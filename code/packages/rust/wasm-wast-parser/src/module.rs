@@ -1332,11 +1332,32 @@ fn build_data(fields: &[SExpr], ctx: &mut ModuleCtx) -> Result<(), WastParseErro
 /// nested folded arithmetic (`(i32.add (i32.add ...) ...)`) aborted with a
 /// real stack overflow around depth ~165-170, and deeply nested
 /// `block`/`loop`/`if` bodies around depth ~487, both on a standard
-/// `cargo test` worker thread. 100 is comfortably under the lower of the
-/// two, and still far above any real hand-written or official-testsuite
-/// `.wat` file's actual nesting (a few dozen levels at most, even for a
-/// deliberately deep expression or control-flow tower).
-const MAX_INSTR_NESTING_DEPTH: usize = 100;
+/// `cargo test` worker thread.
+///
+/// This was originally set to 100. Adding W18's memarg-carrying
+/// load/store match arm (task #92/#110) -- itself sitting directly in
+/// `encode_flat_instr`, on this exact recursion's hot path -- measurably
+/// pushed the real folded-arithmetic overflow point down far enough that
+/// 100 stopped being a safe ceiling: `deeply_nested_folded_arithmetic_
+/// errors_cleanly_not_stack_overflow` started aborting with a genuine
+/// SIGABRT (a real OS stack overflow) instead of the intended clean
+/// `TooDeeplyNested` error, even though that test never touches
+/// `i32.load` itself -- a debug build sizes a function's stack frame for
+/// the union of every match arm's locals, not just the arm actually
+/// taken, so growing ANY arm's locals in a function on this recursion
+/// path shrinks the real margin for ALL of it. Lowered to 60 and
+/// reverified with repeated (8x) full-suite runs showing zero flakiness,
+/// restoring real margin under the new, lower measured overflow point --
+/// still far above any real hand-written or official-testsuite `.wat`
+/// file's actual nesting (a few dozen levels at most, even for a
+/// deliberately deep expression or control-flow tower). Because this
+/// ceiling is calibrated against an empirically-measured OS stack limit
+/// rather than a mathematical bound, ANY future change to a function on
+/// this recursion path (`encode_one` / `encode_one_inner` /
+/// `encode_flat_instr` / `encode_structured_instr` / `encode_instr_list`)
+/// should re-run this file's stack-overflow regression tests a few times
+/// before assuming the margin still holds.
+const MAX_INSTR_NESTING_DEPTH: usize = 60;
 
 struct InstrCtx<'a> {
     module: &'a mut ModuleCtx,
@@ -2097,10 +2118,15 @@ fn encode_flat_instr(
         return Ok(());
     }
     if name == "memory.fill" {
-        encode_instr_list(args, icx, out)?;
+        // W18 (task #92/#111): an optional LEADING memidx token --
+        // `(memory.fill $mem1 (dest)(value)(len))` -- same shape as
+        // `memory.size`/`memory.grow`'s own leading token, reusing the
+        // same helper.
+        let (memidx, _has_memidx, rest) = resolve_leading_memidx_token(args, icx)?;
+        encode_instr_list(rest, icx, out)?;
         out.push(0xFC);
         out.push(0x0B);
-        out.push(0x00); // memory index
+        out.extend(wasm_leb128::encode_unsigned(memidx as u64));
         return Ok(());
     }
     // `memory.init`/`data.drop` (task #95): see the matching comment in
@@ -2109,13 +2135,28 @@ fn encode_flat_instr(
     // and, matching `"call" | "return_call"`'s own folded shape above, it
     // LEADS the operand list rather than trailing it.
     if name == "memory.init" {
-        let idx_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
-        encode_instr_list(&args[1..], icx, out)?;
+        // W18 (task #92/#111): the data-segment index is REQUIRED, but an
+        // OPTIONAL memidx token can precede it -- `(memory.init $mem1 $d
+        // ...)`. Both are bare identifier/index atoms, so unlike
+        // `i32.load`'s leading token (disambiguated from its address
+        // operand by shape: an `Atom` vs a nested `List`), these can't be
+        // told apart by shape alone -- only by COUNT of leading atoms
+        // before the first parenthesized operand: one atom means "just
+        // the required dataidx" (memidx defaults to 0, matching
+        // `memory_init.wast`'s existing single-memory form from task
+        // #95); two means "memidx then dataidx" (matching memory-multi.wast).
+        let leading_atoms = args.iter().take_while(|e| matches!(e, SExpr::Atom(..))).count();
+        let (memidx, idx_expr, rest): (u32, &SExpr, &[SExpr]) = match leading_atoms {
+            0 => return Err(WastParseError::UnexpectedEof),
+            1 => (0, &args[0], &args[1..]),
+            _ => (resolve_idx(&icx.module.memory_names, &args[0], "memory")?, &args[1], &args[2..]),
+        };
+        encode_instr_list(rest, icx, out)?;
         let idx = resolve_idx(&icx.module.data_names, idx_expr, "data")?;
         out.push(0xFC);
         out.push(0x08);
         out.extend(wasm_leb128::encode_unsigned(idx as u64));
-        out.push(0x00); // memory index
+        out.extend(wasm_leb128::encode_unsigned(memidx as u64));
         return Ok(());
     }
     if name == "data.drop" {
@@ -2377,11 +2418,38 @@ fn encode_flat_instr(
         | "i32.load16_u" | "i64.load8_s" | "i64.load8_u" | "i64.load16_s" | "i64.load16_u" | "i64.load32_s"
         | "i64.load32_u" | "i32.store" | "i64.store" | "f32.store" | "f64.store" | "i32.store8" | "i32.store16"
         | "i64.store8" | "i64.store16" | "i64.store32" => {
-            let (memarg, operand_start) = parse_memarg(args, 0);
-            encode_instr_list(&args[operand_start..], icx, out)?;
+            // Multi-memory (W18, task #92/#110): an optional LEADING
+            // memory-index token before the offset=/align= attributes --
+            // `(i32.load $mem1 (i32.const 1))`. Resolving it is pulled
+            // into its own function (`resolve_leading_memidx_token`)
+            // rather than inlined here on purpose: this match arm lives
+            // inside `encode_flat_instr`, which sits on the hot
+            // recursive path every folded instruction funnels through
+            // (`encode_one` -> `encode_flat_instr` -> `encode_instr_list`
+            // -> `encode_one` ...), guarded only by
+            // `MAX_INSTR_NESTING_DEPTH`'s software counter. In a debug
+            // build a function's stack frame is sized for the union of
+            // every match arm's locals, so adding locals inline here
+            // once measurably grew `encode_flat_instr`'s own per-call
+            // frame enough to overflow the REAL OS stack before the
+            // depth counter ever reached its limit -- confirmed by
+            // `deeply_nested_folded_arithmetic_errors_cleanly_not_
+            // stack_overflow` (which never even touches `i32.load`)
+            // failing with a genuine SIGABRT once these locals lived
+            // directly in this arm. Keeping them in a separate,
+            // non-hot-path function keeps this arm's cost off every
+            // other instruction's recursion budget.
+            let (memidx, has_memidx, rest) = resolve_leading_memidx_token(args, icx)?;
+            let (memarg, operand_start) = parse_memarg(rest, 0);
+            encode_instr_list(&rest[operand_start..], icx, out)?;
             out.push(info.opcode);
-            out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+            const MULTI_MEMORY_FLAG: u32 = 0x40;
+            let flag_byte = memarg.0 | if has_memidx { MULTI_MEMORY_FLAG } else { 0 };
+            out.extend(wasm_leb128::encode_unsigned(flag_byte as u64));
             out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+            if has_memidx {
+                out.extend(wasm_leb128::encode_unsigned(memidx as u64));
+            }
             Ok(())
         }
         "memory.size" | "memory.grow" => {
@@ -2592,6 +2660,36 @@ pub(crate) fn parse_v128_const(operands: &[SExpr], pos: usize) -> Result<([u8; 1
         offset += lane_bytes.len();
     }
     Ok((bytes, 1 + lane_count))
+}
+
+/// Split an optional LEADING memory-index token off a memarg-carrying
+/// load/store's folded argument list -- `(i32.load $mem1 (i32.const 1))`
+/// -- the same shape as `memory.size`/`memory.grow`'s own leading token
+/// (see that arm in `encode_flat_instr`): only a bare `Atom` that isn't
+/// itself an `offset=`/`align=` attribute counts (the address operand is
+/// always a nested, parenthesized instruction in folded form, so always
+/// an `SExpr::List`). Returns `(memidx, was_a_token_present, remaining_args)`.
+///
+/// Deliberately its own function, not inlined into the match arm that
+/// calls it: that arm lives in `encode_flat_instr`, on the hot recursive
+/// path every folded instruction funnels through (`encode_one` ->
+/// `encode_flat_instr` -> `encode_instr_list` -> `encode_one` ...),
+/// guarded only by `MAX_INSTR_NESTING_DEPTH`'s software depth counter. In
+/// a debug build a function's stack frame is sized for the union of every
+/// match arm's own locals, so adding these locals directly inline once
+/// measurably grew `encode_flat_instr`'s per-call frame enough to
+/// overflow the real OS stack before the depth counter ever tripped --
+/// caught by `deeply_nested_folded_arithmetic_errors_cleanly_not_stack_
+/// overflow` (which never even touches `i32.load`) failing with a
+/// genuine SIGABRT. Keeping this logic in a separate function keeps its
+/// cost off every other instruction's recursion budget.
+fn resolve_leading_memidx_token<'e>(args: &'e [SExpr], icx: &InstrCtx) -> Result<(u32, bool, &'e [SExpr]), WastParseError> {
+    match args.first() {
+        Some(expr @ SExpr::Atom(s, _)) if !s.starts_with("offset=") && !s.starts_with("align=") => {
+            Ok((resolve_idx(&icx.module.memory_names, expr, "memory")?, true, &args[1..]))
+        }
+        _ => Ok((0, false, args)),
+    }
 }
 
 /// `align=N` / `offset=N` attributes on a load/store, in either order,
@@ -2818,6 +2916,111 @@ mod tests {
         // `$g0` must resolve to the import's own index (0), not fail as an
         // unknown identifier.
         assert_eq!(code_of(&m, 0), &[0x23, 0x00, 0x0B]); // global.get 0; end
+    }
+
+    #[test]
+    fn i32_load_without_a_leading_memidx_token_keeps_the_plain_mvp_encoding() {
+        // Regression guard: a plain `i32.load` with no memory reference
+        // must still encode exactly as before this feature -- align byte
+        // WITHOUT the multi-memory flag bit (0x40) set, no trailing
+        // memidx byte at all.
+        let m = parse_module(r#"(module (memory 1) (func (i32.load (i32.const 0))))"#).unwrap();
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x28, 0x00, 0x00, 0x0B]); // i32.const 0; i32.load align=0 offset=0; end
+    }
+
+    #[test]
+    fn i32_load_with_a_leading_memidx_token_encodes_the_multi_memory_flag_and_index() {
+        // W18 (task #92/#110): `(i32.load $mem1 (i32.const 0))` must
+        // resolve `$mem1` against the module's memory index space and
+        // encode it using the real multi-memory binary form: the
+        // align byte gets its top bit (0x40) set, followed by offset,
+        // followed by a trailing memidx LEB128 -- not silently dropped
+        // to memory 0 like before this fix.
+        let m = parse_module(
+            r#"(module
+                 (memory $mem0 1)
+                 (memory $mem1 1)
+                 (func (i32.load $mem1 (i32.const 0))))"#,
+        )
+        .unwrap();
+        // i32.const 0; i32.load align=(0x40|0) offset=0 memidx=1; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x28, 0x40, 0x00, 0x01, 0x0B]);
+    }
+
+    #[test]
+    fn i32_store_with_offset_and_a_leading_memidx_token_orders_flag_offset_then_memidx() {
+        // Same feature, but proves the leading memidx token composes
+        // correctly with an explicit `offset=` attribute that follows
+        // it -- `parse_memarg` must see the REMAINDER after the memidx
+        // token is stripped, not the raw arg list (which would
+        // misinterpret `$mem1` itself as an out-of-place operand).
+        let m = parse_module(
+            r#"(module
+                 (memory $mem0 1)
+                 (memory $mem1 1)
+                 (func (i32.store $mem1 offset=8 (i32.const 0) (i32.const 1))))"#,
+        )
+        .unwrap();
+        // i32.const 0; i32.const 1; i32.store align=(0x40|0) offset=8 memidx=1; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x41, 0x01, 0x36, 0x40, 0x08, 0x01, 0x0B]);
+    }
+
+    #[test]
+    fn memory_fill_without_a_leading_memidx_token_keeps_the_plain_mvp_encoding() {
+        // Regression guard: `memory.fill`'s pre-W18 single-memory form
+        // (task #94) must still encode its memory-index byte as 0.
+        let m = parse_module(r#"(module (memory 1) (func (memory.fill (i32.const 0) (i32.const 7) (i32.const 4))))"#).unwrap();
+        // i32.const 0; i32.const 7; i32.const 4; memory.fill memidx=0; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x41, 0x07, 0x41, 0x04, 0xFC, 0x0B, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn memory_fill_with_a_leading_memidx_token_encodes_the_real_index() {
+        // W18 (task #92/#111): `(memory.fill $mem1 ...)` must resolve
+        // `$mem1` and encode it as the real trailing memidx byte, matching
+        // `memory-multi.wast`'s own usage.
+        let m = parse_module(
+            r#"(module
+                 (memory $mem0 1)
+                 (memory $mem1 1)
+                 (func (memory.fill $mem1 (i32.const 0) (i32.const 7) (i32.const 4))))"#,
+        )
+        .unwrap();
+        // i32.const 0; i32.const 7; i32.const 4; memory.fill memidx=1; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x41, 0x07, 0x41, 0x04, 0xFC, 0x0B, 0x01, 0x0B]);
+    }
+
+    #[test]
+    fn memory_init_without_a_leading_memidx_token_keeps_the_plain_mvp_encoding() {
+        // Regression guard: `memory.init`'s pre-W18 single-memory form
+        // (task #95) -- ONE leading atom (just the dataidx) -- must still
+        // encode its trailing memory-index byte as 0.
+        let m = parse_module(
+            r#"(module (memory 1) (data $d "hi")
+                 (func (memory.init $d (i32.const 0) (i32.const 0) (i32.const 2))))"#,
+        )
+        .unwrap();
+        // i32.const 0; i32.const 0; i32.const 2; memory.init dataidx=0 memidx=0; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x41, 0x00, 0x41, 0x02, 0xFC, 0x08, 0x00, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn memory_init_with_a_leading_memidx_token_encodes_memidx_then_dataidx() {
+        // W18 (task #92/#111): `(memory.init $mem1 $d ...)` -- TWO
+        // leading atoms -- must resolve `$mem1` against the memory index
+        // space and `$d` against the data-segment index space (in that
+        // order), matching `memory-multi.wast`'s own usage. Binary order
+        // is dataidx THEN memidx (not the same order they appear in text).
+        let m = parse_module(
+            r#"(module
+                 (memory $mem0 1)
+                 (memory $mem1 1)
+                 (data $d "hi")
+                 (func (memory.init $mem1 $d (i32.const 0) (i32.const 0) (i32.const 2))))"#,
+        )
+        .unwrap();
+        // i32.const 0; i32.const 0; i32.const 2; memory.init dataidx=0 memidx=1; end
+        assert_eq!(code_of(&m, 0), &[0x41, 0x00, 0x41, 0x00, 0x41, 0x02, 0xFC, 0x08, 0x00, 0x01, 0x0B]);
     }
 
     #[test]

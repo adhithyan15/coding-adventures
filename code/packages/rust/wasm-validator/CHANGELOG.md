@@ -2,6 +2,35 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.14] - 2026-08-17 (task #92/#111 — real multi-memory memidx bounds check)
+
+### Added
+
+- `ModuleContext.memory_count: u32` (combined imported + module-defined
+  memory count, same index-space convention as `table_count`), replacing
+  `has_memory: bool`'s "is there at least one" check for anything that
+  can now reference a SPECIFIC memory index.
+
+### Fixed
+
+- Every memarg-carrying load/store (`0x28`-`0x3E`) now decodes the align
+  byte's real multi-memory flags bit (`0x40`) and an optional trailing
+  memidx, bounds-checking it against `ctx.memory_count` -- previously
+  this byte wasn't even read as a memidx at all.
+- `memory.size`/`memory.grow` (`0x3F`/`0x40`): their memory-index byte
+  was already treated as a REAL memidx at execution time since WASM17,
+  but the validator still named it `_reserved` and discarded it --
+  closed that validation-time gap to match, bounds-checking it the
+  same way.
+- `memory.init`/`memory.copy`/`memory.fill`: previously hard-rejected
+  ANY nonzero memory index outright (`memory != 0 => err`), which is
+  now the WRONG behavior once `wasm-execution` genuinely supports
+  multi-memory (task #109) -- each memidx is now bounds-checked against
+  `ctx.memory_count` instead, so a real, in-bounds nonzero index
+  validates correctly and only an out-of-bounds one is rejected.
+
+See `code/specs/W18-wasm-multi-memory-memarg.md`.
+
 ## [0.2.13] - 2026-08-17 (task #107 — call_indirect/return_call_indirect table-index bounds check)
 
 ### Fixed

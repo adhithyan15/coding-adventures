@@ -90,6 +90,38 @@ fn valid_narrow_memory_access_family() {
 }
 
 #[test]
+fn valid_i32_load_and_memory_size_grow_with_an_explicit_in_bounds_memory_index() {
+    // W18 (task #92/#111): a real, non-zero memidx that's actually within
+    // bounds must validate cleanly, not just be tolerated by `has_memory`'s
+    // old "is there at least one" check.
+    assert_valid(
+        "(module (memory $mem0 1) (memory $mem1 1)
+           (func (result i32) (i32.load $mem1 (i32.const 0)))
+           (func (result i32) (memory.size $mem1))
+           (func (result i32) (memory.grow $mem1 (i32.const 1))))",
+    );
+}
+
+#[test]
+fn invalid_i32_load_references_an_out_of_bounds_memory_index() {
+    // Same shape as `invalid_call_indirect_references_an_out_of_bounds_
+    // table_index` above: a raw numeric index that's syntactically fine
+    // but exceeds the module's real memory count must be caught by the
+    // validator's own bounds-check, not silently accepted.
+    assert_invalid("(module (memory 1) (func (result i32) (i32.load 5 (i32.const 0))))");
+}
+
+#[test]
+fn invalid_memory_size_references_an_out_of_bounds_memory_index() {
+    assert_invalid("(module (memory 1) (func (result i32) (memory.size 5)))");
+}
+
+#[test]
+fn invalid_memory_grow_references_an_out_of_bounds_memory_index() {
+    assert_invalid("(module (memory 1) (func (result i32) (memory.grow 5 (i32.const 1))))");
+}
+
+#[test]
 fn valid_bulk_memory_copy_and_fill() {
     let memory = wasm_types::MemoryType {
         limits: wasm_types::Limits { min: 1, max: None },
@@ -111,12 +143,58 @@ fn valid_bulk_memory_copy_and_fill() {
 }
 
 #[test]
+fn invalid_memory_copy_references_an_out_of_bounds_destination_or_source_memory_index() {
+    // W18 (task #92/#111): `memory.copy`'s dst/src memidx bytes are real,
+    // decoded LEB128s now (task #109), not hardcoded MVP-only zero bytes
+    // -- each must be bounds-checked independently.
+    let memory = wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false };
+
+    let mut bad_dst = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 4, 0x41, 8, 0xFC, 0x0A, 5, 0, 0x0B], // dst_memidx=5, src_memidx=0
+    );
+    bad_dst.memories.push(memory.clone());
+    assert!(wasm_validator::validate(&bad_dst).is_err(), "out-of-bounds destination memidx must be rejected");
+
+    let mut bad_src = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 4, 0x41, 8, 0xFC, 0x0A, 0, 5, 0x0B], // dst_memidx=0, src_memidx=5
+    );
+    bad_src.memories.push(memory);
+    assert!(wasm_validator::validate(&bad_src).is_err(), "out-of-bounds source memidx must be rejected");
+}
+
+#[test]
+fn invalid_memory_fill_references_an_out_of_bounds_memory_index() {
+    let mut fill = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 42, 0x41, 8, 0xFC, 0x0B, 5, 0x0B], // memidx=5
+    );
+    fill.memories.push(wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false });
+    assert!(wasm_validator::validate(&fill).is_err(), "out-of-bounds memidx must be rejected");
+}
+
+#[test]
 fn valid_memory_init_and_data_drop() {
     assert_valid(
         r#"(module (memory 1) (data $d "hi")
              (func (memory.init $d (i32.const 0) (i32.const 0) (i32.const 2)))
              (func (data.drop $d)))"#,
     );
+}
+
+#[test]
+fn invalid_memory_init_references_an_out_of_bounds_memory_index() {
+    // W18 (task #92/#111): `memory.init`'s memidx byte is now real,
+    // decoded LEB128 too (task #109) -- bounds-check it the same as
+    // `memory.copy`/`memory.fill`.
+    let mut init = module_with_body(
+        wasm_types::FuncType { params: vec![], results: vec![] },
+        vec![0x41, 0, 0x41, 0, 0x41, 2, 0xFC, 0x08, 0, 5, 0x0B], // dataidx=0, memidx=5
+    );
+    init.memories.push(wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false });
+    init.data.push(wasm_types::DataSegment { memory_index: 0, offset_expr: vec![], data: b"hi".to_vec(), is_passive: true });
+    assert!(wasm_validator::validate(&init).is_err(), "out-of-bounds memidx must be rejected");
 }
 
 #[test]

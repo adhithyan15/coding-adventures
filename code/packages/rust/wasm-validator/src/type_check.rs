@@ -422,6 +422,16 @@ struct ModuleContext<'a> {
     /// convention as `func_types`.
     global_types: Vec<GlobalType>,
     has_memory: bool,
+    /// Combined imported + module-defined memory COUNT, same index-space
+    /// convention as `func_types`/`global_types`/`table_count`. Added for
+    /// W18 (task #92/#111): every memarg-carrying load/store, plus
+    /// `memory.size`/`memory.grow`/`memory.init`/`memory.copy`/
+    /// `memory.fill`, can now decode a REAL, non-zero memory index (see
+    /// `wasm-execution`'s own multi-memory memarg support) that must be
+    /// bounds-checked against the actual memory count -- `has_memory`
+    /// alone ("is there at least one") is no longer sufficient once an
+    /// instruction can reference memory N specifically.
+    memory_count: u32,
     /// Combined imported + module-defined table COUNT (WASM17), same
     /// index-space convention as `func_types`/`global_types` -- unlike
     /// `has_memory` (a plain bool, since every memory op hardcodes memory
@@ -470,6 +480,8 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
     }
 
     let has_memory = !module.memories.is_empty() || module.imports.iter().any(|i| matches!(i.type_info, ImportTypeInfo::Memory(_)));
+    let imported_memory_count = module.imports.iter().filter(|i| matches!(i.type_info, ImportTypeInfo::Memory(_))).count();
+    let memory_count = (imported_memory_count + module.memories.len()) as u32;
     let mut table_element_types: Vec<u8> = module
         .imports
         .iter()
@@ -486,6 +498,7 @@ fn build_module_context(module: &WasmModule) -> Result<ModuleContext<'_>, Valida
         func_types,
         global_types,
         has_memory,
+        memory_count,
         table_count,
         table_element_types,
     })
@@ -602,8 +615,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         let (data_idx, data_size) = decode_idx(code, offset)?;
                         let (memory, mem_size) = decode_idx(code, offset + data_size)?;
                         offset += data_size + mem_size;
-                        if memory != 0 {
-                            err!("memory.init references unsupported nonzero memory index");
+                        // W18 (task #92/#111): `memory`'s LEB128 is now
+                        // decoded for real by `wasm-execution` (task
+                        // #109) instead of assumed MVP-only -- bounds-
+                        // check it against the real memory count instead
+                        // of hard-rejecting any nonzero value.
+                        if memory >= ctx.memory_count {
+                            err!("memory.init references memory index {memory}, but only {} memories exist", ctx.memory_count);
                         }
                         if data_idx as usize >= ctx.module.data.len() {
                             err!("memory.init references out-of-bounds data segment index {data_idx}");
@@ -632,8 +650,16 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         let (dst_memory, dst_size) = decode_idx(code, offset)?;
                         let (src_memory, src_size) = decode_idx(code, offset + dst_size)?;
                         offset += dst_size + src_size;
-                        if dst_memory != 0 || src_memory != 0 {
-                            err!("memory.copy references unsupported nonzero memory index");
+                        // W18 (task #92/#111): both memidx LEB128s are now
+                        // decoded for real by `wasm-execution` (task #109)
+                        // instead of assumed MVP-only -- bounds-check each
+                        // against the real memory count instead of hard-
+                        // rejecting any nonzero value.
+                        if dst_memory >= ctx.memory_count {
+                            err!("memory.copy references destination memory index {dst_memory}, but only {} memories exist", ctx.memory_count);
+                        }
+                        if src_memory >= ctx.memory_count {
+                            err!("memory.copy references source memory index {src_memory}, but only {} memories exist", ctx.memory_count);
                         }
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // source
@@ -645,8 +671,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         }
                         let (memory, memory_size) = decode_idx(code, offset)?;
                         offset += memory_size;
-                        if memory != 0 {
-                            err!("memory.fill references unsupported nonzero memory index");
+                        // W18 (task #92/#111): see memory.init/memory.copy above.
+                        if memory >= ctx.memory_count {
+                            err!("memory.fill references memory index {memory}, but only {} memories exist", ctx.memory_count);
                         }
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // length
                         pop_expect(&mut stack, frame!(), ValueType::I32)?; // byte value
@@ -1202,13 +1229,31 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     err!("memory instruction used, but module declares no memory");
                 }
                 let info = get_opcode(byte).expect("0x28..=0x3E are all real memory opcodes");
-                let (align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
+                // W18 (task #92/#111): the align byte's top bit (0x40) is
+                // the real multi-memory flag -- when set, a memidx
+                // LEB128 trails the offset. Mirrors `wasm-execution`'s
+                // own decode exactly (`MULTI_MEMORY_FLAG`).
+                const MULTI_MEMORY_FLAG: u32 = 0x40;
+                let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad memarg align: {e}")))?;
                 let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad memarg offset: {e}")))?;
+                let raw_align = raw_align as u32;
+                let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                let align = raw_align & !MULTI_MEMORY_FLAG;
                 offset += sz1 + sz2;
+                let memidx = if has_memidx {
+                    let (memidx, sz3) = decode_idx(code, offset)?;
+                    offset += sz3;
+                    memidx
+                } else {
+                    0
+                };
+                if memidx >= ctx.memory_count {
+                    err!("{} references memory index {memidx}, but only {} memories exist", info.name, ctx.memory_count);
+                }
 
                 let (value_type, max_align) = memory_op_shape(info.name)?;
                 let max_align = max_align_for(max_align);
-                if align as u32 > max_align {
+                if align > max_align {
                     err!("{}: alignment 2^{align} exceeds the natural alignment 2^{max_align}", info.name);
                 }
                 if info.stack_push == 1 {
@@ -1220,20 +1265,29 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 }
             }
             0x3F => {
-                // memory.size
-                let (_reserved, size) = decode_idx(code, offset)?;
+                // memory.size -- WASM17 already made this byte a real
+                // memidx at execution time; W18 (task #92/#111) closes
+                // the matching validation-time gap: bounds-check it here
+                // too, instead of treating it as a discarded "reserved" byte.
+                let (memidx, size) = decode_idx(code, offset)?;
                 offset += size;
                 if !ctx.has_memory {
                     err!("memory.size used, but module declares no memory");
                 }
+                if memidx >= ctx.memory_count {
+                    err!("memory.size references memory index {memidx}, but only {} memories exist", ctx.memory_count);
+                }
                 push_val(&mut stack, ValueType::I32);
             }
             0x40 => {
-                // memory.grow
-                let (_reserved, size) = decode_idx(code, offset)?;
+                // memory.grow -- same real-memidx bounds-check as memory.size above.
+                let (memidx, size) = decode_idx(code, offset)?;
                 offset += size;
                 if !ctx.has_memory {
                     err!("memory.grow used, but module declares no memory");
+                }
+                if memidx >= ctx.memory_count {
+                    err!("memory.grow references memory index {memidx}, but only {} memories exist", ctx.memory_count);
                 }
                 pop_expect(&mut stack, frame!(), ValueType::I32)?;
                 push_val(&mut stack, ValueType::I32);
