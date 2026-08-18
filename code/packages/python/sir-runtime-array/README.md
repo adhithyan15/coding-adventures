@@ -82,6 +82,14 @@ a plain array *element*, never a native boolean.
   that sizes an allocation from two *independent* operands — `matmul`,
   and the 2-index paths of `index_get`/`index_set`) is validated
   *before* allocating, not after, capped at `MAX_ELEMENTS` (2**26).
+- **`matmul` also bounds total operation count, not just output size.**
+  The output shape `(m, n)` can stay small even when the shared inner
+  dimension `ka` is large (each input's own individual cap bounds
+  `m*ka` and `ka*n` separately, not the triple product) — two
+  boundary-legal inputs sharing a large `ka` would otherwise pass the
+  output-shape check yet still drive the multiply-add loop through an
+  unbounded `m*n*ka` iteration count. `matmul` validates `(m, n, ka)`
+  as a second, additional shape check before running any loop.
 - No `eval`/`exec`/dynamic code execution anywhere in this package.
 
 ## API

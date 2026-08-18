@@ -2,6 +2,23 @@
 
 ## 0.1.0 — initial release
 
+**Security fix (pre-release, found during this release's own security
+review):** `matmul` originally validated only the output shape `(m, n)`
+via `checked_shape_size` before allocating — but the shared inner
+dimension `ka` is bounded only by each *input*'s own individual element
+cap (`m*ka <= MAX_ELEMENTS` and `ka*n <= MAX_ELEMENTS` separately), not
+by the `(m, n)` output check. Two boundary-legal inputs sharing a large
+`ka` (e.g. two `8192 x 8192` matrices, each exactly at the element cap)
+would pass the output-shape check — their `8192 x 8192` product is also
+exactly at the cap — yet still drive the triple-nested multiply-add loop
+through `8192**3` ≈ 5.5e11 iterations: a CPU-exhaustion DoS distinct from
+(and not caught by) the memory-allocation guard. Fixed by additionally
+validating `(m, n, ka)` — the full multiply-add operation count, not
+just the output element count — before any loop runs. See `matmul`'s own
+docstring for the worked example and `tests/test_array.py`'s
+`test_matmul_rejects_large_shared_inner_dimension_cpu_dos` regression
+test.
+
 First release of the SIR22 array/matrix runtime for Python, part of the
 SIR22/SIR23 second-wave backend-expansion initiative (Phase A Slice 2 —
 see `code/specs/SIR22-array-matrix-semantic-ir.md`'s "Backend impact"

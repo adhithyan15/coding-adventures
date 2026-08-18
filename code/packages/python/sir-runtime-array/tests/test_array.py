@@ -306,6 +306,32 @@ class TestMatmul:
         with pytest.raises(ValueError, match="exceeds the .*-element cap"):
             matmul(a, b)
 
+    def test_matmul_rejects_large_shared_inner_dimension_cpu_dos(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SECURITY regression: the output shape (m, n) can stay small even
+        # when the shared inner dimension `ka` is large, because `ka` is
+        # bounded only by each *input*'s own individual element cap
+        # (m*ka <= cap and ka*n <= cap separately) -- not by the (m, n)
+        # output check. Two boundary-legal inputs sharing a large `ka`
+        # must still be rejected by the op-count guard. Lower MAX_ELEMENTS
+        # so this test doesn't need to actually allocate anything huge.
+        monkeypatch.setattr(array_mod, "MAX_ELEMENTS", 100)
+        # a: 2x10 (20 elements, under cap); b: 10x2 (20 elements, under
+        # cap). Output shape (2, 2) = 4 elements, under cap. Op count
+        # m*n*ka = 2*2*10 = 40, under cap -- succeeds.
+        a = zeros(2, 10)
+        b = zeros(10, 2)
+        assert matmul(a, b).shape == (2, 2)
+        # a2: 2x30 (60 elements, under cap); b2: 30x2 (60 elements, under
+        # cap). Output shape (2, 2) = 4 elements, STILL under cap (would
+        # pass an output-shape-only check) -- but op count m*n*ka =
+        # 2*2*30 = 120 exceeds the (lowered) cap, so this must raise.
+        a2 = zeros(2, 30)
+        b2 = zeros(30, 2)
+        with pytest.raises(ValueError, match="exceeds the .*-element cap"):
+            matmul(a2, b2)
+
 
 class TestTranspose:
     def test_transpose_swaps_rows_and_columns(self) -> None:

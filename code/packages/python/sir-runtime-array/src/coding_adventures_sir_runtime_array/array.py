@@ -62,7 +62,12 @@ every call site that sizes an allocation from two *independent* operands
 -- :func:`matmul`, and the 2-index paths of :func:`index_get`/
 :func:`index_set`) is validated *before* allocating, not after, so an
 attacker-influenced shape fails with a clean ``ValueError`` instead of
-exhausting memory.
+exhausting memory. :func:`matmul` additionally bounds the total
+``m * n * ka`` multiply-add *operation* count, not just the ``(m, n)``
+output element count -- two individually-legal inputs can share a large
+inner dimension ``ka`` that the output-shape check alone never sees,
+which would otherwise let a boundary-legal call still exhaust CPU time
+(see that function's own docstring for the worked example).
 
 **Deliberately out of scope**, matching ``array-runtime`` and the TS
 reference exactly: ``Complex``/``Rational`` scalars (``transpose``'s
@@ -375,12 +380,33 @@ def matmul(a: NDArray, b: NDArray) -> NDArray:
     ``[2**26, 1] . [1, 2**26]``, could still ask for a ``2**52``-element
     output), so :func:`checked_shape_size` validates ``(m, n)`` *before*
     allocating the output, not after.
+
+    SECURITY: bounding the *output* shape alone is not enough. The triple
+    nested loop below performs ``m * n * ka`` scalar multiply-adds, and
+    ``ka`` (the shared inner dimension) is bounded only by each *input*
+    array's own individual ``MAX_ELEMENTS`` cap (``m * ka <= MAX_ELEMENTS``
+    and ``ka * n <= MAX_ELEMENTS`` separately) -- not by the ``(m, n)``
+    output check. Two boundary-legal ``8192 x 8192`` inputs (each exactly
+    at the ``2**26``-element cap) would pass the output-shape check (their
+    product ``8192 x 8192`` is *also* exactly at the cap) yet drive this
+    loop through ``8192**3`` ~ 5.5e11 iterations -- a CPU-exhaustion DoS
+    the output-shape check alone does not catch, distinct from (and in
+    addition to) the memory-allocation hazard the check above closes. This
+    is a real-numbers-only variant of the exact class the TypeScript/Rust
+    references *also* leave open, closed here by validating the full
+    ``m * n * ka`` multiply-add count -- not just the output element
+    count -- before any loop runs.
     """
     m, ka = nrows(a), ncols(a)
     kb, n = nrows(b), ncols(b)
     if ka != kb:
         raise ValueError(f"matmul: inner dimensions disagree ({m}x{ka} . {kb}x{n})")
     out_len = checked_shape_size((m, n))
+    # See the SECURITY note above: bounds the total multiply-add op count
+    # (m * n * ka), not just the output element count (m * n) already
+    # validated above -- closes the outer-product-in-the-inner-dimension
+    # gap the output-shape check alone misses.
+    checked_shape_size((m, n, ka))
     ad, bd = a.data, b.data
     out: list[Val] = [0] * out_len
     for j in range(n):
