@@ -1295,7 +1295,14 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar `/` (mrdivide)/`./`
+                            // (elementwise, both-scalar fast path)/`\`
+                            // (mldivide)/`.\ ` all fall through to this
+                            // same scalar-division builtin; it always
+                            // true-divides (MATLAB's default numeric type
+                            // is `double`, no int/float distinction), so
+                            // it maps to `div_true`, not bare `/`.
+                            name: "div_true".to_string(),
                             args: vec![lhs, rhs],
                             effects: EffectSet::PURE,
                             span,
@@ -1320,7 +1327,14 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar `/` (mrdivide)/`./`
+                            // (elementwise, both-scalar fast path)/`\`
+                            // (mldivide)/`.\ ` all fall through to this
+                            // same scalar-division builtin; it always
+                            // true-divides (MATLAB's default numeric type
+                            // is `double`, no int/float distinction), so
+                            // it maps to `div_true`, not bare `/`.
+                            name: "div_true".to_string(),
                             args: vec![rhs, lhs],
                             effects: EffectSet::PURE,
                             span,
@@ -1381,7 +1395,14 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar `/` (mrdivide)/`./`
+                            // (elementwise, both-scalar fast path)/`\`
+                            // (mldivide)/`.\ ` all fall through to this
+                            // same scalar-division builtin; it always
+                            // true-divides (MATLAB's default numeric type
+                            // is `double`, no int/float distinction), so
+                            // it maps to `div_true`, not bare `/`.
+                            name: "div_true".to_string(),
                             args: vec![lhs, rhs],
                             effects: EffectSet::PURE,
                             span,
@@ -1413,7 +1434,14 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar `/` (mrdivide)/`./`
+                            // (elementwise, both-scalar fast path)/`\`
+                            // (mldivide)/`.\ ` all fall through to this
+                            // same scalar-division builtin; it always
+                            // true-divides (MATLAB's default numeric type
+                            // is `double`, no int/float distinction), so
+                            // it maps to `div_true`, not bare `/`.
+                            name: "div_true".to_string(),
                             args: vec![rhs, lhs],
                             effects: EffectSet::PURE,
                             span,
@@ -2088,8 +2116,14 @@ fn expr_is_known_scalar_d(e: &Expr, depth: usize) -> bool {
     }
     match e {
         Expr::IntLit { .. } | Expr::FloatLit { .. } => true,
+        // SIR21 T3b-2: scalar division now lowers to `div_true`, not
+        // bare `/` (see `build_multiplicative`'s scalar-division arms) —
+        // recognised here so `expr_is_known_scalar` still sees through
+        // it. `/` is kept too (harmless — this frontend no longer emits
+        // it from a division site, but leaving the old name recognised
+        // costs nothing and avoids a latent trap if that ever changes).
         Expr::BuiltinCall { name, args, .. }
-            if matches!(name.as_str(), "+" | "-" | "*" | "/" | "neg") =>
+            if matches!(name.as_str(), "+" | "-" | "*" | "/" | "div_true" | "neg") =>
         {
             args.iter().all(|a| expr_is_known_scalar_d(a, depth + 1))
         }

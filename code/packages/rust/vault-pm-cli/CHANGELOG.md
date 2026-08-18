@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Added audit-required `conflict merge totp ITEM BASE_REVISION`, which retains
+  the exact current TOTP seed opaquely, collects the Base32 seed through a
+  hidden prompt, forwards the seed and parameter lines verbatim for
+  application-owned closed validation, durably records host and validation
+  failures, and publishes one authored all-current-parent seed without exposing
+  prior candidate values.
 - Added audit-required `conflict merge database-credential ITEM BASE_REVISION`,
   which retains the exact current database credential opaquely, collects the
   password through a hidden prompt, forwards the engine and port lines verbatim

@@ -428,7 +428,9 @@ mod tests {
         assert_eq!(binop_name("a + b"), "+");
         assert_eq!(binop_name("a - b"), "-");
         assert_eq!(binop_name("a * b"), "*");
-        assert_eq!(binop_name("a / b"), "/");
+        // `/` maps to `div_true` (SIR21 T3b-2), not the operator-spelling
+        // passthrough `+`/`-`/`*`/`%` use — JS's `/` always true-divides.
+        assert_eq!(binop_name("a / b"), "div_true");
         assert_eq!(binop_name("a % b"), "%");
     }
 

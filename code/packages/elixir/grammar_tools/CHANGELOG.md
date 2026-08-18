@@ -1,5 +1,28 @@
 # Changelog
 
+## [0.6.1] - 2026-08-17
+
+### Fixed
+- `Compiler.element_src/2` had no clauses for `:positive_lookahead`,
+  `:negative_lookahead`, `:one_or_more`, or `:separated_repetition` — legal
+  `ParserGrammar` element types already handled by the runtime
+  `GrammarParser` and by the other language ports' compilers, but
+  `compile-grammar` crashed with `FunctionClauseError` on any grammar using
+  them (e.g. `ruby.grammar`'s `!"rescue"`-style negative lookahead,
+  `sql.grammar`'s `!("FOREIGN" "KEY")`, `algol60.grammar`'s
+  `&(SEMICOLON)`, and every `fsharp<version>.grammar`'s
+  `list_expression` rule). Added the four missing clauses, mirroring the
+  TypeScript compiler and the runtime parser's tagged-tuple shapes.
+- `Compiler.compile_token_grammar/2` rendered `keywords`, `reserved_keywords`,
+  and `layout_keywords` (and `mode_transition_src/2`'s `on_tokens`) with
+  plain `inspect/1`, which silently truncates lists past Elixir's default
+  50-item limit (e.g. `sql.tokens`'s 50+ keyword list came out as
+  `[..., ...]`, an invalid/wrong literal). Added `limit: :infinity` to
+  every list-valued `inspect/1` call in the compiler.
+- Corrected `mix.exs`'s `version` field, which had drifted to `0.1.0` while
+  this CHANGELOG had already reached `0.5.0`/`0.6.0` — every prior release
+  from 0.2.0 onward was never actually reflected in the published version.
+
 ## [0.6.0] - 2026-06-14
 
 ### Added (F10 — declarative lexer mode transitions)

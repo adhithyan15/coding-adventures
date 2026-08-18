@@ -84,7 +84,7 @@ this roadmap has not caught up with them. Known debt.)*
   returns the understander to Ch. 6's dative. *Vāyikkuka* looks built on *vāy*,
   "mouth," and is not — Gundert makes it a *tadbhava* of Sanskrit *vac*, with
   വാചകം standing beside it as the same word borrowed straight. *Eḻutuka* is
-  Tamil **எழുது** unchanged, carrying the **ഴ** Kannada and Telugu lost along
+  Tamil **எழுது** unchanged, carrying the **ഴ** Kannada and Telugu lost along
   with the verb itself. **Authored.**
 - **Ch. 34 — Taking, Asking, Helping, Liking**: **എടുക്കുക** *eṭukkuka* (take)
   → **ചോദിക്കുക** *cōdikkuka* (ask) → **സഹായിക്കുക** *sahāyikkuka* (help) →

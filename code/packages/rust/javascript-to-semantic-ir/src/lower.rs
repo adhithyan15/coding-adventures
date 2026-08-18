@@ -3639,7 +3639,12 @@ impl Lowerer {
         // loose and strict equality collapse to the strict-shaped IR
         // comparison — a deliberate semantic change (see module docs).
         let builtin = match op.value.as_str() {
-            "+" | "-" | "*" | "/" | "%" | "<" | ">" | "<=" | ">=" => op.value.as_str(),
+            // SIR21 T3b-2: JS's `/` always true-divides (native JS has no
+            // separate integer-division operator to conflate with), so it
+            // maps to `div_true`, not the operator-spelling passthrough
+            // every other arm here uses.
+            "/" => "div_true",
+            "+" | "-" | "*" | "%" | "<" | ">" | "<=" | ">=" => op.value.as_str(),
             "==" | "===" => "=",
             "!=" | "!==" => "!=",
             other => {

@@ -183,7 +183,8 @@
 //! shipped, ground-truth interpreter** for no reason — the interpreter
 //! already computes an answer for that shape. So this frontend mirrors
 //! `scilab-runtime`'s own choice instead: both `\` and `.\ ` uniformly
-//! lower to `BuiltinCall("/", [rhs, lhs])` when both operands are provably
+//! lower to `BuiltinCall("div_true", [rhs, lhs])` (SIR21 T3b-2 — scalar
+//! division always true-divides) when both operands are provably
 //! scalar, or `Expr::ElementwiseOp { op: Div, lhs: rhs, rhs: lhs, .. }`
 //! (broadcast, operands swapped) otherwise — see
 //! [`Lowerer::build_multiplicative`]'s `"\\" | ".\\"` arm. This is the one
@@ -2094,7 +2095,9 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar division always
+                            // true-divides.
+                            name: "div_true".to_string(),
                             args: vec![lhs, rhs],
                             effects: EffectSet::PURE,
                             span,
@@ -2123,7 +2126,9 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar division always
+                            // true-divides.
+                            name: "div_true".to_string(),
                             args: vec![rhs, lhs],
                             effects: EffectSet::PURE,
                             span,
@@ -2184,7 +2189,9 @@ impl Lowerer {
                 if lhs_scalar && rhs_scalar {
                     Ok((
                         Expr::BuiltinCall {
-                            name: "/".to_string(),
+                            // SIR21 T3b-2: scalar division always
+                            // true-divides.
+                            name: "div_true".to_string(),
                             args: vec![lhs, rhs],
                             effects: EffectSet::PURE,
                             span,
@@ -2988,8 +2995,13 @@ fn expr_is_known_scalar_d(e: &Expr, depth: usize) -> bool {
     }
     match e {
         Expr::IntLit { .. } | Expr::FloatLit { .. } => true,
+        // SIR21 T3b-2: scalar division now lowers to `div_true`, not
+        // bare `/` — recognised here so `expr_is_known_scalar` still
+        // sees through it. `/` is kept too (harmless — this frontend no
+        // longer emits it from a division site, but leaving the old
+        // name recognised costs nothing).
         Expr::BuiltinCall { name, args, .. }
-            if matches!(name.as_str(), "+" | "-" | "*" | "/" | "neg") =>
+            if matches!(name.as_str(), "+" | "-" | "*" | "/" | "div_true" | "neg") =>
         {
             args.iter().all(|a| expr_is_known_scalar_d(a, depth + 1))
         }

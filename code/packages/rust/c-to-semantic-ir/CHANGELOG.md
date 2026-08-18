@@ -1,5 +1,50 @@
 # Changelog
 
+## [0.3.0] - 2026-08-17
+
+### Changed — SIR21 T3b-2 Slice 6: `combine()`'s division reconciliation
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). All 7
+backends implement all four ops (Slice 2, merged). This crate is its own
+slice because `combine()` needed two *different* renames in the same
+function — more mistake surface than the mechanical single-op-name swaps
+every other frontend slice did.
+
+**Behavior change 1 — the float (`double`) arm**: `/` no longer lowers to
+bare `BuiltinCall("/", args)`. It now lowers to `BuiltinCall("div_true",
+args)`. C's usual arithmetic conversions always promote both operands to
+`double` before a floating division runs, so there is no int/float
+distinction left to conflate `/` with once this arm is reached — it always
+true-divides, the exact shape `div_true` exists for.
+
+**Behavior change 2 — the integer arm**: `/` no longer lowers to the
+`tdiv`/`utdiv` builtin names. It now lowers to `div_trunc` (signed) /
+`udiv_trunc` (unsigned) — the exact same underlying semantics (truncate
+toward zero, matching C's own `/` on integers), just under T3b-2's
+canonical name family instead of this crate's own pre-existing ad hoc
+names. This is a pure rename, not new logic: `semantic-ir-to-c`'s
+`div_trunc`/`udiv_trunc` dispatch entries point at the *same*
+`_sir_itdiv`/`_sir_utdiv` runtime functions the old `tdiv`/`utdiv` entries
+already called (unchanged by this PR). `tdiv`/`utdiv` themselves are now
+dead dispatch entries — no frontend emits them anymore — left in place for
+Slice 7 (task #29) to delete, per this arc's established
+additive-then-cleanup discipline. `%`/`tmod` are untouched; this arc
+explicitly does not touch modulo (see the spec's own forward pointer to a
+future, unnumbered milestone).
+
+Verified via this crate's own `tests::double_division_is_true_division_
+not_truncating` and `tests::division_and_modulo_lower_to_truncating_
+builtins` (both updated to assert the new names), `tests::int_min_div_is_
+guarded` (unchanged — runtime-behavior assertion, not name-based, still
+passes: the `INT64_MIN/-1` two's-complement-wrap guard lives in
+`_sir_itdiv` itself and this rename doesn't touch that function), and the
+full `tests/three_way_conformance.rs` corpus (byte-identical against real
+`cc`-compiled output, unchanged and still green).
+
+`c-to-semantic-ir` 0.2.0 -> 0.3.0.
+
 ## [0.2.0] - 2026-08-11
 
 ### Changed — SIR28 Slice 6 (batch 3): `printf` lowers to `__sys_write__`

@@ -2,6 +2,19 @@
 
 All notable changes to the `sir-conformance` crate will be documented in this file.
 
+## [0.27.0] - SIR21 T3b-2 Slice 5a: source-level regression for Python/JS division
+
+Adds `tests/division.rs::python_division_always_true_divides_from_source_on_every_backend`
+and `::javascript_division_always_true_divides_from_source_on_every_backend`
+— the SOURCE-level companion to Slice 3's direct-call coverage. Both
+`python-to-semantic-ir` and `javascript-to-semantic-ir` now lower `/` to
+`div_true` instead of bare `/` (their own crates' CHANGELOGs); these tests
+prove the end-to-end regression that migration closes: `print(7 / 2)` /
+`console.log(7 / 2);` from real source, run through every backend's real
+toolchain via `run_source_via(..., Frontend::Python/JavaScript, target)`,
+prints `3.5` on every backend — not `3`, the value a bare `/` misrouted
+to Ruby-floor-faithful dispatch would give for the same literal operands.
+
 ## [0.26.0] - SIR21 T3b-2 Slice 3: direct-call coverage for div_floor/div_trunc/udiv_trunc/div_true
 
 Adds `pub fn run_module(name, module, target) -> RunOutcome` — a new

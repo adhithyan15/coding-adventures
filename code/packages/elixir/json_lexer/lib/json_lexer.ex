@@ -2,9 +2,10 @@ defmodule CodingAdventures.JsonLexer do
   @moduledoc """
   JSON Lexer — Thin wrapper around the grammar-driven lexer engine.
 
-  This module reads `json.tokens` from the shared grammars directory and
-  uses `GrammarLexer.tokenize/2` to tokenize JSON source code. It's the
-  Elixir equivalent of the Python `json_lexer` package.
+  This module embeds a pre-compiled `json.tokens` grammar (see
+  `CodingAdventures.JsonLexer.Grammar`) and uses `GrammarLexer.tokenize/2`
+  to tokenize JSON source code. It's the Elixir equivalent of the Python
+  `json_lexer` package.
 
   ## Usage
 
@@ -24,10 +25,8 @@ defmodule CodingAdventures.JsonLexer do
   """
 
   alias CodingAdventures.GrammarTools.TokenGrammar
+  alias CodingAdventures.JsonLexer.Grammar
   alias CodingAdventures.Lexer.GrammarLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @doc """
   Tokenize JSON source code.
@@ -48,9 +47,7 @@ defmodule CodingAdventures.JsonLexer do
   """
   @spec create_lexer() :: TokenGrammar.t()
   def create_lexer do
-    tokens_path = Path.join([@grammars_dir, "json", "json.tokens"])
-    {:ok, grammar} = TokenGrammar.parse(File.read!(tokens_path))
-    grammar
+    Grammar.token_grammar()
   end
 
   # Cache the grammar in a persistent_term for fast repeated access.

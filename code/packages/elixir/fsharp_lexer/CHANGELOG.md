@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.1.1] - 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading. Previously `get_grammar/1` read
+  `fsharp<version>.tokens` from `code/grammars/fsharp/` via `File.read!` at
+  an absolute path that walks outside this package's own directory — this
+  works in the monorepo but would raise a `File.Error` on first use after a
+  published Hex package is installed, since `code/grammars/` is not part of
+  the package. All 15 supported versions (`1.0`, `2.0`, `3.0`, `3.1`, `4.0`,
+  `4.1`, `4.5`, `4.6`, `4.7`, `5`, `6`, `7`, `8`, `9`, `10`) are now compiled
+  ahead of time into `CodingAdventures.FSharpLexer.Grammar.V*` submodules
+  (via `grammar-tools compile-tokens`) and looked up through a
+  `version => &Grammar.V*.token_grammar/0` map, mirroring the pattern
+  already used by `verilog_lexer`. `:persistent_term` caching is preserved.
+  No versions required `--force`; all 15 `.tokens` files validated cleanly.
+  Public API (`tokenize/2`, `create_lexer/1`, `default_version/0`,
+  `supported_versions/0`, and the `ArgumentError` message for unknown
+  versions) is unchanged.
+
 ## [0.1.0] - 2026-04-11
 
 ### Added

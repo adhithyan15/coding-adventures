@@ -14,9 +14,7 @@ defmodule CodingAdventures.PythonParser do
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.Parser.{ASTNode, GrammarParser}
   alias CodingAdventures.PythonLexer
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
+  alias CodingAdventures.PythonParser.Grammar, as: CompiledGrammar
 
   @default_version "3.12"
   @supported_versions ["2.7", "3.0", "3.6", "3.8", "3.10", "3.12"]
@@ -54,8 +52,7 @@ defmodule CodingAdventures.PythonParser do
   def create_parser do
     case :persistent_term.get({__MODULE__, :grammar}, nil) do
       nil ->
-        grammar_path = Path.join([@grammars_dir, "python", "python.grammar"])
-        {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
+        grammar = CompiledGrammar.parser_grammar()
         :persistent_term.put({__MODULE__, :grammar}, grammar)
         grammar
 

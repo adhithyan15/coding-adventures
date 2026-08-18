@@ -1,5 +1,32 @@
 # Changelog
 
+## [0.3.0] - 2026-08-17
+
+### Changed — SIR21 T3b-2 Slice 5b: scalar `/` lowers to `div_true`
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). All 7
+backends implement `div_true` (Slice 2, merged); this crate migrates
+alongside `scilab-to-semantic-ir`/`idl-to-semantic-ir` (Slice 5b).
+
+**Behavior change**: `build_multiplicative`'s four scalar-division arms
+(`/` mrdivide, `./` elementwise-both-scalar, `\` mldivide, `.\ `
+elementwise-left-both-scalar) no longer lower to bare
+`BuiltinCall("/", args)`. They all now lower to `BuiltinCall("div_true",
+args)` — MATLAB's default numeric type is `double`, with no int/float
+distinction to conflate scalar `/` with, so it always true-divides.
+
+`expr_is_known_scalar_d` (the scalar/elementwise classifier
+`build_additive`/`build_multiplicative` consult to decide broadcast
+dispatch) is updated in the same commit to recognise `div_true` as
+scalar-preserving — missing this would silently break scalar-vs-
+elementwise dispatch for any expression built on a division subexpression
+(a new regression test,
+`scalar_division_result_is_still_recognised_as_scalar_by_downstream_ops`,
+covers exactly this: `(10 / 2) + 3` must lower to native scalar `+`, not
+fall through to `ElementwiseOp`).
+
 ## [0.2.0] - 2026-08-11
 
 ### Changed — SIR28 Slice 6: `disp` lowers to `__sys_write__`

@@ -1,6 +1,6 @@
 [package]
 name = "mos6502-backend"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "MOS 6502 backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into MOS 6502 machine code via mos6502-encoder.  Emit-only -- bytes go to mos6502-simulator.  Minimal viable: const_*/ret_* only, trivial single-register (accumulator) allocator; ret_* lowers to BRK, the pre-existing HALT convention documented in mos6502-simulator (ported from the Python original), not a newly-invented pseudo-halt.  Mirror of mips-r2000-backend / arm1-backend / armv7-backend / intel8008-backend in shape and intent.  Fifth lane of the 9-architecture expansion."
 

@@ -4,7 +4,7 @@
   "chapter": 11,
   "title": "Four Core Colours",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:472c76f1e406b143",
+  "sourceHash": "fnv1a64:1b80e5f092f94c5e",
   "lessons": [
     {
       "id": "ML-C11-nirangal",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:62c26eca8d419caa",
+      "sourceHash": "fnv1a64:b7ad92108dba1c4e",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which three Malayalam colors closely match Tamil's own words? (Karuppŭ, veḷḷa, cuvappŭ — black, white, red.) Which color is a shared Sanskrit loan across Malayalam, Tamil, and Hindi? (Blue — நீല nīla / நீலம் nīlam / नीला nīlā.)"
+              "text": "Which three Malayalam colors closely match Tamil's own words? (Karuppŭ, veḷḷa, cuvappŭ — black, white, red.) Which color is a shared Sanskrit loan across Malayalam, Tamil, and Hindi? (Blue — நீல nīla / நீலம் nīlam / नीला nīlā.)"
             }
           ]
         }

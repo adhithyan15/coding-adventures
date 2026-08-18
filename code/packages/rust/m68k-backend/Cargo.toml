@@ -1,0 +1,17 @@
+[package]
+name = "m68k-backend"
+version = "0.1.0"
+edition = "2021"
+description = "Motorola 68000 backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into M68K machine code via m68k-encoder.  Emit-only -- bytes go to m68k-simulator.  Minimal viable: const_*/ret_* only, trivial single-register (D0) allocator; ret_* lowers to TRAP #15, the pre-existing HALT convention established by the Python original's own test suite (not STOP #imm, not a newly-invented pseudo-halt).  Mirror of mos6502-backend / arm1-backend / armv7-backend / intel8008-backend in shape and intent.  Eighth lane of the 9-architecture expansion."
+
+[lib]
+name = "m68k_backend"
+path = "src/lib.rs"
+
+[dependencies]
+m68k-encoder = { path = "../m68k-encoder" }
+jit-core      = { path = "../jit-core" }
+vm-core       = { path = "../vm-core" }
+
+[dev-dependencies]
+m68k-simulator = { path = "../m68k-simulator" }

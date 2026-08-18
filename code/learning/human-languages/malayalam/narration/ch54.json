@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 54,
+  "title": "A Tree, Part by Part",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:883b7e1f06e26fc7",
+  "lessons": [
+    {
+      "id": "ML-C54-tree",
+      "sequence": 1590,
+      "title": "മരം (maraṁ) — a tree",
+      "headword": "മരം",
+      "romanization": "maraṁ",
+      "gloss": "a tree",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2e568bd057f0dd85",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did nakṣatraṁ mean, and what did veyil mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മരം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മരം (maraṁ) — \"a tree\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited Dravidian, matching Tamil maram, Kannada mara and Telugu mrānu. Four languages, one word, and no borrowing anywhere in it — this is a word the family had before it split."
+            },
+            {
+              "kind": "speech",
+              "text": "It carries the standing tree and the cut timber on one shape. A carpenter's മരം (maraṁ) and a forest's മരം (maraṁ) are the same word, and Malayalam leaves it to the situation to say which is meant. English needs tree and wood to do that work."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala's own tree, the coconut, gets a compound built on this one, and the ordinary word for a tree-climber is built on it too."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The thing the rest of this run takes apart."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyil, then maraṁ, and say which of the two the other one stands in",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyil*, then *maraṁ*, and say which of the two the other one stands in]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മരം (maraṁ) mean? (\"a tree\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C54-branch",
+      "sequence": 1600,
+      "title": "കൊമ്പ് (kompŭ) — a branch",
+      "headword": "കൊമ്പ്",
+      "romanization": "kompŭ",
+      "gloss": "a branch",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dde763c3c941db25",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did maraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൊമ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊമ്പ് (kompŭ) — \"a branch\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil kompu. Malayalam puts one shape on anything that juts out and comes to a point: the branch of a tree, the horn of an ox, the tusk of an elephant, and the curved brass horn played at a temple festival."
+            },
+            {
+              "kind": "speech",
+              "text": "That is a picture doing the work rather than a rule. Once you have seen the branch and the horn as one thing, the elephant's tusk needs no separate word, and Malayalam never gave it one."
+            },
+            {
+              "kind": "speech",
+              "text": "The elephant sense is the one you are most likely to hear in Kerala, where the animal is a fixture of festival and of conversation both."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: the tree, and the part that reaches out from it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kompŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kompŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁ, then kompŭ, and name two other things the second word covers",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁ*, then *kompŭ*, and name two other things the second word covers]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൊമ്പ് (kompŭ) mean? (\"a branch\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C54-trunk",
+      "sequence": 1610,
+      "title": "തടി (taṭi) — a trunk, timber",
+      "headword": "തടി",
+      "romanization": "taṭi",
+      "gloss": "a trunk, timber",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c35f45508765fec9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kompŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തടി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തടി (taṭi) — \"a trunk, timber\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and it does three jobs on one shape: the trunk of a standing tree, the sawn timber that comes out of it, and — of a person — bulk or build."
+            },
+            {
+              "kind": "speech",
+              "text": "The third sense is ordinary Malayalam and not unkind. To say somebody has തടി (taṭi) is to say they are solidly made, and Kerala says it about a person the way English might say sturdy."
+            },
+            {
+              "kind": "speech",
+              "text": "Beside it sits തടിയൻ (taṭiyan), a heavy-set man, carrying that same he-word tail you met on the sun and the moon."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and this one describes people as well as trees."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kompŭ, then taṭi, and say which of the two you could saw",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kompŭ*, then *taṭi*, and say which of the two you could saw]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തടി (taṭi) mean? (\"a trunk, timber\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C54-root",
+      "sequence": 1620,
+      "title": "വേര് (vērŭ) — a root",
+      "headword": "വേര്",
+      "romanization": "vērŭ",
+      "gloss": "a root",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dacec0a7a005719c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did taṭi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേര്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേര് (vērŭ) — \"a root\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil vēr closely. The little ŭ at the end is the enunciative vowel you have been hearing since the salt-word and the lamp-word: a half-sounded release that Malayalam puts after a bare consonant and Tamil mostly does not write."
+            },
+            {
+              "kind": "speech",
+              "text": "വേര് (vērŭ) reaches past the plant, as the English word does. The വേര് (vērŭ) of a matter is where it started, and a question about the വേര് (vērŭ) of a quarrel is a question about its cause."
+            },
+            {
+              "kind": "speech",
+              "text": "The two languages arriving at the same figure from the same word is not a coincidence here — it is what roots look like to anybody who has pulled one up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four: the tree, the branch, the trunk, and what holds it down."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vērŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vērŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "taṭi, then vērŭ, and say which end of the tree each one names",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *taṭi*, then *vērŭ*, and say which end of the tree each one names]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേര് (vērŭ) mean? (\"a root\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C54-seed",
+      "sequence": 1630,
+      "title": "വിത്ത് (vittŭ) — a seed",
+      "headword": "വിത്ത്",
+      "romanization": "vittŭ",
+      "gloss": "a seed",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6f46f5956a1f5550",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vērŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിത്ത്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിത്ത് (vittŭ) — \"a seed\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil vittu, and it closes the tree by going back to where the tree started."
+            },
+            {
+              "kind": "speech",
+              "text": "Like വേര് (vērŭ) it travels into the abstract. The വിത്ത് (vittŭ) of a plan is its beginning, and Malayalam will talk about sowing one. The doubled tt in the middle is worth catching by ear — Malayalam holds it long, and the length is what separates this word from others in its neighbourhood."
+            },
+            {
+              "kind": "speech",
+              "text": "Sowing season in Kerala is set by the rains rather than by a date, which is why the farming words in this language lean on the weather more than on the calendar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run closes where a tree starts: a tree, a branch, the trunk, a root, a seed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vittŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vittŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — maraṁ, kompŭ, taṭi, vērŭ, vittŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *maraṁ*, *kompŭ*, *taṭi*, *vērŭ*, *vittŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിത്ത് (vittŭ) mean? (\"a seed\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

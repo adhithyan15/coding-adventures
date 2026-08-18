@@ -1020,8 +1020,16 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
             0x11 => {
                 // call_indirect: typeidx, tableidx
                 let (type_idx, sz1) = decode_idx(code, offset)?;
-                let (_table_idx, sz2) = decode_idx(code, offset + sz1)?;
+                let (table_idx, sz2) = decode_idx(code, offset + sz1)?;
                 offset += sz1 + sz2;
+                // Task #107: `table_idx` used to be decoded and discarded
+                // -- every `call_indirect` ran against table 0 regardless
+                // of what it actually named. Same bounds-check shape
+                // `table.grow`/`table.size`/`table.fill` (task #98) and
+                // `table.init`/`table.copy` (task #97) already use.
+                if table_idx >= ctx.table_count {
+                    err!("call_indirect references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                }
                 let callee_type = ctx
                     .module
                     .types
@@ -1061,8 +1069,12 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                 // result-type-must-match-exactly + dead-code-after rule
                 // as `return_call` above.
                 let (type_idx, sz1) = decode_idx(code, offset)?;
-                let (_table_idx, sz2) = decode_idx(code, offset + sz1)?;
+                let (table_idx, sz2) = decode_idx(code, offset + sz1)?;
                 offset += sz1 + sz2;
+                // Task #107: same bounds-check as call_indirect (0x11) above.
+                if table_idx >= ctx.table_count {
+                    err!("return_call_indirect references table index {table_idx}, but only {} tables exist", ctx.table_count);
+                }
                 let callee_type = ctx
                     .module
                     .types

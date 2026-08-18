@@ -53,7 +53,7 @@ use semantic_ir::{
     Stmt,
 };
 use sir_conformance::oracle::{DivOp, Outcome};
-use sir_conformance::{run_module, run_source, RunOutcome, Target};
+use sir_conformance::{run_module, run_source, run_source_via, Frontend, RunOutcome, Target};
 
 /// `(lhs, rhs)` pairs covering every sign combination plus exact division.
 /// Ruby evaluates each with **floor** `/`.
@@ -417,4 +417,68 @@ fn direct_call_zero_divisor_raises_for_every_op_on_every_backend() {
         }
     }
     assert!(ran > 0, "DIRECT-CALL ZERO-DIVISOR: no backend toolchain available");
+}
+
+// ── SIR21 T3b-2 Slice 5a: source-level regression — Python/JS `/` now
+// true-divides ────────────────────────────────────────────────────────────
+//
+// Before this slice, Python's and JavaScript's own frontends lowered `/` to
+// bare `BuiltinCall("/", ...)` — the SAME name Ruby's floor-dividing `/`
+// used — so a backend's runtime dispatch table decided the rounding mode,
+// not the SOURCE LANGUAGE. `python-to-semantic-ir`/`javascript-to-semantic-ir`
+// now emit `div_true` instead (their own crates' unit tests prove the
+// SHAPE); this proves the source-level BEHAVIOR end-to-end: `7 / 2` from
+// real Python/JS source, run through every backend's real toolchain, must
+// be `3.5` — never `3` (the floor/trunc value Ruby's `/` would give for the
+// SAME literal operands) — regardless of which backend runs it.
+
+#[test]
+fn python_division_always_true_divides_from_source_on_every_backend() {
+    let mut ran = 0usize;
+    for &target in Target::all() {
+        match run_source_via("py_div_true", "print(7 / 2)\n", Frontend::Python, target) {
+            RunOutcome::Ran(out) => {
+                assert_eq!(
+                    out,
+                    "3.5",
+                    "\nPYTHON SOURCE DIVISION: backend {} computed `7 / 2` = {out}, expected 3.5\n",
+                    target.tag(),
+                );
+                ran += 1;
+            }
+            RunOutcome::Failed(msg) => panic!(
+                "PYTHON SOURCE DIVISION: backend {} failed on `7 / 2`: {}",
+                target.tag(),
+                msg.lines().next().unwrap_or("")
+            ),
+            RunOutcome::Skipped(_) => {}
+        }
+    }
+    assert!(ran > 0, "PYTHON SOURCE DIVISION: no backend toolchain available");
+}
+
+#[test]
+fn javascript_division_always_true_divides_from_source_on_every_backend() {
+    let mut ran = 0usize;
+    for &target in Target::all() {
+        match run_source_via("js_div_true", "console.log(7 / 2);\n", Frontend::JavaScript, target)
+        {
+            RunOutcome::Ran(out) => {
+                assert_eq!(
+                    out,
+                    "3.5",
+                    "\nJAVASCRIPT SOURCE DIVISION: backend {} computed `7 / 2` = {out}, expected 3.5\n",
+                    target.tag(),
+                );
+                ran += 1;
+            }
+            RunOutcome::Failed(msg) => panic!(
+                "JAVASCRIPT SOURCE DIVISION: backend {} failed on `7 / 2`: {}",
+                target.tag(),
+                msg.lines().next().unwrap_or("")
+            ),
+            RunOutcome::Skipped(_) => {}
+        }
+    }
+    assert!(ran > 0, "JAVASCRIPT SOURCE DIVISION: no backend toolchain available");
 }

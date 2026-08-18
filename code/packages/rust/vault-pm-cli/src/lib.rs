@@ -15,11 +15,12 @@ use coding_adventures_vault_pm_application::{
     PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
     ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
     RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
-    SecureNoteConflictMergeInputV1, V1ApplicationRepositoryFactory, VaultAccessV1,
-    VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
-    AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT,
-    DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES,
-    REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
+    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
+    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
+    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES,
+    RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
 use coding_adventures_vault_pm_cli_host::{
@@ -55,7 +56,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -664,6 +665,10 @@ enum Command {
         item_id: ItemId,
         base_revision: RevisionId,
     },
+    ConflictMergeTotp {
+        item_id: ItemId,
+        base_revision: RevisionId,
+    },
     Help,
 }
 
@@ -900,6 +905,13 @@ fn parse_conflict(arguments: &[String]) -> Result<Command, CliFailure> {
         }
         [action, kind, item, revision] if action == "merge" && kind == "database-credential" => {
             Ok(Command::ConflictMergeDatabaseCredential {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                base_revision: RevisionId::from_user_string(revision)
+                    .map_err(|_| CliFailure::InvalidCommand)?,
+            })
+        }
+        [action, kind, item, revision] if action == "merge" && kind == "totp" => {
+            Ok(Command::ConflictMergeTotp {
                 item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
                 base_revision: RevisionId::from_user_string(revision)
                     .map_err(|_| CliFailure::InvalidCommand)?,
@@ -1145,6 +1157,17 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_id,
             base_revision,
         } => conflict_merge_database_credential(
+            host,
+            prepared.paths(),
+            &writer,
+            selected_vault,
+            item_id,
+            base_revision,
+        ),
+        Command::ConflictMergeTotp {
+            item_id,
+            base_revision,
+        } => conflict_merge_totp(
             host,
             prepared.paths(),
             &writer,
@@ -2917,6 +2940,74 @@ fn conflict_merge_database_credential(
             host.read_database_name()?,
             host.read_database_username()?,
             host.read_database_password()?,
+        ))
+    })();
+    let input = match input {
+        Ok(input) => input,
+        Err(error) => {
+            preparation
+                .record_audited_host_failure(&application_store)
+                .map_err(map_application)?;
+            return Err(map_host(error));
+        }
+    };
+    let mut mutation_random = [0_u8; RESOLVE_ITEM_CONFLICT_RANDOM_BYTES];
+    if let Err(error) = host.fill_entropy(&mut mutation_random) {
+        preparation
+            .record_audited_host_failure(&application_store)
+            .map_err(map_application)?;
+        return Err(map_host(error));
+    }
+    preparation
+        .complete_audited(
+            input,
+            ResolveItemConflictRandomnessV1::new(mutation_random),
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Conflict merged: {}\n",
+        item_id.to_user_string()
+    )))
+}
+
+fn conflict_merge_totp(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    base_revision: RevisionId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let preparation = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .prepare_audited_totp_conflict_merge(
+            item_id,
+            base_revision,
+            wall_time_ms,
+            failure_randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_preparation()
+        .map_err(map_application)?;
+    // The Base32 seed line and every parameter travel to the application
+    // exactly as typed: the audited preparation, not the CLI, is what decodes
+    // and turns them into a record, so an invalid form is recorded before its
+    // error is ever returned.
+    let input = (|| {
+        Ok::<_, HostError>(TotpConflictMergeInputV1::new(
+            host.read_totp_label()?,
+            host.read_totp_issuer()?,
+            host.read_totp_secret()?,
+            host.read_totp_algorithm()?,
+            host.read_totp_digits()?,
+            host.read_totp_period()?,
         ))
     })();
     let input = match input {
@@ -4891,6 +4982,37 @@ mod tests {
             parse([
                 "conflict",
                 "merge",
+                "totp",
+                item.as_str(),
+                revision.as_str()
+            ]),
+            default_invocation(Command::ConflictMergeTotp {
+                item_id,
+                base_revision: revision_id,
+            })
+        );
+        assert_eq!(
+            parse([
+                "--vault",
+                "work",
+                "conflict",
+                "merge",
+                "totp",
+                item.as_str(),
+                revision.as_str(),
+            ]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("work".to_owned()).unwrap()),
+                command: Command::ConflictMergeTotp {
+                    item_id,
+                    base_revision: revision_id,
+                },
+            })
+        );
+        assert_eq!(
+            parse([
+                "conflict",
+                "merge",
                 "login",
                 item.as_str(),
                 revision.to_lowercase().as_str(),
@@ -4946,6 +5068,28 @@ mod tests {
             ]),
             Err(CliFailure::InvalidCommand)
         );
+        assert_eq!(
+            parse([
+                "conflict",
+                "merge",
+                "totp",
+                item.as_str(),
+                revision.to_lowercase().as_str(),
+            ]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["conflict", "merge", "totp", item.as_str()]),
+            Err(CliFailure::InvalidCommand)
+        );
+        // The TOTP selector is closed too: neither the record name nor a
+        // longer spelling stands in for it.
+        for alias in ["totp-seed", "otp", "TOTP"] {
+            assert_eq!(
+                parse(["conflict", "merge", alias, item.as_str(), revision.as_str()]),
+                Err(CliFailure::InvalidCommand)
+            );
+        }
     }
 
     #[test]
@@ -7444,6 +7588,20 @@ mod tests {
             "{database_merged:?}"
         );
         assert!(database_merged.stdout().is_empty());
+
+        // The authored TOTP merge must also stop at the unconflicted
+        // precondition, before any parameter or Base32 seed is asked for.
+        let totp_merge_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 130);
+        let totp_merged = run(
+            ["conflict", "merge", "totp", item, revision.as_str()],
+            &totp_merge_host,
+        );
+        assert_eq!(
+            totp_merged.exit_code(),
+            ExitCode::Conflict,
+            "{totp_merged:?}"
+        );
+        assert!(totp_merged.stdout().is_empty());
 
         let choose_host = TestHost::with_entropy_seed(paths.clone(), [passphrase.clone()], 127);
         let chosen = run(

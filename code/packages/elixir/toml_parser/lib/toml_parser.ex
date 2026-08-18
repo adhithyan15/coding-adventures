@@ -3,8 +3,8 @@ defmodule CodingAdventures.TomlParser do
   TOML Parser — Thin wrapper around the grammar-driven parser engine.
 
   This module combines `TomlLexer.tokenize/1` with `GrammarParser.parse/2`
-  to parse TOML source code into an AST. It reads `toml.grammar` from the
-  shared grammars directory.
+  to parse TOML source code into an AST. It embeds a pre-compiled
+  `toml.grammar` (see `CodingAdventures.TomlParser.Grammar`).
 
   ## Usage
 
@@ -33,10 +33,8 @@ defmodule CodingAdventures.TomlParser do
 
   alias CodingAdventures.GrammarTools.ParserGrammar
   alias CodingAdventures.TomlLexer
+  alias CodingAdventures.TomlParser.Grammar
   alias CodingAdventures.Parser.{GrammarParser, ASTNode}
-
-  @grammars_dir Path.join([__DIR__, "..", "..", "..", "..", "grammars"])
-                |> Path.expand()
 
   @doc """
   Parse TOML source code into an AST.
@@ -58,9 +56,7 @@ defmodule CodingAdventures.TomlParser do
   """
   @spec create_parser() :: ParserGrammar.t()
   def create_parser do
-    grammar_path = Path.join([@grammars_dir, "toml", "toml.grammar"])
-    {:ok, grammar} = ParserGrammar.parse(File.read!(grammar_path))
-    grammar
+    Grammar.parser_grammar()
   end
 
   defp get_grammar do

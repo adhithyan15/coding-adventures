@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.11] - 2026-08-17 (task #107 — call_indirect/return_call_indirect real table index)
+
+### Fixed
+
+- `call_indirect` (`0x11`) and `return_call_indirect` (`0x13`) always ran
+  against table 0 regardless of what their `tableidx` immediate actually
+  named. The immediate was already decoded correctly (`wasm-opcodes`
+  already modeled both opcodes with `["typeidx","tableidx"]`, and
+  `decode_immediates` already read both LEB128s into `DecodedOperand::
+  CallIndirect { type_idx, table_idx }`) -- `table_idx` was just silently
+  dropped in `convert_operand`, the actual bug. Fixed by packing both
+  indices into the operand's `usize` (table_idx high 32 bits, type_idx
+  low 32, same shape as `Atomic`/`Simd`'s own packing) via a new
+  `unpack_call_indirect_operand` helper, and both handlers now call
+  `get_table(ctx, table_idx as usize)` instead of the hardcoded
+  `get_table(ctx, 0)`. Discovered while vendoring `table_init.wast`/
+  `table_copy.wast` (task #97): most modules in both files use this
+  explicit-table-index form pervasively, and every one of them failed
+  to build entirely under the old text-encoder (see `wasm-wast-parser`'s
+  own CHANGELOG entry for this version).
+
 ## [0.9.10] - 2026-08-17 (task #97 — table.init/table.copy/elem.drop)
 
 ### Added

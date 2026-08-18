@@ -8,7 +8,7 @@ defmodule CodingAdventures.PythonLexerTest do
     Enum.map(tokens, & &1.type)
   end
 
-  defp token_values(source, version \\ nil) do
+  defp token_values(source, version) do
     {:ok, tokens} = PythonLexer.tokenize(source, version)
     Enum.map(tokens, & &1.value)
   end
@@ -116,6 +116,17 @@ defmodule CodingAdventures.PythonLexerTest do
       types = token_types("x = 1\n", "")
       assert "NAME" in types
       assert "INT" in types
+    end
+
+    test "every supported version compiles and tokenizes" do
+      for version <- PythonLexer.supported_versions() do
+        grammar = PythonLexer.create_lexer(version)
+        names = Enum.map(grammar.definitions, & &1.name)
+        assert "NAME" in names, "#{version} grammar should define NAME"
+
+        values = token_values("x = 1\n", version)
+        assert "x" in values, "#{version} should tokenize a bare name"
+      end
     end
   end
 end

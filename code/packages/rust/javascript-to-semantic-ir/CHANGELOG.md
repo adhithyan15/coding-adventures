@@ -7,6 +7,33 @@ All notable changes to `javascript-to-semantic-ir` are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## 0.10.0 — SIR21 T3b-2 Slice 5a: `/` lowers to `div_true`
+
+Part of the SIR21 T3b-2 arc (splitting the overloaded `/` builtin into
+`div_floor`/`div_trunc`/`udiv_trunc`/`div_true` — see
+`code/specs/SIR21-type-system-and-integer-semantics.md` §E3). All 7
+backends implement `div_true` (Slice 2, merged); this crate migrates
+alongside `python-to-semantic-ir` (Slice 5a).
+
+**Behavior change**: the `/` operator (in `build_binary_op`) no longer
+lowers to bare `BuiltinCall("/", args)`. It now lowers to
+`BuiltinCall("div_true", args)` — native JS has no separate integer-
+division operator to conflate `/` with, so it always true-divides, and
+this closes a real, previously-untested gap: `7 / 2` from JS source used
+to reach whichever bare-`/` behavior a given backend's runtime dispatch
+table happened to implement, rather than JS's own unambiguous
+true-divide semantics.
+
+Verified with a new `sir-conformance` source-level regression test
+(`javascript_division_always_true_divides_from_source_on_every_backend`):
+`console.log(7 / 2);` from real JS source, run through every backend's
+real toolchain, prints `3.5` — not `3`, the value Ruby's floor-dividing
+`/` would give for the same literal operands.
+
+Other arithmetic/comparison builtins (`+`, `-`, `*`, `%`, `<`, `>`, `<=`,
+`>=`, `==`/`===`, `!=`/`!==`) are untouched — only `/` is in scope for
+this slice.
+
 ## 0.9.0 — SIR28 Slice 5: `console.log(...)` lowers to `__sys_write__`
 
 Part of the SIR28 arc (`__sys_write__`, the general syscall-primitive

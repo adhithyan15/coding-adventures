@@ -220,6 +220,13 @@ pub enum LangAotError {
     /// op/type/operand).  Fifth lane of the 9-architecture expansion
     /// following the historical-arch backend migration pattern.
     Mos6502BackendError(String),
+    /// The Motorola 68000 backend rejected the IIR.
+    ///
+    /// Carries the human-readable string from `m68k-backend` (which
+    /// already includes the failing function name and the unsupported
+    /// op/type/operand).  Eighth lane of the 9-architecture expansion
+    /// following the historical-arch backend migration pattern.
+    M68kBackendError(String),
     /// The WebAssembly backend rejected the IIR.
     ///
     /// Carries the string from `iir-to-wasm` (a validation failure, or an
@@ -271,6 +278,7 @@ impl fmt::Display for LangAotError {
             LangAotError::Ibm704BackendError(m) => write!(f, "ibm704: {m}"),
             LangAotError::Arm1BackendError(m) => write!(f, "arm1: {m}"),
             LangAotError::Mos6502BackendError(m) => write!(f, "mos6502: {m}"),
+            LangAotError::M68kBackendError(m) => write!(f, "m68k: {m}"),
         }
     }
 }
@@ -1576,6 +1584,75 @@ pub fn compile_file_to_mos6502_bin(
     }
     if bytes.is_empty() {
         bytes.push(mos6502_encoder::HALT_BYTE);
+    }
+
+    std::fs::write(out, &bytes)?;
+    Ok(())
+}
+
+/// Cross-platform: source → IIR → Motorola 68000 machine code (`.bin`) on
+/// disk.
+///
+/// Like the MOS 6502 pipeline above (and unlike `compile_file_to_arm1_bin`'s
+/// `to_le_bytes()` flattening step), each `m68k-backend`-compiled
+/// function's bytes are already the wire format — `m68k-encoder` emits
+/// big-endian bytes directly (the 68000's native byte order), so no
+/// endianness conversion is needed before writing them to disk.
+///
+/// Downstream consumers:
+///
+/// * [`m68k-simulator`](../m68k-simulator) — load + execute.
+/// * Any external Motorola 68000 emulator that consumes big-endian byte
+///   streams.
+///
+/// The Motorola 68000 (1979) is the landmark 16/32-bit processor behind
+/// the original Apple Macintosh, Commodore Amiga, Atari ST, early Sun
+/// workstations, and the Sega Genesis/Mega Drive — eighth lane of the
+/// 9-architecture expansion.
+///
+/// # Errors
+///
+/// * `UnsupportedLanguage` / `FrontendError` — no Rust IIR frontend for
+///   `language`, or the frontend rejected the source.
+/// * `M68kBackendError` — the IIR contained an op or type the M68K
+///   backend does not yet handle (the message names the failing
+///   function and op).
+/// * `Io` — failed to read the input or write the output.
+///
+/// # Example downstream invocation
+///
+/// ```bash
+/// lang-aot foo.twig --emit=m68k -o foo.bin
+/// # Then load foo.bin into m68k-simulator
+/// ```
+pub fn compile_file_to_m68k_bin(
+    src: &Path,
+    out: &Path,
+    language: Language,
+) -> Result<(), LangAotError> {
+    let source = std::fs::read_to_string(src)?;
+    let stem = src.file_stem().and_then(|s| s.to_str()).unwrap_or("lang");
+    let module = compile_source_to_iir(language, &source, stem)?;
+
+    // Eighth lane of the 9-architecture expansion: route through
+    // `aot_core` + `m68k-backend`, same per-function-loop pattern as
+    // `compile_file_to_arm1_bin`/`compile_file_to_mos6502_bin`.
+    let mut bytes = Vec::new();
+    let empty_params: Vec<(String, String)> = Vec::new();
+    for f in &module.functions {
+        let inferred = aot_core::infer::infer_types(f);
+        let cir = aot_core::specialise::aot_specialise(f, Some(&inferred));
+        let ctx = jit_core::backend::FunctionContext {
+            name: f.name.as_str(),
+            params: &empty_params,
+            return_type: f.return_type.as_str(),
+        };
+        let fn_bytes = m68k_backend::compile(&ctx, &cir)
+            .map_err(|e| LangAotError::M68kBackendError(format!("{e}")))?;
+        bytes.extend_from_slice(&fn_bytes);
+    }
+    if bytes.is_empty() {
+        bytes.extend_from_slice(&m68k_encoder::HALT_BYTES);
     }
 
     std::fs::write(out, &bytes)?;

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 — 2026-08-17
+
+### Fixed
+- Eliminated runtime grammar loading: `Lexer.create_lexer/0` and `Parser.create_parser/0` now import pre-compiled grammar modules (`CodingAdventures.Brainfuck.Grammar.Tokens` and `CodingAdventures.Brainfuck.Grammar.Parser`) instead of `File.read!`-ing `brainfuck.tokens`/`brainfuck.grammar` from `code/grammars/` on every call. The old code walked out of the installed package's own directory to a monorepo-relative path that a published Hex package does not ship, so `mix deps.get` + first use would raise `File.Error` (enoent).
+
 ## 0.3.0 — 2026-04-10
 
 ### Added
