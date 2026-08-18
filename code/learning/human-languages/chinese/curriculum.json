@@ -77,6 +77,22 @@
         "ZH-EXT-012-NEGATE-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-004",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-013-SHI-BUILD",
+        "ZH-EXT-014-BU-SANDHI"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -102,10 +118,10 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "ZH-PATH-003"
+        "ZH-PATH-003",
+        "ZH-PATH-004"
       ],
       "omits": [
-        "RESPONSE-YES",
         "RESPONSE-YESNO",
         "RESPONSE-OKAY"
       ],
@@ -626,6 +642,34 @@
       ],
       "lessons": [
         "ZH-C04-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-013-SHI-BUILD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write a nine-stroke character by finishing the piece I already know on top before starting the body underneath.",
+      "prerequisites": [
+        "ZH-EXT-012-NEGATE-CONSOLIDATION"
+      ],
+      "lessons": [
+        "ZH-W05-shi",
+        "ZH-C05-shi"
+      ]
+    },
+    {
+      "id": "ZH-EXT-014-BU-SANDHI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can apply the second tone-sandhi rule taught in this book -- 不 rises before a falling tone -- and I know that no sandhi rule appears in the writing.",
+      "prerequisites": [
+        "ZH-EXT-013-SHI-BUILD"
+      ],
+      "lessons": [
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
       ]
     }
   ]
