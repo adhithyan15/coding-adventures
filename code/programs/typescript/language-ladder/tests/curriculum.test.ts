@@ -1,15 +1,39 @@
-import { describe, expect, it } from "vitest";
+import { beforeAll, describe, expect, it } from "vitest";
 import {
   LANGUAGE_CURRICULA,
   LANGUAGE_ORDER,
+  MAPPED_LANGUAGE_IDS,
   SPINE_NODES,
   curriculumForLanguage,
+  loadCurriculumPlans,
   mappedLessonIds,
   mixedCurriculumFrontier,
   spineNodeById,
 } from "../src/curriculum";
 
+// The plans are fetched, not bundled into the shell (see src/curriculum.ts), so
+// every assertion below is about state that exists only after the fetch. The
+// app awaits the same promise before its first plan-dependent render.
+beforeAll(async () => {
+  await loadCurriculumPlans();
+});
+
 describe("per-language shared-spine maps", () => {
+  it("knows which tracks are mapped without loading a single plan", () => {
+    // The file LIST, not the file CONTENTS: this is what keeps the language
+    // picker synchronous while the plans are still in flight.
+    expect([...MAPPED_LANGUAGE_IDS]).toEqual(LANGUAGE_ORDER);
+  });
+
+  it("names each track the same in its directory and in its plan", () => {
+    // The load-bearing invariant behind the assertion above: the picker offers
+    // tracks by DIRECTORY name while every lookup resolves them by the plan's
+    // own `language` field. Let a new track's folder disagree with its
+    // `language` and it would appear in the picker but resolve to nothing.
+    expect(LANGUAGE_CURRICULA.map((curriculum) => curriculum.language))
+      .toEqual([...MAPPED_LANGUAGE_IDS]);
+  });
+
   it("bundles one complete map for every active language", () => {
     expect(LANGUAGE_CURRICULA.map((curriculum) => curriculum.language)).toEqual(LANGUAGE_ORDER);
     // Derived from the registry: registering a track must not require editing

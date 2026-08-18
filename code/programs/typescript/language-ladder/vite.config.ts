@@ -52,8 +52,28 @@ export default defineConfig({
               maxSize: 250_000,
             },
             {
-              name: "curriculum-plans",
-              test: /(?:curriculum\.json|core[\\/](?:languages|spine)\.json)$/,
+              // The track registry and the shared spine: ~18 kB between them,
+              // read synchronously by the shell to name languages and resolve
+              // spine nodes. Small, and it grows by a line per new TRACK rather
+              // than per lesson, so it is safe to keep on the eager path.
+              name: "curriculum-core",
+              test: /core[\\/](?:languages|spine)\.json$/,
+            },
+            {
+              // One chunk per track's authored plan, all of them lazy (see the
+              // note on CURRICULUM_LOADERS in src/curriculum.ts).
+              //
+              // Grouping all 22 into a single `curriculum-plans` chunk is what
+              // put half a megabyte on the first-paint path and made every
+              // corpus commit invalidate all of it at once. Per-track, a
+              // tranche of Telugu words re-downloads Telugu's plan alone, and
+              // no amount of corpus growth can push any of it back into the
+              // eager budget, because none of it is eagerly imported.
+              name(moduleId) {
+                const normalized = moduleId.replaceAll("\\", "/");
+                const match = /human-languages\/([^/]+)\/curriculum\.json$/.exec(normalized);
+                return match?.[1] ? `curriculum-${match[1]}` : null;
+              },
             },
             {
               name: "book-ledgers",

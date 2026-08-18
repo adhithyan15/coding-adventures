@@ -72,9 +72,11 @@ import {
 import {
   LANGUAGE_CURRICULA,
   LANGUAGE_REGISTRY,
+  MAPPED_LANGUAGE_IDS,
   SPINE_CONCEPTS,
   curriculumForLanguage,
   languageName,
+  loadCurriculumPlans,
   mappedLessonIds,
   mixedCurriculumFrontier,
   spineNodeById,
@@ -176,8 +178,12 @@ function recordAtomAnswer(atoms: readonly string[] | undefined, correct: boolean
 }
 let LESSONS: Lesson[] = [];
 let LESSON_IDS: string[] = [];
+// Which tracks are offered is a question about which plans EXIST, not about
+// what they contain, so it is answered from the plan file list (see
+// MAPPED_LANGUAGE_IDS) and stays synchronous even though the plans themselves
+// arrive with the corpus.
 const AVAILABLE_LANGUAGE_IDS = LANGUAGE_CHAIN.filter((language) =>
-  LANGUAGE_CURRICULA.some((curriculum) => curriculum.language === language),
+  MAPPED_LANGUAGE_IDS.includes(language),
 );
 let selectedLanguages = loadLanguages(REVIEW_STORAGE, AVAILABLE_LANGUAGE_IDS);
 // Consolidation lessons — chapter practice, mixed drills, dialogues, reviews —
@@ -189,7 +195,10 @@ let selectedLanguages = loadLanguages(REVIEW_STORAGE, AVAILABLE_LANGUAGE_IDS);
 const CONSOLIDATION_TYPES = new Set(["practice", "practice-mix", "review"]);
 let CONCEPT_LESSONS: Lesson[] = [];
 const SHARED_CONCEPTS = new Set(SPINE_CONCEPTS);
-const ALL_MAPPED_LESSON_IDS = mappedLessonIds(LANGUAGE_CURRICULA.map((item) => item.language));
+// Filled by `installCurriculumPlans()` once the lazy plans land, and BEFORE any
+// lesson is installed — `installLessons` is only ever reached through
+// `refreshCorpus`, which awaits the plans first.
+let ALL_MAPPED_LESSON_IDS = new Set<string>();
 // Learn mode is now admitted by the explicit per-track maps. Namespaced and
 // not-yet-mapped legacy material remains available in Lessons mode.
 let MAPPED_SPINE_LESSONS: Lesson[] = [];
@@ -226,7 +235,11 @@ let reviewSession = restoredReview.session; // advances once per answered questi
 let reviewCell: GridCell | null = null; // the question currently on screen
 let reviewOptions: GridCell[] = []; // its answer options (one is `reviewCell`)
 let reviewChosen: string | null = null; // cellKey of the picked option; null = unanswered
-let learnCompletion: LearnCompletion = loadLearnProgress(REVIEW_STORAGE, LANGUAGE_CURRICULA);
+// Restored by `installCurriculumPlans()`: what counts as "completed" is pruned
+// against the authored paths (see learnprogress.ts), so it cannot be restored
+// before those paths are in hand. Empty until then, which is exactly the state
+// the loading frame renders.
+let learnCompletion: LearnCompletion = new Map();
 type FocusedAttempt = { lessonId: string; state: "check" | "wrong" | "correct" };
 let focusedAttempt: FocusedAttempt | null = null;
 let learnNotice: string | null = null;
@@ -291,7 +304,33 @@ function learnLessonIds(): Set<string> {
   return ids;
 }
 
+/** Guards the one-time restore below: a later refresh must not re-read storage
+ * over progress the learner has made since. */
+let learnProgressRestored = false;
+
+/**
+ * Take delivery of the lazily-fetched per-track plans.
+ *
+ * Everything the plans decide is derived here, in one place, so there is a
+ * single moment after which the app's plan-dependent state is real: the set of
+ * lesson ids the shared spine admits, and the restored Learn progress (which is
+ * pruned against those very paths, so it cannot be restored any earlier).
+ *
+ * Idempotent — `loadCurriculumPlans()` memoises the fetch, and recomputing from
+ * the same plans yields the same answers, so a corpus refresh may call it again
+ * without disturbing anything.
+ */
+async function installCurriculumPlans(): Promise<void> {
+  await loadCurriculumPlans();
+  ALL_MAPPED_LESSON_IDS = mappedLessonIds(LANGUAGE_CURRICULA.map((item) => item.language));
+  if (!learnProgressRestored) {
+    learnCompletion = loadLearnProgress(REVIEW_STORAGE, LANGUAGE_CURRICULA);
+    learnProgressRestored = true;
+  }
+}
+
 async function loadLearnCorpus(): Promise<void> {
+  await installCurriculumPlans();
   BUNDLED_LESSON_IDS ??= new Set(await bundledLessonIds());
   const known = BUNDLED_LESSON_IDS;
   const missing = [...learnLessonIds()].filter(
@@ -302,6 +341,10 @@ async function loadLearnCorpus(): Promise<void> {
 
 async function loadFullCorpus(): Promise<void> {
   if (fullCorpusLoaded) return;
+  // Lessons mode can be the FIRST thing a visitor opens, so it must not assume
+  // the Learn path already pulled the plans in: `installLessons` indexes the
+  // mapped-spine subset out of them.
+  await installCurriculumPlans();
   installLessons(await loadBundledLessons());
   fullCorpusLoaded = true;
 }
