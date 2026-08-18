@@ -1,5 +1,38 @@
 # Changelog — macsyma-iir-compiler
 
+## v0.1.1 — 2026-08-18 — oracle test (macsyma-iir-vm.md §7/§8, PR 4)
+
+### Added
+
+- **`tests/oracle.rs` — a cross-checked oracle diff against
+  `macsyma-runtime`**, closing the gap the v0.1.0 entry below left open.
+  The same source runs through (a) `MacsymaSession::eval_source` (ground
+  truth) and (b) `compile_source` → `macsyma_vm::run` → a new test-local
+  "un-quote" reader (`read_back`, the mirror image of `inert_apply`) →
+  `symbolic_ir::IRNode` → the SAME `cas_pretty_printer::pretty` call the
+  native runtime uses — so both sides are compared through one shared
+  formatter, not two independently-hand-rolled ones.
+- 20-case corpus covering every construct v0 accepts: literal arithmetic
+  (precedence, chains, unary, grouping, exact division), assignment
+  (binding, reference, re-assignment threading, multiple variables), and
+  unevaluated symbolic results for every arithmetic head with a free
+  operand (`Add`/`Sub`/`Mul`/`Div`/`Neg`), including a case exercising
+  `read_back`'s own recursion into a nested symbolic argument
+  (`x + y + z`) and one mixing a bound (concrete) variable with a free
+  symbol in the same expression (`x: 2$ x + y$` → `2 + y`). Every case is
+  `known_bug`-free by design — v0's accepted subset exists specifically so
+  the VM-compiled path and `macsyma-runtime` agree exactly (see
+  `src/lower.rs`'s own doc comment on the `/` exactness rule for why).
+- Unlike `macsyma-to-semantic-ir/tests/oracle.rs` (which joins every
+  statement's own output with `"\n"`), this file diffs only the LAST
+  statement's value — `macsyma-iir-compiler::lower_file` discards every
+  earlier statement's result by design (a v0 program is one `main`
+  function returning its final statement's value).
+- Adds dev-dependencies on `coding-adventures-macsyma-runtime` (oracle
+  ground truth) and `cas-pretty-printer` (the shared renderer) — the
+  non-dev `[dependencies]` section is unchanged; lowering itself still
+  only needs the parse-tree shape.
+
 ## v0.1.0 — 2026-08-14 — initial release (macsyma-iir-vm.md, v0)
 
 The first frontend to bridge a math language onto `interpreter_ir` (IIR),
