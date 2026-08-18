@@ -1054,6 +1054,153 @@
           "TA-LEX-C50-WELCOME-05"
         ]
       }
+    },
+    {
+      "chapter": 51,
+      "title": "Overhead",
+      "label": "ch:ta-overhead",
+      "canDo": "I can name the sky, the sun, the moon, the stars and a cloud in Tamil.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TA-C51-cloud",
+        "kind": "production",
+        "summary": "Complete TA-C51-cloud and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C51-SKY-01",
+          "TA-LEX-C51-SKY-02",
+          "TA-LEX-C51-SKY-03",
+          "TA-LEX-C51-SKY-04",
+          "TA-LEX-C51-SKY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 52,
+      "title": "A Tree",
+      "label": "ch:ta-a-tree",
+      "canDo": "I can name a tree, its branch, its new shoot, its root and its seed in Tamil.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TA-C52-seed",
+        "kind": "production",
+        "summary": "Complete TA-C52-seed and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C52-TREE-01",
+          "TA-LEX-C52-TREE-02",
+          "TA-LEX-C52-TREE-03",
+          "TA-LEX-C52-TREE-04",
+          "TA-LEX-C52-TREE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 53,
+      "title": "The Land",
+      "label": "ch:ta-the-land",
+      "canDo": "I can name a river, a hill, a paddy field, a path and a village in Tamil.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TA-C53-village",
+        "kind": "production",
+        "summary": "Complete TA-C53-village and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C53-LAND-01",
+          "TA-LEX-C53-LAND-02",
+          "TA-LEX-C53-LAND-03",
+          "TA-LEX-C53-LAND-04",
+          "TA-LEX-C53-LAND-05"
+        ]
+      }
+    },
+    {
+      "chapter": 54,
+      "title": "Things in the House",
+      "label": "ch:ta-things-in-the-house",
+      "canDo": "I can name the mat, basket, knife, bowl and box a Tamil house sets out for a guest.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TA-C54-box",
+        "kind": "production",
+        "summary": "Complete TA-C54-box and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C54-HOUSE-01",
+          "TA-LEX-C54-HOUSE-02",
+          "TA-LEX-C54-HOUSE-03",
+          "TA-LEX-C54-HOUSE-04",
+          "TA-LEX-C54-HOUSE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 55,
+      "title": "The Rest of You",
+      "label": "ch:ta-the-rest-of-you",
+      "canDo": "I can name my neck, my back, a lip, a nail and a bone in Tamil.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TA-C55-bone",
+        "kind": "production",
+        "summary": "Complete TA-C55-bone and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C55-BODY-01",
+          "TA-LEX-C55-BODY-02",
+          "TA-LEX-C55-BODY-03",
+          "TA-LEX-C55-BODY-04",
+          "TA-LEX-C55-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 56,
+      "title": "How Much",
+      "label": "ch:ta-how-much",
+      "canDo": "I can say how much I want in Tamil, from a little to a lot, and turn an offer down politely.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TA-C56-let-it-be",
+        "kind": "production",
+        "summary": "Complete TA-C56-let-it-be and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C56-AMOUNT-01",
+          "TA-LEX-C56-AMOUNT-02",
+          "TA-LEX-C56-AMOUNT-03",
+          "TA-LEX-C56-AMOUNT-04",
+          "TA-LEX-C56-AMOUNT-05"
+        ]
+      }
+    },
+    {
+      "chapter": 57,
+      "title": "Wind and Fire",
+      "label": "ch:ta-wind-and-fire",
+      "canDo": "I can name the wind, sand, mud, smoke and an ember in Tamil.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TA-C57-ember",
+        "kind": "production",
+        "summary": "Complete TA-C57-ember and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C57-FIRE-01",
+          "TA-LEX-C57-FIRE-02",
+          "TA-LEX-C57-FIRE-03",
+          "TA-LEX-C57-FIRE-04",
+          "TA-LEX-C57-FIRE-05"
+        ]
+      }
     }
   ]
 }

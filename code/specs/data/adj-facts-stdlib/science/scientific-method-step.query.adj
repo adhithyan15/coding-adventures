@@ -1,0 +1,20 @@
+% ============================================================================
+% scientific-method-step.query.adj — worked recall over the
+% scientific-method-step library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what happens in step 4
+% of the scientific method?" (direct) or "which step figures out what the
+% data means?" (reverse) — it states no fact of its own — it only `import`s
+% the grounded table and asks binding queries. The final query demonstrates
+% honest abstention: `step_8` is not a step this source names at all (the
+% page only ever numbers steps 1 through 7), so recalling it abstains
+% rather than inventing an eighth step.
+% ============================================================================
+
+import "scientific-method-step.adj"
+
+? scientific_method_step(step_1, $A)              % expect ask_a_question_or_state_a_hypothesis (direct)
+? scientific_method_step(step_4, $A)              % expect design_the_experiment (direct)
+? scientific_method_step(step_7, $A)              % expect draw_conclusions_and_write_a_report (direct)
+? scientific_method_step($S, analyze_the_data)     % expect step_6 (reverse)
+? scientific_method_step(step_8, $A)               % expect abstain -- the source only names steps 1 through 7

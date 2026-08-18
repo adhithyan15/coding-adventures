@@ -2,6 +2,88 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.18] - 2026-08-18 (task #133-136 — SIMD: i16x8 comparison family)
+
+### Added
+
+- `register_simd` gains a new dispatch arm for `i16x8`'s own comparison
+  family (`EqI16x8 | NeI16x8 | LtSI16x8 | LtUI16x8 | GtSI16x8 |
+  GtUI16x8 | LeSI16x8 | LeUI16x8 | GeSI16x8 | GeUI16x8`): same
+  lane-wise BINARY shape and boolean-mask convention as `i32x4`'s own
+  comparison family, but over 8 `i16` lanes instead of 4 `i32` lanes --
+  each lane becomes all-1s (`-1i16`, i.e. `0xFFFF`) if true, all-0s
+  otherwise (the mask width tracks the LANE width, not a fixed `i32`).
+  Verified with a dedicated test proving `-1 <_s 1` (true, signed) and
+  `-1 <_u 1` i.e. `0xFFFF <_u 1` (false, unsigned) actually disagree --
+  the same signed/unsigned discipline `i32x4`'s own comparison test
+  already established.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.17] - 2026-08-18 (task #129-132 — SIMD: i16x8 first primary-lane slice)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for this crate's first
+  opcodes where `i16x8` is a PRIMARY lane width: `AddI16x8 | SubI16x8 |
+  MulI16x8` (BINARY, 8 `i16` lanes instead of the 4 `i32` lanes or 16
+  `i8` lanes every prior binary SIMD op here reads/writes, same
+  wrapping-arithmetic shape as `i32x4`'s own `Add`/`Sub`/`Mul`) and
+  `NegI16x8` (UNARY, same shape as `i8x16.neg`/`i32x4.neg`/`.abs`).
+  Verified with a dedicated test proving `i16::MAX + 1` wraps to
+  `i16::MIN` and `i16::MIN.wrapping_neg() == i16::MIN` -- the same
+  two's-complement wrapping edge cases `i8x16`/`i32x4`'s own tests
+  already established at their respective widths.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.16] - 2026-08-18 (task #125-128 — SIMD: i8x16 first slice)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for this crate's first
+  `i8x16`-lane-width ops: `AddI8x16 | SubI8x16` (BINARY, 16 `i8` lanes
+  instead of the 4 `i32` lanes every prior binary SIMD op here reads/
+  writes, same wrapping-arithmetic shape as `i32x4`'s own `Add`/`Sub`
+  otherwise) and `NegI8x16` (UNARY, same shape as `i32x4.neg`/`.abs`).
+  Verified with a dedicated test proving `i8::MAX + 1` wraps to
+  `i8::MIN` and `i8::MIN.wrapping_neg() == i8::MIN` -- the same
+  two's-complement wrapping edge cases `i32x4.abs`'s own test already
+  established for `i32`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.15] - 2026-08-18 (task #121-124 — SIMD widening: i32x4-from-i16x8 family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms, both reading their v128
+  operand(s) as 8 `i16` lanes (`i16x8`) instead of the 4 `i32` lanes
+  (`i32x4`) every prior SIMD op in this crate reads/writes -- the first
+  opcodes here whose input and output lane widths differ:
+  - `ExtaddPairwiseI16x8S | ExtaddPairwiseI16x8U` (UNARY): pairwise-adds
+    adjacent `i16x8` lanes (0+1, 2+3, 4+5, 6+7), each extended to `i32`
+    first (sign- or zero-extend depending on `_s`/`_u`), producing an
+    `i32x4` result.
+  - `DotI16x8S | ExtmulLowI16x8S | ExtmulHighI16x8S | ExtmulLowI16x8U
+    | ExtmulHighI16x8U` (BINARY): `DotI16x8S` pairwise
+    multiply-accumulates ALL 8 lanes of both operands into 4 `i32x4`
+    results; `ExtmulLow`/`ExtmulHigh` instead multiply only the low
+    (indices 0-3) or high (indices 4-7) 4 lanes of each operand
+    pairwise, no summation.
+  - Both arms extend each `i16` lane to `i32` FIRST (correctly, per
+    `_s`/`_u`), then use plain `i32` `wrapping_mul`/`wrapping_add` --
+    verified this is bit-for-bit correct for the unsigned variants too
+    (Rust's wrapping arithmetic on a fixed-width integer is identical
+    regardless of the signed/unsigned interpretation of the result), via
+    a dedicated test proving `0xFFFF * 0xFFFF` (which doesn't fit `i32`'s
+    positive range) still wraps to the correct bit pattern. Also covers
+    `dot_i16x8_s`'s own two's-complement overflow edge case
+    (`i16::MIN * i16::MIN` summed twice overflows `i32` by exactly 1 and
+    must wrap to `i32::MIN`).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.14] - 2026-08-18 (task #118-120 — SIMD widening: i32x4 abs/min/max family)
 
 ### Added

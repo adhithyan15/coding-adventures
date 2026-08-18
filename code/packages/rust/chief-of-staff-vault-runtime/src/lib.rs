@@ -47,16 +47,60 @@ impl fmt::Display for VaultDirectDeliveryError {
 
 impl std::error::Error for VaultDirectDeliveryError {}
 
+/// Who asked for a direct delivery, what they asked for, and where it goes.
+///
+/// This descriptor exists because a delivery adapter that is told only the
+/// destination cannot actually authorize anything. Given `(consumer, payload)`
+/// alone, the strongest rule an adapter can express is a global destination
+/// allowlist — and under that rule a caller permitted to send *one* secret to a
+/// consumer is equally permitted to send *every* secret to it, because no
+/// component in the chain can tell the two requests apart. That is a confused
+/// deputy: the adapter holds the authority but not the facts.
+///
+/// Naming the requester and the secret does not by itself authorize anything.
+/// It is the precondition for an adapter that wants to.
+///
+/// **All three identity fields are only as trustworthy as whatever populated
+/// them** — `requesting_agent_id`, `requesting_user_id`, and `session_id`
+/// alike. They are read from the tool invocation request. If a host lets a
+/// caller assert its own identity, an adapter that authorizes on any of them is
+/// authorizing on the attacker's own claim. Establish that your host attests a
+/// field before relying on it; see D18D section 7.2.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct VaultDirectRequest<'a> {
+    /// Identity of the agent that invoked the tool. Unattested unless the host
+    /// says otherwise — see the type-level note.
+    pub requesting_agent_id: Option<&'a str>,
+    /// User on whose behalf the request was made. Unattested unless the host
+    /// says otherwise — see the type-level note.
+    ///
+    /// Carried separately from the agent because one vault instance may serve
+    /// several users; without it an adapter cannot tell *whose* session asked
+    /// for a delivery, only which agent process did.
+    pub requesting_user_id: Option<&'a str>,
+    /// Session the request arrived on. Unattested unless the host says
+    /// otherwise — see the type-level note.
+    pub session_id: Option<&'a str>,
+    /// Name of the secret being moved.
+    pub secret_name: &'a str,
+    /// Already-authorized consumer the payload is destined for.
+    pub consumer_agent_id: &'a str,
+}
+
 /// Replaceable trusted boundary that accepts direct secret deliveries.
 ///
 /// Implementations may route the owned, zeroizing payload over an authenticated
 /// browser, agent, or host channel. They must not return the bytes to the
 /// requesting agent or include them in diagnostics.
 pub trait VaultDirectDelivery: Send + Sync {
-    /// Deliver one owned payload to the already-authorized consumer.
+    /// Deliver one owned payload, given the full request context.
+    ///
+    /// The adapter is the component entitled to accept or refuse. Refusing is a
+    /// first-class outcome, not an error condition — see
+    /// [`VaultDirectDeliveryError::Rejected`].
     fn deliver(
         &self,
-        consumer_agent_id: &str,
+        request: VaultDirectRequest<'_>,
         payload: LeasePayload,
     ) -> Result<(), VaultDirectDeliveryError>;
 }
@@ -181,11 +225,12 @@ impl ChiefVaultRuntime {
     /// success or a bounded, secret-free error.
     pub fn request_direct(
         &self,
-        secret_name: &str,
-        consumer_agent_id: &str,
+        request: VaultDirectRequest<'_>,
         delivery: &dyn VaultDirectDelivery,
     ) -> Result<(), VaultRuntimeError> {
-        if consumer_agent_id.is_empty() || consumer_agent_id.len() > MAX_CONSUMER_AGENT_ID_BYTES {
+        if request.consumer_agent_id.is_empty()
+            || request.consumer_agent_id.len() > MAX_CONSUMER_AGENT_ID_BYTES
+        {
             return Err(VaultRuntimeError::InvalidConsumerAgentId);
         }
 
@@ -193,10 +238,10 @@ impl ChiefVaultRuntime {
             .secrets
             .lock()
             .expect("vault secret mutex poisoned")
-            .get(secret_name)
+            .get(request.secret_name)
             .cloned()
             .ok_or(VaultRuntimeError::SecretNotFound)?;
-        delivery.deliver(consumer_agent_id, payload)?;
+        delivery.deliver(request, payload)?;
         Ok(())
     }
 
@@ -249,17 +294,32 @@ mod tests {
     impl VaultDirectDelivery for RecordingDelivery {
         fn deliver(
             &self,
-            consumer_agent_id: &str,
+            request: VaultDirectRequest<'_>,
             payload: LeasePayload,
         ) -> Result<(), VaultDirectDeliveryError> {
-            self.deliveries
-                .lock()
-                .unwrap()
-                .push((consumer_agent_id.to_string(), payload.as_bytes().to_vec()));
+            self.deliveries.lock().unwrap().push((
+                request.consumer_agent_id.to_string(),
+                payload.as_bytes().to_vec(),
+            ));
             match *self.result.lock().unwrap() {
                 Some(error) => Err(error),
                 None => Ok(()),
             }
+        }
+    }
+
+    /// Build a descriptor for the common test case: an agent asking for one
+    /// secret on behalf of one consumer.
+    fn direct_request<'a>(
+        secret_name: &'a str,
+        consumer_agent_id: &'a str,
+    ) -> VaultDirectRequest<'a> {
+        VaultDirectRequest {
+            requesting_agent_id: Some("agent:test"),
+            requesting_user_id: Some("user:test"),
+            session_id: Some("session:test"),
+            secret_name,
+            consumer_agent_id,
         }
     }
 
@@ -321,7 +381,10 @@ mod tests {
         let delivery = RecordingDelivery::default();
 
         vault
-            .request_direct("browser-session", "browser-agent", &delivery)
+            .request_direct(
+                direct_request("browser-session", "browser-agent"),
+                &delivery,
+            )
             .expect("trusted delivery should succeed");
 
         let deliveries = delivery.deliveries.lock().unwrap();
@@ -337,18 +400,21 @@ mod tests {
         let delivery = RecordingDelivery::default();
 
         assert!(matches!(
-            vault.request_direct("browser-session", "", &delivery),
+            vault.request_direct(direct_request("browser-session", ""), &delivery),
             Err(VaultRuntimeError::InvalidConsumerAgentId)
         ));
         assert!(matches!(
-            vault.request_direct("missing", "browser-agent", &delivery),
+            vault.request_direct(direct_request("missing", "browser-agent"), &delivery),
             Err(VaultRuntimeError::SecretNotFound)
         ));
         assert!(delivery.deliveries.lock().unwrap().is_empty());
 
         let rejecting = RecordingDelivery::rejecting(VaultDirectDeliveryError::Rejected);
         let error = vault
-            .request_direct("browser-session", "browser-agent", &rejecting)
+            .request_direct(
+                direct_request("browser-session", "browser-agent"),
+                &rejecting,
+            )
             .expect_err("adapter rejection must reach the host");
         assert!(matches!(
             error,

@@ -839,6 +839,106 @@ pub enum SimdOpKind {
     /// `assert_return` grading) could distinguish a correct SIMD
     /// computation from a subtly wrong one.
     ExtractLane,
+    /// `i32x4.extadd_pairwise_i16x8_s` -- reinterpret the operand `v128`
+    /// as 8 SIGNED `i16` lanes, pairwise-add adjacent lanes (0+1, 2+3,
+    /// 4+5, 6+7) with each addend sign-extended to `i32` first, producing
+    /// a 4-lane `i32x4` result. UNARY (pop one `v128`, push one), like
+    /// `Neg`/`Abs` -- but unlike them, the INPUT lane width (16-bit) and
+    /// OUTPUT lane width (32-bit) differ, the first opcode in this crate
+    /// where that's true.
+    ExtaddPairwiseI16x8S,
+    /// `i32x4.extadd_pairwise_i16x8_u` -- same pairwise-add shape as
+    /// [`Self::ExtaddPairwiseI16x8S`], but each `i16` lane is
+    /// zero-extended (read as `u16`) before the add, not sign-extended.
+    ExtaddPairwiseI16x8U,
+    /// `i32x4.dot_i16x8_s` -- reinterpret BOTH `v128` operands as 8
+    /// SIGNED `i16` lanes each; for each of the 4 result lanes `i`,
+    /// compute `sext(a[2i]) * sext(b[2i]) + sext(a[2i+1]) * sext(b[2i+1])`
+    /// (a per-pair signed multiply-accumulate), producing an `i32x4`
+    /// result. BINARY (pop two `v128`s, push one), but -- like
+    /// [`Self::ExtaddPairwiseI16x8S`] -- the input lane width (16-bit)
+    /// differs from the output lane width (32-bit), unlike every prior
+    /// binary kind in this enum.
+    DotI16x8S,
+    /// `i32x4.extmul_low_i16x8_s` -- reinterpret both `v128` operands as 8
+    /// SIGNED `i16` lanes each; take only the LOW 4 lanes (indices 0-3) of
+    /// each, sign-extend every value to `i32`, and multiply the
+    /// corresponding pairs lane-wise, producing an `i32x4` result. Same
+    /// narrow-input/wide-output BINARY shape as [`Self::DotI16x8S`], but
+    /// without the pairwise summation -- a plain widening multiply.
+    ExtmulLowI16x8S,
+    /// `i32x4.extmul_high_i16x8_s` -- same as
+    /// [`Self::ExtmulLowI16x8S`], but operates on the HIGH 4 lanes
+    /// (indices 4-7) of each `i16x8` operand instead of the low 4.
+    ExtmulHighI16x8S,
+    /// `i32x4.extmul_low_i16x8_u` -- same LOW-4-lanes widening multiply as
+    /// [`Self::ExtmulLowI16x8S`], but each `i16` lane is zero-extended
+    /// (read as `u16`) before the multiply, not sign-extended.
+    ExtmulLowI16x8U,
+    /// `i32x4.extmul_high_i16x8_u` -- same HIGH-4-lanes widening multiply
+    /// as [`Self::ExtmulHighI16x8S`], but zero-extended, not sign-extended.
+    ExtmulHighI16x8U,
+    /// `i8x16.add` -- lane-wise wrapping addition over 16 `i8` lanes. The
+    /// first opcode in this table for the `i8x16` lane width -- unlike
+    /// `i32x4`'s first slice, no `i8x16.splat`/`extract_lane` are needed
+    /// alongside it, since `v128.const i8x16 ...` (already supported for
+    /// all 6 shapes) covers both operand construction and result
+    /// comparison for this first `i8x16` slice's own test corpus.
+    AddI8x16,
+    /// `i8x16.sub` -- lane-wise wrapping subtraction over 16 `i8` lanes.
+    SubI8x16,
+    /// `i8x16.neg` -- lane-wise arithmetic negation over 16 `i8` lanes.
+    /// UNARY, same shape as `i32x4`'s own `Neg`/`Abs`. WASM SIMD defines
+    /// no `i8x16.mul` (8-bit lanes are too narrow for a useful lane-wise
+    /// multiply in this proposal), so this first `i8x16` slice is
+    /// deliberately just these 3 opcodes, not a 4th "mul" entry.
+    NegI8x16,
+    /// `i16x8.add` -- lane-wise wrapping addition over 8 `i16` lanes. The
+    /// first opcode in this table for `i16x8` as a PRIMARY lane width
+    /// (this table already has opcodes that READ `i16x8` operands --
+    /// `ExtaddPairwiseI16x8S`/`DotI16x8S`/etc. -- but those all WRITE an
+    /// `i32x4` result; this is the first opcode whose result is itself
+    /// `i16x8`). Same "first slice" pattern as `i8x16.add`/`sub`/`neg`:
+    /// no `i16x8.splat`/`extract_lane` needed, since `v128.const i16x8
+    /// ...` (already supported for all 6 shapes) covers this slice's own
+    /// operand construction and result comparison on its own.
+    AddI16x8,
+    /// `i16x8.sub` -- lane-wise wrapping subtraction over 8 `i16` lanes.
+    SubI16x8,
+    /// `i16x8.mul` -- lane-wise wrapping multiplication over 8 `i16`
+    /// lanes. Unlike `i8x16` (whose 8-bit lanes are too narrow for a
+    /// useful lane-wise multiply, so the spec defines none), WASM SIMD
+    /// DOES define `i16x8.mul` -- this slice includes it precisely
+    /// because the real upstream corpus file (`simd_i16x8_arith.wast`)
+    /// bundles all four ops (`neg`/`add`/`sub`/`mul`) together.
+    MulI16x8,
+    /// `i16x8.neg` -- lane-wise arithmetic negation over 8 `i16` lanes.
+    /// UNARY, same shape as `i8x16.neg`/`i32x4.neg`/`.abs`.
+    NegI16x8,
+    /// `i16x8.eq` -- lane-wise equality over 8 `i16` lanes; each lane
+    /// becomes all-1s if equal, all-0s otherwise (same boolean-mask
+    /// convention as `Eq`/`Ne`/etc. above, but for `i16x8` -- the first
+    /// comparison family for a lane width other than `i32x4`).
+    EqI16x8,
+    /// `i16x8.ne` -- lane-wise inequality, same boolean-mask convention as
+    /// [`Self::EqI16x8`].
+    NeI16x8,
+    /// `i16x8.lt_s` -- lane-wise signed less-than, boolean-mask convention.
+    LtSI16x8,
+    /// `i16x8.lt_u` -- lane-wise unsigned less-than, boolean-mask convention.
+    LtUI16x8,
+    /// `i16x8.gt_s` -- lane-wise signed greater-than, boolean-mask convention.
+    GtSI16x8,
+    /// `i16x8.gt_u` -- lane-wise unsigned greater-than, boolean-mask convention.
+    GtUI16x8,
+    /// `i16x8.le_s` -- lane-wise signed less-than-or-equal, boolean-mask convention.
+    LeSI16x8,
+    /// `i16x8.le_u` -- lane-wise unsigned less-than-or-equal, boolean-mask convention.
+    LeUI16x8,
+    /// `i16x8.ge_s` -- lane-wise signed greater-than-or-equal, boolean-mask convention.
+    GeSI16x8,
+    /// `i16x8.ge_u` -- lane-wise unsigned greater-than-or-equal, boolean-mask convention.
+    GeUI16x8,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -870,6 +970,36 @@ pub struct SimdOpInfo {
 /// verification discipline as the original 5. `i32x4.abs`/`min_s`/
 /// `min_u`/`max_s`/`max_u` widen it further to unblock
 /// `simd_i32x4_arith2.wast`, same verification discipline.
+/// `i32x4.extadd_pairwise_i16x8_s`/`_u`, `i32x4.dot_i16x8_s`, and
+/// `i32x4.extmul_low`/`high_i16x8_s`/`_u` widen it once more to unblock
+/// `simd_i32x4_extadd_pairwise_i16x8.wast`/`simd_i32x4_dot_i16x8.wast`/
+/// `simd_i32x4_extmul_i16x8.wast` -- the first opcodes in this table
+/// whose INPUT lane width (16-bit `i16x8`) differs from their OUTPUT lane
+/// width (32-bit `i32x4`), same live-fetched-and-cross-checked
+/// verification discipline as every widening above.
+/// `i8x16.add`/`sub`/`neg` are this table's first entries for the
+/// `i8x16` lane width -- a brand-new "first slice" (following the same
+/// pattern `i32x4` itself started with), not a widening of an existing
+/// lane width. Each sub-opcode byte fetched live from `BinarySIMD.md`
+/// and cross-checked against the already-implemented `i32x4.add`
+/// (`0xAE`)/`i32x4.abs` (`0xA0`) entries (both matched exactly), same
+/// discipline as every prior addition.
+/// `i16x8.add`/`sub`/`mul`/`neg` are this table's first entries where
+/// `i16x8` is a PRIMARY lane width (produces `i16x8` results, not just
+/// read as a widening-op's input like `ExtaddPairwiseI16x8S`/etc.
+/// above) -- another brand-new "first slice", same discipline. Each
+/// sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+/// against the already-implemented `i32x4.add` (`0xAE`)/`i8x16.add`
+/// (`0x6E`) entries (both matched exactly).
+/// `i16x8.eq`/`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/`le_u`/`ge_s`/`ge_u`
+/// widen `i16x8` further with its own comparison family, closing the gap
+/// left when `i16x8.add`/`sub`/`mul`/`neg` landed without one (unlike
+/// `i32x4`, which got arith+cmp together) -- same boolean-mask
+/// convention and signed/unsigned split as `i32x4`'s own comparison
+/// family, just at the narrower lane width. Each sub-opcode byte fetched
+/// live from `BinarySIMD.md` and cross-checked against the already-
+/// implemented `i16x8.add` (`0x8E`)/`i32x4.eq` (`0x37`) entries (both
+/// matched exactly).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -893,6 +1023,30 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.min_u", sub_opcode: 0xB7, kind: SimdOpKind::MinU },
     SimdOpInfo { name: "i32x4.max_s", sub_opcode: 0xB8, kind: SimdOpKind::MaxS },
     SimdOpInfo { name: "i32x4.max_u", sub_opcode: 0xB9, kind: SimdOpKind::MaxU },
+    SimdOpInfo { name: "i32x4.extadd_pairwise_i16x8_s", sub_opcode: 0x7E, kind: SimdOpKind::ExtaddPairwiseI16x8S },
+    SimdOpInfo { name: "i32x4.extadd_pairwise_i16x8_u", sub_opcode: 0x7F, kind: SimdOpKind::ExtaddPairwiseI16x8U },
+    SimdOpInfo { name: "i32x4.dot_i16x8_s", sub_opcode: 0xBA, kind: SimdOpKind::DotI16x8S },
+    SimdOpInfo { name: "i32x4.extmul_low_i16x8_s", sub_opcode: 0xBC, kind: SimdOpKind::ExtmulLowI16x8S },
+    SimdOpInfo { name: "i32x4.extmul_high_i16x8_s", sub_opcode: 0xBD, kind: SimdOpKind::ExtmulHighI16x8S },
+    SimdOpInfo { name: "i32x4.extmul_low_i16x8_u", sub_opcode: 0xBE, kind: SimdOpKind::ExtmulLowI16x8U },
+    SimdOpInfo { name: "i32x4.extmul_high_i16x8_u", sub_opcode: 0xBF, kind: SimdOpKind::ExtmulHighI16x8U },
+    SimdOpInfo { name: "i8x16.neg", sub_opcode: 0x61, kind: SimdOpKind::NegI8x16 },
+    SimdOpInfo { name: "i8x16.add", sub_opcode: 0x6E, kind: SimdOpKind::AddI8x16 },
+    SimdOpInfo { name: "i8x16.sub", sub_opcode: 0x71, kind: SimdOpKind::SubI8x16 },
+    SimdOpInfo { name: "i16x8.neg", sub_opcode: 0x81, kind: SimdOpKind::NegI16x8 },
+    SimdOpInfo { name: "i16x8.add", sub_opcode: 0x8E, kind: SimdOpKind::AddI16x8 },
+    SimdOpInfo { name: "i16x8.sub", sub_opcode: 0x91, kind: SimdOpKind::SubI16x8 },
+    SimdOpInfo { name: "i16x8.mul", sub_opcode: 0x95, kind: SimdOpKind::MulI16x8 },
+    SimdOpInfo { name: "i16x8.eq", sub_opcode: 0x2D, kind: SimdOpKind::EqI16x8 },
+    SimdOpInfo { name: "i16x8.ne", sub_opcode: 0x2E, kind: SimdOpKind::NeI16x8 },
+    SimdOpInfo { name: "i16x8.lt_s", sub_opcode: 0x2F, kind: SimdOpKind::LtSI16x8 },
+    SimdOpInfo { name: "i16x8.lt_u", sub_opcode: 0x30, kind: SimdOpKind::LtUI16x8 },
+    SimdOpInfo { name: "i16x8.gt_s", sub_opcode: 0x31, kind: SimdOpKind::GtSI16x8 },
+    SimdOpInfo { name: "i16x8.gt_u", sub_opcode: 0x32, kind: SimdOpKind::GtUI16x8 },
+    SimdOpInfo { name: "i16x8.le_s", sub_opcode: 0x33, kind: SimdOpKind::LeSI16x8 },
+    SimdOpInfo { name: "i16x8.le_u", sub_opcode: 0x34, kind: SimdOpKind::LeUI16x8 },
+    SimdOpInfo { name: "i16x8.ge_s", sub_opcode: 0x35, kind: SimdOpKind::GeSI16x8 },
+    SimdOpInfo { name: "i16x8.ge_u", sub_opcode: 0x36, kind: SimdOpKind::GeUI16x8 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1311,8 +1465,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_22_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 22);
+    fn simd_ops_table_has_the_expected_46_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 46);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1400,6 +1554,101 @@ mod tests {
             ("i32x4.min_u", 0xB7, SimdOpKind::MinU),
             ("i32x4.max_s", 0xB8, SimdOpKind::MaxS),
             ("i32x4.max_u", 0xB9, SimdOpKind::MaxU),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i32x4_from_i16x8_widening_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i32x4.eq (0x37)/i32x4.add (0xAE) entries
+        // (both matched exactly) -- same discipline as every widening
+        // above. The first opcodes in this table whose INPUT lane width
+        // (i16x8) differs from their OUTPUT lane width (i32x4).
+        for (name, sub_opcode, kind) in [
+            ("i32x4.extadd_pairwise_i16x8_s", 0x7E, SimdOpKind::ExtaddPairwiseI16x8S),
+            ("i32x4.extadd_pairwise_i16x8_u", 0x7F, SimdOpKind::ExtaddPairwiseI16x8U),
+            ("i32x4.dot_i16x8_s", 0xBA, SimdOpKind::DotI16x8S),
+            ("i32x4.extmul_low_i16x8_s", 0xBC, SimdOpKind::ExtmulLowI16x8S),
+            ("i32x4.extmul_high_i16x8_s", 0xBD, SimdOpKind::ExtmulHighI16x8S),
+            ("i32x4.extmul_low_i16x8_u", 0xBE, SimdOpKind::ExtmulLowI16x8U),
+            ("i32x4.extmul_high_i16x8_u", 0xBF, SimdOpKind::ExtmulHighI16x8U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i8x16_first_slice_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i32x4.add (0xAE)/i32x4.abs (0xA0) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. This is a brand-new lane width's first slice (like
+        // i32x4's own original 5-opcode slice), not a widening of an
+        // existing one -- no i8x16.mul exists in the spec (8-bit lanes
+        // are too narrow for a useful lane-wise multiply).
+        for (name, sub_opcode, kind) in [
+            ("i8x16.neg", 0x61, SimdOpKind::NegI8x16),
+            ("i8x16.add", 0x6E, SimdOpKind::AddI8x16),
+            ("i8x16.sub", 0x71, SimdOpKind::SubI8x16),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        assert!(get_simd_op_by_name("i8x16.mul").is_none(), "WASM SIMD defines no i8x16.mul");
+    }
+
+    #[test]
+    fn simd_i16x8_first_slice_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i32x4.add (0xAE)/i8x16.add (0x6E) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. The first opcodes in this table where i16x8 is a
+        // PRIMARY lane width (produces i16x8 results), not just read as
+        // a widening-op's input (ExtaddPairwiseI16x8S/DotI16x8S/etc.).
+        // Unlike i8x16, WASM SIMD DOES define i16x8.mul.
+        for (name, sub_opcode, kind) in [
+            ("i16x8.neg", 0x81, SimdOpKind::NegI16x8),
+            ("i16x8.add", 0x8E, SimdOpKind::AddI16x8),
+            ("i16x8.sub", 0x91, SimdOpKind::SubI16x8),
+            ("i16x8.mul", 0x95, SimdOpKind::MulI16x8),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i16x8_cmp_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i16x8.add (0x8E)/i32x4.eq (0x37) entries
+        // (both matched exactly) -- same discipline as every prior
+        // addition. Closes the gap left when i16x8.add/sub/mul/neg landed
+        // without a comparison family (unlike i32x4, which got arith+cmp
+        // together) -- same boolean-mask convention and signed/unsigned
+        // split as i32x4's own comparison family, just at i16x8's width.
+        for (name, sub_opcode, kind) in [
+            ("i16x8.eq", 0x2D, SimdOpKind::EqI16x8),
+            ("i16x8.ne", 0x2E, SimdOpKind::NeI16x8),
+            ("i16x8.lt_s", 0x2F, SimdOpKind::LtSI16x8),
+            ("i16x8.lt_u", 0x30, SimdOpKind::LtUI16x8),
+            ("i16x8.gt_s", 0x31, SimdOpKind::GtSI16x8),
+            ("i16x8.gt_u", 0x32, SimdOpKind::GtUI16x8),
+            ("i16x8.le_s", 0x33, SimdOpKind::LeSI16x8),
+            ("i16x8.le_u", 0x34, SimdOpKind::LeUI16x8),
+            ("i16x8.ge_s", 0x35, SimdOpKind::GeSI16x8),
+            ("i16x8.ge_u", 0x36, SimdOpKind::GeUI16x8),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

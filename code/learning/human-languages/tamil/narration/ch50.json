@@ -4,7 +4,7 @@
   "chapter": 50,
   "title": "At the Doorway",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:07b37d86815ed439",
+  "sourceHash": "fnv1a64:e4075edd14f098ed",
   "lessons": [
     {
       "id": "TA-C50-threshold",
@@ -507,7 +507,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cef919b6c3c1e9a",
+      "sourceHash": "fnv1a64:c1ca13a4a05a282e",
       "notice": null,
       "blocks": [
         {
@@ -542,7 +542,7 @@
             },
             {
               "kind": "speech",
-              "text": "varavēṟkiṟēṉ is \"I welcome you\". At the vāsal, over the kōlam, with a malar and a veṟṟilai in hand, it is the last thing left to say — and it brings this book back to where it started, at a door, with vaṇakkam."
+              "text": "varavēṟkiṟēṉ is \"I welcome you\". At the vāsal, over the kōlam, with a malar and a veṟṟilai in hand, it is the last thing left to say at a door — and it sets you back down exactly where this book began, at a door, with vaṇakkam."
             }
           ]
         },

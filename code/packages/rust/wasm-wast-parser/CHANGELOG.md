@@ -1,5 +1,75 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.30 — 2026-08-18 — SIMD: i16x8 comparison family text-form (task #133-136)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover `i16x8`'s own comparison family:
+  `i16x8.eq`/`ne`/`lt_s`/`lt_u`/`gt_s`/`gt_u`/`le_s`/`le_u`/`ge_s`/
+  `ge_u` -- same "no immediate beyond the opcode byte itself" shape
+  every prior SIMD op in this family has, so no new parsing logic, just
+  a wider match-arm pattern list. Verified via a dedicated test
+  asserting the real single-byte LEB128-encoded sub-opcode bytes
+  (`[0xFD, 0x2D]` through `[0xFD, 0x36]` -- all ten are < 128, unlike
+  `i16x8.add`/`sub`/`mul`/`neg`'s own sub-opcodes, all >= 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.29 — 2026-08-18 — SIMD: i16x8 first primary-lane slice text-form (task #129-132)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover this crate's first opcodes where
+  `i16x8` is a PRIMARY lane width: `i16x8.add`/`sub`/`mul`/`neg` -- same
+  "no immediate beyond the opcode byte itself" shape every prior SIMD op
+  in this family has, so no new parsing logic, just a wider match-arm
+  pattern list. Verified via a dedicated test asserting the real
+  2-byte LEB128-encoded sub-opcode bytes (`[0xFD, 0x8E, 0x01]`/
+  `[0xFD, 0x91, 0x01]`/`[0xFD, 0x95, 0x01]`/`[0xFD, 0x81, 0x01]` for
+  `add`/`sub`/`mul`/`neg` -- all four are >= 128, unlike `i8x16.add`/
+  `sub`/`neg`'s own sub-opcodes, all single-byte).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.28 — 2026-08-18 — SIMD: i8x16 first slice text-form (task #125-128)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover this crate's first `i8x16`-lane-
+  width ops: `i8x16.add`/`sub`/`neg` -- same "no immediate beyond the
+  opcode byte itself" shape every prior SIMD op in this family has, so
+  no new parsing logic, just a wider match-arm pattern list. Verified
+  via a dedicated test asserting the real single-byte LEB128-encoded
+  sub-opcode bytes (`[0xFD, 0x6E]`/`[0xFD, 0x71]`/`[0xFD, 0x61]` for
+  `add`/`sub`/`neg` -- all three are < 128, unlike `i32x4.add`'s own
+  `0xAE`, which needs a continuation byte).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.27 — 2026-08-18 — SIMD widening: i32x4-from-i16x8 family text-form (task #121-124)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened further to cover
+  `i32x4.extadd_pairwise_i16x8_s`/`_u`, `i32x4.dot_i16x8_s`, and
+  `i32x4.extmul_low`/`high_i16x8_s`/`_u` -- same "no immediate beyond the
+  opcode byte itself" shape every prior SIMD op in this family has, so no
+  new parsing logic, just a wider match-arm pattern list. Verified via a
+  dedicated test asserting the real LEB128-encoded sub-opcode bytes:
+  `[0xFD, 0x7E]`/`[0xFD, 0x7F]` for `extadd_pairwise_i16x8_s`/`_u` (both
+  sub-opcodes are < 128, so SINGLE-byte LEB128 -- unlike every prior
+  entry this test file covers, no continuation byte needed), and
+  `[0xFD, 0xBA, 0x01]`/`0xBC`/`0xBD`/`0xBE`/`0xBF` for `dot_i16x8_s`/
+  `extmul_low_i16x8_s`/`extmul_high_i16x8_s`/`extmul_low_i16x8_u`/
+  `extmul_high_i16x8_u` (all >= 128, same 2-byte LEB128 shape as
+  `min_s`/`max_u` above).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.26 — 2026-08-18 — SIMD widening: i32x4 abs/min/max family text-form (task #118-120)
 
 ### Added

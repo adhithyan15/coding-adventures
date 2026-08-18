@@ -1128,6 +1128,68 @@ Left out of the Spanish round-2 tranche deliberately: relabelling ripples into e
 cross-reference that targets it, which is its own change with its own verification,
 not something to bury in a vocabulary PR.
 
+## HL-C207 — a re-teach the collision detector CANNOT see: the MORPHEME case
+
+Found authoring Tamil round 2. The candidate headword **atikam** passed every check
+we have: it appears in no lesson body, no headword, and no romanization. It was
+still a re-teach.
+
+The corpus does not contain the WORD. It contains the MORPHEME, glossed inside
+another word's etymology -- `TA-C26-kaalai` explains *ati-* as "excessive, very"
+while unpacking *atikaalai*. Teaching atikam later would have re-taught a piece the
+reader already met, and no substring search can find that, because the string
+being re-taught was never written as a string.
+
+Three collision classes are now known, in increasing order of invisibility:
+
+1. **In a lesson body** -- a plain prose scan finds it.
+2. **Inside a HEADWORD only** -- `claro` in "si, claro"; `puu` in "naay, puunai";
+   `surya` in `suryodaya`. Caught in seven straight tranches by the headword check,
+   which the prose scan alone would miss.
+3. **Inside a GLOSS of a morpheme** -- this one. No string check reaches it,
+   because the target never appears as a token anywhere.
+
+**What actually works for class 3:** an author who has read the track's etymology
+notes. It was caught here by a person recognising the morpheme, not by a tool.
+
+**Possible mechanisation, unproven:** lessons already carry `introduces.knowledge`
+and etymology notes are structured prose. If glossed morphemes were tagged when
+they are introduced, a candidate could be checked against the morpheme ledger the
+same way it is checked against the headword ledger. That is a schema change and
+should not be built speculatively -- but the class should be NAMED so the next
+author knows to read the etymology, not just grep it.
+
+Do not confuse this with a false positive. atikam is a good word and belongs in the
+curriculum; the problem is only that it must not be introduced as NEW after its
+morpheme has been explained.
+
+### VALIDATED, one tranche later: six more in Sanskrit alone
+
+Sanskrit round 3 was the first tranche authored with this class named, and it caught
+**six** candidates that no substring, headword or romanization check could reach:
+
+```
+avashyam  "certainly"        SA-C01-am-na glosses baadham as "certainly"
+chiram    "for a long time"  SA-C20-old-person: puraatana "has existed a long time"
+granthih  "a knot"           SA-C33-mountain glosses parvan as "a knot, a joint"
+karuna    "compassion"       SA-C29-please glosses krpaa as "compassion, kindness"
+shiilam   "character"        ALL 14 writing lessons say "the single character X"
+mrttikaa  kept, gloss moved "earth" -> "soil" (SA-C08 glosses prthivii "the earth")
+```
+
+`shiilam` is the sharpest: the collision is not with one lesson but with a PHRASE
+EVERY WRITING LESSON USES. A per-lesson check would have to notice that fourteen
+files independently spend the same English word.
+
+**So the rate is not marginal.** One tranche, one track, six catches -- against
+three from classes (a)-(c) combined in the same tranche. On a track that explains
+roots constantly, the invisible class is the LARGEST one.
+
+That changes the cost/benefit on mechanising it. The note above said not to build a
+morpheme ledger speculatively; six catches in the first tranche after naming it is
+no longer speculative. It is still a schema change and still needs a design, but it
+should now be treated as **earning its place** rather than as a maybe.
+
 ## HL-C203 — corpus-wide sweep: 31 mixed-script findings, and a THIRD blind tool
 
 The Kannada round-2 audit ran HL-C202's per-word check over the WHOLE corpus, not

@@ -230,7 +230,7 @@ describe("corpus snapshot", () => {
     // Chapter 10 adds singular ir and possessives at A1. Chapter 11 adds one more
     // definite-reference lesson there; its other work is A2. Chapter 12 adds its
     // newly mapped terminal checkpoints at A2 on SPINE-SAY-WHAT-I-DO.
-    expect(summary.byLevel.A1).toBe(557); // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY // +42: HL-C136 wave I. The whole wave lands at A1, not pre-A1, and that is DERIVED rather than chosen: all six chapters realize asking-and-pointing nodes the shared spine declares at A1, so `pre-A1` (1038) does not move at all. The wave is a *pre-A1 lexicon* drive by selection order, which is a statement about which words are worth teaching first, not a claim about which spine node they realize. // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C192: +24 family words // HL-C194: +16 Spanish words // french questions chapter: +9 lessons, +1 chapter (ch32) -- the interrogation category, 0/5 -> 5/5 -- the chapter realizes SPINE-ASK-LOCATION, an A1 node french had DECLARED omitted, so all nine land at A1
+    expect(summary.byLevel.A1).toBe(568); // HL-C230: +11. All eleven Chinese numeral lessons land at A1 because SPINE-COUNT-ONE-TO-FIVE is an A1 node in the shared spine -- DERIVED, not chosen. Note what this does NOT mean: chinese has 20 lessons total and can greet and count. `reach` is the highest level any lesson touches, which is a weak measure of a track, and it is about to say 'A1' for a track that is plainly pre-A1 in every other sense // +1: ES-C02-concordancia sits on SPINE-TIME-OF-DAY // +42: HL-C136 wave I. The whole wave lands at A1, not pre-A1, and that is DERIVED rather than chosen: all six chapters realize asking-and-pointing nodes the shared spine declares at A1, so `pre-A1` (1038) does not move at all. The wave is a *pre-A1 lexicon* drive by selection order, which is a statement about which words are worth teaching first, not a claim about which spine node they realize. // HL-C137 wave II: +36 adjective lessons, +6 chapters, all six Indic tracks // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C192: +24 family words // HL-C194: +16 Spanish words // french questions chapter: +9 lessons, +1 chapter (ch32) -- the interrogation category, 0/5 -> 5/5 -- the chapter realizes SPINE-ASK-LOCATION, an A1 node french had DECLARED omitted, so all nine land at A1
     // Chapter 15's split adds three more mapped A2 lessons without changing its node.
     // Chapter 16's split adds five more mapped A2 lessons on the same node.
     // Chapter 17's split adds four more mapped A2 lessons on the same node.
@@ -298,7 +298,12 @@ describe("corpus snapshot", () => {
     ).toEqual(["spanish"]);
     expect(
       summary.tracks.filter((track) => track.reach === "pre-A1").map((track) => track.language),
-    ).toEqual(["chinese", "japanese"]);
+      // HL-C230: chinese leaves this list. Its numerals chapter realizes
+      // SPINE-COUNT-ONE-TO-FIVE, an A1 node, so its `reach` is now A1 -- while the
+      // track still holds twenty-five lessons and can say hello and count to five. The
+      // metric is honest about what it measures and misleading about what it implies,
+      // which is worth writing down here rather than celebrating in a changelog.
+    ).toEqual(["japanese"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {

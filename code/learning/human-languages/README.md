@@ -138,7 +138,7 @@ enter cross-language review only after focused retrieval.
 | [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 238 | 232 | 59 chapters; through Ch. 59; 54 generated |
-| [Tamil](./tamil/README.md) | Dravidian / Tamil | 212 | 208 | 50 chapters; through Ch. 50; 45 generated |
+| [Tamil](./tamil/README.md) | Dravidian / Tamil | 247 | 243 | 57 chapters; through Ch. 57; 52 generated |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada | 207 | 203 | 59 chapters; through Ch. 59; 54 generated |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu | 206 | 202 | 59 chapters; through Ch. 59; 54 generated |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 212 | 208 | 59 chapters; through Ch. 59; 54 generated |
@@ -149,11 +149,11 @@ enter cross-language review only after focused retrieval.
 | [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 80 | 76 | 16 chapters; through Ch. 16; 11 generated |
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 69 | 65 | 13 chapters; through Ch. 13; 8 generated |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | 75 | 67 | 14 chapters; through Ch. 14; 12 generated |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 196 | 193 | 37 chapters; through Ch. 37; 32 generated |
+| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 231 | 228 | 44 chapters; through Ch. 44; 39 generated |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | 59 | 59 | 14 chapters; through Ch. 14; 12 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 59 | 59 | 15 chapters; through Ch. 15; 13 generated |
-| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 14 | 14 | 2 chapters; through Ch. 2; 2 generated |
-| [Japanese](./japanese/README.md) | Japonic / Japanese | 18 | 18 | 2 chapters; through Ch. 2; 2 generated |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 25 | 25 | 3 chapters; through Ch. 3; 3 generated |
+| [Japanese](./japanese/README.md) | Japonic / Japanese | 29 | 29 | 3 chapters; through Ch. 3; 3 generated |
 <!-- END GENERATED TRACK PROGRESS -->
 
 Spanish is the pilot that proved the format; every other track replicates it,

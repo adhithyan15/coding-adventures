@@ -1,5 +1,62 @@
 # Changelog — wasm-conformance
 
+## 0.1.41 — 2026-08-18 — vendor simd_i16x8_cmp.wast; baseline regen (task #133-136)
+
+### Changed
+
+- Baseline regen: vendored `simd_i16x8_cmp.wast` -- `i16x8`'s own
+  comparison family (eq/ne/lt_s/lt_u/gt_s/gt_u/le_s/le_u/ge_s/ge_u),
+  closing the gap left when `i16x8.add`/`sub`/`mul`/`neg` landed
+  without one, see `wasm-opcodes`'s own CHANGELOG entry. 100% pass on
+  every GRADEABLE directive (420/420 assert_return, 30/30
+  assert_invalid); the file's own small "combination" tail references
+  `v128.load` (not yet implemented), so 1 module and 13 assert_return
+  directives grade `NotYetSupported`, same lazy-grading discipline
+  already established for `simd_i32x4_cmp.wast`'s own `trunc_sat`-
+  dependent tail. Aggregate `assert_return` rose from 21758/21775 to
+  22178/22195; `assert_invalid` from 1471 to 1501.
+
+## 0.1.40 — 2026-08-18 — vendor simd_i16x8_arith.wast; baseline regen (task #129-132)
+
+### Changed
+
+- Baseline regen: vendored `simd_i16x8_arith.wast` -- the first file
+  where `i16x8` is a PRIMARY lane width (produces `i16x8` results)
+  rather than merely an input to an `i32x4`-producing widening op.
+  `i16x8.add`/`sub`/`mul`/`neg` are the first such opcodes this repo
+  implements, see `wasm-opcodes`'s own CHANGELOG entry. 100% pass on
+  every directive kind (2/2 modules, 181/181 assert_return, 11/11
+  assert_invalid). Aggregate `assert_return` rose from 21577/21594 to
+  21758/21775; `assert_invalid` from 1460 to 1471.
+
+## 0.1.39 — 2026-08-18 — vendor simd_i8x16_arith.wast; baseline regen (task #125-128)
+
+### Changed
+
+- Baseline regen: vendored `simd_i8x16_arith.wast` -- this arc's first
+  pivot to a brand-new lane width rather than a further widening of
+  `i32x4` (`i32x4` had run out of small increments; everything left
+  needs a float lane width). `i8x16.add`/`sub`/`neg` are the first
+  `i8x16` opcodes this repo implements, see `wasm-opcodes`'s own
+  CHANGELOG entry. 100% pass on every directive kind (2/2 modules,
+  121/121 assert_return, 8/8 assert_invalid). Aggregate `assert_return`
+  rose from 21456/21473 to 21577/21594; `assert_invalid` from 1452 to
+  1460.
+
+## 0.1.38 — 2026-08-18 — vendor i32x4-from-i16x8 SIMD files; baseline regen (task #121-124)
+
+### Changed
+
+- Baseline regen: vendored `simd_i32x4_extadd_pairwise_i16x8.wast`,
+  `simd_i32x4_dot_i16x8.wast`, and `simd_i32x4_extmul_i16x8.wast` -- the
+  first SIMD opcodes this repo implements whose input lane width
+  (`i16x8`) differs from their output lane width (`i32x4`), see
+  `wasm-opcodes`'s own CHANGELOG entry for the 7 newly-added opcodes.
+  100% pass on every directive kind across all three files: 3/3 modules,
+  148/148 assert_return, 19/19 assert_invalid. Aggregate `assert_return`
+  rose from 21308/21325 to 21456/21473; `assert_invalid` from 1433 to
+  1452.
+
 ## 0.1.37 — 2026-08-18 — vendor simd_i32x4_arith2.wast; baseline regen (task #118-120)
 
 ### Changed

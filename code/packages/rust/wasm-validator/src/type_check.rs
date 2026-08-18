@@ -1424,7 +1424,25 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::MinS
                     | wasm_opcodes::SimdOpKind::MinU
                     | wasm_opcodes::SimdOpKind::MaxS
-                    | wasm_opcodes::SimdOpKind::MaxU => {
+                    | wasm_opcodes::SimdOpKind::MaxU
+                    | wasm_opcodes::SimdOpKind::DotI16x8S
+                    | wasm_opcodes::SimdOpKind::ExtmulLowI16x8S
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI16x8S
+                    | wasm_opcodes::SimdOpKind::ExtmulLowI16x8U
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U
+                    | wasm_opcodes::SimdOpKind::AddI8x16
+                    | wasm_opcodes::SimdOpKind::SubI8x16
+                    | wasm_opcodes::SimdOpKind::AddI16x8
+                    | wasm_opcodes::SimdOpKind::SubI16x8
+                    | wasm_opcodes::SimdOpKind::MulI16x8 => {
+                        // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
+                        // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul` all
+                        // read/write a narrower-than-`v128` lane width
+                        // internally, but AT THE TYPE LEVEL they're the
+                        // same pop-two-push-one `v128` shape as
+                        // `Add`/`Sub`/`Mul` above -- the type-checker
+                        // only sees `v128`, never the narrower lane
+                        // interpretation.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
@@ -1438,17 +1456,38 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::LeS
                     | wasm_opcodes::SimdOpKind::LeU
                     | wasm_opcodes::SimdOpKind::GeS
-                    | wasm_opcodes::SimdOpKind::GeU => {
+                    | wasm_opcodes::SimdOpKind::GeU
+                    | wasm_opcodes::SimdOpKind::EqI16x8
+                    | wasm_opcodes::SimdOpKind::NeI16x8
+                    | wasm_opcodes::SimdOpKind::LtSI16x8
+                    | wasm_opcodes::SimdOpKind::LtUI16x8
+                    | wasm_opcodes::SimdOpKind::GtSI16x8
+                    | wasm_opcodes::SimdOpKind::GtUI16x8
+                    | wasm_opcodes::SimdOpKind::LeSI16x8
+                    | wasm_opcodes::SimdOpKind::LeUI16x8
+                    | wasm_opcodes::SimdOpKind::GeSI16x8
+                    | wasm_opcodes::SimdOpKind::GeUI16x8 => {
                         // WASM's SIMD comparison convention: the RESULT is
                         // still a v128 (a per-lane boolean mask), not a
                         // plain i32 -- see `SimdOpKind::Eq`'s own doc
-                        // comment in wasm-opcodes.
+                        // comment in wasm-opcodes. Same convention for
+                        // i16x8's own comparison family.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Neg | wasm_opcodes::SimdOpKind::Abs => {
+                    wasm_opcodes::SimdOpKind::Neg
+                    | wasm_opcodes::SimdOpKind::Abs
+                    | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
+                    | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
+                    | wasm_opcodes::SimdOpKind::NegI8x16
+                    | wasm_opcodes::SimdOpKind::NegI16x8 => {
                         // UNARY, unlike every kind in the two arms above.
+                        // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
+                        // `i16x8.neg` read their operand as a narrower
+                        // lane width internally, but are still just
+                        // pop-one-`v128`-push-one-`v128` at the type
+                        // level, same as `Neg`/`Abs`.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

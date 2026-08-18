@@ -235,6 +235,47 @@ TESTSUITE_FILES = [
     # coverage this repo's upstream corpus itself splits into a separate
     # file, same real-verified-sub-opcode discipline as the pass above.
     "simd_i32x4_arith2.wast",
+    # SIMD widening (task #121-124): i32x4.extadd_pairwise_i16x8_s/_u,
+    # i32x4.dot_i16x8_s, i32x4.extmul_low/high_i16x8_s/_u -- the first
+    # opcodes in this repo whose INPUT lane width (i16x8) differs from
+    # their OUTPUT lane width (i32x4). Each sub-opcode byte fetched live
+    # from BinarySIMD.md and cross-checked against the already-implemented
+    # i32x4.eq/i32x4.add entries (both matched exactly), same discipline
+    # as every widening pass above. Three separate upstream files, one per
+    # opcode family, same as this repo's own opcode-family split.
+    "simd_i32x4_extadd_pairwise_i16x8.wast",
+    "simd_i32x4_dot_i16x8.wast",
+    "simd_i32x4_extmul_i16x8.wast",
+    # SIMD widen PR4 (task #125-128): simd_i8x16_arith.wast -- the first
+    # `i8x16` lane-width slice (add/sub/neg only, no mul since the spec
+    # defines none, no splat/extract_lane since v128.const i8x16 already
+    # covers this file's own operand construction and result comparison).
+    # Each sub-opcode byte fetched live from BinarySIMD.md and cross-
+    # checked against the already-implemented i32x4.add/i32x4.abs
+    # entries (both matched exactly), same discipline as every prior
+    # addition.
+    "simd_i8x16_arith.wast",
+    # SIMD widen PR5 (task #129-132): simd_i16x8_arith.wast -- the first
+    # opcodes where i16x8 is a PRIMARY lane width (add/sub/mul/neg,
+    # produces i16x8 results), not just an INPUT to an i32x4-producing
+    # widening op (extadd_pairwise/dot/extmul, already implemented).
+    # Unlike i8x16, WASM SIMD DOES define i16x8.mul, so this slice
+    # includes all four ops the real upstream file bundles together.
+    # Each sub-opcode byte fetched live from BinarySIMD.md and cross-
+    # checked against the already-implemented i32x4.add/i8x16.add
+    # entries (both matched exactly), same discipline as every prior
+    # addition.
+    "simd_i16x8_arith.wast",
+    # SIMD widen PR6 (task #133-136): simd_i16x8_cmp.wast -- i16x8's own
+    # comparison family (eq/ne/lt_s/lt_u/gt_s/gt_u/le_s/le_u/ge_s/ge_u),
+    # closing the gap left when i16x8.add/sub/mul/neg landed without one
+    # (unlike i32x4, which got arith+cmp together). Same boolean-mask
+    # convention and signed/unsigned split as i32x4's own comparison
+    # family, just at the narrower lane width. Each sub-opcode byte
+    # fetched live from BinarySIMD.md and cross-checked against the
+    # already-implemented i16x8.add/i32x4.eq entries (both matched
+    # exactly), same discipline as every prior addition.
+    "simd_i16x8_cmp.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
