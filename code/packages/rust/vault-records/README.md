@@ -56,6 +56,35 @@ abort would repeat on every later command against that vault.
 The boundary is exact: a record encoding to exactly `MAX_ENCODED_SIZE`
 succeeds, one byte more fails, and no partial output is ever returned.
 
+## Decoding is not
+
+The other direction carries a stronger rule: **`decode_record` succeeds
+on every input the canonical decoder accepts.** Nothing on the decode
+path may fail for a reason the decode itself did not discover, and in
+particular not because of a size the *encoder* would refuse.
+
+The asymmetry is in the consequence, not in the code. A refused encode
+costs one record — the operator keeps the vault, keeps every other item,
+and is told which command was declined. A refused decode can cost the
+whole vault, because this decode runs during vault *open*: an item that
+will not decode is not one you work around, it is one that stops you
+from having a session at all, and every remedy (delete, export, merge)
+needs a session first.
+
+The opaque arm used to break that rule. It canonicalised the payload by
+re-encoding the value it had just decoded, so any opaque payload in the
+1 MiB–16 MiB band decoded and then failed `EncodeTooLarge`, denying the
+vault permanently. It no longer re-encodes: it returns the payload's own
+bytes, sliced out of the input using the span canonical-CBOR reports.
+Those are the same bytes a re-encode would have produced — the strict
+decoder enforces every rule the encoder applies, so a payload that
+decoded has exactly one legal spelling and the input already carries it —
+and slicing a range the parser measured cannot fail.
+
+The write ceiling is unchanged: such a record is still refused by
+`encode_opaque` and `encode_record`. What changed is that reading it back
+is no longer where the ceiling is enforced.
+
 ## Wire format
 
 ```text
@@ -84,13 +113,14 @@ App code can register additional types by implementing `VaultRecord`.
 `decode_record` returns `AnyRecord::Opaque` for content types this
 crate doesn't recognise, so older clients don't crash on records
 produced by newer ones. `encode_opaque` puts such a record back into
-its `{t, d}` envelope. Both directions re-encode the payload, and both
-report an envelope the encoder declines to represent through their
-`Result` rather than panicking: wrapping costs one level of nesting, so
-a payload nested exactly as deep as the decoder permits does not fit,
-and a caller's own framing bound need not be the encoder's size
-ceiling. Failing closed there loses one record; panicking loses the
-process.
+its `{t, d}` envelope, and the round trip is the identity on the wire:
+what `decode_record` hands back re-wraps to exactly the bytes it came
+from. Only the writing direction re-encodes, and it reports an envelope
+the encoder declines to represent through its `Result` rather than
+panicking — wrapping costs one level of nesting, so a payload nested
+exactly as deep as the decoder permits does not fit, and a caller's own
+framing bound need not be the encoder's size ceiling. Failing closed
+there loses one record; panicking loses the process.
 
 `AnyRecord::summary()` exposes value-redacted inventory data for
 host/store planning: record family, secret-field counts, optional/list

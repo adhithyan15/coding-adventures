@@ -100,7 +100,9 @@
 // so that an oversized or overdeep value is reported rather than
 // aborting the process; the tests below import `encode` separately to
 // build fixture bytes they already know are in range.
-use coding_adventures_canonical_cbor::{decode, try_encode, CborError, CborValue};
+use coding_adventures_canonical_cbor::{
+    decode, decode_map_spanned, try_encode, CborError, CborValue,
+};
 use coding_adventures_zeroize::Zeroize;
 
 // ─────────────────────────────────────────────────────────────────────
@@ -278,8 +280,7 @@ pub fn encode_record<T: VaultRecord>(rec: &T) -> Result<Vec<u8>, VaultRecordErro
 /// as `AnyRecord::Opaque` so old clients do not crash on records
 /// produced by newer ones.
 pub fn decode_record(bytes: &[u8]) -> Result<AnyRecord, VaultRecordError> {
-    let v = decode(bytes)?;
-    let (content_type, payload) = split_envelope(v)?;
+    let (content_type, payload, payload_span) = split_envelope(bytes)?;
     Ok(match content_type.as_str() {
         LOGIN_V1 => AnyRecord::Login(Login::decode_payload(&payload)?),
         SECURE_NOTE_V1 => AnyRecord::SecureNote(SecureNote::decode_payload(&payload)?),
@@ -289,19 +290,46 @@ pub fn decode_record(bytes: &[u8]) -> Result<AnyRecord, VaultRecordError> {
         DATABASE_CREDENTIAL_V1 => {
             AnyRecord::DatabaseCredential(DatabaseCredential::decode_payload(&payload)?)
         }
-        // Unknown / app-specific / future-version: re-encode the
-        // payload bytes verbatim and return as opaque.
+        // Unknown / app-specific / future-version: hand back the
+        // payload's own bytes and return as opaque.
         //
-        // The re-encode is reported through this function's existing
-        // error channel rather than by panicking. A caller decodes
-        // bytes it did not produce, and the size ceiling its own
-        // framing enforces need not be the one the encoder enforces,
-        // so a record that decodes may still be one the encoder
-        // declines to represent. Failing closed there loses one
-        // record; panicking loses the process.
+        // # Why this slices instead of re-encoding
+        //
+        // The obvious spelling is `try_encode(&payload)`, and this
+        // function used to be written that way. It was the most severe
+        // defect in the codec, because it could refuse a record the
+        // decoder had just accepted:
+        //
+        // ```text
+        //   canonical-cbor  MAX_ENCODED_SIZE    =  1 MiB   (encoder only)
+        //   vault-pm        MAX_PLAINTEXT_BYTES = 16 MiB   (what we hold)
+        // ```
+        //
+        // `decode` has no matching input-length bound, so an opaque
+        // payload anywhere between those two numbers reads back fine and
+        // then fails to re-encode. Every such record is undecodable
+        // rather than merely unwritable — and this decode runs during
+        // vault *open*, before any session exists, so a single synced
+        // peer record denied the whole vault permanently, with no
+        // session to delete it from and no export to escape through.
+        //
+        // Nothing needed re-encoding in the first place. The payload
+        // arrived through the strict canonical decoder, which enforces
+        // every rule the encoder applies, so its bytes already are the
+        // one legal spelling of that value — exactly what `try_encode`
+        // would have returned, byte for byte. Taking the sub-slice keeps
+        // that guarantee (`encode_opaque` still round trips to the same
+        // wire form) and drops the only failure mode, since slicing a
+        // range the parser itself measured cannot fail on any input that
+        // decoded at all.
+        //
+        // The record is still too large for this product to *write*.
+        // That refusal stays where it belongs, in `encode_opaque` and
+        // `encode_record`, where it costs one record rather than the
+        // vault.
         _ => AnyRecord::Opaque {
             content_type,
-            payload_bytes: try_encode(&payload)?,
+            payload_bytes: bytes[payload_span].to_vec(),
         },
     })
 }
@@ -310,8 +338,7 @@ pub fn decode_record(bytes: &[u8]) -> Result<AnyRecord, VaultRecordError> {
 /// [`VaultRecordError::ContentTypeMismatch`] if the content type
 /// doesn't match `T::CONTENT_TYPE`.
 pub fn decode_record_as<T: VaultRecord>(bytes: &[u8]) -> Result<T, VaultRecordError> {
-    let v = decode(bytes)?;
-    let (content_type, payload) = split_envelope(v)?;
+    let (content_type, payload, _) = split_envelope(bytes)?;
     if content_type != T::CONTENT_TYPE {
         return Err(VaultRecordError::ContentTypeMismatch {
             expected: T::CONTENT_TYPE,
@@ -321,29 +348,39 @@ pub fn decode_record_as<T: VaultRecord>(bytes: &[u8]) -> Result<T, VaultRecordEr
     T::decode_payload(&payload)
 }
 
-/// Helper: peel off the `{t, d}` envelope. Returns `(content_type, payload)`.
-fn split_envelope(v: CborValue) -> Result<(String, CborValue), VaultRecordError> {
-    let entries = match v {
-        CborValue::Map(e) => e,
-        _ => return Err(VaultRecordError::NotARecord),
+/// Helper: peel off the `{t, d}` envelope.
+///
+/// Returns the content type, the decoded payload, and the byte range the
+/// payload's encoding occupied inside `bytes`. Both public decoders go
+/// through here, so there is exactly one answer to "which bytes are a
+/// record" and the typed and opaque paths cannot drift into accepting
+/// different inputs.
+fn split_envelope(
+    bytes: &[u8],
+) -> Result<(String, CborValue, core::ops::Range<usize>), VaultRecordError> {
+    // Anything that is not a two-entry map is not a record envelope. A
+    // shape mismatch is `Ok(None)` from the codec and a violation of the
+    // canonical profile is `Err`, and the two stay distinct here.
+    let Some(entries) = decode_map_spanned(bytes)? else {
+        return Err(VaultRecordError::NotARecord);
     };
     if entries.len() != 2 {
         return Err(VaultRecordError::NotARecord);
     }
     let mut t: Option<String> = None;
-    let mut d: Option<CborValue> = None;
-    for (k, val) in entries {
-        match k {
-            CborValue::Text(s) if s == "t" => match val {
+    let mut d: Option<(CborValue, core::ops::Range<usize>)> = None;
+    for entry in entries {
+        match entry.key {
+            CborValue::Text(s) if s == "t" => match entry.value {
                 CborValue::Text(s) => t = Some(s),
                 _ => return Err(VaultRecordError::BadEnvelope),
             },
-            CborValue::Text(s) if s == "d" => d = Some(val),
+            CborValue::Text(s) if s == "d" => d = Some((entry.value, entry.value_span)),
             _ => return Err(VaultRecordError::BadEnvelope),
         }
     }
     match (t, d) {
-        (Some(t), Some(d)) => Ok((t, d)),
+        (Some(t), Some((d, span))) => Ok((t, d, span)),
         _ => Err(VaultRecordError::BadEnvelope),
     }
 }
@@ -1820,29 +1857,122 @@ mod tests {
         assert!(encode_opaque("vault/custom-app/v1", &deepest_wrappable).is_ok());
     }
 
-    #[test]
-    fn decode_record_reports_an_unencodable_opaque_payload_instead_of_panicking() {
-        use coding_adventures_canonical_cbor::MAX_ENCODED_SIZE;
-
-        // A caller's own framing bound need not match the encoder's, so a
-        // record can arrive that decodes and yet is larger than the encoder
-        // will re-emit. The opaque arm re-encodes the payload, so that record
-        // must fail closed rather than abort the process.
-        // The envelope is larger than the checked encoder will emit, so the
-        // wire bytes are built directly, the way a peer with a larger frame
-        // budget would have written them. Canonical map order puts the
-        // equal-length key "d" before "t".
-        let mut wire = vec![0xa2, 0x61, b'd', 0x5a];
-        wire.extend_from_slice(&(MAX_ENCODED_SIZE as u32).to_be_bytes());
-        wire.extend(std::iter::repeat_n(0x5a_u8, MAX_ENCODED_SIZE));
+    /// The wire bytes a peer with a larger framing budget writes for one
+    /// opaque record holding a byte string of `payload_len` bytes.
+    ///
+    /// Built directly rather than through `encode_opaque`, because past
+    /// 1 MiB this product's own encoder will not write them. Canonical map
+    /// order puts the equal-length key "d" before "t".
+    fn peer_authored_opaque_wire(payload_len: usize) -> Vec<u8> {
+        // Smallest-form length header for a byte string, the same choice
+        // the canonical encoder makes -- a longer form would be rejected
+        // by the decoder before any of this mattered.
+        let header = match payload_len as u64 {
+            0..=23 => vec![0x40 | payload_len as u8],
+            24..=0xFF => vec![0x58, payload_len as u8],
+            0x100..=0xFFFF => {
+                let mut header = vec![0x59];
+                header.extend_from_slice(&(payload_len as u16).to_be_bytes());
+                header
+            }
+            _ => {
+                let mut header = vec![0x5a];
+                header.extend_from_slice(&(payload_len as u32).to_be_bytes());
+                header
+            }
+        };
+        let mut wire = vec![0xa2, 0x61, b'd'];
+        wire.extend_from_slice(&header);
+        wire.extend(std::iter::repeat_n(0x5a_u8, payload_len));
         wire.extend_from_slice(&[0x61, b't', 0x73]);
         wire.extend_from_slice(b"vault/custom-app/v1");
+        wire
+    }
 
+    #[test]
+    fn an_opaque_payload_too_large_to_re_encode_still_decodes() {
+        use coding_adventures_canonical_cbor::MAX_ENCODED_SIZE;
+
+        // The record class that used to deny the whole vault. A caller's
+        // framing bound need not match the encoder's, so a record can
+        // arrive that decodes and that the encoder would refuse to re-emit.
+        // Because this decode runs during vault open, refusing it is not a
+        // survivable failure -- so the arm must not re-encode at all.
+        let wire = peer_authored_opaque_wire(MAX_ENCODED_SIZE);
         assert!(decode(&wire).is_ok(), "the peer's record must decode");
+
+        let AnyRecord::Opaque {
+            content_type,
+            payload_bytes,
+        } = decode_record(&wire).unwrap()
+        else {
+            panic!("an unknown content type must decode as opaque")
+        };
+        assert_eq!(content_type, "vault/custom-app/v1");
+        // The payload is exactly the sub-slice from the wire: the four-byte
+        // header plus the body, and nothing of the envelope around it.
+        assert_eq!(payload_bytes.len(), MAX_ENCODED_SIZE + 5);
+        assert_eq!(payload_bytes.as_slice(), &wire[3..wire.len() - 22]);
+
+        // Writing it back is still refused, which is the correct place for
+        // the ceiling: it costs one record rather than the vault.
         assert!(matches!(
-            decode_record(&wire),
+            encode_opaque(&content_type, &payload_bytes),
             Err(VaultRecordError::Cbor(CborError::EncodeTooLarge))
         ));
+    }
+
+    #[test]
+    fn opaque_payload_bytes_are_what_re_encoding_would_have_produced() {
+        // Slicing replaced a re-encode, so the two have to agree wherever
+        // the re-encode was possible at all. This is the property
+        // `encode_opaque` round trips on, and the one the application's
+        // authored opaque merge checks its input against.
+        for payload_len in [0, 1, 23, 24, 255, 256, 65_535, 65_536] {
+            let wire = peer_authored_opaque_wire(payload_len);
+            let AnyRecord::Opaque { payload_bytes, .. } = decode_record(&wire).unwrap() else {
+                panic!("an unknown content type must decode as opaque")
+            };
+            let payload = decode(&payload_bytes).unwrap();
+            assert_eq!(
+                payload_bytes,
+                try_encode(&payload).unwrap(),
+                "sliced and re-encoded payloads must agree at length {payload_len}",
+            );
+            assert_eq!(
+                encode_opaque("vault/custom-app/v1", &payload_bytes).unwrap(),
+                wire,
+                "the record must round trip to the same wire bytes at length {payload_len}",
+            );
+        }
+    }
+
+    #[test]
+    fn opaque_payload_bytes_are_sliced_for_every_payload_shape() {
+        // The span the decoder reports has to be right for every value
+        // shape, not just the byte strings a large payload happens to use:
+        // an off-by-one would silently store a different payload.
+        for payload in [
+            CborValue::Unsigned(0),
+            CborValue::Unsigned(u64::MAX),
+            CborValue::Negative(41),
+            CborValue::Bytes(Vec::new()),
+            CborValue::text("text"),
+            CborValue::Array(vec![CborValue::Null, CborValue::Bool(true)]),
+            CborValue::Map(vec![(CborValue::text("k"), CborValue::Unsigned(1))]),
+            CborValue::Tag(7, Box::new(CborValue::text("tagged"))),
+            CborValue::Null,
+        ] {
+            let expected = try_encode(&payload).unwrap();
+            let wire = encode_opaque("vault/custom-app/v1", &expected).unwrap();
+            let AnyRecord::Opaque { payload_bytes, .. } = decode_record(&wire).unwrap() else {
+                panic!("an unknown content type must decode as opaque")
+            };
+            assert_eq!(
+                payload_bytes, expected,
+                "payload {payload:?} must slice out"
+            );
+        }
     }
 
     /// A `Login` whose password is `n` bytes long and whose every other
@@ -2008,6 +2138,26 @@ mod tests {
         let bytes = encode(&envelope);
         let err = decode_record(&bytes).unwrap_err();
         assert!(matches!(err, VaultRecordError::NotARecord));
+    }
+
+    #[test]
+    fn decode_rejects_a_two_entry_map_whose_keys_are_not_t_and_d() {
+        // Two entries is the right *count*, so this reaches the key match
+        // rather than the arity check -- the one branch of the shared
+        // envelope routine that neither arity nor value-type tests cover.
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("a"), CborValue::text(LOGIN_V1.to_string())),
+            (CborValue::text("b"), CborValue::Map(vec![])),
+        ]);
+        let bytes = encode(&envelope);
+        assert!(matches!(
+            decode_record(&bytes).unwrap_err(),
+            VaultRecordError::BadEnvelope
+        ));
+        assert!(matches!(
+            decode_record_as::<Login>(&bytes).unwrap_err(),
+            VaultRecordError::BadEnvelope
+        ));
     }
 
     #[test]

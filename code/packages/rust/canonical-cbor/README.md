@@ -44,6 +44,42 @@ let back = decode(&bytes).unwrap();
 assert_eq!(encode(&back), bytes); // round-trip is byte-for-byte stable
 ```
 
+## Passing a sub-document through, without re-encoding it
+
+`decode_map_spanned` decodes a map and tells you where each entry's value
+sat in the input:
+
+```rust
+use coding_adventures_canonical_cbor::{CborValue, decode_map_spanned, encode};
+
+let bytes = encode(&CborValue::Map(vec![
+    (CborValue::text("d"), CborValue::bytes(vec![1, 2, 3])),
+    (CborValue::text("t"), CborValue::text("example/v1")),
+]));
+let entries = decode_map_spanned(&bytes).unwrap().unwrap();
+assert_eq!(
+    &bytes[entries[0].value_span.clone()],
+    encode(&CborValue::bytes(vec![1, 2, 3])).as_slice(),
+);
+```
+
+Those bytes are exactly what re-encoding the value would produce. The
+decoder enforces every rule the encoder applies, so an input that decodes
+has only one legal spelling — the one the encoder emits.
+
+Which raises the obvious question: why not just re-encode? Because
+`decode` has no input-length bound and `try_encode` has a 1 MiB one. That
+bound protects the *encoder*; it says nothing about what may be read. So
+there are inputs that decode and will not re-encode, and for those a
+round trip turns a readable document into an error. If your job is to
+hold someone else's sub-document and hand it back later without
+interpreting it, take the span: slicing a range the parser itself
+measured cannot fail on anything that decoded.
+
+Valid CBOR that isn't a map is `Ok(None)`, not an error — being the wrong
+shape is a fact about the document, and only profile violations are
+errors.
+
 ## What's in the canonical profile we implement
 
 - **Definite length only.** Indefinite-length items (`0x9F`, `0xBF`,

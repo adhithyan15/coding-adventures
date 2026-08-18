@@ -14751,4 +14751,323 @@ mod tests {
         let session = active_session(locator, &local, &bootstrap, &factory);
         assert_eq!(session.current_catalog.items.len(), 2);
     }
+
+    // ─────────────────────────────────────────────────────────────────
+    // A synced peer's oversized opaque record must not deny vault open
+    //
+    // These pin the invariant that vault open never fails because of one
+    // item. The record below is authored the way a peer with a larger
+    // framing budget authors it — directly as wire bytes, because this
+    // product's own encoder refuses to emit it — and it arrives through
+    // the shared object store the way a sync delivers it.
+    //
+    // 1.5 MiB is the size that matters: comfortably above canonical-
+    // CBOR's 1 MiB encoded ceiling, comfortably below this crate's 16 MiB
+    // plaintext gate. Records in that band decode and must stay decodable.
+    // ─────────────────────────────────────────────────────────────────
+
+    const PEER_OPAQUE_PAYLOAD_BYTES: usize = 1_536 * 1024;
+
+    /// Emit a CBOR header for `major` carrying `len`, in the smallest form
+    /// — the same choice [`coding_adventures_canonical_cbor::encode`] makes,
+    /// written out here because the peer's encoder is not ours.
+    fn cbor_header(major: u8, len: usize) -> Vec<u8> {
+        let tag = major << 5;
+        let len = len as u64;
+        match len {
+            0..=23 => vec![tag | len as u8],
+            24..=0xFF => vec![tag | 24, len as u8],
+            0x100..=0xFFFF => {
+                let mut out = vec![tag | 25];
+                out.extend_from_slice(&(len as u16).to_be_bytes());
+                out
+            }
+            _ => {
+                let mut out = vec![tag | 26];
+                out.extend_from_slice(&(len as u32).to_be_bytes());
+                out
+            }
+        }
+    }
+
+    /// One opaque payload: canonical CBOR for a byte string of `len` bytes.
+    ///
+    /// This is the shape `AnyRecord::Opaque::payload_bytes` carries — the
+    /// encoded `d` value, not the value's contents.
+    fn peer_opaque_payload(len: usize) -> Vec<u8> {
+        let mut payload = cbor_header(2, len);
+        payload.extend(std::iter::repeat_n(0x5a_u8, len));
+        payload
+    }
+
+    /// The record envelope a peer writes: a two-entry map `{d: payload,
+    /// t: content_type}`. Canonical map order is length-first then
+    /// bytewise, and the two keys are both one character, so `"d"`
+    /// (`0x61 0x64`) precedes `"t"` (`0x61 0x74`).
+    fn peer_opaque_record(content_type: &str, payload: &[u8]) -> Vec<u8> {
+        let mut wire = vec![0xa2, 0x61, b'd'];
+        wire.extend_from_slice(payload);
+        wire.extend_from_slice(&[0x61, b't']);
+        wire.extend_from_slice(&cbor_header(3, content_type.len()));
+        wire.extend_from_slice(content_type.as_bytes());
+        wire
+    }
+
+    /// Replace the one occurrence of `needle` in `haystack`.
+    ///
+    /// Splicing works here without repairing any enclosing length because
+    /// CBOR maps and arrays are prefixed with an element *count*, not a
+    /// byte length: growing a value nested inside them leaves every
+    /// enclosing header correct.
+    fn splice_only_occurrence(haystack: &[u8], needle: &[u8], replacement: &[u8]) -> Vec<u8> {
+        let at = haystack
+            .windows(needle.len())
+            .position(|window| window == needle)
+            .expect("the placeholder record must appear in the revision plaintext");
+        assert!(
+            haystack[at + 1..]
+                .windows(needle.len())
+                .all(|window| window != needle),
+            "the placeholder record must appear exactly once",
+        );
+        let mut out = Vec::with_capacity(haystack.len() - needle.len() + replacement.len());
+        out.extend_from_slice(&haystack[..at]);
+        out.extend_from_slice(replacement);
+        out.extend_from_slice(&haystack[at + needle.len()..]);
+        out
+    }
+
+    /// The revision plaintext a peer seals for one live opaque item whose
+    /// payload is `payload_bytes` long.
+    ///
+    /// Built by encoding the revision with a small placeholder record
+    /// through the product's own encoder, then swapping the placeholder's
+    /// byte-string field for the oversized one. Everything except the one
+    /// record therefore has exactly the bytes this product would write.
+    fn peer_opaque_revision_plaintext(item_id: ItemId, payload_bytes: usize) -> Vec<u8> {
+        let placeholder_payload = peer_opaque_payload(8);
+        let placeholder_record =
+            encode_opaque(FIXTURE_OPAQUE_CONTENT_TYPE, &placeholder_payload).unwrap();
+        let document = ItemDocument::new(
+            item_id,
+            ContentType::new(FIXTURE_OPAQUE_CONTENT_TYPE).unwrap(),
+            500,
+            500,
+            LwwRegister::new(true, 500, OperationId::new([0xf0; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Opaque {
+                content_type: FIXTURE_OPAQUE_CONTENT_TYPE.to_owned(),
+                payload_bytes: placeholder_payload,
+            },
+            ObservedSet::new(),
+        )
+        .unwrap();
+        let candidate = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Live(Box::new(document)),
+        )
+        .unwrap();
+        let plaintext =
+            encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap();
+
+        let oversized_record = peer_opaque_record(
+            FIXTURE_OPAQUE_CONTENT_TYPE,
+            &peer_opaque_payload(payload_bytes),
+        );
+        let mut placeholder_field = cbor_header(2, placeholder_record.len());
+        placeholder_field.extend_from_slice(&placeholder_record);
+        let mut oversized_field = cbor_header(2, oversized_record.len());
+        oversized_field.extend_from_slice(&oversized_record);
+        splice_only_occurrence(&plaintext, &placeholder_field, &oversized_field)
+    }
+
+    /// Publish one peer-authored commit straight into the shared object
+    /// store, then adopt its head locally.
+    ///
+    /// The ordinary local mutation path cannot deliver this record: it
+    /// stages the whole publication journal -- sealed frames included --
+    /// in local state, and a 1.5 MiB frame is past what the local-state
+    /// encode will write. That is the point. A record in this size band
+    /// can only have been authored somewhere with a larger framing
+    /// budget, so the fixture writes it the way that device would: the
+    /// objects land in the shared store and the head moves, with local
+    /// state carrying only the pin.
+    fn peer_publishes(
+        locator: BootstrapLocator,
+        local: &MemoryLocalStateStore,
+        bootstrap: &MemoryBootstrapStore,
+        factory: &V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        publication: PublicationJournalV1,
+    ) {
+        let exact_state = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_state).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        assert_eq!(active.bootstrap_locator(), locator);
+        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        let material = unlock_active_material(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            &active,
+            &exact_bootstrap,
+        )
+        .unwrap();
+        let repository = factory
+            .connect(material.repository_address, Box::new(material.verifier))
+            .unwrap();
+        repository.initialize().unwrap();
+        let adopted = active.after_publication(&publication).unwrap();
+        let receipt = repository
+            .publish(publication.publication(), publication.base_heads())
+            .unwrap();
+        assert_eq!(receipt.heads(), publication.expected_heads());
+        // Adopting the head is what any sync ceremony leaves behind, and
+        // the mutation paths require the pin to match the observed head
+        // before they will write. Writing the adopted state directly keeps
+        // this fixture about the poisoned record rather than about a
+        // ceremony this slice does not yet have.
+        *local.0.lock().unwrap() = Some(LocalVaultStateV1::Active(adopted).encode().unwrap());
+    }
+
+    /// A peer commit carrying one live opaque item whose payload is
+    /// `payload_bytes` long.
+    fn peer_opaque_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+        payload_bytes: usize,
+    ) -> (PublicationJournalV1, RevisionId) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &peer_opaque_revision_plaintext(item_id, payload_bytes),
+            &ObjectRandomness::new([0xc1; 32], [0xc2; 24], [0xc3; 24]),
+        )
+        .unwrap();
+        let revision_id = RevisionId::new(*frame.id().unwrap().as_bytes());
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, vec![revision_id])])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xc4; 32], [0xc5; 24], [0xc6; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, vec![frame], catalog_frame),
+            revision_id,
+        )
+    }
+
+    #[test]
+    fn the_peer_record_encoder_agrees_with_this_products_own() {
+        // The fixture above is only a faithful model of a larger-budget peer
+        // if it writes the same bytes this product writes wherever this
+        // product is willing to write at all.
+        for len in [0, 8, 23, 24, 255, 256, 65_535, 65_536] {
+            let payload = peer_opaque_payload(len);
+            assert_eq!(
+                peer_opaque_record(FIXTURE_OPAQUE_CONTENT_TYPE, &payload),
+                encode_opaque(FIXTURE_OPAQUE_CONTENT_TYPE, &payload).unwrap(),
+                "peer and product must agree at payload length {len}",
+            );
+        }
+    }
+
+    /// Sync one peer-authored opaque item of `payload_bytes` into a fresh
+    /// vault and return everything needed to reopen it.
+    #[allow(clippy::type_complexity)]
+    fn vault_with_synced_opaque_item(
+        payload_bytes: usize,
+    ) -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        ItemId,
+        RevisionId,
+    ) {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x5c; 16]);
+        let (publication, revision_id) = peer_opaque_publication(&active, item_id, payload_bytes);
+        peer_publishes(locator, &local, &bootstrap, &factory, publication);
+        (locator, local, bootstrap, factory, item_id, revision_id)
+    }
+
+    #[test]
+    fn a_synced_opaque_record_under_the_encode_ceiling_opens() {
+        // The control for the test below. Same fixture, same delivery, only
+        // the payload size differs -- so a failure there is the size band
+        // and not the way the record was authored or synced.
+        let (locator, local, bootstrap, factory, item_id, revision_id) =
+            vault_with_synced_opaque_item(512 * 1024);
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].revision_id(), revision_id);
+    }
+
+    #[test]
+    fn a_synced_oversized_opaque_record_leaves_the_vault_openable() {
+        // Before the fix this was the worst failure in the codec: the opaque
+        // arm of `decode_record` re-encoded the payload it had just decoded,
+        // the re-encode hit the 1 MiB ceiling, and the resulting error rose
+        // through `decode_item_revision`, `read_candidate`, and
+        // `materialize_current_catalog` to deny `open_active_vault`. One
+        // synced record locked the whole vault, permanently, with no session
+        // to delete it from.
+        let (locator, local, bootstrap, factory, item_id, revision_id) =
+            vault_with_synced_opaque_item(PEER_OPAQUE_PAYLOAD_BYTES);
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].revision_id(), revision_id);
+
+        // The payload survives the open intact: the decoder hands back the
+        // record's own bytes, so what the peer sealed is what is read.
+        let ItemState::Live(document) = candidates[0].state() else {
+            panic!("the synced candidate must be live")
+        };
+        let AnyRecord::Opaque {
+            content_type,
+            payload_bytes,
+        } = document.payload()
+        else {
+            panic!("an unknown content type must decode as opaque")
+        };
+        assert_eq!(content_type, FIXTURE_OPAQUE_CONTENT_TYPE);
+        assert_eq!(
+            payload_bytes.as_slice(),
+            peer_opaque_payload(PEER_OPAQUE_PAYLOAD_BYTES).as_slice(),
+        );
+    }
+
+    #[test]
+    fn a_synced_oversized_opaque_item_can_be_deleted() {
+        // The escape hatch. Opening is only half of it: the operator has to
+        // be able to get rid of the record, and deletion writes a tombstone,
+        // which never re-encodes the poisoned payload.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_opaque_item(PEER_OPAQUE_PAYLOAD_BYTES);
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        session
+            .delete_current_item(item_id, 600, 601, delete_item_randomness(0x5d), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
 }

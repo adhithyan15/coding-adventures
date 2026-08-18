@@ -2,6 +2,49 @@
 
 All notable changes to this package are documented here.
 
+## [0.61.2] - 2026-08-17
+
+### Fixed
+
+- `open_active_vault` no longer fails because of one item's payload size. The
+  repair itself is in `vault-records` — `decode_record`'s opaque arm no longer
+  re-encodes the payload it just decoded — but the damage landed here, and this
+  is where it is pinned.
+
+  An opaque payload between canonical-CBOR's 1 MiB encode ceiling and this
+  crate's 16 MiB plaintext gate decoded fine and then failed `EncodeTooLarge`
+  on the re-encode. The error rose through `decode_item_revision` (as
+  `IntegrityFailure`), `read_candidate`, and `materialize_current_catalog` to
+  deny `open_active_vault`. Since `materialize_current_catalog` reads every
+  candidate of every item, one poisoned revision anywhere in the catalog denied
+  the whole vault — and because the failure is *during* open, there was no
+  session to delete the item from, no export to evacuate through, and no
+  ceremony of any kind. Recovery meant deleting local state or editing the store
+  by hand outside the product. This was the residual exposure recorded in
+  VLT-PM05 §13.2 as worse than anything the two preceding changes fixed: those
+  turned process aborts into closed errors on *write* paths, where a closed
+  error costs one record; on the open path a closed error is the loss.
+
+  Nothing in this crate changed. The invariant it may now rely on is stated in
+  the new VLT-PM05 §13.3: any revision whose plaintext is within
+  `MAX_PLAINTEXT_BYTES` and whose bytes are valid canonical CBOR materialises
+  into the current catalog, whatever the encoder would say about re-emitting it.
+  Open still fails closed on everything it should — corrupt frames, broken pins,
+  failed signatures, a catalog past `MAX_CATALOG_ENTRIES`.
+
+  The escape hatch of §13.2 now covers the opaque case on the same terms as the
+  first-party one, and both halves are pinned by test rather than inferred:
+  `a_synced_oversized_opaque_record_leaves_the_vault_openable` and
+  `a_synced_oversized_opaque_item_can_be_deleted` drive a real 1.5 MiB opaque
+  record delivered the only way such a record can arrive — published straight
+  into the shared object store by a device with a larger framing budget, since
+  the local mutation path stages the whole publication journal in local state
+  and will not write a 1.5 MiB frame. A sub-ceiling control
+  (`a_synced_opaque_record_under_the_encode_ceiling_opens`) uses the identical
+  fixture and delivery, so a failure is attributable to the size band rather
+  than to how the record was authored, and both regression tests were confirmed
+  red against the unfixed opaque arm before the fix landed.
+
 ## [0.61.1] - 2026-08-17
 
 ### Fixed

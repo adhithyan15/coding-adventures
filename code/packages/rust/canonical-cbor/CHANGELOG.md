@@ -9,6 +9,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `decode_map_spanned` and `SpannedMapEntry`: decode a canonical CBOR map
+  and learn where each entry's value sat in the input. The bytes a span points
+  at are exactly what re-encoding the value would produce, because the strict
+  decoder enforces every rule the encoder applies, so an input that decodes has
+  only one legal spelling.
+
+  It exists for callers that pass an unrecognised sub-document through — hold it
+  now, re-emit it later, without interpreting it. Such a caller must slice
+  rather than re-encode, because `decode` has no input-length bound while
+  `try_encode` has `MAX_ENCODED_SIZE`: inputs exist that decode and will not
+  re-encode, and for those a round trip turns a readable document into an error.
+  Slicing a range the parser itself measured cannot fail on any input that
+  decoded. `vault-records`' opaque-record arm is the first caller, where the
+  round trip was denying vault open outright.
+
+  Spans come from the same parse that validates the input — the map reader is
+  now one function used by both decoders — so the spanned decode rejects
+  exactly what `decode` rejects, with the same error, pinned by a differential
+  test over sixteen hostile inputs. Valid CBOR that is not a map is `Ok(None)`
+  rather than an error, so no error identifier is added to the portable CBR01
+  set and the C and C++ ports need no change.
 - Added `try_encode` and transactional `try_encode_into` APIs with stable,
   payload-blind errors for duplicate encoded map keys, excessive nesting, and
   output beyond the 1 MiB item limit.

@@ -7,7 +7,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- `decode_record`'s opaque arm no longer re-encodes the payload it has just
+  decoded, which closes the most severe defect this codec had: an opaque record
+  that could be **read but not read back**.
+
+  The arm produced `AnyRecord::Opaque::payload_bytes` by calling `try_encode` on
+  the decoded payload. `decode` has no input-length bound and `try_encode` has
+  `MAX_ENCODED_SIZE` (1 MiB), so any opaque payload between 1 MiB and this
+  layer's 16 MiB plaintext gate decoded cleanly and then failed
+  `EncodeTooLarge`. That is a different class of failure from the encode-side
+  ones fixed before it: this decode runs underneath `decode_item_revision`,
+  which runs during vault *open*, so the error reached `open_active_vault` and
+  denied the entire vault — permanently, with no session from which to delete
+  the record and no export to escape through. One record synced from a peer
+  with a larger framing budget was enough. Recovery meant deleting local state
+  or hand-editing the store outside the product.
+
+  The re-encode was never needed. The payload arrived through the strict
+  canonical decoder, which enforces every rule the encoder applies, so its bytes
+  already are the one legal spelling of that value — byte for byte what
+  `try_encode` would have returned. The arm now takes that sub-slice, using the
+  span reported by canonical-CBOR's new `decode_map_spanned`, and slicing a
+  range the parser itself measured cannot fail on any input that decoded at all.
+
+  Unchanged by design: `encode_opaque` and `encode_record` still refuse an
+  oversized record with `EncodeTooLarge`. The band of records that are legal to
+  hold and illegal to write is not narrowed — the refusal simply now costs one
+  record rather than the vault. Also unchanged: `encode_opaque(content_type,
+  payload_bytes)` still reproduces the original wire bytes exactly, so the
+  `decode_record` → `encode_opaque` round trip remains the identity, which is
+  the property VLT-PM39's authored opaque merge validates its input against.
+
+  Tests: an oversized record that decodes and whose payload equals the wire
+  sub-slice; sliced-and-re-encoded agreement across eight payload lengths
+  spanning every header width; span correctness across nine payload *shapes*, so
+  an off-by-one cannot hide in a value type the size tests never build; and, in
+  `vault-pm-application`, a 1.5 MiB record delivered through a shared object
+  store that leaves the vault openable and the item deletable, with a
+  sub-ceiling control alongside. Specified in VLT02 *Decoding never re-encodes*
+  and VLT-PM05 §13.3.
+
 ### Changed
+
+- `decode_record` and `decode_record_as` now peel the `{t, d}` envelope through
+  one shared byte-level routine rather than each destructuring an
+  already-decoded value, so there is a single answer to which bytes are a record
+  and the typed and opaque paths cannot drift into accepting different inputs.
+  Accepted inputs and returned errors are unchanged.
 
 - **Breaking:** `encode_record` now returns `Result<Vec<u8>, VaultRecordError>`
   rather than `Vec<u8>`. See *Fixed* below for why the encode is genuinely
