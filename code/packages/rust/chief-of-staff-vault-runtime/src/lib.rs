@@ -349,8 +349,11 @@ fn check_admission(
 /// an invariant someone has to maintain across two insertions.
 /// Proof that [`check_admission`] ran and admitted the request.
 ///
-/// Unconstructible outside [`custody`], so the only way to obtain one is to ask
-/// for a decision and get an affirmative answer.
+/// Its field is private, so no *other crate* can forge one. Within this crate
+/// it is decorative, and saying otherwise would be the same over-claim this
+/// type exists to prevent: the wall that actually matters is `custody`'s
+/// module privacy on the payload field, and `StoredSecret::admit` performs the
+/// check itself rather than trusting a token a caller supplies.
 #[must_use]
 pub struct Admitted(());
 
@@ -421,8 +424,12 @@ pub struct ChiefVaultRuntime {
     /// answer "which capabilities are outstanding over *this* secret" — and
     /// therefore no way to make rotation revoke them.
     ///
-    /// **Lock order is `secrets` → `issued` → `leases`,** and every path that
-    /// takes more than one takes them in that order. `request_lease` holds
+    /// **Lock order is `secrets` → `issued` → `leases`** for every path that
+    /// holds more than one at a time. `consume` and `revoke` touch `leases` and
+    /// then `issued`, which is the reverse — they are safe only because they
+    /// release the first before taking the second, and **must never hold
+    /// both**. Making them atomic by holding `issued` across `leases.consume`
+    /// would close a cycle against `request_lease` and deadlock. `request_lease` holds
     /// `secrets` across the whole mint, which is what stops a rotation from
     /// slipping between the admission decision and the lease being indexed;
     /// see [`ChiefVaultRuntime::request_lease`].
@@ -478,19 +485,33 @@ impl IssuedIndex {
         }
     }
 
-    /// Drop tracked ids the lease manager no longer recognises.
+    /// Drop tracked ids for leases that are no longer usable.
     ///
     /// Covers the case neither `consume` nor `revoke` can: a lease that simply
     /// expired. Nothing calls back into this runtime when a TTL elapses, so
-    /// without this sweep an index over short-lived leases would grow forever
-    /// even with no attacker involved.
-    fn sweep(&mut self, secret_name: &str, leases: &InMemoryLeaseManager) {
+    /// without this sweep an index over short-lived leases fills up and stays
+    /// full, with no attacker involved.
+    ///
+    /// The predicate is *usability*, not presence, and the difference is the
+    /// whole bug this replaced. `LeaseManager::lookup` deliberately returns
+    /// `Ok` for expired and revoked leases -- it reports status rather than
+    /// withholding it -- so an `is_err()` test reclaimed nothing. And because
+    /// the per-secret cap here refuses before `issue` is ever reached, the
+    /// lease layer's own reaper never ran either. The result was that 1024
+    /// one-millisecond leases wedged a secret permanently: every later request
+    /// refused, with no way back except operator rotation.
+    fn sweep(&mut self, secret_name: &str, leases: &InMemoryLeaseManager, now_ms: u64) {
         let Some(set) = self.by_secret.get_mut(secret_name) else {
             return;
         };
         let dead: Vec<LeaseId> = set
             .iter()
-            .filter(|id| leases.lookup(id).is_err())
+            .filter(|id| match leases.lookup(id) {
+                // Still in the table: keep it only while it is actually usable.
+                Ok(info) => !info.is_active_at(now_ms),
+                // Already reaped out of the table.
+                Err(_) => true,
+            })
             .cloned()
             .collect();
         for id in dead {
@@ -585,10 +606,10 @@ impl ChiefVaultRuntime {
     /// Count the leases this runtime still tracks for a secret.
     ///
     /// Tracking is pruned on rotation, on redemption, and on revocation, and
-    /// expired ids are swept when the same secret is next leased. So this
-    /// counts the references rotation would still have to revoke -- close to,
-    /// but not exactly, the number of live leases, since an id whose TTL
-    /// elapsed stays counted until the next sweep touches it.
+    /// ids whose leases are no longer usable are swept when the same secret is
+    /// next leased. So this counts the references rotation would still have to
+    /// revoke -- close to, but not exactly, the number of live leases, since an
+    /// expired id stays counted until the next sweep touches it.
     pub fn tracked_lease_count(&self, secret_name: &str) -> usize {
         self.issued
             .lock()
@@ -630,9 +651,11 @@ impl ChiefVaultRuntime {
             .lock()
             .expect("vault issued-lease mutex poisoned");
 
-        // Discard ids the lease layer has already forgotten before testing the
-        // bound, so expiry alone can never exhaust a secret's budget.
-        issued.sweep(request.secret_name, &self.leases);
+        // Reclaim dead ids before testing the bound, so expiry alone can never
+        // exhaust a secret's budget. This has to run before the capacity check,
+        // not after: the check is what refuses, and refusing on the strength of
+        // leases that expired long ago is the wedge described on `sweep`.
+        issued.sweep(request.secret_name, &self.leases, now_ms());
         if issued.count(request.secret_name) >= MAX_TRACKED_LEASES_PER_SECRET {
             return Err(VaultRuntimeError::TooManyOutstandingLeases);
         }
@@ -703,6 +726,18 @@ impl ChiefVaultRuntime {
             .forget(&lease_id);
         Ok(())
     }
+}
+
+/// Wall-clock milliseconds, for deciding whether a tracked lease is still live.
+///
+/// Falls back to 0 if the clock is before the epoch, which makes every lease
+/// look expired and so sweeps aggressively. That is the safe direction: a
+/// swept-too-early id costs a revocable capability being forgotten, while a
+/// kept-too-long id costs availability.
+fn now_ms() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map_or(0, |elapsed| elapsed.as_millis() as u64)
 }
 
 fn lease_id(vault_ref: &VaultRef) -> Result<LeaseId, VaultRuntimeError> {
@@ -1019,10 +1054,10 @@ mod tests {
 
     #[test]
     fn the_admission_decision_refuses_before_it_can_see_a_payload() {
-        // VLT06 P4 as a property of the type signature rather than of statement
-        // order. `check_admission` takes a `&SecretPolicy` and returns unit —
-        // it is handed no payload, so it cannot leak one, and the clone in
-        // `admit` is necessarily downstream of it.
+        // VLT06 P4 as a property of visibility rather than of statement order.
+        // `check_admission` takes a `&SecretPolicy` and never receives a
+        // payload, and the payload itself lives behind `custody`'s module wall
+        // — cloning it before deciding does not compile from out here.
         //
         // The previous version of this test asserted only that a refused
         // request never reached the delivery adapter, which is a consequence of

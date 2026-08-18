@@ -961,8 +961,9 @@ fn an_agent_cannot_mint_a_lease_that_outlives_the_sweep_horizon() {
     // The lease layer permits 90 days and bounds its table. Together those are
     // a squat: fill the shared table at the maximum TTL and every other
     // consumer — including trusted host paths — is locked out for a quarter.
-    // Capping the agent-facing TTL well under the sweep horizon makes the
-    // attack self-healing rather than durable.
+    // Capping the agent-facing TTL bounds how long a squat can hold slots in
+    // the shared lease table; the runtime index reclaims them via its own
+    // usability sweep.
     let over = i64::try_from(MAX_AGENT_LEASE_TTL_MS).expect("ceiling fits in i64") + 1;
     let error = lease_direct_call(lease_arguments(SECRET_NAME, over))
         .expect_err("a TTL past the agent ceiling must be refused");

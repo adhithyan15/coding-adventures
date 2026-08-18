@@ -63,3 +63,9 @@ It is bounded (1024 per secret, failing closed) and pruned on redemption,
 revocation, and expiry, because an unbounded second table over the
 agent-reachable path would reintroduce the exhaustion the lease layer was
 hardened against.
+
+The expiry sweep tests whether a lease is still *usable*, not whether it is
+still present: `LeaseManager::lookup` returns `Ok` for expired and revoked
+leases on purpose, so a presence check reclaims nothing — and a cap that never
+reclaims is worse than no cap, since 1024 one-millisecond leases would refuse
+the secret permanently.

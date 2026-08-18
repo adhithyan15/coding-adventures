@@ -24,10 +24,14 @@
   test is a sustained hammer instead.
 - **Security**: the lease index is bounded per secret
   (`MAX_TRACKED_LEASES_PER_SECRET`, 1024) and pruned on redemption, revocation,
-  and — via a sweep at issue time — expiry. Unbounded, it was a second table
-  over the same agent-driven path as the lease table, reintroducing the
-  exhaustion that layer had been hardened against. Reaching the bound fails
-  closed: an unrevocable capability is worse than a refused request.
+  and — via a sweep at issue time — expiry. The sweep tests lease *usability*,
+  not presence: `lookup` deliberately returns `Ok` for expired and revoked
+  leases, so a presence test reclaimed nothing and turned the cap into a
+  permanent wedge (1024 one-millisecond leases refused a secret forever).
+  Unbounded, the index was a second table over the same agent-driven path as
+  the lease table, reintroducing the exhaustion that layer had been hardened
+  against. Reaching the bound fails closed: an unrevocable capability is worse
+  than a refused request.
 - `SecretPolicy::privilege_tier` is recorded and read by nothing. The doc says
   so outright rather than implying another layer interprets it.
 - The payload now lives in a private `custody` module reachable only through an

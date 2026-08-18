@@ -227,3 +227,53 @@ fn revoking_a_lease_also_releases_its_slot() {
     vault.revoke(&vault_ref).expect("revoke should work");
     assert_eq!(vault.tracked_lease_count(SECRET), 0);
 }
+
+/// Expired leases must free their slots, or the cap becomes a permanent wedge.
+///
+/// This is the test whose absence hid a real defect. The first version of the
+/// sweep asked `lookup(id).is_err()` — but `LeaseManager::lookup` returns `Ok`
+/// for expired and revoked leases by design, so it reclaimed nothing. And
+/// because the per-secret cap refuses before `issue` is reached, the lease
+/// layer's own reaper never ran either. The result: 1024 one-millisecond
+/// leases wedged a secret forever, with every later request refused and no way
+/// back except operator rotation. Cheap to trigger and impossible to recover
+/// from — strictly worse than the unbounded growth it replaced.
+///
+/// Every other bound test here uses a ten-minute TTL, which is exactly why none
+/// of them could see it.
+#[test]
+fn expired_leases_release_their_slots() {
+    let vault = ChiefVaultRuntime::new();
+    vault.register_secret(
+        SECRET,
+        LeasePayload::new(OLD.to_vec()),
+        SecretPolicy::unrestricted(0),
+    );
+
+    // Fill the cap with leases that die almost immediately, holding every
+    // reference so nothing is redeemed or revoked. Expiry is the only way back.
+    let mut held = Vec::new();
+    for _ in 0..1_024 {
+        match lease(&vault, 1) {
+            Some(vault_ref) => held.push(vault_ref),
+            None => break,
+        }
+    }
+    assert_eq!(
+        held.len(),
+        1_024,
+        "expected to reach the cap; got {} leases",
+        held.len()
+    );
+
+    // Let every one of them elapse.
+    thread::sleep(Duration::from_millis(50));
+
+    vault
+        .request_lease(VaultLeaseRequest {
+            requesting_agent_id: Some("agent:test"),
+            secret_name: SECRET,
+            ttl_ms: 600_000,
+        })
+        .expect("a secret full of expired leases must still be leasable");
+}
