@@ -2,6 +2,84 @@
 
 All notable changes to this package are documented here.
 
+## [0.61.1] - 2026-08-17
+
+### Fixed
+
+- Report every serialisation that exceeds canonical-CBOR's 1 MiB
+  `MAX_ENCODED_SIZE` as a closed `BoundExceeded` instead of aborting the
+  process. This crate's own `MAX_PLAINTEXT_BYTES` is 16 MiB and its local-state
+  bound 32 MiB, both looser than the codec ceiling beneath them, so six encodes
+  were reachable with values the encoder refuses to emit:
+  - `encode_any_record` — a first-party record (all six schemas) larger than
+    1 MiB, which a peer device with a larger framing budget can author and sync.
+  - `encode_item_revision` — the revision framing around that record. Reachable
+    even when the record itself fits, because the item id, schema tag,
+    timestamps, favourite register, three observed sets, and causal-parent list
+    are added on top of the record bytes.
+  - `CatalogV1::encode` — needs no hostile peer at all. `validate_catalog`
+    admits 100,000 entries at roughly sixty bytes each, so an ordinary vault
+    crossed the codec ceiling somewhere below twenty thousand items, and the
+    catalog is re-encoded by *every* mutation.
+  - The portable export snapshot and artifact encodes — also no hostile peer:
+    a vault holding two ~600 KiB entries produced an export larger than 1 MiB
+    and aborted `vault-pm export`.
+  - The portable *import* re-encode of entries decoded from someone else's
+    artifact, the same shape as `decode_record`'s opaque arm.
+  - `encode_signed_object`, whose wrapped exact bytes are caller-sized.
+
+  `BoundExceeded` rather than `IntegrityFailure` because the cause is a fixed
+  serialisation bound being exceeded, not a corrupt store. The pre-existing
+  opaque arm of `encode_any_record` keeps `IntegrityFailure`, which VLT-PM39
+  relies on. `LocalSecretV1::encode` and the export AAD header stay infallible
+  and are documented as provably fixed-size.
+
+- Keep size faults and integrity faults distinct when mapping a CBOR encode
+  failure. The nine call sites above previously used a `|_|` wildcard that
+  collapsed every `CborError` into `BoundExceeded`, including `DuplicateMapKey`
+  — a canonicality fault meaning the value would encode to bytes the strict
+  decoder rejects as ambiguous. Unreachable today, because every map this crate
+  builds has distinct literal keys, but a trap for any later refactor: a real
+  integrity fault would have been reported as the benign size error an operator
+  is told to fix by shrinking a record. `map_encode_error` now matches
+  `EncodeTooLarge`/`EncodeTooDeep` explicitly and sends everything else to
+  `IntegrityFailure`.
+
+### Changed
+
+- Track `vault-records`' `encode_record` signature change to `Result`.
+
+### Known limitations
+
+The change bounds the blast radius of an unencodable record; it does not stop
+one entering the catalog. Recorded in VLT-PM05 section 13.2 and tracked as
+follow-on work rather than widened into this change:
+
+- **Ingest is still ungated.** `decode_item_revision` gates on the 16 MiB
+  plaintext bound and canonical-CBOR caps decode depth but not length, so a
+  peer with a larger framing budget can still hand this device a record that
+  decodes and can never be re-encoded. Matching the ingest gate to
+  `MAX_ENCODED_SIZE` changes what the product accepts, and done naively turns a
+  partly-degraded vault into an unopenable one — a worse failure than the one
+  it prevents — so it needs its own spec.
+- **One unencodable record blocks the whole export.** The export walks every
+  current candidate and propagates the first failure, so a single bad record
+  denies evacuating the entire vault. Skip-and-report is a format and
+  verification change, not a local one: `candidate_count` and the signed
+  `snapshot_hash` assert completeness, and VLT-PM19/VLT-PM20
+  restore-verification depends on that assertion.
+- **A narrow escape hatch.** Deleting the offending item works, because a
+  tombstone revision carries only the item id and a timestamp, so the `Live`
+  arm that reaches `encode_any_record` is never taken — now pinned by
+  `deleting_an_oversized_item_stays_possible`. It covers exactly the
+  single-candidate, first-party-record case. It does *not* cover an item that
+  is also conflicted (deletion asserts one live candidate and otherwise returns
+  `ConflictRequired`), nor an oversized *opaque* record, which is undecodable
+  rather than merely unwritable — `decode_record`'s opaque arm re-encodes the
+  payload, so the failure lands during vault open and no session is ever
+  established to delete from. Both are pre-existing, both need a peer with a
+  larger framing budget to reach, and both are tracked separately.
+
 ## [0.61.0] - 2026-08-17
 
 ### Added

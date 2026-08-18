@@ -24,10 +24,37 @@ let login = Login {
     urls: vec!["https://github.com".into()],
     notes: None,
 };
-let bytes: Vec<u8> = encode_record(&login);
+let bytes: Vec<u8> = encode_record(&login).unwrap();
 let back: Login = decode_record_as::<Login>(&bytes).unwrap();
 assert_eq!(back, login);
 ```
+
+## Encoding is fallible
+
+`encode_record` returns a `Result`, which looks surprising for a
+well-typed struct. It is fallible because two ceilings either side of
+this crate disagree:
+
+```text
+   canonical-cbor  MAX_ENCODED_SIZE    =  1 MiB   per encoded value
+   vault-pm        MAX_PLAINTEXT_BYTES = 16 MiB   per sealed object
+```
+
+The application's gate is sixteen times the codec's, and nothing
+reconciles them — they answer different questions. Between them sits a
+band of record sizes that are legal to hold and legal to decode but
+**illegal to encode**.
+
+That band is reachable. A peer device with a larger framing budget can
+author a `Login` with a 2 MiB password; it seals, syncs, and decodes
+here without complaint. The next command that re-serialises it — an
+edit, a conflict merge, a restore, an export — arrives back at
+`encode_record`. Reporting that closed loses one record; panicking
+would lose the process, and because the record stays in the store the
+abort would repeat on every later command against that vault.
+
+The boundary is exact: a record encoding to exactly `MAX_ENCODED_SIZE`
+succeeds, one byte more fails, and no partial output is ever returned.
 
 ## Wire format
 

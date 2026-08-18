@@ -743,6 +743,102 @@ InternalInvariant
 format, repository, crypto, and provider errors are mapped without formatting
 their payloads.
 
+### 13.1 The plaintext bound is not the encoder's bound
+
+The 16 MiB *application plaintext object* bound above is this layer's
+own gate. It is **not** the ceiling the canonical-CBOR encoder beneath
+it enforces, which is `MAX_ENCODED_SIZE` = 1 MiB per value (see
+VLT02 *Encoding is fallible* and CBR01). The two are independent and
+the application's is the looser of the pair.
+
+Two encodes in this layer therefore have to treat "too large to encode"
+as a reachable outcome rather than an impossible one:
+
+- **`encode_any_record`** — the per-record encode. A first-party record
+  (`Login`, `SecureNote`, `Card`, `TotpSeed`, `ApiKey`,
+  `DatabaseCredential`) whose fields sum past 1 MiB is refused here.
+- **`encode_item_revision`** — the encode of the revision *around* that
+  record. This one is reachable even when the record itself fits,
+  because the revision map adds the item id, schema tag, timestamps,
+  favourite register, observed collection/tag/attachment sets, and the
+  causal-parent list on top of the record bytes. A record just under
+  the ceiling plus that framing lands just over it.
+
+Both report `BoundExceeded`, the same variant `check_plaintext_bound`
+already returns for the 16 MiB gate. The choice is deliberate: the
+cause is a fixed serialisation bound being exceeded, which is exactly
+what `BoundExceeded` names, and reporting it as `IntegrityFailure`
+would tell an operator their store is corrupt when in fact one record
+is merely too big. `check_plaintext_bound` remains in place after each
+encode; it is now the *outer* of two bounds rather than the only one.
+
+The pre-existing opaque arm of `encode_any_record` continues to fold
+all `encode_opaque` failures into `IntegrityFailure`, because its
+dominant failure is a genuine one — stored opaque payload bytes that
+are not valid CBOR — and that mapping is relied on by VLT-PM39.
+
+The guarantee this restores is VLT-PM00's fail-closed contract, on the
+paths that re-serialise an already-stored record: `item edit`, the
+seven authored conflict merges (VLT-PM33–VLT-PM39), `conflict choose`,
+`history restore`, and `export`. Each returns `BoundExceeded` and
+leaves the vault untouched. None aborts the process.
+
+### 13.2 What this does *not* fix — residual exposure
+
+Converting the aborts into errors bounds the blast radius; it does not
+close the hole that lets an unusable record in. Three residual
+properties are stated here deliberately, because a reader should not
+mistake "fails closed" for "cannot happen".
+
+**Ingest is still ungated.** `decode_item_revision` gates on
+`MAX_PLAINTEXT_BYTES` (16 MiB), and canonical-CBOR's decoder caps depth
+but not input length. Nothing rejects a record between 1 MiB and 16 MiB
+at the point it enters the local catalog. A peer running software with
+a larger framing budget can therefore still hand this device a record
+that decodes and can never afterwards be re-encoded. Making the ingest
+gate match `MAX_ENCODED_SIZE` is the real repair, and it is deliberately
+*not* done here: it changes what the product accepts, it needs its own
+spec, and done naively it converts a partly-degraded vault into an
+unopenable one, which is a worse failure than the one it prevents.
+
+**One poisoned record blocks the whole export.** `export_portable_with_passphrase`
+walks every current candidate and propagates the first failure, so a
+single unencodable record denies the export of the entire vault rather
+than just of itself. That matters more than the per-item failures
+because export is the evacuation path. Making export skip-and-report
+instead is *not* done here either: the snapshot's `candidate_count` and
+its signed `snapshot_hash` currently assert completeness, and
+VLT-PM19/VLT-PM20 restore-verification depends on that assertion, so
+partial export is a format and verification change, not a local one.
+
+**An escape hatch, but a narrow one.** Deleting the offending item
+works, because a tombstone revision carries only the item id and a
+timestamp — the record is not in it, so the `Live` arm that reaches
+`encode_any_record` is never taken. An operator can therefore delete the
+item and then export. That is pinned by test
+(`deleting_an_oversized_item_stays_possible`) rather than left as an
+inference from the encoding shape.
+
+The hatch covers exactly one case, and the boundary is worth stating
+because the two it does not cover are worse, not better:
+
+- **It requires a single current candidate.** Deletion asserts one live
+  candidate and returns `ConflictRequired` otherwise, so an oversized
+  record on an item that is *also* conflicted cannot be deleted by the
+  ordinary path at all.
+- **It requires a first-party record.** An oversized *opaque* record is
+  not merely unwritable, it is undecodable: `decode_record`'s opaque arm
+  re-encodes the payload to canonicalise it, so the failure lands during
+  `decode_item_revision` — that is, during vault *open*. No session is
+  ever established, and deletion needs one. Such a record denies the
+  whole vault rather than one item.
+
+Both are pre-existing and neither is reachable through anything this
+product will author, since the encode ceiling now refuses to produce
+such a record in the first place; they need a peer with a larger
+framing budget. They are tracked as follow-on work alongside the two
+repairs above, against this section.
+
 ## 14. Required verification
 
 The Phase 1A package must include:
