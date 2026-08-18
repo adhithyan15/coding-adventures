@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+- Add `ControllingTerminal::read_command_line`, a bounded echoed line reader for
+  the foreground interactive shell. It uses the same controlling terminal every
+  prompt uses, so a redirected standard input can supply neither a secret nor a
+  command; it writes the fixed compile-time `vault-pm> ` prompt; and it reports
+  a real end of input as `Ok(None)` rather than a failure so a session can end
+  cleanly, while every other read failure stays closed. Line content is bounded
+  at 1,024 bytes, must be valid UTF-8, and must contain no control characters.
+- Factor the Unix controlling-terminal open into one helper shared by the
+  secret, text, command-line, and reveal paths, and split the bounded line
+  reader into an end-of-input-aware form. The secret reader's behaviour is
+  unchanged: end of input still fails closed.
+
 - Add a fixed hidden wipe-on-drop opaque-record payload prompt, collecting the
   whole canonical-CBOR payload as lowercase hexadecimal under the existing
   1,024-byte secret-line bound. It is hidden rather than echoed because an

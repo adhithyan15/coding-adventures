@@ -562,6 +562,155 @@ fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     assert_tree_excludes(&home.0, SEARCH_QUERY);
 }
 
+/// One real process, one passphrase, many commands.
+///
+/// This is the property the interactive shell exists for, proved against the
+/// real executable rather than the library: a session unlocks once, runs
+/// several commands without prompting again, forgets its authenticator on an
+/// explicit `lock`, prompts again afterwards, and ends cleanly on `exit`.
+///
+/// It also proves the properties the shell must *not* have weakened. The
+/// child's standard input is the same injected pipe every other end-to-end
+/// test uses, so a piped stdin still cannot drive an unlocked session, and the
+/// hidden item-password ceremony still happens on the terminal with echo off.
+#[test]
+fn real_cli_shell_unlocks_once_locks_on_demand_and_exits_cleanly() {
+    let home = TestHome::new();
+    let (init_status, init_transcript) = run_init_in_pty(&home);
+    assert!(init_status.success(), "init failed: {init_transcript}");
+
+    let (mut master, mut child) = spawn_shell_in_pty(&home);
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"vault-pm> ");
+
+    // First authenticated command: the session has no authenticator yet.
+    master.write_all(b"item list\n").unwrap();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until(&mut master, &mut transcript, b"No items.");
+
+    // Second and third authenticated commands: no prompt may appear between
+    // them, which is the whole point of the session.
+    let quiet = transcript.len();
+    master.write_all(b"item list\n").unwrap();
+    read_until_from(&mut master, &mut transcript, quiet, b"No items.");
+    master.write_all(b"search absent\n").unwrap();
+    read_until_from(&mut master, &mut transcript, quiet, b"No matches.");
+    assert!(
+        !String::from_utf8_lossy(&transcript[quiet..]).contains("Vault passphrase: "),
+        "a retained session re-prompted: {}",
+        String::from_utf8_lossy(&transcript[quiet..])
+    );
+
+    // A secret-bearing command still runs its hidden ceremony inside the shell.
+    let hidden = transcript.len();
+    master.write_all(b"item add login\n").unwrap();
+    read_until_from(&mut master, &mut transcript, hidden, b"Title: ");
+    master.write_all(b"Shell account\n").unwrap();
+    read_until_from(&mut master, &mut transcript, hidden, b"Username: ");
+    master.write_all(b"shell.user\n").unwrap();
+    read_until_from(&mut master, &mut transcript, hidden, b"Password: ");
+    master.write_all(ITEM_PASSWORD).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until_from(&mut master, &mut transcript, hidden, b"URL count (0-16): ");
+    master.write_all(b"0\n").unwrap();
+    read_until_from(&mut master, &mut transcript, hidden, b"Notes (optional): ");
+    master.write_all(b"\n").unwrap();
+    read_until_from(&mut master, &mut transcript, hidden, b"Item added: ");
+    assert!(
+        !String::from_utf8_lossy(&transcript[hidden..]).contains("Vault passphrase: "),
+        "the item ceremony re-prompted for the vault passphrase"
+    );
+
+    // An explicit lock forgets the authenticator; the next command must ask.
+    let relock = transcript.len();
+    master.write_all(b"lock\n").unwrap();
+    read_until_from(&mut master, &mut transcript, relock, b"Locked.");
+    master.write_all(b"item list\n").unwrap();
+    read_until_from(&mut master, &mut transcript, relock, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    read_until_from(&mut master, &mut transcript, relock, b"Shell account");
+
+    master.write_all(b"exit\n").unwrap();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let transcript = String::from_utf8_lossy(&transcript).into_owned();
+    assert!(status.success(), "shell exit failed: {transcript}");
+    assert_transcript_excludes_secrets(&transcript);
+    assert!(!transcript.contains("e2e item password"));
+    assert_tree_excludes(&home.0, PASSPHRASE);
+    assert_tree_excludes(&home.0, ITEM_PASSWORD);
+}
+
+/// End of input ends the session, and refused verbs never end it.
+#[test]
+fn real_cli_shell_rejects_lifecycle_verbs_and_ends_on_end_of_input() {
+    let home = TestHome::new();
+    let (init_status, init_transcript) = run_init_in_pty(&home);
+    assert!(init_status.success(), "init failed: {init_transcript}");
+
+    let (mut master, mut child) = spawn_shell_in_pty(&home);
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"vault-pm> ");
+
+    // Vault lifecycle and vault reselection are refused, and a refusal keeps
+    // the session alive rather than terminating it.
+    for refused in ["init\n", "vault create work\n", "--vault work item list\n"] {
+        let start = transcript.len();
+        master.write_all(refused.as_bytes()).unwrap();
+        read_until_from(
+            &mut master,
+            &mut transcript,
+            start,
+            b"vault-pm: invalid command",
+        );
+    }
+
+    // Ctrl-D on an empty line is the terminal's end of input.
+    master.write_all(&[0x04]).unwrap();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    let transcript = String::from_utf8_lossy(&transcript).into_owned();
+    assert!(
+        status.success(),
+        "end of input did not end the session cleanly: {transcript}"
+    );
+    assert_transcript_excludes_secrets(&transcript);
+}
+
+/// Start `vault-pm shell` on a pseudo-terminal with an injected piped stdin.
+fn spawn_shell_in_pty(home: &TestHome) -> (File, std::process::Child) {
+    let (master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.arg("shell");
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    (master, child)
+}
+
 #[test]
 fn real_cli_creates_redacts_and_separately_reveals_a_payment_card() {
     let home = TestHome::new();

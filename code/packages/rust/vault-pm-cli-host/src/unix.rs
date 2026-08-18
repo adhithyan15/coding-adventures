@@ -5,10 +5,11 @@ use std::io::{Read, Write};
 use std::mem::MaybeUninit;
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
 
-pub(super) fn read_secret(
-    prompt: &str,
-    max_bytes: usize,
-) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+/// Open the process's own controlling terminal, never an inherited descriptor.
+///
+/// Every collection in this module starts here, so a redirected stdin, a pipe,
+/// or an inherited descriptor can never become a secret or command source.
+fn open_controlling_terminal() -> Result<File, CliHostError> {
     let raw = unsafe {
         libc::open(
             c"/dev/tty".as_ptr(),
@@ -23,7 +24,16 @@ pub(super) fn read_secret(
             _ => CliHostError::TerminalAccessFailed,
         });
     }
-    let mut terminal = File::from(owned_fd(raw).map_err(|_| CliHostError::TerminalAccessFailed)?);
+    Ok(File::from(
+        owned_fd(raw).map_err(|_| CliHostError::TerminalAccessFailed)?,
+    ))
+}
+
+pub(super) fn read_secret(
+    prompt: &str,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    let mut terminal = open_controlling_terminal()?;
     verify_terminal(&terminal)?;
     read_secret_from_terminal(&mut terminal, prompt.as_bytes(), max_bytes)
 }
@@ -32,40 +42,35 @@ pub(super) fn read_text(
     prompt: &str,
     max_bytes: usize,
 ) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
-    let raw = unsafe {
-        libc::open(
-            c"/dev/tty".as_ptr(),
-            libc::O_RDWR | libc::O_CLOEXEC | libc::O_NOFOLLOW,
-        )
-    };
-    if raw < 0 {
-        return Err(match std::io::Error::last_os_error().raw_os_error() {
-            Some(libc::ENXIO) | Some(libc::ENODEV) | Some(libc::ENOENT) | Some(libc::ENOTTY) => {
-                CliHostError::TerminalUnavailable
-            }
-            _ => CliHostError::TerminalAccessFailed,
-        });
-    }
-    let mut terminal = File::from(owned_fd(raw).map_err(|_| CliHostError::TerminalAccessFailed)?);
+    let mut terminal = open_controlling_terminal()?;
     read_text_from_terminal(&mut terminal, prompt.as_bytes(), max_bytes)
 }
 
+/// Read one echoed line, distinguishing a real end of input from a failure.
+///
+/// This is [`read_text`]'s sibling for the foreground interactive shell. The
+/// only difference is the terminator policy: `read_text` treats a closed
+/// terminal as `TextInputFailed`, because a half-collected item field must
+/// fail closed, while a shell must be able to end its session on `Ctrl-D`.
+pub(super) fn read_line_or_eof(
+    prompt: &str,
+    max_bytes: usize,
+) -> Result<Option<Zeroizing<Vec<u8>>>, CliHostError> {
+    let mut terminal = open_controlling_terminal()?;
+    verify_terminal(&terminal)?;
+    terminal
+        .write_all(prompt.as_bytes())
+        .and_then(|()| terminal.flush())
+        .map_err(|_| CliHostError::TerminalAccessFailed)?;
+    read_bounded_line_or_eof(&mut terminal, max_bytes).map_err(|error| match error {
+        CliHostError::SecretInputFailed => CliHostError::TextInputFailed,
+        CliHostError::SecretTooLong => CliHostError::InvalidText,
+        other => other,
+    })
+}
+
 pub(super) fn write_revealed_text(value: &str) -> Result<(), CliHostError> {
-    let raw = unsafe {
-        libc::open(
-            c"/dev/tty".as_ptr(),
-            libc::O_RDWR | libc::O_CLOEXEC | libc::O_NOFOLLOW,
-        )
-    };
-    if raw < 0 {
-        return Err(match std::io::Error::last_os_error().raw_os_error() {
-            Some(libc::ENXIO) | Some(libc::ENODEV) | Some(libc::ENOENT) | Some(libc::ENOTTY) => {
-                CliHostError::TerminalUnavailable
-            }
-            _ => CliHostError::TerminalAccessFailed,
-        });
-    }
-    let mut terminal = File::from(owned_fd(raw).map_err(|_| CliHostError::TerminalAccessFailed)?);
+    let mut terminal = open_controlling_terminal()?;
     write_revealed_text_to_terminal(&mut terminal, value)
 }
 
@@ -125,12 +130,26 @@ fn read_bounded_line(
     terminal: &mut File,
     max_bytes: usize,
 ) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    read_bounded_line_or_eof(terminal, max_bytes)?.ok_or(CliHostError::SecretInputFailed)
+}
+
+/// Read one terminator-delimited line, reporting end of input as `None`.
+///
+/// A byte-at-a-time read is deliberate: the terminal is a shared stream, so
+/// reading ahead past the terminator would consume input belonging to whatever
+/// prompt comes next. An oversize line is still drained through its terminator
+/// before the failure is reported, so its tail cannot become the next prompt's
+/// visible input.
+fn read_bounded_line_or_eof(
+    terminal: &mut File,
+    max_bytes: usize,
+) -> Result<Option<Zeroizing<Vec<u8>>>, CliHostError> {
     let mut secret = Zeroizing::new(Vec::with_capacity(max_bytes));
     let mut too_long = false;
     loop {
         let mut byte = Zeroizing::new([0u8; 1]);
         match terminal.read(&mut *byte) {
-            Ok(0) => return Err(CliHostError::SecretInputFailed),
+            Ok(0) => return Ok(None),
             Ok(_) if byte[0] == b'\n' || byte[0] == b'\r' => break,
             Ok(_) if secret.len() < max_bytes => secret.push(byte[0]),
             Ok(_) => too_long = true,
@@ -141,7 +160,7 @@ fn read_bounded_line(
     if too_long {
         Err(CliHostError::SecretTooLong)
     } else {
-        Ok(secret)
+        Ok(Some(secret))
     }
 }
 
@@ -352,6 +371,35 @@ mod tests {
         let mut echoed = [0u8; 17];
         master.read_exact(&mut echoed).unwrap();
         assert!(echoed.starts_with(b"Example account"));
+    }
+
+    #[test]
+    fn command_lines_are_read_until_a_terminator_and_end_at_eof() {
+        let (mut master, mut slave) = pseudo_terminal();
+        let peer = thread::spawn(move || {
+            master.write_all(b"item list\n").unwrap();
+            master
+        });
+        let line = read_bounded_line_or_eof(&mut slave, 64).unwrap().unwrap();
+        assert_eq!(&*line, b"item list");
+        let master = peer.join().unwrap();
+
+        // Closing the writing end is the pseudo-terminal's end of input. It is
+        // a value, not a failure: a foreground shell must be able to stop.
+        drop(master);
+        drop(slave);
+        let mut descriptors = [-1; 2];
+        assert_eq!(unsafe { libc::pipe(descriptors.as_mut_ptr()) }, 0);
+        let mut read_end = File::from(owned_fd(descriptors[0]).unwrap());
+        drop(owned_fd(descriptors[1]).unwrap());
+        assert!(read_bounded_line_or_eof(&mut read_end, 16)
+            .unwrap()
+            .is_none());
+        // The secret reader shares the same loop but must still fail closed.
+        assert!(matches!(
+            read_bounded_line(&mut read_end, 16),
+            Err(CliHostError::SecretInputFailed)
+        ));
     }
 
     #[test]
