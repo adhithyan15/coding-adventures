@@ -1,5 +1,28 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.23 — 2026-08-17 — hex-literal table/memory limits (task #99)
+
+### Fixed
+
+- Table and memory limits (`(table 0xffff_ffff funcref)`, `(memory 0x1
+  0x2)`) only ever accepted decimal literals -- three independent call
+  sites (`parse_limits` itself, `build_table_limits_and_elements`'s
+  declared-table path, `build_import_shell`'s imported-table path) each
+  filtered atoms to ascii-digit-only. For `parse_limits`, a hex atom was
+  silently dropped out of the limits list entirely (wrong `Limits`, not
+  even a clean error). For the other two, a hex atom made the shape check
+  fail entirely, sending parsing down the WRONG branch (mistaking real
+  limits for a missing-limits form) and producing a confusing
+  `UnexpectedEof` instead of a real number.
+- New `numeric::parse_u32` (hex/decimal, `_`-separated, reusing the same
+  `parse_int_magnitude` machinery `parse_i32`/`parse_i8`/etc. already
+  share) plus a `looks_like_uint_literal` shape check used at all three
+  call sites, so every WAT numeric-literal parser in this crate now
+  agrees on what's a valid integer literal.
+- Discovered while vendoring `table.wast` (task #99, previously logged
+  as blocked on exactly this gap): the real testsuite's own `table.wast`
+  uses `0xffff_ffff` table/memory limits directly.
+
 ## 0.1.22 — 2026-08-17 — call_indirect/return_call_indirect explicit table-index text syntax (task #107)
 
 ### Fixed
