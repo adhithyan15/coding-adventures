@@ -42,21 +42,92 @@
 mod lower;
 pub use lower::{compile, WolframIirError};
 
+/// Recursion-depth cap `compile_source` parses under, and the enlarged
+/// worker-thread stack size it parses *on*.
+///
+/// **Corrects an earlier, incorrect assumption in this crate**: this
+/// function originally reasoned (by analogy to
+/// `macsyma-iir-compiler::compile_source`) that no worker-thread stack
+/// enlargement was needed here, since `MAX_RULE_DEPTH` is a property of
+/// the parser, not of this lowering pass. That analogy is invalid for
+/// Wolfram specifically — caught in security review, not assumed safe.
+/// `wolfram-parser`'s own `MAX_RULE_DEPTH` doc comment explains why:
+/// Wolfram's 20-rule-per-level precedence cascade means even ordinary
+/// `(...)` nesting costs ~20 `parse_rule` frames per level, so the
+/// parser's own measured bare-stack (~2 MiB) crash floor is only ~276
+/// frames — about **11 real nesting levels** — regardless of
+/// `MAX_RULE_DEPTH`'s cap value. `wolfram-to-semantic-ir::compile_source`
+/// already solved this exact problem (it calls the same
+/// `try_parse_wolfram`); this crate now mirrors that solution exactly
+/// rather than the simpler, bare-stack-safe pattern
+/// `macsyma-iir-compiler`/`derive-iir-compiler`/`reduce-iir-compiler`/
+/// `maple-iir-compiler`/`axiom-iir-compiler` correctly use (those
+/// parsers' own shallower precedence cascades really are bare-stack-safe
+/// — this crate's original doc comment wrongly generalised that to
+/// Wolfram too).
+///
+/// See `wolfram-to-semantic-ir::PARSE_STACK_SIZE`'s own doc comment for
+/// the full derivation of this budget (64 MiB, not `wolfram-runtime`'s
+/// 512 MiB `EVAL_STACK_SIZE` — sized down to avoid CI resource pressure
+/// from many concurrent per-call thread stacks while still supporting
+/// the full default `MAX_RULE_DEPTH` ceiling with comfortable margin).
+const PARSE_STACK_SIZE: usize = 64 * 1024 * 1024;
+
 /// Parse `source` as Wolfram and lower it into an
 /// [`interpreter_ir::IIRModule`] in one step, mirroring
-/// `wolfram-to-semantic-ir::compile_source`'s convenience wrapper.
+/// `wolfram-to-semantic-ir::compile_source`'s convenience wrapper —
+/// including its enlarged-stack worker-thread pattern (see
+/// [`PARSE_STACK_SIZE`]'s doc comment for why, unlike every sibling
+/// `*-iir-compiler::compile_source` in this rollout, this one needs it).
 ///
-/// Unlike `wolfram-to-semantic-ir::compile_source` (which spawns an
-/// enlarged-stack worker thread because Wolfram's own 20-rule precedence
-/// cascade makes its parser's `MAX_RULE_DEPTH` unsafe on a bare stack),
-/// this crate needs no worker thread here either: `MAX_RULE_DEPTH` is a
-/// property of the PARSER (`coding_adventures_wolfram_parser`), not of
-/// this lowering pass, and this crate's own `compile` trusts the tree it
-/// is handed was already parsed under that guard — see `lower.rs`'s own
-/// `MAX_EXPR_DEPTH` doc comment for the full reasoning (mirrors
-/// `macsyma-iir-compiler::compile_source`'s identical no-worker-thread
-/// shape, not `wolfram-to-semantic-ir`'s).
+/// Both thread-spawn failure and a worker-thread panic (from anywhere in
+/// the parse/lower pipeline, not just a stack overflow, which is
+/// unrecoverable regardless and aborts the whole process before `join`
+/// ever runs) are converted into a [`WolframIirError`] rather than
+/// propagated as a panic on the calling thread — mirrors
+/// `wolfram-to-semantic-ir::compile_source`'s identical guarantee.
 pub fn compile_source(
+    source: &str,
+    module_name: &str,
+) -> Result<interpreter_ir::IIRModule, WolframIirError> {
+    let source = source.to_string();
+    let module_name = module_name.to_string();
+    let handle = std::thread::Builder::new()
+        .name("wolfram-iir-compiler-compile".to_string())
+        .stack_size(PARSE_STACK_SIZE)
+        .spawn(move || compile_on_this_thread(&source, &module_name))
+        .map_err(|e| WolframIirError {
+            message: format!("failed to spawn wolfram-iir-compiler compile worker thread: {e}"),
+            line: 1,
+            column: 1,
+        })?;
+    match handle.join() {
+        Ok(result) => result,
+        Err(panic_payload) => Err(WolframIirError {
+            message: format!(
+                "wolfram-iir-compiler compile worker thread panicked: {}",
+                panic_message(&panic_payload)
+            ),
+            line: 1,
+            column: 1,
+        }),
+    }
+}
+
+/// Extract a human-readable message from a `std::thread::Result::Err`
+/// panic payload — mirrors `wolfram-to-semantic-ir`'s identically-named
+/// free function exactly.
+fn panic_message(payload: &Box<dyn std::any::Any + Send>) -> String {
+    if let Some(s) = payload.downcast_ref::<&str>() {
+        s.to_string()
+    } else if let Some(s) = payload.downcast_ref::<String>() {
+        s.clone()
+    } else {
+        "<non-string panic payload>".to_string()
+    }
+}
+
+fn compile_on_this_thread(
     source: &str,
     module_name: &str,
 ) -> Result<interpreter_ir::IIRModule, WolframIirError> {
@@ -291,5 +362,24 @@ mod tests {
     #[test]
     fn map_sugar_rejected() {
         assert!(compile_source("f /@ x\n", "t").is_err());
+    }
+
+    #[test]
+    fn deeply_nested_parens_fail_cleanly_not_natively() {
+        // Regression for a security-review finding: `compile_source`
+        // originally parsed on the caller's own bare-stack thread,
+        // trusting (incorrectly) that Wolfram's parser needed no
+        // enlarged-stack worker thread the way the other five Wave 5
+        // frontends' parsers do. `wolfram-parser`'s own measured
+        // bare-stack crash floor is ~11 real nesting levels (its
+        // 20-rule-per-level precedence cascade costs ~20 parse_rule
+        // frames per level) -- 300 levels of `(...)` nesting is
+        // trivially reachable syntactically valid input that would have
+        // crashed the process natively before this fix, and must now
+        // fail with a clean `Err` (either a parse-depth rejection or
+        // this crate's own `MAX_EXPR_DEPTH` lowering-recursion guard)
+        // instead.
+        let deeply_nested = format!("{}1{}\n", "(".repeat(300), ")".repeat(300));
+        assert!(compile_source(&deeply_nested, "t").is_err());
     }
 }
