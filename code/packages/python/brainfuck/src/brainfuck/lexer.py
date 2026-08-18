@@ -1,7 +1,7 @@
 """Brainfuck Lexer — tokenizes Brainfuck source using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarLexer``. It loads
-the ``brainfuck.tokens`` file from the ``code/grammars/`` directory and creates
+This module is a thin wrapper around the generic ``GrammarLexer``. It uses a
+pre-compiled ``TOKEN_GRAMMAR`` (see ``brainfuck._grammar_tokens``) and creates
 a lexer configured for Brainfuck tokenization.
 
 What Is Brainfuck?
@@ -50,62 +50,33 @@ Two convenience functions:
 - ``tokenize_brainfuck(source)`` — the all-in-one function. Pass in Brainfuck
   source text, get back a list of tokens. This is the function most callers want.
 
-Locating the Grammar File
---------------------------
+The Brainfuck token grammar is compiled into ``_grammar_tokens.py`` by the
+grammar-tools compiler from ``code/grammars/brainfuck/brainfuck.tokens``.
+Importing the pre-built ``TOKEN_GRAMMAR`` constant means no file I/O at
+startup and no runtime grammar parsing overhead. (The parser grammar lives
+in a separate ``_grammar_parser.py`` in this same package — see
+``parser.py`` — since both a lexer and a parser share this ``brainfuck``
+package.)
 
-The ``brainfuck.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this module's
-file path using ``pathlib.Path``::
+To regenerate after editing ``code/grammars/brainfuck/brainfuck.tokens``::
 
-    lexer.py
-    └── brainfuck/       (parent — the package directory)
-        └── src/         (parent — the src layout directory)
-            └── brainfuck/ (parent — the project directory)
-                └── python/  (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent — repo root's code/ dir)
-                            └── grammars/
-                                └── brainfuck.tokens
-
-That is 6 levels up from this file to ``code/``.
+    grammar-tools compile-tokens code/grammars/brainfuck/brainfuck.tokens \\
+        > code/packages/python/brainfuck/src/brainfuck/_grammar_tokens.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate from this file's directory up 6 levels to reach code/, then
-# into grammars/. The path is:
-#
-#   src/brainfuck/lexer.py -> src/brainfuck -> src -> brainfuck -> python
-#   -> packages -> code -> code/grammars
-#
-# Path(__file__).parent = src/brainfuck/
-# .parent               = src/
-# .parent               = brainfuck/          (the project dir)
-# .parent               = python/
-# .parent               = packages/
-# .parent               = code/
-# / "grammars"          = code/grammars/
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-BF_TOKENS_PATH = GRAMMAR_DIR / "brainfuck" / "brainfuck.tokens"
+from brainfuck._grammar_tokens import TOKEN_GRAMMAR
 
 
 def create_brainfuck_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for Brainfuck source text.
 
-    This function reads the ``brainfuck.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``brainfuck._grammar_tokens``) to create a ``GrammarLexer`` ready to
+    tokenize the given source text. No file I/O is performed.
 
     The resulting lexer recognises the 8 Brainfuck command characters and
     silently discards all other characters (comments and whitespace).
@@ -117,18 +88,13 @@ def create_brainfuck_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with the Brainfuck token
         definitions. Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``brainfuck.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_brainfuck_lexer("++[>+<-]")
         tokens = lexer.tokenize()
         # [Token(INC, '+'), Token(INC, '+'), Token(LOOP_START, '['), ...]
     """
-    grammar = parse_token_grammar(BF_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_brainfuck(source: str) -> list[Token]:
@@ -162,9 +128,6 @@ def tokenize_brainfuck(source: str) -> list[Token]:
 
     Returns:
         A list of ``Token`` objects. The last token is always EOF.
-
-    Raises:
-        FileNotFoundError: If the ``brainfuck.tokens`` file cannot be found.
 
     Example::
 
