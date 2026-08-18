@@ -294,6 +294,8 @@ members = [
     "maple-runtime",
     "maple-repl",
     "maple-to-semantic-ir",
+    "maple-iir-compiler",
+    "maple-vm",
     "scilab-lexer",
     "scilab-parser",
     "scilab-runtime",
