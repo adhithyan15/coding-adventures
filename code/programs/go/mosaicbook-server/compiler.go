@@ -7,9 +7,11 @@
 //
 // # Subprocess model
 //
-// We invoke:
+// We invoke one of two forms, depending on how the component is authored --
+// see compilerArgs for the details:
 //
 //	mosaic-compile --backend <backend> --output <outfile> <sourcefile>
+//	mosaic-compile --interface <mil> --layout <mll> --style <msl> //	               --package-manifest <toml> --backend <backend> --output <outfile>
 //
 // The compiler writes its output to <outfile> and exits 0 on success, non-zero
 // on failure (with a human-readable error on stderr).
@@ -31,14 +33,14 @@ import (
 // compiler from filling server memory with error output.
 const maxCompilerOutputBytes = 1 << 20 // 1 MiB
 
-// compile invokes the external mosaic-compile binary to compile sourcePath to
+// compile invokes the external mosaic-compile binary to compile a component to
 // the given backend, writing output to outputPath.
 //
 // Returns a descriptive error if the binary is not found or exits non-zero.
 // Compiler output captured for error messages is capped at maxCompilerOutputBytes
 // to avoid holding unbounded buffers in memory.
-func (s *Server) compile(sourcePath string, backend string, outputPath string) error {
-	cmd := exec.Command(s.compilerPath, "--backend", backend, "--output", outputPath, sourcePath)
+func (s *Server) compile(c Component, backend string, outputPath string) error {
+	cmd := exec.Command(s.compilerPath, compilerArgs(c, backend, outputPath)...)
 
 	// Capture combined stdout+stderr so we can surface compiler errors in the
 	// preview HTML page rather than just logging them server-side.
@@ -67,13 +69,65 @@ func (s *Server) compile(sourcePath string, backend string, outputPath string) e
 	return nil
 }
 
+// compilerArgs builds the mosaic-compile argument list for one component.
+//
+// There are two invocation forms, and which one applies depends on how the
+// component is authored:
+//
+//   - Legacy single-file: the whole component is one .mosaic file.
+//
+//     mosaic-compile --backend B --output O source.mosaic
+//
+//   - Three-file (UI29): interface, layout and style are separate files
+//     inside a Mosaic package. This is the form every component in this
+//     repo actually uses.
+//
+//     mosaic-compile --interface X.mil --layout X.mll --style X.msl \
+//     --backend B --output O \
+//     --package-manifest pkg/mosaic-package.toml
+//
+// --package-manifest matters more than it looks: it registers the package's
+// exported component names so a layout can reference its siblings (Field
+// referencing Input, for example). Without it those references fail to
+// resolve and the compile errors out.
+//
+// A three-file component may legitimately have no stylesheet, in which case
+// --style is omitted and the backend applies its own defaults.
+// Argument injection is the risk to keep in mind here. Go's exec uses no
+// shell, so there is no shell injection — but every path in the argv comes
+// from a filename in the scanned tree, and a filename can itself look like a
+// flag. A top-level file named `--output=pwned.html.mosaic` yields a relative
+// source path of exactly that, which mosaic-compile's parser reads as a
+// second --output and honours over the real one.
+//
+// Two defences: three-file component names are constrained to identifiers at
+// discovery (validComponentBase), and the legacy positional source is placed
+// after a `--` end-of-options separator so it can never be read as a flag.
+func compilerArgs(c Component, backend string, outputPath string) []string {
+	if !c.isThreeFile() {
+		return []string{"--backend", backend, "--output", outputPath, "--", c.SourcePath}
+	}
+
+	args := []string{
+		"--interface", c.InterfacePath,
+		"--layout", c.LayoutPath,
+	}
+	if c.StylePath != "" {
+		args = append(args, "--style", c.StylePath)
+	}
+	if c.ManifestPath != "" {
+		args = append(args, "--package-manifest", c.ManifestPath)
+	}
+	return append(args, "--backend", backend, "--output", outputPath)
+}
+
 // compileToString is a convenience wrapper around compile that returns the
 // compiled output as a string.
 //
 // It creates a temp file in the OS temp directory, compiles into it, reads the
 // result, and removes the temp file.  The temp file approach keeps the
 // interface identical to the real compiler CLI (which always writes to a file).
-func (s *Server) compileToString(sourcePath string, backend string) (string, error) {
+func (s *Server) compileToString(c Component, backend string) (string, error) {
 	// Create a temp file with an extension appropriate for the backend.
 	// The extension doesn't affect correctness but helps debugging when you
 	// inspect /tmp during development.
@@ -88,7 +142,7 @@ func (s *Server) compileToString(sourcePath string, backend string) (string, err
 	// Always remove the temp file, even on error.
 	defer os.Remove(tmpPath)
 
-	if err := s.compile(sourcePath, backend, tmpPath); err != nil {
+	if err := s.compile(c, backend, tmpPath); err != nil {
 		return "", err
 	}
 

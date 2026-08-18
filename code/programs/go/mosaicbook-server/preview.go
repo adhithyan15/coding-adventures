@@ -104,7 +104,7 @@ func (s *Server) handlePreview(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Compile the source file to the requested backend.
-	compiled, compileErr := s.compileToString(found.SourcePath, backend)
+	compiled, compileErr := s.compileToString(*found, backend)
 
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 	// For the html backend the compiled output is a static HTML fragment with no
@@ -166,6 +166,24 @@ func safeForScriptTag(s string) string {
 func wrapForBackend(compiled string, backend string, componentID string) string {
 	// Derive a component name from the ID (last path segment, PascalCase).
 	compName := componentNameFromID(componentID)
+
+	// The name is interpolated into an *executing* script block below, so it
+	// must be an inert identifier. Discovery already rejects anything else,
+	// but that guard lives three call frames away and only covers the
+	// discovery paths that exist today — the next one added would silently
+	// reintroduce script injection here. Enforce the invariant at the sink,
+	// where it actually matters, rather than trusting the caller.
+	//
+	// NOTE: this validates compName — the LAST segment of the ID — only. The
+	// full componentID is NOT sanitised and must never be interpolated into
+	// a wrapper arm (a `data-component` attribute for debugging is the
+	// obvious way that mistake gets made). Today it reaches only errorPage,
+	// which escapes it.
+	if !validComponentBase.MatchString(compName) {
+		return errorPage(
+			fmt.Sprintf("component name %q is not a valid identifier", compName),
+			backend, componentID, "")
+	}
 
 	switch backend {
 

@@ -2,10 +2,22 @@
 
 A local development server — the "Storybook" for Mosaic components.
 
-MosaicBook discovers `.mosaic` files in your project, compiles them on demand
+MosaicBook discovers Mosaic components in your project, compiles them on demand
 to browser-native backends (HTML, Web Component, React), and serves an
 interactive preview UI in your browser.  File changes are detected
 automatically and the preview reloads within one second.
+
+Two authoring forms are discovered:
+
+- **Three-file (UI29)** — `Button.mil` + `Button.mll` + `Button.light.msl`
+  inside a Mosaic package.  This is what every component in this repo uses.
+  A `.mil` with no sibling `.mll` is skipped (it may be a shared interface
+  fragment); the stylesheet prefers `*.light.msl` and falls back to
+  `*.dark.msl`.  The owning `mosaic-package.toml` is located automatically and
+  passed as `--package-manifest`, which is what lets a layout reference sibling
+  components (`Field` referencing `Input`).
+- **Legacy single-file** — one `Button.mosaic` containing interface, layout and
+  style together.  Still supported; nothing in this repo uses it.
 
 ## What is MosaicBook?
 
@@ -49,7 +61,7 @@ Then open `http://localhost:7331` in your browser.
 | Flag         | Default          | Description                                     |
 | ------------ | ---------------- | ----------------------------------------------- |
 | `--port`     | `7331`           | TCP port to listen on                           |
-| `--root`     | `.` (cwd)        | Directory to scan for `.mosaic` files           |
+| `--root`     | `.` (cwd)        | Directory to scan for Mosaic components        |
 | `--compiler` | `mosaic-compile` | Path (or name on PATH) to the compiler binary   |
 
 ## REST API
@@ -146,7 +158,8 @@ auto-generated.
 ```
 main.go       — flag parsing, server startup, watcher goroutine launch
 server.go     — Server struct, HTTP mux, /api/* handlers, SSE machinery
-stories.go    — .mosaic + .stories.json discovery, title derivation
+stories.go    — component discovery (three-file + legacy .mosaic),
+                .stories.json pairing, title derivation
 compiler.go   — mosaic-compile subprocess invocation
 preview.go    — /preview/* handler, backend-specific HTML wrapping
 watcher.go    — 1-second polling file watcher

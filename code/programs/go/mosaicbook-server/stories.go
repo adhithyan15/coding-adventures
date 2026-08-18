@@ -26,8 +26,10 @@ package main
 
 import (
 	"encoding/json"
+	"log"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"unicode"
 )
@@ -54,11 +56,227 @@ type Component struct {
 	Title string `json:"title"`
 
 	// SourcePath is the relative path to the .mosaic file from root.
+	//
+	// Empty for three-file components (see below), which have no single
+	// source file.
 	SourcePath string `json:"source_path"`
+
+	// The three-file (UI29) form: a component authored as separate
+	// interface/layout/style files inside a Mosaic package, rather than as
+	// one bundled .mosaic file.
+	//
+	// Every component in this repo is authored this way — there are no
+	// .mosaic files left — so these are the paths that actually get used.
+	// When InterfacePath is non-empty the compiler invokes
+	// `--interface/--layout/--style` instead of legacy single-file mode.
+	//
+	// These are deliberately NOT serialised. They are absolute paths, so
+	// marshalling them into GET /api/stories would leak the OS username and
+	// the server's directory layout to anything that can reach the port.
+	// The browser shell needs only id/title/stories.
+	InterfacePath string `json:"-"`
+	LayoutPath    string `json:"-"`
+	StylePath     string `json:"-"`
+
+	// ManifestPath points at the owning package's mosaic-package.toml.
+	// Passing it as --package-manifest is what lets a component reference
+	// its siblings (Field referencing Input, for example); without it those
+	// references fail to resolve.
+	ManifestPath string `json:"-"`
 
 	// Stories is the list of story variants.  Always non-empty (at minimum the
 	// auto-generated "Default" story is present).
 	Stories []Story `json:"stories"`
+}
+
+// isThreeFile reports whether this component is authored in the UI29
+// interface/layout/style form rather than as a single .mosaic file.
+func (c Component) isThreeFile() bool {
+	return c.InterfacePath != ""
+}
+
+// threeFileComponent builds a Component from a UI29 interface file and its
+// siblings.
+//
+// The set is paired by base name inside one directory:
+//
+//	Button.mil            interface  (required — the anchor)
+//	Button.mll            layout     (required)
+//	Button.light.msl      style      (preferred)
+//	Button.dark.msl       style      (fallback if no light variant)
+//
+// A .mil with no matching .mll is not a renderable component (it may be a
+// shared interface fragment), so it is skipped rather than reported as a
+// broken component.
+//
+// The owning package's mosaic-package.toml is located by walking up from the
+// source directory. It is optional: a component outside any package still
+// renders, it just cannot reference siblings.
+func threeFileComponent(root, resolvedRoot, milPath, fileName string) (Component, bool) {
+	base := strings.TrimSuffix(fileName, ".mil")
+
+	// The base name becomes the component name, which the react and
+	// webcomponent preview wrappers interpolate into an *executing* script
+	// block (`React.createElement(Name, null)`, `<name></name>`). A file
+	// named `alert(document.domain)||X.mil` would therefore run script on the
+	// dev server's origin. Restrict to identifiers so no filename can be
+	// anything but an inert name. This also rules out a leading `-`, which
+	// would otherwise let a filename act as a compiler flag.
+	if !validComponentBase.MatchString(base) {
+		return Component{}, false
+	}
+
+	// The interface file itself gets the same containment check as its
+	// siblings. filepath.Walk uses Lstat and never descends a symlinked
+	// directory, so today no generated path can escape — but checking here
+	// makes the invariant local rather than a consequence of Walk's
+	// behaviour, which is what the next refactor is liable to change.
+	if !isRegularFileWithin(resolvedRoot, milPath) {
+		return Component{}, false
+	}
+
+	dir := filepath.Dir(milPath)
+
+	layout := filepath.Join(dir, base+".mll")
+	if !isRegularFileWithin(resolvedRoot, layout) {
+		// Interface with no layout — not renderable on its own.
+		return Component{}, false
+	}
+
+	// Prefer the light stylesheet; fall back to dark so a dark-only
+	// component still previews rather than rendering unstyled.
+	style := filepath.Join(dir, base+".light.msl")
+	if !isRegularFileWithin(resolvedRoot, style) {
+		style = filepath.Join(dir, base+".dark.msl")
+		if !isRegularFileWithin(resolvedRoot, style) {
+			style = ""
+		}
+	}
+
+	rel, err := filepath.Rel(root, milPath)
+	if err != nil {
+		return Component{}, false
+	}
+	id := strings.TrimSuffix(filepath.ToSlash(rel), ".mil")
+
+	return Component{
+		ID:            id,
+		Title:         componentTitleFromBase(base),
+		InterfacePath: milPath,
+		LayoutPath:    layout,
+		StylePath:     style,
+		ManifestPath:  findPackageManifest(dir, root, resolvedRoot),
+		Stories:       []Story{{Name: "Default", Fixtures: map[string]interface{}{}}},
+	}, true
+}
+
+// validComponentBase constrains a component's base name to an identifier.
+//
+// The name reaches two dangerous places: an executing script block in the
+// react/webcomponent preview wrappers, and the argv handed to mosaic-compile.
+// Restricting it here closes both at the source rather than escaping at each
+// sink.
+var validComponentBase = regexp.MustCompile(`^[A-Za-z][A-Za-z0-9_]*$`)
+
+// isRegularFileWithin reports whether path is an existing regular file that,
+// after symlink resolution, still lives inside root.
+//
+// Both checks matter. filepath.Walk uses Lstat and so never descends into a
+// symlinked directory, but a symlink to a *file* looks like an ordinary entry,
+// and a plain os.Stat on a sibling follows it. Without this, a tree containing
+//
+//	Evil.mil -> /home/user/.ssh/id_rsa
+//	Evil.mll -> /home/user/.aws/credentials
+//
+// would be discovered as a valid component and those absolute paths handed to
+// the compiler — whose stderr is rendered back into the preview error page,
+// making it an arbitrary-file-read primitive over one unauthenticated GET.
+func isRegularFileWithin(resolvedRoot, path string) bool {
+	// Lstat does not follow, so a symlink fails IsRegular here and is
+	// rejected outright — as is a directory.
+	info, err := os.Lstat(path)
+	if err != nil || !info.Mode().IsRegular() {
+		return false
+	}
+	// Belt and braces: catches the case where an ancestor directory is a
+	// symlink pointing outside the served tree.
+	return withinRoot(resolvedRoot, path)
+}
+
+// withinRoot reports whether path, fully symlink-resolved, is contained by
+// root. Used to keep discovery from handing the compiler a path outside the
+// served tree.
+func withinRoot(resolvedRoot, path string) bool {
+	// resolvedRoot is pre-resolved by resolveRoot: absolutised and
+	// symlink-resolved once per walk rather than once per candidate. That
+	// halves the syscall cost of this check, which runs several times per
+	// discovered component.
+	//
+	// path must still be absolutised before EvalSymlinks, because
+	// filepath.Rel errors when one argument is relative and the other
+	// absolute — and the two do mix here: the walk yields paths relative to
+	// whatever --root was given, while findPackageManifest builds absolute
+	// candidates.
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		return false
+	}
+	resolvedPath, err := filepath.EvalSymlinks(absPath)
+	if err != nil {
+		return false
+	}
+	rel, err := filepath.Rel(resolvedRoot, resolvedPath)
+	if err != nil {
+		return false
+	}
+	return rel != ".." && !strings.HasPrefix(rel, ".."+string(filepath.Separator))
+}
+
+// resolveRoot absolutises and symlink-resolves the served root once, so the
+// per-candidate containment checks do not repeat that work. Returns "" if the
+// root cannot be resolved, which makes every subsequent containment check
+// fail closed.
+func resolveRoot(root string) string {
+	abs, err := filepath.Abs(root)
+	if err != nil {
+		return ""
+	}
+	resolved, err := filepath.EvalSymlinks(abs)
+	if err != nil {
+		return ""
+	}
+	return resolved
+}
+
+// findPackageManifest walks up from dir looking for a mosaic-package.toml,
+// stopping at root so the search cannot escape the served tree.
+// Returns "" when the component does not belong to a package.
+func findPackageManifest(dir, root, resolvedRoot string) string {
+	absRoot, err := filepath.Abs(root)
+	if err != nil {
+		return ""
+	}
+	cur, err := filepath.Abs(dir)
+	if err != nil {
+		return ""
+	}
+	for {
+		candidate := filepath.Join(cur, "mosaic-package.toml")
+		// Same guard as the sibling files: a symlinked manifest would
+		// otherwise ride into argv as --package-manifest.
+		if isRegularFileWithin(resolvedRoot, candidate) {
+			return candidate
+		}
+		if cur == absRoot {
+			return ""
+		}
+		parent := filepath.Dir(cur)
+		if parent == cur {
+			// Reached the filesystem root without finding a manifest.
+			return ""
+		}
+		cur = parent
+	}
 }
 
 // storiesFile is the JSON schema of a .stories.json file.
@@ -75,6 +293,18 @@ type storiesFile struct {
 func discoverComponents(root string) ([]Component, error) {
 	var components []Component
 
+	// Resolved once per walk rather than once per containment check.
+	// If the root cannot be resolved this is "", which makes every
+	// containment check fail closed and the walk yield nothing.
+	resolvedRoot := resolveRoot(root)
+
+	// Counted, not logged per candidate: this walk runs on every
+	// /api/stories request, so a per-rejection log would flood. One line at
+	// the end is O(1) and is exactly the signal that makes a silent
+	// mis-discovery obvious -- "0 components, 23 skipped" diagnoses in
+	// seconds what silence does not.
+	skipped := 0
+
 	err := filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil {
 			// Non-fatal: skip inaccessible paths and continue walking.
@@ -85,6 +315,18 @@ func discoverComponents(root string) ([]Component, error) {
 			// scanning noise and very large trees.
 			if strings.HasPrefix(info.Name(), ".") && path != root {
 				return filepath.SkipDir
+			}
+			return nil
+		}
+
+		// Three-file (UI29) components: a .mil interface is the anchor, and
+		// the sibling .mll/.msl files complete the set. This is the form
+		// every component in this repo actually uses.
+		if strings.HasSuffix(info.Name(), ".mil") && info.Mode().IsRegular() {
+			if c, ok := threeFileComponent(root, resolvedRoot, path, info.Name()); ok {
+				components = append(components, c)
+			} else {
+				skipped++
 			}
 			return nil
 		}
@@ -107,6 +349,17 @@ func discoverComponents(root string) ([]Component, error) {
 		// Derive a default title from the final path segment (filename without
 		// extension) by inserting spaces before uppercase runs.
 		baseName := strings.TrimSuffix(info.Name(), ".mosaic")
+
+		// Same restriction as the three-file branch, and for the same
+		// reason: this name reaches an executing script block in the
+		// react/webcomponent preview wrappers. Applying it to only one of
+		// the two discovery paths would leave the legacy form injectable
+		// with the identical payload.
+		if !validComponentBase.MatchString(baseName) {
+			skipped++
+			return nil
+		}
+
 		title := componentTitleFromBase(baseName)
 
 		// Look for a sibling .stories.json file (same base name, same dir).
@@ -129,6 +382,9 @@ func discoverComponents(root string) ([]Component, error) {
 		return nil
 	})
 
+	if skipped > 0 {
+		log.Printf("discovery: %d candidate(s) skipped in %s", skipped, root)
+	}
 	return components, err
 }
 
