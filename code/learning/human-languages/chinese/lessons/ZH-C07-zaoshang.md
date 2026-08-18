@@ -34,7 +34,7 @@ reviews_of: [ZH-W07-zao, ZH-W07-shang]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-ZAO] -->
 
-[PAUSE 2s] Write 早. Six strokes, sun finished first.
+[PAUSE 2s] Say **zǎo**. Low and dipping, and hold the bottom of it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[ZH-LEX-ZAOSHANG]; assesses=[] -->
@@ -62,6 +62,10 @@ This is a fifth thing a syllable can do, alongside the four tones. It is not a
 tone that moves — you have met two of those — it is a syllable **giving up its
 tone** because it is unstressed. [REPEAT x2]
 
+Careful or slow speech sometimes restores the full falling tone, *zǎoshàng*, and
+you will hear it. The standard reading, and the one to imitate, is the light
+one.
+
 Say it: *zǎo* low and dipping, then *shang* light and quick, riding on the end.
 The commonest mistake is to give the second syllable a full falling tone out of
 habit, which makes the word sound like two words.
@@ -76,7 +80,7 @@ habit, which makes the word sound like two words.
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-NEUTRAL] -->
 <!-- hl-activity: {"id":"ZH-C07-zaoshang-neutral","kind":"text","assesses":["ZH-TONE-NEUTRAL"],"prompt":"In the pinyin for 'morning', why does the second syllable have no tone mark?","answer":"it is neutral","accepted":["neutral tone","it lost its tone","it is unstressed","no tone, it is neutral"],"feedback":{"correct":"It goes neutral -- unstressed, light, and written with no mark.","incorrect":"Because it is NEUTRAL: unstressed and toneless, so no mark is written."},"response_seconds":12} -->
 
-Does 上 keep its falling tone when it stands alone? (**Yes** — it only goes light
-inside this word.)
+Does 上 keep its falling tone when it stands alone? (**Yes** — the light reading
+belongs to the word, not to the character.)
 
 Source: [Unicode CJK Unified Ideographs chart](https://www.unicode.org/charts/PDF/U4E00.pdf)

@@ -740,7 +740,7 @@
       "stage": "A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can write 早 and 上, and I know that stroke-order habits are strong tendencies with named exceptions -- 上 starts with its vertical, not its top stroke.",
+      "canDo": "I can write 早 and 上, and I know that stroke-order habits carry conditions -- the horizontal leads when two strokes cross, as in 十, but 上 starts with its vertical because its short bar meets that vertical instead of crossing it.",
       "prerequisites": [
         "ZH-EXT-016-CONVERSATION-CLOSE"
       ],

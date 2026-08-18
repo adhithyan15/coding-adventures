@@ -50,9 +50,7 @@ That is the payoff, and it is worth being explicit about. **你好** was never a
 phrase to swallow whole. It is 你 *you* followed by 好 *good*, and the second
 half is reusable:
 
-> 你 + 好 → **你好**
->
-> 早上 + 好 → **早上好**
+> 你 + 好 → **你好**, and 早上 + 好 → **早上好**
 
 **Put a person or a time in front of 好 and you have a greeting.** You have not
 learned two greetings; you have learned a **frame** and filled it twice. Every

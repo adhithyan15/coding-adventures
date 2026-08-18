@@ -35,7 +35,7 @@ Which piece of this character is finished before the other, and how many strokes
 
 
 Lesson 2 of 5.
-上 (shàng) — and a rule that does not apply.
+上 (shàng) — the same rule, read the other way.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -51,11 +51,13 @@ the central vertical, from the top down.
 the short horizontal, left to right, starting at the vertical.
 the long base horizontal, left to right.
 Two pen lifts.
-The vertical comes first. Every character so far has trained you toward top before bottom, left before right, and here the top stroke is not the one you start with. This is worth meeting on a three-stroke character, because it tells you something true about the system: the habits are strong tendencies with named exceptions, not laws. 上 (shàng) is one of the exceptions, and it is common enough that you will see it constantly.
+The vertical comes first, and you wrote the opposite one lesson ago. Inside 早 (zǎo), the two strokes of 十 went horizontal first, then the vertical down through it. Here the order is reversed.
+The difference is what the two strokes do to each other. In 十 they cross, and the horizontal leads. In 上 (shàng) the short bar starts at the vertical instead of crossing it — so there is nothing to cross, and the vertical goes first.
+That is worth meeting on a three-stroke character, because it tells you something true about the system: these are strong tendencies with conditions, not laws. Learn the condition and you can predict the order instead of memorising it.
 The other thing to notice: short horizontal before long horizontal. The base bar is the widest stroke and it goes last, exactly as the closing bar did in 再. When two horizontals differ in length, the long one is usually the finisher.
 
 Guided Practice.
-[once you have stopped driving — write: 上 (shàng) — vertical first, and resist starting at the top left]
+[once you have stopped driving — write: 上 (shàng) — vertical first, even though your hand will want the short bar]
 [once you have stopped driving — write: 上 (shàng) again, and say "short, then long" as you draw the two bars]
 [your turn — say: shàng — falling]
 [pause 8 seconds for the answer]
@@ -64,7 +66,7 @@ Wrap-up Recall.
 Which of the two horizontals is drawn last? (The long one.)
 Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
 [question — say your answer, then pause 10 seconds]
-Which stroke of this character is drawn first?
+Which stroke of this character is drawn first, and why is it not the short bar?
 
 
 Lesson 3 of 5.
@@ -72,7 +74,7 @@ Lesson 3 of 5.
 
 Warm-up.
 [pause 2 seconds]
-Write 早 (zǎo). Six strokes, sun finished first.
+Say zǎo. Low and dipping, and hold the bottom of it.
 
 The word, taken apart.
 早上 (zǎoshang).
@@ -84,6 +86,7 @@ The pinyin for this word is zǎoshang — and 上 (shàng) has lost its tone mar
 On its own 上 is shàng, fourth tone, falling — you practised it that way. Inside this word it goes neutral: short, light, and pitched by whatever came before it. Neutral syllables are written with no mark at all, and that absence is the information.
 This is a fifth thing a syllable can do, alongside the four tones. It is not a tone that moves — you have met two of those — it is a syllable giving up its tone because it is unstressed.
 [repeat that twice]
+Careful or slow speech sometimes restores the full falling tone, zǎoshàng, and you will hear it. The standard reading, and the one to imitate, is the light one.
 Say it: zǎo low and dipping, then shang light and quick, riding on the end. The commonest mistake is to give the second syllable a full falling tone out of habit, which makes the word sound like two words.
 
 Guided Practice.
@@ -93,7 +96,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
-Does 上 (shàng) keep its falling tone when it stands alone? (Yes — it only goes light inside this word.)
+Does 上 (shàng) keep its falling tone when it stands alone? (Yes — the light reading belongs to the word, not to the character.)
 Source: Unicode CJK Unified Ideographs chart.
 [question — say your answer, then pause 12 seconds]
 In the pinyin for 'morning', why does the second syllable have no tone mark?
@@ -111,7 +114,7 @@ The word, taken apart.
 早上好 zǎoshang hǎo — good morning.
 It ends in 好 — the same character, the same word, that you met in the first greeting in this book.
 That is the payoff, and it is worth being explicit about. 你好 was never a phrase to swallow whole. It is 你 you followed by 好 good, and the second half is reusable:
-你 + 好 becomes 你好 早上 + 好 becomes 早上好 (zǎoshang hǎo).
+你 + 好 becomes 你好, and 早上 + 好 becomes 早上好 (zǎoshang hǎo).
 Put a person or a time in front of 好 and you have a greeting. You have not learned two greetings; you have learned a frame and filled it twice. Every one of the other times of day works the same way, and you will be able to build those greetings the moment you have the words for those times.
 
 Sounds you'll need — why nothing moves here.

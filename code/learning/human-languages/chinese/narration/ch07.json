@@ -4,7 +4,7 @@
   "chapter": 7,
   "title": "Good Morning, and a Rule That Declines to Fire",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b62f509fe14069b7",
+  "sourceHash": "fnv1a64:58f8967272263fe8",
   "lessons": [
     {
       "id": "ZH-W07-zao",
@@ -160,10 +160,10 @@
     {
       "id": "ZH-W07-shang",
       "sequence": 460,
-      "title": "上 (shàng) — and a rule that does not apply",
+      "title": "上 (shàng) — the same rule, read the other way",
       "headword": "上",
       "romanization": "shàng",
-      "gloss": "three strokes, and the first one is not where you would guess",
+      "gloss": "three strokes, and the order reverses the one you learned a moment ago",
       "script": "chinese",
       "modality": "pen",
       "derivedModality": "pen",
@@ -171,7 +171,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d8225525672579ec",
+      "sourceHash": "fnv1a64:4f69ff1bea8d65f3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -237,7 +237,15 @@
             },
             {
               "kind": "speech",
-              "text": "The vertical comes first. Every character so far has trained you toward top before bottom, left before right, and here the top stroke is not the one you start with. This is worth meeting on a three-stroke character, because it tells you something true about the system: the habits are strong tendencies with named exceptions, not laws. 上 (shàng) is one of the exceptions, and it is common enough that you will see it constantly."
+              "text": "The vertical comes first, and you wrote the opposite one lesson ago. Inside 早 (zǎo), the two strokes of 十 went horizontal first, then the vertical down through it. Here the order is reversed."
+            },
+            {
+              "kind": "speech",
+              "text": "The difference is what the two strokes do to each other. In 十 they cross, and the horizontal leads. In 上 (shàng) the short bar starts at the vertical instead of crossing it — so there is nothing to cross, and the vertical goes first."
+            },
+            {
+              "kind": "speech",
+              "text": "That is worth meeting on a three-stroke character, because it tells you something true about the system: these are strong tendencies with conditions, not laws. Learn the condition and you can predict the order instead of memorising it."
             },
             {
               "kind": "speech",
@@ -253,11 +261,11 @@
             {
               "kind": "prompt",
               "action": "WRITE",
-              "instruction": "上 (shàng) — vertical first, and resist starting at the top left",
+              "instruction": "上 (shàng) — vertical first, even though your hand will want the short bar",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: 上 — vertical first, and resist starting at the top left]"
+              "source": "[YOU WRITE: 上 — vertical first, even though your hand will want the short bar]"
             },
             {
               "kind": "prompt",
@@ -296,21 +304,21 @@
               "kind": "activity",
               "scored": true,
               "id": "ZH-W07-shang-first",
-              "prompt": "Which stroke of this character is drawn first?",
+              "prompt": "Which stroke of this character is drawn first, and why is it not the short bar?",
               "assesses": [
                 "ZH-SCRIPT-SHANG"
               ],
               "responseSeconds": 10,
               "acceptedResponses": [
-                "the vertical",
+                "the vertical, because the bar does not cross it",
                 "vertical",
                 "the central vertical",
-                "the up-down stroke",
+                "the vertical, the bar meets it",
                 "the vertical stroke"
               ],
               "feedback": {
-                "correct": "The vertical -- not the top horizontal, which is the guess the earlier characters set you up for.",
-                "incorrect": "The VERTICAL comes first here."
+                "correct": "The vertical -- the short bar starts AT it rather than crossing it, so nothing has to be crossed first.",
+                "incorrect": "The VERTICAL. In 十 the horizontal leads because the strokes cross; here they do not."
               }
             }
           ]
@@ -330,7 +338,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f3263ad64e6f255",
+      "sourceHash": "fnv1a64:3fe74ccf51b90d2b",
       "notice": null,
       "blocks": [
         {
@@ -346,7 +354,7 @@
             },
             {
               "kind": "speech",
-              "text": "Write 早 (zǎo). Six strokes, sun finished first."
+              "text": "Say zǎo. Low and dipping, and hold the bottom of it."
             }
           ]
         },
@@ -393,6 +401,10 @@
             },
             {
               "kind": "speech",
+              "text": "Careful or slow speech sometimes restores the full falling tone, zǎoshàng, and you will hear it. The standard reading, and the one to imitate, is the light one."
+            },
+            {
+              "kind": "speech",
               "text": "Say it: zǎo low and dipping, then shang light and quick, riding on the end. The commonest mistake is to give the second syllable a full falling tone out of habit, which makes the word sound like two words."
             }
           ]
@@ -429,7 +441,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Does 上 (shàng) keep its falling tone when it stands alone? (Yes — it only goes light inside this word.)"
+              "text": "Does 上 (shàng) keep its falling tone when it stands alone? (Yes — the light reading belongs to the word, not to the character.)"
             },
             {
               "kind": "speech",
@@ -473,7 +485,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:1d2837011e534580",
+      "sourceHash": "fnv1a64:405520fd53f59724",
       "notice": null,
       "blocks": [
         {
@@ -516,7 +528,7 @@
             },
             {
               "kind": "speech",
-              "text": "你 + 好 becomes 你好 早上 + 好 becomes 早上好 (zǎoshang hǎo)."
+              "text": "你 + 好 becomes 你好, and 早上 + 好 becomes 早上好 (zǎoshang hǎo)."
             },
             {
               "kind": "speech",
