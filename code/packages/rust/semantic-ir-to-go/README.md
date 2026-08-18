@@ -290,6 +290,31 @@ that used to implement them were removed once every frontend finished
 migrating to `__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
+### SIR22 — array/matrix base cut (`NDArrays`, `MatrixOps`, `ArrayColumnMajor`)
+
+`Expr::ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet` and
+`Stmt::IndexSet` (MATLAB/Octave-style dense numeric arrays and matrix ops)
+lower to calls into an inlined `_sir_ndarray_*` sub-runtime — a plain-Go
+port of `semantic-ir-to-javascript`'s own already-proven `ArrayRt`
+sub-runtime, following this backend's existing "paste the runtime helpers
+inline, no `go.mod` dependency" convention. See
+[SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md) for the full
+node-by-node spec. Every array element is a `float64` (MATLAB's own
+"everything is a double" numeric model — see `runtime.rs`'s module doc for
+why this backend does NOT preserve native `int64`/`float64` propagation the
+way the sibling Ruby backend's SIR22 port does). Shape/output sizes are
+validated (with explicit multiplication-overflow guards, since Go's `int`
+can wrap where JS's `Number` cannot) BEFORE any `[]float64` allocation, an
+`_sirNdarrayMaxElements = 1 << 26` cap mirroring the JS reference's
+`MAX_ELEMENTS` exactly.
+
+The 9-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) is **not yet
+supported** — it shares `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
+base cut above, so a plain feature-flag check can't reject it; `lib.rs`'s
+`check_exception_soundness` (extended for this PR) rejects it cleanly with
+a `BackendError` naming the offending node, before `emit` is ever reached.
+
 ## Value model
 
 ```go
@@ -300,11 +325,16 @@ type Closure  struct { Fn func(args []Value) Value }
 type Seq      struct { Items []Value }              // held by *Seq (shared, mutable)
 type MapEntry struct { Key, Val Value }
 type Map      struct { Entries []MapEntry }         // held by *Map (insertion-ordered assoc list)
+type NDArray  struct { Shape []int; Data []float64 } // held by *NDArray (shared, mutable); SIR22
 ```
 
 Single-threaded; symbol interning + globals in module-level maps.
-`*Seq` / `*Map` give sequences and maps reference (shared-mutable)
-semantics; maps key on structural value-equality (`_sir_value_eq`).
+`*Seq` / `*Map` / `*NDArray` give sequences, maps, and arrays reference
+(shared-mutable) semantics; maps key on structural value-equality
+(`_sir_value_eq`). `*NDArray`'s own helper catalog is prefixed
+`_sir_ndarray_*`, deliberately distinct from the pre-existing
+`_sir_array_*` prefix (C5's Ruby-`Array`(`*Seq`)-method-dispatch catalog,
+an unrelated domain) — see `runtime.rs`'s SIR22 section doc comment.
 
 ## Block-as-expression
 

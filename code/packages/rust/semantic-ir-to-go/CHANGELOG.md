@@ -1,5 +1,130 @@
 # Changelog
 
+## 0.40.0 — SIR22 array/matrix base cut (second-wave backend rollout, Phase A Slice 2)
+
+Opens this backend to `Feature::NDArrays`/`Feature::MatrixOps`/
+`Feature::ArrayColumnMajor` and implements the SIR22 array/matrix "base cut"
+— `Expr::ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+and `Stmt::IndexSet` (the mutating counterpart) — per
+`code/specs/SIR22-array-matrix-semantic-ir.md`'s "Backend impact" section,
+which named this backend (alongside C/Rust/Ruby) as a planned second wave
+following JS/TS's own already-shipped SIR22 codegen. The 9-node SIR22 "APL
+addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) remains explicitly OUT of
+scope for this PR — a later slice.
+
+**New `_sir_ndarray_*` runtime (`runtime.rs`)**: an inlined port of
+`semantic-ir-to-javascript`'s own already-proven `ArrayRt` sub-runtime,
+following this backend's existing inlined-runtime convention (no `go.mod`
+dependency, pasted verbatim into every artifact, same as every other
+runtime helper here). Ported 1:1: `checkedShapeSize`, `ndarray`/`fromRows`,
+`toArrayValue`'s bare-scalar coercion, `isScalar`/`nrows`/`ncols`,
+`get`/`set` (NaN-safe AND-form bounds checks), `applyOp`'s 13-op elementwise
+dispatch table (booleans render `1.0`/`0.0`, never a native Go `bool`),
+`elementwise`'s scalar-broadcast rule, `matmul`, `transpose`, `range`
+(MATLAB-style `start:step:stop`, ULP-tolerant inclusive-stop boundary),
+`resolvePositions`/`assertValidPosition` (index-argument resolution),
+`indexGet`/`broadcastValues`/`indexSet`.
+
+**Naming**: every new helper is prefixed `_sir_ndarray_`, NOT `_sir_array_`
+— this backend's PRE-EXISTING Ruby-`Array`(`*Seq`)-method-dispatch catalog
+(C5's `_sir_array_method`/`_sir_array_responds`/`_sir_array_block_method`)
+already owns the `_sir_array_*` prefix for an entirely unrelated domain
+(Ruby's `Array` == this runtime's `*Seq`, not a SIR22 numeric matrix).
+Reusing that prefix would have collided outright with real existing
+functions of the same shape (both take a receiver + do a name-keyed
+dispatch) — a footgun worth flagging explicitly since a naive port of the
+JS reference's `Array.*` naming would have walked straight into it.
+
+**Value representation**: a `*NDArray{Shape []int; Data []float64}` — shared
++ mutable via a pointer handle, exactly like this runtime's existing
+`*Seq`/`*Map` (`Stmt::IndexSet` must mutate the very array a caller's
+binding already holds, MATLAB assignment semantics, mirroring why `*Seq`
+and `*Map` are pointer-backed too). Every element is stored as a **uniform
+`float64`** — a deliberate divergence from the sibling Ruby backend's SIR22
+port (`claude/sir22-slice2-ruby`), which preserves native Ruby
+Integer/Float propagation (Div/Pow force Float; Add/Sub/Mul don't,
+following that crate's own `div_true` precedent). MATLAB's OWN numeric
+model is "every array is a matrix of doubles" by default — there is no
+separate integer-array type in the MATLAB subset this repo's frontends
+target — so uniform `float64` storage is the semantically faithful choice
+here, not a Go-specific compromise, and it is exactly what the JS reference
+this file ports from already does (`Float64Array` throughout). Go's own
+numeric tower (`int64`/`float64` boxed into the existing `Value`
+interface{}) has no "array of numbers" precedent of its own worth
+preserving the way Ruby's native `Integer` class does, so this port stays
+byte-for-byte equivalent to the JS reference's uniform-double model instead
+of introducing a new Go-specific split. One consequence worth flagging: an
+all-integer computation (e.g. `[1 2; 3 4] * [5 6; 7 8]`) prints WITH a
+trailing `.0` on this backend (Go's own `_sir_format_float` convention),
+unlike Ruby's bare-integer output for the same computation — see
+`tests/sir22_array.rs`'s own module doc.
+
+**DoS discipline**: every constructor validates a shape/output size BEFORE
+allocating a `[]float64` from it (`_sir_ndarray_checked_shape_size`,
+called by `ndarray`/`fromRows`/`matmul`/the 2-index-argument paths of
+`indexGet`/`indexSet`), mirroring the JS reference's `MAX_ELEMENTS =
+1 << 26` cap exactly. Go-specific tightening beyond a literal JS port: the
+running shape-size product is checked for overflow ONE multiplication at a
+time (`acc > cap/d` BEFORE `acc *= d`), not after — a JS `Number` cannot
+silently wrap on overflow (only lose precision past 2^53), but Go's `int`
+is a fixed-width two's-complement type where `acc *= d` for a sufficiently
+large shape CAN wrap around to a small or negative `int`, which would slip
+straight past a naive post-hoc `> cap` check. `tests/sir22_array.rs`'s
+`matmul_output_shape_exceeding_the_element_cap_panics_cleanly` proves this
+end-to-end: two independently-under-cap `1x9000`/`9000x1` operands whose
+`9000x9000` matmul OUTPUT would exceed the cap panic cleanly (a readable
+message on stderr) instead of attempting the ~650MB allocation.
+
+**`emit.rs`**: added 6 new `Expr` match arms + 1 `Stmt` arm calling into the
+new runtime, all following this backend's existing emit style
+(`elementwise_op_go_name`/`emit_index_arg`/`emit_index_args` mirror the JS
+backend's `elementwise_op_js_name`/`emit_index_arg`/`emit_index_args`
+exactly). **Landmine avoided**: these 7 nodes previously shared ONE
+combined `panic!` match arm with the 9 SIR22-addendum nodes AND
+`Expr::Convert` (SIR26) — split carefully so `Expr::Convert`'s existing
+(untouched) panic behavior is preserved byte-for-byte in its own arm,
+while the addendum nodes' arm was updated to explain that a NEW soundness
+gate (not the capability gate) is what actually protects them now (see
+below). `cargo test -p semantic-ir-to-go` stayed 100% green throughout,
+confirming no `Expr::Convert` regression.
+
+**Addendum rejection**: the 9-node APL addendum shares
+`NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut, so — now that
+this PR adds those three flags to `ACCEPTED_FEATURES` — the ordinary
+feature-flag capability check alone can no longer distinguish "safe" base-
+cut modules from "still unimplemented" addendum ones. Unlike the JS
+backend's now-removed `find_unimplemented_sir22_addendum_node`
+(`Visitor`-based, a second separate walker) or the Ruby backend's
+`ScanHit::Sir22AddendumNode` (folded into that crate's single shared
+pre-emit scan), this backend already had its OWN pre-existing "reject a
+well-formed-but-unimplemented construct cleanly" mechanism —
+`check_exception_soundness`/`check_soundness_stmt`/`check_soundness_expr`
+(added for E3, extended for O4/MX5 since) — called once from `compile()`
+right beside the manifest gate. This PR extends THAT existing walk rather
+than adding a third parallel mechanism: nine new `check_soundness_expr`
+arms push a clean `BackendError` naming the offending node
+(`unsupported_sir22_addendum`), and the six base-cut node kinds gained
+recursion arms so nested addendum/`Const` usage inside e.g. an `ArrayLit`
+row is still caught. `Stmt::IndexSet`'s prior `panic!` placeholder arm (in
+`check_soundness_stmt`) was replaced with real recursion into its three
+sub-positions, mirroring the existing `Stmt::SeqSet`/`Stmt::MapSet` arms —
+it is a genuinely supported statement now, not a deferred one.
+
+**New `tests/sir22_array.rs`** (9 tests): real `go run` execution proof,
+hand-building `Module`s directly (no frontend targets this backend for
+SIR22 yet) — ported from the JS backend's own `tests/sir22_array.rs`
+worked examples (matmul of two 2x2 matrices against a known product,
+elementwise-mul with a bare-scalar RHS operand, `Div`'s always-true-divide,
+transpose, a MATLAB-style range read by linear index, a `Whole` (`:`)
+selector reading an entire row, `Stmt::IndexSet` mutating in place), plus
+two new tests: the shape-overflow DoS-guard proof described above, and a
+compile-time-rejection proof for `Expr::Reduce` (an addendum node) —
+`compile()` returns a clean `Err` naming the node, not a panic. Uses a
+PID + monotonic-counter temp-filename scheme (not just a per-test tag)
+to avoid the concurrent-`cargo-test` filename race this session's C-backend
+tests already guard against.
+
 ## 0.39.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive only — no frontend emits these names yet, bare `"/"` keeps working
