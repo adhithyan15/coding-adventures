@@ -888,6 +888,31 @@ fn valid_simd_i64x2_arith_and_cmp_family() {
 }
 
 #[test]
+fn valid_simd_shift_family() {
+    // SIMD widen PR14: ixNxM.shl/shr_s/shr_u across all 4 lane widths
+    // -- the FIRST mixed-type binary SIMD op family in this crate: pops
+    // an i32 (pushed last, so on TOP of stack, popped FIRST) then a
+    // v128, pushes one v128. Every prior binary SIMD op pops two v128s
+    // or one v128 -- this is the first time BOTH an i32 and a v128 are
+    // consumed by the same op.
+    assert_valid(
+        r#"(module
+             (func (param v128 i32) (result v128) (i8x16.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i8x16.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i8x16.shr_u (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i16x8.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i16x8.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i16x8.shr_u (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i32x4.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i32x4.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i32x4.shr_u (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i64x2.shl (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i64x2.shr_s (local.get 0) (local.get 1)))
+             (func (param v128 i32) (result v128) (i64x2.shr_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.28] - 2026-08-18 (task #159-161 — SIMD: shift family type rules)
+
+### Added
+
+- New `0xFD` SIMD type-check arm for `ShlI8x16 | ShrSI8x16 |
+  ShrUI8x16 | ShlI16x8 | ShrSI16x8 | ShrUI16x8 | ShlI32x4 | ShrSI32x4
+  | ShrUI32x4 | ShlI64x2 | ShrSI64x2 | ShrUI64x2` -- the FIRST
+  mixed-type binary SIMD op family in this crate's type rules. Pops
+  `I32` first (the shift amount is on top of stack, per
+  `(ixNxM.shl (v128 $a) (i32 $amount))`'s push order), then `V128`,
+  pushes `V128` -- matching wasm-execution's own pop order exactly.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.27] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family type rules)
 
 ### Added

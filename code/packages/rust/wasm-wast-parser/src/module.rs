@@ -1800,6 +1800,18 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::GtSI64x2
             | wasm_opcodes::SimdOpKind::LeSI64x2
             | wasm_opcodes::SimdOpKind::GeSI64x2
+            | wasm_opcodes::SimdOpKind::ShlI8x16
+            | wasm_opcodes::SimdOpKind::ShrSI8x16
+            | wasm_opcodes::SimdOpKind::ShrUI8x16
+            | wasm_opcodes::SimdOpKind::ShlI16x8
+            | wasm_opcodes::SimdOpKind::ShrSI16x8
+            | wasm_opcodes::SimdOpKind::ShrUI16x8
+            | wasm_opcodes::SimdOpKind::ShlI32x4
+            | wasm_opcodes::SimdOpKind::ShrSI32x4
+            | wasm_opcodes::SimdOpKind::ShrUI32x4
+            | wasm_opcodes::SimdOpKind::ShlI64x2
+            | wasm_opcodes::SimdOpKind::ShrSI64x2
+            | wasm_opcodes::SimdOpKind::ShrUI64x2
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -2458,6 +2470,18 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::GtSI64x2
             | wasm_opcodes::SimdOpKind::LeSI64x2
             | wasm_opcodes::SimdOpKind::GeSI64x2
+            | wasm_opcodes::SimdOpKind::ShlI8x16
+            | wasm_opcodes::SimdOpKind::ShrSI8x16
+            | wasm_opcodes::SimdOpKind::ShrUI8x16
+            | wasm_opcodes::SimdOpKind::ShlI16x8
+            | wasm_opcodes::SimdOpKind::ShrSI16x8
+            | wasm_opcodes::SimdOpKind::ShrUI16x8
+            | wasm_opcodes::SimdOpKind::ShlI32x4
+            | wasm_opcodes::SimdOpKind::ShrSI32x4
+            | wasm_opcodes::SimdOpKind::ShrUI32x4
+            | wasm_opcodes::SimdOpKind::ShlI64x2
+            | wasm_opcodes::SimdOpKind::ShrSI64x2
+            | wasm_opcodes::SimdOpKind::ShrUI64x2
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
             | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
             | wasm_opcodes::SimdOpKind::DotI16x8S
@@ -5200,6 +5224,47 @@ mod tests {
         assert!(code_of(&m, 8).windows(3).any(|w| w == [0xFD, 0xD9, 0x01]), "i64x2.gt_s: {:?}", code_of(&m, 8));
         assert!(code_of(&m, 9).windows(3).any(|w| w == [0xFD, 0xDA, 0x01]), "i64x2.le_s: {:?}", code_of(&m, 9));
         assert!(code_of(&m, 10).windows(3).any(|w| w == [0xFD, 0xDB, 0x01]), "i64x2.ge_s: {:?}", code_of(&m, 10));
+    }
+
+    #[test]
+    fn simd_shift_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR14: ixNxM.shl/shr_s/shr_u across all 4 lane
+        // widths -- the FIRST mixed-type binary SIMD op family
+        // (v128 + scalar i32, not two v128s). Same "no immediate beyond
+        // the opcode byte itself" encoder bucket as every prior SIMD op
+        // -- the mixed operand TYPES are invisible to this encoder (a
+        // type-checker concern, see wasm-validator), since operand
+        // count/values are driven entirely by the S-expression
+        // recursion that already ran. i8x16's triple is single-byte
+        // LEB128 (< 128); every other width's is 2-byte (>= 128).
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 i32) (result v128) (i8x16.shl (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i8x16.shr_s (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i8x16.shr_u (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i16x8.shl (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i16x8.shr_s (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i16x8.shr_u (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i32x4.shl (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i32x4.shr_s (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i32x4.shr_u (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i64x2.shl (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i64x2.shr_s (local.get 0) (local.get 1)))
+                 (func (param v128 i32) (result v128) (i64x2.shr_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x6B]), "i8x16.shl: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x6C]), "i8x16.shr_s: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x6D]), "i8x16.shr_u: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0x8B, 0x01]), "i16x8.shl: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0x8C, 0x01]), "i16x8.shr_s: {:?}", code_of(&m, 4));
+        assert!(code_of(&m, 5).windows(3).any(|w| w == [0xFD, 0x8D, 0x01]), "i16x8.shr_u: {:?}", code_of(&m, 5));
+        assert!(code_of(&m, 6).windows(3).any(|w| w == [0xFD, 0xAB, 0x01]), "i32x4.shl: {:?}", code_of(&m, 6));
+        assert!(code_of(&m, 7).windows(3).any(|w| w == [0xFD, 0xAC, 0x01]), "i32x4.shr_s: {:?}", code_of(&m, 7));
+        assert!(code_of(&m, 8).windows(3).any(|w| w == [0xFD, 0xAD, 0x01]), "i32x4.shr_u: {:?}", code_of(&m, 8));
+        assert!(code_of(&m, 9).windows(3).any(|w| w == [0xFD, 0xCB, 0x01]), "i64x2.shl: {:?}", code_of(&m, 9));
+        assert!(code_of(&m, 10).windows(3).any(|w| w == [0xFD, 0xCC, 0x01]), "i64x2.shr_s: {:?}", code_of(&m, 10));
+        assert!(code_of(&m, 11).windows(3).any(|w| w == [0xFD, 0xCD, 0x01]), "i64x2.shr_u: {:?}", code_of(&m, 11));
     }
 
     #[test]

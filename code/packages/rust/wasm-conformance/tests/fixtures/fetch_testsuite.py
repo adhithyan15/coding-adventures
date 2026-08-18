@@ -362,6 +362,20 @@ TESTSUITE_FILES = [
     "simd_i64x2_arith.wast",
     "simd_i64x2_arith2.wast",
     "simd_i64x2_cmp.wast",
+    # SIMD widen PR14 (task #159-161): simd_bit_shift.wast --
+    # ixNxM.shl/shr_s/shr_u across all 4 lane widths (i8x16/i16x8/
+    # i32x4/i64x2). The FIRST mixed-type binary SIMD op family: pops a
+    # scalar i32 shift amount (pushed last, so popped first) then a
+    # v128, pushes one v128 -- every prior binary op popped two v128s
+    # or one v128, never a mix. Per the SIMD spec, the shift amount is
+    # taken MODULO the lane's bit width before shifting (8/16/32/64
+    # respectively) -- both spec-mandated and required for Rust safety
+    # (shifting a primitive by >= its bit width panics). Each
+    # sub-opcode byte fetched live from BinarySIMD.md and cross-checked
+    # against the already-implemented per-width `add` entries (every
+    # width's shl/shr_s/shr_u triple sits immediately before that
+    # width's own `add` sub-opcode).
+    "simd_bit_shift.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
