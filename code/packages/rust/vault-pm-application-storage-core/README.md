@@ -58,9 +58,21 @@ recovery replays this call after a crash and must be able to reach the end. The
 removal is read back afterwards, so a delete that silently did not happen
 reports `Corruption` rather than success.
 
+A third is less obvious and matters more: **the wrap is destroyed by a write,
+not only by the unlink.** Every other durable step of a rotation is a write, and
+a lost write is merely lost work the journal replays. This one is a removal, and
+a lost removal is the opposite — it resurrects key material into a vault whose
+owner state has already moved on and will never revisit it. `remove_file`
+returning success proves the entry is gone from the page cache, not that its
+removal is committed; on a journalling filesystem it can still be uncommitted
+while a later `fsync`ed write elsewhere lands ahead of it. So the retired
+record's body is first replaced with nothing through the same
+write-`fsync`-`rename` path every other step uses, and only then unlinked. After
+that write returns, the wrap is gone whether or not the unlink survives.
+
 ## Verification
 
-Twelve tests cover generation-zero installation, rotation, idempotent retry,
+Thirteen tests cover generation-zero installation, rotation, idempotent retry,
 stale and competing predecessors, malformed generation/pointer data,
 supersession of a retired generation and refusal of the live one, exact
 local-state CAS, concurrent writers, closed errors, and filesystem

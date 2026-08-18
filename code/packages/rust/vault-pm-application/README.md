@@ -591,11 +591,23 @@ Three details carry the weight:
 - **The retired generation is deleted.** `BootstrapStore::supersede_generation`
   removes it and refuses to remove the live one. Advancing the latest pointer
   alone would leave the old passphrase able to unwrap the unchanged root key
-  from a record still on disk.
+  from a record still on disk. Implementations must destroy the wrap with a
+  *durable write* rather than trusting the unlink alone — a removal that is only
+  visible, not committed, resurrects key material into a vault that will never
+  look at it again.
 - **Recovery rolls forward.** `PendingRotationV1` is the commit point; every
   step after it is a pure function of it, which is why the roll-forward needs
-  no secret. Rolling back would have to decide without a passphrase whether the
-  person still knows the old one.
+  no secret. Rolling back as a rule would have to decide without a passphrase
+  whether the person still knows the old one — with one exception, where no
+  deciding is needed: if the store refused the install *and* still serves the
+  generation the rotation meant to retire, nothing was installed and nothing
+  deleted, so the journal is withdrawn and the old passphrase remains the
+  vault's. Without that single exit, one `Conflict` from a provider after the
+  journal landed would brick the vault permanently.
+
+A rotation is also floored at the vault's existing Argon2id memory and iteration
+cost. It may raise the cost and may never lower it: the ceremony a person runs
+to improve their security must not be the one that weakens it.
 
 The structural claim is measured rather than asserted: a unit test compares the
 object store's complete change feed across a rotation of a pre-audit vault and
