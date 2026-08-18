@@ -176,6 +176,27 @@ fn e2e_twig_closure_and_globals() {
     }
 }
 
+/// SIR21 T3b-2 Slice 7: Twig's `/` is variadic with no static int/float
+/// distinction, so it can never migrate to one of `div_floor`/`div_trunc`/
+/// `udiv_trunc`/`div_true` — it stays on bare `"/"` permanently, aliased to
+/// `div_floor`'s rendering (Ruby-floor-faithful: floors ints, true-divides
+/// floats). Now that C — the arc's other bare-`"/"` producer among the
+/// languages this backend accepts as input — has migrated off tdiv/utdiv,
+/// Twig is the only remaining frontend exercising this backend's bare `"/"`
+/// path at all, so this regression proves it still renders and runs
+/// correctly with the dead `tdiv`/`utdiv` dispatch entries removed.
+#[test]
+fn e2e_twig_bare_slash_still_floors_after_tdiv_utdiv_removal() {
+    // `-7 / 2` is the discriminating case: `-4` proves floor-toward-negative-
+    // infinity (div_floor's semantics, which bare `/` aliases); the
+    // now-removed `tdiv` path would have truncated toward zero to `-3`.
+    let rb = twig_to_ruby("(print (/ -7 2))");
+    match run_ruby(&rb) {
+        Some(out) => assert_eq!(out, "-4"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
 #[test]
 fn e2e_tail_if_both_branches() {
     let rb = ruby_to_ruby(
