@@ -1,0 +1,107 @@
+% ============================================================================
+% earth-layer-matter-behavior — WHY each of Earth's internal layers behaves
+% the way it does, DERIVED (not just looked up) by composing a general
+% chemistry PRINCIPLE with a specific geology FACT (adj-facts-stdlib,
+% GEOLOGY, cross-directory composition with CHEMISTRY). NGSS MS-ESS2-1
+% "Develop a model to describe the cycling of Earth's materials and the flow
+% of energy that drives this process."
+% ============================================================================
+% `geology/earth-layers.adj` already tables WHICH physical STATE each of
+% Earth's four internal layers is in ("the outer core is liquid, the inner
+% core is solid"); `chemistry/states-of-matter.adj` already tables what a
+% GIVEN state's own defining behavior IS ("a liquid takes the shape of its
+% container, a solid holds a fixed shape"). Neither file states outright
+% "the outer core takes the shape of its container" — but Earth-layers'
+% specific STATE assignment, run through states-of-matter's general
+% chemistry PRINCIPLE for that state, answers it directly: this is the SAME
+% "compose two independently-citable facts into a derived, dual-cited
+% conclusion" discipline `physics/heat-causes-phase-change.adj` and
+% `physics/force-causes-acceleration.adj` already established, applied here
+% to a genuinely CROSS-DIRECTORY pair (geology + chemistry, not two files in
+% the same subject directory like those two precedents) — the same
+% cross-directory SHAPE `earth-science/season-start-month-number.adj`
+% established (geology's `has_state` plays the role that file's
+% `season_start_month` played; chemistry's `matter_state` plays the role its
+% `month_number` played), but here the composed general fact IS itself a
+% causal PRINCIPLE (states-of-matter's own defining behavior for each
+% state), not a bare naming convention — closer in spirit to
+% `heat-causes-phase-change.adj`.
+%
+%     import "earth-layer-matter-behavior.adj"    % transitively imports earth-layers.adj + ../chemistry/states-of-matter.adj
+%     ? earth_layer_matter_behavior(outer_core, $B)   % takes_shape_of_container
+%     ? earth_layer_matter_behavior(inner_core, $B)   % fixed_shape
+%     ? earth_layer_matter_behavior($L, fixed_shape)  % inner_core (reverse)
+%     ? earth_layer_matter_behavior(crust, $B)        % abstain -- crust is "rigid", not one of the three keyed states
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Layer`/`$State`
+% through the already-shipped `has_state` table, then re-binds
+% `$State`/`$Behavior` through the already-shipped `matter_state` table -- a
+% plain two-hop join on the literal, EXACT state word both tables share. A
+% query's `steps` trail therefore shows THREE entries: the rule's own
+% citation (the general states-of-matter principle), the `has_state` fact's
+% citation (USGS), and the `matter_state` fact's citation (NASA), so a human
+% can independently verify each link.
+%
+% WHY this is a genuine causal explanation, not a coincidental word match:
+% `earth-layers.adj`'s own header already flags exactly this reasoning chain
+% as a rung to climb -- "Before you can reason about how seismic waves
+% travel, why the outer core alone can generate a magnetic field, or how the
+% mantle 'flows,' you must first know WHICH state a given layer is in." The
+% outer core generates Earth's magnetic field (via convection) PRECISELY
+% BECAUSE it is a liquid and liquids "flow to fit" whatever bounds them,
+% rather than holding a fixed shape the way the solid inner core does --
+% this rule makes that link a first-class, queryable, dual-cited fact
+% instead of leaving it as background intuition.
+%
+% HONEST ABSTENTION -- the crux of why this is a narrow, faithful
+% composition and not a forced one: `has_state` tables FOUR layers, but
+% `matter_state` only defines exactly THREE everyday states (solid, liquid,
+% gas). Two of the four layers join cleanly:
+%
+%     layer         has_state's word   matches matter_state's key?   behavior
+%     -----------   -----------------  -----------------------------  -------------------------
+%     outer_core    liquid             YES (liquid)                   takes_shape_of_container
+%     inner_core    solid              YES (solid)                    fixed_shape
+%     crust         rigid              NO -- "rigid" != "solid"       ABSTAIN
+%     mantle        semi_solid         NO -- "semi_solid" != "solid"  ABSTAIN
+%
+% `earth-layers.adj`'s own header already explains WHY: the source
+% deliberately uses "rigid" for the crust (not "solid") and "semi-solid" for
+% the mantle (not "molten" or "solid"), because neither one is simply the
+% same everyday solid state a beginner chemistry table defines. Forcing
+% crust/mantle to join anyway (e.g. by treating "rigid" as a synonym for
+% "solid") would assert a behavior NEITHER already-cited source states --
+% exactly the kind of invented mapping this stdlib's honest-abstention
+% discipline forbids. So this rule derives exactly the two layers whose own
+% cited state word is a literal, exact match for one of chemistry's three
+% keyed states, and abstains on the other two, or any other word, rather
+% than inventing a behavior.
+%
+% CROSS-DIRECTORY IMPORT: this file lives in `geology/` (its natural subject
+% home, alongside `earth-layers.adj`) and imports its chemistry sibling with
+% a relative `../chemistry/states-of-matter.adj` path -- empirically
+% confirmed (in a scratch dir, before writing this file) against the real
+% built CLI binary, mirroring `season-start-month-number.adj`'s own
+% confirmed cross-directory shape. This library's OWN `.query.adj` companion
+% is placed at the package root (not beside this file), the same placement
+% `season-start-month-number.query.adj` already established, so a bare
+% `adj-lang-cli <query>.query.adj` invocation from the package root works
+% directly.
+%
+% Deliberately scoped to Earth's four PRIMARY internal layers only (the same
+% scope `earth-layers.adj` itself already commits to -- no lithosphere,
+% asthenosphere, or crust sub-layers) and to the three everyday states
+% `states-of-matter.adj` itself already commits to (no plasma) -- no new
+% layer or state content is asserted here, only the join. (See
+% ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "earth-layers.adj"
+import "../chemistry/states-of-matter.adj"
+
+rule { head: earth_layer_matter_behavior($Layer, $Behavior)
+       when: has_state($Layer, $State), matter_state($State, $Behavior)
+       source "A solid holds its shape and the volume of a solid is fixed by the shape of the solid."
+       locator "https://www.grc.nasa.gov/www/k-12/airplane/state.html"
+       trust authoritative }

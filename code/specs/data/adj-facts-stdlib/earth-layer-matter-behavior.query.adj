@@ -1,0 +1,30 @@
+% ============================================================================
+% earth-layer-matter-behavior.query.adj — worked recall over the geology/
+% chemistry causal-composition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "why does the outer core
+% behave the way it does?" — it states no fact of its own — it only
+% `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, composing Earth-layers' specific state assignment with
+% states-of-matter's general chemistry principle for that state, so every
+% answer carries BOTH citations in its `steps` trail.
+%
+% Placed at the stdlib PACKAGE ROOT (not beside
+% `geology/earth-layer-matter-behavior.adj`) — the same cross-directory-
+% import sandboxing pattern `season-start-month-number.query.adj` already
+% established: the library itself lives in `geology/` and reaches its
+% chemistry sibling via a relative `../chemistry/states-of-matter.adj`
+% import, which only resolves if the CONSUMING entry program (this file)
+% sits at or above the package root, so both `geology/` and `chemistry/`
+% fall inside the CLI's sandboxed import subtree.
+%
+% Run (from this directory, the package root, so the relative import
+% resolves):
+%     ../../packages/rust/target/debug/adj-lang-cli earth-layer-matter-behavior.query.adj
+% ============================================================================
+
+import "geology/earth-layer-matter-behavior.adj"
+
+? earth_layer_matter_behavior(outer_core, $B)   % expect takes_shape_of_container (direct: the outer core is liquid)
+? earth_layer_matter_behavior($L, fixed_shape)  % expect inner_core (reverse: which layer holds a fixed shape?)
+? earth_layer_matter_behavior(crust, $B)        % expect abstain -- the crust is "rigid", not one of chemistry's three keyed states
