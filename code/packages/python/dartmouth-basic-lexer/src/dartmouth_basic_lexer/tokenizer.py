@@ -1,7 +1,7 @@
 """Dartmouth BASIC 1964 Lexer — tokenizes original BASIC source text.
 
-This module is a thin wrapper around the generic ``GrammarLexer``. It loads
-the ``dartmouth_basic.tokens`` file from the ``code/grammars/`` directory,
+This module is a thin wrapper around the generic ``GrammarLexer``. It uses
+a pre-compiled ``TOKEN_GRAMMAR`` (see ``dartmouth_basic_lexer._grammar``),
 creates a lexer configured for 1964 Dartmouth BASIC, and applies two
 post-tokenize hooks that handle the language's two quirky challenges:
 
@@ -101,64 +101,26 @@ leaving only:
 The hook is careful to *keep* the NEWLINE (it is the statement terminator
 that the parser needs) while suppressing all tokens in between.
 
-Locating the Grammar File
---------------------------
+The Dartmouth BASIC token grammar is compiled into ``_grammar.py`` by the
+grammar-tools compiler from ``code/grammars/dartmouth_basic/dartmouth_basic.tokens``.
+Importing the pre-built ``TOKEN_GRAMMAR`` constant means no file I/O at
+startup and no runtime grammar parsing overhead.
 
-The ``dartmouth_basic.tokens`` file lives in the ``code/grammars/`` directory
-at the repository root. We navigate there relative to this file's path::
+To regenerate after editing
+``code/grammars/dartmouth_basic/dartmouth_basic.tokens`` (path relative to
+the repo root, from ``code/programs/python/grammar-tools``)::
 
-    tokenizer.py            (this file)
-    └── dartmouth_basic_lexer/    (parent: package module)
-        └── src/                  (parent: source root)
-            └── dartmouth-basic-lexer/  (parent: package root)
-                └── python/             (parent: language dir)
-                    └── packages/       (parent: packages dir)
-                        └── code/       (parent: code root)
-                            └── grammars/
-                                └── dartmouth_basic.tokens
-
-That is six ``..`` steps from ``tokenizer.py`` to ``code/``, then into
-``grammars/``.
+    grammar-tools compile-tokens \\
+        ../../../grammars/dartmouth_basic/dartmouth_basic.tokens \\
+        > ../../../packages/python/dartmouth-basic-lexer/src/\\
+dartmouth_basic_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Callable
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# GRAMMAR_DIR resolves to: code/grammars/
-#
-# The six .parent steps navigate up the directory hierarchy:
-#   __file__            → .../src/dartmouth_basic_lexer/tokenizer.py
-#   .parent             → .../src/dartmouth_basic_lexer/
-#   .parent             → .../src/
-#   .parent             → .../dartmouth-basic-lexer/
-#   .parent             → .../python/
-#   .parent             → .../packages/
-#   .parent             → .../code/
-#   / "grammars"        → .../code/grammars/
-#
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = (
-    Path(__file__).parent  # dartmouth_basic_lexer/
-    .parent                # src/
-    .parent                # dartmouth-basic-lexer/
-    .parent                # python/
-    .parent                # packages/
-    .parent                # code/
-    / "grammars"
-)
-
-DARTMOUTH_BASIC_TOKENS_PATH = GRAMMAR_DIR / "dartmouth_basic" / "dartmouth_basic.tokens"
-
+from dartmouth_basic_lexer._grammar import TOKEN_GRAMMAR
 
 # ---------------------------------------------------------------------------
 # Post-Tokenize Hook 1: relabel_line_numbers
@@ -352,8 +314,9 @@ def suppress_rem_content(tokens: list[Token]) -> list[Token]:
 def create_dartmouth_basic_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for 1964 Dartmouth BASIC.
 
-    This function reads ``dartmouth_basic.tokens``, parses it into a
-    ``TokenGrammar``, and constructs a ``GrammarLexer`` for the given source.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``dartmouth_basic_lexer._grammar``) to construct a ``GrammarLexer`` for
+    the given source. No file I/O is performed.
 
     **Note**: This function does NOT attach the post-tokenize hooks. Use
     ``tokenize_dartmouth_basic`` for the complete lexing pipeline including
@@ -387,11 +350,6 @@ def create_dartmouth_basic_lexer(source: str) -> GrammarLexer:
         Call ``.tokenize()`` to get the raw token list (without post-hooks).
         Call ``.add_post_tokenize(hook)`` to add your own transformations.
 
-    Raises:
-        FileNotFoundError: If ``dartmouth_basic.tokens`` cannot be found at
-            the expected path.
-        TokenGrammarError: If the tokens file has syntax errors.
-
     Example::
 
         lexer = create_dartmouth_basic_lexer("10 PRINT X\\n")
@@ -399,8 +357,7 @@ def create_dartmouth_basic_lexer(source: str) -> GrammarLexer:
         lexer.add_post_tokenize(my_hook)
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(DARTMOUTH_BASIC_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_dartmouth_basic(source: str) -> list[Token]:
@@ -458,10 +415,6 @@ def tokenize_dartmouth_basic(source: str) -> list[Token]:
         A list of ``Token`` objects. The last token is always ``EOF``.
         NEWLINE tokens are included (they are significant in line-oriented
         BASIC). Whitespace and REM comment content are not included.
-
-    Raises:
-        FileNotFoundError: If ``dartmouth_basic.tokens`` cannot be found.
-        TokenGrammarError: If the tokens file has syntax errors.
 
     Example::
 
