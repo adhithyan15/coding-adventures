@@ -37,12 +37,16 @@ clearer's delay, salt, and digest are written to a pipe. Every argument vector
 in the module is a compile-time `&'static [&'static str]`, so there is no type
 here a secret could be interpolated into.
 
-**Utilities are resolved from `/usr/bin` and `/bin` only.** `PATH` is never
-consulted, because it is caller-controlled: resolving through it would hand a
-live credential to the standard input of a program chosen by whoever could
-prepend a directory. `/usr/local/bin` is excluded deliberately — it is where
-locally-installed software lives and is group- or user-writable on a meaningful
-fraction of real machines. A utility installed elsewhere is not found and
+**Utilities are resolved from `/usr/bin` and `/bin` only, and the file found
+there must be a root-owned regular file with no group- or other-write bit.**
+`PATH` is never consulted, because it is caller-controlled: resolving through it
+would hand a live credential to the standard input of a program chosen by
+whoever could prepend a directory. `/usr/local/bin` is excluded deliberately —
+it is where locally-installed software lives and is group- or user-writable on a
+meaningful fraction of real machines. The ownership check is what turns "it is
+in a root-owned directory" from an assumption about the host into something the
+module verifies: a symbolic link planted in `/usr/bin` would otherwise be
+followed without comment. A utility that fails either test is not found and
 `--copy` fails closed.
 
 | Session | Write | Read | Clear |
@@ -74,7 +78,11 @@ its output, and arms `alarm(delay + 30)` so a wedged utility cannot leave it
 resident. If the copy succeeds but the clearer cannot be spawned, the clipboard
 is cleared immediately and the failure reported.
 
-Every utility wait is bounded at five seconds, every read at 4 KiB. Values must
+Every utility wait is bounded at five seconds *in time as well as in bytes* —
+the read pipe is non-blocking and polled against a deadline, because on X11 and
+Wayland a reader can wait forever on a selection owner that never answers, and
+reading to end of file would be bounded in bytes and unbounded in time. Every
+read is also capped at 4 KiB. Values must
 be non-empty printable ASCII with no space, at most 1,024 bytes: that is what
 makes the round trip a byte comparison, since whitespace and multi-byte
 sequences are exactly what the read tools disagree about.

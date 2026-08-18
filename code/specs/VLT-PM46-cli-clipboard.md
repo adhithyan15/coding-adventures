@@ -47,7 +47,7 @@ Out of scope, each for its own reason:
 - **Windows.** §4.4 explains why V1 fails closed there rather than shipping a
   clear it cannot verify.
 - **A clipboard *manager* integration** (`clipmenu`, KDE Klipper, macOS
-  clipboard history apps). §7.3 states plainly that this product cannot defeat
+  clipboard history apps). §7.4 states plainly that this product cannot defeat
   one, and that saying so is better than implying otherwise.
 
 ## 2. Command surface
@@ -188,7 +188,18 @@ equivalent tools.
 ### 4.2 Tools are resolved from a fixed trusted directory list, not `PATH`
 
 A tool is used only if it is found in `/usr/bin` or `/bin`, probed in that
-order. `PATH` is never consulted.
+order, **and only if the file found there is a root-owned regular file with no
+group- or other-write bit**. `PATH` is never consulted.
+
+The second half of that sentence exists because the first half alone would be a
+claim about a host's layout rather than something this product checks. A
+symbolic link planted in a trusted directory, an image where `/usr/bin` is not
+in fact root-owned, or a root-owned binary a group member may replace would each
+satisfy "it is in `/usr/bin`" while defeating the point of saying so. The probe
+therefore does not follow links and inspects owner and mode. A narrow
+time-of-check/time-of-use window remains before the `execve`; winning it
+requires the ability to replace a file inside a root-owned, non-world-writable
+directory, which is already root.
 
 `PATH` is caller-controlled. Resolving through it would mean that anyone who can
 prepend a directory to `PATH` — an inherited environment, a compromised shell
@@ -388,7 +399,31 @@ ever put anything on an X11 clipboard — but it means the value lives in one mo
 process than the macOS path uses. It is documented here because a reader
 comparing the platforms deserves to know they are not identical.
 
-### 7.3 A clipboard manager defeats the clear, and cannot be stopped
+### 7.3 A failed clear is silent, and that is a deliberate trade
+
+The detached clearer has no terminal, no standard output, no vault, and no
+audit chain to write to — all of which §5.2 relies on to argue that its
+clipboard read is not a disclosure. The consequence is that "the clipboard was
+cleared" and "the clipboard could not be cleared" look identical from outside:
+a transient tool failure, a session that ended, or a selection owner that never
+answers all produce a secret that stays on the clipboard with nobody told.
+
+The obvious repair — report the outcome somewhere — is refused twice over.
+Writing to the terminal would mean writing to a terminal the process no longer
+owns and a person may have handed to something else. Publishing an audit event
+would mean a detached background process holding a vault open, which is the one
+thing §2.1 says it must never do.
+
+The exit status is also deliberately uninformative: it does not distinguish
+"cleared" from "left alone", because a local user who could observe that
+difference would have an oracle for whether a particular value is still on the
+clipboard. Silence here is the same choice as constant-time comparison in
+§5.1 — refusing to leak the one bit that the comparison exists to protect.
+
+What remains is that the guarantee is best-effort, and this paragraph is where
+that is written down rather than implied.
+
+### 7.4 A clipboard manager defeats the clear, and cannot be stopped
 
 If a clipboard history manager is running, it captured the value the moment it
 was copied and keeps its own copy. Clearing the system clipboard does not reach
@@ -431,7 +466,9 @@ The slice is complete only when tests prove:
    returns unavailable for a headless session, an unknown platform, and a
    session whose tools are absent;
 2. a tool present only outside `/usr/bin` and `/bin` — including one on `PATH`
-   and one in `/usr/local/bin` — is never selected;
+   and one in `/usr/local/bin` — is never selected, and inside those
+   directories a symbolic link, a directory, and a file this process owns are
+   each refused while a real root-owned binary is accepted;
 3. the value contract is enforced: empty, over-long, non-ASCII, space-bearing,
    and control-bearing values are refused before anything is spawned;
 4. the spawned argument vector for the write, the read, the clear, and the
@@ -441,6 +478,9 @@ The slice is complete only when tests prove:
    block, long block, zero delay, and over-range delay are each refused;
 6. the verified clear clears on a digest match, does not clear on a mismatch,
    does not clear when the read fails, and tolerates one trailing newline;
+6a. every wait on a clipboard utility is bounded in time as well as in bytes: a
+   tool that never exits, and a reader that emits a few bytes below the ceiling
+   and then stalls, are both killed on the deadline rather than awaited;
 7. the digest depends on the salt — the same value under two salts produces two
    digests;
 8. `password generate --copy` and `totp code --copy` fail with `unsupported`

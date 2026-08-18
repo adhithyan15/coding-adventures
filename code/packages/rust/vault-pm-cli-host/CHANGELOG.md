@@ -16,8 +16,12 @@
   is a `&'static [&'static str]` chosen at compile time, so there is no type in
   the module a secret could be interpolated into.
 
-  **Utilities are resolved from `/usr/bin` and `/bin` only; `PATH` is never
-  consulted.** `PATH` is caller-controlled, so resolving through it would hand
+  **Utilities are resolved from `/usr/bin` and `/bin` only, must be root-owned
+  regular files with no group- or other-write bit, and `PATH` is never
+  consulted.** The ownership test is what makes the directory rule more than an
+  assumption about the host: a symbolic link planted in a trusted directory
+  would otherwise be followed silently, and so would an image where `/usr/bin`
+  is not in fact root's. `PATH` is caller-controlled, so resolving through it would hand
   a live credential to the standard input of a program chosen by anyone who
   could prepend a directory. `/usr/local/bin` is excluded deliberately: it is
   where locally-installed software lives and is group- or user-writable on a
@@ -60,7 +64,15 @@
   person believes a timeout is running.
 
   Every wait on a utility is bounded at five seconds and every read is bounded
-  at 4 KiB, so no clipboard path can hang a terminal or force an allocation.
+  at 4 KiB *and* at the same five-second deadline, so no clipboard path can hang
+  a terminal or force an allocation. The time bound on the read is not
+  redundant: on X11 and Wayland the selection is served on demand by whichever
+  process owns it, so a reader can stall below the byte ceiling forever waiting
+  on an owner that never answers — and the consequence would be a verified clear
+  that silently never fires. The detached clearer also resets `SIGALRM` to its
+  default disposition before arming its watchdog, because `execve` preserves an
+  *ignored* signal and an inherited `SIG_IGN` would have made the watchdog a
+  silent no-op.
   Accepted values are non-empty printable ASCII with no space, at most 1,024
   bytes — the contract that makes the round trip a byte comparison, since
   whitespace and multi-byte sequences are exactly what the read tools disagree

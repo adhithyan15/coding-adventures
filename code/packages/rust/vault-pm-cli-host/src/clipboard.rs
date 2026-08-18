@@ -242,7 +242,7 @@ pub struct SessionKind {
     pub x11: bool,
 }
 
-/// Choose the clipboard family for a session, given a program-existence test.
+/// Choose the clipboard family for a session, given a program-trust test.
 ///
 /// The order is VLT-PM46 §4.1 and each step of it is a decision:
 ///
@@ -259,7 +259,7 @@ pub struct SessionKind {
 /// copy whose clear could never be verified.
 pub fn select_tooling(
     session: SessionKind,
-    exists: &dyn Fn(&Path) -> bool,
+    trusted: &dyn Fn(&Path) -> bool,
 ) -> Option<ClipboardTooling> {
     let mut candidates: Vec<ClipboardTooling> = Vec::new();
     if session.macos {
@@ -276,7 +276,7 @@ pub fn select_tooling(
         tooling
             .programs()
             .iter()
-            .all(|program| resolve_program(program, exists).is_some())
+            .all(|program| resolve_program(program, trusted).is_some())
     })
 }
 
@@ -285,11 +285,48 @@ pub fn select_tooling(
 /// This is the whole of the `PATH` policy: there isn't one. A program that is
 /// only in `/usr/local/bin`, `/opt`, a Nix profile, or anywhere on `PATH` is not
 /// found, and the caller fails closed.
-pub fn resolve_program(program: &str, exists: &dyn Fn(&Path) -> bool) -> Option<PathBuf> {
+///
+/// `trusted` decides whether a candidate path may be executed. Production
+/// passes [`is_trusted_program`], which requires a root-owned regular file that
+/// is not group- or world-writable — because "the directory is root-owned" is a
+/// claim about a host's layout, and a claim this module can check for itself is
+/// better than a claim it merely assumes. Tests pass a set-membership closure,
+/// which is why the predicate is injected rather than called directly.
+pub fn resolve_program(program: &str, trusted: &dyn Fn(&Path) -> bool) -> Option<PathBuf> {
     TRUSTED_TOOL_DIRECTORIES
         .iter()
         .map(|directory| Path::new(directory).join(program))
-        .find(|candidate| exists(candidate))
+        .find(|candidate| trusted(candidate))
+}
+
+/// Whether a candidate path is a program this adapter may pipe a secret into.
+///
+/// Three conditions, each closing a way the trusted-directory rule could be
+/// true in name only:
+///
+/// | Condition | What it stops |
+/// |---|---|
+/// | `symlink_metadata`, and the result must be a regular file | a symbolic link in `/usr/bin` pointing at a user-writable path, which `Path::exists` would have followed silently |
+/// | owner is `uid` 0 | an image or container where `/usr/bin` is not in fact root-owned |
+/// | no group- or other-write bit | a root-owned binary that a group member may still replace |
+///
+/// A narrow time-of-check/time-of-use window remains between this test and the
+/// `execve`. Winning it requires the ability to replace a file inside a
+/// root-owned, non-world-writable directory, which is already root — so closing
+/// it with `fexecve` would buy nothing this check has not already bought.
+#[cfg(unix)]
+pub fn is_trusted_program(path: &Path) -> bool {
+    use std::os::unix::fs::MetadataExt;
+    let Ok(metadata) = std::fs::symlink_metadata(path) else {
+        return false;
+    };
+    metadata.is_file() && metadata.uid() == 0 && metadata.mode() & 0o022 == 0
+}
+
+/// No target outside Unix has an audited clipboard, so nothing is trusted.
+#[cfg(not(unix))]
+pub fn is_trusted_program(_path: &Path) -> bool {
+    false
 }
 
 /// Read this process's real session kind from the environment.
@@ -339,17 +376,17 @@ impl PlatformClipboard {
     /// it *before* prompting a person for their master passphrase (VLT-PM46
     /// §3.2) without spending anything.
     pub fn detect() -> Result<Self, CliHostError> {
-        Self::detect_for(native_session(), &|path| path.exists())
+        Self::detect_for(native_session(), &is_trusted_program)
     }
 
-    /// Detection against an injected session and existence test.
+    /// Detection against an injected session and program-trust test.
     pub fn detect_for(
         session: SessionKind,
-        exists: &dyn Fn(&Path) -> bool,
+        trusted: &dyn Fn(&Path) -> bool,
     ) -> Result<Self, CliHostError> {
-        let tooling = select_tooling(session, exists).ok_or(CliHostError::ClipboardUnavailable)?;
+        let tooling = select_tooling(session, trusted).ok_or(CliHostError::ClipboardUnavailable)?;
         let resolve = |invocation: ToolInvocation| {
-            resolve_program(invocation.program, exists).ok_or(CliHostError::ClipboardUnavailable)
+            resolve_program(invocation.program, trusted).ok_or(CliHostError::ClipboardUnavailable)
         };
         Ok(Self {
             tooling,
@@ -568,11 +605,14 @@ pub fn copy_and_schedule_clear(
 ) -> Result<(), CliHostError> {
     validate_clipboard_value(value)?;
     let clipboard = PlatformClipboard::detect()?;
-    let mut salt = [0_u8; 32];
-    super::OsEntropy.fill(&mut salt)?;
+    // Wipe-on-drop even in this process. The salt alone is not secret, but the
+    // pair (salt, digest) is secret-equivalent for a low-entropy value, and
+    // this process has no reason to keep either after the child has them.
+    let mut salt = Zeroizing::new([0_u8; 32]);
+    super::OsEntropy.fill(salt.as_mut_slice())?;
     let request = ClipboardClearRequest::new(
         clear_after_seconds,
-        salt,
+        *salt,
         clipboard_commitment(&salt, value.as_bytes()),
     )?;
     let program =
@@ -602,9 +642,16 @@ pub fn run_scheduled_clear(request: &ClipboardClearRequest) -> Result<(), CliHos
 
 #[cfg(unix)]
 fn arm_watchdog(seconds: u32) {
-    // SAFETY: `alarm` takes an integer and returns one. It touches no memory
-    // this process owns and cannot fail.
+    // SAFETY: both calls take integers and return integers. They touch no
+    // memory this process owns and cannot fail in a way that matters here.
+    //
+    // The disposition is reset first, and that is not belt and braces.
+    // `execve` resets *handled* signals to default but preserves *ignored*
+    // ones, so a `vault-pm` launched from a parent that had `SIGALRM` set to
+    // `SIG_IGN` would inherit an ignored alarm and this watchdog would be a
+    // silent no-op — removing the only unconditional bound on this process.
     unsafe {
+        libc::signal(libc::SIGALRM, libc::SIG_DFL);
         libc::alarm(seconds);
     }
 }
@@ -638,12 +685,33 @@ pub fn spawn_detached_clearer(
         .stdin(Stdio::piped())
         .stdout(Stdio::null())
         .stderr(Stdio::null());
+    #[cfg(not(unix))]
+    {
+        // No non-Unix target has an audited clipboard — `PlatformClipboard`
+        // refuses to detect one — so this arm is unreachable through the
+        // product. It is written as a refusal rather than left to fall through
+        // because the fall-through would be worse than a compile error: with no
+        // second `fork` below, the direct child *is* the clearer, and the
+        // `wait` at the end of this function would block the foreground process
+        // for the whole configured timeout, up to an hour, with the secret
+        // already on the clipboard.
+        let _ = &mut command;
+        return Err(CliHostError::ClipboardClearScheduleFailed);
+    }
     #[cfg(unix)]
     {
         // SAFETY: the closure runs in the freshly forked child, between `fork`
-        // and `execvp`, and calls only async-signal-safe functions. `fork`,
-        // `setsid`, and `_exit` are all on POSIX's async-signal-safe list. It
-        // allocates nothing and takes no lock.
+        // and `execvp`. It is non-capturing, allocates nothing, and calls only
+        // `fork`, `setsid`, and `_exit`, all of which POSIX lists as
+        // async-signal-safe.
+        //
+        // The precondition worth stating plainly: **this process must be
+        // single-threaded when it spawns.** glibc's `fork` is not strictly
+        // async-signal-safe in practice — it runs `pthread_atfork` handlers
+        // under an internal lock — so calling it from the post-fork child of a
+        // *multithreaded* parent can deadlock on a lock another thread held.
+        // `vault-pm` is a single-threaded one-shot CLI, which is why this is
+        // sound; a future thread pool in the composition root would not be.
         unsafe {
             command.pre_exec(|| {
                 match libc::fork() {
@@ -661,14 +729,18 @@ pub fn spawn_detached_clearer(
     let mut child = command
         .spawn()
         .map_err(|_| CliHostError::ClipboardClearScheduleFailed)?;
+    let block = Zeroizing::new(request.to_bytes());
     let written = child.stdin.take().ok_or(()).and_then(|mut pipe| {
-        pipe.write_all(&request.to_bytes())
+        pipe.write_all(&*block)
             .and_then(|()| pipe.flush())
             .map_err(|_| ())
     });
     // The direct child is the short-lived intermediate; reaping it is
-    // immediate and leaves the grandchild orphaned as intended.
-    let _ = child.wait();
+    // immediate and leaves the grandchild orphaned as intended. The wait is
+    // still bounded rather than open ended: an intermediate that somehow does
+    // not exit must not be able to hold a person's terminal, and every other
+    // wait in this module is bounded for the same reason.
+    let _ = wait_bounded(&mut child);
     written.map_err(|()| CliHostError::ClipboardClearScheduleFailed)
 }
 
@@ -713,16 +785,78 @@ fn run_tool_capturing(
         .spawn()
         .map_err(|_| CliHostError::ClipboardReadFailed)?;
     let mut captured = Zeroizing::new(Vec::new());
-    let read = child.stdout.take().ok_or(()).and_then(|pipe| {
-        pipe.take(u64::try_from(MAX_CLIPBOARD_READ_BYTES).unwrap_or(u64::MAX) + 1)
-            .read_to_end(&mut captured)
-            .map_err(|_| ())
-    });
+    if capture_bounded(&mut child, &mut captured).is_err() {
+        let _ = child.kill();
+        let _ = child.wait();
+        return Err(CliHostError::ClipboardReadFailed);
+    }
     let exited_cleanly = wait_bounded(&mut child);
-    if read.is_err() || !exited_cleanly || captured.len() > MAX_CLIPBOARD_READ_BYTES {
+    if !exited_cleanly || captured.len() > MAX_CLIPBOARD_READ_BYTES {
         return Err(CliHostError::ClipboardReadFailed);
     }
     Ok(captured)
+}
+
+/// Drain a child's standard output under both a byte ceiling and a deadline.
+///
+/// A plain `read_to_end` would be bounded in *bytes* and unbounded in *time*,
+/// and the difference matters: on X11 and Wayland the clipboard is served on
+/// demand by whichever process owns the selection, so a reader can sit forever
+/// waiting for an owner that never answers. `wait_bounded` would not help,
+/// because it does not run until the read returns. The consequence would be a
+/// verified clear that silently never fires — the exact outcome this module
+/// exists to prevent — reachable by any process on the same display.
+///
+/// So the pipe is put in non-blocking mode and polled against the same
+/// [`TOOL_WAIT`] deadline everything else in this module uses.
+#[cfg(unix)]
+fn capture_bounded(child: &mut Child, captured: &mut Vec<u8>) -> Result<(), ()> {
+    use std::os::fd::AsRawFd;
+    let mut pipe = child.stdout.take().ok_or(())?;
+    // SAFETY: `fcntl` is called on a descriptor this process owns for the
+    // duration of the borrow, and only reads and sets its status flags.
+    let flags = unsafe { libc::fcntl(pipe.as_raw_fd(), libc::F_GETFL) };
+    if flags < 0 {
+        return Err(());
+    }
+    // SAFETY: as above.
+    if unsafe { libc::fcntl(pipe.as_raw_fd(), libc::F_SETFL, flags | libc::O_NONBLOCK) } < 0 {
+        return Err(());
+    }
+    let deadline = Instant::now() + TOOL_WAIT;
+    // Wipe-on-drop: this buffer holds clipboard bytes, which may be the very
+    // secret this process is about to decide whether to clear.
+    let mut chunk = Zeroizing::new(vec![0_u8; 512]);
+    loop {
+        match pipe.read(chunk.as_mut_slice()) {
+            Ok(0) => return Ok(()),
+            Ok(read) => {
+                captured.extend_from_slice(&chunk[..read]);
+                // Past the ceiling the value cannot be ours, so there is
+                // nothing to learn from reading further.
+                if captured.len() > MAX_CLIPBOARD_READ_BYTES {
+                    return Ok(());
+                }
+                continue;
+            }
+            Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {}
+            Err(_) => return Err(()),
+        }
+        if Instant::now() >= deadline {
+            return Err(());
+        }
+        std::thread::sleep(TOOL_POLL);
+    }
+}
+
+/// No non-Unix target reaches this: `PlatformClipboard` never detects one.
+#[cfg(not(unix))]
+fn capture_bounded(child: &mut Child, captured: &mut Vec<u8>) -> Result<(), ()> {
+    let pipe = child.stdout.take().ok_or(())?;
+    pipe.take(u64::try_from(MAX_CLIPBOARD_READ_BYTES).unwrap_or(u64::MAX) + 1)
+        .read_to_end(captured)
+        .map(|_| ())
+        .map_err(|_| ())
 }
 
 /// Wait for a child for at most [`TOOL_WAIT`], then kill it.
@@ -1210,6 +1344,65 @@ mod tests {
             run_tool_capturing(Path::new("/bin/sh"), &["-c", &oversize]),
             Err(CliHostError::ClipboardReadFailed)
         ));
+    }
+
+    /// The production trust predicate checks the file, not just the directory.
+    ///
+    /// "It is in `/usr/bin`, and `/usr/bin` is root-owned" is a claim about a
+    /// host's layout. This proves the module checks the claim rather than
+    /// assuming it — in particular that a symbolic link planted in a trusted
+    /// directory, which `Path::exists` would have followed without comment, is
+    /// refused.
+    #[cfg(unix)]
+    #[test]
+    fn program_trust_requires_a_root_owned_regular_file() {
+        use std::os::unix::fs::symlink;
+
+        // A real root-owned binary in a trusted directory is accepted.
+        assert!(is_trusted_program(Path::new("/bin/sh")));
+
+        // A directory is not a program, and an absent path is not one either.
+        assert!(!is_trusted_program(Path::new("/usr/bin")));
+        assert!(!is_trusted_program(Path::new(
+            "/usr/bin/vault-pm-no-such-clipboard-tool"
+        )));
+
+        // A file this test owns is not root's, whatever it is called.
+        let planted = scratch_path("planted");
+        let _ = std::fs::remove_file(&planted);
+        std::fs::write(&planted, b"#!/bin/sh\nexfiltrate\n").unwrap();
+        assert!(!is_trusted_program(&planted));
+
+        // And a symbolic link is refused even when it points at something that
+        // would itself pass, because the link is what an attacker can replace.
+        let link = scratch_path("link");
+        let _ = std::fs::remove_file(&link);
+        symlink("/bin/sh", &link).unwrap();
+        assert!(!is_trusted_program(&link));
+
+        std::fs::remove_file(&planted).unwrap();
+        std::fs::remove_file(&link).unwrap();
+    }
+
+    /// A reader that writes something and then stalls is killed, not awaited.
+    ///
+    /// This is the case a byte ceiling alone does not cover: on X11 and Wayland
+    /// the selection is served by whichever process owns it, so a reader can
+    /// wait forever on an owner that never answers. Reading to end of file
+    /// would be bounded in bytes and unbounded in time, and the consequence
+    /// would be a verified clear that silently never fires.
+    #[cfg(unix)]
+    #[test]
+    fn a_reader_that_stalls_below_the_ceiling_is_killed_on_the_deadline() {
+        let started = Instant::now();
+        assert!(matches!(
+            run_tool_capturing(Path::new("/bin/sh"), &["-c", "printf 042311; sleep 60"]),
+            Err(CliHostError::ClipboardReadFailed)
+        ));
+        assert!(
+            started.elapsed() < TOOL_WAIT + Duration::from_secs(10),
+            "the read must be bounded in time, not only in bytes"
+        );
     }
 
     #[cfg(unix)]
