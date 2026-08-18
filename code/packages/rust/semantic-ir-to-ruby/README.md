@@ -114,11 +114,23 @@ ONLY console-output primitive the backend emits — bare `"print"`/`"puts"`
 to implement them were removed once every frontend finished migrating to
 `__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
-Rejects `TailCalls`, `Intrinsics`, and every not-yet-wired feature (array
-indexing / slicing via `IndexGet` — `NDArrays`; array-pattern destructuring;
-built-in collection methods; plus a namespaced class/constant definition or a
-non-`@@x`-init class/module body) until its slice lands — each a clean,
-source-positioned `UnsupportedFeature`.
+**SIR22 array/matrix base cut**: `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+`Transpose`/`IndexGet` (+ `Stmt::IndexSet`) route into `sir_array_*` — an
+inlined port of `semantic-ir-to-javascript`'s own `ArrayRt` sub-runtime.
+Dense column-major storage (`SirNDArray(shape, data)`); `data` preserves
+native Ruby Integer/Float type propagation rather than JS's uniform-double
+storage (`Div`/`Pow` force a Float result; `Add`/`Sub`/`Mul` don't), so an
+all-integer computation prints without a spurious `.0` — see
+`runtime.rs`'s own module doc and the CHANGELOG for the full reasoning.
+The nine-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/etc.)
+shares these same three features with the base cut, so a dedicated
+pre-emit scan (`ScanHit::Sir22AddendumNode`) rejects it cleanly until its
+own later slice lands.
+Rejects `TailCalls`, `Intrinsics`, and every other not-yet-wired feature
+(array-pattern destructuring; built-in collection methods; plus a
+namespaced class/constant definition or a non-`@@x`-init class/module
+body) until its slice lands — each a clean, source-positioned
+`UnsupportedFeature`.
 
 ## Verification
 
