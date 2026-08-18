@@ -70,6 +70,7 @@ fn main() -> ExitCode {
         EmitMode::Z80Bin => input.with_extension("bin"),
         EmitMode::Intel8051Bin => input.with_extension("bin"),
         EmitMode::Intel8086Bin => input.with_extension("bin"),
+        EmitMode::SparcV8Bin => input.with_extension("bin"),
     });
 
     let language = match cmd.language {
@@ -211,6 +212,15 @@ enum EmitMode {
     /// "PC-compatible" industry.  Ninth and final lane of the
     /// 9-architecture expansion.
     Intel8086Bin,
+    /// Flat `.bin` of big-endian 32-bit SPARC V8 instruction words via
+    /// `sparc-v8-backend`.  Cross-platform.  Downstream consumers:
+    /// the in-tree `sparc-v8-simulator` or any external SPARC V8
+    /// emulator.  SPARC V8 (1987) was the first **open** RISC
+    /// instruction-set standard, designed by Sun Microsystems and
+    /// later powering Sun SPARCstation workstations and Solaris
+    /// servers for two decades.  Sixth lane of the 9-architecture
+    /// expansion.
+    SparcV8Bin,
 }
 
 struct CliArgs {
@@ -299,9 +309,10 @@ fn parse_emit_value(v: &str) -> Result<EmitMode, String> {
         "z80" | "zilog-z80" => Ok(EmitMode::Z80Bin),
         "intel8051" | "i8051" | "8051" | "mcs51" => Ok(EmitMode::Intel8051Bin),
         "intel8086" | "i8086" | "8086" => Ok(EmitMode::Intel8086Bin),
+        "sparc-v8" | "sparc" | "sparcv8" => Ok(EmitMode::SparcV8Bin),
         other => Err(format!(
             "unknown --emit value {other:?}; expected one of: \
-             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80 | intel8051 | intel8086"
+             native | llvm-ir | riscv32 | intel8008 | armv7 | intel4004 | ge225 | ibm704 | arm1 | mos6502 | m68k | intel8080 | mips-r2000 | z80 | intel8051 | intel8086 | sparc-v8"
         )),
     }
 }
@@ -449,6 +460,17 @@ Options:
                                                 sibling the 8088 shipped in the original
                                                 IBM PC, 1981, founding the
                                                 PC-compatible industry)
+                             sparc-v8 | sparc | sparcv8
+                                              → flat .bin of big-endian 32-bit
+                                                SPARC V8 instruction words via
+                                                sparc-v8-backend; cross-platform;
+                                                load into sparc-v8-simulator or
+                                                an external SPARC V8 emulator
+                                                (the first OPEN RISC instruction-
+                                                set standard, 1987 — Sun
+                                                Microsystems, later powering
+                                                SPARCstation/Solaris for two
+                                                decades)
   -h, --help               Show this help.\
 ");
 }
@@ -607,6 +629,16 @@ fn dispatch(
     // expansion.
     if emit == EmitMode::Intel8086Bin {
         return lang_aot::compile_file_to_intel8086_bin(input, output, language)
+            .map_err(|e| format!("{e}"));
+    }
+    // SPARC V8 .bin emission is also cross-platform — flatten each
+    // 32-bit SPARC V8 word to big-endian bytes (SPARC's byte order,
+    // matching MIPS R2000 and unlike every other little-endian target
+    // in this lane).  No linker, no host gating (no common modern dev
+    // host is SPARC V8 silicon); downstream is always
+    // sparc-v8-simulator or an external SPARC V8 emulator.
+    if emit == EmitMode::SparcV8Bin {
+        return lang_aot::compile_file_to_sparc_v8_bin(input, output, language)
             .map_err(|e| format!("{e}"));
     }
     #[cfg(target_os = "linux")]

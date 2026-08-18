@@ -16,6 +16,7 @@ Gem::Specification.new do |spec|
   }
   spec.add_dependency "coding_adventures_chief_of_staff_channel_crypto", ">= 0.1.0"
   spec.add_dependency "coding_adventures_chief_of_staff_channel_store", ">= 0.1.0"
+  spec.add_dependency "coding_adventures_ct_compare", ">= 0.1.0"
   spec.add_dependency "coding_adventures_sha256", ">= 0.1.0"
   spec.add_development_dependency "minitest", "~> 5.0"
   spec.add_development_dependency "rake", "~> 13.0"

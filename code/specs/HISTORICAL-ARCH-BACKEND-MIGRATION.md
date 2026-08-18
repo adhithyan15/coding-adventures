@@ -337,6 +337,44 @@ segmented addressing) and asserting `AX == 42` and `halted == true` —
 see `code/specs/intel8086-backend.md` and
 `code/specs/intel8086-encoder.md` for the full rationale. This closes
 out all nine lanes of the originally-planned 9-architecture expansion.
+**SPARC V8** — `sparc-v8-encoder` + `sparc-v8-backend`, minimal viable
+(`const_*`/`ret_*` only, single-register `%o0` allocator, same
+trivial-ROM scope as `mips-r2000-backend`/`arm1-backend`).  Sixth lane
+of the expansion.  SPARC V8 (1987) was the first **open** RISC
+instruction-set standard, designed by Sun Microsystems and later
+powering Sun SPARCstation workstations and Solaris servers for two
+decades.  Unlike ARM1 (whose behavioral simulator already existed
+in-tree), this lane needed a brand-new `sparc-v8-simulator` — the
+Python reference existed (`code/packages/python/sparc-v8-simulator`,
+Layer 07r) but had no Rust port, so this lane ported the full ISA
+(all Format 1/2/3 instructions, PSR condition codes, the `Y` register)
+before adding the encoder/backend split on top of it.
+
+SPARC V8's defining structural feature — **overlapping register
+windows** (32 logical registers mapped from a 56-register physical
+file via a Current Window Pointer, rotated by `SAVE`/`RESTORE`) — is
+fully ported in `sparc-v8-simulator` (cross-checked bit-for-bit
+against the in-tree gate-level SPARC V8 port's `virt_to_phys`), but
+`sparc-v8-backend`'s v0.1.0 CIR lowering never emits `SAVE`/`RESTORE`:
+it only ever touches `%g0` (hardwired zero) and `%o0` (windowed, but
+fixed at physical index 8 as long as CWP never moves, which it
+doesn't for a program that never executes `SAVE`/`RESTORE`).  `%o0` is
+the real SPARC ABI's integer return-value register, so this backend
+uses the architecturally authentic register despite it technically
+being "windowed" — see `code/specs/sparc-v8-backend.md` for the full
+scoping rationale.  Also unlike ARM1's pseudo-halt (`SWI #0x123456`,
+invented for that lane's simulator), SPARC's HALT convention — `ta 0`
+(trap always, software trap #0) — was already established in the
+existing Python `sparc-v8-simulator` reference before this Rust port
+began; this lane's `ret_*`/`ret_void` lower to it (`ta 0` =
+`0x91D0_2000`) for the same "no caller context exists" reason ARM1
+uses a pseudo-halt rather than a genuine return-from-subroutine
+instruction.  Byte-for-byte parity for the canonical
+`ADD %g0, 42, %o0; ta 0` sequence
+(`[0x90, 0x00, 0x20, 0x2A, 0x91, 0xD0, 0x20, 0x00]`, big-endian — SPARC
+and MIPS R2000 are the only two big-endian targets in this lane) is
+verified both as a hand-derived byte array and by actually executing
+the emitted bytes in `sparc-v8-simulator` and asserting `%o0 == 42`.
 
 Other lanes in this expansion (e.g. MIPS R2000, first lane) may land
 in parallel PRs and are not enumerated here to avoid merge

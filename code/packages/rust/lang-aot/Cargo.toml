@@ -51,6 +51,8 @@ intel8051-backend     = { path = "../intel8051-backend" }
 intel8051-encoder     = { path = "../intel8051-encoder" }
 intel8086-backend     = { path = "../intel8086-backend" }
 intel8086-encoder     = { path = "../intel8086-encoder" }
+sparc-v8-backend      = { path = "../sparc-v8-backend" }
+sparc-v8-encoder      = { path = "../sparc-v8-encoder" }
 aot-core              = { path = "../aot-core" }
 jit-core              = { path = "../jit-core" }
 # JIT McCarthy path (W15): the universal bytecode JIT (`jit-core`) executes

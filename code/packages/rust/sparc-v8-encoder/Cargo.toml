@@ -1,0 +1,15 @@
+[package]
+name = "sparc-v8-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust SPARC V8 instruction encoder.  Re-exports the canonical encode_add_imm/encode_ta helpers from sparc-v8-simulator (which is the in-tree source of truth for SPARC V8 encoding) and adds the register-role constants (G0, O0) and canonical HALT_WORD (ta 0) the LANG VM sparc-v8-backend uses to lower CIR to big-endian 32-bit SPARC V8 instruction words.  No IR knowledge.  Sixth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "sparc_v8_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for SPARC V8 bit-level encoding.  We re-export rather
+# than duplicate so any future opcode/field fix in the simulator
+# propagates to encoder consumers automatically.
+sparc-v8-simulator = { path = "../sparc-v8-simulator" }
