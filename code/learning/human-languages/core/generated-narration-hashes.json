@@ -7799,6 +7799,28 @@
       "jsonHash": "fnv1a64:c6ed43d1954823cc"
     },
     {
+      "language": "russian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:cd73455eb4b6fe7a",
+      "lessonIds": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "russian/narration/ch15.txt",
+      "json": "russian/narration/ch15.json",
+      "textHash": "fnv1a64:0866bc39157c3a5d",
+      "jsonHash": "fnv1a64:ce6fce6a1fa6519c"
+    },
+    {
       "language": "sanskrit",
       "chapter": 1,
       "sourceHash": "fnv1a64:9c4899c747d7348b",

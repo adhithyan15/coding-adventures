@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:307a0c753bd267ae",
+  "sourceHash": "fnv1a64:6a4561aab0fdc840",
   "summary": {
-    "totalLessons": 3042,
+    "totalLessons": 3051,
     "voice": 2161,
-    "sight": 584,
-    "pen": 297,
+    "sight": 585,
+    "pen": 305,
     "drivableLessons": 2161,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 935,
+    "chapterCount": 936,
     "drivablePrefixTotal": 1932,
     "fullyDrivableChapters": 612,
-    "unstartableChapters": 192,
+    "unstartableChapters": 193,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -8059,11 +8059,11 @@
     },
     {
       "language": "russian",
-      "lessonCount": 75,
+      "lessonCount": 84,
       "voice": 46,
-      "sight": 13,
-      "pen": 16,
-      "drivablePercent": 61,
+      "sight": 14,
+      "pen": 24,
+      "drivablePercent": 55,
       "drivablePrefixTotal": 36,
       "modalities": [
         "voice",
@@ -8318,6 +8318,21 @@
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "RU-W06-u",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 9,
+          "voice": 0,
+          "sight": 1,
+          "pen": 8,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "RU-W07-a",
           "drivable": false,
           "drivableLessonIds": []
         }
@@ -50038,6 +50053,211 @@
         "Script"
       ],
       "delivery": "script"
+    },
+    {
+      "id": "RU-W07-a",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 710,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9b3f03f7ef5246ea",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-o",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 720,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:adc50bdfdfa7468e",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-g",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 730,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d9ae162c44116b57",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-kh",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 740,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:444622f1294f8e8e",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-f",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 750,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9bc90e53af46a44e",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-ts",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 760,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1ca4f9d2ec9421d5",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-y-short",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 770,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8aff4e98bcba2ce4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-W07-yu",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 780,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3054826dce87f1ac",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "RU-C15-practice",
+      "language": "russian",
+      "chapter": 15,
+      "sequence": 790,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cf03ed58ffee7d69",
+      "detachableSegments": [
+        "Script — the three kinds, one more time"
+      ]
     },
     {
       "id": "SA-C01-namaste",

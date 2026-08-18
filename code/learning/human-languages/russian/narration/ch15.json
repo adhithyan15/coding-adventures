@@ -1,0 +1,1301 @@
+{
+  "version": 1,
+  "language": "russian",
+  "chapter": 15,
+  "title": "The Two Letters You Already Knew, and Six You Did Not",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:cd73455eb4b6fe7a",
+  "lessons": [
+    {
+      "id": "RU-W07-a",
+      "sequence": 710,
+      "title": "а — a true friend, and the sound Russian keeps landing on",
+      "headword": "а",
+      "romanization": "a",
+      "gloss": "the letter you already knew — same shape, same sound, and the one that swallows another letter",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9b3f03f7ef5246ea",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write я. A whole syllable in one letter, and nothing to do with the Latin R it resembles."
+            },
+            {
+              "kind": "speech",
+              "text": "Three kinds of letter, you were told: true friends, false friends, and new shapes. This chapter opens with the two truest friends in the alphabet — and then shows you why they still catch people out."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "а (a)."
+            },
+            {
+              "kind": "speech",
+              "text": "A true friend, and about as true as they come. Same shape as Latin a, and when it is stressed it says the a of English father — clean, open, and with none of the drift English a has in cat, cake or call."
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing to learn about the shape. What is worth learning is how often you will see it, and there is a reason for that beyond the alphabet, which the next letter explains."
+            },
+            {
+              "kind": "speech",
+              "text": "Write it as you write a Latin a. That is the whole instruction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "а — exactly the Latin letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: а — exactly the Latin letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a as in father, held open, not the a of cat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **a** as in *father*, held open, not the *a* of *cat*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which English a is it — the one in cat, or the one in father? (Father.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-a-kind",
+              "prompt": "Is a a true friend, a false friend, or a new shape?",
+              "assesses": [
+                "RU-SCRIPT-A-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "a true friend",
+                "true friend",
+                "true",
+                "a true one"
+              ],
+              "feedback": {
+                "correct": "True friend — same shape, same sound.",
+                "incorrect": "A TRUE friend: the shape and the sound both match Latin a."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-o",
+      "sequence": 720,
+      "title": "о — the letter that is not always itself",
+      "headword": "о",
+      "romanization": "o",
+      "gloss": "a true friend when stressed, and the letter that turns into a when it is not",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:adc50bdfdfa7468e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write а. Say it as in father."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "о (o)."
+            },
+            {
+              "kind": "speech",
+              "text": "Another true friend on the page: same shape as Latin o, and when it is stressed it says the o of English more, shortened and rounded."
+            },
+            {
+              "kind": "speech",
+              "text": "Write it as you write a Latin o."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the most useful fact in Russian pronunciation",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the part that matters, and it is worth more to you than the shape."
+            },
+            {
+              "kind": "speech",
+              "text": "When о is NOT stressed, it is not pronounced o. It is pronounced a."
+            },
+            {
+              "kind": "speech",
+              "text": "Russian words carry exactly one stressed syllable, and every other vowel in the word relaxes towards the middle. For о, that relaxation lands on a. So a word written with two о's, stressed on the second, comes out of a Russian mouth as a-o — not o-o."
+            },
+            {
+              "kind": "speech",
+              "text": "This has a name — akanye — and you do not need the name. You need the habit:"
+            },
+            {
+              "kind": "speech",
+              "text": "written о, stressed becomes say o written о, unstressed becomes say a."
+            },
+            {
+              "kind": "speech",
+              "text": "One refinement, so the rule does not mislead you later: right before the stress the sound is a full a. Further from the stress it relaxes further still, towards the uh of English sofa. Either way it is not an o, which is the part that matters."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the single commonest thing an English reader gets wrong when reading Russian aloud, because the letter is sitting right there on the page looking like an o and behaving like an a."
+            },
+            {
+              "kind": "speech",
+              "text": "This is also why а is the most-heard vowel in the language while not being the most-written one: it gets reinforcements from every unstressed о."
+            },
+            {
+              "kind": "speech",
+              "text": "And this is why stress is marked in this book's romanizations rather than on the Cyrillic. Russian text does not print stress marks — a native reader knows where the stress falls and needs no help. You do not know yet, so the romanization carries it, and the Cyrillic stays exactly as you would meet it in the world."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "о (o) — the Latin letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: о — the Latin letter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "a stressed o, then an unstressed one — and let the second become a",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: a stressed **o**, then an unstressed one — and let the second become **a**]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does the spelling change when the sound does? (No — the page keeps о.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-o-unstressed",
+              "prompt": "How is the letter o pronounced when it is NOT the stressed vowel of the word?",
+              "assesses": [
+                "RU-SCRIPT-O-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "as a",
+                "like a",
+                "as an a",
+                "it becomes a",
+                "a"
+              ],
+              "feedback": {
+                "correct": "As a — the letter stays o on the page and moves to a in the mouth.",
+                "incorrect": "As A. Unstressed о relaxes to an a sound."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-g",
+      "sequence": 730,
+      "title": "г — a corner, and a hard g",
+      "headword": "г",
+      "romanization": "g",
+      "gloss": "a new shape that says g — a bare corner, and the Greek gamma behind it",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:d9ae162c44116b57",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write о. Then say what it becomes when it is not stressed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "г (g)."
+            },
+            {
+              "kind": "speech",
+              "text": "A new shape — no Latin relative to mislead you. Two strokes meeting at a square corner: a horizontal across the top, and a vertical dropping from its left end. Like a Latin F with the middle bar removed, or a rotated L."
+            },
+            {
+              "kind": "speech",
+              "text": "It says g, hard, as in English go — never the soft g of gem. Russian spelling does not have that ambiguity, which is one fewer thing to carry than English asks of you."
+            },
+            {
+              "kind": "speech",
+              "text": "It does have one twist, and you have already met it. In the ending -ого (and -его) this letter is written г and said в — which is why до скорого comes out da-SKO-ra-va. That ending is everywhere in Russian, so the exception is worth knowing on the day you learn the letter rather than being ambushed by it later. Everywhere else: hard g."
+            },
+            {
+              "kind": "speech",
+              "text": "If it helps: this is the Greek gamma, squared off. Russian took its alphabet from Greek, and this is one of the letters where the descent is plain."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "г (g) — top horizontal, then the vertical down from its left end",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: г — top horizontal, then the vertical down from its left end]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "g as in go, never as in gem",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **g** as in *go*, never as in *gem*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which Latin letter does it resemble with a bar removed? (F.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-g-sound",
+              "prompt": "Is the letter g in Russian ever soft, as in English 'gem'?",
+              "assesses": [
+                "RU-SCRIPT-G-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "no",
+                "never",
+                "no it is always hard",
+                "always hard",
+                "no, always hard"
+              ],
+              "feedback": {
+                "correct": "Never soft as in gem — it is the hard g of go. The one twist is the -ого ending, said -ova.",
+                "incorrect": "No, never soft. It is the hard g of go, with one exception: the ending -ого, said -ova."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-kh",
+      "sequence": 740,
+      "title": "х (kh) — an x that is not an x",
+      "headword": "х",
+      "romanization": "kh",
+      "gloss": "a false friend that looks like x and says the ch of Bach",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:444622f1294f8e8e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write г. A corner, and a hard g."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "х (kh)."
+            },
+            {
+              "kind": "speech",
+              "text": "A false friend, and a well-disguised one. Two crossing diagonals — an exact Latin x on the page — and it does not say x."
+            },
+            {
+              "kind": "speech",
+              "text": "It says the sound at the end of Scottish loch and German Bach: a breathy rasp made at the back of the mouth, in the same place as k but without ever closing it. Start to say k, then leave the gap open and push air through."
+            },
+            {
+              "kind": "speech",
+              "text": "Romanized in this book as kh, which is a warning label rather than a spelling: there is no k and no h in it, only the one rasping sound."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no letter for it, which is why English borrows it as ch in loch and Bach and then most speakers say a k anyway. You have the letter now, so you can do better than the borrowing."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "х (kh) — two crossing diagonals, like a Latin x",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: х — two crossing diagonals, like a Latin x]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kh — start a k, then leave it open and breathe through",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kh** — start a *k*, then leave it open and breathe through]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "loch, the Scottish way, then just its ending",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *loch*, the Scottish way, then just its ending]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is there a k sound in it? (No — the mouth never closes.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-kh-kind",
+              "prompt": "The letter written x in Russian is which of the three kinds — true friend, false friend, or new shape?",
+              "assesses": [
+                "RU-SCRIPT-KH-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "a false friend",
+                "false friend",
+                "false",
+                "a false one"
+              ],
+              "feedback": {
+                "correct": "A false friend — the Latin shape, and a sound nothing like x.",
+                "incorrect": "A FALSE friend: it looks like Latin x and says the ch of loch."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-f",
+      "sequence": 750,
+      "title": "ф (f) — a circle on a stick",
+      "headword": "ф",
+      "romanization": "f",
+      "gloss": "a new shape that says f — a circle skewered on a vertical",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:9bc90e53af46a44e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write х (kh). Then make its sound without letting your mouth close."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ф (f)."
+            },
+            {
+              "kind": "speech",
+              "text": "A new shape: a vertical stroke with a closed loop threaded onto it, the loop sitting on both sides of the line. Draw the vertical first, then the loop across it."
+            },
+            {
+              "kind": "speech",
+              "text": "It says f, exactly as in English foot. No trap at all."
+            },
+            {
+              "kind": "speech",
+              "text": "This is Greek phi, and that ancestry shows in where you find it. Native Slavic words almost never contain ф — nearly every Russian word with this letter came in from Greek or later from Western Europe. When you meet it, the word is very often one you can half-guess, because it was borrowed from a language you know."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ф (f) — the vertical, then the loop threaded across it",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ф — the vertical, then the loop threaded across it]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "f as in foot",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **f** as in *foot*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which Greek letter is it? (Phi.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-f-borrowed",
+              "prompt": "What does the presence of the letter f usually tell you about a Russian word?",
+              "assesses": [
+                "RU-SCRIPT-F-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "it is borrowed",
+                "it was borrowed",
+                "it is a loanword",
+                "borrowed from greek or western europe",
+                "it came from another language"
+              ],
+              "feedback": {
+                "correct": "That it is borrowed — from Greek or from Western Europe.",
+                "incorrect": "That the word is BORROWED; native Slavic words rarely use ф."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-ts",
+      "sequence": 760,
+      "title": "ц (ts) — one letter for two sounds",
+      "headword": "ц",
+      "romanization": "ts",
+      "gloss": "a new shape that says ts — one letter for a sound English needs two for",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1ca4f9d2ec9421d5",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ш — three uprights standing on a base."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ц (ts)."
+            },
+            {
+              "kind": "speech",
+              "text": "A new shape, and one you should compare to ш immediately, because they are close:"
+            },
+            {
+              "kind": "speech",
+              "text": "ш — three uprights on a base, nothing below the line ц — two uprights on a base, and a small tail dropping below at the right."
+            },
+            {
+              "kind": "speech",
+              "text": "Two uprights instead of three, and a descender. That tail is doing real work: it is the only thing separating this letter from one you already know."
+            },
+            {
+              "kind": "speech",
+              "text": "It says ts, the ending of English cats — but as a single sound at the start of a word too, which English never asks of you. Say cats, then say just its last two letters, then put a vowel after them."
+            },
+            {
+              "kind": "speech",
+              "text": "One letter, one sound, even though English needs two letters to write it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ф (f), then ш, then ц (ts) — and check which one has the tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ф, then ш, then ц — and check which one has the tail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cats, then ts alone, then tsa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cats*, then **ts** alone, then **tsa**]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does English write this sound with one letter or two? (Two — ts.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-ts-tail",
+              "prompt": "What separates the letter ts from the letter sh on the page?",
+              "assesses": [
+                "RU-SCRIPT-TS-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "the tail below the line",
+                "a tail",
+                "the descender",
+                "the little tail at the foot",
+                "two uprights and a tail",
+                "it has a tail"
+              ],
+              "feedback": {
+                "correct": "The tail below the line — and it has two uprights, not three.",
+                "incorrect": "A small TAIL dropping below the line, plus one fewer upright."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-y-short",
+      "sequence": 770,
+      "title": "й (y) — и in a hat",
+      "headword": "й",
+      "romanization": "y",
+      "gloss": "a letter you already write, wearing a small curved cap",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8aff4e98bcba2ce4",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ц. Two uprights, base, tail."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "й (y)."
+            },
+            {
+              "kind": "speech",
+              "text": "No new shape at all. This is и, which you have written since your very first letters, with a small curved cap sitting on top of it. The cap is called a breve, and you draw the letter exactly as before and then add it last."
+            },
+            {
+              "kind": "speech",
+              "text": "The cap changes the job. и is a vowel, the ee of see. й is a consonant: the y of English boy or yes. Its formal name is \"short и\", which describes it well — the same sound, clipped so short it stops being a syllable of its own and leans on the vowel beside it."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why it turns up glued to other vowels at the ends of words, and why it never carries the stress: it cannot, because it is not a syllable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "и, then add the cap to make й (y)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: и, then add the cap to make й]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ee, then clip it to the y of boy",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **ee**, then clip it to the **y** of *boy*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Can this letter carry the stress of a word? (No — it is not a syllable.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-y-short-base",
+              "prompt": "Which letter is underneath the cap, and is the capped letter a vowel or a consonant?",
+              "assesses": [
+                "RU-SCRIPT-Y-SHORT-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "i, and it is a consonant",
+                "и, a consonant",
+                "i - consonant",
+                "и and it is a consonant",
+                "the letter i, consonant"
+              ],
+              "feedback": {
+                "correct": "и underneath, and the cap makes it a consonant.",
+                "incorrect": "и is underneath; with the cap it is a CONSONANT, the y of boy."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-W07-yu",
+      "sequence": 780,
+      "title": "ю (yu) — a syllable in one letter, again",
+      "headword": "ю",
+      "romanization": "yu",
+      "gloss": "a whole syllable in one letter, the way я is",
+      "script": "cyrillic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3054826dce87f1ac",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write я, then у. One is a whole syllable; the other is the oo that looks like a Latin y."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ю (yu)."
+            },
+            {
+              "kind": "speech",
+              "text": "A new shape, but a familiar idea. Two parts, joined: a vertical stroke on the left, and a closed loop to its right, tied to the vertical by a short horizontal at mid-height."
+            },
+            {
+              "kind": "speech",
+              "text": "It says yu — the you of English, or the u of use. One letter, two sounds, exactly the deal you already accepted with я (ya)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the pattern worth taking away: Russian has a small set of letters that each write a y-glide plus a vowel in a single shape. You have met two of them now. They are the reason a Russian word can look shorter than its pronunciation, and the reason counting letters is a poor guide to counting syllables."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not confuse its sound with у, the oo letter that looks like a Latin y. ю (yu) is that sound with a y welded to its front."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ю (yu) — the vertical, the loop, and the bar that ties them",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ю — the vertical, the loop, and the bar that ties them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "у (oo), then ю (yu) (yoo) — the glide is the only difference",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **у** (oo), then **ю** (yoo) — the glide is the only difference]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "я, then ю (yu) — the same trick, two vowels",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **я**, then **ю** — the same trick, two vowels]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "й, then ю (yu) — a capped letter, then a syllable-letter",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: й, then ю — a capped letter, then a syllable-letter]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Is ю (yu) the same sound as у? (No — it is у with a y in front.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-W07-yu-pattern",
+              "prompt": "Which other letter you have learned writes a whole syllable in one shape, the way yu does?",
+              "assesses": [
+                "RU-SCRIPT-YU-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "ya",
+                "я",
+                "the letter ya"
+              ],
+              "feedback": {
+                "correct": "я — the same trick, a y-glide welded to a vowel.",
+                "incorrect": "я, which writes ya in a single shape."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "RU-C15-practice",
+      "sequence": 790,
+      "title": "Practice — eight more letters, sorted",
+      "headword": "а о г х ф ц й ю",
+      "romanization": "a o g kh f ts y yu",
+      "gloss": "eight more letters, sorted into the three kinds — and twenty-nine of thirty-three now yours",
+      "script": "cyrillic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:cf03ed58ffee7d69",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the three kinds, one more time",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the three kinds, one more time and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write а and о. Then say what happens to the second one when it is not the stressed vowel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the three kinds, one more time",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already have a way to sort any Cyrillic letter. Here are this chapter's eight, sorted:"
+            },
+            {
+              "kind": "speech",
+              "text": "True friends — the shape and the sound both match Latin:"
+            },
+            {
+              "kind": "speech",
+              "text": "а a, о o."
+            },
+            {
+              "kind": "speech",
+              "text": "False friend — the Latin shape, a different sound:"
+            },
+            {
+              "kind": "speech",
+              "text": "х kh, the rasp in loch."
+            },
+            {
+              "kind": "speech",
+              "text": "New shapes — no Latin relative to help or mislead:"
+            },
+            {
+              "kind": "speech",
+              "text": "г g, ф f, ц ts, ю yu."
+            },
+            {
+              "kind": "speech",
+              "text": "And one that fits none of the three, because it is not a new letter at all:"
+            },
+            {
+              "kind": "speech",
+              "text": "й (y) — и wearing a cap."
+            },
+            {
+              "kind": "speech",
+              "text": "Two, one, four and one. The single false friend is the one to drill, because a false friend is the only kind that can be read confidently and wrongly: a new shape stops you dead, but х (kh) lets you read straight past it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Twenty-one letters before this chapter, and twenty-nine now. Russian has thirty-three."
+            },
+            {
+              "kind": "speech",
+              "text": "Three of the eight cost you almost nothing. а and о were already yours from the Latin alphabet — the work in them was not the shape but what unstressed о does to your ear — and й is a letter you already write, wearing a cap."
+            },
+            {
+              "kind": "speech",
+              "text": "That leaves four genuinely new shapes (г, ф, ц (ts), ю (yu)) and one false friend (х (kh)) to drill. Five letters of real work out of eight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "а о г х ф ц й ю (a o g kh f ts y yu) — all eight, in order, without looking above",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: а о г х ф ц й ю — all eight, in order, without looking above]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kh, the one that is not an x",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **kh**, the one that is not an x]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ш, then ц (ts) — and check which one has the tail",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ш, then ц — and check which one has the tail]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "и, then й (y) — vowel, then consonant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **и**, then **й** — vowel, then consonant]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many of the thirty-three are now yours? (Twenty-nine.)"
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "RU-C15-practice-false",
+              "prompt": "Of this chapter's eight letters, which one is a false friend, and why is that the dangerous kind?",
+              "assesses": [
+                "RU-SCRIPT-EIGHT-SORTED-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "x, because it can be read confidently and wrongly",
+                "х",
+                "x",
+                "kh",
+                "the x one",
+                "х - it looks like a latin letter but sounds different"
+              ],
+              "feedback": {
+                "correct": "х — a false friend is the only kind you can read with confidence and still be wrong.",
+                "incorrect": "х. A new shape stops you; a false friend lets you read on, wrongly."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -2729,6 +2729,13 @@
       "scriptCommand": "ru"
     },
     {
+      "language": "russian",
+      "chapter": 15,
+      "output": "russian/book/chapters/ch15-script-eight.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
       "language": "sanskrit",
       "chapter": 6,
       "output": "sanskrit/book/chapters/ch06-numbers-1-5.tex",

@@ -157,7 +157,10 @@ describe("real curriculum", () => {
       // and father; 13 extends SPINE-POLITE-REQUEST-REPAIR with milk, cheese,
       // juice and soup. 14 is the script chapter: eleven more Cyrillic letters,
       // sorted into true friends, false friends and shapes with no Latin relative.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+      // 14 -> 15: HL-C232, eight more letters on the same three-kinds frame. It exists
+      // because а and о -- the two commonest vowels in the language -- were taught by no
+      // lesson at all, which 75 lessons and 14 chapters had not surfaced.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(books.books.every((book) => book.chapters.every((chapter) => chapter.tex.length > 100))).toBe(true);
   });
 
@@ -1159,6 +1162,15 @@ describe("real curriculum", () => {
       "RU-C02-kak-cross-language-what-language",
       "RU-C02-practice-informal-question",
       "RU-C02-vy-formality-safe-default",
+      "RU-C15-practice-false",
+      "RU-W07-a-kind",
+      "RU-W07-f-borrowed",
+      "RU-W07-g-sound",
+      "RU-W07-kh-kind",
+      "RU-W07-o-unstressed",
+      "RU-W07-ts-tail",
+      "RU-W07-y-short-base",
+      "RU-W07-yu-pattern",
       "SA-C06-number-cognates-inheritance",
       "TA-W01-curves-va-ka-writing-surface",
       "TE-C31-subha-madhyahnam-register-source-scope",
