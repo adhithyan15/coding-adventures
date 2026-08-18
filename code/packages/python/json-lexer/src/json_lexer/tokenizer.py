@@ -27,51 +27,36 @@ Two convenience functions:
 - ``tokenize_json(source)`` — the all-in-one function. Pass in JSON text,
   get back a list of tokens. This is the function most callers want.
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-The ``json.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``::
+The ``json.tokens`` file is compiled ahead of time by the ``grammar-tools``
+compiler into ``json_lexer/_grammar.py``, which embeds the
+``TokenGrammar`` as native Python data structures. This module imports
+``TOKEN_GRAMMAR`` from it directly — no file I/O or grammar parsing
+happens at runtime, and the package works correctly when installed as a
+site-package (it does not depend on the ``code/grammars/`` directory
+existing on disk).
 
-    tokenizer.py
-    └── json_lexer/        (parent)
-        └── src/           (parent)
-            └── json-lexer/  (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── json.tokens
+To regenerate after editing ``code/grammars/json/json.tokens``:
+
+    grammar-tools compile-tokens code/grammars/json/json.tokens \\
+        -o code/packages/python/json-lexer/src/json_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path is:
-#   src/json_lexer/tokenizer.py -> src/json_lexer -> src -> json-lexer
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-JSON_TOKENS_PATH = GRAMMAR_DIR / "json" / "json.tokens"
+from json_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_json_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for JSON text.
 
-    This function reads the ``json.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``json_lexer._grammar``) to create a ``GrammarLexer`` ready to tokenize
+    the given source text. No file I/O is performed.
 
     Args:
         source: The JSON text to tokenize.
@@ -80,17 +65,12 @@ def create_json_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with JSON token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``json.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_json_lexer('{"key": "value"}')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(JSON_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_json(source: str) -> list[Token]:
@@ -120,7 +100,6 @@ def tokenize_json(source: str) -> list[Token]:
         A list of ``Token`` objects. The last token is always EOF.
 
     Raises:
-        FileNotFoundError: If the ``json.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the JSON grammar.
 

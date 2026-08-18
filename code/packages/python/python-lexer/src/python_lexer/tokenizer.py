@@ -19,36 +19,16 @@ Each Python version has its own grammar file:
 The ``version`` parameter selects which grammar to load. When omitted, it
 defaults to ``"3.12"`` (the latest supported version).
 
-Grammar Caching
-----------------
+Pre-compiled Grammars
+----------------------
 
-Parsing a ``.tokens`` file involves reading from disk and running the
-grammar parser. To avoid this overhead on every call, we cache the parsed
-``TokenGrammar`` object per version in a module-level dictionary.
-
-The cache is safe for concurrent use patterns because:
-1. ``TokenGrammar`` objects are effectively immutable after construction.
-2. The worst case with a race is that two threads parse the same grammar
-   simultaneously and one write overwrites the other — the result is
-   identical, so no corruption occurs.
-
-Locating the Grammar Files
----------------------------
-
-The grammar files live in the ``code/grammars/python/`` directory at the
-root of the coding-adventures repository. We locate them relative to this
-module's file path using ``pathlib.Path``. The path traversal is::
-
-    tokenizer.py
-    └── python_lexer/       (parent)
-        └── src/            (parent)
-            └── python-lexer/ (parent)
-                └── python/     (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── python/
-                                    └── python3.12.tokens
+Each version's ``.tokens`` file is compiled ahead of time by the
+``grammar-tools`` compiler into a ``_grammar_<version>.py`` module that
+embeds the ``TokenGrammar`` as native Python data structures. This package
+imports all of them and looks them up in the ``_TOKEN_GRAMMARS`` dict —
+no file I/O or grammar parsing happens at runtime, and the package works
+correctly when installed as a site-package (it does not depend on the
+``code/grammars/`` directory existing on disk).
 
 What This Module Provides
 --------------------------
@@ -70,10 +50,16 @@ Two convenience functions and two constants:
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
+
+from python_lexer import (
+    _grammar_2_7,
+    _grammar_3_0,
+    _grammar_3_6,
+    _grammar_3_8,
+    _grammar_3_10,
+    _grammar_3_12,
+)
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -96,54 +82,35 @@ directory. The list is ordered chronologically from oldest to newest.
 
 
 # ---------------------------------------------------------------------------
-# Grammar File Location
+# Grammar Lookup
 # ---------------------------------------------------------------------------
 #
-# We navigate from this file's location up to the repository root's
-# grammars/python/ directory. The path is:
-#   src/python_lexer/tokenizer.py -> src/python_lexer -> src ->
-#   python-lexer -> python -> packages -> code -> code/grammars/python
+# Each Python version's TokenGrammar is pre-compiled into its own
+# ``_grammar_<version>.py`` module by the grammar-tools compiler (see
+# ``code/programs/python/grammar-tools``). Importing these modules embeds
+# the grammars as native Python data structures, so no file I/O or grammar
+# parsing happens at runtime:
 #
-# Using Path(__file__) makes this work regardless of the current working
-# directory, which is important for testing and for use as an installed
-# package.
-# ---------------------------------------------------------------------------
-
-_GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars" / "python"
-
-
-def _grammar_path(version: str) -> Path:
-    """Return the path to the ``.tokens`` file for the given version.
-
-    Args:
-        version: A Python version string like ``"3.12"`` or ``"2.7"``.
-
-    Returns:
-        The ``Path`` to the corresponding grammar file, e.g.
-        ``.../code/grammars/python/python3.12.tokens``.
-
-    Example::
-
-        _grammar_path("3.12")
-        # → Path(".../code/grammars/python/python3.12.tokens")
-    """
-    return _GRAMMAR_DIR / f"python{version}.tokens"
-
-
-# ---------------------------------------------------------------------------
-# Grammar Cache
-# ---------------------------------------------------------------------------
+#   1. No file I/O at startup — no open(), read(), or path traversal.
+#   2. No runtime grammar parsing overhead.
+#   3. The package is self-contained — it works correctly when installed
+#      as a site-package in any venv, not just when run from the source
+#      tree (a published PyPI package does not ship ``code/grammars/``).
 #
-# Parsed TokenGrammar objects are cached per version string. Once a grammar
-# is parsed, it is reused for all subsequent calls with that version.
-#
-# The cache is a simple dictionary. In a multi-threaded environment, the
-# worst case is that two threads parse the same grammar simultaneously and
-# one overwrites the other's cache entry — but both produce identical
-# TokenGrammar objects, so this is harmless.
+# To regenerate after editing a ``code/grammars/python/pythonX.Y.tokens``
+# file:
+#   grammar-tools compile-tokens code/grammars/python/pythonX.Y.tokens \
+#       -o code/packages/python/python-lexer/src/python_lexer/_grammar_X_Y.py
 # ---------------------------------------------------------------------------
 
-_grammar_cache: dict[str, object] = {}
+_TOKEN_GRAMMARS: dict[str, object] = {
+    "2.7": _grammar_2_7.TOKEN_GRAMMAR,
+    "3.0": _grammar_3_0.TOKEN_GRAMMAR,
+    "3.6": _grammar_3_6.TOKEN_GRAMMAR,
+    "3.8": _grammar_3_8.TOKEN_GRAMMAR,
+    "3.10": _grammar_3_10.TOKEN_GRAMMAR,
+    "3.12": _grammar_3_12.TOKEN_GRAMMAR,
+}
 
 
 # ---------------------------------------------------------------------------
@@ -154,9 +121,9 @@ _grammar_cache: dict[str, object] = {}
 def create_python_lexer(source: str, version: str = DEFAULT_VERSION) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for the given Python version.
 
-    This function reads the appropriate ``pythonX.Y.tokens`` grammar file,
-    parses it into a ``TokenGrammar``, and creates a ``GrammarLexer`` ready
-    to tokenize the given source code.
+    This function looks up the pre-compiled ``TokenGrammar`` for the given
+    version from ``_TOKEN_GRAMMARS`` and creates a ``GrammarLexer`` ready to
+    tokenize the given source code. No file I/O is performed.
 
     Use this when you want access to the lexer object itself — for example,
     to inspect its internal state or to integrate with a custom pipeline.
@@ -174,8 +141,6 @@ def create_python_lexer(source: str, version: str = DEFAULT_VERSION) -> GrammarL
 
     Raises:
         ValueError: If ``version`` is not in ``SUPPORTED_VERSIONS``.
-        FileNotFoundError: If the grammar file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
 
     Example::
 
@@ -192,18 +157,7 @@ def create_python_lexer(source: str, version: str = DEFAULT_VERSION) -> GrammarL
             f"Supported versions: {', '.join(SUPPORTED_VERSIONS)}"
         )
 
-    # Check the cache first (fast path).
-    if version in _grammar_cache:
-        grammar = _grammar_cache[version]
-        return GrammarLexer(source, grammar)
-
-    # Cache miss — read and parse the grammar file.
-    path = _grammar_path(version)
-    grammar = parse_token_grammar(path.read_text())
-
-    # Store in cache for future calls.
-    _grammar_cache[version] = grammar
-
+    grammar = _TOKEN_GRAMMARS[version]
     return GrammarLexer(source, grammar)
 
 

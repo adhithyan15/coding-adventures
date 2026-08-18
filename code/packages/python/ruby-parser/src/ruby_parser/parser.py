@@ -34,34 +34,29 @@ Two convenience functions:
 - ``parse_ruby(source)`` — the all-in-one function. Pass in Ruby source
   code, get back an AST. This is the function most callers want.
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-The ``ruby.grammar`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path, similar to how
-the Ruby lexer locates ``ruby.tokens``.
+The ``ruby.grammar`` file is compiled ahead of time by the ``grammar-tools``
+compiler into ``ruby_parser/_grammar.py``, which embeds the
+``ParserGrammar`` as native Python data structures. This module imports
+``PARSER_GRAMMAR`` from it directly — no file I/O or grammar parsing
+happens at runtime, and the package works correctly when installed as a
+site-package (it does not depend on the ``code/grammars/`` directory
+existing on disk).
+
+To regenerate after editing ``code/grammars/ruby/ruby.grammar``:
+
+    grammar-tools compile-grammar code/grammars/ruby/ruby.grammar \\
+        -o code/packages/python/ruby-parser/src/ruby_parser/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_parser_grammar
 from lang_parser import ASTNode, GrammarParser
 from ruby_lexer import tokenize_ruby
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path traversal is:
-#   src/ruby_parser/parser.py -> src/ruby_parser -> src -> ruby-parser
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-RUBY_GRAMMAR_PATH = GRAMMAR_DIR / "ruby" / "ruby.grammar"
+from ruby_parser._grammar import PARSER_GRAMMAR
 
 
 def create_ruby_parser(source: str) -> GrammarParser:
@@ -70,7 +65,7 @@ def create_ruby_parser(source: str) -> GrammarParser:
     This function:
 
     1. Tokenizes the source code using the Ruby lexer.
-    2. Reads and parses the ``ruby.grammar`` file.
+    2. Looks up the pre-compiled ``PARSER_GRAMMAR``.
     3. Creates a ``GrammarParser`` with those tokens and grammar.
 
     Use this when you want access to the parser object itself — for
@@ -85,7 +80,6 @@ def create_ruby_parser(source: str) -> GrammarParser:
         Call ``.parse()`` on it to get the AST.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
 
     Example::
@@ -94,8 +88,7 @@ def create_ruby_parser(source: str) -> GrammarParser:
         ast = parser.parse()
     """
     tokens = tokenize_ruby(source)
-    grammar = parse_parser_grammar(RUBY_GRAMMAR_PATH.read_text())
-    return GrammarParser(tokens, grammar)
+    return GrammarParser(tokens, PARSER_GRAMMAR)
 
 
 def parse_ruby(source: str) -> ASTNode:
@@ -123,7 +116,6 @@ def parse_ruby(source: str) -> ASTNode:
         ``rule_name`` is ``"program"``.
 
     Raises:
-        FileNotFoundError: If the grammar files cannot be found.
         LexerError: If the source contains invalid characters.
         GrammarParseError: If the source has syntax errors according
             to the Ruby grammar.

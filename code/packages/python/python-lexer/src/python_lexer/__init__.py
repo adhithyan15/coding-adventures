@@ -3,8 +3,9 @@
 This package supports multiple Python versions (2.7, 3.0, 3.6, 3.8, 3.10,
 3.12), each with its own ``.tokens`` grammar file that captures the exact
 token set for that version. The grammar files live at
-``code/grammars/python/pythonX.Y.tokens`` and are loaded at runtime by
-the grammar-driven lexer.
+``code/grammars/python/pythonX.Y.tokens`` in the monorepo and are compiled
+ahead of time into ``_grammar_<version>.py`` modules shipped with this
+package — no file I/O happens at runtime.
 
 Why Versioned Grammars?
 -----------------------
@@ -36,15 +37,17 @@ How It Works
 ------------
 
 The Python lexer is a **thin wrapper** around the generic ``GrammarLexer``
-from the ``lexer`` package. It does three things:
+from the ``lexer`` package. It does two things:
 
-1. Resolves the version string to a grammar file path.
-2. Parses that file into a ``TokenGrammar`` using ``grammar_tools``.
-3. Feeds the grammar to ``GrammarLexer``, which handles the actual
+1. Resolves the version string to a pre-compiled ``TokenGrammar`` in the
+   ``_TOKEN_GRAMMARS`` dict (one entry per supported version, each backed
+   by its own ``_grammar_<version>.py`` module).
+2. Feeds the grammar to ``GrammarLexer``, which handles the actual
    tokenization.
 
-Parsed grammars are cached per version, so the file is only read and
-parsed once regardless of how many times you call ``tokenize_python()``.
+Since Python already caches imported modules, each version's
+``TokenGrammar`` is only constructed once regardless of how many times you
+call ``tokenize_python()``.
 
 Usage::
 

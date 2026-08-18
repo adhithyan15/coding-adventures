@@ -1,14 +1,23 @@
-"""Excel formula lexer built on the shared grammar-driven lexer."""
+"""Excel formula lexer built on the shared grammar-driven lexer.
+
+The ``excel.tokens`` grammar is compiled ahead of time by the
+``grammar-tools`` compiler into ``excel_lexer/_grammar.py``, which embeds
+the ``TokenGrammar`` as native Python data structures. This module imports
+``TOKEN_GRAMMAR`` from it directly instead of reading and parsing
+``excel.tokens`` from ``code/grammars/`` at runtime — no file I/O happens,
+and the package works correctly when installed as a site-package.
+
+To regenerate after editing ``code/grammars/excel/excel.tokens``:
+
+    grammar-tools compile-tokens code/grammars/excel/excel.tokens \\
+        -o code/packages/python/excel-lexer/src/excel_lexer/_grammar.py
+"""
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, LexerContext, Token
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-EXCEL_TOKENS_PATH = GRAMMAR_DIR / "excel" / "excel.tokens"
+from excel_lexer._grammar import TOKEN_GRAMMAR
 
 
 def _next_non_space_char(ctx: LexerContext) -> str:
@@ -36,8 +45,7 @@ def excel_on_token(token: Token, ctx: LexerContext) -> None:
 
 
 def create_excel_lexer(source: str) -> GrammarLexer:
-    grammar = parse_token_grammar(EXCEL_TOKENS_PATH.read_text())
-    lexer = GrammarLexer(source, grammar)
+    lexer = GrammarLexer(source, TOKEN_GRAMMAR)
     lexer.set_on_token(excel_on_token)
     return lexer
 
