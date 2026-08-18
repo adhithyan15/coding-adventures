@@ -1183,6 +1183,12 @@ describe("real curriculum", () => {
       "ZH-C01-practice-greet",
       "ZH-C01-tone-sandhi-spoken",
       "ZH-C01-tones-count",
+      "ZH-C03-er-tone",
+      "ZH-C03-practice-lift",
+      "ZH-C03-san-next",
+      "ZH-C03-si-tone",
+      "ZH-C03-wu-derive",
+      "ZH-C03-yi-count",
       "ZH-W01-er-role",
       "ZH-W01-hao-build-halves",
       "ZH-W01-ni-build-halves",
@@ -1190,6 +1196,11 @@ describe("real curriculum", () => {
       "ZH-W01-ren-radical-meaning",
       "ZH-W01-ren-strokes",
       "ZH-W01-zi-meaning",
+      "ZH-W03-er-longer",
+      "ZH-W03-san-middle",
+      "ZH-W03-si-last",
+      "ZH-W03-wu-strokes",
+      "ZH-W03-yi-strokes",
     ]);
     expect(activities.every((activity) => activity.assesses.length > 0)).toBe(true);
     expect(activities.every((activity) => activity.acceptedResponses.length > 0)).toBe(true);

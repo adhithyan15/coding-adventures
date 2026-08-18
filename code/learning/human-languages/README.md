@@ -152,7 +152,7 @@ enter cross-language review only after focused retrieval.
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 196 | 193 | 37 chapters; through Ch. 37; 32 generated |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | 59 | 59 | 14 chapters; through Ch. 14; 12 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 59 | 59 | 15 chapters; through Ch. 15; 13 generated |
-| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 14 | 14 | 2 chapters; through Ch. 2; 2 generated |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 25 | 25 | 3 chapters; through Ch. 3; 3 generated |
 | [Japanese](./japanese/README.md) | Japonic / Japanese | 18 | 18 | 2 chapters; through Ch. 2; 2 generated |
 <!-- END GENERATED TRACK PROGRESS -->
 
