@@ -1630,6 +1630,23 @@ jobs:
           }
           Write-Host "Built generated WinUI executable at $($executable.FullName)"
 
+          # Launch the app and assert the SCREEN reacts to a real event.
+          #
+          # The runtime-conformance harness below asserts on the component
+          # object's properties, which passes even when the app is broken --
+          # props do reach the object. Three shipped defects were green under
+          # that arrangement: a startup crash (missing PRI), a UI frozen after
+          # first render (x:Bind defaulting to OneTime), and every row button
+          # emitting no Content. Each was caught only by a human looking at the
+          # window. This is that check, automated.
+          #
+          # UI Automation does not need a foreground window, so no interactive
+          # desktop session is required.
+          pwsh -NoProfile -ExecutionPolicy Bypass -File code/scripts/taskapp-xaml-smoke.ps1 -ExePath $executable.FullName
+          if ($LASTEXITCODE -ne 0) {
+            throw "TaskApp XAML smoke test failed with exit code $LASTEXITCODE"
+          }
+
           $taskHarness = Join-Path $env:RUNNER_TEMP 'mosaic-xaml-taskapp-runtime-conformance'
           New-Item -ItemType Directory -Path $taskHarness -Force | Out-Null
           Copy-Item 'code/packages/rust/task-mosaic-app/conformance/xaml/*' $taskHarness -Recurse
