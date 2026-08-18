@@ -340,7 +340,7 @@ impl HostProfileRuntime {
     /// it converts "this will fail" into "this will succeed" right before it
     /// fails anyway. That is why the registry-level checks below are repeated
     /// here and not just the profile ones — the profile checks were the obvious
-    /// three, and the registry's own two are exactly the ones a caller would be
+    /// three, and the registry's own three are exactly the ones a caller would be
     /// surprised by.
     pub fn check_registration(&self, definition: &ToolDefinition) -> Result<(), HostRuntimeError> {
         if !self.profile.allows_tool(&definition.tool_id) {

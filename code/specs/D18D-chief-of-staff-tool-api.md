@@ -568,15 +568,19 @@ The runtime's own framing events remain. Be precise about why, because the
 obvious justification is wrong: it is *not* that they describe the call rather
 than its result. The started event does, but the terminal event describes the
 result — that is its purpose. It stays because a caller has to learn the
-outcome, and it is safe to keep only because its payload is bounded to the error
-kind and a message the runtime chose.
+outcome. On *this* path it is safe because its payload is bounded to the error
+kind and a message the runtime chose. On the handler-error path the message is
+the handler's own — some description of the failure has to reach the caller —
+and bounding it is the binding's obligation under V2, not the runtime's.
 
 **The terminal event must not carry validation `details`.** On an
 output-validation failure those details hold one path per offending field, and
 each path is built from the handler's own output object — so a handler could
 broadcast arbitrary text, one string per field it invents, through the very
 rejection that refused it. `details` reaches the immediate caller on the
-result; it must not reach the event stream, which is a broadcast.
+result; it must not reach the event stream, which is a broadcast. The rule is
+implemented for every error kind, not only validation failures, because
+handler-supplied `details` on the error path is the wider channel of the two.
 
 ### Built-in definitions are canonical
 
@@ -598,7 +602,8 @@ device tools, host-local tools — are unaffected.
 ### The three unvalidated fields
 
 `artifact_refs`, `memory_refs`, and `events` are passed through unchecked on the
-success path, and deliberately so: a tool that creates an artifact is supposed to
+success path — with one exception, that a handler emitting a terminal event kind
+is refused outright — and deliberately so: a tool that creates an artifact is supposed to
 reference it. There is no general rule making them empty.
 
 For tools that handle secrets there *is* such a rule, and because it cannot come
@@ -838,7 +843,8 @@ invariant a reviewer trusts too far is worse than one they do not trust at all:
 So for `vault.request_direct`, `output` genuinely cannot carry bytes — the
 declared schema is `null` and a non-null output is rejected.
 
-The other three fields the runtime does not inspect on the success path. A
+The other three fields the runtime does not inspect on the success path, save
+that a handler emitting a terminal event kind is refused. A
 binding whose handlers must not use them wraps them with
 `forbidding_side_channels` at registration, which fails any call whose handler
 populated one; see "The three unvalidated fields" above. Returning them empty
@@ -846,9 +852,11 @@ and testing that is necessary but not sufficient, because a test proves what the
 handler does today and the wrapper proves what it can do at all.
 
 One remaining limit on the `output` guarantee, and one that used to exist and no
-longer does. Still true: a rejected output is discarded rather than echoed, so
-the rejection path is not itself a channel — and since the terminal event no
-longer carries validation `details`, that holds for the broadcast too. No longer
+longer does. Still true, with a caveat worth stating: a rejected output *value*
+is discarded rather than echoed. Its *keys* are not — validation names the
+offending fields, and those names are the handler's — so the rejection does
+report handler-chosen strings to the immediate caller. That is why `details` was
+removed from the broadcast: the caller asked, every event sink did not. No longer
 true: the guarantee used to be a property of the `ToolDefinition` passed to
 `register_handler` rather than of the tool id, so a definition registered with
 `output_schema: None` skipped validation. Built-in ids are now pinned to their

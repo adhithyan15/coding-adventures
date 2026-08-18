@@ -4165,7 +4165,9 @@ pub trait ToolHandler {
 /// A violation is an execution error rather than a silent scrub, because a
 /// handler reaching for a channel it was declared not to use is a bug in the
 /// handler, and scrubbing would hide it.
-pub fn forbidding_side_channels<H>(handler: H) -> impl ToolHandler
+pub fn forbidding_side_channels<H>(
+    handler: H,
+) -> impl Fn(JsonValue, ToolExecutionContext) -> Result<ToolHandlerOutput, ToolCallError>
 where
     H: ToolHandler,
 {
@@ -6891,8 +6893,11 @@ mod tests {
         // validation. That Progress event is NOT published: a call the runtime
         // has declared invalid must not have its side effects forwarded, or a
         // handler whose output was refused could still say whatever it liked to
-        // every event sink. Only the runtime's own framing events remain --
-        // they describe the call, not its result.
+        // every event sink. Only the runtime's framing events remain: the
+        // started event describes the call, and the terminal event describes
+        // the result but is kept because a caller has to learn the outcome --
+        // safe on this path only because its payload is bounded to the error
+        // kind and the runtime's own static message.
         assert_eq!(
             trace
                 .events

@@ -47,7 +47,7 @@ All notable changes to this package will be documented in this file.
   runtime cannot know which tools must leave those empty; this is how a binding
   says so once, at registration, and has it checked on every call.
 - `ToolApiError::BuiltinDefinitionMismatch`. Adding an enum variant is
-  technically breaking for exhaustive matches on `ToolApiError`; all 16
+  technically breaking for exhaustive matches on `ToolApiError`; all 18
   in-repo dependents compile unchanged.
 
 - Added the canonical Tier-2 `vault.request_lease` built-in with strict opaque
