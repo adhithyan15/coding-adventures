@@ -169,6 +169,13 @@ pub enum DurableStep {
     ConfigReplace,
     /// Creation of one encrypted portable export artifact.
     ExportArtifact,
+    /// Creation of one exported attachment file (VLT-PM47 §6.5).
+    ///
+    /// The attachment *write* into the vault needs no step of its own: it goes
+    /// through the ordinary storage backend, which is already bracketed. Only
+    /// the export leaves the backend, and it is a plaintext file, so a drill
+    /// that kills either side of it is checking that no partial one survives.
+    AttachmentArtifact,
 }
 
 impl DurableStep {
@@ -182,6 +189,7 @@ impl DurableStep {
             Self::ConfigCreate => "config.create",
             Self::ConfigReplace => "config.replace",
             Self::ExportArtifact => "export.artifact",
+            Self::AttachmentArtifact => "attachment.artifact",
         }
     }
 }

@@ -74,6 +74,16 @@ pub enum CliHostError {
     InvalidImportSource,
     /// The portable-import source could not be completely read.
     ImportReadFailed,
+    /// The attachment source was empty, not a file, or exceeded its bound.
+    InvalidAttachmentSource,
+    /// The attachment source could not be completely read.
+    AttachmentReadFailed,
+    /// The caller supplied an empty attachment destination or content.
+    InvalidAttachmentDestination,
+    /// The attachment destination already exists and was not replaced.
+    AttachmentDestinationExists,
+    /// The attachment destination could not be durably written.
+    AttachmentWriteFailed,
     /// The caller requested an empty entropy buffer.
     InvalidEntropyRequest,
     /// The operating-system CSPRNG failed to fill a requested buffer.
@@ -112,6 +122,13 @@ impl Display for CliHostError {
             Self::ExportWriteFailed => "vault-pm CLI host: export write failed",
             Self::InvalidImportSource => "vault-pm CLI host: invalid import source",
             Self::ImportReadFailed => "vault-pm CLI host: import read failed",
+            Self::InvalidAttachmentSource => "vault-pm CLI host: invalid attachment source",
+            Self::AttachmentReadFailed => "vault-pm CLI host: attachment read failed",
+            Self::InvalidAttachmentDestination => {
+                "vault-pm CLI host: invalid attachment destination"
+            }
+            Self::AttachmentDestinationExists => "vault-pm CLI host: attachment destination exists",
+            Self::AttachmentWriteFailed => "vault-pm CLI host: attachment write failed",
             Self::InvalidEntropyRequest => "vault-pm CLI host: invalid entropy request",
             Self::EntropyUnavailable => "vault-pm CLI host: OS entropy unavailable",
             Self::ClipboardUnavailable => "vault-pm CLI host: clipboard unavailable",
@@ -192,6 +209,15 @@ pub enum TextPrompt {
     /// session can read would manufacture a record of an agreement nobody
     /// made. VLT-PM46 §3.1.
     SecretCopyConfirmation,
+    /// Explicit confirmation before one audited attachment export.
+    ///
+    /// A third sentence for the same reason there is a second: an attachment
+    /// export puts vault-held content into an ordinary unencrypted file that
+    /// this product will not track, clear, or know about again. Neither of the
+    /// other two prompts describes that, and a consent ceremony that
+    /// misdescribes what it is consenting to manufactures a record of an
+    /// agreement nobody made. VLT-PM47 §6.3.
+    AttachmentExportConfirmation,
 }
 
 impl TextPrompt {
@@ -226,6 +252,9 @@ impl TextPrompt {
             Self::SecretCopyConfirmation => {
                 "Copy secret to this system's clipboard? Type yes to continue: "
             }
+            Self::AttachmentExportConfirmation => {
+                "Write this attachment's contents to a plaintext file? Type yes to continue: "
+            }
         }
     }
 
@@ -256,7 +285,9 @@ impl TextPrompt {
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
             Self::LoginUrlCount => 2,
-            Self::SecretRevealConfirmation | Self::SecretCopyConfirmation => 16,
+            Self::SecretRevealConfirmation
+            | Self::SecretCopyConfirmation
+            | Self::AttachmentExportConfirmation => 16,
         }
     }
 
@@ -271,6 +302,7 @@ impl TextPrompt {
                 | Self::TotpIssuer
                 | Self::SecretRevealConfirmation
                 | Self::SecretCopyConfirmation
+                | Self::AttachmentExportConfirmation
         )
     }
 }
@@ -441,6 +473,14 @@ impl ControllingTerminal {
         Ok(answer.as_str() == "yes")
     }
 
+    /// Require an exact echoed `yes` before one attachment export.
+    ///
+    /// Same rule, third sentence. See [`TextPrompt::AttachmentExportConfirmation`].
+    pub fn confirm_attachment_export(&self) -> Result<bool, CliHostError> {
+        let answer = self.read_text(TextPrompt::AttachmentExportConfirmation)?;
+        Ok(answer.as_str() == "yes")
+    }
+
     /// Require an exact echoed `yes` before a clipboard secret disclosure.
     ///
     /// Same rule, different sentence: the person is agreeing to put the value
@@ -495,6 +535,84 @@ pub fn write_portable_export(destination: &Path, artifact: &[u8]) -> Result<(), 
         drop(file);
         let _ = fs::remove_file(destination);
         return Err(CliHostError::ExportWriteFailed);
+    }
+    Ok(())
+}
+
+/// Read one attachment source file under an exact host ceiling.
+///
+/// The same shape as [`read_portable_export`] and for the same reasons — the
+/// metadata length is checked before allocation and the reader is capped at
+/// `max_bytes + 1`, so a file that grows between the two cannot force an
+/// unbounded allocation. It is a separate function because what it returns is
+/// *secret* rather than an already-encrypted artifact: the buffer is
+/// `Zeroizing`, so a failed attach does not leave a copy of the person's file
+/// in freed heap.
+pub fn read_attachment_source(
+    source: &Path,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    if source.as_os_str().is_empty() || max_bytes == 0 {
+        return Err(CliHostError::InvalidAttachmentSource);
+    }
+    // A path that will not open is a path the operator named and this command
+    // cannot take -- missing, a directory it has no permission to open, a
+    // dangling link. That is invalid input, not a failing provider, so it must
+    // not be reported as one: exit 7 tells a person to retry later, and
+    // retrying will not conjure the file.
+    let file = File::open(source).map_err(|_| CliHostError::InvalidAttachmentSource)?;
+    let metadata = file
+        .metadata()
+        .map_err(|_| CliHostError::AttachmentReadFailed)?;
+    if !metadata.is_file()
+        || metadata.len() == 0
+        || metadata.len() > u64::try_from(max_bytes).unwrap_or(u64::MAX)
+    {
+        return Err(CliHostError::InvalidAttachmentSource);
+    }
+    let capacity =
+        usize::try_from(metadata.len()).map_err(|_| CliHostError::InvalidAttachmentSource)?;
+    let limit = u64::try_from(max_bytes)
+        .unwrap_or(u64::MAX)
+        .saturating_add(1);
+    let mut contents = Zeroizing::new(Vec::with_capacity(capacity));
+    file.take(limit)
+        .read_to_end(&mut contents)
+        .map_err(|_| CliHostError::AttachmentReadFailed)?;
+    if contents.is_empty() || contents.len() > max_bytes {
+        return Err(CliHostError::InvalidAttachmentSource);
+    }
+    Ok(contents)
+}
+
+/// Durably create one explicit attachment destination without replacing it.
+///
+/// The exported file is plaintext by definition — that is what an export is.
+/// What this function is careful about is everything else: create-new
+/// semantics so an existing file, directory, or symbolic link is never
+/// followed or replaced; owner-only mode at creation on Unix; and removal of
+/// the incomplete file if the write or the `fsync` fails, because a
+/// half-written plaintext left behind by a failed export is a leak with no
+/// owner.
+pub fn write_attachment_export(destination: &Path, contents: &[u8]) -> Result<(), CliHostError> {
+    if destination.as_os_str().is_empty() || contents.is_empty() {
+        return Err(CliHostError::InvalidAttachmentDestination);
+    }
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    options.mode(0o600);
+    let mut file = options
+        .open(destination)
+        .map_err(map_attachment_open_error)?;
+    if file
+        .write_all(contents)
+        .and_then(|()| file.sync_all())
+        .is_err()
+    {
+        drop(file);
+        let _ = fs::remove_file(destination);
+        return Err(CliHostError::AttachmentWriteFailed);
     }
     Ok(())
 }
@@ -615,6 +733,14 @@ fn map_export_open_error(error: io::Error) -> CliHostError {
         CliHostError::ExportDestinationExists
     } else {
         CliHostError::ExportWriteFailed
+    }
+}
+
+fn map_attachment_open_error(error: io::Error) -> CliHostError {
+    if error.kind() == io::ErrorKind::AlreadyExists {
+        CliHostError::AttachmentDestinationExists
+    } else {
+        CliHostError::AttachmentWriteFailed
     }
 }
 

@@ -23,21 +23,22 @@ mod crash;
 pub const CRASH_INJECTION_COMPILED: bool = cfg!(feature = "crash-injection");
 
 use coding_adventures_vault_pm_application::{
-    complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
-    prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,
-    ApiKeyConflictMergeInputV1, ApplicationError, AuditEventViewV1, AuditVerificationV1,
-    AuditedAccessRandomnessV1, AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore,
-    BootstrapStoreError, CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1,
-    DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
-    LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
-    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableExportPolicyV1,
-    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
-    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
-    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
-    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
-    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
-    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
-    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    attachment_name_from_path, attachment_random_bytes, complete_generation_zero,
+    open_portable_with_passphrase, portable_import_random_bytes, prepare_audited_generation_zero,
+    rehydrate_prepared_init, AddItemRandomnessV1, ApiKeyConflictMergeInputV1, ApplicationError,
+    AttachmentRandomnessV1, AuditEventViewV1, AuditVerificationV1, AuditedAccessRandomnessV1,
+    AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore, BootstrapStoreError,
+    CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1, DeleteItemRandomnessV1,
+    GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1, PassphraseRotationPolicyV1,
+    PassphraseRotationRandomnessV1, PortableExportPolicyV1, PortableExportRandomnessV1,
+    PortableImportRandomnessV1, PortableOpenPolicyV1, ReplaceItemRandomnessV1,
+    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, RevealedSecretEncodingV1,
+    RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1, SecureNoteConflictMergeInputV1,
+    TotpConflictMergeInputV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
+    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
+    AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT,
+    DELETE_ITEM_RANDOM_BYTES, MAX_ATTACHMENT_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
     PASSPHRASE_ROTATION_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
@@ -46,8 +47,8 @@ use coding_adventures_vault_pm_cli_host::clipboard::{
     copy_and_schedule_clear, read_clear_request_from_stdin, run_scheduled_clear, PlatformClipboard,
 };
 use coding_adventures_vault_pm_cli_host::{
-    read_portable_export, write_portable_export, CliHostError, ControllingTerminal, OsEntropy,
-    SecretPrompt, TextPrompt,
+    read_attachment_source, read_portable_export, write_attachment_export, write_portable_export,
+    CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
 };
 use coding_adventures_vault_pm_config::{
     parse_config, render_config, ConfigName, CredentialRef, StorageConfigV1, StorageKind,
@@ -55,8 +56,8 @@ use coding_adventures_vault_pm_config::{
     DEFAULT_AUTO_LOCK_SECONDS, DEFAULT_CLIPBOARD_CLEAR_SECONDS,
 };
 use coding_adventures_vault_pm_domain::{
-    ContentType, ItemDocument, ItemId, LwwRegister, ObservedSet, OperationId, RedactedItemView,
-    RedactedRecordView, RevisionId,
+    AttachmentId, ContentType, ItemDocument, ItemId, LwwRegister, ObservedSet, OperationId,
+    RedactedItemView, RedactedRecordView, RevisionId,
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_password_policy::{
@@ -93,7 +94,7 @@ const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -328,6 +329,20 @@ pub trait CliHost {
 
     /// Read one explicit encrypted portable artifact under the V1 size ceiling.
     fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError>;
+
+    /// Read one attachment source file under the V1 attachment ceiling.
+    ///
+    /// The buffer is `Zeroizing` because what it holds is the person's file,
+    /// not an already-encrypted artifact: a refused or failed attach must not
+    /// leave a copy of it in freed heap.
+    fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError>;
+
+    /// Durably create one explicit attachment destination without replacing it.
+    fn write_attachment_export(&self, destination: &Path, contents: &[u8])
+        -> Result<(), HostError>;
+
+    /// Require an exact echoed `yes` before writing an attachment to a file.
+    fn confirm_attachment_export(&self) -> Result<bool, HostError>;
 
     /// Collect the passphrase for an existing portable artifact without echo.
     fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
@@ -625,6 +640,24 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
+    fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        read_attachment_source(source, MAX_ATTACHMENT_BYTES).map_err(map_native_cli_host)
+    }
+
+    fn write_attachment_export(
+        &self,
+        destination: &Path,
+        contents: &[u8],
+    ) -> Result<(), HostError> {
+        write_attachment_export(destination, contents).map_err(map_native_cli_host)
+    }
+
+    fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+        ControllingTerminal
+            .confirm_attachment_export()
+            .map_err(map_native_cli_host)
+    }
+
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
         OsEntropy.fill(output).map_err(map_native_cli_host)
     }
@@ -809,6 +842,26 @@ enum Command {
     ItemShow {
         item_id: ItemId,
     },
+    /// Store one file against one live item (VLT-PM47 §6.1).
+    AttachmentAdd {
+        item_id: ItemId,
+        source: PathBuf,
+    },
+    /// List one item's attachment metadata (VLT-PM47 §6.2).
+    AttachmentList {
+        item_id: ItemId,
+    },
+    /// Write one stored attachment back out as a plaintext file (§6.3).
+    ///
+    /// The destination is a required argument and never defaulted from the
+    /// stored name. VLT-PM47 §4.6: the name is authored by whoever attached
+    /// the file, which in a synced vault need not be this person, and no code
+    /// path in this product turns a stored name into a filesystem path.
+    AttachmentExport {
+        item_id: ItemId,
+        attachment_id: AttachmentId,
+        destination: PathBuf,
+    },
     ItemReveal {
         item_id: ItemId,
         field: SecretFieldV1,
@@ -984,6 +1037,7 @@ where
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
         "item" => parse_item(tail),
+        "attachment" => parse_attachment(tail),
         "history" => parse_history(tail),
         "conflict" => parse_conflict(tail),
         _ => Err(CliFailure::InvalidCommand),
@@ -1027,6 +1081,38 @@ fn parse_search(values: &mut [String], command_index: usize) -> Result<Command, 
     Ok(Command::Search {
         query: SearchQuery::new(query),
     })
+}
+
+/// Parse the `attachment` verb (VLT-PM00 §14.4).
+///
+/// Three shapes, and the third's destination is required rather than
+/// bracketed. §14.4 originally wrote it `[PATH]`, and VLT-PM47 §2.1 removed
+/// the bracket: the only available default was the stored attachment name
+/// resolved against the process working directory, and that name can be
+/// authored by a synchronising peer.
+fn parse_attachment(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, item, source] if action == "add" && !source.is_empty() => {
+            Ok(Command::AttachmentAdd {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                source: PathBuf::from(source),
+            })
+        }
+        [action, item] if action == "list" => Ok(Command::AttachmentList {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
+        [action, item, attachment, destination]
+            if action == "export" && !destination.is_empty() =>
+        {
+            Ok(Command::AttachmentExport {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                attachment_id: AttachmentId::from_user_string(attachment)
+                    .map_err(|_| CliFailure::InvalidCommand)?,
+                destination: PathBuf::from(destination),
+            })
+        }
+        _ => Err(CliFailure::InvalidCommand),
+    }
 }
 
 fn parse_vault(arguments: &[String]) -> Result<Command, CliFailure> {
@@ -1675,6 +1761,25 @@ fn dispatch(
         }
         Command::ItemList => item_list(host, paths, writer, selected_vault),
         Command::ItemShow { item_id } => item_show(host, paths, writer, selected_vault, item_id),
+        Command::AttachmentAdd { item_id, source } => {
+            attachment_add(host, paths, writer, selected_vault, item_id, &source)
+        }
+        Command::AttachmentList { item_id } => {
+            attachment_list(host, paths, writer, selected_vault, item_id)
+        }
+        Command::AttachmentExport {
+            item_id,
+            attachment_id,
+            destination,
+        } => attachment_export(
+            host,
+            paths,
+            writer,
+            selected_vault,
+            item_id,
+            attachment_id,
+            &destination,
+        ),
         Command::ItemReveal { item_id, field } => {
             item_reveal(host, paths, writer, selected_vault, item_id, field)
         }
@@ -2272,6 +2377,7 @@ impl ItemCreateContext {
             ObservedSet::new(),
             record,
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .map_err(|_| CliFailure::InvalidCommand)
     }
@@ -3009,6 +3115,168 @@ fn item_show(
             .ok_or(CliFailure::NotFound)?
     };
     render_item(item)
+}
+
+/// Store one file against one live item.
+///
+/// Ordering, and every step of it is load-bearing (VLT-PM47 §6.1). The source
+/// is read and its name validated **before** the passphrase prompt, so a
+/// person who named a missing file, a directory, or something over the ceiling
+/// learns it immediately rather than after typing their master passphrase —
+/// the position VLT-PM44 §2.3, VLT-PM45 §2.3, and VLT-PM46 §3.2 all put a
+/// pre-flight check in, for the same reason.
+///
+/// The entropy block is sized from the file's length and reserved before
+/// authentication like every other mutation's, and the plaintext is dropped at
+/// the end of this function whether or not the attach succeeded.
+fn attachment_add(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    source: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let name = source
+        .to_str()
+        .ok_or(CliFailure::InvalidCommand)
+        .and_then(|path| attachment_name_from_path(path).map_err(map_application))?;
+    let contents = host.read_attachment_source(source).map_err(map_host)?;
+    let random_bytes = attachment_random_bytes(contents.len() as u64).map_err(map_application)?;
+    let mut random = Zeroizing::new(vec![0_u8; random_bytes]);
+    host.fill_entropy(&mut random).map_err(map_host)?;
+    let mutation_randomness = AttachmentRandomnessV1::new(random.to_vec(), contents.len() as u64)
+        .map_err(map_application)?;
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let attachment_id = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_attach_attachment(
+            item_id,
+            name,
+            &contents,
+            wall_time_ms,
+            mutation_randomness,
+            failure_randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Attachment added: {}\n",
+        attachment_id.to_user_string()
+    )))
+}
+
+/// List one item's attachment metadata.
+///
+/// Non-secret output on ordinary standard output: identity, name, plaintext
+/// byte length, and content hash. No confirmation ceremony, for the reason
+/// `item show` needs none (VLT-PM47 §6.2).
+fn attachment_list(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let summaries = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_list_attachments(item_id, wall_time_ms, randomness, &application_store)
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    if summaries.is_empty() {
+        return Ok(CliOutput::success("No attachments.\n"));
+    }
+    let mut rendered = String::new();
+    for summary in &summaries {
+        rendered.push_str(&format!(
+            "{}\tbytes={}\tsha256={}\tname={}\n",
+            summary.attachment_id().to_user_string(),
+            summary.total_plaintext_len(),
+            hex_lower(summary.content_sha256()),
+            summary.name(),
+        ));
+    }
+    Ok(CliOutput::success(rendered))
+}
+
+/// Write one stored attachment back out as a plaintext file.
+///
+/// This is VLT-PM25's disclosure ceremony with a different final channel, and
+/// the ordering below is that ceremony's (VLT-PM47 §6.3). Two things happen
+/// before the passphrase prompt: the audit clock and randomness are reserved,
+/// and — deliberately — nothing else, because the destination cannot be
+/// meaningfully pre-checked without racing the write.
+///
+/// A refusal at the prompt, or a host failure collecting the answer, publishes
+/// `Denied` and writes nothing. The plaintext is dropped and wiped at the end
+/// of this function on every path.
+fn attachment_export(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    attachment_id: AttachmentId,
+    destination: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let (confirmed, host_error) = match host.confirm_attachment_export() {
+        Ok(confirmed) => (confirmed, None),
+        Err(error) => (false, Some(error)),
+    };
+    let exported = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_export_attachment(
+            item_id,
+            attachment_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed },
+            wall_time_ms,
+            randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation();
+    if let Some(error) = host_error {
+        // The same shape `totp code` uses: an unauthorized intent must have
+        // been refused by the application, and anything else means the two
+        // layers disagree about what just happened.
+        if !matches!(exported, Err(ApplicationError::InvalidInput)) {
+            return Err(CliFailure::Internal);
+        }
+        return Err(map_host(error));
+    }
+    let content = exported.map_err(map_application)?;
+    crash::around_attachment_artifact(|| {
+        host.write_attachment_export(destination, content.as_bytes())
+    })
+    .map_err(map_host)?;
+    drop(content);
+    Ok(CliOutput::success("Attachment written.\n"))
+}
+
+/// Render one hash as lowercase hexadecimal.
+///
+/// A content hash of plaintext the operator can already obtain, so this is not
+/// a disclosure — but it is the value that makes the byte-identical round trip
+/// checkable by hand, which is why it is rendered at all.
+fn hex_lower(value: &[u8; 32]) -> String {
+    const DIGITS: &[u8; 16] = b"0123456789abcdef";
+    let mut rendered = String::with_capacity(64);
+    for byte in value {
+        rendered.push(DIGITS[usize::from(byte >> 4)] as char);
+        rendered.push(DIGITS[usize::from(byte & 0x0f)] as char);
+    }
+    rendered
 }
 
 fn item_reveal(
@@ -5001,6 +5269,14 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::InvalidExportDestination
         | CliHostError::ExportDestinationExists
         | CliHostError::InvalidImportSource
+        // A missing source, a directory, an empty file, or one over the
+        // attachment ceiling are all "you named something this command cannot
+        // take", which is exit 2 and not a provider failure. The destination
+        // already existing is the same class: this product refuses to replace
+        // a file it did not create.
+        | CliHostError::InvalidAttachmentSource
+        | CliHostError::InvalidAttachmentDestination
+        | CliHostError::AttachmentDestinationExists
         | CliHostError::InvalidEntropyRequest => HostError::Invalid,
         CliHostError::InvalidClipboardClearRequest => HostError::Invalid,
         // A host with no clipboard session, and a value this adapter cannot
@@ -5021,6 +5297,8 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::TextInputFailed
         | CliHostError::ExportWriteFailed
         | CliHostError::ImportReadFailed
+        | CliHostError::AttachmentReadFailed
+        | CliHostError::AttachmentWriteFailed
         | CliHostError::EntropyUnavailable => HostError::Unavailable,
     }
 }
@@ -5105,6 +5383,31 @@ mod tests {
             }
         }
         None
+    }
+
+    /// Whether any file under `root` contains `needle` anywhere in its bytes.
+    ///
+    /// Used to state the negative that matters about attachments: the store
+    /// holds ciphertext, so neither a distinctive run of the plaintext nor the
+    /// file's name appears anywhere beneath the data root.
+    fn tree_contains(root: &std::path::Path, needle: &[u8]) -> bool {
+        let Ok(entries) = fs::read_dir(root) else {
+            return false;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let found = if path.is_dir() {
+                tree_contains(&path, needle)
+            } else {
+                fs::read(&path)
+                    .map(|bytes| bytes.windows(needle.len()).any(|window| window == needle))
+                    .unwrap_or(false)
+            };
+            if found {
+                return true;
+            }
+        }
+        false
     }
 
     /// Advisory wall time reported by a [`TestHost`] whose clock never moves.
@@ -5562,6 +5865,26 @@ mod tests {
 
         fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
             self.secret()
+        }
+
+        // Real filesystem, like the portable-export pair above: the point of
+        // these tests is the ceremony around the write, and a fake that never
+        // touched a disk could not show that a failed export leaves nothing
+        // behind.
+        fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            read_attachment_source(source, MAX_ATTACHMENT_BYTES).map_err(map_native_cli_host)
+        }
+
+        fn write_attachment_export(
+            &self,
+            destination: &Path,
+            contents: &[u8],
+        ) -> Result<(), HostError> {
+            write_attachment_export(destination, contents).map_err(map_native_cli_host)
+        }
+
+        fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+            Ok(self.text()?.as_str() == "yes")
         }
 
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -10300,6 +10623,28 @@ mod tests {
             Ok(b"read_portable_export".to_vec())
         }
 
+        fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            assert_eq!(source, Path::new("source"));
+            self.record("read_attachment_source");
+            Ok(Zeroizing::new(b"read_attachment_source".to_vec()))
+        }
+
+        fn write_attachment_export(
+            &self,
+            destination: &Path,
+            contents: &[u8],
+        ) -> Result<(), HostError> {
+            assert_eq!(destination, Path::new("destination"));
+            assert_eq!(contents, b"attachment");
+            self.record("write_attachment_export");
+            Ok(())
+        }
+
+        fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+            self.record("confirm_attachment_export");
+            Ok(true)
+        }
+
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
             self.record("fill_entropy");
             output.fill(0xa5);
@@ -11435,5 +11780,402 @@ mod tests {
         let generated = core::str::from_utf8(&generated).expect("generated passwords are ASCII");
         assert!(!terminal.transcript().contains(generated));
         assert_eq!(terminal.exit_codes(), vec![ExitCode::Success]);
+    }
+
+    /// One login item, added with a deterministic host, and its identity.
+    fn attachment_fixture(paths: &LocalVaultPaths, passphrase: &[u8]) -> String {
+        let init_host = TestHost::new(paths.clone(), [passphrase.to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [
+                passphrase.to_vec(),
+                b"attachment secret".to_vec(),
+                Vec::new(),
+            ],
+            [
+                "Attachment holder".to_owned(),
+                "user@example.test".to_owned(),
+                "0".to_owned(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+        activate_test_audit_epoch(paths, passphrase.to_vec());
+        ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string()
+    }
+
+    /// A deterministic multi-chunk payload.
+    ///
+    /// The length is a deliberate non-multiple of the chunk size so the short
+    /// final chunk is exercised: an attachment that happened to be an exact
+    /// multiple would leave the tail path untested, and "it round-tripped"
+    /// would then be a weaker statement than it looks.
+    fn multi_chunk_payload() -> Vec<u8> {
+        (0..(2 * coding_adventures_vault_pm_application::ATTACHMENT_CHUNK_BYTES + 1234))
+            .map(|index| (index % 251) as u8)
+            .collect()
+    }
+
+    /// VLT-PM47 §9.1. The acceptance gate: a file bigger than one chunk comes
+    /// back byte for byte, and nothing of it or its name is on disk in clear.
+    #[test]
+    fn an_attachment_round_trips_byte_identically_through_the_command_surface() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"attachment round trip passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let payload = multi_chunk_payload();
+        let source = root.0.join("recovery-codes.bin");
+        fs::write(&source, &payload).unwrap();
+
+        let add_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let added = run(
+            [
+                "attachment",
+                "add",
+                item_id.as_str(),
+                source.to_str().unwrap(),
+            ],
+            &add_host,
+        );
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let attachment_id = added
+            .stdout()
+            .strip_prefix("Attachment added: ")
+            .and_then(|rest| rest.strip_suffix('\n'))
+            .expect("the ceremony announces the new attachment identity")
+            .to_owned();
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["attachment", "list", item_id.as_str()], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(
+            listed.stdout().contains(&attachment_id),
+            "the listing names the attachment: {listed:?}"
+        );
+        assert!(listed.stdout().contains("name=recovery-codes.bin"));
+        assert!(listed
+            .stdout()
+            .contains(&format!("bytes={}", payload.len())));
+        assert!(listed.stdout().contains(&format!(
+            "sha256={}",
+            hex_lower(&coding_adventures_sha256::sha256(&payload))
+        )));
+
+        let destination = root.0.join("exported.bin");
+        let export_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["yes".to_owned()]);
+        let exported = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                attachment_id.as_str(),
+                destination.to_str().unwrap(),
+            ],
+            &export_host,
+        );
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        assert_eq!(exported.stdout(), "Attachment written.\n");
+        assert_eq!(fs::read(&destination).unwrap(), payload);
+
+        // The store holds ciphertext. A distinctive run of the payload and the
+        // file name must appear nowhere under the data root.
+        let needle = &payload[coding_adventures_vault_pm_application::ATTACHMENT_CHUNK_BYTES
+            ..coding_adventures_vault_pm_application::ATTACHMENT_CHUNK_BYTES + 64];
+        assert!(
+            !tree_contains(&root.0.join("data"), needle),
+            "attachment plaintext reached the store"
+        );
+        assert!(
+            !tree_contains(&root.0.join("data"), b"recovery-codes.bin"),
+            "the attachment name reached the store in clear"
+        );
+
+        // Both reads and the attach are recorded, and none of them carries the
+        // name or the bytes.
+        let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit
+            .stdout()
+            .contains("action=item_update\toutcome=succeeded"));
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|row| row.contains("action=item_read\toutcome=succeeded"))
+                .count(),
+            2,
+            "{audit:?}"
+        );
+        assert!(!audit.stdout().contains("recovery-codes.bin"));
+
+        let verify_host = TestHost::new(paths, [passphrase]);
+        let verified = run(["audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
+    /// VLT-PM47 §9.3 and §3.5. Fail closed, before the vault is touched, and
+    /// never by aborting.
+    #[test]
+    fn an_oversized_attachment_is_refused_and_the_vault_is_untouched() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"oversized attachment passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let source = root.0.join("too-large.bin");
+        fs::write(&source, vec![0_u8; MAX_ATTACHMENT_BYTES + 1]).unwrap();
+        // No passphrase is queued: reaching the unlock at all would panic the
+        // host, which is how this test proves the refusal happens first.
+        let host = TestHost::new(paths.clone(), []);
+        let refused = run(
+            [
+                "attachment",
+                "add",
+                item_id.as_str(),
+                source.to_str().unwrap(),
+            ],
+            &host,
+        );
+        assert_eq!(refused.exit_code(), ExitCode::InvalidInput, "{refused:?}");
+
+        // The item still has no attachments, so the refusal published nothing
+        // -- and the vault is still openable, which is the half of "fail
+        // closed" that a panic would have taken away.
+        let listed = run(
+            ["attachment", "list", item_id.as_str()],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(listed.stdout(), "No attachments.\n", "{listed:?}");
+        let verified = run(["audit", "verify"], &TestHost::new(paths, [passphrase]));
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
+    /// A missing source and a source that is a directory are the same class of
+    /// answer, and both arrive before the passphrase prompt.
+    #[test]
+    fn an_unreadable_attachment_source_is_refused_before_any_prompt() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"unreadable source passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        for source in [root.0.join("absent.bin"), root.0.join("data")] {
+            let host = TestHost::new(paths.clone(), []);
+            let refused = run(
+                [
+                    "attachment",
+                    "add",
+                    item_id.as_str(),
+                    source.to_str().unwrap(),
+                ],
+                &host,
+            );
+            assert_eq!(
+                refused.exit_code(),
+                ExitCode::InvalidInput,
+                "{source:?}: {refused:?}"
+            );
+        }
+    }
+
+    /// VLT-PM47 §9.6. Refusal at the prompt releases nothing and still leaves a
+    /// row: an access that happened and left no trace is the outcome the whole
+    /// ceremony exists to prevent.
+    #[test]
+    fn a_refused_export_writes_no_file_and_records_a_denied_read() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"refused export passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let payload = multi_chunk_payload();
+        let source = root.0.join("secret.bin");
+        fs::write(&source, &payload).unwrap();
+        let add_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let added = run(
+            [
+                "attachment",
+                "add",
+                item_id.as_str(),
+                source.to_str().unwrap(),
+            ],
+            &add_host,
+        );
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let attachment_id = added
+            .stdout()
+            .strip_prefix("Attachment added: ")
+            .and_then(|rest| rest.strip_suffix('\n'))
+            .unwrap()
+            .to_owned();
+
+        let destination = root.0.join("never-written.bin");
+        let refuse_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["no".to_owned()]);
+        let refused = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                attachment_id.as_str(),
+                destination.to_str().unwrap(),
+            ],
+            &refuse_host,
+        );
+        assert_eq!(refused.exit_code(), ExitCode::InvalidInput, "{refused:?}");
+        assert!(!destination.exists(), "a refused export wrote a file");
+
+        let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let audit = run(["audit", "list"], &audit_host);
+        assert!(
+            audit.stdout().contains("action=item_read\toutcome=denied"),
+            "{audit:?}"
+        );
+
+        // The destination is refused rather than replaced when it exists, and
+        // the pre-existing bytes survive.
+        fs::write(&destination, b"pre-existing").unwrap();
+        let clash_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["yes".to_owned()]);
+        let clashed = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                attachment_id.as_str(),
+                destination.to_str().unwrap(),
+            ],
+            &clash_host,
+        );
+        assert_eq!(clashed.exit_code(), ExitCode::InvalidInput, "{clashed:?}");
+        assert_eq!(fs::read(&destination).unwrap(), b"pre-existing");
+
+        // An attachment identity this item does not have is not found, and the
+        // failed read is still recorded.
+        let missing = AttachmentId::new([0xfe; 16]).to_user_string();
+        let missing_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["yes".to_owned()]);
+        let not_found = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                missing.as_str(),
+                root.0.join("absent-export.bin").to_str().unwrap(),
+            ],
+            &missing_host,
+        );
+        assert_eq!(not_found.exit_code(), ExitCode::NotFound, "{not_found:?}");
+
+        let verify_host = TestHost::new(paths, [passphrase]);
+        assert_eq!(
+            run(["audit", "verify"], &verify_host).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    /// An item with no attachments says so rather than printing nothing, and a
+    /// missing item is not found.
+    #[test]
+    fn listing_reports_an_empty_attachment_set_and_a_missing_item() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"empty attachment list passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["attachment", "list", item_id.as_str()], &host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert_eq!(listed.stdout(), "No attachments.\n");
+
+        let missing = ItemId::new([0xaa; 16]).to_user_string();
+        let absent_host = TestHost::new(paths, [passphrase]);
+        let absent = run(["attachment", "list", missing.as_str()], &absent_host);
+        assert_eq!(absent.exit_code(), ExitCode::NotFound, "{absent:?}");
+    }
+
+    #[test]
+    fn the_attachment_grammar_is_closed() {
+        let item = ItemId::new([7; 16]);
+        let attachment = AttachmentId::new([8; 16]);
+        assert_eq!(
+            parse(["attachment", "add", &item.to_user_string(), "/tmp/f.bin"]),
+            default_invocation(Command::AttachmentAdd {
+                item_id: item,
+                source: PathBuf::from("/tmp/f.bin"),
+            })
+        );
+        assert_eq!(
+            parse(["attachment", "list", &item.to_user_string()]),
+            default_invocation(Command::AttachmentList { item_id: item })
+        );
+        assert_eq!(
+            parse([
+                "attachment",
+                "export",
+                &item.to_user_string(),
+                &attachment.to_user_string(),
+                "/tmp/out.bin",
+            ]),
+            default_invocation(Command::AttachmentExport {
+                item_id: item,
+                attachment_id: attachment,
+                destination: PathBuf::from("/tmp/out.bin"),
+            })
+        );
+        for rejected in [
+            vec!["attachment"],
+            vec!["attachment", "add"],
+            vec!["attachment", "add", &item.to_user_string()],
+            vec!["attachment", "add", "not-an-id", "/tmp/f.bin"],
+            vec!["attachment", "add", &item.to_user_string(), ""],
+            vec!["attachment", "list"],
+            vec!["attachment", "list", &item.to_user_string(), "extra"],
+            // The destination is required. VLT-PM47 §2.1 removed §14.4's
+            // optional bracket rather than defaulting it from a stored name.
+            vec![
+                "attachment",
+                "export",
+                &item.to_user_string(),
+                &attachment.to_user_string(),
+            ],
+            vec![
+                "attachment",
+                "export",
+                &item.to_user_string(),
+                "not-an-id",
+                "/tmp/out.bin",
+            ],
+            vec!["attachment", "remove", &item.to_user_string(), "x"],
+        ] {
+            assert_eq!(
+                parse(rejected.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{rejected:?} must be refused"
+            );
+        }
+        assert!(USAGE.contains("attachment add ITEM FILE"));
+        assert!(USAGE.contains("attachment list ITEM"));
+        assert!(USAGE.contains("attachment export ITEM ATTACHMENT FILE"));
+    }
+
+    #[test]
+    fn hexadecimal_rendering_is_lowercase_and_fixed_width() {
+        assert_eq!(hex_lower(&[0; 32]), "0".repeat(64));
+        assert_eq!(hex_lower(&[0xff; 32]), "f".repeat(64));
+        let mut mixed = [0_u8; 32];
+        mixed[0] = 0x0a;
+        mixed[31] = 0xb0;
+        let rendered = hex_lower(&mixed);
+        assert_eq!(rendered.len(), 64);
+        assert!(rendered.starts_with("0a"));
+        assert!(rendered.ends_with("b0"));
     }
 }
