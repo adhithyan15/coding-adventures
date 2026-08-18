@@ -1497,9 +1497,14 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
         return Some(raw.to_string());
     }
 
-    // Color setters: hand off to the X4 PascalCasing pass.
+    // Color setters: hand off to the X4 PascalCasing pass. It returns
+    // `None` for CSS-only color forms that have no XAML literal
+    // (`currentColor`), which drops the property rather than emitting a
+    // value the XAML *runtime* rejects with E_XAMLPARSEFAILED. Note the
+    // markup compiler does not validate brush literals, so an
+    // unconvertible color builds cleanly and crashes on launch.
     if is_color_setter(key) {
-        return Some(normalize_xaml_color_value(raw));
+        return normalize_xaml_color_value(raw);
     }
 
     // Length setters: strip CSS `px` units (and reject percentages,
@@ -1646,21 +1651,37 @@ fn is_color_setter(setter: &str) -> bool {
 /// with the WinUI 3 `Microsoft.UI.Colors` set.  Most of them are
 /// identical PascalCased forms (`red`â†’`Red`); a few â€” `darkgray`
 /// vs `DarkGray` â€” also normalise to PascalCase.
-fn normalize_xaml_color_value(s: &str) -> String {
+fn normalize_xaml_color_value(s: &str) -> Option<String> {
     let trimmed = s.trim();
     if trimmed.starts_with('#') {
-        return s.to_string();
+        return Some(s.to_string());
+    }
+    // `rgb()` / `rgba()` are CSS *functions*, not XAML literals. Convert
+    // them to the `#AARRGGBB` form XAML understands rather than passing
+    // the call syntax through (which parses at build time and throws
+    // at runtime).
+    if let Some(hex) = css_rgb_function_to_xaml_hex(trimmed) {
+        return Some(hex);
+    }
+    // `currentColor` is a CSS *cascade* keyword — "whatever the
+    // inherited text color is". XAML has no equivalent: a Brush must
+    // resolve to an actual color, and there is no ambient inherited
+    // value to read at parse time. Drop it and let the element keep its
+    // theme default; inventing a color here would silently diverge from
+    // the authored design.
+    if trimmed.eq_ignore_ascii_case("currentcolor") {
+        return None;
     }
     // `{x:Bind â€¦}` / `{Binding â€¦}` markup extensions or any string with
     // braces â€” keep verbatim.  These aren't color literals.
     if trimmed.starts_with('{') {
-        return s.to_string();
+        return Some(s.to_string());
     }
     // Already PascalCased (or starts with an uppercase letter)?  Treat
     // as XAML-native and pass through.
     let first = trimmed.chars().next();
     if matches!(first, Some(c) if c.is_ascii_uppercase()) {
-        return s.to_string();
+        return Some(s.to_string());
     }
     // All-lowercase identifier â€” PascalCase it.  `transparent` â†’
     // `Transparent`, `red` â†’ `Red`, etc.  We don't gate on a known
@@ -1670,11 +1691,59 @@ fn normalize_xaml_color_value(s: &str) -> String {
     if trimmed.chars().all(|c| c.is_ascii_lowercase()) {
         let mut chars = trimmed.chars();
         match chars.next() {
-            Some(c) => return c.to_ascii_uppercase().to_string() + chars.as_str(),
-            None => return s.to_string(),
+            Some(c) => return Some(c.to_ascii_uppercase().to_string() + chars.as_str()),
+            None => return Some(s.to_string()),
         }
     }
-    s.to_string()
+    Some(s.to_string())
+}
+
+/// Convert a CSS `rgb()` / `rgba()` function call into the `#RRGGBB` /
+/// `#AARRGGBB` literal XAML expects.
+///
+/// XAML brushes accept only hex literals and named colors, so the CSS
+/// call syntax has to be evaluated at emit time. The alpha channel is
+/// CSS's `0.0..=1.0` fraction (commonly written with a leading dot, as
+/// in `rgba(20,17,13,.28)`) and becomes XAML's leading `AA` byte.
+///
+/// Returns `None` for anything that isn't a well-formed 3- or 4-argument
+/// `rgb`/`rgba` call with integer channels in `0..=255`, so malformed
+/// input falls through to the caller's other branches rather than
+/// producing a bogus color.
+fn css_rgb_function_to_xaml_hex(s: &str) -> Option<String> {
+    let lower = s.trim().to_ascii_lowercase();
+    let inner = lower
+        .strip_prefix("rgba(")
+        .or_else(|| lower.strip_prefix("rgb("))?
+        .strip_suffix(')')?;
+
+    let parts: Vec<&str> = inner.split(',').map(str::trim).collect();
+    if parts.len() != 3 && parts.len() != 4 {
+        return None;
+    }
+
+    let mut channels = [0u8; 3];
+    for (slot, raw) in channels.iter_mut().zip(parts.iter()) {
+        *slot = raw.parse::<u16>().ok().filter(|v| *v <= 255)? as u8;
+    }
+
+    let alpha = match parts.get(3) {
+        None => 255u8,
+        Some(raw) => {
+            let fraction = raw.parse::<f64>().ok()?;
+            if !(0.0..=1.0).contains(&fraction) {
+                return None;
+            }
+            // Round rather than truncate so `.28` lands on 71 (0x47),
+            // matching how browsers rasterize the same value.
+            (fraction * 255.0).round() as u8
+        }
+    };
+
+    Some(format!(
+        "#{:02X}{:02X}{:02X}{:02X}",
+        alpha, channels[0], channels[1], channels[2]
+    ))
 }
 
 /// Map a mosstyle CSS property name to its XAML setter property name.
@@ -2718,9 +2787,13 @@ fn emit_text(
             if !is_safe_identifier(&property) {
                 return Err(PipelineEmitError::UnsafeSlotName(property));
             }
+            // A slot-backed accessible name tracks the component's live
+            // prop value, so it must be OneWay. `x:Bind` defaults to
+            // OneTime, which would freeze the announced name at whatever
+            // the slot held when the template was first realized.
             write!(
                 accessibility_attrs,
-                " AutomationProperties.Name=\"{{x:Bind {}}}\"",
+                " AutomationProperties.Name=\"{{x:Bind {}, Mode=OneWay}}\"",
                 ctx.slot_xbind_path(slot)
             )
             .unwrap();
@@ -2746,7 +2819,14 @@ fn emit_text(
             if !is_safe_identifier(&property) {
                 return Err(PipelineEmitError::UnsafeSlotName(property));
             }
-            format!(" Text=\"{{x:Bind {}}}\"", ctx.slot_xbind_path(slot))
+            // Slot-backed text is the component's live prop value and
+            // must be OneWay. `x:Bind`'s default is OneTime, which
+            // renders the value once and never again — the defect that
+            // froze every label in the generated TaskApp.
+            format!(
+                " Text=\"{{x:Bind {}, Mode=OneWay}}\"",
+                ctx.slot_xbind_path(slot)
+            )
         }
         Some(LayoutPropValue::String(s)) => {
             let escaped = escape_xaml_attr(s);
@@ -2768,9 +2848,18 @@ fn emit_text(
         Some(LayoutPropValue::Number(n)) => format!(" Text=\"{n}\""),
         Some(LayoutPropValue::Expr(src)) => {
             // PR-2: route through ExprLowerer.
+            // An expression can read component slots (directly or via a
+            // generated helper), so it must be OneWay for the same
+            // reason as the SlotRef arm above. Row-VM-only expressions
+            // are re-evaluated when the item is rebuilt regardless, so
+            // OneWay is never wrong here — only occasionally redundant.
             match lower_expr_for_xbind(src, ctx) {
-                ExprLowering::Bindable(path) => format!(" Text=\"{{x:Bind {path}}}\""),
-                ExprLowering::Helper(call) => format!(" Text=\"{{x:Bind {call}}}\""),
+                ExprLowering::Bindable(path) => {
+                    format!(" Text=\"{{x:Bind {path}, Mode=OneWay}}\"")
+                }
+                ExprLowering::Helper(call) => {
+                    format!(" Text=\"{{x:Bind {call}, Mode=OneWay}}\"")
+                }
                 ExprLowering::Unsupported(reason) => {
                     return Err(PipelineEmitError::UnsupportedExpression(reason));
                 }
@@ -5137,7 +5226,7 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
              <UseWinUI>true</UseWinUI>\n\
              <EnableMsixTooling>false</EnableMsixTooling>\n\
              <WindowsPackageType>None</WindowsPackageType>\n\
-             <EnableCoreMrtTooling>false</EnableCoreMrtTooling>\n\
+             <EnableCoreMrtTooling>true</EnableCoreMrtTooling>\n\
              <Nullable>enable</Nullable>\n\
              <ImplicitUsings>enable</ImplicitUsings>\n\
              <LangVersion>latest</LangVersion>\n\
@@ -5150,11 +5239,21 @@ fn emit_csproj(_name: &str, options: &EmitOptions) -> String {
                   removed from the default graph. UseRidGraph=true restores\n\
                   support for them. -->\n\
              <UseRidGraph>true</UseRidGraph>\n\
-             <!-- Unpackaged WinUI does not need MrtCore PRI generation or MSIX\n\
-                  packaging targets for this host shell. Keeping them disabled\n\
-                  lets `dotnet build` work on SDK-only machines. -->\n\
-             <AppxGeneratePriEnabled>false</AppxGeneratePriEnabled>\n\
-             <EnableDefaultPriItems>false</EnableDefaultPriItems>\n\
+             <!-- MSIX packaging targets stay OFF above (EnableMsixTooling):\n\
+                  they need the VS-shipped Microsoft.Build.AppxPackage.* tasks,\n\
+                  absent on SDK-only machines — see hello-dialog-xaml\n\
+                  ISSUES.md C1.\n\
+             \n\
+                  PRI generation is a SEPARATE subsystem and must stay ON. The\n\
+                  original C1 mitigation disabled both together, which was too\n\
+                  broad: makepri.exe ships inside the Microsoft.Windows.SDK.BuildTools\n\
+                  package referenced below, so PRI needs no Visual Studio.\n\
+                  Without the app PRI, WinUI cannot resolve\n\
+                  ms-appx:///Microsoft.UI.Xaml/Themes/themeresources.xaml and the\n\
+                  app dies at startup with E_XAMLPARSEFAILED (0x802B000A) — it\n\
+                  builds cleanly and then cannot launch. -->\n\
+             <AppxGeneratePriEnabled>true</AppxGeneratePriEnabled>\n\
+             <EnableDefaultPriItems>true</EnableDefaultPriItems>\n\
            </PropertyGroup>\n\
          \n\
            <ItemGroup>\n\
@@ -9495,7 +9594,7 @@ mod tests {
             },
         );
         let out = compile(&c, &l, &empty_style("Title")).xaml;
-        assert!(out.contains("AutomationProperties.Name=\"{x:Bind SpokenTitle}\""));
+        assert!(out.contains("AutomationProperties.Name=\"{x:Bind SpokenTitle, Mode=OneWay}\""));
         assert!(out.contains("AutomationProperties.HeadingLevel=\"Level2\""));
 
         let hidden = layout_with_root(
@@ -9578,7 +9677,8 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("<TextBlock Text=\"{x:Bind Greeting}\""),
+            r.xaml
+                .contains("<TextBlock Text=\"{x:Bind Greeting, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -9604,7 +9704,7 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
-        assert!(r.xaml.contains("{x:Bind DisplayName}"));
+        assert!(r.xaml.contains("{x:Bind DisplayName, Mode=OneWay}"));
     }
 
     #[test]
@@ -11862,7 +11962,7 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Grid"));
         assert!(
-            r.xaml.contains("Text=\"{x:Bind Owner.Title}\""),
+            r.xaml.contains("Text=\"{x:Bind Owner.Title, Mode=OneWay}\""),
             "component slots inside a typed template must route through Owner:\n{}",
             r.xaml
         );
@@ -12361,6 +12461,56 @@ mod tests {
         assert!(r.xaml.contains("Padding=\"8\""), "got:\n{}", r.xaml);
     }
 
+    /// CSS `rgb()`/`rgba()` are function calls, not XAML literals. They
+    /// must be evaluated at emit time into `#AARRGGBB`, because the XAML
+    /// markup compiler does NOT validate brush literals — an
+    /// unconverted value builds cleanly and then throws
+    /// E_XAMLPARSEFAILED when the runtime loads the page.
+    #[test]
+    fn css_rgb_functions_convert_to_xaml_hex() {
+        // Opaque 3-arg form gets a fully opaque alpha byte.
+        assert_eq!(
+            css_rgb_function_to_xaml_hex("rgb(20,17,13)").as_deref(),
+            Some("#FF14110D")
+        );
+        // 4-arg form with CSS's leading-dot fraction: .28 * 255 = 71.4 â†’ 0x47.
+        assert_eq!(
+            css_rgb_function_to_xaml_hex("rgba(20,17,13,.28)").as_deref(),
+            Some("#4714110D")
+        );
+        assert_eq!(
+            css_rgb_function_to_xaml_hex("rgba(255, 255, 255, 1)").as_deref(),
+            Some("#FFFFFFFF")
+        );
+        // Malformed / out-of-range input falls through rather than
+        // producing a bogus color.
+        assert_eq!(css_rgb_function_to_xaml_hex("rgb(300,0,0)"), None);
+        assert_eq!(css_rgb_function_to_xaml_hex("rgba(1,2,3,9)"), None);
+        assert_eq!(css_rgb_function_to_xaml_hex("#ffffff"), None);
+    }
+
+    /// `currentColor` is a CSS cascade keyword with no XAML equivalent,
+    /// so the color normalizer drops the property instead of emitting a
+    /// literal the runtime rejects.
+    #[test]
+    fn current_color_is_dropped_not_emitted() {
+        assert_eq!(normalize_xaml_color_value("currentColor"), None);
+        assert_eq!(normalize_xaml_color_value("currentcolor"), None);
+        // Ordinary values still normalize as before.
+        assert_eq!(
+            normalize_xaml_color_value("transparent").as_deref(),
+            Some("Transparent")
+        );
+        assert_eq!(
+            normalize_xaml_color_value("#1e1e1e").as_deref(),
+            Some("#1e1e1e")
+        );
+        assert_eq!(
+            normalize_xaml_color_value("rgba(20,17,13,.28)").as_deref(),
+            Some("#4714110D")
+        );
+    }
+
     // â”€â”€ unused-flag placeholders â”€â”€
 
     /// `EmitOptions::emit_project = false` (default) â†’ `project` is
@@ -12394,8 +12544,15 @@ mod tests {
         assert!(p
             .csproj
             .contains("<WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>"));
-        assert!(p.csproj.contains("AppxGeneratePriEnabled>false"));
-        assert!(p.csproj.contains("EnableCoreMrtTooling>false"));
+        // PRI generation must be ON — makepri.exe comes from the
+        // Microsoft.Windows.SDK.BuildTools package reference, and
+        // without an app PRI the built app cannot resolve WinUI's
+        // themeresources and dies at startup. MSIX tooling stays off
+        // separately (that is the part which needs Visual Studio).
+        assert!(p.csproj.contains("AppxGeneratePriEnabled>true"));
+        assert!(p.csproj.contains("EnableDefaultPriItems>true"));
+        assert!(p.csproj.contains("EnableCoreMrtTooling>true"));
+        assert!(p.csproj.contains("EnableMsixTooling>false"));
         assert!(p.csproj.contains("UseRidGraph>true"));
         assert!(p.csproj.contains("FlattenNativeRuntimeDlls"));
         assert!(p.csproj.contains("CopyMosaicNativeHostLibraries"));
