@@ -215,6 +215,16 @@ mod tests {
     }
 
     #[test]
+    fn i64_min_divided_by_neg_one_rejected_not_panicking() {
+        // Regression: plain `a % b`/`a / b` on i64 panics (in every build
+        // profile) for exactly this case. i64::MIN is reachable here via
+        // checked_sub without ever tripping an overflow error
+        // (`-9223372036854775807 - 1` is in-range), so this must return a
+        // clean Err rather than crash the compiler on adversarial input.
+        assert!(compile_source("(-9223372036854775807 - 1) / -1$", "t").is_err());
+    }
+
+    #[test]
     fn function_definition_rejected() {
         assert!(compile_source("f(x) := x + 1$", "t").is_err());
     }

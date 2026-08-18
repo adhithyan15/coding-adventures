@@ -398,14 +398,29 @@ impl Lowerer {
             }
             return match (lhs.literal, rhs.literal) {
                 (Some(_), Some(0)) => Err(self.err_at(node, "division by zero".to_string())),
-                (Some(a), Some(b)) if a % b == 0 => {
+                // `a % b`/`a / b` on plain `i64` panic (in every build
+                // profile, not just debug) for the single case
+                // `i64::MIN % -1` / `i64::MIN / -1` — and `i64::MIN` is
+                // reachable here without any overflow ever being reported,
+                // via checked_sub in the ADD/SUB/MUL arm below (e.g.
+                // `-9223372036854775807 - 1`). `checked_rem`/`checked_div`
+                // both return `None` for that case, so it falls through to
+                // the same "non-literal/unverifiable" rejection as any
+                // other division this v0 slice can't safely evaluate,
+                // rather than crashing the compiler on adversarial input.
+                (Some(a), Some(b)) if a.checked_rem(b) == Some(0) => {
                     let reg = self.emit_builtin("/", &[lhs.reg.as_str(), rhs.reg.as_str()], "i64");
-                    Ok(Lowered { reg, concrete: true, literal: Some(a / b) })
+                    Ok(Lowered { reg, concrete: true, literal: a.checked_div(b) })
                 }
-                (Some(_), Some(_)) => Err(self.err_at(
+                (Some(a), Some(b)) if a.checked_rem(b).is_some() => Err(self.err_at(
                     node,
                     "this division does not divide evenly; the exact result would be a Rational, \
                      which is not representable in v0 (see macsyma-iir-vm.md \u{a7}3/\u{a7}6)"
+                        .to_string(),
+                )),
+                (Some(_), Some(_)) => Err(self.err_at(
+                    node,
+                    "this division cannot be evaluated in v0 (i64::MIN / -1 is not representable)"
                         .to_string(),
                 )),
                 _ => Err(self.err_at(
