@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4f0ac653117531c5",
+  "sourceHash": "fnv1a64:fd7b0f9f9dacad8e",
   "summary": {
     "totalLessons": 3070,
     "voice": 2161,
@@ -49242,7 +49242,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:01a9d848c5acbb2f"
+      "sourceHash": "fnv1a64:953e87b3df5651af"
     },
     {
       "id": "RU-C02-ochen-priyatno",
@@ -49497,7 +49497,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cda6615170c3f19a"
+      "sourceHash": "fnv1a64:b3f937939c7db162"
     },
     {
       "id": "RU-C05-sprashivat",
@@ -49683,7 +49683,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:adc14663fd5e418d"
+      "sourceHash": "fnv1a64:8b86380bc8f593e7"
     },
     {
       "id": "RU-C07-sestra",
@@ -49701,7 +49701,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7bb2afa35ab80406"
+      "sourceHash": "fnv1a64:92abfa643c1d6c0c"
     },
     {
       "id": "RU-C08-semya",
@@ -49938,7 +49938,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ec96d9b13421a7d1"
+      "sourceHash": "fnv1a64:546f4d0fc49f83d9"
     },
     {
       "id": "RU-C12-papa",
@@ -50028,7 +50028,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6a0dd3d7e96613ef"
+      "sourceHash": "fnv1a64:727d159efe18e5df"
     },
     {
       "id": "RU-C13-sok",
@@ -50064,7 +50064,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7f57478fc076953b"
+      "sourceHash": "fnv1a64:094d82b7f6aa3c65"
     },
     {
       "id": "RU-W06-u",

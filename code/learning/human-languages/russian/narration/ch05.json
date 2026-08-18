@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "Taking, Asking, Helping, Loving",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:88e8486d0c691191",
+  "sourceHash": "fnv1a64:48c27977fdd918fe",
   "lessons": [
     {
       "id": "RU-C05-brat",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cda6615170c3f19a",
+      "sourceHash": "fnv1a64:b3f937939c7db162",
       "notice": null,
       "blocks": [
         {
@@ -66,7 +66,7 @@
             },
             {
               "kind": "speech",
-              "text": "Я читаю. Я пишу. Я беру."
+              "text": "Я читаю. Я пишу. Я беру. — ya chitáyu, ya pishú, ya berú."
             }
           ]
         },
@@ -131,11 +131,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Я читаю. Я пишу. Я беру.\"",
+              "instruction": "\"Я читаю. Я пишу. Я беру.\" — ya chitáyu, ya pishú, ya berú",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Я читаю. Я пишу. Я беру.\"]"
+              "source": "[YOU SAY: \"Я читаю. Я пишу. Я беру.\" — *ya chitáyu, ya pishú, ya berú*]"
             },
             {
               "kind": "prompt",

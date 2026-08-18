@@ -52,7 +52,7 @@ arrives. Then **ты берёшь**, so this verb sits in the *знать* famil
 
 Three sentences, all ordinary Russian:
 
-> **Я читаю. Я пишу. Я беру.**
+> **Я читаю. Я пишу. Я беру.** — *ya chitáyu, ya pishú, ya berú.*
 
 ## Grammar Lens: a pair with nothing in common
 <!-- hl-knowledge: introduces=[RU-GRAMMAR-SUPPLETIVE-ASPECT-PAIR]; assesses=[RU-GRAMMAR-ASPECT-PARTNER, RU-LEX-IDTI, RU-ETYMON-IDTI-GO-WENT, RU-LEX-PONIMAT, RU-ETYMON-PONIMAT-TAKE-HOLD] -->
@@ -91,7 +91,7 @@ roots that all begin **bʰ** — a family accent, not a shared word.
 
 [PAUSE 1s]
 - [YOU SAY: "брать" then "я беру" — hear the stem grow its vowel]
-- [YOU SAY: "Я читаю. Я пишу. Я беру."]
+- [YOU SAY: "Я читаю. Я пишу. Я беру." — *ya chitáyu, ya pishú, ya berú*]
 - [YOU SAY: the odd pair — "брать … взять", two words sharing nothing]
 - [YOU SAY: the other suppletion — "идти … шёл", "go … went"]
 - [YOU SAY: "брать" then English "bear, birth, burden, transfer, metaphor"]

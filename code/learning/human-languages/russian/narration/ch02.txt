@@ -223,7 +223,7 @@ Give the three words the chapter opened with: I, familiar you, formal you. (Я, 
 
 The exchange.
 Two strangers meet. Say both voices aloud, one after the other:
-— Здравствуйте! — Как вас зовут? — Меня зовут Анна. А вас? — Меня зовут Иван. Очень приятно.
+— Здравствуйте! — Zdrávstvuyte! — Как вас зовут? — Kak vas zovút? — Меня зовут Анна. А вас? — Menyá zovút Anna. A vas? — Меня зовут Иван. Очень приятно. — Menyá zovút Iván. Óchen priyátno.
 Everything in it is formal, because вы is the safe opening with an adult you do not know.
 
 Grammar Lens: what moves when the exchange goes informal.

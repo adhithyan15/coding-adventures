@@ -4,7 +4,7 @@
   "chapter": 12,
   "title": "Mother and Father",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:24208299442caa4a",
+  "sourceHash": "fnv1a64:ef74b1d87089fc19",
   "lessons": [
     {
       "id": "RU-C12-mama",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ec96d9b13421a7d1",
+      "sourceHash": "fnv1a64:546f4d0fc49f83d9",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say good night, say see-you-later, and now a new chapter — back to семья to fill it in, one person at a time, starting with a word that looks like a cousin of English and, on close inspection, is not really one at all."
+              "text": "Say good night, say see-you-later, and now a new chapter — back to семья (sem'yá) to fill it in, one person at a time, starting with a word that looks like a cousin of English and, on close inspection, is not really one at all."
             }
           ]
         },

@@ -7592,7 +7592,7 @@
     {
       "language": "russian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:f359c6016f6ba24e",
+      "sourceHash": "fnv1a64:8253ed9209494389",
       "lessonIds": [
         "RU-C02-ya",
         "RU-C02-ty-vy",
@@ -7609,8 +7609,8 @@
       "drivablePrefix": 8,
       "text": "russian/narration/ch02.txt",
       "json": "russian/narration/ch02.json",
-      "textHash": "fnv1a64:0499c10826367013",
-      "jsonHash": "fnv1a64:8de1c3f0c415a345"
+      "textHash": "fnv1a64:231b0451122c8000",
+      "jsonHash": "fnv1a64:9f7f1b7a28c4494c"
     },
     {
       "language": "russian",
@@ -7651,7 +7651,7 @@
     {
       "language": "russian",
       "chapter": 5,
-      "sourceHash": "fnv1a64:88e8486d0c691191",
+      "sourceHash": "fnv1a64:48c27977fdd918fe",
       "lessonIds": [
         "RU-C05-brat",
         "RU-C05-sprashivat",
@@ -7662,8 +7662,8 @@
       "drivablePrefix": 4,
       "text": "russian/narration/ch05.txt",
       "json": "russian/narration/ch05.json",
-      "textHash": "fnv1a64:e3357c5d94bc1996",
-      "jsonHash": "fnv1a64:73d2df65ad99c392"
+      "textHash": "fnv1a64:b4a3dd6676ba148c",
+      "jsonHash": "fnv1a64:bf4410dac8203265"
     },
     {
       "language": "russian",
@@ -7685,7 +7685,7 @@
     {
       "language": "russian",
       "chapter": 7,
-      "sourceHash": "fnv1a64:d465fe6d8a8f0a04",
+      "sourceHash": "fnv1a64:9c5167bf6ccca64a",
       "lessonIds": [
         "RU-C07-drug",
         "RU-C07-podruga",
@@ -7696,8 +7696,8 @@
       "drivablePrefix": 4,
       "text": "russian/narration/ch07.txt",
       "json": "russian/narration/ch07.json",
-      "textHash": "fnv1a64:c35c7f394452280a",
-      "jsonHash": "fnv1a64:e1629f7dbdd58140"
+      "textHash": "fnv1a64:bbfb9bc97611ca2f",
+      "jsonHash": "fnv1a64:22491f205ad07cce"
     },
     {
       "language": "russian",
@@ -7766,7 +7766,7 @@
     {
       "language": "russian",
       "chapter": 12,
-      "sourceHash": "fnv1a64:24208299442caa4a",
+      "sourceHash": "fnv1a64:ef74b1d87089fc19",
       "lessonIds": [
         "RU-C12-mama",
         "RU-C12-papa",
@@ -7777,13 +7777,13 @@
       "drivablePrefix": 4,
       "text": "russian/narration/ch12.txt",
       "json": "russian/narration/ch12.json",
-      "textHash": "fnv1a64:01fb048272f36dc5",
-      "jsonHash": "fnv1a64:266cae639390b4d7"
+      "textHash": "fnv1a64:a2f2020759a9e003",
+      "jsonHash": "fnv1a64:484c0d4fef296d08"
     },
     {
       "language": "russian",
       "chapter": 13,
-      "sourceHash": "fnv1a64:1cd466b23489a474",
+      "sourceHash": "fnv1a64:be60dc97d0b76136",
       "lessonIds": [
         "RU-C13-moloko",
         "RU-C13-syr",
@@ -7794,8 +7794,8 @@
       "drivablePrefix": 1,
       "text": "russian/narration/ch13.txt",
       "json": "russian/narration/ch13.json",
-      "textHash": "fnv1a64:16920cd652723f1b",
-      "jsonHash": "fnv1a64:d6590dbc47e4f2df"
+      "textHash": "fnv1a64:7166c40b7c4e2106",
+      "jsonHash": "fnv1a64:781792177b4209d9"
     },
     {
       "language": "russian",
