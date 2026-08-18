@@ -93,9 +93,19 @@ func (s *Server) compile(c Component, backend string, outputPath string) error {
 //
 // A three-file component may legitimately have no stylesheet, in which case
 // --style is omitted and the backend applies its own defaults.
+// Argument injection is the risk to keep in mind here. Go's exec uses no
+// shell, so there is no shell injection — but every path in the argv comes
+// from a filename in the scanned tree, and a filename can itself look like a
+// flag. A top-level file named `--output=pwned.html.mosaic` yields a relative
+// source path of exactly that, which mosaic-compile's parser reads as a
+// second --output and honours over the real one.
+//
+// Two defences: three-file component names are constrained to identifiers at
+// discovery (validComponentBase), and the legacy positional source is placed
+// after a `--` end-of-options separator so it can never be read as a flag.
 func compilerArgs(c Component, backend string, outputPath string) []string {
 	if !c.isThreeFile() {
-		return []string{"--backend", backend, "--output", outputPath, c.SourcePath}
+		return []string{"--backend", backend, "--output", outputPath, "--", c.SourcePath}
 	}
 
 	args := []string{

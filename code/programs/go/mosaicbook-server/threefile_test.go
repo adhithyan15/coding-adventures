@@ -9,6 +9,7 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
@@ -163,6 +164,40 @@ func TestDiscoverThreeFile_NoManifestIsNotAnError(t *testing.T) {
 	}
 }
 
+// Regression: --root is frequently relative (it defaults to "."), while
+// findPackageManifest builds absolute candidates. filepath.Rel errors when
+// one side is relative and the other absolute, which silently broke manifest
+// discovery for every component. Every other test here uses t.TempDir(),
+// which is absolute, so this case had no coverage.
+func TestDiscoverThreeFile_WorksFromRelativeRoot(t *testing.T) {
+	dir := t.TempDir()
+	mustWrite(t, filepath.Join(dir, "mosaic-package.toml"), "[package]\nname = \"demo\"\n")
+	writeThreeFileComponent(t, dir, "Button", ".light.msl")
+
+	wd, err := os.Getwd()
+	if err != nil {
+		t.Fatalf("getwd: %v", err)
+	}
+	if err := os.Chdir(dir); err != nil {
+		t.Fatalf("chdir: %v", err)
+	}
+	t.Cleanup(func() { _ = os.Chdir(wd) })
+
+	comps, err := discoverComponents(".")
+	if err != nil {
+		t.Fatalf("discoverComponents: %v", err)
+	}
+	if len(comps) != 1 {
+		t.Fatalf("expected 1 component, got %d", len(comps))
+	}
+	if comps[0].ManifestPath == "" {
+		t.Error("ManifestPath: empty when discovering from a relative root")
+	}
+	if comps[0].StylePath == "" {
+		t.Error("StylePath: empty when discovering from a relative root")
+	}
+}
+
 // ── Compiler invocation form ──────────────────────────────────────────────
 
 func TestCompilerArgs_ThreeFileFormPassesManifest(t *testing.T) {
@@ -199,12 +234,96 @@ func TestCompilerArgs_OmitsStyleWhenAbsent(t *testing.T) {
 }
 
 // The legacy single-file form must keep working — nothing uses it in this
-// repo today, but removing it is a separate decision.
+// repo today, but removing it is a separate decision. The `--` separator
+// stops a filename such as `--output=pwned.html.mosaic` from being parsed as
+// a flag by the compiler.
 func TestCompilerArgs_LegacySingleFileForm(t *testing.T) {
 	c := Component{SourcePath: "Button.mosaic"}
 	got := strings.Join(compilerArgs(c, "html", "out.html"), " ")
-	want := "--backend html --output out.html Button.mosaic"
+	want := "--backend html --output out.html -- Button.mosaic"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+// ── Hardening ─────────────────────────────────────────────────────────────
+
+// A component name is interpolated into an executing script block by the
+// react/webcomponent preview wrappers, so filenames that are not plain
+// identifiers must never become components.
+// The dangerous names are checked against the predicate directly rather than
+// on disk: Windows refuses to create a file containing `|`, `<` or `"`, so a
+// filesystem-only test would silently skip the most important cases.
+func TestValidComponentBase_RejectsInjectionPayloads(t *testing.T) {
+	for _, base := range []string{
+		`alert(document.domain)||X`, // script injection into the react wrapper
+		`--output=pwned.html`,       // argument injection into the compiler
+		`X"></script><script>y`,     // markup break-out in the webcomponent wrapper
+		`X, null)); alert(1); //`,   // argument break-out in React.createElement
+		`../../etc/passwd`,
+		`Has Space`,
+		`has-dash`,
+		`9Leading`,
+		``,
+	} {
+		if validComponentBase.MatchString(base) {
+			t.Errorf("base %q was accepted; expected rejection", base)
+		}
+	}
+}
+
+func TestDiscoverThreeFile_RejectsNonIdentifierNames(t *testing.T) {
+	// Only names the filesystem will actually accept on every OS.
+	for _, base := range []string{
+		"Has Space",
+		"has-dash",
+		"9Leading",
+	} {
+		dir := t.TempDir()
+		writeThreeFileComponent(t, dir, base, ".light.msl")
+
+		comps, err := discoverComponents(dir)
+		if err != nil {
+			t.Fatalf("discoverComponents(%q): %v", base, err)
+		}
+		if len(comps) != 0 {
+			t.Errorf("base %q: expected rejection, got %d component(s)", base, len(comps))
+		}
+	}
+}
+
+func TestDiscoverThreeFile_AcceptsIdentifierNames(t *testing.T) {
+	for _, base := range []string{"Button", "ButtonGroup", "Input2", "a_b"} {
+		dir := t.TempDir()
+		writeThreeFileComponent(t, dir, base, ".light.msl")
+
+		comps, err := discoverComponents(dir)
+		if err != nil {
+			t.Fatalf("discoverComponents(%q): %v", base, err)
+		}
+		if len(comps) != 1 {
+			t.Errorf("base %q: expected 1 component, got %d", base, len(comps))
+		}
+	}
+}
+
+// The absolute filesystem paths used to drive the compiler must not be
+// serialised into GET /api/stories — they leak the OS username and the
+// server's directory layout to anything that can reach the port.
+func TestComponentJSON_OmitsAbsolutePaths(t *testing.T) {
+	c := Component{
+		ID:            "Button",
+		Title:         "Button",
+		InterfacePath: "/home/someone/secret/Button.mil",
+		LayoutPath:    "/home/someone/secret/Button.mll",
+		StylePath:     "/home/someone/secret/Button.light.msl",
+		ManifestPath:  "/home/someone/secret/mosaic-package.toml",
+	}
+	blob, err := json.Marshal(c)
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	if strings.Contains(string(blob), "/home/someone") {
+		t.Errorf("absolute paths leaked into JSON: %s", blob)
 	}
 }
