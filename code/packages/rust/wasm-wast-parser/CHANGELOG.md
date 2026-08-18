@@ -1,5 +1,23 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.34 — 2026-08-18 — SIMD: i16x8-from-i8x16 widening text-form (task #147-149)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover `i16x8`'s own widening family:
+  `i16x8.extadd_pairwise_i8x16_s`/`_u`/`extmul_low`/
+  `high_i8x16_s`/`_u` -- same "no immediate beyond the opcode byte
+  itself" shape every prior SIMD op in this family has, so no new
+  parsing logic, just a wider match-arm pattern list. Verified via a
+  dedicated test asserting the real single-byte LEB128-encoded
+  sub-opcode bytes for `extadd_pairwise_i8x16_s`/`_u` (`[0xFD, 0x7C]`,
+  `[0xFD, 0x7D]` -- both < 128) and the 2-byte LEB128 bytes for
+  `extmul_low`/`high_i8x16_s`/`_u` (`[0xFD, 0x9C, 0x01]` through
+  `[0xFD, 0x9F, 0x01]` -- all >= 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.33 — 2026-08-18 — SIMD: i16x8 abs/min/max/avgr_u text-form (task #144-146)
 
 ### Added

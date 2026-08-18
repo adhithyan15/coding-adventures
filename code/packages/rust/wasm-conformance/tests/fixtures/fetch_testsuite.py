@@ -306,6 +306,19 @@ TESTSUITE_FILES = [
     # already-implemented i16x8.neg/add/sub/mul entries (all four
     # matched exactly), same discipline as every prior addition.
     "simd_i16x8_arith2.wast",
+    # SIMD widen PR10 (task #147-149): simd_i16x8_extadd_pairwise_i8x16.
+    # wast/simd_i16x8_extmul_i8x16.wast -- i16x8-from-i8x16 widening
+    # family (extadd_pairwise_i8x16_s/u, extmul_low/high_i8x16_s/u),
+    # mirroring the already-implemented i32x4-from-i16x8 widening
+    # family one lane width down. No i16x8.dot_i8x16_s -- WASM SIMD
+    # does not define a dot-product for this pair. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against
+    # the already-implemented i8x16.add/i16x8.mul/i16x8.avgr_u/
+    # i32x4.dot_i16x8_s/i8x16.popcnt/i32x4.extadd_pairwise_i16x8_s
+    # entries (all six matched exactly), same discipline as every
+    # prior addition.
+    "simd_i16x8_extadd_pairwise_i8x16.wast",
+    "simd_i16x8_extmul_i8x16.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
