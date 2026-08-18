@@ -298,6 +298,14 @@ TESTSUITE_FILES = [
     # entries (all three matched exactly), same discipline as every
     # prior addition.
     "simd_i8x16_arith2.wast",
+    # SIMD widen PR9 (task #144-146): simd_i16x8_arith2.wast -- i16x8's
+    # own abs/min_s/min_u/max_s/max_u/avgr_u family, closing the same
+    # "arith2" gap PR8 just closed for i8x16 (no i16x8.popcnt -- WASM
+    # SIMD only defines popcnt for i8x16). Each sub-opcode byte fetched
+    # live from BinarySIMD.md and cross-checked against the
+    # already-implemented i16x8.neg/add/sub/mul entries (all four
+    # matched exactly), same discipline as every prior addition.
+    "simd_i16x8_arith2.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

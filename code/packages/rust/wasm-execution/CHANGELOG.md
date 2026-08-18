@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.21] - 2026-08-18 (task #144-146 — SIMD: i16x8 abs/min/max/avgr_u family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for `i16x8`'s own
+  "arith2" family: `AbsI16x8` (UNARY, same shape as `i16x8.neg`/
+  `i8x16.abs`) and `MinSI16x8 | MinUI16x8 | MaxSI16x8 | MaxUI16x8 |
+  AvgrUI16x8` (BINARY, same shape as `i8x16`'s own `min_s`/`min_u`/
+  `max_s`/`max_u`/`avgr_u`, just at `i16x8`'s wider lane width). `abs`
+  uses the same two's-complement wrapping discipline `i8x16.abs`'s own
+  test already established (`i16::MIN.wrapping_abs() == i16::MIN`).
+  `avgr_u` computes `(a + b + 1) >> 1` widened to `u32` so the `+1`
+  cannot overflow the lane width. Verified with a dedicated test
+  proving `avgr_u(0xFFFF, 0)` rounds UP to `32768`, not down to
+  `32767` -- the one case that would silently hide a missing `+1`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.20] - 2026-08-18 (task #141-143 — SIMD: i8x16 abs/popcnt/min/max/avgr_u family)
 
 ### Added

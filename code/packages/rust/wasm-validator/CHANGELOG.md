@@ -2,6 +2,19 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.23] - 2026-08-18 (task #144-146 — SIMD: i16x8 abs/min/max/avgr_u type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i16x8`'s own "arith2"
+  family: the pop-two-push-one binary arm extended to also cover
+  `MinSI16x8 | MinUI16x8 | MaxSI16x8 | MaxUI16x8 | AvgrUI16x8`; the
+  pop-one-push-one unary arm extended to also cover `AbsI16x8`. Both
+  stay `v128`-in/`v128`-out at the type level regardless of the
+  narrower `i16` lane interpretation the interpreter uses internally.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.22] - 2026-08-18 (task #141-143 — SIMD: i8x16 abs/popcnt/min/max/avgr_u type rules)
 
 ### Added

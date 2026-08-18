@@ -5154,6 +5154,66 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::AbsI16x8 => {
+                // i16x8.abs: UNARY, same shape as `i16x8.neg`/`i8x16.abs`
+                // -- pops exactly ONE v128, takes the absolute value of
+                // each of the 8 `i16` lanes, pushes one.
+                // `i16::MIN.wrapping_abs() == i16::MIN` is the same
+                // two's-complement wrapping edge case `i8x16.abs`'s own
+                // test already established.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let v = i16::from_le_bytes(bytes[i * 2..i * 2 + 2].try_into().unwrap());
+                    let out = v.wrapping_abs();
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::MinSI16x8 | SimdOpKind::MinUI16x8 | SimdOpKind::MaxSI16x8 | SimdOpKind::MaxUI16x8 | SimdOpKind::AvgrUI16x8 => {
+                // i16x8.min_s/min_u/max_s/max_u: BINARY, same shape as
+                // `i8x16`'s own `min_s`/`min_u`/`max_s`/`max_u`, just at
+                // `i16x8`'s wider lane width. `avgr_u`: BINARY unsigned
+                // rounding average, `(a + b + 1) >> 1` -- computed
+                // widened to `u32` so the `+1` cannot overflow the lane
+                // width, then narrowed back. Same convention as
+                // `i8x16.avgr_u`.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let lhs_lane = u16::from_le_bytes(lhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let rhs_lane = u16::from_le_bytes(rhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let l = lhs_lane as i16;
+                    let r = rhs_lane as i16;
+                    let out = match op.kind {
+                        SimdOpKind::MinSI16x8 => l.min(r),
+                        SimdOpKind::MinUI16x8 => lhs_lane.min(rhs_lane) as i16,
+                        SimdOpKind::MaxSI16x8 => l.max(r),
+                        SimdOpKind::MaxUI16x8 => lhs_lane.max(rhs_lane) as i16,
+                        SimdOpKind::AvgrUI16x8 => (((lhs_lane as u32) + (rhs_lane as u32) + 1) >> 1) as i16,
+                        _ => unreachable!("only MinS/MinU/MaxS/MaxU/AvgrU I16x8 reach this arm"),
+                    };
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8689,6 +8749,75 @@ mod tests {
         let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
         // (0xFF + 0 + 1) >> 1 == 0x100 >> 1 == 0x80 == 128, which as i8 is -128.
         assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i8x16([-128; 16]).try_into().unwrap())), "avgr_u(0xFF, 0) must round UP to 128 (0x80), not truncate to 127");
+    }
+
+    /// `i16x8.abs`: same two's-complement wrapping edge case
+    /// `i8x16.abs`'s own test already established -- `i16::MIN`
+    /// (`-32768`) has no positive counterpart in `i16`, so `abs` wraps
+    /// back to `i16::MIN` instead of panicking or overflowing.
+    #[test]
+    fn i16x8_abs_wraps_i16_min_instead_of_panicking() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8([i16::MIN; 8]));
+        code.extend([0xFD, 0x80, 0x01]); // i16x8.abs (sub-opcode 0x80, 2-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([i16::MIN; 8]).try_into().unwrap())), "i16::MIN.abs() must wrap back to i16::MIN, not panic");
+    }
+
+    /// `i16x8.min_s`/`min_u`/`max_s`/`max_u`: same signed/unsigned
+    /// disagreement pattern as `i8x16`'s own test -- `-1` reinterpreted
+    /// as `u16` is `0xFFFF`, the LARGEST unsigned value, so
+    /// `min_s(-1, 1) == -1` but `min_u(-1, 1) == 1` (and symmetrically
+    /// for `max`).
+    #[test]
+    fn i16x8_min_max_disagree_on_signed_vs_unsigned_interpretation() {
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8([-1; 8]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i16x8([1; 8]));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0x96-0x99 are >= 128 -- 2-byte LEB128
+            code.push(0x01);
+            code.push(0x0B);
+            code
+        };
+        let mut min_s_engine = simd_engine_returning_v128(code_for(0x96)); // i16x8.min_s
+        let (_, min_s_bytes) = min_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(min_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([-1; 8]).try_into().unwrap())), "min_s(-1, 1) must be -1 (signed: -1 < 1)");
+
+        let mut min_u_engine = simd_engine_returning_v128(code_for(0x97)); // i16x8.min_u
+        let (_, min_u_bytes) = min_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(min_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([1; 8]).try_into().unwrap())), "min_u(0xFFFF, 1) must be 1 (unsigned: 0xFFFF > 1)");
+
+        let mut max_s_engine = simd_engine_returning_v128(code_for(0x98)); // i16x8.max_s
+        let (_, max_s_bytes) = max_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(max_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([1; 8]).try_into().unwrap())), "max_s(-1, 1) must be 1 (signed: 1 > -1)");
+
+        let mut max_u_engine = simd_engine_returning_v128(code_for(0x99)); // i16x8.max_u
+        let (_, max_u_bytes) = max_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(max_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([-1; 8]).try_into().unwrap())), "max_u(0xFFFF, 1) must be 0xFFFF (unsigned: 0xFFFF > 1)");
+    }
+
+    /// `i16x8.avgr_u`: unsigned ROUNDING average, `(a + b + 1) >> 1` --
+    /// distinct from a plain truncating average. `avgr_u(0xFFFF, 0) ==
+    /// 32768`, not `32767`, because the `+1` rounds up before the
+    /// shift; this is the one case that would silently hide a missing
+    /// `+1`.
+    #[test]
+    fn i16x8_avgr_u_rounds_up_not_truncates() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8([-1; 8])); // 0xFFFF as u16
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i16x8([0; 8]));
+        code.extend([0xFD, 0x9B, 0x01]); // i16x8.avgr_u (sub-opcode 0x9B, 2-byte LEB128)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        // (0xFFFF + 0 + 1) >> 1 == 0x10000 >> 1 == 0x8000 == 32768, which as i16 is -32768.
+        assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([i16::MIN; 8]).try_into().unwrap())), "avgr_u(0xFFFF, 0) must round UP to 32768 (0x8000), not truncate to 32767");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve

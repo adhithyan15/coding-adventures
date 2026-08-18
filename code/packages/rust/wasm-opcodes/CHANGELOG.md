@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.14] - 2026-08-18 - SIMD: i16x8 abs/min/max/avgr_u family (task #144-146)
+
+### Added
+
+- 6 new `SIMD_OPS` entries -- `i16x8`'s own "arith2" family, closing
+  the same gap PR8 (task #141-143) just closed for `i8x16` (no
+  `i16x8.popcnt` -- WASM SIMD only defines `popcnt` for `i8x16`):
+  `i16x8.abs` (`0x80`), `min_s` (`0x96`), `min_u` (`0x97`), `max_s`
+  (`0x98`), `max_u` (`0x99`), `avgr_u` (`0x9B`) -- 69 SIMD opcodes
+  total, up from 63. All six sub-opcodes are >= 128 (2-byte LEB128),
+  same shape as `i16x8`'s own `add`/`sub`/`mul`/`neg`, unlike
+  `i8x16`'s own arith2 family (all < 128). Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against the already-implemented `i16x8.neg`
+  (`0x81`)/`add` (`0x8E`)/`sub` (`0x91`)/`mul` (`0x95`) entries (all
+  four matched exactly).
+- `SimdOpKind::AbsI16x8`/`MinSI16x8`/`MinUI16x8`/`MaxSI16x8`/
+  `MaxUI16x8`/`AvgrUI16x8`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_i16x8_arith2.wast` corpus file this widening unblocks.
+
 ## [0.2.13] - 2026-08-18 - SIMD: i8x16 abs/popcnt/min/max/avgr_u family (task #141-143)
 
 ### Added
