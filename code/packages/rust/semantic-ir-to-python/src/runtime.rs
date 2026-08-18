@@ -91,6 +91,35 @@ pub const RUNTIME_RANGE: &str = r##"# ── SIR range runtime (imported from co
 from coding_adventures_sir_runtime_range import range as _sir_range
 "##;
 
+/// The SIR22 array/matrix-runtime import header, appended **only** when a
+/// module declares `Feature::NDArrays`/`MatrixOps`/`ArrayColumnMajor` (an
+/// `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
+/// expression or an `IndexSet` statement).  Unlike every other runtime
+/// import in this file, this one follows the TypeScript backend's
+/// *imported-package* model rather than this backend's usual inline-runtime
+/// convention — see the SIR22 spec's "Backend impact" section for why
+/// Python follows TypeScript here (both target ecosystems with a real
+/// package manager, unlike C/Go/Rust/Ruby's inlined-port model). Each
+/// helper keeps the emitter's `_sir_array_*` name; see
+/// `code/packages/python/sir-runtime-array`'s own README/CHANGELOG for the
+/// full API and design notes (column-major storage, native int/float
+/// propagation instead of JS's forced-double storage, NaN-safe AND-form
+/// bounds checks, DoS-safe shape validation before allocation).
+pub const RUNTIME_ARRAY: &str = r##"# ── SIR array/matrix runtime (imported from coding-adventures-sir-runtime-array) ──
+from coding_adventures_sir_runtime_array import (
+    from_rows as _sir_array_from_rows,
+    range as _sir_array_range,
+    matmul as _sir_array_matmul,
+    elementwise as _sir_array_elementwise,
+    transpose as _sir_array_transpose,
+    index_get as _sir_array_index_get,
+    index_set as _sir_array_index_set,
+    index_scalar as _sir_array_index_scalar,
+    index_whole as _sir_array_index_whole,
+    index_range as _sir_array_index_range,
+)
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,
@@ -199,6 +228,26 @@ mod tests {
         assert!(RUNTIME_EXC.contains("register_ancestry as _sir_exc_register_ancestry"));
         assert!(RUNTIME_OOP.ends_with('\n'));
         assert!(RUNTIME_EXC.ends_with('\n'));
+    }
+
+    #[test]
+    fn runtime_array_imports_its_package() {
+        assert!(RUNTIME_ARRAY.contains("from coding_adventures_sir_runtime_array import"));
+        for alias in &[
+            "from_rows as _sir_array_from_rows",
+            "range as _sir_array_range",
+            "matmul as _sir_array_matmul",
+            "elementwise as _sir_array_elementwise",
+            "transpose as _sir_array_transpose",
+            "index_get as _sir_array_index_get",
+            "index_set as _sir_array_index_set",
+            "index_scalar as _sir_array_index_scalar",
+            "index_whole as _sir_array_index_whole",
+            "index_range as _sir_array_index_range",
+        ] {
+            assert!(RUNTIME_ARRAY.contains(alias), "array runtime missing `{}`", alias);
+        }
+        assert!(RUNTIME_ARRAY.ends_with('\n'));
     }
 
     #[test]

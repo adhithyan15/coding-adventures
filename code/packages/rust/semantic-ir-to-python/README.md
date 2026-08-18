@@ -77,11 +77,38 @@ uses a **sentinel + body-prologue** strategy:
   sentinel, which the prologue resolves.  `IndirectCall`/closure defaults are
   deferred.
 
+## SIR22 array/matrix base cut
+
+`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet` (+
+`Stmt::IndexSet`) lower to calls into `_sir_array_*`, imported from the
+published `coding-adventures-sir-runtime-array` pip package — **this
+backend follows the TypeScript backend's imported-package model here**,
+not its own usual inlined-runtime convention (contrast the OOP/
+exceptions/pairs/regex/shell/range imports above, and C/Go/Rust/Ruby's
+identical-slice PRs, which all inline a ported sub-runtime instead).
+The import is gated by `uses_array` (any of `Feature::NDArrays`/
+`MatrixOps`/`ArrayColumnMajor`), so a pure arithmetic module never gains
+the dependency. `coding_adventures_sir_runtime_array`'s own `NDArray`
+preserves native Python `int`/`float` propagation rather than forcing
+every element to a double (`Add`/`Sub`/`Mul`/`Pow` stay `int` when both
+operands are; `Div` always true-divides), matching MATLAB's `./`
+semantics without a spurious `.0` on an all-integer computation — see
+that package's own README/CHANGELOG for the full design and security
+notes (NaN-safe AND-form bounds checks, DoS-safe shape validation before
+allocation).
+
+The nine-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/
+`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) shares
+these same three features with the base cut, so a dedicated pre-emit
+tree-walk (`find_unimplemented_sir22_addendum_node` in `lib.rs`) rejects
+it cleanly until its own later slice lands.
+
 ## Capability declaration
 
 Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
-`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`, `DefaultParams`
-(and the SIR16/17 expression, mutation, loop, OOP and exception features).
+`OptionalTypeAnnotations`, `MutualRecursion`, `Globals`, `DefaultParams`,
+`NDArrays`, `MatrixOps`, `ArrayColumnMajor` (and the SIR16/17 expression,
+mutation, loop, OOP and exception features).
 
 **`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
 "none"|"per_value"|"once", unpack_arrays, ...values)` → `_sir_write(...)`

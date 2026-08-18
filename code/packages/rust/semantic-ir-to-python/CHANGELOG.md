@@ -1,5 +1,98 @@
 # Changelog
 
+## 0.15.0 — SIR22 array/matrix base cut (second-wave backend rollout, Phase A Slice 2)
+
+Part of the SIR22/SIR23 backend-expansion initiative (opening
+C/Go/Rust/Python/Ruby to array/matrix and symbolic/pattern support — see
+`code/specs/SIR22-array-matrix-semantic-ir.md`'s "Backend impact" section).
+This backend now accepts `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}`
+and implements the SIR22 base cut: `ArrayLit`/`Range`/`MatMul`/
+`ElementwiseOp`/`Transpose`/`IndexGet` (+ `Stmt::IndexSet`). This PR spans
+two packages — this crate, and the brand-new
+`code/packages/python/sir-runtime-array` pip package it imports.
+
+**Python follows the TypeScript backend's *imported-package* model, not
+this crate's usual inlined-runtime convention.** Unlike C/Go/Rust/Ruby's
+same-slice PRs (which port an inlined `ArrayRt`-style sub-runtime into
+their own `RUNTIME` string constant), the new `_sir_array_*` helpers are
+imported from a real published-style pip package,
+`coding-adventures-sir-runtime-array` — the emitted import is gated on
+`uses_array` (any of the three SIR22 features), so a pure arithmetic
+module never gains the dependency, exactly like the pairs/OOP/exceptions/
+regex/shell/range imports this crate already gates the same way. See
+`runtime.rs`'s new `RUNTIME_ARRAY` doc comment and the new package's own
+CHANGELOG for the full design (column-major storage, native `int`/`float`
+propagation instead of JS's forced-double storage, NaN-safe AND-form
+bounds checks, DoS-safe shape validation before allocation).
+
+**`IndexArg` emits as constructor calls, not inline literals.** `emit.rs`'s
+new `emit_index_arg`/`emit_index_args` render `IndexArg::Scalar(e)` /
+`::Whole` / `::Range(e)` as `_sir_array_index_scalar(e)` /
+`_sir_array_index_whole()` / `_sir_array_index_range(e)` — readable Python
+function calls rather than the TypeScript backend's inline
+`{ kind: "scalar", value }` object literals, since the new Python package
+exposes these as first-class constructors (see that package's own
+CHANGELOG "Design notes").
+
+**`Stmt::IndexSet` is wired into BOTH statement-position and
+expression-position (walrus-tuple) emission.** `emit_stmt_inner`'s
+`Stmt::IndexSet` arm emits a bare `_sir_array_index_set(...)` call
+statement; `emit_block_as_expr`'s own separate `Stmt::IndexSet` arm
+(a second match, over the same `Stmt` enum, for blocks lifted into
+expression position via Python's walrus operator) emits the identical
+call wrapped in the walrus-tuple's `(expr, )` shape, mirroring how
+`SeqSet`/`MapSet` already handle this dual-position requirement. Missing
+this second arm would have left the panic in place for any `IndexSet`
+reachable only from an `if`/block used as a value — a real gap this PR's
+own `index_set_in_expression_position_walrus_path_mutates_in_place` test
+(in the new `tests/sir22_array.rs`) specifically regression-tests.
+
+**The SIR22 "APL addendum" nodes** (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) share
+`NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut above, so a
+bare feature-flag check can't tell a module using one of these nine apart
+from a safe base-cut-only module. Added `find_unimplemented_sir22_addendum_node`
+to `lib.rs` — a dedicated `semantic_ir::Visitor` tree-walk (using
+`walk_expr_default`), wired into `PythonBackend::compile` right after the
+existing capability check — mirroring `semantic-ir-to-javascript`'s
+identically-named, now-removed check from its own original SIR22 base-cut
+PR (removed there once that backend's later PR shipped real addendum
+codegen; this backend has not done that yet, so the check stays). `emit`'s
+corresponding `Expr` match arm keeps the nine addendum variants (plus the
+pre-existing SIR26 `Convert`) as an explicit panic — not folded into a
+wildcard — so Rust's exhaustiveness checking still forces a future new
+SIR22 node to be handled here.
+
+**Security**: every NaN-safe AND-form bounds check the JS/TS/Ruby
+references document (`get`/`set`'s `r >= 0 and c >= 0 and ...`, never the
+OR-form negation) is replicated exactly in the new Python package — a real
+`float('nan')` reachable from the compiled program's own runtime
+arithmetic (e.g. `0.0 / 0.0`) behaves identically under IEEE-754 in
+Python. Every shape/output size is validated via `checked_shape_size`
+*before* allocating, matching the JS/TS references' own DoS-safety
+discipline.
+
+New `tests/sir22_array.rs` (9 tests, ported from
+`semantic-ir-to-javascript`/`semantic-ir-to-ruby`'s own worked examples):
+hand-built `Module`s exercising `matmul`/scalar-broadcast
+`elementwise`/`Div`'s forced-true-divide behavior/`transpose`/`range`/a
+`Whole` selector/`IndexGet`/`IndexSet` mutation in both statement and
+walrus-expression position, each compiled and run through a real
+`python3`/`python` interpreter (skips gracefully when absent, with
+`PYTHONPATH` covering every sibling `sir-runtime-*` package
+`sir-runtime-core`'s own module-load time transitively needs), plus a
+compile-time rejection test proving `Reduce` is cleanly rejected rather
+than reaching an `emit_expr` panic. `lib.rs` also gained direct
+capability-acceptance tests for all three new features and a second
+addendum-rejection test (`Catenate`, nested inside a `LetBinding`) proving
+the walk isn't hardcoded to only catch `Reduce`.
+
+Requires the new `code/packages/python/sir-runtime-array` package
+(0.1.0) to be present for any emitted program using these nodes to
+actually run — a Rust-only build of this crate has no new dependency.
+
+`semantic-ir-to-python` 0.14.0 -> 0.15.0.
+
 ## 0.14.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive-only: adds the four new division builtin names from SIR21 T3b-2

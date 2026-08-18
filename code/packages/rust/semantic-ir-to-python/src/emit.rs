@@ -12,8 +12,8 @@ use std::collections::{BTreeSet, HashMap};
 use std::fmt::Write;
 
 use semantic_ir::{
-    resolve_binary, BinaryLowering, Block, Expr, Feature, Function, Global, IndexArg, Module,
-    ParamKind, Scope, Stmt, TypeEnv,
+    resolve_binary, BinaryLowering, Block, ElementwiseOpKind, Expr, Feature, Function, Global,
+    IndexArg, Module, ParamKind, Scope, Stmt, TypeEnv,
 };
 
 use crate::runtime::RUNTIME;
@@ -254,6 +254,19 @@ fn uses_shell(m: &Module) -> bool {
 /// positive result gates the `coding-adventures-sir-runtime-range` import.
 fn uses_range(m: &Module) -> bool {
     module_uses_builtin(m, "range")
+}
+
+/// True if the module uses the SIR22 array/matrix domain, in which case the
+/// emitted artifact imports `coding-adventures-sir-runtime-array` (following
+/// the TypeScript backend's imported-package model — see `runtime.rs`'s
+/// `RUNTIME_ARRAY` doc comment). Any of the three SIR22 features gates the
+/// same single import — a module using only a bare `ArrayLit`/`IndexGet`
+/// with no `MatMul`/`ElementwiseOp`/`Transpose` still needs `from_rows`/
+/// `index_get` from this package.
+fn uses_array(m: &Module) -> bool {
+    m.manifest.contains(Feature::NDArrays)
+        || m.manifest.contains(Feature::MatrixOps)
+        || m.manifest.contains(Feature::ArrayColumnMajor)
 }
 
 /// Walk every function body looking for a `BuiltinCall` named `name`.  Used to
@@ -532,6 +545,10 @@ pub fn emit_module(m: &Module) -> String {
     // Only range-using modules import the range runtime.
     if uses_range(m) {
         out.push_str(crate::runtime::RUNTIME_RANGE);
+    }
+    // Only array/matrix-using modules import the SIR22 array runtime.
+    if uses_array(m) {
+        out.push_str(crate::runtime::RUNTIME_ARRAY);
     }
     // E2: thread user `class Child < Parent` ancestry into the exception
     // matcher at program init, *before* any function or main body runs, so a
@@ -1061,17 +1078,81 @@ fn emit_stmt_inner(out: &mut String, s: &Stmt, indent: usize, env: &mut TypeEnv)
                 emit_stmt_list(out, ens, indent + 1, env);
             }
         }
-        // SIR22 `target[indices...] = value`. This backend does not declare
-        // `Feature::NDArrays`/`Feature::MatrixOps` in `ACCEPTED_FEATURES`
-        // (see `lib.rs`), so `Backend::check_module` rejects any module
-        // using this node before it ever reaches emission — a validated
-        // module never reaches this arm.
-        Stmt::IndexSet { span, .. } => {
-            panic!(
-                "python backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
-                span
-            );
+        // SIR22 `target[indices...] = value` — mutating in place via
+        // `_sir_array_index_set` (the imported
+        // `coding-adventures-sir-runtime-array` package, gated by
+        // `uses_array` — see `emit_module`). Matches the SIR22 spec's own
+        // note that `IndexSet` is a `Stmt`, not a pure `Expr`, for exactly
+        // this in-place-mutation reason.
+        Stmt::IndexSet {
+            target,
+            indices,
+            value,
+            ..
+        } => {
+            out.push_str(&pad);
+            out.push_str("_sir_array_index_set(");
+            emit_expr(out, target, indent, env);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent, env);
+            out.push_str("], ");
+            emit_expr(out, value, indent, env);
+            out.push_str(")\n");
         }
+    }
+}
+
+/// Emit one `IndexArg` as a call into `coding-adventures-sir-runtime-array`'s
+/// `index_scalar`/`index_whole`/`index_range` constructors. The `Range` case
+/// reuses `emit_expr` on the inner `Expr::Range` node directly — that node's
+/// own `Expr::Range` arm already emits a call into `_sir_array_range(...)`,
+/// which returns exactly the `NDArray` shape `index_range` expects, so no
+/// separate handling is needed here.
+fn emit_index_arg(out: &mut String, arg: &IndexArg, indent: usize, env: &mut TypeEnv) {
+    match arg {
+        IndexArg::Scalar(e) => {
+            out.push_str("_sir_array_index_scalar(");
+            emit_expr(out, e, indent, env);
+            out.push(')');
+        }
+        IndexArg::Whole => {
+            out.push_str("_sir_array_index_whole()");
+        }
+        IndexArg::Range(e) => {
+            out.push_str("_sir_array_index_range(");
+            emit_expr(out, e, indent, env);
+            out.push(')');
+        }
+    }
+}
+
+fn emit_index_args(out: &mut String, indices: &[IndexArg], indent: usize, env: &mut TypeEnv) {
+    for (i, arg) in indices.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_index_arg(out, arg, indent, env);
+    }
+}
+
+/// The `coding-adventures-sir-runtime-array` string `elementwise`'s
+/// `apply_op` dispatches on — exact `ElementwiseOpKind` variant names, not
+/// `.name()`'s lowercase `"add"` form.
+fn elementwise_op_py_name(op: ElementwiseOpKind) -> &'static str {
+    match op {
+        ElementwiseOpKind::Add => "Add",
+        ElementwiseOpKind::Sub => "Sub",
+        ElementwiseOpKind::Mul => "Mul",
+        ElementwiseOpKind::Div => "Div",
+        ElementwiseOpKind::Pow => "Pow",
+        ElementwiseOpKind::Max => "Max",
+        ElementwiseOpKind::Min => "Min",
+        ElementwiseOpKind::Eq => "Eq",
+        ElementwiseOpKind::Ne => "Ne",
+        ElementwiseOpKind::Lt => "Lt",
+        ElementwiseOpKind::Le => "Le",
+        ElementwiseOpKind::Ge => "Ge",
+        ElementwiseOpKind::Gt => "Gt",
     }
 }
 
@@ -1278,22 +1359,102 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
             out.push('=');
             emit_expr(out, value, indent, env);
         }
-        // SIR22 array/matrix expressions. This backend does not declare
-        // `Feature::NDArrays`/`Feature::MatrixOps` in `ACCEPTED_FEATURES`
-        // (see `lib.rs`), so `Backend::check_module` rejects any module
-        // using these nodes before emission is ever reached — matching the
-        // `Expr::Intrinsic` guard above, a validated module never reaches
-        // this arm.
-        Expr::ArrayLit { .. }
-        | Expr::Range { .. }
-        | Expr::MatMul { .. }
-        | Expr::ElementwiseOp { .. }
-        | Expr::Transpose { .. }
-        | Expr::IndexGet { .. }
-        // SIR22 addendum: APL primitive operators — same deferral rationale
-        // (gated by the same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
-        // features, not in `ACCEPTED_FEATURES` either).
-        | Expr::Reduce { .. }
+        // ── SIR22: array/matrix nodes (base cut) ───────────────────────
+        // Real codegen: calls into the imported
+        // `coding-adventures-sir-runtime-array` package (gated by
+        // `uses_array` — see `emit_module`), following the TypeScript
+        // backend's imported-package model rather than this backend's
+        // usual OOP/exceptions/pairs inline-runtime convention — see the
+        // SIR22 spec's "Backend impact" section. `rows` is row-major in
+        // the literal syntax (per the SIR22 spec); `_sir_array_from_rows`
+        // reconciles that with column-major storage, so the emitter just
+        // nests the row/element expressions unchanged.
+        Expr::ArrayLit { rows, .. } => {
+            out.push_str("_sir_array_from_rows([");
+            for (i, row) in rows.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                out.push('[');
+                emit_args(out, row, indent, env);
+                out.push(']');
+            }
+            out.push_str("])");
+        }
+        // `_sir_array_range(start, stop, step)` — note the argument ORDER:
+        // the SIR node's own field order is `start, step, stop`, but
+        // `coding-adventures-sir-runtime-array`'s `range(start, stop,
+        // step=1)` takes `stop` before `step` (mirrors the TypeScript
+        // backend's identical reordering at its own `__SirArray.range`
+        // call site).
+        Expr::Range {
+            start, step, stop, ..
+        } => {
+            out.push_str("_sir_array_range(");
+            emit_expr(out, start, indent, env);
+            out.push_str(", ");
+            emit_expr(out, stop, indent, env);
+            out.push_str(", ");
+            match step {
+                Some(step) => emit_expr(out, step, indent, env),
+                None => out.push('1'),
+            }
+            out.push(')');
+        }
+        Expr::MatMul { lhs, rhs, .. } => {
+            out.push_str("_sir_array_matmul(");
+            emit_expr(out, lhs, indent, env);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent, env);
+            out.push(')');
+        }
+        // The op name must match `elementwise`'s `apply_op` dispatch (in
+        // `coding-adventures-sir-runtime-array`) exactly (`"Add"`, not
+        // `.name()`'s lowercase `"add"`).
+        Expr::ElementwiseOp { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "_sir_array_elementwise({}, ",
+                quote_py_string(elementwise_op_py_name(*op))
+            );
+            emit_expr(out, lhs, indent, env);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent, env);
+            out.push(')');
+        }
+        Expr::Transpose {
+            target, conjugate, ..
+        } => {
+            out.push_str("_sir_array_transpose(");
+            emit_expr(out, target, indent, env);
+            let _ = write!(out, ", {})", if *conjugate { "True" } else { "False" });
+        }
+        Expr::IndexGet {
+            target, indices, ..
+        } => {
+            out.push_str("_sir_array_index_get(");
+            emit_expr(out, target, indent, env);
+            out.push_str(", [");
+            emit_index_args(out, indices, indent, env);
+            out.push_str("])");
+        }
+        // SIR22 addendum: APL primitive operators (`Reduce`/`Scan`/
+        // `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
+        // `Ravel`/`Catenate`). This backend does not implement codegen for
+        // these nine nodes in this slice — a separate, later rollout slice
+        // per the SIR22 spec's "Backend impact" section. They share the
+        // SAME three features (`NDArrays`/`MatrixOps`/`ArrayColumnMajor`)
+        // with the base cut above, so — now that those features are in
+        // `ACCEPTED_FEATURES` (see `lib.rs`) — a bare capability check can
+        // no longer reject a module using one of these nine.
+        // `PythonBackend::compile`'s `find_unimplemented_sir22_addendum_node`
+        // walk closes that gap *before* emission is ever reached (mirrors
+        // `semantic-ir-to-javascript`'s original SIR22 base-cut PR's
+        // identically named check), so a validated module never reaches
+        // this arm. Kept as an explicit panic (not folded into a wildcard)
+        // so Rust's exhaustiveness checking still forces a new SIR22 node
+        // to be handled here.
+        Expr::Reduce { .. }
         | Expr::Scan { .. }
         | Expr::OuterProduct { .. }
         | Expr::Shape { .. }
@@ -1968,16 +2129,24 @@ fn emit_block_as_expr(out: &mut String, b: &Block, indent: usize, env: &mut Type
                     span
                 );
             }
-            // SIR22 `target[indices...] = value`. This backend does not
-            // declare `Feature::NDArrays`/`Feature::MatrixOps` in
-            // `ACCEPTED_FEATURES` (see `lib.rs`), so `Backend::check_module`
-            // rejects any module using this node before emission is ever
-            // reached — a validated module never reaches this arm.
-            Stmt::IndexSet { span, .. } => {
-                panic!(
-                    "python backend reached a deferred SIR22 array/matrix statement (index-set) at {} — not accepted yet",
-                    span
-                );
+            // SIR22 `target[indices...] = value` — same shape as
+            // `SeqSet`/`MapSet` above: `_sir_array_index_set` mutates in
+            // place and returns `None`, which composes fine as a tuple
+            // element (its value is discarded, matching every other
+            // mutation arm in this walrus tuple).
+            Stmt::IndexSet {
+                target,
+                indices,
+                value,
+                ..
+            } => {
+                out.push_str("(_sir_array_index_set(");
+                emit_expr(out, target, indent, env);
+                out.push_str(", [");
+                emit_index_args(out, indices, indent, env);
+                out.push_str("], ");
+                emit_expr(out, value, indent, env);
+                out.push_str(")), ");
             }
         }
     }
