@@ -34,7 +34,7 @@ reviews_of: [FA-C09-nan]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAN, FA-PHRASE-LOTFAN] -->
 
-[PAUSE 2s] Say **نان، لطفاً**. Here is the drink that usually comes with it.
+[PAUSE 2s] Say **نان، لطفاً** (*nân, lotfan*). Here is the drink that usually comes with it.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[FA-LEX-CHAY]; assesses=[] -->

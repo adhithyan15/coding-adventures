@@ -40,14 +40,14 @@ is in one piece.
 
 | | Arabic | literally |
 |---|---|---|
-| A | **السلام عليكم** | peace [be] upon you |
-| B | **وعليكم السلام** | and upon you, peace |
-| A | **ما اسمك؟** | what [is] your name? |
-| B | **اسمي …، تشرفنا.** | my name [is] …, we are honoured |
-| A | **كيف حالك؟** | how [is] your state? |
-| B | **الحمد لله، بخير.** | the praise [is] to God — in goodness |
-| A | **مع السلامة** | with safety |
-| B | **إلى اللقاء** | until the meeting |
+| A | **السلام عليكم** (*as-salāmu ʿalaykum*) | peace [be] upon you |
+| B | **وعليكم السلام** (*wa-ʿalaykum as-salām*) | and upon you, peace |
+| A | **ما اسمك؟** (*mā ismuka?*) | what [is] your name? |
+| B | **اسمي …، تشرفنا.** (*ismī …, tasharrafnā*) | my name [is] …, we are honoured |
+| A | **كيف حالك؟** (*kayfa ḥāluka?*) | how [is] your state? |
+| B | **الحمد لله، بخير.** (*al-ḥamdu lillāh, bi-khayr*) | the praise [is] to God — in goodness |
+| A | **مع السلامة** (*maʿa s-salāma*) | with safety |
+| B | **إلى اللقاء** (*ilā l-liqāʾ*) | until the meeting |
 
 Read the right-hand column top to bottom. **Not one line contains a verb "to
 be."** The zero copula has held for four chapters.

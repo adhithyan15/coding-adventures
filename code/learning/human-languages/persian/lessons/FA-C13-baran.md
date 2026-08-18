@@ -34,7 +34,7 @@ reviews_of: [FA-C13-setare, FA-C04-hal-e-shoma-chetor-ast, FA-C04-khubam, FA-C04
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-SETARE, FA-ETYMON-SETARE] -->
 
-[PAUSE 2s] Say **ستاره**, and its root's three attested cousins. Not every
+[PAUSE 2s] Say **ستاره** (*setâre*), and its root's three attested cousins. Not every
 sky word gets to keep company like that.
 
 ## You'll want to know first — one word

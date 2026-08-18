@@ -311,12 +311,12 @@ Four chapters. Greet, introduce, ask after someone, part. Here it all is in one 
 
 You'll want to know — The full exchange.
 [a table of 8 rows, read aloud]
-A. Arabic: السلام عليكم. literally: peace [be] upon you.
-B. Arabic: وعليكم السلام. literally: and upon you, peace.
-A. Arabic: ما اسمك؟. literally: what [is] your name?
-B. Arabic: اسمي …، تشرفنا. literally: my name [is] …, we are honoured.
-A. Arabic: كيف حالك؟. literally: how [is] your state?
-B. Arabic: الحمد لله، بخير. literally: the praise [is] to God — in goodness.
+A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.
+B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.
+A. Arabic: ما اسمك؟ (mā ismuka?) literally: what [is] your name?
+B. Arabic: اسمي …، تشرفنا. (ismī …, tasharrafnā). literally: my name [is] …, we are honoured.
+A. Arabic: كيف حالك؟ (kayfa ḥāluka?) literally: how [is] your state?
+B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.
 A. Arabic: مع السلامة (as-salāma) (maʿa s-salāma). literally: with safety.
 B. Arabic: إلى اللقاء (ilā l-liqāʾ). literally: until the meeting.
 Read the right-hand column top to bottom. Not one line contains a verb "to be." The zero copula has held for four chapters.

@@ -316,16 +316,16 @@ Before we start: this one needs your eyes, so it is not fully a driving lesson. 
 
 Warm-up.
 [pause 2 seconds]
-Chapter 1 let you greet. Chapter 2 let you introduce yourself. This chapter closes the loop: you can now ask after someone and answer back.
+Chapter 1 let you greet. Chapter 2 let you introduce yourself. This chapter closes the loop: you can ask after someone and answer back.
 
 The exchange.
 [a table of 5 rows, read aloud]
-A. Arabic: السلام عليكم. literally: peace [be] upon you.
-B. Arabic: وعليكم السلام. literally: and upon you, peace.
-A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki). literally: how [is] your state?
-B. Arabic: الحمد لله (al-ḥamdu lillāh)، بخير (bi-khayr). literally: the praise [is] to God — in goodness.
-B. Arabic: وأنت؟ ما اسمك؟. literally: and you? what [is] your name?
-Read down the right-hand column. Not one line contains a verb "to be." Arabic joins things by putting them next to each other.
+A. Arabic: السلام عليكم (as-salāmu ʿalaykum). literally: peace [be] upon you.
+B. Arabic: وعليكم السلام (wa-ʿalaykum as-salām). literally: and upon you, peace.
+A. Arabic: كيف حالك؟ (kayfa ḥāluka / kayfa ḥāluki) (kayfa ḥāluka?) literally: how [is] your state?
+B. Arabic: الحمد لله، بخير. (al-ḥamdu lillāh, bi-khayr). literally: the praise [is] to God — in goodness.
+B. Arabic: وأنت؟ ما اسمك؟ (wa-anta? mā ismuka?) literally: and you? what [is] your name?
+Read down the right-hand column. Not one line contains a verb "to be." Arabic just puts the two things next to each other.
 
 You'll want to know — the pieces.
 [a table of 4 rows, read aloud]
@@ -333,15 +333,15 @@ phrase: kayfa ḥāluka. built from: kayfa + ḥāl + -ka/-ki.
 phrase: bi-khayr. built from: bi- + khayr (already inside ṣabāḥ al-khayr).
 phrase: al-ḥamdu lillāh. built from: al- + ḥamd + li- + allāh.
 phrase: ismuka. built from: ism + -ka/-ki — the same suffix as ḥāluka.
-Three tiny attaching pieces — al-, bi-, li- — and two suffixes, -ī and -ka/-ki. That is most of the chapter.
+Three attaching pieces — al-, bi-, li- — and two suffixes, -ī and -ka/-ki. That is most of the chapter.
 
 Grammar Lens — gender.
-Every "you" in this chapter splits. Say the pair aloud:
+Every "you" here splits. Say the pair aloud:
 [a table of 3 rows, read aloud]
 to a man: kayfa ḥāluka? to a woman: kayfa ḥāluki?
 to a man: mā ismuka? to a woman: mā ismuki?
 to a man: anta. to a woman: anti.
-One vowel mark decides — the fatḥa / kasra pair from the writing set.
+One vowel mark decides — the fatḥa / kasra pair.
 
 Guided Practice.
 [pause 1 second]
