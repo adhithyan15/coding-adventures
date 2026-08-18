@@ -53,7 +53,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                same pinned commit, no re-pin),
                extended 2026-08-18 (task #150-152 -- simd_bitwise.wast,
                v128.not/and/andnot/or/xor/bitselect bitwise family, same
-               pinned commit, no re-pin)
+               pinned commit, no re-pin),
+               extended 2026-08-18 (task #153-155 -- simd_boolean.wast,
+               v128.any_true + ixNxM.all_true/bitmask boolean-reduction
+               family, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -307,6 +310,25 @@ pass on every gradeable directive kind (1/1 modules, 126/126
 assert_return, 28/28 assert_invalid; 13 assert_return directives grade
 `NotYetSupported` because they depend on `v128.load`, not a real
 failure).
+
+`simd_boolean.wast` (task #153-155) covers `v128.any_true` (one op,
+exported under `i8x16.any_true`/`i16x8.any_true`/`i32x4.any_true` in
+the corpus purely for test naming -- there is only one real
+`v128.any_true` sub-opcode, lane-width-agnostic) plus `ixNxM.all_true`/
+`bitmask` across all 4 lane widths (`i8x16`/`i16x8`/`i32x4`/`i64x2`).
+The first `v128`-in/`i32`-out reduction shape besides `extract_lane`
+(no lane-index immediate -- these reduce over ALL lanes), and the
+first opcodes in this interpreter to read the operand as 8-byte
+(`i64`) lanes. Chosen over shift-op and i64x2-arithmetic candidates in
+a fresh prioritization survey: highest opcode count (9) behind a
+single new operand shape and one 72KB corpus file, and unlocks real
+use of the comparison families from earlier PRs (a `v128` mask result
+is otherwise inert without a reduction op to consume it). Each
+sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+against the already-implemented `v128.bitselect`/`i8x16.popcnt`/
+`i16x8.abs`/`neg`/`i32x4.abs`/`neg` entries, same discipline as every
+prior addition. 100% pass on every directive kind (2/2 modules,
+259/259 assert_return, 12/12 assert_invalid, 4/4 assert_malformed).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

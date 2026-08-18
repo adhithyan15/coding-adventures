@@ -1066,6 +1066,44 @@ pub enum SimdOpKind {
     /// the first ternary SIMD op in this interpreter, unlike every UNARY
     /// (pop one) or BINARY (pop two) kind above.
     Bitselect,
+    /// `v128.any_true` -- pops one `v128`, pushes one `i32`: `1` if ANY of
+    /// the 128 bits is set (equivalently, if any lane at any width is
+    /// nonzero), else `0`. The first SCALAR-RESULT reduction kind in this
+    /// table besides [`Self::ExtractLane`] -- unlike `ExtractLane`, there
+    /// is no lane-index immediate, since this reduces over the WHOLE
+    /// operand regardless of lane width.
+    AnyTrue,
+    /// `i8x16.all_true` -- pops one `v128`, pushes one `i32`: `1` if EVERY
+    /// one of the 16 `i8` lanes is nonzero, else `0`. Same shape as
+    /// [`Self::AnyTrue`] but ALL instead of ANY, and lane-width-sensitive
+    /// (needs one variant per lane width, unlike `AnyTrue`).
+    AllTrueI8x16,
+    /// `i16x8.all_true` -- same as [`Self::AllTrueI8x16`], but over the 8
+    /// `i16` lanes of an `i16x8`-interpreted operand.
+    AllTrueI16x8,
+    /// `i32x4.all_true` -- same as [`Self::AllTrueI8x16`], but over the 4
+    /// `i32` lanes of an `i32x4`-interpreted operand.
+    AllTrueI32x4,
+    /// `i64x2.all_true` -- same as [`Self::AllTrueI8x16`], but over the 2
+    /// `i64` lanes of an `i64x2`-interpreted operand -- the first opcode
+    /// in this table to read the operand as 8-byte lanes.
+    AllTrueI64x2,
+    /// `i8x16.bitmask` -- pops one `v128`, pushes one `i32`: bit `i` of
+    /// the result is the sign bit (MSB) of `i8` lane `i`, for all 16
+    /// lanes, packed into the low 16 bits of the `i32`. Same
+    /// v128-in/i32-out shape as [`Self::AnyTrue`]/[`Self::AllTrueI8x16`],
+    /// but packs a per-lane BIT rather than reducing to a single
+    /// true/false.
+    BitmaskI8x16,
+    /// `i16x8.bitmask` -- same as [`Self::BitmaskI8x16`], but one sign
+    /// bit per `i16` lane (8 lanes), packed into the low 8 bits.
+    BitmaskI16x8,
+    /// `i32x4.bitmask` -- same as [`Self::BitmaskI8x16`], but one sign
+    /// bit per `i32` lane (4 lanes), packed into the low 4 bits.
+    BitmaskI32x4,
+    /// `i64x2.bitmask` -- same as [`Self::BitmaskI8x16`], but one sign
+    /// bit per `i64` lane (2 lanes), packed into the low 2 bits.
+    BitmaskI64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1255,6 +1293,15 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.or", sub_opcode: 0x50, kind: SimdOpKind::Or },
     SimdOpInfo { name: "v128.xor", sub_opcode: 0x51, kind: SimdOpKind::Xor },
     SimdOpInfo { name: "v128.bitselect", sub_opcode: 0x52, kind: SimdOpKind::Bitselect },
+    SimdOpInfo { name: "v128.any_true", sub_opcode: 0x53, kind: SimdOpKind::AnyTrue },
+    SimdOpInfo { name: "i8x16.all_true", sub_opcode: 0x63, kind: SimdOpKind::AllTrueI8x16 },
+    SimdOpInfo { name: "i8x16.bitmask", sub_opcode: 0x64, kind: SimdOpKind::BitmaskI8x16 },
+    SimdOpInfo { name: "i16x8.all_true", sub_opcode: 0x83, kind: SimdOpKind::AllTrueI16x8 },
+    SimdOpInfo { name: "i16x8.bitmask", sub_opcode: 0x84, kind: SimdOpKind::BitmaskI16x8 },
+    SimdOpInfo { name: "i32x4.all_true", sub_opcode: 0xA3, kind: SimdOpKind::AllTrueI32x4 },
+    SimdOpInfo { name: "i32x4.bitmask", sub_opcode: 0xA4, kind: SimdOpKind::BitmaskI32x4 },
+    SimdOpInfo { name: "i64x2.all_true", sub_opcode: 0xC3, kind: SimdOpKind::AllTrueI64x2 },
+    SimdOpInfo { name: "i64x2.bitmask", sub_opcode: 0xC4, kind: SimdOpKind::BitmaskI64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1673,8 +1720,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_81_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 81);
+    fn simd_ops_table_has_the_expected_90_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 90);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1984,6 +2031,38 @@ mod tests {
             ("v128.or", 0x50, SimdOpKind::Or),
             ("v128.xor", 0x51, SimdOpKind::Xor),
             ("v128.bitselect", 0x52, SimdOpKind::Bitselect),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_boolean_reduction_and_bitmask_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md. `v128.any_true` (0x53)
+        // immediately follows the already-implemented `v128.bitselect`
+        // (0x52); each lane width's `all_true`/`bitmask` pair sits at
+        // base+3/base+4 relative to that lane width's already-implemented
+        // `abs`/`neg` pair (i8x16.popcnt at 0x62 -> all_true 0x63 ->
+        // bitmask 0x64; i16x8.abs 0x80/neg 0x81 -> all_true 0x83 ->
+        // bitmask 0x84; i32x4.abs 0xA0/neg 0xA1 -> all_true 0xA3 ->
+        // bitmask 0xA4; i64x2 follows the same 0xC0/0xC1/0xC3/0xC4
+        // pattern, the first i64x2 opcodes in this table) -- same
+        // discipline as every prior addition. This is the first
+        // v128-in/i32-out reduction shape besides `extract_lane`, and the
+        // first opcodes to read the operand as 8-byte (`i64`) lanes.
+        for (name, sub_opcode, kind) in [
+            ("v128.any_true", 0x53, SimdOpKind::AnyTrue),
+            ("i8x16.all_true", 0x63, SimdOpKind::AllTrueI8x16),
+            ("i8x16.bitmask", 0x64, SimdOpKind::BitmaskI8x16),
+            ("i16x8.all_true", 0x83, SimdOpKind::AllTrueI16x8),
+            ("i16x8.bitmask", 0x84, SimdOpKind::BitmaskI16x8),
+            ("i32x4.all_true", 0xA3, SimdOpKind::AllTrueI32x4),
+            ("i32x4.bitmask", 0xA4, SimdOpKind::BitmaskI32x4),
+            ("i64x2.all_true", 0xC3, SimdOpKind::AllTrueI64x2),
+            ("i64x2.bitmask", 0xC4, SimdOpKind::BitmaskI64x2),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

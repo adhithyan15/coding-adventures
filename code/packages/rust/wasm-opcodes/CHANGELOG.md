@@ -2,6 +2,38 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.17] - 2026-08-18 - SIMD: boolean-reduction/bitmask family (task #153-155)
+
+### Added
+
+- 9 new `SIMD_OPS` entries -- `v128.any_true` (`0x53`) plus
+  `ixNxM.all_true`/`bitmask` across all 4 lane widths: `i8x16.all_true`
+  (`0x63`), `i8x16.bitmask` (`0x64`), `i16x8.all_true` (`0x83`),
+  `i16x8.bitmask` (`0x84`), `i32x4.all_true` (`0xA3`), `i32x4.bitmask`
+  (`0xA4`), `i64x2.all_true` (`0xC3`), `i64x2.bitmask` (`0xC4`) -- 90
+  SIMD opcodes total, up from 81. `i64x2.all_true`/`bitmask` are the
+  first `i64x2` opcodes in this table. Chosen over shift-op and
+  i64x2-arithmetic candidates in a fresh prioritization survey: highest
+  opcode count (9) behind a single new operand shape and one 72KB
+  corpus file, and unlocks real use of the comparison families from
+  earlier PRs (a `v128` mask result is otherwise inert without a
+  reduction op to consume it). Each sub-opcode byte fetched live from
+  the SIMD proposal's own `BinarySIMD.md` and cross-checked against the
+  already-implemented `v128.bitselect` (`0x52`)/`i8x16.popcnt`
+  (`0x62`)/`i16x8.abs` (`0x80`)/`neg` (`0x81`)/`i32x4.abs` (`0xA0`)/
+  `neg` (`0xA1`) entries (every value landed exactly where the
+  `abs`/`neg`/`[popcnt]`/`all_true`/`bitmask` per-lane-width pattern
+  predicts).
+- `SimdOpKind::AnyTrue`/`AllTrueI8x16`/`AllTrueI16x8`/`AllTrueI32x4`/
+  `AllTrueI64x2`/`BitmaskI8x16`/`BitmaskI16x8`/`BitmaskI32x4`/
+  `BitmaskI64x2`. The first `v128`-in/`i32`-out reduction shape besides
+  `ExtractLane`, but with NO lane-index immediate (these reduce over
+  ALL lanes, not select one).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md` and the `wasm-
+conformance` crate's own CHANGELOG entry for the newly-vendored
+`simd_boolean.wast` and the resulting baseline delta.
+
 ## [0.2.16] - 2026-08-18 - SIMD: v128 bitwise family (task #150-152)
 
 ### Added
