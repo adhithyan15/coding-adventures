@@ -2573,15 +2573,18 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
         "c<<" => ("_sir_shl", 2),
         ">>" => ("_sir_shr", 2),
         "u>>" => ("_sir_lshr", 2),
-        // Milestone 6 truncating division / remainder (signed + unsigned).
-        "tdiv" => ("_sir_itdiv", 2),
+        // Milestone 6 truncating remainder (signed + unsigned) -- untouched
+        // by SIR21 T3b-2, which only renamed the division half (`tdiv`/
+        // `utdiv` -> `div_trunc`/`udiv_trunc` below).
         "tmod" => ("_sir_itmod", 2),
-        "utdiv" => ("_sir_utdiv", 2),
         "utmod" => ("_sir_utmod", 2),
-        // SIR21 T3b-2: div_trunc/udiv_trunc are tdiv/utdiv under their new
-        // canonical names (same helpers, zero behaviour change -- see this
-        // crate's CHANGELOG for why T3b-2 folds the synonym families
-        // together). div_true is genuinely new: always coerce to float,
+        // SIR21 T3b-2: `div_trunc`/`udiv_trunc` are `tdiv`/`utdiv` under
+        // their new canonical names (same `_sir_itdiv`/`_sir_utdiv` helpers,
+        // zero behaviour change). The old bare `"tdiv"`/`"utdiv"` dispatch
+        // entries are removed here (Slice 7 cleanup) now that
+        // `c-to-semantic-ir` -- their only emitter -- has migrated
+        // (Slice 6); the helpers themselves stay, since these entries still
+        // call them. div_true is genuinely new: always coerce to float,
         // never branch on operand tag (see `_sir_true_div`'s own doc
         // comment in runtime.rs for its zero-divisor handling).
         "div_trunc" => ("_sir_itdiv", 2),

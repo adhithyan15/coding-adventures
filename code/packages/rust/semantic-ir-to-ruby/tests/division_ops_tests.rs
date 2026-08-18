@@ -9,8 +9,9 @@
 //! everywhere `/` is used) — verified here by checking it computes the SAME
 //! values that op already produces. `div_trunc`/`udiv_trunc`/`div_true` are
 //! the ones with real new logic (`div_trunc`/`udiv_trunc` share the
-//! pre-existing `sir_tdiv` helper `tdiv`/`utdiv` already use; `div_true` is
-//! entirely new), and get the most coverage here, including the
+//! pre-existing `sir_tdiv` helper — the same one the now-removed bare
+//! `tdiv`/`utdiv` builtin names used to route to; `div_true` is entirely
+//! new), and get the most coverage here, including the
 //! zero-divisor case — where `div_floor`/`div_trunc`/`udiv_trunc` raise via
 //! Ruby's own native `Integer#/0`, but `div_true` needs its own explicit
 //! check (Ruby's native `Float#/0` silently returns `Infinity`).

@@ -3908,14 +3908,15 @@ SirValue _sir_builtin_dispatch(SirValue *caps, SirValue *args, int argc) {
     if (strcmp(name, "c<<") == 0)      return _sir_shl(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, ">>") == 0)       return _sir_shr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "u>>") == 0)      return _sir_lshr(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
-    if (strcmp(name, "tdiv") == 0)     return _sir_itdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "tmod") == 0)     return _sir_itmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
-    if (strcmp(name, "utdiv") == 0)    return _sir_utdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     if (strcmp(name, "utmod") == 0)    return _sir_utmod(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));
     /* SIR21 T3b-2: div_floor is `_sir_divide_v` under a new name (identical
        floor-int/true-divide-float dispatch, zero new logic). div_trunc/
-       udiv_trunc are `tdiv`/`utdiv` under new names -- see this file's own
-       CHANGELOG for why T3b-2 folds the two synonym families into one.
+       udiv_trunc are the OLD `tdiv`/`utdiv` names under their new canonical
+       spelling -- the bare `"tdiv"`/`"utdiv"` dispatch entries that used to
+       be here are removed (Slice 7 cleanup) now that their only emitter
+       (`c-to-semantic-ir`) has migrated (Slice 6); `_sir_itdiv`/
+       `_sir_utdiv` themselves stay, since these entries still call them.
        div_true is genuinely new (see `_sir_true_div`'s own doc comment). */
     if (strcmp(name, "div_floor") == 0)  return _sir_divide_v(args, argc);
     if (strcmp(name, "div_trunc") == 0)  return _sir_itdiv(_sir_arg(args, argc, 0), _sir_arg(args, argc, 1));

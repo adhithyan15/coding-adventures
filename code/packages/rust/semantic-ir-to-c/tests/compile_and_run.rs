@@ -145,6 +145,18 @@ const CORPUS: &[Case] = &[
         expected: "8",
     },
     Case {
+        // SIR21 T3b-2 Slice 7: Twig's `/` is variadic with no static
+        // int/float distinction, so it can never migrate off bare `"/"` —
+        // it stays aliased to `div_floor`'s rendering permanently. `-7 / 2`
+        // is the discriminating case: `-4` proves floor-toward-negative-
+        // infinity; the now-removed `tdiv` dispatch entry would have
+        // truncated toward zero to `-3` instead.
+        name: "twig_bare_slash_still_floors_after_tdiv_utdiv_removal",
+        lang: "twig",
+        source: "(print (/ -7 2))",
+        expected: "-4",
+    },
+    Case {
         // Unary minus (`-x`) lowers to the `neg` builtin, which the C backend
         // now lowers (SIR21 §E3). Before, ANY negative literal made the C
         // backend report an unsupported builtin and skip. `neg` reuses the

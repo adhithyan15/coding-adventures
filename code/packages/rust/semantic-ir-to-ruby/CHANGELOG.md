@@ -1,5 +1,36 @@
 # Changelog
 
+## 0.24.0 — SIR21 T3b-2 Slice 7: cleanup — remove dead `tdiv`/`utdiv`
+
+Part of the SIR21 T3b-2 arc's final slice. `c-to-semantic-ir` was the only
+crate that ever emitted the bare `"tdiv"`/`"utdiv"` builtin names (this
+backend accepted them so C-sourced modules could target Ruby); it migrated
+to `div_trunc`/`udiv_trunc` in Slice 6 (merged). With that migration in,
+`"tdiv"`/`"utdiv"` are provably dead names here too — nothing in this
+repository constructs a `BuiltinCall` with either name anymore.
+
+Removed `"tdiv"`/`"utdiv"` from `SUPPORTED_BUILTINS` (the validator
+allowlist gate) and their `emit_builtin` match arm. The `sir_tdiv` runtime
+helper itself is untouched — `div_trunc`/`udiv_trunc`'s own match arm
+(added in Slice 2) still calls it, so it remains live code, just reachable
+only under the new canonical names now. `tmod`/`utmod` (modulo) are
+untouched — this arc has never touched modulo. Bare `"/"` also stays
+exactly as it was (still aliased to `div_floor`'s identical rendering) —
+`twig-to-semantic-ir`'s permanent fallback route, per the spec.
+
+Also added a new Twig-sourced regression test
+(`e2e_twig_bare_slash_still_floors_after_tdiv_utdiv_removal`, `-7 / 2` →
+`-4`): Twig's `/` is variadic with no static int/float distinction, so it
+can never migrate to one of the four typed division ops — it stays on
+bare `"/"` permanently, and this cleanup deliberately proves that removing
+the *other* two names Twig's own emission never touched (`"tdiv"`/
+`"utdiv"`) left its own path undisturbed.
+
+Verified via the full `semantic-ir-to-ruby` test suite (0 failures) and the
+full `sir-conformance` suite (0 failures).
+
+`semantic-ir-to-ruby` 0.23.0 -> 0.24.0.
+
 ## 0.23.0 — SIR21 T3b-2 Slice 2: `div_floor`/`div_trunc`/`udiv_trunc`/`div_true`
 
 Additive-only: adds the four new division builtin names from SIR21 T3b-2
