@@ -245,9 +245,16 @@ disagree with itself.
 
 Decoding validates every relation before the value exists: the bootstrap must
 decode, verify under its own authority signature, name the same `vault_id`,
-carry the same `authority_public_key` fingerprint the active state pins,
-declare `generation = active_generation + 1`, and declare
+carry the same `authority_public_key` fingerprint the active state pins, be a
+non-zero generation, and declare
 `previous_bootstrap = Some(active.bootstrap_id)`.
+
+The successor relation on the *generation number* is deliberately not checked
+here, because `ActiveStateV1` pins a bootstrap ID and not a generation, so this
+value does not know its predecessor's number. `BootstrapStore::put_generation`
+does — it reads the current latest — and already refuses anything but
+`current.generation + 1` with the expected predecessor. The check is stated
+once, where the fact needed to state it lives.
 
 The journal is not optional. Consider the alternative — put the new generation
 first and update local state after:

@@ -778,7 +778,7 @@ fn map_application_repository(error: ApplicationRepositoryError) -> ApplicationE
     }
 }
 
-fn wrap_root_key(
+pub(crate) fn wrap_root_key(
     passphrase: &[u8],
     kdf: &Argon2idParametersV1,
     vault_id: VaultId,
@@ -810,7 +810,7 @@ fn wrap_root_key(
     })
 }
 
-fn unwrap_root_key(
+pub(crate) fn unwrap_root_key(
     passphrase: &[u8],
     bootstrap: &BootstrapV1,
 ) -> Result<Zeroizing<[u8; 32]>, ApplicationError> {
@@ -861,7 +861,7 @@ fn root_wrap_aad(vault_id: VaultId) -> Vec<u8> {
     aad
 }
 
-fn sign_bootstrap(value: BootstrapV1, secret: &[u8; 64]) -> Result<BootstrapV1, ApplicationError> {
+pub(crate) fn sign_bootstrap(value: BootstrapV1, secret: &[u8; 64]) -> Result<BootstrapV1, ApplicationError> {
     let preimage = value
         .signing_preimage()
         .map_err(|_| ApplicationError::InternalInvariant)?;
@@ -1041,6 +1041,17 @@ mod tests {
                     Ok(())
                 }
             }
+        }
+
+        fn supersede_generation(
+            &self,
+            _locator: BootstrapLocator,
+            _superseded: BootstrapId,
+        ) -> Result<(), BootstrapStoreError> {
+            // Generation zero never supersedes anything, and this fixture is
+            // deliberately single-slot, so the only correct answer here is the
+            // refusal `BootstrapStore` requires for the live generation.
+            Err(BootstrapStoreError::Conflict)
         }
     }
 

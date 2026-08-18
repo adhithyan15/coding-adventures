@@ -20,6 +20,7 @@ mod mutation;
 mod open;
 mod repository;
 mod restore;
+mod rotate;
 mod search;
 mod state;
 mod status;
@@ -81,9 +82,15 @@ pub use repository::{
     V1ApplicationRepositoryFactory,
 };
 pub use restore::{PortableRestoreExpectationV1, PortableRestoreVerificationV1};
+pub use rotate::{
+    commit_passphrase_rotation, prepare_passphrase_rotation, recover_pending_rotation,
+    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PreparedPassphraseRotationV1,
+    PASSPHRASE_ROTATION_RANDOM_BYTES,
+};
 pub use state::{
     ActiveStateV1, AuthorityFingerprint, BootstrapLocator, BootstrapStore, BootstrapStoreError,
-    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, PreparedInitV1, PublicationJournalV1,
+    LocalStateStore, LocalStateStoreError, LocalVaultStateV1, PendingRotationV1, PreparedInitV1,
+    PublicationJournalV1,
 };
 pub use status::{VaultStatusStateV1, VaultStatusV1};
 pub use verifier::V1SingleDeviceVerifier;

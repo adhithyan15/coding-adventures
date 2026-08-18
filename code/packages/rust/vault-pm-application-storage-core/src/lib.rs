@@ -288,6 +288,51 @@ impl<B: StorageBackend> BootstrapStore for StorageCoreApplicationStore<B> {
             exact_bootstrap,
         )
     }
+
+    /// Remove one retired generation record, refusing to remove the live one.
+    ///
+    /// VLT-PM43 §5.4. Advancing the latest pointer is not enough to retire a
+    /// passphrase: the superseded generation still holds a wrapping of the
+    /// *same, unchanged* vault root key under the *old* passphrase-derived key,
+    /// so anyone who later obtained a copy of this directory and the retired
+    /// passphrase could open the vault through it. The delete is the part of a
+    /// rotation that makes the rotation mean something.
+    ///
+    /// Two behaviours are load-bearing rather than incidental:
+    ///
+    /// - The latest generation is refused outright, with `Conflict`. That
+    ///   record is the only way into the vault, and a guard is worth more than
+    ///   a convention that every caller passes the right identifier.
+    /// - An already-absent record is success, because the rotation's recovery
+    ///   replays this call after a crash and must be able to reach the end.
+    fn supersede_generation(
+        &self,
+        locator: BootstrapLocator,
+        superseded: BootstrapId,
+    ) -> Result<(), BootstrapStoreError> {
+        let _write = self
+            .write_lock
+            .lock()
+            .map_err(|_| BootstrapStoreError::Unavailable)?;
+        self.initialize_bootstrap()?;
+        if self
+            .read_latest(locator)?
+            .is_some_and(|latest| latest.id == superseded)
+        {
+            return Err(BootstrapStoreError::Conflict);
+        }
+        let namespace = generation_namespace(locator);
+        let key = hex_bytes(superseded.as_bytes());
+        match self.backend.delete(&namespace, &key, None) {
+            Ok(()) | Err(StorageError::NotFound { .. }) => {}
+            Err(error) => return Err(map_bootstrap_write(error)),
+        }
+        match self.backend.get(&namespace, &key) {
+            Ok(None) => Ok(()),
+            Ok(Some(_)) => Err(BootstrapStoreError::Corruption),
+            Err(error) => Err(map_bootstrap_read(error)),
+        }
+    }
 }
 
 impl<B: StorageBackend> LocalStateStore for StorageCoreApplicationStore<B> {

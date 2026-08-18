@@ -16,6 +16,7 @@ const VERSION: u64 = 1;
 const PREPARED_INIT: u64 = 1;
 const ACTIVE: u64 = 2;
 const PENDING_PUBLICATION: u64 = 3;
+const PENDING_ROTATION: u64 = 4;
 const MAX_LOCAL_STATE_BYTES: usize = 32 * 1024 * 1024;
 const MAX_BOOTSTRAP_BYTES: usize = 1024 * 1024;
 const AUTHORITY_FINGERPRINT_DOMAIN: &[u8] = b"VPM-AUTHORITY-FINGERPRINT-v1";
@@ -381,6 +382,25 @@ impl ActiveStateV1 {
         self.audit_event_head
     }
 
+    /// Re-pin this state to a different accepted signed bootstrap.
+    ///
+    /// A passphrase rotation changes exactly one field of the owner state: the
+    /// bootstrap ID it will demand on the next open. Everything else — vault,
+    /// device, certificate, encrypted local secret, pins, counter, catalog,
+    /// audit head — is a function of the vault root key, which the rotation
+    /// does not touch. That is what makes the operation O(1), and expressing it
+    /// as a one-field replacement is what keeps the claim checkable: the
+    /// caller cannot accidentally rebuild an unrelated state and call it a
+    /// rotation.
+    pub(crate) fn with_bootstrap_id(
+        mut self,
+        bootstrap_id: BootstrapId,
+    ) -> Result<Self, ApplicationError> {
+        self.bootstrap_id = bootstrap_id;
+        self.validate()?;
+        Ok(self)
+    }
+
     /// Install a verified encrypted event as this device's first audit head.
     pub(crate) fn with_audit_event_head(
         mut self,
@@ -551,6 +571,125 @@ impl Debug for PreparedInitV1 {
     }
 }
 
+/// Crash-resumable passphrase-rotation journal recorded before the swap.
+///
+/// # Why a rotation needs its own journal
+///
+/// VLT-PM43 §5.2. A rotation moves one durable fact — which signed bootstrap a
+/// vault's owner state accepts — across two independent stores. The bootstrap
+/// store learns the new generation; the local state store learns to demand it.
+/// Doing that in either order without a journal has a landing point that wedges
+/// the vault:
+///
+/// ```text
+///   put_generation(next)      ✔ the provider now serves the new bootstrap
+///   ✗ CRASH
+///   compare_exchange(active)  ✘ never ran; owner state still pins the OLD id
+/// ```
+///
+/// The next open compares the served bootstrap's ID against the pinned one and
+/// fails closed — which is exactly what that pin is for, and exactly the wrong
+/// answer here. Neither passphrase would open the vault, and the only escape
+/// would be to weaken the rollback and fork detection the pin provides.
+///
+/// This value is written *first*, so every later step is a pure function of it.
+/// Recovery therefore rolls forward and needs no passphrase at all: the exact
+/// signed bytes, the superseded ID, and the intended next owner state are all
+/// derivable from what is already durable.
+///
+/// # What it may hold
+///
+/// Only the last stable owner state and the *public* signed bootstrap bytes.
+/// A `BootstrapV1` is a provider-discoverable record by construction — the
+/// wrapped root key inside it is ciphertext no passphrase-free reader can
+/// open — so journalling it adds no secret to disk that the bootstrap store is
+/// not about to hold anyway.
+#[derive(Clone, PartialEq, Eq)]
+pub struct PendingRotationV1 {
+    active: ActiveStateV1,
+    bootstrap: Vec<u8>,
+}
+
+impl PendingRotationV1 {
+    /// Validate and retain the last stable state and the exact next bootstrap.
+    pub fn new(active: ActiveStateV1, bootstrap: Vec<u8>) -> Result<Self, ApplicationError> {
+        let value = Self { active, bootstrap };
+        value.validate()?;
+        Ok(value)
+    }
+
+    /// Borrow the last stable owner state, which still pins the old bootstrap.
+    pub const fn active(&self) -> &ActiveStateV1 {
+        &self.active
+    }
+
+    /// Borrow the exact authority-signed next bootstrap bytes.
+    pub fn bootstrap(&self) -> &[u8] {
+        &self.bootstrap
+    }
+
+    /// Return the ID of the bootstrap this rotation retires.
+    pub const fn superseded_bootstrap_id(&self) -> BootstrapId {
+        self.active.bootstrap_id()
+    }
+
+    /// Return the ID of the bootstrap this rotation installs.
+    pub fn next_bootstrap_id(&self) -> Result<BootstrapId, ApplicationError> {
+        BootstrapV1::decode(&self.bootstrap)
+            .and_then(|bootstrap| bootstrap.id())
+            .map_err(|_| ApplicationError::IntegrityFailure)
+    }
+
+    /// Derive the owner state installed once the rotation is durable.
+    ///
+    /// Deliberately computed rather than stored. A journal that carried both
+    /// the bootstrap and a separately built "intended" state could disagree
+    /// with itself, and the disagreement would only surface after a crash.
+    pub fn intended_active(&self) -> Result<ActiveStateV1, ApplicationError> {
+        self.active.clone().with_bootstrap_id(self.next_bootstrap_id()?)
+    }
+
+    fn validate(&self) -> Result<(), ApplicationError> {
+        self.active.validate()?;
+        if self.bootstrap.len() > MAX_BOOTSTRAP_BYTES {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        let bootstrap =
+            BootstrapV1::decode(&self.bootstrap).map_err(|_| ApplicationError::IntegrityFailure)?;
+        let bootstrap_preimage = bootstrap
+            .signing_preimage()
+            .map_err(|_| ApplicationError::IntegrityFailure)?;
+        // The generation *number* is not checked against a predecessor here:
+        // an `ActiveStateV1` pins an ID, not a number, so this value does not
+        // know what the predecessor's number was. `BootstrapStore` does, and
+        // already refuses anything but `current.generation + 1`.
+        if !is_valid_public_key(bootstrap.authority_public_key.as_bytes())
+            || !verify(
+                &bootstrap_preimage,
+                bootstrap.signature.as_bytes(),
+                bootstrap.authority_public_key.as_bytes(),
+            )
+            || bootstrap.generation == 0
+            || bootstrap.previous_bootstrap != Some(self.active.bootstrap_id)
+            || bootstrap.vault_id != self.active.vault_id
+            || AuthorityFingerprint::for_public_key(bootstrap.authority_public_key)
+                != self.active.authority_fingerprint
+        {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        Ok(())
+    }
+}
+
+impl Debug for PendingRotationV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("PendingRotationV1")
+            .field("bootstrap_bytes", &self.bootstrap.len())
+            .finish_non_exhaustive()
+    }
+}
+
 /// Complete canonical owner-state machine persisted by a host adapter.
 #[derive(Clone, PartialEq, Eq)]
 pub enum LocalVaultStateV1 {
@@ -565,6 +704,8 @@ pub enum LocalVaultStateV1 {
         /// Exact retryable publication and intended new pins/counter/catalog.
         publication: PublicationJournalV1,
     },
+    /// Stable old state plus the exact signed bootstrap a rotation installs.
+    PendingRotation(PendingRotationV1),
 }
 
 impl LocalVaultStateV1 {
@@ -594,6 +735,13 @@ impl LocalVaultStateV1 {
                 CborValue::Map(vec![
                     field(1, encode_active(active)?),
                     field(2, encode_publication(publication)?),
+                ]),
+            ),
+            Self::PendingRotation(value) => (
+                PENDING_ROTATION,
+                CborValue::Map(vec![
+                    field(1, encode_active(&value.active)?),
+                    field(2, bytes(&value.bootstrap)),
                 ]),
             ),
         };
@@ -630,6 +778,12 @@ impl LocalVaultStateV1 {
                 let publication = decode_publication(take_value(&mut body, 2)?)?;
                 Self::pending_publication(active, publication)?
             }
+            PENDING_ROTATION => {
+                let mut body = closed_fields(body, &[1, 2])?;
+                let active = decode_active(take_value(&mut body, 1)?)?;
+                let bootstrap = take_bytes(&mut body, 2)?;
+                Self::PendingRotation(PendingRotationV1::new(active, bootstrap)?)
+            }
             _ => return Err(ApplicationError::Unsupported),
         };
         value.validate()?;
@@ -648,6 +802,7 @@ impl LocalVaultStateV1 {
                 publication.validate()?;
                 validate_pending(active, publication)
             }
+            Self::PendingRotation(value) => value.validate(),
         }
     }
 }
@@ -660,6 +815,7 @@ impl Debug for LocalVaultStateV1 {
             Self::PendingPublication { .. } => {
                 formatter.write_str("LocalVaultStateV1::PendingPublication")
             }
+            Self::PendingRotation(_) => formatter.write_str("LocalVaultStateV1::PendingRotation"),
         }
     }
 }
@@ -703,6 +859,39 @@ pub trait BootstrapStore: Send + Sync {
         locator: BootstrapLocator,
         expected_previous: Option<BootstrapId>,
         exact_bootstrap: &[u8],
+    ) -> Result<(), BootstrapStoreError>;
+
+    /// Durably remove one retired generation that is no longer the latest.
+    ///
+    /// # Why this is part of the contract and not a housekeeping detail
+    ///
+    /// VLT-PM43 §5.4. A bootstrap generation holds one wrapping of the vault
+    /// root key under one passphrase-derived key. A passphrase rotation
+    /// installs a new wrapping of the *same, unchanged* root key and moves the
+    /// latest pointer — but if the previous generation stayed on disk, the
+    /// retired passphrase would still unwrap that root key from it, and the
+    /// rotation would have accomplished nothing against the adversary the
+    /// person most likely had in mind. "Superseded" has to mean gone, not
+    /// merely no longer pointed at.
+    ///
+    /// # Required behaviour
+    ///
+    /// - Removing an already-absent generation is success. Recovery replays
+    ///   this call, so it must be idempotent.
+    /// - Removing the generation the latest pointer currently names must fail
+    ///   with [`BootstrapStoreError::Conflict`]. Deleting the live bootstrap
+    ///   would leave a vault no passphrase could open, and refusing makes that
+    ///   unreachable by construction rather than by every caller staying
+    ///   careful.
+    ///
+    /// This removes the ability to *re-open* a vault through a retired
+    /// credential. It does not break the generation chain: each bootstrap
+    /// still names its predecessor by hash, so rollback and fork detection are
+    /// unaffected, and nothing in this product reads a non-latest generation.
+    fn supersede_generation(
+        &self,
+        locator: BootstrapLocator,
+        superseded: BootstrapId,
     ) -> Result<(), BootstrapStoreError>;
 }
 

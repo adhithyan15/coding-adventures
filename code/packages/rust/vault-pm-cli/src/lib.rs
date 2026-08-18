@@ -31,13 +31,15 @@ use coding_adventures_vault_pm_application::{
     DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
     LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
     PortableExportPolicyV1, PortableExportRandomnessV1, PortableImportRandomnessV1,
-    PortableOpenPolicyV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableOpenPolicyV1,
+    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
     RestoreItemRandomnessV1, RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1,
     SecretFieldV1, SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1,
     V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1,
     ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES,
     DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES,
-    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
+    MAX_PORTABLE_EXPORT_ARTIFACT_BYTES, PASSPHRASE_ROTATION_RANDOM_BYTES,
+    PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
 use coding_adventures_vault_pm_application_storage_core::StorageCoreApplicationStore;
@@ -76,7 +78,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -666,6 +668,8 @@ enum Command {
     Doctor {
         unlock: bool,
     },
+    /// Re-wrap the vault root key under a newly collected master passphrase.
+    PassphraseRotate,
     PortableExport {
         destination: PathBuf,
     },
@@ -832,6 +836,7 @@ where
         "shell" if tail.is_empty() => Ok(Command::Shell),
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
+        "passphrase" => parse_passphrase(tail),
         "export" => parse_export(tail),
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
@@ -1090,6 +1095,19 @@ fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+/// Parse the `passphrase` noun.
+///
+/// `rotate` is the only verb, and it takes no arguments at all: VLT-PM00 §14.5
+/// forbids a passphrase reaching this process through argv, an environment
+/// variable, command history, a URL, or config, and a flag that named a file or
+/// a policy would be the first step toward one that named a secret.
+fn parse_passphrase(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [verb] if verb == "rotate" => Ok(Command::PassphraseRotate),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
 fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliFailure> {
     let paths = host.paths().map_err(map_host)?;
     let prepared = paths.prepare().map_err(map_local_host)?;
@@ -1234,6 +1252,7 @@ fn dispatch(
             audit_show(host, paths, writer, selected_vault, trace_id)
         }
         Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
+        Command::PassphraseRotate => passphrase_rotate(host, paths, writer, selected_vault),
         Command::PortableExport { destination } => {
             portable_export(host, paths, writer, selected_vault, &destination)
         }
@@ -3575,8 +3594,9 @@ fn resume_init(
     let LocalVaultStateV1::PreparedInit(_) = state else {
         return match state {
             LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
-            LocalVaultStateV1::PendingPublication { .. } => {
-                resume_pending_publication(host, &config, vault, locator, &application_store)
+            LocalVaultStateV1::PendingPublication { .. }
+            | LocalVaultStateV1::PendingRotation(_) => {
+                resume_interrupted_write(host, &config, vault, locator, &application_store)
             }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
         };
@@ -3594,7 +3614,7 @@ fn resume_init(
     Ok(CliOutput::success("Vault initialized.\n"))
 }
 
-/// Finish an interrupted mutation publication found by a resume path.
+/// Finish an interrupted durable write found by a resume path.
 ///
 /// VLT-PM42. `init` and `vault create` both mean "finish whatever was
 /// interrupted here", and both used to refuse a `PendingPublication` with the
@@ -3604,10 +3624,16 @@ fn resume_init(
 /// publication is the same promise one generation on, and these are the verbs
 /// a stuck person retries.
 ///
+/// VLT-PM43 adds the second journal, an interrupted passphrase rotation, to the
+/// same sentence. The passphrase collected below is used only by the unlock
+/// that follows the repair: a rotation roll-forward consumes none, so a person
+/// who reaches here after an interrupted rotation must type the *new*
+/// passphrase — the one they had just confirmed when the machine stopped.
+///
 /// The repaired vault is opened before success is reported, so "recovered"
 /// means a real authenticated open of the repaired durable bytes succeeded,
 /// not merely that a write returned.
-fn resume_pending_publication(
+fn resume_interrupted_write(
     host: &dyn CliHost,
     config: &VaultPmConfigV1,
     vault: &VaultConfigV1,
@@ -3735,8 +3761,9 @@ fn resume_vault_create(
     let LocalVaultStateV1::PreparedInit(_) = state else {
         return match state {
             LocalVaultStateV1::Active(_) => Err(CliFailure::AlreadyInitialized),
-            LocalVaultStateV1::PendingPublication { .. } => {
-                resume_pending_publication(host, config, vault, locator, &application_store)
+            LocalVaultStateV1::PendingPublication { .. }
+            | LocalVaultStateV1::PendingRotation(_) => {
+                resume_interrupted_write(host, config, vault, locator, &application_store)
             }
             LocalVaultStateV1::PreparedInit(_) => unreachable!(),
         };
@@ -3777,6 +3804,118 @@ fn status(
         VaultStatusStateV1::RecoveryRequired => "recovery_required",
     };
     Ok(render_status_label(label, json))
+}
+
+/// Collect a new master passphrase and re-wrap the vault root key under it.
+///
+/// VLT-PM43. The order of the two prompts is the whole safety argument. The
+/// *current* passphrase comes first, because it is the authentication, and
+/// because a person who cannot produce it must be told so before being asked to
+/// invent a replacement. The *new* one is collected and confirmed second,
+/// against an already unlocked vault, so a typo is caught while the old
+/// passphrase is still the only one that means anything.
+///
+/// Nothing durable happens until both are in hand and the next bootstrap is
+/// built and signed. Every failure up to that point leaves a vault the current
+/// passphrase still opens.
+fn passphrase_rotate(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault = configured_vault(paths, &config, selected_vault)?;
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let repository_factory = configured_repository_factory(&config, vault)?;
+
+    // Reserved before authentication, exactly as `export` reserves its audit
+    // inputs, so that a failure to collect the new passphrase can still be
+    // recorded without asking the host for anything new at the worst moment.
+    let (wall_time_ms, audit_randomness) = audited_access_inputs(host)?;
+    let mut rotation_random = [0_u8; PASSPHRASE_ROTATION_RANDOM_BYTES];
+    host.fill_entropy(&mut rotation_random).map_err(map_host)?;
+    let (memory_kib, iterations, lanes) = host.generation_zero_kdf();
+    let policy =
+        PassphraseRotationPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
+
+    let current_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let mut access = VaultAccessV1::locked(locator);
+    // VLT-PM42. A rotation must describe a settled vault: the bootstrap it
+    // signs pins the state an interrupted publication may still be moving.
+    access
+        .unlock_recovering_pending_publication(
+            Zeroizing::new(current_passphrase.to_vec()),
+            &application_store,
+            &application_store,
+            &repository_factory,
+        )
+        .map_err(map_application)?;
+    // Read after the recovering unlock, never before: a replay can advance the
+    // durable bootstrap, and signing a successor to a stale one would be
+    // refused by the store at the worst possible moment.
+    let exact_bootstrap = application_store
+        .load_latest(locator)
+        .map_err(map_bootstrap_store)?
+        .ok_or(CliFailure::Integrity)?;
+    let audit_enabled = access
+        .as_unlocked()
+        .map_err(map_application)?
+        .audit_enabled();
+
+    let new_passphrase = match host.read_new_passphrase() {
+        Ok(passphrase) => passphrase,
+        Err(error) => {
+            if audit_enabled {
+                access
+                    .into_unlocked()
+                    .map_err(map_application)?
+                    .record_audited_passphrase_rotation_host_failure(
+                        wall_time_ms,
+                        audit_randomness,
+                        &application_store,
+                    )
+                    .map_err(map_application)?;
+            }
+            return Err(map_host(error));
+        }
+    };
+    let randomness = PassphraseRotationRandomnessV1::new(rotation_random);
+
+    let unlocked = access.into_unlocked().map_err(map_application)?;
+    if audit_enabled {
+        unlocked
+            .audited_rotate_passphrase(
+                &exact_bootstrap,
+                &current_passphrase,
+                &new_passphrase,
+                policy,
+                randomness,
+                wall_time_ms,
+                audit_randomness,
+                &application_store,
+                &application_store,
+            )
+            .map_err(map_application)?;
+    } else {
+        unlocked
+            .rotate_passphrase(
+                &exact_bootstrap,
+                &current_passphrase,
+                &new_passphrase,
+                policy,
+                randomness,
+                &application_store,
+                &application_store,
+            )
+            .map_err(map_application)?;
+    }
+    Ok(CliOutput::success("Vault passphrase rotated.\n"))
 }
 
 fn audit_enable(
