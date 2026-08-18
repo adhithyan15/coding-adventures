@@ -240,15 +240,28 @@ vault-pm: recovered an interrupted write
 Standard output is untouched, so nothing that parses a command's output has to
 change, and the exit class is unchanged.
 
-Three notes on why the observation is trustworthy:
+The complete rule, because the interesting rows are the silent ones:
+
+| before | after | notice | why |
+|---|---|---|---|
+| `RecoveryRequired` | anything else, observed | **yes** | only this command held the writer lock |
+| `RecoveryRequired` | `RecoveryRequired` | no | still wedged; nothing was finished |
+| `RecoveryRequired` | unobservable | no | an observation that could not be taken is not evidence |
+| anything else | anything | no | there was nothing to repair |
+
+Three notes on why this is trustworthy:
 
 - **It cannot produce a false positive.** The writer lock excludes every other
   local writer for the whole command, so nothing but this command can move the
   state out of `RecoveryRequired` between the two reads.
-- **It can produce a false negative, and that is the safe direction.** If the
+- **Both ends fail toward silence, and that is the safe direction.** If the
   configuration cannot be read, or the selector names a vault the observation
-  cannot resolve, the observation is simply skipped and the repair happens
-  without the notice.
+  cannot resolve, or the owner state becomes unreadable while the command runs,
+  the notice is withheld and the repair — if it happened — happens quietly. The
+  third row above is the trap this rule exists to avoid: "not observed" is not
+  the same as "no longer wedged", and reading it as such would announce a repair
+  on a vault that is still broken. A missing notice costs a courtesy; a wrong
+  one is a false claim about a person's vault.
 - **It says "recovered", not "your command did something extra".** The
   observation is of the vault, not of the verb, so the same sentence is correct
   for `item list`, for `init`, and for a shell command.
@@ -312,7 +325,9 @@ time. It names no vault, item, revision, object, provider, path, or count.
 11. Real-process proof that the read-only diagnostics still refuse to repair:
     `status` and `doctor` run against a wedged vault leave it wedged.
 12. The recovery notice appears on standard error exactly when a repair
-    happened, and never on a command that only reported the wedged state.
+    happened, and never on a command that only reported the wedged state. The
+    complete truth table of §6 is pinned directly, including the row where the
+    after-state cannot be observed and the notice must be withheld.
 13. Every landing point of the shared publication path is, after this contract,
     either a clean rollback or a state the very next ordinary command repairs.
     No landing point leaves a vault any command refuses.

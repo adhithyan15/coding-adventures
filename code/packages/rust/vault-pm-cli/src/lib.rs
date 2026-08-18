@@ -1109,10 +1109,8 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
     // command finished an interrupted publication.
     let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
     let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
-    let recovered = before == Some(VaultStatusStateV1::RecoveryRequired)
-        && observed_vault_state(prepared.paths(), &writer, selected_vault)
-            != Some(VaultStatusStateV1::RecoveryRequired);
-    if !recovered {
+    let after = observed_vault_state(prepared.paths(), &writer, selected_vault);
+    if !observed_a_repair(before, after) {
         return result;
     }
     // The notice is attached to a failed command too. A repair that happened
@@ -1125,6 +1123,34 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
     })
 }
 
+/// Whether two observations prove *this* command finished an interrupted
+/// publication.
+///
+/// The whole truth table, because the interesting cases are the ones that must
+/// stay quiet:
+///
+/// | before | after | repair announced | why |
+/// |---|---|---|---|
+/// | `RecoveryRequired` | anything else, observed | **yes** | only this command held the writer lock, so only this command can have moved it |
+/// | `RecoveryRequired` | `RecoveryRequired` | no | still wedged; nothing was finished |
+/// | `RecoveryRequired` | `None` | no | the observation could not be taken, which is not evidence of anything |
+/// | anything else | anything | no | there was nothing to repair |
+///
+/// The third row is the one worth stating out loud. `None` means the state
+/// could not be read — an owner-state file that just became unreadable, a store
+/// that went away mid-command — and `None != Some(RecoveryRequired)` is
+/// perfectly true while proving nothing. Reading it as "no longer recovery
+/// required" would announce a repair on a vault that is still wedged, which is
+/// precisely the false claim [`observed_vault_state`] exists to avoid. Both
+/// ends therefore fail toward silence.
+const fn observed_a_repair(
+    before: Option<VaultStatusStateV1>,
+    after: Option<VaultStatusStateV1>,
+) -> bool {
+    matches!(before, Some(VaultStatusStateV1::RecoveryRequired))
+        && matches!(after, Some(state) if !matches!(state, VaultStatusStateV1::RecoveryRequired))
+}
+
 /// Read the durable lifecycle state of the vault this invocation targets.
 ///
 /// Deliberately total, and deliberately silent about why it failed: this
@@ -1135,7 +1161,9 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
 ///
 /// `None` therefore biases the notice toward silence. That is the safe
 /// direction: a missing notice loses a courtesy, while a wrong one would be a
-/// false claim about a person's vault.
+/// false claim about a person's vault. The caller must honour that bias in
+/// *both* observations — see [`execute`], where an unobservable after-state is
+/// treated as "say nothing" rather than as "no longer recovery required".
 fn observed_vault_state(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
@@ -8271,6 +8299,38 @@ mod tests {
             .find_map(|line| line.strip_prefix("Item added: "))
             .expect("item-add identifier")
             .to_owned()
+    }
+
+    #[test]
+    fn a_repair_is_announced_only_when_both_observations_prove_one() {
+        use VaultStatusStateV1::{Absent, Locked, Prepared, RecoveryRequired, Unlocked};
+
+        // The only row that speaks: wedged before, demonstrably not wedged
+        // after. Every state the projection can report counts as "not wedged".
+        for after in [Absent, Prepared, Locked, Unlocked] {
+            assert!(
+                observed_a_repair(Some(RecoveryRequired), Some(after)),
+                "{after:?}"
+            );
+        }
+
+        // Still wedged, so nothing was finished.
+        assert!(!observed_a_repair(
+            Some(RecoveryRequired),
+            Some(RecoveryRequired)
+        ));
+
+        // An observation that could not be taken proves nothing, and
+        // `None != Some(RecoveryRequired)` is exactly the true-but-meaningless
+        // comparison that would otherwise announce a repair on a vault that is
+        // still wedged.
+        assert!(!observed_a_repair(Some(RecoveryRequired), None));
+
+        // Nothing to repair in the first place.
+        for before in [None, Some(Absent), Some(Prepared), Some(Locked)] {
+            assert!(!observed_a_repair(before, Some(Locked)), "{before:?}");
+            assert!(!observed_a_repair(before, None), "{before:?}");
+        }
     }
 
     #[test]

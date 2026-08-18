@@ -397,9 +397,14 @@ vault-pm: recovered an interrupted write
 `execute` decides that by reading the durable lifecycle state immediately
 before and immediately after the command, both inside the cross-process writer
 lock the command already holds. That lock is what makes the inference sound —
-no other local writer can move the state between the two reads — and an
-observation that cannot be made degrades to silence rather than to a false
-claim. Standard output and every exit class are unchanged.
+no other local writer can move the state between the two reads.
+
+`observed_a_repair` states the whole rule, and the row worth knowing is the
+quiet one: if the after-state cannot be *observed*, no notice is emitted. "Not
+observed" satisfies "not `recovery_required`" while proving nothing, and
+announcing a repair on a vault that is still wedged would be worse than saying
+nothing at all. Both ends fail toward silence. Standard output and every exit
+class are unchanged.
 
 See `code/specs/VLT-PM42-cli-pending-publication-recovery.md`.
 

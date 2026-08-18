@@ -38,10 +38,14 @@
   observes that transition across the command, both reads inside the
   cross-process writer lock the command already holds — which is what makes the
   inference sound, since no other local writer can move the state between them.
-  An observation it cannot make degrades to silence, never to a false claim.
-  Standard output and every exit class are unchanged, and the notice is
-  attached to a failing command too, because a repair is worth saying even when
-  the verb that triggered it went on to report `not found`.
+  *Both* observations must succeed for the claim to be made, and the security
+  review of this change is why that sentence is worth writing down: an
+  unobservable after-state satisfies "not `RecoveryRequired`" while proving
+  nothing, so reading it that way would announce a repair on a vault that is
+  still wedged. `observed_a_repair` states the whole truth table and is pinned
+  by a test. Standard output and every exit class are unchanged, and the notice
+  is attached to a failing command too, because a repair is worth saying even
+  when the verb that triggered it went on to report `not found`.
 - No change to the crash-injection isolation. The `crash-injection` feature is
   still named in no section of the product crate, still enabled only by
   `code/programs/rust/vault-pm-cli-drill`, and the product executable still
