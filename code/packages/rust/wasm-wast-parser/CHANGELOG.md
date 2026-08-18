@@ -1,5 +1,20 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.37 — 2026-08-18 — SIMD: i64x2 arith+cmp family text-form (task #156-158)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover i64x2's first REAL ARITHMETIC
+  family: `i64x2.abs`/`neg`/`add`/`sub`/`mul`/`eq`/`ne`/`lt_s`/`gt_s`/
+  `le_s`/`ge_s` -- same "no immediate beyond the opcode byte itself"
+  shape every prior SIMD op in this family has, so no new parsing
+  logic. Verified via a dedicated test asserting the real 2-byte
+  LEB128-encoded sub-opcode bytes (`[0xFD, 0xC0, 0x01]` through
+  `[0xFD, 0xDB, 0x01]` -- all >= 128).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.36 — 2026-08-18 — SIMD: boolean-reduction/bitmask family text-form (task #153-155)
 
 ### Added

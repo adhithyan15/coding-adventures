@@ -1452,7 +1452,10 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::And
                     | wasm_opcodes::SimdOpKind::AndNot
                     | wasm_opcodes::SimdOpKind::Or
-                    | wasm_opcodes::SimdOpKind::Xor => {
+                    | wasm_opcodes::SimdOpKind::Xor
+                    | wasm_opcodes::SimdOpKind::AddI64x2
+                    | wasm_opcodes::SimdOpKind::SubI64x2
+                    | wasm_opcodes::SimdOpKind::MulI64x2 => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1498,7 +1501,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::LeSI8x16
                     | wasm_opcodes::SimdOpKind::LeUI8x16
                     | wasm_opcodes::SimdOpKind::GeSI8x16
-                    | wasm_opcodes::SimdOpKind::GeUI8x16 => {
+                    | wasm_opcodes::SimdOpKind::GeUI8x16
+                    | wasm_opcodes::SimdOpKind::EqI64x2
+                    | wasm_opcodes::SimdOpKind::NeI64x2
+                    | wasm_opcodes::SimdOpKind::LtSI64x2
+                    | wasm_opcodes::SimdOpKind::GtSI64x2
+                    | wasm_opcodes::SimdOpKind::LeSI64x2
+                    | wasm_opcodes::SimdOpKind::GeSI64x2 => {
                         // WASM's SIMD comparison convention: the RESULT is
                         // still a v128 (a per-lane boolean mask), not a
                         // plain i32 -- see `SimdOpKind::Eq`'s own doc
@@ -1519,7 +1528,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::AbsI16x8
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16S
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16U
-                    | wasm_opcodes::SimdOpKind::Not => {
+                    | wasm_opcodes::SimdOpKind::Not
+                    | wasm_opcodes::SimdOpKind::AbsI64x2
+                    | wasm_opcodes::SimdOpKind::NegI64x2 => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/

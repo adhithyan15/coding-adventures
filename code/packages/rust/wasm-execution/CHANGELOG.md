@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.25] - 2026-08-18 (task #156-158 — SIMD: i64x2 arith+cmp family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms for i64x2's first REAL
+  ARITHMETIC family: `SimdOpKind::AbsI64x2` (UNARY, `wrapping_abs` so
+  `i64::MIN` maps to itself, not a panic), `NegI64x2` (UNARY,
+  `wrapping_neg`), `AddI64x2 | SubI64x2 | MulI64x2` (BINARY, wrapping
+  arithmetic over 2 `i64` lanes), and `EqI64x2 | NeI64x2 | LtSI64x2 |
+  GtSI64x2 | LeSI64x2 | GeSI64x2` (BINARY, boolean-mask-per-lane,
+  `-1i64`/`0i64` -- SIGNED ONLY, since the SIMD proposal never defines
+  unsigned `i64x2` comparisons). Verified with dedicated tests proving
+  `abs`/`neg` wrap `i64::MIN` instead of panicking,
+  `add`/`sub`/`mul` wrap on overflow (`i64::MAX + 1` -> `i64::MIN`),
+  and the comparison family reads lanes as SIGNED (using `i64::MIN` vs
+  a small positive value, where an unsigned mix-up would flip the
+  result since `i64::MIN`'s bit pattern is the largest unsigned
+  value).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.24] - 2026-08-18 (task #153-155 — SIMD: boolean-reduction/bitmask family)
 
 ### Added

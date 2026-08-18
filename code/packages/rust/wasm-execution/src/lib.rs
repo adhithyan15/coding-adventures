@@ -5421,6 +5421,120 @@ fn register_simd(vm: &mut GenericVM) {
                 }
                 push_wasm(vm, WasmValue::I32(mask));
             }
+            SimdOpKind::AbsI64x2 => {
+                // i64x2.abs: UNARY, same shape as i8x16/i16x8/i32x4's own
+                // `abs` -- pops exactly ONE v128, takes the absolute
+                // value of each of the 2 `i64` lanes, pushes one.
+                // `i64::MIN.wrapping_abs() == i64::MIN` is the same
+                // two's-complement wrapping edge case every narrower
+                // lane width's own `abs` test already established --
+                // the first i64x2 REAL ARITHMETIC opcode (PR12 only
+                // added the all_true/bitmask reduction ops).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = i64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v.wrapping_abs();
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::NegI64x2 => {
+                // i64x2.neg: UNARY, same shape as `i64x2.abs` above.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = i64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v.wrapping_neg();
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::AddI64x2 | SimdOpKind::SubI64x2 | SimdOpKind::MulI64x2 => {
+                // i64x2.add/sub/mul: BINARY, same wrapping-arithmetic
+                // shape as every other lane width's own `add`/`sub`/
+                // `mul`, but over 2 `i64` (8-byte) lanes instead of the
+                // narrower widths this interpreter already handles.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = i64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = i64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::AddI64x2 => l.wrapping_add(r),
+                        SimdOpKind::SubI64x2 => l.wrapping_sub(r),
+                        SimdOpKind::MulI64x2 => l.wrapping_mul(r),
+                        _ => unreachable!("only AddI64x2/SubI64x2/MulI64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::EqI64x2
+            | SimdOpKind::NeI64x2
+            | SimdOpKind::LtSI64x2
+            | SimdOpKind::GtSI64x2
+            | SimdOpKind::LeSI64x2
+            | SimdOpKind::GeSI64x2 => {
+                // i64x2's own comparison family: same lane-wise BINARY
+                // shape and boolean-mask convention as every other lane
+                // width's comparison family, but over 2 `i64` lanes and
+                // SIGNED ONLY -- the SIMD proposal never defines unsigned
+                // i64x2 comparisons, unlike every narrower lane width.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mask = |b: bool| if b { -1i64 } else { 0i64 };
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let l = i64::from_le_bytes(lhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let r = i64::from_le_bytes(rhs[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::EqI64x2 => mask(l == r),
+                        SimdOpKind::NeI64x2 => mask(l != r),
+                        SimdOpKind::LtSI64x2 => mask(l < r),
+                        SimdOpKind::GtSI64x2 => mask(l > r),
+                        SimdOpKind::LeSI64x2 => mask(l <= r),
+                        SimdOpKind::GeSI64x2 => mask(l >= r),
+                        _ => unreachable!("only EqI64x2/NeI64x2/LtSI64x2/GtSI64x2/LeSI64x2/GeSI64x2 reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8335,6 +8449,17 @@ mod tests {
         lanes.iter().map(|&l| l as u8).collect()
     }
 
+    /// Same v128 literal encoding as [`v128_const_bytes`], but for the
+    /// 2-lane `i64x2` shape PR13's arith/cmp family reads/writes -- the
+    /// first opcodes in this crate to read the operand as 8-byte lanes.
+    fn v128_const_bytes_i64x2(lanes: [i64; 2]) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(16);
+        for lane in lanes {
+            bytes.extend_from_slice(&lane.to_le_bytes());
+        }
+        bytes
+    }
+
     /// `v128.const` + `i32x4.extract_lane` round-trip: proves the const
     /// pool (`ctx.simd_consts`) and the v128 heap handle mechanism both
     /// work end to end, not just that the code compiles.
@@ -9280,6 +9405,109 @@ mod tests {
         i64_bytes[7] = 0x80; // lane 0's high byte
         let mut i64_bitmask = simd_engine(boolean_code_for(i64_bytes, &[0xC4, 0x01]));
         assert_eq!(i64_bitmask.call_function(0, &[]).unwrap(), vec![WasmValue::I32(0b01)], "i64x2.bitmask: lane 0 negative, lane 1 positive");
+    }
+
+    /// `i64x2.abs`/`neg`: same two's-complement wrapping edge case every
+    /// narrower lane width's own `abs`/`neg` test already established --
+    /// `i64::MIN` has no positive counterpart in `i64`, so both wrap
+    /// back to `i64::MIN` instead of panicking or overflowing. i64x2's
+    /// first REAL ARITHMETIC opcodes (PR12 only added the all_true/
+    /// bitmask reduction ops).
+    #[test]
+    fn i64x2_abs_and_neg_wrap_i64_min_instead_of_panicking() {
+        let mut abs_code = vec![0xFD, 0x0C];
+        abs_code.extend(v128_const_bytes_i64x2([i64::MIN; 2]));
+        abs_code.extend([0xFD, 0xC0, 0x01]); // i64x2.abs (sub-opcode 0xC0, 2-byte LEB128)
+        abs_code.push(0x0B);
+        let mut abs_engine = simd_engine_returning_v128(abs_code);
+        let (_, abs_bytes) = abs_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(abs_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MIN; 2]).try_into().unwrap())), "i64::MIN.abs() must wrap back to i64::MIN, not panic");
+
+        let mut neg_code = vec![0xFD, 0x0C];
+        neg_code.extend(v128_const_bytes_i64x2([i64::MIN; 2]));
+        neg_code.extend([0xFD, 0xC1, 0x01]); // i64x2.neg (sub-opcode 0xC1, 2-byte LEB128)
+        neg_code.push(0x0B);
+        let mut neg_engine = simd_engine_returning_v128(neg_code);
+        let (_, neg_bytes) = neg_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(neg_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MIN; 2]).try_into().unwrap())), "-(i64::MIN) must wrap back to i64::MIN, not panic");
+    }
+
+    /// `i64x2.add`/`sub`/`mul`: BINARY lane-wise wrapping arithmetic over
+    /// 2 `i64` lanes -- verifies real wrap-on-overflow behavior
+    /// (`i64::MAX + 1` must wrap to `i64::MIN`, not panic), same
+    /// discipline as every other lane width's own arith family.
+    #[test]
+    fn i64x2_add_sub_mul_wrap_on_overflow() {
+        let code_for = |sub_opcode: u8, lhs: [i64; 2], rhs: [i64; 2]| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i64x2(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i64x2(rhs));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0xCE/0xD1/0xD5 are >= 128 -- 2-byte LEB128
+            code.push(0x01);
+            code.push(0x0B);
+            code
+        };
+
+        let mut add_engine = simd_engine_returning_v128(code_for(0xCE, [i64::MAX, 5], [1, 7])); // i64x2.add
+        let (_, add_bytes) = add_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(add_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MIN, 12]).try_into().unwrap())), "i64::MAX + 1 must wrap to i64::MIN");
+
+        let mut sub_engine = simd_engine_returning_v128(code_for(0xD1, [i64::MIN, 10], [1, 3])); // i64x2.sub
+        let (_, sub_bytes) = sub_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(sub_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([i64::MAX, 7]).try_into().unwrap())), "i64::MIN - 1 must wrap to i64::MAX");
+
+        let mut mul_engine = simd_engine_returning_v128(code_for(0xD5, [3, 4], [5, 6])); // i64x2.mul
+        let (_, mul_bytes) = mul_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(mul_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([15, 24]).try_into().unwrap())), "3*5=15, 4*6=24");
+    }
+
+    /// `i64x2.eq`/`ne`/`lt_s`/`gt_s`/`le_s`/`ge_s`: same lane-wise
+    /// boolean-mask convention as every other lane width's comparison
+    /// family, but SIGNED ONLY -- the SIMD proposal never defines
+    /// unsigned `i64x2` comparisons. Uses `i64::MIN` vs a small positive
+    /// value so a signed-vs-unsigned confusion bug would flip the
+    /// result (unsigned would read `i64::MIN`'s bit pattern as the
+    /// LARGEST unsigned value).
+    #[test]
+    fn i64x2_cmp_family_is_signed_and_correctly_ordered() {
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i64x2([i64::MIN, 5]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i64x2([1, 5]));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0xD6-0xDB are >= 128 -- 2-byte LEB128
+            code.push(0x01);
+            code.push(0x0B);
+            code
+        };
+        let mask = |b: bool| if b { -1i64 } else { 0i64 };
+
+        let mut eq_engine = simd_engine_returning_v128(code_for(0xD6)); // i64x2.eq
+        let (_, eq_bytes) = eq_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(eq_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(true)]).try_into().unwrap())), "eq: lane 0 differs, lane 1 equal");
+
+        let mut ne_engine = simd_engine_returning_v128(code_for(0xD7)); // i64x2.ne
+        let (_, ne_bytes) = ne_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(ne_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(true), mask(false)]).try_into().unwrap())), "ne: lane 0 differs, lane 1 equal");
+
+        let mut lt_s_engine = simd_engine_returning_v128(code_for(0xD8)); // i64x2.lt_s
+        let (_, lt_s_bytes) = lt_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(lt_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(true), mask(false)]).try_into().unwrap())), "lt_s: i64::MIN < 1 (signed), 5 not < 5");
+
+        let mut gt_s_engine = simd_engine_returning_v128(code_for(0xD9)); // i64x2.gt_s
+        let (_, gt_s_bytes) = gt_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(gt_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(false)]).try_into().unwrap())), "gt_s: i64::MIN not > 1 (signed), 5 not > 5");
+
+        let mut le_s_engine = simd_engine_returning_v128(code_for(0xDA)); // i64x2.le_s
+        let (_, le_s_bytes) = le_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(le_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(true), mask(true)]).try_into().unwrap())), "le_s: i64::MIN <= 1, 5 <= 5");
+
+        let mut ge_s_engine = simd_engine_returning_v128(code_for(0xDB)); // i64x2.ge_s
+        let (_, ge_s_bytes) = ge_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(ge_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([mask(false), mask(true)]).try_into().unwrap())), "ge_s: i64::MIN not >= 1 (signed), 5 >= 5");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve

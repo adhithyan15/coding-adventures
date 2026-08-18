@@ -56,7 +56,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                pinned commit, no re-pin),
                extended 2026-08-18 (task #153-155 -- simd_boolean.wast,
                v128.any_true + ixNxM.all_true/bitmask boolean-reduction
-               family, same pinned commit, no re-pin)
+               family, same pinned commit, no re-pin),
+               extended 2026-08-18 (task #156-158 -- simd_i64x2_arith.wast/
+               simd_i64x2_arith2.wast/simd_i64x2_cmp.wast, i64x2's first
+               real arithmetic family, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -329,6 +332,26 @@ against the already-implemented `v128.bitselect`/`i8x16.popcnt`/
 `i16x8.abs`/`neg`/`i32x4.abs`/`neg` entries, same discipline as every
 prior addition. 100% pass on every directive kind (2/2 modules,
 259/259 assert_return, 12/12 assert_invalid, 4/4 assert_malformed).
+
+`simd_i64x2_arith.wast`/`simd_i64x2_arith2.wast`/`simd_i64x2_cmp.wast`
+(task #156-158) cover `i64x2.abs`/`neg`/`add`/`sub`/`mul`/`eq`/`ne`/
+`lt_s`/`gt_s`/`le_s`/`ge_s` -- i64x2's first REAL ARITHMETIC family
+(task #153-155 only added the `all_true`/`bitmask` reduction ops, no
+computation). No `lt_u`/`gt_u`/`le_u`/`ge_u` -- the SIMD proposal never
+defines unsigned `i64x2` comparisons, unlike every narrower lane
+width. Reuses the existing `v128,v128->v128`/`v128->v128` shapes
+already implemented for i8x16/i16x8/i32x4 -- this closes a lane-width
+coverage gap, not a new operand shape. Each sub-opcode byte fetched
+live from `BinarySIMD.md` and cross-checked against the
+already-implemented `i64x2.all_true`/`bitmask` entries plus the
+identical `abs`/`neg`/`[gap]`/`all_true`/`bitmask` cluster layout
+already confirmed for i8x16/i16x8/i32x4. 100% pass on every directive
+kind across all three files (5/5 modules, 310/310 assert_return, 23/23
+assert_invalid). Implementing real i64x2 arithmetic also unblocked 22
+previously-`NotYetSupported` `assert_return` directives in the
+UNRELATED, already-vendored `simd_const.wast` (its i64x2 `v128.const`
+round-trip cases needed a real i64x2 op to observe the result through)
+-- a legitimate ripple effect, not a regression.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
