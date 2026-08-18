@@ -31,9 +31,10 @@
       "title": "F# cowsay via existing paint-vm-ascii",
       "depends_on": [],
       "status": "pr-open",
+      "pr_number": 12040,
       "priority": 2,
       "backend_work": "none -- fsharp/paint-vm-ascii already implements glyph_run",
-      "notes": "Mirrors the C# pilot almost exactly; smallest remaining unblocker."
+      "notes": "Mirrors the C# pilot almost exactly; smallest remaining unblocker. Auto-merge enabled."
     },
     {
       "id": "perl-cowsay",
