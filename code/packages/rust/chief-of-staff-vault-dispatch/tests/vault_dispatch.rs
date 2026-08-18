@@ -1209,3 +1209,74 @@ fn a_lease_reference_is_redeemable_exactly_once_and_only_by_the_broker() {
         "a redeemed reference must not be redeemable again"
     );
 }
+
+// ===========================================================================
+// Deliberate lease-only registration (D18D 7.1 V4)
+// ===========================================================================
+
+#[test]
+fn a_lease_only_registration_wires_exactly_one_tool() {
+    // A deployment with no trusted delivery adapter cannot honestly offer
+    // request_direct. The profile below grants only the lease tool, which the
+    // all-or-nothing pair registration would refuse outright.
+    let mut host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    bridge
+        .register_lease_only_into_host(&mut host)
+        .expect("a lease-only host should accept the lease tool");
+    assert_eq!(host.summary().registered_tool_count, 1);
+}
+
+#[test]
+fn the_pair_registration_still_refuses_that_same_host() {
+    // The two operations must stay distinguishable. If `register_into_host`
+    // quietly succeeded here, "deliberate subset" and "misconfigured host"
+    // would look identical from the call site, which is the thing V4's
+    // amendment exists to prevent.
+    let mut host = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    bridge
+        .register_into_host(&mut host)
+        .expect_err("request_direct is not allowed on this host");
+    assert_eq!(
+        host.summary().registered_tool_count,
+        0,
+        "a refused pair must leave the host untouched"
+    );
+}
+
+#[test]
+fn a_lease_only_host_still_enforces_tier_and_capability() {
+    // The subset is narrower, not laxer: it goes through the same checked path.
+    let bridge = VaultToolBridge::new(vault_with_secret(), RecordingDelivery::accepting());
+
+    let mut low_tier = orchestrator(host_profile(
+        PrivilegeTier::Tier1,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:lease"],
+    ));
+    assert!(matches!(
+        bridge.register_lease_only_into_host(&mut low_tier),
+        Err(HostRuntimeError::PrivilegeCeilingExceeded { .. })
+    ));
+
+    let mut no_capability = orchestrator(host_profile(
+        PrivilegeTier::Tier2,
+        &[VAULT_REQUEST_LEASE_TOOL_ID],
+        &["vault:direct"],
+    ));
+    assert!(matches!(
+        bridge.register_lease_only_into_host(&mut no_capability),
+        Err(HostRuntimeError::MissingCapability { .. })
+    ));
+}

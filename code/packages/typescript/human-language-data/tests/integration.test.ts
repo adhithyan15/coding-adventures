@@ -119,7 +119,9 @@ describe("real curriculum", () => {
       // Chapter 12 adds nâm, del, dar, ketâb onto SPINE-EXCHANGE-NAMES; Chapter 13 adds
       // âsemân, khorshid, mâh, setâre, bârân onto SPINE-CHECK-WELLBEING; Chapter 14 adds
       // khâhar, pesar, mard, zan, dust onto SPINE-EXCHANGE-NAMES, closing the tranche.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+      // 14 -> 15: HL-C233, the track's first script chapter. Persian taught no letters
+      // at all before it, in 59 lessons across 14 chapters.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
     expect(
       books.books
         .find((book) => book.language === "urdu")
@@ -137,7 +139,9 @@ describe("real curriculum", () => {
       // 12 -> 15: the second pre-A1 vocabulary tranche (wave 6). Chapter 13 (colors) and
       // 14 (clothing) add further POLITE-REQUEST-REPAIR segments; chapter 15 (weather)
       // returns to CHECK-WELLBEING. All three stay within the 12-atom chapter budget.
-    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+      // 15 -> 16: HL-C234, the track's first script chapter. Urdu was the LAST track in
+      // the corpus teaching no letters at all, in 59 lessons across 15 chapters.
+    ).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
     expect(
       books.books
         .find((book) => book.language === "russian")
@@ -1095,6 +1099,16 @@ describe("real curriculum", () => {
       "FA-C14-mard-meaning",
       "FA-C14-pesar-meaning",
       "FA-C14-zan-meaning",
+      "FA-C15-practice-vowels",
+      "FA-W15-alef-direction",
+      "FA-W15-be-dot",
+      "FA-W15-he-final",
+      "FA-W15-joining-break",
+      "FA-W15-lam-vs-alef",
+      "FA-W15-mim-tail",
+      "FA-W15-sin-teeth",
+      "FA-W15-te-nun-dots",
+      "FA-W15-vav-join",
       "FR-C18-oui-negative",
       "GE-C17-kopf-haupt-compound-word",
       "GU-C06-number-histories-be-source",
@@ -1199,6 +1213,15 @@ describe("real curriculum", () => {
       "UR-C11-dil-cousin",
       "UR-C12-doodh-false-friend",
       "UR-C12-roti-pasand",
+      "UR-C16-practice-vowels",
+      "UR-W16-alef-cascade",
+      "UR-W16-joining-gap",
+      "UR-W16-kaf-lifts",
+      "UR-W16-lam-bowl",
+      "UR-W16-mim-head",
+      "UR-W16-nun-dot",
+      "UR-W16-sin-lifts",
+      "UR-W16-ye-dots",
       "ZH-C01-hao-components",
       "ZH-C01-hao-fond-tone",
       "ZH-C01-ni-meaning",

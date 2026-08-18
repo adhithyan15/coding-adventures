@@ -27,16 +27,17 @@ use chief_of_staff_host_runtime::{
     OrchestratorProfileSummary,
 };
 use chief_of_staff_tool_api::{
-    builtin_tool_definition, ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier,
-    RequestedBy, SchemaProperty, ToolApiError, ToolApprovalChallenge, ToolApprovalGrant,
-    ToolAuditRecordQuery, ToolCallError, ToolConcurrency, ToolDefinition, ToolErrorKind,
-    ToolEventKind, ToolExecutionContext, ToolExecutionJournal, ToolExecutionJournalHealthSummary,
-    ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest, ToolPolicyProfile, ToolSideEffects,
-    ToolStability, ToolStreaming,
+    ApprovalAssurance, ApprovalState, JsonSchema, PrivilegeTier, RequestedBy, SchemaProperty,
+    ToolApiError, ToolApprovalChallenge, ToolApprovalGrant, ToolAuditRecordQuery, ToolCallError,
+    ToolConcurrency, ToolDefinition, ToolErrorKind, ToolEventKind, ToolExecutionJournal,
+    ToolExecutionJournalHealthSummary, ToolHandlerOutput, ToolIdempotency, ToolInvocationRequest,
+    ToolPolicyProfile, ToolSideEffects, ToolStability, ToolStreaming,
 };
 use chief_of_staff_tool_audit_store::{ToolAuditStore, ToolAuditStoreInventorySummary};
+use chief_of_staff_vault_dispatch::VaultToolBridge;
 use chief_of_staff_vault_runtime::{
-    AllowedAgents, ChiefVaultRuntime, SecretPolicy, VaultDeliveryMode, VaultLeaseRequest,
+    AllowedAgents, ChiefVaultRuntime, SecretPolicy, VaultDeliveryMode, VaultDirectDelivery,
+    VaultDirectDeliveryError, VaultDirectRequest,
 };
 use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_leases::LeasePayload;
@@ -86,6 +87,24 @@ const VAULT_TOOL_ID: &str = "vault.request_lease";
 const WEATHER_SECRET_NAME: &str = "weather-api-key";
 const WEATHER_SECRET_FIXTURE: &[u8] = b"weather-api-key-host-only-fixture";
 const WEATHER_LEASE_TTL_MS: u64 = 30_000;
+
+/// The harness's lease TTL must stay inside the bridge's agent ceiling.
+///
+/// Before this crate used `VaultToolBridge` it registered its own
+/// `vault.request_lease` handler, which accepted any TTL the lease layer would
+/// take -- up to ninety days. The bridge caps agent-requested leases at fifteen
+/// minutes so a squat on the shared lease table self-heals rather than
+/// persisting for a quarter.
+///
+/// Both sides are constants, so this is a compile-time check rather than a
+/// test: raising `WEATHER_LEASE_TTL_MS` past the ceiling should fail the build,
+/// not fail a run. That the ceiling actually *refuses* an over-long request is
+/// pinned in `chief-of-staff-vault-dispatch` by
+/// `an_agent_cannot_mint_a_lease_that_outlives_the_sweep_horizon`.
+const _: () = assert!(
+    WEATHER_LEASE_TTL_MS <= chief_of_staff_vault_dispatch::MAX_AGENT_LEASE_TTL_MS,
+    "harness lease TTL exceeds the bridge's agent ceiling"
+);
 const FETCH_TOOL_ID: &str = "weather.fetch_current";
 const CLASSIFY_TOOL_ID: &str = "weather.classify_umbrella";
 const WRITE_TOOL_ID: &str = "file.write_text";
@@ -953,7 +972,17 @@ impl UmbrellaPipeline {
                 rotated_at_ms: 0,
             },
         );
-        register_vault_lease_tool(&mut tool_runtime, vault.clone())?;
+        // The canonical binding, not a local re-implementation. The handler
+        // this replaces drifted from it in two ways that mattered: it accepted
+        // any TTL the lease layer would take (up to 90 days, versus the
+        // bridge's 15-minute agent ceiling), and it built its error message
+        // with `format!`, which D18D 7.1 V2 forbids because a formatted string
+        // is one edit away from interpolating something it should not.
+        //
+        // Lease-only because this deployment has no trusted delivery adapter;
+        // see `register_lease_only_into_host`.
+        VaultToolBridge::new(vault.clone(), Arc::new(UnavailableDirectDelivery))
+            .register_lease_only_into_host(&mut tool_runtime)?;
         let http_client = generated_operations::generated_http_client()?;
         register_weather_fetch_tool(
             &mut tool_runtime,
@@ -1620,44 +1649,24 @@ fn register_weather_fetch_tool(
     )
 }
 
-fn register_vault_lease_tool(
-    runtime: &mut OrchestratorProfileRuntime,
-    vault: Arc<ChiefVaultRuntime>,
-) -> Result<(), HostRuntimeError> {
-    let definition = builtin_tool_definition(VAULT_TOOL_ID)
-        .expect("the canonical vault lease built-in must be present");
-    runtime.register_handler(
-        definition,
-        move |arguments, context: ToolExecutionContext| {
-            let secret_name = field_string(&arguments, "secret_name")?;
-            let ttl_ms = field_i64(&arguments, "ttl_ms")?;
-            let ttl_ms = u64::try_from(ttl_ms).map_err(|_| {
-                ToolCallError::new(
-                    ToolErrorKind::ToolValidationError,
-                    "ttl_ms must be a positive integer",
-                )
-            })?;
-            // The requesting identity has to reach the vault, or the secret's
-            // `allowed_agents` rule has nothing to decide on and refuses every
-            // caller. `agent_id` is the only identity field the host attests.
-            let receipt = vault
-                .request_lease(VaultLeaseRequest {
-                    requesting_agent_id: context.agent_id.as_deref(),
-                    secret_name: &secret_name,
-                    ttl_ms,
-                })
-                .map_err(|error| {
-                    ToolCallError::new(
-                        ToolErrorKind::ToolPermissionDenied,
-                        format!("vault lease request rejected: {error}"),
-                    )
-                })?;
-            Ok(ToolHandlerOutput::new(object(vec![
-                ("vault_ref", string(receipt.vault_ref.as_str())),
-                ("expires_at_ms", int(receipt.expires_at_ms as i64)),
-            ])))
-        },
-    )
+/// A delivery adapter for a deployment that has none.
+///
+/// `VaultToolBridge` needs one to be constructed, but this harness registers
+/// lease-only, so nothing can reach it. It refuses rather than accepting,
+/// because the failure mode of a permissive stub is a secret that appears
+/// delivered and is not — and if a future edit ever does register
+/// `request_direct` here, refusing is the behaviour that surfaces the mistake
+/// instead of hiding it.
+struct UnavailableDirectDelivery;
+
+impl VaultDirectDelivery for UnavailableDirectDelivery {
+    fn deliver(
+        &self,
+        _request: VaultDirectRequest<'_>,
+        _payload: LeasePayload,
+    ) -> Result<(), VaultDirectDeliveryError> {
+        Err(VaultDirectDeliveryError::Unavailable)
+    }
 }
 
 fn fetch_weather_from_source(
@@ -2583,6 +2592,47 @@ fn tool_error_to_agent(error: ToolCallError) -> UmbrellaAgentError {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// The harness registers the lease tool and *only* the lease tool.
+    ///
+    /// It has no trusted delivery adapter, so offering `vault.request_direct`
+    /// would present a working direct-delivery tool over a stub that refuses.
+    #[test]
+    fn the_harness_registers_lease_only() {
+        let mut runtime = OrchestratorProfileRuntime::from_json(WEATHER_ORCHESTRATOR_PROFILE)
+            .expect("the checked-in profile should parse");
+        let vault = Arc::new(ChiefVaultRuntime::new());
+        vault.register_secret(
+            WEATHER_SECRET_NAME,
+            LeasePayload::new(WEATHER_SECRET_FIXTURE.to_vec()),
+            SecretPolicy {
+                privilege_tier: 1,
+                allowed_agents: AllowedAgents::only([AGENT_ID]),
+                allowed_mode: VaultDeliveryMode::Leased,
+                rotated_at_ms: 0,
+            },
+        );
+        let bridge = VaultToolBridge::new(vault, Arc::new(UnavailableDirectDelivery));
+
+        bridge
+            .register_lease_only_into_host(&mut runtime)
+            .expect("lease-only registration should succeed");
+        assert_eq!(
+            runtime.summary().registered_tool_count,
+            1,
+            "lease-only must register exactly one tool"
+        );
+
+        // The pair registration must still refuse: this profile grants neither
+        // `vault.request_direct` nor `vault:direct`, and a deliberate subset
+        // must not be reachable by the pair path quietly succeeding.
+        let mut pair_runtime = OrchestratorProfileRuntime::from_json(WEATHER_ORCHESTRATOR_PROFILE)
+            .expect("the checked-in profile should parse");
+        let pair_vault = Arc::new(ChiefVaultRuntime::new());
+        VaultToolBridge::new(pair_vault, Arc::new(UnavailableDirectDelivery))
+            .register_into_host(&mut pair_runtime)
+            .expect_err("the profile grants no direct-delivery access");
+    }
 
     #[test]
     fn rws_boundaries_reject_unsplit_fetch_and_write_host() {

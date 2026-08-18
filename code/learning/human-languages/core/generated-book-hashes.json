@@ -3879,6 +3879,24 @@
       "tex": "persian/book/chapters/ch14-people-words.tex"
     },
     {
+      "language": "persian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d0838dab3dd89a51",
+      "lessonIds": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "tex": "persian/book/chapters/ch15-script-nine.tex"
+    },
+    {
       "language": "portuguese",
       "chapter": 2,
       "sourceHash": "fnv1a64:b0efef039678335d",
@@ -9258,6 +9276,23 @@
         "UR-C15-sardi"
       ],
       "tex": "urdu/book/chapters/ch15-weather.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:2fcf9e68075991d4",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "tex": "urdu/book/chapters/ch16-script-seven.tex"
     }
   ]
 }

@@ -6855,6 +6855,29 @@
       "jsonHash": "fnv1a64:4909c4cedf569170"
     },
     {
+      "language": "persian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:f4cc4631133ae7af",
+      "lessonIds": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "persian/narration/ch15.txt",
+      "json": "persian/narration/ch15.json",
+      "textHash": "fnv1a64:50a800088cd12148",
+      "jsonHash": "fnv1a64:6d39af3cf2adb125"
+    },
+    {
       "language": "portuguese",
       "chapter": 1,
       "sourceHash": "fnv1a64:eeea38606ef36d23",
@@ -15221,6 +15244,28 @@
       "json": "urdu/narration/ch15.json",
       "textHash": "fnv1a64:fd5dce85fefda727",
       "jsonHash": "fnv1a64:000057ef453b9b94"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:6ac24a4fee6bc830",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch16.txt",
+      "json": "urdu/narration/ch16.json",
+      "textHash": "fnv1a64:30b82fc16bd26faa",
+      "jsonHash": "fnv1a64:ca3e287d21320d5b"
     }
   ],
   "findings": []

@@ -46,7 +46,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                commit, no re-pin),
                extended 2026-08-18 (task #144-146 -- simd_i16x8_arith2.wast,
                i16x8 abs/min/max/avgr_u family, same pinned commit, no
-               re-pin)
+               re-pin),
+               extended 2026-08-18 (task #147-149 --
+               simd_i16x8_extadd_pairwise_i8x16.wast/
+               simd_i16x8_extmul_i8x16.wast, i16x8-from-i8x16 widening,
+               same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -264,6 +268,23 @@ already-implemented `i16x8.neg`/`add`/`sub`/`mul` entries (all four
 matched exactly), same discipline as every prior addition. 100% pass
 on EVERY directive kind (2/2 modules, 151/151 assert_return, 17/17
 assert_invalid, 2/2 assert_malformed).
+
+`simd_i16x8_extadd_pairwise_i8x16.wast`/`simd_i16x8_extmul_i8x16.wast`
+(task #147-149) mirror the already-implemented `i32x4`-from-`i16x8`
+widening family one lane width down -- closing the last remaining gap
+between `i16x8` and `i8x16`'s coverage. `extadd_pairwise_i8x16_s`/`_u`
+pairwise-add adjacent `i8` lanes after sign-/zero-extending to `i16`;
+`extmul_low`/`high_i8x16_s`/`_u` take only the low/high 8 `i8` lanes
+of each operand, sign-/zero-extend to `i16`, and multiply lane-wise
+(no summation). Unlike the `i32x4`-from-`i16x8` family, there is no
+`i16x8.dot_i8x16_s` -- WASM SIMD does not define a dot-product for
+this pair. Each sub-opcode byte fetched live from `BinarySIMD.md` and
+cross-checked against the already-implemented `i8x16.add`/
+`i16x8.mul`/`i16x8.avgr_u`/`i32x4.dot_i16x8_s`/`i8x16.popcnt`/
+`i32x4.extadd_pairwise_i16x8_s` entries (all six matched exactly),
+same discipline as every prior addition. 100% pass on EVERY directive
+kind across both files (2/2 modules, 120/120 assert_return, 16/16
+assert_invalid).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
