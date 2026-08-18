@@ -89,16 +89,28 @@ them.
 Realises `SPINE-EXCHANGE-NAMES`. 字 (宀 roof + 子 child) is ready: both pieces are
 inventoried and both are already taught.
 
-**名 is the blocker, and it is worth stating precisely.** 名 itself *is*
-inventoried and does have a ductus, so it can be typeset today. What cannot be
-typeset is **夕**, the piece above 口 that makes 名 decomposable. Chapter 1
-promises the reader "never a character you have not been shown the parts of
-first", so teaching 名 while refusing to show 夕 breaks a stated promise rather
-than merely cutting a corner. Adding 夕 means adding it to
-[`data/scripts/chinese.json`](../data/scripts/chinese.json), which **obliges a
-hand-authored, font-checked ductus** in `script-ductus`, and re-running the
-subset script, which needs network access. Budget that work deliberately; do not
-discover it mid-chapter.
+**名 needs care but is not blocked.** 名 itself is inventoried and has a ductus.
+**夕**, the piece above 口 that makes 名 decomposable, is *not* inventoried and
+has no ductus — but it **is typesettable today**, because the subset script
+collects every CJK codepoint appearing anywhere in
+[`data/scripts/chinese.json`](../data/scripts/chinese.json), and 夕 appears there
+inside 名's own `components` text. Verified by reading the subset's cmap, not by
+trusting this file.
+
+So there are two different costs, and they should not be confused:
+
+- **Naming and showing 夕 as a component** costs nothing new. This is exactly how
+  儿 is handled in the 见 lesson — printed, named, related to a character the
+  reader already knows, with no `letters` entry and no ductus.
+- **Teaching 夕 as a glyph with its own stroke order** means a `letters` entry in
+  `chinese.json`, which **obliges a hand-authored, font-checked ductus** in
+  `script-ductus`. Only this path costs real work, and re-running the subset
+  script (which needs network) is only required for a character that appears
+  *nowhere* in the file.
+
+Chapter 1 promises the reader "never a character you have not been shown the
+parts of first", so 名 must show 夕 either way. The component route satisfies that
+promise at no cost.
 
 ## Times of day *(planned)*
 
@@ -115,14 +127,21 @@ the simplified forms taught here.
 
 ## The font constraint, recorded because it shapes the plan
 
-The vendored `_fonts/NotoSansSC-Subset.ttf` is a subset covering exactly the
-characters in [`data/scripts/chinese.json`](../data/scripts/chinese.json). Adding
-a character to a lesson means adding it to that file and re-running
+The vendored `_fonts/NotoSansSC-Subset.ttf` covers every CJK codepoint that
+appears **anywhere** in [`data/scripts/chinese.json`](../data/scripts/chinese.json)
+— not merely the inventoried `letters`, but also every character named inside
+another character's components, stroke notes or citations. That is 51 characters
+against 29 inventoried glyphs, and the gap is load-bearing: 夕, 十, 目, 儿, 寸,
+身 and 青 are all printable without being taught. **Read the font's cmap before
+concluding a character is unavailable** — this file previously asserted the
+narrower rule and sent a chapter down a re-subset path it did not need. A character
+mentioned nowhere in that file does need an entry plus a re-run of
 [`_fonts/subset-cjk.sh`](../_fonts/subset-cjk.sh), which needs network access to
-fetch the ~17 MB upstream Noto Sans SC. Every chapter delivered so far was authored **inside the
-existing subset** for that reason, and the planned ones above were ordered the
-same way wherever possible. The names chapter is the first that cannot be, and it
-must re-subset — and author a ductus — before it can be typeset. That is
-a real constraint on chapter order that no alphabetic track in this curriculum
-has, because a Noto subset for an alphabet covers the whole writing system at
-once.
+fetch the ~17 MB upstream Noto Sans SC. 对 *duì* is the live example: absent
+entirely, hence untypesettable, hence untaught.
+
+Every chapter delivered so far was authored inside the existing subset, and the
+planned ones above were ordered the same way. This is still a real constraint on
+chapter order that no alphabetic track in this curriculum has, because a Noto
+subset for an alphabet covers the whole writing system at once — but it is a
+narrower constraint than this file used to claim.
