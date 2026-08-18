@@ -111,8 +111,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -135,35 +133,16 @@ my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 # We use File::Spec for cross-platform path construction and
 # File::Basename::dirname to strip the filename component.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/css-lexer/lib/CodingAdventures/CssLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → css-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `css.tokens`, caching the result.
+# Load the compiled `css.tokens` grammar, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'css', 'css.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::CssLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::CssLexer: failed to parse css.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
+    require CodingAdventures::CssLexer::_Grammar;
+    $_grammar = CodingAdventures::CssLexer::_Grammar::token_grammar();
     return $_grammar;
 }
 

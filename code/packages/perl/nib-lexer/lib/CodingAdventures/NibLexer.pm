@@ -3,10 +3,8 @@ package CodingAdventures::NibLexer;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 my $_grammar;
@@ -14,28 +12,19 @@ my $_rules;
 my $_skip_rules;
 my $_keyword_map;
 
-sub _grammars_dir {
-    my $dir = File::Spec->rel2abs(dirname(__FILE__));
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
+# _grammar() loads the pre-compiled `nib.tokens` grammar (cached for the
+# lifetime of the process) instead of reading and parsing nib.tokens off
+# disk. CodingAdventures::NibLexer::_Grammar is a checked-in generated
+# module produced ahead of time by
+# `grammar-tools.pl compile-tokens code/grammars/nib/nib.tokens`; a real
+# CPAN install of this package does not ship code/grammars/, so the old
+# disk-read approach would fail outside this monorepo checkout.
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile(_grammars_dir(), 'nib', 'nib.tokens');
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::NibLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    require CodingAdventures::NibLexer::_Grammar;
+    $_grammar = CodingAdventures::NibLexer::_Grammar::token_grammar();
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::NibLexer: failed to parse nib.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
     return $_grammar;
 }
 

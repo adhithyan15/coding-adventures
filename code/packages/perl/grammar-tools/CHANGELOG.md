@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.4.0] - 2026-08-17
+
+### Added
+
+- `CodingAdventures::GrammarTools::Compiler` — compiles a parsed `TokenGrammar`
+  or `ParserGrammar` into Perl source code that reconstructs the same object
+  graph as a literal (blessed) data structure, eliminating file I/O and
+  re-parsing at runtime. Exposes `compile_token_grammar($grammar,
+  $source_file)` and `compile_parser_grammar($grammar, $source_file)`.
+  Used by the new `code/programs/perl/grammar-tools/grammar-tools.pl` CLI's
+  `compile-tokens`/`compile-grammar` commands, which downstream `*-lexer`
+  packages now run at dev time instead of reading `.tokens`/`.grammar` files
+  from disk at runtime.
+
 ## [0.3.0] - 2026-07-02
 
 ### Added

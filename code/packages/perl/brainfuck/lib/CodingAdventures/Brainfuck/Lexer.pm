@@ -46,23 +46,15 @@ package CodingAdventures::Brainfuck::Lexer;
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. The first match wins.
 #
-# # Path navigation
-# =================
+# # Grammar source
+# ================
 #
-# `__FILE__` resolves to `lib/CodingAdventures/Brainfuck/Lexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures/Brainfuck`
-#
-# From there we need to climb to the repo root (`code/`) then descend
-# into `grammars/brainfuck.tokens`:
-#
-#   lib/CodingAdventures/Brainfuck  (dirname of __FILE__)
-#      ↑ up 1 → lib/CodingAdventures/
-#      ↑ up 2 → lib/
-#      ↑ up 3 → brainfuck/       (package directory)
-#      ↑ up 4 → perl/
-#      ↑ up 5 → packages/
-#      ↑ up 6 → code/             ← repo root
-#   + /grammars/brainfuck.tokens
+# The grammar is compiled ahead of time (via `grammar-tools compile-tokens`)
+# into the sibling module `CodingAdventures::Brainfuck::Lexer::_Grammar`,
+# which embeds the parsed `TokenGrammar` as native Perl data. That module is
+# `require`d directly instead of reading `brainfuck.tokens` off disk, so this
+# package is self-contained once installed (a published CPAN distribution
+# would not include the monorepo's `code/grammars/` tree).
 #
 # ============================================================================
 
@@ -71,8 +63,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -96,35 +86,16 @@ my $_skip_rules;   # arrayref of qr// patterns for skip definitions
 # We use File::Spec for cross-platform path construction and
 # File::Basename::dirname to strip the filename component.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/brainfuck/lib/CodingAdventures/Brainfuck/Lexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 6 levels: Brainfuck/ → CodingAdventures/ → lib/ → brainfuck/ → perl/ → packages/ → code/
-    for (1..6) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `brainfuck.tokens`, caching the result.
+# Load the compiled `brainfuck.tokens` grammar, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     return $_grammar if $_grammar;
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'brainfuck', 'brainfuck.tokens' );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::Brainfuck::Lexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::Brainfuck::Lexer: failed to parse brainfuck.tokens: $err"
-        unless $grammar;
-
-    $_grammar = $grammar;
+    require CodingAdventures::Brainfuck::Lexer::_Grammar;
+    $_grammar = CodingAdventures::Brainfuck::Lexer::_Grammar::token_grammar();
     return $_grammar;
 }
 

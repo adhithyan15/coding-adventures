@@ -2,6 +2,30 @@
 
 All notable changes to this package are documented here.
 
+## [0.03] — 2026-08-17
+
+### Changed
+
+- Eliminated runtime disk reads of `.tokens` grammar files. Each grammar is
+  now compiled once, at dev time, into a native Perl module checked into
+  git under `lib/CodingAdventures/TypescriptLexer/_Grammar*.pm`, via:
+  `grammar-tools.pl compile-tokens <file.tokens> -o <output.pm> -p <Package::Name>`.
+  A real CPAN install of this package does not ship `code/grammars/`, so the
+  old `open()`-based `_grammar()` would have died with "No such file or
+  directory" outside this monorepo checkout.
+- 7 compiled grammar modules total: `_Grammar.pm` (the generic default,
+  compiled from `typescript.tokens`) plus one per named version —
+  `_Grammar_ts1_0.pm`, `_Grammar_ts2_0.pm`, `_Grammar_ts3_0.pm`,
+  `_Grammar_ts4_0.pm`, `_Grammar_ts5_0.pm`, `_Grammar_ts5_8.pm`.
+  `_grammar($version)` now dispatches through `%GRAMMAR_MODULE`
+  (keyed by version string, `''` for the generic default) and calls the
+  matching module's `token_grammar()` sub instead of parsing a `.tokens`
+  file off disk.
+- Removed `_resolve_tokens_path()` and `_grammars_dir()` (dead code — no
+  more path navigation needed) and the now-unused `File::Basename` /
+  `File::Spec` imports. `Makefile.PL`'s `PREREQ_PM` no longer lists them.
+- `$VERSION` bumped from `0.02` to `0.03`.
+
 ## [0.02] — 2026-04-05
 
 ### Added

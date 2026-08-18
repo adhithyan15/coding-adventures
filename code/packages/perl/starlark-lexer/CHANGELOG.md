@@ -2,6 +2,32 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased] — 2026-08-17
+
+### Changed
+
+- **Eliminated runtime grammar-file disk reads.** `_grammar()` previously
+  opened `code/grammars/starlark/starlark.tokens` off disk (via
+  `_grammars_dir()` climbing 5 directory levels from `__FILE__` with
+  `File::Basename::dirname` and `File::Spec`) and parsed it with
+  `CodingAdventures::GrammarTools::parse_token_grammar` on first use. A real
+  CPAN install of this package would not ship `code/grammars/`, so that path
+  would die with "cannot open ... No such file or directory" outside this
+  monorepo checkout.
+- `starlark.tokens` is now compiled once, at dev time, via
+  `code/programs/perl/grammar-tools/grammar-tools.pl compile-tokens` into a
+  checked-in generated module, `CodingAdventures::StarlarkLexer::_Grammar`
+  (`lib/CodingAdventures/StarlarkLexer/_Grammar.pm`), which defines
+  `token_grammar()`. `_grammar()` now `require`s that module and calls the
+  qualified sub instead of touching disk.
+- Removed the now-dead `_grammars_dir()` sub and the `use File::Basename
+  qw(dirname);` / `use File::Spec;` imports (no longer used anywhere else
+  in the module).
+- Removed `File::Basename` and `File::Spec` from `Makefile.PL`'s
+  `PREREQ_PM`.
+- No behavioral change: `_build_rules()`, `tokenize()`, and the
+  Perl-code-execution regex security check remain untouched.
+
 ## [0.01] — 2026-03-29
 
 ### Added

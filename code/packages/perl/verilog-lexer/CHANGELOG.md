@@ -1,5 +1,28 @@
 # Changelog — CodingAdventures::VerilogLexer
 
+## [0.02] — 2026-08-17
+
+### Changed
+
+- Eliminated runtime disk reads of `.tokens` grammar files. Each of the 3
+  supported versions (`1995`, `2001`, `2005`) is now compiled once, at dev
+  time, into a native Perl module checked into git under
+  `lib/CodingAdventures/VerilogLexer/_Grammar_*.pm`, via:
+  `grammar-tools.pl compile-tokens <file.tokens> -o <output.pm> -p <Package::Name>`.
+  A real CPAN install of this package does not ship `code/grammars/`, so the
+  old `open()`-based `_grammar()` would have died with "No such file or
+  directory" outside this monorepo checkout.
+- `_grammar($version)` now dispatches through `%GRAMMAR_MODULE` (keyed by
+  resolved version string) and calls the matching module's
+  `token_grammar()` sub instead of parsing a `.tokens` file off disk.
+  Note: the unversioned `verilog.tokens` file was never read by this module
+  (only `verilog1995.tokens`, `verilog2001.tokens`, `verilog2005.tokens`
+  via `_resolve_version()`'s default), so it was not compiled.
+- Removed `_grammars_dir()` (dead code — no more path navigation needed)
+  and the now-unused `File::Basename` / `File::Spec` imports. `Makefile.PL`'s
+  `PREREQ_PM` no longer lists them.
+- `$VERSION` bumped from `0.01` to `0.02`.
+
 ## [0.01] — 2026-03-29
 
 ### Added

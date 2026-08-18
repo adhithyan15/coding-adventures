@@ -1,5 +1,16 @@
 # Changelog — CodingAdventures::Brainfuck (Perl)
 
+## [0.04] — 2026-08-17
+
+### Changed
+- `CodingAdventures::Brainfuck::Lexer` now loads its grammar from the
+  compiled `CodingAdventures::Brainfuck::Lexer::_Grammar` module instead of
+  reading and parsing `brainfuck.tokens` off disk at runtime. A published
+  CPAN distribution of this package would not include the monorepo's
+  `code/grammars/` tree, so the old path-climbing `open()` would fail after
+  install. The compiled module is generated via `grammar-tools
+  compile-tokens` and checked into git.
+
 ## [0.03] — 2026-04-10
 
 ### Added

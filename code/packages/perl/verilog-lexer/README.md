@@ -14,17 +14,20 @@ component with named ports (inputs and outputs) and internal logic.
 ## How it fits in the stack
 
 ```
-verilog.tokens       (grammar definition)
-      ↓
-GrammarTools         (parse_token_grammar)
-      ↓
-VerilogLexer         (this module — thin wrapper)
+verilog<version>.tokens        (grammar definition, code/grammars/verilog/)
+      ↓  compiled once at dev time via grammar-tools.pl compile-tokens
+_Grammar_<version>.pm          (checked into git)
+      ↓  require'd + token_grammar()
+VerilogLexer                   (this module — thin wrapper)
       ↓
 Token array          [{ type=>"MODULE", value=>"module", line=>1, col=>1 }, ...]
 ```
 
-The module reads `code/grammars/verilog.tokens` once (cached) and compiles
-the token definitions to Perl `qr/\G.../` patterns.
+The module loads the per-version grammar (`verilog1995`, `verilog2001`,
+`verilog2005`) from a compiled native Perl module checked into git under
+`lib/CodingAdventures/VerilogLexer/_Grammar_*.pm` (cached), and compiles
+the token definitions to Perl `qr/\G.../` patterns. No `.tokens` file is
+read from disk at runtime.
 
 ## Installation
 
@@ -85,4 +88,4 @@ The last element always has `type => 'EOF'`. Dies on unexpected input.
 
 ## Version
 
-0.01
+0.02

@@ -18,16 +18,17 @@ control flow.
 ## How it fits in the stack
 
 ```
-vhdl.tokens          (grammar definition)
-      ↓
-GrammarTools         (parse_token_grammar)
-      ↓
-VhdlLexer            (this module — thin wrapper)
+vhdl<version>.tokens           (grammar definition, code/grammars/vhdl/)
+      ↓  compiled once at dev time via grammar-tools.pl compile-tokens
+_Grammar_<version>.pm          (checked into git)
+      ↓  require'd + token_grammar()
+VhdlLexer                      (this module — thin wrapper)
       ↓
 Token array          [{ type=>"ENTITY", value=>"entity", line=>1, col=>1 }, ...]
 ```
 
-All token values are **lowercase** because `vhdl.tokens` sets `case_sensitive: false`.
+All token values are **lowercase** because the underlying grammars set
+`case_sensitive: false`.
 
 ## Installation
 
@@ -88,4 +89,4 @@ The last element always has `type => 'EOF'`. Dies on unexpected input.
 
 ## Version
 
-0.01
+0.02

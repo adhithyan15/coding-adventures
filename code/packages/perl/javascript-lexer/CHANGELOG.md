@@ -2,6 +2,18 @@
 
 All notable changes to this package are documented here.
 
+## [0.03] — 2026-08-17
+
+### Changed
+- Grammar is now loaded from precompiled `CodingAdventures::JavascriptLexer::_Grammar*`
+  modules (one per ECMAScript version, plus a generic default) instead of
+  reading and parsing `.tokens` files off disk at runtime. A published CPAN
+  distribution would not include the monorepo's `code/grammars/` tree, so
+  the old path-climbing `open()` would fail after install. The 15 compiled
+  modules (`javascript.tokens` + es1, es3, es5, es2015-es2025) are generated
+  via `grammar-tools compile-tokens` and checked into git. Dropped the
+  now-unused `File::Basename`/`File::Spec` dependencies.
+
 ## [0.02] — 2026-04-05
 
 ### Added

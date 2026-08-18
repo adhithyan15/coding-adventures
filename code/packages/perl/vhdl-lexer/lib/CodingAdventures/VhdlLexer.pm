@@ -5,9 +5,10 @@ package CodingAdventures::VhdlLexer;
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools. It reads the shared `vhdl.tokens`
-# grammar file, compiles the token definitions into Perl regexes, and applies
-# them in priority order to tokenize VHDL (IEEE 1076-2008) source code.
+# by CodingAdventures::GrammarTools. It loads the shared per-version VHDL
+# grammar from a compiled native Perl module checked into git, compiles the
+# token definitions into Perl regexes, and applies them in priority order to
+# tokenize VHDL (IEEE 1076-1987/1993/2002/2008/2019) source code.
 #
 # # What is VHDL tokenization?
 # ================================
@@ -34,18 +35,24 @@ package CodingAdventures::VhdlLexer;
 #   { type => "SEMICOLON", value => ";",         line => 1, col => 40 }
 #   { type => "EOF",       value => "",          line => 1, col => 41 }
 #
-# VHDL is case-insensitive: `vhdl.tokens` sets `case_sensitive: false`,
-# so the grammar lowercases all input before matching. All token values
-# in the output are lowercase.
+# VHDL is case-insensitive: the underlying `vhdl<version>.tokens` grammars
+# set `case_sensitive: false`, so the grammar lowercases all input before
+# matching. All token values in the output are lowercase.
 #
 # Whitespace and single-line comments (-- ...) are consumed silently.
 #
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `vhdl.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` looks up the compiled grammar module
+#    for `$version` in `%GRAMMAR_MODULE` and calls its `token_grammar()` sub,
+#    caching the result for the lifetime of the process. Each module
+#    (`_Grammar_1987.pm`, `_Grammar_1993.pm`, `_Grammar_2002.pm`,
+#    `_Grammar_2008.pm`, `_Grammar_2019.pm`) was generated at dev time via
+#    `grammar-tools.pl compile-tokens ... -p <Package::Name>` from the
+#    corresponding `vhdl<version>.tokens` file under `code/grammars/vhdl/`
+#    and is checked into git — no runtime disk reads outside the installed
+#    package.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
 #    in the grammar into a `{ name => str, pat => qr/\G.../ }` hashref.
@@ -56,22 +63,6 @@ package CodingAdventures::VhdlLexer;
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. First match wins. On no match, dies with
 #    position info.
-#
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/VhdlLexer.pm`.
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/vhdl.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → vhdl-lexer/    (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/           ← repo root
-#   + /grammars/vhdl.tokens
 #
 # # Token types
 # =============
@@ -110,41 +101,49 @@ package CodingAdventures::VhdlLexer;
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our $DEFAULT_VERSION = '2008';
 our @SUPPORTED_VERSIONS = qw(1987 1993 2002 2008 2019);
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
+
+require CodingAdventures::VhdlLexer::_Grammar_1987;
+require CodingAdventures::VhdlLexer::_Grammar_1993;
+require CodingAdventures::VhdlLexer::_Grammar_2002;
+require CodingAdventures::VhdlLexer::_Grammar_2008;
+require CodingAdventures::VhdlLexer::_Grammar_2019;
 
 # ============================================================================
 # Grammar loading and caching
 # ============================================================================
 #
-# Reading and parsing the grammar file on every tokenize() call would be
-# wasteful. We cache the TokenGrammar object and compiled rule lists in
-# package-level variables. They are populated on the first call and reused.
+# Parsing the grammar on every tokenize() call would be wasteful. We cache
+# the TokenGrammar object and compiled rule lists in package-level
+# variables. They are populated on the first call and reused.
 
 my %_grammar_cache;      # version -> CodingAdventures::GrammarTools::TokenGrammar
 my %_rules_cache;        # version -> arrayref of { name => str, pat => qr// }
 my %_skip_rules_cache;   # version -> arrayref of qr// patterns for skip definitions
 my %_keyword_map_cache;  # version -> hashref mapping keyword string -> promoted token type
 
-# --- _grammars_dir() ----------------------------------------------------------
+# ============================================================================
+# Grammar module dispatch table
+# ============================================================================
 #
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
+# Each compiled grammar module was generated at dev time from a .tokens file
+# via `grammar-tools.pl compile-tokens ... -p <Package::Name>` and is checked
+# into git under lib/CodingAdventures/VhdlLexer/_Grammar_*.pm. This avoids
+# reading code/grammars/ off disk at runtime — a real CPAN install of this
+# package would not ship that directory. Note: the unversioned `vhdl.tokens`
+# file is never read by this module — only the five versioned files below.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/vhdl-lexer/lib/CodingAdventures/VhdlLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → vhdl-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
+my %GRAMMAR_MODULE = (
+    '1987' => 'CodingAdventures::VhdlLexer::_Grammar_1987',
+    '1993' => 'CodingAdventures::VhdlLexer::_Grammar_1993',
+    '2002' => 'CodingAdventures::VhdlLexer::_Grammar_2002',
+    '2008' => 'CodingAdventures::VhdlLexer::_Grammar_2008',
+    '2019' => 'CodingAdventures::VhdlLexer::_Grammar_2019',
+);
 
 sub _resolve_version {
     my ($version) = @_;
@@ -167,7 +166,8 @@ sub supported_versions {
 
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `vhdl.tokens`, caching the result.
+# Look up the compiled grammar module for `$version` and call its
+# token_grammar() sub, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
@@ -176,17 +176,9 @@ sub _grammar {
 
     return $_grammar_cache{$version} if exists $_grammar_cache{$version};
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'vhdl', "vhdl${version}.tokens" );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::VhdlLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::VhdlLexer: failed to parse vhdl${version}.tokens: $err"
-        unless $grammar;
-
-    $_grammar_cache{$version} = $grammar;
+    my $module = $GRAMMAR_MODULE{$version};
+    no strict 'refs';
+    $_grammar_cache{$version} = &{"${module}::token_grammar"}();
     return $_grammar_cache{$version};
 }
 
@@ -282,9 +274,10 @@ sub _build_rules {
 #
 # Tokenize a VHDL source string.
 #
-# VHDL is case-insensitive: `vhdl.tokens` sets `case_sensitive: false`,
-# which causes the GrammarTools parser to lowercase all input text before
-# applying patterns. This means all returned token values are lowercase:
+# VHDL is case-insensitive: the underlying `vhdl<version>.tokens` grammars
+# set `case_sensitive: false`, which causes the GrammarTools parser to
+# lowercase all input text before applying patterns. This means all
+# returned token values are lowercase:
 # "ENTITY" input → value "entity", "Entity" input → value "entity".
 #
 # Algorithm:
@@ -431,14 +424,16 @@ CodingAdventures::VhdlLexer - Grammar-driven VHDL tokenizer
 =head1 DESCRIPTION
 
 A thin wrapper around the grammar infrastructure in CodingAdventures::GrammarTools.
-Reads the shared C<vhdl.tokens> file, compiles token definitions to Perl regexes,
-and tokenizes VHDL (IEEE 1076-2008) source into a flat list of token hashrefs.
+Loads the shared per-version VHDL grammar from a compiled native Perl module,
+compiles token definitions to Perl regexes, and tokenizes VHDL (IEEE
+1076-1987/1993/2002/2008/2019) source into a flat list of token hashrefs.
 
 Each token hashref has four keys: C<type>, C<value>, C<line>, C<col>.
 
-VHDL is case-insensitive. The C<vhdl.tokens> grammar sets C<case_sensitive: false>,
-so the lexer lowercases all input before matching. All returned token values are
-lowercase: C<"ENTITY"> input gives value C<"entity">.
+VHDL is case-insensitive. The underlying per-version grammars set
+C<case_sensitive: false>, so the lexer lowercases all input before matching.
+All returned token values are lowercase: C<"ENTITY"> input gives value
+C<"entity">.
 
 Whitespace and C<-- > line comments are silently consumed. The last token is
 always C<EOF>.
@@ -452,7 +447,7 @@ Dies on unexpected input with a descriptive message.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

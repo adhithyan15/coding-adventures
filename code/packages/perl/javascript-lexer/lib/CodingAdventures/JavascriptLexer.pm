@@ -54,9 +54,9 @@ package CodingAdventures::JavascriptLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar($version)` opens the correct .tokens
-#    file, parses it with `CodingAdventures::GrammarTools::parse_token_grammar`,
-#    and caches the result per-version.
+# 1. **Grammar loading** — `_grammar($version)` looks up the right
+#    precompiled grammar module (see "Compiled grammar dispatch" below),
+#    calls its `token_grammar()`, and caches the result per-version.
 #
 # 2. **Pattern compilation** — `_build_rules($version)` converts every
 #    TokenDefinition in the grammar into a `{ name => str, pat => qr/\G.../ }`
@@ -66,22 +66,16 @@ package CodingAdventures::JavascriptLexer;
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. First match wins.
 #
-# # Path navigation
-# =================
+# # Grammar source
+# ================
 #
-# `__FILE__` resolves to `lib/CodingAdventures/JavascriptLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → javascript-lexer/     (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/                 ← repo root
-#   + /grammars/javascript.tokens  (or ecmascript/<version>.tokens)
+# Each supported version's grammar is compiled ahead of time (via
+# `grammar-tools compile-tokens`) into a sibling `_Grammar*.pm` module that
+# embeds the parsed `TokenGrammar` as native Perl data. Those modules are
+# `require`d directly instead of reading `javascript.tokens`/
+# `ecmascript/<version>.tokens` off disk, so this package is self-contained
+# once installed (a published CPAN distribution would not include the
+# monorepo's `code/grammars/` tree).
 #
 # ============================================================================
 
@@ -90,9 +84,23 @@ use warnings;
 
 our $VERSION = '0.02';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
+
+require CodingAdventures::JavascriptLexer::_Grammar;
+require CodingAdventures::JavascriptLexer::_Grammar_es1;
+require CodingAdventures::JavascriptLexer::_Grammar_es3;
+require CodingAdventures::JavascriptLexer::_Grammar_es5;
+require CodingAdventures::JavascriptLexer::_Grammar_es2015;
+require CodingAdventures::JavascriptLexer::_Grammar_es2016;
+require CodingAdventures::JavascriptLexer::_Grammar_es2017;
+require CodingAdventures::JavascriptLexer::_Grammar_es2018;
+require CodingAdventures::JavascriptLexer::_Grammar_es2019;
+require CodingAdventures::JavascriptLexer::_Grammar_es2020;
+require CodingAdventures::JavascriptLexer::_Grammar_es2021;
+require CodingAdventures::JavascriptLexer::_Grammar_es2022;
+require CodingAdventures::JavascriptLexer::_Grammar_es2023;
+require CodingAdventures::JavascriptLexer::_Grammar_es2024;
+require CodingAdventures::JavascriptLexer::_Grammar_es2025;
 
 # ============================================================================
 # Valid ECMAScript versions
@@ -119,41 +127,37 @@ my %_keyword_map_cache; # version => hashref  keyword => type
 # Path helpers
 # ============================================================================
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/javascript-lexer/lib/CodingAdventures/JavascriptLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → javascript-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
-# --- _resolve_tokens_path($version) ------------------------------------------
+# --- Compiled grammar dispatch -------------------------------------------------
 #
-# Return the absolute path to the correct .tokens grammar file.
-#
-#   undef / "" → grammars/javascript.tokens             (generic)
-#   "es1"      → grammars/ecmascript/es1.tokens
-#   "es2015"   → grammars/ecmascript/es2015.tokens
+# Each entry maps a version string ("" = generic) to the package produced by
+# `grammar-tools compile-tokens`. The modules are `require`d above; this
+# table just resolves a version string to the right one.
 
-sub _resolve_tokens_path {
-    my ($class, $version) = @_;
-    my $grammars = _grammars_dir();
-
-    return File::Spec->catfile($grammars, 'javascript', 'javascript.tokens')
-        unless $version;
-
-    die "CodingAdventures::JavascriptLexer: unknown ECMAScript version '$version'. "
-      . "Valid versions: es1 es3 es5 es2015..es2025"
-        unless $VALID_VERSIONS{$version};
-
-    return File::Spec->catfile($grammars, 'ecmascript', "$version.tokens");
-}
+my %GRAMMAR_MODULE = (
+    ''       => 'CodingAdventures::JavascriptLexer::_Grammar',
+    'es1'    => 'CodingAdventures::JavascriptLexer::_Grammar_es1',
+    'es3'    => 'CodingAdventures::JavascriptLexer::_Grammar_es3',
+    'es5'    => 'CodingAdventures::JavascriptLexer::_Grammar_es5',
+    'es2015' => 'CodingAdventures::JavascriptLexer::_Grammar_es2015',
+    'es2016' => 'CodingAdventures::JavascriptLexer::_Grammar_es2016',
+    'es2017' => 'CodingAdventures::JavascriptLexer::_Grammar_es2017',
+    'es2018' => 'CodingAdventures::JavascriptLexer::_Grammar_es2018',
+    'es2019' => 'CodingAdventures::JavascriptLexer::_Grammar_es2019',
+    'es2020' => 'CodingAdventures::JavascriptLexer::_Grammar_es2020',
+    'es2021' => 'CodingAdventures::JavascriptLexer::_Grammar_es2021',
+    'es2022' => 'CodingAdventures::JavascriptLexer::_Grammar_es2022',
+    'es2023' => 'CodingAdventures::JavascriptLexer::_Grammar_es2023',
+    'es2024' => 'CodingAdventures::JavascriptLexer::_Grammar_es2024',
+    'es2025' => 'CodingAdventures::JavascriptLexer::_Grammar_es2025',
+);
 
 # --- _grammar($version) -------------------------------------------------------
 #
-# Load and parse the grammar for `$version`, caching the result.
+# Load the compiled grammar for `$version`, caching the result.
+#
+#   undef / "" → generic javascript.tokens grammar
+#   "es1"      → ecmascript/es1.tokens grammar
+#   "es2015"   → ecmascript/es2015.tokens grammar
 
 sub _grammar {
     my ($class, $version) = @_;
@@ -161,15 +165,13 @@ sub _grammar {
 
     return $_grammar_cache{$version} if $_grammar_cache{$version};
 
-    my $tokens_file = $class->_resolve_tokens_path($version);
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::JavascriptLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    die "CodingAdventures::JavascriptLexer: unknown ECMAScript version '$version'. "
+      . "Valid versions: es1 es3 es5 es2015..es2025"
+        unless $version eq '' || $VALID_VERSIONS{$version};
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::JavascriptLexer: failed to parse '$tokens_file': $err"
-        unless $grammar;
+    my $module = $GRAMMAR_MODULE{$version};
+    no strict 'refs';
+    my $grammar = &{"${module}::token_grammar"}();
 
     $_grammar_cache{$version} = $grammar;
     return $grammar;

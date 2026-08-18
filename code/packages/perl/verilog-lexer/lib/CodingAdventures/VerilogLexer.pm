@@ -5,9 +5,10 @@
 # ============================================================================
 #
 # This module is a thin wrapper around the grammar infrastructure provided
-# by CodingAdventures::GrammarTools. It reads the shared `verilog.tokens`
-# grammar file, compiles the token definitions into Perl regexes, and applies
-# them in priority order to tokenize Verilog (IEEE 1364-2005) source code.
+# by CodingAdventures::GrammarTools. It loads the shared per-version Verilog
+# grammar from a compiled native Perl module checked into git, compiles the
+# token definitions into Perl regexes, and applies them in priority order to
+# tokenize Verilog (IEEE 1364-1995/2001/2005) source code.
 #
 # # What is Verilog tokenization?
 # ==================================
@@ -35,14 +36,19 @@
 #   { type => "EOF",      value => "",       line => 1, col => 33 }
 #
 # Whitespace and comments (// and /* */) are consumed silently — skip patterns
-# in `verilog.tokens` match them and they are never emitted as tokens.
+# in the grammar match them and they are never emitted as tokens.
 #
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `verilog.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar()` looks up the compiled grammar module
+#    for `$version` in `%GRAMMAR_MODULE` and calls its `token_grammar()` sub,
+#    caching the result for the lifetime of the process. Each module
+#    (`_Grammar_1995.pm`, `_Grammar_2001.pm`, `_Grammar_2005.pm`) was
+#    generated at dev time via `grammar-tools.pl compile-tokens ... -p
+#    <Package::Name>` from the corresponding `verilog<version>.tokens` file
+#    under `code/grammars/verilog/` and is checked into git — no runtime
+#    disk reads outside the installed package.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
 #    in the grammar into a `{ name => str, pat => qr/\G.../ }` hashref.
@@ -53,22 +59,6 @@
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. First match wins. On no match, dies with
 #    position info.
-#
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/VerilogLexer.pm`.
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/verilog.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → verilog-lexer/   (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/            ← repo root
-#   + /grammars/verilog.tokens
 #
 # # Token types
 # =============
@@ -108,44 +98,46 @@
 use strict;
 use warnings;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our $DEFAULT_VERSION = '2005';
 our @SUPPORTED_VERSIONS = qw(1995 2001 2005);
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
+
+require CodingAdventures::VerilogLexer::_Grammar_1995;
+require CodingAdventures::VerilogLexer::_Grammar_2001;
+require CodingAdventures::VerilogLexer::_Grammar_2005;
 
 # ============================================================================
 # Grammar loading and caching
 # ============================================================================
 #
-# Reading and parsing the grammar file on every tokenize() call would be
-# wasteful. We cache the TokenGrammar object and compiled rule lists in
-# package-level variables. They are populated on the first call and reused.
+# Parsing the grammar on every tokenize() call would be wasteful. We cache
+# the TokenGrammar object and compiled rule lists in package-level
+# variables. They are populated on the first call and reused.
 
 my %_grammar_cache;      # version -> CodingAdventures::GrammarTools::TokenGrammar
 my %_rules_cache;        # version -> arrayref of { name => str, pat => qr// }
 my %_skip_rules_cache;   # version -> arrayref of qr// patterns for skip definitions
 my %_keyword_map_cache;  # version -> hashref mapping keyword string -> promoted token type
 
-# --- _grammars_dir() ----------------------------------------------------------
+# ============================================================================
+# Grammar module dispatch table
+# ============================================================================
 #
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-#
-# We use File::Spec for cross-platform path construction and
-# File::Basename::dirname to strip the filename component.
+# Each compiled grammar module was generated at dev time from a .tokens file
+# via `grammar-tools.pl compile-tokens ... -p <Package::Name>` and is checked
+# into git under lib/CodingAdventures/VerilogLexer/_Grammar_*.pm. This avoids
+# reading code/grammars/ off disk at runtime — a real CPAN install of this
+# package would not ship that directory. Note: the unversioned
+# `verilog.tokens` file is never read by this module — only the three
+# versioned files below.
 
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/verilog-lexer/lib/CodingAdventures/VerilogLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → verilog-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
+my %GRAMMAR_MODULE = (
+    '1995' => 'CodingAdventures::VerilogLexer::_Grammar_1995',
+    '2001' => 'CodingAdventures::VerilogLexer::_Grammar_2001',
+    '2005' => 'CodingAdventures::VerilogLexer::_Grammar_2005',
+);
 
 sub _resolve_version {
     my ($version) = @_;
@@ -168,7 +160,8 @@ sub supported_versions {
 
 # --- _grammar() ---------------------------------------------------------------
 #
-# Load and parse `verilog.tokens`, caching the result.
+# Look up the compiled grammar module for `$version` and call its
+# token_grammar() sub, caching the result.
 # Returns a CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
@@ -177,17 +170,9 @@ sub _grammar {
 
     return $_grammar_cache{$version} if exists $_grammar_cache{$version};
 
-    my $tokens_file = File::Spec->catfile( _grammars_dir(), 'verilog', "verilog${version}.tokens" );
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::VerilogLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
-
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::VerilogLexer: failed to parse verilog${version}.tokens: $err"
-        unless $grammar;
-
-    $_grammar_cache{$version} = $grammar;
+    my $module = $GRAMMAR_MODULE{$version};
+    no strict 'refs';
+    $_grammar_cache{$version} = &{"${module}::token_grammar"}();
     return $_grammar_cache{$version};
 }
 
@@ -450,8 +435,9 @@ CodingAdventures::VerilogLexer - Grammar-driven Verilog tokenizer
 =head1 DESCRIPTION
 
 A thin wrapper around the grammar infrastructure in CodingAdventures::GrammarTools.
-Reads the shared C<verilog.tokens> file, compiles token definitions to Perl regexes,
-and tokenizes Verilog (IEEE 1364-2005) source into a flat list of token hashrefs.
+Loads the shared per-version Verilog grammar from a compiled native Perl module,
+compiles token definitions to Perl regexes, and tokenizes Verilog (IEEE
+1364-1995/2001/2005) source into a flat list of token hashrefs.
 
 Each token hashref has four keys: C<type>, C<value>, C<line>, C<col>.
 
@@ -480,7 +466,7 @@ Dies on unexpected input with a descriptive message.
 
 =head1 VERSION
 
-0.01
+0.02
 
 =head1 AUTHOR
 

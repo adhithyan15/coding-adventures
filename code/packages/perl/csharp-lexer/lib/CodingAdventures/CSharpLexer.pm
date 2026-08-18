@@ -52,9 +52,10 @@ package CodingAdventures::CSharpLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar($version)` opens the correct .tokens
-#    file, parses it with `CodingAdventures::GrammarTools::parse_token_grammar`,
-#    and caches the result per-version.
+# 1. **Grammar loading** — `_grammar($version)` resolves the version to a
+#    precompiled `_Grammar_<version>` sibling module (see "Why precompiled
+#    grammars?" below) and calls its `token_grammar()` constructor, caching
+#    the result per-version.
 #
 # 2. **Pattern compilation** — `_build_rules($version)` converts every
 #    TokenDefinition in the grammar into a `{ name => str, pat => qr/\G.../ }`
@@ -63,6 +64,23 @@ package CodingAdventures::CSharpLexer;
 # 3. **Tokenization** — `tokenize()` walks the source string using Perl's
 #    `\G` + `pos()` mechanism, trying skip patterns first and then token
 #    patterns in definition order. First match wins.
+#
+# # Why precompiled grammars?
+# ============================
+#
+# Earlier versions of this module read `code/grammars/csharp/csharp<version>.tokens`
+# off disk at runtime, using a path that walked outside this package's own
+# directory into the monorepo. That works when running from a checkout of
+# the monorepo, but a published CPAN distribution does not include
+# `code/grammars/` — installing this package and calling `tokenize` would
+# die with "cannot open ... No such file or directory".
+#
+# Instead, each supported C# version's grammar is compiled ahead of time
+# (via `grammar-tools compile-tokens`) into a `_Grammar_<version>.pm`
+# sibling module (dots become underscores, e.g. `_Grammar_12_0`) that
+# embeds the parsed `TokenGrammar` as native Perl data. Those modules ship
+# with this package like any other source file, so the distribution is
+# self-contained.
 #
 # # C#-specific token highlights
 # ================================
@@ -85,23 +103,6 @@ package CodingAdventures::CSharpLexer;
 # regex engine is greedy and will take the longest match when patterns are
 # ordered correctly.
 #
-# # Path navigation
-# =================
-#
-# `__FILE__` resolves to `lib/CodingAdventures/CSharpLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
-#
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → csharp-lexer/   (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/                 ← repo root
-#   + /grammars/csharp/csharp<version>.tokens
-#
 # ============================================================================
 
 use strict;
@@ -109,8 +110,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # ============================================================================
@@ -145,45 +144,46 @@ my %_skip_rules_cache;  # version => arrayref of qr//
 my %_keyword_map_cache; # version => hashref  keyword => type
 
 # ============================================================================
-# Path helpers
+# Precompiled grammars
 # ============================================================================
-
-sub _grammars_dir {
-    # __FILE__ = .../code/packages/perl/csharp-lexer/lib/CodingAdventures/CSharpLexer.pm
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ → lib/ → csharp-lexer/ → perl/ → packages/ → code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
-# --- _resolve_tokens_path($version) ------------------------------------------
 #
-# Return the absolute path to the correct .tokens grammar file.
-#
-#   undef / "" → grammars/csharp/csharp12.0.tokens             (default)
-#   "1.0"      → grammars/csharp/csharp1.0.tokens
-#   "8.0"      → grammars/csharp/csharp8.0.tokens
-#   "12.0"     → grammars/csharp/csharp12.0.tokens
+# Each entry maps a version string to the package name of a `require`d
+# module produced by
+# `grammar-tools compile-tokens code/grammars/csharp/csharp<version>.tokens`.
+# Every module exposes a `token_grammar()` constructor; `_grammar` calls it
+# (and caches the result) the first time a version is actually used.
 
-sub _resolve_tokens_path {
-    my ($class, $version) = @_;
-    my $grammars = _grammars_dir();
+require CodingAdventures::CSharpLexer::_Grammar_1_0;
+require CodingAdventures::CSharpLexer::_Grammar_2_0;
+require CodingAdventures::CSharpLexer::_Grammar_3_0;
+require CodingAdventures::CSharpLexer::_Grammar_4_0;
+require CodingAdventures::CSharpLexer::_Grammar_5_0;
+require CodingAdventures::CSharpLexer::_Grammar_6_0;
+require CodingAdventures::CSharpLexer::_Grammar_7_0;
+require CodingAdventures::CSharpLexer::_Grammar_8_0;
+require CodingAdventures::CSharpLexer::_Grammar_9_0;
+require CodingAdventures::CSharpLexer::_Grammar_10_0;
+require CodingAdventures::CSharpLexer::_Grammar_11_0;
+require CodingAdventures::CSharpLexer::_Grammar_12_0;
 
-    # Default to C# 12.0 when no version specified
-    $version = $DEFAULT_VERSION unless $version;
-
-    die "CodingAdventures::CSharpLexer: unknown C# version '$version'. "
-      . "Valid versions: 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0"
-        unless $VALID_VERSIONS{$version};
-
-    return File::Spec->catfile($grammars, 'csharp', "csharp$version.tokens");
-}
+my %GRAMMAR_MODULE = (
+    '1.0'  => 'CodingAdventures::CSharpLexer::_Grammar_1_0',
+    '2.0'  => 'CodingAdventures::CSharpLexer::_Grammar_2_0',
+    '3.0'  => 'CodingAdventures::CSharpLexer::_Grammar_3_0',
+    '4.0'  => 'CodingAdventures::CSharpLexer::_Grammar_4_0',
+    '5.0'  => 'CodingAdventures::CSharpLexer::_Grammar_5_0',
+    '6.0'  => 'CodingAdventures::CSharpLexer::_Grammar_6_0',
+    '7.0'  => 'CodingAdventures::CSharpLexer::_Grammar_7_0',
+    '8.0'  => 'CodingAdventures::CSharpLexer::_Grammar_8_0',
+    '9.0'  => 'CodingAdventures::CSharpLexer::_Grammar_9_0',
+    '10.0' => 'CodingAdventures::CSharpLexer::_Grammar_10_0',
+    '11.0' => 'CodingAdventures::CSharpLexer::_Grammar_11_0',
+    '12.0' => 'CodingAdventures::CSharpLexer::_Grammar_12_0',
+);
 
 # --- _grammar($version) -------------------------------------------------------
 #
-# Load and parse the grammar for `$version`, caching the result.
+# Resolve the precompiled `TokenGrammar` for `$version`, caching the result.
 
 sub _grammar {
     my ($class, $version) = @_;
@@ -191,18 +191,14 @@ sub _grammar {
 
     return $_grammar_cache{$version} if $_grammar_cache{$version};
 
-    my $tokens_file = $class->_resolve_tokens_path($version);
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::CSharpLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    die "CodingAdventures::CSharpLexer: unknown C# version '$version'. "
+      . "Valid versions: 1.0 2.0 3.0 4.0 5.0 6.0 7.0 8.0 9.0 10.0 11.0 12.0"
+        unless $VALID_VERSIONS{$version};
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::CSharpLexer: failed to parse '$tokens_file': $err"
-        unless $grammar;
-
-    $_grammar_cache{$version} = $grammar;
-    return $grammar;
+    my $module = $GRAMMAR_MODULE{$version};
+    no strict 'refs';
+    $_grammar_cache{$version} = &{"${module}::token_grammar"}();
+    return $_grammar_cache{$version};
 }
 
 # --- _build_rules($version) ---------------------------------------------------
