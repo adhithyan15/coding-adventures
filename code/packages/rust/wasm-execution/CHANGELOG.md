@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.14] - 2026-08-18 (task #118-120 — SIMD widening: i32x4 abs/min/max family)
+
+### Added
+
+- `register_simd`'s binary `v128,v128->v128` dispatch arm widened further
+  to add `MinS | MinU | MaxS | MaxU`: `MinS`/`MaxS` compare lanes as
+  signed `i32` (plain `.min`/`.max`), `MinU`/`MaxU` cast each lane to
+  `u32` first -- same signed/unsigned split already proven necessary for
+  the comparison family, verified with a dedicated test showing
+  `min_s(-1, 1) == -1` but `min_u(-1, 1)` (i.e. `min_u(0xFFFFFFFF, 1)`)
+  `== 1` actually disagree.
+- `SimdOpKind::Neg | SimdOpKind::Abs` now share the unary dispatch arm
+  (previously `Neg`-only), computing `wrapping_neg`/`wrapping_abs`
+  per-kind inside -- `i32::MIN.wrapping_abs() == i32::MIN` (the classic
+  two's-complement absolute-value overflow edge case) is covered by a
+  dedicated test.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.13] - 2026-08-18 (task #113-117 — SIMD widening: i32x4 arithmetic + comparison family)
 
 ### Added

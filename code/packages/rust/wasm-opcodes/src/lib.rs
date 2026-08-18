@@ -820,6 +820,16 @@ pub enum SimdOpKind {
     /// one) -- see this module's own execution-handler dispatch, which
     /// funnels `Neg` through a separate arm from the binary lane-wise ops.
     Neg,
+    /// `i32x4.abs` -- lane-wise absolute value. UNARY, same shape as `Neg`.
+    Abs,
+    /// `i32x4.min_s` -- lane-wise signed minimum.
+    MinS,
+    /// `i32x4.min_u` -- lane-wise unsigned minimum.
+    MinU,
+    /// `i32x4.max_s` -- lane-wise signed maximum.
+    MaxS,
+    /// `i32x4.max_u` -- lane-wise unsigned maximum.
+    MaxU,
     /// `i32x4.extract_lane` -- read one `i32` lane back out of a `v128`,
     /// selected by a lane-index immediate (0-3). Not in the spec's
     /// original 4-opcode minimal slice, but genuinely required to make
@@ -857,7 +867,9 @@ pub struct SimdOpInfo {
 /// corpus files -- their exact sub-opcode bytes were fetched live from
 /// `BinarySIMD.md` and cross-checked against the already-implemented
 /// `i32x4.eq`/`i32x4.add` entries below (both matched exactly), same
-/// verification discipline as the original 5.
+/// verification discipline as the original 5. `i32x4.abs`/`min_s`/
+/// `min_u`/`max_s`/`max_u` widen it further to unblock
+/// `simd_i32x4_arith2.wast`, same verification discipline.
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -872,10 +884,15 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.le_u", sub_opcode: 0x3E, kind: SimdOpKind::LeU },
     SimdOpInfo { name: "i32x4.ge_s", sub_opcode: 0x3F, kind: SimdOpKind::GeS },
     SimdOpInfo { name: "i32x4.ge_u", sub_opcode: 0x40, kind: SimdOpKind::GeU },
+    SimdOpInfo { name: "i32x4.abs", sub_opcode: 0xA0, kind: SimdOpKind::Abs },
     SimdOpInfo { name: "i32x4.neg", sub_opcode: 0xA1, kind: SimdOpKind::Neg },
     SimdOpInfo { name: "i32x4.add", sub_opcode: 0xAE, kind: SimdOpKind::Add },
     SimdOpInfo { name: "i32x4.sub", sub_opcode: 0xB1, kind: SimdOpKind::Sub },
     SimdOpInfo { name: "i32x4.mul", sub_opcode: 0xB5, kind: SimdOpKind::Mul },
+    SimdOpInfo { name: "i32x4.min_s", sub_opcode: 0xB6, kind: SimdOpKind::MinS },
+    SimdOpInfo { name: "i32x4.min_u", sub_opcode: 0xB7, kind: SimdOpKind::MinU },
+    SimdOpInfo { name: "i32x4.max_s", sub_opcode: 0xB8, kind: SimdOpKind::MaxS },
+    SimdOpInfo { name: "i32x4.max_u", sub_opcode: 0xB9, kind: SimdOpKind::MaxU },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1294,8 +1311,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_17_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 17);
+    fn simd_ops_table_has_the_expected_22_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 22);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1363,6 +1380,26 @@ mod tests {
             ("i32x4.neg", 0xA1, SimdOpKind::Neg),
             ("i32x4.sub", 0xB1, SimdOpKind::Sub),
             ("i32x4.mul", 0xB5, SimdOpKind::Mul),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i32x4_arith2_widening_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i32x4.eq (0x37)/i32x4.add (0xAE) entries
+        // (both matched exactly) -- same discipline as the arith/cmp
+        // widening above. See this package's own CHANGELOG entry.
+        for (name, sub_opcode, kind) in [
+            ("i32x4.abs", 0xA0, SimdOpKind::Abs),
+            ("i32x4.min_s", 0xB6, SimdOpKind::MinS),
+            ("i32x4.min_u", 0xB7, SimdOpKind::MinU),
+            ("i32x4.max_s", 0xB8, SimdOpKind::MaxS),
+            ("i32x4.max_u", 0xB9, SimdOpKind::MaxU),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);
