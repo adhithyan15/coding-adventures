@@ -14,7 +14,10 @@ performed a rotation. VLT-PM42 §Status recorded the finding; this document is
 the ceremony that answers it.
 
 It does not close Phase 1A on its own. §23 item 10c — the `password generate`
-contradiction between §14.4 and §23 — is unrelated and remains open.
+contradiction between §14.4 and §23 — was unrelated to rotation and was
+resolved separately, as documentation only: the generator is a Phase 1B
+daily-use convenience (VLT-PM00 §23 items 10c and 11), so no Phase 1A work
+follows from it.
 
 ## 1. What the criterion is actually asking for
 

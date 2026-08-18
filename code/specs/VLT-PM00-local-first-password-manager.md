@@ -149,7 +149,7 @@ is `VLT-PM15-operation-audit.md`.
 | Phase | Deliverable | Storage | Client surface | Independently useful result |
 |---|---|---|---|---|
 | 0 | Contract and security closure | in-memory fault model | test harness | formats and invariants fixed before product code |
-| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault — crash-survivable since §23 item 10a; open: §23 items 10b–10c |
+| 1A | Local one-shot CLI | filesystem | CLI | usable offline single-user vault — crash-survivable since §23 item 10a, passphrase-rotatable since item 10b; the generator named in item 10c belongs to Phase 1B |
 | 1B | Complete local CLI | filesystem + removable folder | CLI + interactive shell/local agent | practical daily local password manager |
 | 2 | Bring-your-own-cloud | Google Drive first, then WebDAV/S3 | CLI | multi-device E2EE without our server |
 | 3 | Web client | IndexedDB/OPFS + direct cloud adapters | installable PWA | browser access without a plaintext backend |
@@ -916,7 +916,9 @@ The leading `--vault NAME` selector may prefix any command that operates on an
 existing vault. It is command-scoped and never rewrites `default_vault`.
 
 Phase 1A implements `init`, `status`, `shell`, item CRUD/list, search, history,
-password generation, portable export, audit verification, and `doctor`.
+portable export, audit verification, and `doctor`. `password generate`,
+`totp code`, and the attachment commands are Phase 1B daily-use conveniences
+(§23 item 11), as are the import adapters (§23 item 13).
 Cloud/storage migration commands activate in Phase 2.
 
 ### 14.5 Unlock experience
@@ -1751,12 +1753,28 @@ changelog, focused build, and downstream validation.
       one passphrase opens the vault at each — never both, which would mean the
       retired wrap survived, and never neither, which would mean the vault was
       bricked.
-10c. **Open — found alongside 10b.** §14.4 states that Phase 1A implements
-      "password generation", while §23 item 11 places the password generator in
-      Phase 1B. The two statements contradict each other and the shipped
-      surface has no `password generate`. Decide which document is right and
-      make the other match; if §14.4 is right, the generator is a Phase 1A
-      item and Phase 1A does not close without it.
+10c. password-generator phase contradiction — **resolved, documentation only,
+      in favour of Phase 1B.** §14.4 stated that Phase 1A implements "password
+      generation" while item 11 below placed the generator in Phase 1B; no
+      `password generate` has shipped from either reading, so nothing had been
+      built against the wrong answer. §14.4 was the incorrect half and now
+      agrees with item 11.
+      Three of this document's own statements decide it. §4 defines Phase 1A as
+      "a usable offline single-user vault" and Phase 1B as a "practical daily
+      local password manager": a vault is usable offline once it can hold,
+      retrieve, and prove the integrity of secrets a person already has, and
+      minting new ones is a convenience of daily use rather than a property of
+      custody. §2.1 groups "password generation, clipboard-safe secret
+      retrieval, URL-aware matching, browser autofill" into a single
+      convenience bullet, and item 11 groups the generator with TOTP display,
+      clipboard, and attachments — the same company in both places. And §14.4's
+      own signature is `password generate [policy flags] [--copy|--reveal]`,
+      whose preferred output path is the clipboard, which item 11 delivers:
+      putting the generator in Phase 1A would have shipped a command whose
+      documented primary mode did not yet exist. §14.8's Phase 1A acceptance
+      criteria never mention generation, so no gate is weakened by moving it.
+      No code changes; no `password generate` is added or removed, because none
+      was ever implemented. The generator remains tracked as part of item 11.
 
 ### Phase 1B — daily local use
 
