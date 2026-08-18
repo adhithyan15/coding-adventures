@@ -9,7 +9,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use std::collections::HashMap;
+use std::collections::{BTreeSet, HashMap};
 use std::fmt;
 use std::sync::Mutex;
 
@@ -46,6 +46,131 @@ impl fmt::Display for VaultDirectDeliveryError {
 }
 
 impl std::error::Error for VaultDirectDeliveryError {}
+
+/// How a secret is permitted to leave the vault (VLT06 P1).
+///
+/// The distinction is not a preference. Direct delivery exists so that
+/// plaintext never reaches the requesting agent — it is the mode for a bank
+/// password. A lease hands back a redeemable reference. So allowing a
+/// direct-only secret to be *leased* does not weaken the protection, it
+/// inverts it: the caller obtains exactly the material direct mode exists to
+/// withhold, simply by asking a different way.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum VaultDeliveryMode {
+    /// Only direct delivery to a trusted consumer. Leases are refused.
+    Direct,
+    /// Only leased delivery. Direct delivery is refused.
+    Leased,
+    /// Either mode is admissible.
+    Both,
+}
+
+impl VaultDeliveryMode {
+    fn admits_lease(self) -> bool {
+        matches!(self, Self::Leased | Self::Both)
+    }
+
+    fn admits_direct(self) -> bool {
+        matches!(self, Self::Direct | Self::Both)
+    }
+}
+
+/// Which agents may request a secret (VLT06 P2, P3).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum AllowedAgents {
+    /// No agent constraint. Every caller is admissible.
+    Any,
+    /// Only these attested agent identities are admissible.
+    Only(BTreeSet<String>),
+}
+
+impl AllowedAgents {
+    /// Build an `Only` set from any iterator of identities.
+    pub fn only<I, S>(identities: I) -> Self
+    where
+        I: IntoIterator<Item = S>,
+        S: Into<String>,
+    {
+        Self::Only(identities.into_iter().map(Into::into).collect())
+    }
+
+    /// Decide admissibility for a possibly-absent requesting identity.
+    ///
+    /// **An absent identity is refused under `Only`, never treated as
+    /// unconstrained** (VLT06 P3). This is the rule that is easiest to get
+    /// wrong, because the natural way to write the comparison — match the
+    /// request's identity against the policy's — succeeds vacuously when both
+    /// sides are absent, and a check that passes when it had nothing to check
+    /// is worse than no check at all, since it reads as enforcement.
+    ///
+    /// The hazard is live, not theoretical: in the D18 tool stack only
+    /// `agent_id` is host-attested, while `user_id` and `session_id` are
+    /// unconditionally `None` outside tests. A rule written over one of those
+    /// would compare absent to absent and admit everyone.
+    fn admits(&self, requesting_agent_id: Option<&str>) -> bool {
+        match self {
+            Self::Any => true,
+            Self::Only(allowed) => {
+                requesting_agent_id.is_some_and(|identity| allowed.contains(identity))
+            }
+        }
+    }
+}
+
+/// The admission policy a secret carries (VLT06, "Per-secret admission policy").
+///
+/// There is deliberately no `Default`. A permissive default would make a secret
+/// unguarded by omission and say nothing when it happened; a restrictive
+/// default would be discovered only when a legitimate caller was refused.
+/// Neither is safe-by-default, so [`ChiefVaultRuntime::register_secret`]
+/// requires the policy at the call site (VLT06 P5).
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SecretPolicy {
+    /// Minimum approval tier, 0–3. Carried for the approval layer; the vault
+    /// records it rather than interpreting it.
+    pub privilege_tier: u8,
+    /// Which agents may request this secret.
+    pub allowed_agents: AllowedAgents,
+    /// Which delivery modes are admissible.
+    pub allowed_mode: VaultDeliveryMode,
+    /// When the secret was last changed, in milliseconds since Unix epoch.
+    pub rotated_at_ms: u64,
+}
+
+impl SecretPolicy {
+    /// The most permissive policy: any agent, either mode, tier 0.
+    ///
+    /// Named rather than derived so that "this secret is unguarded" is a thing
+    /// someone had to type, and greppable when it turns out to be wrong.
+    pub fn unrestricted(rotated_at_ms: u64) -> Self {
+        Self {
+            privilege_tier: 0,
+            allowed_agents: AllowedAgents::Any,
+            allowed_mode: VaultDeliveryMode::Both,
+            rotated_at_ms,
+        }
+    }
+}
+
+/// Who is asking for a lease, and for what.
+///
+/// Mirrors [`VaultDirectRequest`]. The lease path needs the requester for the
+/// same reason the direct path does — without it the vault cannot apply
+/// [`AllowedAgents`] — and it is the weaker of the two paths to leave
+/// unguarded, because a lease hands back a redeemable capability with no
+/// trusted adapter anywhere in the loop.
+///
+/// `requesting_agent_id` is trustworthy only if the host attests it; see the
+/// note on [`VaultDirectRequest`].
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct VaultLeaseRequest<'a> {
+    /// Identity of the agent that invoked the tool, if the host attested one.
+    pub requesting_agent_id: Option<&'a str>,
+    /// Name of the secret to lease.
+    pub secret_name: &'a str,
+    /// Requested lease lifetime in milliseconds.
+    pub ttl_ms: u64,
+}
 
 /// Who asked for a direct delivery, what they asked for, and where it goes.
 ///
@@ -128,6 +253,11 @@ impl fmt::Debug for VaultLeaseReceipt {
 pub enum VaultRuntimeError {
     /// The requested secret name is not registered with this broker.
     SecretNotFound,
+    /// The secret exists but forbids the requested delivery mode (VLT06 P1).
+    DeliveryModeNotPermitted,
+    /// The secret exists but the requesting agent is not on its allow-list,
+    /// or no attested identity accompanied the request (VLT06 P2, P3).
+    AgentNotPermitted,
     /// The consumer identifier is empty or exceeds the protocol bound.
     InvalidConsumerAgentId,
     /// The supplied reference was not minted by this broker format.
@@ -142,6 +272,10 @@ impl fmt::Display for VaultRuntimeError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::SecretNotFound => f.write_str("secret not found"),
+            Self::DeliveryModeNotPermitted => {
+                f.write_str("secret does not permit the requested delivery mode")
+            }
+            Self::AgentNotPermitted => f.write_str("agent is not permitted to request this secret"),
             Self::InvalidConsumerAgentId => f.write_str("invalid consumer agent identifier"),
             Self::InvalidVaultRef => f.write_str("invalid VaultRef"),
             Self::DirectDelivery(error) => write!(f, "{error}"),
@@ -164,9 +298,19 @@ impl From<VaultDirectDeliveryError> for VaultRuntimeError {
     }
 }
 
+/// One registered secret: the bytes, and the policy governing who gets them.
+///
+/// Kept together in one map value rather than in two parallel maps, so a secret
+/// cannot exist without a policy — the pairing is a type-level fact rather than
+/// an invariant someone has to maintain across two insertions.
+struct StoredSecret {
+    payload: LeasePayload,
+    policy: SecretPolicy,
+}
+
 /// In-process vault actor boundary used by Chief host runtimes.
 pub struct ChiefVaultRuntime {
-    secrets: Mutex<HashMap<String, LeasePayload>>,
+    secrets: Mutex<HashMap<String, StoredSecret>>,
     leases: InMemoryLeaseManager,
 }
 
@@ -186,11 +330,65 @@ impl ChiefVaultRuntime {
     }
 
     /// Register or rotate a named secret while retaining it in zeroizing memory.
-    pub fn register_secret(&self, name: impl Into<String>, payload: LeasePayload) {
+    ///
+    /// The policy is required rather than defaulted (VLT06 P5): a permissive
+    /// default would leave a secret unguarded silently, and a restrictive one
+    /// would surface only as a refused legitimate caller. Use
+    /// [`SecretPolicy::unrestricted`] when a secret genuinely has no
+    /// constraints, so that fact is written down and greppable.
+    pub fn register_secret(
+        &self,
+        name: impl Into<String>,
+        payload: LeasePayload,
+        policy: SecretPolicy,
+    ) {
         self.secrets
             .lock()
             .expect("vault secret mutex poisoned")
-            .insert(name.into(), payload);
+            .insert(name.into(), StoredSecret { payload, policy });
+    }
+
+    /// Read the policy recorded for a secret, without touching the payload.
+    pub fn secret_policy(&self, secret_name: &str) -> Option<SecretPolicy> {
+        self.secrets
+            .lock()
+            .expect("vault secret mutex poisoned")
+            .get(secret_name)
+            .map(|stored| stored.policy.clone())
+    }
+
+    /// Apply the admission policy and hand back the payload only if it passes.
+    ///
+    /// Every read of the secret map goes through here, which is what makes
+    /// VLT06 P4 — "refuse before materializing" — true by construction rather
+    /// than by remembering. A refused request never clones the payload, so a
+    /// later mistake on a refusal path has nothing to leak.
+    fn admit(
+        &self,
+        secret_name: &str,
+        requesting_agent_id: Option<&str>,
+        wants_lease: bool,
+    ) -> Result<LeasePayload, VaultRuntimeError> {
+        let guard = self.secrets.lock().expect("vault secret mutex poisoned");
+        let stored = guard
+            .get(secret_name)
+            .ok_or(VaultRuntimeError::SecretNotFound)?;
+
+        let mode = stored.policy.allowed_mode;
+        let admitted = if wants_lease {
+            mode.admits_lease()
+        } else {
+            mode.admits_direct()
+        };
+        if !admitted {
+            return Err(VaultRuntimeError::DeliveryModeNotPermitted);
+        }
+        if !stored.policy.allowed_agents.admits(requesting_agent_id) {
+            return Err(VaultRuntimeError::AgentNotPermitted);
+        }
+
+        // Only now does the payload leave storage.
+        Ok(stored.payload.clone())
     }
 
     /// Issue a short-lived opaque reference for a named secret.
@@ -200,17 +398,10 @@ impl ChiefVaultRuntime {
     /// this boundary.
     pub fn request_lease(
         &self,
-        secret_name: &str,
-        ttl_ms: u64,
+        request: VaultLeaseRequest<'_>,
     ) -> Result<VaultLeaseReceipt, VaultRuntimeError> {
-        let payload = self
-            .secrets
-            .lock()
-            .expect("vault secret mutex poisoned")
-            .get(secret_name)
-            .cloned()
-            .ok_or(VaultRuntimeError::SecretNotFound)?;
-        let lease_id = self.leases.issue(payload, ttl_ms)?;
+        let payload = self.admit(request.secret_name, request.requesting_agent_id, true)?;
+        let lease_id = self.leases.issue(payload, request.ttl_ms)?;
         let info = self.leases.lookup(&lease_id)?;
         Ok(VaultLeaseReceipt {
             vault_ref: VaultRef::trusted(format!("{VAULT_REF_PREFIX}{}", lease_id.as_hex())),
@@ -234,13 +425,7 @@ impl ChiefVaultRuntime {
             return Err(VaultRuntimeError::InvalidConsumerAgentId);
         }
 
-        let payload = self
-            .secrets
-            .lock()
-            .expect("vault secret mutex poisoned")
-            .get(request.secret_name)
-            .cloned()
-            .ok_or(VaultRuntimeError::SecretNotFound)?;
+        let payload = self.admit(request.secret_name, request.requesting_agent_id, false)?;
         delivery.deliver(request, payload)?;
         Ok(())
     }
@@ -323,13 +508,229 @@ mod tests {
         }
     }
 
+    /// A lease request from the standard test agent.
+    fn lease_request(secret_name: &str, ttl_ms: u64) -> VaultLeaseRequest<'_> {
+        VaultLeaseRequest {
+            requesting_agent_id: Some("agent:test"),
+            secret_name,
+            ttl_ms,
+        }
+    }
+
+    #[test]
+    fn a_direct_only_secret_cannot_be_leased_instead() {
+        // The inversion this whole check exists to stop: a secret configured so
+        // plaintext never reaches the agent, obtained as a redeemable reference
+        // by asking the other way.
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "bank-password",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy {
+                privilege_tier: 3,
+                allowed_agents: AllowedAgents::Any,
+                allowed_mode: VaultDeliveryMode::Direct,
+                rotated_at_ms: 0,
+            },
+        );
+
+        assert!(matches!(
+            vault.request_lease(lease_request("bank-password", 30_000)),
+            Err(VaultRuntimeError::DeliveryModeNotPermitted)
+        ));
+
+        // ... while the mode it *is* configured for still works.
+        let delivery = RecordingDelivery::default();
+        vault
+            .request_direct(direct_request("bank-password", "browser-agent"), &delivery)
+            .expect("direct delivery is the permitted mode");
+    }
+
+    #[test]
+    fn a_leased_only_secret_cannot_be_delivered_directly() {
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "weather-api-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy {
+                privilege_tier: 1,
+                allowed_agents: AllowedAgents::Any,
+                allowed_mode: VaultDeliveryMode::Leased,
+                rotated_at_ms: 0,
+            },
+        );
+        let delivery = RecordingDelivery::default();
+
+        assert!(matches!(
+            vault.request_direct(
+                direct_request("weather-api-key", "browser-agent"),
+                &delivery
+            ),
+            Err(VaultRuntimeError::DeliveryModeNotPermitted)
+        ));
+        assert!(
+            delivery.deliveries.lock().unwrap().is_empty(),
+            "a refused mode must not reach the adapter at all"
+        );
+
+        vault
+            .request_lease(lease_request("weather-api-key", 30_000))
+            .expect("leasing is the permitted mode");
+    }
+
+    #[test]
+    fn an_agent_outside_the_allow_list_is_refused_on_both_paths() {
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "finance-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy {
+                privilege_tier: 2,
+                allowed_agents: AllowedAgents::only(["agent:finance"]),
+                allowed_mode: VaultDeliveryMode::Both,
+                rotated_at_ms: 0,
+            },
+        );
+        let delivery = RecordingDelivery::default();
+
+        // `lease_request` / `direct_request` both speak as "agent:test".
+        assert!(matches!(
+            vault.request_lease(lease_request("finance-key", 30_000)),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+        assert!(matches!(
+            vault.request_direct(direct_request("finance-key", "browser-agent"), &delivery),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+        assert!(delivery.deliveries.lock().unwrap().is_empty());
+
+        // The named agent gets through.
+        vault
+            .request_lease(VaultLeaseRequest {
+                requesting_agent_id: Some("agent:finance"),
+                secret_name: "finance-key",
+                ttl_ms: 30_000,
+            })
+            .expect("the allow-listed agent is admitted");
+    }
+
+    #[test]
+    fn an_absent_identity_is_refused_rather_than_treated_as_unconstrained() {
+        // VLT06 P3, and the reason it is a numbered rule. Writing the check the
+        // natural way — compare the request's identity to the policy's — passes
+        // vacuously when both are absent. In this stack `user_id` and
+        // `session_id` are unconditionally None outside tests, so a rule
+        // written over either would admit everyone while reading as
+        // enforcement.
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "finance-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy {
+                privilege_tier: 2,
+                allowed_agents: AllowedAgents::only(["agent:finance"]),
+                allowed_mode: VaultDeliveryMode::Both,
+                rotated_at_ms: 0,
+            },
+        );
+        let delivery = RecordingDelivery::default();
+
+        assert!(matches!(
+            vault.request_lease(VaultLeaseRequest {
+                requesting_agent_id: None,
+                secret_name: "finance-key",
+                ttl_ms: 30_000,
+            }),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+        assert!(matches!(
+            vault.request_direct(
+                VaultDirectRequest {
+                    requesting_agent_id: None,
+                    requesting_user_id: None,
+                    session_id: None,
+                    secret_name: "finance-key",
+                    consumer_agent_id: "browser-agent",
+                },
+                &delivery
+            ),
+            Err(VaultRuntimeError::AgentNotPermitted)
+        ));
+
+        // `Any` still admits an anonymous caller — absence is only fatal where
+        // the policy actually names who is allowed.
+        vault.register_secret(
+            "public-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
+        vault
+            .request_lease(VaultLeaseRequest {
+                requesting_agent_id: None,
+                secret_name: "public-key",
+                ttl_ms: 30_000,
+            })
+            .expect("Any admits a caller with no attested identity");
+    }
+
+    #[test]
+    fn a_refused_request_never_materializes_the_payload() {
+        // VLT06 P4. Proven through the adapter: the delivery boundary is the
+        // only place the payload can be observed, and a refused request must
+        // not reach it. The mode and agent refusals above assert the same
+        // thing; this pins the ordering explicitly.
+        let vault = ChiefVaultRuntime::new();
+        vault.register_secret(
+            "bank-password",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy {
+                privilege_tier: 3,
+                allowed_agents: AllowedAgents::only(["agent:vault"]),
+                allowed_mode: VaultDeliveryMode::Direct,
+                rotated_at_ms: 0,
+            },
+        );
+        let delivery = RecordingDelivery::default();
+
+        assert!(vault
+            .request_direct(direct_request("bank-password", "browser-agent"), &delivery)
+            .is_err());
+        assert!(
+            delivery.deliveries.lock().unwrap().is_empty(),
+            "the payload must not have been cloned out of storage"
+        );
+    }
+
+    #[test]
+    fn the_recorded_policy_is_readable_without_touching_the_payload() {
+        let vault = ChiefVaultRuntime::new();
+        let policy = SecretPolicy {
+            privilege_tier: 2,
+            allowed_agents: AllowedAgents::only(["agent:finance", "agent:audit"]),
+            allowed_mode: VaultDeliveryMode::Leased,
+            rotated_at_ms: 1_700_000_000_000,
+        };
+        vault.register_secret(
+            "finance-key",
+            LeasePayload::new(SECRET.to_vec()),
+            policy.clone(),
+        );
+
+        assert_eq!(vault.secret_policy("finance-key"), Some(policy));
+        assert_eq!(vault.secret_policy("absent"), None);
+    }
+
     #[test]
     fn opaque_reference_resolves_once_inside_host_boundary() {
         let vault = ChiefVaultRuntime::new();
-        vault.register_secret("weather-api-key", LeasePayload::new(SECRET.to_vec()));
+        vault.register_secret(
+            "weather-api-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
 
         let receipt = vault
-            .request_lease("weather-api-key", 30_000)
+            .request_lease(lease_request("weather-api-key", 30_000))
             .expect("lease should be issued");
         assert!(receipt.vault_ref.as_str().starts_with(VAULT_REF_PREFIX));
         assert!(!receipt.vault_ref.as_str().contains("runtime-secret"));
@@ -344,10 +745,14 @@ mod tests {
     #[test]
     fn lease_receipt_debug_redacts_bearer_capability() {
         let vault = ChiefVaultRuntime::new();
-        vault.register_secret("weather-api-key", LeasePayload::new(SECRET.to_vec()));
+        vault.register_secret(
+            "weather-api-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
 
         let receipt = vault
-            .request_lease("weather-api-key", 30_000)
+            .request_lease(lease_request("weather-api-key", 30_000))
             .expect("lease should be issued");
         let debug = format!("{receipt:?}");
 
@@ -359,9 +764,13 @@ mod tests {
     #[test]
     fn revoked_and_unknown_references_fail_closed() {
         let vault = ChiefVaultRuntime::new();
-        vault.register_secret("weather-api-key", LeasePayload::new(SECRET.to_vec()));
+        vault.register_secret(
+            "weather-api-key",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
         let receipt = vault
-            .request_lease("weather-api-key", 30_000)
+            .request_lease(lease_request("weather-api-key", 30_000))
             .expect("lease should be issued");
         vault
             .revoke(&receipt.vault_ref)
@@ -371,13 +780,19 @@ mod tests {
         assert!(vault
             .consume(&VaultRef::trusted("raw-secret-or-random-handle"))
             .is_err());
-        assert!(vault.request_lease("missing", 30_000).is_err());
+        assert!(vault
+            .request_lease(lease_request("missing", 30_000))
+            .is_err());
     }
 
     #[test]
     fn direct_delivery_moves_secret_only_into_trusted_adapter() {
         let vault = ChiefVaultRuntime::new();
-        vault.register_secret("browser-session", LeasePayload::new(SECRET.to_vec()));
+        vault.register_secret(
+            "browser-session",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
         let delivery = RecordingDelivery::default();
 
         vault
@@ -396,7 +811,11 @@ mod tests {
     #[test]
     fn direct_delivery_fails_closed_before_or_at_adapter_boundary() {
         let vault = ChiefVaultRuntime::new();
-        vault.register_secret("browser-session", LeasePayload::new(SECRET.to_vec()));
+        vault.register_secret(
+            "browser-session",
+            LeasePayload::new(SECRET.to_vec()),
+            SecretPolicy::unrestricted(0),
+        );
         let delivery = RecordingDelivery::default();
 
         assert!(matches!(
