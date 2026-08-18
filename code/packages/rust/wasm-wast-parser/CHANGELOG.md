@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.29 — 2026-08-18 — SIMD: i16x8 first primary-lane slice text-form (task #129-132)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms widened to cover this crate's first opcodes where
+  `i16x8` is a PRIMARY lane width: `i16x8.add`/`sub`/`mul`/`neg` -- same
+  "no immediate beyond the opcode byte itself" shape every prior SIMD op
+  in this family has, so no new parsing logic, just a wider match-arm
+  pattern list. Verified via a dedicated test asserting the real
+  2-byte LEB128-encoded sub-opcode bytes (`[0xFD, 0x8E, 0x01]`/
+  `[0xFD, 0x91, 0x01]`/`[0xFD, 0x95, 0x01]`/`[0xFD, 0x81, 0x01]` for
+  `add`/`sub`/`mul`/`neg` -- all four are >= 128, unlike `i8x16.add`/
+  `sub`/`neg`'s own sub-opcodes, all single-byte).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.28 — 2026-08-18 — SIMD: i8x16 first slice text-form (task #125-128)
 
 ### Added

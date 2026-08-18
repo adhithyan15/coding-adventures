@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.17] - 2026-08-18 (task #129-132 — SIMD: i16x8 first primary-lane slice)
+
+### Added
+
+- `register_simd` gains two new dispatch arms for this crate's first
+  opcodes where `i16x8` is a PRIMARY lane width: `AddI16x8 | SubI16x8 |
+  MulI16x8` (BINARY, 8 `i16` lanes instead of the 4 `i32` lanes or 16
+  `i8` lanes every prior binary SIMD op here reads/writes, same
+  wrapping-arithmetic shape as `i32x4`'s own `Add`/`Sub`/`Mul`) and
+  `NegI16x8` (UNARY, same shape as `i8x16.neg`/`i32x4.neg`/`.abs`).
+  Verified with a dedicated test proving `i16::MAX + 1` wraps to
+  `i16::MIN` and `i16::MIN.wrapping_neg() == i16::MIN` -- the same
+  two's-complement wrapping edge cases `i8x16`/`i32x4`'s own tests
+  already established at their respective widths.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.16] - 2026-08-18 (task #125-128 — SIMD: i8x16 first slice)
 
 ### Added
