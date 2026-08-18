@@ -1,0 +1,38 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-crash-injection",
+  "capabilities": [
+    {
+      "category": "env",
+      "action": "read",
+      "target": "VAULT_PM_CRASH_AT and VAULT_PM_CRASH_TRACE",
+      "justification": "VLT-PM41 crash injection reads the durable-step ordinal to stop at and the path of the metadata-only step ledger. Both are read exactly once per process, through a OnceLock, and no other variable is consulted."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "one explicit durable-step ledger path",
+      "justification": "Creates the ledger owner-only when it is absent, refusing a relative path, a symlink at the final component, and a reader-less FIFO. Only an ordinal, a phase, and a name from the closed DurableStep vocabulary are ever written, so no key, namespace, object identifier, path, title, or ciphertext can reach it."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "one explicit durable-step ledger path",
+      "justification": "Appends to the ledger when it already exists, after confirming by fstat on the open descriptor that it is a regular file this user owns at owner-only permissions. The path is NOT confined to the vault roots: any absolute path naming an existing private regular file this user owns is accepted, and only something that already controls this process's environment can choose it."
+    },
+    {
+      "category": "proc",
+      "action": "signal",
+      "target": "this process only",
+      "justification": "Removes this process with SIGKILL at the chosen durable write so a drill can observe what an uncatchable interruption leaves on disk. The signal is sent to the caller's own process id and to no other, and the process terminates rather than continuing."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc kill, getpid, and getuid",
+      "justification": "SIGKILL cannot be raised through the standard library, and the ledger's ownership check needs the caller's real user id. Each call takes no pointer the caller supplies and touches no memory the compiler tracks."
+    }
+  ],
+  "justification": "Test-only real-process crash injection for local vault-pm hosts, specified by VLT-PM41. It holds real operating-system authority - reading two environment variables, appending to an unconfined absolute path, and removing its own process - which is why that authority is declared here rather than only in the drill program that composes it. The authority cannot reach a released binary: the package is an optional dependency behind coding_adventures_vault_pm_cli's non-default crash-injection feature, only code/programs/rust/vault-pm-cli-drill enables it, and the product executable fails to compile when it is active."
+}

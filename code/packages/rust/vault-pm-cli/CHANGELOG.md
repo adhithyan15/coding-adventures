@@ -2,6 +2,37 @@
 
 ## Unreleased
 
+- Added the composition root's durable-write seam for
+  `VLT-PM41-cli-crash-fault-matrix.md`. The new `crash` module names every
+  point at which this package makes something durable, so a drill can kill the
+  real process at a chosen one: backend writes through a `LocalBackend` type
+  alias, plus the two writes that do not go through a backend — the first
+  creation of the client configuration file and the creation of an encrypted
+  portable-export artifact. The seam lives here rather than in
+  `vault-pm-application` because the application layer is deliberately
+  storage-agnostic and owns no filesystem authority, so it is not the layer
+  that knows what "durable" means.
+- Added the non-default `crash-injection` feature that selects the instrumented
+  half of that module. With the feature off — the only configuration the
+  product executable is ever built in — `LocalBackend` is exactly
+  `FsStorageBackend`, each combinator is an `#[inline]` function whose body is
+  `action()`, and the crash-injection package is an optional dependency that is
+  not compiled at all. No behavior, output, exit class, file, or on-disk format
+  changes in either configuration. Only `code/programs/rust/vault-pm-cli-drill`
+  enables the feature; the product crate names it in no section, because Cargo
+  resolves features per package and naming it even in `dev-dependencies` would
+  let `cargo build --all-targets` uplift an instrumented binary to
+  `target/release/vault-pm`.
+- Added `CRASH_INJECTION_COMPILED`, a public `const` a composition root can
+  assert on to turn "this build must not contain crash injection" into a
+  compile error. Declaring no feature is necessary and not sufficient: cargo's
+  `--features <dep>/<feature>` syntax reaches a direct dependency's features
+  even when the root package declares none of its own, so the product
+  executable asserts on this constant as well.
+- Corrected the `crash` module's own documentation, which still described the
+  rejected `dev-dependencies` design as the live one. That matters more there
+  than anywhere else: it is the module implementing the seam, so its doc
+  comment was telling the next maintainer to do the unsafe thing.
 - Added `vault-pm [--vault NAME] shell`, the foreground interactive session
   host specified by `VLT-PM40-cli-interactive-shell.md`. It adds no capability:
   every command inside a session runs through the same parser, the same

@@ -58,6 +58,37 @@ impl Drop for TestHome {
     }
 }
 
+/// The shipped executable must never contain VLT-PM41 crash injection.
+///
+/// The drill needs a `vault-pm` it can kill at a chosen durable write, and the
+/// obvious way to get one — enabling the `crash-injection` feature through
+/// this crate's `dev-dependencies` — quietly fails. Cargo resolves features
+/// per package across a build graph, so `cargo build --release --all-targets`
+/// would pull dev-dependencies in and uplift the instrumented binary to
+/// `target/release/vault-pm`, the exact path a packaging step copies from. A
+/// password manager would then ship an environment-variable kill switch that
+/// fires between durable writes.
+///
+/// The drill therefore lives in a separate crate,
+/// `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
+/// This test is the guard rail on that decision: it reads the binary this
+/// crate actually produced and fails if either injection variable name appears
+/// anywhere in it. It runs in a build that does have dev-dependencies
+/// resolved, which is precisely the configuration the mistake shows up in.
+#[test]
+fn the_shipped_executable_contains_no_crash_injection() {
+    let binary = fs::read(env!("CARGO_BIN_EXE_vault-pm")).unwrap();
+    for forbidden in [b"VAULT_PM_CRASH_AT".as_slice(), b"VAULT_PM_CRASH_TRACE"] {
+        assert!(
+            !binary
+                .windows(forbidden.len())
+                .any(|value| value == forbidden),
+            "the shipped vault-pm binary contains {}; see VLT-PM41 section 4.6",
+            String::from_utf8_lossy(forbidden)
+        );
+    }
+}
+
 #[test]
 fn real_cli_initializes_through_a_hidden_tty_and_survives_restart() {
     let home = TestHome::new();

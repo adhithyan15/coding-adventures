@@ -116,9 +116,49 @@ process cleanly. Both spawn the shell with the same injected piped stdin every
 other drill uses, so a redirected stdin is proven unable to supply a command as
 well as unable to supply a secret.
 
+## The crash/fault drill
+
+`tests/local_cli_e2e.rs` proves what this executable does when it is allowed to
+finish. `code/programs/rust/vault-pm-cli-drill` proves what happens when it is
+not: its `tests/crash_fault_matrix.rs` kills a real process with `SIGKILL` at a
+deterministically chosen durable write and then asks the next real process what
+it can see and what it can repair.
+
+That drill lives in a separate crate on purpose, and this crate carries the
+guard rail. VLT-PM41 needs a binary built with
+`coding_adventures_vault_pm_cli`'s `crash-injection` feature, and the obvious
+way to get one — enabling it through this crate's `dev-dependencies` — is a
+trap. Cargo resolves features per package across a build graph, so
+`cargo build --release --all-targets` pulls dev-dependencies in and uplifts the
+instrumented binary to `target/release/vault-pm`, the exact path a packaging
+step copies from. This crate therefore names that feature in no section, and
+the instrumented twin is `vault-pm-drill` in its own workspace.
+
+Naming no feature is necessary and *not sufficient*, because
+`--features <dep>/<feature>` reaches a direct dependency's features regardless
+of what the root package declares. So `src/main.rs` also carries a `const`
+assertion on `CRASH_INJECTION_COMPILED` — a `vault-pm` with the instrumentation
+in it does not compile — and
+`the_shipped_executable_contains_no_crash_injection` reads the binary this
+crate produced and fails if either injection variable name appears in it.
+
+Two results from the drill are worth reading before trusting this executable
+with anything:
+
+- An interrupted `init` is always repairable by running `init` again, and the
+  resumed vault passes authenticated `doctor --unlock`.
+- An interrupted **mutation** is not repairable from this command surface. The
+  tree is never torn and the durable journal is exact, but no verb replays it,
+  so every later command fails — as exit 2 `vault-pm: invalid command`, which
+  tells a person their command is wrong about a vault that is intact. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 and VLT-PM00 §23
+  item 10a.
+
 ## Verification
 
 ```bash
 bash BUILD
 cargo clippy --manifest-path Cargo.toml --all-targets -- -D warnings
 ```
+
+The crash drill has its own `BUILD`, next to its own crate.

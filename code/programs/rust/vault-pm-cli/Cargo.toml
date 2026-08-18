@@ -10,6 +10,13 @@ license = "MIT"
 [dependencies]
 coding_adventures_vault_pm_cli = { path = "../../../packages/rust/vault-pm-cli" }
 
+# This crate must never name `coding_adventures_vault_pm_cli`'s
+# `crash-injection` feature, in any section. Cargo resolves features per
+# package across a build graph, so naming it even in `dev-dependencies` would
+# let `cargo build --all-targets` uplift an instrumented binary to
+# `target/release/vault-pm` — the path a packaging step copies from. The
+# VLT-PM41 drill therefore lives in a separate crate,
+# `code/programs/rust/vault-pm-cli-drill`, whose binary is `vault-pm-drill`.
 [dev-dependencies]
 libc = "0.2"
 

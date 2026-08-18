@@ -359,10 +359,52 @@ command one-shot.
 The pre-emptive idle timer that locks a session while nobody is typing remains
 Phase 1B work; this slice ships only the command-boundary bound.
 
+## The durable-write seam
+
+This package is the layer that knows what "durable" means. `vault-pm-application`
+is deliberately storage-agnostic and owns no filesystem authority, so it cannot
+be. Everything this crate makes durable passes one of three gates: the
+`storage-core` backend it composes over the application-state and object roots,
+the configuration writer, and the portable-export destination.
+
+`src/crash.rs` names those gates for
+`code/specs/VLT-PM41-cli-crash-fault-matrix.md`, so a drill can kill the real
+process at a chosen durable write and then check what the *next* real process
+can see and repair. The module has two bodies:
+
+- **`crash-injection` off** — the default, and the only configuration the
+  product executable is ever built in. `LocalBackend` is exactly
+  `FsStorageBackend`, each combinator is an `#[inline]` function whose whole
+  body is `action()`, and `coding_adventures_vault_pm_crash_injection` is an
+  optional dependency that is not compiled at all.
+- **`crash-injection` on** — enabled by exactly one crate,
+  `code/programs/rust/vault-pm-cli-drill`, through its ordinary
+  `[dependencies]`.
+
+Neither configuration changes behavior, output, exit classes, files, or on-disk
+formats. Nothing here is reachable from an argument vector or from
+configuration.
+
 ## Verification
 
 ```bash
 bash BUILD
 cargo clippy -p coding_adventures_vault_pm_cli --all-targets -- -D warnings
+cargo clippy -p coding_adventures_vault_pm_cli --features crash-injection \
+  --all-targets -- -D warnings
 RUSTDOCFLAGS="-D warnings" cargo doc -p coding_adventures_vault_pm_cli --no-deps
 ```
+
+The real-process crash drill lives in
+`code/programs/rust/vault-pm-cli-drill`, because only there is there a process
+to remove - and because keeping it out of the product crate is what makes the
+"never in a released binary" claim structural rather than conventional. Cargo
+resolves features per package, so a product crate that named
+`crash-injection` even in `dev-dependencies` would hand
+`cargo build --all-targets` an instrumented `target/release/vault-pm`.
+
+Naming no feature is necessary and not sufficient, since
+`--features <dep>/<feature>` reaches a direct dependency's features regardless.
+This crate therefore also exports `CRASH_INJECTION_COMPILED`, and the product
+executable asserts on it in a `const` block, so a `vault-pm` with the
+instrumentation in it does not compile.

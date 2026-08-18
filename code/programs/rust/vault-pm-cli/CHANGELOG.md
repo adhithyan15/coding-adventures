@@ -2,6 +2,38 @@
 
 ## Unreleased
 
+- Added `the_shipped_executable_contains_no_crash_injection` to
+  `tests/local_cli_e2e.rs`, and kept this crate free of any mention of
+  `coding_adventures_vault_pm_cli`'s `crash-injection` feature. VLT-PM41 needs
+  a binary it can kill at a chosen durable write, and the obvious way to get
+  one — enabling that feature through this crate's `dev-dependencies` — is a
+  trap: Cargo resolves features per package across a build graph, so
+  `cargo build --release --all-targets` pulls dev-dependencies in and uplifts
+  the instrumented binary to `target/release/vault-pm`, the exact path a
+  packaging step copies from. The instrumented twin therefore lives in
+  `code/programs/rust/vault-pm-cli-drill` as `vault-pm-drill`, and the new test
+  reads the binary this crate produced — in a build that does have
+  dev-dependencies resolved — and fails if either injection variable name
+  appears anywhere in it.
+- Added a `const` assertion in `src/main.rs` on
+  `coding_adventures_vault_pm_cli::CRASH_INJECTION_COMPILED`. Naming no feature
+  is necessary and *not sufficient*: cargo's `--features <dep>/<feature>`
+  syntax reaches a direct dependency's features even when the root package
+  declares none of its own, so
+  `cargo build --release --features coding_adventures_vault_pm_cli/crash-injection`
+  would otherwise still have produced an instrumented
+  `target/release/vault-pm`. It is now a compile error, which needs no test to
+  have been run.
+- **Found by the VLT-PM41 drill, not fixed here:** an interrupted mutation
+  leaves a vault this command surface cannot repair. The tree is never torn,
+  the durable `PendingPublication` journal is exact, and both read-only
+  diagnostics correctly report `recovery_required` — but no verb replays it, so
+  every later command fails, and it fails as exit 2
+  `vault-pm: invalid command`, telling a person their command is wrong about a
+  vault that is intact and one journal replay from healthy. See
+  `code/specs/VLT-PM41-cli-crash-fault-matrix.md` section 8 and VLT-PM00 §23
+  item 10a.
+
 - Exposed `vault-pm [--vault NAME] shell`, the foreground interactive session
   host, through the unchanged thin executable. Two real-process
   pseudo-terminal drills prove a session unlocks once for several commands,
