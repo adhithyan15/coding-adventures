@@ -11,6 +11,7 @@ The current command surface is:
 vault-pm init [--vault NAME] [--storage NAME]
 vault-pm vault create NAME
 vault-pm [--vault NAME] status [--json]
+vault-pm [--vault NAME] shell
 vault-pm [--vault NAME] audit enable
 vault-pm [--vault NAME] audit verify
 vault-pm [--vault NAME] audit list
@@ -98,6 +99,22 @@ restarts into algorithm/digits/period metadata with explicit secret redaction,
 reveals canonical Base32 only after a separate audited confirmation, verifies
 the closed audit-row grammar, and excludes both encoded and raw seed bytes from
 the profile tree.
+
+`vault-pm shell` is the same binary in its second host shape: one foreground
+process that reads command lines from the controlling terminal and runs them
+through the identical parser and application boundary. It keeps one wipe-on-drop
+passphrase between commands and nothing else, so an operator can work a session
+without answering a prompt — and paying an Argon2id derivation — for every
+single command. Two further pseudo-terminal drills cover it. The first proves a
+real process unlocks once, runs several commands with no second prompt, still
+collects an item password through the hidden terminal ceremony inside the
+session, forgets its authenticator on `lock`, re-authenticates afterwards, exits
+cleanly, and leaves no passphrase or item password in the transcript or the
+profile tree. The second proves `init`, `vault create`, and a leading `--vault`
+are refused inside a session without ending it, and that `Ctrl-D` ends the
+process cleanly. Both spawn the shell with the same injected piped stdin every
+other drill uses, so a redirected stdin is proven unable to supply a command as
+well as unable to supply a secret.
 
 ## Verification
 

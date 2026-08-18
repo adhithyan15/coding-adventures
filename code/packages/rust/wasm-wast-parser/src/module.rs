@@ -1720,6 +1720,11 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
             | wasm_opcodes::SimdOpKind::Neg
+            | wasm_opcodes::SimdOpKind::Abs
+            | wasm_opcodes::SimdOpKind::MinS
+            | wasm_opcodes::SimdOpKind::MinU
+            | wasm_opcodes::SimdOpKind::MaxS
+            | wasm_opcodes::SimdOpKind::MaxU
             | wasm_opcodes::SimdOpKind::Eq
             | wasm_opcodes::SimdOpKind::Ne
             | wasm_opcodes::SimdOpKind::LtS
@@ -1729,7 +1734,14 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::LeS
             | wasm_opcodes::SimdOpKind::LeU
             | wasm_opcodes::SimdOpKind::GeS
-            | wasm_opcodes::SimdOpKind::GeU => {
+            | wasm_opcodes::SimdOpKind::GeU
+            | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
+            | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
+            | wasm_opcodes::SimdOpKind::DotI16x8S
+            | wasm_opcodes::SimdOpKind::ExtmulLowI16x8S
+            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8S
+            | wasm_opcodes::SimdOpKind::ExtmulLowI16x8U
+            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -2294,6 +2306,11 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
             | wasm_opcodes::SimdOpKind::Neg
+            | wasm_opcodes::SimdOpKind::Abs
+            | wasm_opcodes::SimdOpKind::MinS
+            | wasm_opcodes::SimdOpKind::MinU
+            | wasm_opcodes::SimdOpKind::MaxS
+            | wasm_opcodes::SimdOpKind::MaxU
             | wasm_opcodes::SimdOpKind::Eq
             | wasm_opcodes::SimdOpKind::Ne
             | wasm_opcodes::SimdOpKind::LtS
@@ -2303,7 +2320,14 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::LeS
             | wasm_opcodes::SimdOpKind::LeU
             | wasm_opcodes::SimdOpKind::GeS
-            | wasm_opcodes::SimdOpKind::GeU => {
+            | wasm_opcodes::SimdOpKind::GeU
+            | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8S
+            | wasm_opcodes::SimdOpKind::ExtaddPairwiseI16x8U
+            | wasm_opcodes::SimdOpKind::DotI16x8S
+            | wasm_opcodes::SimdOpKind::ExtmulLowI16x8S
+            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8S
+            | wasm_opcodes::SimdOpKind::ExtmulLowI16x8U
+            | wasm_opcodes::SimdOpKind::ExtmulHighI16x8U => {
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -4689,6 +4713,55 @@ mod tests {
         assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xA1, 0x01]), "i32x4.neg: {:?}", code_of(&m, 2));
         assert!(code_of(&m, 3).windows(2).any(|w| w == [0xFD, 0x3A]), "i32x4.lt_u: {:?}", code_of(&m, 3));
         assert!(code_of(&m, 4).windows(2).any(|w| w == [0xFD, 0x3F]), "i32x4.ge_s: {:?}", code_of(&m, 4));
+    }
+
+    #[test]
+    fn simd_i32x4_arith2_widening_encodes_the_real_sub_opcodes() {
+        // SIMD widening (task #118-120): i32x4.abs (the one UNARY kind
+        // here) and the min/max family, each real sub-opcode verified
+        // against wasm-opcodes' own CHANGELOG entry.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (i32x4.abs (local.get 0)))
+                 (func (param v128 v128) (result v128) (i32x4.min_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.min_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.max_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.max_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0xA0, 0x01]), "i32x4.abs: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0xB6, 0x01]), "i32x4.min_s: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xB7, 0x01]), "i32x4.min_u: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0xB8, 0x01]), "i32x4.max_s: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0xB9, 0x01]), "i32x4.max_u: {:?}", code_of(&m, 4));
+    }
+
+    #[test]
+    fn simd_i32x4_from_i16x8_widening_encodes_the_real_sub_opcodes() {
+        // SIMD widening (task #121-124): i32x4.extadd_pairwise_i16x8_s/_u
+        // (sub-opcodes < 128, single-byte LEB128 -- unlike every prior
+        // arm's entries here, no continuation byte), i32x4.dot_i16x8_s,
+        // and i32x4.extmul_low/high_i16x8_s/_u (sub-opcodes >= 128, same
+        // 2-byte LEB128 shape as min_s/max_u above), each real sub-opcode
+        // verified against wasm-opcodes' own CHANGELOG entry.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (i32x4.extadd_pairwise_i16x8_s (local.get 0)))
+                 (func (param v128) (result v128) (i32x4.extadd_pairwise_i16x8_u (local.get 0)))
+                 (func (param v128 v128) (result v128) (i32x4.dot_i16x8_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.extmul_low_i16x8_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.extmul_high_i16x8_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.extmul_low_i16x8_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i32x4.extmul_high_i16x8_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x7E]), "i32x4.extadd_pairwise_i16x8_s: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x7F]), "i32x4.extadd_pairwise_i16x8_u: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xBA, 0x01]), "i32x4.dot_i16x8_s: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0xBC, 0x01]), "i32x4.extmul_low_i16x8_s: {:?}", code_of(&m, 3));
+        assert!(code_of(&m, 4).windows(3).any(|w| w == [0xFD, 0xBD, 0x01]), "i32x4.extmul_high_i16x8_s: {:?}", code_of(&m, 4));
+        assert!(code_of(&m, 5).windows(3).any(|w| w == [0xFD, 0xBE, 0x01]), "i32x4.extmul_low_i16x8_u: {:?}", code_of(&m, 5));
+        assert!(code_of(&m, 6).windows(3).any(|w| w == [0xFD, 0xBF, 0x01]), "i32x4.extmul_high_i16x8_u: {:?}", code_of(&m, 6));
     }
 
     #[test]

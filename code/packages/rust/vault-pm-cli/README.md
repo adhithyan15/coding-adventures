@@ -317,6 +317,48 @@ verification result before emitting aggregate completed-and-verified output. A
 post-import interruption leaves `restore verify FILE` as the safe retry path;
 the command never repeats import against the now non-empty target.
 
+## Foreground interactive shell
+
+`vault-pm [--vault NAME] shell` is a second *host shape* for the commands above,
+not a second set of commands. It exists because the one-shot model asks for a
+passphrase — and pays a full Argon2id derivation — once per operation, which is
+unusable for a working session.
+
+A session binds exactly one vault when it starts: the named selector, or the
+configured default as it stood at that moment. Every delegated command carries
+that name explicitly, so a retained authenticator can never be presented to a
+target the user did not authenticate against. `init`, `vault`, a nested
+`shell`, and a leading `--vault` are refused inside a session; `lock`, `help`,
+`exit`, and `quit` are the only verbs the shell handles itself.
+
+What is retained between commands is one wipe-on-drop passphrase buffer, and
+nothing else. Derived keys, the decrypted catalog, the search projection, the
+repository verifier, pinned heads, and the cross-process writer lock all live
+and die inside a single command, exactly as they do one-shot — because every
+VLT-PM05 access and mutation boundary consumes its session by value so a stale
+pinned head cannot be reused. The authenticator is collected lazily on the first
+command that needs to unlock, and is wiped by `lock`, by any `locked` exit
+class, by the configured `auto_lock_seconds` bound — measured when a command is
+submitted, not when the prompt was printed, so an unattended session cannot hand
+a stale value to whoever types next — by an unreadable clock, and by session
+end. `status` therefore still reports `locked`
+inside a session, which is accurate: between commands the vault really is
+locked.
+
+Command lines are read from the controlling terminal with the fixed
+`vault-pm> ` prompt, never from process standard input, so a redirected stdin
+supplies neither a secret nor a command. Hidden ceremonies are untouched: `item
+add login` inside a session collects its password through the same echo-disabled
+terminal path, and `item reveal` still writes only to the terminal. Ordinary
+output goes to stdout and stderr byte-identically to the one-shot invocation, so
+a command's failure prints the same fixed line and does not end the session. The
+process exit class of `vault-pm shell` reports how the *session* ended, not how
+the last command fared; a caller that needs a command's exit class runs that
+command one-shot.
+
+The pre-emptive idle timer that locks a session while nobody is typing remains
+Phase 1B work; this slice ships only the command-boundary bound.
+
 ## Verification
 
 ```bash

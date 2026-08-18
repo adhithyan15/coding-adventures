@@ -70,6 +70,27 @@ pub(super) fn read_text(
     })
 }
 
+/// Read one echoed console line, distinguishing end of input from failure.
+///
+/// The Windows sibling of the Unix reader with the same name. `Ctrl-Z` on an
+/// empty console line ends the read with zero units, which is the console's
+/// end-of-input signal and therefore `Ok(None)` rather than a failure.
+pub(super) fn read_line_or_eof(
+    prompt: &str,
+    max_bytes: usize,
+) -> Result<Option<Zeroizing<Vec<u8>>>, CliHostError> {
+    let input = open_console(CONSOLE_INPUT, GENERIC_READ | GENERIC_WRITE)?;
+    let output = open_console(CONSOLE_OUTPUT, GENERIC_READ | GENERIC_WRITE)?;
+    verify_console(&input)?;
+    verify_console(&output)?;
+    write_console(&output, prompt)?;
+    read_bounded_line_or_eof(&input, max_bytes).map_err(|error| match error {
+        CliHostError::SecretInputFailed => CliHostError::TextInputFailed,
+        CliHostError::SecretTooLong => CliHostError::InvalidText,
+        other => other,
+    })
+}
+
 pub(super) fn write_revealed_text(value: &str) -> Result<(), CliHostError> {
     let output = open_console(CONSOLE_OUTPUT, GENERIC_READ | GENERIC_WRITE)?;
     verify_console(&output)?;
@@ -129,6 +150,13 @@ fn read_bounded_line(
     input: &OwnedHandle,
     max_bytes: usize,
 ) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    read_bounded_line_or_eof(input, max_bytes)?.ok_or(CliHostError::SecretInputFailed)
+}
+
+fn read_bounded_line_or_eof(
+    input: &OwnedHandle,
+    max_bytes: usize,
+) -> Result<Option<Zeroizing<Vec<u8>>>, CliHostError> {
     let mut units = WideSecret(Vec::with_capacity(max_bytes));
     let mut too_long = false;
     'line: loop {
@@ -143,8 +171,11 @@ fn read_bounded_line(
                 null(),
             )
         };
-        if succeeded == 0 || read == 0 {
+        if succeeded == 0 {
             return Err(CliHostError::SecretInputFailed);
+        }
+        if read == 0 {
+            return Ok(None);
         }
         for unit in &buffer.0[..read as usize] {
             if *unit == b'\r' as u16 || *unit == b'\n' as u16 {
@@ -157,11 +188,7 @@ fn read_bounded_line(
             }
         }
     }
-    if too_long {
-        finish_line(units, true, max_bytes)
-    } else {
-        finish_line(units, false, max_bytes)
-    }
+    finish_line(units, too_long, max_bytes).map(Some)
 }
 
 fn finish_line(

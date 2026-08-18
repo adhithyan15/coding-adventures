@@ -3,6 +3,8 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
+pub mod shell;
+
 use coding_adventures_storage_fs::FsStorageBackend;
 use coding_adventures_vault_pm_application::{
     complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
@@ -44,6 +46,7 @@ use coding_adventures_vault_records::{
 };
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
+use shell::{run_shell, NativeShellTerminal, ShellTerminal};
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsString;
 use std::path::{Path, PathBuf};
@@ -56,7 +59,7 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -559,12 +562,40 @@ where
     I: IntoIterator<Item = S>,
     S: Into<OsString>,
 {
+    run_with_terminal(arguments, host, &NativeShellTerminal)
+}
+
+/// Parse and execute one argument vector with an injected shell terminal.
+///
+/// Identical to [`run`] for every command except `shell`, which needs a
+/// terminal to read command lines from and render results to. Tests use this
+/// entry point to drive a scripted session; the executable uses [`run`], whose
+/// terminal is the real controlling terminal.
+pub fn run_with_terminal<I, S>(
+    arguments: I,
+    host: &dyn CliHost,
+    terminal: &dyn ShellTerminal,
+) -> CliOutput
+where
+    I: IntoIterator<Item = S>,
+    S: Into<OsString>,
+{
     let invocation = match parse(arguments) {
         Ok(invocation) => invocation,
         Err(error) => return CliOutput::failure(error),
     };
     if matches!(invocation.command, Command::Help) {
         return CliOutput::success(USAGE);
+    }
+    // The shell is dispatched before `execute` because `execute` acquires the
+    // cross-process writer lock for the whole command. A shell must not hold
+    // that lock while it waits at a prompt, and its own per-command
+    // invocations acquire it one at a time.
+    if matches!(invocation.command, Command::Shell) {
+        return match run_shell(host, terminal, invocation.selected_vault) {
+            Ok(output) => output,
+            Err(error) => CliOutput::failure(error),
+        };
     }
     match execute(invocation, host) {
         Ok(output) => output,
@@ -590,6 +621,8 @@ enum Command {
     Status {
         json: bool,
     },
+    /// Begin one foreground interactive session over this same grammar.
+    Shell,
     AuditEnable,
     AuditVerify,
     AuditList,
@@ -762,6 +795,7 @@ where
         "init" => parse_init(tail),
         "vault" => parse_vault(tail),
         "status" => parse_status(tail),
+        "shell" if tail.is_empty() => Ok(Command::Shell),
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
         "export" => parse_export(tail),
@@ -1205,7 +1239,9 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
             item_id,
             base_revision,
         ),
-        Command::Help => unreachable!("help returns before host access"),
+        Command::Help | Command::Shell => {
+            unreachable!("help and shell return before writer acquisition")
+        }
     }
 }
 
@@ -4185,6 +4221,9 @@ mod tests {
         None
     }
 
+    /// Advisory wall time reported by a [`TestHost`] whose clock never moves.
+    const FIXED_TEST_TIME_MS: u64 = 1_700_000_000_000;
+
     struct TestHost {
         paths: LocalVaultPaths,
         secrets: Mutex<VecDeque<Vec<u8>>>,
@@ -4192,18 +4231,18 @@ mod tests {
         revealed: Mutex<Vec<Zeroizing<Vec<u8>>>>,
         entropy_seed: u8,
         entropy_available: bool,
+        /// Wall time returned by the next [`CliHost::now_ms`] call.
+        clock_ms: AtomicU64,
+        /// Milliseconds the clock advances after each reading.
+        ///
+        /// Zero — the default every existing test uses — makes the clock a
+        /// constant, so nothing that does not opt in can observe elapsed time.
+        clock_step_ms: u64,
     }
 
     impl TestHost {
         fn new(paths: LocalVaultPaths, secrets: impl IntoIterator<Item = Vec<u8>>) -> Self {
-            Self {
-                paths,
-                secrets: Mutex::new(secrets.into_iter().collect()),
-                texts: Mutex::new(VecDeque::new()),
-                revealed: Mutex::new(Vec::new()),
-                entropy_seed: 1,
-                entropy_available: true,
-            }
+            Self::build(paths, secrets, [], 1, true, 0)
         }
 
         fn with_entropy_seed(
@@ -4211,14 +4250,7 @@ mod tests {
             secrets: impl IntoIterator<Item = Vec<u8>>,
             entropy_seed: u8,
         ) -> Self {
-            Self {
-                paths,
-                secrets: Mutex::new(secrets.into_iter().collect()),
-                texts: Mutex::new(VecDeque::new()),
-                revealed: Mutex::new(Vec::new()),
-                entropy_seed,
-                entropy_available: true,
-            }
+            Self::build(paths, secrets, [], entropy_seed, true, 0)
         }
 
         fn with_texts(
@@ -4226,14 +4258,7 @@ mod tests {
             secrets: impl IntoIterator<Item = Vec<u8>>,
             texts: impl IntoIterator<Item = String>,
         ) -> Self {
-            Self {
-                paths,
-                secrets: Mutex::new(secrets.into_iter().collect()),
-                texts: Mutex::new(texts.into_iter().collect()),
-                revealed: Mutex::new(Vec::new()),
-                entropy_seed: 1,
-                entropy_available: true,
-            }
+            Self::build(paths, secrets, texts, 1, true, 0)
         }
 
         fn with_texts_and_entropy_seed(
@@ -4242,28 +4267,62 @@ mod tests {
             texts: impl IntoIterator<Item = String>,
             entropy_seed: u8,
         ) -> Self {
-            Self {
-                paths,
-                secrets: Mutex::new(secrets.into_iter().collect()),
-                texts: Mutex::new(texts.into_iter().collect()),
-                revealed: Mutex::new(Vec::new()),
-                entropy_seed,
-                entropy_available: true,
-            }
+            Self::build(paths, secrets, texts, entropy_seed, true, 0)
         }
 
         fn without_entropy(
             paths: LocalVaultPaths,
             secrets: impl IntoIterator<Item = Vec<u8>>,
         ) -> Self {
+            Self::build(paths, secrets, [], 1, false, 0)
+        }
+
+        /// Build a host whose clock advances by `clock_step_ms` per reading.
+        fn with_clock_step(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            clock_step_ms: u64,
+        ) -> Self {
+            Self::build(paths, secrets, [], 1, true, clock_step_ms)
+        }
+
+        fn build(
+            paths: LocalVaultPaths,
+            secrets: impl IntoIterator<Item = Vec<u8>>,
+            texts: impl IntoIterator<Item = String>,
+            entropy_seed: u8,
+            entropy_available: bool,
+            clock_step_ms: u64,
+        ) -> Self {
             Self {
                 paths,
                 secrets: Mutex::new(secrets.into_iter().collect()),
-                texts: Mutex::new(VecDeque::new()),
+                texts: Mutex::new(texts.into_iter().collect()),
                 revealed: Mutex::new(Vec::new()),
-                entropy_seed: 1,
-                entropy_available: false,
+                entropy_seed,
+                entropy_available,
+                clock_ms: AtomicU64::new(FIXED_TEST_TIME_MS),
+                clock_step_ms,
             }
+        }
+
+        /// Return how many scripted secrets remain unconsumed.
+        fn remaining_secrets(&self) -> usize {
+            self.secrets.lock().unwrap().len()
+        }
+
+        /// Move the advisory clock forward without reading it.
+        ///
+        /// This models wall time passing while the process is blocked on
+        /// something other than a clock call — a terminal read, for instance.
+        fn advance_clock(&self, milliseconds: u64) {
+            self.clock_ms.fetch_add(milliseconds, Ordering::Relaxed);
+        }
+
+        /// Move the advisory clock backwards, as an NTP step or a manual
+        /// correction can do to real wall time.
+        fn rewind_clock(&self, milliseconds: u64) {
+            self.clock_ms.fetch_sub(milliseconds, Ordering::Relaxed);
         }
 
         fn secret(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
@@ -4502,7 +4561,9 @@ mod tests {
         }
 
         fn now_ms(&self) -> Result<u64, HostError> {
-            Ok(1_700_000_000_000)
+            Ok(self
+                .clock_ms
+                .fetch_add(self.clock_step_ms, Ordering::Relaxed))
         }
 
         fn generation_zero_kdf(&self) -> (u32, u32, u8) {
@@ -8028,5 +8089,702 @@ mod tests {
         assert_eq!(output.exit_code(), ExitCode::Success);
         assert_eq!(output.stdout(), USAGE);
         assert!(!root.0.join("config").exists());
+    }
+
+    /// A scripted stand-in for the controlling terminal a real session reads.
+    ///
+    /// It answers command lines from a queue and records what the shell chose
+    /// to render, so a test can assert on the exact transcript a user would
+    /// have seen. An exhausted queue reports end of input, which is how a
+    /// scripted session ends without an explicit `exit`.
+    struct ScriptedTerminal<'host> {
+        lines: Mutex<VecDeque<String>>,
+        rendered: Mutex<Vec<CliOutput>>,
+        readable: bool,
+        /// Host whose clock advances while this terminal waits for input.
+        idle_host: Option<&'host TestHost>,
+        /// Milliseconds each blocked read consumes.
+        idle_ms: u64,
+    }
+
+    impl<'host> ScriptedTerminal<'host> {
+        fn new(lines: impl IntoIterator<Item = &'static str>) -> Self {
+            Self {
+                lines: Mutex::new(lines.into_iter().map(str::to_owned).collect()),
+                rendered: Mutex::new(Vec::new()),
+                readable: true,
+                idle_host: None,
+                idle_ms: 0,
+            }
+        }
+
+        /// A terminal whose user takes `idle_ms` to type each line.
+        fn idle(
+            lines: impl IntoIterator<Item = &'static str>,
+            host: &'host TestHost,
+            idle_ms: u64,
+        ) -> Self {
+            Self {
+                idle_host: Some(host),
+                idle_ms,
+                ..Self::new(lines)
+            }
+        }
+
+        /// A terminal that cannot be read at all, as when `/dev/tty` is absent.
+        fn unreadable() -> Self {
+            Self {
+                lines: Mutex::new(VecDeque::new()),
+                rendered: Mutex::new(Vec::new()),
+                readable: false,
+                idle_host: None,
+                idle_ms: 0,
+            }
+        }
+
+        fn transcript(&self) -> String {
+            self.rendered
+                .lock()
+                .unwrap()
+                .iter()
+                .map(|output| format!("{}{}", output.stdout(), output.stderr()))
+                .collect()
+        }
+
+        fn exit_codes(&self) -> Vec<ExitCode> {
+            self.rendered
+                .lock()
+                .unwrap()
+                .iter()
+                .map(CliOutput::exit_code)
+                .collect()
+        }
+    }
+
+    impl ShellTerminal for ScriptedTerminal<'_> {
+        fn read_command_line(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+            if !self.readable {
+                return Err(HostError::Unavailable);
+            }
+            // A real terminal read blocks for as long as nobody types, so the
+            // scripted one models wall time passing *inside* the read rather
+            // than only between commands.
+            if let Some(host) = self.idle_host {
+                host.advance_clock(self.idle_ms);
+            }
+            Ok(self.lines.lock().unwrap().pop_front().map(Zeroizing::new))
+        }
+
+        fn write_output(&self, output: &CliOutput) -> Result<(), HostError> {
+            self.rendered.lock().unwrap().push(output.clone());
+            Ok(())
+        }
+    }
+
+    /// Initialize a vault and return its host root, ready for a shell session.
+    fn initialized_shell_root() -> TestRoot {
+        let root = TestRoot::new();
+        let init_host = TestHost::new(root.paths(), [b"shell session passphrase".to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        root
+    }
+
+    #[test]
+    fn shell_grammar_accepts_only_a_bare_verb() {
+        assert_eq!(parse(["shell"]), default_invocation(Command::Shell));
+        assert_eq!(
+            parse(["--vault", "personal", "shell"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("personal").unwrap()),
+                command: Command::Shell,
+            })
+        );
+        for arguments in [
+            vec!["shell", "--json"],
+            vec!["shell", "item", "list"],
+            vec!["shell", "--passphrase", "secret"],
+        ] {
+            assert_eq!(
+                parse(arguments.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{arguments:?}"
+            );
+        }
+        assert!(USAGE.contains("vault-pm [--vault NAME] shell\n"));
+        // Dispatch repeats this refusal rather than trusting classification,
+        // because a delegated `shell` would recurse over the real terminal.
+        for refused in ["init", "vault", "shell", "--vault"] {
+            assert!(shell::is_refused(refused), "{refused}");
+        }
+        for delegated in ["item", "status", "search", "conflict", "audit"] {
+            assert!(!shell::is_refused(delegated), "{delegated}");
+        }
+    }
+
+    #[test]
+    fn shell_unlocks_once_for_many_commands() {
+        let root = initialized_shell_root();
+        // Exactly one passphrase is scripted for three authenticated commands.
+        let host = TestHost::new(root.paths(), [b"shell session passphrase".to_vec()]);
+        let terminal = ScriptedTerminal::new(["item list", "status", "item list", "exit"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        assert_eq!(output.stdout(), "");
+        assert_eq!(output.stderr(), "");
+        assert_eq!(host.remaining_secrets(), 0);
+        // `status` still reports `locked`, and that is correct rather than a
+        // gap: it projects durable owner state, and between commands the vault
+        // really is locked. The session retains an authenticator, not an
+        // unlocked vault, so nothing about the stored state has changed.
+        assert_eq!(
+            terminal.transcript(),
+            "No items.\nStatus: locked\nNo items.\n"
+        );
+        assert_eq!(
+            terminal.exit_codes(),
+            [ExitCode::Success, ExitCode::Success, ExitCode::Success]
+        );
+    }
+
+    #[test]
+    fn shell_lock_forces_the_next_command_to_reauthenticate() {
+        let root = initialized_shell_root();
+        let host = TestHost::new(
+            root.paths(),
+            [
+                b"shell session passphrase".to_vec(),
+                b"shell session passphrase".to_vec(),
+            ],
+        );
+        let terminal = ScriptedTerminal::new(["item list", "lock", "item list", "quit"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        // Both scripted passphrases were consumed: one before `lock`, one after.
+        assert_eq!(host.remaining_secrets(), 0);
+        assert_eq!(terminal.transcript(), "No items.\nLocked.\nNo items.\n");
+    }
+
+    #[test]
+    fn shell_ends_on_end_of_input_without_an_explicit_verb() {
+        let root = initialized_shell_root();
+        let host = TestHost::new(root.paths(), [b"shell session passphrase".to_vec()]);
+        let terminal = ScriptedTerminal::new(["item list"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        assert_eq!(terminal.transcript(), "No items.\n");
+    }
+
+    #[test]
+    fn shell_wipes_the_authenticator_after_a_rejected_attempt() {
+        let root = initialized_shell_root();
+        let host = TestHost::new(
+            root.paths(),
+            [
+                b"wrong passphrase".to_vec(),
+                b"shell session passphrase".to_vec(),
+            ],
+        );
+        let terminal = ScriptedTerminal::new(["item list", "item list", "exit"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        // A rejected passphrase is not retained, so the second command asks
+        // again and succeeds instead of failing forever.
+        assert_eq!(host.remaining_secrets(), 0);
+        assert_eq!(
+            terminal.exit_codes(),
+            [ExitCode::Locked, ExitCode::Success],
+            "{}",
+            terminal.transcript()
+        );
+        assert_eq!(
+            terminal.transcript(),
+            "vault-pm: authentication required\nNo items.\n"
+        );
+    }
+
+    #[test]
+    fn shell_reauthenticates_after_the_configured_idle_bound() {
+        let root = initialized_shell_root();
+        // Each clock reading advances 400 seconds, so the 300-second default
+        // auto-lock bound has always elapsed by the next command boundary.
+        let host = TestHost::with_clock_step(
+            root.paths(),
+            [
+                b"shell session passphrase".to_vec(),
+                b"shell session passphrase".to_vec(),
+            ],
+            400_000,
+        );
+        let terminal = ScriptedTerminal::new(["item list", "item list", "exit"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        assert_eq!(host.remaining_secrets(), 0);
+        assert_eq!(terminal.transcript(), "No items.\nNo items.\n");
+    }
+
+    #[test]
+    fn shell_reauthenticates_when_the_wait_at_the_prompt_exceeds_the_bound() {
+        let root = initialized_shell_root();
+        // The clock itself never moves when it is read; all the elapsed time
+        // happens inside the blocked terminal read, which is where an
+        // unattended session actually spends it. A bound checked only before
+        // the prompt was printed would see zero elapsed time here and hand the
+        // stale authenticator to the command an attacker typed.
+        let host = TestHost::new(
+            root.paths(),
+            [
+                b"shell session passphrase".to_vec(),
+                b"shell session passphrase".to_vec(),
+            ],
+        );
+        let terminal = ScriptedTerminal::idle(["item list", "item list", "exit"], &host, 400_000);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        assert_eq!(host.remaining_secrets(), 0);
+        assert_eq!(terminal.transcript(), "No items.\nNo items.\n");
+    }
+
+    #[test]
+    fn shell_refuses_lifecycle_and_reselection_verbs() {
+        let root = initialized_shell_root();
+        let host = TestHost::new(root.paths(), []);
+        let terminal = ScriptedTerminal::new([
+            "init",
+            "vault create work",
+            "shell",
+            "--vault work item list",
+            "\"unterminated",
+            "a b c d e f g h i",
+            "exit",
+        ]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 6]);
+        assert_eq!(
+            terminal.transcript(),
+            "vault-pm: invalid command\n".repeat(6)
+        );
+        // No passphrase was ever collected, so nothing was retained to wipe.
+        assert_eq!(host.remaining_secrets(), 0);
+    }
+
+    #[test]
+    fn shell_help_and_blank_lines_need_no_authentication() {
+        let root = initialized_shell_root();
+        let host = TestHost::new(root.paths(), []);
+        let terminal = ScriptedTerminal::new(["", "   ", "help", "exit"]);
+        let output = run_with_terminal(["shell"], &host, &terminal);
+
+        assert_eq!(output.exit_code(), ExitCode::Success);
+        let transcript = terminal.transcript();
+        assert!(transcript.starts_with("Shell:\n  lock "));
+        assert!(transcript.contains("  exit    end the session"));
+        assert!(transcript.ends_with(USAGE));
+        assert_eq!(terminal.exit_codes(), [ExitCode::Success]);
+    }
+
+    #[test]
+    fn shell_refuses_to_start_without_configuration_or_a_terminal() {
+        let empty = TestRoot::new();
+        let unconfigured = TestHost::new(empty.paths(), []);
+        let unconfigured_output = run_with_terminal(
+            ["shell"],
+            &unconfigured,
+            &ScriptedTerminal::new(["item list"]),
+        );
+        assert_eq!(unconfigured_output.exit_code(), ExitCode::InvalidInput);
+        assert_eq!(unconfigured_output.stderr(), "vault-pm: invalid command\n");
+
+        let root = initialized_shell_root();
+        let host = TestHost::new(root.paths(), []);
+        let missing_vault = run_with_terminal(
+            ["--vault", "absent", "shell"],
+            &host,
+            &ScriptedTerminal::new([]),
+        );
+        assert_eq!(missing_vault.exit_code(), ExitCode::NotFound);
+
+        let unreadable = ScriptedTerminal::unreadable();
+        let no_terminal = run_with_terminal(["shell"], &host, &unreadable);
+        assert_eq!(no_terminal.exit_code(), ExitCode::Provider);
+        assert_eq!(no_terminal.stderr(), "vault-pm: storage unavailable\n");
+        assert!(unreadable.transcript().is_empty());
+    }
+
+    #[test]
+    fn shell_tokenizer_is_closed_and_quote_aware() {
+        assert_eq!(
+            shell::tokenize("item show ABC").unwrap(),
+            ["item", "show", "ABC"]
+        );
+        assert_eq!(
+            shell::tokenize("  item \t list  ").unwrap(),
+            ["item", "list"]
+        );
+        assert_eq!(
+            shell::tokenize("search \"two words\"").unwrap(),
+            ["search", "two words"]
+        );
+        assert_eq!(shell::tokenize("search \"\"").unwrap(), ["search", ""]);
+        assert!(shell::tokenize("").unwrap().is_empty());
+        for rejected in [
+            "search \"unterminated",
+            "search \"a\"b",
+            "one two three four five six seven eight nine",
+        ] {
+            assert_eq!(
+                shell::tokenize(rejected),
+                Err(CliFailure::InvalidCommand),
+                "{rejected}"
+            );
+        }
+    }
+
+    #[test]
+    fn shell_idle_bound_fails_closed_on_an_unusable_clock() {
+        let root = TestRoot::new();
+        let host = TestHost::new(root.paths(), [b"retained value".to_vec()]);
+        let session = shell::ShellSession::new(300_000);
+        assert_eq!(&*session.authenticator(&host).unwrap(), b"retained value");
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+
+        // Wall time is advisory, not monotonic. A backwards step must expire the
+        // authenticator rather than report zero elapsed time forever.
+        host.rewind_clock(1);
+        session.enforce_idle_bound(&host);
+        assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
+
+        // A forward step inside the bound retains it; past the bound expires it.
+        assert!(session.authenticator(&host).is_err());
+        let host = TestHost::new(root.paths(), [b"retained value".to_vec()]);
+        let session = shell::ShellSession::new(300_000);
+        session.authenticator(&host).unwrap();
+        host.advance_clock(299_999);
+        session.enforce_idle_bound(&host);
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+        host.advance_clock(1);
+        session.enforce_idle_bound(&host);
+        assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
+    }
+
+    /// A host whose every answer names the method that produced it.
+    ///
+    /// The point is to make a mis-wired delegation impossible to miss. The
+    /// session host forwards roughly fifty [`CliHost`] methods by hand, and the
+    /// dangerous failure is not a missing method — that would not compile — but
+    /// a copy-paste swap between two methods with the same signature, say
+    /// `read_card_cvv` answering with the card number. Because each answer here
+    /// is its own method's name, any such swap shows up as a wrong value rather
+    /// than as silently plausible output.
+    struct EchoingHost {
+        paths: LocalVaultPaths,
+        calls: Mutex<Vec<&'static str>>,
+    }
+
+    /// Implement the `CliHost` methods whose answer is just a bounded string.
+    macro_rules! echoing_text {
+        ($($method:ident),* $(,)?) => {
+            $(
+                fn $method(&self) -> Result<Zeroizing<String>, HostError> {
+                    Ok(self.echo(stringify!($method)))
+                }
+            )*
+        };
+    }
+
+    /// Implement the `CliHost` methods whose answer is an optional string.
+    macro_rules! echoing_optional_text {
+        ($($method:ident),* $(,)?) => {
+            $(
+                fn $method(&self) -> Result<Option<Zeroizing<String>>, HostError> {
+                    Ok(Some(self.echo(stringify!($method))))
+                }
+            )*
+        };
+    }
+
+    /// Implement the `CliHost` methods whose answer is owned secret bytes.
+    macro_rules! echoing_secret {
+        ($($method:ident),* $(,)?) => {
+            $(
+                fn $method(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
+                    Ok(Zeroizing::new(stringify!($method).as_bytes().to_vec()))
+                }
+            )*
+        };
+    }
+
+    impl EchoingHost {
+        fn new(paths: LocalVaultPaths) -> Self {
+            Self {
+                paths,
+                calls: Mutex::new(Vec::new()),
+            }
+        }
+
+        fn echo(&self, method: &'static str) -> Zeroizing<String> {
+            Zeroizing::new(method.to_owned())
+        }
+
+        fn record(&self, method: &'static str) {
+            self.calls.lock().unwrap().push(method);
+        }
+
+        fn calls(&self) -> Vec<&'static str> {
+            self.calls.lock().unwrap().clone()
+        }
+    }
+
+    impl CliHost for EchoingHost {
+        echoing_text!(
+            read_login_title,
+            read_login_username,
+            read_login_url_count,
+            read_login_url,
+            read_login_password,
+            read_secure_note_title,
+            read_secure_note_body,
+            read_card_title,
+            read_card_holder,
+            read_card_number,
+            read_card_expiry_month,
+            read_card_expiry_year,
+            read_card_cvv,
+            read_api_key_label,
+            read_api_key_service,
+            read_api_key_token,
+            read_api_key_scopes,
+            read_api_key_expiry,
+            read_database_label,
+            read_database_engine,
+            read_database_host,
+            read_database_port,
+            read_database_username,
+            read_database_password,
+            read_totp_label,
+            read_totp_secret,
+            read_totp_algorithm,
+            read_totp_digits,
+            read_totp_period,
+            read_opaque_payload,
+        );
+        echoing_optional_text!(
+            read_login_notes,
+            read_card_billing_postal_code,
+            read_database_name,
+            read_totp_issuer,
+        );
+        echoing_secret!(
+            read_new_passphrase,
+            read_existing_passphrase,
+            read_export_passphrase,
+            read_import_passphrase,
+        );
+
+        fn paths(&self) -> Result<LocalVaultPaths, HostError> {
+            self.record("paths");
+            Ok(self.paths.clone())
+        }
+
+        fn confirm_secret_reveal(&self) -> Result<bool, HostError> {
+            self.record("confirm_secret_reveal");
+            Ok(true)
+        }
+
+        fn write_revealed_text(&self, value: &str) -> Result<(), HostError> {
+            assert_eq!(value, "revealed");
+            self.record("write_revealed_text");
+            Ok(())
+        }
+
+        fn write_portable_export(
+            &self,
+            destination: &Path,
+            artifact: &[u8],
+        ) -> Result<(), HostError> {
+            assert_eq!(destination, Path::new("destination"));
+            assert_eq!(artifact, b"artifact");
+            self.record("write_portable_export");
+            Ok(())
+        }
+
+        fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError> {
+            assert_eq!(source, Path::new("source"));
+            self.record("read_portable_export");
+            Ok(b"read_portable_export".to_vec())
+        }
+
+        fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
+            self.record("fill_entropy");
+            output.fill(0xa5);
+            Ok(())
+        }
+
+        fn now_ms(&self) -> Result<u64, HostError> {
+            self.record("now_ms");
+            Ok(FIXED_TEST_TIME_MS)
+        }
+
+        fn generation_zero_kdf(&self) -> (u32, u32, u8) {
+            self.record("generation_zero_kdf");
+            (1, 2, 3)
+        }
+
+        fn portable_export_kdf(&self) -> (u32, u32, u8) {
+            self.record("portable_export_kdf");
+            (4, 5, 6)
+        }
+
+        fn portable_open_kdf(&self) -> (u32, u32, u8) {
+            self.record("portable_open_kdf");
+            (7, 8, 9)
+        }
+    }
+
+    #[test]
+    fn shell_session_host_delegates_every_authority_except_the_unlock_prompt() {
+        let root = TestRoot::new();
+        let inner = EchoingHost::new(root.paths());
+        let session = shell::ShellSession::new(300_000);
+        let host = shell::SessionHost {
+            inner: &inner,
+            session: &session,
+        };
+
+        // Every echoed answer must arrive from the identically named method.
+        macro_rules! assert_text {
+            ($($method:ident),* $(,)?) => {
+                $(assert_eq!(&*host.$method().unwrap(), stringify!($method));)*
+            };
+        }
+        macro_rules! assert_optional_text {
+            ($($method:ident),* $(,)?) => {
+                $(assert_eq!(
+                    &*host.$method().unwrap().expect(stringify!($method)),
+                    stringify!($method)
+                );)*
+            };
+        }
+        assert_text!(
+            read_login_title,
+            read_login_username,
+            read_login_url_count,
+            read_login_url,
+            read_login_password,
+            read_secure_note_title,
+            read_secure_note_body,
+            read_card_title,
+            read_card_holder,
+            read_card_number,
+            read_card_expiry_month,
+            read_card_expiry_year,
+            read_card_cvv,
+            read_api_key_label,
+            read_api_key_service,
+            read_api_key_token,
+            read_api_key_scopes,
+            read_api_key_expiry,
+            read_database_label,
+            read_database_engine,
+            read_database_host,
+            read_database_port,
+            read_database_username,
+            read_database_password,
+            read_totp_label,
+            read_totp_secret,
+            read_totp_algorithm,
+            read_totp_digits,
+            read_totp_period,
+            read_opaque_payload,
+        );
+        assert_optional_text!(
+            read_login_notes,
+            read_card_billing_postal_code,
+            read_database_name,
+            read_totp_issuer,
+        );
+        assert_eq!(
+            &*host.read_new_passphrase().unwrap(),
+            b"read_new_passphrase"
+        );
+        assert_eq!(
+            &*host.read_export_passphrase().unwrap(),
+            b"read_export_passphrase"
+        );
+        assert_eq!(
+            &*host.read_import_passphrase().unwrap(),
+            b"read_import_passphrase"
+        );
+        assert_eq!(
+            host.paths().unwrap().config_root(),
+            root.paths().config_root()
+        );
+        assert!(host.confirm_secret_reveal().unwrap());
+        host.write_revealed_text("revealed").unwrap();
+        host.write_portable_export(Path::new("destination"), b"artifact")
+            .unwrap();
+        assert_eq!(
+            host.read_portable_export(Path::new("source")).unwrap(),
+            b"read_portable_export"
+        );
+        let mut entropy = [0_u8; 4];
+        host.fill_entropy(&mut entropy).unwrap();
+        assert_eq!(entropy, [0xa5; 4]);
+        assert_eq!(host.now_ms().unwrap(), FIXED_TEST_TIME_MS);
+        assert_eq!(host.generation_zero_kdf(), (1, 2, 3));
+        assert_eq!(host.portable_export_kdf(), (4, 5, 6));
+        assert_eq!(host.portable_open_kdf(), (7, 8, 9));
+        assert_eq!(
+            inner.calls(),
+            [
+                "paths",
+                "confirm_secret_reveal",
+                "write_revealed_text",
+                "write_portable_export",
+                "read_portable_export",
+                "fill_entropy",
+                "now_ms",
+                "generation_zero_kdf",
+                "portable_export_kdf",
+                "portable_open_kdf",
+            ]
+        );
+
+        // The unlock prompt is the one method that behaves differently: it is
+        // collected once and then answered from the session.
+        assert_eq!(
+            &*host.read_existing_passphrase().unwrap(),
+            b"read_existing_passphrase"
+        );
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+        assert_eq!(
+            &*host.read_existing_passphrase().unwrap(),
+            b"read_existing_passphrase"
+        );
+    }
+
+    #[test]
+    fn shell_session_debug_never_reveals_the_authenticator() {
+        let session = shell::ShellSession::new(1_000);
+        assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
+        let host = TestHost::new(TestRoot::new().paths(), [b"retained value".to_vec()]);
+        let collected = session.authenticator(&host).unwrap();
+        assert_eq!(&*collected, b"retained value");
+        assert_eq!(format!("{session:?}"), "ShellSession(<retained>)");
+        // A second call reuses the retained value instead of consuming another.
+        assert_eq!(&*session.authenticator(&host).unwrap(), b"retained value");
+        assert_eq!(host.remaining_secrets(), 0);
+        session.lock();
+        assert_eq!(format!("{session:?}"), "ShellSession(<locked>)");
+        assert!(matches!(
+            session.authenticator(&host),
+            Err(HostError::Unavailable)
+        ));
     }
 }

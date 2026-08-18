@@ -1,0 +1,106 @@
+% ============================================================================
+% engineering-design-step — the engineering design process, as NASA's own
+% classroom worksheet names its steps in order (adj-facts-stdlib, ENGINEERING).
+% ============================================================================
+% This is the first table in a new `engineering/` subject directory in this
+% stdlib, and the first fresh-WebFetch slice this cycle ships into the
+% "K-8 science foundations" item's `engineering design` Major Gap — the prior
+% SIX cycles ran an exhaustive causal-composition sweep (no new WebFetch,
+% only deriving facts from tables already shipped) and, this cycle's own
+% scoping pass concluded, found no composable pair anywhere in the stdlib for
+% this gap: `physics/simple-machines.adj` and its two siblings
+% (`simple-machine-function.adj`, `simple-machine-alt-example.adj`) all decode
+% the SAME NASA sentence about the six classical machines (lever, wedge,
+% screw, ...) and share no atom with any independently-sourced second table.
+% "Engineering design" as an NGSS practice is a different thing entirely from
+% "name the six simple machines" — it is the repeatable PROCESS an engineer
+% follows (ask, plan, build, test, refine, share), which no simple-machine
+% table states or implies. This table grounds that process directly from a
+% new primary source.
+%
+% Recall is a binding query:
+%
+%     ? engineering_design_step(step_3, $A)   % brainstorm_possible_solutions
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `engineering_design_step(step, action)` carrying the citation, so
+% the lookup above is the ordinary SLD binding query — the engine returns the
+% action WITH its source, on the CPU, with zero model calls, and abstains on
+% a step number the source does not name on its own (see below). The query
+% also runs BACKWARD — bind the action and recall which step performs it:
+%
+%     ? engineering_design_step($S, share_the_design)   % step_8
+%
+% The six named steps, as a little truth table (the worksheet's own heading
+% for each step, verbatim, alongside the atom this table gives it):
+%
+%     step        action                                                            heading (verbatim, NASA)
+%     ----------  --------------------------------------------------------------  -----------------------------------------------------------------
+%     step_1      identify_the_problem                                            "Step 1: Identify the problem."
+%     step_2      identify_criteria_and_constraints                               "Step 2: Identify criteria and constraints."
+%     step_3      brainstorm_possible_solutions                                   "Step 3: Brainstorm possible solutions."
+%     step_4      select_a_design                                                 "Step 4: Select a design"
+%     steps_5_7   build_a_prototype_test_and_evaluate_and_refine_the_design       "Steps 5-7: Build a prototype, test and evaluate, and refine the design."
+%     step_8      share_the_design                                                "Step 8: Share the design."
+%
+% IMPORTANT — why `steps_5_7` is ONE row, not three: the source worksheet
+% numbers eight steps overall, but groups the middle three under a SINGLE
+% combined heading, "Steps 5-7: Build a prototype, test and evaluate, and
+% refine the design." It never gives "build a prototype," "test and
+% evaluate," or "refine the design" its OWN "Step 5:" / "Step 6:" / "Step 7:"
+% heading the way it does for every other step — so splitting that heading
+% into three separate rows would assert a numbering precision the source
+% itself declines to state. This table keeps the source's own grouping
+% instead of inventing a finer one. A direct consequence: a query for `step_5`
+% or `step_6` or `step_7` alone ABSTAINS — those are real step numbers the
+% worksheet's own step count implies exist, but the source never names any of
+% them individually, so recalling one honestly abstains rather than guessing
+% which third of the combined heading it would have been.
+%
+% Provenance: quoted verbatim from NASA's "The Engineering Design Process"
+% student worksheet — the companion handout NASA's Next Gen STEM "Engineering
+% Design Process" classroom-connection lesson (Grades 6-12, NGSS standards
+% MS-ETS1-1 and HS-ETS1-3; see the SAME family of Next Gen STEM PDFs that
+% `physics/simple-machines.adj` already cites for a different lesson)
+% instructs the teacher to "Distribute one Engineering Design Process
+% Worksheet per student." Each step's exact heading text above is quoted
+% character-for-character from that worksheet, extracted with `pdftotext
+% -layout` from the fetched PDF, so any reader can re-check it. An ADJ
+% `table` carries ONE provenance envelope, so `source`/`locator`/`trust`
+% below hold the strongest single span (step 1's heading, which fixes the
+% first row); every OTHER row's own verbatim heading is quoted above and
+% additionally carried as its own `cites` entry below, so each step remains
+% independently checkable. The source is a primary U.S. government NASA
+% education page (nasa.gov), so `trust authoritative`.
+%
+% A term related to engineering design but not one of these six step atoms —
+% "prototype" on its own (the worksheet only ever uses it INSIDE the combined
+% steps_5_7 heading, never as a step name of its own) or a ninth step the
+% worksheet does not have — has no row, so a recall on it ABSTAINS rather
+% than inventing a step. That honest-abstention property, plus the
+% `steps_5_7` grouping decision above, is what makes this table safe to
+% reason from.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table engineering_design_step {
+    columns step, action
+
+    row (step_1, identify_the_problem)
+    row (step_2, identify_criteria_and_constraints)
+    row (step_3, brainstorm_possible_solutions)
+    row (step_4, select_a_design)
+    row (steps_5_7, build_a_prototype_test_and_evaluate_and_refine_the_design)
+    row (step_8, share_the_design)
+
+    source "Step 1: Identify the problem."
+    locator "https://www.nasa.gov/wp-content/uploads/2021/07/the_engineering_design_process_worksheet.pdf"
+    trust authoritative
+
+    cites "Step 2: Identify criteria and constraints." locator "https://www.nasa.gov/wp-content/uploads/2021/07/the_engineering_design_process_worksheet.pdf"
+    cites "Step 3: Brainstorm possible solutions." locator "https://www.nasa.gov/wp-content/uploads/2021/07/the_engineering_design_process_worksheet.pdf"
+    cites "Step 4: Select a design" locator "https://www.nasa.gov/wp-content/uploads/2021/07/the_engineering_design_process_worksheet.pdf"
+    cites "Steps 5-7: Build a prototype, test and evaluate, and refine the design." locator "https://www.nasa.gov/wp-content/uploads/2021/07/the_engineering_design_process_worksheet.pdf"
+    cites "Step 8: Share the design." locator "https://www.nasa.gov/wp-content/uploads/2021/07/the_engineering_design_process_worksheet.pdf"
+}

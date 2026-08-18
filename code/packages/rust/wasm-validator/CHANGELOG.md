@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.17] - 2026-08-18 (task #121-124 — SIMD widening: i32x4-from-i16x8 family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened further: `Add | Sub | Mul | MinS |
+  MinU | MaxS | MaxU` arm extended to also cover `DotI16x8S |
+  ExtmulLowI16x8S | ExtmulHighI16x8S | ExtmulLowI16x8U |
+  ExtmulHighI16x8U` (same pop-two-push-one `v128` shape -- these ops
+  read their operands as `i16x8` internally, but the type checker only
+  ever sees plain `v128`, never the narrower lane interpretation).
+  `Neg | Abs` arm extended to `Neg | Abs | ExtaddPairwiseI16x8S |
+  ExtaddPairwiseI16x8U` (same pop-one-push-one `v128` shape).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.16] - 2026-08-18 (task #118-120 — SIMD widening: i32x4 abs/min/max family type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened further: `Add | Sub | Mul` arm
+  extended to `Add | Sub | Mul | MinS | MinU | MaxS | MaxU` (same
+  pop-two-push-one `v128` shape, result stays a plain `v128`, not a
+  boolean mask like the comparison family). `Neg` arm extended to
+  `Neg | Abs` (same pop-one-push-one `v128` shape).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.15] - 2026-08-18 (task #113-117 — SIMD widening: i32x4 arithmetic + comparison family type rules)
 
 ### Added
