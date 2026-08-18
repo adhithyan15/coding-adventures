@@ -36,5 +36,6 @@ build = {
     type = "builtin",
     modules = {
         ["coding_adventures.excel_lexer"] = "src/coding_adventures/excel_lexer/init.lua",
+        ["coding_adventures.excel_lexer._grammar"] = "src/coding_adventures/excel_lexer/_grammar.lua",
     },
 }
