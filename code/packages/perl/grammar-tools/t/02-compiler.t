@@ -220,4 +220,44 @@ GRAMMAR
     ok($names{$_}, "rule '$_' present") for qw(value object member array);
 };
 
+# ============================================================================
+# package_name argument
+# ============================================================================
+
+subtest 'compile_token_grammar: package_name emits a package declaration' => sub {
+    my ($original) = CodingAdventures::GrammarTools->parse_token_grammar("NUMBER = /[0-9]+/\n");
+    my $code = CodingAdventures::GrammarTools::Compiler::compile_token_grammar(
+        $original, 'x.tokens', 'CodingAdventures::Fixture::_Grammar'
+    );
+    like($code, qr/^package CodingAdventures::Fixture::_Grammar;/m, 'package line present');
+    like($code, qr/use strict;/, 'use strict present');
+    like($code, qr/use warnings;/, 'use warnings present');
+
+    my $ok = eval $code;
+    die "eval failed: $@" unless $ok;
+    no strict 'refs';
+    my $loaded = &{'CodingAdventures::Fixture::_Grammar::token_grammar'}();
+    is(ref($loaded), 'CodingAdventures::GrammarTools::TokenGrammar', 'callable via qualified name');
+};
+
+subtest 'compile_token_grammar: omitted package_name has no package line' => sub {
+    my ($original) = CodingAdventures::GrammarTools->parse_token_grammar("NUMBER = /[0-9]+/\n");
+    my $code = CodingAdventures::GrammarTools::Compiler::compile_token_grammar($original, 'x.tokens');
+    unlike($code, qr/^package /m, 'no package line when package_name omitted');
+};
+
+subtest 'compile_parser_grammar: package_name emits a package declaration' => sub {
+    my ($original) = CodingAdventures::GrammarTools->parse_parser_grammar("start = NUMBER ;\n");
+    my $code = CodingAdventures::GrammarTools::Compiler::compile_parser_grammar(
+        $original, 'x.grammar', 'CodingAdventures::Fixture::_ParserGrammar'
+    );
+    like($code, qr/^package CodingAdventures::Fixture::_ParserGrammar;/m, 'package line present');
+
+    my $ok = eval $code;
+    die "eval failed: $@" unless $ok;
+    no strict 'refs';
+    my $loaded = &{'CodingAdventures::Fixture::_ParserGrammar::parser_grammar'}();
+    is(ref($loaded), 'HASH', 'callable via qualified name');
+};
+
 done_testing;

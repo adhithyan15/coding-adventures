@@ -134,4 +134,21 @@ subtest 'main: -o flag is parsed and honored' => sub {
     ok(-s $out_path, 'output file was written and is non-empty');
 };
 
+subtest 'main: -p flag emits a package declaration and is require-able by path' => sub {
+    my (undef, $out_path) = tempfile(SUFFIX => '.pm', UNLINK => 1);
+    local @ARGV = ('compile-tokens', $JSON_TOKENS, '-o', $out_path, '-p', 'Test::Cli::JsonGrammar');
+    is(main::main(), 0);
+
+    open my $fh, '<', $out_path or die "cannot read $out_path: $!";
+    local $/;
+    my $content = <$fh>;
+    close $fh;
+    like($content, qr/^package Test::Cli::JsonGrammar;/m, 'package line present');
+
+    require $out_path;
+    no strict 'refs';
+    my $grammar = &{'Test::Cli::JsonGrammar::token_grammar'}();
+    is(ref($grammar), 'CodingAdventures::GrammarTools::TokenGrammar', 'require-able by file path, callable by qualified name');
+};
+
 done_testing;

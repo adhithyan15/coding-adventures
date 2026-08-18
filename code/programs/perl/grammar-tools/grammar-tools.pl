@@ -12,8 +12,8 @@
 #     grammar-tools.pl validate <file.tokens> <file.grammar>
 #     grammar-tools.pl validate-tokens <file.tokens>
 #     grammar-tools.pl validate-grammar <file.grammar>
-#     grammar-tools.pl compile-tokens <file.tokens> [-o <output.pm>]
-#     grammar-tools.pl compile-grammar <file.grammar> [-o <output.pm>]
+#     grammar-tools.pl compile-tokens <file.tokens> [-o <output.pm>] [-p <Package::Name>]
+#     grammar-tools.pl compile-grammar <file.grammar> [-o <output.pm>] [-p <Package::Name>]
 #
 # Exit codes
 # ----------
@@ -31,6 +31,13 @@
 # Rust/TypeScript/Elixir ports, these commands do not run a validation
 # step before compiling (matching the Lua port) — there is no `--force`
 # flag because there is nothing to force past.
+#
+# `-p <Package::Name>` (optional) emits a `package Package::Name;` line at
+# the top of the generated file, so it can be `require`d as a normal Perl
+# module (e.g. `require CodingAdventures::RubyLexer::_Grammar;`) instead of
+# defining `token_grammar`/`parser_grammar` in whatever package happens to
+# be current when the file is required. Downstream lexer/parser packages
+# should always pass this.
 
 use strict;
 use warnings;
@@ -220,7 +227,7 @@ sub validate_grammar_only {
 # compile_tokens_command($tokens_path, $output_path)
 # ----------------------------------------------------------------------------
 sub compile_tokens_command {
-    my ($tokens_path, $output_path) = @_;
+    my ($tokens_path, $output_path, $package_name) = @_;
     unless (-e $tokens_path) {
         print STDERR "Error: File not found: $tokens_path\n";
         return 1;
@@ -233,7 +240,7 @@ sub compile_tokens_command {
         print STDERR "  $perr\n";
         return 1;
     }
-    my $code = CodingAdventures::GrammarTools::Compiler::compile_token_grammar($grammar, basename($tokens_path));
+    my $code = CodingAdventures::GrammarTools::Compiler::compile_token_grammar($grammar, basename($tokens_path), $package_name);
     if ($output_path) {
         open my $out, '>', $output_path or do {
             print STDERR "Error: cannot write '$output_path': $!\n";
@@ -251,7 +258,7 @@ sub compile_tokens_command {
 }
 
 sub compile_grammar_command {
-    my ($grammar_path, $output_path) = @_;
+    my ($grammar_path, $output_path, $package_name) = @_;
     unless (-e $grammar_path) {
         print STDERR "Error: File not found: $grammar_path\n";
         return 1;
@@ -264,7 +271,7 @@ sub compile_grammar_command {
         print STDERR "  $perr\n";
         return 1;
     }
-    my $code = CodingAdventures::GrammarTools::Compiler::compile_parser_grammar($grammar, basename($grammar_path));
+    my $code = CodingAdventures::GrammarTools::Compiler::compile_parser_grammar($grammar, basename($grammar_path), $package_name);
     if ($output_path) {
         open my $out, '>', $output_path or do {
             print STDERR "Error: cannot write '$output_path': $!\n";
@@ -282,10 +289,10 @@ sub compile_grammar_command {
 }
 
 # ----------------------------------------------------------------------------
-# dispatch($command, \@files, $output_path)
+# dispatch($command, \@files, $output_path, $package_name)
 # ----------------------------------------------------------------------------
 sub dispatch {
-    my ($command, $files, $output_path) = @_;
+    my ($command, $files, $output_path, $package_name) = @_;
 
     if ($command eq 'validate') {
         if (@$files != 2) {
@@ -313,14 +320,14 @@ sub dispatch {
             print STDERR "Error: 'compile-tokens' requires one argument: <tokens>\n";
             return 2;
         }
-        return compile_tokens_command($files->[0], $output_path);
+        return compile_tokens_command($files->[0], $output_path, $package_name);
     }
     if ($command eq 'compile-grammar') {
         if (@$files != 1) {
             print STDERR "Error: 'compile-grammar' requires one argument: <grammar>\n";
             return 2;
         }
-        return compile_grammar_command($files->[0], $output_path);
+        return compile_grammar_command($files->[0], $output_path, $package_name);
     }
 
     print STDERR "Error: unknown command '$command'\n";
@@ -339,18 +346,22 @@ sub main {
 
     my $command = shift @args;
     my $output_path;
+    my $package_name;
     my @files;
     while (@args) {
         my $arg = shift @args;
         if ($arg eq '-o' || $arg eq '--output') {
             $output_path = shift @args;
         }
+        elsif ($arg eq '-p' || $arg eq '--package') {
+            $package_name = shift @args;
+        }
         else {
             push @files, $arg;
         }
     }
 
-    return dispatch($command, \@files, $output_path);
+    return dispatch($command, \@files, $output_path, $package_name);
 }
 
 # `unless caller` — only run when executed directly, not when `require`d

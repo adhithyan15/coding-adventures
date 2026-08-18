@@ -111,10 +111,16 @@ sub _groups_src {
 }
 
 # ----------------------------------------------------------------------------
-# compile_token_grammar($grammar, $source_file) -> Perl source string
+# compile_token_grammar($grammar, $source_file, $package_name) -> Perl source
+#
+# $package_name, when given, is emitted as a `package NAME;` declaration so
+# the generated file can be `require`d as a normal Perl module (e.g.
+# `require CodingAdventures::RubyLexer::_Grammar;`) instead of dumping
+# `token_grammar` into whatever package happens to be current at require
+# time. Omit it only for ad-hoc/one-off compiles (e.g. CLI stdout output).
 # ----------------------------------------------------------------------------
 sub compile_token_grammar {
-    my ($grammar, $source_file) = @_;
+    my ($grammar, $source_file, $package_name) = @_;
     $source_file //= '';
 
     my $defs_src        = _token_def_list_src($grammar->definitions, '        ');
@@ -132,6 +138,7 @@ sub compile_token_grammar {
     my $start_mode_src  = _perl_string($grammar->start_mode);
 
     my $source_line = $source_file eq '' ? '' : "# Source: $source_file\n";
+    my $package_line = $package_name ? "package $package_name;\nuse strict;\nuse warnings;\n\n" : '';
 
     my $body = "sub token_grammar {\n"
         . "    return bless {\n"
@@ -158,6 +165,7 @@ sub compile_token_grammar {
         . "# This file embeds a TokenGrammar as native Perl data structures.\n"
         . "# Call token_grammar() instead of reading and parsing the .tokens file.\n"
         . "\n"
+        . $package_line
         . $body
         . "\n1;\n";
 }
@@ -226,10 +234,12 @@ sub _rule_src {
 }
 
 # ----------------------------------------------------------------------------
-# compile_parser_grammar($grammar, $source_file) -> Perl source string
+# compile_parser_grammar($grammar, $source_file, $package_name) -> Perl source
+#
+# $package_name behaves as documented on compile_token_grammar above.
 # ----------------------------------------------------------------------------
 sub compile_parser_grammar {
-    my ($grammar, $source_file) = @_;
+    my ($grammar, $source_file, $package_name) = @_;
     $source_file //= '';
 
     my $rules = $grammar->{rules} // [];
@@ -244,6 +254,7 @@ sub compile_parser_grammar {
 
     my $source_line = $source_file eq '' ? '' : "# Source: $source_file\n";
     my $version = $grammar->{version} // 0;
+    my $package_line = $package_name ? "package $package_name;\nuse strict;\nuse warnings;\n\n" : '';
 
     return <<"PERL";
 # AUTO-GENERATED FILE — DO NOT EDIT
@@ -252,7 +263,7 @@ ${source_line}# Regenerate with: perl code/programs/perl/grammar-tools/grammar-t
 # This file embeds a ParserGrammar as native Perl data structures.
 # Call parser_grammar() instead of reading and parsing the .grammar file.
 
-sub parser_grammar {
+${package_line}sub parser_grammar {
     return {
         rules => $rules_src,
         version => $version,
