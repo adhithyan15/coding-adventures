@@ -749,6 +749,56 @@ These wrap repository channel services rather than exposing raw log internals.
 
 These always participate in approval/tier checks.
 
+#### 7.1 Host dispatch binding
+
+The two definitions above are declarations. This subsection is the normative
+contract for the handlers that *implement* them at the host boundary, so that a
+reviewer can check an implementation against a written rule rather than against
+the author's intent.
+
+A conforming binding registers exactly these two handlers against a vault
+runtime that owns the secret material, and it obeys four invariants.
+
+**V1 — no secret return channel.** Neither handler may place secret bytes, or
+any value derived from secret bytes, into `ToolHandlerOutput.output`,
+`artifact_refs`, `memory_refs`, `events`, or into any field of a returned
+`ToolCallError`. `vault.request_lease` returns exactly `{ vault_ref,
+expires_at_ms }`. `vault.request_direct` returns JSON `null` — its declared
+`output_schema` is `null`, so the runtime's output validation rejects any other
+shape even if a handler tried to return one. The direct path moves the payload
+into the trusted delivery adapter and returns unit; it never receives the bytes
+back to forward.
+
+**V2 — bounded, secret-free errors.** Handler errors carry a fixed
+`ToolErrorKind` and one of a closed set of static messages. A handler must not
+interpolate the requested secret name, the payload, a `VaultRef`, or any
+adapter-supplied string into the message or `details`. `details` stays JSON
+`null` unless it carries a value already safe to show the caller. In
+particular, "secret not found" and "delivery rejected" must be distinguishable
+only to the extent the caller is already entitled to distinguish them.
+
+**V3 — validate arguments independently of the registry.** A handler may be
+invoked directly, without the registry's schema validation in front of it, so
+each handler re-checks argument presence and type and returns
+`ToolValidationError` on any mismatch. Missing, null, wrong-typed, and
+out-of-range arguments are all validation failures, never panics: no `unwrap`,
+no indexing, no arithmetic that can overflow on caller-controlled input.
+
+**V4 — the registration path is the tier gate.** Handlers are attached with
+`register_handler`, which enforces `allows_tool`, the `required_tier` ceiling
+and the `required_capabilities` of the definition being registered. A binding
+must not bypass that path by inserting into the handler map directly, and must
+not register a vault tool against a host profile whose `max_tier` is below
+`Tier2`. Registration failure is fatal to host startup rather than degraded
+into an unregistered tool, because a missing vault handler is observationally
+identical to a denied one from the agent's side.
+
+`vault.request_direct`'s `consumer_agent_id` names an *already-authorized*
+consumer. The handler does not perform that authorization; it forwards to the
+trusted adapter, which is the component entitled to accept or refuse. A binding
+that treats a caller-supplied `consumer_agent_id` as proof of authorization is
+non-conforming.
+
 ### 8. Filesystem tools
 
 - `fs.read`
