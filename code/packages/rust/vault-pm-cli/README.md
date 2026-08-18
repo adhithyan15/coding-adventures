@@ -471,6 +471,58 @@ unlinks a file rather than overwriting media.
 it collected once still opens the vault, and a rotation is the event that makes
 that false.
 
+## Generating a password
+
+```text
+vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
+                           [--no-digits] [--no-symbols] [--exclude-ambiguous]
+                           (--reveal|--copy)
+```
+
+This is the one command in the grammar that opens no vault. It unlocks nothing,
+reads no item, publishes no audit event, and takes no `--vault` selector,
+because a selector names a target and this command has none. It works on a
+machine where `init` has never run, which is the most common moment to want a
+generated password.
+
+`VLT-PM44-cli-password-generate.md` §1 records why that scoping is deliberate
+rather than incomplete. Briefly: `VLT-PM15` §2 already exempts operations that
+reveal no vault content; a vault-scoped event would be a *new* disclosure,
+correlating an instant with whichever item is created next; and requiring the
+master passphrase to perform an operation that never opens the vault would
+train a person to type it at prompts that do not need it.
+
+The strength of what it produces is fixed by two rules, both in the pure
+`vault-pm-password-policy` crate:
+
+- **The randomness is the operating-system CSPRNG**, reached through
+  `CliHost::fill_entropy` → `OsEntropy::fill` → `csprng::fill_random` →
+  `getrandom`/`getentropy`/`BCryptGenRandom`. That path is fail-closed: an
+  unavailable source is a provider failure, never a weaker draw.
+- **The floor is 80 bits**, checked as the exact integer comparison
+  `alphabet^length >= 2^80`. The default — 24 characters over all four classes
+  — is 155 bits, so the floor only ever bites on a policy someone deliberately
+  narrowed. A 12-character all-class password is 77.7 bits and is refused, one
+  character short, with its own message rather than a generic
+  "invalid command".
+
+Exactly one output mode is required. There is no plain-stdout mode: this
+command has nothing but a secret to say, and a default stdout mode would put a
+live credential into shell history, scrollback, `tee` pipelines, and CI logs
+the first time anyone redirected it. `--reveal` confirms on the controlling
+terminal and writes there and nowhere else, reusing the `item reveal` prompt
+and adapter unchanged. `--copy` is recognized and refused with the unsupported
+class until the clipboard ceremony ships — VLT-PM00 §14.4 documents the flag,
+so someone who reads the spec and types it deserves "not yet" rather than
+"invalid command".
+
+Confirmation happens *before* generation, which buys a property `item reveal`
+cannot have: on refusal no password is ever created, so there is no secret to
+wipe.
+
+The interactive shell can run this verb, and is the one place it is delegated
+*without* the session's bound-vault prefix — see `takes_no_vault_selector`.
+
 ## The durable-write seam
 
 This package is the layer that knows what "durable" means. `vault-pm-application`

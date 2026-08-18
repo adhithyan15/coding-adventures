@@ -2,6 +2,91 @@
 
 ## Unreleased
 
+- **Added `vault-pm password generate`**, the first of `VLT-PM00` §23 item 11
+  and the first command in this grammar that opens no vault. Specified by
+  `VLT-PM44-cli-password-generate.md`.
+
+  It is dispatched beside `help`, before `execute`: no platform layout is
+  resolved, no cross-process writer lock is taken, no passphrase is collected,
+  and no audit event is published. It works on a machine where `init` has never
+  run, which is the most common moment to want a generated password. VLT-PM44
+  §1 records the three reasons that scoping is deliberate — `VLT-PM15` §2
+  already exempts operations that reveal no vault content, a vault-scoped event
+  would correlate an instant with whichever item is created next, and requiring
+  the master passphrase for an operation that never opens the vault would train
+  a person to type it at prompts that do not need it.
+
+  The command surface is `[--length N] [--no-lowercase] [--no-uppercase]
+  [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)`. This
+  is the crate's first real flag parser; every other command's arguments are
+  positional or a single boolean and are matched as exhaustive slice patterns.
+  Duplicate rejection needs no bookkeeping flags because the state being built
+  *is* the record — a class starts selected and can only be cleared once, an
+  output mode starts absent and can only be set once — so a second occurrence
+  has nowhere to go and falls into the same `_` arm as an unknown flag.
+
+  `--length` accepts one to three ASCII decimal digits with no sign, no
+  separator, no whitespace, and no leading zero. `str::parse` alone would take
+  `+24` and `007`, and a grammar with two spellings of one number is a grammar
+  where a typo can silently mean something else.
+
+- **Exactly one output mode is required**, and there is no plain-stdout mode.
+  VLT-PM00 §14.6 makes ordinary output redacted, and this command has nothing
+  but a secret to say: a default stdout mode would put a live credential into
+  shell history, terminal scrollback, `tee` pipelines, and CI logs the first
+  time anyone redirected it.
+
+  `--reveal` reuses `item reveal`'s fixed confirmation prompt and terminal
+  adapter unchanged rather than inventing a second ceremony, so the value is
+  quoted, control-escaped, written to the reopened controlling terminal, and
+  never enters `CliOutput`, stdout, stderr, argv, or a `Debug` rendering.
+  Confirmation runs *before* generation, which buys a property `item reveal`
+  cannot have: on refusal no password is ever created, so there is no secret to
+  wipe. Nothing forces the other order here, because unlike a stored-secret
+  reveal there is no audit event that must be published before the answer is
+  known.
+
+  `--copy` is recognized and refused with the unsupported class. No clipboard
+  adapter exists anywhere in this product — `clipboard_clear_seconds` is a
+  configuration value with no writer behind it — and §14.4 documents the flag,
+  so someone who reads the specification and types it deserves "not yet" rather
+  than "invalid command". It is refused before any prompt, since confirming a
+  reveal nobody asked for and then failing would be worse than failing at once.
+
+- **Added `CliFailure::WeakPasswordPolicy`**, carrying the invalid exit class
+  with its own fixed message, `vault-pm: password policy below the minimum
+  entropy floor`. It is the one rejection in this grammar a person will hit
+  while doing something entirely reasonable — asking for a shorter password, or
+  narrowing the alphabet for a site that refuses symbols — and "invalid
+  command" would send them hunting for a typo that is not there. The message
+  names no length, alphabet, or bit count.
+
+- **The `--vault` selector is refused for `password generate`**, joining
+  `init`, `vault create`, and `help`. The selector names a target for a command
+  to operate on, and this command operates on none; accepting and ignoring it
+  would let someone believe they had aimed a command that was never aimable.
+
+  The interactive shell prefixes every delegated command with its bound vault,
+  so it now asks `takes_no_vault_selector` first and delegates this one verb
+  unprefixed. Refusing the verb in the shell instead would have been the
+  smaller change and the worse one: a generator is exactly what you reach for
+  mid-session.
+
+- **Randomness comes from the operating-system CSPRNG** through the existing
+  `CliHost::fill_entropy` → `OsEntropy::fill` → `csprng::fill_random` path, in
+  one reservation, into a wipe-on-drop buffer. No new host method, no new
+  adapter, and no general-purpose RNG. The policy and sampler live in the new
+  pure `coding_adventures_vault_pm_password_policy` crate, which sources no
+  randomness at all.
+
+- Added ten unit tests and 25 new closed-parser rows, covering the flag surface
+  and its rejections, the entropy floor on both sides of three documented
+  policies, terminal-only delivery with empty stdout and stderr, determinism
+  under a fixed host and divergence under a different one, narrowed alphabets,
+  five confirmation answers that must not authorize a reveal, `--copy`,
+  an unavailable CSPRNG, an untouched vault root, and a full shell session that
+  runs the verb without ever unlocking.
+
 - **Added `vault-pm [--vault NAME] passphrase rotate`**, the ceremony
   `VLT-PM00` §14.8 has required since before there was any code and that
   nothing performed. Specified by `VLT-PM43-cli-passphrase-rotation.md`; closes

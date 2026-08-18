@@ -18,6 +18,9 @@ vault-pm [--vault NAME] audit list
 vault-pm [--vault NAME] audit show TRACE
 vault-pm [--vault NAME] doctor [--unlock]
 vault-pm [--vault NAME] passphrase rotate
+vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
+                           [--no-digits] [--no-symbols] [--exclude-ambiguous]
+                           (--reveal|--copy)
 vault-pm [--vault NAME] export FILE
 vault-pm [--vault NAME] import FILE
 vault-pm --vault NAME restore FILE
@@ -47,6 +50,12 @@ vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION
 ```
+
+`password generate` is the one exception to everything below: it opens no
+vault, takes no `--vault` selector, collects no passphrase, and runs on a home
+directory where `init` has never happened. It still needs a controlling
+terminal, because its confirmation and its one line of output both go there and
+nowhere else.
 
 `init` and every authenticated command require a controlling terminal even
 when stdin is redirected. No passphrase flag, environment variable, config

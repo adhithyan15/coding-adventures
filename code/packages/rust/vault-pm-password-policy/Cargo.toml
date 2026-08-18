@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_vault_pm_password_policy"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM44 pure password-generation policy, entropy floor, and unbiased sampler"
+license = "MIT"
+
+[dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }
