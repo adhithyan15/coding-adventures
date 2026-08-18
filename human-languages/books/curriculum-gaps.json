@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 3051,
+    "totalLessons": 3061,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -28,18 +28,18 @@
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 756,
     "scriptExposureExemptedGlyphs": 2220,
-    "tracksTeachingNoScript": 2,
+    "tracksTeachingNoScript": 1,
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 322,
     "forwardReviews": 168,
-    "atomsNeverRevisited": 587,
+    "atomsNeverRevisited": 588,
     "forwardReferences": 511,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 75,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2600,
+    "drivableLessons": 2601,
     "drivablePercent": 85,
-    "chaptersWithoutDrivablePrefix": 87,
+    "chaptersWithoutDrivablePrefix": 88,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -2956,7 +2956,8 @@
           11,
           12,
           13,
-          14
+          14,
+          15
         ],
         "bookChapters": [
           1,
@@ -2972,7 +2973,8 @@
           11,
           12,
           13,
-          14
+          14,
+          15
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3220,10 +3222,10 @@
       {
         "language": "persian",
         "status": "mixed",
-        "lessonCount": 59,
+        "lessonCount": 69,
         "versions": {
           "1": 4,
-          "2": 55
+          "2": 65
         }
       },
       {
@@ -3888,8 +3890,8 @@
       },
       {
         "language": "persian",
-        "bookChapters": 14,
-        "declaredChapters": 14,
+        "bookChapters": 15,
+        "declaredChapters": 15,
         "missingCapability": 0,
         "findings": 2,
         "clean": false
@@ -3960,8 +3962,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 936,
-      "declaredChapters": 936,
+      "bookChapters": 937,
+      "declaredChapters": 937,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 75,
@@ -3973,9 +3975,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3051,
+    "totalLessons": 3061,
     "byLevel": {
-      "pre-A1": 1769,
+      "pre-A1": 1779,
       "A1": 568,
       "A2": 543,
       "B1": 40,
@@ -4183,9 +4185,9 @@
       },
       {
         "language": "persian",
-        "lessonCount": 59,
+        "lessonCount": 69,
         "byLevel": {
-          "pre-A1": 46,
+          "pre-A1": 56,
           "A1": 0,
           "A2": 13,
           "B1": 0,
@@ -4903,8 +4905,8 @@
       },
       {
         "language": "persian",
-        "lessonCount": 59,
-        "measurable": 55,
+        "lessonCount": 69,
+        "measurable": 65,
         "unmeasurable": 4,
         "lessonViolations": 2,
         "chapterViolations": 3
@@ -5854,8 +5856,8 @@
           "language": "persian",
           "script": "perso-arabic",
           "latinScript": false,
-          "lessonCount": 59,
-          "totalGlyphs": 34,
+          "lessonCount": 69,
+          "totalGlyphs": 35,
           "lessonViolations": 1,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -21586,6 +21588,18 @@
         "revisits": 0
       },
       {
+        "atom": "FA-ETYMON-DOKHTAR",
+        "language": "persian",
+        "introducedBy": "FA-C10-dokhtar",
+        "introducedAt": 40,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "FA-ETYMON-HAL",
         "language": "persian",
         "introducedBy": "FA-C04-hal",
@@ -21608,6 +21622,18 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "FA-ETYMON-ZABAN",
+        "language": "persian",
+        "introducedBy": "FA-C11-zaban",
+        "introducedAt": 44,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
       },
       {
         "atom": "FR-ETYMON-AIMER-10",
@@ -34652,6 +34678,17 @@
         "revisits": 1
       },
       {
+        "atom": "FA-ETYMON-BARADAR",
+        "language": "persian",
+        "introducedBy": "FA-C10-baradar",
+        "introducedAt": 39,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FA-ETYMON-BUDAN-BE",
         "language": "persian",
         "introducedBy": "FA-C06-budan",
@@ -34674,6 +34711,17 @@
         "revisits": 1
       },
       {
+        "atom": "FA-ETYMON-CHESHM",
+        "language": "persian",
+        "introducedBy": "FA-C11-cheshm",
+        "introducedAt": 41,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "FA-ETYMON-DANESTAN-KNOW",
         "language": "persian",
         "introducedBy": "FA-C06-danestan",
@@ -34685,10 +34733,43 @@
         "revisits": 1
       },
       {
-        "atom": "FA-ETYMON-DOKHTAR",
+        "atom": "FA-ETYMON-DAR",
         "language": "persian",
-        "introducedBy": "FA-C10-dokhtar",
-        "introducedAt": 40,
+        "introducedBy": "FA-C12-dar",
+        "introducedAt": 47,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FA-ETYMON-DAST",
+        "language": "persian",
+        "introducedBy": "FA-C11-dast",
+        "introducedAt": 42,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FA-ETYMON-DEL",
+        "language": "persian",
+        "introducedBy": "FA-C12-del",
+        "introducedAt": 46,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-ETYMON-DUST",
+        "language": "persian",
+        "introducedBy": "FA-C14-dust",
+        "introducedAt": 58,
         "missed": [
           "R1",
           "R2"
@@ -34722,6 +34803,17 @@
         "language": "persian",
         "introducedBy": "FA-C09-kelid",
         "introducedAt": 36,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FA-ETYMON-KETAB",
+        "language": "persian",
+        "introducedBy": "FA-C12-ketab",
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -34773,10 +34865,32 @@
         "revisits": 2
       },
       {
+        "atom": "FA-ETYMON-NAM",
+        "language": "persian",
+        "introducedBy": "FA-C12-nam",
+        "introducedAt": 45,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "FA-ETYMON-NAN",
         "language": "persian",
         "introducedBy": "FA-C09-nan",
         "introducedAt": 34,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FA-ETYMON-PA",
+        "language": "persian",
+        "introducedBy": "FA-C11-pa",
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -34828,10 +34942,10 @@
         "revisits": 2
       },
       {
-        "atom": "FA-ETYMON-ZABAN",
+        "atom": "FA-ETYMON-ZAN",
         "language": "persian",
-        "introducedBy": "FA-C11-zaban",
-        "introducedAt": 44,
+        "introducedBy": "FA-C14-zan",
+        "introducedAt": 57,
         "missed": [
           "R1",
           "R2"
@@ -34872,6 +34986,28 @@
         "revisits": 2
       },
       {
+        "atom": "FA-LEX-BARADAR",
+        "language": "persian",
+        "introducedBy": "FA-C10-baradar",
+        "introducedAt": 39,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-CHESHM",
+        "language": "persian",
+        "introducedBy": "FA-C11-cheshm",
+        "introducedAt": 41,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "FA-LEX-DASHTAN",
         "language": "persian",
         "introducedBy": "FA-C08-dust-dashtan",
@@ -34881,6 +35017,39 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "FA-LEX-DAST",
+        "language": "persian",
+        "introducedBy": "FA-C11-dast",
+        "introducedAt": 42,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-DEL",
+        "language": "persian",
+        "introducedBy": "FA-C12-del",
+        "introducedAt": 46,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-DUST",
+        "language": "persian",
+        "introducedBy": "FA-C14-dust",
+        "introducedAt": 58,
+        "missed": [
+          "R1",
+          "R2"
+        ],
+        "revisits": 0
       },
       {
         "atom": "FA-LEX-DUST-DASHTAN",
@@ -34947,6 +35116,17 @@
           "R3"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-NAM",
+        "language": "persian",
+        "introducedBy": "FA-C12-nam",
+        "introducedAt": 45,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FA-LEX-NAN",
@@ -48600,16 +48780,6 @@
         "revisits": 2
       },
       {
-        "atom": "FA-ETYMON-BARADAR",
-        "language": "persian",
-        "introducedBy": "FA-C10-baradar",
-        "introducedAt": 39,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "FA-ETYMON-BARAN",
         "language": "persian",
         "introducedBy": "FA-C13-baran",
@@ -48620,50 +48790,10 @@
         "revisits": 1
       },
       {
-        "atom": "FA-ETYMON-CHESHM",
+        "atom": "FA-ETYMON-KHAHAR",
         "language": "persian",
-        "introducedBy": "FA-C11-cheshm",
-        "introducedAt": 41,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "FA-ETYMON-DAR",
-        "language": "persian",
-        "introducedBy": "FA-C12-dar",
-        "introducedAt": 47,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "FA-ETYMON-DAST",
-        "language": "persian",
-        "introducedBy": "FA-C11-dast",
-        "introducedAt": 42,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "FA-ETYMON-DEL",
-        "language": "persian",
-        "introducedBy": "FA-C12-del",
-        "introducedAt": 46,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "FA-ETYMON-KETAB",
-        "language": "persian",
-        "introducedBy": "FA-C12-ketab",
-        "introducedAt": 48,
+        "introducedBy": "FA-C14-khahar",
+        "introducedAt": 54,
         "missed": [
           "R2"
         ],
@@ -48690,20 +48820,20 @@
         "revisits": 2
       },
       {
-        "atom": "FA-ETYMON-NAM",
+        "atom": "FA-ETYMON-MARD",
         "language": "persian",
-        "introducedBy": "FA-C12-nam",
-        "introducedAt": 45,
+        "introducedBy": "FA-C14-mard",
+        "introducedAt": 56,
         "missed": [
           "R2"
         ],
-        "revisits": 2
+        "revisits": 1
       },
       {
-        "atom": "FA-ETYMON-PA",
+        "atom": "FA-ETYMON-PESAR",
         "language": "persian",
-        "introducedBy": "FA-C11-pa",
-        "introducedAt": 43,
+        "introducedBy": "FA-C14-pesar",
+        "introducedAt": 55,
         "missed": [
           "R2"
         ],
@@ -48718,16 +48848,6 @@
           "R2"
         ],
         "revisits": 1
-      },
-      {
-        "atom": "FA-ETYMON-ZAN",
-        "language": "persian",
-        "introducedBy": "FA-C14-zan",
-        "introducedAt": 57,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 0
       },
       {
         "atom": "FA-GRAMMAR-CHI-AST-FUSION",
@@ -48820,16 +48940,6 @@
         "revisits": 2
       },
       {
-        "atom": "FA-LEX-BARADAR",
-        "language": "persian",
-        "introducedBy": "FA-C10-baradar",
-        "introducedAt": 39,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "FA-LEX-BUDAN",
         "language": "persian",
         "introducedBy": "FA-C06-budan",
@@ -48848,16 +48958,6 @@
           "R2"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "FA-LEX-CHESHM",
-        "language": "persian",
-        "introducedBy": "FA-C11-cheshm",
-        "introducedAt": 41,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "FA-LEX-CHETOR",
@@ -48890,22 +48990,22 @@
         "revisits": 3
       },
       {
-        "atom": "FA-LEX-DAST",
+        "atom": "FA-LEX-DAR",
         "language": "persian",
-        "introducedBy": "FA-C11-dast",
-        "introducedAt": 42,
+        "introducedBy": "FA-C12-dar",
+        "introducedAt": 47,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 2
       },
       {
-        "atom": "FA-LEX-DEL",
+        "atom": "FA-LEX-DOKHTAR",
         "language": "persian",
-        "introducedBy": "FA-C12-del",
-        "introducedAt": 46,
+        "introducedBy": "FA-C10-dokhtar",
+        "introducedAt": 40,
         "missed": [
-          "R2"
+          "R3"
         ],
         "revisits": 2
       },
@@ -48954,6 +49054,26 @@
         "language": "persian",
         "introducedBy": "FA-C09-kelid",
         "introducedAt": 36,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-KETAB",
+        "language": "persian",
+        "introducedBy": "FA-C12-ketab",
+        "introducedAt": 48,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-KHAHAR",
+        "language": "persian",
+        "introducedBy": "FA-C14-khahar",
+        "introducedAt": 54,
         "missed": [
           "R2"
         ],
@@ -49030,10 +49150,10 @@
         "revisits": 2
       },
       {
-        "atom": "FA-LEX-NAM",
+        "atom": "FA-LEX-MARD",
         "language": "persian",
-        "introducedBy": "FA-C12-nam",
-        "introducedAt": 45,
+        "introducedBy": "FA-C14-mard",
+        "introducedAt": 56,
         "missed": [
           "R2"
         ],
@@ -49048,6 +49168,26 @@
           "R2"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "FA-LEX-PA",
+        "language": "persian",
+        "introducedBy": "FA-C11-pa",
+        "introducedAt": 43,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-PESAR",
+        "language": "persian",
+        "introducedBy": "FA-C14-pesar",
+        "introducedAt": 55,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 2
       },
       {
         "atom": "FA-LEX-RAFTAN",
@@ -49068,6 +49208,26 @@
           "R3"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "FA-LEX-ZABAN",
+        "language": "persian",
+        "introducedBy": "FA-C11-zaban",
+        "introducedAt": 44,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-LEX-ZAN",
+        "language": "persian",
+        "introducedBy": "FA-C14-zan",
+        "introducedAt": 57,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 1
       },
       {
         "atom": "FA-PHRASE-LOTFAN",
@@ -49154,6 +49314,26 @@
         "language": "persian",
         "introducedBy": "FA-C03-esm-e-shoma-chist",
         "introducedAt": 7,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "FA-SCRIPT-RTL-01",
+        "language": "persian",
+        "introducedBy": "FA-W15-alef",
+        "introducedAt": 59,
+        "missed": [
+          "R1"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "FA-SCRIPT-ZE",
+        "language": "persian",
+        "introducedBy": "FA-C11-zaban",
+        "introducedAt": 44,
         "missed": [
           "R3"
         ],
@@ -59423,12 +59603,12 @@
       },
       {
         "language": "persian",
-        "lessonCount": 59,
+        "lessonCount": 69,
         "lessonsWithoutSequence": 4,
         "forwardPrerequisites": 2,
         "forwardReviews": 0,
-        "atomsTaught": 136,
-        "atomsNeverRevisited": 6,
+        "atomsTaught": 148,
+        "atomsNeverRevisited": 7,
         "forwardReferences": 10
       },
       {
@@ -59517,13 +59697,13 @@
       "tracksWithUnorderedLessons": 12,
       "forwardPrerequisites": 143,
       "forwardReviews": 168,
-      "atomsTaught": 4206,
-      "atomsNeverRevisited": 587,
+      "atomsTaught": 4218,
+      "atomsNeverRevisited": 588,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1130,
-        "R2": 3265,
-        "R3": 3064,
+        "R1": 1133,
+        "R2": 3275,
+        "R3": 3085,
         "R4": 1724
       },
       "forwardReferences": 511
@@ -59651,11 +59831,11 @@
       {
         "language": "persian",
         "script": "perso-arabic",
-        "lessonCount": 59,
-        "scriptLessons": 0,
-        "taughtGlyphs": 0,
-        "shownGlyphs": 34,
-        "neverTaughtGlyphs": 34,
+        "lessonCount": 69,
+        "scriptLessons": 9,
+        "taughtGlyphs": 10,
+        "shownGlyphs": 35,
+        "neverTaughtGlyphs": 25,
         "violations": 50,
         "exposureOnly": 9,
         "exposureExemptedGlyphs": 264,
@@ -65036,7 +65216,7 @@
     ],
     "summary": {
       "tracksWithScript": 16,
-      "tracksTeachingNothing": 2,
+      "tracksTeachingNothing": 1,
       "violations": 756,
       "exposureOnly": 176,
       "exposureExemptedGlyphs": 2220,
@@ -65358,6 +65538,11 @@
             "criterion": "atom-budget",
             "detail": "2 lesson(s) at or below pre-A1 exceed the new-atom budget",
             "shortfall": 2
+          },
+          {
+            "criterion": "reinforcement",
+            "detail": "3 atom(s) at or below pre-A1 are revisited fewer than twice (33 etymology hook(s) waived)",
+            "shortfall": 3
           }
         ],
         "vocabulary": 56
@@ -65551,11 +65736,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3051,
+    "totalLessons": 3061,
     "voice": 2161,
-    "sight": 585,
-    "pen": 305,
-    "coreVoice": 2600,
+    "sight": 586,
+    "pen": 314,
+    "coreVoice": 2601,
     "lessonsWithWritingSegments": 133,
     "drivablePercent": 85,
     "tracks": [
@@ -71451,12 +71636,12 @@
       },
       {
         "language": "persian",
-        "lessonCount": 59,
+        "lessonCount": 69,
         "voice": 57,
-        "sight": 2,
-        "pen": 0,
-        "coreVoice": 58,
-        "drivablePercent": 98,
+        "sight": 3,
+        "pen": 9,
+        "coreVoice": 59,
+        "drivablePercent": 86,
         "drivablePrefixTotal": 55,
         "chapters": [
           {
@@ -71656,6 +71841,21 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "persian",
+            "chapter": 15,
+            "lessonCount": 10,
+            "voice": 0,
+            "sight": 1,
+            "pen": 9,
+            "coreVoice": 1,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "FA-W15-alef"
           }
         ]
       },
@@ -79759,7 +79959,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3051,
+    "lessons": 3061,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -79769,8 +79969,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 2985,
-    "usesBeforeIntroduction": 11446,
+    "lessonsUsingTerms": 2993,
+    "usesBeforeIntroduction": 11464,
     "technicalUsesBeforeIntroduction": 3132,
     "technicalLessons": 1614,
     "worstTerms": [
@@ -79801,12 +80001,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3051,
+    "lessonsScanned": 3061,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1068,
+    "filesScanned": 1069,
     "mainCharacters": 125,
     "scriptCharacters": 670,
     "gaps": 0
