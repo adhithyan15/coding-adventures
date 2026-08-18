@@ -31,51 +31,38 @@ Two convenience functions:
 - ``tokenize_css(source)`` — the all-in-one function. Pass in CSS text,
   get back a list of tokens. This is the function most callers want.
 
-Locating the Grammar File
---------------------------
+Grammar Source
+--------------
 
-The ``css.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``::
-
-    tokenizer.py
-    └── css_lexer/         (parent)
-        └── src/           (parent)
-            └── css-lexer/   (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── css.tokens
+The ``css.tokens`` file lives in the ``code/grammars/css/`` directory at
+the root of the coding-adventures repository, but this package does not
+read it at runtime. It is pre-compiled into ``css_lexer._grammar`` (see
+that module's header for regeneration instructions), so tokenizing CSS
+requires no file I/O and works correctly in an installed package that
+does not ship the monorepo's ``code/grammars/`` directory.
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
+from css_lexer._grammar import TOKEN_GRAMMAR
+
 # ---------------------------------------------------------------------------
-# Grammar File Location
+# Grammar Source
 # ---------------------------------------------------------------------------
 #
-# Navigate from this file's location up to the repository root's grammars/
-# directory. The path is:
-#   src/css_lexer/tokenizer.py -> src/css_lexer -> src -> css-lexer
-#   -> python -> packages -> code -> code/grammars
+# The CSS token grammar (``code/grammars/css/css.tokens``) is pre-compiled
+# into ``css_lexer._grammar`` — see that module's header for regeneration
+# instructions. Importing the compiled ``TOKEN_GRAMMAR`` constant avoids
+# file I/O and runtime parsing on every call.
 # ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-CSS_TOKENS_PATH = GRAMMAR_DIR / "css" / "css.tokens"
 
 
 def create_css_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for CSS text.
 
-    This function reads the ``css.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    Uses the pre-compiled ``TOKEN_GRAMMAR`` constant — no file I/O.
 
     Args:
         source: The CSS text to tokenize.
@@ -84,17 +71,12 @@ def create_css_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with CSS token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``css.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_css_lexer('h1 { color: red; }')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(CSS_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_css(source: str) -> list[Token]:

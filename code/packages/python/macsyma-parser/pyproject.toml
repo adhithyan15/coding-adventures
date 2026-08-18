@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-macsyma-parser"
-version = "0.1.0"
+version = "0.1.1"
 description = "Parses MACSYMA/Maxima syntax via the grammar-driven parser — a thin wrapper that loads macsyma.grammar."
 requires-python = ">=3.12"
 license = "MIT"
@@ -49,6 +49,9 @@ select = ["E", "W", "F", "I", "UP", "B", "SIM"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--cov=macsyma_parser --cov-report=term-missing --cov-fail-under=80"
+
+[tool.coverage.run]
+omit = ["src/**/_grammar.py"]
 
 [tool.coverage.report]
 fail_under = 80

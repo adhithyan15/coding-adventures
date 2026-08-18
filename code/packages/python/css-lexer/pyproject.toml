@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-css-lexer"
-version = "0.1.0"
+version = "0.1.1"
 description = "Tokenizes CSS text using the grammar-driven lexer — a thin wrapper that loads css.tokens"
 requires-python = ">=3.12"
 license = "MIT"

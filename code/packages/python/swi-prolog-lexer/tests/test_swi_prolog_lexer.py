@@ -5,11 +5,11 @@ from __future__ import annotations
 from lexer import Token, TokenType
 
 from swi_prolog_lexer import (
-    SWI_PROLOG_TOKENS_PATH,
     __version__,
     create_swi_prolog_lexer,
     tokenize_swi_prolog,
 )
+from swi_prolog_lexer._grammar import TOKEN_GRAMMAR
 
 
 def token_types(tokens: list[Token]) -> list[str]:
@@ -32,11 +32,12 @@ class TestVersion:
 
 
 class TestSwiTokenization:
-    """SWI-Prolog source should tokenize through its dedicated grammar file."""
+    """SWI-Prolog source should tokenize through its pre-compiled grammar."""
 
-    def test_uses_swi_token_grammar_path(self) -> None:
-        assert SWI_PROLOG_TOKENS_PATH.name == "swi.tokens"
-        assert SWI_PROLOG_TOKENS_PATH.parent.name == "prolog"
+    def test_uses_precompiled_swi_token_grammar(self) -> None:
+        lexer = create_swi_prolog_lexer("parent(homer, bart).\n")
+
+        assert lexer._grammar is TOKEN_GRAMMAR
 
     def test_fact(self) -> None:
         tokens = tokenize_swi_prolog("parent(homer, bart).\n")

@@ -5,11 +5,11 @@ from __future__ import annotations
 from lexer import Token, TokenType
 
 from iso_prolog_lexer import (
-    ISO_PROLOG_TOKENS_PATH,
     __version__,
     create_iso_prolog_lexer,
     tokenize_iso_prolog,
 )
+from iso_prolog_lexer._grammar import TOKEN_GRAMMAR
 
 
 def token_types(tokens: list[Token]) -> list[str]:
@@ -32,11 +32,12 @@ class TestVersion:
 
 
 class TestIsoTokenization:
-    """ISO/Core source should tokenize through its dedicated grammar file."""
+    """ISO/Core source should tokenize through its pre-compiled grammar."""
 
-    def test_uses_iso_token_grammar_path(self) -> None:
-        assert ISO_PROLOG_TOKENS_PATH.name == "iso.tokens"
-        assert ISO_PROLOG_TOKENS_PATH.parent.name == "prolog"
+    def test_uses_precompiled_iso_token_grammar(self) -> None:
+        lexer = create_iso_prolog_lexer("parent(homer, bart).\n")
+
+        assert lexer._grammar is TOKEN_GRAMMAR
 
     def test_fact(self) -> None:
         tokens = tokenize_iso_prolog("parent(homer, bart).\n")
