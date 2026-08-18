@@ -2,6 +2,16 @@
 
 All notable changes to this package are documented here.
 
+## Unreleased
+
+### Fixed
+
+- Eliminated runtime grammar loading: `tokenize` now requires a
+  pre-compiled `_grammar` module instead of reading and parsing the
+  `xml.tokens` file from `code/grammars/` on every call. The old code
+  walked out of the installed package's own directory to a
+  monorepo-relative path that a published LuaRocks package does not ship.
+
 ## [0.1.1] — 2026-08-07
 
 ### Changed
