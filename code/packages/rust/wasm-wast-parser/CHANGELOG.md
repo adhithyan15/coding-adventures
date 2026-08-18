@@ -1,5 +1,46 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.24 — 2026-08-17 — real multi-memory memarg leading token (task #92/#110)
+
+### Added
+
+- `i32.load`/`i64.load`/`f32.load`/`f64.load`/every narrow load and
+  store variant/`i32.store`/`i64.store`/`f32.store`/`f64.store` now
+  accept an optional LEADING memory-index token before their
+  `offset=`/`align=` attributes -- `(i32.load $mem1 (i32.const 1))` --
+  distinguished from the address operand (always a nested, parenthesized
+  instruction in folded form, so always an `SExpr::List`) and from an
+  `offset=`/`align=` attribute (a bare `Atom` with that literal prefix)
+  by shape. Pulled into its own `resolve_leading_memidx_token` function
+  rather than inlined into the match arm -- see the "Fixed" note below.
+- `memory.fill` accepts the same optional leading memidx token --
+  `(memory.fill $mem1 (dest) (value) (len))`.
+- `memory.init` accepts an optional leading memidx token BEFORE its
+  (always-required) data-segment index -- `(memory.init $mem1 $d (dest)
+  (src) (len))`. Unlike `i32.load`'s token, this one isn't distinguishable
+  from the data-segment index by shape (both are bare identifier/index
+  atoms) -- disambiguated instead by COUNT of leading atoms before the
+  first parenthesized operand: one atom means "just the required
+  dataidx" (memidx defaults to 0, the pre-existing single-memory form
+  from task #95); two means "memidx then dataidx".
+
+### Fixed
+
+- **Real regression, caught before merge**: adding the leading-memidx-
+  token locals directly inline inside `encode_flat_instr`'s match arm
+  measurably grew that function's own per-call stack frame (a debug
+  build sizes a function's frame for the union of every match arm's
+  locals, not just the arm actually taken) enough to overflow the REAL
+  OS stack before `MAX_INSTR_NESTING_DEPTH`'s software depth counter
+  ever tripped -- `deeply_nested_folded_arithmetic_errors_cleanly_not_
+  stack_overflow` (which never even touches `i32.load`) started
+  aborting with a genuine SIGABRT. `MAX_INSTR_NESTING_DEPTH` lowered
+  from 100 to 60 and reverified with repeated (8x+) full-suite runs
+  showing zero flakiness. `encode_flat_instr`'s own per-arm complexity
+  (this arm and any future one) should keep this margin in mind --
+  see the constant's own doc comment for the reasoning and the re-
+  verification procedure this session used.
+
 ## 0.1.23 — 2026-08-17 — hex-literal table/memory limits (task #99)
 
 ### Fixed

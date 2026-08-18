@@ -20,7 +20,9 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                pinned commit, no re-pin),
                extended 2026-08-16 (task #98 -- table_size.wast/
                table_fill.wast, table.size/table.grow/table.fill, same
-               pinned commit, no re-pin)
+               pinned commit, no re-pin),
+               extended 2026-08-17 (task #92/#109-112 -- memory-multi.wast,
+               real multi-memory memarg, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -88,8 +90,23 @@ defines. 100% pass, every directive kind, on the first baseline regen
 after implementation. Only uses single-memory numeric segment indices
 (no `spectest` import, no table/elem instructions), so it's vendorable
 standalone -- unlike its sibling `bulk.wast` (task #97 still pending)
-and `memory-multi.wast` (task #92, explicit multi-memory indices, now
-unblocked and vendorable as a near-zero-cost follow-up).
+and `memory-multi.wast` (task #92, explicit multi-memory indices, was
+blocked on real multi-memory memarg support).
+
+`memory-multi.wast` (task #92/#109-112) is that follow-up, now unblocked:
+every memarg-carrying load/store opcode (`0x28`-`0x3E`, 23 total) plus
+`memory.copy`/`memory.fill`/`memory.init` previously hardcoded memory
+index 0 and either ignored or assumed a fixed byte width for any memidx
+immediate -- a real, decoded-but-discarded gap, not a deferred feature
+(`ModuleContext.has_memory` was a plain bool for exactly this reason, per
+its own doc comment). This pass added the real binary flags-bit `0x40` +
+memidx decode/encode (`wasm-execution`), the matching text-form leading
+memidx token for `i32.load`/`memory.fill`/`memory.init`
+(`wasm-wast-parser`), and the matching validation-time bounds-check
+(`wasm-validator`, `ModuleContext.memory_count`) -- see `code/specs/
+W18-wasm-multi-memory-memarg.md`. 100% pass, every directive kind
+(2/2 modules, 4/4 assert_return), on the first baseline regen after
+implementation.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

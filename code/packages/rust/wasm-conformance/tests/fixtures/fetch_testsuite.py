@@ -177,6 +177,15 @@ TESTSUITE_FILES = [
     # unlike its sibling `bulk.wast` (task #97 still pending) and
     # `memory-multi.wast` (task #92, explicit multi-memory indices).
     "memory_init.wast",
+    # Real multi-memory memarg (W18, task #92/#109-112): `i32.load`'s
+    # leading-memidx-token form, plus `memory.init`/`memory.fill` with an
+    # explicit non-default memory index -- the binary flags-bit `0x40` +
+    # memidx encoding, decoded/executed for real across all 23 memarg
+    # opcodes (`wasm-execution`), the matching text-form leading token
+    # (`wasm-wast-parser`), and the matching validation-time bounds-check
+    # (`wasm-validator`) all landed in this same pass. See `code/specs/
+    # W18-wasm-multi-memory-memarg.md`.
+    "memory-multi.wast",
     # Real cross-module linking (WASM05, task #93) -- the original W05
     # scope note excluded this as needing "heavier module-linking
     # semantics" than existed at the time; `RegistryHost` (real

@@ -2,6 +2,42 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.12] - 2026-08-17 (task #92/#109 — real multi-memory memarg)
+
+### Fixed
+
+- `DecodedOperand::MemArg` widened from `{ _align, offset }` to
+  `{ _align, offset, memidx }`. The decode arm now checks the align
+  byte's top bit (`0x40`, the real multi-memory flags bit), masks it
+  back out for the real alignment hint, and conditionally decodes a
+  third LEB128 into `memidx`. All 23 memarg-carrying load/store
+  handlers (`0x28`-`0x3E`) switched from a hardcoded `get_memory(ctx)`
+  (always memory 0) to `get_memory_at(ctx, memarg_memidx(instr))`, via
+  a new `unpack_memarg_operand` helper (same packed-`usize` shape as
+  `unpack_call_indirect_operand`: memidx in the high 32 bits, offset in
+  the low 32).
+- `memory.init`/`memory.copy`/`memory.fill` (`0xFC` `0x08`/`0x0A`/`0x0B`)
+  assumed their memory-index immediate(s) were a FIXED byte width (1/2/1
+  bytes respectively) instead of real LEB128s -- this only worked
+  because an MVP-only (always-0) index happens to be exactly one byte;
+  a genuine multi-memory-encoded non-zero index would silently misalign
+  every subsequent decode. Fixed by decoding real LEB128s for all three,
+  repurposing the existing `(data_idx, aux)` decode-tuple slots (`aux`
+  for `memory.init`'s memidx, `data_idx`/`aux` for `memory.copy`'s
+  dst/src memidx pair, mirroring `table.copy`'s own shape).
+- New `LinearMemory::copy_between` (mirrors `Table::copy_between`'s own
+  security-reviewed raw-pointer pattern from task #97 exactly: raw
+  pointers, not `&mut`/`&` references, to avoid aliasing UB on a
+  same-memory self-copy; every field access scoped to a single,
+  explicit -- never autoref'd -- statement) wires `memory.copy`'s
+  handler to actually copy BETWEEN two distinct memories instead of
+  always operating within memory 0.
+- New end-to-end regression tests proving cross-memory `i32.load`,
+  `memory.fill`, `memory.copy`, and `memory.init` each operate on the
+  NAMED memory, not memory 0.
+
+See `code/specs/W18-wasm-multi-memory-memarg.md`.
+
 ## [0.9.11] - 2026-08-17 (task #107 — call_indirect/return_call_indirect real table index)
 
 ### Fixed

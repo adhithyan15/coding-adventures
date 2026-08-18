@@ -692,6 +692,50 @@ impl LinearMemory {
         }
     }
 
+    /// Copy `len` bytes from `src_mem[src..]` into `dst_mem[dest..]` --
+    /// the CROSS-MEMORY `memory.copy` primitive (task #92/W18, multi-
+    /// memory proposal). Takes RAW POINTERS, not `&mut LinearMemory`/
+    /// `&LinearMemory` references, for the identical reason `Table::
+    /// copy_between` does (task #97, `/security-review` finding): `memory.
+    /// copy`'s two memory operands can name either the SAME memory or two
+    /// DIFFERENT ones, and forming a `&mut`/`&` pair that both alias the
+    /// same memory -- even briefly, even with no actual read/write hazard
+    /// -- is undefined behavior under Rust's aliasing model regardless of
+    /// what the two references do with it. Every access below goes
+    /// through the raw pointers directly, inside `unsafe`, with each
+    /// reference scoped to a single statement (explicit, not autoref'd,
+    /// same `dangerous_implicit_autorefs`-satisfying shape `Table::
+    /// copy_between` uses) so no aliased reference is ever constructed.
+    ///
+    /// # Safety
+    /// `dst_mem`/`src_mem` must each be valid, live, properly aligned
+    /// pointers to a `LinearMemory` for the whole call (satisfied by every
+    /// call site, which resolves them from `ctx.memories: Vec<*mut
+    /// LinearMemory>` -- pointers into a `Vec` that outlives the call).
+    /// Correct even when they point at the SAME `LinearMemory` (a self-
+    /// copy with potentially overlapping ranges): the source range is
+    /// read into a temporary `Vec` BEFORE any destination write happens,
+    /// so it never observes a partially-overwritten source -- the same
+    /// overlap-safe (memmove) semantics `copy`'s own `copy_within` gives
+    /// for the single-buffer case. Same zero-length-still-bounds-checked
+    /// discipline `copy`/`fill` above established.
+    pub unsafe fn copy_between(dst_mem: *mut LinearMemory, src_mem: *const LinearMemory, dest: usize, src: usize, len: usize) -> Result<(), TrapError> {
+        let src_end = src.checked_add(len);
+        let dest_end = dest.checked_add(len);
+        let src_len = unsafe { (*src_mem).data.len() };
+        let dst_len = unsafe { (*dst_mem).data.len() };
+        match (src_end, dest_end) {
+            (Some(se), Some(de)) if se <= src_len && de <= dst_len => {
+                let bytes: Vec<u8> = unsafe { (&(*src_mem).data)[src..se].to_vec() };
+                unsafe { (&mut (*dst_mem).data)[dest..de].copy_from_slice(&bytes) };
+                Ok(())
+            }
+            _ => Err(TrapError::new(format!(
+                "out of bounds memory.copy: dest={dest}, src={src}, len={len}, dst_memory_size={dst_len}, src_memory_size={src_len}"
+            ))),
+        }
+    }
+
     /// Fill `len` bytes of linear memory starting at `dest` with `value` —
     /// the `memory.fill` bulk-memory primitive (task #94). Same overflow-
     /// proof bounds-check shape as `copy` above, including the same
@@ -1106,8 +1150,11 @@ pub enum DecodedOperand {
     None,
     /// A single integer value (label index, local index, const, etc.).
     Int(i64),
-    /// A memory argument: (alignment_log2, offset).
-    MemArg { _align: u32, offset: u32 },
+    /// A memory argument: (alignment_log2, offset, memidx). `memidx` is 0
+    /// unless the multi-memory proposal's flags-bit `0x40` was set on the
+    /// encoded `align` byte (task #92/W18), in which case a real memory
+    /// index followed the offset in the binary.
+    MemArg { _align: u32, offset: u32, memidx: u32 },
     /// A branch table: labels + default.
     BrTable {
         labels: Vec<u32>,
@@ -1256,10 +1303,10 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //
         //   sub          instruction         immediates
         //   0x00-0x07    *.trunc_sat_*_s/u   (none -- WASM03)
-        //   0x08         memory.init         <data_idx:u32leb> <mem idx> (task #95)
+        //   0x08         memory.init         <data_idx:u32leb> <memidx:u32leb> (task #95, #92/W18)
         //   0x09         data.drop           <data_idx:u32leb> (task #95)
-        //   0x0A         memory.copy         <dst mem idx> <src mem idx> (both 0 in our modules)
-        //   0x0B         memory.fill         <mem idx>
+        //   0x0A         memory.copy         <dst_memidx:u32leb> <src_memidx:u32leb> (task #92/W18)
+        //   0x0B         memory.fill         <memidx:u32leb> (task #92/W18)
         //   0x0C         table.init          <elem_idx:u32leb> <table_idx:u32leb> (task #97)
         //   0x0D         elem.drop           <elem_idx:u32leb> (task #97)
         //   0x0E         table.copy          <dst_table_idx:u32leb> <src_table_idx:u32leb> (task #97)
@@ -1269,19 +1316,20 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
         //
         // `trunc_sat`'s 8 sub-opcodes need no extra immediate bytes consumed
         // here (the default `_ => (0, 0)` arm already handles that correctly).
-        // The memory-index byte(s) memory.copy/fill/init carry are decoded
-        // but discarded (this repo's single-memory-only scope for bulk
-        // memory ops, matching WASM17's own precedent); `memory.init`/
-        // `data.drop`'s `data_idx` is the one immediate actually used at
-        // runtime -- unlike `memory.copy`/`memory.fill`, WHICH data segment
-        // to read from can't be hardcoded to "the only one," so this must be
-        // a real decoded value, not a discarded placeholder. `table.grow`/
-        // `table.size`/`table.fill` reuse the same `data_idx` slot to carry
-        // a real table index instead (see `BulkMemory`'s own doc comment) --
-        // this repo supports up to `MAX_TABLES` (64) real tables, so a
-        // table.get/table.set-style hardcoded-to-0 shortcut would be wrong.
-        // `table.init`/`table.copy` carry TWO real indices each (unlike
-        // every sub-opcode above, which needs at most one), hence `aux`.
+        // The memory-index immediate(s) memory.copy/fill/init carry are
+        // real LEB128 `u32`s (task #92/W18, multi-memory proposal) --
+        // previously assumed to be a fixed single byte and skipped/
+        // discarded entirely, which happened to work only because every
+        // MVP-only (memidx-always-0) encoding is coincidentally one byte.
+        // `memory.init`/`data.drop`'s `data_idx` is a data-segment index;
+        // `table.grow`/`table.size`/`table.fill` reuse the same `data_idx`
+        // slot to carry a real table index instead (see `BulkMemory`'s own
+        // doc comment) -- this repo supports up to `MAX_TABLES` (64) real
+        // tables, so a table.get/table.set-style hardcoded-to-0 shortcut
+        // would be wrong. `table.init`/`table.copy`/`memory.init`/`memory.
+        // copy` each carry a SECOND real index in `aux` too (`memory.fill`
+        // needs only one, carried in `data_idx` like `data.drop`), reusing
+        // the same repurposed-slot pattern.
         if opcode_byte == 0xFC {
             let sub = if offset < code.len() {
                 let s = code[offset];
@@ -1292,9 +1340,20 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
             };
             let (data_idx, aux) = match sub {
                 0x08 => {
-                    let (idx, sz) = decode_leb_u32(code, offset);
-                    offset += sz + 1; // + the trailing single-byte memory index
-                    (idx, 0)
+                    // `memory.init` (task #92/W18 fix): the trailing
+                    // memory-index immediate is a REAL LEB128 `u32`, not
+                    // always a single `0x00` byte -- a prior version just
+                    // skipped exactly one byte, which happened to work
+                    // for every MVP-only (memidx-always-0) module but
+                    // would misalign every subsequent decode the moment
+                    // a real multi-memory-encoded non-zero index needed
+                    // more than one LEB128 byte. `aux` carries the real
+                    // memidx (same repurposed-slot pattern `table.grow`'s
+                    // own doc comment above already establishes).
+                    let (idx, sz1) = decode_leb_u32(code, offset);
+                    let (memidx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (idx, memidx as u8)
                 }
                 0x09 => {
                     let (idx, sz) = decode_leb_u32(code, offset);
@@ -1302,12 +1361,22 @@ pub fn decode_function_body(body: &FunctionBody) -> Vec<DecodedInstruction> {
                     (idx, 0)
                 }
                 0x0A => {
-                    offset += 2; // memory.copy: dst + src memory-index bytes
-                    (0, 0)
+                    // `memory.copy` (task #92/W18 fix): dst/src memidx
+                    // immediates are both real LEB128 `u32`s, same fix as
+                    // `memory.init` above. `data_idx` carries dst,
+                    // `aux` carries src -- same shape `table.copy`'s own
+                    // `(dst_table_idx, src_table_idx as u8)` uses.
+                    let (dst_memidx, sz1) = decode_leb_u32(code, offset);
+                    let (src_memidx, sz2) = decode_leb_u32(code, offset + sz1);
+                    offset += sz1 + sz2;
+                    (dst_memidx, src_memidx as u8)
                 }
                 0x0B => {
-                    offset += 1; // memory.fill: one memory-index byte
-                    (0, 0)
+                    // `memory.fill` (task #92/W18 fix): same real-LEB128
+                    // fix as above; `data_idx` carries the real memidx.
+                    let (memidx, sz) = decode_leb_u32(code, offset);
+                    offset += sz;
+                    (memidx, 0)
                 }
                 0x0C => {
                     let (elem_idx, sz1) = decode_leb_u32(code, offset);
@@ -1554,14 +1623,29 @@ fn decode_immediates(code: &[u8], offset: usize, immediates: &[&str]) -> (Decode
             (DecodedOperand::Int(value as i64), consumed)
         }
         "memarg" => {
-            let (align, sz1) = decode_leb_u32(code, offset);
+            // Multi-memory proposal (task #92/W18): bit 6 (0x40) of the
+            // encoded `align` byte, previously required to be zero, is a
+            // sentinel -- when set, a third LEB128 memidx immediately
+            // follows the offset. Masked back out of `align` itself so
+            // `_align`'s own low 6 bits (the real alignment log2) stay
+            // correct either way.
+            const MULTI_MEMORY_FLAG: u32 = 0x40;
+            let (raw_align, sz1) = decode_leb_u32(code, offset);
             let (mem_offset, sz2) = decode_leb_u32(code, offset + sz1);
+            let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+            let align = raw_align & !MULTI_MEMORY_FLAG;
+            let (memidx, sz3) = if has_memidx {
+                decode_leb_u32(code, offset + sz1 + sz2)
+            } else {
+                (0, 0)
+            };
             (
                 DecodedOperand::MemArg {
                     _align: align,
                     offset: mem_offset,
+                    memidx,
                 },
-                sz1 + sz2,
+                sz1 + sz2 + sz3,
             )
         }
         "vec_labelidx" => {
@@ -2138,7 +2222,13 @@ fn convert_operand(
     match operand {
         DecodedOperand::None => None,
         DecodedOperand::Int(v) => Some(Operand::Index(*v as usize)),
-        DecodedOperand::MemArg { offset, .. } => Some(Operand::Index(*offset as usize)),
+        // Packed exactly like `CallIndirect` above: `memidx` in the high
+        // 32 bits, `offset` in the low 32 (task #92/W18). `offset` needs
+        // the full low 32 bits (no memory64 support here); `MAX_MEMORIES`
+        // (64) comfortably fits `memidx` in the high bits either way.
+        DecodedOperand::MemArg { offset, memidx, .. } => {
+            Some(Operand::Index(((*memidx as usize) << 32) | (*offset as usize)))
+        }
         DecodedOperand::F32(v) => Some(Operand::Index(v.to_bits() as usize)),
         DecodedOperand::F64(v) => Some(Operand::Index(v.to_bits() as usize)),
         // Packed exactly like `Atomic`/`Simd` above: `table_idx` in the
@@ -2223,6 +2313,17 @@ fn unpack_bulk_memory_operand(instr: &Instruction) -> (u8, u32, u8) {
 /// from the packed `Operand::Index` `convert_operand` built above -- same
 /// shape as `unpack_atomic_operand` (task #107).
 fn unpack_call_indirect_operand(instr: &Instruction) -> (u32, u32) {
+    let packed = match &instr.operand {
+        Some(Operand::Index(i)) => *i,
+        _ => 0,
+    };
+    ((packed & 0xFFFF_FFFF) as u32, (packed >> 32) as u32)
+}
+
+/// Unpack a `memarg`-carrying load/store's `(offset, memidx)` from the
+/// packed `Operand::Index` `convert_operand` built above -- same shape as
+/// `unpack_call_indirect_operand` (task #92/W18).
+fn unpack_memarg_operand(instr: &Instruction) -> (u32, u32) {
     let packed = match &instr.operand {
         Some(Operand::Index(i)) => *i,
         _ => 0,
@@ -2860,12 +2961,17 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 if idx >= ctx.data_segments.len() || idx >= ctx.dropped_data_segments.len() {
                     return Err(VMError::GenericError(format!("memory.init: data segment index {idx} out of bounds")));
                 }
+                // Task #92/W18: `aux` carries the real, decoded memory
+                // index -- previously discarded entirely (`memory.init`
+                // always wrote to memory 0 regardless of what the
+                // trailing immediate actually named).
+                let memidx = aux as usize;
                 let dropped = ctx.dropped_data_segments[idx];
                 let segment_bytes: &[u8] = if dropped { &[] } else { ctx.data_segments[idx].as_slice() };
                 match src.checked_add(n) {
                     Some(src_end) if src_end <= segment_bytes.len() => {
                         let bytes = segment_bytes[src..src_end].to_vec();
-                        get_memory(ctx)?.write_bytes(dest, &bytes).map_err(VMError::from)?;
+                        get_memory_at(ctx, memidx)?.write_bytes(dest, &bytes).map_err(VMError::from)?;
                     }
                     _ => {
                         return Err(VMError::from(TrapError::new(format!(
@@ -2899,7 +3005,33 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let src = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                get_memory(ctx)?.copy(dest, src, n).map_err(VMError::from)?;
+                // Task #92/W18: `data_idx`/`aux` carry the real, decoded
+                // dst/src memory indices -- previously both discarded
+                // entirely (`memory.copy` always operated on memory 0
+                // regardless of what the two trailing immediates
+                // actually named). Same `Table::copy_between` two-
+                // pointer, no-aliasing pattern task #97's own
+                // `/security-review` finding established.
+                let dst_memidx = data_idx as usize;
+                let src_memidx = aux as usize;
+                if dst_memidx >= ctx.memories.len() {
+                    return Err(VMError::GenericError(format!("memory.copy: destination memory index {dst_memidx} out of bounds")));
+                }
+                if src_memidx >= ctx.memories.len() {
+                    return Err(VMError::GenericError(format!("memory.copy: source memory index {src_memidx} out of bounds")));
+                }
+                let dst_ptr = ctx.memories[dst_memidx];
+                let src_ptr: *const LinearMemory = ctx.memories[src_memidx];
+                // SAFETY: both pointers were bounds-checked above and come
+                // from `ctx.memories`, which outlives this call.
+                // `LinearMemory::copy_between` takes raw pointers, not
+                // `&mut`/`&` references -- see its own doc comment for
+                // why: forming both over the same `LinearMemory` when
+                // `dst_memidx == src_memidx` would be aliasing UB even
+                // though no actual read/write hazard exists.
+                unsafe {
+                    LinearMemory::copy_between(dst_ptr, src_ptr, dest, src, n).map_err(VMError::from)?;
+                }
             }
             0x0B => {
                 // `memory.fill` (task #94): stack (bottom -> top) is
@@ -2911,7 +3043,10 @@ fn register_numeric_i64(vm: &mut GenericVM) {
                 let n = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
                 let value = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as u8;
                 let dest = pop_wasm(vm)?.as_i32().map_err(VMError::from)? as u32 as usize;
-                get_memory(ctx)?.fill(dest, value, n).map_err(VMError::from)?;
+                // Task #92/W18: `data_idx` carries the real, decoded
+                // memory index -- previously discarded entirely.
+                let memidx = data_idx as usize;
+                get_memory_at(ctx, memidx)?.fill(dest, value, n).map_err(VMError::from)?;
             }
             0x0C => {
                 // `table.init` (task #97): stack (bottom -> top) is
@@ -3965,11 +4100,14 @@ fn register_parametric(vm: &mut GenericVM) {
 fn register_memory(vm: &mut GenericVM) {
     // Helper to compute effective address from memarg operand
     fn effective_addr(instr: &Instruction, base: i32) -> usize {
-        let mem_offset = match &instr.operand {
-            Some(Operand::Index(i)) => *i,
-            _ => 0,
-        };
-        (base as u32 as usize).wrapping_add(mem_offset)
+        let (mem_offset, _memidx) = unpack_memarg_operand(instr);
+        (base as u32 as usize).wrapping_add(mem_offset as usize)
+    }
+
+    // Helper: the memarg's real memory index (task #92/W18) -- 0 unless
+    // the multi-memory proposal's flags-bit 0x40 was set in the binary.
+    fn memarg_memidx(instr: &Instruction) -> usize {
+        unpack_memarg_operand(instr).1 as usize
     }
 
     // i32.load (0x28)
@@ -3977,7 +4115,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let mem = get_memory(ctx)?;
+        let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_i32(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
@@ -3989,7 +4127,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let mem = get_memory(ctx)?;
+        let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_i64(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
@@ -4001,7 +4139,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let mem = get_memory(ctx)?;
+        let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_f32(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::F32(val));
         vm.advance_pc();
@@ -4013,7 +4151,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let mem = get_memory(ctx)?;
+        let mem = get_memory_at(ctx, memarg_memidx(instr))?;
         let val = mem.load_f64(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::F64(val));
         vm.advance_pc();
@@ -4025,7 +4163,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i32_8s(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_8s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
         Ok(None)
@@ -4035,7 +4173,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i32_8u(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_8u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
         Ok(None)
@@ -4045,7 +4183,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i32_16s(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_16s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
         Ok(None)
@@ -4055,7 +4193,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i32_16u(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i32_16u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I32(val));
         vm.advance_pc();
         Ok(None)
@@ -4066,7 +4204,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i64_8s(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_8s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
         Ok(None)
@@ -4076,7 +4214,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i64_8u(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_8u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
         Ok(None)
@@ -4086,7 +4224,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i64_16s(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_16s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
         Ok(None)
@@ -4096,7 +4234,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i64_16u(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_16u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
         Ok(None)
@@ -4106,7 +4244,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i64_32s(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_32s(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
         Ok(None)
@@ -4116,7 +4254,7 @@ fn register_memory(vm: &mut GenericVM) {
         let ctx = get_ctx(ctx);
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        let val = get_memory(ctx)?.load_i64_32u(addr).map_err(VMError::from)?;
+        let val = get_memory_at(ctx, memarg_memidx(instr))?.load_i64_32u(addr).map_err(VMError::from)?;
         push_wasm(vm, WasmValue::I64(val));
         vm.advance_pc();
         Ok(None)
@@ -4128,7 +4266,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i32(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4139,7 +4277,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4150,7 +4288,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_f32(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4161,7 +4299,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_f64(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4174,7 +4312,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i32_8(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4185,7 +4323,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i32_16(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4198,7 +4336,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64_8(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4209,7 +4347,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64_16(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -4220,7 +4358,7 @@ fn register_memory(vm: &mut GenericVM) {
         let val = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
         let base = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
         let addr = effective_addr(instr, base);
-        get_memory(ctx)?
+        get_memory_at(ctx, memarg_memidx(instr))?
             .store_i64_32(addr, val)
             .map_err(VMError::from)?;
         vm.advance_pc();
@@ -7285,6 +7423,145 @@ mod tests {
     }
 
     // ══════════════════════════════════════════════════════════════════════
+    // Task #92/W18: real multi-memory memarg
+    // ══════════════════════════════════════════════════════════════════════
+
+    #[test]
+    fn test_i32_load_with_explicit_nonzero_memidx_reads_the_named_memory() {
+        // The multi-memory proposal's memarg flags-bit 0x40 + trailing
+        // memidx immediate used to be entirely unread (the decoder never
+        // even checked bit 6), so every load/store always ran against
+        // memory 0 regardless of what the bytecode named. Two memories
+        // here hold DIFFERENT values at the same offset; an
+        // `i32.load align=2|0x40 offset=0 memidx=1` must read memory 1's
+        // value (99), not memory 0's (0, its untouched default) --
+        // proving the real memory index is decoded and used, not just
+        // that decoding doesn't crash.
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (address)
+            0x28, 0x42, 0x00, 0x01, // i32.load align=(0x40|2) offset=0 memidx=1
+            0x0B, // end
+        ];
+        let func_type = FuncType { params: vec![], results: vec![ValueType::I32] };
+        let body = FunctionBody { locals: vec![], code };
+        let mem0 = LinearMemory::new(1, None);
+        let mut mem1 = LinearMemory::new(1, None);
+        mem1.store_i32(0, 99).unwrap();
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![mem0, mem1],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        let result = engine.call_function(0, &[]).expect("i32.load through memory 1 should succeed");
+        assert_eq!(result, vec![WasmValue::I32(99)]);
+    }
+
+    #[test]
+    fn test_memory_fill_with_explicit_nonzero_memidx_fills_the_named_memory() {
+        // `memory.fill`'s memidx immediate used to be assumed a fixed
+        // single MVP-only byte and discarded entirely -- every fill
+        // always targeted memory 0. `memory.fill memidx=1` must leave
+        // memory 0 untouched (still 0) and fill memory 1 with 7s.
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (dest)
+            0x41, 0x07, // i32.const 7 (value)
+            0x41, 0x04, // i32.const 4 (len)
+            0xFC, 0x0B, 0x01, // memory.fill memidx=1
+            0x0B, // end
+        ];
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code };
+        let mem0 = LinearMemory::new(1, None);
+        let mem1 = LinearMemory::new(1, None);
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![mem0, mem1],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.call_function(0, &[]).expect("memory.fill through memory 1 should succeed");
+        let state = engine.into_state();
+        assert_eq!(&state.memories[0].data[0..4], &[0, 0, 0, 0], "memory 0 must be untouched");
+        assert_eq!(&state.memories[1].data[0..4], &[7, 7, 7, 7], "memory 1 must be filled");
+    }
+
+    #[test]
+    fn test_memory_copy_between_two_different_memories() {
+        // `memory.copy`'s dst/src memidx immediates used to be assumed
+        // fixed single MVP-only bytes and discarded entirely -- every
+        // copy always operated within memory 0. `memory.copy dst_mem=1
+        // src_mem=0` must read from memory 0 and write into memory 1,
+        // leaving memory 0 itself unchanged (proving neither side is
+        // hardcoded, and that this isn't a same-memory self-copy).
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (dest, in memory 1)
+            0x41, 0x00, // i32.const 0 (src, in memory 0)
+            0x41, 0x04, // i32.const 4 (len)
+            0xFC, 0x0A, 0x01, 0x00, // memory.copy dst_memidx=1 src_memidx=0
+            0x0B, // end
+        ];
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code };
+        let mut mem0 = LinearMemory::new(1, None);
+        mem0.store_i32(0, 0x11223344).unwrap();
+        let mem1 = LinearMemory::new(1, None);
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![mem0, mem1],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.call_function(0, &[]).expect("cross-memory memory.copy should succeed");
+        let state = engine.into_state();
+        assert_eq!(state.memories[0].load_i32(0).unwrap(), 0x11223344, "memory 0 (source) must be unchanged");
+        assert_eq!(state.memories[1].load_i32(0).unwrap(), 0x11223344, "memory 1 (destination) must have the copied value");
+    }
+
+    #[test]
+    fn test_memory_init_with_explicit_nonzero_memidx_writes_the_named_memory() {
+        // `memory.init`'s trailing memidx immediate used to be skipped
+        // as a fixed single byte and discarded -- every init always
+        // wrote into memory 0. `memory.init $d memidx=1` must leave
+        // memory 0 untouched and write the segment's bytes into memory 1.
+        let code = vec![
+            0x41, 0x00, // i32.const 0 (dest)
+            0x41, 0x00, // i32.const 0 (src)
+            0x41, 0x02, // i32.const 2 (len)
+            0xFC, 0x08, 0x00, 0x01, // memory.init data_idx=0 memidx=1
+            0x0B, // end
+        ];
+        let func_type = FuncType { params: vec![], results: vec![] };
+        let body = FunctionBody { locals: vec![], code };
+        let mem0 = LinearMemory::new(1, None);
+        let mem1 = LinearMemory::new(1, None);
+        let mut engine = WasmExecutionEngine::new(WasmEngineConfig {
+            memories: vec![mem0, mem1],
+            tables: vec![],
+            globals: vec![],
+            global_types: vec![],
+            func_types: vec![func_type],
+            func_bodies: vec![Some(body)],
+            host_functions: vec![None],
+        });
+        engine.set_data_segments(vec![vec![0xAA, 0xBB]]);
+        engine.set_dropped_data_segments(vec![false]);
+        engine.call_function(0, &[]).expect("memory.init through memory 1 should succeed");
+        let state = engine.into_state();
+        assert_eq!(&state.memories[0].data[0..2], &[0, 0], "memory 0 must be untouched");
+        assert_eq!(&state.memories[1].data[0..2], &[0xAA, 0xBB], "memory 1 must hold the segment's bytes");
+    }
+
+    // ══════════════════════════════════════════════════════════════════════
     // WASM10: dedicated-thread call_function, cross-module nesting guard
     // ══════════════════════════════════════════════════════════════════════
 
@@ -8027,9 +8304,10 @@ mod tests {
         let decoded = decode_function_body(&body);
         assert_eq!(decoded[0].opcode, 0x28);
         match &decoded[0].operand {
-            DecodedOperand::MemArg { _align, offset } => {
+            DecodedOperand::MemArg { _align, offset, memidx } => {
                 assert_eq!(*_align, 2);
                 assert_eq!(*offset, 8);
+                assert_eq!(*memidx, 0);
             }
             _ => panic!("expected MemArg operand"),
         }
