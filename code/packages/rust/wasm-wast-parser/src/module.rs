@@ -26,6 +26,7 @@
 //! **labels** (one per enclosing `block`/`loop`/`if`, pushed/popped as the
 //! instruction encoder walks nested folded or flat instruction lists).
 
+use crate::numeric;
 use crate::numeric::{parse_f32_bits, parse_f64_bits, parse_i16, parse_i32, parse_i64, parse_i8};
 use crate::sexpr::{expect_get, parse_source, SExpr};
 use crate::WastParseError;
@@ -506,7 +507,11 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
             // a stub.
             let limits_start = if desc.get(1).and_then(|e| e.as_atom()).is_some_and(|s| s.starts_with('$')) { 2 } else { 1 };
             let rest = &desc[limits_start..];
-            let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()))).count();
+            // Task #99: same hex-aware shape check as the declared-table
+            // and `parse_limits` call sites -- an imported table with a
+            // hex limit (`(import "m" "t" (table 0x10 funcref))`) hit the
+            // identical ascii-digit-only bug here too.
+            let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).count();
             let limits = parse_limits(&rest[..digit_count])?;
             let reftype = expect_get(rest, digit_count)?;
             let element_type = match reftype.as_atom() {
@@ -579,14 +584,28 @@ fn build_import_shell(items: &[SExpr], desc: &[SExpr], kind: &str) -> Result<Imp
     })
 }
 
+/// Structural (not numeric) check: does this atom look like a limit
+/// literal, decimal or `0x`/`0X`-hex, `_`-separated? Used only to decide
+/// where the leading run of limit numbers ends and any trailing keyword
+/// (`shared` for memory, a reftype for table) begins -- the ACTUAL value
+/// (and its own range validation) comes from [`numeric::parse_u32`]
+/// below, not from this shape check.
+fn looks_like_uint_literal(s: &str) -> bool {
+    let s = s.strip_prefix('+').unwrap_or(s);
+    match s.strip_prefix("0x").or_else(|| s.strip_prefix("0X")) {
+        Some(hex) => !hex.is_empty() && hex.chars().all(|c| c.is_ascii_hexdigit() || c == '_'),
+        None => !s.is_empty() && s.chars().all(|c| c.is_ascii_digit() || c == '_'),
+    }
+}
+
 fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
-    let digit_atoms: Vec<&SExpr> = fields
-        .iter()
-        .take_while(|e| e.as_atom().is_some_and(|s| s.chars().all(|c| c.is_ascii_digit())))
-        .collect();
-    // A digit-only string doesn't guarantee it fits u32 -- a syntactically
-    // fine but numerically out-of-range literal (e.g. 2^32) must produce a
-    // clean error here, not an `.unwrap()` panic on `parse`'s `Err`.
+    // Task #99: the real testsuite's own `table.wast` uses hex limits like
+    // `(table 0xffff_ffff funcref)` -- this used to filter to ascii-digit-
+    // only atoms, silently dropping a hex atom out of the limits list
+    // entirely (wrong `Limits`, not even a clean parse error) instead of
+    // parsing it. `numeric::parse_u32` already has the real hex-aware
+    // magnitude parser `parse_i32`/`parse_i8`/etc. all share.
+    let digit_atoms: Vec<&SExpr> = fields.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).collect();
     let nums: Vec<u32> = digit_atoms
         .iter()
         .map(|e| {
@@ -594,11 +613,7 @@ fn parse_limits(fields: &[SExpr]) -> Result<Limits, WastParseError> {
                 SExpr::Atom(s, pos) => (s.as_str(), *pos),
                 _ => unreachable!("take_while already filtered to atoms"),
             };
-            s.parse::<u32>().map_err(|_| WastParseError::InvalidNumericLiteralForType {
-                pos,
-                text: s.to_string(),
-                ty: "u32 limit",
-            })
+            numeric::parse_u32(s, pos)
         })
         .collect::<Result<_, _>>()?;
     match nums.as_slice() {
@@ -1048,7 +1063,13 @@ fn build_func(fields: &[SExpr], ctx: &mut ModuleCtx, func_idx: usize, code_idx: 
 /// comment explains for functions/code, needed here for the identical
 /// reason once a module can combine a table import with a real table.
 fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: u32, ctx: &mut ModuleCtx) -> Result<(), WastParseError> {
-    let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()));
+    // Task #99: this used the same ascii-digit-only check `parse_limits`
+    // itself used to have, so a hex limit like `(table 0x10 0xffff_ffff
+    // funcref)` fell into the WRONG branch below entirely (mistaking the
+    // limits for a missing-limits `[reftype, (elem e*)]` form), not just
+    // mis-parsing the number. `looks_like_uint_literal` is the same hex-
+    // aware shape check `parse_limits` now uses.
+    let starts_with_limit_number = rest.first().and_then(|e| e.as_atom()).is_some_and(looks_like_uint_literal);
     if starts_with_limit_number {
         // Task #96: `(table $t 2 externref)` -- `parse_limits`'s own
         // digit-scanning `take_while` only consumes the leading numeric
@@ -1059,7 +1080,7 @@ fn build_table_limits_and_elements(rest: &[SExpr], table_idx: u32, storage_idx: 
         // FUNCREF placeholder regardless of what the source actually
         // declared -- real (not just multi-table) corpus files with an
         // `externref` table hit this.
-        let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(|s| s.chars().all(|c| c.is_ascii_digit()))).count();
+        let digit_count = rest.iter().take_while(|e| e.as_atom().is_some_and(looks_like_uint_literal)).count();
         ctx.module.tables[storage_idx as usize].limits = parse_limits(&rest[..digit_count])?;
         let reftype = expect_get(rest, digit_count)?;
         ctx.module.tables[storage_idx as usize].element_type = match reftype.as_atom() {
@@ -2895,6 +2916,35 @@ mod tests {
         };
         assert_eq!(tt.element_type, wasm_types::EXTERNREF);
         assert_eq!(tt.limits, Limits { min: 3, max: Some(10) });
+    }
+
+    /// Task #99: table (and memory) limits accept hex literals, not just
+    /// decimal -- the real testsuite's own `table.wast` uses `0xffff_ffff`
+    /// (with a `_` digit separator). `parse_limits` used to filter to
+    /// ascii-digit-only atoms, silently dropping a hex atom out of the
+    /// limits list entirely instead of parsing it.
+    #[test]
+    fn table_limits_accept_hex_literals_with_underscore_separators() {
+        let m = parse_module("(module (table 0x10 0xffff_ffff funcref))").unwrap();
+        assert_eq!(m.tables[0].limits, Limits { min: 0x10, max: Some(0xFFFF_FFFF) });
+    }
+
+    #[test]
+    fn memory_limits_accept_hex_literals() {
+        let m = parse_module("(module (memory 0x1 0x2))").unwrap();
+        assert_eq!(m.memories[0].limits, Limits { min: 1, max: Some(2) });
+    }
+
+    /// The same hex-literal gap, at a THIRD independent call site: an
+    /// imported table's limits (`build_import_shell`'s own digit-scanning
+    /// `take_while`, separate from `build_table_limits_and_elements`'s).
+    #[test]
+    fn imported_table_limits_accept_hex_literals() {
+        let m = parse_module(r#"(module (import "m" "t" (table 0x10 funcref)))"#).unwrap();
+        let ImportTypeInfo::Table(tt) = &m.imports[0].type_info else {
+            panic!("expected a table import, got {:?}", m.imports[0].type_info);
+        };
+        assert_eq!(tt.limits, Limits { min: 0x10, max: None });
     }
 
     // ── Multi-memory (W16, task #85) ──────────────────────────────────────

@@ -98,10 +98,19 @@ TESTSUITE_FILES = [
     # declarations never actually read their `funcref`/`externref` reftype
     # keyword, silently defaulting every table's element_type to funcref
     # regardless of the source (`(table $t2 2 externref)` still parsed as
-    # funcref). Deliberately excludes table.wast: has its own separate
-    # remaining gaps -- hex-literal table limits, a real `spectest` import.
+    # funcref).
     "table_get.wast",
     "table_set.wast",
+    # table.wast (task #99): needed hex-literal table/memory limit parsing
+    # (`(table 0xffff_ffff funcref)`) -- three independent call sites in
+    # wasm-wast-parser filtered atoms to ascii-digit-only, silently
+    # dropping a hex atom out of the limits list entirely (or, for the
+    # declared-table/imported-table sites, taking the WRONG parse branch
+    # altogether) instead of parsing it. One `(table (import "spectest"
+    # "table") ...)` directive grades NotYetSupported via the harness's
+    # existing unresolved-import handling -- doesn't block the rest of
+    # the file.
+    "table.wast",
     # table.size/table.grow/table.fill (task #98) -- entirely unimplemented
     # before this pass (no opcode decoding, no interpreter handler, no
     # wast-parser text-form support, no validator type-check rule).
