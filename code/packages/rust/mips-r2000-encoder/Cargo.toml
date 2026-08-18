@@ -1,0 +1,15 @@
+[package]
+name = "mips-r2000-encoder"
+version = "0.1.0"
+edition = "2021"
+description = "Pure-Rust MIPS R2000 instruction encoder.  Re-exports the canonical encode_* helpers from mips-r2000-simulator::encoding (which is the in-tree source of truth for MIPS R2000 encoding) and adds the register-role constants and canonical RET_WORD (JR $ra) the LANG VM mips-r2000-backend uses to lower CIR to big-endian 32-bit MIPS R2000 instruction words.  No IR knowledge.  First lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "mips_r2000_encoder"
+path = "src/lib.rs"
+
+[dependencies]
+# Source of truth for MIPS R2000 bit-level encoding.  We re-export rather
+# than duplicate so any future opcode/funct fix in the simulator
+# propagates to encoder consumers automatically.
+mips-r2000-simulator = { path = "../mips-r2000-simulator" }

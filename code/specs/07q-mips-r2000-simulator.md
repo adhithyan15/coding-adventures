@@ -363,3 +363,37 @@ ADDIU (or ADDU with a negated offset in register).
 | test_coverage.py    | SRA: arithmetic right shift preserves sign               |
 | test_coverage.py    | MULTU: 0xFFFFFFFF × 0xFFFFFFFF → correct HI:LO          |
 | test_coverage.py    | max_steps exceeded returns ok=False                      |
+
+---
+
+## Rust port
+
+A behavioral Rust port of this simulator lives at
+[`code/packages/rust/mips-r2000-simulator`](../packages/rust/mips-r2000-simulator/)
+— first lane of a 9-architecture expansion applying the pattern
+established by
+[`HISTORICAL-ARCH-BACKEND-MIGRATION.md`](HISTORICAL-ARCH-BACKEND-MIGRATION.md)
+(typed CIR → `Backend` trait → machine code, verified against an
+in-tree behavioral simulator).  This document remains the ISA
+reference (ports don't re-litigate the semantics above); the Rust
+crate's own README/CHANGELOG document port-specific engineering
+choices — most notably:
+
+- **Big-endian memory accessors built on `cpu_simulator::Memory`**,
+  whose `read_word`/`write_word` helpers are little-endian (shared
+  with the RISC-V/ARM/x86 simulators already in the workspace).
+- **Fail-closed halt instead of `ValueError`** for `ADD`/`ADDI`/`SUB`
+  signed-overflow and `DIV`/`DIVU` by zero, since the Rust
+  `step() -> String` API has no exception-propagation channel.
+- **Real 32-bit-address `J`/`JAL` targets**, rather than this
+  document's Python implementation's fixed-64KB-address-space target
+  masking, so the Rust simulator works for any `memory_size`.
+
+Two downstream crates consume the Rust simulator's `encoding` module:
+[`mips-r2000-encoder`](../packages/rust/mips-r2000-encoder/) (a thin
+re-export + register-constant shim) and
+[`mips-r2000-backend`](../packages/rust/mips-r2000-backend/) (the
+`jit_core::backend::Backend` implementation `lang-aot --emit=mips-r2000`
+routes through).  See
+[`mips-r2000-encoder.md`](mips-r2000-encoder.md) and
+[`mips-r2000-backend.md`](mips-r2000-backend.md) for their specs.

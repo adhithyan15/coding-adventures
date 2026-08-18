@@ -1,0 +1,17 @@
+[package]
+name = "mips-r2000-backend"
+version = "0.1.0"
+edition = "2021"
+description = "MIPS R2000 backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into MIPS R2000 machine code via mips-r2000-encoder.  Emit-only -- bytes go to mips-r2000-simulator.  Minimal viable: const_*/ret_* only, trivial single-register (v0) allocator.  Mirror of armv7-backend / intel8008-backend in shape and intent.  First lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "mips_r2000_backend"
+path = "src/lib.rs"
+
+[dependencies]
+mips-r2000-encoder = { path = "../mips-r2000-encoder" }
+jit-core            = { path = "../jit-core" }
+vm-core              = { path = "../vm-core" }
+
+[dev-dependencies]
+mips-r2000-simulator = { path = "../mips-r2000-simulator" }
