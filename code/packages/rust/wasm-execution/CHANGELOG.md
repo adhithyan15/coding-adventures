@@ -2,6 +2,28 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.22] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms mirroring the
+  already-implemented `i32x4`-from-`i16x8` widening family one lane
+  width down: `ExtaddPairwiseI8x16S | ExtaddPairwiseI8x16U` (UNARY --
+  reinterpret the popped v128 as 16 `i8` lanes, pairwise-add adjacent
+  lanes after sign-/zero-extending each to `i16`, producing an 8-lane
+  `i16x8` result) and `ExtmulLowI8x16S | ExtmulHighI8x16S |
+  ExtmulLowI8x16U | ExtmulHighI8x16U` (BINARY -- take only the low
+  (indices 0-7) or high (indices 8-15) 8 `i8` lanes of each operand,
+  sign-/zero-extend to `i16`, and multiply lane-wise, no summation).
+  No `i16x8.dot_i8x16_s` handler -- WASM SIMD does not define a
+  dot-product for this pair. Verified with dedicated tests proving
+  the low/high halves are read independently (distinct operand values
+  in each half produce distinct results) and that `_s`/`_u` disagree
+  on `-1 * 1` the same way every other signed/unsigned pair in this
+  interpreter does.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.21] - 2026-08-18 (task #144-146 — SIMD: i16x8 abs/min/max/avgr_u family)
 
 ### Added

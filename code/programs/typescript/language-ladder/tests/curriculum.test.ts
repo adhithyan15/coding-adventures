@@ -188,6 +188,15 @@ describe("per-language shared-spine maps", () => {
       "UR-C15-hawa",
       "UR-C15-garmi",
       "UR-C15-sardi",
+      "UR-W16-alef",
+      "UR-W16-lam",
+      "UR-W16-sin",
+      "UR-W16-mim",
+      "UR-W16-joining",
+      "UR-W16-kaf",
+      "UR-W16-nun",
+      "UR-W16-ye",
+      "UR-C16-practice",
 ]));
   });
 

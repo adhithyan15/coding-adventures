@@ -357,6 +357,32 @@
           "UR-REGISTER-TWO-ROADS-ONE-ROOT"
         ]
       }
+    },
+    {
+      "chapter": 16,
+      "title": "Seven Letters, and the Words You Already Knew",
+      "label": "ch:ur-script-seven",
+      "canDo": "I can write seven Urdu letters from memory, read salam, kya, kan, nak, lal, kala, nila and lena off the page rather than from the romanization, and explain why Urdu leaves its short vowels unwritten.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "UR-C16-practice",
+        "kind": "writing",
+        "summary": "Eight words the book had only ever given by ear, read letter by letter from the right -- including kan and nak, the same three letters in different orders, which is the proof that the reader is decoding rather than recognising.",
+        "assesses": [
+          "UR-SCRIPT-RTL-01",
+          "UR-SCRIPT-ALIF-01",
+          "UR-SCRIPT-LAM-01",
+          "UR-SCRIPT-SIN-01",
+          "UR-SCRIPT-MIM-01",
+          "UR-SCRIPT-JOINING-01",
+          "UR-SCRIPT-KAF-01",
+          "UR-SCRIPT-NUN-01",
+          "UR-SCRIPT-YE-01",
+          "UR-SCRIPT-SEVEN-READ-01"
+        ]
+      }
     }
   ]
 }
