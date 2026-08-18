@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.24] - 2026-08-18 (task #147-149 — SIMD: i16x8-from-i8x16 widening type rules)
+
+### Added
+
+- `0xFD` SIMD type-check match widened for `i16x8`'s own widening
+  family: the pop-two-push-one binary arm extended to also cover
+  `ExtmulLowI8x16S | ExtmulHighI8x16S | ExtmulLowI8x16U |
+  ExtmulHighI8x16U`; the pop-one-push-one unary arm extended to also
+  cover `ExtaddPairwiseI8x16S | ExtaddPairwiseI8x16U`. Both stay
+  `v128`-in/`v128`-out at the type level regardless of the narrower
+  `i8`-in/`i16`-out lane interpretation the interpreter uses
+  internally.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.23] - 2026-08-18 (task #144-146 — SIMD: i16x8 abs/min/max/avgr_u type rules)
 
 ### Added

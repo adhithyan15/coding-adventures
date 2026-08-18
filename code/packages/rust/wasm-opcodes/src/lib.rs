@@ -1004,6 +1004,40 @@ pub enum SimdOpKind {
     /// there is no `i16x8.popcnt` -- WASM SIMD only defines `popcnt` for
     /// `i8x16`).
     AvgrUI16x8,
+    /// `i16x8.extadd_pairwise_i8x16_s` -- reinterpret the operand `v128` as
+    /// 16 SIGNED `i8` lanes, pairwise-add adjacent lanes (0+1, 2+3, ...,
+    /// 14+15) with each addend sign-extended to `i16` first, producing an
+    /// 8-lane `i16x8` result. UNARY, narrow-input (8-bit)/wide-output
+    /// (16-bit), same shape as [`Self::ExtaddPairwiseI16x8S`] one lane
+    /// width down. Closes the last remaining gap between `i16x8` and
+    /// `i8x16`'s coverage -- mirrors the already-implemented
+    /// `i32x4`-from-`i16x8` widening family.
+    ExtaddPairwiseI8x16S,
+    /// `i16x8.extadd_pairwise_i8x16_u` -- same pairwise-add shape as
+    /// [`Self::ExtaddPairwiseI8x16S`], but each `i8` lane is
+    /// zero-extended (read as `u8`) before the add, not sign-extended.
+    ExtaddPairwiseI8x16U,
+    /// `i16x8.extmul_low_i8x16_s` -- reinterpret both `v128` operands as
+    /// 16 SIGNED `i8` lanes each; take only the LOW 8 lanes (indices 0-7)
+    /// of each, sign-extend every value to `i16`, and multiply the
+    /// corresponding pairs lane-wise, producing an `i16x8` result. Same
+    /// narrow-input/wide-output BINARY shape as
+    /// [`Self::ExtmulLowI16x8S`] one lane width down. Unlike the
+    /// `i32x4`-from-`i16x8` family, there is no `i16x8.dot_i8x16_s` --
+    /// WASM SIMD does not define a dot-product for this pair, so this
+    /// family has no `Dot*` counterpart.
+    ExtmulLowI8x16S,
+    /// `i16x8.extmul_high_i8x16_s` -- same as [`Self::ExtmulLowI8x16S`],
+    /// but operates on the HIGH 8 lanes (indices 8-15) of each `i8x16`
+    /// operand instead of the low 8.
+    ExtmulHighI8x16S,
+    /// `i16x8.extmul_low_i8x16_u` -- same LOW-8-lanes widening multiply as
+    /// [`Self::ExtmulLowI8x16S`], but each `i8` lane is zero-extended
+    /// (read as `u8`) before the multiply, not sign-extended.
+    ExtmulLowI8x16U,
+    /// `i16x8.extmul_high_i8x16_u` -- same HIGH-8-lanes widening multiply
+    /// as [`Self::ExtmulHighI8x16S`], but zero-extended, not sign-extended.
+    ExtmulHighI8x16U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1090,6 +1124,17 @@ pub struct SimdOpInfo {
 /// and cross-checked against the already-implemented `i16x8.neg`
 /// (`0x81`)/`add` (`0x8E`)/`sub` (`0x91`)/`mul` (`0x95`) entries (all
 /// four matched exactly).
+/// `i16x8.extadd_pairwise_i8x16_s`/`_u`/`extmul_low`/`high_i8x16_s`/`_u`
+/// mirrors the already-implemented `i32x4`-from-`i16x8` widening family,
+/// one lane width down -- closing the last remaining gap between
+/// `i16x8` and `i8x16`'s coverage. Unlike that family, there is no
+/// `i16x8.dot_i8x16_s` -- WASM SIMD does not define a dot-product for
+/// this lane-width pair. Each sub-opcode byte fetched live from
+/// `BinarySIMD.md` and cross-checked against the already-implemented
+/// `i8x16.add` (`0x6E`)/`i16x8.mul` (`0x95`)/`i16x8.avgr_u` (`0x9B`)/
+/// `i32x4.dot_i16x8_s` (`0xBA`)/`i8x16.popcnt` (`0x62`)/
+/// `i32x4.extadd_pairwise_i16x8_s` (`0x7E`) entries (all six matched
+/// exactly).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1160,6 +1205,12 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i16x8.max_s", sub_opcode: 0x98, kind: SimdOpKind::MaxSI16x8 },
     SimdOpInfo { name: "i16x8.max_u", sub_opcode: 0x99, kind: SimdOpKind::MaxUI16x8 },
     SimdOpInfo { name: "i16x8.avgr_u", sub_opcode: 0x9B, kind: SimdOpKind::AvgrUI16x8 },
+    SimdOpInfo { name: "i16x8.extadd_pairwise_i8x16_s", sub_opcode: 0x7C, kind: SimdOpKind::ExtaddPairwiseI8x16S },
+    SimdOpInfo { name: "i16x8.extadd_pairwise_i8x16_u", sub_opcode: 0x7D, kind: SimdOpKind::ExtaddPairwiseI8x16U },
+    SimdOpInfo { name: "i16x8.extmul_low_i8x16_s", sub_opcode: 0x9C, kind: SimdOpKind::ExtmulLowI8x16S },
+    SimdOpInfo { name: "i16x8.extmul_high_i8x16_s", sub_opcode: 0x9D, kind: SimdOpKind::ExtmulHighI8x16S },
+    SimdOpInfo { name: "i16x8.extmul_low_i8x16_u", sub_opcode: 0x9E, kind: SimdOpKind::ExtmulLowI8x16U },
+    SimdOpInfo { name: "i16x8.extmul_high_i8x16_u", sub_opcode: 0x9F, kind: SimdOpKind::ExtmulHighI8x16U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1578,8 +1629,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_69_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 69);
+    fn simd_ops_table_has_the_expected_75_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 75);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -1837,6 +1888,33 @@ mod tests {
             ("i16x8.max_s", 0x98, SimdOpKind::MaxSI16x8),
             ("i16x8.max_u", 0x99, SimdOpKind::MaxUI16x8),
             ("i16x8.avgr_u", 0x9B, SimdOpKind::AvgrUI16x8),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i16x8_from_i8x16_widening_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented i8x16.add (0x6E)/i16x8.mul (0x95)/
+        // i16x8.avgr_u (0x9B)/i32x4.dot_i16x8_s (0xBA)/i8x16.popcnt
+        // (0x62)/i32x4.extadd_pairwise_i16x8_s (0x7E) entries (all six
+        // matched exactly) -- same discipline as every prior addition.
+        // Mirrors the already-implemented i32x4-from-i16x8 widening
+        // family (task #121-124) one lane width down, closing the last
+        // remaining gap between i16x8 and i8x16's coverage. No
+        // i16x8.dot_i8x16_s -- WASM SIMD does not define a dot-product
+        // for this lane-width pair.
+        for (name, sub_opcode, kind) in [
+            ("i16x8.extadd_pairwise_i8x16_s", 0x7C, SimdOpKind::ExtaddPairwiseI8x16S),
+            ("i16x8.extadd_pairwise_i8x16_u", 0x7D, SimdOpKind::ExtaddPairwiseI8x16U),
+            ("i16x8.extmul_low_i8x16_s", 0x9C, SimdOpKind::ExtmulLowI8x16S),
+            ("i16x8.extmul_high_i8x16_s", 0x9D, SimdOpKind::ExtmulHighI8x16S),
+            ("i16x8.extmul_low_i8x16_u", 0x9E, SimdOpKind::ExtmulLowI8x16U),
+            ("i16x8.extmul_high_i8x16_u", 0x9F, SimdOpKind::ExtmulHighI8x16U),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

@@ -5214,6 +5214,71 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::ExtaddPairwiseI8x16S | SimdOpKind::ExtaddPairwiseI8x16U => {
+                // i16x8.extadd_pairwise_i8x16_s/u: reinterpret the ONE
+                // popped v128 as 16 i8 lanes, pairwise-add adjacent lanes
+                // (0+1, 2+3, ..., 14+15) after extending each to i16
+                // (sign- or zero-extend depending on _s/_u), producing an
+                // 8-lane i16x8 result. Same UNARY narrow-input (8-bit)/
+                // wide-output (16-bit) shape as
+                // `ExtaddPairwiseI16x8S`/`U` one lane width down.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let extend = |v: i8| match op.kind {
+                    SimdOpKind::ExtaddPairwiseI8x16S => v as i16,
+                    SimdOpKind::ExtaddPairwiseI8x16U => (v as u8) as i16,
+                    _ => unreachable!("only ExtaddPairwiseI8x16S/U reach this arm"),
+                };
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let sum = extend(bytes[i * 2] as i8).wrapping_add(extend(bytes[i * 2 + 1] as i8));
+                    result[i * 2..i * 2 + 2].copy_from_slice(&sum.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ExtmulLowI8x16S | SimdOpKind::ExtmulHighI8x16S | SimdOpKind::ExtmulLowI8x16U | SimdOpKind::ExtmulHighI8x16U => {
+                // i16x8.extmul_low/high_i8x16_s/u: reinterpret BOTH popped
+                // v128s as 16 i8 lanes each; take only the LOW (indices
+                // 0-7) or HIGH (indices 8-15) 8 lanes of each, sign- or
+                // zero-extend every value to i16, and multiply the
+                // corresponding pairs lane-wise, producing an i16x8
+                // result. Same narrow-input (8-bit)/wide-output (16-bit)
+                // BINARY shape as `ExtmulLow/HighI16x8S/U` one lane width
+                // down. No `i16x8.dot_i8x16_s` counterpart -- WASM SIMD
+                // does not define a dot-product for this pair.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let sext = |v: i8| v as i16;
+                let zext = |v: i8| (v as u8) as i16;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let out = match op.kind {
+                        SimdOpKind::ExtmulLowI8x16S => sext(lhs[i] as i8).wrapping_mul(sext(rhs[i] as i8)),
+                        SimdOpKind::ExtmulHighI8x16S => sext(lhs[i + 8] as i8).wrapping_mul(sext(rhs[i + 8] as i8)),
+                        SimdOpKind::ExtmulLowI8x16U => zext(lhs[i] as i8).wrapping_mul(zext(rhs[i] as i8)),
+                        SimdOpKind::ExtmulHighI8x16U => zext(lhs[i + 8] as i8).wrapping_mul(zext(rhs[i + 8] as i8)),
+                        _ => unreachable!("only ExtmulLow/HighI8x16S/U reach this arm"),
+                    };
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8818,6 +8883,77 @@ mod tests {
         let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
         // (0xFFFF + 0 + 1) >> 1 == 0x10000 >> 1 == 0x8000 == 32768, which as i16 is -32768.
         assert_eq!(bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([i16::MIN; 8]).try_into().unwrap())), "avgr_u(0xFFFF, 0) must round UP to 32768 (0x8000), not truncate to 32767");
+    }
+
+    /// `i16x8.extadd_pairwise_i8x16_s`/`_u`: same signed/unsigned
+    /// disagreement pattern as every other `_s`/`_u` pair in this
+    /// interpreter -- `-1` reinterpreted as `u8` is `0xFF`, so pairwise
+    /// summing two `-1` lanes gives `-2` sign-extended but `510`
+    /// zero-extended. Also proves the narrow-input (8-bit)/wide-output
+    /// (16-bit) shape actually widens (a sum that would overflow `i8`
+    /// doesn't wrap).
+    #[test]
+    fn i16x8_extadd_pairwise_i8x16_disagrees_on_signed_vs_unsigned_interpretation() {
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i8x16([-1; 16]));
+            code.push(0xFD);
+            code.push(sub_opcode); // 0x7C/0x7D are < 128 -- single-byte LEB128
+            code.push(0x0B);
+            code
+        };
+        let mut s_engine = simd_engine_returning_v128(code_for(0x7C)); // i16x8.extadd_pairwise_i8x16_s
+        let (_, s_bytes) = s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([-2; 8]).try_into().unwrap())), "sext(-1) + sext(-1) must be -2 (signed)");
+
+        let mut u_engine = simd_engine_returning_v128(code_for(0x7D)); // i16x8.extadd_pairwise_i8x16_u
+        let (_, u_bytes) = u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([510; 8]).try_into().unwrap())), "zext(0xFF) + zext(0xFF) must be 510 (unsigned), not -2");
+    }
+
+    /// `i16x8.extmul_low/high_i8x16_s`/`_u`: proves the LOW 8 lanes
+    /// (indices 0-7) and HIGH 8 lanes (indices 8-15) of each `i8x16`
+    /// operand are read independently -- distinct operand values in the
+    /// low vs. high half must produce distinct results, not accidentally
+    /// alias -- and that `_s`/`_u` disagree on `-1 * 1` the same way
+    /// every other signed/unsigned pair in this interpreter does.
+    #[test]
+    fn i16x8_extmul_i8x16_reads_low_and_high_halves_independently_and_distinguishes_signed_from_unsigned() {
+        let mut lhs = [1i8; 16];
+        for l in lhs.iter_mut().skip(8) {
+            *l = -1;
+        } // low half = 1, high half = -1
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16([1; 16]));
+        code.extend([0xFD, 0x9C, 0x01]); // i16x8.extmul_low_i8x16_s (sub-opcode 0x9C, 2-byte LEB128)
+        code.push(0x0B);
+        let mut low_s_engine = simd_engine_returning_v128(code);
+        let (_, low_s_bytes) = low_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([1; 8]).try_into().unwrap())), "extmul_low_s must read the LOW 8 lanes (value 1), not the high half");
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16([1; 16]));
+        code.extend([0xFD, 0x9D, 0x01]); // i16x8.extmul_high_i8x16_s (sub-opcode 0x9D, 2-byte LEB128)
+        code.push(0x0B);
+        let mut high_s_engine = simd_engine_returning_v128(code);
+        let (_, high_s_bytes) = high_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([-1; 8]).try_into().unwrap())), "extmul_high_s must read the HIGH 8 lanes (value -1), not the low half");
+
+        // -1 (0xFF) reinterpreted as u8 is the largest u8 value, so
+        // extmul_high_u(0xFF, 1) must be 255, not -1.
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i8x16([1; 16]));
+        code.extend([0xFD, 0x9F, 0x01]); // i16x8.extmul_high_i8x16_u (sub-opcode 0x9F, 2-byte LEB128)
+        code.push(0x0B);
+        let mut high_u_engine = simd_engine_returning_v128(code);
+        let (_, high_u_bytes) = high_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([255; 8]).try_into().unwrap())), "extmul_high_u(0xFF, 1) must be 255 (unsigned), not -1");
     }
 
     /// Multiple `v128.const`s inside ONE function body must each resolve
