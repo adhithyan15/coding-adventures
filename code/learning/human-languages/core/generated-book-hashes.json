@@ -536,6 +536,21 @@
       "tex": "chinese/book/chapters/ch03-numbers.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:1017c2a5eb9b6d6b",
+      "lessonIds": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri",
+        "ZH-W04-bu",
+        "ZH-C04-bu",
+        "ZH-C04-practice"
+      ],
+      "tex": "chinese/book/chapters/ch04-negation.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",

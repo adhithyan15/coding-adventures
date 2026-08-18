@@ -76,6 +76,30 @@
           "ZH-DIALOGUE-COUNT"
         ]
       }
+    },
+    {
+      "chapter": 4,
+      "title": "One Box, Two Characters, and the First Thing You Can Refuse",
+      "label": "ch:zh-negation",
+      "canDo": "I can write 口 and 日 -- the second being the first with one bar added -- and I can disagree in Mandarin by putting 不 in front of a word I already know, because Mandarin has no standalone word for no.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ZH-C04-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange in the book that contains a disagreement -- a greeting, a question, and a refusal built by negating a word the reader has had since the opening lesson.",
+        "assesses": [
+          "ZH-SCRIPT-KOU",
+          "ZH-LEX-KOU",
+          "ZH-SCRIPT-RI",
+          "ZH-LEX-RI",
+          "ZH-SCRIPT-BU",
+          "ZH-LEX-BU",
+          "ZH-GRAMMAR-NEGATE",
+          "ZH-DIALOGUE-NEGATE"
+        ]
+      }
     }
   ]
 }
