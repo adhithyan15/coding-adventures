@@ -1,0 +1,23 @@
+[package]
+name = "maple-iir-compiler"
+version = "0.1.0"
+edition = "2021"
+description = "Lowers a Maple CST (coding-adventures-maple-parser's GrammarASTNode) into an IIRModule, per maple-iir-vm.md's v0 scope: literal integer arithmetic (+ - * /, unary), assignment, and unevaluated symbolic expressions. A retarget of maple-runtime's/maple-to-semantic-ir's CST dispatch, following macsyma-iir-compiler's precedent. Emits IIR over the dynval-runtime value model so the module runs end-to-end on maple-vm."
+
+[lib]
+name = "maple_iir_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+coding-adventures-maple-parser = { path = "../maple-parser" }
+interpreter-ir = { path = "../interpreter-ir" }
+parser = { path = "../parser" }
+lexer = { path = "../lexer" }
+symbolic-ir = { path = "../symbolic-ir" }
+
+[dev-dependencies]
+maple-vm = { path = "../maple-vm" }
+dynval-runtime = { path = "../dynval-runtime" }
+# Oracle ground truth (tests/oracle.rs) + the shared renderer used to
+# format both the ground truth and the compiled-side read-back result.
+coding-adventures-maple-runtime = { path = "../maple-runtime" }
