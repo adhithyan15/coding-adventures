@@ -304,32 +304,42 @@ with the old one still in force. Rolling forward has none of those problems and
 one crisp rule a person can hold: *once the machine accepted your new
 passphrase, it is your passphrase.*
 
-#### 5.3.1 The one case where standing still is provably safe
+#### 5.3.1 Convergence, and why nothing ever rolls back
 
-Rolling forward is unanswerable only while it is *unknown* how far the
-interrupted ceremony got. There is exactly one shape of failure where that
-uncertainty does not exist: the bootstrap store refuses the install, **and** the
-generation it still serves is the one this rotation intended to retire. The
-install demonstrably did not happen, and neither did the supersession that
-strictly follows it, so the durable world is byte-for-byte the one the rotation
-started from.
+Idempotence is only half of what makes replay safe. The other half is
+**convergence**: every host replaying the journal performs the same writes in
+the same order with the same bytes, so two of them racing — or one retrying
+after another got further — cannot disagree about the outcome. They can only
+both arrive at it.
 
-In that single case the journal is withdrawn — `PendingRotation` is
-compare-exchanged back to the `Active` it recorded — and the original error is
-returned. Without it, one `Conflict` from a provider after the journal landed
-would be terminal: that class is not a wait-and-retry class, every later command
-re-enters the roll-forward through the same door, and the vault is bricked by a
-transient answer with no verb to escape it. A contract that only ever rolls
-forward is worth less than one that also knows when it is safe to stand still.
+That is what forbids an "obviously safe" partial roll-back, and the case worth
+writing down is the one that looks safest. Suppose `put_generation` refuses and
+the store still serves the generation this rotation meant to retire. That reads
+like proof that nothing happened and the journal could be withdrawn. It is not
+proof, and withdrawing would be far worse than the failure it papers over:
 
-This is not a hole in "the journal is the commit point". The rule the product
-actually needs is *exactly one passphrase works, and a person can find out
-which*, and the withdrawal preserves it: the old passphrase opens the vault, the
-new one does not, and the command reports failure rather than success. Anything
-that prevents *proving* the install never happened — an unreadable provider, a
-latest pointer naming something else, a failed compare-exchange — leaves the
-journal exactly where it was. Guessing here would be the one mistake with no
-recovery.
+- `put_generation` installs the generation record *before* it advances the
+  latest pointer, so a refusal from the second half leaves the first half done.
+  "Latest has not moved" does not mean "nothing was installed".
+- Worse, the observation reads the **bootstrap store** while the withdrawal
+  writes the **local state store**, and nothing makes those two atomic together.
+  A second host that completed the rotation inside that window — installing the
+  successor, retiring the old generation — would find the first host then
+  committing `Active(old)` on top. The vault would pin a bootstrap the provider
+  no longer has, and the retired one would be gone: **no passphrase would ever
+  open it again**, with no journal left to say so.
+
+So a bootstrap store that has moved somewhere this journal did not put it is
+treated as what it is — a tampered or forked provider — and fails closed as
+`IntegrityFailure` with the journal intact. That is the same answer the product
+already gives for any bootstrap that does not match its pin, and it is the
+answer a security product should give: a store whose contents changed underneath
+a signed, pinned chain is not a condition to paper over.
+
+The escape in that case is the one VLT-PM41 §5 already proves rather than a new
+verb. Both read-only diagnostics keep describing the vault without touching it,
+so restoring a pre-rotation file-level backup stays available instead of racing
+an eager repair.
 
 The recovery runs at the vault-open boundary, in the same place and by the same
 rule VLT-PM42 established. `status` reports `recovery_required`; `doctor`
@@ -454,13 +464,20 @@ construction, a public record.
 | new passphrase confirmation mismatch, or prompt unavailable | host `Invalid` | 2 |
 | vault not initialized, or no configuration | `NotInitialized` | 2 |
 | owner state is `PreparedInit` | `InvalidInput` | 2 |
+| new Argon2id policy below the vault's current cost | `InvalidInput` | 2 |
 | VRK does not bind to the session's local secret | `IntegrityFailure` | 6 |
 | bootstrap store conflict, or a superseded-is-latest refusal | `IntegrityFailure` | 6 |
 | another local writer won a compare-exchange | `ConcurrentHost` | 5 |
 | store unavailable | `StorageUnavailable` | 7 |
 
-Every one of them leaves the vault openable: by the old passphrase before the
-journal is durable, by the new one after.
+Every one of them leaves the vault openable by the passphrase the journal says
+owns it: the old one before the journal is durable, the new one after. One row
+deserves its exception stated rather than buried. A bootstrap-store `Conflict`
+raised *after* the journal is durable means the provider has moved somewhere
+this journal did not put it — a tampered or forked store — and §5.3.1 explains
+why the answer is to fail closed with the journal intact rather than to undo
+anything. In that case both read-only diagnostics keep working, and the escape
+is the file-level backup restore VLT-PM41 §5 proves, not a repair verb.
 
 ## 7. Verification
 

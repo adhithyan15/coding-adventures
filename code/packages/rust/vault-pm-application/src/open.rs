@@ -16284,18 +16284,19 @@ mod tests {
         }
     }
 
-    /// A bootstrap store that refuses to install anything.
+    /// A bootstrap store whose latest pointer has moved somewhere this journal
+    /// did not put it.
     ///
-    /// It answers `load_latest` truthfully, which is what lets the roll-back
-    /// prove the install never happened.
-    struct RefusingInstallStore<'store>(&'store MemoryBootstrapStore);
+    /// The only realistic cause is a tampered or forked provider, and treating
+    /// it as one is the point of the test below.
+    struct ForeignLatestStore;
 
-    impl BootstrapStore for RefusingInstallStore<'_> {
+    impl BootstrapStore for ForeignLatestStore {
         fn load_latest(
             &self,
-            locator: BootstrapLocator,
+            _locator: BootstrapLocator,
         ) -> Result<Option<Vec<u8>>, BootstrapStoreError> {
-            self.0.load_latest(locator)
+            Ok(Some(b"a bootstrap this journal never signed".to_vec()))
         }
 
         fn put_generation(
@@ -16316,62 +16317,7 @@ mod tests {
         }
     }
 
-    /// A journalled rotation the provider refused has an exit.
-    ///
-    /// Rolling forward is the rule, but it is unanswerable only while it is
-    /// unknown how far the ceremony got. When the store still serves the
-    /// generation this rotation meant to retire, the install provably did not
-    /// happen and neither did the retirement that strictly follows it — so the
-    /// vault is exactly where it started and standing still is safe. Without
-    /// this the vault would be wedged forever by a transient provider answer.
-    #[test]
-    fn a_rotation_the_provider_refused_leaves_the_old_passphrase_working() {
-        let (locator, local, bootstrap, factory, _backend, item_id) = vault_with_one_item();
-        install_pending_rotation(&local, &bootstrap, 0xb1);
-        let before_bootstrap = exact_bootstrap(&bootstrap);
-
-        let refusing = RefusingInstallStore(&bootstrap);
-        assert_eq!(
-            crate::recover_pending_rotation(locator, &local, &refusing).err(),
-            Some(ApplicationError::IntegrityFailure)
-        );
-
-        // The journal is gone, the durable world is the one the rotation
-        // started from, and the old passphrase still opens the vault.
-        assert_eq!(exact_bootstrap(&bootstrap), before_bootstrap);
-        assert_eq!(
-            crate::VaultAccessV1::locked(locator)
-                .status(&local)
-                .unwrap()
-                .state(),
-            crate::VaultStatusStateV1::Locked
-        );
-        let reopened = open_active_vault(
-            Zeroizing::new(OLD_PASSPHRASE.to_vec()),
-            locator,
-            &local,
-            &bootstrap,
-            &factory,
-        )
-        .unwrap();
-        assert!(reopened.get_item(item_id).unwrap().is_some());
-        assert_eq!(
-            open_active_vault(
-                Zeroizing::new(NEW_PASSPHRASE.to_vec()),
-                locator,
-                &local,
-                &bootstrap,
-                &factory,
-            )
-            .err(),
-            Some(ApplicationError::AuthenticationFailed)
-        );
-    }
-
-    /// A store that refuses to install *and* cannot be read.
-    ///
-    /// Nothing can be proved about how far the ceremony got, so the journal
-    /// must stay exactly where it is.
+    /// A store that can be neither read nor written.
     struct BlindRefusingStore;
 
     impl BootstrapStore for BlindRefusingStore {
@@ -16400,24 +16346,53 @@ mod tests {
         }
     }
 
+    /// A refused roll-forward fails closed and undoes nothing.
+    ///
+    /// Undoing is the tempting answer and the wrong one. Every host replaying
+    /// this journal performs the same writes in the same order, which is what
+    /// makes concurrent and repeated recovery safe. A host that unilaterally
+    /// withdrew the journal would break that convergence: it reads the
+    /// bootstrap store and writes the local state store, nothing makes those
+    /// two atomic together, and a second host that finished the rotation inside
+    /// the window would find the first committing `Active(old)` on top of an
+    /// already-retired generation — a vault pinning a bootstrap the provider no
+    /// longer has, openable by no passphrase at all.
+    ///
+    /// So the journal survives every failure, and both read-only diagnostics
+    /// keep describing the vault without touching it, which is what keeps the
+    /// file-level backup restore VLT-PM41 §5 proves available.
     #[test]
-    fn an_unprovable_rotation_failure_leaves_the_journal_alone() {
-        let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
-        install_pending_rotation(&local, &bootstrap, 0xb7);
-        let exact_pending = local.0.lock().unwrap().clone().unwrap();
+    fn a_refused_roll_forward_fails_closed_with_the_journal_intact() {
+        for (store, expected) in [
+            (
+                &ForeignLatestStore as &dyn BootstrapStore,
+                ApplicationError::IntegrityFailure,
+            ),
+            (&BlindRefusingStore, ApplicationError::StorageUnavailable),
+        ] {
+            let (locator, local, bootstrap, _factory, _backend, _) = vault_with_one_item();
+            install_pending_rotation(&local, &bootstrap, 0xb7);
+            let exact_pending = local.0.lock().unwrap().clone().unwrap();
 
-        assert_eq!(
-            crate::recover_pending_rotation(locator, &local, &BlindRefusingStore).err(),
-            Some(ApplicationError::StorageUnavailable)
-        );
-        assert_eq!(local.0.lock().unwrap().clone().unwrap(), exact_pending);
-        assert_eq!(
-            crate::VaultAccessV1::locked(locator)
-                .status(&local)
-                .unwrap()
-                .state(),
-            crate::VaultStatusStateV1::RecoveryRequired
-        );
+            assert_eq!(
+                crate::recover_pending_rotation(locator, &local, store).err(),
+                Some(expected)
+            );
+            assert_eq!(local.0.lock().unwrap().clone().unwrap(), exact_pending);
+            assert_eq!(
+                crate::VaultAccessV1::locked(locator)
+                    .status(&local)
+                    .unwrap()
+                    .state(),
+                crate::VaultStatusStateV1::RecoveryRequired
+            );
+            assert_eq!(
+                crate::VaultAccessV1::locked(locator)
+                    .doctor(&local, &bootstrap)
+                    .state(),
+                crate::VaultDoctorStateV1::RecoveryRequired
+            );
+        }
     }
 
     #[test]

@@ -595,15 +595,18 @@ Three details carry the weight:
   *durable write* rather than trusting the unlink alone — a removal that is only
   visible, not committed, resurrects key material into a vault that will never
   look at it again.
-- **Recovery rolls forward.** `PendingRotationV1` is the commit point; every
-  step after it is a pure function of it, which is why the roll-forward needs
-  no secret. Rolling back as a rule would have to decide without a passphrase
-  whether the person still knows the old one — with one exception, where no
-  deciding is needed: if the store refused the install *and* still serves the
-  generation the rotation meant to retire, nothing was installed and nothing
-  deleted, so the journal is withdrawn and the old passphrase remains the
-  vault's. Without that single exit, one `Conflict` from a provider after the
-  journal landed would brick the vault permanently.
+- **Recovery rolls forward, and never back.** `PendingRotationV1` is the commit
+  point; every step after it is a pure function of it, which is why the
+  roll-forward needs no secret. Rolling back would have to decide without a
+  passphrase whether the person still knows the old one — and, more sharply,
+  would break *convergence*, the property that every host replaying the journal
+  performs the same writes in the same order. A host that withdrew the journal
+  would be reading the bootstrap store while writing the local state store,
+  with nothing making those atomic; a second host finishing the rotation inside
+  that window would find the first committing `Active(old)` over an
+  already-retired generation, leaving a vault no passphrase opens. A store that
+  has moved somewhere the journal did not put it fails closed instead, with the
+  journal intact and both read-only diagnostics still usable.
 
 A rotation is also floored at the vault's existing Argon2id memory and iteration
 cost. It may raise the cost and may never lower it: the ceremony a person runs

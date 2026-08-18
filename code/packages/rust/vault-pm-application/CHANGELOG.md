@@ -85,13 +85,22 @@ All notable changes to this package are documented here.
   `Copy`, so wrapping it in `Zeroizing` silently left the original array on the
   stack un-wiped. The authority secret is now bound mutably and the original
   wiped once the owned copy exists.
-- `finish_pending_rotation` withdraws its journal in the one case where doing
-  so is provably safe: the store refused the install *and* still serves the
-  generation the rotation meant to retire, so nothing was installed and nothing
-  deleted. Previously a `Conflict` after the journal landed was terminal —
-  mapped to `IntegrityFailure`, which is not a wait-and-retry class — and every
-  later command re-entered the roll-forward and failed identically, bricking a
-  vault on a transient provider answer.
+- The rotation roll-forward **never** undoes anything, and the reason is now
+  stated where it can be checked. A partial roll-back — withdrawing the journal
+  when the store refused the install and still served the generation the
+  rotation meant to retire — was written, reviewed, and removed. It reads like
+  proof that nothing happened and it is not: `put_generation` installs the
+  generation record *before* it advances the latest pointer, and, decisively,
+  the observation reads the bootstrap store while the withdrawal writes the
+  local state store, with nothing making those atomic together. A second host
+  finishing the rotation inside that window would find the first committing
+  `Active(old)` on top of an already-retired generation — a vault pinning a
+  bootstrap the provider no longer has, openable by *no* passphrase, with no
+  journal left to say so. What makes concurrent and repeated recovery safe is
+  convergence: every host performs the same writes in the same order. A store
+  that has moved somewhere the journal did not put it is a tampered or forked
+  provider, fails closed as `IntegrityFailure` with the journal intact, and
+  leaves the file-level backup restore VLT-PM41 §5 proves available.
 
 ## [0.62.0] - 2026-08-18
 

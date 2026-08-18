@@ -390,6 +390,39 @@ pub fn commit_passphrase_rotation(
 /// already-installed generation as success, `supersede_generation` accepts an
 /// already-absent record as success, and the final compare-exchange re-reads
 /// and accepts the value it intended to write.
+///
+/// # Convergence, and why nothing here ever rolls back
+///
+/// Idempotence is only half of what makes replay safe. The other half is that
+/// every host replaying this journal performs the *same* writes in the *same*
+/// order with the *same* bytes, so two of them racing — or one of them retrying
+/// after the other got further — cannot disagree about the outcome. They can
+/// only both arrive at it.
+///
+/// That is why a failure here never undoes anything, however tempting it looks.
+/// A tempting case: `put_generation` refuses and the store still serves the
+/// generation this rotation meant to retire, which reads like proof that
+/// nothing happened and the journal could safely be withdrawn. It is not proof,
+/// and withdrawing would be much worse than the failure it papers over:
+///
+/// - `put_generation` installs the generation record *before* it advances the
+///   latest pointer, so a refusal from the second half leaves the first half
+///   done. "Latest has not moved" does not mean "nothing was installed".
+/// - Worse, the observation reads the bootstrap store while the withdrawal
+///   writes the local state store. Nothing makes those two atomic together.
+///   A second host that completes the rotation inside that window — installing
+///   the successor, retiring the old generation — would find the first host
+///   then committing `Active(old)` on top. The vault would pin a bootstrap the
+///   provider no longer has and the retired one would be gone: **no passphrase
+///   would ever open it again**, with no journal left to say so.
+///
+/// So a bootstrap store that has moved somewhere this journal did not put it is
+/// treated as what it is — a tampered or forked provider — and fails closed as
+/// `IntegrityFailure` with the journal intact. That is the same answer the
+/// product already gives for any bootstrap that does not match its pin, and it
+/// keeps the escape hatch VLT-PM41 §5 proves: both read-only diagnostics still
+/// describe the vault without touching it, so restoring a file-level backup
+/// stays available instead of racing an eager repair.
 pub fn recover_pending_rotation(
     locator: BootstrapLocator,
     local_state_store: &dyn LocalStateStore,
@@ -424,18 +457,13 @@ fn finish_pending_rotation(
 ) -> Result<ActiveStateV1, ApplicationError> {
     let superseded = journal.superseded_bootstrap_id();
 
-    if let Err(error) =
-        bootstrap_store.put_generation(locator, Some(superseded), journal.bootstrap())
-    {
-        return Err(abandon_uninstalled_rotation(
-            locator,
-            journal,
-            exact_pending,
-            local_state_store,
-            bootstrap_store,
-            map_bootstrap_store(error),
-        ));
-    }
+    // Every host replaying this journal performs exactly these writes, in this
+    // order, with these bytes. That is what makes concurrent and repeated
+    // recovery safe — see the *convergence* note on
+    // [`recover_pending_rotation`] for why no host may unilaterally undo them.
+    bootstrap_store
+        .put_generation(locator, Some(superseded), journal.bootstrap())
+        .map_err(map_bootstrap_store)?;
     // Read the provider back before retiring anything. The old wrap is the
     // only remaining way into this vault until the new one is actually being
     // served, so the delete below must never run on the strength of a write
@@ -465,66 +493,6 @@ fn finish_pending_rotation(
             }
         }
         Err(error) => Err(map_local_state_store(error)),
-    }
-}
-
-/// Undo a journalled rotation that provably never reached the provider.
-///
-/// # The one landing point that would otherwise have no exit
-///
-/// Rolling forward is the rule (see [`recover_pending_rotation`]) precisely
-/// because, once anything has been installed, no passphrase-free code can tell
-/// how far the ceremony got. There is exactly one shape of failure where that
-/// uncertainty does not exist: `put_generation` refused, *and* the store's
-/// latest is still the generation this rotation intended to retire. Then the
-/// install demonstrably did not happen, and neither did the supersession that
-/// strictly follows it — so the durable world is byte-for-byte the one the
-/// rotation started from, and the old passphrase is still the vault's
-/// passphrase.
-///
-/// Without this, a `Conflict` from the bootstrap store after the journal landed
-/// would be terminal. `map_bootstrap_store` turns it into `IntegrityFailure`,
-/// which is not a wait-and-retry class, and every later command re-enters the
-/// roll-forward through the same door and fails the same way — a vault bricked
-/// by a transient answer from a provider, with no verb to escape it. A
-/// contract that only ever rolls forward is worth less than one that also
-/// knows when it is safe to stand still.
-///
-/// # Why this is not a hole in "the journal is the commit point"
-///
-/// The rule the product actually needs is *exactly one passphrase works, and a
-/// person can find out which*. Rolling back here preserves it: the old
-/// passphrase opens the vault, the new one does not, and the command reports
-/// failure rather than success. The rotation simply did not happen, and the
-/// person retries.
-///
-/// Anything that stops this function from *proving* the install never happened
-/// — an unreadable provider, a latest pointer naming something else, a failed
-/// compare-exchange — leaves the journal exactly where it was and returns the
-/// original error. Guessing here would be the one mistake with no recovery.
-fn abandon_uninstalled_rotation(
-    locator: BootstrapLocator,
-    journal: &PendingRotationV1,
-    exact_pending: &[u8],
-    local_state_store: &dyn LocalStateStore,
-    bootstrap_store: &dyn BootstrapStore,
-    original: ApplicationError,
-) -> ApplicationError {
-    let Ok(Some(observed)) = bootstrap_store.load_latest(locator) else {
-        return original;
-    };
-    let Ok(observed) = BootstrapV1::decode(&observed) else {
-        return original;
-    };
-    if observed.id().ok() != Some(journal.superseded_bootstrap_id()) {
-        return original;
-    }
-    let Ok(exact_active) = LocalVaultStateV1::Active(journal.active().clone()).encode() else {
-        return original;
-    };
-    match local_state_store.compare_exchange(locator, Some(exact_pending), &exact_active) {
-        Ok(()) => original,
-        Err(_) => original,
     }
 }
 
