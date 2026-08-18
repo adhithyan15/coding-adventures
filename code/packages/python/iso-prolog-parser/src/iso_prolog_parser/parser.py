@@ -1,12 +1,9 @@
-"""ISO/Core Prolog parser backed by ``code/grammars/prolog/iso.grammar``."""
+"""ISO/Core Prolog parser backed by a pre-compiled ``iso.grammar``."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass
-from functools import cache
-from pathlib import Path
 
-from grammar_tools import ParserGrammar, parse_parser_grammar
 from iso_prolog_lexer import tokenize_iso_prolog
 from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
@@ -24,8 +21,7 @@ from prolog_operator_parser import (
 )
 from prolog_parser import ParsedQuery, PrologParseError
 
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-ISO_PROLOG_GRAMMAR_PATH = GRAMMAR_DIR / "prolog" / "iso.grammar"
+from iso_prolog_parser._grammar import PARSER_GRAMMAR
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,17 +36,10 @@ class ParsedIsoSource:
     predicate_registry: PredicateRegistry
 
 
-@cache
-def _iso_parser_grammar() -> ParserGrammar:
-    """Load and cache the ISO/Core Prolog parser grammar."""
-
-    return parse_parser_grammar(ISO_PROLOG_GRAMMAR_PATH.read_text())
-
-
 def create_iso_prolog_parser(source: str) -> GrammarParser:
     """Create a grammar-driven parser configured for ISO/Core Prolog."""
 
-    return GrammarParser(tokenize_iso_prolog(source), _iso_parser_grammar())
+    return GrammarParser(tokenize_iso_prolog(source), PARSER_GRAMMAR)
 
 
 def parse_iso_ast(source: str) -> ASTNode:
@@ -58,7 +47,7 @@ def parse_iso_ast(source: str) -> ASTNode:
 
     tokens = tokenize_iso_prolog(source)
     try:
-        return GrammarParser(tokens, _iso_parser_grammar()).parse()
+        return GrammarParser(tokens, PARSER_GRAMMAR).parse()
     except GrammarParseError as error:
         token = error.token if error.token is not None else tokens[-1]
         raise PrologParseError(token, str(error)) from error
