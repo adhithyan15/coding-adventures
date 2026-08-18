@@ -1750,6 +1750,26 @@ impl UnlockedVaultV1 {
         self.current_catalog.conflicted_item_count()
     }
 
+    /// Return how many current live revisions hold at least one attachment.
+    ///
+    /// An aggregate count and nothing else — no identity, no name, no size —
+    /// which is what VLT-PM00 §20 permits a host to observe. It exists for one
+    /// caller: a portable export has to be able to say that it did not carry
+    /// something. VLT-PM47 §8.3 records why attachments do not travel, and a
+    /// backup that quietly is not one is the failure this count prevents.
+    pub fn attachment_bearing_item_count(&self) -> usize {
+        self.current_catalog
+            .items
+            .values()
+            .filter(|candidates| {
+                candidates.iter().any(|candidate| {
+                    matches!(candidate.state(), ItemState::Live(document)
+                        if !document.attachments().is_empty())
+                })
+            })
+            .count()
+    }
+
     /// Re-verify the complete reachable vault and return aggregate counts.
     ///
     /// This repeats repository discovery relative to durable local pins,

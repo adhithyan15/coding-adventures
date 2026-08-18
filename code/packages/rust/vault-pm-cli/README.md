@@ -691,9 +691,28 @@ be this person, so no code path here turns a stored name into a filesystem
 path. The write refuses to replace an existing destination, creates owner-only,
 `fsync`s, and removes the incomplete file if anything fails.
 
+The name is printed **quoted and escaped**, through the same helper every other
+stored string here passes through. The application layer already rejects the
+characters that make a name render as a different name — Unicode Cc, Cf, and
+the line and paragraph separators — on decode as well as on ingest, so this is
+the second of two gates. It is here because a validator is a statement about
+what was stored and an escape is a statement about what reaches a terminal, and
+the operator is reading the terminal when they choose which attachment to
+export.
+
 `attachment remove` is not implemented. Removing the reference while every byte
 stays in the store until a garbage collection this product has not built would
 say something false; it lands with `gc run`.
+
+**A portable export announces what it did not carry.** A snapshot carries
+records and not blobs, so an attachment stays in the source vault. Exporting a
+vault that holds one writes a fixed sentence to standard error —
+`vault-pm: portable export does not carry attachments` — leaving standard
+output and the exit class untouched, the same shape as the recovery notice
+above. Without it the operator was told an export succeeded and later told a
+restore was *verified*, with nothing anywhere saying their attachments had not
+travelled, and a backup somebody believes carries their recovery codes and does
+not is worse than no backup.
 
 ## The durable-write seam
 

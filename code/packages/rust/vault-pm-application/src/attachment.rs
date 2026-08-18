@@ -94,16 +94,29 @@ pub const MAX_ATTACHMENT_BYTES: usize = crate::codec::MAX_PLAINTEXT_BYTES;
 /// what happens when two bounds that should agree are stated twice.
 pub const MAX_ATTACHMENT_CHUNKS: usize = MAX_ATTACHMENT_BYTES.div_ceil(ATTACHMENT_CHUNK_BYTES);
 
-/// The number this whole design turns on, checked by the compiler.
+/// A generous upper bound on everything a chunk object adds to its payload.
 ///
-/// One sealed chunk object encodes to roughly `ATTACHMENT_CHUNK_BYTES` plus
-/// about sixty bytes of tag, ids, and CBOR framing. Requiring sixteen times
-/// that to fit under `canonical-cbor`'s `MAX_ENCODED_SIZE` is the margin that
-/// makes "an attachment chunk cannot hit the codec ceiling" a fact rather than
-/// an expectation — and unlike a test, this one cannot be skipped, because a
-/// change to either constant stops the crate compiling.
+/// The real figure is about sixty bytes — a 16-byte tag, a 16-byte blob id, an
+/// index, a flag, a version, a kind, and CBOR framing. A kilobyte is used here
+/// because the assertion below should keep holding across a format revision
+/// that adds a field, and should stop holding if one ever adds a *lot*.
+const MAX_CHUNK_OBJECT_FRAMING_BYTES: usize = 1024;
+
+/// The relation this whole design turns on, checked by the compiler.
+///
+/// One sealed chunk object is at most `ATTACHMENT_CHUNK_BYTES` plus the
+/// framing above, and requiring fifteen of those to fit under
+/// `canonical-cbor`'s `MAX_ENCODED_SIZE` is what makes "an attachment chunk
+/// cannot reach the codec ceiling" a fact rather than an expectation. Unlike a
+/// test, this one cannot be skipped: a change to either constant stops the
+/// crate compiling.
+///
+/// Fifteen rather than sixteen because sixteen chunks of payload alone come to
+/// exactly the ceiling, leaving no room for the framing — the encoded object is
+/// what has to fit, not the plaintext it carries.
 const _: () = assert!(
-    ATTACHMENT_CHUNK_BYTES * 16 <= coding_adventures_canonical_cbor::MAX_ENCODED_SIZE,
+    (ATTACHMENT_CHUNK_BYTES + MAX_CHUNK_OBJECT_FRAMING_BYTES) * 15
+        <= coding_adventures_canonical_cbor::MAX_ENCODED_SIZE,
     "one encoded attachment chunk must sit far under canonical-CBOR's ceiling"
 );
 
@@ -126,6 +139,21 @@ pub const MAX_ATTACHMENT_NAME_BYTES: usize = 255;
 /// The content hash is rendered on purpose: it is what makes the
 /// byte-identical round trip checkable by a person, and it is a hash of
 /// plaintext they can already obtain, so it discloses nothing new.
+///
+/// # Why this one does not wipe its name, and the other two do
+///
+/// The attachment name is **metadata**, of the same class as an item title:
+/// `attachment list` prints it on ordinary standard output, so treating it as
+/// a secret here would be a claim the very next line of the product breaks.
+/// This type holds nothing else, so it holds nothing to wipe, and it is
+/// `Clone` because a caller may reasonably keep one.
+///
+/// [`AttachmentContentV1`] and `AttachmentManifestV1` do wipe theirs, and that
+/// is not a contradiction: both also hold a real secret — the plaintext and
+/// the key — and both wipe *everything they hold* rather than maintaining a
+/// per-field classification that a later field could be added on the wrong
+/// side of. Wiping a non-secret costs a memset; getting the classification
+/// wrong once costs a key.
 #[derive(Clone, PartialEq, Eq)]
 pub struct AttachmentSummaryV1 {
     attachment_id: AttachmentId,
@@ -650,11 +678,45 @@ mod tests {
             attachment_name_from_path("../../etc/passwd").unwrap(),
             "passwd"
         );
-        for rejected in ["", "/", ".", "..", "a\0b", "a\nb", "/tmp/", "a/../b/"] {
+        for rejected in [
+            "",
+            "/",
+            ".",
+            "..",
+            "a\0b",
+            "a\nb",
+            "/tmp/",
+            "a/../b/",
+            // Category Cf and Zl/Zp. `char::is_control` lets every one of
+            // these through, and each renders as a name other than the one
+            // stored — which matters because the operator picks an attachment
+            // to export by reading that rendering.
+            "recovery\u{202E}gnp.exe",
+            "invoice\u{200F}fdp.exe",
+            "quiet\u{200B}name.pdf",
+            "\u{FEFF}leading-mark.pdf",
+            "two\u{2028}rows.pdf",
+            "two\u{2029}rows.pdf",
+            "isolate\u{2066}name.pdf",
+        ] {
             assert_eq!(
                 expect_err(attachment_name_from_path(rejected)),
                 ApplicationError::InvalidInput,
                 "{rejected:?} must be refused"
+            );
+        }
+        // Ordinary non-ASCII names are still perfectly acceptable: the
+        // rejection is of characters that change what a name *looks like*,
+        // not of anyone's alphabet.
+        for accepted in [
+            "résumé.pdf",
+            "recuperación.txt",
+            "восстановление.bin",
+            "回復コード.pdf",
+        ] {
+            assert!(
+                validate_attachment_name(accepted).is_ok(),
+                "{accepted:?} must be accepted"
             );
         }
         assert!(validate_attachment_name(&"a".repeat(MAX_ATTACHMENT_NAME_BYTES)).is_ok());

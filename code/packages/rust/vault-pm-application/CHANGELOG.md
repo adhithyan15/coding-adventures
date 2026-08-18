@@ -72,6 +72,31 @@ All notable changes to this package are documented here.
     SHA-256 are re-derived, because VLT14 v1 commits `0` rather than the real
     total in chunk associated data and names verifying it as the caller's duty.
 
+### Security
+
+- **`validate_attachment_name` now rejects Unicode Cf and Zl/Zp**, not only
+  Cc. It runs on decode as well as ingest, so the name it is checking may have
+  been authored by a synchronising peer, and `char::is_control` covers only
+  category Cc: a name carrying U+202E RIGHT-TO-LEFT OVERRIDE passed, and
+  rendered as a *different* name in the listing an operator uses to choose
+  which attachment to export. Ordinary non-ASCII names are unaffected.
+
+- **`AttachmentManifestV1::encode` returns `Zeroizing<Vec<u8>>`** and wipes its
+  own intermediate CBOR tree, and the manifest's key is decoded through a new
+  helper that wipes the decoder's copy. The manifest is the one value in this
+  module whose *encoded output* is a secret; `bytes(...)` copied the key into a
+  heap buffer the encoder then freed unwiped, and `take_fixed` did the same on
+  the way back. VLT02 already records that the CBOR value types are not
+  zeroize-aware and that making them so is a change to a deliberately
+  zero-dependency crate; this closes the half that does not need it.
+
+- **`UnlockedVaultV1::attachment_bearing_item_count`**, an aggregate the CLI
+  uses to say that a portable export left attachments behind. A backup an
+  operator believes carries their recovery codes and does not is worse than no
+  backup, and before this the export ceremony reported success and then
+  `restore verify` reported *verified*, because both sides of the comparison
+  had attachments normalised out of them.
+
 ### Changed
 
 - **`prepare_item_publication` gained a content-object parameter** rather than

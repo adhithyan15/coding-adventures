@@ -17,6 +17,20 @@
   half-written plaintext left behind by a failed export is a leak with no
   owner.
 
+- `read_attachment_source` opens with `O_NONBLOCK | O_NOCTTY` on Unix and
+  reserves one byte past the declared length. The first because the check that
+  rejects a FIFO cannot run until the open returns, and opening a FIFO for
+  reading blocks until a writer appears — naming a named pipe used to hang the
+  command rather than be refused. The second because `Zeroizing` wipes only the
+  allocation it owns: a file that grew between the metadata read and the read
+  made `read_to_end` reallocate, copying the plaintext already read into a new
+  allocation and freeing the old one unwiped.
+
+- `write_attachment_export` documents what its two guarantees are worth per
+  platform, that its cleanup is by path rather than by descriptor, and that a
+  kill *inside* the write still leaves a partial file. All three were true
+  before and none was written down, which is the same as assuming them.
+
 - **Added `TextPrompt::AttachmentExportConfirmation`** and
   `ControllingTerminal::confirm_attachment_export`. A third sentence for the
   same reason there is a second: an export puts vault-held content into a

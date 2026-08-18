@@ -865,7 +865,7 @@ pub(crate) fn attach_attachment(
         chunk_ids,
         wall_time_ms,
     )?;
-    let manifest_plaintext = Zeroizing::new(manifest.encode()?);
+    let manifest_plaintext = manifest.encode()?;
     let manifest_randomness = take_object_randomness_slice(&randomness.bytes, &mut offset);
     let manifest_frame = seal_object(
         keys,

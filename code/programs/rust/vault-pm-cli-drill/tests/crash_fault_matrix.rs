@@ -1842,7 +1842,7 @@ fn an_interrupted_attachment_export_never_leaves_a_partial_plaintext() {
         .transcript
         .lines()
         .map(|line| line.trim_end_matches('\r'))
-        .find(|line| line.contains("name=attachment-source.bin"))
+        .find(|line| line.contains("name=\"attachment-source.bin\""))
         .and_then(|line| line.split('\t').next())
         .expect("the listing names the attachment")
         .to_owned();

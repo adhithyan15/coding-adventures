@@ -34,6 +34,20 @@
 - `DurableStep::AttachmentArtifact` is bracketed around the exported file, the
   one durable write this ceremony makes outside the storage backend.
 
+- **`attachment list` renders the stored name through `quoted`**, like every
+  other stored string this CLI prints. The name is the most peer-authorable
+  string in the product — in a synced vault it was typed on another device —
+  and it is what an operator reads to choose which attachment to export, so it
+  gets the escape as well as the application layer's validation.
+
+- **`export` now writes a fixed notice to standard error when the vault held
+  attachments**: `vault-pm: portable export does not carry attachments`. Same
+  shape as the VLT-PM42 recovery notice — payload-free, standard output
+  unchanged, exit class unchanged. A snapshot carries records and not blobs, so
+  without this an operator was told an export succeeded and later told a
+  restore was *verified*, with nothing anywhere saying their attachments had
+  not travelled.
+
 - **`--copy` now works** on `password generate` and `totp code`, the third
   piece of `VLT-PM00` §23 item 11. Specified by `VLT-PM46-cli-clipboard.md`.
   Both commands have parsed `--copy` and then refused it with the unsupported

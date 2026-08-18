@@ -92,9 +92,11 @@ destination is precisely that. §14.4's optional bracket is removed.
 - **Streaming export.** §4.7 buffers one whole attachment in memory. The ceiling
   in §3.4 is what makes that defensible, and §8.2 records what a streaming host
   write would have to add.
-- **Attachments on portable export/import.** VLT-PM17/VLT-PM18's snapshot format
-  carries records, not blobs. An attachment is not lost — it stays in the source
-  vault — but it does not travel. §8.3 records the shape of the change.
+- **Attachments on portable export/import.** VLT-PM17/VLT-PM18's snapshot
+  format carries records, not blobs. An attachment is not lost — it stays in
+  the source vault — but it does not travel, and **`export` says so** rather
+  than leaving the operator to discover it at restore time. §8.3 records the
+  shape of the change and §6.6 the notice.
 
 ### 2.3 What is *not* reused, and why the reuse map still holds
 
@@ -396,11 +398,32 @@ mode a byte-identical-round-trip guarantee actually has to survive.
 never stored: VLT-PM15 §5 forbids a source path in an audit event, and there is
 no reason for the vault to hold one either.
 
-A name must be 1..=255 bytes of UTF-8 containing no NUL, no ASCII control
-character, no `/`, no `\`, and must not be `.` or `..`. Any other name is
-rejected at ingest with `InvalidInput`. It is rejected rather than repaired,
-because a sanitiser is a function whose output the author did not choose, and
-the interesting inputs to one are exactly the hostile ones.
+A name must be 1..=255 bytes of UTF-8, must not be `.` or `..`, and must
+contain none of:
+
+- a Unicode **Cc** control character — which is what blocks ESC, so a terminal
+  escape sequence cannot ride in a name, and blocks tab and newline, so the
+  tab-separated listing cannot be forged;
+- a Unicode **Cf** format character — the bidirectional marks and overrides
+  (U+061C, U+200E–U+200F, U+202A–U+202E), the isolates (U+2066–U+2069), the
+  zero-width and joining characters, and U+FEFF;
+- **Zl** or **Zp**, the line and paragraph separators; or
+- `/` or `\`.
+
+Anything else is rejected with `InvalidInput`. It is rejected rather than
+repaired, because a sanitiser is a function whose output the author did not
+choose, and the interesting inputs to one are exactly the hostile ones.
+
+The Cf and Zl/Zp half of that list is there because **this validator also runs
+on decode**, on a name a synchronising peer authored. `char::is_control` is Cc
+only; a name carrying U+202E renders as a different name, and §6.2's listing is
+how the operator chooses which attachment to export. Ordinary non-ASCII names
+are untouched — the rejection is of characters that change what a name *looks
+like*, not of anybody's alphabet.
+
+The rendering layer escapes independently (§6.2). Two gates, because a
+validator must not be the only thing between peer-authored text and a
+terminal.
 
 The 255-byte limit is the widest name every filesystem this product targets
 accepts, so a name that survives ingest is a name that could have been a file.
@@ -570,6 +593,13 @@ length, and the SHA-256 of the plaintext content. It reads the item's manifests
 and nothing else — no chunk object is fetched, so listing a 16 MiB attachment
 costs one small object read.
 
+**The name is rendered quoted and escaped**, through the same helper every
+other stored string in this CLI passes through. §4.5 validates it on decode as
+well as on ingest, so this is the second of two gates rather than the only one;
+it is here because a validator is a statement about what was stored and the
+escape is a statement about what reaches a terminal, and the second is the one
+the operator is reading when they choose an attachment to export.
+
 The audit action is **`ItemRead`**, item-scoped, non-secret. It requires no
 confirmation ceremony for the same reason `item show` does not: what it renders
 is the redacted projection, and a name is the same class of metadata as a title,
@@ -619,7 +649,28 @@ reaches the host. This is the identical structure `audited_current_item_totp_cod
 uses, and it is shared with it rather than copied: the outcome table that maps
 situation to audit result is one function.
 
-### 6.4 Entropy is caller-supplied and sized by the file
+### 6.4 A portable export announces what it did not carry
+
+An attachment does not survive `export` → `import`: the snapshot carries
+records, and the import path drops the attachment set rather than producing an
+item that claims attachments the target vault has no bytes for.
+
+A backup an operator believes carries their recovery codes and does not is
+worse than no backup, so `export` from a vault holding at least one attachment
+writes a fixed sentence to standard error:
+
+```text
+vault-pm: portable export does not carry attachments
+```
+
+The same shape as VLT-PM42's recovery notice, and for the same reasons.
+Standard output is unchanged, so nothing that parses it has to learn a new
+line, and the exit class of a command that also had something to mention is the
+exit class of the command. The sentence is fixed at compile time and names no
+vault, item, count, or path — the condition that produced it is an aggregate of
+the kind VLT-PM00 §20 permits, and the sentence carries not even that.
+
+### 6.5 Entropy is caller-supplied and sized by the file
 
 `vault-pm-application` draws no randomness of its own. Every mutation takes one
 owned wipe-on-drop entropy block whose size is a `const`. An attachment's block
@@ -644,7 +695,7 @@ audit-event object        80
 arithmetic appears; the ceremony asserts the consumed offset equals the declared
 size, as every existing ceremony does.
 
-### 6.5 The destination
+### 6.6 The destination
 
 `attachment export` writes through a host capability modelled exactly on
 `write_portable_export`: refuse an existing destination rather than overwrite
@@ -652,6 +703,28 @@ it, create with owner-only permissions where the platform has them, write and
 `fsync`, and **remove the partial file if any step fails**. A half-written
 plaintext file left behind by a failed export is a leak with no owner, and the
 existing portable-export path already refuses to leave one.
+
+Three residuals, recorded rather than assumed away. On Unix `create_new` is
+`O_CREAT | O_EXCL`, which refuses an existing path including a dangling
+symbolic link, and `0600` applies from the instant the file exists; both
+statements are narrower on Windows, where `CREATE_NEW` resolves a reparse point
+and `OpenOptions` exposes no mode — a gap that matters more for this plaintext
+than for the encrypted portable artifact, and that needs a Windows security
+descriptor to close. The cleanup re-resolves the path rather than acting on the
+descriptor. And a `SIGKILL` delivered *inside* the write still leaves a partial
+file: the drill brackets the call and can prove both of its landing points
+clean, but not that one. Removing that last residual means writing to a
+temporary and renaming, which changes what the destination is during the write.
+
+The **source** is opened `O_NONBLOCK | O_NOCTTY` on Unix, because the check
+that would reject a FIFO cannot run until the open returns and opening a FIFO
+for reading blocks until a writer appears — without the flag, naming a named
+pipe hangs the command instead of being refused. The read buffer is sized one
+byte past the file's declared length so that a file which grows between the
+metadata read and the read itself cannot make `read_to_end` reallocate: a
+reallocation copies the plaintext already read into a new allocation and frees
+the old one *unwiped*, which is exactly what the `Zeroizing` buffer exists to
+prevent.
 
 The destination is validated before the passphrase prompt. A person who named a
 path that already exists should learn it immediately, not after typing their
@@ -745,7 +818,13 @@ distinction is wanted, it is a VLT-PM15 amendment.
    characteristic landing points; at every one the vault is either unchanged or
    finishes on the next ordinary command, `status` and `doctor` report a named
    recoverable state, and no plaintext reaches disk.
-9. An export whose write fails leaves no partial file at the destination.
+9. An export whose write fails leaves no partial file at the destination, an
+    existing destination is refused with its bytes intact, a symbolic link is
+    refused rather than followed, and a named-pipe source is refused rather
+    than waited on.
+9a. A portable export of a vault holding an attachment writes the fixed
+    attachments-not-carried notice to standard error, one that does not writes
+    nothing there, and standard output is identical in both cases.
 10. `cargo fmt --check`, `cargo clippy --all-targets -D warnings`, and
     `cargo doc` are clean on every touched crate, and each crate's own `BUILD`
     line passes.

@@ -2721,7 +2721,7 @@ fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
     assert!(list_status.success(), "{list_transcript}");
     let listed = String::from_utf8(list_stdout).unwrap();
     assert!(listed.contains(&attachment_id), "{listed:?}");
-    assert!(listed.contains("name=recovery-codes.bin"), "{listed:?}");
+    assert!(listed.contains("name=\"recovery-codes.bin\""), "{listed:?}");
     assert!(
         listed.contains(&format!("bytes={}", payload.len())),
         "{listed:?}"

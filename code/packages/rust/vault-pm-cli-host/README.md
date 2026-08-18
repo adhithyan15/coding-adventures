@@ -165,12 +165,31 @@ observations cannot force an unbounded allocation. A path that will not open is
 `InvalidAttachmentSource` — exit 2 — rather than a provider failure, because
 exit 7 tells a person to retry later and retrying will not conjure the file.
 
+On Unix the read also passes `O_NONBLOCK | O_NOCTTY`. The check that rejects a
+FIFO cannot run until the open returns, and opening a FIFO for reading blocks
+until a writer appears — so without the flag, naming a named pipe hung the
+command instead of being refused. And the buffer reserves one byte past the
+declared length, because `Zeroizing` wipes the allocation it owns and only that
+one: a file that grew between the metadata read and the read made `read_to_end`
+reallocate, copying the plaintext already read into a new allocation and
+freeing the old one unwiped.
+
 What the write produces *is* plaintext: that is what an export is. So the care
 is everywhere else. Create-new semantics, so an existing file, directory, or
 symbolic link is never followed or replaced; owner-only mode at creation on
 Unix; write, `fsync`; and removal of the incomplete file if either step fails,
 because a half-written plaintext left behind by a failed export is a leak with
 no owner.
+
+Three residuals are written down rather than assumed away, because each is
+true and none was obvious. `create_new` refusing a symbolic link, and
+owner-only mode from the instant the file exists, are both Unix statements —
+Windows resolves reparse points and `OpenOptions` exposes no mode there, which
+matters more for this plaintext than for the encrypted portable artifact next
+to it. The cleanup re-resolves the path rather than acting on the descriptor.
+And a kill delivered *inside* the write leaves a partial file: the drill
+brackets the whole call, so it proves both of its landing points clean and says
+nothing about that one.
 
 `AttachmentExportConfirmation` is a third confirmation sentence rather than a
 reuse of the reveal or copy one. An export puts vault content into an ordinary

@@ -170,7 +170,24 @@ impl CliOutput {
         self.stderr.insert_str(0, RECOVERY_NOTICE);
         self
     }
+
+    /// Prepend the fixed VLT-PM47 attachments-not-carried notice.
+    ///
+    /// Standard output is untouched for the same reason
+    /// [`Self::with_recovery_notice`] leaves it alone: the exit class and the
+    /// parseable output of a command that also had something to mention are
+    /// the exit class and output of the command.
+    fn with_attachment_notice(mut self) -> Self {
+        self.stderr.insert_str(0, ATTACHMENT_EXPORT_NOTICE);
+        self
+    }
 }
+
+/// The one sentence an export that left attachments behind is announced with.
+///
+/// Fixed at compile time and payload-free: it names no vault, item, count, or
+/// path. VLT-PM47 §8.3.
+const ATTACHMENT_EXPORT_NOTICE: &str = "vault-pm: portable export does not carry attachments\n";
 
 /// The one sentence a repaired vault is announced with.
 ///
@@ -2003,10 +2020,13 @@ fn portable_export(
             &repository_factory,
         )
         .map_err(map_application)?;
-    let audit_enabled = access
-        .as_unlocked()
-        .map_err(map_application)?
-        .audit_enabled();
+    let unlocked = access.as_unlocked().map_err(map_application)?;
+    let audit_enabled = unlocked.audit_enabled();
+    // VLT-PM47 §8.3. A portable snapshot carries records and not blobs, so
+    // every attachment in this vault stays behind. Sampled here, while the
+    // session is still borrowed, because the next thing this ceremony does is
+    // consume it.
+    let attachments_left_behind = unlocked.attachment_bearing_item_count() > 0;
     let export_passphrase = match host.read_export_passphrase() {
         Ok(passphrase) => passphrase,
         Err(error) => {
@@ -2056,7 +2076,19 @@ fn portable_export(
     };
     crash::around_export_artifact(|| host.write_portable_export(destination, artifact.as_bytes()))
         .map_err(map_host)?;
-    Ok(CliOutput::success("Portable export written.\n"))
+    let output = CliOutput::success("Portable export written.\n");
+    // Told, rather than discovered later. An operator who believes an export
+    // is a backup and finds out at restore time that their recovery codes did
+    // not travel has been misled by silence, and this product's whole posture
+    // is that it does not do that. The notice is a fixed compile-time sentence
+    // on standard error and names no item, count, or path — the same shape as
+    // the VLT-PM42 recovery notice, and for the same reason: nothing that
+    // parses this command's standard output has to learn a new line.
+    Ok(if attachments_left_behind {
+        output.with_attachment_notice()
+    } else {
+        output
+    })
 }
 
 struct PortableImportContext {
@@ -3201,7 +3233,18 @@ fn attachment_list(
             summary.attachment_id().to_user_string(),
             summary.total_plaintext_len(),
             hex_lower(summary.content_sha256()),
-            summary.name(),
+            // Every stored, peer-authorable string this CLI renders goes
+            // through `quoted`, and the attachment name is the most
+            // peer-authorable of them: in a synced vault it was typed on
+            // another device. `validate_attachment_name` already refuses
+            // Unicode category Cc, so an ANSI escape cannot get here — but it
+            // admits Cf and Zl/Zp, so a right-to-left override or a line
+            // separator can still make a name render as a different name, and
+            // the operator picks which attachment to export by reading this
+            // list. `escape_debug`, which `quoted` uses, escapes exactly that
+            // set. Validation at the boundary is not allowed to be the only
+            // gate for something printed to a terminal.
+            quoted(summary.name()),
         ));
     }
     Ok(CliOutput::success(rendered))
@@ -11857,7 +11900,7 @@ mod tests {
             listed.stdout().contains(&attachment_id),
             "the listing names the attachment: {listed:?}"
         );
-        assert!(listed.stdout().contains("name=recovery-codes.bin"));
+        assert!(listed.stdout().contains("name=\"recovery-codes.bin\""));
         assert!(listed
             .stdout()
             .contains(&format!("bytes={}", payload.len())));
@@ -12099,6 +12142,63 @@ mod tests {
         let absent_host = TestHost::new(paths, [passphrase]);
         let absent = run(["attachment", "list", missing.as_str()], &absent_host);
         assert_eq!(absent.exit_code(), ExitCode::NotFound, "{absent:?}");
+    }
+
+    /// VLT-PM47 §8.3. An export of a vault that holds attachments says so.
+    /// A backup an operator believes carries their recovery codes and does
+    /// not is the failure silence would produce here.
+    #[test]
+    fn a_portable_export_says_when_it_left_attachments_behind() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"export attachment notice passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        // Before anything is attached the notice must not appear, or it would
+        // mean nothing when it did.
+        let quiet_destination = root.0.join("quiet.vpmx");
+        let quiet_host = TestHost::new(
+            paths.clone(),
+            [passphrase.clone(), b"export artifact passphrase".to_vec()],
+        );
+        let quiet = run(["export", quiet_destination.to_str().unwrap()], &quiet_host);
+        assert_eq!(quiet.exit_code(), ExitCode::Success, "{quiet:?}");
+        assert_eq!(quiet.stdout(), "Portable export written.\n");
+        assert_eq!(quiet.stderr(), "");
+
+        let source = root.0.join("attached.bin");
+        fs::write(&source, multi_chunk_payload()).unwrap();
+        let add_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(
+            run(
+                [
+                    "attachment",
+                    "add",
+                    item_id.as_str(),
+                    source.to_str().unwrap(),
+                ],
+                &add_host,
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let destination = root.0.join("loud.vpmx");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [passphrase.clone(), b"export artifact passphrase".to_vec()],
+        );
+        let exported = run(["export", destination.to_str().unwrap()], &export_host);
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        // Standard output is unchanged, so nothing that parses it has to learn
+        // a new line; the notice is on standard error and names nothing.
+        assert_eq!(exported.stdout(), "Portable export written.\n");
+        assert_eq!(
+            exported.stderr(),
+            "vault-pm: portable export does not carry attachments\n"
+        );
+        assert!(!exported.stderr().contains("attached.bin"));
+        assert!(!exported.stderr().contains(&item_id));
     }
 
     #[test]

@@ -596,6 +596,29 @@ blob. `MAX_ATTACHMENT_BYTES` is set below what one publication can carry on
 purpose, so the resumable-upload protocol that would need its own recovery path
 is not needed and does not exist.
 
+### The name is validated on the way *out*, not only on the way in
+
+`validate_attachment_name` runs on decode as well as on ingest, because the
+name it is checking may have been written on another device. It rejects Unicode
+category Cc — which is what blocks terminal escapes, tabs, and newlines — and
+also Cf and the line and paragraph separators, which `char::is_control` does
+not: a name carrying U+202E RIGHT-TO-LEFT OVERRIDE renders as a *different*
+name, and the listing is how an operator chooses which attachment to export.
+Ordinary non-ASCII names are untouched; the rejection is of characters that
+change what a name looks like, not of anybody's alphabet. The CLI escapes
+independently, because a validator must not be the only thing between
+peer-authored text and a terminal.
+
+### What does not travel
+
+An attachment does not survive a portable export and import: the snapshot
+carries records, and the import path drops the attachment set rather than
+producing an item that claims attachments the target has no bytes for.
+`attachment_bearing_item_count` exists so the export ceremony can *say* so — an
+aggregate and nothing else, in the sense VLT-PM00 §20 permits. A backup an
+operator believes carries their recovery codes and does not is worse than no
+backup.
+
 See `VLT-PM47-cli-attachments.md`.
 
 ## Two doors into an unlocked vault
