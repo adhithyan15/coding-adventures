@@ -38,11 +38,10 @@ Test Coverage Goals
 from __future__ import annotations
 
 import pytest
-
-from dartmouth_basic_parser import create_dartmouth_basic_parser, parse_dartmouth_basic
-from lang_parser import ASTNode, GrammarParser, GrammarParseError
+from lang_parser import ASTNode, GrammarParseError, GrammarParser
 from lexer import Token
 
+from dartmouth_basic_parser import create_dartmouth_basic_parser, parse_dartmouth_basic
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -855,24 +854,20 @@ class TestMultiLinePrograms:
 
 
 # ---------------------------------------------------------------------------
-# Grammar path
+# Grammar constant
 # ---------------------------------------------------------------------------
 
 
-class TestGrammarPath:
-    """Tests for the grammar file location constant."""
+class TestGrammarConstant:
+    """Tests for the pre-compiled grammar constant (replaces the old
+    disk-path-based TestGrammarPath — the parser no longer reads a
+    .grammar file from disk at runtime)."""
 
-    def test_grammar_path_exists(self) -> None:
-        """The grammar file should exist at the expected path."""
-        from dartmouth_basic_parser.parser import DARTMOUTH_BASIC_GRAMMAR_PATH
-        assert DARTMOUTH_BASIC_GRAMMAR_PATH.exists(), (
-            f"Grammar file not found at {DARTMOUTH_BASIC_GRAMMAR_PATH}"
-        )
-
-    def test_grammar_path_is_file(self) -> None:
-        """The grammar path should point to a file, not a directory."""
-        from dartmouth_basic_parser.parser import DARTMOUTH_BASIC_GRAMMAR_PATH
-        assert DARTMOUTH_BASIC_GRAMMAR_PATH.is_file()
+    def test_parser_grammar_importable(self) -> None:
+        """PARSER_GRAMMAR should be importable and non-empty."""
+        from dartmouth_basic_parser.parser import PARSER_GRAMMAR
+        assert PARSER_GRAMMAR is not None
+        assert len(PARSER_GRAMMAR.rules) > 0
 
 
 # ---------------------------------------------------------------------------

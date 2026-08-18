@@ -1,7 +1,7 @@
 """SQL Lexer — tokenizes SQL text using the grammar-driven approach.
 
-This module is a thin wrapper around the generic ``GrammarLexer``. It loads
-the ``sql.tokens`` file from the ``code/grammars/`` directory and creates a
+This module is a thin wrapper around the generic ``GrammarLexer``. It uses
+a pre-compiled ``TOKEN_GRAMMAR`` (see ``sql_lexer._grammar``) and creates a
 lexer configured for ANSI SQL tokenization.
 
 SQL is a case-insensitive query language. Unlike JSON, SQL has:
@@ -59,51 +59,32 @@ Two convenience functions:
 - ``tokenize_sql(source)`` — the all-in-one function. Pass in SQL text,
   get back a list of tokens. This is the function most callers want.
 
-Locating the Grammar File
---------------------------
+The SQL token grammar is compiled into ``_grammar.py`` by the grammar-tools
+compiler from ``code/grammars/sql/sql.tokens``. Importing the pre-built
+``TOKEN_GRAMMAR`` constant means no file I/O at startup and no runtime
+grammar parsing overhead — the package is self-contained and works
+correctly when installed as a site-package in any venv, not just when run
+from the monorepo source tree.
 
-The ``sql.tokens`` file lives in the ``code/grammars/`` directory at the
-root of the coding-adventures repository. We locate it relative to this
-module's file path using ``pathlib.Path``::
+To regenerate after editing ``code/grammars/sql/sql.tokens``::
 
-    tokenizer.py
-    └── sql_lexer/        (parent)
-        └── src/           (parent)
-            └── sql-lexer/  (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── sql.tokens
+    grammar-tools compile-tokens code/grammars/sql/sql.tokens \\
+        > code/packages/python/sql-lexer/src/sql_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# We navigate from this file's location up to the repository root's
-# grammars/ directory. The path is:
-#   src/sql_lexer/tokenizer.py -> src/sql_lexer -> src -> sql-lexer
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-SQL_TOKENS_PATH = GRAMMAR_DIR / "sql" / "sql.tokens"
+from sql_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_sql_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for SQL text.
 
-    This function reads the ``sql.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``sql_lexer._grammar``) to create a ``GrammarLexer`` ready to tokenize
+    the given source text. No file I/O is performed.
 
     The grammar's ``# @case_insensitive true`` directive causes the lexer
     to normalize all keyword values to uppercase. Identifiers and other
@@ -116,17 +97,12 @@ def create_sql_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with SQL token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``sql.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_sql_lexer("SELECT id FROM users")
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(SQL_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_sql(source: str) -> list[Token]:
@@ -162,7 +138,6 @@ def tokenize_sql(source: str) -> list[Token]:
         A list of ``Token`` objects. The last token is always EOF.
 
     Raises:
-        FileNotFoundError: If the ``sql.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the SQL grammar.
 

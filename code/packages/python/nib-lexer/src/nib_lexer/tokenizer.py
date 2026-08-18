@@ -148,54 +148,37 @@ sequence was chosen over ``#`` (Python/Ruby) because 4004 assembly
 conventionally uses semicolons for comments — keeping ``//`` as the Nib
 comment marker avoids confusion between the two syntaxes.
 
-Locating the Grammar File
---------------------------
+The Grammar
 
-The ``nib.tokens`` file lives in the ``code/grammars/`` directory at the root
-of the coding-adventures repository. We locate it relative to this module's
-file path using ``pathlib.Path``::
+The Nib token grammar is compiled into ``_grammar.py`` by the grammar-tools
+compiler from ``code/grammars/nib/nib.tokens``. Importing the pre-built
+``TOKEN_GRAMMAR`` constant means no file I/O at startup and no runtime
+grammar parsing overhead — the package is self-contained and works
+correctly when installed as a site-package in any venv, not just when run
+from the monorepo source tree.
 
-    tokenizer.py
-    └── nib_lexer/       (parent)
-        └── src/         (parent)
-            └── nib-lexer/ (parent)
-                └── python/    (parent)
-                    └── packages/ (parent)
-                        └── code/     (parent)
-                            └── grammars/
-                                └── nib.tokens
+To regenerate after editing ``code/grammars/nib/nib.tokens``::
+
+    grammar-tools compile-tokens code/grammars/nib/nib.tokens \\
+        > code/packages/python/nib-lexer/src/nib_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from dataclasses import replace
 
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 from lexer.tokenizer import TokenType
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-#
-# Navigate from this file's location up to the repository root's grammars/
-# directory. The path is:
-#   src/nib_lexer/tokenizer.py -> src/nib_lexer -> src -> nib-lexer
-#   -> python -> packages -> code -> code/grammars
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-NIB_TOKENS_PATH = GRAMMAR_DIR / "nib" / "nib.tokens"
+from nib_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_nib_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for Nib text.
 
-    This function reads the ``nib.tokens`` file, parses it into a
-    ``TokenGrammar``, and creates a ``GrammarLexer`` ready to tokenize
-    the given source text.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``nib_lexer._grammar``) to create a ``GrammarLexer`` ready to tokenize
+    the given source text. No file I/O is performed.
 
     The lexer handles the following Nib-specific behaviors automatically:
 
@@ -222,17 +205,12 @@ def create_nib_lexer(source: str) -> GrammarLexer:
         A ``GrammarLexer`` instance configured with Nib token definitions.
         Call ``.tokenize()`` on it to get the token list.
 
-    Raises:
-        FileNotFoundError: If the ``nib.tokens`` file cannot be found.
-        TokenGrammarError: If the ``.tokens`` file has syntax errors.
-
     Example::
 
         lexer = create_nib_lexer('fn add(a: u4, b: u4) -> u4 { return a +% b; }')
         tokens = lexer.tokenize()
     """
-    grammar = parse_token_grammar(NIB_TOKENS_PATH.read_text())
-    return GrammarLexer(source, grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_nib(source: str) -> list[Token]:
@@ -296,7 +274,6 @@ def tokenize_nib(source: str) -> list[Token]:
         A list of ``Token`` objects. The last token is always EOF.
 
     Raises:
-        FileNotFoundError: If the ``nib.tokens`` file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern in the Nib grammar.
 

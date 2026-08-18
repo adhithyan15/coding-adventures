@@ -1,6 +1,6 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
 # ruff: noqa: E501, F401
-# Source: lisp.tokens
+# Source: brainfuck.tokens
 # Regenerate with: grammar-tools compile-tokens <source.tokens>
 #
 # This file embeds a TokenGrammar as native Python data structures.
@@ -17,71 +17,78 @@ TOKEN_GRAMMAR = TokenGrammar(
     case_sensitive=True,
     definitions=[
         TokenDefinition(
-            name='NUMBER',
-            pattern='-?[0-9]+',
-            is_regex=True,
-            line_number=11,
-            alias=None,
-        ),
-        TokenDefinition(
-            name='SYMBOL',
-            pattern='[a-zA-Z_+\\-*\\/=<>!?&][a-zA-Z0-9_+\\-*\\/=<>!?&]*',
-            is_regex=True,
-            line_number=12,
-            alias=None,
-        ),
-        TokenDefinition(
-            name='STRING',
-            pattern='"([^"\\\\]|\\\\.)*"',
-            is_regex=True,
-            line_number=13,
-            alias=None,
-        ),
-        TokenDefinition(
-            name='LPAREN',
-            pattern='(',
+            name='RIGHT',
+            pattern='>',
             is_regex=False,
-            line_number=14,
+            line_number=23,
             alias=None,
         ),
         TokenDefinition(
-            name='RPAREN',
-            pattern=')',
+            name='LEFT',
+            pattern='<',
             is_regex=False,
-            line_number=15,
+            line_number=24,
             alias=None,
         ),
         TokenDefinition(
-            name='QUOTE',
-            pattern="'",
+            name='INC',
+            pattern='+',
             is_regex=False,
-            line_number=16,
+            line_number=29,
             alias=None,
         ),
         TokenDefinition(
-            name='DOT',
+            name='DEC',
+            pattern='-',
+            is_regex=False,
+            line_number=30,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='OUTPUT',
             pattern='.',
             is_regex=False,
-            line_number=17,
+            line_number=35,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='INPUT',
+            pattern=',',
+            is_regex=False,
+            line_number=36,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='LOOP_START',
+            pattern='[',
+            is_regex=False,
+            line_number=41,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='LOOP_END',
+            pattern=']',
+            is_regex=False,
+            line_number=42,
             alias=None,
         ),
     ],
     keywords=[],
     mode=None,
-    escape_mode='none',
+    escape_mode=None,
     skip_definitions=[
         TokenDefinition(
             name='WHITESPACE',
             pattern='[ \\t\\r\\n]+',
             is_regex=True,
-            line_number=8,
+            line_number=65,
             alias=None,
         ),
         TokenDefinition(
             name='COMMENT',
-            pattern=';[^\\n]*',
+            pattern='[^><+\\-.,\\[\\] \\t\\r\\n]+',
             is_regex=True,
-            line_number=9,
+            line_number=66,
             alias=None,
         ),
     ],

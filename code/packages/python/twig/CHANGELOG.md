@@ -3,6 +3,21 @@
 All notable changes to this package will be documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.5.1] — 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar loading: `create_twig_lexer` and
+  `create_twig_parser` now import pre-compiled `_grammar_tokens` and
+  `_grammar_parser` modules instead of reading and parsing
+  `twig.tokens`/`twig.grammar` from `code/grammars/` on every call. The
+  old code walked out of the installed package's own directory to a
+  monorepo-relative path that a published PyPI package does not ship, so
+  `pip install` + first use would raise `FileNotFoundError`.
+- Also corrected this file's version numbering to match `pyproject.toml`
+  (previously the changelog's latest entry read `0.5.0` while
+  `pyproject.toml` still said `0.1.0`).
+
 ## [0.5.0] — 2026-05-04 (TW04 Phase 4g — bundled Twig standard library)
 
 ### Added — bundled stdlib (`stdlib/io`, `stdlib/list`, `stdlib/print`)

@@ -1,6 +1,6 @@
 # AUTO-GENERATED FILE — DO NOT EDIT
 # ruff: noqa: E501, F401
-# Source: lisp.tokens
+# Source: twig.tokens
 # Regenerate with: grammar-tools compile-tokens <source.tokens>
 #
 # This file embeds a TokenGrammar as native Python data structures.
@@ -17,71 +17,92 @@ TOKEN_GRAMMAR = TokenGrammar(
     case_sensitive=True,
     definitions=[
         TokenDefinition(
-            name='NUMBER',
-            pattern='-?[0-9]+',
-            is_regex=True,
-            line_number=11,
-            alias=None,
-        ),
-        TokenDefinition(
-            name='SYMBOL',
-            pattern='[a-zA-Z_+\\-*\\/=<>!?&][a-zA-Z0-9_+\\-*\\/=<>!?&]*',
-            is_regex=True,
-            line_number=12,
-            alias=None,
-        ),
-        TokenDefinition(
-            name='STRING',
-            pattern='"([^"\\\\]|\\\\.)*"',
-            is_regex=True,
-            line_number=13,
-            alias=None,
-        ),
-        TokenDefinition(
             name='LPAREN',
             pattern='(',
             is_regex=False,
-            line_number=14,
+            line_number=26,
             alias=None,
         ),
         TokenDefinition(
             name='RPAREN',
             pattern=')',
             is_regex=False,
-            line_number=15,
+            line_number=27,
             alias=None,
         ),
         TokenDefinition(
             name='QUOTE',
             pattern="'",
             is_regex=False,
-            line_number=16,
+            line_number=28,
             alias=None,
         ),
         TokenDefinition(
-            name='DOT',
-            pattern='.',
+            name='COLON',
+            pattern=':',
             is_regex=False,
-            line_number=17,
+            line_number=36,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='ARROW',
+            pattern='->',
+            is_regex=False,
+            line_number=55,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='BOOL_TRUE',
+            pattern='#t',
+            is_regex=False,
+            line_number=63,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='BOOL_FALSE',
+            pattern='#f',
+            is_regex=False,
+            line_number=64,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='STRING',
+            pattern='"([^"\\\\]|\\\\.)*"',
+            is_regex=True,
+            line_number=78,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='INTEGER',
+            pattern='-?[0-9]+',
+            is_regex=True,
+            line_number=89,
+            alias=None,
+        ),
+        TokenDefinition(
+            name='NAME',
+            pattern='[A-Za-z+\\-*/=<>!?_$][A-Za-z+\\-*/=<>!?_$0-9]*',
+            is_regex=True,
+            line_number=102,
             alias=None,
         ),
     ],
-    keywords=[],
+    keywords=['define', 'lambda', 'let', 'if', 'begin', 'quote', 'nil', 'module', 'export', 'import', 'typed', 'type', 'record', 'union', 'match', 'let*'],
     mode=None,
-    escape_mode='none',
+    escape_mode=None,
     skip_definitions=[
         TokenDefinition(
             name='WHITESPACE',
             pattern='[ \\t\\r\\n]+',
             is_regex=True,
-            line_number=8,
+            line_number=159,
             alias=None,
         ),
         TokenDefinition(
             name='COMMENT',
             pattern=';[^\\n]*',
             is_regex=True,
-            line_number=9,
+            line_number=160,
             alias=None,
         ),
     ],
