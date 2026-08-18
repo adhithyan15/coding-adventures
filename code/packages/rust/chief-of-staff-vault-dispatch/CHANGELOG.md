@@ -21,11 +21,17 @@ this package adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Changed
 
-- The crate now has its first non-test consumer. `weather-agent-e2e` registers
+- The crate now has its first consumer outside its own test suite: the
+  `weather-agent-e2e` end-to-end harness. That is a CI exercise, not a
+  deployment -- see the note on the daemon below. It registers
   through the bridge instead of its own `vault.request_lease` handler, which had
   drifted in two ways that mattered: it accepted any TTL the lease layer would
   take (ninety days, versus the bridge's fifteen-minute agent ceiling) and built
   its error with `format!`, which V2 forbids.
+- No *shipping* process registers these tools yet. The daemon does not assemble
+  a host-profile tool runtime at all, so the tier gate, the capability checks,
+  and every built-in definition other than smart-home are inert in production.
+  Tracked separately; it needs an architectural decision rather than a patch.
 
 ## [0.1.0] — 2026-08-17
 
@@ -112,9 +118,14 @@ the D18 vault *runtime*: the two tools were catalogued but had no handlers, so
 
 ### Known gaps as of 0.1.0
 
-These describe the state at 0.1.0. The first has since been closed -- per-secret
-policy shipped in the vault runtime (VLT06, PR #11982) -- and is kept here as a
-record of what this release did not do, not as a current statement.
+These describe the state at 0.1.0, and are kept as a record of what that
+release did not do rather than as a current statement.
+
+The first has since been *partly* closed: `allowed_agents` and `allowed_mode`
+ship in the vault runtime (VLT06, PR #11982). `privilege_tier` is still recorded
+and read by nothing, and the tier and capability checks are still per-tool and
+run once at registration -- so a `privilege_tier` on a registered secret is not
+a control.
 
 - There is no per-secret policy. `privilege_tier`, `allowed_agents`, and
   `allowed_mode` are unimplemented, and the tier and capability checks are

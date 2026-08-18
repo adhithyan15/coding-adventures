@@ -100,6 +100,12 @@
 //! pair is registered all-or-nothing, via a pre-flight that is co-total with
 //! the registration path — profile checks *and* the registry's own.
 //!
+//! All-or-nothing is about partial *failure*, not about which tools a
+//! deployment chooses to offer: a binding with no trusted delivery adapter
+//! should register the lease tool alone, via
+//! [`VaultToolBridge::register_lease_only_into_host`], rather than offering
+//! `request_direct` over a stub that has nowhere to deliver.
+//!
 //! Note what this gate is not. It runs once, at registration, per host, and is
 //! a statement about a *tool*, not a *secret* — it cannot express "this host
 //! may lease the weather key but not the bank password". The per-secret half of
@@ -295,6 +301,11 @@ impl VaultToolBridge {
     /// host's tool-allowed, tier, and capability checks — the tool registry has
     /// no host profile to check against. Use it for local dispatch and tests;
     /// use [`Self::register_into_host`] at a real host boundary.
+    ///
+    /// Registers `request_direct` too, so a caller with no trusted delivery
+    /// adapter wants [`Self::register_lease_only`] instead — offering a
+    /// direct-delivery tool over a stub is the configuration this crate argues
+    /// against.
     pub fn register_all(&self, runtime: &mut InMemoryToolRuntime) -> Result<(), ToolApiError> {
         for definition in Self::definitions()? {
             match definition.tool_id.as_str() {
@@ -357,6 +368,21 @@ impl VaultToolBridge {
             }
         }
         Ok(())
+    }
+
+    /// Register only `vault.request_lease` with a bare tool runtime.
+    ///
+    /// The counterpart to [`Self::register_lease_only_into_host`] for the
+    /// unchecked path. It exists so that "no delivery adapter, so do not offer
+    /// direct delivery" is expressible on both paths — otherwise the advice
+    /// would hold at a host boundary and quietly not hold anywhere else.
+    pub fn register_lease_only(
+        &self,
+        runtime: &mut InMemoryToolRuntime,
+    ) -> Result<(), ToolApiError> {
+        let definition = builtin_tool_definition(VAULT_REQUEST_LEASE_TOOL_ID)
+            .ok_or_else(|| ToolApiError::UnknownTool(VAULT_REQUEST_LEASE_TOOL_ID.to_string()))?;
+        runtime.register_handler(definition, self.lease_handler())
     }
 
     /// Register **only** `vault.request_lease` at a host boundary.

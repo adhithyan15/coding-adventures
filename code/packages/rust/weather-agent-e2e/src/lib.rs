@@ -2617,6 +2617,11 @@ mod tests {
         bridge
             .register_lease_only_into_host(&mut runtime)
             .expect("lease-only registration should succeed");
+        assert_eq!(
+            runtime.summary().registered_tool_count,
+            1,
+            "lease-only must register exactly one tool"
+        );
 
         // The pair registration must still refuse: this profile grants neither
         // `vault.request_direct` nor `vault:direct`, and a deliberate subset
