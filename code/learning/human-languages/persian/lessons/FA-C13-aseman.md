@@ -34,7 +34,7 @@ reviews_of: [FA-C12-ketab]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-KETAB, FA-ETYMON-KETAB] -->
 
-[PAUSE 2s] Say **کتاب**, and which language it came from. This chapter turns
+[PAUSE 2s] Say **کتاب** (*ketâb*), and which language it came from. This chapter turns
 from things in the house to the world above it, starting with the biggest
 word of all.
 

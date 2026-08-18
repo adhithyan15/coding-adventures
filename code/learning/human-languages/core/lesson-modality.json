@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:fd7b0f9f9dacad8e",
+  "sourceHash": "fnv1a64:79d8e51e0b335384",
   "summary": {
     "totalLessons": 3070,
     "voice": 2161,
@@ -17201,7 +17201,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a84e2262a220a4e9"
+      "sourceHash": "fnv1a64:ba0898bc3feaa45b"
     },
     {
       "id": "AR-W10-ayn",
@@ -17365,7 +17365,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:05c5e1b72f8cf5f3"
+      "sourceHash": "fnv1a64:dc8602c69aa3d525"
     },
     {
       "id": "AR-C05-naam",
@@ -45021,7 +45021,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:38ba1bbde851847b"
+      "sourceHash": "fnv1a64:f26a069106bfc347"
     },
     {
       "id": "FA-C09-chay",
@@ -45039,7 +45039,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a26e57f7adf3801e"
+      "sourceHash": "fnv1a64:13e89f0266a2ee3c"
     },
     {
       "id": "FA-C09-kelid",
@@ -45165,7 +45165,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a0073b3f04ec27b6"
+      "sourceHash": "fnv1a64:5e58e15e9a9b069e"
     },
     {
       "id": "FA-C11-pa",
@@ -45237,7 +45237,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2a338a6b464d934"
+      "sourceHash": "fnv1a64:d9f09ab490244f86"
     },
     {
       "id": "FA-C12-dar",
@@ -45291,7 +45291,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6d992ea29e7bfb60"
+      "sourceHash": "fnv1a64:d1dee18370dc6a76"
     },
     {
       "id": "FA-C13-khorshid",
@@ -45309,7 +45309,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:251ffdeba61e505b"
+      "sourceHash": "fnv1a64:8055697d9d545edf"
     },
     {
       "id": "FA-C13-mah",
@@ -45327,7 +45327,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0e4d867ef70e34a1"
+      "sourceHash": "fnv1a64:89ff5e82aad2582f"
     },
     {
       "id": "FA-C13-setare",
@@ -45363,7 +45363,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:514ee9899221b7ba"
+      "sourceHash": "fnv1a64:569219c452011a28"
     },
     {
       "id": "FA-C14-khahar",
@@ -45417,7 +45417,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0acfe919b99ffa5f"
+      "sourceHash": "fnv1a64:878a7d36dcd4cf57"
     },
     {
       "id": "FA-C14-zan",
@@ -45453,7 +45453,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2159ff3d4b5fda4a"
+      "sourceHash": "fnv1a64:6dab3630555d9c86"
     },
     {
       "id": "FA-W15-alef",

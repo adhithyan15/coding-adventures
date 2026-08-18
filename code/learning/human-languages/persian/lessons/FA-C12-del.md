@@ -34,7 +34,7 @@ reviews_of: [FA-C12-nam]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-NAM, FA-ETYMON-NAM] -->
 
-[PAUSE 2s] Say **نام**, and its English cousin. This lesson's word has an
+[PAUSE 2s] Say **نام** (*nâm*), and its English cousin. This lesson's word has an
 even more famous one.
 
 ## You'll want to know first — one word

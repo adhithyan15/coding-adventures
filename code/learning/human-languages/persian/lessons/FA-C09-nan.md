@@ -34,7 +34,7 @@ reviews_of: [FA-C09-ab]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[FA-LEX-AB, FA-PHRASE-LOTFAN] -->
 
-[PAUSE 2s] Say **آب، لطفاً**. This chapter's second request names the other
+[PAUSE 2s] Say **آب، لطفاً** (*âb, lotfan*). This chapter's second request names the other
 thing on every Persian table.
 
 ## You'll want to know first — one word
