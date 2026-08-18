@@ -15,45 +15,36 @@ Lattice extends CSS with 5 new token types:
 All CSS token types are preserved unchanged. The ``LINE_COMMENT`` skip
 pattern adds support for ``//`` single-line comments (not in CSS).
 
-Locating the Grammar File
---------------------------
+Pre-compiled Grammar
+---------------------
 
-The ``lattice.tokens`` file lives in ``code/grammars/`` at the repository
-root. We locate it relative to this module's file path::
+The ``lattice.tokens`` file is compiled ahead of time by the
+``grammar-tools`` compiler into ``lattice_lexer/_grammar.py``, which
+embeds the ``TokenGrammar`` as native Python data structures. This module
+imports ``TOKEN_GRAMMAR`` from it directly — no file I/O or grammar
+parsing happens at runtime, and the package works correctly when
+installed as a site-package (it does not depend on the
+``code/grammars/`` directory existing on disk).
 
-    tokenizer.py
-    └── lattice_lexer/       (parent)
-        └── src/             (parent)
-            └── lattice-lexer/   (parent)
-                └── python/      (parent)
-                    └── packages/ (parent)
-                        └── code/ (parent)
-                            └── grammars/
-                                └── lattice.tokens
+To regenerate after editing ``code/grammars/lattice/lattice.tokens``:
+
+    grammar-tools compile-tokens code/grammars/lattice/lattice.tokens \\
+        -o code/packages/python/lattice-lexer/src/lattice_lexer/_grammar.py
 """
 
 from __future__ import annotations
 
-from pathlib import Path
-
-from grammar_tools import parse_token_grammar
 from lexer import GrammarLexer, Token
 
-# ---------------------------------------------------------------------------
-# Grammar File Location
-# ---------------------------------------------------------------------------
-
-GRAMMAR_DIR = Path(__file__).parent.parent.parent.parent.parent.parent / "grammars"
-LATTICE_TOKENS_PATH = GRAMMAR_DIR / "lattice" / "lattice.tokens"
+from lattice_lexer._grammar import TOKEN_GRAMMAR
 
 
 def create_lattice_lexer(source: str) -> GrammarLexer:
     """Create a ``GrammarLexer`` configured for Lattice source text.
 
-    This function:
-
-    1. Reads and parses the ``lattice.tokens`` grammar file.
-    2. Creates a ``GrammarLexer`` with the Lattice token definitions.
+    This function uses the pre-compiled ``TOKEN_GRAMMAR`` (from
+    ``lattice_lexer._grammar``) to create a ``GrammarLexer`` with the
+    Lattice token definitions. No file I/O is performed.
 
     Args:
         source: The Lattice source text to tokenize.
@@ -61,16 +52,12 @@ def create_lattice_lexer(source: str) -> GrammarLexer:
     Returns:
         A ``GrammarLexer`` instance ready to produce tokens.
 
-    Raises:
-        FileNotFoundError: If the grammar file cannot be found.
-
     Example::
 
         lexer = create_lattice_lexer('$color: red;')
         tokens = lexer.tokenize()
     """
-    token_grammar = parse_token_grammar(LATTICE_TOKENS_PATH.read_text())
-    return GrammarLexer(source, token_grammar)
+    return GrammarLexer(source, TOKEN_GRAMMAR)
 
 
 def tokenize_lattice(source: str) -> list[Token]:
@@ -88,7 +75,6 @@ def tokenize_lattice(source: str) -> list[Token]:
         A list of ``Token`` objects.
 
     Raises:
-        FileNotFoundError: If the grammar file cannot be found.
         LexerError: If the source contains characters that don't match
             any token pattern.
 
