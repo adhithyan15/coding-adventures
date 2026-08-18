@@ -1,0 +1,17 @@
+[package]
+name = "sparc-v8-backend"
+version = "0.1.0"
+edition = "2021"
+description = "SPARC V8 backend for jit-core / aot-core.  Lowers a Vec<CIRInstr> into SPARC V8 machine code via sparc-v8-encoder.  Emit-only -- bytes go to sparc-v8-simulator.  Minimal viable: const_*/ret_* only, trivial single-register (%o0) allocator; ret_* lowers to ta 0 (HALT) rather than RESTORE+JMPL, since the minimal-viable const_*/ret_* scope never establishes a caller context.  Mirror of mips-r2000-backend / arm1-backend in shape and intent.  Sixth lane of the 9-architecture expansion following the historical-arch backend migration pattern."
+
+[lib]
+name = "sparc_v8_backend"
+path = "src/lib.rs"
+
+[dependencies]
+sparc-v8-encoder = { path = "../sparc-v8-encoder" }
+jit-core          = { path = "../jit-core" }
+vm-core           = { path = "../vm-core" }
+
+[dev-dependencies]
+sparc-v8-simulator = { path = "../sparc-v8-simulator" }

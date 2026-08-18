@@ -889,7 +889,18 @@ pub fn prepare_rotation_candidate(
         }
     }
     let (new_epoch, cmk, grants) = rotation.into_parts();
-    if base_epoch.0.checked_add(1).map(KeyEpoch) != Some(new_epoch) {
+    // Exhaustion is a distinct condition from naming the wrong successor, and
+    // must be checked first: `base_epoch + 1` is not a meaningful question once
+    // `base_epoch` is saturated. Folding them together reported
+    // `unexpected_epoch` for what is really "there is no next epoch". See the
+    // D18T roster, which defines `epoch_exhausted` over a candidate
+    // preparation's `base_epoch` as well as the channel's `active_epoch`.
+    let successor = base_epoch
+        .0
+        .checked_add(1)
+        .map(KeyEpoch)
+        .ok_or(EpochActivationError::EpochExhausted)?;
+    if successor != new_epoch {
         return Err(EpochActivationError::UnexpectedEpoch);
     }
     let mut grant_bytes = Vec::with_capacity(grants.len());

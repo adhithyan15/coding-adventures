@@ -644,8 +644,15 @@ function validatePublicPreparation(
   definition: ChannelDefinition,
   prepared: PublicPreparation,
 ): ActivationPlan {
+  if (!bytesEqual(prepared.channelId, definition.channelId)) fail("invalid_plan");
+  // Exhaustion sits between the channel comparison and the successor
+  // comparison, exactly where Rust's short-circuiting `||` chain evaluates it.
+  // It must precede the successor check because baseEpoch + 1 is not a
+  // meaningful question once baseEpoch is saturated; it must follow the channel
+  // check so a bundle that is BOTH foreign and saturated still reports
+  // invalid_plan, as it did before and as Rust still does.
+  if (prepared.baseEpoch === MAX_U64) fail("epoch_exhausted");
   if (
-    !bytesEqual(prepared.channelId, definition.channelId) || prepared.baseEpoch === MAX_U64 ||
     prepared.newEpoch !== prepared.baseEpoch + 1n || prepared.grants.length < 1 ||
     prepared.grants.length > MAX_PLAN_RECEIVERS
   ) fail("invalid_plan");

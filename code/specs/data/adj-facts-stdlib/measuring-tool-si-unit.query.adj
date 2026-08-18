@@ -1,0 +1,30 @@
+% ============================================================================
+% measuring-tool-si-unit.query.adj — worked recall over the chemistry/
+% metrology causal-composition library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what SI unit does a
+% thermometer's reading reduce to?" — it states no fact of its own — it only
+% `import`s the grounded rule and asks binding queries. The answer is
+% DERIVED, composing measuring-tools' specific tool→quantity assignment with
+% si-base-units' general metrology principle for that quantity, so every
+% answer carries BOTH citations in its `steps` trail.
+%
+% Placed at the stdlib PACKAGE ROOT (not beside
+% `chemistry/measuring-tool-si-unit.adj`) — the same cross-directory-import
+% sandboxing pattern `earth-layer-matter-behavior.query.adj` already
+% established: the library itself lives in `chemistry/` and reaches its
+% metrology sibling via a relative `../metrology/si-base-units.adj` import,
+% which only resolves if the CONSUMING entry program (this file) sits at or
+% above the package root, so both `chemistry/` and `metrology/` fall inside
+% the CLI's sandboxed import subtree.
+%
+% Run (from this directory, the package root, so the relative import
+% resolves):
+%     ../../packages/rust/target/debug/adj-lang-cli measuring-tool-si-unit.query.adj
+% ============================================================================
+
+import "chemistry/measuring-tool-si-unit.adj"
+
+? measuring_tool_si_unit(thermometer, $U, $S)      % expect kelvin, "K" (direct: a thermometer measures temperature)
+? measuring_tool_si_unit($T, kelvin, $S)            % expect thermometer (reverse: which tool's reading is in kelvin?)
+? measuring_tool_si_unit(graduated_cylinder, $U, $S) % expect abstain -- volume is a DERIVED SI unit, not one of the 7 base units

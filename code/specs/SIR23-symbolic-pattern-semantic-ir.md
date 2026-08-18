@@ -191,10 +191,28 @@ isn't SIR" boundary the native runtimes already draw.)
   runtime via `sir-runtime-symbolic` (`__SirSym.apply(head, args)`,
   `__SirSym.replaceAll(expr, rules)`, `__SirSym.replaceRepeated(expr, rules,
   cap)`), imported only when `Feature::SymbolicExpr`/`PatternMatching` is in
-  the manifest.
-- **Rust/Go/Python backends**: not required in this first wave; they reject
-  modules declaring `SymbolicExpr`/`PatternMatching` per the existing
-  capability-rejection path.
+  the manifest. Per this spec's own Addendum below, this is the **matcher
+  only** (Tier A) — `SymApply` compiles to a pure, inert term constructor;
+  no backend has an evaluator (Tier B) as of this writing.
+- **C/Go/Rust/Python/Ruby backends** — **second wave, planned**: the
+  original text here named only Rust/Go/Python as declining this domain
+  "in this first wave" — C and Ruby decline identically today but were
+  never actually named, an omission fixed here since all five behave the
+  same way. This is now a planned second wave, scoped explicitly
+  to **Tier A (the matcher) only** — the evaluator remains out of scope
+  for every backend, including JS/TS, and is its own later, per-backend
+  arc. **C/Go/Rust/Ruby** will port the matcher subset only of JS's
+  `Symbolic` IIFE (`matchPattern`/`substituteTerm`/`applyRuleTerm`/
+  `replaceAllTerm`/`replaceRepeatedTerm` — explicitly excluding
+  `evalTerm` and the environment/held-form/function-dispatch machinery)
+  into each backend's own runtime; **Python** will get a new
+  `code/packages/python/sir-runtime-symbolic` package ported from
+  `code/packages/typescript/sir-runtime-symbolic`, which per this spec's
+  own scope boundary already re-exports the matcher only — already
+  exactly Tier A, the ideal minimal port source. Each backend's
+  `SymReplaceAll` depth cap must be its own empirically-measured constant
+  (this spec's own CWE-674 methodology below) — JS's `512` does not
+  transfer to a different language's stack-frame cost.
 
 ## Versioning
 

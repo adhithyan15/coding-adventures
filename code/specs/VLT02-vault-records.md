@@ -74,10 +74,102 @@ Implementors:
 - recover their fields from a `CborValue::Map` in `decode_payload`,
 - implement `Zeroize` (manually) so secret fields wipe on drop.
 
-`encode_record(&T) -> Vec<u8>` and `decode_record_as::<T>(&[u8]) ->
-Result<T, …>` wrap the trait into the full `{t, d}` envelope.
-`decode_record(&[u8]) -> Result<AnyRecord, …>` is the
-content-type-dispatching counterpart.
+`encode_record(&T) -> Result<Vec<u8>, VaultRecordError>` and
+`decode_record_as::<T>(&[u8]) -> Result<T, …>` wrap the trait into the
+full `{t, d}` envelope. `decode_record(&[u8]) -> Result<AnyRecord, …>`
+is the content-type-dispatching counterpart. Every one of these four
+entry points is fallible in both directions; see *Encoding is
+fallible* below for why encoding is not infallible even though the
+input is a well-typed Rust struct.
+
+## Encoding is fallible
+
+Encoding a record can fail, and the fallibility is not a formality.
+The reason is an asymmetry between two independent ceilings that this
+crate sits between:
+
+| Ceiling                                | Owner            | Value  | Applies to                          |
+|----------------------------------------|------------------|--------|-------------------------------------|
+| `MAX_ENCODED_SIZE`                     | `canonical-cbor` | 1 MiB  | any single CBOR-encoded value       |
+| `MAX_ENCODE_DEPTH` / `MAX_DECODE_DEPTH`| `canonical-cbor` | 128    | nesting of any single value         |
+| `MAX_PLAINTEXT_BYTES`                  | VLT-PM05         | 16 MiB | one encrypted application object    |
+
+The application's plaintext gate is **sixteen times larger** than the
+codec's encoded-size gate. Nothing reconciles them, and nothing should:
+they answer different questions. `MAX_PLAINTEXT_BYTES` bounds what the
+AEAD layer will seal in one frame; `MAX_ENCODED_SIZE` bounds what the
+canonical encoder will ever emit for one value, which is a
+denial-of-service bound on the codec itself.
+
+The consequence is a range of record sizes — roughly 1 MiB to 16 MiB —
+that are **legal to hold and legal to decode but illegal to encode**.
+A record in that range is not hypothetical:
+
+- A peer device whose own framing budget is larger authors a record
+  with, say, a 2 MiB `Login.password`. It is well under the 16 MiB
+  plaintext gate, so it seals, syncs, and decodes locally without
+  complaint.
+- The local catalog now holds a record that the encoder will refuse to
+  re-emit. Every later operation that re-serialises it — `item edit`,
+  any of the seven authored conflict-merge ceremonies (VLT-PM33
+  through VLT-PM39), `conflict choose`, `history restore`, and
+  `export` — reaches the encoder again.
+
+Had `encode_record` been infallible, that second step would abort the
+process rather than return an error. **A process abort is strictly
+worse than a closed error**: it discards in-flight state, it violates
+VLT-PM00's fail-closed contract, and because the poisoned record
+persists in the store, the abort repeats on every subsequent command
+against the same vault. That is a local denial of service reachable by
+one record from an untrusted peer.
+
+So `encode_record` returns `Result` and reports
+`VaultRecordError::Cbor(CborError::EncodeTooLarge)`. Failing closed
+loses one record; panicking loses the process.
+
+(The sibling `EncodeTooDeep` is *not* reachable through
+`encode_record`. Every first-party payload has a fixed, shallow shape —
+the deepest is envelope → payload map → a `Vec<String>` field → text,
+four levels against a limit of 128 — so no first-party record can be
+nested past the encoder's depth cap. Depth is reachable only through
+`encode_opaque`, whose payload is caller-supplied CBOR of arbitrary
+shape, and that path is already covered.) This is the same rule and the same remedy already applied
+to `encode_opaque` and to `decode_record`'s opaque arm; it is stated
+here once because it governs all first-party record types equally, not
+just the opaque one.
+
+Two properties follow that callers may rely on:
+
+1. **No partial output.** `try_encode` builds into a local buffer and
+   returns `Err` without handing back bytes, so a rejected record never
+   produces a truncated encoding that a later reader could mistake for
+   a whole one.
+2. **The boundary is exact, not approximate.** A record whose full
+   envelope encodes to exactly `MAX_ENCODED_SIZE` bytes succeeds; one
+   byte more fails. Callers must not assume slack.
+
+One property callers may *not* rely on: the rejected encode does **not**
+wipe what it had already serialised. `try_encode` drops its partial
+output buffer — up to `MAX_ENCODED_SIZE` of plaintext — without
+zeroizing it, so a refused record leaves a copy of its secret fields in
+freed heap.
+
+This is not new to the `Result`: the panicking wrapper reached that
+state by the same path, since `encode` is `try_encode(...).expect(...)`
+and the buffer was already dropped before the panic. What is new is
+that the process now survives to keep running with that heap freed but
+unwiped.
+
+It is left as it stands, and the reason is that wiping the output
+buffer alone would be misleading rather than protective. The same
+plaintext is simultaneously held in the `CborValue` tree the caller
+built and still owns, and canonical-CBOR's value types implement
+neither `Zeroize` nor a wiping `Drop` on any path — the property
+VLT-PM39 §5 already records for the whole codec layer. Wiping one copy
+while the larger one persists would buy a guarantee the layer cannot
+actually make. Closing it properly means making canonical-CBOR
+zeroize-aware end to end, which adds a dependency to a deliberately
+zero-dependency foundational crate and so belongs to its own change.
 
 ## First-party record types
 
@@ -165,6 +257,8 @@ This matches VLT01's discipline.
 | Plaintext record values leak through diagnostic formatting      | Closed custom `Debug` on records and `AnyRecord`                       | `record_debug_is_value_redacted`, `any_record_debug_is_value_redacted` |
 | Attacker content type leaks through error diagnostic formatting | Closed custom `Debug` on `VaultRecordError`                            | `error_debug_strings_are_static`                                |
 | Forward incompatibility breaks v1 readers                       | Unknown payload fields tolerated                                      | `extra_unknown_fields_in_payload_are_ignored`                   |
+| Peer record between the two ceilings aborts the process on re-encode | `encode_record` returns `Result` via `try_encode`                | `encode_record_reports_an_oversized_record_instead_of_panicking` |
+| Every first-party type shares that exposure, not just `Login`   | The `Result` is on the generic entry point, above the trait            | `every_first_party_record_type_reports_oversize`                |
 
 ## Non-goals
 

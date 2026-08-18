@@ -2,7 +2,7 @@ use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
 use crate::initialize::{verify_active_bootstrap, verify_signed_bootstrap};
 use crate::{decode_item_revision, encode_item_revision, ApplicationError};
 use coding_adventures_argon2id::{argon2id, Options as Argon2idOptions};
-use coding_adventures_canonical_cbor::{decode, encode, CborValue};
+use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborValue};
 use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
@@ -359,8 +359,15 @@ fn encrypt_portable_plaintext(
         field(6, CborValue::Bytes(ciphertext)),
         field(7, CborValue::Bytes(tag.to_vec())),
     ]);
+    // The artifact carries the whole export ciphertext, which this
+    // module bounds at MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES (512 MiB) --
+    // five hundred times canonical-CBOR's 1 MiB encoded ceiling. Any
+    // export past that ceiling therefore has to be reported rather than
+    // aborting the process, and unlike the record encodes this needs no
+    // hostile peer at all: an ordinary vault of a few dozen items
+    // produces an artifact larger than 1 MiB.
     Ok(PortableExportArtifactV1 {
-        bytes: encode(&artifact),
+        bytes: try_encode(&artifact).map_err(crate::codec::map_encode_error)?,
     })
 }
 
@@ -372,7 +379,13 @@ fn parse_opened_snapshot(plaintext: &[u8]) -> Result<OpenedPortableSnapshotV1, A
     check_wire_value(fields.take(1)?.into_uint()?, VERSION)?;
     let exact_bootstrap = Zeroizing::new(fields.take(2)?.into_bytes()?);
     let entries_value = fields.take(3)?;
-    let encoded_entries = Zeroizing::new(encode(entries_value.get()));
+    // Re-encoding entries that arrived inside someone else's export: the
+    // same shape as `decode_record`'s opaque arm. The producer's framing
+    // budget need not be the encoder's ceiling, so a snapshot that
+    // decodes here may still be one the encoder declines to re-emit.
+    // Failing closed rejects one import; panicking loses the process.
+    let encoded_entries =
+        Zeroizing::new(try_encode(entries_value.get()).map_err(crate::codec::map_encode_error)?);
     let candidate_count = usize::try_from(fields.take(4)?.into_uint()?)
         .map_err(|_| ApplicationError::BoundExceeded)?;
     let expected_hash: [u8; 32] = fields.take(5)?.into_fixed()?;
@@ -490,7 +503,11 @@ pub(crate) fn export_portable_with_passphrase(
     let candidate_count =
         u64::try_from(entries.len()).map_err(|_| ApplicationError::BoundExceeded)?;
     let mut entries_value = SecretCborValue::new(CborValue::Array(entries.into_inner()));
-    let encoded_entries = Zeroizing::new(encode(entries_value.get()));
+    // Every candidate revision in the vault, concatenated. This module's
+    // own ceiling on it is 512 MiB; the encoder's is 1 MiB, so a vault of
+    // a few dozen ordinary items already crosses the tighter one.
+    let encoded_entries =
+        Zeroizing::new(try_encode(entries_value.get()).map_err(crate::codec::map_encode_error)?);
     let snapshot_hash = snapshot_hash(exact_bootstrap, &encoded_entries)?;
     let snapshot = SecretCborValue::new(CborValue::Map(vec![
         field(1, CborValue::Unsigned(VERSION)),
@@ -499,7 +516,8 @@ pub(crate) fn export_portable_with_passphrase(
         field(4, CborValue::Unsigned(candidate_count)),
         field(5, CborValue::Bytes(snapshot_hash.to_vec())),
     ]));
-    let plaintext = Zeroizing::new(encode(snapshot.get()));
+    let plaintext =
+        Zeroizing::new(try_encode(snapshot.get()).map_err(crate::codec::map_encode_error)?);
     if plaintext.len() > MAX_PORTABLE_EXPORT_PLAINTEXT_BYTES {
         return Err(ApplicationError::BoundExceeded);
     }
@@ -548,6 +566,11 @@ fn artifact_aad(kdf: &Argon2idParametersV1, nonce: [u8; NONCE_BYTES]) -> Vec<u8>
         field(4, kdf_value(kdf)),
         field(5, CborValue::Bytes(nonce.to_vec())),
     ]);
+    // The one encode left infallible in this module, and provably so:
+    // the header is a version, two small enum codes, four Argon2id
+    // integers, a 16-byte salt, and a 24-byte nonce. Its size is the same
+    // on every call and nowhere near the encoder's ceiling or depth cap,
+    // so there is no oversized input for a checked encode to report.
     let encoded = encode(&header);
     let mut aad = Vec::with_capacity(EXPORT_AAD_DOMAIN.len() + encoded.len());
     aad.extend_from_slice(EXPORT_AAD_DOMAIN);

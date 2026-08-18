@@ -1,5 +1,66 @@
 # Changelog
 
+## 0.25.0 — SIR22 array/matrix base cut (second-wave backend rollout, Phase A Slice 2)
+
+Part of the SIR22/SIR23 backend-expansion initiative (opening
+C/Go/Rust/Python/Ruby to array/matrix and symbolic/pattern support — see
+`code/specs/SIR22-array-matrix-semantic-ir.md`'s "Backend impact" section).
+This backend now accepts `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}`
+and implements the SIR22 base cut: `ArrayLit`/`Range`/`MatMul`/
+`ElementwiseOp`/`Transpose`/`IndexGet` (+ `Stmt::IndexSet`).
+
+**New runtime** (`runtime.rs`): `sir_array_*` — an inlined port of
+`semantic-ir-to-javascript`'s own already-proven `ArrayRt` sub-runtime
+(itself a port of the published `@coding-adventures/sir-runtime-array`
+package), following this crate's existing inlined-runtime convention
+(unlike Python/TypeScript's imported-package model). Column-major dense
+storage (`SirNDArray(shape, data)`), same value model as the Rust/JS/TS
+references.
+
+**A deliberate divergence from the JS/TS references, not a bug**: `data`
+holds whatever Numeric type the source arithmetic naturally produces
+(Integer stays Integer through `+`/`-`/`*`; only `Div`/`Pow` force a Float
+result) rather than JS's `Float64Array`-forced uniform-double storage —
+Ruby distinguishes Integer/Float in its own display convention (this
+crate's `sir_fmt_float` already deliberately keeps a trailing `.0` on a
+real Float), so an all-integer computation like a 2x2 `matmul` prints its
+result without a spurious `.0`, matching this crate's own `div_true`
+precedent for exactly the same class of decision.
+
+**SIR22 "APL addendum" nodes** (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) share
+`NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut above, so a
+bare feature-flag check can't tell a module using one of these nine apart
+from a safe base-cut-only module. Added a dedicated pre-emit scan arm
+(`ScanHit::Sir22AddendumNode`, folded into this crate's existing single
+shared `Scan`/`first_scan_issue` traversal rather than a second,
+JS-style, separate walker) that rejects them cleanly — mirrors JS/TS's
+own `find_unimplemented_sir22_addendum_node` (since removed there, once
+their own addendum shipped in a later PR — see the SIR22 spec's
+now-corrected "Backend impact" section). Real codegen for these nine is
+Phase A Slice 3, a separate later PR.
+
+**Security**: every NaN-safe AND-form bounds check the JS reference
+documents (`sir_array_get`/`sir_array_set`'s `r >= 0 && c >= 0 && ...`,
+never the OR-form negation) is replicated exactly — Ruby's `Float::NAN`
+follows the same IEEE-754 "every relational comparison is false" rule, so
+the identical hazard class applies. Every shape/output size is validated
+via `sir_array_checked_shape_size` *before* allocating, matching the JS
+reference's own DoS-safety discipline (an attacker-influenced shape must
+fail cleanly, not exhaust memory or crash on an unvalidated `Array.new`).
+
+New `tests/sir22_array.rs` (8 tests, ported from
+`semantic-ir-to-javascript/tests/sir22_array.rs`'s own worked examples,
+adapted for this backend's numeric-type-propagation divergence noted
+above): hand-built `Module`s exercising `matmul`/scalar-broadcast
+`elementwise`/`Div`'s forced-float behavior/`transpose`/`range`/a `Whole`
+selector/`IndexSet` mutation, each compiled and run through a real `ruby`
+interpreter (skips gracefully when absent), plus a compile-time rejection
+test proving `Reduce` is cleanly rejected rather than reaching an
+`emit_expr` panic.
+
+`semantic-ir-to-ruby` 0.24.0 -> 0.25.0.
+
 ## 0.24.0 — SIR21 T3b-2 Slice 7: cleanup — remove dead `tdiv`/`utdiv`
 
 Part of the SIR21 T3b-2 arc's final slice. `c-to-semantic-ir` was the only

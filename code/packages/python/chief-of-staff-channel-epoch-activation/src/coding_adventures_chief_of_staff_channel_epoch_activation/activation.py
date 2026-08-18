@@ -834,10 +834,18 @@ def prepare_rotation_candidate(
 def _validate_public_preparation(
     definition: ChannelDefinition, prepared: PublicPreparation
 ) -> ActivationPlan:
+    if prepared.channel_id != definition.channel_id:
+        _fail("invalid_plan")
+    # Exhaustion sits between the channel comparison and the successor
+    # comparison, exactly where Rust's short-circuiting chain evaluates it. It
+    # must precede the successor check because base_epoch + 1 is not a
+    # meaningful question once base_epoch is saturated; it must follow the
+    # channel check so a bundle that is BOTH foreign and saturated still reports
+    # invalid_plan, as it did before and as Rust still does.
+    if prepared.base_epoch == MAX_U64:
+        _fail("epoch_exhausted")
     if (
-        prepared.channel_id != definition.channel_id
-        or prepared.base_epoch == MAX_U64
-        or prepared.new_epoch != prepared.base_epoch + 1
+        prepared.new_epoch != prepared.base_epoch + 1
         or not 1 <= len(prepared.grants) <= MAX_PLAN_RECEIVERS
     ):
         _fail("invalid_plan")

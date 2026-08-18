@@ -14609,4 +14609,146 @@ mod tests {
         )
         .unwrap();
     }
+
+    // ─────────────────────────────────────────────────────────────────
+    // Oversized records fail closed on every mutating path
+    //
+    // These pin the *user-facing* half of the fix. The codec-level
+    // boundary lives in `codec.rs`; what matters here is that a record
+    // the encoder will not emit produces a closed `ApplicationError` out
+    // of the real ceremonies rather than aborting the process.
+    //
+    // A password of 2 MiB is the shape used throughout: comfortably
+    // inside this crate's 16 MiB plaintext gate, comfortably outside
+    // canonical-CBOR's 1 MiB encoded ceiling.
+    // ─────────────────────────────────────────────────────────────────
+
+    const OVERSIZED_PASSWORD_BYTES: usize = 2 * 1024 * 1024;
+
+    fn oversized_password() -> String {
+        "p".repeat(OVERSIZED_PASSWORD_BYTES)
+    }
+
+    fn active_session(
+        locator: BootstrapLocator,
+        local: &MemoryLocalStateStore,
+        bootstrap: &MemoryBootstrapStore,
+        factory: &V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+    ) -> UnlockedVaultV1 {
+        open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            local,
+            bootstrap,
+            factory,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn add_item_reports_an_oversized_record_instead_of_aborting() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let randomness = add_item_randomness(0x41);
+        let item_id = randomness.item_id();
+
+        // The document itself is constructible -- the domain layer has no
+        // field-length bound -- so the refusal has to come from the
+        // publish path, and it has to be a value, not a crash.
+        let document = new_login_document(item_id, "Oversized", &oversized_password());
+        assert_eq!(
+            session
+                .add_item(document, 301, randomness, &local)
+                .map(|_| ()),
+            Err(ApplicationError::BoundExceeded)
+        );
+
+        // Nothing was written: the vault is still openable and still empty.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert!(session.current_catalog.items.is_empty());
+    }
+
+    #[test]
+    fn login_edit_reports_an_oversized_replacement_instead_of_aborting() {
+        let (locator, local, bootstrap, factory) = initialized();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let randomness = add_item_randomness(0x42);
+        let item_id = randomness.item_id();
+        session
+            .add_item(
+                rich_login_document(item_id, "Editable", "short-password"),
+                301,
+                randomness,
+                &local,
+            )
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let preparation = session.prepare_login_edit(item_id).unwrap();
+        assert_eq!(
+            preparation
+                .complete(
+                    LoginEditInputV1::new(
+                        Zeroizing::new("Editable".to_owned()),
+                        Zeroizing::new("user@example.test".to_owned()),
+                        Zeroizing::new(oversized_password()),
+                        vec![Zeroizing::new("https://one.example.test".to_owned())],
+                        None,
+                    ),
+                    302,
+                    replace_item_randomness(0x43),
+                    &local,
+                )
+                .map(|_| ()),
+            Err(ApplicationError::BoundExceeded)
+        );
+
+        // The original revision survives the refused edit untouched.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items[&item_id].len(), 1);
+    }
+
+    #[test]
+    fn portable_export_reports_an_oversized_artifact_instead_of_aborting() {
+        // Each record here is under the codec's 1 MiB ceiling on its own,
+        // so every item publishes cleanly. The export snapshot
+        // concatenates them all, which is what crosses the ceiling -- and
+        // that needs no hostile peer, just an ordinary vault with a
+        // couple of large entries in it.
+        let (locator, local, bootstrap, factory) = initialized();
+        let large = "p".repeat(600 * 1024);
+        for seed in [0x44_u8, 0x45] {
+            let session = active_session(locator, &local, &bootstrap, &factory);
+            let randomness = add_item_randomness(seed);
+            let item_id = randomness.item_id();
+            session
+                .add_item(
+                    new_login_document(item_id, "Large", &large),
+                    301,
+                    randomness,
+                    &local,
+                )
+                .unwrap();
+        }
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let exact_bootstrap = bootstrap.0.lock().unwrap().clone().unwrap();
+        assert_eq!(
+            session
+                .export_portable_with_passphrase(
+                    &exact_bootstrap,
+                    Zeroizing::new(b"separate export passphrase".to_vec()),
+                    crate::PortableExportPolicyV1::new(8 * 1024, 1, 1).unwrap(),
+                    crate::PortableExportRandomnessV1::new(
+                        [0x5b; crate::PORTABLE_EXPORT_RANDOM_BYTES]
+                    ),
+                )
+                .map(|_| ()),
+            Err(ApplicationError::BoundExceeded)
+        );
+
+        // The vault is untouched and still openable after the refusal.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), 2);
+    }
 }

@@ -1,0 +1,118 @@
+% ============================================================================
+% measuring-tool-si-unit — WHICH internationally-standardized SI unit a lab
+% measuring tool's own readings are expressed in, DERIVED (not just looked up)
+% by composing a specific CHEMISTRY fact with a general METROLOGY principle
+% (adj-facts-stdlib, CHEMISTRY, cross-directory composition with METROLOGY).
+% Grounds the "observation and measurement" Major Gap ADJ-STDLIB-COVERAGE.md
+% §5.1 names for K-8 science.
+% ============================================================================
+% `chemistry/measuring-tools.adj` already tables WHICH quantity each common lab
+% tool measures ("a ruler measures length, a thermometer measures temperature");
+% `metrology/si-base-units.adj` already tables what the ONE internationally
+% agreed SI unit for a GIVEN base quantity IS ("length's base unit is the
+% meter, temperature's base unit is the kelvin"). Neither file states outright
+% "a thermometer's readings are standardized in kelvin" — but measuring-tools'
+% specific tool→quantity assignment, run through si-base-units' general
+% metrology PRINCIPLE for that quantity, answers it directly: this is the SAME
+% "compose two independently-citable facts into a derived, dual-cited
+% conclusion" discipline `physics/heat-causes-phase-change.adj`,
+% `physics/force-causes-acceleration.adj`, and
+% `geology/earth-layer-matter-behavior.adj` already established, applied here
+% to a genuinely CROSS-DIRECTORY pair (chemistry + metrology, not two files in
+% the same subject directory) — the same cross-directory SHAPE
+% `earth-layer-matter-behavior.adj` proved out (its `has_state` plays the role
+% this file's `measuring_tool` plays; its `matter_state` plays the role this
+% file's `si_base_unit` plays), applied here to the OBSERVATION/MEASUREMENT
+% gap rather than an Earth-processes one.
+%
+%     import "measuring-tool-si-unit.adj"        % transitively imports measuring-tools.adj + ../metrology/si-base-units.adj
+%     ? measuring_tool_si_unit(thermometer, $Unit, $Symbol)   % kelvin, "K"
+%     ? measuring_tool_si_unit(ruler, $Unit, $Symbol)         % meter, "m"
+%     ? measuring_tool_si_unit(balance, $Unit, $Symbol)       % kilogram, "kg"
+%     ? measuring_tool_si_unit($T, kelvin, $Symbol)           % thermometer (reverse)
+%     ? measuring_tool_si_unit(graduated_cylinder, $U, $S)    % abstain -- volume is a DERIVED SI unit, not one of the 7 BASE units
+%
+% This is a native `rule` (ADJ-TABLES RS-6): its body binds `$Tool`/`$Quantity`
+% through the already-shipped `measuring_tool` table, then re-binds
+% `$Quantity`/`$Unit`/`$Symbol` through the already-shipped `si_base_unit`
+% table -- a plain two-hop join on the literal, EXACT quantity word both
+% tables share. A query's `steps` trail therefore shows THREE entries: the
+% rule's own citation (the general SI-standardization principle), the
+% `measuring_tool` fact's citation (Chemistry LibreTexts), and the
+% `si_base_unit` fact's citation (NIST), so a human can independently verify
+% each link.
+%
+% WHY this is a genuine derivation, not a coincidental word match: a tool's
+% raw reading is only USEFUL to another scientist once it is tied to the one
+% unit everyone has agreed to measure that quantity in -- that is the entire
+% point of the SI system, and it is exactly the link `measuring_tools.adj`'s
+% own header names as the gap it fills ("observation and measurement") without
+% yet closing the loop to a standardized unit. This rule closes that loop: a
+% ruler's centimeters and a thermometer's degrees Celsius are both informal
+% everyday framings of the SAME base quantities (length, temperature) whose
+% ONE internationally-standardized unit is what `si_base_unit` tables, making
+% "which SI unit does this tool's reading reduce to" a first-class, queryable,
+% dual-cited fact instead of background intuition a learner is expected to
+% already have.
+%
+% HONEST ABSTENTION -- the crux of why this is a narrow, faithful composition
+% and not a forced one: `measuring_tool` tables FOUR tools, but `si_base_unit`
+% only defines the SEVEN quantities SI calls "base" (length, mass, time,
+% electric_current, temperature, amount_of_substance, luminous_intensity).
+% Three of the four tools join cleanly:
+%
+%     tool                  measuring_tool's quantity   matches si_base_unit's key?   SI unit
+%     -------------------   --------------------------  ----------------------------  ---------
+%     ruler                 length                       YES (length)                  meter
+%     balance                mass                         YES (mass)                    kilogram
+%     thermometer            temperature                  YES (temperature)             kelvin
+%     graduated_cylinder      volume                       NO -- volume is DERIVED       ABSTAIN
+%
+% `metrology/si-derived-units.adj` (already shipped, in this SAME package) is
+% the independent confirmation of WHY: that sibling table's own header
+% explains that volume (`si_derived_unit(volume, "m3")`) is "one rung up from
+% the seven base units" -- a quantity built by RAISING the base unit meter to
+% the third power, not a base quantity in its own right. Forcing
+% `graduated_cylinder` to join against `si_base_unit` anyway (e.g. by
+% asserting the base unit `meter` is "the" SI unit for volume) would conflate
+% a base quantity with a derived one -- a real metrology distinction the
+% cited NIST source itself draws, and exactly the kind of invented mapping
+% this stdlib's honest-abstention discipline forbids. So this rule derives
+% exactly the three tools whose own tabled quantity is a literal, exact match
+% for one of SI's seven keyed BASE quantities, and abstains on the fourth,
+% rather than inventing a base-unit assignment for a derived quantity.
+%
+% CROSS-DIRECTORY IMPORT: this file lives in `chemistry/` (its natural
+% subject home, alongside `measuring-tools.adj`, the specific-instance table)
+% and imports its metrology sibling with a relative
+% `../metrology/si-base-units.adj` path -- empirically confirmed (in a
+% scratch dir, before writing this file) against the real built CLI binary,
+% mirroring `earth-layer-matter-behavior.adj`'s own confirmed cross-directory
+% shape. This library's OWN `.query.adj` companion is placed at the package
+% root (not beside this file), the same placement
+% `earth-layer-matter-behavior.query.adj` already established, so a bare
+% `adj-lang-cli <query>.query.adj` invocation from the package root works
+% directly.
+%
+% Deliberately scoped to the four lab tools `measuring-tools.adj` itself
+% already commits to (no weather or ocean instruments -- those are DIFFERENT
+% already-shipped "observation and measurement" axes, `meteorology/
+% weather-instruments.adj` and `oceanography/ocean-observing-instruments.adj`,
+% whose own quantity vocabulary -- wind_speed, atmospheric_pressure,
+% underwater_sound, etc. -- does not literally match any of `si_base_unit`'s
+% seven keyed quantities, so composing either of those tables here would
+% either produce zero rows or require inventing an unstated mapping) and to
+% the seven everyday base quantities `si-base-units.adj` itself already
+% commits to -- no new tool or unit content is asserted here, only the join.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts.)
+% ============================================================================
+
+import "measuring-tools.adj"
+import "../metrology/si-base-units.adj"
+
+rule { head: measuring_tool_si_unit($Tool, $Unit, $Symbol)
+       when: measuring_tool($Tool, $Quantity), si_base_unit($Quantity, $Unit, $Symbol)
+       source "The SI is made up of 7 base units that define the 22 derived units with special names and symbols."
+       locator "https://www.nist.gov/pml/owm/metric-si/si-units"
+       trust authoritative }

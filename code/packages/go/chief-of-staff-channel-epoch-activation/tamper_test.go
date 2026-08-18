@@ -42,6 +42,15 @@ func TestTamperedCustodyBundlesAreRejected(t *testing.T) {
 			code:   ErrInvalidPlan,
 		},
 		{
+			// A saturated base_epoch has no successor at all, which the D18T
+			// roster calls epoch_exhausted -- not invalid_plan. base_epoch + 1
+			// is not a meaningful question here, so the check must come before
+			// the successor comparison.
+			name:   "base-epoch-saturated",
+			bundle: NewPublicPreparation(testChannelID, MaxU64, 0, public.PlanBytes(), public.Grants()),
+			code:   ErrEpochExhausted,
+		},
+		{
 			name:   "grant-list-emptied",
 			bundle: NewPublicPreparation(testChannelID, 0, 1, public.PlanBytes(), nil),
 			code:   ErrInvalidPlan,
