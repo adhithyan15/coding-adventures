@@ -1906,6 +1906,25 @@
       "tex": "japanese/book/chapters/ch02-hiragana-eight.tex"
     },
     {
+      "language": "japanese",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:3ff7e4c4a4bc5425",
+      "lessonIds": [
+        "JA-W03-a",
+        "JA-W03-ri",
+        "JA-W03-ka",
+        "JA-W03-dakuten",
+        "JA-W03-to",
+        "JA-W03-u",
+        "JA-W03-arigatou-read",
+        "JA-W03-sa",
+        "JA-W03-ma",
+        "JA-W03-su",
+        "JA-C03-practice"
+      ],
+      "tex": "japanese/book/chapters/ch03-thanks.tex"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "sourceHash": "fnv1a64:0dd0018832133f4e",

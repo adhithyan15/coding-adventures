@@ -52,6 +52,33 @@
           "JA-SCRIPT-HA-01"
         ]
       }
+    },
+    {
+      "chapter": 3,
+      "title": "Eight Signs, One Mark, and the Longest Word You Know",
+      "label": "ch:ja-thanks",
+      "canDo": "I can write eight more hiragana from memory, add the dakuten to voice a sign I already know, and read ありがとうございます off the page without the romanization.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "JA-C03-practice",
+        "kind": "dialogue",
+        "summary": "The ten signs of the polite thank-you named one by one, three of them earlier signs wearing two ticks, and a short exchange in which every character on the page is one the reader can write.",
+        "assesses": [
+          "JA-SCRIPT-A-01",
+          "JA-SCRIPT-RI-01",
+          "JA-SCRIPT-KA-01",
+          "JA-SCRIPT-TO-01",
+          "JA-SCRIPT-U-01",
+          "JA-SCRIPT-SA-01",
+          "JA-SCRIPT-MA-01",
+          "JA-SCRIPT-SU-01",
+          "JA-SCRIPT-DAKUTEN-01",
+          "JA-SCRIPT-ARIGATOU-READ-01",
+          "JA-SCRIPT-GOZAIMASU-READ-01"
+        ]
+      }
     }
   ]
 }
