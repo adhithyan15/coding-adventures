@@ -1102,11 +1102,14 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
 
     // VLT-PM42 §6. A repair nobody mentions is indistinguishable from no
     // repair, so the composition root watches the durable lifecycle state
-    // across the command it is about to run. Both reads happen inside the
-    // cross-process writer lock the command already holds, which is what makes
-    // the inference sound: no other local writer can move the state between
-    // them, so `RecoveryRequired` before and anything else after means *this*
-    // command finished an interrupted publication.
+    // across the command it is about to run: once before, and — only if that
+    // reading found something repairable — once after. Both readings happen
+    // inside the cross-process writer lock the command already holds, which is
+    // what makes the inference sound: no other local writer can move the state
+    // between them, so `RecoveryRequired` before and `Locked` after means
+    // *this* command finished an interrupted publication.
+    // `observed_a_repair` below states the whole rule, including the rows that
+    // must stay quiet.
     let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
     let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
     // The second reading is taken only when the first one found something that
@@ -1187,6 +1190,16 @@ const fn observed_a_repair(
 /// false claim about a person's vault. The caller must honour that bias in
 /// *both* observations — see [`execute`], where an unobservable after-state is
 /// treated as "say nothing" rather than as "no longer recovery required".
+///
+/// # This is an observation, not a pure one
+///
+/// Reading owner state is not free of effect. `LocalStateStore::load`
+/// initializes its backend first, and `FsStorageBackend::initialize` creates
+/// missing roots and sweeps stranded temporaries — so this function *writes*,
+/// idempotently, inside the writer lock the command already holds. Under the
+/// `crash-injection` feature that initialization is a named durable step the
+/// VLT-PM41 drill counts and kills processes at, which is why [`execute`] takes
+/// the second reading only when the first found something to repair.
 fn observed_vault_state(
     paths: &LocalVaultPaths,
     writer: &LocalWriterGuard,
@@ -8352,10 +8365,25 @@ mod tests {
             );
         }
 
-        // Nothing to repair in the first place.
-        for before in [None, Some(Absent), Some(Prepared), Some(Locked)] {
-            assert!(!observed_a_repair(before, Some(Locked)), "{before:?}");
-            assert!(!observed_a_repair(before, None), "{before:?}");
+        // Nothing to repair in the first place — every remaining `before`,
+        // against every possible `after`, so the table above is total.
+        for before in [
+            None,
+            Some(Absent),
+            Some(Prepared),
+            Some(Locked),
+            Some(Unlocked),
+        ] {
+            for after in [
+                None,
+                Some(Absent),
+                Some(Prepared),
+                Some(Locked),
+                Some(Unlocked),
+                Some(RecoveryRequired),
+            ] {
+                assert!(!observed_a_repair(before, after), "{before:?} {after:?}");
+            }
         }
     }
 
