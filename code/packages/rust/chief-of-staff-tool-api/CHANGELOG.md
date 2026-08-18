@@ -4,6 +4,30 @@ All notable changes to this package will be documented in this file.
 
 ## Unreleased
 
+### Security
+
+- A call that fails output validation no longer publishes the handler's events.
+  They were assembled before validation and forwarded on the rejection path, so
+  the runtime declared a call invalid and shipped that call's side effects
+  anyway -- a handler whose output was refused could still say whatever it liked
+  to every event sink. The runtime's own framing events are unaffected: they
+  describe the call, not its result.
+- Registering a definition under a built-in tool id now requires it to match the
+  catalog entry, with a new `ToolApiError::BuiltinDefinitionMismatch`. Without
+  it, the schema a tool is validated against was a property of whichever
+  `ToolDefinition` reached `register`, not of the tool id -- so anything holding
+  a registry could re-register `vault.request_direct` with `output_schema: None`
+  and silently disable the output validation the vault binding's "no secret
+  return channel" rests on, while the registry looked entirely normal. Only ids
+  the catalog claims are constrained; smart-home and host-local tools are
+  untouched.
+
+  This is a **behaviour change for anything that registered a look-alike under a
+  real built-in id.** One existed: this crate's own test fixture reused
+  `artifact.create` with a different description and output schema. It is now
+  `test.artifact_create`, which is what it always should have been -- a
+  synthetic tool testing the runtime had no business claiming a catalogued id.
+
 ### Added
 
 - Added the canonical Tier-2 `vault.request_lease` built-in with strict opaque

@@ -3199,6 +3199,21 @@ impl InMemoryToolRegistry {
         if !report.ok {
             return Err(ToolApiError::InvalidDefinition(report.errors));
         }
+        // A built-in tool id names one definition. Without this, the schema a
+        // tool is validated against is a property of whichever `ToolDefinition`
+        // value happened to reach this function rather than of the tool id --
+        // so anything holding a registry could re-register
+        // `vault.request_direct` with `output_schema: None` and silently
+        // disable the output validation that binding's guarantees rest on,
+        // while the resulting registry looked entirely normal.
+        //
+        // Only ids the catalog claims are constrained. Smart-home device tools,
+        // host-local tools, and anything else outside it are untouched.
+        if let Some(canonical) = builtin_tool_definition(&definition.tool_id) {
+            if canonical != definition {
+                return Err(ToolApiError::BuiltinDefinitionMismatch(definition.tool_id));
+            }
+        }
         if self.definitions.contains_key(&definition.tool_id) {
             return Err(ToolApiError::DuplicateToolId(definition.tool_id));
         }
@@ -4786,9 +4801,12 @@ impl InMemoryToolRuntime {
                 trace_with_terminal(record, request, started_event(request), result)
             }
             Ok(output) => {
-                let mut events = started_event(request);
-                events.extend(handler_events(request, output.events, events.len() as u64));
-
+                // Validate BEFORE building the handler's events into the
+                // stream. Assembling them first and publishing them on the
+                // rejection path would mean the runtime declares a call invalid
+                // and forwards that call's side effects anyway -- a handler
+                // whose output was refused could still say anything it liked to
+                // every event sink.
                 if let Some(output_schema) = &definition.output_schema {
                     let output_validation = output_schema.validate_value(&output.output);
                     if !output_validation.ok {
@@ -4802,9 +4820,19 @@ impl InMemoryToolRuntime {
                         );
                         record.status = ToolCallStatus::Failed;
                         record.completed_at = Some(request.requested_at);
-                        return trace_with_terminal(record, request, events, result);
+                        // Only the runtime's own framing events. Those describe
+                        // the call, not its result, so they stay.
+                        return trace_with_terminal(
+                            record,
+                            request,
+                            started_event(request),
+                            result,
+                        );
                     }
                 }
+
+                let mut events = started_event(request);
+                events.extend(handler_events(request, output.events, events.len() as u64));
 
                 let mut result = ToolResult::completed(request.call_id.clone(), output.output);
                 result.artifact_refs = output.artifact_refs;
@@ -5101,6 +5129,10 @@ pub enum ToolApiError {
     DuplicateToolId(String),
     UnknownTool(String),
     InvalidDefinition(Vec<ToolValidationIssue>),
+    /// A definition was registered under a built-in tool id but differs from
+    /// the catalog entry for that id. See D18D, "Built-in definitions are
+    /// canonical".
+    BuiltinDefinitionMismatch(String),
 }
 
 impl Display for ToolApiError {
@@ -5109,6 +5141,10 @@ impl Display for ToolApiError {
             Self::InvalidToolId(tool_id) => write!(f, "invalid tool id '{tool_id}'"),
             Self::DuplicateToolId(tool_id) => write!(f, "duplicate tool id '{tool_id}'"),
             Self::UnknownTool(tool_id) => write!(f, "unknown tool '{tool_id}'"),
+            Self::BuiltinDefinitionMismatch(tool_id) => write!(
+                f,
+                "definition for built-in tool '{tool_id}' does not match the catalog"
+            ),
             Self::InvalidDefinition(issues) => {
                 write!(f, "invalid tool definition with {} issue(s)", issues.len())
             }
@@ -5225,6 +5261,13 @@ fn json_schema_type(type_name: &str) -> JsonValue {
 
 #[cfg(test)]
 mod tests {
+    /// Tool id for the synthetic fixture below. Deliberately outside the
+    /// built-in catalog: a test tool that claims a real id would be rejected,
+    /// and would be testing the wrong thing if it were not.
+    const SYNTHETIC_TOOL_ID: &str = "test.artifact_create";
+    /// A second id outside the catalog, for tests that need two entries.
+    const SYNTHETIC_SECOND_TOOL_ID: &str = "test.remember";
+
     use super::*;
 
     fn json_object_lookup<'a>(value: &'a JsonValue, key: &str) -> Option<&'a JsonValue> {
@@ -5425,12 +5468,12 @@ mod tests {
         registry.register(definition.clone()).unwrap();
         assert_eq!(
             registry.register(definition).unwrap_err(),
-            ToolApiError::DuplicateToolId("artifact.create".to_string())
+            ToolApiError::DuplicateToolId(SYNTHETIC_TOOL_ID.to_string())
         );
 
         let request = ToolInvocationRequest {
             call_id: "call_1".to_string(),
-            tool_id: "artifact.create".to_string(),
+            tool_id: SYNTHETIC_TOOL_ID.to_string(),
             arguments: JsonValue::Object(vec![
                 (
                     "collection".to_string(),
@@ -5473,8 +5516,12 @@ mod tests {
     fn registry_lists_definitions_by_tool_id() {
         let mut registry = InMemoryToolRegistry::new();
         registry
+            // Was `memory.remember` with an artifact.create body -- a
+            // look-alike under a real built-in id, which registration now
+            // rejects. Any second id outside the catalog serves the purpose,
+            // which is only to have two entries to list.
             .register(ToolDefinition {
-                tool_id: "memory.remember".to_string(),
+                tool_id: SYNTHETIC_SECOND_TOOL_ID.to_string(),
                 display_name: "Remember".to_string(),
                 ..artifact_create_definition()
             })
@@ -5486,7 +5533,7 @@ mod tests {
             .into_iter()
             .map(|definition| definition.tool_id.as_str())
             .collect();
-        assert_eq!(ids, vec!["artifact.create", "memory.remember"]);
+        assert_eq!(ids, vec![SYNTHETIC_TOOL_ID, SYNTHETIC_SECOND_TOOL_ID]);
     }
 
     #[test]
@@ -5939,11 +5986,14 @@ mod tests {
         );
         assert_eq!(
             registry
-                .schema_documents(&ToolCatalogQuery::new().for_family(BuiltinToolFamily::Artifact))
+                // The fixture is no longer in the Artifact family -- its id
+                // is synthetic now -- so query by capability, which is what
+                // this assertion was really about.
+                .schema_documents(&ToolCatalogQuery::new())
                 .into_iter()
                 .map(|document| document.tool_id)
                 .collect::<Vec<_>>(),
-            vec!["artifact.create"]
+            vec!["memory.remember", "memory.search", SYNTHETIC_TOOL_ID]
         );
         assert_eq!(
             registry
@@ -6185,7 +6235,9 @@ mod tests {
                 .iter()
                 .map(|request| request.tool_id.as_str())
                 .collect::<Vec<_>>(),
-            vec!["artifact.create", "artifact.create", "memory.search"]
+            // The synthetic id sorts after "memory.search"; the fixture used
+            // to be named "artifact.create", which sorted before it.
+            vec!["memory.search", SYNTHETIC_TOOL_ID, SYNTHETIC_TOOL_ID]
         );
     }
 
@@ -6193,7 +6245,7 @@ mod tests {
     fn call_record_queries_find_active_approval_work() {
         let queued = ToolCallRecord {
             call_id: "call_1".to_string(),
-            tool_id: "artifact.create".to_string(),
+            tool_id: SYNTHETIC_TOOL_ID.to_string(),
             status: ToolCallStatus::Queued,
             started_at: None,
             completed_at: None,
@@ -6444,7 +6496,7 @@ mod tests {
 
         let audit = &journal.audit_records()[0];
         assert_eq!(audit.call_id, "call_1");
-        assert_eq!(audit.tool_id, "artifact.create");
+        assert_eq!(audit.tool_id, SYNTHETIC_TOOL_ID);
         assert_eq!(audit.requested_by, RequestedBy::Agent);
         assert_eq!(audit.started_at, Some(100));
         assert_eq!(audit.completed_at, Some(100));
@@ -6465,7 +6517,7 @@ mod tests {
             trace_summary,
             ToolExecutionTraceSummary {
                 call_id: "call_1".to_string(),
-                tool_id: "artifact.create".to_string(),
+                tool_id: SYNTHETIC_TOOL_ID.to_string(),
                 status: ToolCallStatus::Completed,
                 approval_state: ApprovalState::NotRequired,
                 event_count: 3,
@@ -6549,7 +6601,7 @@ mod tests {
 
         let completed_records = journal.query_call_records(
             &ToolCallRecordQuery::new()
-                .for_tool("artifact.create")
+                .for_tool(SYNTHETIC_TOOL_ID)
                 .with_status(ToolCallStatus::Completed),
         );
         assert_eq!(completed_records[0].call_id, "call_1");
@@ -6565,7 +6617,7 @@ mod tests {
 
         let audit_records = journal.query_audit_records(
             &ToolAuditRecordQuery::new()
-                .for_tool("artifact.create")
+                .for_tool(SYNTHETIC_TOOL_ID)
                 .requested_by(RequestedBy::Agent)
                 .with_status(ToolCallStatus::Completed)
                 .with_approval_state(ApprovalState::NotRequired)
@@ -6588,6 +6640,84 @@ mod tests {
         );
         assert_eq!(sink.drain(), vec![audit.clone()]);
         assert!(sink.records().is_empty());
+    }
+
+    /// A built-in tool id names one definition (D18D, "Built-in definitions
+    /// are canonical").
+    ///
+    /// Without this, the schema a tool is validated against is a property of
+    /// whichever `ToolDefinition` reached `register`, not of the tool id. The
+    /// vault binding's "no secret return channel" rests on
+    /// `vault.request_direct` having `output_schema: Some(Null)`; re-registering
+    /// it with `None` disables that check while the registry looks normal.
+    #[test]
+    fn a_lookalike_definition_cannot_claim_a_builtin_tool_id() {
+        let mut registry = InMemoryToolRegistry::new();
+
+        // The exact attack: same id, validation disabled.
+        let disarmed = ToolDefinition {
+            output_schema: None,
+            ..builtin_tool_definition("vault.request_direct").expect("built-in exists")
+        };
+        assert_eq!(
+            registry.register(disarmed),
+            Err(ToolApiError::BuiltinDefinitionMismatch(
+                "vault.request_direct".to_string()
+            ))
+        );
+
+        // A subtler divergence is refused just the same.
+        let retitled = ToolDefinition {
+            display_name: "Totally normal vault tool".to_string(),
+            ..builtin_tool_definition("vault.request_lease").expect("built-in exists")
+        };
+        assert!(matches!(
+            registry.register(retitled),
+            Err(ToolApiError::BuiltinDefinitionMismatch(_))
+        ));
+
+        // The genuine article still registers.
+        registry
+            .register(builtin_tool_definition("vault.request_direct").expect("built-in exists"))
+            .expect("the catalog definition is registerable");
+
+        // And ids the catalog does not claim are unconstrained.
+        registry
+            .register(artifact_create_definition())
+            .expect("a synthetic id is not the catalog's business");
+    }
+
+    /// A rejected call publishes nothing the handler produced.
+    ///
+    /// Companion to `runtime_rejects_invalid_handler_output_before_completed_result`,
+    /// which checks the same rule via event *kinds*. This one checks the
+    /// payload, because the kind alone would not catch a handler that smuggled
+    /// data out through an event body on the rejection path.
+    #[test]
+    fn a_rejected_call_publishes_no_handler_event_payload() {
+        let mut runtime = InMemoryToolRuntime::new();
+        runtime
+            .register_handler(artifact_create_definition(), |_, _| {
+                Ok(ToolHandlerOutput::new(JsonValue::Object(vec![(
+                    // Wrong shape: fails the declared output schema.
+                    "wrong_field".to_string(),
+                    JsonValue::String("x".to_string()),
+                )]))
+                .with_event(
+                    ToolEventKind::Progress,
+                    JsonValue::String("smuggled-through-an-event".to_string()),
+                ))
+            })
+            .unwrap();
+
+        let trace = runtime.invoke_with_events(&artifact_create_request());
+
+        assert!(!trace.result.ok, "the output should have been refused");
+        let rendered = format!("{:?}", trace.events);
+        assert!(
+            !rendered.contains("smuggled-through-an-event"),
+            "a refused call must not forward the handler's event payload: {rendered}"
+        );
     }
 
     #[test]
@@ -6617,17 +6747,19 @@ mod tests {
         assert_eq!(error.kind, ToolErrorKind::ToolValidationError);
         assert_eq!(error.message, "tool handler output failed validation");
         assert!(format!("{:?}", error.details).contains("$.artifact_ref"));
+        // The handler emitted a Progress event and then failed output
+        // validation. That Progress event is NOT published: a call the runtime
+        // has declared invalid must not have its side effects forwarded, or a
+        // handler whose output was refused could still say whatever it liked to
+        // every event sink. Only the runtime's own framing events remain --
+        // they describe the call, not its result.
         assert_eq!(
             trace
                 .events
                 .iter()
                 .map(|event| event.kind)
                 .collect::<Vec<_>>(),
-            vec![
-                ToolEventKind::Started,
-                ToolEventKind::Progress,
-                ToolEventKind::Failed,
-            ]
+            vec![ToolEventKind::Started, ToolEventKind::Failed]
         );
         assert!(trace
             .events
@@ -7007,9 +7139,17 @@ mod tests {
         assert_eq!(trace.events[1].kind, ToolEventKind::Failed);
     }
 
+    /// A synthetic tool for exercising the runtime.
+    ///
+    /// It used to claim the real `artifact.create` id while carrying a
+    /// different description and output schema. That is precisely what
+    /// "built-in definitions are canonical" now forbids, and the reason it
+    /// forbids it: a registry holding a look-alike under a real id validates
+    /// every call against the look-alike's schema while looking entirely
+    /// normal. Renamed to an id the catalog does not claim.
     fn artifact_create_definition() -> ToolDefinition {
         ToolDefinition {
-            tool_id: "artifact.create".to_string(),
+            tool_id: SYNTHETIC_TOOL_ID.to_string(),
             display_name: "Create artifact".to_string(),
             description: "Create a durable artifact in a named collection.".to_string(),
             input_schema: artifact_create_schema(),
@@ -7050,7 +7190,7 @@ mod tests {
     fn artifact_create_request() -> ToolInvocationRequest {
         ToolInvocationRequest {
             call_id: "call_1".to_string(),
-            tool_id: "artifact.create".to_string(),
+            tool_id: SYNTHETIC_TOOL_ID.to_string(),
             arguments: JsonValue::Object(vec![
                 (
                     "collection".to_string(),
