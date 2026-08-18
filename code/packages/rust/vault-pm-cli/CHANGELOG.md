@@ -29,6 +29,10 @@
   `--features <dep>/<feature>` syntax reaches a direct dependency's features
   even when the root package declares none of its own, so the product
   executable asserts on this constant as well.
+- Corrected the `crash` module's own documentation, which still described the
+  rejected `dev-dependencies` design as the live one. That matters more there
+  than anywhere else: it is the module implementing the seam, so its doc
+  comment was telling the next maintainer to do the unsafe thing.
 - Added `vault-pm [--vault NAME] shell`, the foreground interactive session
   host specified by `VLT-PM40-cli-interactive-shell.md`. It adds no capability:
   every command inside a session runs through the same parser, the same

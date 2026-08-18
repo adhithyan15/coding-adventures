@@ -372,13 +372,14 @@ the configuration writer, and the portable-export destination.
 process at a chosen durable write and then check what the *next* real process
 can see and repair. The module has two bodies:
 
-- **`crash-injection` off** — the default, and the only configuration a
-  released binary is ever built in. `LocalBackend` is exactly
+- **`crash-injection` off** — the default, and the only configuration the
+  product executable is ever built in. `LocalBackend` is exactly
   `FsStorageBackend`, each combinator is an `#[inline]` function whose whole
   body is `action()`, and `coding_adventures_vault_pm_crash_injection` is an
   optional dependency that is not compiled at all.
-- **`crash-injection` on** — enabled only through the executable's
-  `dev-dependencies`, so it exists in `cargo test` builds and nowhere else.
+- **`crash-injection` on** — enabled by exactly one crate,
+  `code/programs/rust/vault-pm-cli-drill`, through its ordinary
+  `[dependencies]`.
 
 Neither configuration changes behavior, output, exit classes, files, or on-disk
 formats. Nothing here is reachable from an argument vector or from

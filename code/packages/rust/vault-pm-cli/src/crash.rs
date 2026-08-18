@@ -13,17 +13,27 @@
 //! The module has two bodies selected by the optional `crash-injection`
 //! feature:
 //!
-//! - **feature off** — the default, and the only configuration a released
-//!   `vault-pm` is ever built in. `LocalBackend` is exactly
-//!   `FsStorageBackend`, and each `around_*` combinator is an `#[inline]`
-//!   function whose whole body is `action()`. No counter, no environment
-//!   variable, no dependency: the crash-injection package is an *optional*
-//!   dependency, so it is not even compiled.
-//! - **feature on** — enabled only by this executable's dev-dependencies, so
-//!   it exists in `cargo test` builds and nowhere else. `LocalBackend` gains a
-//!   decorator that brackets every backend write, and the combinators bracket
-//!   the two durable writes that do *not* go through the backend: the client
-//!   configuration file and the portable-export artifact.
+//! - **feature off** — the default, and the only configuration the product
+//!   executable `code/programs/rust/vault-pm-cli` is ever built in.
+//!   `LocalBackend` is exactly `FsStorageBackend`, and each `around_*`
+//!   combinator is an `#[inline]` function whose whole body is `action()`. No
+//!   counter, no environment variable, no dependency: the crash-injection
+//!   package is an *optional* dependency, so it is not even compiled.
+//! - **feature on** — enabled by exactly one crate,
+//!   `code/programs/rust/vault-pm-cli-drill`, through its ordinary
+//!   `[dependencies]`. `LocalBackend` gains a decorator that brackets every
+//!   backend write, and the combinators bracket the two durable writes that do
+//!   *not* go through the backend: the client configuration file and the
+//!   portable-export artifact.
+//!
+//! Do not be tempted to reach the feature from the product crate's
+//! `dev-dependencies` instead of splitting the crate. Cargo resolves features
+//! per package across a build graph, so `cargo build --all-targets` would pull
+//! them in and uplift an instrumented binary to `target/release/vault-pm` —
+//! the path a packaging step copies from. Declaring no feature is in turn
+//! necessary and *not sufficient*, because `--features <dep>/<feature>` reaches
+//! a direct dependency's features regardless, which is why the product's
+//! `main.rs` asserts on [`crate::CRASH_INJECTION_COMPILED`] as well.
 //!
 //! Keeping the seam here rather than inside `vault-pm-application` matters:
 //! the application layer is deliberately storage-agnostic and owns no

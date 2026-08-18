@@ -47,6 +47,13 @@ All notable changes to this package are documented here.
   the kernel discards - which is what happens to a process that is PID 1 in
   its own namespace, since `SIGKILL` cannot have a handler - now falls back to
   `abort` after a bounded wait rather than parking forever.
+- A capability manifest, because this package holds real operating-system
+  authority - reading two environment variables, appending to an unconfined
+  absolute path, and removing its own process - and a package without a
+  manifest is audited as pure computation with zero OS access. The drill
+  program that composes it declares the same authority, but the library is
+  where it actually lives, so a future consumer would otherwise inherit it
+  silently.
 - Twelve unit tests covering vocabulary distinctness, the ledger format,
   owner-only append, refusal of relative, symlinked, FIFO, and world-readable
   ledger paths, ordinal monotonicity, bracketing order, write wrapping versus read
