@@ -24,6 +24,20 @@ mod platform;
 pub const MAX_SECRET_BYTES: usize = 1_024;
 /// Maximum accepted UTF-8 bytes for one echoed item field.
 pub const MAX_TEXT_BYTES: usize = 2_048;
+/// Maximum accepted UTF-8 bytes for one interactive shell command line.
+///
+/// A command line carries selectors — item identifiers, revision identifiers,
+/// field names, and a search query — never a passphrase or a record secret.
+/// The bound exists so a pasted blob cannot force an unbounded allocation on
+/// the terminal read path, not because long commands are meaningful.
+pub const MAX_COMMAND_BYTES: usize = 1_024;
+
+/// Fixed prompt written before each interactive shell command line.
+///
+/// Like every other prompt in this adapter it is a compile-time constant. The
+/// shell never renders a vault name, item title, or previous result into its
+/// prompt, so a stored value can never be mistaken for shell chrome.
+const SHELL_COMMAND_PROMPT: &str = "vault-pm> ";
 
 /// Stable, payload-free native CLI host failures.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -343,6 +357,44 @@ impl ControllingTerminal {
         #[cfg(not(any(unix, windows)))]
         {
             let _ = prompt;
+            Err(CliHostError::UnsupportedPlatform)
+        }
+    }
+
+    /// Read one bounded interactive shell command line, or report end of input.
+    ///
+    /// The line is collected from the same controlling terminal every prompt
+    /// uses — never from process standard input. A redirected or piped stdin
+    /// therefore cannot drive an unlocked shell session, exactly as it cannot
+    /// satisfy a passphrase prompt.
+    ///
+    /// Echo is left in the terminal's ordinary line-discipline state: a command
+    /// line is not a secret, and hiding it would make the shell unusable. The
+    /// caller is responsible for keeping secret-bearing input on the hidden
+    /// [`Self::read_secret`] path.
+    ///
+    /// Returns:
+    ///
+    /// | Terminal event | Result |
+    /// |---|---|
+    /// | complete line | `Ok(Some(line))`, terminator removed |
+    /// | empty line | `Ok(Some(""))` |
+    /// | end of input (`Ctrl-D`, closed terminal) | `Ok(None)` |
+    /// | invalid UTF-8, control character, or oversize | `Err(..)` |
+    ///
+    /// End of input is a value rather than an error because a foreground shell
+    /// must be able to end its session cleanly, while an unexpected read
+    /// failure must still fail closed.
+    pub fn read_command_line(&self) -> Result<Option<Zeroizing<String>>, CliHostError> {
+        #[cfg(any(unix, windows))]
+        {
+            match platform::read_line_or_eof(SHELL_COMMAND_PROMPT, MAX_COMMAND_BYTES)? {
+                Some(bytes) => validate_text(bytes, true).map(Some),
+                None => Ok(None),
+            }
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
             Err(CliHostError::UnsupportedPlatform)
         }
     }

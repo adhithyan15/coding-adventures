@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Exposed `vault-pm [--vault NAME] shell`, the foreground interactive session
+  host, through the unchanged thin executable. Two real-process
+  pseudo-terminal drills prove a session unlocks once for several commands,
+  runs a hidden item-creation ceremony inside the session, re-authenticates
+  after `lock`, refuses vault-lifecycle and reselection verbs without ending,
+  ends cleanly on `Ctrl-D`, and leaks no secret to the transcript or the
+  profile tree while its standard input remains an injected pipe.
+
 - Exposed audited authored opaque-record conflict merge with a single hidden
   hexadecimal payload prompt, opaque base retention, an inherited content type,
   closed hexadecimal and CBOR-canonicality validation, and all-current-parent

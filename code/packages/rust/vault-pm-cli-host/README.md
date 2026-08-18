@@ -8,7 +8,8 @@ auditable adapters:
   Windows, emits only fixed prompts, reads bounded item metadata under the
   existing echo mode or disables echo for secrets, restores the original
   terminal mode before returning, and supports exact-`yes` confirmation plus
-  quoted/control-escaped direct secret delivery; and
+  quoted/control-escaped direct secret delivery, and reads one bounded echoed
+  command line for the foreground interactive shell; and
 - `OsEntropy` completely fills a caller-owned non-empty buffer using the
   repository `csprng` wrapper and maps operating-system details to one stable,
   payload-free failure; and
@@ -20,7 +21,12 @@ auditable adapters:
 
 Secret input never comes from process stdin, argv, an environment variable, a
 configuration value, or a URL. Redirecting stdin therefore cannot inject a
-master passphrase. New-vault collection performs two independent terminal
+master passphrase. Interactive shell command lines are read from that same
+controlling terminal, so a redirected stdin cannot inject a *command* into an
+unlocked session either. A command line is not a secret, so it is read under the
+terminal's ordinary echo mode; the only difference from item-metadata reads is
+that a genuine end of input is reported as a value, letting a foreground shell
+stop instead of failing. New-vault collection performs two independent terminal
 reads and compares them with the repository constant-time comparison primitive.
 Portable-export collection applies the same rule to two distinct fixed hidden
 prompts rather than reusing the live vault passphrase.
@@ -62,10 +68,11 @@ string escaping prevents stored control characters from becoming terminal
 commands or counterfeit output; the escaped string and Windows UTF-16 buffer
 are wipe-on-drop.
 
-Thirteen Unix tests exercise stable diagnostics, text/secret bounds, constant-time
+Fourteen Unix tests exercise stable diagnostics, text/secret bounds, constant-time
 confirmation behavior, real OS entropy, pseudo-terminal ordinary and hidden
-input, mode restoration, oversized-line draining, non-terminal refusal, and
-create-new durable export persistence, and bounded artifact reads.
+input, mode restoration, oversized-line draining, non-terminal refusal,
+create-new durable export persistence, bounded artifact reads, and
+end-of-input-aware command-line reads.
 Windows adds three target-specific tests for console names and strict bounded
 UTF-16 conversion; cross-target Clippy validates the native Windows API
 surface from Unix.

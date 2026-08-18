@@ -2,6 +2,24 @@
 
 ## Unreleased
 
+- Added `vault-pm [--vault NAME] shell`, the foreground interactive session
+  host specified by `VLT-PM40-cli-interactive-shell.md`. It adds no capability:
+  every command inside a session runs through the same parser, the same
+  application use-case boundary, the same publish-before-release audit
+  ordering, and the same closed exit classes as its one-shot invocation. A
+  session binds one vault at start, collects one wipe-on-drop authenticator
+  lazily on the first command that unlocks, and thereafter runs commands
+  without re-prompting. Each command still performs its own verified open,
+  consumes its own session, and acquires the cross-process writer lock only for
+  its own duration, so no pinned repository head is reused and an idle prompt
+  blocks no other process. `lock` wipes the authenticator, a rejected
+  passphrase or an unreadable clock wipes it, the configured
+  `auto_lock_seconds` bound wipes it at a command boundary, and `exit`, `quit`,
+  or end of input ends the session. `init`, `vault`, a nested `shell`, and a
+  leading `--vault` are refused inside a session. Command lines are read from
+  the controlling terminal, never from process standard input, so a redirected
+  stdin can supply neither a secret nor a command.
+
 - Added audit-required `conflict merge opaque ITEM BASE_REVISION`, the last
   authored merge ceremony, which retains the exact current opaque record
   together with the content type it must keep, collects the whole

@@ -1644,7 +1644,19 @@ changelog, focused build, and downstream validation.
               events, aggregate-only completed-and-verified output, and the
               standalone verifier retained for interruption recovery, using
               `VLT-PM23-cli-verified-restore.md`.
-9b-5. foreground interactive shell over the same command/use-case boundary.
+9b-5. completed foreground interactive shell over the same command/use-case
+       boundary: one bound vault resolved at session start, lazy collection of
+       a single wipe-on-drop authenticator, per-command verified open and
+       session consumption so no pinned head is reused, per-command writer-lock
+       acquisition so an idle prompt blocks no other process, explicit `lock`,
+       fail-closed wipe on a rejected attempt or an unreadable clock, a
+       command-boundary `auto_lock_seconds` idle bound, refused vault-lifecycle
+       and reselection verbs, controlling-terminal command lines that a
+       redirected stdin cannot supply, unchanged hidden secret ceremonies and
+       publish-before-release audit ordering, and real-process pseudo-terminal
+       proof of unlock-once, re-lock, and clean end of input, using
+       `VLT-PM40-cli-interactive-shell.md`. The pre-emptive idle timer remains
+       Phase 1B item 12.
 10. Crash/fault matrix and local restore drill.
 
 ### Phase 1B — daily local use
