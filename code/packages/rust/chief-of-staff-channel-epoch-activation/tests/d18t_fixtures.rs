@@ -27,6 +27,14 @@ fn checked_manifest_is_byte_identical_to_its_recorded_generator() {
         string(root, "fixture_format"),
         "D18T-durable-epoch-activation-fixtures-v1"
     );
+    // The manifest names the spec it implements. All five ports assert this;
+    // the reference did not, which the six-language gate surfaced the first
+    // time it ran. A manifest that drifted away from its own spec would
+    // otherwise be caught everywhere except here.
+    assert_eq!(
+        string(root, "spec"),
+        "code/specs/D18T-chief-of-staff-durable-epoch-activation-profile.md"
+    );
     let generator_blob_sha1 = string(root, "generator_blob_sha1");
     let generator_source = include_bytes!("../examples/generate_d18t_fixtures.rs");
     let mut git_blob = format!("blob {}\0", generator_source.len()).into_bytes();
