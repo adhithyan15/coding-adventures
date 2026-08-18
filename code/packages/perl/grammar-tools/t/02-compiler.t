@@ -246,6 +246,21 @@ subtest 'compile_token_grammar: omitted package_name has no package line' => sub
     unlike($code, qr/^package /m, 'no package line when package_name omitted');
 };
 
+subtest 'compile_token_grammar: rejects a package_name that is not a bareword' => sub {
+    # Regression test: package_name is spliced into generated source as
+    # executable code (`package $package_name;`), unlike every grammar-
+    # derived field, which goes through _perl_string(). A value containing
+    # `;` would inject arbitrary Perl into the generated file.
+    my ($original) = CodingAdventures::GrammarTools->parse_token_grammar("NUMBER = /[0-9]+/\n");
+    for my $bad ('Foo; system("touch /tmp/pwned")', 'Foo::', '1Foo', 'Foo-Bar') {
+        my $ok = eval {
+            CodingAdventures::GrammarTools::Compiler::compile_token_grammar($original, 'x.tokens', $bad);
+            1;
+        };
+        ok(!$ok, "rejects invalid package_name '$bad'");
+    }
+};
+
 subtest 'compile_parser_grammar: package_name emits a package declaration' => sub {
     my ($original) = CodingAdventures::GrammarTools->parse_parser_grammar("start = NUMBER ;\n");
     my $code = CodingAdventures::GrammarTools::Compiler::compile_parser_grammar(

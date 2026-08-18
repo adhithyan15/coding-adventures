@@ -58,6 +58,27 @@ sub _perl_bool {
 }
 
 # ----------------------------------------------------------------------------
+# _validate_package_name($name) — reject anything that isn't a plain Perl
+# package name.
+#
+# Unlike grammar-derived strings (patterns, keywords, ...), which are always
+# rendered through _perl_string() as escaped string literals, $package_name
+# is spliced directly into the generated source as executable code
+# (`package $package_name;`). A value containing `;` or other Perl syntax
+# would inject arbitrary code into the generated file. Every current caller
+# passes a hardcoded literal, so this isn't reachable today, but the
+# generated output is checked into git and blindly require()d by production
+# packages — validate defensively rather than trust future callers.
+# ----------------------------------------------------------------------------
+sub _validate_package_name {
+    my ($name) = @_;
+    die "CodingAdventures::GrammarTools::Compiler: invalid package name '$name' "
+      . "(expected a bareword Perl package name like Foo::Bar)\n"
+        unless $name =~ /\A[A-Za-z_]\w*(?:::[A-Za-z_]\w*)*\z/;
+    return $name;
+}
+
+# ----------------------------------------------------------------------------
 # _string_list_src(\@strings, $indent) — render an arrayref of strings.
 # ----------------------------------------------------------------------------
 sub _string_list_src {
@@ -138,7 +159,9 @@ sub compile_token_grammar {
     my $start_mode_src  = _perl_string($grammar->start_mode);
 
     my $source_line = $source_file eq '' ? '' : "# Source: $source_file\n";
-    my $package_line = $package_name ? "package $package_name;\nuse strict;\nuse warnings;\n\n" : '';
+    my $package_line = $package_name
+        ? "package " . _validate_package_name($package_name) . ";\nuse strict;\nuse warnings;\n\n"
+        : '';
 
     my $body = "sub token_grammar {\n"
         . "    return bless {\n"
@@ -254,7 +277,9 @@ sub compile_parser_grammar {
 
     my $source_line = $source_file eq '' ? '' : "# Source: $source_file\n";
     my $version = $grammar->{version} // 0;
-    my $package_line = $package_name ? "package $package_name;\nuse strict;\nuse warnings;\n\n" : '';
+    my $package_line = $package_name
+        ? "package " . _validate_package_name($package_name) . ";\nuse strict;\nuse warnings;\n\n"
+        : '';
 
     return <<"PERL";
 # AUTO-GENERATED FILE — DO NOT EDIT
