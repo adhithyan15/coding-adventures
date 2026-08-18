@@ -30,9 +30,10 @@ package CodingAdventures::PythonLexer;
 # # Architecture
 # ==============
 #
-# 1. **Grammar loading** — `_grammar()` opens `python.tokens`, parses it
-#    with `CodingAdventures::GrammarTools::parse_token_grammar`, and caches
-#    the result for the lifetime of the process.
+# 1. **Grammar loading** — `_grammar($version)` resolves the version to a
+#    precompiled `_Grammar_<version>` sibling module (see "Why precompiled
+#    grammars?" below) and calls its `token_grammar()` constructor, caching
+#    the result per-version.
 #
 # 2. **Pattern compilation** — `_build_rules()` converts every TokenDefinition
 #    in the grammar into a `{ name => str, pat => qr/\G.../ }` hashref.
@@ -44,22 +45,24 @@ package CodingAdventures::PythonLexer;
 #    patterns in definition order. First match wins. On no match, dies with
 #    position info.
 #
-# # Path navigation
-# =================
+# # Why precompiled grammars?
+# ============================
 #
-# `__FILE__` resolves to `lib/CodingAdventures/PythonLexer.pm`.
-# `dirname(__FILE__)` → `lib/CodingAdventures`
+# Earlier versions of this module read `code/grammars/python/python<version>.tokens`
+# (or, for the legacy unversioned grammar, `code/grammars/python/python.tokens`)
+# off disk at runtime, using a path that walked outside this package's own
+# directory into the monorepo. That works when running from a checkout of
+# the monorepo, but a published CPAN distribution does not include
+# `code/grammars/` — installing this package and calling `tokenize` would
+# die with "cannot open ... No such file or directory".
 #
-# From there we climb to the repo root (`code/`) then descend into
-# `grammars/python.tokens`:
-#
-#   lib/CodingAdventures  (dirname of __FILE__)
-#      ↑ up 1 → lib/
-#      ↑ up 2 → python-lexer/     (package directory)
-#      ↑ up 3 → perl/
-#      ↑ up 4 → packages/
-#      ↑ up 5 → code/             ← repo root
-#   + /grammars/python.tokens
+# Instead, each supported Python version's grammar (plus the legacy
+# unversioned grammar) is compiled ahead of time (via
+# `grammar-tools compile-tokens`) into a `_Grammar_<version>.pm` sibling
+# module (dots become underscores, e.g. `_Grammar_3_12`; the legacy grammar
+# becomes `_Grammar_legacy`) that embeds the parsed `TokenGrammar` as native
+# Perl data. Those modules ship with this package like any other source
+# file, so the distribution is self-contained.
 #
 # # Token types
 # =============
@@ -88,8 +91,6 @@ use warnings;
 
 our $VERSION = '0.01';
 
-use File::Basename qw(dirname);
-use File::Spec;
 use CodingAdventures::GrammarTools;
 
 # DefaultVersion is the Python version used when no version is specified.
@@ -111,20 +112,6 @@ my %_rules_cache;     # version => arrayref of { name => str, pat => qr// }
 my %_skip_cache;      # version => arrayref of qr// patterns for skip definitions
 my %_keyword_cache;   # version => hashref mapping keyword string => promoted type
 
-# --- _grammars_dir() ----------------------------------------------------------
-#
-# Return the absolute path to the shared `grammars/` directory in the
-# monorepo, computed relative to this module file.
-
-sub _grammars_dir {
-    my $dir = File::Spec->rel2abs( dirname(__FILE__) );
-    # Climb 5 levels: CodingAdventures/ -> lib/ -> python-lexer/ -> perl/ -> packages/ -> code/
-    for (1..5) {
-        $dir = dirname($dir);
-    }
-    return File::Spec->catdir($dir, 'grammars');
-}
-
 # --- _resolve_version($version) -----------------------------------------------
 #
 # Return the version string to use. If undef or empty, returns DEFAULT_VERSION.
@@ -135,24 +122,40 @@ sub _resolve_version {
     return $version;
 }
 
-# --- _grammar_path($version) --------------------------------------------------
+# ============================================================================
+# Precompiled grammars
+# ============================================================================
 #
-# Return the path to the .tokens file for the given Python version.
+# Each entry maps a version string to the package name of a `require`d
+# module produced by `grammar-tools compile-tokens`, run once per
+# `code/grammars/python/python<version>.tokens` file (and, for 'legacy',
+# against the unversioned `code/grammars/python/python.tokens`). Every
+# module exposes a `token_grammar()` constructor; `_grammar` calls it (and
+# caches the result) the first time a version is actually used.
 
-sub _grammar_path {
-    my ($version) = @_;
-    # 'legacy' loads the old minimal python.tokens (no indentation mode,
-    # simple patterns compatible with all regex engines).
-    if ($version eq 'legacy') {
-        return File::Spec->catfile( _grammars_dir(), 'python', 'python.tokens' );
-    }
-    return File::Spec->catfile( _grammars_dir(), 'python', "python${version}.tokens" );
-}
+require CodingAdventures::PythonLexer::_Grammar_legacy;
+require CodingAdventures::PythonLexer::_Grammar_2_7;
+require CodingAdventures::PythonLexer::_Grammar_3_0;
+require CodingAdventures::PythonLexer::_Grammar_3_6;
+require CodingAdventures::PythonLexer::_Grammar_3_8;
+require CodingAdventures::PythonLexer::_Grammar_3_10;
+require CodingAdventures::PythonLexer::_Grammar_3_12;
+
+my %GRAMMAR_MODULE = (
+    'legacy' => 'CodingAdventures::PythonLexer::_Grammar_legacy',
+    '2.7'    => 'CodingAdventures::PythonLexer::_Grammar_2_7',
+    '3.0'    => 'CodingAdventures::PythonLexer::_Grammar_3_0',
+    '3.6'    => 'CodingAdventures::PythonLexer::_Grammar_3_6',
+    '3.8'    => 'CodingAdventures::PythonLexer::_Grammar_3_8',
+    '3.10'   => 'CodingAdventures::PythonLexer::_Grammar_3_10',
+    '3.12'   => 'CodingAdventures::PythonLexer::_Grammar_3_12',
+);
 
 # --- _grammar($version) -------------------------------------------------------
 #
-# Load and parse the versioned grammar, caching per version.
-# Returns a CodingAdventures::GrammarTools::TokenGrammar object.
+# Resolve the precompiled `TokenGrammar` for the given Python version,
+# caching per version. Returns a
+# CodingAdventures::GrammarTools::TokenGrammar object.
 
 sub _grammar {
     my ($version) = @_;
@@ -160,18 +163,14 @@ sub _grammar {
 
     return $_grammar_cache{$v} if $_grammar_cache{$v};
 
-    my $tokens_file = _grammar_path($v);
-    open my $fh, '<', $tokens_file
-        or die "CodingAdventures::PythonLexer: cannot open '$tokens_file': $!";
-    my $content = do { local $/; <$fh> };
-    close $fh;
+    die "CodingAdventures::PythonLexer: unknown Python version '$v'. "
+      . "Valid versions: 2.7 3.0 3.6 3.8 3.10 3.12 legacy"
+        unless exists $GRAMMAR_MODULE{$v};
 
-    my ($grammar, $err) = CodingAdventures::GrammarTools->parse_token_grammar($content);
-    die "CodingAdventures::PythonLexer: failed to parse python${v}.tokens: $err"
-        unless $grammar;
-
-    $_grammar_cache{$v} = $grammar;
-    return $grammar;
+    my $module = $GRAMMAR_MODULE{$v};
+    no strict 'refs';
+    $_grammar_cache{$v} = &{"${module}::token_grammar"}();
+    return $_grammar_cache{$v};
 }
 
 # --- _build_rules() -----------------------------------------------------------

@@ -2,6 +2,32 @@
 
 All notable changes to this package are documented here.
 
+## [Unreleased] — 2026-08-17
+
+### Fixed
+
+- Eliminated runtime grammar-file disk reads. Previously, `_grammar($version)`
+  opened `code/grammars/java/java<version>.tokens` off disk at runtime,
+  using a path that walked outside this package's own directory into the
+  monorepo (`File::Basename`/`File::Spec`-based directory walk-up). That
+  works inside a checkout of the monorepo, but a published CPAN
+  distribution does not include `code/grammars/` — installing this package
+  and calling `tokenize` would die with "cannot open ... No such file or
+  directory".
+- Each of the 10 supported Java versions' `.tokens` grammar is now compiled
+  ahead of time (via `grammar-tools compile-tokens`) into a
+  `_Grammar_<version>.pm` sibling module under
+  `lib/CodingAdventures/JavaLexer/` (e.g. `_Grammar_1_4.pm`, `_Grammar_21.pm`)
+  that embeds the parsed `TokenGrammar` as native Perl data. `_grammar($version)`
+  now `require`s the appropriate precompiled module and calls its
+  `token_grammar()` constructor (cached per version) instead of reading
+  and parsing a `.tokens` file from disk.
+- Removed `_resolve_tokens_path($version)` and `_grammars_dir()` (now
+  dead) along with the `File::Basename`/`File::Spec` prerequisites in
+  `Makefile.PL`.
+- Public API (`tokenize`), version validation, and error message text are
+  unchanged.
+
 ## [0.01] — 2026-04-11
 
 ### Added
