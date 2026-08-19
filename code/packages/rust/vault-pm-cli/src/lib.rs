@@ -3366,7 +3366,16 @@ fn decode_external_totp_field(title: &str, raw: &str) -> Result<TotpSeed, ()> {
     if trimmed.is_empty() || trimmed.len() > MAX_EXTERNAL_TOTP_FIELD_BYTES {
         return Err(());
     }
-    if trimmed.len() >= 10 && trimmed[..10].eq_ignore_ascii_case("otpauth://") {
+    // `str::get` rather than direct indexing: a byte offset that lands
+    // inside a multi-byte UTF-8 character panics on `&trimmed[..10]`, and
+    // this field comes straight from an untrusted imported file (VLT-PM00
+    // §7.1 adversary 6). `get` returns `None` instead of panicking, which
+    // this cleanly treats as "not the otpauth prefix" and falls through to
+    // the Base32 path.
+    if trimmed
+        .get(..10)
+        .is_some_and(|prefix| prefix.eq_ignore_ascii_case("otpauth://"))
+    {
         return parse_otpauth_totp_uri(title, trimmed);
     }
     let normalized: String = trimmed
@@ -3387,7 +3396,13 @@ fn decode_external_totp_field(title: &str, raw: &str) -> Result<TotpSeed, ()> {
 
 fn parse_otpauth_totp_uri(title: &str, uri: &str) -> Result<TotpSeed, ()> {
     const PREFIX: &str = "otpauth://totp/";
-    if uri.len() < PREFIX.len() || !uri[..PREFIX.len()].eq_ignore_ascii_case(PREFIX) {
+    // Same reasoning as the `get(..10)` check above: `uri[..PREFIX.len()]`
+    // would panic instead of refusing the record if a multi-byte character
+    // straddles that byte offset in an untrusted field.
+    let Some(prefix) = uri.get(..PREFIX.len()) else {
+        return Err(());
+    };
+    if !prefix.eq_ignore_ascii_case(PREFIX) {
         return Err(());
     }
     let rest = &uri[PREFIX.len()..];
@@ -8400,6 +8415,32 @@ mod tests {
         assert!(decode_external_totp_field("L", "otpauth://totp/x?issuer=Y").is_err());
         assert!(decode_external_totp_field("L", "").is_err());
         assert!(decode_external_totp_field("L", "not-base32-or-a-uri!!").is_err());
+    }
+
+    /// A multi-byte UTF-8 character straddling the fixed byte offset this
+    /// prefix check compares against must be refused, not panic. Direct
+    /// `&s[..10]` indexing panics when the boundary falls inside a
+    /// character; a crafted TOTP field in an imported file is exactly the
+    /// untrusted input that can put one there (VLT-PM00 §7.1 adversary 6).
+    #[test]
+    fn decode_external_totp_field_does_not_panic_on_a_boundary_splitting_character() {
+        // "123456789" is 9 ASCII bytes; "é" is 2 bytes starting at byte 9,
+        // so byte offset 10 lands on its second byte -- not a boundary.
+        assert!(decode_external_totp_field("L", "123456789\u{e9}").is_err());
+        // Same shape, deliberately resembling the otpauth prefix so the
+        // check is actually exercised rather than short-circuited.
+        assert!(decode_external_totp_field("L", "otpauth:/\u{e9}").is_err());
+    }
+
+    /// Same class of bug, one level deeper: `parse_otpauth_totp_uri`'s own
+    /// fixed-prefix check must not panic either, once a caller has passed
+    /// the first ten bytes.
+    #[test]
+    fn parse_otpauth_totp_uri_does_not_panic_on_a_boundary_splitting_character() {
+        // "otpauth://" (10 ASCII bytes) + "abcd" (4 ASCII bytes, total 14)
+        // + "é" (2 bytes starting at byte 14) puts byte offset 15 --
+        // `"otpauth://totp/".len()` -- on the character's second byte.
+        assert!(parse_otpauth_totp_uri("L", "otpauth://abcd\u{e9}").is_err());
     }
 
     #[test]
