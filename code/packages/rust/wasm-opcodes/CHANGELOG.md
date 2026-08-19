@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.24] - 2026-08-19 - SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min (task #174-176)
+
+### Added
+
+- 3 new `SIMD_OPS` entries: `f32x4.abs` (`0xE0`), `f32x4.mul` (`0xE6`),
+  `f32x4.min` (`0xE8`) -- the FIRST genuine floating-point ARITHMETIC
+  ops in this table (PR17's `f32x4.splat`/`f64x2.splat` were pure
+  bit-pattern broadcasts, no arithmetic). 127 SIMD opcodes total, up
+  from 124. `abs` reuses the plain UNARY `v128->v128` shape (same as
+  `i8x16.abs`); `mul` reuses the plain BINARY `v128,v128->v128` shape
+  (same as `i16x8.mul`). `min` is the same BINARY shape too, but its
+  runtime semantics are NOT a plain `f32::min()`/IEEE `minNum` --
+  WASM's `fmin` propagates NaN unconditionally (if either operand is
+  NaN the result is NaN) and treats `-0.0` as winning a `-0.0`/`+0.0`
+  tie, the exact per-lane transplant of this crate's own scalar
+  `f32.min` (sub-opcode `0x96`) semantics -- see that opcode's own
+  handler in `wasm-execution` for the original scalar bug this
+  mirrors. Each sub-opcode byte fetched live from the SIMD proposal's
+  own `BinarySIMD.md`.
+- `SimdOpKind::AbsF32x4`/`MulF32x4`/`MinF32x4`.
+
 ## [0.2.23] - 2026-08-19 - SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane (task #171-173)
 
 ### Added

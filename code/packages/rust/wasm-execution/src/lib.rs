@@ -5858,6 +5858,96 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::AbsF32x4 => {
+                // f32x4.abs (SIMD widen PR19): UNARY, pop one v128,
+                // clear the sign bit of each of the 4 `f32` lanes,
+                // push one v128. A pure bit operation with no NaN/
+                // signed-zero subtlety -- `f32::abs()` is correct here,
+                // unlike `MinF32x4` below. Same shape as `AbsI8x16`/
+                // `AbsI16x8`, just at `f32x4`'s width, and little-endian
+                // `to_le_bytes()`/`from_le_bytes()` throughout, same
+                // convention `SplatF32x4` (PR17) established for reading/
+                // writing float lanes.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = f32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = v.abs();
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::MulF32x4 => {
+                // f32x4.mul (SIMD widen PR19): BINARY, pop two v128s,
+                // multiply each of the 4 `f32` lane pairs with ordinary
+                // IEEE-754 float multiply (Rust's `*` on `f32` is correct
+                // here -- plain multiplication has no WASM-specific
+                // deviation from IEEE-754, unlike `min`/`max`). Same
+                // "pop two v128s, push one" shape as `MulI16x8`, just at
+                // `f32x4`'s width.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let l = f32::from_le_bytes(lhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let r = f32::from_le_bytes(rhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = l * r;
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::MinF32x4 => {
+                // f32x4.min (SIMD widen PR19): BINARY, pop two v128s,
+                // take the WASM-spec `fmin` (NOT Rust's `f32::min()`/
+                // IEEE `minNum`) of each of the 4 `f32` lane pairs --
+                // the exact per-lane transplant of this crate's own
+                // scalar `f32.min` opcode handler (0x96, registered in
+                // `register_numeric_f32` above): if EITHER lane is NaN,
+                // the result lane is NaN (propagated, not silently
+                // dropped); for a -0.0/+0.0 tie, -0.0 wins. See that
+                // handler's own comment for the exact bug this
+                // discipline avoids (`min(NaN, -0.0)` silently
+                // returning `-0.0` under Rust's native `.min()`).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let l = f32::from_le_bytes(lhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let r = f32::from_le_bytes(rhs[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = if l.is_nan() || r.is_nan() {
+                        f32::NAN
+                    } else if l == 0.0 && r == 0.0 {
+                        if l.is_sign_negative() || r.is_sign_negative() { -0.0 } else { 0.0 }
+                    } else {
+                        l.min(r)
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8781,6 +8871,30 @@ mod tests {
             bytes.extend_from_slice(&lane.to_le_bytes());
         }
         bytes
+    }
+
+    /// Same v128 literal encoding as [`v128_const_bytes`], but for the
+    /// 4-lane `f32x4` floating-point shape SIMD widen PR19's
+    /// `f32x4.abs`/`f32x4.mul`/`f32x4.min` all read/write, instead of
+    /// the 4-lane `i32x4` integer shape [`v128_const_bytes`] itself uses.
+    fn v128_const_bytes_f32x4(lanes: [f32; 4]) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(16);
+        for lane in lanes {
+            bytes.extend_from_slice(&lane.to_le_bytes());
+        }
+        bytes
+    }
+
+    /// Decode a [`V128Bytes`] result back into its 4 `f32` lanes,
+    /// little-endian -- used by the `f32x4.min` NaN tests below, which
+    /// can't rely on exact byte-for-byte equality against a fixed NaN
+    /// bit pattern (only `f32::is_nan()` is a meaningful check for NaN).
+    fn f32x4_lanes(bytes: V128Bytes) -> [f32; 4] {
+        let mut lanes = [0.0f32; 4];
+        for (i, lane) in lanes.iter_mut().enumerate() {
+            *lane = f32::from_le_bytes(bytes.0[i * 4..i * 4 + 4].try_into().unwrap());
+        }
+        lanes
     }
 
     /// `v128.const` + `i32x4.extract_lane` round-trip: proves the const
@@ -13342,5 +13456,121 @@ mod tests {
         code.push(0x0B);
         let mut engine = simd_engine_returning_v128(code);
         assert!(engine.call_function_with_v128(0, &[]).is_err());
+    }
+
+    // ── SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min ───────────────────
+
+    /// `f32x4.abs`: clears the sign bit of each lane -- a normal negative
+    /// lane becomes its positive counterpart, `-0.0` becomes `+0.0`, and
+    /// a NaN lane stays NaN (only its sign bit changes, same as scalar
+    /// `f32::abs()`, which is exactly why this op needs no bespoke
+    /// NaN-canonicalization logic the way `f32x4.min` below does).
+    #[test]
+    fn f32x4_abs_clears_sign_bit_and_leaves_nan_lane_nan() {
+        let lanes = [-3.5f32, 2.0f32, -0.0f32, f32::NAN];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lanes));
+        code.extend([0xFD, 0xE0, 0x01]); // f32x4.abs (LEB128: [0xE0, 0x01] for sub-opcode 0xE0)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], 3.5, "abs(-3.5) must be 3.5");
+        assert_eq!(out[1], 2.0, "abs(2.0) must stay 2.0");
+        assert!(out[2] == 0.0 && out[2].is_sign_positive(), "abs(-0.0) must clear the sign bit to +0.0, got {}", out[2]);
+        assert!(out[3].is_nan(), "abs(NaN) must stay NaN, got {}", out[3]);
+    }
+
+    /// `f32x4.mul`: ordinary lane-wise IEEE-754 float multiply -- a
+    /// straightforward product check across mixed-sign, non-trivial
+    /// values (not 0.0/1.0, whose products could accidentally match a
+    /// broken implementation).
+    #[test]
+    fn f32x4_mul_multiplies_each_lane_pair() {
+        let lhs = [2.0f32, -3.0f32, 0.5f32, 10.0f32];
+        let rhs = [4.0f32, 5.0f32, -2.0f32, 0.1f32];
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4(rhs));
+        code.extend([0xFD, 0xE6, 0x01]); // f32x4.mul (LEB128: [0xE6, 0x01] for sub-opcode 0xE6)
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [8.0, -15.0, -1.0, 1.0], "f32x4.mul must compute the exact lane-wise product");
+    }
+
+    /// `f32x4.min`: the MOST IMPORTANT correctness case in this PR. WASM's
+    /// `fmin` is NOT Rust's native `f32::min()`/IEEE `minNum` -- if
+    /// EITHER operand is NaN the result must be NaN (propagated), in
+    /// BOTH operand orders (`min(NaN, x)` and `min(x, NaN)` must both be
+    /// NaN, proving the NaN check isn't accidentally order-dependent).
+    /// This is the exact per-lane transplant of this crate's own scalar
+    /// `f32.min` (0x96) bug fix -- see that opcode's own test,
+    /// `test_f32_min_max_propagates_nan`, for the original scalar
+    /// regression this mirrors.
+    #[test]
+    fn f32x4_min_propagates_nan_in_either_lane_regardless_of_operand_order() {
+        let min_code = |lhs: [f32; 4], rhs: [f32; 4]| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_f32x4(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_f32x4(rhs));
+            code.extend([0xFD, 0xE8, 0x01]); // f32x4.min (LEB128: [0xE8, 0x01] for sub-opcode 0xE8)
+            code.push(0x0B);
+            code
+        };
+
+        // min(NaN, 5.0) in every lane.
+        let mut engine = simd_engine_returning_v128(min_code([f32::NAN; 4], [5.0; 4]));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "min(NaN, 5.0) must be NaN in every lane, got {out:?}");
+
+        // min(5.0, NaN) -- the OTHER operand order -- must also be NaN.
+        let mut engine = simd_engine_returning_v128(min_code([5.0; 4], [f32::NAN; 4]));
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(out.iter().all(|v| v.is_nan()), "min(5.0, NaN) must be NaN in every lane, got {out:?}");
+    }
+
+    /// `f32x4.min`: WASM's signed-zero tie-break -- `-0.0` wins a
+    /// `-0.0`/`+0.0` tie (`min(+0.0, -0.0) == -0.0`), checked by its
+    /// ACTUAL SIGN BIT via `is_sign_negative()`, not `== 0.0` (which is
+    /// true for both `+0.0` and `-0.0` and would silently pass even if
+    /// the implementation got the sign wrong).
+    #[test]
+    fn f32x4_min_signed_zero_tie_returns_negative_zero() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4([0.0f32; 4]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4([-0.0f32; 4]));
+        code.extend([0xFD, 0xE8, 0x01]); // f32x4.min
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(
+            out.iter().all(|v| *v == 0.0 && v.is_sign_negative()),
+            "min(+0.0, -0.0) must be -0.0 (checked by sign bit, not just == 0.0) in every lane, got {out:?}"
+        );
+    }
+
+    /// `f32x4.min`: an ordinary non-edge-case lane-wise minimum, proving
+    /// the normal path still works once the NaN/signed-zero special
+    /// cases above are handled explicitly.
+    #[test]
+    fn f32x4_min_normal_case_picks_the_smaller_value() {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4([-3.0f32, 2.0f32, 7.5f32, -1.5f32]));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_f32x4([2.0f32, -3.0f32, 7.5f32, -1.5f32]));
+        code.extend([0xFD, 0xE8, 0x01]); // f32x4.min
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [-3.0, -3.0, 7.5, -1.5], "f32x4.min must pick the smaller value in each lane");
     }
 }

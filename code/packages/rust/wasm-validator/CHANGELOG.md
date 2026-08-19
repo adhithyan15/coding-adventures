@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.33] - 2026-08-19 (task #174-176 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min type rules)
+
+### Added
+
+- `SimdOpKind::MulF32x4 | MinF32x4` join the existing binary-`v128`-op
+  type-check arm (pop two `V128`, push `V128`) -- their NaN/signed-zero
+  runtime subtlety (see `wasm-opcodes`'s own `SimdOpKind::MinF32x4` doc
+  comment) is entirely invisible to the type checker.
+- `SimdOpKind::AbsF32x4` joins the existing unary-`v128`-op type-check
+  arm (pop one `V128`, push `V128`) -- a pure bit operation, no new
+  type-checker machinery needed.
+- 2 new tests: a valid-module case covering all 3 new ops, plus an
+  invalid-module regression confirming `f32x4.mul` genuinely rejects
+  an `i32` in a `v128` operand slot, not just accepting whatever's on
+  the stack.
+
 ## [0.2.32] - 2026-08-19 (task #171-173 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane type rules)
 
 ### Added

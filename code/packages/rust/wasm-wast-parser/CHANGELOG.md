@@ -1,5 +1,20 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.43 — 2026-08-19 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min text-form (task #174-176)
+
+### Added
+
+- `SimdOpKind::AbsF32x4`/`MulF32x4`/`MinF32x4` join the shared "no
+  immediate beyond the opcode byte itself" SIMD dispatch arm (already
+  used for `i8x16.add`/`Swizzle`/etc.) in both the folded and flat
+  instruction encoders -- the unary/binary distinction only matters at
+  the type-checker/runtime level, not at this encoding shape.
+- 1 new test covering all 3 new ops (folded + flat), confirming each
+  encodes its real 2-byte LEB128 sub-opcode (`0xE0`/`0xE6`/`0xE8`, all
+  `>= 128`) -- the first SIMD widen PR whose new opcodes all need the
+  genuine multi-byte LEB128 path rather than the single-byte
+  happy-path most of this table's opcodes take.
+
 ## 0.1.42 — 2026-08-19 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane text-form (task #171-173)
 
 ### Added

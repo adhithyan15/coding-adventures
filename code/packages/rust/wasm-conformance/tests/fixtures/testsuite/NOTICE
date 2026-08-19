@@ -495,6 +495,41 @@ don't unblock anything in `simd_load.wast` -- no directive there
 exercises either op; they're covered by dedicated unit tests in
 `wasm-execution`/`wasm-wast-parser`/`wasm-validator` instead.
 
+SIMD widen PR19 (task #174-176) implements `f32x4.abs`/`f32x4.mul`/
+`f32x4.min` -- the FIRST genuine floating-point ARITHMETIC ops in this
+crate (PR17's `f32x4.splat`/`f64x2.splat` were pure bit-pattern
+broadcasts, no arithmetic). No new file is vendored (no
+`fetch_testsuite.py` change); this is a baseline regeneration against
+the already-vendored `simd_load.wast` (task #162-164 above). Of that
+file's 5 remaining `NotYetSupported` modules/directives (see PR18's own
+NOTICE entry above), exactly 3 needed exactly the opcodes this PR adds
+(`as-f32x4.mul-operand`, `as-f32x4.abs-operand`, `as-f32x4.min-operand`
+-- each module is just `v128.load` plus the one new op, so all 3 fully
+unblock); the other 2 (`as-i32x4.trunc_sat_f32x4_s-operand`,
+`as-f32x4.convert_i32x4_u-operand`) need float<->int conversion opcodes
+this PR does not touch and remain `NotYetSupported`. `f32x4.min` in
+particular needed WASM-spec-correct `fmin` semantics (NaN propagation
+in either operand order, `-0.0` winning a `-0.0`/`+0.0` tie), NOT Rust's
+native `f32::min()`/IEEE `minNum` -- implemented as the exact per-lane
+transplant of this crate's own scalar `f32.min` (sub-opcode `0x96`)
+handler, which already carries this same discipline for the non-SIMD
+MVP opcodes. Aggregate `assert_return` rose from 24157/24174 to
+24160/24177 (+3 pass, +3 gradeable, exactly matching the predicted
+unblock count); `module` pass count rose from 1157 to 1160 (+3, one per
+fully-unblocked module) and its `NotYetSupported` count fell from 73 to
+70. Checked (cheaply, not exhaustively) whether `simd_splat.wast`'s
+still-`NotYetSupported` module 3 (task #165-167/PR17's own NOTICE entry)
+picked up any credit from this PR: it did not -- that module is one
+shared unit whose instantiation fails as a whole on ANY unsupported
+opcode anywhere in it, and even though it defines
+`as-f32x4_abs-operand`/`as-f32x4_min-operands` functions using this PR's
+new ops, at least 11 other opcodes used elsewhere in the same module
+(`f32x4.eq`/`f32x4.div`/`f32x4.convert_i32x4_s`/`_u`/
+`f32x4.extract_lane`/`f64x2.extract_lane`/`f64x2.add`/`sub`/`mul`/`eq`/
+`i32x4.trunc_sat_f32x4_s`) are still unimplemented, so the whole module
+-- and all 43 of its `assert_return` directives -- stays
+`NotYetSupported` until a future, larger widening pass covers the rest.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.
