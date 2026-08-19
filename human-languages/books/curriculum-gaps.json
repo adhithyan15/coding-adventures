@@ -20,9 +20,9 @@
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
-    "mixedSchemaTracks": 18,
-    "version2SchemaTracks": 4,
-    "lessonsWithoutLevel": 84,
+    "mixedSchemaTracks": 17,
+    "version2SchemaTracks": 5,
+    "lessonsWithoutLevel": 78,
     "rampOverBudgetLessons": 46,
     "scriptRampOverBudgetLessons": 62,
     "lessonsOpeningMultipleScripts": 5,
@@ -30,12 +30,12 @@
     "scriptExposureExemptedGlyphs": 2220,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 319,
-    "forwardReviews": 167,
-    "atomsNeverRevisited": 604,
-    "forwardReferences": 510,
+    "lessonsWithoutSequence": 307,
+    "forwardReviews": 160,
+    "atomsNeverRevisited": 614,
+    "forwardReferences": 504,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 75,
+    "chapterPayoffsNotRepresentative": 76,
     "chapterGateCleanTracks": 10,
     "drivableLessons": 2662,
     "drivablePercent": 85,
@@ -3237,11 +3237,10 @@
       },
       {
         "language": "russian",
-        "status": "mixed",
+        "status": "version-2",
         "lessonCount": 84,
         "versions": {
-          "1": 12,
-          "2": 72
+          "2": 84
         }
       },
       {
@@ -3465,6 +3464,13 @@
         "chapter": 5,
         "lessonId": "FA-C05-practice",
         "message": "persian chapter 5 payoff assesses 4/11 of the chapter's atoms (0.36), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "russian",
+        "chapter": 1,
+        "lessonId": "RU-C01-practice",
+        "message": "russian chapter 1 payoff assesses 0/18 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -3951,7 +3957,7 @@
         "bookChapters": 15,
         "declaredChapters": 15,
         "missingCapability": 0,
-        "findings": 1,
+        "findings": 2,
         "clean": false
       },
       {
@@ -4000,7 +4006,7 @@
       "declaredChapters": 954,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 75,
+      "payoffsNotRepresentative": 76,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
@@ -4011,7 +4017,7 @@
   "levels": {
     "totalLessons": 3147,
     "byLevel": {
-      "pre-A1": 1858,
+      "pre-A1": 1864,
       "A1": 573,
       "A2": 547,
       "B1": 40,
@@ -4019,8 +4025,8 @@
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 84,
-    "mappedPercent": 97,
+    "unmapped": 78,
+    "mappedPercent": 98,
     "tracks": [
       {
         "language": "arabic",
@@ -4266,7 +4272,7 @@
         "language": "russian",
         "lessonCount": 84,
         "byLevel": {
-          "pre-A1": 64,
+          "pre-A1": 70,
           "A1": 0,
           "A2": 14,
           "B1": 0,
@@ -4274,7 +4280,7 @@
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 6,
+        "unmapped": 0,
         "reach": "A2"
       },
       {
@@ -4720,6 +4726,13 @@
         "lessonCount": 8
       },
       {
+        "language": "russian",
+        "chapter": 1,
+        "atoms": 18,
+        "budget": 12,
+        "lessonCount": 12
+      },
+      {
         "language": "arabic",
         "chapter": 4,
         "atoms": 16,
@@ -4964,10 +4977,10 @@
       {
         "language": "russian",
         "lessonCount": 84,
-        "measurable": 71,
-        "unmeasurable": 13,
+        "measurable": 83,
+        "unmeasurable": 1,
         "lessonViolations": 1,
-        "chapterViolations": 3
+        "chapterViolations": 4
       },
       {
         "language": "sanskrit",
@@ -5017,6 +5030,17 @@
       },
       "lessons": [
         {
+          "lessonId": "RU-C01-privet",
+          "language": "russian",
+          "chapter": 1,
+          "glyphs": 14,
+          "sample": "абвдезийопрсту",
+          "systems": [
+            "Cyrillic"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "MR-C01-dhanyavad",
           "language": "marathi",
           "chapter": 1,
@@ -5024,17 +5048,6 @@
           "sample": "आदधनभयवहाीे्",
           "systems": [
             "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "RU-C01-da",
-          "language": "russian",
-          "chapter": 1,
-          "glyphs": 12,
-          "sample": "Навдезйнрсту",
-          "systems": [
-            "Cyrillic"
           ],
           "budget": 3
         },
@@ -5450,11 +5463,11 @@
           "budget": 3
         },
         {
-          "lessonId": "RU-C01-pozhaluysta",
+          "lessonId": "RU-C02-ya",
           "language": "russian",
-          "chapter": 1,
+          "chapter": 2,
           "glyphs": 5,
-          "sample": "бжкло",
+          "sample": "Якфъѧ",
           "systems": [
             "Cyrillic"
           ],
@@ -5593,11 +5606,11 @@
           "budget": 3
         },
         {
-          "lessonId": "RU-C02-ya",
+          "lessonId": "RU-C01-spasibo",
           "language": "russian",
-          "chapter": 2,
+          "chapter": 1,
           "glyphs": 4,
-          "sample": "Яфъѧ",
+          "sample": "Бглю",
           "systems": [
             "Cyrillic"
           ],
@@ -5983,13 +5996,13 @@
         "lessonsWithForeignScript": 213,
         "maxForeignGlyphsInALesson": 27,
         "steepestLesson": {
-          "lessonId": "MR-C01-dhanyavad",
-          "language": "marathi",
+          "lessonId": "RU-C01-privet",
+          "language": "russian",
           "chapter": 1,
-          "glyphs": 12,
-          "sample": "आदधनभयवहाीे्",
+          "glyphs": 14,
+          "sample": "абвдезийопрсту",
           "systems": [
-            "Devanagari"
+            "Cyrillic"
           ],
           "budget": 3
         }
@@ -5997,8 +6010,8 @@
     },
     "summary": {
       "lessonViolations": 46,
-      "chapterViolations": 21,
-      "unmeasurableLessons": 604,
+      "chapterViolations": 22,
+      "unmeasurableLessons": 592,
       "measurablePercent": 81,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -10522,189 +10535,9 @@
         "lessonId": "RU-C01-da",
         "language": "russian",
         "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-C01-da",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-privet",
-        "detail": "reviews RU-C01-privet, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-da",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-spasibo",
-        "detail": "reviews RU-C01-spasibo, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-da",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "RU-C01-zdravstvuyte",
-        "detail": "requires RU-C01-zdravstvuyte, which comes 6 lesson(s) later"
-      },
-      {
-        "lessonId": "RU-C01-net",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-C01-net",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-privet",
-        "detail": "reviews RU-C01-privet, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-spasibo",
-        "detail": "reviews RU-C01-spasibo, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "RU-C01-spasibo",
-        "detail": "requires RU-C01-spasibo, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-privet",
-        "detail": "reviews RU-C01-privet, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-zdravstvuyte",
-        "detail": "reviews RU-C01-zdravstvuyte, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
         "kind": "forward-review",
         "other": "RU-C01-spasibo",
         "detail": "reviews RU-C01-spasibo, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "RU-C01-privet",
-        "detail": "requires RU-C01-privet, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "RU-C01-zdravstvuyte",
-        "detail": "requires RU-C01-zdravstvuyte, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "RU-C01-spasibo",
-        "detail": "requires RU-C01-spasibo, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "RU-C01-privet",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-C01-spasibo",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-C01-spasibo",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-zdravstvuyte",
-        "detail": "reviews RU-C01-zdravstvuyte, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-zdravstvuyte",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-W01-false-friends-v-r",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-W02-false-friends-s-n",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-W03-new-shapes-b-d",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-W04-privet-letters-p-i",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "RU-W05-privet-letters-e-t",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "UR-C01-ji-han",
@@ -14961,6 +14794,19 @@
         "language": "malayalam",
         "introducedBy": "ML-S124-letter-sa",
         "introducedAt": 74,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-PRAGMATICS-GREETING-REGISTER",
+        "language": "russian",
+        "introducedBy": "RU-C01-zdravstvuyte",
+        "introducedAt": 1,
         "missed": [
           "R1",
           "R2",
@@ -27418,6 +27264,18 @@
         "revisits": 2
       },
       {
+        "atom": "RU-DIALOGUE-COURTESY-01",
+        "language": "russian",
+        "introducedBy": "RU-C01-practice",
+        "introducedAt": 6,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "RU-DRILL-PERSON-SHAPES-01",
         "language": "russian",
         "introducedBy": "RU-C02-practice-cases",
@@ -27574,10 +27432,130 @@
         "revisits": 0
       },
       {
+        "atom": "RU-LEX-DA",
+        "language": "russian",
+        "introducedBy": "RU-C01-da",
+        "introducedAt": 2,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "RU-LEX-NET",
+        "language": "russian",
+        "introducedBy": "RU-C01-net",
+        "introducedAt": 3,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "RU-LEX-SUP",
         "language": "russian",
         "introducedBy": "RU-C13-sup",
         "introducedAt": 63,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-B-01",
+        "language": "russian",
+        "introducedBy": "RU-W03-new-shapes-b-d",
+        "introducedAt": 9,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-D-01",
+        "language": "russian",
+        "introducedBy": "RU-W03-new-shapes-b-d",
+        "introducedAt": 9,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-E-01",
+        "language": "russian",
+        "introducedBy": "RU-W05-privet-letters-e-t",
+        "introducedAt": 11,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-I-01",
+        "language": "russian",
+        "introducedBy": "RU-W04-privet-letters-p-i",
+        "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-N-01",
+        "language": "russian",
+        "introducedBy": "RU-W02-false-friends-s-n",
+        "introducedAt": 8,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-R-01",
+        "language": "russian",
+        "introducedBy": "RU-W01-false-friends-v-r",
+        "introducedAt": 7,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-S-01",
+        "language": "russian",
+        "introducedBy": "RU-W02-false-friends-s-n",
+        "introducedAt": 8,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "RU-SCRIPT-T-01",
+        "language": "russian",
+        "introducedBy": "RU-W05-privet-letters-e-t",
+        "introducedAt": 11,
         "missed": [
           "R1",
           "R2",
@@ -44251,6 +44229,28 @@
         "revisits": 3
       },
       {
+        "atom": "RU-LEX-POZHALUYSTA",
+        "language": "russian",
+        "introducedBy": "RU-C01-pozhaluysta",
+        "introducedAt": 5,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "RU-LEX-PRIVET",
+        "language": "russian",
+        "introducedBy": "RU-C01-privet",
+        "introducedAt": 0,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
         "atom": "RU-LEX-ROT",
         "language": "russian",
         "introducedBy": "RU-C09-rot",
@@ -44293,6 +44293,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "RU-LEX-SPASIBO",
+        "language": "russian",
+        "introducedBy": "RU-C01-spasibo",
+        "introducedAt": 4,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "RU-LEX-SPOKOYNOY-NOCHI",
@@ -44339,6 +44350,17 @@
         "revisits": 3
       },
       {
+        "atom": "RU-LEX-ZDRAVSTVUYTE",
+        "language": "russian",
+        "introducedBy": "RU-C01-zdravstvuyte",
+        "introducedAt": 1,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "RU-SCRIPT-FE",
         "language": "russian",
         "introducedBy": "RU-C06-kofe",
@@ -44361,6 +44383,17 @@
         "revisits": 2
       },
       {
+        "atom": "RU-SCRIPT-P-01",
+        "language": "russian",
+        "introducedBy": "RU-W04-privet-letters-p-i",
+        "introducedAt": 10,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "RU-SCRIPT-SHA",
         "language": "russian",
         "introducedBy": "RU-C04-pisat",
@@ -44381,6 +44414,17 @@
           "R3"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "RU-SCRIPT-V-01",
+        "language": "russian",
+        "introducedBy": "RU-W01-false-friends-v-r",
+        "introducedAt": 7,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "RU-SCRIPT-YA-NOT-R",
@@ -57905,6 +57949,14 @@
         "lessonsEarly": 12
       },
       {
+        "lessonId": "RU-C01-zdravstvuyte",
+        "language": "russian",
+        "position": 1,
+        "word": "вы",
+        "taughtBy": "RU-C02-ty-vy",
+        "lessonsEarly": 12
+      },
+      {
         "lessonId": "TE-C03-miiru-elaa-unnaaru",
         "language": "telugu",
         "position": 15,
@@ -58313,14 +58365,6 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "RU-C01-zdravstvuyte",
-        "language": "russian",
-        "position": 6,
-        "word": "вы",
-        "taughtBy": "RU-C02-ty-vy",
-        "lessonsEarly": 7
-      },
-      {
         "lessonId": "UR-C13-lal",
         "language": "urdu",
         "position": 46,
@@ -58398,14 +58442,6 @@
         "position": 53,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "RU-C01-da",
-        "language": "russian",
-        "position": 0,
-        "word": "здравствуйте",
-        "taughtBy": "RU-C01-zdravstvuyte",
         "lessonsEarly": 6
       },
       {
@@ -58817,30 +58853,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "RU-C01-net",
-        "language": "russian",
-        "position": 1,
-        "word": "привет",
-        "taughtBy": "RU-C01-privet",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "position": 2,
-        "word": "спасибо",
-        "taughtBy": "RU-C01-spasibo",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "position": 3,
-        "word": "здравствуйте",
-        "taughtBy": "RU-C01-zdravstvuyte",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "TE-C26-udayam",
         "language": "telugu",
         "position": 77,
@@ -59222,22 +59234,6 @@
         "position": 21,
         "word": "até logo",
         "taughtBy": "PT-C04-ate-logo",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "RU-C01-practice",
-        "language": "russian",
-        "position": 3,
-        "word": "спасибо",
-        "taughtBy": "RU-C01-spasibo",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "RU-C01-privet",
-        "language": "russian",
-        "position": 4,
-        "word": "здравствуйте",
-        "taughtBy": "RU-C01-zdravstvuyte",
         "lessonsEarly": 2
       },
       {
@@ -60433,11 +60429,11 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "RU-C01-practice",
+        "lessonId": "RU-C01-privet",
         "language": "russian",
-        "position": 3,
-        "word": "привет",
-        "taughtBy": "RU-C01-privet",
+        "position": 0,
+        "word": "здравствуйте",
+        "taughtBy": "RU-C01-zdravstvuyte",
         "lessonsEarly": 1
       },
       {
@@ -60717,12 +60713,12 @@
       {
         "language": "russian",
         "lessonCount": 84,
-        "lessonsWithoutSequence": 12,
-        "forwardPrerequisites": 5,
-        "forwardReviews": 8,
-        "atomsTaught": 142,
-        "atomsNeverRevisited": 12,
-        "forwardReferences": 14
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 1,
+        "atomsTaught": 160,
+        "atomsNeverRevisited": 22,
+        "forwardReferences": 8
       },
       {
         "language": "sanskrit",
@@ -60776,20 +60772,20 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 319,
-      "tracksWithUnorderedLessons": 12,
-      "forwardPrerequisites": 142,
-      "forwardReviews": 167,
-      "atomsTaught": 4313,
-      "atomsNeverRevisited": 604,
+      "lessonsWithoutSequence": 307,
+      "tracksWithUnorderedLessons": 11,
+      "forwardPrerequisites": 137,
+      "forwardReviews": 160,
+      "atomsTaught": 4331,
+      "atomsNeverRevisited": 614,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1154,
-        "R2": 3351,
-        "R3": 3183,
-        "R4": 1759
+        "R1": 1164,
+        "R2": 3367,
+        "R3": 3201,
+        "R4": 1764
       },
-      "forwardReferences": 510
+      "forwardReferences": 504
     }
   },
   "scriptClosure": {
@@ -63448,13 +63444,6 @@
         "count": 6
       },
       {
-        "lessonId": "RU-C01-pozhaluysta",
-        "language": "russian",
-        "chapter": 1,
-        "glyphs": "бвеикь",
-        "count": 6
-      },
-      {
         "lessonId": "RU-C11-do-skorogo",
         "language": "russian",
         "chapter": 11,
@@ -63816,6 +63805,13 @@
         "language": "punjabi",
         "chapter": 11,
         "glyphs": "ਜਨਰਹਾ",
+        "count": 5
+      },
+      {
+        "lessonId": "RU-C01-pozhaluysta",
+        "language": "russian",
+        "chapter": 1,
+        "glyphs": "бвеиь",
         "count": 5
       },
       {
@@ -66686,8 +66682,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "7 atom(s) at or below pre-A1 are revisited fewer than twice (30 etymology hook(s) waived)",
-            "shortfall": 7
+            "detail": "20 atom(s) at or below pre-A1 are revisited fewer than twice (30 etymology hook(s) waived)",
+            "shortfall": 20
           }
         ],
         "vocabulary": 53
@@ -66820,11 +66816,11 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 3147,
-    "voice": 2221,
-    "sight": 588,
+    "voice": 2220,
+    "sight": 589,
     "pen": 338,
     "coreVoice": 2662,
-    "lessonsWithWritingSegments": 133,
+    "lessonsWithWritingSegments": 136,
     "drivablePercent": 85,
     "tracks": [
       {
@@ -73681,8 +73677,8 @@
       {
         "language": "russian",
         "lessonCount": 84,
-        "voice": 46,
-        "sight": 14,
+        "voice": 45,
+        "sight": 15,
         "pen": 24,
         "coreVoice": 57,
         "drivablePercent": 68,
@@ -73692,12 +73688,11 @@
             "language": "russian",
             "chapter": 1,
             "lessonCount": 12,
-            "voice": 1,
-            "sight": 6,
+            "voice": 0,
+            "sight": 7,
             "pen": 5,
             "coreVoice": 7,
             "modalities": [
-              "voice",
               "sight",
               "pen"
             ],

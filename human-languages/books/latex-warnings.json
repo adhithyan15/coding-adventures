@@ -400,14 +400,12 @@
         "hyperref_warning": 0,
         "missing_character": 0,
         "overfull": 0,
-        "underfull": 0
+        "underfull": 1
       },
-      "improvements": [
-        "underfull"
-      ],
+      "improvements": [],
       "log": "code/learning/human-languages/russian/book/book.log",
       "regressions": [],
-      "status": "under baseline",
+      "status": "ok",
       "track": "russian"
     },
     {
