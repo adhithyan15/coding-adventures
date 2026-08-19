@@ -156,6 +156,27 @@ impl Simulator {
                 let v = self.state.get(Reg::Rdi) as i64;
                 self.stdout.extend(v.to_string().into_bytes());
             }
+            // `void __twig_gc_write_barrier(parent, child)` — accepted, does nothing.
+            //
+            // The x86_64-backend emits this call after every `field_store` and
+            // `array_set` (#10489), because a *real* run links against the
+            // generational collector in `gc-core-capi`, where the barrier records
+            // an old→young edge in the remembered set so a minor collection does
+            // not free a young object that only an old object still points at.
+            //
+            // This simulator has no collector to remember anything *for*: `Memory`
+            // is a bump allocator that never reclaims, so every object stays live
+            // for the whole run by construction and the remembered set has no
+            // reader. The barrier is therefore *semantically* a no-op here — not
+            // merely unimplemented — and the two arguments in rdi/rsi are read by
+            // nobody. What matters is only that it resolves: a `ret`-equivalent, so
+            // the array programs in the language matrix run past their stores
+            // instead of trapping `UnresolvedExternal`.
+            //
+            // Note this is a `void` shim: it deliberately leaves rax alone rather
+            // than zeroing it, matching the C prototype (a caller that reads rax
+            // after a void call is already wrong, and clobbering it would mask that).
+            "__twig_gc_write_barrier" => {}
             other => return Err(Trap::UnresolvedExternal(other.to_string())),
         }
         Ok(())

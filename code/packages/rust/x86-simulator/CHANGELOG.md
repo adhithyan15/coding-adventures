@@ -1,5 +1,25 @@
 # Changelog — x86-simulator
 
+## 0.7.7 — 2026-08-19 — resolve `__twig_gc_write_barrier`
+
+Accept `__twig_gc_write_barrier(parent, child)` as a host shim, so array and
+field stores run instead of trapping.
+
+Since #10489 the x86_64-backend emits a call to that symbol after **every**
+`field_store` and `array_set` — unconditionally, because at that IR level
+nothing distinguishes a pointer element from a scalar one. A real link supplies
+it from `gc-core-capi`, where it records an old→young edge in the remembered set
+so a minor collection cannot free a young object that only an old object still
+references. The simulator had no such symbol, so the three array cells in the
+language matrix (`algol_for_loop_array`, `algol_static_array`, `basic_array`)
+died on `UnresolvedExternal("__twig_gc_write_barrier")` the moment they stored
+an element.
+
+The shim is a no-op, and that is the *correct* semantics here rather than a
+stub: `Memory` is a bump allocator that never reclaims, so every object is live
+for the whole run and the remembered set has no reader. It is also a `void`
+shim — rax is left untouched to match the C prototype.
+
 ## 0.7.6 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
 
 Decode + execute the three SSE conversion opcodes, so the simulator can RUN

@@ -453,6 +453,13 @@ fn render_cowsay_png_metal(output: &str, path: &Path) -> Result<(), String> {
             font,
             color: color_black(),
             max_lines: None,
+            // A cow is ASCII art: `output` is already laid out into hard-newline
+            // rows whose columns must line up, and `text_width` above was measured
+            // from those exact rows. Soft wrapping could only re-break a row that
+            // is already the right length — which would shear the balloon off the
+            // cow. Hard `\n` breaks are preserved either way, so `false` is what
+            // preserves the drawing.
+            wrap: false,
             text_align: TextAlign::Start,
         })),
         children: Vec::new(),
