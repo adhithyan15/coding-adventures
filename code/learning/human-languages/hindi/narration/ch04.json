@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e046f3d85f75b26e",
+  "sourceHash": "fnv1a64:254b0713b9b6a859",
   "lessons": [
     {
       "id": "HI-C04-phir",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c1ec4388a7aa9dc",
+      "sourceHash": "fnv1a64:3d70728e90675b06",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:e0eb74cfe65cb16a",
+      "sourceHash": "fnv1a64:a025facd26a353f3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -289,7 +289,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:33f727db88431000",
+      "sourceHash": "fnv1a64:c9a2ad6452a9b800",
       "notice": null,
       "blocks": [
         {
@@ -407,7 +407,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f67b49e60666c204",
+      "sourceHash": "fnv1a64:6e57c331212bbc8d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -556,7 +556,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:8ef6eee504ce48a6",
+      "sourceHash": "fnv1a64:0f74d5bb5bd84619",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -704,7 +704,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:70d3d737ef40dfc4",
+      "sourceHash": "fnv1a64:6562f0a49b0950f7",
       "notice": null,
       "blocks": [
         {
@@ -726,8 +726,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells, by register",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the farewells, by register",
           "segments": [
             {
               "kind": "pause",
@@ -775,8 +775,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "etymology",
+          "title": "The word, taken apart — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -815,8 +815,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",

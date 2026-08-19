@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:4c5587a248a49504",
+  "sourceHash": "fnv1a64:0452218b0889f563",
   "summary": {
     "totalLessons": 3147,
     "voice": 2220,
@@ -27828,7 +27828,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5c1ec4388a7aa9dc",
+      "sourceHash": "fnv1a64:3d70728e90675b06",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27849,7 +27849,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e0eb74cfe65cb16a",
+      "sourceHash": "fnv1a64:a025facd26a353f3",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27870,7 +27870,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:33f727db88431000"
+      "sourceHash": "fnv1a64:c9a2ad6452a9b800"
     },
     {
       "id": "HI-C04-kal-milte-hain",
@@ -27888,7 +27888,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f67b49e60666c204",
+      "sourceHash": "fnv1a64:6e57c331212bbc8d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27909,7 +27909,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8ef6eee504ce48a6",
+      "sourceHash": "fnv1a64:0f74d5bb5bd84619",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27930,7 +27930,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:70d3d737ef40dfc4"
+      "sourceHash": "fnv1a64:6562f0a49b0950f7"
     },
     {
       "id": "HI-C05-bolna",
@@ -27948,28 +27948,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ae78ad2f330261be",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "HI-C05-main-hindi-bolta-hun",
-      "language": "hindi",
-      "chapter": 5,
-      "sequence": 410,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:d1c08f17c09d8ef0",
+      "sourceHash": "fnv1a64:48916d08e1d6055c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27978,7 +27957,7 @@
       "id": "HI-C05-rahna",
       "language": "hindi",
       "chapter": 5,
-      "sequence": 420,
+      "sequence": 410,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -27991,7 +27970,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ca46ccaaa68ffc75",
+      "sourceHash": "fnv1a64:c6878088b621d894",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28000,7 +27979,7 @@
       "id": "HI-C05-karna",
       "language": "hindi",
       "chapter": 5,
-      "sequence": 430,
+      "sequence": 420,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -28012,7 +27991,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5520670f09c9cd1b",
+      "sourceHash": "fnv1a64:2fa43a63ad331f6e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -28021,7 +28000,7 @@
       "id": "HI-C05-bolta-hun",
       "language": "hindi",
       "chapter": 5,
-      "sequence": 440,
+      "sequence": 430,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -28033,7 +28012,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ffb053b363a48206"
+      "sourceHash": "fnv1a64:926eab697b3d54c3"
+    },
+    {
+      "id": "HI-C05-main-hindi-bolta-hun",
+      "language": "hindi",
+      "chapter": 5,
+      "sequence": 440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:64de2a7ed25c1785",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
     },
     {
       "id": "HI-C05-practice",
@@ -28051,7 +28051,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b47a31c332e56c2b"
+      "sourceHash": "fnv1a64:d36b7ed52adbe147"
     },
     {
       "id": "HI-C06-numbers-1-5",

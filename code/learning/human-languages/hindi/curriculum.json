@@ -219,17 +219,42 @@
       "after": []
     },
     {
+      "id": "HI-PATH-009A",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-004-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "HI-C05-bolna",
         "HI-C05-bolta-hun",
         "HI-C05-rahna",
-        "HI-C05-karna"
+        "HI-C05-karna",
+        "HI-C05-main-hindi-bolta-hun"
       ],
       "before": [],
       "inline": [
         "HI-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-028A",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "HI-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-005-CONSOLIDATION"
       ],
       "after": []
     },
@@ -923,6 +948,7 @@
       "segments": [
         "HI-PATH-003",
         "HI-PATH-009",
+        "HI-PATH-009A",
         "HI-PATH-025",
         "HI-PATH-49-LEAVE",
         "HI-PATH-56-ROAD"
@@ -980,6 +1006,7 @@
       "segments": [
         "HI-PATH-008",
         "HI-PATH-028",
+        "HI-PATH-028A",
         "HI-PATH-029",
         "HI-PATH-42-VERBS",
         "HI-PATH-43-SEESAY"
@@ -1511,7 +1538,8 @@
       "canDo": "I can build the Hindi present habitual — stem + -tā/-tī/-te plus honā — on any verb stem I know.",
       "prerequisites": [],
       "lessons": [
-        "HI-C05-bolta-hun"
+        "HI-C05-bolta-hun",
+        "HI-C05-main-hindi-bolta-hun"
       ]
     },
     {
@@ -1913,6 +1941,32 @@
       ],
       "lessons": [
         "HI-C03-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-004-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can take my leave in Hindi at three levels of formality, and say when I expect to meet again.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C04-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-005-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can say what I do in Hindi -- speak, live, make -- putting the verb last and matching it to myself.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C05-practice"
       ]
     }
   ]

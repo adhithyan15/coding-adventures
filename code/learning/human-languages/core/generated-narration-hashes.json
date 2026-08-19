@@ -2434,7 +2434,7 @@
     {
       "language": "hindi",
       "chapter": 4,
-      "sourceHash": "fnv1a64:e046f3d85f75b26e",
+      "sourceHash": "fnv1a64:254b0713b9b6a859",
       "lessonIds": [
         "HI-C04-phir",
         "HI-C04-milenge",
@@ -2447,27 +2447,27 @@
       "drivablePrefix": 0,
       "text": "hindi/narration/ch04.txt",
       "json": "hindi/narration/ch04.json",
-      "textHash": "fnv1a64:405c3f4c6e156a32",
-      "jsonHash": "fnv1a64:3642a17b5e2de386"
+      "textHash": "fnv1a64:fb80ac347f9fde84",
+      "jsonHash": "fnv1a64:dcec2d80d7123310"
     },
     {
       "language": "hindi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:184c01edb54d88f7",
+      "sourceHash": "fnv1a64:2d9f4dcbd7e52fe5",
       "lessonIds": [
         "HI-C05-bolna",
-        "HI-C05-main-hindi-bolta-hun",
         "HI-C05-rahna",
         "HI-C05-karna",
         "HI-C05-bolta-hun",
+        "HI-C05-main-hindi-bolta-hun",
         "HI-C05-practice"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "hindi/narration/ch05.txt",
       "json": "hindi/narration/ch05.json",
-      "textHash": "fnv1a64:5a638dc6d91f102a",
-      "jsonHash": "fnv1a64:13c459381cbf13f3"
+      "textHash": "fnv1a64:ed05b74f37ece7e7",
+      "jsonHash": "fnv1a64:44d8739fa410a94a"
     },
     {
       "language": "hindi",
