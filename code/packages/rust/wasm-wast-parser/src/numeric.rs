@@ -405,7 +405,11 @@ pub fn parse_f64_bits(text: &str, pos: usize) -> Result<u64, WastParseError> {
     } else if rest == "nan" {
         0x7FF8_0000_0000_0000u64
     } else if let Some(payload_str) = rest.strip_prefix("nan:0x").or_else(|| rest.strip_prefix("nan:0X")) {
-        let payload = u64::from_str_radix(payload_str, 16)
+        // WAT allows `_` digit separators inside a NaN payload too (e.g.
+        // `nan:0x7f_ffff`, from the real SIMD splat corpus) -- strip them
+        // the same way every other numeric literal path in this file
+        // already does, rather than rejecting the literal outright.
+        let payload = u64::from_str_radix(&strip_underscores(payload_str), 16)
             .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?;
         if payload == 0 || payload > 0x000F_FFFF_FFFF_FFFF {
             return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
@@ -428,7 +432,9 @@ pub fn parse_f32_bits(text: &str, pos: usize) -> Result<u32, WastParseError> {
     } else if rest == "nan" {
         0x7FC0_0000u32
     } else if let Some(payload_str) = rest.strip_prefix("nan:0x").or_else(|| rest.strip_prefix("nan:0X")) {
-        let payload = u32::from_str_radix(payload_str, 16)
+        // See the matching comment in `parse_f64_bits` -- `_` digit
+        // separators are legal inside a NaN payload too.
+        let payload = u32::from_str_radix(&strip_underscores(payload_str), 16)
             .map_err(|_| WastParseError::InvalidNumericLiteral { pos, text: text.to_string() })?;
         if payload == 0 || payload > 0x007F_FFFF {
             return Err(WastParseError::InvalidNumericLiteral { pos, text: text.to_string() });
@@ -575,6 +581,22 @@ mod tests {
         // Sign bit set for a negative payload NaN.
         let neg_bits = parse_f64_bits("-nan:0x1", 0).unwrap();
         assert_eq!(neg_bits, 0xFFF0_0000_0000_0001);
+    }
+
+    /// SIMD widen PR16: real corpus failure -- `simd_splat.wast` writes
+    /// `nan:0x7f_ffff` (an `_` digit separator inside the NaN payload),
+    /// which made the whole file fail to parse as a script before this
+    /// fix, since `parse_f32_bits`/`parse_f64_bits`'s `nan:0x<payload>`
+    /// arm called `from_str_radix` directly on the raw payload text
+    /// instead of going through `strip_underscores` first, unlike every
+    /// other numeric literal path in this file.
+    #[test]
+    fn nan_payload_with_underscore_digit_separators_parses() {
+        let bits = parse_f32_bits("nan:0x7f_ffff", 0).unwrap();
+        assert_eq!(bits, 0x7FFF_FFFF, "underscores inside a NaN payload must be stripped, not rejected");
+
+        let bits64 = parse_f64_bits("nan:0x000f_ffff_ffff_ffff", 0).unwrap();
+        assert_eq!(bits64, 0x7FFF_FFFF_FFFF_FFFF);
     }
 
     /// Task #80: real corpus failures (`simd_const.wast`, vendored in PR

@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.28] - 2026-08-19 (task #165-167 — SIMD: splat family widening)
+
+### Added
+
+- `register_simd` gains three new dispatch arms: `SimdOpKind::SplatI8x16`
+  pops an `i32` and broadcasts its LOW byte into all 16 lanes;
+  `SplatI16x8` pops an `i32` and broadcasts its LOW 16 bits into all 8
+  lanes; `SplatI64x2` pops a real `i64` (not `i32`) and broadcasts all
+  8 bytes into both lanes. Same shape as the pre-existing `Splat`
+  (`i32x4.splat`) arm, just at narrower/wider lane widths.
+- 3 new tests, each proving the SPECIFIC bytes broadcast, not just
+  "returns some v128": `i8x16.splat`/`i16x8.splat` verify only the low
+  byte/16 bits of a deliberately-oversized `i32` operand end up in the
+  lanes (the high bits must be silently dropped, not carried through or
+  trapped on); `i64x2.splat` verifies the FULL 64-bit value is
+  broadcast, not just its low 32 bits.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.27] - 2026-08-18 (task #162-164 — SIMD: v128.load/v128.store)
 
 ### Added

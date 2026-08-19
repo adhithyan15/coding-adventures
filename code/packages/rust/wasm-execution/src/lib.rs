@@ -5699,6 +5699,42 @@ fn register_simd(vm: &mut GenericVM) {
                 let addr = (base as u32 as usize).wrapping_add(aux);
                 get_memory_at(ctx, 0)?.write_bytes(addr, &bytes).map_err(VMError::from)?;
             }
+            SimdOpKind::SplatI8x16 => {
+                // i8x16.splat (SIMD widen PR16): pop one i32, broadcast
+                // its LOW byte into all 16 lanes -- same shape as the
+                // existing i32x4.splat, just a narrower lane and only
+                // the low 8 bits of the popped i32 matter.
+                let scalar = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let lane = scalar as u8;
+                let bytes = [lane; 16];
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::SplatI16x8 => {
+                // i16x8.splat (SIMD widen PR16): pop one i32, broadcast
+                // its LOW 16 bits into all 8 lanes.
+                let scalar = pop_wasm(vm)?.as_i32().map_err(VMError::from)?;
+                let lane = (scalar as u16).to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..8 {
+                    bytes[i * 2..i * 2 + 2].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::SplatI64x2 => {
+                // i64x2.splat (SIMD widen PR16): pop one i64 (NOT i32,
+                // unlike every narrower integer splat), broadcast all 8
+                // bytes into both lanes.
+                let scalar = pop_wasm(vm)?.as_i64().map_err(VMError::from)?;
+                let lane = scalar.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..2 {
+                    bytes[i * 8..i * 8 + 8].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8654,6 +8690,60 @@ mod tests {
         ];
         let mut engine = simd_engine(code);
         assert_eq!(engine.call_function(0, &[]).unwrap(), vec![WasmValue::I32(7)]);
+    }
+
+    /// `i8x16.splat` (SIMD widen PR16): must broadcast only the LOW byte
+    /// of the popped i32 into all 16 lanes -- `0x1FF`'s low byte is
+    /// `0xFF`, and its high bits must be silently dropped, not carried
+    /// into a lane or trapped on.
+    #[test]
+    fn i8x16_splat_broadcasts_only_the_low_byte_into_every_lane() {
+        let mut code = vec![0x41];
+        code.extend(wasm_leb128::encode_signed(0x1FF));
+        code.extend([0xFD, 0x0F]); // i8x16.splat
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([-1i8; 16]).try_into().unwrap())),
+            "i8x16.splat must broadcast only the low byte (0x1FF's low byte is 0xFF)"
+        );
+    }
+
+    /// `i16x8.splat` (SIMD widen PR16): must broadcast only the LOW 16
+    /// bits of the popped i32 into all 8 lanes.
+    #[test]
+    fn i16x8_splat_broadcasts_only_the_low_16_bits_into_every_lane() {
+        let mut code = vec![0x41];
+        code.extend(wasm_leb128::encode_signed(0x1FFFF)); // low 16 bits: 0xFFFF
+        code.extend([0xFD, 0x10]); // i16x8.splat
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([-1i16; 8]).try_into().unwrap())),
+            "i16x8.splat must broadcast only the low 16 bits (0x1FFFF's low 16 bits are 0xFFFF)"
+        );
+    }
+
+    /// `i64x2.splat` (SIMD widen PR16): the FIRST splat that pops a real
+    /// `i64` rather than an `i32` -- verifies the full 64-bit value is
+    /// broadcast, not just its low 32 bits.
+    #[test]
+    fn i64x2_splat_broadcasts_the_full_i64_into_both_lanes() {
+        let mut code = vec![0x42]; // i64.const
+        code.extend(wasm_leb128::encode_signed(0x1_0000_0001i64));
+        code.extend([0xFD, 0x12]); // i64x2.splat
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(v128_const_bytes_i64x2([0x1_0000_0001i64; 2]).try_into().unwrap())),
+            "i64x2.splat must broadcast the full 64-bit value, not just its low 32 bits"
+        );
     }
 
     /// `i32x4.add`: real lane-wise addition, not just "returns some v128" --

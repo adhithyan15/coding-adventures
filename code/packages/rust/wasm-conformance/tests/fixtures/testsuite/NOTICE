@@ -67,7 +67,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-18 (task #162-164 -- simd_load.wast/
                simd_store.wast, v128.load/v128.store, the first SIMD ops
                touching real linear memory, same pinned commit, no
-               re-pin)
+               re-pin),
+               extended 2026-08-19 (task #165-167 -- simd_splat.wast,
+               i8x16.splat/i16x8.splat/i64x2.splat, same pinned commit,
+               no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -417,6 +420,40 @@ above, which only moves directives between the `pass` and
 `not_yet_supported` buckets of already-vendored files, not the total
 directive count). `assert_invalid` rose by 11 and `assert_malformed`
 rose by 6 (both still 100.0% of gradeable directives).
+
+`simd_splat.wast` (task #165-167) covers `i8x16.splat`/`i16x8.splat`/
+`i64x2.splat` (`0x0F`/`0x10`/`0x12`), widening lane-width coverage of
+the already-implemented `i32x4.splat` (`0x11`) -- same "pop scalar,
+push v128" shape; `i64x2.splat` is the first splat that pops a real
+`i64` rather than an `i32`. Each sub-opcode byte fetched live from
+`BinarySIMD.md` and cross-checked against the already-implemented
+`i32x4.splat` entry (both matched exactly). Vendoring this file first
+surfaced a genuine, unrelated bug in `wasm-wast-parser`'s numeric
+literal parser: `nan:0x7f_ffff` (a `_` digit separator inside a NaN
+payload) made the WHOLE script fail to parse, since `parse_f32_bits`/
+`parse_f64_bits`'s `nan:0x<payload>` arm called `from_str_radix`
+directly on the raw payload text instead of routing it through the
+`strip_underscores` helper every other numeric literal path in that
+file already uses -- fixed as part of this same PR, with dedicated
+regression tests. Once the file parses, its own upstream structure
+bundles all 6 lane widths' splat exports (including `f32x4.splat`/
+`f64x2.splat`, neither implemented -- this crate has zero float-lane
+SIMD support at all) into the SAME modules the new integer-lane
+directives depend on, so every one of this file's `assert_return`
+directives (158 total) grades `NotYetSupported` until float-lane
+support lands in a future PR -- `assert_invalid` (22/22) and
+`assert_malformed` (1/1) DO pass today, since those directives don't
+require the shared modules to build. Vendored now anyway (rather than
+deferred) since it's the real upstream file, the 3 new opcodes are
+independently verified via dedicated unit tests in `wasm-execution`/
+`wasm-wast-parser`/`wasm-validator`, and this file will automatically
+flip to real credit with zero further changes once float-lane SIMD
+support exists. Aggregate `assert_return` stays 24040/24057
+(pass/gradeable, unchanged) but its `NotYetSupported` count rose from
+552 to 710 (+158, exactly this file's own `assert_return` count);
+`assert_invalid` rose from 1681/1681 to 1703/1703 (+22) and
+`assert_malformed` from 274/274 to 275/275 (+1), both still 100.0% of
+gradeable directives.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

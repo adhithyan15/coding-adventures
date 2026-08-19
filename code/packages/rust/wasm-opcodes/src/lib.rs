@@ -1209,6 +1209,22 @@ pub enum SimdOpKind {
     /// instruction's own `memarg` offset immediate). Same `memarg`
     /// shape and memory-0-only scope as [`Self::Load`].
     Store,
+    /// `i8x16.splat` -- pop one `i32`, broadcast its LOW byte into all
+    /// 16 lanes of a new `v128`. Same shape as [`Self::Splat`] (pop one
+    /// scalar, push one `v128`) but at `i8x16`'s width -- only the
+    /// low 8 bits of the popped `i32` matter, matching the spec's own
+    /// "splat" semantics (the operand type is always `i32` for the
+    /// integer splats narrower than `i64x2`, regardless of lane width).
+    SplatI8x16,
+    /// `i16x8.splat` -- pop one `i32`, broadcast its LOW 16 bits into
+    /// all 8 lanes. Same shape as [`Self::SplatI8x16`], one lane width
+    /// wider.
+    SplatI16x8,
+    /// `i64x2.splat` -- pop one `i64` (NOT `i32`, unlike every narrower
+    /// integer splat), broadcast all 8 bytes into both lanes. Same
+    /// "pop scalar, push v128" shape as [`Self::Splat`], but the FIRST
+    /// splat whose popped operand type differs from `i32`.
+    SplatI64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1432,6 +1448,9 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i64x2.shr_u", sub_opcode: 0xCD, kind: SimdOpKind::ShrUI64x2 },
     SimdOpInfo { name: "v128.load", sub_opcode: 0x00, kind: SimdOpKind::Load },
     SimdOpInfo { name: "v128.store", sub_opcode: 0x0B, kind: SimdOpKind::Store },
+    SimdOpInfo { name: "i8x16.splat", sub_opcode: 0x0F, kind: SimdOpKind::SplatI8x16 },
+    SimdOpInfo { name: "i16x8.splat", sub_opcode: 0x10, kind: SimdOpKind::SplatI16x8 },
+    SimdOpInfo { name: "i64x2.splat", sub_opcode: 0x12, kind: SimdOpKind::SplatI64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1850,8 +1869,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_115_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 115);
+    fn simd_ops_table_has_the_expected_118_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 118);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2287,6 +2306,31 @@ mod tests {
         for (name, sub_opcode, kind) in [
             ("v128.load", 0x00, SimdOpKind::Load),
             ("v128.store", 0x0B, SimdOpKind::Store),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_splat_family_has_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md and cross-checked against the
+        // already-implemented `i32x4.splat` (0x11) entry, which sits
+        // exactly in the middle of this contiguous run: `i8x16.splat`
+        // (0x0F), `i16x8.splat` (0x10), `i32x4.splat` (0x11, already
+        // implemented), `i64x2.splat` (0x12) -- `f32x4.splat` (0x13) and
+        // `f64x2.splat` (0x14) immediately follow but are deliberately
+        // out of scope (this crate has zero float-lane SIMD support
+        // yet). All three new entries reuse the exact "pop one scalar,
+        // push one v128" shape `i32x4.splat` already established --
+        // `i64x2.splat` is the first splat whose popped operand type is
+        // `i64` rather than `i32`.
+        for (name, sub_opcode, kind) in [
+            ("i8x16.splat", 0x0F, SimdOpKind::SplatI8x16),
+            ("i16x8.splat", 0x10, SimdOpKind::SplatI16x8),
+            ("i64x2.splat", 0x12, SimdOpKind::SplatI64x2),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

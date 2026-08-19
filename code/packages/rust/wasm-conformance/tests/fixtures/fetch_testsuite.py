@@ -387,6 +387,18 @@ TESTSUITE_FILES = [
     # NotYetSupported pending a real v128.load.
     "simd_load.wast",
     "simd_store.wast",
+    # SIMD widen PR16 (task #165-167): simd_splat.wast -- i8x16.splat/
+    # i16x8.splat/i64x2.splat (0x0F/0x10/0x12), widening lane-width
+    # coverage of the already-implemented i32x4.splat (0x11). Same
+    # "pop scalar, push v128" shape; i64x2.splat is the first splat that
+    # pops i64 rather than i32. The upstream file bundles all 6 splat
+    # exports (including f32x4.splat/f64x2.splat, neither implemented)
+    # into ONE module, so that module -- and every directive invoking
+    # it -- grades NotYetSupported until float-lane SIMD support lands
+    # in a future PR; still vendored now since it's the real upstream
+    # file and the 3 new opcodes are correctly implemented and tested
+    # via dedicated unit tests in the meantime.
+    "simd_splat.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

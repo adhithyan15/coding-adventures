@@ -1730,6 +1730,9 @@ fn encode_stream_instr(
                 return Ok(consumed);
             }
             wasm_opcodes::SimdOpKind::Splat
+            | wasm_opcodes::SimdOpKind::SplatI8x16
+            | wasm_opcodes::SimdOpKind::SplatI16x8
+            | wasm_opcodes::SimdOpKind::SplatI64x2
             | wasm_opcodes::SimdOpKind::Add
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
@@ -2414,6 +2417,9 @@ fn encode_flat_instr(
                 return Ok(());
             }
             wasm_opcodes::SimdOpKind::Splat
+            | wasm_opcodes::SimdOpKind::SplatI8x16
+            | wasm_opcodes::SimdOpKind::SplatI16x8
+            | wasm_opcodes::SimdOpKind::SplatI64x2
             | wasm_opcodes::SimdOpKind::Add
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
@@ -5318,6 +5324,33 @@ mod tests {
         )
         .unwrap();
         assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFD, 0x00, 0x00, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn splat_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
+        // "no immediate beyond the opcode byte itself" encoder bucket as
+        // every prior no-memarg SIMD op (reuses the shared match arm
+        // `i32x4.splat` already lives in), just three new lane widths.
+        // All three sub-opcodes (0x0F/0x10/0x12) are < 128, so all
+        // single-byte LEB128 -- unlike `i32x4.splat` (0x11, also < 128,
+        // already implemented), this run has no 2-byte cases.
+        let m = parse_module(
+            r#"(module
+                 (func (param i32) (result v128) (i8x16.splat (local.get 0)))
+                 (func (param i32) (result v128) (i16x8.splat (local.get 0)))
+                 (func (param i64) (result v128) (i64x2.splat (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x0F]), "i8x16.splat: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x10]), "i16x8.splat: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x12]), "i64x2.splat: {:?}", code_of(&m, 2));
+
+        let flat = parse_module(
+            "(module (func (param i32) (result v128) local.get 0 i8x16.splat))",
+        )
+        .unwrap();
+        assert!(code_of(&flat, 0).windows(2).any(|w| w == [0xFD, 0x0F]), "flat i8x16.splat: {:?}", code_of(&flat, 0));
     }
 
     #[test]
