@@ -20,7 +20,22 @@ const REGISTRY_NAMESPACE: &str = "chief-service-registry";
 const HOST_PREFIX: &str = "hosts/";
 const HOST_CONTENT_TYPE: &str = "application/vnd.coding-adventures.chief-host-v1";
 const MAGIC: &[u8; 4] = b"D18R";
-const VERSION: u8 = 1;
+/// The version this build writes.
+const VERSION: u8 = 2;
+/// The oldest version this build can still read.
+///
+/// Version 1 records carry no restart-intensity window. They decode with the
+/// window closed, which is exactly right: a host that has never been counted
+/// against a window has not used any of it. Refusing to read them instead would
+/// be worse than a wiped registry -- `ServiceRegistry::list` fails on a single
+/// undecodable record, which fails the reconcile the daemon runs before it
+/// starts serving, so the daemon would not come up and there would be no
+/// control plane left to repair it with.
+///
+/// Version 2 also changed the *quarantine* body, from a bare deadline to one
+/// that names the run that set it. Gating only the appended window and leaving
+/// the changed body unversioned is a mistake this decoder made once.
+const MIN_READABLE_VERSION: u8 = 1;
 const MAX_HOST_NAME_BYTES: usize = 64;
 const MAX_PACKAGE_PATH_BYTES: usize = 4096;
 const MAX_REASON_BYTES: usize = 512;
@@ -116,8 +131,13 @@ pub enum HostStatus {
     Restarting,
     Stopping,
     Stopped,
-    Crashed { exit_code: Option<i32> },
-    Quarantined { until_ns: u64, reason: String },
+    Crashed {
+        exit_code: Option<i32>,
+    },
+    Quarantined {
+        until: QuarantineDeadline,
+        reason: String,
+    },
 }
 
 /// Immutable package identity supplied at registration time.
@@ -161,6 +181,220 @@ impl HostRegistration {
     }
 }
 
+/// One open restart-intensity window.
+///
+/// A window is a three-part fact -- which daemon run opened it, when, and how
+/// many restarts have happened inside it -- and the three are only meaningful
+/// together. Holding them in one type makes the half-open states unwritable
+/// rather than merely rejected: there is no way to spell "a window that started
+/// at time T with zero restarts in it", so nothing downstream has to interpret
+/// one.
+///
+/// `boot_id` is what keeps `start_ns` honest. It is a reading of a *monotonic*
+/// clock, which in this tree counts from daemon start, so a value persisted by
+/// one daemon run means nothing to the next -- a record written after an hour
+/// of uptime looks like an hour in the future to a daemon that has just
+/// started. Stamping the run that produced it lets a reader notice that and
+/// start over, instead of comparing two unrelated numbers.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct RestartWindow {
+    boot_id: u64,
+    start_ns: u64,
+    restarts: u32,
+}
+
+impl RestartWindow {
+    /// Open a window, or refuse one that records no restarts.
+    ///
+    /// A window exists *because* a restart happened inside it; one holding zero
+    /// restarts is a window that should simply have been closed.
+    pub fn new(boot_id: u64, start_ns: u64, restarts: u32) -> Result<Self, RegistryError> {
+        if restarts == 0 {
+            return Err(RegistryError::invalid(
+                "restarts",
+                "an open window must record at least one restart",
+            ));
+        }
+        Ok(Self {
+            boot_id,
+            start_ns,
+            restarts,
+        })
+    }
+
+    /// Open a window at `start_ns`, holding the one restart that opened it.
+    ///
+    /// Total, unlike [`Self::new`], because "one restart" cannot be the invalid
+    /// count. The reconciler opens windows on a hot path and should not have to
+    /// handle an error that cannot happen; `new` exists for the decoder, which
+    /// is reading a number it did not choose.
+    pub fn opened(boot_id: u64, start_ns: u64) -> Self {
+        Self {
+            boot_id,
+            start_ns,
+            restarts: 1,
+        }
+    }
+
+    /// Record one more restart inside this same window.
+    ///
+    /// Saturating, and safe to saturate: the caller refuses the restart long
+    /// before `u32::MAX` is in reach, so this only pins the count if a record
+    /// arrives already at the ceiling.
+    pub fn spending(self) -> Self {
+        Self {
+            restarts: self.restarts.saturating_add(1),
+            ..self
+        }
+    }
+
+    /// Return the daemon run that opened this window.
+    pub fn boot_id(self) -> u64 {
+        self.boot_id
+    }
+
+    /// Return the monotonic reading at which this window opened.
+    pub fn start_ns(self) -> u64 {
+        self.start_ns
+    }
+
+    /// Return the restarts recorded inside this window.
+    pub fn restarts(self) -> u32 {
+        self.restarts
+    }
+}
+
+/// Everything an observation remembers about restarts.
+///
+/// One value rather than three loose fields, because the three must travel
+/// together. The reconciler rewrites a host's observation on many paths -- a
+/// phase change, a stop, a failed start, a quarantine -- and every one of them
+/// has to carry this bookkeeping forward untouched. While the window was a
+/// separate opt-in builder call, forgetting it was a one-line omission that no
+/// type checked, and that is exactly what happened: the window was preserved on
+/// the restart path and wiped on every other, so the bound could be evaded by
+/// any host that stayed up for a single tick between crashes.
+///
+/// Passing the ledger as a unit does not make dropping the window impossible --
+/// `NEVER` is still there for the callers that genuinely mean it. It makes it
+/// impossible to drop *by omission*, which is how it was dropped.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct RestartLedger {
+    count: u32,
+    last_restart_ns: Option<u64>,
+    window: Option<RestartWindow>,
+}
+
+impl RestartLedger {
+    /// The ledger of a host that has never been restarted.
+    pub const NEVER: Self = Self {
+        count: 0,
+        last_restart_ns: None,
+        window: None,
+    };
+
+    /// Build a ledger, rejecting a lifetime count that disagrees with its
+    /// timestamp.
+    ///
+    /// `count` is a lifetime tally and `window` is a rate; both are kept
+    /// because they answer different questions. The tally alone cannot
+    /// distinguish a host crash-looping four times a second from one crashing
+    /// twice a day -- they reach any fixed limit identically, one in minutes
+    /// and one in centuries.
+    pub fn new(
+        count: u32,
+        last_restart_ns: Option<u64>,
+        window: Option<RestartWindow>,
+    ) -> Result<Self, RegistryError> {
+        if count == 0 && last_restart_ns.is_some() || count > 0 && last_restart_ns.is_none() {
+            return Err(RegistryError::invalid(
+                "last_restart_ns",
+                "must be present exactly when restart_count is non-zero",
+            ));
+        }
+        // Every restart inside the window is also a restart in the lifetime
+        // tally, so the window can never hold more. The decoder reads both from
+        // bytes it did not write, and a record claiming otherwise would present
+        // a host already past its intensity limit with a clean lifetime count.
+        if window.is_some_and(|window| window.restarts() > count) {
+            return Err(RegistryError::invalid(
+                "restarts_in_window",
+                "must not exceed the lifetime restart count",
+            ));
+        }
+        Ok(Self {
+            count,
+            last_restart_ns,
+            window,
+        })
+    }
+
+    /// Return the lifetime restart tally.
+    pub fn count(self) -> u32 {
+        self.count
+    }
+
+    /// Return when the most recent restart happened.
+    pub fn last_restart_ns(self) -> Option<u64> {
+        self.last_restart_ns
+    }
+
+    /// Return the open intensity window, if any.
+    pub fn window(self) -> Option<RestartWindow> {
+        self.window
+    }
+}
+
+/// When a quarantine lifts, if it lifts.
+///
+/// A deadline is not just a number, for the same reason a restart window is not
+/// just a number: `Until` holds a *monotonic* reading, which counts from daemon
+/// start, so a deadline written by one run is not comparable to the next run's
+/// clock. A 60-second quarantine written by a daemon that had been up for a
+/// month decodes as a deadline a month away, and the host stays down for the
+/// previous run's entire uptime.
+///
+/// Recording which run set the deadline lets a reader tell "not yet" from "not
+/// mine". A deadline from another run counts as elapsed -- the safe direction,
+/// since the alternative is a host held down by an interval nobody chose.
+///
+/// `Permanent` is a variant rather than a sentinel value. It used to be
+/// `u64::MAX`, which meant every arithmetic path had to be careful not to
+/// saturate into "never lifts" by accident, and one of them was not.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum QuarantineDeadline {
+    /// Never lifts, whatever the clock says. Reserved for conditions that
+    /// cannot resolve on their own, such as the lifetime restart counter
+    /// running out.
+    Permanent,
+    /// Lifts at `ns`, as read by the daemon run identified by `boot_id`.
+    Until { boot_id: u64, ns: u64 },
+    /// Already over.
+    ///
+    /// Version-1 records stored a deadline as a bare monotonic reading with no
+    /// run attached, which is exactly the unusable state the `boot_id` exists
+    /// to detect -- there is no honest way to place such a number on this run's
+    /// clock. Rather than invent a run for it, or a sentinel `boot_id` that
+    /// would reintroduce the collision problem, those deadlines decode as
+    /// expired. A host that comes back too eagerly is corrected by the next
+    /// tick; one wedged behind an uninterpretable deadline is not.
+    Lapsed,
+}
+
+impl QuarantineDeadline {
+    /// Whether this quarantine has expired as of `now_ns` in run `boot_id`.
+    pub fn has_elapsed(self, boot_id: u64, now_ns: u64) -> bool {
+        match self {
+            Self::Permanent => false,
+            Self::Lapsed => true,
+            Self::Until {
+                boot_id: written_by,
+                ns,
+            } => written_by != boot_id || now_ns >= ns,
+        }
+    }
+}
+
 /// Cached process observation. Every field is evidence to be reverified after restart.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HostObservation {
@@ -169,20 +403,17 @@ pub struct HostObservation {
     started_at_ns: Option<u64>,
     last_heartbeat_ns: Option<u64>,
     control_channel_id: Option<ChannelId>,
-    restart_count: u32,
-    last_restart_ns: Option<u64>,
+    restarts: RestartLedger,
 }
 
 impl HostObservation {
-    #[allow(clippy::too_many_arguments)]
     pub fn new(
         status: HostStatus,
         process_id: Option<u32>,
         started_at_ns: Option<u64>,
         last_heartbeat_ns: Option<u64>,
         control_channel_id: Option<ChannelId>,
-        restart_count: u32,
-        last_restart_ns: Option<u64>,
+        restarts: RestartLedger,
     ) -> Result<Self, RegistryError> {
         if process_id == Some(0) {
             return Err(RegistryError::invalid("process_id", "must be non-zero"));
@@ -200,14 +431,6 @@ impl HostObservation {
                     "must not precede started_at_ns",
                 ));
             }
-        }
-        if restart_count == 0 && last_restart_ns.is_some()
-            || restart_count > 0 && last_restart_ns.is_none()
-        {
-            return Err(RegistryError::invalid(
-                "last_restart_ns",
-                "must be present exactly when restart_count is non-zero",
-            ));
         }
         if let Some(channel_id) = control_channel_id {
             validate_uuid_v7(channel_id)?;
@@ -244,9 +467,27 @@ impl HostObservation {
             started_at_ns,
             last_heartbeat_ns,
             control_channel_id,
-            restart_count,
-            last_restart_ns,
+            restarts,
         })
+    }
+
+    /// Return the whole restart ledger, for carrying forward unchanged.
+    ///
+    /// Every observation the reconciler writes for an already-known host should
+    /// pass this straight through. Only the restart path itself has cause to
+    /// build a different one.
+    pub fn restarts(&self) -> RestartLedger {
+        self.restarts
+    }
+
+    /// Start of the open restart-intensity window, if any.
+    pub fn restart_window_start_ns(&self) -> Option<u64> {
+        self.restarts.window().map(RestartWindow::start_ns)
+    }
+
+    /// Restarts recorded inside the open window.
+    pub fn restarts_in_window(&self) -> u32 {
+        self.restarts.window().map_or(0, RestartWindow::restarts)
     }
 
     pub fn stopped() -> Self {
@@ -256,8 +497,7 @@ impl HostObservation {
             started_at_ns: None,
             last_heartbeat_ns: None,
             control_channel_id: None,
-            restart_count: 0,
-            last_restart_ns: None,
+            restarts: RestartLedger::NEVER,
         }
     }
 
@@ -282,11 +522,11 @@ impl HostObservation {
     }
 
     pub fn restart_count(&self) -> u32 {
-        self.restart_count
+        self.restarts.count()
     }
 
     pub fn last_restart_ns(&self) -> Option<u64> {
-        self.last_restart_ns
+        self.restarts.last_restart_ns()
     }
 }
 
@@ -573,7 +813,7 @@ pub fn host_record_key(name: &HostName) -> String {
     format!("{HOST_PREFIX}{}", name.as_str())
 }
 
-/// Encode one bounded version-1 host record.
+/// Encode one bounded version-2 host record.
 pub fn encode_host_entry(entry: &HostEntry) -> Vec<u8> {
     let mut output = Vec::with_capacity(192);
     output.extend_from_slice(MAGIC);
@@ -597,12 +837,30 @@ pub fn encode_host_entry(entry: &HostEntry) -> Vec<u8> {
         }
         None => output.push(0),
     }
-    output.extend_from_slice(&entry.observation.restart_count.to_be_bytes());
-    push_option_u64(&mut output, entry.observation.last_restart_ns);
+    let restarts = entry.observation.restarts;
+    output.extend_from_slice(&restarts.count().to_be_bytes());
+    push_option_u64(&mut output, restarts.last_restart_ns());
+    // Version 2 appends the restart-intensity window. Appending rather than
+    // interleaving is what lets *this* decoder stop early on a version-1
+    // record. It does nothing for a version-1 binary, which rejects a version-2
+    // record on the version byte before reaching any field at all.
+    //
+    // The window is written as one presence byte followed by all three of its
+    // parts, mirroring the type: a reader can no more reconstruct two thirds of
+    // a window than a caller can construct one.
+    match restarts.window() {
+        Some(window) => {
+            output.push(1);
+            output.extend_from_slice(&window.boot_id().to_be_bytes());
+            output.extend_from_slice(&window.start_ns().to_be_bytes());
+            output.extend_from_slice(&window.restarts().to_be_bytes());
+        }
+        None => output.push(0),
+    }
     output
 }
 
-/// Decode one strict version-1 host record.
+/// Decode one strict host record, version 1 or 2.
 pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     if bytes.len() > MAX_RECORD_BYTES {
         return Err(RegistryError::CorruptRecord(
@@ -613,7 +871,8 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     if reader.take(4)? != MAGIC {
         return Err(RegistryError::CorruptRecord("invalid magic".to_string()));
     }
-    if reader.u8()? != VERSION {
+    let version = reader.u8()?;
+    if !(MIN_READABLE_VERSION..=VERSION).contains(&version) {
         return Err(RegistryError::CorruptRecord(
             "unsupported version".to_string(),
         ));
@@ -642,7 +901,7 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
             ))
         }
     };
-    let status = decode_status(&mut reader)?;
+    let status = decode_status(&mut reader, version)?;
     let process_id = reader.option_u32()?;
     let started_at_ns = reader.option_u64()?;
     let last_heartbeat_ns = reader.option_u64()?;
@@ -661,15 +920,39 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     };
     let restart_count = reader.u32()?;
     let last_restart_ns = reader.option_u64()?;
+    // Version 1 ends here. Its records predate the restart-intensity window, so
+    // they decode with it closed -- a host never counted against a window has
+    // used none of it.
+    let window = if version >= 2 {
+        match reader.u8()? {
+            0 => None,
+            1 => {
+                // Bound in order rather than passed inline: two of the three
+                // parts are `u64` and swapping them would still typecheck.
+                let boot_id = reader.u64()?;
+                let start_ns = reader.u64()?;
+                let restarts = reader.u32()?;
+                Some(RestartWindow::new(boot_id, start_ns, restarts).map_err(as_corrupt)?)
+            }
+            _ => {
+                return Err(RegistryError::CorruptRecord(
+                    "invalid restart window option".to_string(),
+                ))
+            }
+        }
+    } else {
+        None
+    };
     reader.finish()?;
+    let restarts =
+        RestartLedger::new(restart_count, last_restart_ns, window).map_err(as_corrupt)?;
     let observation = HostObservation::new(
         status,
         process_id,
         started_at_ns,
         last_heartbeat_ns,
         control_channel_id,
-        restart_count,
-        last_restart_ns,
+        restarts,
     )
     .map_err(as_corrupt)?;
     Ok(HostEntry::new(
@@ -773,15 +1056,23 @@ fn encode_status(output: &mut Vec<u8>, status: &HostStatus) {
                 None => output.push(0),
             }
         }
-        HostStatus::Quarantined { until_ns, reason } => {
+        HostStatus::Quarantined { until, reason } => {
             output.push(7);
-            output.extend_from_slice(&until_ns.to_be_bytes());
+            match until {
+                QuarantineDeadline::Permanent => output.push(0),
+                QuarantineDeadline::Until { boot_id, ns } => {
+                    output.push(1);
+                    output.extend_from_slice(&boot_id.to_be_bytes());
+                    output.extend_from_slice(&ns.to_be_bytes());
+                }
+                QuarantineDeadline::Lapsed => output.push(2),
+            }
             push_string_u16(output, reason);
         }
     }
 }
 
-fn decode_status(reader: &mut Reader<'_>) -> Result<HostStatus, RegistryError> {
+fn decode_status(reader: &mut Reader<'_>, version: u8) -> Result<HostStatus, RegistryError> {
     match reader.u8()? {
         1 => Ok(HostStatus::Starting),
         2 => Ok(HostStatus::Running),
@@ -800,10 +1091,38 @@ fn decode_status(reader: &mut Reader<'_>) -> Result<HostStatus, RegistryError> {
             };
             Ok(HostStatus::Crashed { exit_code })
         }
-        7 => Ok(HostStatus::Quarantined {
-            until_ns: reader.u64()?,
-            reason: reader.string_u16(MAX_REASON_BYTES)?,
-        }),
+        7 if version < 2 => {
+            // Version 1: a bare `u64`, with `u64::MAX` meaning "never lifts".
+            let until_ns = reader.u64()?;
+            Ok(HostStatus::Quarantined {
+                until: if until_ns == u64::MAX {
+                    QuarantineDeadline::Permanent
+                } else {
+                    QuarantineDeadline::Lapsed
+                },
+                reason: reader.string_u16(MAX_REASON_BYTES)?,
+            })
+        }
+        7 => {
+            let until = match reader.u8()? {
+                0 => QuarantineDeadline::Permanent,
+                1 => {
+                    let boot_id = reader.u64()?;
+                    let ns = reader.u64()?;
+                    QuarantineDeadline::Until { boot_id, ns }
+                }
+                2 => QuarantineDeadline::Lapsed,
+                _ => {
+                    return Err(RegistryError::CorruptRecord(
+                        "invalid quarantine deadline".to_string(),
+                    ))
+                }
+            };
+            Ok(HostStatus::Quarantined {
+                until,
+                reason: reader.string_u16(MAX_REASON_BYTES)?,
+            })
+        }
         _ => Err(RegistryError::CorruptRecord(
             "invalid host status".to_string(),
         )),
@@ -957,6 +1276,14 @@ mod tests {
         )
     }
 
+    /// A fixed daemon-run identity for tests that never model a restart.
+    const BOOT_ID: u64 = 0xD18;
+
+    /// Build a ledger for a test observation, panicking on a half-open pair.
+    fn ledger(count: u32, last_restart_ns: Option<u64>) -> RestartLedger {
+        RestartLedger::new(count, last_restart_ns, None).expect("a valid restart pair")
+    }
+
     fn running_entry(host: &str) -> HostEntry {
         let observation = HostObservation::new(
             HostStatus::Running,
@@ -964,8 +1291,7 @@ mod tests {
             Some(100),
             Some(110),
             Some(channel_id()),
-            1,
-            Some(90),
+            ledger(1, Some(90)),
         )
         .unwrap();
         HostEntry::new(registration(host, 7), DesiredState::Running, observation)
@@ -996,8 +1322,7 @@ mod tests {
             Some(1),
             Some(1),
             Some(channel_id()),
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
         assert!(HostObservation::new(
@@ -1006,13 +1331,18 @@ mod tests {
             Some(2),
             Some(1),
             Some(channel_id()),
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
-        assert!(
-            HostObservation::new(HostStatus::Stopped, Some(1), None, None, None, 0, None,).is_err()
-        );
+        assert!(HostObservation::new(
+            HostStatus::Stopped,
+            Some(1),
+            None,
+            None,
+            None,
+            ledger(0, None)
+        )
+        .is_err());
     }
 
     #[test]
@@ -1027,21 +1357,36 @@ mod tests {
             HostStatus::Crashed {
                 exit_code: Some(-9),
             },
+            // Every deadline variant, not just one. An earlier version of this
+            // test covered `Until` alone while claiming "every status shape" in
+            // its name, and missed that `Lapsed` encoded to a tag the decoder
+            // rejected -- an asymmetry that destroys the record it is asked to
+            // save, and then stops the daemon that reads it back.
             HostStatus::Quarantined {
-                until_ns: 999,
+                until: QuarantineDeadline::Permanent,
+                reason: "panic threshold".to_string(),
+            },
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Until {
+                    boot_id: 0xD18,
+                    ns: 999,
+                },
+                reason: "panic threshold".to_string(),
+            },
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Lapsed,
                 reason: "panic threshold".to_string(),
             },
         ];
         for status in statuses {
             let active = matches!(status, HostStatus::Running);
             let observation = HostObservation::new(
-                status,
+                status.clone(),
                 active.then_some(42),
                 active.then_some(100),
                 active.then_some(110),
                 active.then_some(channel_id()),
-                0,
-                None,
+                ledger(0, None),
             )
             .unwrap();
             let entry = HostEntry::new(
@@ -1049,10 +1394,9 @@ mod tests {
                 DesiredState::Running,
                 observation,
             );
-            assert_eq!(
-                decode_host_entry(&encode_host_entry(&entry)).unwrap(),
-                entry
-            );
+            let decoded = decode_host_entry(&encode_host_entry(&entry))
+                .unwrap_or_else(|error| panic!("{status:?} must round trip: {error}"));
+            assert_eq!(decoded.observation().status(), &status);
         }
     }
 
@@ -1076,8 +1420,13 @@ mod tests {
         let mut encoded = encode_host_entry(&entry);
         encoded[0] ^= 1;
         assert!(decode_host_entry(&encoded).is_err());
+        // 2 is the current version, so the unsupported cases are either side of
+        // the readable range rather than a fixed neighbour of version 1.
         let mut encoded = encode_host_entry(&entry);
-        encoded[4] = 2;
+        encoded[4] = VERSION + 1;
+        assert!(decode_host_entry(&encoded).is_err());
+        let mut encoded = encode_host_entry(&entry);
+        encoded[4] = MIN_READABLE_VERSION - 1;
         assert!(decode_host_entry(&encoded).is_err());
         let mut encoded = encode_host_entry(&entry);
         let channel_offset = encoded
@@ -1340,54 +1689,60 @@ mod tests {
 
     #[test]
     fn observation_validation_covers_restart_uuid_running_and_quarantine_rules() {
-        assert!(
-            HostObservation::new(HostStatus::Starting, None, None, Some(1), None, 0, None,)
-                .is_err()
-        );
-        assert!(
-            HostObservation::new(HostStatus::Starting, None, None, None, None, 1, None,).is_err()
-        );
-        assert!(
-            HostObservation::new(HostStatus::Starting, None, None, None, None, 0, Some(1),)
-                .is_err()
-        );
+        assert!(HostObservation::new(
+            HostStatus::Starting,
+            None,
+            None,
+            Some(1),
+            None,
+            ledger(0, None)
+        )
+        .is_err());
+        // The half-open restart pair is refused by the ledger, which is now
+        // the only way to spell one.
+        assert!(RestartLedger::new(1, None, None).is_err());
+        assert!(RestartLedger::new(0, Some(1), None).is_err());
         assert!(HostObservation::new(
             HostStatus::Starting,
             None,
             None,
             None,
             Some(ChannelId([0; 16])),
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
         assert!(
-            HostObservation::new(HostStatus::Running, None, None, None, None, 0, None,).is_err()
+            HostObservation::new(HostStatus::Running, None, None, None, None, ledger(0, None))
+                .is_err()
         );
         assert!(HostObservation::new(
             HostStatus::Quarantined {
-                until_ns: 5,
+                until: QuarantineDeadline::Until {
+                    boot_id: BOOT_ID,
+                    ns: 5
+                },
                 reason: String::new(),
             },
             None,
             None,
             None,
             None,
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
         assert!(HostObservation::new(
             HostStatus::Quarantined {
-                until_ns: 5,
+                until: QuarantineDeadline::Until {
+                    boot_id: BOOT_ID,
+                    ns: 5
+                },
                 reason: "bad\nreason".to_string(),
             },
             None,
             None,
             None,
             None,
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
     }
@@ -1445,8 +1800,7 @@ mod tests {
                 None,
                 None,
                 None,
-                0,
-                None,
+                ledger(0, None),
             )
             .unwrap(),
         );
@@ -1517,5 +1871,180 @@ mod tests {
             position: usize::MAX,
         };
         assert!(reader.take(1).is_err());
+    }
+
+    /// A version-1 record still decodes, with the window closed.
+    ///
+    /// This is the property that keeps an upgrade from wiping a live registry,
+    /// and it cannot be checked by round-tripping the current encoder: that
+    /// only ever produces version-2 bytes. The v1 layout is therefore rebuilt
+    /// by hand — truncating a v2 record at the point v1 ended, and relabelling
+    /// the version byte.
+    #[test]
+    fn a_version_one_record_still_decodes_with_the_window_closed() {
+        let entry = running_entry("legacy-host");
+        let v2 = encode_host_entry(&entry);
+
+        // v1 is v2 minus the appended window, which for a closed window is a
+        // single absent tag byte.
+        let trailing = 1;
+        let mut v1 = v2[..v2.len() - trailing].to_vec();
+        v1[4] = 1;
+
+        let decoded = decode_host_entry(&v1).expect("a version-1 record must still decode");
+        assert_eq!(decoded.observation().restart_window_start_ns(), None);
+        assert_eq!(decoded.observation().restarts_in_window(), 0);
+        assert_eq!(
+            decoded.observation().restart_count(),
+            entry.observation().restart_count(),
+            "the fields version 1 did carry must survive unchanged"
+        );
+    }
+
+    /// The window survives a round trip with all three of its parts.
+    ///
+    /// The boot id matters as much as the timestamp: without it a reader cannot
+    /// tell a window opened four microseconds into *this* daemon run from one
+    /// opened four microseconds into the last.
+    #[test]
+    fn the_restart_window_round_trips() {
+        let entry = running_entry("windowed-host");
+        let window = RestartWindow::new(0xFEED_BEEF, 4_000, 3).expect("a window with restarts");
+        // Three restarts in the window means at least three in the lifetime
+        // tally; the ledger refuses any other pairing.
+        let restarts =
+            RestartLedger::new(3, Some(90), Some(window)).expect("a valid restart ledger");
+        let observation = HostObservation::new(
+            HostStatus::Running,
+            Some(42),
+            Some(100),
+            Some(110),
+            Some(channel_id()),
+            restarts,
+        )
+        .unwrap();
+        let entry = HostEntry::new(
+            entry.registration().clone(),
+            entry.desired_state(),
+            observation,
+        );
+
+        let decoded = decode_host_entry(&encode_host_entry(&entry)).expect("round trip");
+        let decoded_window = decoded
+            .observation()
+            .restarts()
+            .window()
+            .expect("the window must survive");
+        assert_eq!(decoded_window.boot_id(), 0xFEED_BEEF);
+        assert_eq!(decoded_window.start_ns(), 4_000);
+        assert_eq!(decoded_window.restarts(), 3);
+    }
+
+    /// A window recording no restarts is a window that should have been closed,
+    /// so it cannot be built -- and a record claiming one is corrupt.
+    #[test]
+    fn an_empty_restart_window_is_rejected() {
+        assert!(RestartWindow::new(1, 4_000, 0).is_err());
+
+        // The same rule holds on the way in from disk. Hand-build a record
+        // whose window tag says "present" but whose count is zero.
+        let entry = running_entry("windowed-host");
+        let window = RestartWindow::new(7, 4_000, 1).expect("a window with restarts");
+        let restarts =
+            RestartLedger::new(1, Some(90), Some(window)).expect("a valid restart ledger");
+        let observation = HostObservation::new(
+            HostStatus::Running,
+            Some(42),
+            Some(100),
+            Some(110),
+            Some(channel_id()),
+            restarts,
+        )
+        .unwrap();
+        let entry = HostEntry::new(
+            entry.registration().clone(),
+            entry.desired_state(),
+            observation,
+        );
+        let mut bytes = encode_host_entry(&entry);
+        let count_at = bytes.len() - 4;
+        bytes[count_at..].copy_from_slice(&0u32.to_be_bytes());
+        assert!(decode_host_entry(&bytes).is_err());
+    }
+
+    /// Every version-1 status shape still decodes, including the quarantine.
+    ///
+    /// The existing version-1 test used a `Running` entry, so it could not see
+    /// that version 2 changed the *status body* as well as appending the
+    /// window. Only the appended part was version-gated, and every version-1
+    /// quarantine record became undecodable -- which fails the whole of
+    /// `ServiceRegistry::list`, which fails the reconcile the daemon runs
+    /// before it starts serving. One old record, and the daemon will not come
+    /// up, with no control plane left to repair it.
+    #[test]
+    fn every_version_one_status_still_decodes() {
+        // Version 1's quarantine body: a bare deadline, `u64::MAX` for "never".
+        for (until_ns, expected) in [
+            (u64::MAX, QuarantineDeadline::Permanent),
+            (5_000, QuarantineDeadline::Lapsed),
+            (0, QuarantineDeadline::Lapsed),
+        ] {
+            let entry = HostEntry::new(
+                registration("mail-host", 3),
+                DesiredState::Running,
+                HostObservation::new(
+                    HostStatus::Quarantined {
+                        until: QuarantineDeadline::Permanent,
+                        reason: "panic threshold".to_string(),
+                    },
+                    None,
+                    None,
+                    None,
+                    None,
+                    ledger(0, None),
+                )
+                .unwrap(),
+            );
+            let v2 = encode_host_entry(&entry);
+
+            // Rebuild the record as version 1 would have written it: the
+            // permanent tag byte becomes a bare u64, and the appended window
+            // (one absent-tag byte) is dropped.
+            // Walk the fixed prefix to the status tag rather than searching
+            // for a byte value: a hash or a length can be 7 too.
+            let u16_at = |bytes: &[u8], at: usize| {
+                usize::from(u16::from_be_bytes([bytes[at], bytes[at + 1]]))
+            };
+            let mut tag_at = 4 + 1;
+            tag_at += 2 + u16_at(&v2, tag_at);
+            tag_at += 2 + u16_at(&v2, tag_at);
+            tag_at += 32 + 1 + 1;
+            assert_eq!(v2[tag_at], 7, "the status tag must be the quarantine one");
+            let mut v1 = v2[..=tag_at].to_vec();
+            v1.extend_from_slice(&until_ns.to_be_bytes());
+            // Everything after the version-2 deadline: the reason, minus the
+            // trailing window tag.
+            // The fixture encodes `Permanent`, whose version-2 body is a lone
+            // tag byte.
+            let deadline_bytes = 1;
+            v1.extend_from_slice(&v2[tag_at + 1 + deadline_bytes..v2.len() - 1]);
+            v1[4] = 1;
+
+            let decoded = decode_host_entry(&v1).expect("a version-1 quarantine must decode");
+            assert_eq!(
+                decoded.observation().status(),
+                &HostStatus::Quarantined {
+                    until: expected,
+                    reason: "panic threshold".to_string(),
+                }
+            );
+        }
+    }
+
+    /// A deadline this daemon cannot place on its own clock counts as expired.
+    #[test]
+    fn a_lapsed_deadline_has_always_elapsed() {
+        assert!(QuarantineDeadline::Lapsed.has_elapsed(BOOT_ID, 0));
+        assert!(QuarantineDeadline::Lapsed.has_elapsed(0, u64::MAX));
     }
 }
