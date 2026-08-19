@@ -91,6 +91,12 @@ func ValidateBuildFiles(packages []discovery.Package, graph *directedgraph.Graph
 
 		prereqs := transitivePredecessors(graph, pkg.Name)
 		allowedDirectRefs := allowedDirectRefsFromMetadata(pkg, pythonKnownNames, perlKnownNames, graph)
+		for dep := range parseDeclaredBuildDeps(pkg) {
+			if allowedDirectRefs == nil {
+				allowedDirectRefs = make(map[string]bool)
+			}
+			allowedDirectRefs[dep] = true
+		}
 		delete(referenced, pkg.Name)      // Self-references are allowed.
 		delete(referencedFuzzy, pkg.Name) // Self-references are allowed.
 
@@ -158,6 +164,36 @@ func buildFileLabel(pkgPath string) string {
 }
 
 var relPathRe = regexp.MustCompile(`(?:\.\.?[/\\][^ \t\r\n"'&|;()]+)+`)
+
+var buildToolDepsRe = regexp.MustCompile(`(?m)^\s*#\s*build-tool:\s*deps=(.+)$`)
+
+// parseDeclaredBuildDeps extracts package names declared via a
+// "# build-tool: deps=pkg1 pkg2" comment at the top of a BUILD/BUILD_windows
+// file. This is the escape hatch for a BUILD script that legitimately
+// reaches into a sibling package the language-specific manifest parser has
+// no way to see — most commonly a native library staged from another
+// language's package (e.g. a Rust cdylib a Swift package links against via
+// shell commands, invisible to the Package.swift .package(path:) scanner).
+// Declaring the dependency here documents the relationship for humans and
+// tells the validator it's intentional rather than a hidden coupling the
+// inferred dependency graph doesn't know about — the same role
+// allowedDirectRefsFromMetadata's perl cpanfile parsing plays for perl.
+//
+// pkg.BuildContent holds the raw text of whichever BUILD file the running
+// platform selected (see discovery.getBuildFile), so this only sees the
+// comment when it's present in the file actually used for validation —
+// matching how referencedPackages only sees that same file's commands.
+func parseDeclaredBuildDeps(pkg discovery.Package) map[string]bool {
+	match := buildToolDepsRe.FindStringSubmatch(pkg.BuildContent)
+	if match == nil {
+		return nil
+	}
+	declared := make(map[string]bool)
+	for _, name := range strings.Fields(match[1]) {
+		declared[name] = true
+	}
+	return declared
+}
 
 func referencedPackages(pkg discovery.Package, pathToPkg map[string]string) map[string]bool {
 	found := make(map[string]bool)
