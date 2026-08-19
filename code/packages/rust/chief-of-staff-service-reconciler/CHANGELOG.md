@@ -18,3 +18,8 @@
   against this run's monotonic clock.
 - Consult the bound when retrying a start claimed on an earlier tick, so a host
   left durably in `Starting` or `Restarting` cannot start unbounded.
+- Stamp intensity quarantine deadlines with the daemon run that set them, so a
+  deadline from a previous run does not hold a host down for that run's uptime.
+- Charge a restart for retrying a restart claim that no window from this run
+  vouches for, instead of granting it free. Retrying a first-launch claim is
+  still free, since a host that has never run has not restarted.

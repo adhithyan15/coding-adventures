@@ -598,14 +598,26 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     .map_err(ChiefDaemonError::Process)?;
     let interval = config.host_defaults().health_check_interval();
     let interval_ns = u64::try_from(interval.as_nanos()).unwrap_or(u64::MAX);
-    // The restart window is stored durably but stamped with a monotonic clock,
-    // which counts from daemon start and so means nothing to the next run. The
-    // boot id is what lets a later daemon tell "this run's window" apart from
-    // "some previous run's window"; wall-clock start time is unique per run,
-    // which is all that is asked of it. A clock that cannot be read yields
-    // zero, and a stale window that survives that coincidence is still caught
-    // by the reconciler's "started in the future" check.
-    let boot_id = SystemUnixTimeClock.now_ms().unwrap_or(0);
+    // Durable restart windows and quarantine deadlines both hold monotonic
+    // readings, which count from daemon start and so mean nothing to the next
+    // run. The boot id is what lets a later daemon tell "this run's reading"
+    // apart from "some previous run's reading", and the only thing asked of it
+    // is that two runs never share one.
+    //
+    // Random, not the wall clock. A clock reading collides whenever two runs
+    // start in the same millisecond, and it collides *constantly* if the clock
+    // cannot be read at all and every run falls back to the same constant. A
+    // collision does not fail loudly: it silently makes a previous run's
+    // readings look like this run's, which is the exact condition the boot id
+    // exists to detect. Mixing the clock in keeps the ids time-separated even
+    // if the entropy source is poor.
+    let boot_id = coding_adventures_uuid::v4()
+        .map(|id| id.to_u128() as u64)
+        .unwrap_or_else(|_| SystemUnixTimeClock.now_ms().unwrap_or_default())
+        ^ SystemUnixTimeClock
+            .now_ms()
+            .unwrap_or_default()
+            .rotate_left(32);
     let reconcile_config = ReconcileConfig::new(
         boot_id,
         interval_ns.saturating_mul(HEARTBEAT_GRACE_INTERVALS),

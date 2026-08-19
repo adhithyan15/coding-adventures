@@ -124,8 +124,13 @@ pub enum HostStatus {
     Restarting,
     Stopping,
     Stopped,
-    Crashed { exit_code: Option<i32> },
-    Quarantined { until_ns: u64, reason: String },
+    Crashed {
+        exit_code: Option<i32>,
+    },
+    Quarantined {
+        until: QuarantineDeadline,
+        reason: String,
+    },
 }
 
 /// Immutable package identity supplied at registration time.
@@ -254,18 +259,18 @@ impl RestartWindow {
 
 /// Everything an observation remembers about restarts.
 ///
-/// One value rather than four loose fields, because the four must travel
+/// One value rather than three loose fields, because the three must travel
 /// together. The reconciler rewrites a host's observation on many paths -- a
 /// phase change, a stop, a failed start, a quarantine -- and every one of them
-/// has to carry this bookkeeping forward untouched. While the pieces were
-/// separate parameters, carrying three of them and silently resetting the
-/// fourth was a one-line omission that no type checked, and that is exactly
-/// what happened: the intensity window was preserved on the restart path and
-/// wiped on every other, so the bound could be evaded by any host that stayed
-/// up for a single tick between crashes.
+/// has to carry this bookkeeping forward untouched. While the window was a
+/// separate opt-in builder call, forgetting it was a one-line omission that no
+/// type checked, and that is exactly what happened: the window was preserved on
+/// the restart path and wiped on every other, so the bound could be evaded by
+/// any host that stayed up for a single tick between crashes.
 ///
-/// Passing the ledger as a unit does not make that mistake less likely. It
-/// makes it unspellable.
+/// Passing the ledger as a unit does not make dropping the window impossible --
+/// `NEVER` is still there for the callers that genuinely mean it. It makes it
+/// impossible to drop *by omission*, which is how it was dropped.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub struct RestartLedger {
     count: u32,
@@ -300,6 +305,16 @@ impl RestartLedger {
                 "must be present exactly when restart_count is non-zero",
             ));
         }
+        // Every restart inside the window is also a restart in the lifetime
+        // tally, so the window can never hold more. The decoder reads both from
+        // bytes it did not write, and a record claiming otherwise would present
+        // a host already past its intensity limit with a clean lifetime count.
+        if window.is_some_and(|window| window.restarts() > count) {
+            return Err(RegistryError::invalid(
+                "restarts_in_window",
+                "must not exceed the lifetime restart count",
+            ));
+        }
         Ok(Self {
             count,
             last_restart_ns,
@@ -320,6 +335,45 @@ impl RestartLedger {
     /// Return the open intensity window, if any.
     pub fn window(self) -> Option<RestartWindow> {
         self.window
+    }
+}
+
+/// When a quarantine lifts, if it lifts.
+///
+/// A deadline is not just a number, for the same reason a restart window is not
+/// just a number: `Until` holds a *monotonic* reading, which counts from daemon
+/// start, so a deadline written by one run is not comparable to the next run's
+/// clock. A 60-second quarantine written by a daemon that had been up for a
+/// month decodes as a deadline a month away, and the host stays down for the
+/// previous run's entire uptime.
+///
+/// Recording which run set the deadline lets a reader tell "not yet" from "not
+/// mine". A deadline from another run counts as elapsed -- the safe direction,
+/// since the alternative is a host held down by an interval nobody chose.
+///
+/// `Permanent` is a variant rather than a sentinel value. It used to be
+/// `u64::MAX`, which meant every arithmetic path had to be careful not to
+/// saturate into "never lifts" by accident, and one of them was not.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum QuarantineDeadline {
+    /// Never lifts, whatever the clock says. Reserved for conditions that
+    /// cannot resolve on their own, such as the lifetime restart counter
+    /// running out.
+    Permanent,
+    /// Lifts at `ns`, as read by the daemon run identified by `boot_id`.
+    Until { boot_id: u64, ns: u64 },
+}
+
+impl QuarantineDeadline {
+    /// Whether this quarantine has expired as of `now_ns` in run `boot_id`.
+    pub fn has_elapsed(self, boot_id: u64, now_ns: u64) -> bool {
+        match self {
+            Self::Permanent => false,
+            Self::Until {
+                boot_id: written_by,
+                ns,
+            } => written_by != boot_id || now_ns >= ns,
+        }
     }
 }
 
@@ -983,9 +1037,16 @@ fn encode_status(output: &mut Vec<u8>, status: &HostStatus) {
                 None => output.push(0),
             }
         }
-        HostStatus::Quarantined { until_ns, reason } => {
+        HostStatus::Quarantined { until, reason } => {
             output.push(7);
-            output.extend_from_slice(&until_ns.to_be_bytes());
+            match until {
+                QuarantineDeadline::Permanent => output.push(0),
+                QuarantineDeadline::Until { boot_id, ns } => {
+                    output.push(1);
+                    output.extend_from_slice(&boot_id.to_be_bytes());
+                    output.extend_from_slice(&ns.to_be_bytes());
+                }
+            }
             push_string_u16(output, reason);
         }
     }
@@ -1010,10 +1071,25 @@ fn decode_status(reader: &mut Reader<'_>) -> Result<HostStatus, RegistryError> {
             };
             Ok(HostStatus::Crashed { exit_code })
         }
-        7 => Ok(HostStatus::Quarantined {
-            until_ns: reader.u64()?,
-            reason: reader.string_u16(MAX_REASON_BYTES)?,
-        }),
+        7 => {
+            let until = match reader.u8()? {
+                0 => QuarantineDeadline::Permanent,
+                1 => {
+                    let boot_id = reader.u64()?;
+                    let ns = reader.u64()?;
+                    QuarantineDeadline::Until { boot_id, ns }
+                }
+                _ => {
+                    return Err(RegistryError::CorruptRecord(
+                        "invalid quarantine deadline".to_string(),
+                    ))
+                }
+            };
+            Ok(HostStatus::Quarantined {
+                until,
+                reason: reader.string_u16(MAX_REASON_BYTES)?,
+            })
+        }
         _ => Err(RegistryError::CorruptRecord(
             "invalid host status".to_string(),
         )),
@@ -1167,6 +1243,9 @@ mod tests {
         )
     }
 
+    /// A fixed daemon-run identity for tests that never model a restart.
+    const BOOT_ID: u64 = 0xD18;
+
     /// Build a ledger for a test observation, panicking on a half-open pair.
     fn ledger(count: u32, last_restart_ns: Option<u64>) -> RestartLedger {
         RestartLedger::new(count, last_restart_ns, None).expect("a valid restart pair")
@@ -1246,7 +1325,10 @@ mod tests {
                 exit_code: Some(-9),
             },
             HostStatus::Quarantined {
-                until_ns: 999,
+                until: QuarantineDeadline::Until {
+                    boot_id: BOOT_ID,
+                    ns: 999,
+                },
                 reason: "panic threshold".to_string(),
             },
         ];
@@ -1590,7 +1672,10 @@ mod tests {
         );
         assert!(HostObservation::new(
             HostStatus::Quarantined {
-                until_ns: 5,
+                until: QuarantineDeadline::Until {
+                    boot_id: BOOT_ID,
+                    ns: 5
+                },
                 reason: String::new(),
             },
             None,
@@ -1602,7 +1687,10 @@ mod tests {
         .is_err());
         assert!(HostObservation::new(
             HostStatus::Quarantined {
-                until_ns: 5,
+                until: QuarantineDeadline::Until {
+                    boot_id: BOOT_ID,
+                    ns: 5
+                },
                 reason: "bad\nreason".to_string(),
             },
             None,
@@ -1777,8 +1865,10 @@ mod tests {
     fn the_restart_window_round_trips() {
         let entry = running_entry("windowed-host");
         let window = RestartWindow::new(0xFEED_BEEF, 4_000, 3).expect("a window with restarts");
+        // Three restarts in the window means at least three in the lifetime
+        // tally; the ledger refuses any other pairing.
         let restarts =
-            RestartLedger::new(1, Some(90), Some(window)).expect("a valid restart ledger");
+            RestartLedger::new(3, Some(90), Some(window)).expect("a valid restart ledger");
         let observation = HostObservation::new(
             HostStatus::Running,
             Some(42),

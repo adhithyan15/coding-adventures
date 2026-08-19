@@ -18,8 +18,8 @@ use chief_of_staff_service_reconciler::{
     HostSupervisor, ReconcileAction, ReconcileReport, SupervisorObservation, SupervisorPhase,
 };
 use chief_of_staff_service_registry::{
-    DesiredState, HostName, HostRegistration, HostStatus, LoadedHost, PackagePath, RegistryError,
-    RestartPolicy,
+    DesiredState, HostName, HostRegistration, HostStatus, LoadedHost, PackagePath,
+    QuarantineDeadline, RegistryError, RestartPolicy,
 };
 use chief_of_staff_trust_checker::TrustRequestContext;
 use coding_adventures_json_parser::try_parse_json;
@@ -1548,11 +1548,25 @@ fn status_json(status: &HostStatus) -> JsonValue {
             ("kind", JsonValue::String("crashed".to_string())),
             ("exit_code", optional_i32(*exit_code)),
         ]),
-        HostStatus::Quarantined { until_ns, reason } => object(vec![
-            ("kind", JsonValue::String("quarantined".to_string())),
-            ("until_ns", JsonValue::String(until_ns.to_string())),
-            ("reason", JsonValue::String(reason.clone())),
-        ]),
+        // `until_ns` is reported only when the quarantine actually lifts, and
+        // `permanent` says which case this is. The reading is monotonic and
+        // scoped to the daemon run named by `boot_id`, so a client must not
+        // compare it against anything of its own -- reporting it bare would
+        // invite exactly that.
+        HostStatus::Quarantined { until, reason } => object(match until {
+            QuarantineDeadline::Permanent => vec![
+                ("kind", JsonValue::String("quarantined".to_string())),
+                ("permanent", JsonValue::Bool(true)),
+                ("reason", JsonValue::String(reason.clone())),
+            ],
+            QuarantineDeadline::Until { boot_id, ns } => vec![
+                ("kind", JsonValue::String("quarantined".to_string())),
+                ("permanent", JsonValue::Bool(false)),
+                ("boot_id", JsonValue::String(boot_id.to_string())),
+                ("until_ns", JsonValue::String(ns.to_string())),
+                ("reason", JsonValue::String(reason.clone())),
+            ],
+        }),
     }
 }
 
@@ -2624,7 +2638,14 @@ mod tests {
             HostStatus::Stopped,
             HostStatus::Crashed { exit_code: Some(7) },
             HostStatus::Quarantined {
-                until_ns: u64::MAX,
+                until: QuarantineDeadline::Permanent,
+                reason: "policy".to_string(),
+            },
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Until {
+                    boot_id: 11,
+                    ns: u64::MAX,
+                },
                 reason: "policy".to_string(),
             },
         ];
@@ -2633,8 +2654,13 @@ mod tests {
             .map(status_json)
             .map(|value| serialize(&value).unwrap())
             .collect::<String>();
+        // A u64 is serialised as a string, so full precision survives.
         assert!(text.contains(&u64::MAX.to_string()));
         assert!(text.contains("quarantined"));
+        // A permanent quarantine reports no deadline at all -- there is no
+        // sentinel number for a client to compare against its own clock.
+        assert!(text.contains("\"permanent\":true"));
+        assert!(text.contains("\"boot_id\":\"11\""));
         for phase in [
             SupervisorPhase::Starting,
             SupervisorPhase::Running,

@@ -35,19 +35,31 @@ start -- and every one of them must carry that bookkeeping forward. While the
 window was a separate opt-in builder call, the restart path set it and every
 other path silently dropped it, so a host that stayed up for a single tick
 between crashes reset its own window and was never bounded at all. Passing the
-ledger as a unit does not make that mistake less likely; it makes it
-unspellable.
+ledger as a unit does not make that mistake impossible -- `RestartLedger::NEVER`
+is still there for the callers that genuinely mean it -- but it does make it
+impossible to drop the window *by omission*, which is how it was dropped.
 
-**A window belongs to one daemon run.** `start_ns` is read from a monotonic
-clock that counts from daemon start, so a value written by one run is not on the
-same scale as the next run's readings -- a window opened after an hour of uptime
-looks an hour in the *future* to a daemon that has just started. Each window
-therefore records the `boot_id` of the run that opened it, and a window from
-another run is discarded rather than compared against. The honest consequence:
-the bound holds within a daemon run, and a daemon restart hands every host a
-fresh budget. Daemon restarts are not something a supervised host gets to
-trigger, so that is the right trade -- but it is a weaker claim than "durable",
-and the earlier version of this file made the stronger one.
+**Monotonic readings are never stored bare.** A monotonic clock counts from
+daemon start, so a reading written by one run is not on the same scale as the
+next run's -- a value recorded after an hour of uptime looks an hour in the
+*future* to a daemon that has just started. Two durable things hold such
+readings, and both name the run that took them: `RestartWindow` carries a
+`boot_id`, and so does `QuarantineDeadline::Until`. A reading from another run
+is treated as elapsed rather than compared against.
+
+Both halves matter, and shipping only the first was a real bug. A window that
+outlived its run wedged a host in a quarantine that re-armed every time it
+lifted; fixing that while leaving the *deadline* unstamped moved the same wedge
+one layer over, where a sixty-second quarantine written by a month-old daemon
+kept the host down for a month. `QuarantineDeadline::Permanent` is a variant
+rather than a `u64::MAX` sentinel for the same reason: a sentinel is something
+arithmetic can saturate into by accident, and it did.
+
+The honest consequence: the bound holds within a daemon run, and a daemon
+restart hands every host a fresh budget. Daemon restarts are not something a
+supervised host gets to trigger, so that is the right trade -- but it is a
+weaker claim than "durable", and an earlier version of this file made the
+stronger one.
 
 **Exceeding the bound quarantines one host; it does not raise an error.** The
 reconciler walks every host per tick, so a per-host failure raised out of the

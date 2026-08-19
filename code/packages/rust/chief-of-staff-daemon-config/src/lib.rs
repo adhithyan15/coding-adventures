@@ -607,7 +607,7 @@ pub fn default_restart_window_ns() -> u64 {
     DEFAULT_RESTART_WINDOW_NS
 }
 
-/// Return the restart budget applied when `[host_defaults]` omits the key.
+/// Return the restart budget applied when `[hosts.defaults]` omits the key.
 pub fn default_max_restarts_per_window() -> u32 {
     DEFAULT_MAX_RESTARTS_PER_WINDOW
 }

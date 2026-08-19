@@ -10,7 +10,8 @@
 use chief_of_staff_channel_crypto::ChannelId;
 use chief_of_staff_service_registry::{
     DesiredState, HostEntry, HostName, HostObservation, HostRegistration, HostStatus, LoadedHost,
-    RegistryError, RestartLedger, RestartPolicy, RestartWindow, ServiceRegistry,
+    QuarantineDeadline, RegistryError, RestartLedger, RestartPolicy, RestartWindow,
+    ServiceRegistry,
 };
 use core::fmt::{self, Display, Formatter};
 
@@ -372,28 +373,36 @@ fn open_window(
     })
 }
 
-/// Whether a start that was already claimed on an earlier tick may proceed.
+/// Decide the window for a start that was already claimed on an earlier tick.
 ///
-/// A claim spends the budget when it is written, so a retry must not spend it
-/// again -- but it must still be refused once the budget is gone. Without this
-/// check, a host durably left in `Starting` or `Restarting` gets a start that
-/// never passes the bound at all, and that is the state every host is in from
-/// the reconciler's point of view immediately after a daemon restart.
+/// A restart claim written by *this* run already spent its budget, so retrying
+/// it must not spend again -- but it must still be refused once that budget is
+/// gone. Returns the window to record, or `None` to refuse. First-launch claims
+/// do not come here: a host that has never run has not restarted.
 ///
-/// This is deliberately the conservative reading. A window already at the limit
-/// refuses the retry even though the claim it retries was itself legitimate, so
-/// the host quarantines and comes back one window later rather than starting
-/// now. Retrying a claim is not free supervision, and a bound that a host can
-/// sit just underneath forever is not a bound.
-fn window_admits_retry(
+/// When no window from this run applies, the retry is treated as an ordinary
+/// restart and opens one. That case is not exotic -- it is the common one.
+/// After a daemon restart every host inspects as absent, so anything durably
+/// left in `Restarting` arrives here with a window from the *previous* run,
+/// which does not vouch for anything. Passing the old ledger straight through
+/// would make those starts free: counted against neither the window nor the
+/// lifetime tally. With the shipped `ProcessHostSupervisor` that is one
+/// uncounted start per host per daemon run, because it never forgets an
+/// instance it started; a supervisor that forgets more eagerly would get them
+/// without limit, and this crate is generic over the trait.
+fn retry_restart_window(
     previous: Option<RestartWindow>,
     now_ns: u64,
     boot_id: u64,
     window_ns: u64,
     max_restarts: u32,
-) -> bool {
-    open_window(previous, now_ns, boot_id, window_ns)
-        .is_none_or(|window| window.restarts() < max_restarts)
+) -> Option<RestartWindow> {
+    match open_window(previous, now_ns, boot_id, window_ns) {
+        // This run's window, already holding the claim being retried.
+        Some(window) => (window.restarts() <= max_restarts).then_some(window),
+        // Nothing from this run vouches for the claim, so it costs a restart.
+        None => Some(RestartWindow::opened(boot_id, now_ns)),
+    }
 }
 
 /// Invalid reconciliation configuration.
@@ -643,11 +652,10 @@ impl<'a> ServiceReconciler<'a> {
         observed: SupervisorObservation,
         now_ns: u64,
     ) -> Result<HostReconcileOutcome, ReconcileError<S::Error>> {
-        if let HostStatus::Quarantined { until_ns, reason } = loaded.entry().observation().status()
-        {
-            if now_ns < *until_ns {
+        if let HostStatus::Quarantined { until, reason } = loaded.entry().observation().status() {
+            if !until.has_elapsed(self.config.boot_id(), now_ns) {
                 let status = HostStatus::Quarantined {
-                    until_ns: *until_ns,
+                    until: *until,
                     reason: reason.clone(),
                 };
                 return match observed {
@@ -666,10 +674,14 @@ impl<'a> ServiceReconciler<'a> {
         }
         match observed {
             SupervisorObservation::Absent => {
-                if should_start_absent(loaded.entry(), now_ns) {
+                if should_start_absent(loaded.entry(), self.config.boot_id(), now_ns) {
                     self.start_instance(supervisor, loaded, now_ns, false)
                 } else {
-                    let status = deferred_status(loaded.entry().observation(), now_ns);
+                    let status = deferred_status(
+                        loaded.entry().observation(),
+                        self.config.boot_id(),
+                        now_ns,
+                    );
                     self.persist_status(
                         &loaded,
                         inactive_observation(loaded.entry().observation(), status, None)?,
@@ -750,24 +762,48 @@ impl<'a> ServiceReconciler<'a> {
 
     /// Quarantine a host that has spent its restart budget.
     ///
-    /// `until_ns` is held strictly below `u64::MAX` so the quarantine is always
-    /// one that lifts. `u64::MAX` is reserved for the lifetime counter running
-    /// out, which is genuinely permanent; an intensity quarantine that
-    /// saturated into it would silently turn a rate limit into a death
-    /// sentence.
+    /// The deadline is stamped with this daemon run, because it is a monotonic
+    /// reading and means nothing to the next run. Without the stamp, a
+    /// sixty-second quarantine written by a daemon that had been up for a month
+    /// decodes as a deadline a month away, and the host stays down for the
+    /// previous run's entire uptime -- a rate limit silently promoted to a
+    /// death sentence, on a schedule the crash-looping host chose.
     fn quarantine_for_intensity<E>(
         &self,
         loaded: &LoadedHost,
         now_ns: u64,
     ) -> Result<HostReconcileOutcome, ReconcileError<E>> {
         let previous = loaded.entry().observation();
-        let until_ns = now_ns
-            .saturating_add(self.config.restart_window_ns())
-            .min(u64::MAX - 1);
         let quarantined = HostObservation::new(
             HostStatus::Quarantined {
-                until_ns,
+                until: QuarantineDeadline::Until {
+                    boot_id: self.config.boot_id(),
+                    ns: now_ns.saturating_add(self.config.restart_window_ns()),
+                },
                 reason: RESTART_INTENSITY_EXCEEDED.to_string(),
+            },
+            None,
+            previous.started_at_ns(),
+            previous.last_heartbeat_ns(),
+            None,
+            previous.restarts(),
+        )?;
+        self.persist_status(loaded, quarantined, ReconcileAction::Deferred)
+    }
+
+    /// Quarantine a host whose lifetime restart counter has run out.
+    ///
+    /// Permanent, and deliberately so: unlike the intensity window this does
+    /// not resolve by waiting, and an operator has to look at it.
+    fn quarantine_for_exhaustion<E>(
+        &self,
+        loaded: &LoadedHost,
+    ) -> Result<HostReconcileOutcome, ReconcileError<E>> {
+        let previous = loaded.entry().observation();
+        let quarantined = HostObservation::new(
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Permanent,
+                reason: RESTART_COUNTER_EXHAUSTED.to_string(),
             },
             None,
             previous.started_at_ns(),
@@ -800,20 +836,30 @@ impl<'a> ServiceReconciler<'a> {
         // be a separate builder call, so the restart path set it and every
         // other write silently dropped it, and a host that stayed up for one
         // tick between crashes was never counted at all.
-        let restarts = if retrying_claim {
-            // A claim written on an earlier tick already spent its budget, so
-            // retrying it spends nothing -- but it is still refused once the
-            // budget is gone.
-            if !window_admits_retry(
+        let restarts = if retrying_claim && !restarting {
+            // Retrying a first-launch claim. A host that has never run has not
+            // restarted, and the bound is on restarts.
+            previous.restarts()
+        } else if retrying_claim {
+            let Some(window) = retry_restart_window(
                 previous.restarts().window(),
                 now_ns,
                 self.config.boot_id(),
                 self.config.restart_window_ns(),
                 self.config.max_restarts_per_window(),
-            ) {
+            ) else {
                 return self.quarantine_for_intensity(&loaded, now_ns);
+            };
+            if previous.restarts().window() == Some(window) {
+                // The claim's own window: nothing more to spend.
+                previous.restarts()
+            } else {
+                // A window opened here, so the lifetime tally moves with it.
+                match previous.restart_count().checked_add(1) {
+                    Some(count) => RestartLedger::new(count, Some(now_ns), Some(window))?,
+                    None => return self.quarantine_for_exhaustion(&loaded),
+                }
             }
-            previous.restarts()
         } else if restarting {
             // The bound goes here, beside the lifetime counter and before it is
             // spent, because this is the single point every restart passes
@@ -837,20 +883,7 @@ impl<'a> ServiceReconciler<'a> {
             };
             match previous.restart_count().checked_add(1) {
                 Some(count) => RestartLedger::new(count, Some(now_ns), Some(window))?,
-                None => {
-                    let quarantined = HostObservation::new(
-                        HostStatus::Quarantined {
-                            until_ns: u64::MAX,
-                            reason: RESTART_COUNTER_EXHAUSTED.to_string(),
-                        },
-                        None,
-                        previous.started_at_ns(),
-                        previous.last_heartbeat_ns(),
-                        None,
-                        previous.restarts(),
-                    )?;
-                    return self.persist_status(&loaded, quarantined, ReconcileAction::Deferred);
-                }
+                None => return self.quarantine_for_exhaustion(&loaded),
             }
         } else {
             previous.restarts()
@@ -993,7 +1026,7 @@ fn validate_time<E>(
     Ok(())
 }
 
-fn should_start_absent(entry: &HostEntry, now_ns: u64) -> bool {
+fn should_start_absent(entry: &HostEntry, boot_id: u64, now_ns: u64) -> bool {
     let observation = entry.observation();
     match observation.status() {
         HostStatus::Starting | HostStatus::Restarting => true,
@@ -1005,17 +1038,18 @@ fn should_start_absent(entry: &HostEntry, now_ns: u64) -> bool {
             observation.started_at_ns().is_none()
                 || entry.registration().restart_policy() == RestartPolicy::Always
         }
-        HostStatus::Quarantined { until_ns, .. } => {
-            now_ns >= *until_ns && entry.registration().restart_policy() != RestartPolicy::Never
+        HostStatus::Quarantined { until, .. } => {
+            until.has_elapsed(boot_id, now_ns)
+                && entry.registration().restart_policy() != RestartPolicy::Never
         }
     }
 }
 
-fn deferred_status(observation: &HostObservation, now_ns: u64) -> HostStatus {
+fn deferred_status(observation: &HostObservation, boot_id: u64, now_ns: u64) -> HostStatus {
     match observation.status() {
-        HostStatus::Quarantined { until_ns, reason } if now_ns < *until_ns => {
+        HostStatus::Quarantined { until, reason } if !until.has_elapsed(boot_id, now_ns) => {
             HostStatus::Quarantined {
-                until_ns: *until_ns,
+                until: *until,
                 reason: reason.clone(),
             }
         }
@@ -1567,7 +1601,10 @@ mod tests {
         let backend = InMemoryStorageBackend::new();
         let quarantined = HostObservation::new(
             HostStatus::Quarantined {
-                until_ns: NOW + 1,
+                until: QuarantineDeadline::Until {
+                    boot_id: BOOT_ID,
+                    ns: NOW + 1,
+                },
                 reason: "cooldown".to_string(),
             },
             None,
@@ -1652,7 +1689,7 @@ mod tests {
         assert_eq!(
             load(&backend, "mail-host").observation().status(),
             &HostStatus::Quarantined {
-                until_ns: u64::MAX,
+                until: QuarantineDeadline::Permanent,
                 reason: RESTART_COUNTER_EXHAUSTED.to_string()
             }
         );
@@ -1661,8 +1698,12 @@ mod tests {
     #[test]
     fn absent_cached_states_apply_recovery_policy() {
         let cases = [
+            // Retrying a first-launch claim is not a restart, so the tally
+            // stays put. Retrying a *restart* claim with no window from this
+            // run to vouch for it does cost one -- those starts used to be
+            // free, counted against neither the window nor the lifetime tally.
             (HostStatus::Starting, RestartPolicy::Never, true, 1),
-            (HostStatus::Restarting, RestartPolicy::Never, true, 1),
+            (HostStatus::Restarting, RestartPolicy::Never, true, 2),
             (HostStatus::Running, RestartPolicy::OnFailure, true, 2),
             (HostStatus::Running, RestartPolicy::Never, false, 1),
             (HostStatus::Stopping, RestartPolicy::OnFailure, true, 2),
@@ -1938,7 +1979,10 @@ mod tests {
             next_restart_window(stale, 500, BOOT_ID, window_ns, 3),
             Some(RestartWindow::opened(BOOT_ID, 500))
         );
-        assert!(window_admits_retry(stale, 500, BOOT_ID, window_ns, 3));
+        assert_eq!(
+            retry_restart_window(stale, 500, BOOT_ID, window_ns, 3),
+            Some(RestartWindow::opened(BOOT_ID, 500))
+        );
     }
 
     /// A window stamped ahead of `now_ns` within one run means the clock went
@@ -1953,17 +1997,32 @@ mod tests {
         );
     }
 
-    /// Retrying a claim spends nothing, but is refused once the budget is gone.
+    /// Retrying a claim inside its own window spends nothing; a retry with no
+    /// window to vouch for it costs a restart like any other start.
     #[test]
-    fn a_retry_is_admitted_only_while_budget_remains() {
+    fn a_retry_spends_nothing_only_inside_the_window_that_claimed_it() {
         let window_ns = 1_000;
         let at = |restarts| Some(RestartWindow::new(BOOT_ID, 500, restarts).unwrap());
+        let retry = |previous, now| retry_restart_window(previous, now, BOOT_ID, window_ns, 3);
 
-        assert!(window_admits_retry(at(1), 900, BOOT_ID, window_ns, 3));
-        assert!(!window_admits_retry(at(3), 900, BOOT_ID, window_ns, 3));
-        // Once the window elapses there is nothing left to refuse against.
-        assert!(window_admits_retry(at(3), 1_500, BOOT_ID, window_ns, 3));
-        assert!(window_admits_retry(None, 900, BOOT_ID, window_ns, 3));
+        // Inside the claim's own window: returned unchanged, nothing spent.
+        assert_eq!(retry(at(1), 900), at(1));
+        assert_eq!(retry(at(3), 900), at(3));
+
+        // No window from this run vouches for the claim, so a fresh one opens
+        // and the caller spends a restart. These are the shapes that used to be
+        // free: an elapsed window, a window from another boot, and no window at
+        // all -- the last being every host's state after a daemon restart.
+        let fresh = Some(RestartWindow::opened(BOOT_ID, 1_500));
+        assert_eq!(retry(at(3), 1_500), fresh);
+        assert_eq!(
+            retry(
+                Some(RestartWindow::new(BOOT_ID + 1, 500, 3).unwrap()),
+                1_500
+            ),
+            fresh
+        );
+        assert_eq!(retry(None, 1_500), fresh);
     }
 
     /// A host restarted up to the bound is quarantined rather than restarted
@@ -2020,13 +2079,17 @@ mod tests {
         assert_eq!(report.outcomes().len(), 1);
     }
 
-    /// The window is durable, so the bound survives a daemon restart.
+    /// The window is written to the durable record, not held in memory.
     ///
-    /// Without this the counter would reset whenever the process did, and a
-    /// crash-looping host would be restarted forever by a daemon that itself
-    /// restarts — which is the failure this rule exists to stop.
+    /// This proves the window is *encoded*, and nothing more. It deliberately
+    /// does not claim the bound survives a daemon restart -- it does not, by
+    /// design: a window belongs to the run that opened it (see
+    /// `a_window_from_another_daemon_run_is_discarded`), so a daemon restart
+    /// hands every host a fresh budget. An earlier version of this test claimed
+    /// the opposite in its name and its doc, which is worth remembering: the
+    /// test passed either way, because encoding is all it ever checked.
     #[test]
-    fn the_restart_window_survives_a_reload() {
+    fn the_restart_window_is_durably_encoded() {
         let backend = InMemoryStorageBackend::new();
         register(
             &backend,
@@ -2176,5 +2239,110 @@ mod tests {
             "expected an intensity quarantine, got {:?}",
             persisted.observation().status()
         );
+    }
+
+    /// A quarantine written by a previous daemon run does not hold this one.
+    ///
+    /// The deadline is a monotonic reading, so a sixty-second quarantine
+    /// written by a daemon that had been up for a month decodes as a deadline a
+    /// month away. Before deadlines carried a boot id, that host stayed down
+    /// for the previous run's entire uptime and re-armed on every restart after
+    /// that -- a rate limit quietly promoted to a death sentence, on a schedule
+    /// the crash-looping host got to pick.
+    #[test]
+    fn a_quarantine_from_another_daemon_run_does_not_hold() {
+        let month_ns = 30 * 24 * 60 * 60 * 1_000_000_000u64;
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Quarantined {
+                    // Written by the previous run, a month into its uptime.
+                    until: QuarantineDeadline::Until {
+                        boot_id: BOOT_ID + 1,
+                        ns: month_ns,
+                    },
+                    reason: RESTART_INTENSITY_EXCEEDED.to_string(),
+                },
+                None,
+                Some(700),
+                Some(800),
+                None,
+                ledger(2, Some(600)),
+            )
+            .unwrap(),
+        );
+
+        // This run's clock is near zero, as a freshly started daemon's is.
+        let exited = SupervisorObservation::exited([7; 32], Some(9), Some(800), Some(900)).unwrap();
+        let mut supervisor = FakeSupervisor::with("mail-host", exited);
+        reconciler(&backend)
+            .reconcile_all(&mut supervisor, NOW)
+            .unwrap();
+
+        assert!(
+            !supervisor.starts.is_empty(),
+            "a deadline from another run must not hold this one"
+        );
+    }
+
+    /// A permanent quarantine is permanent in every run.
+    ///
+    /// The lifetime restart counter running out does not resolve by waiting, so
+    /// unlike an intensity quarantine it must survive a daemon restart. This is
+    /// the one case where "the deadline is from another run" must not mean
+    /// "start the host".
+    #[test]
+    fn a_permanent_quarantine_survives_a_daemon_restart() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Quarantined {
+                    until: QuarantineDeadline::Permanent,
+                    reason: RESTART_COUNTER_EXHAUSTED.to_string(),
+                },
+                None,
+                Some(700),
+                Some(800),
+                None,
+                ledger(2, Some(600)),
+            )
+            .unwrap(),
+        );
+
+        let exited = SupervisorObservation::exited([7; 32], Some(9), Some(800), Some(900)).unwrap();
+        let mut supervisor = FakeSupervisor::with("mail-host", exited);
+        reconciler(&backend)
+            .reconcile_all(&mut supervisor, u64::MAX - 1)
+            .unwrap();
+
+        assert!(
+            supervisor.starts.is_empty(),
+            "a permanent quarantine must not lift, whatever the clock says"
+        );
+    }
+
+    /// A deadline is not comparable across runs, and `has_elapsed` is the only
+    /// thing that decides it.
+    #[test]
+    fn a_deadline_elapses_for_its_own_run_and_for_no_other() {
+        let deadline = QuarantineDeadline::Until {
+            boot_id: BOOT_ID,
+            ns: 1_000,
+        };
+        assert!(!deadline.has_elapsed(BOOT_ID, 999));
+        assert!(deadline.has_elapsed(BOOT_ID, 1_000));
+        // Another run's reading is not "not yet", it is "not mine".
+        assert!(deadline.has_elapsed(BOOT_ID + 1, 0));
+
+        assert!(!QuarantineDeadline::Permanent.has_elapsed(BOOT_ID, u64::MAX));
+        assert!(!QuarantineDeadline::Permanent.has_elapsed(BOOT_ID + 1, u64::MAX));
     }
 }

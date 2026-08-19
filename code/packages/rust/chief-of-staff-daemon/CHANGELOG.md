@@ -77,3 +77,5 @@
 - Apply the configured restart-intensity bound to the reconciler, and pin the
   crate's default against the reconciler's own so the two cannot drift apart.
 - Derive the reconciler's boot id from the daemon's wall-clock start time.
+- Derive the reconciler's boot id from random bytes mixed with the wall clock,
+  rather than a clock reading alone that two runs can share.
