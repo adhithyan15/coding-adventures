@@ -142,3 +142,22 @@ All notable changes to this package are documented here.
   exists elsewhere or overwrite one, which is what the leaf-level checks
   (`target` itself, every bucket directory, every object read/write)
   already prevent.
+- **Fifth review round: `scan_object_root`'s and `copy_object_tree`'s own
+  `root`/`source` argument — the currently-configured, already-existing
+  storage location itself — was never checked for being a symlink,
+  unlike every path this crate reads from or writes into one level
+  deeper.** `scan_object_root` validated `root` with `fs::metadata`
+  (which follows symlinks), so a symlinked scan root or migration source
+  was scanned/copied as whatever it actually pointed to, with
+  `ScanReport` reporting back completely clean — confirmed exploitable
+  with a standalone reproduction before being fixed: a symlinked
+  `source` let `copy_object_tree` silently copy an attacker's chosen
+  files into `target` as if they were the vault's own committed objects.
+  Fixed by checking `fs::symlink_metadata` first, exactly the discipline
+  `target`'s own top-level path already had (VLT-PM50 §7). Adds
+  `ScanError::UnexpectedSymlink`, mapped to the existing
+  `CopyError::UnexpectedSymlink` in `copy_object_tree`'s error
+  translation. Two new regression tests, the second confirmed against
+  the actual vulnerable code before the fix landed: a symlinked scan
+  root is refused by `scan_object_root`, and a symlinked migration
+  source is refused before `copy_object_tree` reads anything out of it.

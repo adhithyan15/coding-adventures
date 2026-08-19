@@ -233,6 +233,18 @@ pub enum ScanError {
     ReadFailed,
     /// [`MAX_SCANNED_ENTRIES`] was exceeded.
     TooManyEntries,
+    /// `root` itself is a symlink, refused rather than followed.
+    ///
+    /// `root` is a currently-configured storage location — the vault's own
+    /// live object store, or a mirror of it — not a scanned-and-reported-on
+    /// entry underneath it, so a symlink here is not merely an interference
+    /// finding to report: following it would scan (and, for
+    /// [`copy_object_tree`], read and copy) whatever directory it actually
+    /// points to while every caller believes it is looking at `root`, and
+    /// [`ScanReport`] would come back clean either way. Refused before any
+    /// other check for the same reason [`copy_object_tree`]'s `target`
+    /// leaf already was (VLT-PM50 §7).
+    UnexpectedSymlink,
 }
 
 impl std::fmt::Display for ScanError {
@@ -241,6 +253,7 @@ impl std::fmt::Display for ScanError {
             Self::RootUnavailable => "vault-pm-storage-removable: root unavailable",
             Self::ReadFailed => "vault-pm-storage-removable: read failed",
             Self::TooManyEntries => "vault-pm-storage-removable: too many entries",
+            Self::UnexpectedSymlink => "vault-pm-storage-removable: unexpected symlink",
         })
     }
 }
@@ -256,8 +269,21 @@ impl std::error::Error for ScanError {}
 /// level, is reported as a warning and never causes this function itself to
 /// fail — a dirty directory is exactly the case the caller wants a report
 /// about, not an error blocking the report.
+///
+/// `root` itself is the one exception: unlike the entries beneath it, `root`
+/// is always a currently-configured, already-existing storage location (a
+/// vault's live object store, or a mirror of it), so a symlink there is
+/// refused outright with [`ScanError::UnexpectedSymlink`] rather than
+/// reported as an interference finding — the same "check the exact path
+/// this operation is about to act on, not something following its own
+/// metadata call" discipline `copy_object_tree` already applies to
+/// `target`. `fs::symlink_metadata` (which does not follow the link) is
+/// used for this check rather than `fs::metadata`, which would have.
 pub fn scan_object_root(root: &Path) -> Result<ScanReport, ScanError> {
-    let metadata = fs::metadata(root).map_err(|_| ScanError::RootUnavailable)?;
+    let metadata = fs::symlink_metadata(root).map_err(|_| ScanError::RootUnavailable)?;
+    if metadata.file_type().is_symlink() {
+        return Err(ScanError::UnexpectedSymlink);
+    }
     if !metadata.is_dir() {
         return Err(ScanError::RootUnavailable);
     }
@@ -428,6 +454,7 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
         ScanError::RootUnavailable => CopyError::SourceUnavailable,
         ScanError::ReadFailed => CopyError::IoFailed,
         ScanError::TooManyEntries => CopyError::TooManyEntries,
+        ScanError::UnexpectedSymlink => CopyError::UnexpectedSymlink,
     })?;
 
     ensure_real_directory(target)?;
@@ -916,6 +943,53 @@ mod tests {
         assert_eq!(scan_object_root(&missing), Err(ScanError::RootUnavailable));
     }
 
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_scan_root_is_refused_not_followed() {
+        use std::os::unix::fs::symlink;
+
+        let attacker_dir = TempDir::new();
+        write_object(
+            attacker_dir.path(),
+            "2121",
+            "aabbcc",
+            b"exfiltrated secret bytes",
+        );
+        let parent = TempDir::new();
+        let root_link = parent.path().join("root-link");
+        symlink(attacker_dir.path(), &root_link).unwrap();
+
+        assert_eq!(
+            scan_object_root(&root_link),
+            Err(ScanError::UnexpectedSymlink)
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_migration_source_is_refused_before_anything_is_read() {
+        use std::os::unix::fs::symlink;
+
+        let attacker_dir = TempDir::new();
+        write_object(
+            attacker_dir.path(),
+            "2121",
+            "aabbcc",
+            b"exfiltrated secret bytes",
+        );
+        let parent = TempDir::new();
+        let source_link = parent.path().join("source-link");
+        symlink(attacker_dir.path(), &source_link).unwrap();
+        let target = TempDir::new();
+
+        assert_eq!(
+            copy_object_tree(&source_link, target.path()),
+            Err(CopyError::UnexpectedSymlink)
+        );
+        // Nothing was read out of the attacker's directory and copied.
+        assert!(fs::read_dir(target.path()).unwrap().next().is_none());
+    }
+
     #[test]
     fn a_file_where_the_root_should_be_is_root_unavailable() {
         let root = TempDir::new();
@@ -1233,6 +1307,7 @@ mod tests {
             ScanError::RootUnavailable,
             ScanError::ReadFailed,
             ScanError::TooManyEntries,
+            ScanError::UnexpectedSymlink,
         ] {
             assert!(error.to_string().starts_with("vault-pm-storage-removable"));
         }

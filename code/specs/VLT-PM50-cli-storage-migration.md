@@ -429,6 +429,23 @@ a trust boundary worth naming explicitly:
   or overwrite one, which is what every leaf-level check in this section
   exists to prevent for the exact paths this crate reads from and
   writes into.
+- A fifth and final review round found the one path this section had not
+  yet closed: `scan_object_root`'s and `copy_object_tree`'s own
+  `root`/`source` argument — unlike `target`, which was checked from
+  round 3 onward — was validated with `fs::metadata` (follows symlinks)
+  rather than `fs::symlink_metadata`. Confirmed exploitable before being
+  fixed: a symlinked scan root or migration source was scanned or copied
+  as whatever it actually pointed to, with `ScanReport` reporting
+  completely clean and `copy_object_tree` silently copying an
+  attacker-chosen directory's contents into `target` as if they were the
+  vault's own committed objects. This is not the same as the accepted
+  ancestor-symlink residual immediately above: `source`/`root` is
+  always the exact, already-existing, currently-configured storage
+  location — not a not-yet-created ancestor — so there is no legitimate
+  case (macOS's `/tmp`/`/var` included) where refusing it is a false
+  positive the way refusing every ancestor was. Fixed the same way
+  `target`'s leaf already was, closing the last gap this document's own
+  security section had.
 
 ## 8. Reuse map correction
 
