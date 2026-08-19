@@ -955,6 +955,26 @@ fn invalid_i64x2_splat_with_an_i32_operand() {
 }
 
 #[test]
+fn valid_float_splat_family() {
+    // SIMD widen PR17: f32x4.splat/f64x2.splat -- the FIRST
+    // floating-point-typed SIMD ops in this crate's type rules. Same
+    // "pop scalar, push v128" shape as every prior splat, just popping
+    // F32/F64 instead of I32/I64.
+    assert_valid(
+        r#"(module
+             (func (param f32) (result v128) (f32x4.splat (local.get 0)))
+             (func (param f64) (result v128) (f64x2.splat (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_splat_with_an_i32_operand() {
+    // Confirms the type checker actually enforces F32, not just
+    // accepting whatever scalar type is on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.splat (local.get 0))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

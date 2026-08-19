@@ -839,6 +839,118 @@
         "TA-EXT-57-FIRE"
       ],
       "after": []
+    },
+    {
+      "id": "TA-PATH-58-ANIMAL",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TA-C58-cow",
+        "TA-C58-goat",
+        "TA-C58-hen",
+        "TA-C58-crow",
+        "TA-C58-bird"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-58-ANIMAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-59-KITCHEN",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TA-C59-curd",
+        "TA-C59-ghee",
+        "TA-C59-oil",
+        "TA-C59-jaggery",
+        "TA-C59-sugar"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-59-KITCHEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-60-MADE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TA-C60-needle",
+        "TA-C60-rope",
+        "TA-C60-umbrella",
+        "TA-C60-broom",
+        "TA-C60-comb"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-60-MADE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-61-FEEL",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TA-C61-hunger",
+        "TA-C61-thirst",
+        "TA-C61-sleep",
+        "TA-C61-fever",
+        "TA-C61-pain"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-61-FEEL"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-62-JOIN",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TA-C62-only",
+        "TA-C62-still",
+        "TA-C62-soon",
+        "TA-C62-at-once",
+        "TA-C62-first-of-all"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-62-JOIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-63-MANNERS",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TA-C63-request",
+        "TA-C63-permission",
+        "TA-C63-hesitancy",
+        "TA-C63-trust",
+        "TA-C63-humility"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-63-MANNERS"
+      ],
+      "after": []
+    },
+    {
+      "id": "TA-PATH-64-HARVEST",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TA-C64-paddy",
+        "TA-C64-grass",
+        "TA-C64-crop",
+        "TA-C64-threshing-floor",
+        "TA-C64-harvest"
+      ],
+      "before": [],
+      "inline": [
+        "TA-EXT-64-HARVEST"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -849,7 +961,8 @@
         "TA-PATH-100",
         "TA-PATH-031",
         "TA-PATH-50-WELCOME",
-        "TA-PATH-51-SKY"
+        "TA-PATH-51-SKY",
+        "TA-PATH-58-ANIMAL"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -863,7 +976,8 @@
         "TA-PATH-005",
         "TA-PATH-011",
         "TA-PATH-49-COURTESY",
-        "TA-PATH-54-HOUSE"
+        "TA-PATH-54-HOUSE",
+        "TA-PATH-63-MANNERS"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -876,7 +990,8 @@
         "TA-PATH-004",
         "TA-PATH-006",
         "TA-PATH-47-REPLY",
-        "TA-PATH-56-AMOUNT"
+        "TA-PATH-56-AMOUNT",
+        "TA-PATH-62-JOIN"
       ],
       "omits": [],
       "relocates": {}
@@ -890,7 +1005,8 @@
         "TA-PATH-023",
         "TA-PATH-033",
         "TA-PATH-46-ROLE",
-        "TA-PATH-52-TREE"
+        "TA-PATH-52-TREE",
+        "TA-PATH-59-KITCHEN"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -905,7 +1021,8 @@
         "TA-PATH-019",
         "TA-PATH-034",
         "TA-PATH-45-BODY",
-        "TA-PATH-55-BODY"
+        "TA-PATH-55-BODY",
+        "TA-PATH-61-FEEL"
       ],
       "omits": [
         "WORD-GOOD",
@@ -919,7 +1036,8 @@
         "TA-PATH-021",
         "TA-PATH-032",
         "TA-PATH-44-ASK",
-        "TA-PATH-53-LAND"
+        "TA-PATH-53-LAND",
+        "TA-PATH-60-MADE"
       ],
       "omits": [],
       "relocates": {}
@@ -929,7 +1047,8 @@
         "TA-PATH-012",
         "TA-PATH-035",
         "TA-PATH-48-LEAVE",
-        "TA-PATH-57-FIRE"
+        "TA-PATH-57-FIRE",
+        "TA-PATH-64-HARVEST"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1965,6 +2084,111 @@
         "TA-C57-mud",
         "TA-C57-smoke",
         "TA-C57-ember"
+      ]
+    },
+    {
+      "id": "TA-EXT-58-ANIMAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five animals of the yard in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C58-cow",
+        "TA-C58-goat",
+        "TA-C58-hen",
+        "TA-C58-crow",
+        "TA-C58-bird"
+      ]
+    },
+    {
+      "id": "TA-EXT-59-KITCHEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Tamil kitchen keeps in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C59-curd",
+        "TA-C59-ghee",
+        "TA-C59-oil",
+        "TA-C59-jaggery",
+        "TA-C59-sugar"
+      ]
+    },
+    {
+      "id": "TA-EXT-60-MADE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things people make in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C60-needle",
+        "TA-C60-rope",
+        "TA-C60-umbrella",
+        "TA-C60-broom",
+        "TA-C60-comb"
+      ]
+    },
+    {
+      "id": "TA-EXT-61-FEEL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things the body feels in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C61-hunger",
+        "TA-C61-thirst",
+        "TA-C61-sleep",
+        "TA-C61-fever",
+        "TA-C61-pain"
+      ]
+    },
+    {
+      "id": "TA-EXT-62-JOIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can place five small words that set the pace of a sentence in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C62-only",
+        "TA-C62-still",
+        "TA-C62-soon",
+        "TA-C62-at-once",
+        "TA-C62-first-of-all"
+      ]
+    },
+    {
+      "id": "TA-EXT-63-MANNERS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five things that sit behind a polite request in Tamil.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C63-request",
+        "TA-C63-permission",
+        "TA-C63-hesitancy",
+        "TA-C63-trust",
+        "TA-C63-humility"
+      ]
+    },
+    {
+      "id": "TA-EXT-64-HARVEST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can follow a Tamil field from the standing crop to the harvest.",
+      "prerequisites": [],
+      "lessons": [
+        "TA-C64-paddy",
+        "TA-C64-grass",
+        "TA-C64-crop",
+        "TA-C64-threshing-floor",
+        "TA-C64-harvest"
       ]
     }
   ]

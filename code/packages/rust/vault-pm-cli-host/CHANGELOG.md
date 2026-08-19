@@ -2,6 +2,50 @@
 
 ## Unreleased
 
+- **Added `read_attachment_source` and `write_attachment_export`**, the
+  filesystem halves of `VLT-PM47-cli-attachments.md`. The read returns
+  `Zeroizing` bytes because what it holds is the person's file rather than an
+  already-encrypted artifact, so a refused or failed attach leaves no copy in
+  freed heap; it bounds the metadata length before allocating and caps the
+  reader at one byte past the ceiling, so a file that grows between the two
+  cannot force an unbounded allocation. A path that will not open is
+  `InvalidAttachmentSource` and exit 2 rather than a provider failure: exit 7
+  tells a person to retry later, and retrying will not conjure the file.
+
+  The write refuses to replace an existing destination, creates owner-only on
+  Unix, `fsync`s, and removes the incomplete file if anything fails — a
+  half-written plaintext left behind by a failed export is a leak with no
+  owner.
+
+- `read_attachment_source` opens with `O_NONBLOCK | O_NOCTTY` on Unix, because
+  the check that rejects a FIFO cannot run until the open returns and opening a
+  FIFO for reading blocks until a writer appears — naming a named pipe used to
+  hang the command rather than be refused.
+
+- **The read is now exact.** `Zeroizing` wipes the allocation it owns and only
+  that one, so a vector holding plaintext that reallocates leaves the bytes
+  already read in freed heap. Reserving extra capacity did not fix that,
+  because the reservation comes from a measurement a concurrently-appended file
+  has already invalidated — a hundred-byte file that grows to a megabyte during
+  the read reallocates repeatedly whatever the ceiling is, and the result was
+  still *accepted*, since the only length check compared it against the 16 MiB
+  ceiling. One allocation of exactly the declared length, `read_exact`, and a
+  one-byte probe that must see end-of-file: a file longer than it measured is
+  refused by the probe and a shorter one by `UnexpectedEof`, and reallocation is
+  unreachable rather than unlikely.
+
+- `write_attachment_export` documents what its two guarantees are worth per
+  platform, that its cleanup is by path rather than by descriptor, and that a
+  kill *inside* the write still leaves a partial file. All three were true
+  before and none was written down, which is the same as assuming them.
+
+- **Added `TextPrompt::AttachmentExportConfirmation`** and
+  `ControllingTerminal::confirm_attachment_export`. A third sentence for the
+  same reason there is a second: an export puts vault-held content into a
+  plaintext file, neither of the other two prompts says so, and a consent
+  ceremony that misdescribes what it is consenting to manufactures a record of
+  an agreement nobody made.
+
 - **Added `clipboard`**, the platform clipboard adapter with a verified timed
   clear, specified by `VLT-PM46-cli-clipboard.md`. `VLT-PM00` §14.6 has always
   called `--copy` the *preferred* secret-output mode and `VLT-PM07` has always

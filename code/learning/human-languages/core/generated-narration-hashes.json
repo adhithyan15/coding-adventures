@@ -14556,6 +14556,132 @@
       "jsonHash": "fnv1a64:0839f215d2b02f4a"
     },
     {
+      "language": "tamil",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:76204ac3b7665f74",
+      "lessonIds": [
+        "TA-C58-cow",
+        "TA-C58-goat",
+        "TA-C58-hen",
+        "TA-C58-crow",
+        "TA-C58-bird"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch58.txt",
+      "json": "tamil/narration/ch58.json",
+      "textHash": "fnv1a64:8219618b822437f5",
+      "jsonHash": "fnv1a64:67ed5bc2a2f7d7bc"
+    },
+    {
+      "language": "tamil",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:8b952cf43bccb15b",
+      "lessonIds": [
+        "TA-C59-curd",
+        "TA-C59-ghee",
+        "TA-C59-oil",
+        "TA-C59-jaggery",
+        "TA-C59-sugar"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch59.txt",
+      "json": "tamil/narration/ch59.json",
+      "textHash": "fnv1a64:853f1841df9f159f",
+      "jsonHash": "fnv1a64:ad1b3ca769c3665a"
+    },
+    {
+      "language": "tamil",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:5a1a98622172715e",
+      "lessonIds": [
+        "TA-C60-needle",
+        "TA-C60-rope",
+        "TA-C60-umbrella",
+        "TA-C60-broom",
+        "TA-C60-comb"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch60.txt",
+      "json": "tamil/narration/ch60.json",
+      "textHash": "fnv1a64:b40bb868581a77be",
+      "jsonHash": "fnv1a64:29fa5dfda02ba9c4"
+    },
+    {
+      "language": "tamil",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:352db1400a2259e5",
+      "lessonIds": [
+        "TA-C61-hunger",
+        "TA-C61-thirst",
+        "TA-C61-sleep",
+        "TA-C61-fever",
+        "TA-C61-pain"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch61.txt",
+      "json": "tamil/narration/ch61.json",
+      "textHash": "fnv1a64:3db8a44133caa74f",
+      "jsonHash": "fnv1a64:f1e2637426105bea"
+    },
+    {
+      "language": "tamil",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:f7552970c1397df0",
+      "lessonIds": [
+        "TA-C62-only",
+        "TA-C62-still",
+        "TA-C62-soon",
+        "TA-C62-at-once",
+        "TA-C62-first-of-all"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch62.txt",
+      "json": "tamil/narration/ch62.json",
+      "textHash": "fnv1a64:5ac59d8482b16aed",
+      "jsonHash": "fnv1a64:bf0ba605a7d1b6b3"
+    },
+    {
+      "language": "tamil",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:88ddf0e5a98f00a7",
+      "lessonIds": [
+        "TA-C63-request",
+        "TA-C63-permission",
+        "TA-C63-hesitancy",
+        "TA-C63-trust",
+        "TA-C63-humility"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch63.txt",
+      "json": "tamil/narration/ch63.json",
+      "textHash": "fnv1a64:b6193ade7d8fb8da",
+      "jsonHash": "fnv1a64:77c19c61d8cc4c6a"
+    },
+    {
+      "language": "tamil",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:94fe5f3beb137e77",
+      "lessonIds": [
+        "TA-C64-paddy",
+        "TA-C64-grass",
+        "TA-C64-crop",
+        "TA-C64-threshing-floor",
+        "TA-C64-harvest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "tamil/narration/ch64.txt",
+      "json": "tamil/narration/ch64.json",
+      "textHash": "fnv1a64:a4343d136184634c",
+      "jsonHash": "fnv1a64:10a0d79ecda17001"
+    },
+    {
       "language": "telugu",
       "chapter": 1,
       "sourceHash": "fnv1a64:1a3b4076a4e03286",

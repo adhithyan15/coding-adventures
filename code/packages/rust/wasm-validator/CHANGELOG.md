@@ -2,6 +2,20 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.31] - 2026-08-19 (task #168-170 — SIMD: float splat family type rules)
+
+### Added
+
+- New `SimdOpKind::SplatF32x4` arm (pop `F32`, push `V128`) and
+  `SplatF64x2` arm (pop `F64`, push `V128`) -- the FIRST
+  floating-point-typed SIMD ops in this crate's type rules.
+- 2 new tests: a valid module exercising both new splat ops, and an
+  invalid-module case confirming `f32x4.splat` genuinely rejects an
+  `i32` operand (not just accepting whatever scalar type is on the
+  stack).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.30] - 2026-08-19 (task #165-167 — SIMD: splat family widening type rules)
 
 ### Added

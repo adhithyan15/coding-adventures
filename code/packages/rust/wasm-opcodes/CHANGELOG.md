@@ -2,6 +2,26 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.22] - 2026-08-19 - SIMD: float splat family, first float-lane ops (task #168-170)
+
+### Added
+
+- 2 new `SIMD_OPS` entries: `f32x4.splat` (`0x13`), `f64x2.splat`
+  (`0x14`) -- the FIRST floating-point-typed SIMD opcodes in this
+  table, and the immediate continuation of the `0x0F`-`0x12`
+  integer-splat run PR16 landed. 120 SIMD opcodes total, up from 118.
+  Splat itself is a pure bit-pattern broadcast -- no rounding, NaN
+  canonicalization, or comparison semantics -- so it reuses the exact
+  "pop one scalar, push one v128" shape every prior splat already
+  established, just popping `F32`/`F64` instead of `I32`/`I64`. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i64x2.splat` (`0x12`) entry (matched exactly, confirming the whole
+  `0x0F`-`0x14` splat run is contiguous and self-consistent).
+- `SimdOpKind::SplatF32x4`/`SplatF64x2`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.21] - 2026-08-19 - SIMD: splat family widening (task #165-167)
 
 ### Added

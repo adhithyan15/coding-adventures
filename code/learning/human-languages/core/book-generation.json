@@ -4964,6 +4964,48 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 58,
+      "output": "tamil/book/chapters/ch58-around-the-yard.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 59,
+      "output": "tamil/book/chapters/ch59-in-the-kitchen.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 60,
+      "output": "tamil/book/chapters/ch60-things-people-make.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 61,
+      "output": "tamil/book/chapters/ch61-how-the-body-feels.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 62,
+      "output": "tamil/book/chapters/ch62-only-and-still.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 63,
+      "output": "tamil/book/chapters/ch63-asking-well.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 64,
+      "output": "tamil/book/chapters/ch64-the-harvest.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",
