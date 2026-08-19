@@ -1215,6 +1215,130 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             out.push_str(");\n");
             let _ = writeln!(out, "{pad}}}");
         }
+        // ── SIR22 addendum: APL primitive operators — real codegen ──────
+        // Each of the nine maps 1:1 onto a call into the `_sir_array_*`
+        // functions in `runtime.rs`'s "SIR22 addendum" section — the same
+        // treatment `ElementwiseOp`/`Transpose`/`MatMul` above already get
+        // for the SIR22 base cut. `Reduce`/`Scan`/`OuterProduct` carry an
+        // `ElementwiseOpKind` and so reuse `elementwise_op_c_name` exactly
+        // like `ElementwiseOp` does; the remaining six have no `op` field
+        // at all (they are "bespoke, not BinOp-shaped" per the SIR22 spec
+        // addendum and `apl-runtime::builtins`'s own doc comment) and just
+        // hoist their operand(s).
+        Expr::Reduce { op, target, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[target.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_apl_reduce({}, {});",
+                elementwise_op_c_name(*op),
+                names[0]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[target.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_scan({}, {});",
+                elementwise_op_c_name(*op),
+                names[0]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[lhs.as_ref(), rhs.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_outer({}, {}, {});",
+                elementwise_op_c_name(*op),
+                names[0],
+                names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::Shape { target, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[target.as_ref()], inner);
+            let _ = writeln!(out, "{ipad}{dst} = _sir_array_shape({});", names[0]);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs`) — `_sir_array_reshape(shapeArg, target)` takes the
+        // same order, so no argument reordering is needed at this call
+        // site (contrast `Expr::Range`'s `start, step, stop` vs.
+        // `_sir_array_range`'s `start, stop, step` above, which DOES
+        // reorder).
+        Expr::Reshape { shape, target, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[shape.as_ref(), target.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_reshape({}, {});",
+                names[0], names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::IndexGenerator { count, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[count.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_index_generator({});",
+                names[0]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[haystack.as_ref(), needle.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_index_of({}, {});",
+                names[0], names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::Ravel { target, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[target.as_ref()], inner);
+            let _ = writeln!(out, "{ipad}{dst} = _sir_array_ravel({});", names[0]);
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_operands(out, &[lhs.as_ref(), rhs.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_array_catenate({}, {});",
+                names[0], names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
         // A call whose arguments contain control flow: hoist every argument
         // into a temp (left-to-right), then make the call.
         _ => emit_compound_call(out, dst, e, indent),
@@ -2837,38 +2961,32 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
             }
             scan_expr_for_builtin(target).or_else(|| indices.iter().find_map(scan_index_arg_for_builtin))
         }
-        // ── SIR22 "APL addendum" — deferred, rejected cleanly ────────────
+        // ── SIR22 "APL addendum": real codegen (Phase A Slice 3) ─────────
         // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
-        // `IndexOf`/`Ravel`/`Catenate` share `NDArrays`/`MatrixOps`/
-        // `ArrayColumnMajor` with the base cut above, so they pass the
-        // ordinary feature-flag capability check — this dedicated scan arm
-        // (folded into this crate's existing single shared pre-emit scan,
-        // the SAME mechanism `first_unsupported_builtin` already uses for
-        // every other "well-formed but not yet lowered" construct, not a
-        // new one) is what actually rejects them, cleanly, until their own
-        // later rollout slice. Mirrors JS/TS's own (since-removed once
-        // THEIR addendum shipped) `find_unimplemented_sir22_addendum_node`
-        // and the sibling Ruby backend's `ScanHit::Sir22AddendumNode`.
-        Expr::Reduce { span, .. } => Some(("SIR22 addendum node Reduce".to_string(), span.clone())),
-        Expr::Scan { span, .. } => Some(("SIR22 addendum node Scan".to_string(), span.clone())),
-        Expr::OuterProduct { span, .. } => Some((
-            "SIR22 addendum node OuterProduct".to_string(),
-            span.clone(),
-        )),
-        Expr::Shape { span, .. } => Some(("SIR22 addendum node Shape".to_string(), span.clone())),
-        Expr::Reshape { span, .. } => {
-            Some(("SIR22 addendum node Reshape".to_string(), span.clone()))
+        // `IndexOf`/`Ravel`/`Catenate` now have real `emit_expr` arms
+        // (below) and real `_sir_array_*` runtime backing (`runtime.rs`'s
+        // "SIR22 addendum" section) — the dedicated rejection arms that
+        // used to live here through Slice 2 are gone. Like the base cut
+        // just above, this scan arm's only remaining job is recursing into
+        // each node's own sub-expressions, to catch a DEEPER deferred
+        // builtin nested inside (e.g. inside a `Reduce`'s `target`), not to
+        // reject the node itself.
+        Expr::Reduce { target, .. } => scan_expr_for_builtin(target),
+        Expr::Scan { target, .. } => scan_expr_for_builtin(target),
+        Expr::OuterProduct { lhs, rhs, .. } => {
+            scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
         }
-        Expr::IndexGenerator { span, .. } => Some((
-            "SIR22 addendum node IndexGenerator".to_string(),
-            span.clone(),
-        )),
-        Expr::IndexOf { span, .. } => {
-            Some(("SIR22 addendum node IndexOf".to_string(), span.clone()))
+        Expr::Shape { target, .. } => scan_expr_for_builtin(target),
+        Expr::Reshape { shape, target, .. } => {
+            scan_expr_for_builtin(shape).or_else(|| scan_expr_for_builtin(target))
         }
-        Expr::Ravel { span, .. } => Some(("SIR22 addendum node Ravel".to_string(), span.clone())),
-        Expr::Catenate { span, .. } => {
-            Some(("SIR22 addendum node Catenate".to_string(), span.clone()))
+        Expr::IndexGenerator { count, .. } => scan_expr_for_builtin(count),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => scan_expr_for_builtin(haystack).or_else(|| scan_expr_for_builtin(needle)),
+        Expr::Ravel { target, .. } => scan_expr_for_builtin(target),
+        Expr::Catenate { lhs, rhs, .. } => {
+            scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
         }
         _ => None,
     }
