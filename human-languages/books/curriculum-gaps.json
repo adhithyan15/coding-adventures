@@ -20,26 +20,26 @@
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
-    "mixedSchemaTracks": 15,
-    "version2SchemaTracks": 7,
-    "lessonsWithoutLevel": 68,
+    "mixedSchemaTracks": 14,
+    "version2SchemaTracks": 8,
+    "lessonsWithoutLevel": 64,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 62,
+    "scriptRampOverBudgetLessons": 61,
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 756,
     "scriptExposureExemptedGlyphs": 2220,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 277,
-    "forwardReviews": 149,
-    "atomsNeverRevisited": 624,
-    "forwardReferences": 502,
+    "lessonsWithoutSequence": 246,
+    "forwardReviews": 135,
+    "atomsNeverRevisited": 629,
+    "forwardReferences": 501,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 10,
     "drivableLessons": 2872,
     "drivablePercent": 86,
-    "chaptersWithoutDrivablePrefix": 97,
+    "chaptersWithoutDrivablePrefix": 98,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -3310,11 +3310,10 @@
       },
       {
         "language": "gujarati",
-        "status": "mixed",
+        "status": "version-2",
         "lessonCount": 69,
         "versions": {
-          "1": 31,
-          "2": 38
+          "2": 69
         }
       },
       {
@@ -4120,7 +4119,7 @@
   "levels": {
     "totalLessons": 3357,
     "byLevel": {
-      "pre-A1": 2082,
+      "pre-A1": 2086,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4128,7 +4127,7 @@
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 68,
+    "unmapped": 64,
     "mappedPercent": 98,
     "tracks": [
       {
@@ -4210,7 +4209,7 @@
         "language": "gujarati",
         "lessonCount": 69,
         "byLevel": {
-          "pre-A1": 44,
+          "pre-A1": 48,
           "A1": 2,
           "A2": 19,
           "B1": 0,
@@ -4218,7 +4217,7 @@
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 4,
+        "unmapped": 0,
         "reach": "A2"
       },
       {
@@ -5006,8 +5005,8 @@
       {
         "language": "gujarati",
         "lessonCount": 69,
-        "measurable": 38,
-        "unmeasurable": 31,
+        "measurable": 69,
+        "unmeasurable": 0,
         "lessonViolations": 2,
         "chapterViolations": 1
       },
@@ -5169,17 +5168,6 @@
           "budget": 3
         },
         {
-          "lessonId": "GU-C01-aabhaar",
-          "language": "gujarati",
-          "chapter": 1,
-          "glyphs": 11,
-          "sample": "આદધનભયરવાૃ્",
-          "systems": [
-            "Gujarati"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "JA-C01-arigatou",
           "language": "japanese",
           "chapter": 1,
@@ -5212,6 +5200,28 @@
           "systems": [
             "Hiragana",
             "Katakana"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "GU-C01-aabhaar",
+          "language": "gujarati",
+          "chapter": 1,
+          "glyphs": 9,
+          "sample": "આદધભયરવાૃ",
+          "systems": [
+            "Gujarati"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "GU-C01-namaste",
+          "language": "gujarati",
+          "chapter": 1,
+          "glyphs": 9,
+          "sample": "કછતનમસેો્",
+          "systems": [
+            "Gujarati"
           ],
           "budget": 3
         },
@@ -5510,28 +5520,6 @@
           "sample": "اسمنو",
           "systems": [
             "Arabic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "GU-C01-aavjo",
-          "language": "gujarati",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "ંજુેો",
-          "systems": [
-            "Gujarati"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "GU-C01-namaste",
-          "language": "gujarati",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "કછતમસ",
-          "systems": [
-            "Gujarati"
           ],
           "budget": 3
         },
@@ -5942,9 +5930,9 @@
           "latinScript": false,
           "lessonCount": 69,
           "totalGlyphs": 41,
-          "lessonViolations": 3,
+          "lessonViolations": 2,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 2
+          "lessonsWithForeignScript": 1
         },
         {
           "language": "hindi",
@@ -6108,9 +6096,9 @@
         }
       ],
       "summary": {
-        "lessonViolations": 62,
+        "lessonViolations": 61,
         "systemViolations": 5,
-        "lessonsWithForeignScript": 219,
+        "lessonsWithForeignScript": 218,
         "maxForeignGlyphsInALesson": 27,
         "steepestLesson": {
           "lessonId": "RU-C01-privet",
@@ -6128,8 +6116,8 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 24,
-      "unmeasurableLessons": 528,
-      "measurablePercent": 84,
+      "unmeasurableLessons": 497,
+      "measurablePercent": 85,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -8420,374 +8408,12 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "GU-C01-aabhaar",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C01-aabhaar",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GU-C01-namaste",
-        "detail": "reviews GU-C01-namaste, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C01-aabhaar",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GU-C01-namaste",
-        "detail": "requires GU-C01-namaste, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C01-aavjo",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C01-aavjo",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GU-C01-namaste",
-        "detail": "requires GU-C01-namaste, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C01-haa-naa",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C01-haa-naa",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GU-C01-namaste",
-        "detail": "requires GU-C01-namaste, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C01-namaste",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C01-practice",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C01-practice",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GU-C01-saarun",
-        "detail": "reviews GU-C01-saarun, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C01-practice",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GU-C01-saarun",
-        "detail": "requires GU-C01-saarun, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C01-saarun",
-        "language": "gujarati",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-anand",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
         "lessonId": "GU-C02-anand",
         "language": "gujarati",
         "chapter": 2,
         "kind": "forward-review",
         "other": "GU-C02-tamarun-naam-shun-chhe",
-        "detail": "reviews GU-C02-tamarun-naam-shun-chhe, which the learner does not reach for another 7 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-anand",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GU-C02-maarun-naam-chhe",
-        "detail": "requires GU-C02-maarun-naam-chhe, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C02-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-naam",
-        "detail": "reviews GU-C02-naam, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-maarun",
-        "detail": "reviews GU-C02-maarun, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GU-C02-naam",
-        "detail": "requires GU-C02-naam, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C02-maarun",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-maarun",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-naam",
-        "detail": "reviews GU-C02-naam, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-maarun",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GU-C02-naam",
-        "detail": "requires GU-C02-naam, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C02-maarun-naam-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-maarun-naam-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-naam",
-        "detail": "reviews GU-C02-naam, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-maarun-naam-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GU-C02-naam",
-        "detail": "requires GU-C02-naam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C02-naam",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-practice",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-practice",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-tu-tame",
-        "detail": "reviews GU-C02-tu-tame, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-practice",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-shun",
-        "detail": "reviews GU-C02-shun, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-practice",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-tamarun-naam-shun-chhe",
-        "detail": "reviews GU-C02-tamarun-naam-shun-chhe, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-practice",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GU-C02-tamarun-naam-shun-chhe",
-        "detail": "requires GU-C02-tamarun-naam-shun-chhe, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C02-shun",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-shun",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-tu-tame",
-        "detail": "reviews GU-C02-tu-tame, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-tamarun-naam-shun-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C02-tamarun-naam-shun-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-tu-tame",
-        "detail": "reviews GU-C02-tu-tame, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C02-tamarun-naam-shun-chhe",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GU-C02-tu-tame",
-        "detail": "requires GU-C02-tu-tame, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C02-tu-tame",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C03-hun",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C03-kem",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C03-majaa",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C03-majaa",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GU-C03-tame-kem-chho",
-        "detail": "requires GU-C03-tame-kem-chho, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C03-practice",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C03-practice",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GU-C03-tame-kem-chho",
-        "detail": "reviews GU-C03-tame-kem-chho, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C03-practice",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GU-C03-vandho-nahi",
-        "detail": "reviews GU-C03-vandho-nahi, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C03-practice",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GU-C03-tame-kem-chho",
-        "detail": "requires GU-C03-tame-kem-chho, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C03-practice",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GU-C03-vandho-nahi",
-        "detail": "requires GU-C03-vandho-nahi, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C03-tame-kem-chho",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C03-vandho-nahi",
-        "language": "gujarati",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C04-kaale",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
+        "detail": "reviews GU-C02-tamarun-naam-shun-chhe, which the learner does not reach for another 3 lesson(s)"
       },
       {
         "lessonId": "GU-C04-kaale",
@@ -8795,102 +8421,15 @@
         "chapter": 4,
         "kind": "forward-review",
         "other": "GU-C04-pachha-malishun",
-        "detail": "reviews GU-C04-pachha-malishun, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C04-kaale",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "GU-C04-malishun",
-        "detail": "requires GU-C04-malishun, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C04-malishun",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C04-pachha",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C04-pachha-malishun",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C04-practice",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C05-bolvun",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C05-hun-gujarati-bolun-chhun",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
+        "detail": "reviews GU-C04-pachha-malishun, which the learner does not reach for another 2 lesson(s)"
       },
       {
         "lessonId": "GU-C05-kaam-karvun",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C05-kaam-karvun",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "GU-C05-rahevun",
-        "detail": "reviews GU-C05-rahevun, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C05-practice",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GU-C05-practice",
         "language": "gujarati",
         "chapter": 5,
         "kind": "forward-review",
         "other": "GU-C05-rahevun",
         "detail": "reviews GU-C05-rahevun, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C05-practice",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "GU-C05-rahevun",
-        "detail": "requires GU-C05-rahevun, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GU-C05-rahevun",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "HI-C05-rahna",
@@ -22568,6 +22107,90 @@
         "language": "german",
         "introducedBy": "GE-C18-nein",
         "introducedAt": 70,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GU-CONCEPT-C01-AABHAAR-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C01-aabhaar",
+        "introducedAt": 1,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GU-CONCEPT-C01-PRACTICE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C01-practice",
+        "introducedAt": 5,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GU-CONCEPT-C02-ANAND-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-anand",
+        "introducedAt": 10,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C02-PRACTICE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-practice",
+        "introducedAt": 14,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GU-CONCEPT-C03-PRACTICE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C03-practice",
+        "introducedAt": 20,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GU-CONCEPT-C04-PRACTICE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C04-practice",
+        "introducedAt": 25,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "GU-CONCEPT-C05-PRACTICE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C05-practice",
+        "introducedAt": 30,
         "missed": [
           "R1",
           "R2",
@@ -39539,6 +39162,182 @@
         "revisits": 0
       },
       {
+        "atom": "GU-CONCEPT-C01-HAANAA-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C01-haa-naa",
+        "introducedAt": 3,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GU-CONCEPT-C01-SAARUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C01-saarun",
+        "introducedAt": 4,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C02-SHUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-shun",
+        "introducedAt": 12,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-tamarun-naam-shun-chhe",
+        "introducedAt": 13,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C03-KEM-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C03-kem",
+        "introducedAt": 16,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GU-CONCEPT-C03-MAJAA-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C03-majaa",
+        "introducedAt": 18,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C03-tame-kem-chho",
+        "introducedAt": 17,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GU-CONCEPT-C03-VANDHONAHI-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C03-vandho-nahi",
+        "introducedAt": 19,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C04-KAALE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C04-kaale",
+        "introducedAt": 22,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C04-MALISHUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C04-malishun",
+        "introducedAt": 21,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GU-CONCEPT-C04-PACHHA-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C04-pachha",
+        "introducedAt": 23,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GU-CONCEPT-C04-PACHHAMALISHUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C04-pachha-malishun",
+        "introducedAt": 24,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C05-BOLVUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C05-bolvun",
+        "introducedAt": 26,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C05-hun-gujarati-bolun-chhun",
+        "introducedAt": 27,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C05-KAAMKARVUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C05-kaam-karvun",
+        "introducedAt": 28,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "GU-CONCEPT-C05-RAHEVUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C05-rahevun",
+        "introducedAt": 29,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "GU-ETYMON-AAVVU-REACH",
         "language": "gujarati",
         "introducedBy": "GU-C07-aavvun",
@@ -54145,6 +53944,86 @@
         "revisits": 1
       },
       {
+        "atom": "GU-CONCEPT-C01-AAVJO-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C01-aavjo",
+        "introducedAt": 2,
+        "missed": [
+          "R2"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GU-CONCEPT-C01-NAMASTE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C01-namaste",
+        "introducedAt": 0,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "GU-CONCEPT-C02-CHHE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-chhe",
+        "introducedAt": 8,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "GU-CONCEPT-C02-MAARUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-maarun",
+        "introducedAt": 7,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-maarun-naam-chhe",
+        "introducedAt": 9,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "GU-CONCEPT-C02-NAAM-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-naam",
+        "introducedAt": 6,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
+        "atom": "GU-CONCEPT-C02-TUTAME-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C02-tu-tame",
+        "introducedAt": 11,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "GU-CONCEPT-C03-HUN-01",
+        "language": "gujarati",
+        "introducedBy": "GU-C03-hun",
+        "introducedAt": 15,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "GU-ETYMON-AANKH-EYE",
         "language": "gujarati",
         "introducedBy": "GU-C12-aankh",
@@ -60361,20 +60240,20 @@
         "lessonsEarly": 34
       },
       {
-        "lessonId": "GU-C01-aavjo",
-        "language": "gujarati",
-        "position": 1,
-        "word": "આવવું",
-        "taughtBy": "GU-C07-aavvun",
-        "lessonsEarly": 34
-      },
-      {
         "lessonId": "LA-C14-annos-natus",
         "language": "latin",
         "position": 24,
         "word": "habēre",
         "taughtBy": "LA-C37-habeo",
         "lessonsEarly": 34
+      },
+      {
+        "lessonId": "GU-C01-aavjo",
+        "language": "gujarati",
+        "position": 2,
+        "word": "આવવું",
+        "taughtBy": "GU-C07-aavvun",
+        "lessonsEarly": 33
       },
       {
         "lessonId": "TA-C33-puri",
@@ -60689,6 +60568,14 @@
         "lessonsEarly": 16
       },
       {
+        "lessonId": "GU-C01-namaste",
+        "language": "gujarati",
+        "position": 0,
+        "word": "કેમ",
+        "taughtBy": "GU-C03-kem",
+        "lessonsEarly": 16
+      },
+      {
         "lessonId": "HI-C36-ghar",
         "language": "hindi",
         "position": 116,
@@ -60838,14 +60725,6 @@
         "position": 26,
         "word": "estás",
         "taughtBy": "ES-C04-estar-estado",
-        "lessonsEarly": 13
-      },
-      {
-        "lessonId": "GU-C01-namaste",
-        "language": "gujarati",
-        "position": 3,
-        "word": "કેમ",
-        "taughtBy": "GU-C03-kem",
         "lessonsEarly": 13
       },
       {
@@ -61185,14 +61064,6 @@
         "lessonsEarly": 8
       },
       {
-        "lessonId": "GU-C02-chhe",
-        "language": "gujarati",
-        "position": 7,
-        "word": "હું",
-        "taughtBy": "GU-C03-hun",
-        "lessonsEarly": 8
-      },
-      {
         "lessonId": "IT-C01-buongiorno",
         "language": "italian",
         "position": 0,
@@ -61331,17 +61202,9 @@
       {
         "lessonId": "GU-C02-chhe",
         "language": "gujarati",
-        "position": 7,
-        "word": "તું",
-        "taughtBy": "GU-C02-tu-tame",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "GU-C02-chhe",
-        "language": "gujarati",
-        "position": 7,
-        "word": "તમે",
-        "taughtBy": "GU-C02-tu-tame",
+        "position": 8,
+        "word": "હું",
+        "taughtBy": "GU-C03-hun",
         "lessonsEarly": 7
       },
       {
@@ -61809,6 +61672,22 @@
         "lessonsEarly": 3
       },
       {
+        "lessonId": "GU-C02-chhe",
+        "language": "gujarati",
+        "position": 8,
+        "word": "તું",
+        "taughtBy": "GU-C02-tu-tame",
+        "lessonsEarly": 3
+      },
+      {
+        "lessonId": "GU-C02-chhe",
+        "language": "gujarati",
+        "position": 8,
+        "word": "તમે",
+        "taughtBy": "GU-C02-tu-tame",
+        "lessonsEarly": 3
+      },
+      {
         "lessonId": "IT-C01-buongiorno",
         "language": "italian",
         "position": 0,
@@ -62102,14 +61981,6 @@
         "position": 102,
         "word": "fuß",
         "taughtBy": "GE-C31-fuss",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "GU-C02-maarun",
-        "language": "gujarati",
-        "position": 8,
-        "word": "નામ",
-        "taughtBy": "GU-C02-naam",
         "lessonsEarly": 2
       },
       {
@@ -63607,12 +63478,12 @@
       {
         "language": "gujarati",
         "lessonCount": 69,
-        "lessonsWithoutSequence": 31,
-        "forwardPrerequisites": 15,
-        "forwardReviews": 17,
-        "atomsTaught": 84,
-        "atomsNeverRevisited": 5,
-        "forwardReferences": 9
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 3,
+        "atomsTaught": 115,
+        "atomsNeverRevisited": 10,
+        "forwardReferences": 8
       },
       {
         "language": "hindi",
@@ -63776,20 +63647,20 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 277,
-      "tracksWithUnorderedLessons": 10,
-      "forwardPrerequisites": 123,
-      "forwardReviews": 149,
-      "atomsTaught": 4605,
-      "atomsNeverRevisited": 624,
+      "lessonsWithoutSequence": 246,
+      "tracksWithUnorderedLessons": 9,
+      "forwardPrerequisites": 108,
+      "forwardReviews": 135,
+      "atomsTaught": 4636,
+      "atomsNeverRevisited": 629,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1181,
-        "R2": 3618,
-        "R3": 3472,
+        "R1": 1188,
+        "R2": 3642,
+        "R3": 3502,
         "R4": 2018
       },
-      "forwardReferences": 502
+      "forwardReferences": 501
     }
   },
   "scriptClosure": {
@@ -69442,8 +69313,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "9 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
-            "shortfall": 9
+            "detail": "20 atom(s) at or below pre-A1 are revisited fewer than twice (12 etymology hook(s) waived)",
+            "shortfall": 20
           }
         ],
         "vocabulary": 53
@@ -69820,8 +69691,8 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 3357,
-    "voice": 2430,
-    "sight": 589,
+    "voice": 2429,
+    "sight": 590,
     "pen": 338,
     "coreVoice": 2872,
     "lessonsWithWritingSegments": 136,
@@ -71718,26 +71589,25 @@
       {
         "language": "gujarati",
         "lessonCount": 69,
-        "voice": 17,
-        "sight": 42,
+        "voice": 16,
+        "sight": 43,
         "pen": 10,
         "coreVoice": 57,
         "drivablePercent": 83,
-        "drivablePrefixTotal": 56,
+        "drivablePrefixTotal": 53,
         "chapters": [
           {
             "language": "gujarati",
             "chapter": 1,
             "lessonCount": 6,
-            "voice": 1,
-            "sight": 5,
+            "voice": 0,
+            "sight": 6,
             "pen": 0,
             "coreVoice": 4,
             "modalities": [
-              "voice",
               "sight"
             ],
-            "drivablePrefix": 3,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "GU-C01-namaste"
           },
           {
@@ -84895,7 +84765,7 @@
     "terms": 54,
     "termsUsed": 53,
     "lessonsUsingTerms": 3255,
-    "usesBeforeIntroduction": 11950,
+    "usesBeforeIntroduction": 11949,
     "technicalUsesBeforeIntroduction": 3164,
     "technicalLessons": 1642,
     "worstTerms": [
@@ -84933,7 +84803,7 @@
   "glyphCoverage": {
     "filesScanned": 1128,
     "mainCharacters": 126,
-    "scriptCharacters": 692,
+    "scriptCharacters": 693,
     "gaps": 0
   }
 }
