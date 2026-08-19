@@ -1,5 +1,89 @@
 # Changelog
 
+## 0.17.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
+
+Part of the SIR22/SIR23 backend-expansion initiative (`code/specs/
+SIR23-symbolic-pattern-semantic-ir.md`'s "Backend impact" section) -- this
+backend now implements SIR23's Tier A pattern matcher: `SymSymbol`/
+`SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+`SymReplaceAll`, gated on the new `Feature::SymbolicExpr`/
+`Feature::PatternMatching`/`Feature::Rationals` flags (`Rationals` did not
+previously appear in this crate's `ACCEPTED_FEATURES`). **Tier B** (a
+general expression evaluator -- `Add`/`Sin`/`D`/user-function-dispatch
+folding) is explicitly OUT OF SCOPE for this slice -- a `SymApply` builds
+an inert term tree, nothing more.
+
+This PR spans two packages, following the same imported-package shape Slice
+2/3 established for the SIR22 array/matrix domain: this crate, and the new
+`code/packages/python/sir-runtime-symbolic` (0.1.0, a direct structural
+port of the published `@coding-adventures/sir-runtime-symbolic` TypeScript
+package) -- which the emitted `.py` now imports rather than an inlined
+runtime blob, matching the TypeScript backend's own model rather than this
+backend's usual inline-runtime convention for Ruby-derived concerns
+(OOP/exceptions/pairs).
+
+**New `runtime.rs` constant, `RUNTIME_SYMBOLIC`** -- the
+`from coding_adventures_sir_runtime_symbolic import (...)` header, appended
+only when `uses_symbolic(m)` (any of the three SIR23 features) is true,
+aliasing every helper to this crate's own `_sir_sym_*` convention
+(`sym as _sir_sym_symbol`, `int as _sir_sym_int`, `rational as
+_sir_sym_rational`, `number_node as _sir_sym_float`, `string_node as
+_sir_sym_string`, `apply as _sir_sym_apply`, `blank`/`blank_typed as
+_sir_sym_blank[_typed]`, `named as _sir_sym_named`, `rule`/`rule_delayed as
+_sir_sym_rule[_delayed]`, `replace_all`/`replace_repeated as
+_sir_sym_replace_all`/`_replace_repeated`, `unwrap as _sir_sym_unwrap`) --
+mirrors `RUNTIME_ARRAY`'s exact shape. Only the functions `emit.rs`'s SIR23
+arms actually call are imported (the matcher primitives `match_pattern`/
+`substitute`/`apply_rule` stay internal to the imported package's own
+`replace_all`/`replace_repeated`).
+
+**New `emit.rs` arms** for all seven `Expr` variants, replacing the
+placeholder panics Slice 3 left in place, plus a new `emit_sym_operand`
+helper (mirrors the JavaScript/TypeScript/Ruby backends' identically-named
+function) that wraps a bare `IntLit`/`FloatLit`/`StrLit` operand through
+the matching `_sir_sym_int`/`_sir_sym_float`/`_sir_sym_string` leaf-term
+constructor before it sits inside a `SymApply`/`SymRule`/`SymReplaceAll`
+term tree -- a raw Python literal is never a valid symbolic term.
+`SymReplaceAll` wraps its whole call in `_sir_sym_unwrap(...)`, converting
+either DoS-guard sentinel (`DepthLimitError`/`RewriteCycleError`) the
+imported package returns into a raised `ValueError` at the exact point a
+`SymReplaceAll` expression must evaluate to a real term or fail loudly.
+
+### Security
+
+DoS guards (CWE-674) live entirely in the new Python package, not in this
+crate's codegen -- see `code/packages/python/sir-runtime-symbolic`'s own
+CHANGELOG for the full account. Summary: `MAX_TERM_DEPTH = 512` bounds
+`replace_all`'s/`replace_repeated`'s tree WALK (not the matcher functions,
+whose recursion is bounded by a single rule's own static pattern/RHS
+shape, never runtime data); `replace_repeated` additionally enforces an
+independent `max_iterations` (default 100) cap on its fixed-point loop,
+implemented as a local `while` loop rather than a recursive retry (so
+`max_iterations` bounds CPU time, never native stack depth, however large
+a value is passed). Verified end-to-end in this crate's own
+`tests/sir23_symbolic.rs::depth_limit_guard_raises_a_clean_error_instead_
+of_crashing` against a REAL runtime-built 600-level-deep term (600 firings
+of a compiled `Stmt::ForRange` loop, not a hand-built static AST) --
+asserts the emitted Python process exits non-zero with `sir-runtime-
+symbolic: depth-limit` on stderr.
+
+### Tests
+
+`tests/sir23_symbolic.rs` (new, 6 tests, ported from
+`semantic-ir-to-javascript`'s own already-proven test file, Tier A cases
+only): `replace_repeated_reduces_nested_add_zero_to_bare_symbol`,
+`replace_all_single_pass_does_not_retry_at_same_position`,
+`typed_blank_matches_only_constrained_head`,
+`a_rational_term_prints_reduced`,
+`depth_limit_guard_raises_a_clean_error_instead_of_crashing`, and
+`rule_delayed_and_rule_currently_produce_identical_rewrites`. Each runs
+emitted Python under a real `python3`/`python` interpreter with
+`sir-runtime-symbolic/src` (plus its own two dependencies'
+`symbolic-ir/src`/`cas-pattern-matching/src`) added to `PYTHONPATH`
+alongside the existing core/pairs/oop/range/regex/exceptions set --
+mirrors `tests/sir22_array.rs::run_array_program`'s exact harness shape.
+`cargo test`/`cargo clippy --all-targets` both clean.
+
 ## 0.16.0 — SIR22 "APL addendum" real codegen (Phase A Slice 3)
 
 Part of the SIR22/SIR23 backend-expansion initiative (`code/specs/
