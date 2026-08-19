@@ -16,10 +16,14 @@
 - Require a `boot_id` in `ReconcileConfig::new`, identifying the daemon run. A
   restart window recorded by a previous run is discarded rather than measured
   against this run's monotonic clock.
-- Consult the bound when retrying a start claimed on an earlier tick, so a host
-  left durably in `Starting` or `Restarting` cannot start unbounded.
+- Treat retrying a *restart* claim as a restart, charging it to the window like
+  any other. It previously took a separate path that spent nothing, so a host
+  that kept inspecting as absent restarted without limit.
+- Require an unfulfilled claim -- no recorded process -- before treating a
+  `Starting` record as a first launch. A live process observed mid-bootstrap is
+  also recorded as `Starting`, and was taking free starts.
+- Refuse a zero `boot_id`, which is where a caller lands when every source of a
+  unique value has failed.
 - Stamp intensity quarantine deadlines with the daemon run that set them, so a
   deadline from a previous run does not hold a host down for that run's uptime.
-- Charge a restart for retrying a restart claim that no window from this run
-  vouches for, instead of granting it free. Retrying a first-launch claim is
-  still free, since a host that has never run has not restarted.
+

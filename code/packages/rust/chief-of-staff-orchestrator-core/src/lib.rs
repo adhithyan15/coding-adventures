@@ -1323,7 +1323,7 @@ mod tests {
             supervisor,
             authorizer,
             clock,
-            ReconcileConfig::new(0, 100).expect("valid reconcile config"),
+            ReconcileConfig::new(1, 100).expect("valid reconcile config"),
         )
     }
 
@@ -2218,7 +2218,7 @@ mod tests {
             identity,
             clock,
             Box::<UuidV7SessionIdSource>::default(),
-            ReconcileConfig::new(0, 100).expect("reconcile config"),
+            ReconcileConfig::new(1, 100).expect("reconcile config"),
             FakeAuthorizer::allowing(events),
         );
         fn assert_send_static<T: Send + 'static>(_: &T) {}

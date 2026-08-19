@@ -27,7 +27,14 @@ const VERSION: u8 = 2;
 /// Version 1 records carry no restart-intensity window. They decode with the
 /// window closed, which is exactly right: a host that has never been counted
 /// against a window has not used any of it. Refusing to read them instead would
-/// turn a routine upgrade into a wiped registry.
+/// be worse than a wiped registry -- `ServiceRegistry::list` fails on a single
+/// undecodable record, which fails the reconcile the daemon runs before it
+/// starts serving, so the daemon would not come up and there would be no
+/// control plane left to repair it with.
+///
+/// Version 2 also changed the *quarantine* body, from a bare deadline to one
+/// that names the run that set it. Gating only the appended window and leaving
+/// the changed body unversioned is a mistake this decoder made once.
 const MIN_READABLE_VERSION: u8 = 1;
 const MAX_HOST_NAME_BYTES: usize = 64;
 const MAX_PACKAGE_PATH_BYTES: usize = 4096;
@@ -362,6 +369,16 @@ pub enum QuarantineDeadline {
     Permanent,
     /// Lifts at `ns`, as read by the daemon run identified by `boot_id`.
     Until { boot_id: u64, ns: u64 },
+    /// Already over.
+    ///
+    /// Version-1 records stored a deadline as a bare monotonic reading with no
+    /// run attached, which is exactly the unusable state the `boot_id` exists
+    /// to detect -- there is no honest way to place such a number on this run's
+    /// clock. Rather than invent a run for it, or a sentinel `boot_id` that
+    /// would reintroduce the collision problem, those deadlines decode as
+    /// expired. A host that comes back too eagerly is corrected by the next
+    /// tick; one wedged behind an uninterpretable deadline is not.
+    Lapsed,
 }
 
 impl QuarantineDeadline {
@@ -369,6 +386,7 @@ impl QuarantineDeadline {
     pub fn has_elapsed(self, boot_id: u64, now_ns: u64) -> bool {
         match self {
             Self::Permanent => false,
+            Self::Lapsed => true,
             Self::Until {
                 boot_id: written_by,
                 ns,
@@ -882,7 +900,7 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
             ))
         }
     };
-    let status = decode_status(&mut reader)?;
+    let status = decode_status(&mut reader, version)?;
     let process_id = reader.option_u32()?;
     let started_at_ns = reader.option_u64()?;
     let last_heartbeat_ns = reader.option_u64()?;
@@ -1046,13 +1064,14 @@ fn encode_status(output: &mut Vec<u8>, status: &HostStatus) {
                     output.extend_from_slice(&boot_id.to_be_bytes());
                     output.extend_from_slice(&ns.to_be_bytes());
                 }
+                QuarantineDeadline::Lapsed => output.push(2),
             }
             push_string_u16(output, reason);
         }
     }
 }
 
-fn decode_status(reader: &mut Reader<'_>) -> Result<HostStatus, RegistryError> {
+fn decode_status(reader: &mut Reader<'_>, version: u8) -> Result<HostStatus, RegistryError> {
     match reader.u8()? {
         1 => Ok(HostStatus::Starting),
         2 => Ok(HostStatus::Running),
@@ -1070,6 +1089,18 @@ fn decode_status(reader: &mut Reader<'_>) -> Result<HostStatus, RegistryError> {
                 }
             };
             Ok(HostStatus::Crashed { exit_code })
+        }
+        7 if version < 2 => {
+            // Version 1: a bare `u64`, with `u64::MAX` meaning "never lifts".
+            let until_ns = reader.u64()?;
+            Ok(HostStatus::Quarantined {
+                until: if until_ns == u64::MAX {
+                    QuarantineDeadline::Permanent
+                } else {
+                    QuarantineDeadline::Lapsed
+                },
+                reason: reader.string_u16(MAX_REASON_BYTES)?,
+            })
         }
         7 => {
             let until = match reader.u8()? {
@@ -1925,5 +1956,81 @@ mod tests {
         let count_at = bytes.len() - 4;
         bytes[count_at..].copy_from_slice(&0u32.to_be_bytes());
         assert!(decode_host_entry(&bytes).is_err());
+    }
+
+    /// Every version-1 status shape still decodes, including the quarantine.
+    ///
+    /// The existing version-1 test used a `Running` entry, so it could not see
+    /// that version 2 changed the *status body* as well as appending the
+    /// window. Only the appended part was version-gated, and every version-1
+    /// quarantine record became undecodable -- which fails the whole of
+    /// `ServiceRegistry::list`, which fails the reconcile the daemon runs
+    /// before it starts serving. One old record, and the daemon will not come
+    /// up, with no control plane left to repair it.
+    #[test]
+    fn every_version_one_status_still_decodes() {
+        // Version 1's quarantine body: a bare deadline, `u64::MAX` for "never".
+        for (until_ns, expected) in [
+            (u64::MAX, QuarantineDeadline::Permanent),
+            (5_000, QuarantineDeadline::Lapsed),
+            (0, QuarantineDeadline::Lapsed),
+        ] {
+            let entry = HostEntry::new(
+                registration("mail-host", 3),
+                DesiredState::Running,
+                HostObservation::new(
+                    HostStatus::Quarantined {
+                        until: QuarantineDeadline::Permanent,
+                        reason: "panic threshold".to_string(),
+                    },
+                    None,
+                    None,
+                    None,
+                    None,
+                    ledger(0, None),
+                )
+                .unwrap(),
+            );
+            let v2 = encode_host_entry(&entry);
+
+            // Rebuild the record as version 1 would have written it: the
+            // permanent tag byte becomes a bare u64, and the appended window
+            // (one absent-tag byte) is dropped.
+            // Walk the fixed prefix to the status tag rather than searching
+            // for a byte value: a hash or a length can be 7 too.
+            let u16_at = |bytes: &[u8], at: usize| {
+                usize::from(u16::from_be_bytes([bytes[at], bytes[at + 1]]))
+            };
+            let mut tag_at = 4 + 1;
+            tag_at += 2 + u16_at(&v2, tag_at);
+            tag_at += 2 + u16_at(&v2, tag_at);
+            tag_at += 32 + 1 + 1;
+            assert_eq!(v2[tag_at], 7, "the status tag must be the quarantine one");
+            let mut v1 = v2[..=tag_at].to_vec();
+            v1.extend_from_slice(&until_ns.to_be_bytes());
+            // Everything after the version-2 deadline: the reason, minus the
+            // trailing window tag.
+            // The fixture encodes `Permanent`, whose version-2 body is a lone
+            // tag byte.
+            let deadline_bytes = 1;
+            v1.extend_from_slice(&v2[tag_at + 1 + deadline_bytes..v2.len() - 1]);
+            v1[4] = 1;
+
+            let decoded = decode_host_entry(&v1).expect("a version-1 quarantine must decode");
+            assert_eq!(
+                decoded.observation().status(),
+                &HostStatus::Quarantined {
+                    until: expected,
+                    reason: "panic threshold".to_string(),
+                }
+            );
+        }
+    }
+
+    /// A deadline this daemon cannot place on its own clock counts as expired.
+    #[test]
+    fn a_lapsed_deadline_has_always_elapsed() {
+        assert!(QuarantineDeadline::Lapsed.has_elapsed(BOOT_ID, 0));
+        assert!(QuarantineDeadline::Lapsed.has_elapsed(0, u64::MAX));
     }
 }

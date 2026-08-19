@@ -5486,7 +5486,7 @@ hardware_key_timeout = 60
     /// constants together, so this test does.
     #[test]
     fn restart_intensity_defaults_match_the_reconciler() {
-        let defaults = ReconcileConfig::new(0, 100).expect("valid heartbeat age");
+        let defaults = ReconcileConfig::new(1, 100).expect("valid heartbeat age");
         assert_eq!(
             defaults.restart_window_ns(),
             chief_of_staff_daemon_config::default_restart_window_ns()

@@ -1559,6 +1559,15 @@ fn status_json(status: &HostStatus) -> JsonValue {
                 ("permanent", JsonValue::Bool(true)),
                 ("reason", JsonValue::String(reason.clone())),
             ],
+            // A lapsed deadline reports as already expired: it came from a
+            // record whose deadline this daemon cannot place on its own clock,
+            // and there is no number to give a client that would mean anything.
+            QuarantineDeadline::Lapsed => vec![
+                ("kind", JsonValue::String("quarantined".to_string())),
+                ("permanent", JsonValue::Bool(false)),
+                ("expired", JsonValue::Bool(true)),
+                ("reason", JsonValue::String(reason.clone())),
+            ],
             QuarantineDeadline::Until { boot_id, ns } => vec![
                 ("kind", JsonValue::String("quarantined".to_string())),
                 ("permanent", JsonValue::Bool(false)),
@@ -1853,7 +1862,7 @@ mod tests {
             FakeSupervisor::default(),
             NoopWiring,
             Arc::new(TestClock::new()),
-            ReconcileConfig::new(0, 50).expect("valid reconcile config"),
+            ReconcileConfig::new(1, 50).expect("valid reconcile config"),
         )
     }
 

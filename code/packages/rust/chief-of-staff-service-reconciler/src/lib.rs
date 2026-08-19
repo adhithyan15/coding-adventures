@@ -255,11 +255,20 @@ impl ReconcileConfig {
     /// records a *monotonic* timestamp, which is meaningless outside the run
     /// that took it; a shared default would make two runs' readings look
     /// comparable when they are not. Any value unique per run will do -- the
-    /// daemon uses its wall-clock start time.
+    /// daemon uses random bytes mixed with its wall-clock start time.
+    ///
+    /// Zero is refused. It is not a meaningful identity, it is where a caller
+    /// ends up when every source of a unique value has failed -- and two runs
+    /// sharing an id is precisely the condition the id exists to detect, one
+    /// that produces no error and no log line, only a host wedged behind a
+    /// deadline from a run that ended.
     ///
     /// The restart-intensity bound defaults to five restarts in sixty seconds.
     /// Override it with [`Self::with_restart_intensity`].
     pub fn new(boot_id: u64, max_heartbeat_age_ns: u64) -> Result<Self, ConfigError> {
+        if boot_id == 0 {
+            return Err(ConfigError::ZeroBootId);
+        }
         if max_heartbeat_age_ns == 0 {
             return Err(ConfigError::ZeroHeartbeatAge);
         }
@@ -373,43 +382,14 @@ fn open_window(
     })
 }
 
-/// Decide the window for a start that was already claimed on an earlier tick.
-///
-/// A restart claim written by *this* run already spent its budget, so retrying
-/// it must not spend again -- but it must still be refused once that budget is
-/// gone. Returns the window to record, or `None` to refuse. First-launch claims
-/// do not come here: a host that has never run has not restarted.
-///
-/// When no window from this run applies, the retry is treated as an ordinary
-/// restart and opens one. That case is not exotic -- it is the common one.
-/// After a daemon restart every host inspects as absent, so anything durably
-/// left in `Restarting` arrives here with a window from the *previous* run,
-/// which does not vouch for anything. Passing the old ledger straight through
-/// would make those starts free: counted against neither the window nor the
-/// lifetime tally. With the shipped `ProcessHostSupervisor` that is one
-/// uncounted start per host per daemon run, because it never forgets an
-/// instance it started; a supervisor that forgets more eagerly would get them
-/// without limit, and this crate is generic over the trait.
-fn retry_restart_window(
-    previous: Option<RestartWindow>,
-    now_ns: u64,
-    boot_id: u64,
-    window_ns: u64,
-    max_restarts: u32,
-) -> Option<RestartWindow> {
-    match open_window(previous, now_ns, boot_id, window_ns) {
-        // This run's window, already holding the claim being retried.
-        Some(window) => (window.restarts() <= max_restarts).then_some(window),
-        // Nothing from this run vouches for the claim, so it costs a restart.
-        None => Some(RestartWindow::opened(boot_id, now_ns)),
-    }
-}
-
 /// Invalid reconciliation configuration.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum ConfigError {
     /// A zero heartbeat age would make every non-future heartbeat ambiguous.
     ZeroHeartbeatAge,
+    /// A zero boot id is what a caller lands on when every source of a unique
+    /// value failed, so it is refused rather than shared between runs.
+    ZeroBootId,
     /// A zero restart window or count would silently mean "never restart",
     /// overriding every host's declared policy.
     ZeroRestartIntensity,
@@ -419,6 +399,7 @@ impl Display for ConfigError {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
         formatter.write_str(match self {
             Self::ZeroHeartbeatAge => "maximum heartbeat age must be non-zero",
+            Self::ZeroBootId => "boot id must be non-zero",
             Self::ZeroRestartIntensity => "restart window and count must both be non-zero",
         })
     }
@@ -822,10 +803,23 @@ impl<'a> ServiceReconciler<'a> {
         observed_previous_attempt: bool,
     ) -> Result<HostReconcileOutcome, ReconcileError<S::Error>> {
         let previous = loaded.entry().observation();
+        // Both arms require the claim to be unfulfilled -- no process recorded
+        // against it. `Starting` *with* a pid is not an unclaimed launch, it is
+        // a live process seen in bootstrap; treating it as a first launch let a
+        // host that had already run take free, uncounted starts every time it
+        // vanished mid-bootstrap. The `Restarting` arm always had this guard.
         let retrying_claim = !observed_previous_attempt
-            && (matches!(previous.status(), HostStatus::Starting)
-                || matches!(previous.status(), HostStatus::Restarting)
-                    && previous.process_id().is_none());
+            && previous.process_id().is_none()
+            && matches!(
+                previous.status(),
+                HostStatus::Starting | HostStatus::Restarting
+            );
+        // Note what is *not* here: a separate, cheaper path for retrying a
+        // restart claim. There was one, and it charged nothing to the window,
+        // so a host that could keep inspecting as absent restarted without
+        // limit while `restarts_in_window` sat at 1. A retried restart is a
+        // restart. Charging one twice costs a crash-looping host a little of
+        // its budget; charging it zero times costs the bound.
         let restarting = if retrying_claim {
             matches!(previous.status(), HostStatus::Restarting)
         } else {
@@ -840,26 +834,6 @@ impl<'a> ServiceReconciler<'a> {
             // Retrying a first-launch claim. A host that has never run has not
             // restarted, and the bound is on restarts.
             previous.restarts()
-        } else if retrying_claim {
-            let Some(window) = retry_restart_window(
-                previous.restarts().window(),
-                now_ns,
-                self.config.boot_id(),
-                self.config.restart_window_ns(),
-                self.config.max_restarts_per_window(),
-            ) else {
-                return self.quarantine_for_intensity(&loaded, now_ns);
-            };
-            if previous.restarts().window() == Some(window) {
-                // The claim's own window: nothing more to spend.
-                previous.restarts()
-            } else {
-                // A window opened here, so the lifetime tally moves with it.
-                match previous.restart_count().checked_add(1) {
-                    Some(count) => RestartLedger::new(count, Some(now_ns), Some(window))?,
-                    None => return self.quarantine_for_exhaustion(&loaded),
-                }
-            }
         } else if restarting {
             // The bound goes here, beside the lifetime counter and before it is
             // spent, because this is the single point every restart passes
@@ -1979,10 +1953,7 @@ mod tests {
             next_restart_window(stale, 500, BOOT_ID, window_ns, 3),
             Some(RestartWindow::opened(BOOT_ID, 500))
         );
-        assert_eq!(
-            retry_restart_window(stale, 500, BOOT_ID, window_ns, 3),
-            Some(RestartWindow::opened(BOOT_ID, 500))
-        );
+        assert!(open_window(stale, 500, BOOT_ID, window_ns).is_none());
     }
 
     /// A window stamped ahead of `now_ns` within one run means the clock went
@@ -1997,32 +1968,96 @@ mod tests {
         );
     }
 
-    /// Retrying a claim inside its own window spends nothing; a retry with no
-    /// window to vouch for it costs a restart like any other start.
+    /// A host stuck retrying a restart claim is still bounded.
+    ///
+    /// This used to be the hole. Retrying a claim took a separate path that
+    /// returned the stored window untouched -- it never spent it -- so
+    /// `restarts_in_window` could not rise above 1 and the refusal it checked
+    /// for was unreachable. A supervisor that reported the host absent every
+    /// tick got a start every tick, forever, against a budget of two.
     #[test]
-    fn a_retry_spends_nothing_only_inside_the_window_that_claimed_it() {
-        let window_ns = 1_000;
-        let at = |restarts| Some(RestartWindow::new(BOOT_ID, 500, restarts).unwrap());
-        let retry = |previous, now| retry_restart_window(previous, now, BOOT_ID, window_ns, 3);
-
-        // Inside the claim's own window: returned unchanged, nothing spent.
-        assert_eq!(retry(at(1), 900), at(1));
-        assert_eq!(retry(at(3), 900), at(3));
-
-        // No window from this run vouches for the claim, so a fresh one opens
-        // and the caller spends a restart. These are the shapes that used to be
-        // free: an elapsed window, a window from another boot, and no window at
-        // all -- the last being every host's state after a daemon restart.
-        let fresh = Some(RestartWindow::opened(BOOT_ID, 1_500));
-        assert_eq!(retry(at(3), 1_500), fresh);
-        assert_eq!(
-            retry(
-                Some(RestartWindow::new(BOOT_ID + 1, 500, 3).unwrap()),
-                1_500
-            ),
-            fresh
+    fn a_host_retrying_a_restart_claim_is_still_bounded() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Restarting,
+                None,
+                Some(700),
+                Some(800),
+                None,
+                ledger(1, Some(600)),
+            )
+            .unwrap(),
         );
-        assert_eq!(retry(None, 1_500), fresh);
+        let config = ReconcileConfig::new(BOOT_ID, 100)
+            .unwrap()
+            .with_restart_intensity(1_000_000, 2)
+            .unwrap();
+
+        // The supervisor never sees the host, so every tick is a claim retry.
+        let mut starts = 0;
+        for _ in 0..20 {
+            let mut supervisor = FakeSupervisor::default();
+            ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+                .reconcile_all(&mut supervisor, NOW)
+                .unwrap();
+            starts += supervisor.starts.len();
+        }
+
+        assert_eq!(starts, 2, "a claim retry is a restart and must be charged");
+        assert!(
+            matches!(
+                load(&backend, "mail-host").observation().status(),
+                HostStatus::Quarantined { reason, .. }
+                    if reason.as_str() == RESTART_INTENSITY_EXCEEDED
+            ),
+            "the retry loop must end in a quarantine"
+        );
+    }
+
+    /// A `Starting` record that already names a process is not a first launch.
+    ///
+    /// The free first-launch retry is selected by status, and `Starting` is
+    /// also written for a live process observed mid-bootstrap. Without the
+    /// process-id guard, a host that had already run and then vanished during
+    /// bootstrap took an uncounted start every time.
+    #[test]
+    fn a_starting_record_with_a_process_is_not_a_free_first_launch() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Starting,
+                Some(42),
+                Some(700),
+                Some(800),
+                None,
+                ledger(1, Some(600)),
+            )
+            .unwrap(),
+        );
+        let config = ReconcileConfig::new(BOOT_ID, 100)
+            .unwrap()
+            .with_restart_intensity(1_000_000, 2)
+            .unwrap();
+
+        let mut starts = 0;
+        for _ in 0..20 {
+            let mut supervisor = FakeSupervisor::default();
+            ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+                .reconcile_all(&mut supervisor, NOW)
+                .unwrap();
+            starts += supervisor.starts.len();
+        }
+
+        assert_eq!(starts, 2, "a bootstrap that vanishes must still be charged");
     }
 
     /// A host restarted up to the bound is quarantined rather than restarted
@@ -2113,6 +2148,12 @@ mod tests {
         let reloaded = load(&backend, "mail-host");
         assert_eq!(reloaded.observation().restarts_in_window(), 1);
         assert_eq!(reloaded.observation().restart_window_start_ns(), Some(NOW));
+    }
+
+    /// A zero boot id means every source of a unique value failed.
+    #[test]
+    fn a_zero_boot_id_is_refused() {
+        assert_eq!(ReconcileConfig::new(0, 100), Err(ConfigError::ZeroBootId));
     }
 
     /// A zero window or count is refused rather than silently meaning "never".

@@ -21,7 +21,10 @@ often. Without a second bound, a host that fails during startup is restarted as
 fast as the tick loop runs, forever.
 
 `ReconcileConfig::with_restart_intensity` bounds the rate: at most N restarts
-inside a rolling window, defaulting to five per sixty seconds. A host that
+inside a window, defaulting to five per sixty seconds. The window is a fixed
+span that resets once it elapses, not a sliding window over individual restart
+timestamps -- a sliding window needs every restart's timestamp, which is
+unbounded state to persist per host. A host that
 exhausts its budget is quarantined with `restart intensity exceeded` instead of
 being restarted, and the quarantine lifts one window later.
 
@@ -39,13 +42,20 @@ ledger as a unit does not make that mistake impossible -- `RestartLedger::NEVER`
 is still there for the callers that genuinely mean it -- but it does make it
 impossible to drop the window *by omission*, which is how it was dropped.
 
-**Monotonic readings are never stored bare.** A monotonic clock counts from
-daemon start, so a reading written by one run is not on the same scale as the
-next run's -- a value recorded after an hour of uptime looks an hour in the
-*future* to a daemon that has just started. Two durable things hold such
-readings, and both name the run that took them: `RestartWindow` carries a
-`boot_id`, and so does `QuarantineDeadline::Until`. A reading from another run
-is treated as elapsed rather than compared against.
+**Every durable reading this crate *compares* names the run that took it.** A
+monotonic clock counts from daemon start, so a reading written by one run is not
+on the same scale as the next run's -- a value recorded after an hour of uptime
+looks an hour in the *future* to a daemon that has just started. Two durable
+values are compared against the clock, and both carry a `boot_id`:
+`RestartWindow` and `QuarantineDeadline::Until`. A reading from another run is
+treated as elapsed rather than compared against.
+
+Note the precise claim. The host record also persists `started_at_ns`,
+`last_heartbeat_ns` and `last_restart_ns` bare, and those are fine *because
+nothing compares them across runs* -- they are reported, or compared against
+each other inside a single record. Heartbeat staleness uses the live supervisor
+reading, never the stored one. The property that holds is about comparison, not
+storage, and an earlier version of this paragraph claimed the broader thing.
 
 Both halves matter, and shipping only the first was a real bug. A window that
 outlived its run wedged a host in a quarantine that re-armed every time it
@@ -65,9 +75,11 @@ stronger one.
 reconciler walks every host per tick, so a per-host failure raised out of the
 walk would take every other host down with it, and an agent able to crash itself
 on demand could disable supervision for the whole deployment. Note that this is
-true of the intensity bound specifically, not of the walk in general: a
-supervisor start or stop that *fails* still propagates out of `reconcile_all`.
-That is pre-existing and tracked separately.
+true of the intensity bound specifically, not of the walk in general. A failed
+supervisor `start`, `stop` or `inspect`, a `FutureObservation`, and any
+`RegistryError` -- including one raised while validating an observation -- all
+still propagate out of `reconcile_all` and abort the tick for every other host.
+That is pre-existing and tracked separately in #12122.
 
 ## Validation
 
