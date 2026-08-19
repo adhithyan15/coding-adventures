@@ -574,7 +574,7 @@
     {
       "language": "bengali",
       "chapter": 1,
-      "sourceHash": "fnv1a64:7dc88c24276e2ef1",
+      "sourceHash": "fnv1a64:7ca1d7c547720f59",
       "lessonIds": [
         "BN-C01-nomoshkar",
         "BN-C01-dhonnobad",
@@ -588,12 +588,12 @@
       "text": "bengali/narration/ch01.txt",
       "json": "bengali/narration/ch01.json",
       "textHash": "fnv1a64:4814da95deb4a48e",
-      "jsonHash": "fnv1a64:64eafcec90cf6de3"
+      "jsonHash": "fnv1a64:7e1c84c3b2b0321f"
     },
     {
       "language": "bengali",
       "chapter": 2,
-      "sourceHash": "fnv1a64:f1150a397c9e35fc",
+      "sourceHash": "fnv1a64:e32fde4e95bc490f",
       "lessonIds": [
         "BN-C02-naam",
         "BN-C02-amar",
@@ -609,12 +609,12 @@
       "text": "bengali/narration/ch02.txt",
       "json": "bengali/narration/ch02.json",
       "textHash": "fnv1a64:90786881b184ce52",
-      "jsonHash": "fnv1a64:4eb5e9708ab680b7"
+      "jsonHash": "fnv1a64:d9a20b61ddbf95a3"
     },
     {
       "language": "bengali",
       "chapter": 3,
-      "sourceHash": "fnv1a64:5cf05a9847198274",
+      "sourceHash": "fnv1a64:a5ba65dea1e48ba0",
       "lessonIds": [
         "BN-C03-ami",
         "BN-C03-kemon",
@@ -628,12 +628,12 @@
       "text": "bengali/narration/ch03.txt",
       "json": "bengali/narration/ch03.json",
       "textHash": "fnv1a64:3189e770b17a352b",
-      "jsonHash": "fnv1a64:7022deda93acbfba"
+      "jsonHash": "fnv1a64:0f54017933c38284"
     },
     {
       "language": "bengali",
       "chapter": 4,
-      "sourceHash": "fnv1a64:95b8a11959317c33",
+      "sourceHash": "fnv1a64:322ada37d9e4874e",
       "lessonIds": [
         "BN-C04-abar",
         "BN-C04-dekha-hobe",
@@ -646,12 +646,12 @@
       "text": "bengali/narration/ch04.txt",
       "json": "bengali/narration/ch04.json",
       "textHash": "fnv1a64:1994915e9d1cd3bf",
-      "jsonHash": "fnv1a64:ec69c0781943ba56"
+      "jsonHash": "fnv1a64:83ddd841c37b8c48"
     },
     {
       "language": "bengali",
       "chapter": 5,
-      "sourceHash": "fnv1a64:24d3c03d7c8adefc",
+      "sourceHash": "fnv1a64:e0481b47dd26e085",
       "lessonIds": [
         "BN-C05-bola",
         "BN-C05-ami-bangla-boli",
@@ -664,7 +664,7 @@
       "text": "bengali/narration/ch05.txt",
       "json": "bengali/narration/ch05.json",
       "textHash": "fnv1a64:d4cd887f96d2eb89",
-      "jsonHash": "fnv1a64:2b73207070061771"
+      "jsonHash": "fnv1a64:3a6f3bad75597f39"
     },
     {
       "language": "bengali",
@@ -2124,70 +2124,70 @@
     {
       "language": "gujarati",
       "chapter": 1,
-      "sourceHash": "fnv1a64:08fb66dea407c28f",
+      "sourceHash": "fnv1a64:b3924c2ba696cbb9",
       "lessonIds": [
+        "GU-C01-namaste",
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
         "GU-C01-haa-naa",
-        "GU-C01-namaste",
-        "GU-C01-practice",
-        "GU-C01-saarun"
+        "GU-C01-saarun",
+        "GU-C01-practice"
       ],
-      "voiceLessons": 1,
+      "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch01.txt",
       "json": "gujarati/narration/ch01.json",
-      "textHash": "fnv1a64:11eeebe50b2b4871",
-      "jsonHash": "fnv1a64:3b084a58ef790bae"
+      "textHash": "fnv1a64:312082718b4a2f04",
+      "jsonHash": "fnv1a64:68dac075bf2824f1"
     },
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:b40428346fb84ab2",
+      "sourceHash": "fnv1a64:2fb4aa7e2e45a3d4",
       "lessonIds": [
-        "GU-C02-anand",
-        "GU-C02-chhe",
-        "GU-C02-maarun",
-        "GU-C02-maarun-naam-chhe",
         "GU-C02-naam",
-        "GU-C02-practice",
+        "GU-C02-maarun",
+        "GU-C02-chhe",
+        "GU-C02-maarun-naam-chhe",
+        "GU-C02-anand",
+        "GU-C02-tu-tame",
         "GU-C02-shun",
         "GU-C02-tamarun-naam-shun-chhe",
-        "GU-C02-tu-tame"
+        "GU-C02-practice"
       ],
       "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch02.txt",
       "json": "gujarati/narration/ch02.json",
-      "textHash": "fnv1a64:d26a9d8a6bfb2ca1",
-      "jsonHash": "fnv1a64:63e667473fe07be1"
+      "textHash": "fnv1a64:1db377c27cc2b300",
+      "jsonHash": "fnv1a64:3c73f6a916f3e73d"
     },
     {
       "language": "gujarati",
       "chapter": 3,
-      "sourceHash": "fnv1a64:abfa845dbcbdcdb7",
+      "sourceHash": "fnv1a64:8761b18a7cb6a98f",
       "lessonIds": [
         "GU-C03-hun",
         "GU-C03-kem",
-        "GU-C03-majaa",
-        "GU-C03-practice",
         "GU-C03-tame-kem-chho",
-        "GU-C03-vandho-nahi"
+        "GU-C03-majaa",
+        "GU-C03-vandho-nahi",
+        "GU-C03-practice"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch03.txt",
       "json": "gujarati/narration/ch03.json",
-      "textHash": "fnv1a64:8ed231e80843803b",
-      "jsonHash": "fnv1a64:4bbb9340a3330ba6"
+      "textHash": "fnv1a64:b504438d7f06803e",
+      "jsonHash": "fnv1a64:eb166e750590ae88"
     },
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:a7cb2a54ee279339",
+      "sourceHash": "fnv1a64:0bf6cff43642d6f5",
       "lessonIds": [
-        "GU-C04-kaale",
         "GU-C04-malishun",
+        "GU-C04-kaale",
         "GU-C04-pachha",
         "GU-C04-pachha-malishun",
         "GU-C04-practice"
@@ -2196,26 +2196,26 @@
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch04.txt",
       "json": "gujarati/narration/ch04.json",
-      "textHash": "fnv1a64:86d513f5209fb31e",
-      "jsonHash": "fnv1a64:20345aac0ac86963"
+      "textHash": "fnv1a64:93e9ccecd101e2bc",
+      "jsonHash": "fnv1a64:2c0bcb6f92f7a37b"
     },
     {
       "language": "gujarati",
       "chapter": 5,
-      "sourceHash": "fnv1a64:21df006e01581a7f",
+      "sourceHash": "fnv1a64:41d87b88a8cd1af0",
       "lessonIds": [
         "GU-C05-bolvun",
         "GU-C05-hun-gujarati-bolun-chhun",
         "GU-C05-kaam-karvun",
-        "GU-C05-practice",
-        "GU-C05-rahevun"
+        "GU-C05-rahevun",
+        "GU-C05-practice"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "gujarati/narration/ch05.txt",
       "json": "gujarati/narration/ch05.json",
-      "textHash": "fnv1a64:a13e2b30c7c79bc9",
-      "jsonHash": "fnv1a64:c5e89c796ee37c62"
+      "textHash": "fnv1a64:13ba0da6a2289fd0",
+      "jsonHash": "fnv1a64:ffc705b12f88ae9e"
     },
     {
       "language": "gujarati",

@@ -14,7 +14,7 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [BN-CONCEPT-C01-NOMOSHKAR-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01]
+  knowledge: [BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-NOMOSHKAR-01]
 introduces:
   knowledge: [BN-CONCEPT-C01-PRACTICE-01]
 practises:
@@ -30,13 +30,13 @@ reviews_of: [BN-C01-nomoshkar, BN-C01-dhonnobad, BN-C01-hyan-na, BN-C01-achchha,
 # Chapter 1 — Practice and Recall
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 [PAUSE 2s] No new words. Just the five, mixed and recombined — and the one shift
 that ties them together.
 
 ## How to answer — rapid recall
-<!-- hl-knowledge: introduces=[BN-CONCEPT-C01-PRACTICE-01]; assesses=[BN-CONCEPT-C01-NOMOSHKAR-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01] -->
+<!-- hl-knowledge: introduces=[BN-CONCEPT-C01-PRACTICE-01]; assesses=[BN-CONCEPT-C01-ACHCHHA-01, BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01, BN-CONCEPT-C01-NOMOSHKAR-01] -->
 
 [PAUSE 1s each]
 - [YOU SAY: hello / goodbye, palms together — *nômoshkar*]

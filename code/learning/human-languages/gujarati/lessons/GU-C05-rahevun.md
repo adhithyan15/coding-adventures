@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: GU-C05-rahevun
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 300
 chapter: 5
 type: word
 headword: રહેવું
@@ -8,22 +11,37 @@ concept_tag: GU-VERB-RAHEVU
 prerequisites: [GU-C05-bolvun]
 sounds: [e-sign, u-nasal]
 roots: [rah-remain]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-CONCEPT-C05-BOLVUN-01]
+introduces:
+  knowledge: [GU-CONCEPT-C05-RAHEVUN-01]
+practises:
+  knowledge: [GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-RAHEVUN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
 reviews_of: [GU-C05-bolvun, GU-C05-hun-gujarati-bolun-chhun]
 ---
 
 # રહેવું (rahevũ) — "to live, to stay"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01] -->
 
 [PAUSE 2s] A second verb, so you can say where you live.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[GU-CONCEPT-C05-RAHEVUN-01]; assesses=[GU-CONCEPT-C05-BOLVUN-01] -->
 
 **ર** (*ra*) + **હે** (*he*) + **વું** (*vũ*) → **રહેવું** (*rahevũ*). The familiar
 *-vũ* infinitive.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-RAHEVUN-01] -->
 
 **રહેવું** (*rahevũ*, "to live, to remain, to stay") is from Sanskrit **રહ્**
 (*rah-*, "to remain") — the same root as Hindi *rahnā* and Punjabi *rahiṇā*. "I
@@ -31,12 +49,14 @@ live in Ahmedabad" is **હું અમદાવાદમાં રહું �
 stem *rah-* + person + copula, exactly like *bolvũ*.
 
 ## Grammar Lens: "in" comes after the noun
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-RAHEVUN-01] -->
 
 **અમદાવાદમાં** (*Amdāvādmā*) = *Ahmedabad* + **-માં** (*-mā*, "in"), glued to the
 **end** of the noun. Gujarati, like Hindi, uses **post**positions where English
 uses prepositions: "Ahmedabad-in I live," the verb last.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-RAHEVUN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "rahevũ"]
@@ -44,6 +64,7 @@ uses prepositions: "Ahmedabad-in I live," the verb last.
 - [YOU SAY: where "in" (*-mā*) sits — glued to the end of the noun]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C05-BOLVUN-01, GU-CONCEPT-C05-RAHEVUN-01] -->
 
 [PAUSE 3s] What root is *rahevũ* from, and where does "in" go? (Sanskrit *rah-*
 "to remain"; *-mā* "in" attaches to the **end** of the noun.)

@@ -504,6 +504,35 @@ fn build_self_package_registry(
 /// purpose. Authors who DO want strict-mode behavior can omit the
 /// bare `<Component>.mll` and ship only the variant files; the
 /// fallback then provably can't fire.
+/// Report a stylesheet whose declared component name does not match the
+/// interface it is being compiled against.
+///
+/// See `code/specs/mosstyle-slot-variants.md` §3.0.1. `StyleDef`'s own doc
+/// comment already claims this invariant — "matches the `.mil` and `.mll`
+/// component name" — but nothing enforced it, so a stylesheet naming the
+/// wrong component compiled cleanly and produced an UNSTYLED component:
+/// every part lookup misses, the build stays green, the output is wrong.
+///
+/// Returns `None` when the names agree, or the full diagnostic when they do
+/// not. Split out from the caller so the message is unit-testable rather than
+/// trapped behind a `process::exit`.
+fn style_component_name_error(
+    style_name: &str,
+    component_name: &str,
+    interface_path: &str,
+    style_path: &str,
+) -> Option<String> {
+    if style_name == component_name {
+        return None;
+    }
+    Some(format!(
+        "mosaic-compile: stylesheet declares `style {style_name}` but the interface declares \
+         `component {component_name}`.\n  interface:  {interface_path}\n  stylesheet: {style_path}\n\
+         The names must match — a mismatched stylesheet styles nothing, because every part \
+         lookup misses."
+    ))
+}
+
 fn resolve_layout_path(layout_arg: &str, component_name: &str, variant: Option<&str>) -> String {
     // Defense-in-depth: validate component_name + variant against a
     // strict identifier shape before interpolating into path joins.
@@ -703,6 +732,32 @@ fn run_pipeline(
     // therefore consume identical composed IR.
     let style_src = read_file_or_die(style_path);
     let component_name = mosmodel_out.component.component.clone();
+
+    // -- 3a-pre. The stylesheet must name the same component as the .mil ----
+    //
+    // See code/specs/mosstyle-slot-variants.md §3.0.1. `StyleDef`'s own doc
+    // comment already claims this invariant ("matches the `.mil` and `.mll`
+    // component name") — nothing enforced it.
+    //
+    // A stylesheet naming the wrong component compiles cleanly and produces an
+    // UNSTYLED component, because every part lookup misses. Green build, wrong
+    // output: the same failure shape as a silently dropped style property.
+    //
+    // Checked against the RAW stylesheet, before package composition merges in
+    // dependency styles, so the error names what the author actually wrote.
+    // A parse failure here is left alone — the real compile below reports it
+    // with proper diagnostics.
+    if let Ok(raw_style) = mosstyle_compiler::compile(&style_src, None) {
+        if let Some(error) = style_component_name_error(
+            &raw_style.def.component_name,
+            &component_name,
+            interface_path,
+            style_path,
+        ) {
+            eprintln!("{error}");
+            process::exit(1);
+        }
+    }
     let composed = compose_component_with_model(
         &component_name,
         mosmodel_out,
@@ -1477,6 +1532,39 @@ fn write_bytes_or_die(path: &str, content: &[u8]) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A stylesheet naming the wrong component must fail the build.
+    ///
+    /// Before this check it compiled cleanly and produced an unstyled
+    /// component, because every part lookup missed — a green build with wrong
+    /// output, the same shape as a silently dropped style property.
+    #[test]
+    fn style_component_name_mismatch_is_reported() {
+        // Matching names: no diagnostic.
+        assert_eq!(
+            style_component_name_error("Button", "Button", "Button.mil", "Button.light.msl"),
+            None
+        );
+
+        // Mismatch: the message must name BOTH sides and BOTH files, since
+        // the whole failure mode is not knowing which of the pair is wrong.
+        let err = style_component_name_error("Buton", "Button", "Button.mil", "Button.light.msl")
+            .expect("a mismatch must produce a diagnostic");
+        assert!(err.contains("Buton"), "should name the stylesheet's: {err}");
+        assert!(err.contains("Button"), "should name the interface's: {err}");
+        assert!(err.contains("Button.mil"), "should name the interface: {err}");
+        assert!(
+            err.contains("Button.light.msl"),
+            "should name the stylesheet: {err}"
+        );
+
+        // Case differences are mismatches — component names are PascalCase
+        // and part lookups are case-sensitive.
+        assert!(
+            style_component_name_error("button", "Button", "a.mil", "a.msl").is_some(),
+            "case-differing names must not be treated as equal"
+        );
+    }
 
     #[test]
     fn pkg_backend_mapping_exposes_native_and_web_package_backends() {

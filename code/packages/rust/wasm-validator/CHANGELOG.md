@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.37] - 2026-08-19 (task #190-192 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero type rule)
+
+### Added
+
+- `SimdOpKind::TruncSatF64x2SZero`/`TruncSatF64x2UZero` join the
+  existing UNARY `v128` op type-check arm (pop one `V128`, push
+  `V128`) alongside `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` -- even
+  though the runtime reads 2 `f64` lanes and writes 4 `i32` lanes (2
+  zero-filled), WASM's type system doesn't distinguish lane shapes, so
+  this is the same pop-one-push-one shape as every other kind in that
+  arm.
+- 3 new tests: a valid-module case covering both new ops, plus two
+  invalid-module regressions confirming each genuinely rejects an `i32`
+  operand instead of `v128`, not just accepting whatever's on the
+  stack.
+
 ## [0.2.36] - 2026-08-19 (task #183-185 — SIMD widen PR22: i16x8.q15mulr_sat_s type rule)
 
 ### Added

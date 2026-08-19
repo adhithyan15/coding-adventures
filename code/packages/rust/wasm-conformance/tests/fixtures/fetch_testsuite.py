@@ -437,6 +437,26 @@ TESTSUITE_FILES = [
     # inventory -- both come back 100% passing.
     "simd_select.wast",
     "simd_address.wast",
+    # SIMD widen PR24 (task #188-189): simd_i32x4_trunc_sat_f32x4.wast --
+    # like PR23, ZERO new opcodes. Exercises only
+    # `i32x4.trunc_sat_f32x4_s`/`i32x4.trunc_sat_f32x4_u`, both already
+    # implemented since SIMD widen PR20 (task #177-179). Verified by
+    # actually vendoring and grading the file, not just a static opcode-
+    # inventory claim: 100% pass on every directive (1/1 module, 102/102
+    # assert_return, 4/4 assert_invalid).
+    "simd_i32x4_trunc_sat_f32x4.wast",
+    # SIMD widen PR25 (task #190-192): simd_i32x4_trunc_sat_f64x2.wast --
+    # vendors the dedicated upstream file for the 2 NEW opcodes this PR
+    # adds: `i32x4.trunc_sat_f64x2_s_zero` (0xFC), `i32x4.trunc_sat_f64x2_
+    # u_zero` (0xFD). Mirrors PR24's `simd_i32x4_trunc_sat_f32x4.wast`
+    # almost exactly, just the f64x2-source ("_zero") rung instead of the
+    # f32x4-source one -- same boundary-value corpus shape (zero/
+    # negative-zero/fractional/exact-integer/just-inside-range/
+    # just-outside-range/huge-finite/subnormal/inf/nan/signed-and-quiet-
+    # nan-payload/octal-literal cases, `_s_zero` and `_u_zero` each tested
+    # independently) plus its own `assert_invalid` type-check coverage
+    # (wrong-operand-type, empty-argument for both ops).
+    "simd_i32x4_trunc_sat_f64x2.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

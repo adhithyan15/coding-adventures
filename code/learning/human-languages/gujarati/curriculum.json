@@ -58,6 +58,18 @@
       "after": []
     },
     {
+      "id": "GU-PATH-C1P",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "GU-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-001-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "GU-PATH-005",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -109,6 +121,18 @@
       "before": [],
       "inline": [
         "GU-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-C4P",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "GU-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-004-CONSOLIDATION"
       ],
       "after": []
     },
@@ -214,6 +238,18 @@
       "after": []
     },
     {
+      "id": "GU-PATH-C2P",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "GU-C02-practice"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-002-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "GU-PATH-015",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
@@ -225,6 +261,18 @@
       "before": [],
       "inline": [
         "GU-EXT-015-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "GU-PATH-C3P",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "GU-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "GU-EXT-003-CONSOLIDATION"
       ],
       "after": []
     }
@@ -253,7 +301,8 @@
     },
     "SPINE-RESPOND-BASIC": {
       "segments": [
-        "GU-PATH-004"
+        "GU-PATH-004",
+        "GU-PATH-C1P"
       ],
       "omits": [
         "RESPONSE-YES",
@@ -264,7 +313,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "GU-PATH-005",
-        "GU-PATH-014"
+        "GU-PATH-014",
+        "GU-PATH-C2P"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -274,7 +324,8 @@
     "SPINE-CHECK-WELLBEING": {
       "segments": [
         "GU-PATH-006",
-        "GU-PATH-015"
+        "GU-PATH-015",
+        "GU-PATH-C3P"
       ],
       "omits": [
         "WORD-GOOD",
@@ -295,7 +346,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "GU-PATH-003",
-        "GU-PATH-008"
+        "GU-PATH-008",
+        "GU-PATH-C4P"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -702,6 +754,58 @@
         "GU-W01-e-matra",
         "GU-W01-virama",
         "GU-W01-namaste-read"
+      ]
+    },
+    {
+      "id": "GU-EXT-001-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can greet, thank, answer yes or no, and take my leave in Gujarati, and read every word of it in the Gujarati script.",
+      "prerequisites": [
+        "GU-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "GU-C01-practice"
+      ]
+    },
+    {
+      "id": "GU-EXT-002-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask someone's name in Gujarati and give my own.",
+      "prerequisites": [
+        "GU-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "GU-C02-practice"
+      ]
+    },
+    {
+      "id": "GU-EXT-003-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask how someone is in Gujarati and say that I am well.",
+      "prerequisites": [
+        "GU-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "GU-C03-practice"
+      ]
+    },
+    {
+      "id": "GU-EXT-004-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can take my leave in Gujarati and say when I expect to meet again.",
+      "prerequisites": [
+        "GU-EXT-008-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "GU-C04-practice"
       ]
     }
   ]

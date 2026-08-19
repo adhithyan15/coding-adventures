@@ -1,5 +1,43 @@
 # Changelog — x86-simulator
 
+## 0.7.7 — 2026-08-19 — host shim for `__twig_gc_write_barrier`
+
+Fixes a **latent** breakage: three LANG-FULL matrix cells
+(`basic_array_runs_on_x86_sim`, `algol_static_array_runs_on_x86_sim`,
+`algol_for_loop_array_runs_on_x86_sim`) failed with
+
+```
+UnresolvedExternal("__twig_gc_write_barrier")
+```
+
+When the precise-GC track (AOT00-T8 follow-up) taught `x86_64-backend` to emit a
+generational write barrier after every `field_store` / `array_set`, this
+simulator's `host_call` dispatch table was not extended to match — so every
+program performing a heap store trapped. Nothing in a recent PR caused it; this
+crate's BUILD simply is not re-run by main's diff-based CI unless a change lands
+in its dependency cone, so the break sat on main silently until an unrelated
+near-full-repo rebuild surfaced it.
+
+**The shim is a genuine no-op, not a stub.** `__twig_gc_write_barrier(parent,
+child)` exists to add `parent` to a remembered set so a later *minor* collection
+does not free a young object reachable only from an old one. This simulator's
+`Memory::alloc` is a monotonic bump allocator — nothing is ever freed, swept,
+promoted, or relocated, and there is only one generation because there is no
+collector — so the remembered set has no reader and doing nothing is
+semantically exact. `src/lib.rs` carries the full reasoning inline so the arm is
+not mistaken for unfinished work.
+
+Three new unit tests, all of which fail against the pre-fix dispatch table where
+applicable: the symbol resolves to a clean `ret` rather than trapping; the shim
+is *silent* (moves neither the heap bump cursor nor stdout, and never
+dereferences either operand); and an unknown symbol still fails closed, so the
+fix did not widen the table into a catch-all.
+
+Scope: `x86-simulator` is the only crate in the repo with a host-runtime symbol
+dispatch table (it is the sole `fn host_call` / `Trap::UnresolvedExternal` site),
+so no sibling simulator shares this gap. `aarch64-backend` emits the same
+barrier, but has no simulator executing its output.
+
 ## 0.7.6 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
 
 Decode + execute the three SSE conversion opcodes, so the simulator can RUN

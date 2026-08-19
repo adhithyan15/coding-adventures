@@ -2,6 +2,31 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.35] - 2026-08-19 (task #190-192 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero)
+
+### Added
+
+- `register_simd` gains a new dispatch arm:
+  `SimdOpKind::TruncSatF64x2SZero | SimdOpKind::TruncSatF64x2UZero` pops
+  one `v128`, reads it as 2 `f64` lanes (unlike `TruncSatF32x4S`/`_U`'s
+  4 `f32` lanes), converts each to a SATURATING `i32` (signed for
+  `_s_zero`, unsigned bit pattern for `_u_zero`) via the same Rust `as`
+  cast discipline as `TruncSatF32x4S`/`_U` (saturating + NaN-safe since
+  Rust 1.45, no hand-rolled bounds checking), and writes a `v128` with 4
+  `i32` lanes: lanes 0-1 hold the two truncated results (same order as
+  the source `f64` lanes), lanes 2-3 are always `0` -- the "_zero" half
+  of this op's semantics, since `f64x2` only has 2 lanes to widen
+  `i32x4`'s 4.
+- New test helpers `v128_const_bytes_f64x2`/`trunc_sat_f64x2_zero_code`.
+- 9 new unit tests: ordinary in-range values truncate toward zero with
+  lanes 2-3 zero-filled; NaN saturates to 0 (never traps) for both `_s`
+  and `_u`; +/-infinity saturate to `i32::MIN`/`MAX` (`_s`) or `0`/
+  `u32::MAX` (`_u`); a huge finite value (`1e20`) saturates to
+  `i32::MAX` without wrapping or panicking; a negative value saturates
+  to `0` for `_u_zero` (not wrapped); and a dedicated test confirming
+  lanes 2-3 are always zero even for ordinary non-saturating,
+  non-zero-producing input values.
+
 ## [0.9.34] - 2026-08-19 (task #183-185 — SIMD widen PR22: i16x8.q15mulr_sat_s)
 
 ### Added
