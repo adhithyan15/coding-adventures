@@ -884,6 +884,118 @@
         "TE-EXT-66-FIELD"
       ],
       "after": []
+    },
+    {
+      "id": "TE-PATH-67-WALL",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "TE-C67-wall",
+        "TE-C67-roof",
+        "TE-C67-threshold",
+        "TE-C67-step",
+        "TE-C67-window"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-67-WALL"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-68-SOUND",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "TE-C68-sound",
+        "TE-C68-voice",
+        "TE-C68-song",
+        "TE-C68-shout",
+        "TE-C68-message"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-68-SOUND"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-69-TOOL",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "TE-C69-axe",
+        "TE-C69-saw",
+        "TE-C69-spade",
+        "TE-C69-hammer",
+        "TE-C69-stick"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-69-TOOL"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-70-CREATURE",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "TE-C70-mouse",
+        "TE-C70-frog",
+        "TE-C70-mosquito",
+        "TE-C70-squirrel",
+        "TE-C70-spider"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-70-CREATURE"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-71-KIN",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "TE-C71-uncle",
+        "TE-C71-aunt",
+        "TE-C71-brother-in-law",
+        "TE-C71-sister-in-law",
+        "TE-C71-son-in-law"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-71-KIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-72-MARKET",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "TE-C72-shop",
+        "TE-C72-money",
+        "TE-C72-price",
+        "TE-C72-weight",
+        "TE-C72-bargain"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-72-MARKET"
+      ],
+      "after": []
+    },
+    {
+      "id": "TE-PATH-73-TASTE",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "TE-C73-sweet",
+        "TE-C73-sour",
+        "TE-C73-bitter",
+        "TE-C73-pungent",
+        "TE-C73-astringent"
+      ],
+      "before": [],
+      "inline": [
+        "TE-EXT-73-TASTE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -893,7 +1005,8 @@
         "TE-PATH-100",
         "TE-PATH-52-WELCOME",
         "TE-PATH-53-SKY",
-        "TE-PATH-60-ANIMAL"
+        "TE-PATH-60-ANIMAL",
+        "TE-PATH-67-WALL"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -908,7 +1021,8 @@
         "TE-PATH-009",
         "TE-PATH-51-COURTESY",
         "TE-PATH-56-HOUSE",
-        "TE-PATH-65-MANNERS"
+        "TE-PATH-65-MANNERS",
+        "TE-PATH-72-MARKET"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -921,7 +1035,8 @@
         "TE-PATH-004",
         "TE-PATH-49-REPLY",
         "TE-PATH-58-REPLY",
-        "TE-PATH-64-JOIN"
+        "TE-PATH-64-JOIN",
+        "TE-PATH-70-CREATURE"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -939,7 +1054,8 @@
         "TE-PATH-029",
         "TE-PATH-48-ROLE",
         "TE-PATH-54-TREE",
-        "TE-PATH-61-KITCHEN"
+        "TE-PATH-61-KITCHEN",
+        "TE-PATH-68-SOUND"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -956,7 +1072,8 @@
         "TE-PATH-031",
         "TE-PATH-47-BODY",
         "TE-PATH-57-BODY",
-        "TE-PATH-63-HEALTH"
+        "TE-PATH-63-HEALTH",
+        "TE-PATH-71-KIN"
       ],
       "omits": [
         "WORD-GOOD",
@@ -972,7 +1089,8 @@
         "TE-PATH-033",
         "TE-PATH-46-ASK",
         "TE-PATH-55-ROAD",
-        "TE-PATH-62-MADE"
+        "TE-PATH-62-MADE",
+        "TE-PATH-69-TOOL"
       ],
       "omits": [],
       "relocates": {}
@@ -982,7 +1100,8 @@
         "TE-PATH-010",
         "TE-PATH-50-LEAVE",
         "TE-PATH-59-WEATHER",
-        "TE-PATH-66-FIELD"
+        "TE-PATH-66-FIELD",
+        "TE-PATH-73-TASTE"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -2021,6 +2140,111 @@
         "TE-C66-grass",
         "TE-C66-threshing-floor",
         "TE-C66-harvest"
+      ]
+    },
+    {
+      "id": "TE-EXT-67-WALL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the parts a Telugu house is built from, and greet the people inside it.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C67-wall",
+        "TE-C67-roof",
+        "TE-C67-threshold",
+        "TE-C67-step",
+        "TE-C67-window"
+      ]
+    },
+    {
+      "id": "TE-EXT-68-SOUND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the sounds a Telugu house makes, and give my name aloud in a message.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C68-sound",
+        "TE-C68-voice",
+        "TE-C68-song",
+        "TE-C68-shout",
+        "TE-C68-message"
+      ]
+    },
+    {
+      "id": "TE-EXT-69-TOOL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five Telugu tools and ask politely to borrow one.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C69-axe",
+        "TE-C69-saw",
+        "TE-C69-spade",
+        "TE-C69-hammer",
+        "TE-C69-stick"
+      ]
+    },
+    {
+      "id": "TE-EXT-70-CREATURE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five small Telugu creatures and answer yes or no about them.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C70-mouse",
+        "TE-C70-frog",
+        "TE-C70-mosquito",
+        "TE-C70-squirrel",
+        "TE-C70-spider"
+      ]
+    },
+    {
+      "id": "TE-EXT-71-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the family a Telugu marriage adds, and ask after each of them.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C71-uncle",
+        "TE-C71-aunt",
+        "TE-C71-brother-in-law",
+        "TE-C71-sister-in-law",
+        "TE-C71-son-in-law"
+      ]
+    },
+    {
+      "id": "TE-EXT-72-MARKET",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can buy something in a Telugu shop, ask the price, and thank the seller.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C72-shop",
+        "TE-C72-money",
+        "TE-C72-price",
+        "TE-C72-weight",
+        "TE-C72-bargain"
+      ]
+    },
+    {
+      "id": "TE-EXT-73-TASTE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the tastes of a Telugu meal and take my leave when it is finished.",
+      "prerequisites": [],
+      "lessons": [
+        "TE-C73-sweet",
+        "TE-C73-sour",
+        "TE-C73-bitter",
+        "TE-C73-pungent",
+        "TE-C73-astringent"
       ]
     }
   ]

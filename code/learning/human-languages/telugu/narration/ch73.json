@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 73,
+  "title": "Tastes",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:36d42d74129e6538",
+  "lessons": [
+    {
+      "id": "TE-C73-sweet",
+      "sequence": 2480,
+      "title": "తీపి (tīpi) — sweet, sweetness",
+      "headword": "తీపి",
+      "romanization": "tīpi",
+      "gloss": "sweet, sweetness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:00fe99b34a290951",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bēraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: తీపి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "తీపి (tīpi) — \"sweet, sweetness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "తీపి (tīpi) is sweetness — the taste, and the quality of anything that has it."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited. చక్కెర gives it in a kitchen and a పండు gives it on a చెట్టు, and a person described as తీపి (tīpi) is being called good company."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu counts its tastes rather than gesturing at them, and తీపి (tīpi) is the one every count opens with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One. The taste every count opens with."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīpi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīpi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīpi, then cakkera, and say which one is the taste",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīpi*, then *cakkera*, and say which one is the taste]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does తీపి (tīpi) mean? (\"sweet, sweetness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C73-sour",
+      "sequence": 2490,
+      "title": "పులుపు (pulupu) — sour, sourness",
+      "headword": "పులుపు",
+      "romanization": "pulupu",
+      "gloss": "sour, sourness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:19d08410d34dd156",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tīpi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పులుపు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పులుపు (pulupu) — \"sour, sourness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పులుపు (pulupu) is sourness — tamarind, lime, పెరుగు left a day too long."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited and it is not a complaint. A Telugu meal wants పులుపు (pulupu) in it on purpose; the everyday tamarind stew is built around exactly this taste."
+            },
+            {
+              "kind": "speech",
+              "text": "Said of a face it means what it means in English, and it is said most often of children who have just been told no."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: తీపి (tīpi) and పులుపు (pulupu), and a meal wants both of them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pulupu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pulupu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tīpi, then pulupu, and say which one is in curd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tīpi*, then *pulupu*, and say which one is in curd]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పులుపు (pulupu) mean? (\"sour, sourness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C73-bitter",
+      "sequence": 2500,
+      "title": "చేదు (cēdu) — bitter, bitterness",
+      "headword": "చేదు",
+      "romanization": "cēdu",
+      "gloss": "bitter, bitterness",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6a1d208c61a765f2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pulupu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: చేదు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "చేదు (cēdu) — \"bitter, bitterness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "చేదు (cēdu) is bitterness — neem leaf, some greens, most medicine."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited, and Telugu does not treat it as a fault. Bitter is eaten deliberately at the opening of the year and at the opening of a meal, on the understanding that it does you good."
+            },
+            {
+              "kind": "speech",
+              "text": "It carries over into speech unchanged. చేదు (cēdu) news is bad news, and a చేదు (cēdu) truth is one you are told anyway."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three. The one eaten on purpose."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēdu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēdu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cēdu, then tīpi, and say which one is eaten first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cēdu*, then *tīpi*, and say which one is eaten first]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does చేదు (cēdu) mean? (\"bitter, bitterness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C73-pungent",
+      "sequence": 2510,
+      "title": "కారం (kāraṁ) — pungency, heat",
+      "headword": "కారం",
+      "romanization": "kāraṁ",
+      "gloss": "pungency, heat",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b777a1e4b8a8af3d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cēdu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కారం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కారం (kāraṁ) — \"pungency, heat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కారం (kāraṁ) is heat — the bite of మిరప, and by an easy extension the chilli powder itself."
+            },
+            {
+              "kind": "speech",
+              "text": "Ask for something with తక్కువ కారం (kāraṁ) and you will be understood anywhere, though in one or two households you will be heard as having said something mildly insulting."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited. Do not read it into the end of నమస్కారం, which is a different word altogether, Sanskrit, and means a making."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. And the one you may want తక్కువ of."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kāraṁ, then takkuva and kāraṁ together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kāraṁ*, then *takkuva* and *kāraṁ* together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కారం (kāraṁ) mean? (\"pungency, heat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C73-astringent",
+      "sequence": 2520,
+      "title": "వగరు (vagaru) — astringent",
+      "headword": "వగరు",
+      "romanization": "vagaru",
+      "gloss": "astringent",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7edf9e9e12600c58",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kāraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: వగరు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "వగరు (vagaru) — \"astringent\"."
+            },
+            {
+              "kind": "speech",
+              "text": "వగరు (vagaru) is astringency — the dry, puckering taste of an unripe పండు, of raw banana, of టీ left to stand."
+            },
+            {
+              "kind": "speech",
+              "text": "English has no everyday word for it and Telugu has had one for as long as it has been written down. Once you can name it you begin noticing it, which is most of what a word is for."
+            },
+            {
+              "kind": "speech",
+              "text": "With ఉప్పు, which you already have, that is the full set a Telugu cook thinks in: తీపి (tīpi), పులుపు (pulupu), చేదు (cēdu), కారం (kāraṁ), వగరు (vagaru) and salt. A meal carrying all of them is finished, and so is the visit — వెళ్ళొస్తాను."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: తీపి (tīpi), పులుపు (pulupu), చేదు (cēdu), కారం (kāraṁ), వగరు (vagaru). The tastes a Telugu meal is built from, and the last of them names what nothing else does."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vagaru",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vagaru*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then take your leave with veḷḷostānu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then take your leave with *veḷḷostānu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does వగరు (vagaru) mean? (\"astringent\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
