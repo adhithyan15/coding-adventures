@@ -64,7 +64,23 @@ typedef enum {
      * (rather than reusing `SIR_SEQ`) mirrors `SIR_INSTANCE`'s own reasoning:
      * no built-in Sequence helper should ever mis-handle an NDArray, and the
      * two have different storage (a flat `double*` here, not a `SirValue*`). */
-    SIR_ARRAY
+    SIR_ARRAY,
+    /* SIR23 Tier A: an immutable symbolic-expression term (`SirSymTerm`) —
+     * see the "SIR23 symbolic expressions" section near the end of this
+     * file for the full value model and every `_sir_symterm_*` op. A
+     * dedicated tag mirrors `SIR_ARRAY`/`SIR_INSTANCE`'s own reasoning: no
+     * built-in helper for another tag should ever mis-handle a term.
+     * NAMED `SIR_SYMTERM` (not `SIR_SYM`) deliberately: `SIR_SYM` already
+     * exists above for `Expr::SymLit`, this backend's Ruby-style interned
+     * `:symbol` literal — an UNRELATED domain (a bare interned name, not a
+     * symbolic-expression tree). Reusing the `SIR_SYM` prefix for this new
+     * tag/its `_sir_sym_*` helpers would sit confusingly close to that
+     * pre-existing, unrelated `_sir_sym()`/`SIR_SYM` pair (the exact kind
+     * of near-collision earlier slices hit for real, e.g. `_sir_array_
+     * reduce` vs. the pre-existing Sequence `#reduce` — see this crate's
+     * own CHANGELOG); `_sir_symterm_*` avoids it entirely by construction,
+     * not just by avoiding a literal duplicate-symbol compile error. */
+    SIR_SYMTERM
 } SirTag;
 
 typedef struct SirValue SirValue;
@@ -75,6 +91,7 @@ typedef struct SirMap SirMap;
 typedef struct SirError SirError;
 typedef struct SirInstance SirInstance;
 typedef struct SirNDArray SirNDArray;
+typedef struct SirSymTerm SirSymTerm;
 
 struct SirValue {
     SirTag tag;
@@ -90,6 +107,7 @@ struct SirValue {
         SirError *err;    /* SIR_ERROR */
         SirInstance *inst;/* SIR_INSTANCE */
         SirNDArray *arr;  /* SIR_ARRAY */
+        SirSymTerm *symterm; /* SIR_SYMTERM */
     } as;
 };
 
@@ -590,6 +608,13 @@ int _sir_value_eq_d(SirValue a, SirValue b, int depth) {
          * scope; this at least makes `a == a` true rather than silently
          * falling to the `default: return 0` below. */
         case SIR_ARRAY:   return a.as.arr == b.as.arr;
+        /* Reference identity only, same precedent as `SIR_ARRAY` just
+         * above — a general `SirValue ==` is not the matcher's STRUCTURAL
+         * equality (`_sir_symterm_equals`, defined in the "SIR23 symbolic
+         * expressions" section below, and used internally by the pattern
+         * matcher/rewrite engine); this only makes `a == a` true rather
+         * than silently falling to `default: return 0`. */
+        case SIR_SYMTERM: return a.as.symterm == b.as.symterm;
         default:          return 0;
     }
 }
@@ -960,6 +985,20 @@ void _sir_fmt_pair(FILE *out, SirValue v) {
 #define SIR_MAX_FMT_DEPTH 500
 static int _sir_fmt_depth = 0;
 
+/* Forward declarations: the SIR23 symbolic-term renderers are DEFINED in
+ * the "SIR23 symbolic expressions" section near the end of this file
+ * (alongside the rest of the `_sir_symterm_*` domain, mirroring where
+ * `SirNDArray`/`_sir_array_*` live relative to `SIR_ARRAY`'s placeholder
+ * case below), but `_sir_fmt`/`_sir_display_str` need to CALL them from
+ * here, earlier in the file — C requires a prior declaration, so these two
+ * prototypes stand in for the real definitions (exactly the role `char
+ * *_sir_display_str(SirValue v);`'s own forward declaration just below
+ * plays for the mutually-recursive `_sir_display_*` family). Only a
+ * pointer to the still-incomplete `SirSymTerm` type is needed here, which
+ * the earlier `typedef struct SirSymTerm SirSymTerm;` already provides. */
+void _sir_symterm_fmt(FILE *out, const SirSymTerm *t, int64_t depth);
+char *_sir_symterm_display(const SirSymTerm *t, int64_t depth);
+
 void _sir_fmt(FILE *out, SirValue v) {
     char buf[32];
     if (_sir_fmt_depth > SIR_MAX_FMT_DEPTH) {
@@ -997,6 +1036,16 @@ void _sir_fmt(FILE *out, SirValue v) {
          * exactly like the JS/Ruby references' own test suites. This
          * placeholder mirrors `SIR_CLOSURE`'s `#<closure>` precedent. */
         case SIR_ARRAY: fputs("#<Array>", out); break;
+        /* Unlike `SIR_ARRAY` just above, a genuine recursive renderer DOES
+         * exist for a symbolic term — see the "SIR23 symbolic expressions"
+         * section's module doc for why this domain gets real display where
+         * SIR22 arrays deliberately don't (the JS/Ruby references' own
+         * SIR23 test suites print terms directly and assert on stdout, so
+         * this backend's tests need the same capability). Depth-capped
+         * with `SIR_SYMTERM_MAX_TERM_DEPTH` (that section's own guard, NOT
+         * `SIR_MAX_FMT_DEPTH` above — a term built via `_sir_symterm_apply`
+         * is not depth-capped at construction time, only these walks are). */
+        case SIR_SYMTERM: _sir_symterm_fmt(out, v.as.symterm, 0); break;
         default: break;
     }
     _sir_fmt_depth--;
@@ -1104,6 +1153,10 @@ char *_sir_display_str(SirValue v) {
         /* See `_sir_fmt`'s matching `SIR_ARRAY` case above for why this is a
          * placeholder, not a full `[1 2; 3 4]` rendering. */
         case SIR_ARRAY: result = _sir_dup("#<Array>"); break;
+        /* See `_sir_fmt`'s matching `SIR_SYMTERM` case for why this domain
+         * gets a real recursive renderer where `SIR_ARRAY` just above
+         * deliberately doesn't. */
+        case SIR_SYMTERM: result = _sir_symterm_display(v.as.symterm, 0); break;
         default: result = _sir_dup("");
     }
     _sir_display_depth--;
@@ -5295,5 +5348,973 @@ SirValue _sir_array_catenate(SirValue lhsv, SirValue rhsv) {
     fprintf(stderr, "sir: catenate: catenate of a vector with a matrix is not yet supported\n");
     exit(1);
     return _sir_nil(); /* unreachable */
+}
+
+/* ============================================================
+ * SIR23 symbolic expressions + pattern/rewrite (Tier A,
+ * Phase A Slice 4)
+ * ============================================================
+ *
+ * `Expr::SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+ * `SymPatternNamed`/`SymRule`/`SymReplaceAll` lower (see `emit.rs`) to
+ * calls into the `_sir_symterm_*` functions below — an inlined port of
+ * `semantic-ir-to-javascript`'s own already-proven `Symbolic` sub-
+ * runtime's Tier A (matcher) slice: term construction, `matchPattern`/
+ * `substituteTerm`/`applyRuleTerm`, and `replaceAll`/`replaceRepeated`
+ * with their `MAX_TERM_DEPTH` guard. Tier B (`evalTerm`, the arithmetic/
+ * calculus/user-function evaluator) is explicitly OUT OF SCOPE for this
+ * slice, matching the SIR23 spec's own Tier A/Tier B split — no `Add`/
+ * `Sin`/`D`/… folding exists here; a `SymApply` builds an inert term
+ * tree, nothing more. Also ported from the already-merged
+ * `semantic-ir-to-ruby` SIR23 PR's `sir_sym_*` functions, adapted from
+ * that single-tier dynamically-typed port to this file's own two-tier
+ * convention (see "Value model" below).
+ *
+ * ## Value model
+ *
+ * `SirSymTerm { kind, name, as }` — one tagged struct, discriminated by
+ * `.kind` (`SirSymTermKind`: `SIR_SYMTERM_SYMBOL`/`_INTEGER`/`_RATIONAL`/
+ * `_FLOAT`/`_STRING`/`_APPLY`), mirroring the JS reference's frozen
+ * `{kind, ...}` object shape and this file's own `SirNDArray`/`SirValue`
+ * tagged-union convention exactly (a `kind` enum plus a `union` for the
+ * per-kind payload — see the struct definition below). Every term is
+ * built once and never mutated afterward (this domain's own "term is
+ * immutable once built" invariant, matching the JS/Ruby references'
+ * `Object.freeze`/`.freeze`; C has no language-level immutability, so
+ * this is a DISCIPLINE every `_sir_symterm_*` function below upholds by
+ * never writing through an already-returned `SirSymTerm *` — nothing
+ * enforces it at compile time, unlike Ruby's `.freeze`, which is a
+ * genuine C-specific weakening worth calling out explicitly).
+ *
+ * **Two tiers**, unlike the single-tier Ruby/JS references (Ruby's own
+ * dynamic typing lets a bare `SirSymTerm` flow anywhere; C's `SirValue`
+ * needs an explicit tag to flow through the same `let`/return/argument
+ * slots as every other value):
+ *   - RAW tier (`SirSymTerm *`, functions suffixed `_raw` or otherwise
+ *     internal): the matcher/rewrite algorithm itself, operating
+ *     directly on term pointers with no `SirValue` boxing overhead on
+ *     every recursive step — `_sir_symterm_equals`, `_sir_symterm_match_
+ *     pattern`, `_sir_symterm_substitute`, `_sir_symterm_apply_rule`,
+ *     the depth-capped walks, and construction.
+ *   - BOXED tier (`SirValue`, tag `SIR_SYMTERM`): the small set of
+ *     functions `emit.rs`'s generated code actually calls
+ *     (`_sir_symterm_symbol`/`_sir_symterm_apply`/`_sir_symterm_replace_
+ *     all`/…) — each coerces its `SirValue` operands to raw term
+ *     pointers via `_sir_symterm_require` (mirrors `_sir_array_
+ *     require`'s identical "must already be the right tag, no silent
+ *     coercion" contract), delegates to the raw tier, and re-boxes the
+ *     result.
+ *
+ * ## Memory management
+ *
+ * `_sir_alloc` (malloc, abort-on-OOM), never freed — this file's
+ * established arena/leak-on-exit convention (see the file's own module
+ * doc at the top), unchanged for this domain. A `SymApply`'s `args` is a
+ * dynamic array — `SirSymTerm **args, int64_t nargs` — the SAME shape
+ * this file already uses for `_sir_seq_lit`'s `SirValue *items, int64_t
+ * len` (`SirSeq`) and `SirNDArray.data`/`data_len`, reused here rather
+ * than inventing a third dynamic-array convention. An `args` array is
+ * OWNED by the term that stores it (transferred, not copied) — mirrors
+ * `_sir_array_new_matrix`'s identical "caller allocates a fresh buffer,
+ * the constructor just stores the pointer" contract; every call site
+ * below allocates a fresh `args` array specifically for that one
+ * `_sir_symterm_apply_raw` call, so this is safe (no aliasing between
+ * two distinct terms' `args`).
+ *
+ * ## Naming: `_sir_symterm_*`, NOT `_sir_sym_*`
+ *
+ * The Ruby/JS references both use a `sym`/`Sym`-rooted prefix
+ * (`sir_sym_*` / `Symbolic.*`) with no collision risk in THEIR runtimes.
+ * This file already has an UNRELATED `SIR_SYM` tag and `_sir_sym()`
+ * constructor (`Expr::SymLit` — a bare interned Ruby-style `:symbol`
+ * literal, not a symbolic-expression tree) predating SIR23 by several
+ * feature batches. Reusing `_sir_sym_*` here — even though no call site
+ * would be a literal duplicate-symbol compile error, since e.g.
+ * `_sir_sym_symbol` and `_sir_sym` are textually distinct — would still
+ * sit confusingly close to that pre-existing pair for anyone reading
+ * this file, exactly the near-collision hazard earlier slices in this
+ * arc hit for REAL (Go's `_sir_array_*` vs. a pre-existing Ruby-`Array`
+ * dispatch table; this very crate's own SIR22 addendum `_sir_array_
+ * reduce` vs. a pre-existing Sequence `#reduce`/`#inject`, renamed to
+ * `_sir_array_apl_reduce` — see this file's own history / CHANGELOG.md).
+ * `_sir_symterm_*` (and the `SIR_SYMTERM` tag) sidesteps the whole
+ * category of confusion by construction, not just by avoiding a literal
+ * duplicate symbol.
+ *
+ * ## DoS safety (CWE-674) — depth cap + iteration cap
+ *
+ * `_sir_symterm_match_pattern`/`_sir_symterm_substitute` recurse over a
+ * RULE's own `lhs`/`rhs` shape, not the TARGET expression's — the JS/Ruby
+ * references thread NO depth parameter through their equivalents, on the
+ * reasoning (stated explicitly in the JS reference's own doc comments)
+ * that a rule's pattern/RHS is "author-written, not runtime-controlled"
+ * and therefore always shallow. **This port deliberately diverges from
+ * that precedent** (added during this PR's own security review, which
+ * flagged it as a genuine gap rather than a faithful-port nicety): C has
+ * no managed-language safety net for a native stack overflow, and
+ * nothing in this crate actually VALIDATES that a `SymRule`'s `lhs`/`rhs`
+ * stays shallow — it is built through the same `_sir_symterm_apply_raw`
+ * path as any other term (see `_sir_symterm_equals`'s own doc comment,
+ * below, on that exact "not depth-capped at construction time" gap), and
+ * this backend is one of several sharing a common SIR a hostile or just
+ * buggy upstream frontend could hand a rule with an arbitrarily deep
+ * `lhs`/`rhs` to. So `_sir_symterm_match_pattern`/`_substitute` DO carry
+ * a `depth` parameter, checked against `SIR_SYMTERM_MAX_TERM_DEPTH` via
+ * the `SIR_SYMTERM_CHECK_DEPTH` macro (see their own definitions,
+ * further down) — `_sir_symterm_apply_rule` resets `depth` to 0 at each
+ * fresh call, so one rule's match/substitute gets its own independent
+ * budget, not one shared with however deep the caller's OWN tree walk
+ * already is.
+ *
+ * `_sir_symterm_walk_once` (backs `replaceAll`/`/.`) and `_sir_symterm_
+ * repeated_walk` (backs `replaceRepeated`/`//.`), by contrast, walk the
+ * ENTIRE target expression tree, which ordinary compiled-program data
+ * CAN build to unbounded depth (e.g. a `for`-loop repeatedly wrapping an
+ * accumulator in `SymApply(Wrap, [acc])` — see `tests/sir23_symbolic.rs`'s
+ * depth-limit test, which builds exactly this via a REAL compiled
+ * `Stmt::ForRange`, not a hand-built static AST) — so these two need an
+ * explicit cap. `SIR_SYMTERM_MAX_TERM_DEPTH = 512` mirrors the JS
+ * reference's `MAX_TERM_DEPTH` exactly (already cross-validated against
+ * the published TypeScript `sir-runtime-symbolic` package, which uses
+ * the identical constant).
+ *
+ * `_sir_symterm_repeated_walk` ALSO enforces a SEPARATE `max_iterations`
+ * (default 100) cap on its fixed-point firing loop, independent of
+ * recursion depth: a rule firing repeatedly at ONE tree position loops
+ * in a plain `for (;;)` at that SAME call frame (see the function body),
+ * never a recursive call per firing — so however many times a rule
+ * fires at one position costs O(1) native stack frames, not O(firings);
+ * `depth` only increases on a genuine descent into `head`/`args`, and
+ * `max_iterations` bounds ITERATION COUNT (CPU time) only, never native
+ * recursion depth. This exactly matches the already-merged
+ * `semantic-ir-to-ruby` PR's `sir_sym_replace_repeated`'s own `lambda`-
+ * based loop (there, `return` inside the lambda exits only that
+ * recursive call, not the enclosing method — the C `for (;;)` here plays
+ * the identical role with plain C control flow, no closure needed).
+ *
+ * **Error-signaling mechanism, and why it's SIMPLER here than the Ruby/JS
+ * references' sentinel-value approach**: both caps, on violation, call
+ * `fprintf(stderr, …); exit(1);` DIRECTLY at the point of violation —
+ * this file's own established SIR22 DoS-guard convention (see e.g.
+ * `_sir_array_checked_size`'s identical "shape exceeds the N-element cap"
+ * abort above), not a new mechanism. The Ruby/JS references instead
+ * return a sentinel value (a tagged Hash / object) up through every
+ * recursive frame, unwrapped by a dedicated `sir_sym_unwrap`/`unwrap`
+ * function at the top-level `replaceAll`/`replaceRepeated` call — needed
+ * there because those languages' idiomatic control flow threads a
+ * "stop everything, propagate cleanly" signal through explicit return
+ * values by the JS original's own design (not a language limitation —
+ * both Ruby and JS have exceptions that unwind through recursive calls
+ * just fine). C's `exit(1)` terminates the WHOLE process immediately and
+ * unconditionally, with no unwinding to do and thus no sentinel to
+ * thread through return values or a separate `_sir_symterm_unwrap`
+ * function to route results through — matching this file's own SIR22
+ * convention (a shape-size overflow there is a hard, unrescuable abort,
+ * not routed through the `setjmp`/`longjmp` `raise`/`rescue` mechanism
+ * either), verified against a REAL runtime-built deep term in
+ * `tests/sir23_symbolic.rs`, not a synthetic direct call.
+ *
+ * ## Display
+ *
+ * Unlike `SIR_ARRAY` (a deliberate `"#<Array>"` placeholder — see that
+ * tag's own doc comment above `_sir_fmt`'s `SIR_ARRAY` case — since no
+ * SIR22 test needs a full array rendering), a genuine recursive
+ * `head(args, …)` generic-form renderer IS implemented here
+ * (`_sir_symterm_fmt`/`_sir_symterm_display`, wired into `_sir_fmt`/
+ * `_sir_display_str` near the top of this file): the JS/Ruby references'
+ * own SIR23 test suites print terms directly and assert on stdout, so
+ * this backend's tests need the same capability to port those cases
+ * faithfully — printing only a scalar side-channel result (e.g. via
+ * `IndexGet`, `SirNDArray`'s own workaround) is not an option for a term
+ * whose EXPECTED assertion is its printed form (`"z"`, `"Pair(b, b)"`,
+ * `"5"`, …). Depth-capped with `SIR_SYMTERM_MAX_TERM_DEPTH` — the SAME
+ * guard the matcher's own tree walks use above, NOT the general
+ * `SIR_MAX_FMT_DEPTH`/`SIR_MAX_DISPLAY_DEPTH` — mirroring the already-
+ * merged Ruby PR's `sir_sym_to_s` precedent exactly: a term built via
+ * `_sir_symterm_apply` is not depth-capped at CONSTRUCTION time, only
+ * these rendering walks (and the matcher's tree walks above) are. The
+ * Derive-specific infix/precedence pretty-printer (SIR23 addendum item
+ * 4) is separate follow-up work, not part of this Tier A matcher port —
+ * matches the Ruby PR's own explicit scope note.
+ */
+
+#define SIR_SYMTERM_MAX_TERM_DEPTH 512
+
+typedef enum {
+    SIR_SYMTERM_SYMBOL,
+    SIR_SYMTERM_INTEGER,
+    SIR_SYMTERM_RATIONAL,
+    SIR_SYMTERM_FLOAT,
+    SIR_SYMTERM_STRING,
+    SIR_SYMTERM_APPLY
+} SirSymTermKind;
+
+/* `Rational` is stored REDUCED (numerator/denominator share no common
+ * factor; denominator positive) — see `_sir_symterm_rational_raw`, which
+ * normalizes exactly as `symbolic_ir::IRNode::rational` does; this struct
+ * itself does not re-validate the invariant (SIR10 "types carry, don't
+ * verify" — mirrors `semantic_ir::Expr::SymRational`'s own doc note). */
+struct SirSymTerm {
+    SirSymTermKind kind;
+    const char *name; /* SIR_SYMTERM_SYMBOL only; NUL for every other kind */
+    union {
+        int64_t i;      /* SIR_SYMTERM_INTEGER */
+        double f;       /* SIR_SYMTERM_FLOAT */
+        const char *s;  /* SIR_SYMTERM_STRING */
+        struct { int64_t numer, denom; } rat; /* SIR_SYMTERM_RATIONAL */
+        struct { SirSymTerm *head; SirSymTerm **args; int64_t nargs; } apply; /* SIR_SYMTERM_APPLY */
+    } as;
+};
+
+/* ---- generic-form display (`head(args, ...)`), depth-capped --------- */
+
+void _sir_symterm_fmt(FILE *out, const SirSymTerm *t, int64_t depth) {
+    char buf[48];
+    if (depth > SIR_SYMTERM_MAX_TERM_DEPTH) { fputs("...", out); return; }
+    switch (t->kind) {
+        case SIR_SYMTERM_SYMBOL:
+            fputs(t->name, out);
+            break;
+        case SIR_SYMTERM_INTEGER:
+            snprintf(buf, sizeof(buf), "%lld", (long long)t->as.i);
+            fputs(buf, out);
+            break;
+        case SIR_SYMTERM_RATIONAL:
+            snprintf(buf, sizeof(buf), "%lld/%lld", (long long)t->as.rat.numer, (long long)t->as.rat.denom);
+            fputs(buf, out);
+            break;
+        case SIR_SYMTERM_FLOAT:
+            _sir_fmt_float(out, t->as.f);
+            break;
+        /* Raw, no surrounding quotes — matches `_sir_fmt`'s own `SIR_STR`
+         * case exactly (a symbolic term's String leaf display is not the
+         * Ruby `#inspect`-quoted form). */
+        case SIR_SYMTERM_STRING:
+            fputs(t->as.s, out);
+            break;
+        case SIR_SYMTERM_APPLY: {
+            int64_t i;
+            _sir_symterm_fmt(out, t->as.apply.head, depth + 1);
+            fputc('(', out);
+            for (i = 0; i < t->as.apply.nargs; i++) {
+                if (i) fputs(", ", out);
+                _sir_symterm_fmt(out, t->as.apply.args[i], depth + 1);
+            }
+            fputc(')', out);
+            break;
+        }
+    }
+}
+
+/* String-returning parallel to `_sir_symterm_fmt` above, for `_sir_
+ * display_str` (SIR18 string interpolation) — mirrors this file's own
+ * pre-existing `_sir_fmt` / `_sir_display_str` duplication (see that
+ * pair's own doc comment: two separate functions kept in lockstep by
+ * inspection, not a refactor of one into the other, so the already-
+ * tested `puts`/`print` path stays untouched). */
+char *_sir_symterm_display(const SirSymTerm *t, int64_t depth) {
+    char buf[48];
+    if (depth > SIR_SYMTERM_MAX_TERM_DEPTH) return _sir_dup("...");
+    switch (t->kind) {
+        case SIR_SYMTERM_SYMBOL:
+            return _sir_dup(t->name);
+        case SIR_SYMTERM_INTEGER:
+            snprintf(buf, sizeof(buf), "%lld", (long long)t->as.i);
+            return _sir_dup(buf);
+        case SIR_SYMTERM_RATIONAL:
+            snprintf(buf, sizeof(buf), "%lld/%lld", (long long)t->as.rat.numer, (long long)t->as.rat.denom);
+            return _sir_dup(buf);
+        case SIR_SYMTERM_FLOAT:
+            return _sir_display_float(t->as.f);
+        case SIR_SYMTERM_STRING:
+            return _sir_dup(t->as.s);
+        case SIR_SYMTERM_APPLY: {
+            char *acc = _sir_symterm_display(t->as.apply.head, depth + 1);
+            int64_t i;
+            acc = _sir_cat(acc, "(");
+            for (i = 0; i < t->as.apply.nargs; i++) {
+                if (i) acc = _sir_cat(acc, ", ");
+                acc = _sir_cat(acc, _sir_symterm_display(t->as.apply.args[i], depth + 1));
+            }
+            return _sir_cat(acc, ")");
+        }
+    }
+    return _sir_dup(""); /* unreachable; silences -Wreturn-type on toolchains that don't see the switch is exhaustive */
+}
+
+/* ---- raw term constructors -------------------------------------------- */
+
+SirSymTerm *_sir_symterm_symbol_raw(const char *name) {
+    SirSymTerm *t = (SirSymTerm *)_sir_alloc(sizeof(SirSymTerm));
+    t->kind = SIR_SYMTERM_SYMBOL;
+    t->name = _sir_dup(name);
+    return t;
+}
+
+SirSymTerm *_sir_symterm_int_raw(int64_t value) {
+    SirSymTerm *t = (SirSymTerm *)_sir_alloc(sizeof(SirSymTerm));
+    t->kind = SIR_SYMTERM_INTEGER;
+    t->name = "";
+    t->as.i = value;
+    return t;
+}
+
+/* SECURITY (integer overflow / UB): computes the reduced numerator and
+ * denominator WITHOUT ever negating a possibly-`INT64_MIN` operand with a
+ * bare unary `-` (signed-overflow UB — `-INT64_MIN`'s true magnitude, 2^63,
+ * has no positive `int64_t` representation; this file's own `_sir_i64_
+ * abs_u` doc comment, above, documents this exact hazard as CONFIRMED to
+ * misbehave under optimization on this project's toolchain, not just a
+ * theoretical concern). Sign is tracked separately (`neg`); magnitudes are
+ * computed and reduced entirely in `uint64_t` via the SAME `_sir_i64_abs_u`
+ * helper `_sir_num_gcd` already uses for the analogous "Ruby `#gcd`" case
+ * above, reusing that established pattern rather than inventing a new one.
+ * The final narrowing back to `int64_t` saturates at `INT64_MAX` on the one
+ * edge case where it could still overflow (`denom == INT64_MIN`, gcd == 1
+ * -- reduced magnitude stays at 2^63, one past `INT64_MAX`), matching this
+ * file's own `_sir_num_gcd`/`_sir_f64_to_i64_saturating` "never raise by
+ * saturating" convention for a true-value-doesn't-fit case, rather than
+ * risking a silent wraparound. */
+SirSymTerm *_sir_symterm_rational_raw(int64_t numer, int64_t denom) {
+    int neg;
+    uint64_t un, ud, ug, ga, gb;
+    SirSymTerm *t;
+    if (denom == 0) {
+        fprintf(stderr, "sir: sir_symterm_rational: denominator cannot be zero\n");
+        exit(1);
+    }
+    neg = (numer < 0) != (denom < 0);
+    un = _sir_i64_abs_u(numer);
+    ud = _sir_i64_abs_u(denom);
+    ga = un; gb = ud;
+    while (gb != 0) { uint64_t tmp = gb; gb = ga % gb; ga = tmp; }
+    ug = (ga == 0) ? 1 : ga; /* un == 0 (numer == 0): gcd is defined as |denom| */
+    un /= ug;
+    ud /= ug;
+    t = (SirSymTerm *)_sir_alloc(sizeof(SirSymTerm));
+    t->kind = SIR_SYMTERM_RATIONAL;
+    t->name = "";
+    t->as.rat.denom = (ud > (uint64_t)INT64_MAX) ? INT64_MAX : (int64_t)ud;
+    /* SECURITY (CWE-682, /security-review finding): unlike the denominator
+     * (always positive, so its true magnitude 2^63 genuinely cannot fit in
+     * a positive int64_t and MUST saturate), a negative numerator's
+     * magnitude 2^63 IS exactly representable as INT64_MIN — saturating it
+     * to INT64_MAX first and then negating would silently corrupt an exact
+     * value (e.g. sir_symterm_rational(INT64_MIN, 1)) into
+     * -9223372036854775807 instead of the correct -9223372036854775808.
+     * Special-case that one exactly-representable boundary before falling
+     * back to the same saturate-then-negate logic for every other case. */
+    if (neg && un == (uint64_t)INT64_MAX + 1) {
+        t->as.rat.numer = INT64_MIN;
+    } else {
+        int64_t mag = (un > (uint64_t)INT64_MAX) ? INT64_MAX : (int64_t)un;
+        t->as.rat.numer = neg ? -mag : mag; /* mag <= INT64_MAX, so -mag never overflows */
+    }
+    return t;
+}
+
+/* Mirrors `_sir_display_float`'s own NaN/Infinity test (`f != f` for NaN;
+ * `f == f * 0.5 && f != 0.0` for +-Infinity) rather than pulling in
+ * `<math.h>`'s `isnan`/`isinf` — matches this file's own established
+ * local idiom for that exact check instead of introducing a second one. */
+SirSymTerm *_sir_symterm_float_raw(double value) {
+    SirSymTerm *t;
+    if (value != value || (value == value * 0.5 && value != 0.0)) {
+        fprintf(stderr, "sir: sir_symterm_float: value must be finite\n");
+        exit(1);
+    }
+    t = (SirSymTerm *)_sir_alloc(sizeof(SirSymTerm));
+    t->kind = SIR_SYMTERM_FLOAT;
+    t->name = "";
+    t->as.f = value;
+    return t;
+}
+
+/* `value` is caller-owned (a generated-code string literal, or an already
+ * `_sir_dup`'d buffer) — mirrors `_sir_str`'s own "no copy" contract
+ * exactly (the general `SIR_STR` constructor just above, in this file's
+ * v0 core section). */
+SirSymTerm *_sir_symterm_string_raw(const char *value) {
+    SirSymTerm *t = (SirSymTerm *)_sir_alloc(sizeof(SirSymTerm));
+    t->kind = SIR_SYMTERM_STRING;
+    t->name = "";
+    t->as.s = value;
+    return t;
+}
+
+/* `args`/`nargs` are OWNED by the returned term (transferred, not copied)
+ * — see this section's own module doc, "Memory management", above. */
+SirSymTerm *_sir_symterm_apply_raw(SirSymTerm *head, SirSymTerm **args, int64_t nargs) {
+    SirSymTerm *t = (SirSymTerm *)_sir_alloc(sizeof(SirSymTerm));
+    t->kind = SIR_SYMTERM_APPLY;
+    t->name = "";
+    t->as.apply.head = head;
+    t->as.apply.args = args;
+    t->as.apply.nargs = nargs;
+    return t;
+}
+
+/* ---- boxed (SirValue-facing) term constructors ------------------------ */
+
+/* Coerce a `SirValue` operand that must ALREADY be a symbolic term —
+ * mirrors `_sir_array_require`'s identical "no bare-scalar/String
+ * fallback" contract exactly: `emit.rs`'s own `emit_sym_operand` helper
+ * wraps a bare `IntLit`/`FloatLit`/`StrLit` operand through the matching
+ * leaf constructor (`_sir_symterm_int`/`_sir_symterm_float`/`_sir_symterm_
+ * string`) BEFORE it is ever passed as an operand here, so reaching this
+ * with a non-`SIR_SYMTERM` tag is a genuine backend/frontend bug, not a
+ * legal input this runtime should silently coerce. */
+SirSymTerm *_sir_symterm_require(SirValue v, const char *ctx) {
+    if (v.tag != SIR_SYMTERM) {
+        fprintf(stderr, "sir: %s: expected a symbolic term\n", ctx);
+        exit(1);
+    }
+    return v.as.symterm;
+}
+
+SirValue _sir_symterm_symbol(const char *name) {
+    SirValue v;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_symbol_raw(name);
+    return v;
+}
+
+SirValue _sir_symterm_int(int64_t value) {
+    SirValue v;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_int_raw(value);
+    return v;
+}
+
+SirValue _sir_symterm_rational(int64_t numer, int64_t denom) {
+    SirValue v;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_rational_raw(numer, denom);
+    return v;
+}
+
+SirValue _sir_symterm_float(double value) {
+    SirValue v;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_float_raw(value);
+    return v;
+}
+
+SirValue _sir_symterm_string(const char *value) {
+    SirValue v;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_string_raw(value);
+    return v;
+}
+
+/* `head[args…]` as data. `emit.rs` always passes an already-computed
+ * `nargs` matching the emitted vararg count (the SIR node's own
+ * `args.len()`, a compile-time-known AST size, not attacker-influenced
+ * runtime data — the SAME arity contract `_sir_seq_lit`/`_sir_map_lit`'s
+ * own vararg entry points already rely on with no extra check). */
+SirValue _sir_symterm_apply(SirValue head, int nargs, ...) {
+    SirSymTerm **args = (nargs > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)nargs) : NULL;
+    va_list ap;
+    int i;
+    SirValue v;
+    va_start(ap, nargs);
+    for (i = 0; i < nargs; i++) {
+        SirValue a = va_arg(ap, SirValue);
+        args[i] = _sir_symterm_require(a, "sir_symterm_apply");
+    }
+    va_end(ap);
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_apply_raw(_sir_symterm_require(head, "sir_symterm_apply"), args, (int64_t)nargs);
+    return v;
+}
+
+/* ---- structural equality (depth-capped) ------------------------------- */
+
+/* Used by the matcher (a REPEATED pattern variable must bind to the SAME
+ * term every occurrence — see `_sir_symterm_match_pattern`'s `Pattern`
+ * case below), by `_sir_symterm_bindings_bind`'s "already bound to this
+ * exact term" fast path, and by `_sir_symterm_repeated_walk`'s "did this
+ * firing actually change anything" fixed-point check.
+ *
+ * SECURITY (CWE-674): depth-capped with the SAME `SIR_SYMTERM_MAX_TERM_
+ * DEPTH` guard `_sir_symterm_walk_once`/`_sir_symterm_repeated_walk` use
+ * below — a term built via `_sir_symterm_apply_raw` is NOT depth-capped
+ * at CONSTRUCTION time (only the tree WALKS are), so an attacker-
+ * influenced runtime value (e.g. a loop lowered to repeated `SymApply`
+ * nesting) could build one arbitrarily deep directly. Past the cap,
+ * `0` ("not structurally equal") is the safe, contained answer, mirroring
+ * `_sir_symterm_match_pattern`'s own "give up cleanly" contract for a
+ * failed match. */
+int _sir_symterm_equals(const SirSymTerm *a, const SirSymTerm *b, int64_t depth) {
+    if (depth > SIR_SYMTERM_MAX_TERM_DEPTH) return 0;
+    if (a->kind != b->kind) return 0;
+    switch (a->kind) {
+        case SIR_SYMTERM_SYMBOL:   return strcmp(a->name, b->name) == 0;
+        case SIR_SYMTERM_INTEGER:  return a->as.i == b->as.i;
+        case SIR_SYMTERM_RATIONAL: return a->as.rat.numer == b->as.rat.numer && a->as.rat.denom == b->as.rat.denom;
+        case SIR_SYMTERM_FLOAT:    return a->as.f == b->as.f;
+        case SIR_SYMTERM_STRING:   return strcmp(a->as.s, b->as.s) == 0;
+        case SIR_SYMTERM_APPLY: {
+            int64_t i;
+            if (!_sir_symterm_equals(a->as.apply.head, b->as.apply.head, depth + 1)) return 0;
+            if (a->as.apply.nargs != b->as.apply.nargs) return 0;
+            for (i = 0; i < a->as.apply.nargs; i++) {
+                if (!_sir_symterm_equals(a->as.apply.args[i], b->as.apply.args[i], depth + 1)) return 0;
+            }
+            return 1;
+        }
+    }
+    return 0;
+}
+
+const char *_sir_symterm_head_name(const SirSymTerm *t) {
+    return t->kind == SIR_SYMTERM_SYMBOL ? t->name : "";
+}
+
+/* ---- pattern/rule vocabulary ------------------------------------------ */
+
+#define SIR_SYMTERM_BLANK_HEAD "Blank"
+#define SIR_SYMTERM_PATTERN_HEAD "Pattern"
+#define SIR_SYMTERM_RULE_HEAD "Rule"
+#define SIR_SYMTERM_RULE_DELAYED_HEAD "RuleDelayed"
+
+int _sir_symterm_is_head(const SirSymTerm *t, const char *name) {
+    return t->kind == SIR_SYMTERM_APPLY
+        && t->as.apply.head->kind == SIR_SYMTERM_SYMBOL
+        && strcmp(t->as.apply.head->name, name) == 0;
+}
+int _sir_symterm_is_blank(const SirSymTerm *t)   { return _sir_symterm_is_head(t, SIR_SYMTERM_BLANK_HEAD); }
+int _sir_symterm_is_pattern(const SirSymTerm *t) { return _sir_symterm_is_head(t, SIR_SYMTERM_PATTERN_HEAD); }
+int _sir_symterm_is_rule(const SirSymTerm *t) {
+    return t->kind == SIR_SYMTERM_APPLY
+        && t->as.apply.head->kind == SIR_SYMTERM_SYMBOL
+        && (strcmp(t->as.apply.head->name, SIR_SYMTERM_RULE_HEAD) == 0
+            || strcmp(t->as.apply.head->name, SIR_SYMTERM_RULE_DELAYED_HEAD) == 0)
+        && t->as.apply.nargs == 2;
+}
+
+SirValue _sir_symterm_blank(void) {
+    SirValue v;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_apply_raw(_sir_symterm_symbol_raw(SIR_SYMTERM_BLANK_HEAD), NULL, 0);
+    return v;
+}
+SirValue _sir_symterm_blank_typed(const char *head) {
+    SirSymTerm **args = (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *));
+    SirValue v;
+    args[0] = _sir_symterm_symbol_raw(head);
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_apply_raw(_sir_symterm_symbol_raw(SIR_SYMTERM_BLANK_HEAD), args, 1);
+    return v;
+}
+SirValue _sir_symterm_named(const char *name, SirValue inner) {
+    SirSymTerm **args = (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * 2);
+    SirValue v;
+    args[0] = _sir_symterm_symbol_raw(name);
+    args[1] = _sir_symterm_require(inner, "sir_symterm_named");
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_apply_raw(_sir_symterm_symbol_raw(SIR_SYMTERM_PATTERN_HEAD), args, 2);
+    return v;
+}
+SirValue _sir_symterm_rule(SirValue lhs, SirValue rhs) {
+    SirSymTerm **args = (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * 2);
+    SirValue v;
+    args[0] = _sir_symterm_require(lhs, "sir_symterm_rule");
+    args[1] = _sir_symterm_require(rhs, "sir_symterm_rule");
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_apply_raw(_sir_symterm_symbol_raw(SIR_SYMTERM_RULE_HEAD), args, 2);
+    return v;
+}
+SirValue _sir_symterm_rule_delayed(SirValue lhs, SirValue rhs) {
+    SirSymTerm **args = (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * 2);
+    SirValue v;
+    args[0] = _sir_symterm_require(lhs, "sir_symterm_rule_delayed");
+    args[1] = _sir_symterm_require(rhs, "sir_symterm_rule_delayed");
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_apply_raw(_sir_symterm_symbol_raw(SIR_SYMTERM_RULE_DELAYED_HEAD), args, 2);
+    return v;
+}
+
+/* ---- bindings: a persistent (copy-on-write) name -> term assoc array -- */
+
+/* Persistent / copy-on-write (mirrors the already-merged Ruby PR's `{}`
+ * Hash-based `Bindings`, and the JS reference's own `Bindings` class) so
+ * a FAILED match attempt never mutates a binding set an earlier attempt
+ * still holds a reference to: `_sir_symterm_bindings_bind` always
+ * allocates a FRESH array, never writing through `b`'s own `names`/
+ * `values` pointers in place. */
+typedef struct SirSymBindings {
+    const char **names;
+    SirSymTerm **values;
+    int64_t len;
+} SirSymBindings;
+
+SirSymBindings _sir_symterm_bindings_empty(void) {
+    SirSymBindings b;
+    b.names = NULL;
+    b.values = NULL;
+    b.len = 0;
+    return b;
+}
+
+SirSymTerm *_sir_symterm_bindings_get(SirSymBindings b, const char *name) {
+    int64_t i;
+    for (i = 0; i < b.len; i++) {
+        if (strcmp(b.names[i], name) == 0) return b.values[i];
+    }
+    return NULL;
+}
+
+SirSymBindings _sir_symterm_bindings_bind(SirSymBindings b, const char *name, SirSymTerm *value) {
+    int64_t i;
+    for (i = 0; i < b.len; i++) {
+        if (strcmp(b.names[i], name) != 0) continue;
+        /* Already bound — same value: return `b` UNCHANGED (no fresh
+         * allocation needed). A DIFFERENT value here would be a caller
+         * bug (the pattern matcher's own `Pattern` case, below, always
+         * checks `_sir_symterm_equals` against an existing binding BEFORE
+         * ever calling this function, exactly mirroring the Ruby/JS
+         * references' identical call-site discipline), so this branch
+         * is a defensive fast path, not a silently-overwriting rebind. */
+        if (_sir_symterm_equals(b.values[i], value, 0)) return b;
+        break;
+    }
+    {
+        SirSymBindings nb;
+        nb.len = (i < b.len) ? b.len : b.len + 1;
+        nb.names = (const char **)_sir_alloc(sizeof(char *) * (size_t)nb.len);
+        nb.values = (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)nb.len);
+        if (b.len > 0) {
+            memcpy(nb.names, b.names, sizeof(char *) * (size_t)b.len);
+            memcpy(nb.values, b.values, sizeof(SirSymTerm *) * (size_t)b.len);
+        }
+        nb.names[i] = name;
+        nb.values[i] = value;
+        return nb;
+    }
+}
+
+/* ---- pattern/rule field accessors -------------------------------------- */
+
+const char *_sir_symterm_blank_head_constraint(const SirSymTerm *t) {
+    if (t->as.apply.nargs == 0) return NULL;
+    {
+        const SirSymTerm *first = t->as.apply.args[0];
+        return first->kind == SIR_SYMTERM_SYMBOL ? first->name : NULL;
+    }
+}
+
+const char *_sir_symterm_pattern_name(const SirSymTerm *t) {
+    if (t->as.apply.nargs < 1 || t->as.apply.args[0]->kind != SIR_SYMTERM_SYMBOL) {
+        fprintf(stderr, "sir: Symbolic: Pattern name must be a Symbol\n");
+        exit(1);
+    }
+    return t->as.apply.args[0]->name;
+}
+
+const SirSymTerm *_sir_symterm_pattern_inner(const SirSymTerm *t) {
+    if (t->as.apply.nargs < 2) {
+        fprintf(stderr, "sir: Symbolic: Pattern requires an inner expression\n");
+        exit(1);
+    }
+    return t->as.apply.args[1];
+}
+
+const char *_sir_symterm_effective_head_name(const SirSymTerm *t) {
+    if (t->kind == SIR_SYMTERM_APPLY) {
+        const char *hn = _sir_symterm_head_name(t->as.apply.head);
+        return (hn[0] == '\0') ? "Apply" : hn;
+    }
+    switch (t->kind) {
+        case SIR_SYMTERM_INTEGER:  return "Integer";
+        case SIR_SYMTERM_RATIONAL: return "Rational";
+        case SIR_SYMTERM_FLOAT:    return "Float";
+        case SIR_SYMTERM_STRING:   return "String";
+        default:                   return "Symbol";
+    }
+}
+
+/* ---- the matcher itself: depth-capped defensively (see below) -------- */
+
+typedef struct SirSymMatchResult {
+    int ok;
+    SirSymBindings bindings;
+} SirSymMatchResult;
+
+/* SECURITY (CWE-674, added after security review — see this section's own
+ * module doc, which originally claimed "no depth cap needed" on the
+ * strength of the Ruby/JS references' reasoning that a rule's `lhs`/`rhs`
+ * is always "author-written, not runtime-controlled" and therefore
+ * shallow): that premise does NOT hold here. A `SymRule`'s `lhs`/`rhs`
+ * `Expr` tree is not depth-validated anywhere in this crate — it is built
+ * through the SAME `_sir_symterm_apply_raw`/`hoist_sym_operands` path as
+ * any other term, which this file's own `_sir_symterm_equals` doc comment
+ * (above) already acknowledges is NOT depth-capped at construction time.
+ * A SIR-generating frontend (this backend is one of several sharing a
+ * common narrow-waist IR) could hand this backend a `SymRule` whose `lhs`
+ * (or `rhs`) is a `SymApply` chain nested far past any reasonable
+ * "hand-authored rule" depth — driving `_sir_symterm_match_pattern`/
+ * `_sir_symterm_substitute`'s recursion, which tracks the RULE's shape
+ * (not the target expression's), to a native stack overflow with NO
+ * cap catching it first. `SIR_SYMTERM_MAX_TERM_DEPTH` — the SAME constant
+ * `_sir_symterm_walk_once`/`_sir_symterm_repeated_walk` use for the
+ * TARGET-expression side of this exact hazard — now bounds this side
+ * too, via a `depth` parameter threaded through all three matcher
+ * functions and reset to 0 at each fresh `_sir_symterm_apply_rule` call
+ * (a rule match starts a NEW bounded recursion over that rule's own
+ * shape, independent of how deep the caller's own tree walk already is —
+ * mirrring `_sir_symterm_equals`'s identical independent-depth-budget
+ * convention). */
+#define SIR_SYMTERM_CHECK_DEPTH(depth) \
+    do { \
+        if ((depth) > SIR_SYMTERM_MAX_TERM_DEPTH) { \
+            fprintf(stderr, "sir: sir-runtime-symbolic: depth-limit\n"); \
+            exit(1); \
+        } \
+    } while (0)
+
+/* Five-case structural matcher: `Blank()`, `Blank(T)`, `Pattern(name,
+ * inner)`, compound-vs-compound (recurse head + every arg, same arity
+ * required), and plain structural equality — a direct port of the
+ * already-merged Ruby PR's `sir_sym_match_pattern` (itself a port of
+ * `cas-pattern-matching::matchPattern`), with a depth cap the Ruby/JS
+ * references don't carry — see the module doc immediately above for why
+ * this port adds one anyway. */
+SirSymMatchResult _sir_symterm_match_pattern(const SirSymTerm *pattern, const SirSymTerm *target, SirSymBindings bindings, int64_t depth) {
+    SirSymMatchResult fail;
+    fail.ok = 0;
+    fail.bindings = _sir_symterm_bindings_empty();
+    SIR_SYMTERM_CHECK_DEPTH(depth);
+
+    if (_sir_symterm_is_blank(pattern)) {
+        const char *constraint = _sir_symterm_blank_head_constraint(pattern);
+        SirSymMatchResult r;
+        if (constraint == NULL) { r.ok = 1; r.bindings = bindings; return r; }
+        if (strcmp(_sir_symterm_effective_head_name(target), constraint) == 0) { r.ok = 1; r.bindings = bindings; return r; }
+        return fail;
+    }
+    if (_sir_symterm_is_pattern(pattern)) {
+        const char *name = _sir_symterm_pattern_name(pattern);
+        const SirSymTerm *inner = _sir_symterm_pattern_inner(pattern);
+        SirSymMatchResult matched = _sir_symterm_match_pattern(inner, target, bindings, depth + 1);
+        SirSymTerm *existing;
+        if (!matched.ok) return fail;
+        existing = _sir_symterm_bindings_get(matched.bindings, name);
+        if (existing != NULL) {
+            SirSymMatchResult r;
+            if (!_sir_symterm_equals(existing, target, 0)) return fail;
+            r.ok = 1;
+            r.bindings = matched.bindings;
+            return r;
+        }
+        {
+            SirSymMatchResult r;
+            r.ok = 1;
+            r.bindings = _sir_symterm_bindings_bind(matched.bindings, name, (SirSymTerm *)target);
+            return r;
+        }
+    }
+    if (pattern->kind == SIR_SYMTERM_APPLY) {
+        SirSymMatchResult current;
+        int64_t i;
+        if (target->kind != SIR_SYMTERM_APPLY) return fail;
+        current = _sir_symterm_match_pattern(pattern->as.apply.head, target->as.apply.head, bindings, depth + 1);
+        if (!current.ok) return fail;
+        if (pattern->as.apply.nargs != target->as.apply.nargs) return fail;
+        for (i = 0; i < pattern->as.apply.nargs; i++) {
+            current = _sir_symterm_match_pattern(pattern->as.apply.args[i], target->as.apply.args[i], current.bindings, depth + 1);
+            if (!current.ok) return fail;
+        }
+        return current;
+    }
+    {
+        SirSymMatchResult r;
+        r.ok = _sir_symterm_equals(pattern, target, 0);
+        r.bindings = bindings;
+        return r;
+    }
+}
+
+/* Depth-capped for the identical reason `_sir_symterm_match_pattern` now
+ * is (see that function's own doc comment) — `template_term` is a rule's
+ * `rhs`, subject to the exact same "not actually depth-validated at
+ * construction" gap. */
+SirSymTerm *_sir_symterm_substitute(const SirSymTerm *template_term, SirSymBindings bindings, int64_t depth) {
+    SIR_SYMTERM_CHECK_DEPTH(depth);
+    if (_sir_symterm_is_pattern(template_term)) {
+        SirSymTerm *captured = _sir_symterm_bindings_get(bindings, _sir_symterm_pattern_name(template_term));
+        return (captured != NULL) ? captured : (SirSymTerm *)template_term;
+    }
+    if (template_term->kind == SIR_SYMTERM_APPLY) {
+        int64_t n = template_term->as.apply.nargs, i;
+        SirSymTerm *new_head = _sir_symterm_substitute(template_term->as.apply.head, bindings, depth + 1);
+        SirSymTerm **new_args = (n > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) new_args[i] = _sir_symterm_substitute(template_term->as.apply.args[i], bindings, depth + 1);
+        return _sir_symterm_apply_raw(new_head, new_args, n);
+    }
+    return (SirSymTerm *)template_term;
+}
+
+/* `*out_matched` reports match success/failure (the C stand-in for the
+ * Ruby/JS references' `nil`-on-no-match return); the return value is only
+ * meaningful when `*out_matched` is nonzero. Starts BOTH `_sir_symterm_
+ * match_pattern`/`_substitute` at a fresh `depth` of 0 — this call is the
+ * entry point into one rule's own bounded recursion (see those two
+ * functions' shared doc comment), independent of how deep the CALLER's
+ * own tree walk (`_sir_symterm_walk_once`/`_repeated_walk`) already is. */
+SirSymTerm *_sir_symterm_apply_rule(const SirSymTerm *rewrite_rule, const SirSymTerm *expr, int *out_matched) {
+    SirSymMatchResult m;
+    const SirSymTerm *lhs, *rhs;
+    if (!_sir_symterm_is_rule(rewrite_rule)) {
+        fprintf(stderr, "sir: Symbolic.applyRule: expected Rule/RuleDelayed\n");
+        exit(1);
+    }
+    lhs = rewrite_rule->as.apply.args[0];
+    rhs = rewrite_rule->as.apply.args[1];
+    m = _sir_symterm_match_pattern(lhs, expr, _sir_symterm_bindings_empty(), 0);
+    *out_matched = m.ok;
+    return m.ok ? _sir_symterm_substitute(rhs, m.bindings, 0) : NULL;
+}
+
+/* ---- replaceAll / replaceRepeated (`/.` / `//.`) + depth guard -------- */
+
+/* `expr /. rules` — one pass, bottom-up: a node's head/args are walked
+ * (and possibly replaced) before the node itself is tried against
+ * `rules`; the first matching rule wins and the freshly substituted
+ * replacement is NOT re-walked or retried at that same position
+ * (Wolfram's single-pass `/.` contract, distinct from `_sir_symterm_
+ * repeated_walk` below). On exceeding `SIR_SYMTERM_MAX_TERM_DEPTH`,
+ * aborts directly (see this section's module doc, "Error-signaling
+ * mechanism") rather than returning a sentinel. */
+SirSymTerm *_sir_symterm_walk_once(SirSymTerm *node, SirSymTerm **rules, int64_t nrules, int64_t depth) {
+    SirSymTerm *current = node;
+    int64_t i;
+    if (depth > SIR_SYMTERM_MAX_TERM_DEPTH) {
+        fprintf(stderr, "sir: sir-runtime-symbolic: depth-limit\n");
+        exit(1);
+    }
+    if (node->kind == SIR_SYMTERM_APPLY) {
+        int64_t n = node->as.apply.nargs;
+        SirSymTerm *new_head = _sir_symterm_walk_once(node->as.apply.head, rules, nrules, depth + 1);
+        SirSymTerm **new_args = (n > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) new_args[i] = _sir_symterm_walk_once(node->as.apply.args[i], rules, nrules, depth + 1);
+        current = _sir_symterm_apply_raw(new_head, new_args, n);
+    }
+    for (i = 0; i < nrules; i++) {
+        int matched = 0;
+        SirSymTerm *replacement = _sir_symterm_apply_rule(rules[i], current, &matched);
+        if (matched) return replacement;
+    }
+    return current;
+}
+
+/* `expr //. rules` context: `max_iterations` is a GLOBAL cap shared
+ * across the WHOLE walk (guards a non-terminating rule set — SIR23 spec
+ * "Matcher semantics" point 6), threaded via this small struct rather
+ * than a global/thread-local (the emitted program is single-threaded
+ * like every other part of this runtime, but a struct keeps the counter
+ * scoped to one `_sir_symterm_replace_repeated` call, matching this
+ * file's general preference for explicit state over hidden statics where
+ * the call graph makes it easy — c.f. `_sir_fmt_depth`, which DOES use a
+ * static because `_sir_fmt`'s recursive signature has no natural place to
+ * thread extra state through; this one does). */
+typedef struct SirSymReplContext {
+    SirSymTerm **rules;
+    int64_t nrules;
+    int64_t max_iterations;
+    int64_t counter;
+} SirSymReplContext;
+
+/* `expr //. rules` — a fixed point: at each subtree, keep retrying `rules`
+ * until none fire (re-walking any fresh replacement so its own sub-parts
+ * also converge) before moving up to the parent. A firing loops LOCALLY
+ * at the CURRENT call frame (the `for (;;)` below — never a recursive
+ * call on the replacement), so however many times a rule fires at one
+ * tree position costs O(1) native stack frames, not O(firings); `depth`
+ * only increases on a genuine descent into `head`/`args` (the two
+ * recursive calls inside the `if (current->kind == SIR_SYMTERM_APPLY)`
+ * block), so `max_iterations` bounds ITERATION COUNT (CPU time) only,
+ * never native recursion depth — see this section's module doc for the
+ * full DoS-safety rationale (both the depth cap AND the iteration cap,
+ * and why they are independent guards). */
+SirSymTerm *_sir_symterm_repeated_walk(SirSymReplContext *ctx, SirSymTerm *node, int64_t depth) {
+    SirSymTerm *current = node;
+    if (depth > SIR_SYMTERM_MAX_TERM_DEPTH) {
+        fprintf(stderr, "sir: sir-runtime-symbolic: depth-limit\n");
+        exit(1);
+    }
+    for (;;) {
+        if (current->kind == SIR_SYMTERM_APPLY) {
+            int64_t n = current->as.apply.nargs, i;
+            SirSymTerm *new_head = _sir_symterm_repeated_walk(ctx, current->as.apply.head, depth + 1);
+            SirSymTerm **new_args = (n > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)n) : NULL;
+            for (i = 0; i < n; i++) new_args[i] = _sir_symterm_repeated_walk(ctx, current->as.apply.args[i], depth + 1);
+            current = _sir_symterm_apply_raw(new_head, new_args, n);
+        }
+        {
+            int fired = 0;
+            int64_t i;
+            for (i = 0; i < ctx->nrules; i++) {
+                int matched = 0;
+                SirSymTerm *replacement = _sir_symterm_apply_rule(ctx->rules[i], current, &matched);
+                if (!matched || _sir_symterm_equals(replacement, current, 0)) continue;
+                ctx->counter++;
+                if (ctx->counter > ctx->max_iterations) {
+                    fprintf(stderr, "sir: sir-runtime-symbolic: rewrite-cycle (max %lld iterations)\n",
+                            (long long)ctx->max_iterations);
+                    exit(1);
+                }
+                current = replacement;
+                fired = 1;
+                break;
+            }
+            if (!fired) return current;
+        }
+    }
+}
+
+/* Boxed (`SirValue`-facing) entry points `emit.rs`'s generated code calls
+ * directly for `Expr::SymReplaceAll`. `nrules` is, like `_sir_symterm_
+ * apply`'s `nargs`, an emitted-code-controlled compile-time-known count
+ * (the SIR node's own `rules.len()`), not attacker-influenced runtime
+ * data. `replace_repeated`'s `max_iterations` is fixed at 100 — the
+ * Ruby/JS references' own default, and `Expr::SymReplaceAll` has no field
+ * for a caller-supplied override, so there is nothing to thread one
+ * through from. */
+SirValue _sir_symterm_replace_all(SirValue expr, int nrules, ...) {
+    SirSymTerm **rules = (nrules > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)nrules) : NULL;
+    va_list ap;
+    int i;
+    SirValue v;
+    va_start(ap, nrules);
+    for (i = 0; i < nrules; i++) {
+        SirValue r = va_arg(ap, SirValue);
+        rules[i] = _sir_symterm_require(r, "sir_symterm_replace_all");
+    }
+    va_end(ap);
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_walk_once(_sir_symterm_require(expr, "sir_symterm_replace_all"), rules, (int64_t)nrules, 0);
+    return v;
+}
+
+SirValue _sir_symterm_replace_repeated(SirValue expr, int nrules, ...) {
+    SirSymTerm **rules = (nrules > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)nrules) : NULL;
+    va_list ap;
+    int i;
+    SirValue v;
+    SirSymReplContext ctx;
+    va_start(ap, nrules);
+    for (i = 0; i < nrules; i++) {
+        SirValue r = va_arg(ap, SirValue);
+        rules[i] = _sir_symterm_require(r, "sir_symterm_replace_repeated");
+    }
+    va_end(ap);
+    ctx.rules = rules;
+    ctx.nrules = (int64_t)nrules;
+    ctx.max_iterations = 100;
+    ctx.counter = 0;
+    v.tag = SIR_SYMTERM;
+    v.as.symterm = _sir_symterm_repeated_walk(&ctx, _sir_symterm_require(expr, "sir_symterm_replace_repeated"), 0);
+    return v;
 }
 "####;

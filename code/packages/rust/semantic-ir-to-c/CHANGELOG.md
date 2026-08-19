@@ -1,5 +1,147 @@
 # Changelog
 
+## 0.42.0 — SIR23 Tier A pattern matcher (Phase A Slice 4, second-wave backend rollout)
+
+Implements SIR23's Tier A pattern matcher: `Expr::SymSymbol`/`SymRational`/
+`SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/`SymReplaceAll`,
+gated on three new `ACCEPTED_FEATURES` flags: `Feature::SymbolicExpr`,
+`Feature::PatternMatching`, `Feature::Rationals` (the last is genuinely
+new to this crate — neither the SIR22 base cut nor its APL addendum ever
+needed a `SirType::Rational`). One of five parallel, independent backend
+PRs for this slice (mirrors the already-merged `semantic-ir-to-ruby`
+SIR23 PR, itself a port of the already-proven `semantic-ir-to-javascript`
+`Symbolic` sub-runtime's Tier A slice). Tier B (the `evalTerm` arithmetic/
+calculus/user-function evaluator) is explicitly OUT OF SCOPE for this
+slice — a `SymApply` builds an inert term tree, nothing more; no
+`Add`/`Sin`/`D`/… folding exists here.
+
+**New `SirValue` tag, `SIR_SYMTERM`**, wrapping a new heap-allocated
+`SirSymTerm` (`runtime.rs`, new "SIR23 symbolic expressions" section):
+a tagged struct discriminated by `SirSymTermKind`
+(`SIR_SYMTERM_SYMBOL`/`_INTEGER`/`_RATIONAL`/`_FLOAT`/`_STRING`/`_APPLY`),
+mirroring this file's own `SirNDArray`/`SIR_ARRAY` tagged-union
+convention and memory model (arena-allocated via `_sir_alloc`, never
+freed — the same leak-on-exit convention every other heap value in this
+runtime already uses). `SymApply`'s `args` reuses the same
+`T **items, int64_t len` dynamic-array shape this file already uses for
+`SirSeq`/`SirNDArray.data`, rather than inventing a third convention.
+
+**Named `_sir_symterm_*`/`SIR_SYMTERM`, NOT `_sir_sym_*`/`SIR_SYM`**: the
+Ruby/JS references' own `sir_sym_*`/`Symbolic.*` prefix would sit
+confusingly close to this file's PRE-EXISTING, UNRELATED `SIR_SYM` tag
+and `_sir_sym()` constructor (`Expr::SymLit`, this backend's Ruby-style
+interned `:symbol` literal — a bare interned name, not a symbolic-
+expression tree). No literal duplicate-symbol collision would have
+occurred (`_sir_sym_symbol` and `_sir_sym` are textually distinct), but
+this is exactly the near-collision hazard earlier slices in this arc hit
+FOR REAL (this crate's own SIR22 addendum renamed its new `reduce` to
+`_sir_array_apl_reduce` to dodge a pre-existing, unrelated Sequence
+`#reduce`/`#inject`; Go's `_sir_array_*` collided with a pre-existing
+Ruby-`Array`-dispatch table) — `_sir_symterm_*` sidesteps the whole
+category by construction, documented in the new section's own module
+doc.
+
+**New runtime functions**, two-tier (unlike the Ruby/JS references'
+single dynamically-typed tier, C's `SirValue` needs an explicit boxing
+step): a RAW tier operating directly on `SirSymTerm *` (construction;
+`_sir_symterm_equals` — depth-capped structural equality; the pattern/
+rule vocabulary `_sir_symterm_is_blank`/`_is_pattern`/`_is_rule`;
+persistent copy-on-write bindings `_sir_symterm_bindings_empty`/`_bind`/
+`_get`; the matcher `_sir_symterm_match_pattern`/`_substitute`/
+`_apply_rule`; the depth-capped walks `_sir_symterm_walk_once`/
+`_repeated_walk`) and a BOXED tier `emit.rs`'s generated code calls
+directly (`_sir_symterm_symbol`/`_int`/`_rational`/`_float`/`_string`/
+`_apply`/`_blank`/`_blank_typed`/`_named`/`_rule`/`_rule_delayed`/
+`_replace_all`/`_replace_repeated`), each coercing its `SirValue`
+operands via a new `_sir_symterm_require` (mirrors `_sir_array_require`'s
+identical "must already be the right tag, no silent coercion" contract).
+
+**DoS guards (CWE-674)**: `SIR_SYMTERM_MAX_TERM_DEPTH = 512` bounds
+`_sir_symterm_walk_once`/`_repeated_walk`'s tree WALK (the TARGET
+expression side). `_repeated_walk` also enforces a SEPARATE
+`max_iterations` (fixed at 100) cap on its fixed-point firing loop,
+implemented as a plain `for (;;)` at the SAME call frame (never a
+recursive call per firing), so a rule firing repeatedly at one tree
+position costs O(1) native stack frames, not O(firings) — verified
+against a REAL compiled `Stmt::ForRange`-built 600-level-deep term in
+`tests/sir23_symbolic.rs`, not a hand-built static AST. Both caps call
+`fprintf(stderr, …); exit(1);` DIRECTLY at the violation point — this
+file's own established SIR22 DoS-guard convention (see `_sir_array_
+checked_size`'s identical abort) — simpler than the Ruby/JS references'
+sentinel-value-plus-`unwrap` approach, since C's `exit(1)` needs no
+unwinding and thus nothing to unwrap.
+
+**Security review finding, fixed before push**: the matcher functions
+(`_match_pattern`/`_substitute`/`_apply_rule`, the RULE-pattern side of
+this same hazard) initially shipped with NO depth cap, on the Ruby/JS
+references' own precedent that a rule's `lhs`/`rhs` is "author-written,
+not runtime-controlled" and therefore always shallow. Security review
+correctly flagged that premise as unverified here: nothing in this
+crate actually validates a `SymRule`'s `lhs`/`rhs` depth, and it is
+built through the exact same unbounded-at-construction `_sir_symterm_
+apply_raw` path as any other term — so a SIR-generating frontend could
+hand this backend a rule whose pattern/RHS is itself deeply nested,
+driving unbounded native recursion with no cap catching it. Fixed by
+threading a `depth` parameter through all three functions (a new
+`SIR_SYMTERM_CHECK_DEPTH` macro, same `SIR_SYMTERM_MAX_TERM_DEPTH`
+constant), reset to 0 at each fresh `_apply_rule` call so one rule's
+match/substitute gets its own independent depth budget rather than one
+shared with the caller's own tree-walk depth. This is a deliberate,
+documented divergence from the Ruby/JS references' own no-cap
+precedent, not an oversight ported forward.
+
+**Integer-overflow hazard fixed proactively during implementation**:
+`_sir_symterm_rational_raw`'s gcd-reduction never negates a possibly-
+`INT64_MIN` numerator/denominator with a bare unary `-` (signed-overflow
+UB — this file's own `_sir_i64_abs_u` doc comment documents this as
+CONFIRMED to misbehave under optimization, not theoretical); sign is
+tracked separately and magnitudes are computed/reduced entirely in
+`uint64_t` via the SAME `_sir_i64_abs_u` helper `_sir_num_gcd` already
+uses for the analogous case, saturating at `INT64_MAX` on the one edge
+case that could still overflow on narrowing back (matching this file's
+own "never raise by saturating" convention).
+
+**New `emit.rs` arms**: the seven node kinds each lower to a call into
+their matching `_sir_symterm_*` helper via this backend's existing
+hoist-into-`SirValue`-temps convention (`hoist_operands`), plus a new
+`hoist_sym_operands` helper (this backend's version of the Ruby/JS
+backends' identically-purposed `emit_sym_operand`, adapted from their
+"return inline expression text" style to this backend's own hoisting
+style) that wraps a bare `IntLit`/`FloatLit`/`StrLit` operand through the
+matching leaf-term constructor before it can sit inside a term tree. Two
+small literal-formatting helpers, `i64_c_literal`/`f64_c_literal`, were
+factored out of the pre-existing `emit_int_literal`/`emit_float_literal`
+(both now delegate to them) so `Expr::SymRational`'s bare `numer`/`denom`
+fields and `hoist_sym_operands`'s literal-wrapping case can reuse the
+exact same overflow-safe `i64::MIN` spelling and non-finite-float
+spelling without duplicating either.
+
+**Display**: unlike `SIR_ARRAY` (a deliberate `"#<Array>"` placeholder —
+no SIR22 test needs a full array rendering), a genuine recursive
+`head(args, …)` generic-form renderer IS implemented
+(`_sir_symterm_fmt`/`_sir_symterm_display`, wired into the pre-existing
+`_sir_fmt`/`_sir_display_str` dispatchers via two forward declarations
+added just above `_sir_fmt`) — the JS/Ruby references' own SIR23 test
+suites print terms directly and assert on stdout, so this backend's
+tests need the same capability to port those cases faithfully. Depth-
+capped with `SIR_SYMTERM_MAX_TERM_DEPTH`, not the general
+`SIR_MAX_FMT_DEPTH`/`SIR_MAX_DISPLAY_DEPTH`, mirroring the already-merged
+Ruby PR's `sir_sym_to_s` precedent. The Derive-specific infix/precedence
+pretty-printer (SIR23 addendum item 4) is separate follow-up work.
+
+**New tests**: `tests/sir23_symbolic.rs` — 6 real-`cc`-compile-and-run
+tests (ported from `semantic-ir-to-javascript`'s own
+`tests/sir23_symbolic.rs`, Tier A cases only, matching the already-merged
+Ruby PR's test selection) proving `//.`'s fixed-point behavior, `/.`'s
+single-pass behavior, typed-blank head-constraint matching, rational
+reduction at construction time, the depth-limit guard (via a REAL
+compiled 600-iteration `for`-loop, not a hand-built AST), and a
+malformed-rule runtime rejection (a C-specific addition beyond the
+Ruby/JS reference suites, exercising the pointer/manual-memory hazards a
+managed-language port doesn't need to worry about: `_sir_symterm_apply_
+rule` rejecting a non-`Rule`/`RuleDelayed`-headed term cleanly rather
+than indexing `args[0]`/`args[1]` on a term that may have zero args).
+
 ## 0.41.0 — SIR22 "APL addendum" (Phase A Slice 3, second-wave backend rollout)
 
 Implements the 9-node SIR22 "APL addendum" this backend's own Slice 2 left
