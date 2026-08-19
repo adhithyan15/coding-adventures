@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import math
 
-import coding_adventures_sir_runtime_array.array as array_mod
 import pytest
+
+import coding_adventures_sir_runtime_array.array as array_mod
 from coding_adventures_sir_runtime_array import (
     MAX_ELEMENTS,
     NDArray,
@@ -63,7 +64,7 @@ class TestCheckedShapeSize:
         # bool is an int subclass in Python; a shape dimension must be a
         # real int, not a stray True/False.
         with pytest.raises(ValueError, match="negative or non-integer"):
-            checked_shape_size((True, 2))  # type: ignore[arg-type]
+            checked_shape_size((True, 2))
 
     def test_rejects_shape_exceeding_max_elements_cap(self) -> None:
         with pytest.raises(ValueError, match="exceeds the .*-element cap"):
@@ -80,7 +81,7 @@ class TestNdarrayConstruction:
 
     def test_ndarray_rejects_non_list_data(self) -> None:
         with pytest.raises(TypeError, match="data must be a list"):
-            ndarray((2,), (1, 2))  # type: ignore[arg-type]
+            ndarray((2,), (1, 2))
 
     def test_scalar_factory(self) -> None:
         a = scalar(7)
@@ -177,7 +178,7 @@ class TestGetSet:
         # NaN is False), so this must raise, not silently misbehave.
         a = from_rows([[1, 2], [3, 4]])
         with pytest.raises(ValueError, match="out of bounds"):
-            sir_set(a, float("nan"), 0, 1)
+            sir_set(a, float("nan"), 0, 1)  # type: ignore[arg-type]
 
 
 class TestApplyOp:
