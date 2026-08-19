@@ -7092,6 +7092,26 @@ fn emit_host_button(
                 attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
             }
         }
+        // An expression label — `label: ( row[1] )` is the common shape.
+        //
+        // This arm was missing, and the catch-all below swallowed it, so a
+        // button whose label came from a row expression emitted NO Content
+        // attribute at all. That is why every task row, project-rail row and
+        // notes row rendered a blank button: not a binding-mode problem, the
+        // attribute simply never existed. The Text lowering already routes
+        // expressions through the same helper successfully two elements away
+        // in the same template.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
         _ => {}
     }
 
@@ -12611,6 +12631,72 @@ mod tests {
              them to OneTime and whatever they render freezes after the first \
              pass:\n{}",
             offenders.join("\n")
+        );
+    }
+
+    /// A `HostButton` whose label is a row expression must emit `Content`.
+    ///
+    /// `label: ( row[1] )` lands on `LayoutPropValue::Expr`, and that arm was
+    /// missing from the label match — the catch-all swallowed it, so the
+    /// button emitted no `Content` attribute at all and rendered blank. It
+    /// looked like a styling gap for weeks because an empty button is
+    /// invisible rather than obviously broken; it affected every task row,
+    /// project-rail row and notes row.
+    #[test]
+    fn host_button_with_row_expression_label_emits_content() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                // list<list<text>> — a list of rows, each a list of cells,
+                // which is the shape task-rows actually has.
+                SlotType::List(Box::new(ListInnerType::List(Box::new(
+                    ListInnerType::Text,
+                )))),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![for_node(
+                    LayoutPropValue::SlotRef("rows".to_string()),
+                    "row",
+                    None,
+                    vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Expr("row[1]".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }],
+                )],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        // Every emitted Button must carry a Content attribute — a button that
+        // renders empty is the failure mode this guards against.
+        for line in r.xaml.lines() {
+            let t = line.trim();
+            if t.starts_with("<Button ") {
+                assert!(
+                    t.contains("Content="),
+                    "emitted a Button with no Content, which renders blank:\n{t}\n\nfull XAML:\n{}",
+                    r.xaml
+                );
+            }
+        }
+        assert!(
+            r.xaml.contains("Content=\"{x:Bind"),
+            "row-expression label should lower to a binding, got:\n{}",
+            r.xaml
         );
     }
 

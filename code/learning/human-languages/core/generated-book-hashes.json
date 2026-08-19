@@ -614,6 +614,30 @@
       "tex": "chinese/book/chapters/ch09-shenme.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:35e11539b70daa41",
+      "lessonIds": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "tex": "chinese/book/chapters/ch10-xiexie.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:efeb50daae8dbbb0",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "tex": "chinese/book/chapters/ch11-qing.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",
@@ -790,6 +814,18 @@
         "FR-C32-quel"
       ],
       "tex": "french/book/chapters/ch32-questions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:35ea0518c5abb30c",
+      "lessonIds": [
+        "FR-C33-vouloir",
+        "FR-C33-pouvoir",
+        "FR-C33-devoir",
+        "FR-C33-practice"
+      ],
+      "tex": "french/book/chapters/ch33-modaux.tex"
     },
     {
       "language": "german",
@@ -2613,6 +2649,20 @@
     },
     {
       "language": "latin",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:fc742a0558a5aef5",
+      "lessonIds": [
+        "LA-C01-salve",
+        "LA-C01-ave",
+        "LA-C01-vale",
+        "LA-C01-gratias",
+        "LA-C01-ita-non",
+        "LA-C01-practice"
+      ],
+      "tex": "latin/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:e487ced01dcb7f2f",
       "lessonIds": [
@@ -3805,6 +3855,15 @@
         "MR-W01-namaskar-read"
       ],
       "tex": "marathi/book/chapters/ch14-script-first.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:497f80f61dd5767f",
+      "lessonIds": [
+        "FA-C02-esm-e-man"
+      ],
+      "tex": "persian/book/chapters/ch02-give-your-name.tex"
     },
     {
       "language": "persian",
@@ -9287,6 +9346,15 @@
         "TE-C66-harvest"
       ],
       "tex": "telugu/book/chapters/ch66-the-field.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:cfca1c3146b05ede",
+      "lessonIds": [
+        "UR-C02-mera-naam"
+      ],
+      "tex": "urdu/book/chapters/ch02-give-your-name.tex"
     },
     {
       "language": "urdu",

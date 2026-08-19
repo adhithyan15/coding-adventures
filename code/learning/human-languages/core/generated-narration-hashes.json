@@ -1032,6 +1032,40 @@
       "jsonHash": "fnv1a64:423a29571793f8fc"
     },
     {
+      "language": "chinese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:973a39a8619cdb55",
+      "lessonIds": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch10.txt",
+      "json": "chinese/narration/ch10.json",
+      "textHash": "fnv1a64:bc4806b83508a7fb",
+      "jsonHash": "fnv1a64:3b71f2f96558b9da"
+    },
+    {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:395664a6a3b64bdd",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch11.txt",
+      "json": "chinese/narration/ch11.json",
+      "textHash": "fnv1a64:debd1e52601ba7ff",
+      "jsonHash": "fnv1a64:343c4343076ee1e7"
+    },
+    {
       "language": "french",
       "chapter": 1,
       "sourceHash": "fnv1a64:b9a7455b1f549b7d",
@@ -1560,6 +1594,23 @@
       "json": "french/narration/ch32.json",
       "textHash": "fnv1a64:f09f8d778d1153e2",
       "jsonHash": "fnv1a64:dd2457530a36d0ba"
+    },
+    {
+      "language": "french",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:abb9eee8ab13a632",
+      "lessonIds": [
+        "FR-C33-vouloir",
+        "FR-C33-pouvoir",
+        "FR-C33-devoir",
+        "FR-C33-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "french/narration/ch33.txt",
+      "json": "french/narration/ch33.json",
+      "textHash": "fnv1a64:f353fa3c1f4aee07",
+      "jsonHash": "fnv1a64:c9df5a1930adc056"
     },
     {
       "language": "german",
@@ -15245,7 +15296,7 @@
     {
       "language": "urdu",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d3efc74a56512410",
+      "sourceHash": "fnv1a64:d7e6c7d21186e200",
       "lessonIds": [
         "UR-C02-mera-naam"
       ],
@@ -15253,8 +15304,8 @@
       "drivablePrefix": 1,
       "text": "urdu/narration/ch02.txt",
       "json": "urdu/narration/ch02.json",
-      "textHash": "fnv1a64:62f95e1e2a34f5c1",
-      "jsonHash": "fnv1a64:3cc911c9f78d0d11"
+      "textHash": "fnv1a64:b51d3358d9b6bb75",
+      "jsonHash": "fnv1a64:ea3231d5c2ec1fbe"
     },
     {
       "language": "urdu",

@@ -1,0 +1,174 @@
+Mandarin Chinese, chapter 10: One Character, Two Courtesies.
+5 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 5.
+讠 (yán) — the speech radical.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 亻. Two strokes, squeezed to the left edge of a block.
+
+Script — the shape.
+讠 (yán).
+Two strokes, one pen lift, and it is not a character. Like 亻, it is a component — a piece that lives at the left edge of other characters.
+a dot at the top, pressed down and to the right.
+a short horizontal, which turns down and then finishes rising to the upper right — all one stroke, no lift.
+That second stroke does three things without stopping. You have handled worse: the frame of 再, the leg of 见, the turn in 么.
+讠 (yán) means speech. It is the squeezed form of 言, the character for words and speaking, and it does the same job 亻 does: it tells you what the character is about before you know how to say it.
+讠 (yán) joins 亻 as a component that carries meaning rather than sound, and the pair is worth holding together:
+亻 at the left edge becomes the character is about a person.
+讠 (yán) at the left edge becomes the character is about speech.
+You will meet 讠 (yán) often. Every time you do, you can guess something true about the word before anyone tells you.
+
+Guided Practice.
+[once you have stopped driving — write: 讠 (yán) — dot, then one unbroken turning stroke]
+[once you have stopped driving — write: 亻, then 讠 (yán), side by side — two meaning-carrying components]
+
+Wrap-up Recall.
+How many pen lifts does 讠 (yán) take? (One.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 12 seconds]
+A character has this component at its left edge. What can you guess about the word?
+
+
+Lesson 2 of 5.
+谢 (xiè) — twelve strokes, and three pieces.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write 讠 (yán). Dot, then one turning stroke.
+
+Script — the shape.
+谢 (xiè).
+Twelve strokes. That is the longest thing in this book, and the number is about to stop mattering.
+You were told once that stroke-counting gives out and structure takes over. This is where that pays off. 谢 (xiè) is three pieces, left to right, and you have just written the first:
+讠 (yán) + 身 + 寸.
+讠 (yán) — speech, two strokes, done.
+身 — a shape meaning body, seven strokes.
+寸 — a shape meaning inch, three strokes on the right.
+身 and 寸 are pieces, not characters you are being asked to own. Read them, place them, move on.
+讠 (yán) (strokes 1-2). As you just practised.
+身 (strokes 3-9). An upper falling stroke; the left side down; the top and right side in one turning stroke that hooks left at the base; two short inner horizontals; a wide horizontal beneath them; then a falling stroke down-left.
+寸 (strokes 10-12). A horizontal; a vertical that hooks left at the base; and a dot, last.
+Eleven pen lifts. Left piece finished before the middle, middle before the right — the oldest habit you have, applied to three pieces instead of two.
+Compare it honestly with 我. 我 was seven strokes and had no pieces you could hold on to. 谢 (xiè) is twelve and has three. The long one is the easier one. That is the whole argument for learning structure rather than counting.
+
+Guided Practice.
+[once you have stopped driving — write: 讠 (yán), then the middle piece, then the right piece — stopping between each]
+[once you have stopped driving — write: 谢 (xiè) straight through, and say "speech, body, inch" as you go]
+[your turn — say: xiè — falling]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which was harder to learn, this one or 我? (我 — and it is five strokes shorter.)
+Source: Unicode CJK Unified Ideographs chart; stroke order per the PRC standard Xiandai Hanyu Tongyongzi Bishun Guifan (1997).
+[question — say your answer, then pause 14 seconds]
+How many pieces does this twelve-stroke character break into, and which one do you write first?
+
+
+Lesson 3 of 5.
+谢谢 (xièxie) — said twice.
+
+Warm-up.
+[pause 2 seconds]
+Say xiè — falling, from high to low.
+
+The word, taken apart.
+谢谢 xièxie — thank you.
+It is 谢 (xiè) written twice. Nothing else. You learned one character and you have the word.
+This is new, and it is not a quirk. Mandarin builds a great many words by saying a piece twice, and doubling usually softens something — it makes an action smaller, lighter, more everyday. That pattern is worth knowing; you will meet it again.
+Two cautions about this particular word, so you do not over-apply it. 谢谢 (xièxie) is a fixed expression, not something you assemble fresh each time — it does not mean "to thank briefly". And 谢 is not said on its own: it lives inside words, so do not reach for a bare 谢 and expect it to work.
+
+Sounds you'll need — the second one goes light.
+xièxie, not xièxiè.
+The first 谢 (xiè) falls. The second goes neutral — short, light, no tone mark. You have seen this twice already, on 上 inside 早上 and on 字 inside 名字, and now on a syllable that is the same character as the one before it.
+That is the useful lesson: the light syllable is not a property of the character, it is a property of the word. 谢 (xiè) falls in this word's first half and goes light in its second — and you will meet 谢 (xiè) falling again, in its second position, before this chapter is out.
+[repeat that twice]
+Say it: xiè dropping, then xie small and quick behind it.
+
+Guided Practice.
+[your turn — say: xiè alone, falling — then xièxie, with the second syllable light]
+[pause 8 seconds for the answer]
+[your turn — say: xièxie twice, and say which of the two 谢 carries a tone]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 谢谢 (xièxie) — the same twelve strokes, twice]
+
+Wrap-up Recall.
+How many new characters did this word cost you? (One.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+The two halves of this word are the same character. Are they said the same way?
+
+
+Lesson 4 of 5.
+不谢 (bú xiè) — answering thanks.
+
+Warm-up.
+[pause 2 seconds]
+Say xièxie — falling, then light.
+
+The word, taken apart.
+Someone thanks you. What do you say back?
+不谢 (bú xiè).
+不谢 (bú xiè) — and it is made of two things you already have. 不, the negator you have carried since 好 and 不好, in front of 谢, which you learned an hour ago. Nothing new. You could have built this yourself.
+It works the way 不是 works: put 不 in front of the word and you turn it. Here turning it is a polite refusal of the thanks — no need to thank me — which is how a great many languages answer being thanked.
+
+Sounds you'll need — you have met this rule.
+Before you say it, work it out. 谢 (xiè) is fourth tone. What does 不 do in front of a fourth tone?
+It rises. bú xiè, not bù xiè — exactly as 不是 became bú shì.
+This is the second time that rule has fired, and this time you were told the condition before the word. That is the difference between a rule you have been given and a rule you can use: you can now predict the pronunciation of a word nobody has said to you yet.
+[repeat that twice]
+
+Why it's said this way — one honest note.
+不谢 (bú xiè) is real and correct, and it is not the commonest reply. The one you will hear most often needs two characters this book cannot yet print, so it is waiting. 不谢 (bú xiè) will be understood everywhere, and it has the advantage of costing you nothing you did not already have.
+
+Guided Practice.
+[your turn — say: bú xiè — the first syllable rising, and know why]
+[pause 8 seconds for the answer]
+[your turn — say: bú shì, then bú xiè — the same rule, twice]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 不谢 (bú xiè)]
+
+Wrap-up Recall.
+How many new characters did this reply cost you? (None.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 14 seconds]
+Why is it said bú xiè and not bù xiè?
+
+
+Lesson 5 of 5.
+Practice — thanks, and the answer.
+
+Warm-up.
+[pause 2 seconds]
+Say bú xiè. Rising, then falling — and you know why the first one rises.
+
+The exchange.
+A: 早上好 zǎoshang hǎo — good morning. B: 早上好 zǎoshang hǎo — good morning. A: 谢谢 xièxie — thank you. B: 不谢 bú xiè — you're welcome. A: 再见 zàijiàn — goodbye.
+Six lines, and one new character paid for two of them.
+
+What you've built — one character, a whole exchange.
+This chapter cost you 谢 and nothing else. Out of it came the thanks (谢谢 (xièxie), the same character twice) and the reply (不谢 (bú xiè), a negator you already had). That is what a system does for you that a phrasebook cannot: pieces recombine.
+Three things you did here without being led:
+you doubled a character to make a word, and knew the second half would go light;
+you negated a word to make its answer, the same move that turned 是 into 不是;
+and you predicted a tone change from a rule, before hearing the word said.
+That last one is the real marker. Early on you were told what 你好 sounds like. Now you are told a rule and you work out what a word sounds like. Those are different kinds of knowing, and only the second one travels to words nobody has taught you.
+
+Guided Practice.
+[your turn — say: the whole exchange, both parts]
+[pause 8 seconds for the answer]
+[your turn — say: xièxie, then bú xiè — light on the second, rising on the first]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: 谢谢 (xièxie), then 不谢 (bú xiè)]
+
+Wrap-up Recall.
+Which two of these did you work out rather than being told? (The light second syllable, and the rising 不.)
+Source: Unicode CJK Unified Ideographs chart.
+[question — say your answer, then pause 12 seconds]
+This chapter taught you both how to thank someone and how to answer being thanked. How many new characters did that take?

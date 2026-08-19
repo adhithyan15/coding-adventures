@@ -110,7 +110,7 @@ describe("corpus snapshot", () => {
 
     expect(report.summary.tracksWithNoCoreVerb).toBe(2);
     expect(report.summary.universallyMissing).toHaveLength(0);
-    expect(report.summary.meanCoveredPercent).toBe(39);
+    expect(report.summary.meanCoveredPercent).toBe(40); // HL-C247: +1 -- vouloir, pouvoir and devoir raise french core-verb coverage
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.

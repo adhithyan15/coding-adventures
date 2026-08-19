@@ -10,7 +10,7 @@ use lib 'lib';
 use CodingAdventures::PaintInstructions;
 use CodingAdventures::PaintVmAscii;
 
-is(CodingAdventures::PaintVmAscii->VERSION, '0.1.0', 'version matches');
+is(CodingAdventures::PaintVmAscii->VERSION, '0.2.0', 'version matches');
 
 my $filled_scene = CodingAdventures::PaintInstructions->paint_scene(
     3,

@@ -133,8 +133,8 @@ enter cross-language review only after focused retrieval.
 | Language | Family / script | Canonical lessons | Mapped lessons | Book progress |
 |---|---|---:|---:|---|
 | [Spanish](./spanish/README.md) | Romance / Latin | 549 | 549 | 295 chapters; through Ch. 295; 295 generated |
-| [Latin](./latin/README.md) | Italic / Latin | 108 | 108 | 47 chapters; through Ch. 47; 46 generated |
-| [French](./french/README.md) | Romance / Latin | 114 | 100 | 32 chapters; through Ch. 32; 16 generated |
+| [Latin](./latin/README.md) | Italic / Latin | 108 | 108 | 47 chapters; through Ch. 47; 47 generated |
+| [French](./french/README.md) | Romance / Latin | 118 | 104 | 33 chapters; through Ch. 33; 17 generated |
 | [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 238 | 232 | 59 chapters; through Ch. 59; 54 generated |
@@ -150,9 +150,9 @@ enter cross-language review only after focused retrieval.
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 69 | 65 | 13 chapters; through Ch. 13; 8 generated |
 | [Russian](./russian/README.md) | Slavic / Cyrillic | 84 | 76 | 15 chapters; through Ch. 15; 13 generated |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 231 | 228 | 44 chapters; through Ch. 44; 39 generated |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | 69 | 69 | 15 chapters; through Ch. 15; 13 generated |
-| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 68 | 68 | 16 chapters; through Ch. 16; 14 generated |
-| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 55 | 55 | 9 chapters; through Ch. 9; 9 generated |
+| [Persian](./persian/README.md) | Iranian / Perso-Arabic | 69 | 69 | 15 chapters; through Ch. 15; 14 generated |
+| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 68 | 68 | 16 chapters; through Ch. 16; 15 generated |
+| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 63 | 63 | 11 chapters; through Ch. 11; 11 generated |
 | [Japanese](./japanese/README.md) | Japonic / Japanese | 29 | 29 | 3 chapters; through Ch. 3; 3 generated |
 <!-- END GENERATED TRACK PROGRESS -->
 

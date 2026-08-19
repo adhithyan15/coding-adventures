@@ -1,0 +1,623 @@
+{
+  "version": 1,
+  "language": "french",
+  "chapter": 33,
+  "title": "Want, Can, Must",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:abb9eee8ab13a632",
+  "lessons": [
+    {
+      "id": "FR-C33-vouloir",
+      "sequence": 1190,
+      "title": "vouloir — to want",
+      "headword": "vouloir",
+      "romanization": "vouloir",
+      "gloss": "to want — and why je voudrais is the form you will actually use",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5ff8dd5065225afd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Put est-ce que in front of a statement and it becomes a question. Hold that; you will need it in a moment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vouloir — to want. Here are the singular forms, which is what you need first:"
+            },
+            {
+              "kind": "speech",
+              "text": "Say it as a chant, three beats:"
+            },
+            {
+              "kind": "speech",
+              "text": "je veux — tu veux — il veut."
+            },
+            {
+              "kind": "speech",
+              "text": "I want, you want, he wants. And notice what your ear reports: all three sound identical. veux, veux, veut — the spelling distinguishes them and the mouth does not. That is why French keeps the subject pronoun in front: without je or tu, nothing tells a listener who wants what."
+            },
+            {
+              "kind": "speech",
+              "text": "Then a want needs something wanted, and it follows directly:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je veux un café. — I want a coffee."
+            },
+            {
+              "kind": "speech",
+              "text": "Tu veux le pain? — Do you want the bread?"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the form to be careful with",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Now the part a phrasebook will not tell you, and the reason this word needs a warning where parler did not."
+            },
+            {
+              "kind": "speech",
+              "text": "Je veux is blunt in a request. Said to a waiter or a shopkeeper it lands close to English I want, which is to say it lands badly. It is perfectly ordinary elsewhere — je veux dire is \"I mean\", and je veux bien is a cheerful \"gladly\" — so the problem is not the word, it is the counter. French has a softened form built for exactly this, and it is the one you should reach for by default:"
+            },
+            {
+              "kind": "speech",
+              "text": "je voudrais — I would like."
+            },
+            {
+              "kind": "speech",
+              "text": "Same verb, different shape. Je voudrais un café is what a French speaker actually says across a counter, and it is no harder to say than je veux."
+            },
+            {
+              "kind": "speech",
+              "text": "So learn both, and learn when each belongs. Je veux is for a want you are simply stating — to a friend, to a child, about yourself. Je voudrais is for asking anyone for anything. If you are unsure which you are doing, you are asking, and you want voudrais."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je veux, tu veux, il veut — and hear that all three are the same sound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je veux, tu veux, il veut* — and hear that all three are the same sound]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je voudrais un café, as though to a stranger behind a counter",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je voudrais un café*, as though to a stranger behind a counter]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "est-ce que tu veux un café?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: *est-ce que tu veux un café ?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the three singular forms. (Veux, veux, veut — all said the same.) You are ordering coffee from someone you have never met: which form do you use? (Je voudrais, never je veux.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C33-pouvoir",
+      "sequence": 1200,
+      "title": "pouvoir — can",
+      "headword": "pouvoir",
+      "romanization": "pouvoir",
+      "gloss": "can — the verb that turns a demand into a request",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83e40d8cbef9bb56",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say je voudrais un café. That was a want, softened."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pouvoir — to be able, and in practice can. The singular:"
+            },
+            {
+              "kind": "speech",
+              "text": "Same chant, three beats:"
+            },
+            {
+              "kind": "speech",
+              "text": "je peux — tu peux — il peut."
+            },
+            {
+              "kind": "speech",
+              "text": "I can, you can, he can. The same pattern you just met: all three sound alike, and the pronoun carries the person."
+            },
+            {
+              "kind": "speech",
+              "text": "That final t is silent — until you invert. Peut-il? wakes it, and needs no added -t- the way parle-t-il did, because this verb already has one. Peux, peux, peut — and note it rhymes with nothing in vouloir, but behaves identically."
+            },
+            {
+              "kind": "speech",
+              "text": "What follows pouvoir is a plain, unchanged verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je peux parler français. — I can speak French."
+            },
+            {
+              "kind": "speech",
+              "text": "Tu peux aider? — Can you help?"
+            },
+            {
+              "kind": "speech",
+              "text": "Nothing happens to parler or aider. They arrive in the dictionary form and stay there, which makes this one of the cheapest structures in French: every plain verb you know can be put behind peux with no change at all."
+            },
+            {
+              "kind": "speech",
+              "text": "One group does change, and you already own two of them. A verb that carries se keeps it, and the se matches the person: je peux m'asseoir, tu peux te lever. The verb itself is still untouched; only its little pronoun follows you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — asking somebody else",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reason pouvoir matters early has little to do with ability."
+            },
+            {
+              "kind": "speech",
+              "text": "Asking someone to do something by telling them to do it is abrupt in French, as it is in English. What French reaches for instead is a question about ability — the same move English makes with can you:"
+            },
+            {
+              "kind": "speech",
+              "text": "Tu peux fermer la porte? — Can you close the door?"
+            },
+            {
+              "kind": "speech",
+              "text": "Nobody is really asking whether the other person is capable. The question is the politeness, and it is why pouvoir buys you more than a translation would suggest."
+            },
+            {
+              "kind": "speech",
+              "text": "For a stranger, soften it the same way vouloir softened into voudrais — the identical shift, on this verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "Pourriez-vous fermer la porte?"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je peux, tu peux, il peut — again, one sound between them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je peux, tu peux, il peut* — again, one sound between them]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je peux parler français",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je peux parler français*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "tu peux aider?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: *tu peux aider ?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to the verb that follows peux? (Nothing — it stays in its dictionary form.) Why does a beginner need pouvoir early? (Because asking whether someone can is how French makes a polite request.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C33-devoir",
+      "sequence": 1210,
+      "title": "devoir — must",
+      "headword": "devoir",
+      "romanization": "devoir",
+      "gloss": "must — the third of the set, and the one with a debt inside it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ec79d2d8196026a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say je peux parler français. The second verb did not change."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "devoir — to have to, must. The singular, and by now you can predict the shape of the problem:"
+            },
+            {
+              "kind": "speech",
+              "text": "je dois — tu dois — il doit."
+            },
+            {
+              "kind": "speech",
+              "text": "I must, you must, he must. All three sound alike again. Three verbs in a row have done this, which is the point worth carrying away: in the French present singular, the three persons are routinely one sound, and the pronoun is what tells them apart. This is not a quirk of these three words."
+            },
+            {
+              "kind": "speech",
+              "text": "The exceptions are the three verbs you learned earliest, and they are exceptions because they are used constantly: suis / es / est, ai / as / a, vais / vas / va. Everywhere else, expect one sound."
+            },
+            {
+              "kind": "speech",
+              "text": "A plain verb follows, exactly as after peux:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je dois partir. — I must leave."
+            },
+            {
+              "kind": "speech",
+              "text": "Tu dois entendre. — You must hear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the debt inside it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "devoir comes from Latin dēbēre, to owe — and it never stopped meaning that. The same French verb still does both jobs:"
+            },
+            {
+              "kind": "speech",
+              "text": "Je dois partir. — I must leave."
+            },
+            {
+              "kind": "speech",
+              "text": "Je te dois dix euros. — I owe you ten euros."
+            },
+            {
+              "kind": "speech",
+              "text": "One word, two obligations — and the order matters. The owing came first: the Latin verb meant to owe, and the sense of must grew out of it, exactly as English ought grew out of owed."
+            },
+            {
+              "kind": "speech",
+              "text": "That Latin dēbēre is also where English gets debt, debit and due — so a word you have never seen has been sitting in your own vocabulary all along, spelled differently and meaning the half of devoir that involves money."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je dois, tu dois, il doit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je dois, tu dois, il doit*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je dois partir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je dois partir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je te dois dix euros — the same verb, the other meaning",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je te dois dix euros* — the same verb, the other meaning]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two things does devoir mean? (Must, and to owe.) Which English words share its Latin root? (Debt, debit, due.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C33-practice",
+      "sequence": 1220,
+      "title": "Practice — want, can, must",
+      "headword": "je voudrais, je peux, je dois",
+      "romanization": "je voudrais, je peux, je dois",
+      "gloss": "the three verbs that put another verb to work",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3c0416eaf66b97ca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say je dois partir."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three verbs, one shape between them. Say each chant in turn:"
+            },
+            {
+              "kind": "speech",
+              "text": "je veux — tu veux — il veut je peux — tu peux — il peut je dois — tu dois — il doit."
+            },
+            {
+              "kind": "speech",
+              "text": "Every chant is three forms that sound identical, and between the three chants you have wanting, being able, and having to."
+            },
+            {
+              "kind": "speech",
+              "text": "And all three do the same structural thing: a plain verb follows, unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "Je veux partir. — I want to leave."
+            },
+            {
+              "kind": "speech",
+              "text": "Je peux partir. — I can leave."
+            },
+            {
+              "kind": "speech",
+              "text": "Je dois partir. — I must leave."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the payoff, and it is larger than three words. Every verb you have learned in this book — parler, aider, fermer, ouvrir, écrire, lire, dormir — can be dropped in behind any of these three with no change of any kind. You have not learned three expressions. You have learned three openings, and you already own everything that goes after them."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — choosing the right one",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One caution carried forward, because it is the difference between sounding capable and sounding rude."
+            },
+            {
+              "kind": "speech",
+              "text": "Stating a want to a friend: je veux."
+            },
+            {
+              "kind": "speech",
+              "text": "Asking anyone for anything: je voudrais."
+            },
+            {
+              "kind": "speech",
+              "text": "Asking someone else to act: tu peux…? or vous pouvez…?"
+            },
+            {
+              "kind": "speech",
+              "text": "The blunt form is not wrong French. It is correct French used at the wrong moment, which is a harder mistake to hear and an easier one to make."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "je veux partir, je peux partir, je dois partir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *je veux partir, je peux partir, je dois partir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the same three with parler français instead of partir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the same three with *parler français* instead of *partir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "ASK",
+              "instruction": "vous pouvez fermer la porte?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU ASK: *vous pouvez fermer la porte ?*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What happens to a verb placed after veux, peux or dois? (Nothing — it stays in its dictionary form.) You want to ask a stranger to close a window: which of the three do you start with? (Vous pouvez…)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

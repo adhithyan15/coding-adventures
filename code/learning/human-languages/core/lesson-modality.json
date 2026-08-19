@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0f9da2262de39c0e",
+  "sourceHash": "fnv1a64:c3922faa9a470bf4",
   "summary": {
-    "totalLessons": 3135,
-    "voice": 2212,
+    "totalLessons": 3147,
+    "voice": 2221,
     "sight": 588,
-    "pen": 335,
-    "drivableLessons": 2212,
+    "pen": 338,
+    "drivableLessons": 2221,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 951,
-    "drivablePrefixTotal": 1967,
-    "fullyDrivableChapters": 619,
-    "unstartableChapters": 201,
+    "chapterCount": 954,
+    "drivablePrefixTotal": 1971,
+    "fullyDrivableChapters": 620,
+    "unstartableChapters": 203,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -867,11 +867,11 @@
     },
     {
       "language": "chinese",
-      "lessonCount": 55,
-      "voice": 26,
+      "lessonCount": 63,
+      "voice": 31,
       "sight": 4,
-      "pen": 25,
-      "drivablePercent": 47,
+      "pen": 28,
+      "drivablePercent": 49,
       "drivablePrefixTotal": 1,
       "modalities": [
         "voice",
@@ -1022,17 +1022,49 @@
           "firstNonVoiceLesson": "ZH-W09-shen",
           "drivable": false,
           "drivableLessonIds": []
+        },
+        {
+          "chapter": 10,
+          "lessonCount": 5,
+          "voice": 3,
+          "sight": 0,
+          "pen": 2,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W10-yan",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 11,
+          "lessonCount": 3,
+          "voice": 2,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-W11-qing",
+          "drivable": false,
+          "drivableLessonIds": []
         }
       ]
     },
     {
       "language": "french",
-      "lessonCount": 114,
-      "voice": 99,
+      "lessonCount": 118,
+      "voice": 103,
       "sight": 12,
       "pen": 3,
       "drivablePercent": 87,
-      "drivablePrefixTotal": 83,
+      "drivablePrefixTotal": 87,
       "modalities": [
         "voice",
         "sight",
@@ -1604,6 +1636,25 @@
             "FR-C32-pourquoi",
             "FR-C32-inversion",
             "FR-C32-quel"
+          ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "FR-C33-vouloir",
+            "FR-C33-pouvoir",
+            "FR-C33-devoir",
+            "FR-C33-practice"
           ]
         }
       ]
@@ -21482,6 +21533,165 @@
       "sourceHash": "fnv1a64:a8e10f6c3e57e6ab"
     },
     {
+      "id": "ZH-W10-yan",
+      "language": "chinese",
+      "chapter": 10,
+      "sequence": 600,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d21eaf5ba42c9141",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-W10-xie",
+      "language": "chinese",
+      "chapter": 10,
+      "sequence": 610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4ede712559267b3f",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C10-xiexie",
+      "language": "chinese",
+      "chapter": 10,
+      "sequence": 620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9399b653410e48df"
+    },
+    {
+      "id": "ZH-C10-buxie",
+      "language": "chinese",
+      "chapter": 10,
+      "sequence": 630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a7e1862970bcf35d"
+    },
+    {
+      "id": "ZH-C10-practice",
+      "language": "chinese",
+      "chapter": 10,
+      "sequence": 640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:17613f147e1d0138"
+    },
+    {
+      "id": "ZH-W11-qing",
+      "language": "chinese",
+      "chapter": 11,
+      "sequence": 650,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:07dacaf9c61f23e7",
+      "detachableSegments": [
+        "Script — the shape"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "ZH-C11-qing",
+      "language": "chinese",
+      "chapter": 11,
+      "sequence": 660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5b761a25bb0f5a71"
+    },
+    {
+      "id": "ZH-C11-practice",
+      "language": "chinese",
+      "chapter": 11,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3e3199553a4721f8"
+    },
+    {
       "id": "FR-C01-bien",
       "language": "french",
       "chapter": 1,
@@ -23542,6 +23752,78 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:5b200dedd4a60ccf"
+    },
+    {
+      "id": "FR-C33-vouloir",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5ff8dd5065225afd"
+    },
+    {
+      "id": "FR-C33-pouvoir",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:83e40d8cbef9bb56"
+    },
+    {
+      "id": "FR-C33-devoir",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9ec79d2d8196026a"
+    },
+    {
+      "id": "FR-C33-practice",
+      "language": "french",
+      "chapter": 33,
+      "sequence": 1220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3c0416eaf66b97ca"
     },
     {
       "id": "GE-C01-abend",
@@ -75183,7 +75465,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9b79da0c62dcb0a"
+      "sourceHash": "fnv1a64:f7dd6fcae0bd7124"
     },
     {
       "id": "UR-C03-aap-tum-tu",
