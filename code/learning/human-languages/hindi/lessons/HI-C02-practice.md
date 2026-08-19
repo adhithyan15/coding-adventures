@@ -1,6 +1,8 @@
 ---
+schema_version: 2
 id: HI-C02-practice
 sequence: 260
+spine_node: SPINE-EXCHANGE-NAMES
 chapter: 2
 type: practice
 headword: (dialogue)
@@ -9,17 +11,31 @@ concept_tag: REVIEW
 prerequisites: [HI-C02-mera-naam-hai, HI-C02-aapka-naam-kya-hai, HI-C02-khushi]
 sounds: []
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-CONCEPT-C02-MERANAAMHAI-01, HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01]
+introduces:
+  knowledge: [HI-CONCEPT-C02-PRACTICE-01]
+practises:
+  knowledge: [HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01, HI-CONCEPT-C02-MERANAAMHAI-01, HI-CONCEPT-C02-PRACTICE-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C02-naam, HI-C02-meraa, HI-C02-hai, HI-C02-mera-naam-hai, HI-C02-aap-tum, HI-C02-kya, HI-C02-aapka-naam-kya-hai, HI-C02-khushi]
 ---
 
 # Chapter 2 — the introduction, whole
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01, HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01] -->
 
 [PAUSE 2s] Every atom is built and rooted. Here's the exchange it was for.
 
-## The dialogue
+## The exchange
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C02-PRACTICE-01]; assesses=[HI-CONCEPT-C02-MERANAAMHAI-01, HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01] -->
 
 | Hindi | English |
 |---|---|
@@ -40,6 +56,7 @@ Two Hindi habits: the **verb goes last** (subject–object–verb), and "you" ha
 **three** respect-levels (*āp / tum / tū*).
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01, HI-CONCEPT-C02-MERANAAMHAI-01, HI-CONCEPT-C02-PRACTICE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: the whole exchange, both voices]
@@ -47,6 +64,7 @@ Two Hindi habits: the **verb goes last** (subject–object–verb), and "you" ha
 - [YOU SAY: ask it back — "āpkā nām kyā hai?"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-AAPKANAAMKYAHAI-01, HI-CONCEPT-C02-KHUSHI-01, HI-CONCEPT-C02-MERANAAMHAI-01, HI-CONCEPT-C02-PRACTICE-01] -->
 
 [PAUSE 3s] Give your name, ask someone else's, say you're pleased to meet them.
 (*Merā nām … hai. / Āpkā nām kyā hai? / …khushī huī.*) Which two words here come

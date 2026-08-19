@@ -1,6 +1,8 @@
 ---
+schema_version: 2
 id: HI-C02-hai
 sequence: 130
+spine_node: SPINE-EXCHANGE-NAMES
 chapter: 2
 type: word
 headword: है
@@ -10,23 +12,38 @@ concept_tag: WORD-IS
 prerequisites: [HI-C02-naam]
 sounds: [matra-ai]
 roots: [asti]
-est_minutes: 3
+duration:
+  max_seconds: 180
+requires:
+  knowledge: [HI-CONCEPT-C02-NAAM-01]
+introduces:
+  knowledge: [HI-CONCEPT-C02-HAI-01]
+practises:
+  knowledge: [HI-CONCEPT-C02-HAI-01, HI-CONCEPT-C02-NAAM-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C02-naam, HI-C02-meraa]
 ---
 
 # है (hai) — "is," cousin of English *is*
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-NAAM-01] -->
 
 [PAUSE 2s] The little verb "is" — and it's the same "is" spoken from Ireland to
 India.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C02-HAI-01]; assesses=[HI-CONCEPT-C02-NAAM-01] -->
 
 *(Skim if you read Devanagari.)* **ह** (ha) + **ै** (the *ai*-mātrā) → **है**
 (*hai*). One syllable.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-HAI-01] -->
 
 **है** (*hai*, "is") ← Sanskrit **अस्ति** (*asti*, "is"), from Proto-Indo-European
 **\*h₁es-** — the root of "to be" across the whole family:
@@ -37,18 +54,20 @@ Hindi *hai* is the Indian cousin of the same tiny verb. "Is" really is *one*
 word, stretched across a continent.
 
 ## Grammar Lens: the verb comes last
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-HAI-01] -->
 
 Hindi is **subject–object–verb**: "my name Arun **is**." *hai* sits at the
 *end* of the sentence, where English puts "is" in the middle. Bank the shape —
 in Hindi the verb waits until the end.
 
 ## Sounds you'll need
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-HAI-01] -->
 
 ह (*ha*) + ै (the *ai*-mātrā) → है
 (*hai*). One syllable.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-HAI-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "hai"]
@@ -56,6 +75,7 @@ in Hindi the verb waits until the end.
 - [YOU SAY: "merā nām Arun hai" — note *hai* at the end]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C02-HAI-01] -->
 
 [PAUSE 3s] What Sanskrit/PIE root is **है** from, and its cousins? (*asti* /
 *\*h₁es-* — *is*, *ist*, *est*, *es*.) Where does the verb sit in a Hindi
