@@ -2,6 +2,29 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.33] - 2026-08-19 (task #180-182 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply family)
+
+### Added
+
+- `register_simd` gains a new dispatch arm:
+  `SimdOpKind::ExtmulLowI64x2S | ExtmulHighI64x2S | ExtmulLowI64x2U |
+  ExtmulHighI64x2U` pop two `v128`s, reinterpret both as 4 `i32` lanes
+  each, take only the LOW (indices 0-1) or HIGH (indices 2-3) 2 lanes
+  of each operand, sign- or zero-extend every value to `i64`, multiply
+  the corresponding pairs lane-wise, and push one `v128` holding the
+  2 `i64` results. Mirrors the already-implemented
+  `ExtmulLowI16x8S`/`ExtmulLowI8x16S`/etc. arms one and two lane
+  widths up respectively -- same narrow-input (32-bit)/wide-output
+  (64-bit) BINARY shape, no summation (unlike `DotI16x8S`). This is
+  the third and final rung of this crate's "extmul" widening-multiply
+  family.
+- 1 new unit test covering all 4 variants: proves the LOW 2 lanes and
+  HIGH 2 lanes of each `i32x4` operand are read independently (not
+  aliased), and that `_s`/`_u` disagree on `-1 * 1` the same way every
+  other signed/unsigned pair in this interpreter does, including the
+  unsigned-widening edge case (`0xFFFFFFFF` zero-extended to `i64` is
+  `4294967295`, not `-1`).
+
 ## [0.9.32] - 2026-08-19 (task #177-179 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert conversion family)
 
 ### Added

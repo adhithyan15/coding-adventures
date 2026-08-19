@@ -1483,7 +1483,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::MulI64x2
                     | wasm_opcodes::SimdOpKind::Swizzle
                     | wasm_opcodes::SimdOpKind::MulF32x4
-                    | wasm_opcodes::SimdOpKind::MinF32x4 => {
+                    | wasm_opcodes::SimdOpKind::MinF32x4
+                    | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
+                    | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1502,7 +1506,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // runtime subtlety (see wasm-opcodes'
                         // `SimdOpKind::MinF32x4` doc comment) is entirely
                         // invisible here -- still just two V128 pops, one
-                        // V128 push.
+                        // V128 push. `i64x2.extmul_low`/`high_i32x4_s`/
+                        // `_u` (SIMD widen PR21) complete the third and
+                        // final "extmul" rung -- same reasoning: the
+                        // `i32x4` -> `i64x2` widening is entirely a
+                        // runtime concern, invisible to the type checker.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

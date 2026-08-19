@@ -1365,6 +1365,28 @@ pub enum SimdOpKind {
     /// sign-extend the bit pattern into the wrong float value for any
     /// lane with the high bit set).
     ConvertI32x4U,
+    /// `i64x2.extmul_low_i32x4_s` -- reinterpret both `v128` operands as 4
+    /// SIGNED `i32` lanes each; take only the LOW 2 lanes (indices 0-1) of
+    /// each, sign-extend every value to `i64`, and multiply the
+    /// corresponding pairs lane-wise, producing an `i64x2` result. The
+    /// third and final rung of this table's widening-multiply "extmul"
+    /// family, mirroring [`Self::ExtmulLowI16x8S`] (which itself mirrors
+    /// [`Self::ExtmulLowI8x16S`]) one lane width up: same narrow-input/
+    /// wide-output BINARY shape, just `i32x4` -> `i64x2` instead of
+    /// `i16x8` -> `i32x4`.
+    ExtmulLowI64x2S,
+    /// `i64x2.extmul_high_i32x4_s` -- same as [`Self::ExtmulLowI64x2S`],
+    /// but operates on the HIGH 2 lanes (indices 2-3) of each `i32x4`
+    /// operand instead of the low 2.
+    ExtmulHighI64x2S,
+    /// `i64x2.extmul_low_i32x4_u` -- same LOW-2-lanes widening multiply as
+    /// [`Self::ExtmulLowI64x2S`], but each `i32` lane is zero-extended
+    /// (read as `u32`) before the multiply, not sign-extended.
+    ExtmulLowI64x2U,
+    /// `i64x2.extmul_high_i32x4_u` -- same HIGH-2-lanes widening multiply
+    /// as [`Self::ExtmulHighI64x2S`], but zero-extended, not
+    /// sign-extended.
+    ExtmulHighI64x2U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1506,6 +1528,17 @@ pub struct SimdOpInfo {
 /// `f32x4.min`'s `0xE8` -- the SIMD proposal's numbering leaves a gap
 /// (`extend_low`/`high`, `narrow`, etc.) for opcodes this crate
 /// doesn't implement yet.
+/// `i64x2.extmul_low`/`high_i32x4_s`/`_u` (SIMD widen PR21) complete the
+/// third and final rung of the "extmul" widening-multiply family this
+/// table already implements twice over: `i16x8.extmul_low`/
+/// `high_i8x16_s`/`_u` (`i8x16` -> `i16x8`) and `i32x4.extmul_low`/
+/// `high_i16x8_s`/`_u` (`i16x8` -> `i32x4`). This is the `i32x4` ->
+/// `i64x2` rung, same narrow-input/wide-output BINARY shape one lane
+/// width up. Each sub-opcode byte fetched live from `BinarySIMD.md` and
+/// cross-checked against the already-implemented `i32x4.extmul_low_i16x8_s`
+/// (`0xBC`)/`i64x2.abs` (`0xC0`)/`i64x2.ge_s` (`0xDB`) entries (all three
+/// matched exactly, confirming `0xDC`-`0xDF` sits immediately past
+/// `i64x2`'s own comparison family with no gap).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1638,6 +1671,10 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.trunc_sat_f32x4_u", sub_opcode: 0xF9, kind: SimdOpKind::TruncSatF32x4U },
     SimdOpInfo { name: "f32x4.convert_i32x4_s", sub_opcode: 0xFA, kind: SimdOpKind::ConvertI32x4S },
     SimdOpInfo { name: "f32x4.convert_i32x4_u", sub_opcode: 0xFB, kind: SimdOpKind::ConvertI32x4U },
+    SimdOpInfo { name: "i64x2.extmul_low_i32x4_s", sub_opcode: 0xDC, kind: SimdOpKind::ExtmulLowI64x2S },
+    SimdOpInfo { name: "i64x2.extmul_high_i32x4_s", sub_opcode: 0xDD, kind: SimdOpKind::ExtmulHighI64x2S },
+    SimdOpInfo { name: "i64x2.extmul_low_i32x4_u", sub_opcode: 0xDE, kind: SimdOpKind::ExtmulLowI64x2U },
+    SimdOpInfo { name: "i64x2.extmul_high_i32x4_u", sub_opcode: 0xDF, kind: SimdOpKind::ExtmulHighI64x2U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2056,8 +2093,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_131_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 131);
+    fn simd_ops_table_has_the_expected_135_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 135);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2615,5 +2652,32 @@ mod tests {
             assert_eq!(op.kind, kind);
             assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
         }
+    }
+
+    #[test]
+    fn simd_i64x2_from_i32x4_widening_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR21 (task #180-182): `i64x2.extmul_low_i32x4_s`
+        // (0xDC), `i64x2.extmul_high_i32x4_s` (0xDD),
+        // `i64x2.extmul_low_i32x4_u` (0xDE), `i64x2.extmul_high_i32x4_u`
+        // (0xDF) -- fetched live from BinarySIMD.md, cross-checked against
+        // the already-implemented `i32x4.extmul_low_i16x8_s` (0xBC)/
+        // `i64x2.abs` (0xC0)/`i64x2.ge_s` (0xDB) entries (all three
+        // matched exactly). Completes the third and final rung of this
+        // table's "extmul" widening-multiply family (i8x16->i16x8,
+        // i16x8->i32x4, and now i32x4->i64x2). No `i64x2.dot_i32x4_s` --
+        // same as the i16x8->i8x16 rung, WASM SIMD does not define a
+        // dot-product for this lane-width pair.
+        for (name, sub_opcode, kind) in [
+            ("i64x2.extmul_low_i32x4_s", 0xDC, SimdOpKind::ExtmulLowI64x2S),
+            ("i64x2.extmul_high_i32x4_s", 0xDD, SimdOpKind::ExtmulHighI64x2S),
+            ("i64x2.extmul_low_i32x4_u", 0xDE, SimdOpKind::ExtmulLowI64x2U),
+            ("i64x2.extmul_high_i32x4_u", 0xDF, SimdOpKind::ExtmulHighI64x2U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        assert!(get_simd_op_by_name("i64x2.dot_i32x4_s").is_none(), "WASM SIMD defines no i64x2.dot_i32x4_s");
     }
 }

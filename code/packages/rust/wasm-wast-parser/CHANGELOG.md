@@ -1,5 +1,19 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.45 — 2026-08-19 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply text-form (task #180-182)
+
+### Added
+
+- `SimdOpKind::ExtmulLowI64x2S`/`ExtmulHighI64x2S`/`ExtmulLowI64x2U`/
+  `ExtmulHighI64x2U` join the shared "no immediate beyond the opcode
+  byte itself" SIMD dispatch arm (already used for
+  `ExtmulLowI16x8S`/etc.) in both the folded and flat instruction
+  encoders -- verified byte-identical at both call sites before using
+  `replace_all`, per this campaign's own documented past gotcha. The
+  third and final "extmul" rung's text-form support.
+- 1 new test covering all 4 new ops, confirming each encodes its real
+  2-byte LEB128 sub-opcode (`0xDC`/`0xDD`/`0xDE`/`0xDF`, all `>= 128`).
+
 ## 0.1.44 — 2026-08-19 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert text-form (task #177-179)
 
 ### Added

@@ -5319,6 +5319,49 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::ExtmulLowI64x2S | SimdOpKind::ExtmulHighI64x2S | SimdOpKind::ExtmulLowI64x2U | SimdOpKind::ExtmulHighI64x2U => {
+                // i64x2.extmul_low/high_i32x4_s/u: reinterpret BOTH popped
+                // v128s as 4 i32 lanes each; take only the LOW (indices
+                // 0-1) or HIGH (indices 2-3) 2 lanes of each, sign- or
+                // zero-extend every value to i64, and multiply the
+                // corresponding pairs lane-wise, producing an i64x2
+                // result. Same narrow-input (32-bit)/wide-output (64-bit)
+                // BINARY shape as `ExtmulLow/HighI16x8S/U`/
+                // `ExtmulLow/HighI8x16S/U` two lane widths down -- the
+                // third and final rung of this interpreter's "extmul"
+                // widening-multiply family. No `i64x2.dot_i32x4_s`
+                // counterpart -- WASM SIMD does not define a dot-product
+                // for this pair, same as the i16x8-from-i8x16 rung.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let lane32 = |b: &[u8; 16], i: usize| i32::from_le_bytes(b[i * 4..i * 4 + 4].try_into().unwrap());
+                let sext = |v: i32| v as i64;
+                let zext = |v: i32| (v as u32) as i64;
+
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let out = match op.kind {
+                        SimdOpKind::ExtmulLowI64x2S => sext(lane32(&lhs, i)).wrapping_mul(sext(lane32(&rhs, i))),
+                        SimdOpKind::ExtmulHighI64x2S => sext(lane32(&lhs, i + 2)).wrapping_mul(sext(lane32(&rhs, i + 2))),
+                        SimdOpKind::ExtmulLowI64x2U => zext(lane32(&lhs, i)).wrapping_mul(zext(lane32(&rhs, i))),
+                        SimdOpKind::ExtmulHighI64x2U => zext(lane32(&lhs, i + 2)).wrapping_mul(zext(lane32(&rhs, i + 2))),
+                        _ => unreachable!("only ExtmulLow/HighI64x2S/U reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::Not => {
                 // v128.not: UNARY, but unlike `Neg`/`Abs` above this
                 // operates on the raw bytes directly -- lane-width-
@@ -9831,6 +9874,64 @@ mod tests {
         let mut high_u_engine = simd_engine_returning_v128(code);
         let (_, high_u_bytes) = high_u_engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([255; 8]).try_into().unwrap())), "extmul_high_u(0xFF, 1) must be 255 (unsigned), not -1");
+    }
+
+    /// `i64x2.extmul_low/high_i32x4_s`/`_u`: the third and final rung of
+    /// the "extmul" widening-multiply family, one lane width up from
+    /// `i16x8.extmul_low/high_i8x16_s`/`_u` above. Proves the LOW 2 lanes
+    /// (indices 0-1) and HIGH 2 lanes (indices 2-3) of each `i32x4`
+    /// operand are read independently -- distinct operand values in the
+    /// low vs. high half must produce distinct results -- and that `_s`/
+    /// `_u` disagree on `-1 * 1` the same way every other signed/unsigned
+    /// pair in this interpreter does, including the
+    /// unsigned-widening-overflows-i64-if-misread-as-sign-extend edge
+    /// case (`0xFFFFFFFF` zero-extended is `4294967295`, not `-1`).
+    #[test]
+    fn i64x2_extmul_i32x4_reads_low_and_high_halves_independently_and_distinguishes_signed_from_unsigned() {
+        let lhs = [1, 1, -1, -1]; // low half (lanes 0-1) = 1, high half (lanes 2-3) = -1
+        let rhs = [1, 1, 1, 1];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(rhs));
+        code.extend([0xFD, 0xDC, 0x01]); // i64x2.extmul_low_i32x4_s (sub-opcode 0xDC, 2-byte LEB128)
+        code.push(0x0B);
+        let mut low_s_engine = simd_engine_returning_v128(code);
+        let (_, low_s_bytes) = low_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([1, 1]).try_into().unwrap())), "extmul_low_s must read the LOW 2 lanes (value 1), not the high half");
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(rhs));
+        code.extend([0xFD, 0xDD, 0x01]); // i64x2.extmul_high_i32x4_s (sub-opcode 0xDD, 2-byte LEB128)
+        code.push(0x0B);
+        let mut high_s_engine = simd_engine_returning_v128(code);
+        let (_, high_s_bytes) = high_s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_s_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([-1, -1]).try_into().unwrap())), "extmul_high_s must read the HIGH 2 lanes (value -1), not the low half");
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(rhs));
+        code.extend([0xFD, 0xDE, 0x01]); // i64x2.extmul_low_i32x4_u (sub-opcode 0xDE, 2-byte LEB128)
+        code.push(0x0B);
+        let mut low_u_engine = simd_engine_returning_v128(code);
+        let (_, low_u_bytes) = low_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_u_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([1, 1]).try_into().unwrap())), "extmul_low_u must read the LOW 2 lanes (value 1), not the high half");
+
+        // -1 (0xFFFFFFFF) reinterpreted as u32 is the largest u32 value,
+        // so extmul_high_u(0xFFFFFFFF, 1) must be 4294967295, not -1.
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(rhs));
+        code.extend([0xFD, 0xDF, 0x01]); // i64x2.extmul_high_i32x4_u (sub-opcode 0xDF, 2-byte LEB128)
+        code.push(0x0B);
+        let mut high_u_engine = simd_engine_returning_v128(code);
+        let (_, high_u_bytes) = high_u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([4294967295, 4294967295]).try_into().unwrap())), "extmul_high_u(0xFFFFFFFF, 1) must be 4294967295 (unsigned), not -1");
     }
 
     /// `v128.not`: bitwise complement of all 128 bits, lane-width-
