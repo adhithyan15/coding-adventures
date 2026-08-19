@@ -437,6 +437,14 @@ TESTSUITE_FILES = [
     # inventory -- both come back 100% passing.
     "simd_select.wast",
     "simd_address.wast",
+    # SIMD widen PR24 (task #188-189): simd_i32x4_trunc_sat_f32x4.wast --
+    # like PR23, ZERO new opcodes. Exercises only
+    # `i32x4.trunc_sat_f32x4_s`/`i32x4.trunc_sat_f32x4_u`, both already
+    # implemented since SIMD widen PR20 (task #177-179). Verified by
+    # actually vendoring and grading the file, not just a static opcode-
+    # inventory claim: 100% pass on every directive (1/1 module, 102/102
+    # assert_return, 4/4 assert_invalid).
+    "simd_i32x4_trunc_sat_f32x4.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
