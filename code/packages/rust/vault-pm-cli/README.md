@@ -359,6 +359,63 @@ command one-shot.
 The pre-emptive idle timer that locks a session while nobody is typing remains
 Phase 1B work; this slice ships only the command-boundary bound.
 
+## Local agent, IPC, and auto-lock
+
+`vault-pm agent start` answers the pre-emptive-timer gap the shell above
+leaves open, by moving passphrase retention into its own long-lived,
+background process instead of one foreground session. `agent start`
+re-executes this same binary, detached, as the hidden `agent run-foreground`
+verb, which binds a permission-checked Unix domain socket
+(`coding_adventures_vault_pm_agent_host`) at a short, deterministic,
+owner-private path and retains one passphrase per vault name in memory.
+
+`agent unlock` is the only way that store is populated. It authenticates
+through the exact same `open_authenticated_access` unlock step every other
+command uses — locking the session again immediately afterward — and hands
+the agent a passphrase only once that open has already succeeded against the
+real vault; the agent crate itself has no dependency on
+`vault-pm-application` and cannot verify a passphrase even in principle.
+Every other authenticated command then opportunistically asks a running
+agent for its vault's passphrase before ever reaching the terminal prompt,
+through one seam (`agent::passphrase_for`) every one of them shares. Every
+branch that is not "a running agent already holds an unexpired passphrase for
+exactly this vault" falls back to the unmodified one-shot prompt
+unconditionally — one-shot operation remains correct with no agent running
+at all.
+
+`passphrase rotate` is the one exception: it always prompts for the current
+passphrase fresh, never consulting the agent, for the same reason the
+interactive shell above refuses to delegate `passphrase` at all. A successful
+rotation also forgets that vault's cached passphrase immediately, and any
+command that comes back with the `locked` exit class tells the agent to
+forget that vault too — a best-effort self-heal against a cache made stale by
+an out-of-band rotation on another device, mirroring the shell's own
+in-process `lock`-on-rejection.
+
+Two permission layers gate every connection: the socket's parent directory
+and the socket file are owner-only (`0700`/`0600`), and — the requirement
+that actually matters — every accepted connection's peer is verified against
+the kernel's own record of who opened it (`SO_PEERCRED` on Linux,
+`getpeereid` on macOS and the BSD family) *before* a single request byte is
+read. A mismatched peer gets no response at all.
+
+Auto-lock is real and pre-emptive here, unlike the shell's command-boundary
+bound: a background sweep thread wipes each vault's retained passphrase once
+its own `auto_lock_seconds` elapses, whether or not any command asks about it
+in the meantime, because a background process — unlike a shell blocked on a
+terminal read — has somewhere for that timer to run.
+
+`vault-pm agent stop`, `agent lock [--vault NAME]`, and `agent status
+[--json] [--vault NAME]` round out the surface; all three are idempotent, and
+`agent start` on an already-running agent reports success rather than
+failing. The interactive shell refuses the whole `agent` noun, because
+`agent run-foreground` run inline would block the session's own prompt
+forever — the same mistake a nested `shell` already is.
+
+Windows named-pipe support is an explicit, documented deferral
+(`VLT-PM48-local-agent-ipc.md` §9); every agent verb reports the closed
+`unsupported` exit class there instead.
+
 ## Finishing what a crash interrupted
 
 A process killed inside a mutation leaves a durable `PendingPublication`

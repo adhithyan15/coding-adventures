@@ -2876,3 +2876,236 @@ fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
         run_unlock_in_pty(&home, &["audit", "verify"], b"Audit: verified");
     assert!(verify_status.success(), "{verify}");
 }
+
+// ---------------------------------------------------------------------------
+// VLT-PM48: local agent, IPC, and auto-lock.
+// ---------------------------------------------------------------------------
+
+/// Stops whatever agent is running for `home` when the test ends, including
+/// on panic.
+///
+/// Every agent test spawns a real detached background process. Without this,
+/// a failing assertion would leave that process running for the lifetime of
+/// the CI runner (or a developer's machine), holding a socket open under a
+/// temporary directory this test is about to delete out from under it.
+struct AgentGuard<'a> {
+    home: &'a TestHome,
+}
+
+impl Drop for AgentGuard<'_> {
+    fn drop(&mut self) {
+        let _ = run_plain(self.home, &["agent", "stop"]);
+    }
+}
+
+/// Run one command over a real pseudo-terminal, feeding it nothing.
+///
+/// Used to prove a command does *not* prompt: if it needed a passphrase, the
+/// prompt text would already be sitting in the transcript, and the child
+/// would then block reading `/dev/tty` — which nothing here ever writes to —
+/// so `drain_pty`'s bounded read fails loudly after
+/// [`PTY_READ_TIMEOUT_MS`] rather than either hanging this test suite forever
+/// or, worse, silently passing. Standard input is `Stdio::null()` rather than
+/// piped and closed, because VLT-PM08 §2 already establishes that secret
+/// collection never reads process stdin at all — the prompt this test is
+/// checking for lives on the controlling terminal, not on this stream.
+fn run_without_prompting_in_pty(home: &TestHome, arguments: &[&str]) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::null())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    let mut transcript = Vec::new();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn stdout_string(output: &std::process::Output) -> String {
+    String::from_utf8_lossy(&output.stdout).into_owned()
+}
+
+/// The complete agent lifecycle through the real executable, end to end.
+///
+/// This is the one test that proves the whole point of VLT-PM48: a person
+/// who runs `agent unlock` once answers no further passphrase prompts for
+/// ordinary authenticated commands until they explicitly lock, stop the
+/// agent, or the configured idle bound elapses — while every step in between
+/// remains the same real `vault-pm` binary, the same real filesystem vault,
+/// and the same real Unix domain socket a second local process would have to
+/// reach.
+#[test]
+fn real_agent_unlock_removes_the_prompt_until_locked_or_stopped() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+
+    // Nothing is running yet, and asking is not an error.
+    let not_running = run_plain(&home, &["agent", "status"]);
+    assert!(not_running.status.success());
+    assert_eq!(stdout_string(&not_running), "Agent: not running.\n");
+
+    // A command that needs unlocking still falls back to the ordinary prompt
+    // when no agent exists — VLT-PM48 §2 requirement 4, checked before the
+    // agent is even started so a regression here cannot hide behind "the
+    // agent happened to be running already."
+    let (status, transcript) = run_unlock_in_pty(&home, &["item", "list"], b"No items.");
+    assert!(status.success(), "{transcript}");
+
+    let started = run_plain(&home, &["agent", "start"]);
+    assert!(started.status.success(), "{:?}", started);
+    assert_eq!(stdout_string(&started), "Agent: started.\n");
+    let _guard = AgentGuard { home: &home };
+
+    // Starting an already-running agent is idempotent, not an error.
+    let started_again = run_plain(&home, &["agent", "start"]);
+    assert!(started_again.status.success());
+    assert_eq!(stdout_string(&started_again), "Agent: already running.\n");
+
+    let running_empty = run_plain(&home, &["agent", "status"]);
+    assert!(running_empty.status.success());
+    assert_eq!(
+        stdout_string(&running_empty),
+        "Agent: running. No vaults retained.\n"
+    );
+
+    // One real passphrase prompt, on a real pseudo-terminal, handed to a real
+    // running agent process over its real socket.
+    let (unlock_status, unlock_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["agent", "unlock"],
+        b"Agent: unlocked.",
+        PASSPHRASE,
+    );
+    assert!(unlock_status.success(), "{unlock_transcript}");
+    assert_transcript_excludes_secrets(&unlock_transcript);
+
+    let running_with_vault = run_plain(&home, &["agent", "status"]);
+    assert!(running_with_vault.status.success());
+    let status_text = stdout_string(&running_with_vault);
+    assert!(
+        status_text.starts_with("Agent: running.\n"),
+        "{status_text}"
+    );
+    assert!(
+        status_text.contains("personal: unlocked ("),
+        "{status_text}"
+    );
+    assert!(status_text.contains("s remaining)\n"), "{status_text}");
+
+    // `--vault` filtered status reports the same thing about one named vault.
+    let filtered = run_plain(&home, &["--vault", "personal", "agent", "status", "--json"]);
+    assert!(filtered.status.success());
+    let filtered_text = stdout_string(&filtered);
+    assert!(
+        filtered_text.contains("\"vault\":\"personal\""),
+        "{filtered_text}"
+    );
+    assert!(
+        filtered_text.contains("\"unlocked\":true"),
+        "{filtered_text}"
+    );
+
+    // The heart of the feature: a one-shot authenticated command run with
+    // nothing at all on its controlling terminal still succeeds, because it
+    // opportunistically reused the agent's retained passphrase instead of
+    // prompting for one.
+    let (reused_status, reused_transcript) = run_without_prompting_in_pty(&home, &["item", "list"]);
+    assert!(reused_status.success(), "{reused_transcript}");
+    assert!(
+        !reused_transcript.contains("Vault passphrase"),
+        "an unlocked agent must remove the prompt entirely: {reused_transcript}"
+    );
+    assert!(
+        reused_transcript.contains("No items."),
+        "{reused_transcript}"
+    );
+
+    // `agent lock` forgets it, and the very next command prompts again.
+    let locked = run_plain(&home, &["agent", "lock"]);
+    assert!(locked.status.success());
+    assert_eq!(stdout_string(&locked), "Agent: locked.\n");
+
+    let after_lock_status = run_plain(&home, &["agent", "status"]);
+    assert!(after_lock_status.status.success());
+    assert_eq!(
+        stdout_string(&after_lock_status),
+        "Agent: running. No vaults retained.\n"
+    );
+
+    let (reprompted_status, reprompted_transcript) =
+        run_unlock_in_pty(&home, &["item", "list"], b"No items.");
+    assert!(reprompted_status.success(), "{reprompted_transcript}");
+
+    // `agent stop` tears the socket down; the next status call reports the
+    // agent absent rather than erroring, and stopping an already-stopped
+    // agent is equally harmless.
+    let stopped = run_plain(&home, &["agent", "stop"]);
+    assert!(stopped.status.success());
+    assert_eq!(stdout_string(&stopped), "Agent: stopped.\n");
+
+    let stopped_again = run_plain(&home, &["agent", "stop"]);
+    assert!(stopped_again.status.success());
+    assert_eq!(stdout_string(&stopped_again), "Agent: not running.\n");
+
+    let finally_not_running = run_plain(&home, &["agent", "status"]);
+    assert!(finally_not_running.status.success());
+    assert_eq!(stdout_string(&finally_not_running), "Agent: not running.\n");
+}
+
+/// A successful `passphrase rotate` invalidates whatever the agent had
+/// cached for that vault immediately, not only after the idle bound elapses.
+#[test]
+fn real_agent_cache_is_forgotten_immediately_after_a_passphrase_rotation() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+
+    let started = run_plain(&home, &["agent", "start"]);
+    assert!(started.status.success());
+    let _guard = AgentGuard { home: &home };
+
+    let (unlock_status, unlock_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["agent", "unlock"],
+        b"Agent: unlocked.",
+        PASSPHRASE,
+    );
+    assert!(unlock_status.success(), "{unlock_transcript}");
+
+    // Confirm the opportunistic path is live before rotating, so the assertion
+    // after rotation is about the rotation and not about the agent never
+    // having been reached at all.
+    let (before_status, before_transcript) = run_without_prompting_in_pty(&home, &["item", "list"]);
+    assert!(before_status.success(), "{before_transcript}");
+
+    // The rotation itself still needs the (still-cached, still-correct) old
+    // passphrase and a fresh one on a real terminal.
+    let (rotate_status, rotate_transcript) =
+        run_passphrase_rotate_in_pty(&home, PASSPHRASE, ROTATED_PASSPHRASE);
+    assert!(rotate_status.success(), "{rotate_transcript}");
+
+    // The agent's cached value is now the old, wrong passphrase. Because
+    // `passphrase_rotate` forgets it immediately on success, the very next
+    // command falls back to a prompt — for the *new* passphrase — rather than
+    // silently trying the stale one and failing with `Locked`.
+    let (after_status, after_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["item", "list"],
+        b"No items.",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(after_status.success(), "{after_transcript}");
+}

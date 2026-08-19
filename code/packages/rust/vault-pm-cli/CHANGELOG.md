@@ -2,6 +2,41 @@
 
 ## Unreleased
 
+- **`agent start|stop|status|unlock|lock`**, `VLT-PM00` §23 item 12.
+  Specified by `VLT-PM48-local-agent-ipc.md`. `agent start` re-executes this
+  same binary, detached, as the hidden `agent run-foreground` verb, which
+  binds a permission-checked Unix domain socket
+  (`coding_adventures_vault_pm_agent_host`) and retains one passphrase per
+  vault name in memory until an explicit `agent lock`, `agent stop`, or its
+  own `auto_lock_seconds` idle bound elapses — enforced by a real background
+  sweep thread, the pre-emptive auto-lock timer `VLT-PM40-cli-interactive-
+  shell.md` §3.5 named as this slice's own deferred work.
+
+  `agent unlock` authenticates exactly once, through the same
+  `open_authenticated_access` unlock step every other command uses, and hands
+  the agent a passphrase only after that open already succeeded against the
+  real vault — the agent itself verifies nothing and cannot, since
+  `vault-pm-agent-host` has no dependency on `vault-pm-application` at all.
+
+  Every authenticated command now funnels its passphrase collection through
+  one new seam, `agent::passphrase_for`: a running, unlocked agent removes
+  the terminal prompt; anything else — no agent, an expired bound, a
+  different vault — falls back to the unmodified one-shot prompt
+  unconditionally. `passphrase rotate` is the one exception and always
+  prompts fresh, for the same reason `vault-pm shell` refuses to delegate
+  `passphrase` at all (`VLT-PM43-cli-passphrase-rotation.md` §3.1); a
+  successful rotation also forgets that vault's cached passphrase
+  immediately, and any command that comes back `Locked` triggers the same
+  best-effort forget, mirroring `ShellSession`'s in-process self-heal.
+
+  The interactive shell refuses the whole `agent` noun, not verb by verb:
+  `agent run-foreground` inline would block the session's own prompt forever,
+  the same mistake a nested `shell` already is.
+
+  Windows named-pipe support is explicitly deferred (`VLT-PM48` §9); every
+  agent command reports the closed `unsupported` exit class there rather than
+  silently doing nothing.
+
 - **`attachment add`, `attachment list`, and `attachment export`**, the last
   piece of `VLT-PM00` §23 item 11. Specified by
   `VLT-PM47-cli-attachments.md`. The verbs are spelled as §14.4 already

@@ -663,10 +663,20 @@ fn classify(line: &str) -> ShellCommand {
 /// terminal, or a redirect — so the verb could only ever read the wrong thing
 /// and then fail. `--copy` inside a session works exactly as it does outside
 /// one; it spawns its own clearer.
+///
+/// `agent` (VLT-PM48) is refused wholesale rather than verb by verb. Most of
+/// its subcommands would be harmless here — `agent unlock`, for one, would
+/// simply reuse the session's already-retained authenticator instead of
+/// prompting again — but `agent run-foreground` is the long-lived accept loop
+/// `agent start` re-executes this binary as, and running it inline would
+/// block the session's own command prompt forever, the same category of
+/// mistake a nested `shell` would be. One rule covering the whole noun is
+/// easier to state and to keep correct than a rule that allows some of its
+/// verbs and not others.
 pub(crate) fn is_refused(verb: &str) -> bool {
     matches!(
         verb,
-        "init" | "vault" | "shell" | "passphrase" | "clipboard" | "--vault"
+        "init" | "vault" | "shell" | "passphrase" | "clipboard" | "agent" | "--vault"
     )
 }
 
