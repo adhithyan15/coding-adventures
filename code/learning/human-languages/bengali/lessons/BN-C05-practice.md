@@ -14,11 +14,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-THAKA-01, BN-CONCEPT-C05-KAJKORA-01]
+  knowledge: [BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-THAKA-01]
 introduces:
   knowledge: [BN-CONCEPT-C05-PRACTICE-01]
 practises:
-  knowledge: [BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01]
+  knowledge: [BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,13 +30,13 @@ reviews_of: [BN-C05-bola, BN-C05-ami-bangla-boli, BN-C05-thaka, BN-C05-kaj-kora,
 # Chapter 5 — The first verbs
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-THAKA-01, BN-CONCEPT-C05-KAJKORA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-THAKA-01] -->
 
 [PAUSE 2s] No new words. Three verbs, one gender-free engine — build real
 sentences about yourself.
 
 ## How to answer — build the sentences
-<!-- hl-knowledge: introduces=[BN-CONCEPT-C05-PRACTICE-01]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-THAKA-01, BN-CONCEPT-C05-KAJKORA-01] -->
+<!-- hl-knowledge: introduces=[BN-CONCEPT-C05-PRACTICE-01]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-THAKA-01] -->
 
 [PAUSE 1s each]
 - [YOU SAY: "I speak Bengali" — *āmi bānglā bôli*]
@@ -45,7 +45,7 @@ sentences about yourself.
 - [YOU SAY: "he speaks" and "she speaks" — *se bôle* (the same for both!)]
 
 ## Grammar lens — the engine
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01] -->
 
 [PAUSE 2s]
 - [YOU SAY: the "I" ending on every present verb (*-i*)]
@@ -53,7 +53,7 @@ sentences about yourself.
 - [YOU SAY: where the verb sits, and where "in" sits (verb last; *-y/-te* after the noun)]
 
 ## What you've built — roots you now carry
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01] -->
 
 [PAUSE 2s]
 - *bôlā* "to speak" (native; *bol-*, like Hindi/Punjabi)
@@ -62,7 +62,7 @@ sentences about yourself.
 - *bānglā* ← *bôngo*, the ancient region — the Ganges delta
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C05-KAJKORA-01, BN-CONCEPT-C05-PRACTICE-01, BN-CONCEPT-C05-THAKA-01] -->
 
 [PAUSE 3s] In one breath, say your language, your city, and your work in Bengali —
 and note what stays the same for anyone. (*Āmi bānglā bôli. Āmi … thāki. Āmi kāj
