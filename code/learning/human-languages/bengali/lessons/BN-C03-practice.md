@@ -14,11 +14,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01]
+  knowledge: [BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01]
 introduces:
   knowledge: [BN-CONCEPT-C03-PRACTICE-01]
 practises:
-  knowledge: [BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01]
+  knowledge: [BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,12 +30,12 @@ reviews_of: [BN-C03-kemon, BN-C03-tumi-kemon-achho, BN-C03-ami, BN-C03-bhalo, BN
 # Chapter 3 — The how-are-you exchange
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
 [PAUSE 2s] No new words. The whole responding cycle, from atoms you now own.
 
 ## The exchange
-<!-- hl-knowledge: introduces=[BN-CONCEPT-C03-PRACTICE-01]; assesses=[BN-CONCEPT-C03-TUMIKEMONACHHO-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01] -->
+<!-- hl-knowledge: introduces=[BN-CONCEPT-C03-PRACTICE-01]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
 [PAUSE 1s each]
 - [YOU SAY: "How are you?" (familiar) — *tumi kēmon āchho?*]
@@ -44,7 +44,7 @@ reviews_of: [BN-C03-kemon, BN-C03-tumi-kemon-achho, BN-C03-ami, BN-C03-bhalo, BN
 - [YOU SAY: the respectful question — *āpni kēmon āchhen?*]
 
 ## The word, taken apart — the atoms
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
 [PAUSE 2s]
 - [YOU SAY: the k- question-word for "how" (*kēmon*)]
@@ -52,7 +52,7 @@ reviews_of: [BN-C03-kemon, BN-C03-tumi-kemon-achho, BN-C03-ami, BN-C03-bhalo, BN
 - [YOU SAY: when Bengali needs the verb and when it drops it (state vs. equation)]
 
 ## What you've built — roots you now carry
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
 [PAUSE 2s]
 - *kēmon* ← the interrogative *k-* (PIE *\*kʷo-*), cousin of English *how/what*
@@ -61,7 +61,7 @@ reviews_of: [BN-C03-kemon, BN-C03-tumi-kemon-achho, BN-C03-ami, BN-C03-bhalo, BN
 - *nā* ← PIE *\*ne*, English *no* (in *kono bæpār nā*)
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C03-BHALO-01, BN-CONCEPT-C03-KEMON-01, BN-CONCEPT-C03-KONOBEPARNA-01, BN-CONCEPT-C03-PRACTICE-01, BN-CONCEPT-C03-TUMIKEMONACHHO-01] -->
 
 [PAUSE 3s] A stranger asks *āpni kēmon āchhen?* — give a full, polite reply, and
 answer their thanks. (*Āmi bhālo āchhi, dhônnobad* — and to thanks, *kono bæpār

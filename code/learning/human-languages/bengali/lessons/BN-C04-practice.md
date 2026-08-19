@@ -14,11 +14,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01]
+  knowledge: [BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01]
 introduces:
   knowledge: [BN-CONCEPT-C04-PRACTICE-01]
 practises:
-  knowledge: [BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01]
+  knowledge: [BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,12 +30,12 @@ reviews_of: [BN-C01-ashi, BN-C04-abar, BN-C04-dekha-hobe, BN-C04-abar-dekha-hobe
 # Chapter 4 — The farewells
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->
 
 [PAUSE 2s] No new words. Three ways to part — none of them a blunt "goodbye."
 
 ## Why it's said this way — the farewells
-<!-- hl-knowledge: introduces=[BN-CONCEPT-C04-PRACTICE-01]; assesses=[BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->
+<!-- hl-knowledge: introduces=[BN-CONCEPT-C04-PRACTICE-01]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01] -->
 
 [PAUSE 1s each]
 - [YOU SAY: the tender Chapter-1 goodbye — *āshi* ("I'll come [again]")]
@@ -43,7 +43,7 @@ reviews_of: [BN-C01-ashi, BN-C04-abar, BN-C04-dekha-hobe, BN-C04-abar-dekha-hobe
 - [YOU SAY: "see you tomorrow" — *kāl dækhā hôbe*]
 
 ## The word, taken apart — the atoms
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
 
 [PAUSE 2s]
 - [YOU SAY: "again" and "[a] seeing will happen" (*ābār*, *dækhā hôbe*)]
@@ -51,7 +51,7 @@ reviews_of: [BN-C01-ashi, BN-C04-abar, BN-C04-dekha-hobe, BN-C04-abar-dekha-hobe
 - [YOU SAY: what's odd about *dækhā hôbe* (impersonal — the event is the subject)]
 
 ## What you've built — roots you now carry
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
 
 [PAUSE 2s]
 - *dækhā hôbe* — "[a] seeing will happen"; the impersonal future
@@ -59,7 +59,7 @@ reviews_of: [BN-C01-ashi, BN-C04-abar, BN-C04-dekha-hobe, BN-C04-abar-dekha-hobe
 - *āshi* (Ch.1) — "I'll come [again]," the Bengali promise-of-return goodbye
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-ASHI-01, BN-CONCEPT-C04-ABAR-01, BN-CONCEPT-C04-ABARDEKHAHOBE-01, BN-CONCEPT-C04-DEKHAHOBE-01, BN-CONCEPT-C04-KALDEKHAHOBE-01, BN-CONCEPT-C04-PRACTICE-01] -->
 
 [PAUSE 3s] You're leaving a friend and expect to see them next week. Which goodbye
 fits, and how does Bengali phrase "we'll meet"? (*Ābār dækhā hôbe*; impersonally —

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5cf05a9847198274",
+  "sourceHash": "fnv1a64:a5ba65dea1e48ba0",
   "lessons": [
     {
       "id": "BN-C03-ami",
@@ -666,7 +666,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:51c268d4bd2935ac",
+      "sourceHash": "fnv1a64:0f1b161d1fb7adb6",
       "notice": null,
       "blocks": [
         {

@@ -42,9 +42,13 @@
         "summary": "Complete BN-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Bengali, give my name, and understand the other person's name.",
         "assesses": [
           "BN-CONCEPT-C02-ALAAP-01",
+          "BN-CONCEPT-C02-AMAR-01",
           "BN-CONCEPT-C02-AMARNAAM-01",
+          "BN-CONCEPT-C02-KI-01",
+          "BN-CONCEPT-C02-NAAM-01",
           "BN-CONCEPT-C02-PRACTICE-01",
-          "BN-CONCEPT-C02-TOMARNAAMKI-01"
+          "BN-CONCEPT-C02-TOMARNAAMKI-01",
+          "BN-CONCEPT-C02-TUMIAPNI-01"
         ]
       }
     },
@@ -63,7 +67,9 @@
         "kind": "task",
         "summary": "Complete BN-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Bengali, answer naturally, and return the question.",
         "assesses": [
+          "BN-CONCEPT-C03-AMI-01",
           "BN-CONCEPT-C03-BHALO-01",
+          "BN-CONCEPT-C03-KEMON-01",
           "BN-CONCEPT-C03-KONOBEPARNA-01",
           "BN-CONCEPT-C03-PRACTICE-01",
           "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
@@ -83,7 +89,10 @@
         "kind": "task",
         "summary": "Complete BN-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Bengali conversation politely and choose a farewell that fits the situation.",
         "assesses": [
+          "BN-CONCEPT-C01-ASHI-01",
+          "BN-CONCEPT-C04-ABAR-01",
           "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
+          "BN-CONCEPT-C04-DEKHAHOBE-01",
           "BN-CONCEPT-C04-KALDEKHAHOBE-01",
           "BN-CONCEPT-C04-PRACTICE-01"
         ]
@@ -102,6 +111,7 @@
         "kind": "task",
         "summary": "Complete BN-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Bengali sentences with the chapter's first verbs.",
         "assesses": [
+          "BN-CONCEPT-C03-AMI-01",
           "BN-CONCEPT-C05-AMIBANGLABOLI-01",
           "BN-CONCEPT-C05-BOLA-01",
           "BN-CONCEPT-C05-KAJKORA-01",
@@ -175,6 +185,13 @@
           "BN-GRAMMAR-C08-BOJHA-02",
           "BN-LEX-C08-PORA-01",
           "BN-SOUND-C08-PORA-02",
+          "BN-LEX-C07-DEKHA-01",
+          "BN-GRAMMAR-C07-DEKHA-02",
+          "BN-LEX-NUMBERS-ONE-TO-FIVE",
+          "BN-SCRIPT-CHANDRABINDU-NASAL",
+          "BN-ETYMON-DUI-COMPARISON",
+          "BN-HISTORY-DV-NUMERAL-SIMPLIFICATION",
+          "BN-HISTORY-DUI-AREAL-COMPANY",
           "BN-LEX-C08-LEKHA-01",
           "BN-GRAMMAR-C08-LEKHA-02"
         ]
@@ -193,9 +210,19 @@
         "kind": "production",
         "summary": "Say āmār bhālo lāge and hear that you are not its subject, set it against āmi bhālobāsi where you are, place both beside the আমার … আছে shape that says 'I have', and run the chapter's four verbs back — neowā, jijñāsā kôrā, sāhājjo kôrā, bhālo lāgā. Six of the chapter's nine atoms. Two of the other three — the নেওয়া compound and the noun-plus-করা pattern — are retrieved by the very next lesson after the one that taught them; the third, the doubled য্য of সাহায্য, is taught in the penultimate lesson and genuinely is not revisited, which is recorded here rather than papered over with a claim the payoff does not make.",
         "assesses": [
+          "BN-LEX-C08-BHABA-01",
+          "BN-LEX-C08-BOJHA-01",
+          "BN-GRAMMAR-C08-BOJHA-02",
+          "BN-LEX-C08-PORA-01",
+          "BN-LEX-C08-LEKHA-01",
+          "BN-GRAMMAR-C08-LEKHA-02",
           "BN-LEX-C09-NEOWA-01",
           "BN-LEX-C09-JIJNASA-01",
           "BN-LEX-C09-SAHAJJO-01",
+          "BN-GRAMMAR-C07-HOWA-02",
+          "BN-GRAMMAR-C07-ASHA-02",
+          "BN-LEX-C07-KHAOWA-01",
+          "BN-GRAMMAR-C07-KHAOWA-02",
           "BN-LEX-C09-BHALOLAGA-01",
           "BN-GRAMMAR-C09-DATIVE-02",
           "BN-LEX-C09-BHALOBASA-03"
