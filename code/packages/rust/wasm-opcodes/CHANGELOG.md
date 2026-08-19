@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.27] - 2026-08-19 - SIMD widen PR22: i16x8.q15mulr_sat_s (task #183-185)
+
+### Added
+
+- 1 new `SIMD_OPS` entry: `i16x8.q15mulr_sat_s` (`0x82`) -- a Q15
+  fixed-point ROUNDING SATURATING multiply, the first genuinely new
+  SIMD op family/semantic in this table since the "extmul"
+  widening-multiply arc completed in PR21. 136 SIMD opcodes total, up
+  from 135. Sub-opcode `0x82` fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i16x8.neg` (`0x81`)/`i16x8.all_true` (`0x83`) entries that straddle
+  it on either side -- `0x82` was the one gap in that run, confirmed
+  unused by any other `SIMD_OPS` entry.
+- `SimdOpKind::Q15mulrSatI16x8S`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): per
+  lane, sign-extend both `i16`s to `i32`, multiply, add the Q15
+  rounding constant `0x4000`, arithmetic-shift right by 15, then
+  saturate to `i16::MIN..=i16::MAX`. The saturating clamp fires in
+  exactly one case: both lanes at `i16::MIN`, which the unsaturated
+  formula would push one past `i16::MAX`.
+
 ## [0.2.26] - 2026-08-19 - SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply family (task #180-182)
 
 ### Added

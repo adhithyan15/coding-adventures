@@ -319,6 +319,17 @@ TESTSUITE_FILES = [
     # prior addition.
     "simd_i16x8_extadd_pairwise_i8x16.wast",
     "simd_i16x8_extmul_i8x16.wast",
+    # SIMD widen PR22 (task #183-185): simd_i16x8_q15mulr_sat_s.wast --
+    # i16x8.q15mulr_sat_s (0x82), a Q15 fixed-point ROUNDING SATURATING
+    # multiply -- the first genuinely new SIMD op family/semantic since
+    # the "extmul" widening-multiply arc completed in PR21 (not a plain
+    # wrapping/compare/min-max op like every other i16x8 binary entry).
+    # Sub-opcode fetched live from BinarySIMD.md and cross-checked
+    # against the already-implemented i16x8.neg (0x81)/i16x8.all_true
+    # (0x83) entries that straddle it (0x82 was the one gap between
+    # them). Same as PR21's file, this is a BRAND-NEW file this repo
+    # did not previously vendor at all.
+    "simd_i16x8_q15mulr_sat_s.wast",
     # SIMD widen PR11 (task #150-152): simd_bitwise.wast -- v128.not/
     # and/andnot/or/xor/bitselect, the lane-width-agnostic raw-byte
     # bitwise family. A strategic pivot from "widen the next narrow
