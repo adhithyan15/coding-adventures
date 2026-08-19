@@ -4,6 +4,76 @@ All notable changes to this package will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed - generated components collapsed to zero size in any QML layout
+
+Every generated component reported `0 x 0` to its parent and collapsed when
+placed in a `RowLayout`, `ColumnLayout`, or `GridLayout`. Hosting four
+`mosaic-pkg-toolkit` `Button`s in a `RowLayout` under `qml.exe` produced a row
+measuring `48x0` — the spacings alone — with all four buttons at `0x0`, painted
+on top of each other and on the text below, their labels clipped to a single
+character.
+
+The cause: the root wrapper is a QML `Item`, the one QtQuick container with no
+intrinsic size. Unlike `Rectangle`, `Text`, the Controls widgets, and both the
+positioners and the layouts, a bare `Item` publishes `0 x 0` and does not grow
+to fit its children — they are simply allowed to paint outside it. Since
+`implicitWidth`/`implicitHeight` is exactly the channel a QML layout reads to
+size a child, every component collapsed. The emitter already emitted
+content-derived sizing in several places (`For` delegates, styled `Rectangle`s,
+drag wrappers, table delegates) but never on the component root.
+
+Three `Item`s that were missing it now publish a `childrenRect`-derived
+implicit size:
+
+- the **component root**, which fixes the reported bug;
+- an **unstyled `Box`** container, which lowers to a bare `Item` — without
+  this a `Box`-rooted component still collapsed, the root faithfully measuring
+  a child that measured nothing;
+- the **`HostTooltip`** wrapper, a pure decorator that was silently collapsing
+  whatever it decorated.
+
+`Spacer` and `Stack` are deliberately excluded: `Spacer` is a zero-implicit-size
+flex filler by design, and a `Stack`'s children carry `anchors.fill: parent`, so
+sizing it from `childrenRect` would be a binding loop.
+
+Verified by rendering, not by reading. Across all 23 `mosaic-pkg-toolkit`
+components probed inside a `RowLayout` under Qt 6.8.1, measured implicit size
+went from `0x0` for every one of them to a real size for 19, with **zero**
+binding-loop warnings. The four still at zero are the separate styled-`Box`
+issue noted below. `venture-browser`'s `VentureChrome` — the largest real Qt
+consumer, using `For`, `HostTable`, and `Stack` — is unchanged at `1100x800`
+when anchored (how its host test uses it) and now measures `471x599` in a
+layout instead of collapsing.
+
+Known adjacent gap, deliberately not fixed here: a styled `Box` whose only
+child is a `Text` with `anchors.fill: parent` still has no intrinsic size, so
+`Badge`, `Alert`, and `Accordion` measure only their padding. `childrenRect`
+cannot recover that — the anchored child has no independent size to measure
+(adding it converges to the margins, `6x6`). The fix is to let the `Text` drive
+the implicit size when the part declares no fixed dimension, which touches the
+Grid/table lowering the path was built for. See the README's deferred
+follow-ups.
+
+### Documented - `QtQuick.Controls` name collision; alias the directory import
+
+A generated file is named after its MIL component, so `Button.mil` produces the
+QML type `Button` — colliding with `QtQuick.Controls.Button`, and likewise for
+`CheckBox`, `RadioButton`, `TextField`, and `Popup`. Confirmed on Qt 6.8.1:
+when both are in scope the **module type wins**, so a consumer writing a bare
+`Button { variant: "primary" }` gets `QtQuick.Controls.Button` and fails with
+`Cannot assign to non-existent property "variant"` — or, if it only sets
+properties the two share, silently renders the wrong component.
+
+Consumers must use a namespaced directory import (`import "." as Mosaic;
+Mosaic.Button { … }`), which is verified to resolve correctly. The README now
+documents this.
+
+Components are intentionally **not** renamed (to `MosaicButton` or similar):
+the MIL component name is the cross-backend contract that React, SwiftUI,
+Compose, Flutter, and XAML all emit verbatim, and a Qt-only rename would break
+both that correspondence and every existing consumer. The structural fix is
+`qmldir` emission from `--emit-project`, recorded as a deferred follow-up.
+
 ### Added - accessible HostSlider names
 
 Literal and slot-backed `HostSlider.a11y-label` values now lower to
