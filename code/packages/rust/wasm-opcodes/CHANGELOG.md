@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.25] - 2026-08-19 - SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert conversion family (task #177-179)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `i32x4.trunc_sat_f32x4_s` (`0xF8`),
+  `i32x4.trunc_sat_f32x4_u` (`0xF9`), `f32x4.convert_i32x4_s` (`0xFA`),
+  `f32x4.convert_i32x4_u` (`0xFB`) -- this table's FIRST `i32x4`<->
+  `f32x4` CONVERSION ops (a lane TYPE change, not just a value change
+  within one lane type, unlike every prior `f32x4` addition: PR17's
+  splats, PR19's abs/mul/min). 131 SIMD opcodes total, up from 127.
+  All four reuse the plain UNARY `v128->v128` shape (same as
+  `f32x4.abs`). `trunc_sat_f32x4_s`/`_u` NEVER trap -- unlike this
+  table's TRAPPING scalar `i32.trunc_f32_s`/`_u` MVP opcodes -- NaN
+  saturates to 0, out-of-range saturates to the target bound, matching
+  the semantics of this crate's own `0xFC`-prefixed scalar `trunc_sat`
+  conversions. `convert_i32x4_u` needs its `i32` lane's bit pattern
+  reinterpreted as `u32` BEFORE the cast to `f32`, not converted
+  directly from the signed interpretation -- see
+  `SimdOpKind::ConvertI32x4U`'s own doc comment for the exact bug this
+  avoids. Each sub-opcode byte fetched live from the SIMD proposal's
+  own `BinarySIMD.md`.
+- `SimdOpKind::TruncSatF32x4S`/`TruncSatF32x4U`/`ConvertI32x4S`/
+  `ConvertI32x4U`.
+
 ## [0.2.24] - 2026-08-19 - SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min (task #174-176)
 
 ### Added

@@ -1039,6 +1039,34 @@ fn invalid_f32x4_mul_given_an_i32_operand_instead_of_v128() {
 }
 
 #[test]
+fn valid_i32x4_f32x4_conversion_family() {
+    // SIMD widen PR20 (task #177-179): i32x4.trunc_sat_f32x4_s/_u,
+    // f32x4.convert_i32x4_s/_u -- the FIRST i32x4<->f32x4 CONVERSION
+    // ops in this crate's type rules (a lane TYPE change, not just a
+    // value change within one lane type, unlike every prior f32x4
+    // addition). All 4 are UNARY at the type level (pop one v128, push
+    // one v128) -- WASM's type system doesn't distinguish "i32-lane
+    // v128" from "f32-lane v128", so this is the exact same shape as
+    // f32x4.abs above, even though the runtime semantics genuinely
+    // reinterpret the lane bytes as a different numeric type.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i32x4.trunc_sat_f32x4_s (local.get 0)))
+             (func (param v128) (result v128) (i32x4.trunc_sat_f32x4_u (local.get 0)))
+             (func (param v128) (result v128) (f32x4.convert_i32x4_s (local.get 0)))
+             (func (param v128) (result v128) (f32x4.convert_i32x4_u (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_convert_i32x4_u_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in the operand
+    // slot, not just accepting whatever's on the stack -- the operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.convert_i32x4_u (local.get 0))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

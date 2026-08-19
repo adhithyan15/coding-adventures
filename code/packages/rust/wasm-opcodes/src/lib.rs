@@ -1306,6 +1306,65 @@ pub enum SimdOpKind {
     /// discipline fixes (`min(NaN, -0.0)` silently returning `-0.0`
     /// instead of `NaN` under Rust's native `.min()`).
     MinF32x4,
+    /// `i32x4.trunc_sat_f32x4_s` -- pop one `v128`, convert each of the 4
+    /// `f32` lanes to a SIGNED SATURATING `i32`, push one `v128`. This is
+    /// the SIMD counterpart of the `0xFC`-prefixed scalar
+    /// `i32.trunc_sat_f32_s` instruction (sub-opcode `0x00`, the
+    /// "non-trapping float-to-int conversions" proposal) -- crucially,
+    /// like that scalar op and UNLIKE this crate's TRAPPING
+    /// `i32.trunc_f32_s`/`_u` MVP opcodes (`0xA8`/`0xA9`), `trunc_sat`
+    /// NEVER TRAPS: a NaN lane saturates to `0`, a lane below
+    /// `i32::MIN` saturates to `i32::MIN`, a lane above `i32::MAX`
+    /// saturates to `i32::MAX`, and an ordinary in-range lane truncates
+    /// toward zero same as the trapping version. Rust's own `as` cast
+    /// from `f32` to `i32` has implemented exactly this saturating
+    /// semantic since Rust 1.45 (the "T-as-int" RFC), so `lane as i32`
+    /// is directly correct -- no hand-rolled NaN/range checks needed,
+    /// mirroring the discipline the `0xFC` scalar `trunc_sat` handlers
+    /// in `wasm-execution` already use. Same UNARY "pop v128, push
+    /// v128" shape as [`Self::AbsF32x4`], just with a lane-width-
+    /// preserving type change (f32 lane in, i32 lane out) instead of a
+    /// same-type transform.
+    TruncSatF32x4S,
+    /// `i32x4.trunc_sat_f32x4_u` -- same UNARY shape as
+    /// [`Self::TruncSatF32x4S`], but each `f32` lane saturates to an
+    /// UNSIGNED `i32` interpretation instead: a NaN lane saturates to
+    /// `0`, a lane below `0` saturates to `0` (NOT wrapped/reinterpreted
+    /// -- a negative float genuinely means "below the unsigned range's
+    /// minimum"), a lane above `u32::MAX` saturates to `u32::MAX`, and
+    /// an ordinary in-range lane truncates toward zero. Rust's `as` cast
+    /// from `f32` to `u32` has the same saturating semantics as the `_s`
+    /// case, so `lane as u32` is directly correct; the result is then
+    /// stored as a `u32` bit pattern into the same 4-byte lane slot
+    /// this table's other `i32x4`-lane ops use (the lane storage itself
+    /// doesn't distinguish signed/unsigned -- only the conversion that
+    /// produced it does).
+    TruncSatF32x4U,
+    /// `f32x4.convert_i32x4_s` -- pop one `v128`, convert each of the 4
+    /// `i32` lanes (interpreted as SIGNED) to `f32`, push one `v128`.
+    /// The inverse direction of [`Self::TruncSatF32x4S`]. Rust's `as`
+    /// cast from `i32` to `f32` already performs the correct
+    /// round-to-nearest, ties-to-even conversion WASM's spec requires,
+    /// so `lane as f32` (reading the lane's bytes as `i32` first) is
+    /// directly correct -- the simpler of this PR's two `convert`
+    /// directions, since no bit-pattern reinterpretation is needed
+    /// before the cast (contrast [`Self::ConvertI32x4U`] below, which
+    /// DOES need one). Same UNARY "pop v128, push v128" shape as
+    /// [`Self::TruncSatF32x4S`], just the reverse type change (i32 lane
+    /// in, f32 lane out).
+    ConvertI32x4S,
+    /// `f32x4.convert_i32x4_u` -- same UNARY shape as
+    /// [`Self::ConvertI32x4S`], but each `i32` lane's bit pattern is
+    /// reinterpreted as UNSIGNED (`u32`) BEFORE the conversion to
+    /// `f32`, not converted directly from the signed `i32`. This
+    /// matters: a lane with the high bit set (e.g. the bit pattern
+    /// `0xFFFFFFFF`, which as a signed `i32` is `-1`) must convert to
+    /// `4294967295.0f32` (`u32::MAX`), NOT `-1.0f32` -- so the runtime
+    /// handler must do `(lane_bytes_as_i32 as u32) as f32`, in that
+    /// order, never `lane_bytes_as_i32 as f32` directly (which would
+    /// sign-extend the bit pattern into the wrong float value for any
+    /// lane with the high bit set).
+    ConvertI32x4U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1429,6 +1488,24 @@ pub struct SimdOpInfo {
 /// (`0x23`) entries, which sit exactly one past this run's own end
 /// (both matched exactly, confirming the whole `0x0C`-`0x23` run is
 /// contiguous and self-consistent).
+/// `i32x4.trunc_sat_f32x4_s`/`_u`/`f32x4.convert_i32x4_s`/`_u` (SIMD
+/// widen PR20) are this table's first `i32x4`<->`f32x4` CONVERSION
+/// ops -- unlike every prior `f32x4` addition (PR17's splats, PR19's
+/// abs/mul/min), which stayed within `f32x4` the whole way, these
+/// change lane TYPE, not just value, matching the scalar `0xFC`-
+/// prefixed `trunc_sat`/`convert` conversions this crate already
+/// implements for non-SIMD MVP opcodes (see `wasm-execution`'s `0xFC`
+/// handler). `trunc_sat_f32x4_s`/`_u` NEVER TRAP (NaN saturates to 0,
+/// out-of-range saturates to the target bound) -- deliberately NOT the
+/// same trapping behavior as this table's scalar `i32.trunc_f32_s`/
+/// `_u` MVP opcodes. Each sub-opcode byte fetched live from
+/// `BinarySIMD.md` and cross-checked against the already-implemented
+/// `f32x4.abs` (`0xE0`)/`f32x4.min` (`0xE8`) entries (both matched
+/// exactly). The 4 new sub-opcodes (`0xF8`-`0xFB`) are themselves a
+/// contiguous, self-consistent run, though not adjacent to
+/// `f32x4.min`'s `0xE8` -- the SIMD proposal's numbering leaves a gap
+/// (`extend_low`/`high`, `narrow`, etc.) for opcodes this crate
+/// doesn't implement yet.
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1557,6 +1634,10 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "f32x4.abs", sub_opcode: 0xE0, kind: SimdOpKind::AbsF32x4 },
     SimdOpInfo { name: "f32x4.mul", sub_opcode: 0xE6, kind: SimdOpKind::MulF32x4 },
     SimdOpInfo { name: "f32x4.min", sub_opcode: 0xE8, kind: SimdOpKind::MinF32x4 },
+    SimdOpInfo { name: "i32x4.trunc_sat_f32x4_s", sub_opcode: 0xF8, kind: SimdOpKind::TruncSatF32x4S },
+    SimdOpInfo { name: "i32x4.trunc_sat_f32x4_u", sub_opcode: 0xF9, kind: SimdOpKind::TruncSatF32x4U },
+    SimdOpInfo { name: "f32x4.convert_i32x4_s", sub_opcode: 0xFA, kind: SimdOpKind::ConvertI32x4S },
+    SimdOpInfo { name: "f32x4.convert_i32x4_u", sub_opcode: 0xFB, kind: SimdOpKind::ConvertI32x4U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1975,8 +2056,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_127_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 127);
+    fn simd_ops_table_has_the_expected_131_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 131);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2502,6 +2583,32 @@ mod tests {
             ("f32x4.abs", 0xE0, SimdOpKind::AbsF32x4),
             ("f32x4.mul", 0xE6, SimdOpKind::MulF32x4),
             ("f32x4.min", 0xE8, SimdOpKind::MinF32x4),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i32x4_f32x4_conversion_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR20 (task #177-179): `i32x4.trunc_sat_f32x4_s`
+        // (0xF8), `i32x4.trunc_sat_f32x4_u` (0xF9), `f32x4.convert_i32x4_s`
+        // (0xFA), `f32x4.convert_i32x4_u` (0xFB) -- fetched live from
+        // BinarySIMD.md, this table's first `i32x4`<->`f32x4`
+        // CONVERSION ops (a lane TYPE change, not just a value change
+        // within one lane type, unlike every prior `f32x4` addition).
+        // `trunc_sat_f32x4_s`/`_u` NEVER trap (NaN saturates to 0,
+        // out-of-range saturates to the target bound) -- see
+        // `SimdOpKind::TruncSatF32x4S`'s own doc comment for why this is
+        // deliberately NOT the same trapping behavior as this crate's
+        // scalar `i32.trunc_f32_s`/`_u` MVP opcodes.
+        for (name, sub_opcode, kind) in [
+            ("i32x4.trunc_sat_f32x4_s", 0xF8, SimdOpKind::TruncSatF32x4S),
+            ("i32x4.trunc_sat_f32x4_u", 0xF9, SimdOpKind::TruncSatF32x4U),
+            ("f32x4.convert_i32x4_s", 0xFA, SimdOpKind::ConvertI32x4S),
+            ("f32x4.convert_i32x4_u", 0xFB, SimdOpKind::ConvertI32x4U),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

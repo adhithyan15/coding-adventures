@@ -5948,6 +5948,75 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::TruncSatF32x4S | SimdOpKind::TruncSatF32x4U => {
+                // i32x4.trunc_sat_f32x4_s/_u (SIMD widen PR20): UNARY,
+                // pop one v128, convert each of the 4 `f32` lanes to a
+                // SATURATING i32 (signed for `_s`, unsigned bit pattern
+                // for `_u`), push one v128. UNLIKE this crate's TRAPPING
+                // scalar `i32.trunc_f32_s`/`_u` handlers (0xA8/0xA9,
+                // just above), this NEVER traps -- deliberately not
+                // reusing that trapping helper. Rust's `as` cast from
+                // `f32` to `i32`/`u32` has implemented the exact
+                // spec-required saturating semantic (NaN -> 0,
+                // out-of-range -> the nearest bound, truncate-toward-
+                // zero otherwise) since Rust 1.45, same as this crate's
+                // own `0xFC`-prefixed scalar `trunc_sat` handlers above
+                // (see that handler's own comment) -- no hand-rolled
+                // bounds checking needed. The `_u` case stores the
+                // `u32` bit pattern directly (`(v as u32).to_le_bytes()`)
+                // into the same 4-byte lane slot every other `i32x4`-
+                // lane op in this table uses; lane storage itself is
+                // signedness-agnostic bytes.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = f32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out_bytes = match op.kind {
+                        SimdOpKind::TruncSatF32x4S => (v as i32).to_le_bytes(),
+                        SimdOpKind::TruncSatF32x4U => (v as u32).to_le_bytes(),
+                        _ => unreachable!("only TruncSatF32x4S/U reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out_bytes);
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ConvertI32x4S | SimdOpKind::ConvertI32x4U => {
+                // f32x4.convert_i32x4_s/_u (SIMD widen PR20): UNARY, pop
+                // one v128, convert each of the 4 `i32` lanes to `f32`
+                // (signed for `_s`, treating the lane's bit pattern as
+                // `u32` first for `_u`), push one v128. The `_u` case is
+                // the important one to get right: a lane with the high
+                // bit set (e.g. bit pattern 0xFFFFFFFF, i.e. -1 as a
+                // signed i32) must convert to 4294967295.0f32
+                // (u32::MAX), NOT -1.0f32 -- so this reads the lane as
+                // i32 (matching this table's other i32x4-lane ops'
+                // byte layout), then reinterprets AS u32 BEFORE casting
+                // to f32 (`(v as u32) as f32`), never casting the
+                // signed i32 straight to f32 (which would sign-extend
+                // the value into the wrong float).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let v = i32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::ConvertI32x4S => v as f32,
+                        SimdOpKind::ConvertI32x4U => (v as u32) as f32,
+                        _ => unreachable!("only ConvertI32x4S/U reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -13572,5 +13641,209 @@ mod tests {
         let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
         let out = f32x4_lanes(results[0].unwrap());
         assert_eq!(out, [-3.0, -3.0, 7.5, -1.5], "f32x4.min must pick the smaller value in each lane");
+    }
+
+    // ── i32x4<->f32x4 conversions (SIMD widen PR20, task #177-179) ──────────
+
+    /// Build the code for `i32x4.trunc_sat_f32x4_s`/`_u` (sub-opcodes
+    /// 0xF8/0xF9) applied to a single `v128.const f32x4` operand.
+    fn trunc_sat_f32x4_code(lanes: [f32; 4], sub_opcode: u8) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lanes));
+        code.extend([0xFD, sub_opcode, 0x01]); // LEB128: [sub_opcode, 0x01] since 0xF8/0xF9 >= 128
+        code.push(0x0B);
+        code
+    }
+
+    /// Build the code for `f32x4.convert_i32x4_s`/`_u` (sub-opcodes
+    /// 0xFA/0xFB) applied to a single `v128.const i32x4` operand.
+    fn convert_i32x4_code(lanes: [i32; 4], sub_opcode: u8) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lanes));
+        code.extend([0xFD, sub_opcode, 0x01]); // LEB128: [sub_opcode, 0x01] since 0xFA/0xFB >= 128
+        code.push(0x0B);
+        code
+    }
+
+    /// `i32x4.trunc_sat_f32x4_s`: an ordinary in-range value truncates
+    /// toward zero, exactly like the trapping `i32.trunc_f32_s` would on
+    /// the same input -- proves the normal (non-saturating) path is
+    /// correct before the edge-case tests below exercise the actual
+    /// point of `trunc_sat` (never trapping).
+    #[test]
+    fn i32x4_trunc_sat_f32x4_s_ordinary_value_truncates_toward_zero() {
+        let code = trunc_sat_f32x4_code([3.7f32, -3.7f32, 0.0f32, 1.999f32], 0xF8);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([3, -3, 0, 1]).try_into().unwrap())),
+            "trunc_sat_f32x4_s must truncate toward zero on ordinary in-range values"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_s`: the whole point of `trunc_sat` vs.
+    /// this crate's TRAPPING `i32.trunc_f32_s` scalar handler -- a NaN
+    /// lane must saturate to `0`, never trap the whole call.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_s_nan_saturates_to_zero_not_trap() {
+        let code = trunc_sat_f32x4_code([f32::NAN; 4], 0xF8);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([0, 0, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f32x4_s must saturate NaN lanes to 0, never trap"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_s`: `+infinity` saturates to `i32::MAX`.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_s_positive_infinity_saturates_to_i32_max() {
+        let code = trunc_sat_f32x4_code([f32::INFINITY; 4], 0xF8);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([i32::MAX; 4]).try_into().unwrap())),
+            "trunc_sat_f32x4_s must saturate +infinity lanes to i32::MAX"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_s`: `-infinity` saturates to `i32::MIN`.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_s_negative_infinity_saturates_to_i32_min() {
+        let code = trunc_sat_f32x4_code([f32::NEG_INFINITY; 4], 0xF8);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([i32::MIN; 4]).try_into().unwrap())),
+            "trunc_sat_f32x4_s must saturate -infinity lanes to i32::MIN"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_s`: a finite value WAY over `i32::MAX`
+    /// (`1e20`) must still saturate to `i32::MAX`, not wrap or panic --
+    /// the overflow case doesn't require an actual infinity.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_s_huge_finite_value_saturates_to_i32_max() {
+        let code = trunc_sat_f32x4_code([1e20f32; 4], 0xF8);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([i32::MAX; 4]).try_into().unwrap())),
+            "trunc_sat_f32x4_s must saturate a huge finite value (1e20) to i32::MAX"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_u`: an ordinary in-range positive value
+    /// truncates toward zero, same as the `_s` case.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_u_ordinary_value_truncates_toward_zero() {
+        let code = trunc_sat_f32x4_code([3.7f32; 4], 0xF9);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([3, 3, 3, 3]).try_into().unwrap())),
+            "trunc_sat_f32x4_u must truncate toward zero on ordinary in-range values"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_u`: a NaN lane saturates to 0, same as `_s`.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_u_nan_saturates_to_zero_not_trap() {
+        let code = trunc_sat_f32x4_code([f32::NAN; 4], 0xF9);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([0, 0, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f32x4_u must saturate NaN lanes to 0, never trap"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_u`: a NEGATIVE value must saturate to the
+    /// unsigned minimum (`0`), NOT wrap around to a huge unsigned value
+    /// the way a raw bit-reinterpretation of a negative signed result
+    /// would -- this is the saturating-to-bound semantic, not a
+    /// two's-complement reinterpretation.
+    #[test]
+    fn i32x4_trunc_sat_f32x4_u_negative_value_saturates_to_zero_not_wrap() {
+        let code = trunc_sat_f32x4_code([-5.0f32; 4], 0xF9);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([0, 0, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f32x4_u must saturate a negative value to 0 (unsigned min), not wrap"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f32x4_u`: `+infinity` saturates to `u32::MAX`'s
+    /// bit pattern -- stored in the same 4-byte lane slot as every other
+    /// `i32x4`-lane op, so the expected bytes are `u32::MAX.to_le_bytes()`
+    /// per lane (equivalently `-1i32` reinterpreted as bytes).
+    #[test]
+    fn i32x4_trunc_sat_f32x4_u_positive_infinity_saturates_to_u32_max_bit_pattern() {
+        let code = trunc_sat_f32x4_code([f32::INFINITY; 4], 0xF9);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        for i in 0..4 {
+            expected[i * 4..i * 4 + 4].copy_from_slice(&u32::MAX.to_le_bytes());
+        }
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(expected)),
+            "trunc_sat_f32x4_u must saturate +infinity lanes to u32::MAX's bit pattern"
+        );
+    }
+
+    /// `f32x4.convert_i32x4_s`: ordinary positive and negative signed
+    /// `i32` lanes convert correctly to `f32`.
+    #[test]
+    fn f32x4_convert_i32x4_s_converts_positive_and_negative_values() {
+        let code = convert_i32x4_code([42, -42, 0, 1000000], 0xFA);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [42.0, -42.0, 0.0, 1_000_000.0], "convert_i32x4_s must convert signed i32 lanes to f32 directly");
+    }
+
+    /// `f32x4.convert_i32x4_u`: THE MOST IMPORTANT test in this PR. A
+    /// lane with the high bit set -- bit pattern `0xFFFFFFFF`, which as
+    /// a SIGNED `i32` is `-1` -- represents `u32::MAX` (4294967295) when
+    /// read as unsigned, and must convert to `4294967295.0f32`, NOT
+    /// `-1.0f32`. A naive `lane_as_i32 as f32` (sign-extending straight
+    /// from the signed interpretation) would produce `-1.0f32` here --
+    /// exactly the bug class `SimdOpKind::ConvertI32x4U`'s own doc
+    /// comment warns about. This test would fail without the
+    /// `(v as u32) as f32` fix in the runtime handler.
+    #[test]
+    fn f32x4_convert_i32x4_u_high_bit_set_lane_converts_as_unsigned_not_sign_extended() {
+        let code = convert_i32x4_code([-1i32, -1i32, -1i32, -1i32], 0xFB);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(
+            out,
+            [4294967295.0f32; 4],
+            "convert_i32x4_u must read the 0xFFFFFFFF bit pattern as u32::MAX (4294967295.0), NOT sign-extend it to -1.0 -- got {out:?}"
+        );
+    }
+
+    /// `f32x4.convert_i32x4_u`: an ordinary small positive value (no
+    /// high bit set) converts the same whether read as signed or
+    /// unsigned -- the normal, non-edge-case path.
+    #[test]
+    fn f32x4_convert_i32x4_u_ordinary_positive_value_converts_normally() {
+        let code = convert_i32x4_code([7, 100, 0, 65535], 0xFB);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out, [7.0, 100.0, 0.0, 65535.0], "convert_i32x4_u must convert ordinary positive lanes normally");
     }
 }

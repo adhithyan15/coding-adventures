@@ -1872,7 +1872,11 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::Swizzle
             | wasm_opcodes::SimdOpKind::AbsF32x4
             | wasm_opcodes::SimdOpKind::MulF32x4
-            | wasm_opcodes::SimdOpKind::MinF32x4 => {
+            | wasm_opcodes::SimdOpKind::MinF32x4
+            | wasm_opcodes::SimdOpKind::TruncSatF32x4S
+            | wasm_opcodes::SimdOpKind::TruncSatF32x4U
+            | wasm_opcodes::SimdOpKind::ConvertI32x4S
+            | wasm_opcodes::SimdOpKind::ConvertI32x4U => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -1887,6 +1891,10 @@ fn encode_stream_instr(
                 // shape at the ENCODING level -- the unary/binary
                 // distinction only matters at the type-checker/runtime
                 // level (see `wasm-validator`/`wasm-execution`), not here.
+                // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
+                // PR20) join too -- same no-immediate shape, the fact
+                // that these change lane TYPE (not just value) is
+                // likewise invisible at this encoding level.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2600,7 +2608,11 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::Swizzle
             | wasm_opcodes::SimdOpKind::AbsF32x4
             | wasm_opcodes::SimdOpKind::MulF32x4
-            | wasm_opcodes::SimdOpKind::MinF32x4 => {
+            | wasm_opcodes::SimdOpKind::MinF32x4
+            | wasm_opcodes::SimdOpKind::TruncSatF32x4S
+            | wasm_opcodes::SimdOpKind::TruncSatF32x4U
+            | wasm_opcodes::SimdOpKind::ConvertI32x4S
+            | wasm_opcodes::SimdOpKind::ConvertI32x4U => {
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
@@ -2608,6 +2620,8 @@ fn encode_flat_instr(
                 // `AbsF32x4`/`MulF32x4`/`MinF32x4` (SIMD widen PR19) join
                 // too -- same no-immediate encoding shape, see the
                 // matching comment in `encode_stream_instr` above.
+                // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
+                // PR20) join too, same reasoning.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5578,6 +5592,42 @@ mod tests {
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE0, 0x01]), "missing f32x4.abs: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE6, 0x01]), "missing f32x4.mul: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xE8, 0x01]), "missing f32x4.min: {code:?}");
+        }
+    }
+
+    #[test]
+    fn i32x4_f32x4_conversion_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR20 (task #177-179): i32x4.trunc_sat_f32x4_s
+        // (0xF8), i32x4.trunc_sat_f32x4_u (0xF9), f32x4.convert_i32x4_s
+        // (0xFA), f32x4.convert_i32x4_u (0xFB) -- like PR19's f32x4
+        // arith3 family, all four sub-opcode values are >= 128, so each
+        // encodes as a real 2-byte LEB128 sequence (`[byte, 0x01]`).
+        // All four are UNARY (one v128 operand) -- same "no immediate
+        // beyond the opcode bytes themselves" shape as `f32x4.abs`
+        // above.
+        let folded = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 (f32x4.convert_i32x4_u
+                   (i32x4.trunc_sat_f32x4_u
+                     (f32x4.convert_i32x4_s
+                       (i32x4.trunc_sat_f32x4_s (local.get 0))))))
+               )"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 local.get 0
+                 i32x4.trunc_sat_f32x4_s
+                 f32x4.convert_i32x4_s
+                 i32x4.trunc_sat_f32x4_u
+                 f32x4.convert_i32x4_u))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xF8, 0x01]), "missing i32x4.trunc_sat_f32x4_s: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xF9, 0x01]), "missing i32x4.trunc_sat_f32x4_u: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xFA, 0x01]), "missing f32x4.convert_i32x4_s: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xFB, 0x01]), "missing f32x4.convert_i32x4_u: {code:?}");
         }
     }
 

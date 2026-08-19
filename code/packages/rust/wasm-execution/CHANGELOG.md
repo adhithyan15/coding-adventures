@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.32] - 2026-08-19 (task #177-179 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert conversion family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms:
+  - `SimdOpKind::TruncSatF32x4S`/`TruncSatF32x4U` pop one `v128`,
+    convert each of the 4 `f32` lanes to a SATURATING `i32` (signed
+    for `_s`, unsigned bit pattern for `_u`), push one `v128`. NEVER
+    TRAPS -- unlike this crate's TRAPPING scalar `i32.trunc_f32_s`/
+    `_u` handlers (`0xA8`/`0xA9`) just above, deliberately not reused
+    here: a NaN lane saturates to `0`, an out-of-range lane saturates
+    to the target bound. Rust's `as` cast from `f32` to `i32`/`u32`
+    has implemented exactly this saturating semantic since Rust 1.45,
+    same discipline this crate's own `0xFC`-prefixed scalar
+    `trunc_sat` handlers already use -- no hand-rolled bounds
+    checking needed.
+  - `SimdOpKind::ConvertI32x4S`/`ConvertI32x4U` pop one `v128`,
+    convert each of the 4 `i32` lanes to `f32` (signed directly for
+    `_s`; for `_u`, the lane's bit pattern is reinterpreted as `u32`
+    BEFORE the cast -- `(v as u32) as f32`, never `v as f32` directly,
+    which would sign-extend a high-bit-set lane into the wrong float
+    value), push one `v128`.
+- 12 new tests: `trunc_sat_f32x4_s` (ordinary value, NaN saturates to
+  0, +/-infinity saturate to `i32::MIN`/`MAX`, a huge finite value
+  (`1e20`) saturates to `i32::MAX`), `trunc_sat_f32x4_u` (ordinary
+  value, NaN saturates to 0, a negative value saturates to 0 -- NOT
+  wrapped/reinterpreted, +infinity saturates to `u32::MAX`'s bit
+  pattern), `convert_i32x4_s` (positive/negative values),
+  `convert_i32x4_u` (an ordinary positive value, and -- the most
+  important test in this PR -- a lane with the high bit set
+  (`0xFFFFFFFF`/`-1i32`) converting to `4294967295.0f32`, NOT
+  `-1.0f32`, the exact bug class `ConvertI32x4U`'s own doc comment
+  warns about).
+
 ## [0.9.31] - 2026-08-19 (task #174-176 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min)
 
 ### Added
