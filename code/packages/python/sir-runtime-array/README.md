@@ -2,12 +2,16 @@
 
 SIR22 N-D array/matrix runtime for **Semantic-IR-emitted Python**.
 
-Implements the SIR22 array/matrix domain's **base cut**
+Implements the SIR22 array/matrix domain
 (`code/specs/SIR22-array-matrix-semantic-ir.md`): a dense, column-major
 `NDArray` value model plus `matmul`/`elementwise`/`transpose`/`range`/
-indexed get-set — the runtime a compiled MATLAB/Octave program's
-`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
-`IndexSet` IR nodes call into.
+indexed get-set (the **base cut** — the runtime a compiled MATLAB/Octave
+program's `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
+`IndexGet`/`IndexSet` IR nodes call into), plus the nine-node **"APL
+addendum"** — `reduce`/`scan`/`outer`/`shape`/`reshape`/
+`index_generator`/`index_of`/`ravel`/`catenate` — the runtime an APL
+program's `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` IR nodes call into.
 
 ## Where it fits in the stack
 
@@ -26,10 +30,16 @@ this package only when a module uses the array/matrix domain; pure
 modules never gain the dependency. See the SIR22 spec's "Backend impact"
 section for the full second-wave rollout rationale.
 
-This package is itself a Python port of the published TypeScript package
+This package's base cut is a Python port of the published TypeScript
+package
 [`@coding-adventures/sir-runtime-array`](../../typescript/sir-runtime-array),
 itself the standalone extraction of `semantic-ir-to-javascript`'s inlined
-`ArrayRt` sub-runtime.
+`ArrayRt` sub-runtime. The nine-node "APL addendum" was ported directly
+from that same `ArrayRt` sub-runtime instead (`semantic-ir-to-javascript/
+src/runtime.rs`'s "SIR22 addendum: APL primitive operators" section) —
+at the time of that port, the TypeScript package itself had not yet
+grown these nine functions, so the already-shipped JS implementation was
+the closer, more direct reference.
 
 ## Column-major storage
 
@@ -90,6 +100,15 @@ a plain array *element*, never a native boolean.
   output-shape check yet still drive the multiply-add loop through an
   unbounded `m*n*ka` iteration count. `matmul` validates `(m, n, ka)`
   as a second, additional shape check before running any loop.
+- **Every addendum function re-examined for the same bug class.** `outer`'s
+  `(m, n)` output, `index_of`'s `len(haystack) * len(needle)` scan-cost
+  product (an O(n²) hazard the trivially-small *output* length alone
+  never catches), `catenate`'s combined length (checked once, up front,
+  regardless of which of its five rank-combination branches runs), and
+  `index_generator`'s/`reshape`'s element counts are each validated
+  before allocating or looping — not just the most obviously dangerous
+  one. See the 0.2.0 CHANGELOG entry for the full list and each
+  function's dedicated regression test.
 - No `eval`/`exec`/dynamic code execution anywhere in this package.
 
 ## API
@@ -110,6 +129,15 @@ a plain array *element*, never a native boolean.
 | `range(start, stop, step=1) -> NDArray` | MATLAB-style `start:step:stop` as a `1 x n` row vector. |
 | `index_scalar(v)` / `index_whole()` / `index_range(indices)` | Build one `IndexArg`. |
 | `index_get(a, indices)` / `index_set(a, indices, value)` | `A(i[, j])` read / in-place write. |
+| `reduce(op, a) -> NDArray` | APL `+/A` — fold along the one axis (rank 2 folds each row independently). |
+| `scan(op, a) -> NDArray` | APL `+\A` — running fold, same shape as `a`. |
+| `outer(op, a, b) -> NDArray` | APL `A∘.×B` — pairwise op, scoped to `rank(a), rank(b) <= 1`. |
+| `shape(a) -> NDArray` | APL monadic `⍴A` — dimensions as a vector (a scalar's shape is the *empty* vector). |
+| `reshape(shape_arg, target) -> NDArray` | APL dyadic `A⍴B` — reinterpret under new dimensions, cyclic fill/truncate. |
+| `index_generator(a) -> NDArray` | APL monadic `⍳n` — the **1-based** vector `[1, ..., n]`. |
+| `index_of(haystack, needle) -> NDArray` | APL dyadic `A⍳B` — 1-based search; not-found is `len(haystack) + 1`. |
+| `ravel(a) -> NDArray` | APL monadic `,A` — flatten to a rank-1 vector, row-major order. |
+| `catenate(a, b) -> NDArray` | APL dyadic `A,B` — vector/matrix concatenation (5 supported rank combinations). |
 
 ## Usage
 
@@ -123,16 +151,19 @@ index_get(p, [index_scalar(0), index_scalar(0)])   # 19
 index_get(p, [index_scalar(1), index_scalar(1)])   # 50
 
 transpose(from_rows([[1, 2, 3], [4, 5, 6]])).data  # [1, 2, 3, 4, 5, 6] (column-major 3x2)
+
+from coding_adventures_sir_runtime_array import reduce, index_generator, catenate
+
+reduce("Add", from_vec([1, 2, 3, 4])).data   # [10]           (APL +/1 2 3 4)
+index_generator(scalar(4)).data              # [1, 2, 3, 4]   (APL ⍳4 -- 1-based)
+catenate(from_vec([1, 2]), from_vec([3, 4])).data  # [1, 2, 3, 4]
 ```
 
 ## Out of scope
 
 Matching `array-runtime` and the TypeScript reference exactly:
 `Complex`/`Rational` scalars (`transpose`'s `conjugate` flag is accepted
-for API-shape parity but is a no-op on real data); rank > 2; the
-nine-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) — a separate
-later slice.
+for API-shape parity but is a no-op on real data); rank > 2.
 
 ## Development
 

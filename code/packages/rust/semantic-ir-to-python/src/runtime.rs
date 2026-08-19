@@ -94,13 +94,16 @@ from coding_adventures_sir_runtime_range import range as _sir_range
 /// The SIR22 array/matrix-runtime import header, appended **only** when a
 /// module declares `Feature::NDArrays`/`MatrixOps`/`ArrayColumnMajor` (an
 /// `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
-/// expression or an `IndexSet` statement).  Unlike every other runtime
-/// import in this file, this one follows the TypeScript backend's
-/// *imported-package* model rather than this backend's usual inline-runtime
-/// convention — see the SIR22 spec's "Backend impact" section for why
-/// Python follows TypeScript here (both target ecosystems with a real
-/// package manager, unlike C/Go/Rust/Ruby's inlined-port model). Each
-/// helper keeps the emitter's `_sir_array_*` name; see
+/// expression, an `IndexSet` statement, or one of the nine SIR22 "APL
+/// addendum" expressions — `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+/// `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` — which share
+/// these same three features).  Unlike every other runtime import in this
+/// file, this one follows the TypeScript backend's *imported-package*
+/// model rather than this backend's usual inline-runtime convention — see
+/// the SIR22 spec's "Backend impact" section for why Python follows
+/// TypeScript here (both target ecosystems with a real package manager,
+/// unlike C/Go/Rust/Ruby's inlined-port model). Each helper keeps the
+/// emitter's `_sir_array_*` name; see
 /// `code/packages/python/sir-runtime-array`'s own README/CHANGELOG for the
 /// full API and design notes (column-major storage, native int/float
 /// propagation instead of JS's forced-double storage, NaN-safe AND-form
@@ -117,6 +120,15 @@ from coding_adventures_sir_runtime_array import (
     index_scalar as _sir_array_index_scalar,
     index_whole as _sir_array_index_whole,
     index_range as _sir_array_index_range,
+    reduce as _sir_array_reduce,
+    scan as _sir_array_scan,
+    outer as _sir_array_outer,
+    shape as _sir_array_shape,
+    reshape as _sir_array_reshape,
+    index_generator as _sir_array_index_generator,
+    index_of as _sir_array_index_of,
+    ravel as _sir_array_ravel,
+    catenate as _sir_array_catenate,
 )
 "##;
 
@@ -248,6 +260,28 @@ mod tests {
             assert!(RUNTIME_ARRAY.contains(alias), "array runtime missing `{}`", alias);
         }
         assert!(RUNTIME_ARRAY.ends_with('\n'));
+    }
+
+    /// SIR22 "APL addendum" — the nine-node extension sharing the base
+    /// cut's own three features (`NDArrays`/`MatrixOps`/
+    /// `ArrayColumnMajor`), each aliased to the `_sir_array_*` name
+    /// `emit.rs`'s `Expr::Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+    /// `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` arms call into.
+    #[test]
+    fn runtime_array_imports_the_apl_addendum_functions() {
+        for alias in &[
+            "reduce as _sir_array_reduce",
+            "scan as _sir_array_scan",
+            "outer as _sir_array_outer",
+            "shape as _sir_array_shape",
+            "reshape as _sir_array_reshape",
+            "index_generator as _sir_array_index_generator",
+            "index_of as _sir_array_index_of",
+            "ravel as _sir_array_ravel",
+            "catenate as _sir_array_catenate",
+        ] {
+            assert!(RUNTIME_ARRAY.contains(alias), "array runtime missing `{}`", alias);
+        }
     }
 
     #[test]

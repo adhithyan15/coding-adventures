@@ -400,12 +400,13 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
         // whose runtime meaning is its inner `value`; recurse into it so this
         // builtin-usage scan stays faithful.  Real support pending KW2–KW6.
         Expr::KeywordArg { value, .. } => expr_uses_builtin(value, name),
-        // SIR22 array/matrix expressions are not accepted by this backend
-        // yet (see `ACCEPTED_FEATURES` in `lib.rs`), so a validated module
-        // never contains them in practice. Still, this scan is exhaustive
-        // by design so a new node can't silently hide a builtin use — recurse
-        // into every sub-expression the same way the other compound-expr
-        // arms above do.
+        // SIR22 array/matrix expressions (base cut + the nine-node
+        // addendum below) — real codegen now exists for all of these (see
+        // `ACCEPTED_FEATURES` in `lib.rs` and this file's `emit_expr`
+        // arms), so a validated module can genuinely contain them. This
+        // scan is exhaustive by design so a new node can't silently hide a
+        // builtin use — recurse into every sub-expression the same way the
+        // other compound-expr arms above do.
         Expr::ArrayLit { rows, .. } => rows
             .iter()
             .any(|row| row.iter().any(|c| expr_uses_builtin(c, name))),
@@ -429,9 +430,9 @@ fn expr_uses_builtin(e: &Expr, name: &str) -> bool {
             expr_uses_builtin(target, name)
                 || indices.iter().any(|ix| index_arg_uses_builtin(ix, name))
         }
-        // SIR22 addendum: APL primitive operators — not accepted by this
-        // backend either (same `MatrixOps`/`NDArrays`/`ArrayColumnMajor`
-        // gating), but recurse faithfully regardless.
+        // SIR22 addendum: APL primitive operators — real codegen (see
+        // `emit_expr`'s corresponding arms below); recurse into every
+        // operand the same way the base-cut arms above do.
         Expr::Reduce { target, .. } => expr_uses_builtin(target, name),
         Expr::Scan { target, .. } => expr_uses_builtin(target, name),
         Expr::OuterProduct { lhs, rhs, .. } => {
@@ -1438,36 +1439,104 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
             emit_index_args(out, indices, indent, env);
             out.push_str("])");
         }
-        // SIR22 addendum: APL primitive operators (`Reduce`/`Scan`/
-        // `OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
-        // `Ravel`/`Catenate`). This backend does not implement codegen for
-        // these nine nodes in this slice — a separate, later rollout slice
-        // per the SIR22 spec's "Backend impact" section. They share the
-        // SAME three features (`NDArrays`/`MatrixOps`/`ArrayColumnMajor`)
-        // with the base cut above, so — now that those features are in
-        // `ACCEPTED_FEATURES` (see `lib.rs`) — a bare capability check can
-        // no longer reject a module using one of these nine.
-        // `PythonBackend::compile`'s `find_unimplemented_sir22_addendum_node`
-        // walk closes that gap *before* emission is ever reached (mirrors
-        // `semantic-ir-to-javascript`'s original SIR22 base-cut PR's
-        // identically named check), so a validated module never reaches
-        // this arm. Kept as an explicit panic (not folded into a wildcard)
-        // so Rust's exhaustiveness checking still forces a new SIR22 node
-        // to be handled here.
-        Expr::Reduce { .. }
-        | Expr::Scan { .. }
-        | Expr::OuterProduct { .. }
-        | Expr::Shape { .. }
-        | Expr::Reshape { .. }
-        | Expr::IndexGenerator { .. }
-        | Expr::IndexOf { .. }
-        | Expr::Ravel { .. }
-        | Expr::Catenate { .. }
+        // ── SIR22 addendum: APL primitive operators — real codegen ─────
+        // Each of the nine maps 1:1 onto a call into the imported
+        // `coding-adventures-sir-runtime-array` package (gated by the
+        // SAME `NDArrays`/`MatrixOps`/`ArrayColumnMajor` features the
+        // base cut above uses — see `RUNTIME_ARRAY` in `runtime.rs`).
+        // `Reduce`/`Scan`/`OuterProduct` carry an `ElementwiseOpKind` and
+        // so reuse `elementwise_op_py_name` exactly like `ElementwiseOp`
+        // above does; the remaining six have no `op` field at all (they
+        // are "bespoke, not BinOp-shaped" per the SIR22 spec addendum and
+        // `apl-runtime::builtins`'s own doc comment) and just recurse into
+        // their operand(s). Only a single call site is needed for each —
+        // unlike `Stmt::IndexSet` (which needed separate handling in
+        // `emit_stmt_inner` and `emit_block_as_expr`'s walrus path because
+        // `Stmt` has no single shared emit function), every one of these
+        // nine is an `Expr`, so this one `emit_expr` arm already covers
+        // every position (statement position, walrus-tuple position, a
+        // nested operand, ...) — `emit_block_as_expr` calls back into
+        // `emit_expr` for every expression it composes into a tuple.
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(
+                out,
+                "_sir_array_reduce({}, ",
+                quote_py_string(elementwise_op_py_name(*op))
+            );
+            emit_expr(out, target, indent, env);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(
+                out,
+                "_sir_array_scan({}, ",
+                quote_py_string(elementwise_op_py_name(*op))
+            );
+            emit_expr(out, target, indent, env);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "_sir_array_outer({}, ",
+                quote_py_string(elementwise_op_py_name(*op))
+            );
+            emit_expr(out, lhs, indent, env);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent, env);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            out.push_str("_sir_array_shape(");
+            emit_expr(out, target, indent, env);
+            out.push(')');
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs`) — `_sir_array_reshape(shape_arg, target)` takes the
+        // same order, so no argument reordering is needed at this call
+        // site (contrast `Expr::Range`'s `start, step, stop` vs.
+        // `_sir_array_range`'s `start, stop, step` above, which DOES
+        // reorder).
+        Expr::Reshape { shape, target, .. } => {
+            out.push_str("_sir_array_reshape(");
+            emit_expr(out, shape, indent, env);
+            out.push_str(", ");
+            emit_expr(out, target, indent, env);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            out.push_str("_sir_array_index_generator(");
+            emit_expr(out, count, indent, env);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            out.push_str("_sir_array_index_of(");
+            emit_expr(out, haystack, indent, env);
+            out.push_str(", ");
+            emit_expr(out, needle, indent, env);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            out.push_str("_sir_array_ravel(");
+            emit_expr(out, target, indent, env);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            out.push_str("_sir_array_catenate(");
+            emit_expr(out, lhs, indent, env);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent, env);
+            out.push(')');
+        }
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module.
-        | Expr::Convert { .. } => {
+        Expr::Convert { .. } => {
             panic!(
-                "python backend reached a deferred SIR22/SIR26 expression ({}) at {} — not accepted yet",
+                "python backend reached a deferred SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
                 e.span()
             );
