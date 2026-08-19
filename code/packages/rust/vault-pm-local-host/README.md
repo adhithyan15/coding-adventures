@@ -35,14 +35,31 @@ Initial creation never replaces an existing object; stale replacement returns a
 closed conflict. The host deliberately treats the bytes as opaque—the
 `vault-pm-config` crate remains the sole schema and canonical-rendering owner.
 
+`LocalVaultPaths::runtime_root`/`agent_socket_path` (VLT-PM48) resolve the
+short, deterministic, owner-private directory the local agent's Unix domain
+socket is bound at — beside the system temporary directory, named from a
+truncated hash of the data root, and deliberately *not* nested under
+`data_root`: `sockaddr_un.sun_path` is bounded to roughly 100 bytes on Linux
+and macOS, far below the 4096-byte ceiling every other path in this crate
+accepts, and a verbose platform data directory can already consume most of
+that budget on its own. `PreparedLocalVault::ensure_runtime_root` verifies or
+creates it lazily — unlike every root `prepare()` already handles, no
+ordinary command reaches it — using a leaf-only check
+(`ensure_private_runtime_directory`) rather than the general recursive
+`ensure_private_directory`: the system temporary directory's own ancestry
+(`/tmp`, `/var`) is trusted as the platform gives it, since on macOS both are
+themselves platform-placed symlinks that the general walk would otherwise
+refuse before ever reaching this crate's own directory.
+
 Diagnostics and `Debug` output never include resolved paths.
 
-Eleven tests cover path resolution, idempotent layout creation, native modes and
-object types, broad-root and unsafe-file refusal, stable redaction, lock
-contention, exact configuration round trips, stale-write rejection, and input
-bounds. Windows executes the same public contract in CI and cross-target Clippy
-validates its native API surface locally. Tarpaulin's LLVM engine measures 304
-of 319 Unix production lines covered (95.30%).
+Thirteen tests cover path resolution, idempotent layout creation, native modes
+and object types, broad-root and unsafe-file refusal, stable redaction, lock
+contention, exact configuration round trips, stale-write rejection, input
+bounds, and (VLT-PM48) the runtime-socket path's determinism and owner-only
+creation. Windows executes the same public contract in CI and cross-target
+Clippy validates its native API surface locally. Tarpaulin's LLVM engine
+measures 339 of 359 Unix production lines covered (94.43%).
 
 ## Verification
 

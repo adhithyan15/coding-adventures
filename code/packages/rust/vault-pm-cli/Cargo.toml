@@ -7,6 +7,7 @@ license = "MIT"
 
 [dependencies]
 coding_adventures_storage_fs = { path = "../storage-fs" }
+coding_adventures_vault_pm_agent_host = { path = "../vault-pm-agent-host" }
 coding_adventures_vault_pm_application = { path = "../vault-pm-application" }
 coding_adventures_vault_pm_application_storage_core = { path = "../vault-pm-application-storage-core" }
 coding_adventures_vault_pm_cli_host = { path = "../vault-pm-cli-host" }

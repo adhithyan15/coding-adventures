@@ -1,0 +1,62 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "rust/vault-pm-agent-host",
+  "capabilities": [
+    {
+      "category": "net",
+      "action": "listen",
+      "target": "owner-private Unix domain socket at the VLT-PM48 runtime path",
+      "justification": "Binds the local agent's request socket after verifying its parent directory and reclaiming only a stale, same-user-owned prior socket file."
+    },
+    {
+      "category": "net",
+      "action": "connect",
+      "target": "owner-private Unix domain socket at the VLT-PM48 runtime path",
+      "justification": "The CLI-side client connects to a running agent to look up, retain, forget, or ask the status of a cached passphrase, and to signal shutdown."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "the agent socket path and its existing metadata",
+      "justification": "Verifies an existing path at the socket location is a socket owned by this same user before ever reclaiming (unlinking) it."
+    },
+    {
+      "category": "fs",
+      "action": "write",
+      "target": "the agent socket path",
+      "justification": "Sets owner-only (0600) permissions on the bound socket file as defense in depth beneath the peer-credential check."
+    },
+    {
+      "category": "fs",
+      "action": "delete",
+      "target": "the agent socket path",
+      "justification": "Removes a stale socket left by an unclean prior exit before rebinding, and removes its own socket file on a clean shutdown."
+    },
+    {
+      "category": "proc",
+      "action": "fork",
+      "target": "this same executable, re-executed as the detached agent process",
+      "justification": "`agent start` launches the long-lived agent as a double-forked, session-detached child so it outlives the one-shot command that started it, mirroring vault-pm-cli-host's clipboard clearer."
+    },
+    {
+      "category": "proc",
+      "action": "exec",
+      "target": "this same executable, via the caller-supplied program path",
+      "justification": "The detached child re-executes the running `vault-pm` binary as `agent run-foreground` with a fixed, caller-controlled-free argument vector."
+    },
+    {
+      "category": "ffi",
+      "action": "call",
+      "target": "libc socket peer-credential and process-identity APIs (SO_PEERCRED, getpeereid, getuid, fork, setsid)",
+      "justification": "Verifies the kernel-reported real UID of every connecting peer before serving it, and performs the detached double-fork used by `agent start`. Neither is reachable through portable Rust I/O."
+    },
+    {
+      "category": "time",
+      "action": "sleep",
+      "target": "short fixed poll intervals (accept-loop retry, idle-bound sweep, client readiness poll)",
+      "justification": "Polls a non-blocking listener and a background auto-lock sweep on short fixed intervals, and bounds every client round trip and `agent start` readiness wait so a slow or unreachable agent fails no slower than a missing one."
+    }
+  ],
+  "justification": "Permission-checked Unix-domain-socket transport and in-memory passphrase retention for the local vault-pm agent (VLT-PM48). Performs no configuration, provider, or vault-content access, and depends on no cryptographic or application package; it retains and returns only the opaque passphrase bytes a caller already verified elsewhere."
+}

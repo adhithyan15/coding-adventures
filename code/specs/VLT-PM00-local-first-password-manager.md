@@ -997,6 +997,10 @@ Windows named pipe. The agent is optional; one-shot operation always remains.
 No master password is accepted through argv, an environment variable, command
 history, URL, or config.
 
+**The Unix-domain-socket half has shipped**, as
+`VLT-PM48-local-agent-ipc.md`, per §23 item 12. Windows named-pipe support
+remains explicitly deferred.
+
 ### 14.6 Secret output policy
 
 - Normal list/show/JSON output is redacted.
@@ -1925,7 +1929,40 @@ changelog, focused build, and downstream validation.
       `--copy` on the VLT-PM25 reveal commands (`item reveal`,
       `item show --field`, `history show`) remains deferred to those ceremonies
       by VLT-PM46 §8.1.
-12. local agent/IPC and auto-lock.
+12. local agent/IPC and auto-lock. **Has shipped**, as
+      `VLT-PM48-local-agent-ipc.md`: `vault-pm agent start` re-executes this
+      same binary, detached, as the hidden `agent run-foreground` verb, which
+      binds a permission-checked Unix domain socket
+      (`coding_adventures_vault_pm_agent_host`) and retains one passphrase
+      per vault name until an explicit `agent lock`, `agent stop`, or its own
+      `auto_lock_seconds` idle bound elapses — enforced by a real background
+      sweep thread, the pre-emptive timer `VLT-PM40-cli-interactive-shell.md`
+      §3.5 named as this item's own deferred work, because a foreground shell
+      blocked on a terminal read has nowhere for that timer to run and a
+      background process does. Two permission layers gate every connection,
+      and the second is the one this document's §14.5 calls non-optional:
+      owner-only filesystem modes on the socket, and the kernel-verified real
+      UID of every connecting peer (`SO_PEERCRED` on Linux, `getpeereid` on
+      macOS/BSD), checked before a single request byte is read. `agent
+      unlock` authenticates exactly once — through the same authenticated
+      open every other command already performs, immediately locked again
+      afterward — and hands the agent a passphrase only once that open has
+      already succeeded against the real vault; the agent package itself
+      carries no dependency on `vault-pm-application` and cannot verify a
+      passphrase even in principle. Every other authenticated command
+      opportunistically asks a running agent before it ever prompts, through
+      one shared seam, and falls back to the unmodified one-shot prompt
+      unconditionally when no agent is running, its cache is expired, or its
+      answer is for a different vault — one-shot operation remains correct
+      with no agent present at all. `passphrase rotate` is the one
+      authenticated command that never delegates to the agent, always
+      prompting for the current passphrase fresh, for the reason
+      `VLT-PM43-cli-passphrase-rotation.md` §3.1 already gave the interactive
+      shell for refusing `passphrase` entirely; a successful rotation also
+      forgets that vault's cached passphrase immediately rather than leaving
+      it to expire on its own. Windows named-pipe support is explicitly
+      deferred and documented rather than silently unimplemented; every agent
+      verb reports the closed `unsupported` exit class there.
 13. Bitwarden/KDBX/browser CSV import adapters.
 14. removable/synced-folder mode and mirror decorator.
 

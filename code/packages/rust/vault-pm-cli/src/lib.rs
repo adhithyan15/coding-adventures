@@ -5,6 +5,7 @@
 
 pub mod shell;
 
+mod agent;
 mod crash;
 
 /// Whether VLT-PM41 crash injection is compiled into this build.
@@ -94,7 +95,7 @@ const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -764,6 +765,28 @@ where
             Err(error) => CliOutput::failure(map_host(error)),
         };
     }
+    // VLT-PM48. Five of the six agent verbs are dispatched here, before the
+    // cross-process writer lock is ever considered, because none of them
+    // resolves configuration or touches one vault's durable state: they only
+    // reach the agent's own socket. `agent unlock` is the exception — it must
+    // authenticate against a real vault before it hands the agent anything —
+    // and falls through to `execute` like every other authenticated command.
+    match &invocation.command {
+        Command::AgentStart => return agent_result(agent::agent_start(host)),
+        Command::AgentStop => return agent_result(agent::agent_stop(host)),
+        Command::AgentStatus { json } => {
+            return agent_result(agent::agent_status(
+                host,
+                invocation.selected_vault.as_ref(),
+                *json,
+            ))
+        }
+        Command::AgentLock => {
+            return agent_result(agent::agent_lock(host, invocation.selected_vault.as_ref()))
+        }
+        Command::AgentRunForeground => return agent_result(agent::agent_run_foreground(host)),
+        _ => {}
+    }
     // The shell is dispatched before `execute` because `execute` acquires the
     // cross-process writer lock for the whole command. A shell must not hold
     // that lock while it waits at a prompt, and its own per-command
@@ -775,6 +798,13 @@ where
         };
     }
     match execute(invocation, host) {
+        Ok(output) => output,
+        Err(error) => CliOutput::failure(error),
+    }
+}
+
+fn agent_result(result: Result<CliOutput, CliFailure>) -> CliOutput {
+    match result {
         Ok(output) => output,
         Err(error) => CliOutput::failure(error),
     }
@@ -800,6 +830,29 @@ enum Command {
     },
     /// Begin one foreground interactive session over this same grammar.
     Shell,
+    /// Start the local agent as a detached background process (VLT-PM48).
+    AgentStart,
+    /// Ask a running agent to forget everything and stop listening.
+    AgentStop,
+    /// Report whether the agent is running and which vaults it retains.
+    AgentStatus {
+        /// Render as one machine-readable JSON line instead of text.
+        json: bool,
+    },
+    /// Authenticate once and hand the agent this vault's passphrase to
+    /// retain.
+    AgentUnlock,
+    /// Ask the agent to forget one vault's retained passphrase, or every
+    /// vault's.
+    AgentLock,
+    /// The detached process `agent start` re-executes this binary as.
+    ///
+    /// Not a command for people, listed in [`USAGE`] anyway for the same
+    /// reason `ClipboardClear` is: a closed grammar with a hidden verb in it
+    /// is not a closed grammar. It opens no vault, takes no writer lock, and
+    /// authenticates nothing — it only binds the agent socket and serves
+    /// requests until `agent stop` or `Shutdown` ends it.
+    AgentRunForeground,
     AuditEnable,
     AuditVerify,
     AuditList,
@@ -1044,6 +1097,7 @@ where
         "vault" => parse_vault(tail),
         "status" => parse_status(tail),
         "shell" if tail.is_empty() => Ok(Command::Shell),
+        "agent" => parse_agent(tail),
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
         "passphrase" => parse_passphrase(tail),
@@ -1061,10 +1115,13 @@ where
     }?;
     // A `--vault` selector names a target for the command to operate on.
     // `init` and `vault create` build a vault rather than opening one, `help`
-    // reads nothing, and `password generate` (VLT-PM44 §2.2) touches no vault
-    // at all — so for these four the selector would be a statement with no
-    // referent, and accepting it silently would let a person believe they had
-    // aimed a command that was never aimable.
+    // reads nothing, `password generate` (VLT-PM44 §2.2) touches no vault at
+    // all, and the three agent *lifecycle* verbs act on the agent process
+    // itself rather than one vault (VLT-PM48 §6) — `agent unlock` and `agent
+    // lock` are the ones that do take a selector, matching every other
+    // authenticated command. For the six listed here the selector would be a
+    // statement with no referent, and accepting it silently would let a
+    // person believe they had aimed a command that was never aimable.
     if selected_vault.is_some()
         && matches!(
             &command,
@@ -1073,6 +1130,9 @@ where
                 | Command::Help
                 | Command::PasswordGenerate { .. }
                 | Command::ClipboardClear
+                | Command::AgentStart
+                | Command::AgentStop
+                | Command::AgentRunForeground
         )
     {
         return Err(CliFailure::InvalidCommand);
@@ -1347,6 +1407,26 @@ fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [] => Ok(Command::Doctor { unlock: false }),
         [argument] if argument == "--unlock" => Ok(Command::Doctor { unlock: true }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+/// Parse the `agent` noun (VLT-PM48).
+///
+/// `status` is the only verb with a flag; every other verb takes no
+/// arguments at all, for the same reason `passphrase rotate` does not: none
+/// of them ever needs to accept a secret, a path, or a policy on argv.
+fn parse_agent(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action] if action == "start" => Ok(Command::AgentStart),
+        [action] if action == "stop" => Ok(Command::AgentStop),
+        [action] if action == "status" => Ok(Command::AgentStatus { json: false }),
+        [action, flag] if action == "status" && flag == "--json" => {
+            Ok(Command::AgentStatus { json: true })
+        }
+        [action] if action == "unlock" => Ok(Command::AgentUnlock),
+        [action] if action == "lock" => Ok(Command::AgentLock),
+        [action] if action == "run-foreground" => Ok(Command::AgentRunForeground),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -1627,6 +1707,19 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
     // must stay quiet.
     let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
     let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
+    // VLT-PM48. A `Locked` result means whatever passphrase this command used
+    // was rejected — including, possibly, one an unlocked agent supplied
+    // opportunistically (`agent::passphrase_for`). Forgetting it now is the
+    // same self-heal `ShellSession`'s own dispatch performs in-process
+    // (VLT-PM40 §3.4 rule 2): without it, a stale cached value (for example
+    // after an out-of-band passphrase rotation on another device) would keep
+    // being tried, and keep failing, until its idle bound expired on its own.
+    // Best effort and unconditional: this runs whether or not the agent was
+    // actually the source of the passphrase, and whether or not one is even
+    // running — both are harmless no-ops.
+    if matches!(&result, Ok(output) if output.exit_code() == ExitCode::Locked) {
+        best_effort_forget_agent_cache(prepared.paths(), &writer, selected_vault);
+    }
     // The second reading is taken only when the first one found something that
     // could be repaired, and that condition is load-bearing rather than an
     // optimization. `LocalStateStore::load` initializes its backend, and a
@@ -1651,6 +1744,27 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Ok(output) => output.with_recovery_notice(),
         Err(error) => CliOutput::failure(error).with_recovery_notice(),
     })
+}
+
+/// Resolve the vault a `Locked` command was aimed at, and tell the agent to
+/// forget its cached passphrase. Every failure is swallowed: reading
+/// configuration again to name a vault for a cleanup step must never turn a
+/// command's own (already-rendered) `Locked` result into a different failure.
+fn best_effort_forget_agent_cache(
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) {
+    let Ok(Some(exact_config)) = writer.load_config() else {
+        return;
+    };
+    let Ok(config) = decode_config(&exact_config) else {
+        return;
+    };
+    let vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    agent::forget_cached_passphrase_on_rejection(paths, &vault_name);
 }
 
 /// Whether two observations prove *this* command finished an interrupted
@@ -1750,6 +1864,7 @@ fn dispatch(
         }
         Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
         Command::PassphraseRotate => passphrase_rotate(host, paths, writer, selected_vault),
+        Command::AgentUnlock => agent::agent_unlock(host, paths, writer, selected_vault),
         Command::PortableExport { destination } => {
             portable_export(host, paths, writer, selected_vault, &destination)
         }
@@ -1871,9 +1986,15 @@ fn dispatch(
         Command::Help
         | Command::Shell
         | Command::PasswordGenerate { .. }
-        | Command::ClipboardClear => {
+        | Command::ClipboardClear
+        | Command::AgentStart
+        | Command::AgentStop
+        | Command::AgentStatus { .. }
+        | Command::AgentLock
+        | Command::AgentRunForeground => {
             unreachable!(
-                "help, shell, password generate, and clipboard clear return before writer acquisition"
+                "help, shell, password generate, clipboard clear, and every agent verb but \
+                 `agent unlock` return before writer acquisition"
             )
         }
     }
@@ -1923,7 +2044,15 @@ fn open_authenticated_access(
     let application_store = application_store(paths);
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
-    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM48. Every authenticated command funnels its passphrase collection
+    // through this one function, so this is the single place that makes the
+    // running agent's cached passphrase reach the whole grammar: a running,
+    // unlocked agent skips the prompt below; anything else falls back to it
+    // unchanged.
+    let vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let passphrase = agent::passphrase_for(host, paths, &vault_name).map_err(map_host)?;
     // VLT-PM42. A process killed inside a mutation publication leaves an exact
     // journal that this open finishes with the passphrase it just collected.
     // Before that, every command on this path answered a crash with exit 2
@@ -2009,7 +2138,11 @@ fn portable_export(
 
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
-    let vault_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let export_vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let vault_passphrase =
+        agent::passphrase_for(host, paths, &export_vault_name).map_err(map_host)?;
     // VLT-PM42. An export must describe a settled vault, so an interrupted
     // publication is finished before the artifact is computed.
     access
@@ -4714,6 +4847,19 @@ fn status(
 /// Nothing durable happens until both are in hand and the next bootstrap is
 /// built and signed. Every failure up to that point leaves a vault the current
 /// passphrase still opens.
+///
+/// VLT-PM48 §6. Unlike every other authenticated command, this one never
+/// asks a running agent for the current passphrase — it always prompts, the
+/// same way it always has. `vault-pm shell` refuses `passphrase rotate`
+/// outright for a closely related reason (VLT-PM43 §3.1): a retained
+/// authenticator's whole premise is that it still opens the vault, and a
+/// rotation is precisely the event that can make that false. The agent
+/// cannot be refused the same way — it is a legitimate way to *reach* this
+/// command, not a session it runs inside — so instead this is the one place
+/// that always collects its own current passphrase fresh, rather than reuse
+/// a cached one, however current that cache happens to be. A rotation is a
+/// deliberate enough act that proving knowledge of the current passphrase
+/// again is a feature, not friction.
 fn passphrase_rotate(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -4740,6 +4886,9 @@ fn passphrase_rotate(
     let policy =
         PassphraseRotationPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
 
+    let rotate_vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
     let current_passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let mut access = VaultAccessV1::locked(locator);
     // VLT-PM42. A rotation must describe a settled vault: the bootstrap it
@@ -4811,6 +4960,14 @@ fn passphrase_rotate(
             )
             .map_err(map_application)?;
     }
+    // VLT-PM48. A successful rotation makes the agent's cached passphrase for
+    // this vault wrong, immediately and for certain — unlike the general
+    // `Locked`-triggered self-heal in `execute`, there is no ambiguity to
+    // wait out here. Forgetting it now means the very next opportunistic
+    // lookup falls back to a prompt instead of trying (and failing with) the
+    // password that no longer opens this vault. Best effort: an agent that
+    // is not running has nothing to forget.
+    agent::forget_cached_passphrase_on_rejection(paths, &rotate_vault_name);
     Ok(CliOutput::success("Vault passphrase rotated.\n"))
 }
 
@@ -4855,7 +5012,10 @@ fn audit_verify(
     let application_store = application_store(paths);
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
-    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let audit_vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let passphrase = agent::passphrase_for(host, paths, &audit_vault_name).map_err(map_host)?;
     // VLT-PM42. `audit verify` publishes an audit-only commit of its own
     // through the very path a crash interrupts, so it finishes an outstanding
     // publication before starting another.
@@ -4969,7 +5129,11 @@ fn doctor(
         );
     if unlock {
         let repository_factory = configured_repository_factory(&config, vault)?;
-        let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+        let doctor_vault_name = selected_vault
+            .cloned()
+            .unwrap_or_else(|| config.default_vault().clone());
+        let passphrase =
+            agent::passphrase_for(host, paths, &doctor_vault_name).map_err(map_host)?;
         access
             .unlock(
                 passphrase,
@@ -5227,6 +5391,13 @@ enum CliFailure {
     Provider,
     Unsupported,
     Internal,
+    /// The local agent (VLT-PM48) could not be reached or refused a request.
+    ///
+    /// Carries the same `Provider` exit class as every other "a local
+    /// dependency was unavailable" failure, but its own message: "storage
+    /// unavailable" would misdescribe a socket problem that has nothing to do
+    /// with the object store.
+    AgentUnavailable,
 }
 
 impl CliFailure {
@@ -5242,6 +5413,7 @@ impl CliFailure {
             Self::Provider => ExitCode::Provider,
             Self::Unsupported => ExitCode::Unsupported,
             Self::Internal => ExitCode::Internal,
+            Self::AgentUnavailable => ExitCode::Provider,
         }
     }
 
@@ -5257,6 +5429,7 @@ impl CliFailure {
             Self::Provider => "vault-pm: storage unavailable",
             Self::Unsupported => "vault-pm: unsupported capability",
             Self::Internal => "vault-pm: internal invariant failed",
+            Self::AgentUnavailable => "vault-pm: agent unavailable",
         }
     }
 }
@@ -9945,6 +10118,98 @@ mod tests {
         assert!(USAGE.contains("passphrase rotate"));
     }
 
+    #[test]
+    fn agent_grammar_parses_every_documented_verb() {
+        assert_eq!(
+            parse(["agent", "start"]),
+            default_invocation(Command::AgentStart)
+        );
+        assert_eq!(
+            parse(["agent", "stop"]),
+            default_invocation(Command::AgentStop)
+        );
+        assert_eq!(
+            parse(["agent", "status"]),
+            default_invocation(Command::AgentStatus { json: false })
+        );
+        assert_eq!(
+            parse(["agent", "status", "--json"]),
+            default_invocation(Command::AgentStatus { json: true })
+        );
+        assert_eq!(
+            parse(["agent", "unlock"]),
+            default_invocation(Command::AgentUnlock)
+        );
+        assert_eq!(
+            parse(["agent", "lock"]),
+            default_invocation(Command::AgentLock)
+        );
+        assert_eq!(
+            parse(["agent", "run-foreground"]),
+            default_invocation(Command::AgentRunForeground)
+        );
+        assert_eq!(
+            parse(["--vault", "personal", "agent", "unlock"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("personal").unwrap()),
+                command: Command::AgentUnlock,
+            })
+        );
+        assert_eq!(
+            parse(["--vault", "personal", "agent", "lock"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("personal").unwrap()),
+                command: Command::AgentLock,
+            })
+        );
+        for arguments in [
+            vec!["agent"],
+            vec!["agent", "unknown-verb"],
+            vec!["agent", "start", "extra"],
+            vec!["agent", "status", "--bogus"],
+            vec!["agent", "unlock", "extra"],
+        ] {
+            assert_eq!(
+                parse(arguments.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{arguments:?}"
+            );
+        }
+        assert!(USAGE.contains("agent start"));
+        assert!(USAGE.contains("agent stop"));
+        assert!(USAGE.contains("agent status"));
+        assert!(USAGE.contains("agent unlock"));
+        assert!(USAGE.contains("agent lock"));
+        assert!(USAGE.contains("agent run-foreground"));
+    }
+
+    /// `agent start`, `agent stop`, and `agent run-foreground` act on the
+    /// agent process itself, not one vault, so a `--vault` selector is a
+    /// statement with no referent — the same rule VLT-PM44 §2.2 and
+    /// VLT-PM46 §2.1 apply to `password generate` and `clipboard clear`.
+    /// `agent unlock` and `agent lock` are vault-scoped and must accept one.
+    #[test]
+    fn agent_lifecycle_verbs_refuse_a_vault_selector_but_unlock_and_lock_accept_one() {
+        for refused in [
+            vec!["--vault", "personal", "agent", "start"],
+            vec!["--vault", "personal", "agent", "stop"],
+            vec!["--vault", "personal", "agent", "run-foreground"],
+        ] {
+            assert_eq!(
+                parse(refused.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{refused:?}"
+            );
+        }
+        for accepted in [
+            vec!["--vault", "personal", "agent", "unlock"],
+            vec!["--vault", "personal", "agent", "lock"],
+            vec!["--vault", "personal", "agent", "status"],
+        ] {
+            assert!(parse(accepted.clone()).is_ok(), "{accepted:?}");
+        }
+    }
+
     /// The measurement §14.8 actually asks for, at the composition root.
     ///
     /// Every CLI vault is audit-first from generation zero (VLT-PM21), so there
@@ -10267,7 +10532,7 @@ mod tests {
         assert!(USAGE.contains("vault-pm [--vault NAME] shell\n"));
         // Dispatch repeats this refusal rather than trusting classification,
         // because a delegated `shell` would recurse over the real terminal.
-        for refused in ["init", "vault", "shell", "--vault"] {
+        for refused in ["init", "vault", "shell", "agent", "--vault"] {
             assert!(shell::is_refused(refused), "{refused}");
         }
         for delegated in ["item", "status", "search", "conflict", "audit"] {
@@ -10415,6 +10680,12 @@ mod tests {
             // collected once still opens the vault, and a rotation is exactly
             // the event that makes that false.
             "passphrase rotate",
+            // VLT-PM48 §6. `agent` is refused wholesale, including its
+            // vault-scoped verbs: `agent run-foreground` inline would block
+            // this very prompt forever, the same mistake a nested `shell`
+            // would be, and one rule for the whole noun is simpler than one
+            // that allows some of its verbs and not others.
+            "agent unlock",
             "--vault work item list",
             "\"unterminated",
             "a b c d e f g h i",
@@ -10423,10 +10694,10 @@ mod tests {
         let output = run_with_terminal(["shell"], &host, &terminal);
 
         assert_eq!(output.exit_code(), ExitCode::Success);
-        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 7]);
+        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 8]);
         assert_eq!(
             terminal.transcript(),
-            "vault-pm: invalid command\n".repeat(7)
+            "vault-pm: invalid command\n".repeat(8)
         );
         // No passphrase was ever collected, so nothing was retained to wipe.
         assert_eq!(host.remaining_secrets(), 0);
