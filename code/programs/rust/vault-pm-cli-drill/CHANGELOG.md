@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.4.0] - 2026-08-18
+
+### Added
+
+- **Two attachment drills** for `VLT-PM47-cli-attachments.md`.
+  `an_interrupted_attachment_add_is_clean_or_resumable` kills a real process at
+  the characteristic landing points of the ceremony that publishes the most
+  objects in this product — a three-chunk file adds four content objects on
+  top of the revision, catalog, and audit event — and then proves the vault
+  still attaches and still returns the bytes identically.
+  `an_interrupted_attachment_export_never_leaves_a_partial_plaintext` finds the
+  two `attachment.artifact` landing points *by name* rather than by ordinal and
+  requires the destination afterwards to be either absent or the complete
+  plaintext.
+
+- `attachment.artifact` in the closed ledger vocabulary.
+
 All notable changes to this package are documented here.
 
 ## [0.3.0] - 2026-08-18

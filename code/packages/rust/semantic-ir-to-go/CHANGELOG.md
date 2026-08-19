@@ -1,5 +1,106 @@
 # Changelog
 
+## 0.42.0 — SIR23 Tier A pattern matcher (second-wave backend rollout, Phase A Slice 4)
+
+Implements the 7-node SIR23 Tier A slice — the symbolic-expression
+pattern matcher and rewrite engine — as one of five parallel per-backend
+PRs for this rollout (Ruby merged first as precedent; C/Rust/Python are
+sibling PRs): `Expr::SymSymbol`/`SymRational`/`SymApply`/
+`SymPatternBlank`/`SymPatternNamed`/`SymRule`/`SymReplaceAll`. New
+`Feature` flags accepted: `SymbolicExpr`, `PatternMatching`, `Rationals`
+(the last shared with the SIR22 array/matrix domain rather than a flag
+of its own, per the SIR23 spec). Tier B (`evalTerm` — arithmetic/
+calculus/user-function folding: `Add`/`Sin`/`D`/...) is explicitly OUT
+OF SCOPE for this slice; a `SymApply` builds an inert term tree, nothing
+more.
+
+**New `_sir_cas_*` runtime functions + `*SirCasTerm` type (`runtime.rs`)**:
+an inlined port of `semantic-ir-to-javascript`'s already-proven
+`Symbolic` sub-runtime's Tier A slice — term construction (`symbol`/
+`int`/`rational`/`float`/`string`/`apply`), `matchPattern`/
+`substituteTerm`/`applyRuleTerm` (the five-case structural matcher:
+`Blank()`, `Blank(T)`, `Pattern(name, inner)`, compound-vs-compound,
+plain structural equality), and `replaceAll`/`replaceRepeated` (`/.` /
+`//.`) with their DoS guards. Cross-checked against the sibling Ruby
+backend's own port (`sir23-ruby-matcher`, merged as PR #12128).
+
+**Naming**: `_sir_cas_*` / `SirCasTerm`, NOT `_sir_sym_*` — this backend
+already owns that prefix for Ruby `Symbol#to_proc`/`Symbol` method
+dispatch (`_sir_sym_to_proc`, `_sir_symbol_*`), an unrelated domain. The
+same class of landmine Slice 2 hit with `_sir_array_*` (forced the
+rename to `_sir_ndarray_*`); this slice checked first and picked a
+distinct prefix (`_sir_cas_*`, for "Computer Algebra System", matching
+the SIR23 spec's own `cas-pattern-matching` crate name) up front.
+
+**Value model**: `*SirCasTerm`, one kind-discriminated Go struct
+(`sirCasSymbol`/`sirCasInteger`/`sirCasRational`/`sirCasFloat`/
+`sirCasString`/`sirCasApply`) — the same established pattern this
+backend already uses for SIR22's `*NDArray`, rather than one Go type per
+kind. `Head`/`Args` are typed `Value`/`[]Value` (not `*SirCasTerm`/
+`[]*SirCasTerm`) so every `_sir_cas_*` function accepts the same boxed
+interface every other runtime value flows through, asserting the
+concrete type once internally (`_sir_cas_as_term`, mirroring
+`_sir_ndarray_as_ndarray`'s identical discipline).
+
+**Bindings**: `map[string]Value`, copy-on-write via a manual
+full-copy-plus-insert in `_sir_cas_bindings_bind` (no persistent-map
+library exists anywhere in this repo's Go-facing dependency graph, and
+Go has neither Ruby's cheap `Hash#merge` nor a built-in structural-
+sharing map) — a failed match attempt never mutates a binding set an
+earlier attempt still holds a reference to.
+
+**DoS guards (CWE-674)**: `sirCasMaxTermDepth = 512` caps every tree
+WALK (`_sir_cas_walk_once`/`_sir_cas_replace_repeated`'s recursive
+descent into `head`/`args`, term equality, and display) — NOT the
+matcher functions (`_sir_cas_match_pattern`/`_sir_cas_substitute`/
+`_sir_cas_apply_rule`), which recurse only as deep as one rule's own
+author-written shape and need no cap. `_sir_cas_replace_repeated` also
+enforces `sirCasMaxIterationsDefault = 100`, a GLOBAL fixed-point
+iteration cap shared across the whole walk (a `for` loop at each call
+frame, never a recursive call per firing, so a rule firing repeatedly at
+one tree position costs O(1) native stack frames). Both caps `panic`
+directly with a `fmt.Sprintf`-formatted message the moment they are
+exceeded — a DELIBERATE departure from the Ruby/JS references (which
+thread a sentinel value back up through every recursive return,
+unwrapping/raising only once the walk fully returns): this backend's own
+`_sir_ndarray_checked_shape_size` already established "panic immediately
+with a controlled message" as the house convention for this exact class
+of guard, and Go's `panic`/`recover` gives a clean, catchable unwind
+through however many frames are on the stack — the compiled `TryCatch`
+rescue path recovers ANY panic value, not just `*SirError` — so there is
+no need for hand-rolled sentinel propagation here.
+
+**Display**: `_sir_cas_to_s` renders a term in generic `head(args, ...)`
+form (no Wolfram infix/precedence pretty-printing — separate follow-up
+work), wired into `_sir_format_d` (the existing `print`/`puts` dispatch)
+via a `*SirCasTerm` case. SIR22's own `*NDArray` deliberately has no
+display path, but this slice's own reference tests (ported from the JS
+backend's suite) print terms directly and assert on stdout, so a
+display path is load-bearing here.
+
+**Emit (`emit.rs`)**: replaces the combined SIR23 deferred-node `panic!`
+arm with seven real per-variant codegen arms, plus an `emit_sym_operand`
+helper (ported from the Ruby/JS backends' identically-named helper) that
+wraps a bare `IntLit`/`FloatLit`/`StrLit` operand through the matching
+`_sir_cas_*` leaf constructor before it sits inside a term tree. The
+SIR23 arm was already cleanly split from the unrelated SIR26 `Convert`
+deferred-node arm (a prior slice's own split) — no further separation
+needed this time.
+
+**Tests (`tests/sir23_symbolic.rs`)**: ported from `semantic-ir-to-
+javascript`'s own proven suite, Tier A cases only —
+`replace_repeated_reduces_nested_add_zero_to_bare_symbol`,
+`replace_all_single_pass_does_not_retry_at_same_position`,
+`typed_blank_matches_only_constrained_head`, `a_rational_term_prints_
+reduced`, plus `depth_limit_guard_panics_instead_of_crashing_the_go_
+stack` — a REAL compiled `Stmt::ForRange` loop builds 600 levels of
+`Wrap(...)` nesting at runtime (not a hand-built static AST), then
+`replaceAll` over it must panic cleanly instead of overflowing the Go
+stack. All five hand-build a `Module` directly (no frontend targets this
+backend for SIR23 yet), emit Go, and run it with a real `go run`,
+skipping (not failing) when no `go` is on `PATH` — mirrors
+`sir22_array.rs`'s established pattern.
+
 ## 0.41.0 — SIR22 "APL addendum" (second-wave backend rollout, Phase A Slice 3)
 
 Implements the 9-node SIR22 "APL addendum" this backend's own Slice 2

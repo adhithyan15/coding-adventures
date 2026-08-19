@@ -323,6 +323,30 @@ surface-syntax exception documented on `array_index_generator`/
 `array_index_of` in `runtime.rs`. See
 [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
 
+**`SymbolicExpr` / `PatternMatching` / `Rationals`** (SIR23 symbolic-
+expression/pattern-matcher domain, Tier A only, Phase A Slice 4):
+`Expr::SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+`SymPatternNamed`/`SymRule`/`SymReplaceAll` route into a new
+`__sir::sir_sym_*` sub-runtime — an inlined port of `semantic-ir-to-
+javascript`'s already-proven `Symbolic` sub-runtime's Tier A (matcher)
+slice: term construction, `matchPattern`/`substituteTerm`/`applyRuleTerm`,
+and `replaceAll`/`replaceRepeated`. **Tier A only** — no `evalTerm`-
+equivalent arithmetic/calculus/user-function-dispatch evaluator exists; a
+`SymApply` builds an inert `head(args…)` term tree, nothing more.
+`Rationals` is not a new flag this slice introduces — it already exists in
+`semantic_ir::Feature`, shared with the SIR22 array/matrix domain, and
+`SymRational` observes it.
+A new `Value::SymTerm(Rc<SirSymTerm>)` handle carries a term — plain `Rc`,
+no `RefCell`, since SIR23 adds no in-place mutation statement (every
+matcher/substitution helper produces a fresh term). Both tree-WALK
+functions (`sir_sym_replace_all`'s single pass, `sir_sym_replace_repeated`'s
+fixed point) are depth-capped at `SIR_SYM_MAX_TERM_DEPTH = 512`
+(CWE-674); `replace_repeated` additionally caps total rule firings across
+one call at `SIR_SYM_MAX_REWRITE_ITERATIONS = 100`, looping iteratively so
+a rule refiring at one tree position costs O(1) stack frames. Both caps
+`raise` through this backend's existing SIR17 exception convention. See
+[SIR23](../../../specs/SIR23-symbolic-pattern-semantic-ir.md).
+
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), `StringInterpolation`, a stateful (non-empty
 body) `Class`/`Module` or a non-name-slot `Const` reference (rejected
@@ -342,9 +366,19 @@ enum Value {
     Map(Rc<RefCell<Vec<(Value, Value)>>>),   // SIR16 Maps (insertion-ordered)
     Instance(u64),                           // SIR17 O5 user-object handle
     NDArray(Rc<RefCell<SirNDArray>>),        // SIR22 array/matrix base cut
+    SymTerm(Rc<SirSymTerm>),                 // SIR23 symbolic-expression term (Tier A)
 }
 
 struct SirNDArray { shape: Vec<usize>, data: Vec<f64> }  // rank <= 2, column-major
+
+enum SirSymTerm {                            // immutable — no RefCell needed
+    Symbol { name: String },
+    Integer { value: i64 },
+    Rational { numer: i64, denom: i64 },     // always reduced
+    Float { value: f64 },
+    Str { value: String },
+    Apply { head: Rc<SirSymTerm>, args: Vec<Rc<SirSymTerm>> },
+}
 ```
 
 - Single-threaded (`Rc`, not `Arc`).

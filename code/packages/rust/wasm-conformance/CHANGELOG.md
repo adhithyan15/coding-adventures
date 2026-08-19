@@ -1,5 +1,164 @@
 # Changelog — wasm-conformance
 
+## 0.1.58 — 2026-08-19 — vendor simd_select.wast + simd_address.wast: pure vendoring, zero new opcodes (task #186-187)
+
+### Added
+
+- Vendored `simd_select.wast` and `simd_address.wast` (both new files,
+  not re-fetches of already-vendored ones) at the existing pinned commit
+  `28864811cf03bdbf880733786148feaba339582d`. Unlike every prior PR in
+  this SIMD widening campaign, this PR adds ZERO new opcodes to
+  `wasm-opcodes` -- both files were confirmed, before vendoring, to use
+  only opcodes already fully implemented: `simd_select.wast` exercises
+  untyped `select` (`0x1B`) with `v128` operands (the parametric `select`
+  handler and the validator's `select` type-check rule are both already
+  fully generic over `ValueType`, `V128` included, with no SIMD-specific
+  gating anywhere); `simd_address.wast` exercises `v128.load`/
+  `v128.store` memarg offset/align edge cases, both implemented since
+  PR15 (task #162-164). 100% pass on EVERY directive in both files:
+  `simd_select.wast` (1/1 module, 6/6 assert_return); `simd_address.wast`
+  (3/3 modules, 36/36 assert_return, 6/6 assert_trap, 2/2 assert_invalid,
+  2/2 assert_malformed) -- 46 directives total, zero `NotYetSupported`
+  anywhere. Aggregate `assert_return` rose from 24292/24309 to
+  24334/24351 (+42 pass, +42 gradeable, exactly the two files' combined
+  `assert_return` count); `assert_trap` +6, `assert_invalid` +2,
+  `assert_malformed` +2 (all still 100.0% of gradeable directives);
+  `module` pass count rose from 1164 to 1168 (+4). No source changes to
+  `wasm-execution`/`wasm-validator`/`wasm-wast-parser`/`wasm-opcodes` --
+  only this crate's fixtures/baseline/version/changelog are touched. See
+  `tests/fixtures/testsuite/NOTICE` for the full breakdown.
+
+## 0.1.57 — 2026-08-19 — vendor simd_i16x8_q15mulr_sat_s.wast: i16x8.q15mulr_sat_s Q15 rounding saturating multiply (task #183-185)
+
+### Added
+
+- Vendored `simd_i16x8_q15mulr_sat_s.wast` (new file, not a re-fetch of
+  an already-vendored one) at the existing pinned commit
+  `28864811cf03bdbf880733786148feaba339582d` -- `i16x8.q15mulr_sat_s`
+  (see `wasm-opcodes`'s own CHANGELOG entry) is the first genuinely new
+  SIMD op family/semantic since the "extmul" widening-multiply arc
+  completed in PR21. 100% pass on EVERY directive kind in the new file
+  (1/1 module, 26/26 assert_return, 3/3 assert_invalid) on the first
+  baseline regen after implementation, including the upstream corpus's
+  own saturating-edge-case vectors -- confirming the Q15
+  rounding-then-saturating formula (not a wrapping cast) is correct.
+  Aggregate `assert_return` rose from 24266/24283 to 24292/24309 (+26
+  pass, +26 gradeable, exactly this file's own `assert_return` count);
+  `assert_invalid` rose from 1715/1715 to 1718/1718 (+3, still 100.0%
+  of gradeable directives); `module` pass count rose from 1163 to 1164
+  (+1). See `tests/fixtures/testsuite/NOTICE` for the full breakdown.
+
+## 0.1.56 — 2026-08-19 — vendor simd_i64x2_extmul_i32x4.wast: i64x2.extmul_i32x4 widening-multiply family (task #180-182)
+
+### Added
+
+- Vendored `simd_i64x2_extmul_i32x4.wast` (new file, not a re-fetch of
+  an already-vendored one) at the existing pinned commit
+  `28864811cf03bdbf880733786148feaba339582d` -- `i64x2.extmul_low`/
+  `high_i32x4_s`/`_u` (see `wasm-opcodes`'s own CHANGELOG entry) are
+  the third and final "extmul" rung this crate now implements. 100%
+  pass on EVERY directive kind in the new file (1/1 module, 104/104
+  assert_return, 12/12 assert_invalid) on the first baseline regen
+  after implementation. Aggregate `assert_return` rose from
+  24162/24179 to 24266/24283 (+104 pass, +104 gradeable, exactly this
+  file's own `assert_return` count); `assert_invalid` rose from
+  1703/1703 to 1715/1715 (+12, still 100.0% of gradeable directives);
+  `module` pass count rose from 1162 to 1163 (+1). See
+  `tests/fixtures/testsuite/NOTICE` for the full breakdown.
+
+## 0.1.55 — 2026-08-19 — baseline regen: i32x4/f32x4 trunc_sat/convert fully resolve simd_load.wast (task #177-179)
+
+### Changed
+
+- Baseline regen, no new file vendored: `i32x4.trunc_sat_f32x4_s`/`_u`/
+  `f32x4.convert_i32x4_s`/`_u` (see `wasm-opcodes`'s own CHANGELOG
+  entry) unblock the LAST 2 remaining `assert_return` directives in the
+  already-vendored `simd_load.wast` (task #162-164) --
+  `as-i32x4.trunc_sat_f32x4_s-operand` and
+  `as-f32x4.convert_i32x4_u-operand`, each the sole directive of its
+  own single-func module, and each depending on nothing else
+  unimplemented (just `v128.load` plus the one new op). `simd_load.wast`
+  now has ZERO stuck directives -- 100% `assert_return`/`module` pass
+  rate for this file. Aggregate `assert_return` rose from 24160/24177
+  to 24162/24179 (+2 pass, +2 gradeable, exactly matching the predicted
+  unblock count); `module` pass count rose from 1160 to 1162 (+2) and
+  its `NotYetSupported` count fell from 70 to 68. Also re-checked
+  `simd_splat.wast`'s own still-`NotYetSupported` module (task
+  #165-167): its still-missing-opcode count dropped from 16 to 14 (2 of
+  this PR's 4 new ops are used inside it), but its instantiation still
+  fails as a whole on the other 14 opcodes, so it stays
+  `NotYetSupported`. See `tests/fixtures/testsuite/NOTICE` for the full
+  breakdown.
+
+## 0.1.54 — 2026-08-19 — baseline regen: f32x4.abs/mul/min unblock simd_load.wast (task #174-176)
+
+### Changed
+
+- Baseline regen, no new file vendored: `f32x4.abs`/`f32x4.mul`/
+  `f32x4.min` (see `wasm-opcodes`'s own CHANGELOG entry) unblock the 3
+  remaining `assert_return` directives in the already-vendored
+  `simd_load.wast` (task #162-164) that needed exactly these ops:
+  `as-f32x4.abs-operand`, `as-f32x4.mul-operand`,
+  `as-f32x4.min-operand`, each the sole directive of its own
+  single-func module, and each depending on nothing else unimplemented
+  (just `v128.load` plus the one new op). The other 2 previously-stuck
+  directives (`as-i32x4.trunc_sat_f32x4_s-operand`,
+  `as-f32x4.convert_i32x4_u-operand`) need float<->int conversion
+  opcodes this PR doesn't touch, and stay `NotYetSupported` -- this
+  file's `NotYetSupported` tally is now fully accounted for. Aggregate
+  `assert_return` rose from 24157/24174 to 24160/24177 (+3 pass, +3
+  gradeable, exactly matching the predicted unblock count); `module`
+  pass count rose from 1157 to 1160 (+3) and its `NotYetSupported`
+  count fell from 73 to 70. Also checked (cheaply) whether
+  `simd_splat.wast`'s own still-`NotYetSupported` module picked up any
+  credit: it did not, since that module's instantiation fails as a
+  whole on at least 11 OTHER still-unimplemented opcodes used
+  elsewhere in the same module. See
+  `tests/fixtures/testsuite/NOTICE` for the full breakdown.
+
+## 0.1.53 — 2026-08-19 — baseline regen: i8x16.swizzle/extract_lane_s unblock simd_load.wast (task #171-173)
+
+### Changed
+
+- Baseline regen, no new file vendored: `i8x16.swizzle`/
+  `i8x16.extract_lane_s` (see `wasm-opcodes`'s own CHANGELOG entry;
+  `i8x16.extract_lane_u`/`replace_lane` also landed in the same PR but
+  exercise no directive in this file) unblock 2 of the 7
+  `assert_return` directives in the already-vendored `simd_load.wast`
+  (task #162-164) that were stuck `NotYetSupported`:
+  `as-i8x16_extract_lane_s-value/0` and `as-i8x16.swizzle-operand`,
+  each the sole directive of its own single-func module, and each
+  depending on nothing else unimplemented (just `v128.load` plus the
+  one new op) -- exactly as confirmed by re-reading the file before
+  regenerating. The other 5 stuck directives need float-lane
+  arithmetic/conversion ops (`f32x4.mul`/`f32x4.abs`/`f32x4.min`/
+  `i32x4.trunc_sat_f32x4_s`/`f32x4.convert_i32x4_u`) this PR doesn't
+  touch, and stay `NotYetSupported`. Aggregate `assert_return` rose
+  from 24155/24172 to 24157/24174 (+2 pass, +2 gradeable, exactly
+  matching the predicted unblock count); `module` pass count rose
+  from 1155 to 1157 (+2) and its `NotYetSupported` count fell from 75
+  to 73. See `tests/fixtures/testsuite/NOTICE` for the full breakdown.
+
+## 0.1.52 — 2026-08-19 — baseline regen: f32x4/f64x2.splat unblocks simd_splat.wast (task #168-170)
+
+### Changed
+
+- Baseline regen, no new file vendored: `f32x4.splat`/`f64x2.splat`
+  (see `wasm-opcodes`'s own CHANGELOG entry) unblock 115 of the 158
+  `assert_return` directives in the already-vendored `simd_splat.wast`
+  (task #165-167) that were stuck `NotYetSupported` -- exactly as
+  predicted when that file was vendored. 3 of its 4 modules (pure
+  splat, splat-into-store/load, splat-into-control-construct) needed
+  ONLY the two new float splats to build; the remaining module (43
+  directives) stays `NotYetSupported`, since it additionally needs
+  `extract_lane`/`replace_lane` for multiple lane widths and
+  `i8x16.swizzle`, none implemented yet. Aggregate `assert_return`
+  rose from 24040/24057 to 24155/24172 (+115 pass, +115 gradeable,
+  matching the predicted unblock count exactly); `module` pass count
+  rose from 1152 to 1155 (+3) and its `NotYetSupported` count fell
+  from 78 to 75. See `tests/fixtures/testsuite/NOTICE` for the full
+  breakdown.
+
 ## 0.1.51 — 2026-08-19 — vendor simd_splat.wast; baseline regen (task #165-167)
 
 ### Changed

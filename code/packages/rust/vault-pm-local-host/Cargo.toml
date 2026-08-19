@@ -6,6 +6,7 @@ description = "Secure platform paths and single-writer exclusion for the local p
 license = "MIT"
 
 [dependencies]
+coding_adventures_sha256 = { path = "../sha256" }
 directories = "6.0.0"
 
 [target.'cfg(unix)'.dependencies]

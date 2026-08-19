@@ -1,0 +1,14 @@
+[package]
+name = "coding_adventures_vault_pm_agent_host"
+version = "0.1.0"
+edition = "2021"
+description = "Permission-checked Unix-domain-socket transport and passphrase retention for the local vault-pm agent"
+license = "MIT"
+
+[dependencies]
+coding_adventures_vault_pm_agent_protocol = { path = "../vault-pm-agent-protocol" }
+coding_adventures_vault_pm_local_host = { path = "../vault-pm-local-host" }
+coding_adventures_zeroize = { path = "../zeroize" }
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

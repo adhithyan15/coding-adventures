@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 61,
+  "title": "On the Kitchen Shelf",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:b6d27421e7e7de16",
+  "lessons": [
+    {
+      "id": "ML-C61-coconut",
+      "sequence": 1940,
+      "title": "തേങ്ങ (tēṅṅa) — a coconut",
+      "headword": "തേങ്ങ",
+      "romanization": "tēṅṅa",
+      "gloss": "a coconut",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7a67a90271f58d96",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did kākka mean, and what did āna mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തേങ്ങ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തേങ്ങ (tēṅṅa) — \"a coconut\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, and the fruit of the tree the tree-lesson pointed at without naming: maraṁ is any tree, and Kerala's own one gets a compound built on that word."
+            },
+            {
+              "kind": "speech",
+              "text": "One long-standing account derives the name Kerala itself from a word for the coconut palm. The account is debated and worth holding loosely, but nobody argues about the tree's place in the kitchen."
+            },
+            {
+              "kind": "speech",
+              "text": "A തേങ്ങ (tēṅṅa) is the ripe nut with the husk off. Almost everything on the shelf after this one comes out of it in some form."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things off a Kerala kitchen shelf."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅṅa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅṅa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "maraṁ, then tēṅṅa, and say which one grows on the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *maraṁ*, then *tēṅṅa*, and say which one grows on the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തേങ്ങ (tēṅṅa) mean? (\"a coconut\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C61-oil",
+      "sequence": 1950,
+      "title": "എണ്ണ (eṇṇa) — oil",
+      "headword": "എണ്ണ",
+      "romanization": "eṇṇa",
+      "gloss": "oil",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:66d4a35e0677e696",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tēṅṅa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എണ്ണ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എണ്ണ (eṇṇa) — \"oil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil eṇṇey, and the older shape of it comes apart into two pieces meaning sesame and liquid — the oil named after the seed it first came from."
+            },
+            {
+              "kind": "speech",
+              "text": "The seed changed and the word stayed. What a Kerala kitchen presses now is the coconut you have just met, so for most cooks the word for oil in general and the oil actually on the shelf name one thing."
+            },
+            {
+              "kind": "speech",
+              "text": "The doubled ണ in the middle is a long consonant: hold it, the way katti, the knife-word, holds its tt."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇṇa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇṇa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅṅa, then eṇṇa, and say which one is pressed out of the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅṅa*, then *eṇṇa*, and say which one is pressed out of the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എണ്ണ (eṇṇa) mean? (\"oil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C61-curd",
+      "sequence": 1960,
+      "title": "തൈര് (tairŭ) — curd",
+      "headword": "തൈര്",
+      "romanization": "tairŭ",
+      "gloss": "curd",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d574bcf0c1acde1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did eṇṇa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: തൈര്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "തൈര് (tairŭ) — \"curd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil tayir. Milk is warmed, cooled to the hand, given a spoonful of yesterday's തൈര് (tairŭ) and left overnight; by morning it has set."
+            },
+            {
+              "kind": "speech",
+              "text": "It closes on the same bare r that closes vērŭ, the root-word — a consonant with the vowel taken off it rather than a syllable of its own."
+            },
+            {
+              "kind": "speech",
+              "text": "On a Kerala plate it is the last course, spooned over rice to cool everything the chilli did earlier."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tairŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tairŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāl, then tairŭ, and say which one is made from the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāl*, then *tairŭ*, and say which one is made from the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does തൈര് (tairŭ) mean? (\"curd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C61-jaggery",
+      "sequence": 1970,
+      "title": "ശർക്കര (śarkkara) — jaggery",
+      "headword": "ശർക്കര",
+      "romanization": "śarkkara",
+      "gloss": "jaggery",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3b86ed085cb7874e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tairŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ശർക്കര",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ശർക്കര (śarkkara) — \"jaggery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit śarkārā, whose first meaning was gravel or grit — the sweetener named for its grain rather than for its taste."
+            },
+            {
+              "kind": "speech",
+              "text": "That word travelled further than most. Arabic took it as sukkar, Latin as saccharum, and English ended with sugar and saccharine, so an English speaker half owns this shelf-word already."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala's own ശർക്കര (śarkkara) is dark and soft, boiled down from palm sap or cane, and it is what sweetens the festival rice pudding rather than white sugar."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śarkkara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śarkkara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śarkkara, then the English word sugar, and hear one word twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śarkkara*, then the English word *sugar*, and hear one word twice]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ശർക്കര (śarkkara) mean? (\"jaggery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C61-chilli",
+      "sequence": 1980,
+      "title": "മുളക് (muḷakŭ) — a chilli",
+      "headword": "മുളക്",
+      "romanization": "muḷakŭ",
+      "gloss": "a chilli",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:26175bda90358a81",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did śarkkara mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുളക്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുളക് (muḷakŭ) — \"a chilli\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, and older than the thing it now names. The chilli reached Kerala on Portuguese ships in the sixteenth century; the word was waiting for it."
+            },
+            {
+              "kind": "speech",
+              "text": "Before that it belonged to black pepper, the crop Kerala had been selling to the world for a thousand years. Pepper kept the word with a piece added in front of it, and the newcomer walked off with the plain form."
+            },
+            {
+              "kind": "speech",
+              "text": "So the basket of pepper going down to the market and the മുളക് (muḷakŭ) in the curry carry the same name, one of them with a syllable of warning attached."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the shelf is stocked: a coconut, oil, curd, jaggery and a chilli."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muḷakŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muḷakŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — tēṅṅa, eṇṇa, tairŭ, śarkkara, muḷakŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *tēṅṅa*, *eṇṇa*, *tairŭ*, *śarkkara*, *muḷakŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുളക് (muḷakŭ) mean? (\"a chilli\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

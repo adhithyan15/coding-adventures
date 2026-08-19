@@ -198,6 +198,26 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // ── SIR23 symbolic expression + pattern/rewrite, Tier A only (second-
+    // wave backend rollout, Phase A Slice 4) ───────────────────────────
+    // `SymSymbol`/`SymApply` observe `Feature::SymbolicExpr`;
+    // `SymRational` observes `Feature::Rationals` (shared with the SIR22
+    // array/matrix domain rather than a flag of its own — see the SIR23
+    // spec's own "New `Feature` flags" note, and `validator.rs`'s
+    // `Expr::SymRational` arm); `SymPatternBlank`/`SymPatternNamed`/
+    // `SymRule`/`SymReplaceAll` observe `Feature::PatternMatching`. All
+    // three route into `_sir_cas_*` helpers, an inlined port of the
+    // already-proven `semantic-ir-to-javascript` `Symbolic` sub-runtime's
+    // Tier A (matcher) slice — term construction, `matchPattern`/
+    // `substituteTerm`/`applyRuleTerm`, `replaceAll`/`replaceRepeated`
+    // with their depth + iteration DoS guards (see runtime.rs's "SIR23
+    // symbolic expressions" section). Tier B (`evalTerm`, the arithmetic/
+    // calculus/user-function evaluator) is OUT OF SCOPE for this slice —
+    // no `Add`/`Sin`/`D`/... folding is accepted or implemented; a
+    // `SymApply` builds an inert term tree, nothing more.
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    Feature::Rationals,
 ];
 
 impl Backend for GoBackend {

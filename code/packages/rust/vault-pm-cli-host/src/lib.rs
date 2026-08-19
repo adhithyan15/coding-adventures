@@ -74,6 +74,16 @@ pub enum CliHostError {
     InvalidImportSource,
     /// The portable-import source could not be completely read.
     ImportReadFailed,
+    /// The attachment source was empty, not a file, or exceeded its bound.
+    InvalidAttachmentSource,
+    /// The attachment source could not be completely read.
+    AttachmentReadFailed,
+    /// The caller supplied an empty attachment destination or content.
+    InvalidAttachmentDestination,
+    /// The attachment destination already exists and was not replaced.
+    AttachmentDestinationExists,
+    /// The attachment destination could not be durably written.
+    AttachmentWriteFailed,
     /// The caller requested an empty entropy buffer.
     InvalidEntropyRequest,
     /// The operating-system CSPRNG failed to fill a requested buffer.
@@ -112,6 +122,13 @@ impl Display for CliHostError {
             Self::ExportWriteFailed => "vault-pm CLI host: export write failed",
             Self::InvalidImportSource => "vault-pm CLI host: invalid import source",
             Self::ImportReadFailed => "vault-pm CLI host: import read failed",
+            Self::InvalidAttachmentSource => "vault-pm CLI host: invalid attachment source",
+            Self::AttachmentReadFailed => "vault-pm CLI host: attachment read failed",
+            Self::InvalidAttachmentDestination => {
+                "vault-pm CLI host: invalid attachment destination"
+            }
+            Self::AttachmentDestinationExists => "vault-pm CLI host: attachment destination exists",
+            Self::AttachmentWriteFailed => "vault-pm CLI host: attachment write failed",
             Self::InvalidEntropyRequest => "vault-pm CLI host: invalid entropy request",
             Self::EntropyUnavailable => "vault-pm CLI host: OS entropy unavailable",
             Self::ClipboardUnavailable => "vault-pm CLI host: clipboard unavailable",
@@ -192,6 +209,15 @@ pub enum TextPrompt {
     /// session can read would manufacture a record of an agreement nobody
     /// made. VLT-PM46 §3.1.
     SecretCopyConfirmation,
+    /// Explicit confirmation before one audited attachment export.
+    ///
+    /// A third sentence for the same reason there is a second: an attachment
+    /// export puts vault-held content into an ordinary unencrypted file that
+    /// this product will not track, clear, or know about again. Neither of the
+    /// other two prompts describes that, and a consent ceremony that
+    /// misdescribes what it is consenting to manufactures a record of an
+    /// agreement nobody made. VLT-PM47 §6.3.
+    AttachmentExportConfirmation,
 }
 
 impl TextPrompt {
@@ -226,6 +252,9 @@ impl TextPrompt {
             Self::SecretCopyConfirmation => {
                 "Copy secret to this system's clipboard? Type yes to continue: "
             }
+            Self::AttachmentExportConfirmation => {
+                "Write this attachment's contents to a plaintext file? Type yes to continue: "
+            }
         }
     }
 
@@ -256,7 +285,9 @@ impl TextPrompt {
             Self::LoginUsername => 1_024,
             Self::LoginUrl => MAX_TEXT_BYTES,
             Self::LoginUrlCount => 2,
-            Self::SecretRevealConfirmation | Self::SecretCopyConfirmation => 16,
+            Self::SecretRevealConfirmation
+            | Self::SecretCopyConfirmation
+            | Self::AttachmentExportConfirmation => 16,
         }
     }
 
@@ -271,6 +302,7 @@ impl TextPrompt {
                 | Self::TotpIssuer
                 | Self::SecretRevealConfirmation
                 | Self::SecretCopyConfirmation
+                | Self::AttachmentExportConfirmation
         )
     }
 }
@@ -441,6 +473,14 @@ impl ControllingTerminal {
         Ok(answer.as_str() == "yes")
     }
 
+    /// Require an exact echoed `yes` before one attachment export.
+    ///
+    /// Same rule, third sentence. See [`TextPrompt::AttachmentExportConfirmation`].
+    pub fn confirm_attachment_export(&self) -> Result<bool, CliHostError> {
+        let answer = self.read_text(TextPrompt::AttachmentExportConfirmation)?;
+        Ok(answer.as_str() == "yes")
+    }
+
     /// Require an exact echoed `yes` before a clipboard secret disclosure.
     ///
     /// Same rule, different sentence: the person is agreeing to put the value
@@ -499,6 +539,168 @@ pub fn write_portable_export(destination: &Path, artifact: &[u8]) -> Result<(), 
     Ok(())
 }
 
+/// Read one attachment source file under an exact host ceiling.
+///
+/// The same shape as [`read_portable_export`] and for the same reasons — the
+/// metadata length is checked before allocation and the reader is capped at
+/// `max_bytes + 1`, so a file that grows between the two cannot force an
+/// unbounded allocation. It is a separate function because what it returns is
+/// *secret* rather than an already-encrypted artifact: the buffer is
+/// `Zeroizing`, so a failed attach does not leave a copy of the person's file
+/// in freed heap.
+pub fn read_attachment_source(
+    source: &Path,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    if source.as_os_str().is_empty() || max_bytes == 0 {
+        return Err(CliHostError::InvalidAttachmentSource);
+    }
+    // A path that will not open is a path the operator named and this command
+    // cannot take -- missing, a directory it has no permission to open, a
+    // dangling link. That is invalid input, not a failing provider, so it must
+    // not be reported as one: exit 7 tells a person to retry later, and
+    // retrying will not conjure the file.
+    //
+    // `O_NONBLOCK` matters because the type check below cannot run until the
+    // open returns, and opening a FIFO for reading blocks until a writer
+    // appears. Without it, `vault-pm attachment add ITEM /path/to/a/fifo`
+    // hangs indefinitely instead of being refused; `O_NOCTTY` keeps a named
+    // terminal device from becoming this process's controlling terminal on the
+    // way to the same refusal. Both are dropped from the semantics that matter
+    // once `is_file()` has passed, because a regular file ignores them.
+    let mut options = OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NONBLOCK | libc::O_NOCTTY);
+    let mut file = options
+        .open(source)
+        .map_err(|_| CliHostError::InvalidAttachmentSource)?;
+    let metadata = file
+        .metadata()
+        .map_err(|_| CliHostError::AttachmentReadFailed)?;
+    if !metadata.is_file()
+        || metadata.len() == 0
+        || metadata.len() > u64::try_from(max_bytes).unwrap_or(u64::MAX)
+    {
+        return Err(CliHostError::InvalidAttachmentSource);
+    }
+    let declared =
+        usize::try_from(metadata.len()).map_err(|_| CliHostError::InvalidAttachmentSource)?;
+
+    // # The buffer never grows, and that is a structural property rather than
+    // # an argument
+    //
+    // `Zeroizing` wipes the allocation it owns and only that one. If a vector
+    // holding plaintext reallocates, the bytes already read are copied into a
+    // new allocation and the old one is freed **unwiped** — and nothing in
+    // this function ever learns that happened.
+    //
+    // `read_to_end` reallocates whenever the file turns out to be longer than
+    // the capacity reserved from `metadata()`, which a file being appended to
+    // concurrently trivially is: a 100-byte file that grows to a megabyte
+    // during the read reallocates repeatedly, and every one of those freed
+    // allocations holds the person's plaintext. Bounding the *total* read does
+    // not help, because the bound is the 16 MiB ceiling and the reservation
+    // was 100 bytes.
+    //
+    // So the read is exact instead. One allocation of exactly the declared
+    // length, filled by `read_exact`, and then a single-byte probe:
+    //
+    //   * `Ok(0)` — the file ended where it said it would. Accept.
+    //   * `Ok(_)` — the file grew while being read. Refuse: what was read is
+    //     not the file the operator named, and this is the only place that can
+    //     tell.
+    //   * `Err(_)`— a real read failure.
+    //
+    // `read_exact` covers the other direction: a file that *shrank* returns
+    // `UnexpectedEof`, which is the same "not what you named" answer.
+    //
+    // No `Vec::with_capacity` + `read_to_end`, and no `take`. Reallocation is
+    // not made unlikely here; it is made unreachable.
+    let mut contents = Zeroizing::new(vec![0_u8; declared]);
+    file.read_exact(&mut contents).map_err(|error| {
+        if error.kind() == io::ErrorKind::UnexpectedEof {
+            CliHostError::InvalidAttachmentSource
+        } else {
+            CliHostError::AttachmentReadFailed
+        }
+    })?;
+    let mut beyond = [0_u8; 1];
+    match file.read(&mut beyond) {
+        Ok(0) => {}
+        Ok(_) => return Err(CliHostError::InvalidAttachmentSource),
+        Err(_) => return Err(CliHostError::AttachmentReadFailed),
+    }
+    if contents.is_empty() || contents.len() > max_bytes {
+        return Err(CliHostError::InvalidAttachmentSource);
+    }
+    Ok(contents)
+}
+
+/// Durably create one explicit attachment destination without replacing it.
+///
+/// The exported file is plaintext by definition — that is what an export is.
+/// What this function is careful about is everything else: create-new
+/// semantics, owner-only mode at creation, and removal of the incomplete file
+/// if the write or the `fsync` fails, because a half-written plaintext left
+/// behind by a failed export is a leak with no owner.
+///
+/// # What the two guarantees are worth, per platform
+///
+/// On Unix `create_new` is `O_CREAT | O_EXCL`, which the kernel refuses on an
+/// existing path *including a dangling symbolic link*, so nothing is followed
+/// or replaced; and `mode(0o600)` makes the file owner-only from the instant
+/// it exists rather than after a later `chmod`. Both statements are narrower
+/// on Windows: `CREATE_NEW` resolves a reparse point unless the caller passes
+/// `FILE_FLAG_OPEN_REPARSE_POINT`, and the file inherits the directory's ACL
+/// because `OpenOptions` exposes no mode there. That gap matters more here
+/// than it does for `write_portable_export`, whose artifact is encrypted,
+/// because this file is the person's plaintext. Closing it needs a Windows
+/// security descriptor and belongs with the rest of that platform's story —
+/// `VLT-PM46` §4.4 already fails the clipboard closed there for a comparable
+/// reason. Recorded rather than silently assumed.
+///
+/// # The cleanup is by path
+///
+/// `remove_file` re-resolves `destination` rather than acting on the open
+/// descriptor, so in a world-writable non-sticky directory the entry removed
+/// need not be the one created. An attacker who can swap an entry there can
+/// already unlink it, and `remove_file` does not follow symbolic links, so
+/// this is a residual rather than a hole — but it is a real difference from
+/// "we delete what we made".
+///
+/// # A kill inside the write still leaves a partial file
+///
+/// The caller brackets this whole call as one durable step, so the crash drill
+/// can kill on either side of it and prove nothing partial survives *those*
+/// two landing points. A `SIGKILL` delivered inside `write_all` is not one of
+/// them, and it does leave a partial plaintext. Removing that residual means
+/// writing to a `create_new` temporary in the same directory and renaming,
+/// which is a different contract — the destination would briefly not be the
+/// file the operator named — and is not made here.
+pub fn write_attachment_export(destination: &Path, contents: &[u8]) -> Result<(), CliHostError> {
+    if destination.as_os_str().is_empty() || contents.is_empty() {
+        return Err(CliHostError::InvalidAttachmentDestination);
+    }
+    let mut options = OpenOptions::new();
+    options.write(true).create_new(true);
+    #[cfg(unix)]
+    options.mode(0o600);
+    let mut file = options
+        .open(destination)
+        .map_err(map_attachment_open_error)?;
+    if file
+        .write_all(contents)
+        .and_then(|()| file.sync_all())
+        .is_err()
+    {
+        drop(file);
+        let _ = fs::remove_file(destination);
+        return Err(CliHostError::AttachmentWriteFailed);
+    }
+    Ok(())
+}
+
 /// Read one explicit encrypted portable artifact under an exact host ceiling.
 ///
 /// The source must be a non-empty regular file. Metadata is checked before
@@ -532,6 +734,63 @@ pub fn read_portable_export(source: &Path, max_bytes: usize) -> Result<Vec<u8>, 
         return Err(CliHostError::InvalidImportSource);
     }
     Ok(artifact)
+}
+
+/// Read one explicit external-format import source (Bitwarden JSON, CSV,
+/// ...) under an exact host ceiling.
+///
+/// The same exact-length-read shape as [`read_attachment_source`], and for
+/// the same reason: unlike [`read_portable_export`]'s artifact (already
+/// vault-pm ciphertext), this file *is* the person's plaintext secrets —
+/// every password a Bitwarden or browser export names, in the clear — so
+/// the buffer is `Zeroizing` and never reallocates mid-read (see that
+/// function's doc comment for why reallocation would leak a copy of the
+/// plaintext into freed, unwiped heap). Decoding and format validation
+/// remain the caller's (adapter crate's) responsibility; this function only
+/// gets the bytes off disk safely.
+pub fn read_external_import_source(
+    source: &Path,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    if source.as_os_str().is_empty() || max_bytes == 0 {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    let mut options = OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NONBLOCK | libc::O_NOCTTY);
+    let mut file = options
+        .open(source)
+        .map_err(|_| CliHostError::InvalidImportSource)?;
+    let metadata = file
+        .metadata()
+        .map_err(|_| CliHostError::ImportReadFailed)?;
+    if !metadata.is_file()
+        || metadata.len() == 0
+        || metadata.len() > u64::try_from(max_bytes).unwrap_or(u64::MAX)
+    {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    let declared =
+        usize::try_from(metadata.len()).map_err(|_| CliHostError::InvalidImportSource)?;
+    let mut contents = Zeroizing::new(vec![0_u8; declared]);
+    file.read_exact(&mut contents).map_err(|error| {
+        if error.kind() == io::ErrorKind::UnexpectedEof {
+            CliHostError::InvalidImportSource
+        } else {
+            CliHostError::ImportReadFailed
+        }
+    })?;
+    let mut beyond = [0_u8; 1];
+    match file.read(&mut beyond) {
+        Ok(0) => {}
+        Ok(_) => return Err(CliHostError::InvalidImportSource),
+        Err(_) => return Err(CliHostError::ImportReadFailed),
+    }
+    if contents.is_empty() || contents.len() > max_bytes {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    Ok(contents)
 }
 
 /// Stateless cryptographic entropy adapter backed by the repository OS CSPRNG.
@@ -615,6 +874,14 @@ fn map_export_open_error(error: io::Error) -> CliHostError {
         CliHostError::ExportDestinationExists
     } else {
         CliHostError::ExportWriteFailed
+    }
+}
+
+fn map_attachment_open_error(error: io::Error) -> CliHostError {
+    if error.kind() == io::ErrorKind::AlreadyExists {
+        CliHostError::AttachmentDestinationExists
+    } else {
+        CliHostError::AttachmentWriteFailed
     }
 }
 
@@ -1008,5 +1275,262 @@ mod tests {
             entropy.fill(&mut []).unwrap_err(),
             CliHostError::InvalidEntropyRequest
         );
+    }
+
+    /// `Result::unwrap_err` needs the success type to implement `Debug`, and
+    /// a `Zeroizing` buffer of somebody's file deliberately does not.
+    fn source_err(result: Result<Zeroizing<Vec<u8>>, CliHostError>) -> CliHostError {
+        match result {
+            Ok(_) => panic!("expected a closed error"),
+            Err(error) => error,
+        }
+    }
+
+    fn attachment_scratch(tag: &str) -> std::path::PathBuf {
+        let path = std::env::temp_dir().join(format!(
+            "vault-pm-attachment-{tag}-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        ));
+        fs::create_dir(&path).unwrap();
+        path
+    }
+
+    #[test]
+    fn an_attachment_source_round_trips_and_refuses_what_it_cannot_take() {
+        let root = attachment_scratch("read");
+        let file = root.join("payload.bin");
+        fs::write(&file, b"attachment bytes").unwrap();
+        assert_eq!(
+            read_attachment_source(&file, 1_024).unwrap().as_slice(),
+            b"attachment bytes"
+        );
+
+        // Exactly at the ceiling is accepted; one byte over is refused, so the
+        // boundary is exact rather than approximate.
+        assert!(read_attachment_source(&file, 16).is_ok());
+        assert_eq!(
+            source_err(read_attachment_source(&file, 15)),
+            CliHostError::InvalidAttachmentSource
+        );
+
+        let empty = root.join("empty.bin");
+        fs::write(&empty, b"").unwrap();
+        for (path, bound) in [
+            (empty.as_path(), 1_024),
+            (root.as_path(), 1_024),
+            (root.join("absent.bin").as_path(), 1_024),
+            (file.as_path(), 0),
+            (std::path::Path::new(""), 1_024),
+        ] {
+            assert_eq!(
+                source_err(read_attachment_source(path, bound)),
+                CliHostError::InvalidAttachmentSource,
+                "{path:?} must be refused"
+            );
+        }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// A file longer than it said it was must be refused, not read.
+    ///
+    /// This is the case the exact read exists for. Before it, the only length
+    /// check compared the result against the 16 MiB ceiling, so a short file
+    /// that grew during the read was *accepted* — and every reallocation on
+    /// the way there freed an unwiped copy of the plaintext. A test cannot
+    /// observe freed heap, so it asserts the observable half: the mismatch is
+    /// detected at all.
+    #[test]
+    fn a_source_longer_than_its_measured_length_is_refused() {
+        let root = attachment_scratch("grew");
+        let file = root.join("growing.bin");
+        fs::write(&file, b"first").unwrap();
+        fs::OpenOptions::new()
+            .append(true)
+            .open(&file)
+            .unwrap()
+            .write_all(b"-more")
+            .unwrap();
+
+        // Ten bytes now. Five is the ceiling a stale measurement would have
+        // produced, and the read must not quietly return ten bytes under it.
+        assert_eq!(
+            source_err(read_attachment_source(&file, 5)),
+            CliHostError::InvalidAttachmentSource
+        );
+        // With an honest ceiling the whole current file is read exactly, and
+        // the buffer that held it was never grown.
+        assert_eq!(
+            read_attachment_source(&file, 1_024).unwrap().as_slice(),
+            b"first-more"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn an_external_import_source_round_trips_and_refuses_what_it_cannot_take() {
+        let root = attachment_scratch("external-import");
+        let file = root.join("export.json");
+        fs::write(&file, b"{\"items\":[]}").unwrap();
+        assert_eq!(
+            read_external_import_source(&file, 1_024)
+                .unwrap()
+                .as_slice(),
+            b"{\"items\":[]}"
+        );
+
+        // Exactly at the ceiling is accepted; one byte over is refused.
+        let exact = b"{\"items\":[]}".len();
+        assert!(read_external_import_source(&file, exact).is_ok());
+        assert_eq!(
+            source_err(read_external_import_source(&file, exact - 1)),
+            CliHostError::InvalidImportSource
+        );
+
+        let empty = root.join("empty.json");
+        fs::write(&empty, b"").unwrap();
+        for (path, bound) in [
+            (empty.as_path(), 1_024),
+            (root.as_path(), 1_024),
+            (root.join("absent.json").as_path(), 1_024),
+            (file.as_path(), 0),
+            (std::path::Path::new(""), 1_024),
+        ] {
+            assert_eq!(
+                source_err(read_external_import_source(path, bound)),
+                CliHostError::InvalidImportSource,
+                "{path:?} must be refused"
+            );
+        }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// Same growth-during-read protection `read_attachment_source` has, for
+    /// the same reason: this is the person's plaintext secrets, and a
+    /// reallocation on the way to reading it would leave an unwiped copy in
+    /// freed heap.
+    #[test]
+    fn an_external_import_source_longer_than_its_measured_length_is_refused() {
+        let root = attachment_scratch("external-import-grew");
+        let file = root.join("growing.csv");
+        fs::write(&file, b"name,url\n").unwrap();
+        fs::OpenOptions::new()
+            .append(true)
+            .open(&file)
+            .unwrap()
+            .write_all(b"Site,https://x.example\n")
+            .unwrap();
+        assert_eq!(
+            source_err(read_external_import_source(&file, 9)),
+            CliHostError::InvalidImportSource
+        );
+        assert_eq!(
+            read_external_import_source(&file, 1_024)
+                .unwrap()
+                .as_slice(),
+            b"name,url\nSite,https://x.example\n"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// Opening a FIFO for reading blocks until a writer appears, and the type
+    /// check that would reject it cannot run until the open returns. Without
+    /// `O_NONBLOCK` this call hangs forever rather than refusing; the test
+    /// would time out rather than fail, which is the worst way to learn it.
+    #[cfg(unix)]
+    #[test]
+    fn a_named_pipe_source_is_refused_rather_than_waited_on() {
+        let root = attachment_scratch("fifo");
+        let fifo = root.join("pipe");
+        let name = std::ffi::CString::new(fifo.to_str().unwrap()).unwrap();
+        // SAFETY: a null-terminated path into a directory this test created.
+        let made = unsafe { libc::mkfifo(name.as_ptr(), 0o600) };
+        assert_eq!(made, 0, "mkfifo failed: {}", io::Error::last_os_error());
+        assert_eq!(
+            source_err(read_attachment_source(&fifo, 1_024)),
+            CliHostError::InvalidAttachmentSource
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn an_attachment_export_is_owner_only_and_never_replaces_anything() {
+        let root = attachment_scratch("write");
+        let destination = root.join("exported.bin");
+        write_attachment_export(&destination, b"plaintext").unwrap();
+        assert_eq!(fs::read(&destination).unwrap(), b"plaintext");
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            let mode = fs::metadata(&destination).unwrap().permissions().mode();
+            assert_eq!(mode & 0o777, 0o600);
+        }
+
+        // An existing destination is refused with its bytes intact, and so is
+        // a symbolic link pointing at one — `O_CREAT | O_EXCL` refuses the
+        // link itself rather than following it.
+        assert_eq!(
+            write_attachment_export(&destination, b"other").unwrap_err(),
+            CliHostError::AttachmentDestinationExists
+        );
+        assert_eq!(fs::read(&destination).unwrap(), b"plaintext");
+        #[cfg(unix)]
+        {
+            let victim = root.join("victim.bin");
+            fs::write(&victim, b"untouched").unwrap();
+            let link = root.join("link.bin");
+            std::os::unix::fs::symlink(&victim, &link).unwrap();
+            assert_eq!(
+                write_attachment_export(&link, b"overwrite").unwrap_err(),
+                CliHostError::AttachmentDestinationExists
+            );
+            assert_eq!(fs::read(&victim).unwrap(), b"untouched");
+        }
+
+        for (path, contents) in [
+            (root.join("empty-content.bin"), b"".as_slice()),
+            (std::path::PathBuf::new(), b"bytes".as_slice()),
+        ] {
+            assert_eq!(
+                write_attachment_export(&path, contents).unwrap_err(),
+                CliHostError::InvalidAttachmentDestination
+            );
+        }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn the_attachment_export_prompt_is_its_own_sentence() {
+        assert_eq!(
+            TextPrompt::AttachmentExportConfirmation.message(),
+            "Write this attachment's contents to a plaintext file? Type yes to continue: "
+        );
+        // Distinct from both existing confirmations: a consent ceremony that
+        // misdescribes what it is consenting to manufactures a record of an
+        // agreement nobody made.
+        assert_ne!(
+            TextPrompt::AttachmentExportConfirmation.message(),
+            TextPrompt::SecretRevealConfirmation.message()
+        );
+        assert_ne!(
+            TextPrompt::AttachmentExportConfirmation.message(),
+            TextPrompt::SecretCopyConfirmation.message()
+        );
+        assert!(TextPrompt::AttachmentExportConfirmation.allows_empty());
+        assert_eq!(TextPrompt::AttachmentExportConfirmation.max_bytes(), 16);
+        for error in [
+            CliHostError::InvalidAttachmentSource,
+            CliHostError::AttachmentReadFailed,
+            CliHostError::InvalidAttachmentDestination,
+            CliHostError::AttachmentDestinationExists,
+            CliHostError::AttachmentWriteFailed,
+        ] {
+            let rendered = error.to_string();
+            assert!(rendered.starts_with("vault-pm CLI host: "), "{rendered}");
+            assert!(!rendered.contains('/'), "{rendered}");
+        }
     }
 }

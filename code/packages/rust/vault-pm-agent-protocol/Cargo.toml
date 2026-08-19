@@ -1,0 +1,9 @@
+[package]
+name = "coding_adventures_vault_pm_agent_protocol"
+version = "0.1.0"
+edition = "2021"
+description = "Bounded wire protocol for the local vault-pm agent IPC channel"
+license = "MIT"
+
+[dependencies]
+coding_adventures_zeroize = { path = "../zeroize" }

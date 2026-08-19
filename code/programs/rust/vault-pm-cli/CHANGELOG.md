@@ -2,6 +2,77 @@
 
 ## Unreleased
 
+- Command surface gains `import portable|bitwarden|csv|kdbx FILE`
+  (`VLT-PM49-cli-external-import.md`), replacing the old bare
+  `import FILE`. Added `real_cli_imports_bitwarden_json_and_leaks_no_secret_
+  anywhere` to `tests/local_cli_e2e.rs`: a real Bitwarden JSON export on
+  disk, through the real `vault-pm` binary over a real pseudo-terminal,
+  becomes a real redacted item, and the fixture's plaintext password is
+  proven absent from stdout, `item list`, and every durable `audit list`
+  row — not merely absent from one of them. The same test proves
+  `import kdbx` fails closed against a nonexistent path exactly like it
+  would against a real one, i.e. without ever opening it.
+
+- Fixed the actual cause of PR #12042's "Build and test affected packages"
+  step running 2h46m before its 150-minute job timeout fired, with the build
+  tool's progress line frozen and zero log output for over two hours:
+  `run_attachment_command_in_pty` in `tests/local_cli_e2e.rs` — the helper
+  behind the `attachment add` / `attachment list` / `attachment export`
+  end-to-end drills this PR adds — was the one PTY-driven `run_*_in_pty`
+  helper in this file that never dropped its `Command` after `spawn`. Every
+  other helper here does, immediately, and a comment now explains why:
+  `Command` keeps its own copy of the `Stdio` handed to `.stderr(...)` — the
+  pty slave — alive for as long as the `Command` value lives, and without an
+  explicit early drop that is the end of the function, *after* `drain_pty`.
+  A pty master only reports EOF once every open reference to its slave is
+  closed, so the un-dropped `Command` was a second, silent holder of the
+  slave: the real `vault-pm attachment add` process would run to completion
+  and exit cleanly, but `drain_pty`'s read loop kept waiting for a hang-up
+  the terminal could never produce while the test's own leaked descriptor
+  held it open. Reproduced deterministically — in isolation, not from
+  parallel-test contention — under a 2-CPU-constrained Docker container
+  (matching GitHub Actions' runner shape) both with 13 tests running at
+  once and with `the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically`
+  run completely alone; fixed by adding the same `drop(command);` every
+  sibling helper already carries. This crate's own product sources are
+  unchanged — `vault-pm attachment add` itself was never stuck.
+
+- The pseudo-terminal helpers (`read_until`, `read_until_from`, `drain_pty`)
+  also now bound every blocking `read` on the PTY master with a 60-second
+  `libc::poll` idle timeout, panicking with the pattern that never arrived
+  and the transcript captured so far instead of blocking indefinitely. This
+  is what turned the leaked-descriptor bug above from a genuine hang into a
+  loud, fast, diagnosable failure in the first place — the panic that named
+  `drain_pty` and an empty trailing transcript is what led to finding it —
+  and it now guards every other `run_*_in_pty` helper against the same class
+  of mistake, or any other single unexpected byte from the real child
+  process (a race, a PTY-vs-interactive-terminal buffering difference, a
+  changed prompt string, or a genuine product deadlock), since they all
+  funnel through these three functions.
+
+  Locally (native, unconstrained) the full `local_cli_e2e` suite, including
+  the giant `real_cli_initializes_through_a_hidden_tty_and_survives_restart`
+  test that drives ~15-20 sequential real CLI invocations through a PTY,
+  passes cleanly in ~137s with no timeouts hit. A 2-CPU-constrained Docker
+  run — the closer approximation of the CI runner used to find and confirm
+  the leaked-descriptor bug above — also passes cleanly, in ~157s.
+
+- The shipped executable now stores, lists, and exports file attachments:
+  `attachment add ITEM FILE`, `attachment list ITEM`, and
+  `attachment export ITEM ATTACHMENT FILE`. This crate's own sources are
+  unchanged; the storage lives in `coding_adventures_vault_pm_application`,
+  the file I/O in `coding_adventures_vault_pm_cli_host`, and the grammar in
+  `coding_adventures_vault_pm_cli`. Specified by
+  `VLT-PM47-cli-attachments.md`.
+
+- A real-process end-to-end test round-trips a payload of two 64 KiB chunks
+  plus 1,234 bytes — deliberately not a chunk multiple, so the short final
+  chunk is exercised — through a pseudo-terminal and compares the exported
+  file byte for byte, checks that neither an interior run of the plaintext nor
+  the file's name appears anywhere under the platform roots, and proves a
+  refused export writes no file while still leaving a denied row in the audit
+  chain.
+
 - The shipped executable can now deliver a secret to the system clipboard:
   `password generate --copy` and `totp code ITEM --copy` are no longer refused.
   This crate's own sources are unchanged; the adapter lives in

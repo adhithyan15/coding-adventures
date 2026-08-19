@@ -593,16 +593,41 @@ fn collect_expr_assigned(e: &Expr, out: &mut HashSet<String>) {
         // SIR26 `Convert` — `Conversions` not accepted; unreachable in a
         // validated module.
         Expr::Convert { .. } => {}
-        // SIR23 symbolic-expression/pattern nodes: same rationale as the
-        // SIR22 nodes above — rejected before emit, so none of these carry
-        // a reachable `Assign` for this backend.
-        Expr::SymSymbol { .. }
-        | Expr::SymRational { .. }
-        | Expr::SymApply { .. }
-        | Expr::SymPatternBlank { .. }
-        | Expr::SymPatternNamed { .. }
-        | Expr::SymRule { .. }
-        | Expr::SymReplaceAll { .. } => {}
+        // SIR23 symbolic-expression/pattern nodes (Tier A, Phase A Slice 4):
+        // now ACCEPTED (see `ACCEPTED_FEATURES` in lib.rs and the real
+        // codegen arms in `emit_expr` below), so — unlike the stale "rejected
+        // before emit" comment this replaces — each of these CAN legitimately
+        // nest an `Assign` the same as any other operand position (e.g. a
+        // `SymApply` arg, or a `SymReplaceAll`'s `expr`, is an ordinary
+        // `Expr` slot; a validated module may put anything expression-shaped
+        // there, exactly as `ArrayLit`'s `rows` elements can). Real recursion
+        // now, mirroring the SIR22 (base cut + addendum) arms just above —
+        // this is the same "no-op recursion gap" Slice 3 found and fixed for
+        // the nine SIR22 addendum nodes.
+        Expr::SymSymbol { .. } => {}
+        Expr::SymRational { .. } => {}
+        Expr::SymApply { head, args, .. } => {
+            collect_expr_assigned(head, out);
+            for a in args {
+                collect_expr_assigned(a, out);
+            }
+        }
+        Expr::SymPatternBlank { head, .. } => {
+            if let Some(head) = head {
+                collect_expr_assigned(head, out);
+            }
+        }
+        Expr::SymPatternNamed { pattern, .. } => collect_expr_assigned(pattern, out),
+        Expr::SymRule { lhs, rhs, .. } => {
+            collect_expr_assigned(lhs, out);
+            collect_expr_assigned(rhs, out);
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            collect_expr_assigned(expr, out);
+            for r in rules {
+                collect_expr_assigned(r, out);
+            }
+        }
     }
 }
 
@@ -1364,23 +1389,82 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 span
             );
         }
-        // SIR23 symbolic-expression/pattern nodes — `Feature::SymbolicExpr` /
-        // `Feature::PatternMatching` are not in this backend's accepted-
-        // features list, so `check_module` rejects any module using them
-        // before it ever reaches emit.  Defensive panic covers internal
-        // bugs only (matches the SIR22/SIR26 arm above).
-        Expr::SymSymbol { span, .. }
-        | Expr::SymRational { span, .. }
-        | Expr::SymApply { span, .. }
-        | Expr::SymPatternBlank { span, .. }
-        | Expr::SymPatternNamed { span, .. }
-        | Expr::SymRule { span, .. }
-        | Expr::SymReplaceAll { span, .. } => {
-            panic!(
-                "rust backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
-                e.kind_name(),
-                span
-            );
+        // ── SIR23: symbolic expression + pattern/rewrite (Tier A, Phase A
+        // Slice 4) ──────────────────────────────────────────────────────
+        // Mirrors the JS/Ruby backends' SIR23 arms, but calls into the
+        // INLINED `__sir::sir_sym_*` runtime (runtime.rs) rather than an
+        // imported package — this backend's existing "self-contained, no
+        // external crate" convention (same as `array_*`/`seq_*`/`map_*`).
+        // Tier A (the pattern matcher) only — no `evalTerm`-equivalent
+        // arithmetic/calculus folding exists here (see runtime.rs's own
+        // SIR23 section doc for the full Tier A/Tier B rationale).
+        Expr::SymSymbol { name, .. } => {
+            out.push_str("__sir::sir_sym_symbol(");
+            out.push_str(&quote_rs_string(name));
+            out.push(')');
+        }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "__sir::sir_sym_rational({numer}i64, {denom}i64)");
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("__sir::sir_sym_apply(");
+            emit_sym_operand(out, head, indent);
+            out.push_str(", vec![");
+            emit_sym_args(out, args, indent);
+            out.push_str("])");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("__sir::sir_sym_blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                out.push_str("__sir::sir_sym_blank_typed(");
+                out.push_str(&quote_rs_string(name));
+                out.push(')');
+            }
+            _ => panic!(
+                "rust backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            out.push_str("__sir::sir_sym_named(");
+            out.push_str(&quote_rs_string(name));
+            out.push_str(", ");
+            emit_sym_operand(out, pattern, indent);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "__sir::sir_sym_rule_delayed("
+            } else {
+                "__sir::sir_sym_rule("
+            });
+            emit_sym_operand(out, lhs, indent);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str(if *repeated {
+                "__sir::sir_sym_replace_repeated("
+            } else {
+                "__sir::sir_sym_replace_all("
+            });
+            emit_sym_operand(out, expr, indent);
+            out.push_str(", vec![");
+            emit_sym_args(out, rules, indent);
+            out.push_str("])");
         }
     }
 }
@@ -1422,6 +1506,46 @@ fn emit_args(out: &mut String, args: &[Expr], indent: usize) {
             out.push_str(", ");
         }
         emit_expr(out, a, indent);
+    }
+}
+
+/// Wrap a `SymApply`/`SymPatternNamed`/`SymRule`/`SymReplaceAll` operand
+/// that is a bare literal (`IntLit`/`FloatLit`/`StrLit`) through the
+/// matching `__sir::sir_sym_*` leaf-term constructor — a raw
+/// `Value::Int`/`Value::Float`/`Value::Str` is never a valid Symbolic term
+/// on its own, so it must become one before it can sit inside a term tree.
+/// Any other operand (already a Symbolic-producing expression, e.g. a
+/// nested `SymApply` or a `VarRef` bound to a term) emits unchanged.
+/// Mirrors the JavaScript/Ruby backends' identically-named helper.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("__sir::sir_sym_int(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::FloatLit { .. } => {
+            out.push_str("__sir::sir_sym_float(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("__sir::sir_sym_string(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent),
+    }
+}
+
+/// `emit_args`, but each element passes through `emit_sym_operand` — used
+/// for a `SymApply`'s `args` and a `SymReplaceAll`'s `rules` list.
+fn emit_sym_args(out: &mut String, args: &[Expr], indent: usize) {
+    for (i, a) in args.iter().enumerate() {
+        if i > 0 {
+            out.push_str(", ");
+        }
+        emit_sym_operand(out, a, indent);
     }
 }
 

@@ -1249,7 +1249,28 @@ end
 # inner)`, compound-vs-compound (recurse head + every arg, same arity
 # required), and plain structural equality — a direct port of
 # `cas-pattern-matching::matchPattern`.
-def sir_sym_match_pattern(pattern, target, bindings = sir_sym_bindings_empty)
+#
+# SECURITY (CWE-674, /security-review finding, applied as a follow-up fix
+# after this function shipped depth-uncapped): this function's own
+# original doc comment (and the JS reference it was ported from) argued no
+# cap was needed because a rule's `lhs`/`rhs` is always "author-written,
+# not runtime-controlled" and therefore shallow. That premise does not
+# actually hold in ANY of this arc's backends: `Expr::SymRule`'s `lhs`/
+# `rhs` are ordinary `Expr`s — `emit_sym_operand`'s catch-all passes a
+# `VarRef` through unchanged, so a rule's pattern/template can be a local
+# variable holding a term a compiled `for`-loop built to unbounded depth
+# at RUNTIME, identical in kind to the target-tree hazard `sir_sym_
+# replace_all`/`replace_repeated` already guard against. `depth` mirrors
+# the SAME `SIR_SYM_MAX_TERM_DEPTH` cap those two use, reset to 0 at each
+# fresh `sir_sym_apply_rule` call so one rule's match/substitute gets its
+# own independent depth budget. Past the cap, raises the SAME "sir-
+# runtime-symbolic: depth-limit" error `sir_sym_unwrap` already raises for
+# the target-tree walk guards — NOT a silent `nil`/truncated fallback: a
+# silently wrong-but-plausible match/substitution result would be worse
+# than a loud, catchable failure (this repo's own standing "never trade
+# loud for silent" discipline for a safety-relevant path).
+def sir_sym_match_pattern(pattern, target, bindings = sir_sym_bindings_empty, depth = 0)
+  raise "sir-runtime-symbolic: depth-limit" if depth > SIR_SYM_MAX_TERM_DEPTH
   if sir_sym_is_blank?(pattern)
     constraint = sir_sym_blank_head_constraint(pattern)
     return bindings if constraint.nil?
@@ -1258,7 +1279,7 @@ def sir_sym_match_pattern(pattern, target, bindings = sir_sym_bindings_empty)
   if sir_sym_is_pattern?(pattern)
     name = sir_sym_pattern_name(pattern)
     inner = sir_sym_pattern_inner(pattern)
-    matched = sir_sym_match_pattern(inner, target, bindings)
+    matched = sir_sym_match_pattern(inner, target, bindings, depth + 1)
     return nil if matched.nil?
     existing = matched[name]
     return sir_sym_term_equals(existing, target) ? matched : nil unless existing.nil?
@@ -1266,11 +1287,11 @@ def sir_sym_match_pattern(pattern, target, bindings = sir_sym_bindings_empty)
   end
   if pattern.kind == :apply
     return nil unless target.kind == :apply
-    current = sir_sym_match_pattern(pattern.head, target.head, bindings)
+    current = sir_sym_match_pattern(pattern.head, target.head, bindings, depth + 1)
     return nil if current.nil?
     return nil if pattern.args.length != target.args.length
     pattern.args.each_with_index do |p, i|
-      current = sir_sym_match_pattern(p, target.args[i], current)
+      current = sir_sym_match_pattern(p, target.args[i], current, depth + 1)
       return nil if current.nil?
     end
     return current
@@ -1278,15 +1299,25 @@ def sir_sym_match_pattern(pattern, target, bindings = sir_sym_bindings_empty)
   sir_sym_term_equals(pattern, target) ? bindings : nil
 end
 
-def sir_sym_substitute(template, bindings)
+# SECURITY (CWE-674): depth-capped for the identical reason `sir_sym_
+# match_pattern` above now is — a rule's RHS (`template` here) is subject
+# to the exact same "runtime-built, not necessarily shallow" hazard, and
+# is reached EVEN WHEN the target being rewritten is itself shallow (e.g.
+# `Blank() -> <a 600-deep term>` matches a bare one-node target instantly,
+# then `substitute` still has to rebuild the WHOLE deep RHS) — so this
+# cannot be caught by `sir_sym_walk_once`/`replace_repeated`'s own
+# target-tree depth tracking alone. Raises loudly past the cap, same as
+# `sir_sym_match_pattern` above, not a silent truncated fallback.
+def sir_sym_substitute(template, bindings, depth = 0)
+  raise "sir-runtime-symbolic: depth-limit" if depth > SIR_SYM_MAX_TERM_DEPTH
   if sir_sym_is_pattern?(template)
     captured = bindings[sir_sym_pattern_name(template)]
     return captured.nil? ? template : captured
   end
   if template.kind == :apply
     return sir_sym_apply(
-      sir_sym_substitute(template.head, bindings),
-      template.args.map { |a| sir_sym_substitute(a, bindings) }
+      sir_sym_substitute(template.head, bindings, depth + 1),
+      template.args.map { |a| sir_sym_substitute(a, bindings, depth + 1) }
     )
   end
   template
@@ -1296,8 +1327,8 @@ def sir_sym_apply_rule(rewrite_rule, expr)
   raise "Symbolic.applyRule: expected Rule/RuleDelayed" unless sir_sym_is_rule?(rewrite_rule)
   lhs = rewrite_rule.args[0]
   rhs = rewrite_rule.args[1]
-  bindings = sir_sym_match_pattern(lhs, expr, sir_sym_bindings_empty)
-  bindings.nil? ? nil : sir_sym_substitute(rhs, bindings)
+  bindings = sir_sym_match_pattern(lhs, expr, sir_sym_bindings_empty, 0)
+  bindings.nil? ? nil : sir_sym_substitute(rhs, bindings, 0)
 end
 
 # ── replaceAll / replaceRepeated (`/.` / `//.`) + depth guard ────────────

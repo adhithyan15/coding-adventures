@@ -1459,6 +1459,21 @@
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     },
     {
+      "id": "adj.science.6to8.consumer_trophic_level",
+      "title": "Recall what each consumer trophic level (primary, secondary, tertiary) eats in an ecosystem's food chain",
+      "band": "6-8",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/biology/consumer-trophic-level.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
       "id": "adj.science.k2.season_start_month_number",
       "title": "Derive which numbered month a meteorological season starts in, by bridging a season fact to a calendar fact",
       "band": "K-2",
