@@ -20,7 +20,15 @@ const REGISTRY_NAMESPACE: &str = "chief-service-registry";
 const HOST_PREFIX: &str = "hosts/";
 const HOST_CONTENT_TYPE: &str = "application/vnd.coding-adventures.chief-host-v1";
 const MAGIC: &[u8; 4] = b"D18R";
-const VERSION: u8 = 1;
+/// The version this build writes.
+const VERSION: u8 = 2;
+/// The oldest version this build can still read.
+///
+/// Version 1 records carry no restart-intensity window. They decode with the
+/// window closed, which is exactly right: a host that has never been counted
+/// against a window has not used any of it. Refusing to read them instead would
+/// turn a routine upgrade into a wiped registry.
+const MIN_READABLE_VERSION: u8 = 1;
 const MAX_HOST_NAME_BYTES: usize = 64;
 const MAX_PACKAGE_PATH_BYTES: usize = 4096;
 const MAX_REASON_BYTES: usize = 512;
@@ -171,6 +179,16 @@ pub struct HostObservation {
     control_channel_id: Option<ChannelId>,
     restart_count: u32,
     last_restart_ns: Option<u64>,
+    /// Start of the current restart-intensity window, if one is open.
+    ///
+    /// `restart_count` is a lifetime tally: it answers "how many times has this
+    /// host ever restarted", which quarantines only on integer exhaustion. That
+    /// is not an intensity bound — a host crash-looping four times a second and
+    /// one crashing twice a day reach it identically, one in minutes and one in
+    /// centuries. These two fields carry the rate.
+    restart_window_start_ns: Option<u64>,
+    /// Restarts inside the window that began at `restart_window_start_ns`.
+    restarts_in_window: u32,
 }
 
 impl HostObservation {
@@ -184,6 +202,9 @@ impl HostObservation {
         restart_count: u32,
         last_restart_ns: Option<u64>,
     ) -> Result<Self, RegistryError> {
+        // The intensity window defaults to closed. `with_restart_window` opens
+        // it; only the reconciler's restart path has the clock reading needed
+        // to do so meaningfully.
         if process_id == Some(0) {
             return Err(RegistryError::invalid("process_id", "must be non-zero"));
         }
@@ -246,7 +267,43 @@ impl HostObservation {
             control_channel_id,
             restart_count,
             last_restart_ns,
+            restart_window_start_ns: None,
+            restarts_in_window: 0,
         })
+    }
+
+    /// Record the restart-intensity window this observation was taken under.
+    ///
+    /// Paired like `restart_count` and `last_restart_ns` are: a window with no
+    /// start is not a window, and a start with no restarts in it is a window
+    /// that should simply have been closed. Rejecting both mismatches keeps the
+    /// durable record from carrying a state the reconciler cannot interpret.
+    pub fn with_restart_window(
+        mut self,
+        window_start_ns: Option<u64>,
+        restarts_in_window: u32,
+    ) -> Result<Self, RegistryError> {
+        if window_start_ns.is_none() && restarts_in_window > 0
+            || window_start_ns.is_some() && restarts_in_window == 0
+        {
+            return Err(RegistryError::invalid(
+                "restart_window_start_ns",
+                "must be present exactly when restarts_in_window is non-zero",
+            ));
+        }
+        self.restart_window_start_ns = window_start_ns;
+        self.restarts_in_window = restarts_in_window;
+        Ok(self)
+    }
+
+    /// Start of the open restart-intensity window, if any.
+    pub fn restart_window_start_ns(&self) -> Option<u64> {
+        self.restart_window_start_ns
+    }
+
+    /// Restarts recorded inside the open window.
+    pub fn restarts_in_window(&self) -> u32 {
+        self.restarts_in_window
     }
 
     pub fn stopped() -> Self {
@@ -258,6 +315,8 @@ impl HostObservation {
             control_channel_id: None,
             restart_count: 0,
             last_restart_ns: None,
+            restart_window_start_ns: None,
+            restarts_in_window: 0,
         }
     }
 
@@ -573,7 +632,7 @@ pub fn host_record_key(name: &HostName) -> String {
     format!("{HOST_PREFIX}{}", name.as_str())
 }
 
-/// Encode one bounded version-1 host record.
+/// Encode one bounded version-2 host record.
 pub fn encode_host_entry(entry: &HostEntry) -> Vec<u8> {
     let mut output = Vec::with_capacity(192);
     output.extend_from_slice(MAGIC);
@@ -599,10 +658,15 @@ pub fn encode_host_entry(entry: &HostEntry) -> Vec<u8> {
     }
     output.extend_from_slice(&entry.observation.restart_count.to_be_bytes());
     push_option_u64(&mut output, entry.observation.last_restart_ns);
+    // Version 2 appends the restart-intensity window. Appending rather than
+    // interleaving is what lets a version-1 reader's field offsets stay valid,
+    // and what lets this decoder stop early on a version-1 record.
+    push_option_u64(&mut output, entry.observation.restart_window_start_ns);
+    output.extend_from_slice(&entry.observation.restarts_in_window.to_be_bytes());
     output
 }
 
-/// Decode one strict version-1 host record.
+/// Decode one strict host record, version 1 or 2.
 pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     if bytes.len() > MAX_RECORD_BYTES {
         return Err(RegistryError::CorruptRecord(
@@ -613,7 +677,8 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     if reader.take(4)? != MAGIC {
         return Err(RegistryError::CorruptRecord("invalid magic".to_string()));
     }
-    if reader.u8()? != VERSION {
+    let version = reader.u8()?;
+    if !(MIN_READABLE_VERSION..=VERSION).contains(&version) {
         return Err(RegistryError::CorruptRecord(
             "unsupported version".to_string(),
         ));
@@ -661,6 +726,14 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     };
     let restart_count = reader.u32()?;
     let last_restart_ns = reader.option_u64()?;
+    // Version 1 ends here. Its records predate the restart-intensity window, so
+    // they decode with it closed -- a host never counted against a window has
+    // used none of it.
+    let (restart_window_start_ns, restarts_in_window) = if version >= 2 {
+        (reader.option_u64()?, reader.u32()?)
+    } else {
+        (None, 0)
+    };
     reader.finish()?;
     let observation = HostObservation::new(
         status,
@@ -671,6 +744,8 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
         restart_count,
         last_restart_ns,
     )
+    .map_err(as_corrupt)?
+    .with_restart_window(restart_window_start_ns, restarts_in_window)
     .map_err(as_corrupt)?;
     Ok(HostEntry::new(
         HostRegistration::new(host_name, package_path, package_hash, restart_policy),
@@ -1076,8 +1151,13 @@ mod tests {
         let mut encoded = encode_host_entry(&entry);
         encoded[0] ^= 1;
         assert!(decode_host_entry(&encoded).is_err());
+        // 2 is the current version, so the unsupported cases are either side of
+        // the readable range rather than a fixed neighbour of version 1.
         let mut encoded = encode_host_entry(&entry);
-        encoded[4] = 2;
+        encoded[4] = VERSION + 1;
+        assert!(decode_host_entry(&encoded).is_err());
+        let mut encoded = encode_host_entry(&entry);
+        encoded[4] = MIN_READABLE_VERSION - 1;
         assert!(decode_host_entry(&encoded).is_err());
         let mut encoded = encode_host_entry(&entry);
         let channel_offset = encoded
@@ -1517,5 +1597,63 @@ mod tests {
             position: usize::MAX,
         };
         assert!(reader.take(1).is_err());
+    }
+
+    /// A version-1 record still decodes, with the window closed.
+    ///
+    /// This is the property that keeps an upgrade from wiping a live registry,
+    /// and it cannot be checked by round-tripping the current encoder: that
+    /// only ever produces version-2 bytes. The v1 layout is therefore rebuilt
+    /// by hand — truncating a v2 record at the point v1 ended, and relabelling
+    /// the version byte.
+    #[test]
+    fn a_version_one_record_still_decodes_with_the_window_closed() {
+        let entry = running_entry("legacy-host");
+        let v2 = encode_host_entry(&entry);
+
+        // v1 is v2 minus the appended window: an option-u64 that is `None`
+        // (one tag byte) plus a u32.
+        let trailing = 1 + 4;
+        let mut v1 = v2[..v2.len() - trailing].to_vec();
+        v1[4] = 1;
+
+        let decoded = decode_host_entry(&v1).expect("a version-1 record must still decode");
+        assert_eq!(decoded.observation().restart_window_start_ns(), None);
+        assert_eq!(decoded.observation().restarts_in_window(), 0);
+        assert_eq!(
+            decoded.observation().restart_count(),
+            entry.observation().restart_count(),
+            "the fields version 1 did carry must survive unchanged"
+        );
+    }
+
+    /// The window survives a round trip, so the bound is durable across a
+    /// daemon restart rather than resetting every time the process does.
+    #[test]
+    fn the_restart_window_round_trips() {
+        let entry = running_entry("windowed-host");
+        let observation = entry
+            .observation()
+            .clone()
+            .with_restart_window(Some(4_000), 3)
+            .expect("an open window with restarts in it is valid");
+        let entry = HostEntry::new(
+            entry.registration().clone(),
+            entry.desired_state(),
+            observation,
+        );
+
+        let decoded = decode_host_entry(&encode_host_entry(&entry)).expect("round trip");
+        assert_eq!(decoded.observation().restart_window_start_ns(), Some(4_000));
+        assert_eq!(decoded.observation().restarts_in_window(), 3);
+    }
+
+    /// A window start with no restarts in it, or restarts with no window, is a
+    /// state the reconciler cannot interpret, so it is refused at construction.
+    #[test]
+    fn a_half_open_restart_window_is_rejected() {
+        let observation = HostObservation::stopped();
+        assert!(observation.clone().with_restart_window(Some(1), 0).is_err());
+        assert!(observation.with_restart_window(None, 1).is_err());
     }
 }
