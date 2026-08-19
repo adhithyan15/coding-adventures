@@ -9,10 +9,17 @@ import (
 
 // crateSpec describes one crate to materialize in a temp repo.
 type crateSpec struct {
-	path     string // repo-relative, e.g. "code/packages/rust/foo"
-	hasCargo bool
-	hasBuild bool
+	path      string // repo-relative, e.g. "code/packages/rust/foo"
+	hasCargo  bool
+	hasBuild  bool
+	buildName string // defaults to "BUILD" when hasBuild is set
+	// buildBody is the BUILD's contents. nil means "a real command"; a pointer
+	// to "" means a genuinely empty file, which is the cheapest bypass of all
+	// and therefore has to be expressible here.
+	buildBody *string
 }
+
+func body(s string) *string { return &s }
 
 // newRepo builds a throwaway repo tree. Everything the check looks at is on the
 // filesystem, so the tests drive it the same way CI does — by making real files
@@ -30,7 +37,15 @@ func newRepo(t *testing.T, crates []crateSpec, ledger string) string {
 			writeFile(t, filepath.Join(dir, "Cargo.toml"), "[package]\nname = \"x\"\n")
 		}
 		if c.hasBuild {
-			writeFile(t, filepath.Join(dir, "BUILD"), "cargo test -p x -- --nocapture\n")
+			name := c.buildName
+			if name == "" {
+				name = "BUILD"
+			}
+			content := "cargo test -p x -- --nocapture\n"
+			if c.buildBody != nil {
+				content = *c.buildBody
+			}
+			writeFile(t, filepath.Join(dir, name), content)
 		}
 	}
 
@@ -167,7 +182,7 @@ func TestOrphans_StaleEntryForCrateThatNowHasBuildFails(t *testing.T) {
 	if err == nil {
 		t.Fatal("expected a stale exemption to fail, got nil")
 	}
-	if !strings.Contains(err.Error(), "stale") || !strings.Contains(err.Error(), "now HAS a BUILD") {
+	if !strings.Contains(err.Error(), "stale") || !strings.Contains(err.Error(), "now covered by a BUILD") {
 		t.Errorf("error should explain the entry is stale, got: %v", err)
 	}
 }
@@ -257,5 +272,124 @@ func TestOrphans_RealRepoPasses(t *testing.T) {
 
 	if err := ValidateNoOrphanCrates(root); err != nil {
 		t.Fatalf("the repo does not pass its own orphan-crate gate:\n%v", err)
+	}
+}
+
+// A crate nested inside another language's package is covered by that package's
+// BUILD. This repo has ~170 such native-extension crates (for example
+// code/packages/python/conduit/ext/conduit_native), and flagging them would turn
+// the gate into noise that gets switched off.
+func TestOrphans_AncestorBuildCovers(t *testing.T) {
+	root := newRepo(t, []crateSpec{
+		{path: "code/packages/python/conduit", hasBuild: true},
+		{path: "code/packages/python/conduit/ext/conduit_native", hasCargo: true},
+	}, "")
+
+	if err := ValidateNoOrphanCrates(root); err != nil {
+		t.Fatalf("an ancestor BUILD should cover a nested crate, got: %v", err)
+	}
+}
+
+// ... but only a real ancestor. A sibling's BUILD must not launder a crate.
+func TestOrphans_SiblingBuildDoesNotCover(t *testing.T) {
+	root := newRepo(t, []crateSpec{
+		{path: "code/packages/rust/covered", hasCargo: true, hasBuild: true},
+		{path: "code/packages/rust/naked", hasCargo: true},
+	}, "")
+
+	err := ValidateNoOrphanCrates(root)
+	if err == nil || !strings.Contains(err.Error(), "naked") {
+		t.Fatalf("a sibling BUILD must not cover another crate, got: %v", err)
+	}
+	if strings.Contains(err.Error(), "covered") {
+		t.Errorf("the crate with its own BUILD should not be reported: %v", err)
+	}
+}
+
+// `touch BUILD` must not satisfy the gate. An empty BUILD is accepted by
+// discovery, yields an empty command list, and makes the package report success
+// having compiled, tested and linted nothing — the cheapest possible bypass, and
+// one that leaves no reviewable artifact behind.
+func TestOrphans_EmptyBuildIsNotCoverage(t *testing.T) {
+	for name, content := range map[string]string{
+		"completely empty": "",
+		"blank lines":      "\n\n   \n",
+		"comments only":    "# TODO: write this\n# really\n",
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := newRepo(t, []crateSpec{
+				{path: "code/packages/rust/alpha", hasCargo: true, hasBuild: true, buildBody: body(content)},
+			}, "")
+
+			err := ValidateNoOrphanCrates(root)
+			if err == nil {
+				t.Fatal("expected an empty BUILD to be rejected, got nil")
+			}
+			if !strings.Contains(err.Error(), "no runnable commands") {
+				t.Errorf("error should say the BUILD is empty, got: %v", err)
+			}
+		})
+	}
+}
+
+// A platform-specific BUILD is still a BUILD. Discovery resolves BUILD_windows /
+// BUILD_mac / BUILD_linux, so a crate shipping only one of those is genuinely
+// built and must not be pushed into the ledger — a false EXCLUDED entry would
+// put a lie in the file and weaken it permanently.
+func TestOrphans_PlatformBuildCounts(t *testing.T) {
+	for _, name := range []string{"BUILD_windows", "BUILD_mac", "BUILD_linux", "BUILD_mac_and_linux"} {
+		t.Run(name, func(t *testing.T) {
+			root := newRepo(t, []crateSpec{
+				{path: "code/packages/rust/alpha", hasCargo: true, hasBuild: true, buildName: name},
+			}, "")
+
+			if err := ValidateNoOrphanCrates(root); err != nil {
+				t.Fatalf("%s should count as coverage, got: %v", name, err)
+			}
+		})
+	}
+}
+
+// A ledger path must be repo-relative and inside the scanned tree.
+// `filepath.Clean` does not strip a leading `..`, so an unchecked entry would be
+// stat-ed outside the repo — a directory-existence oracle readable from the
+// build status, and an entry that could never go stale because it can never
+// become covered.
+func TestOrphans_LedgerPathEscapesAreRejected(t *testing.T) {
+	cases := map[string]string{
+		"parent traversal": "../../../../Users/someone/.ssh",
+		"absolute unix":    "/etc/passwd",
+		"outside scanRoot": "notcode/packages/rust/alpha",
+	}
+	for name, badPath := range cases {
+		t.Run(name, func(t *testing.T) {
+			root := newRepo(t, []crateSpec{
+				{path: "code/packages/rust/alpha", hasCargo: true},
+			}, "EXCLUDED "+badPath+"  # a stated reason\n")
+
+			err := ValidateNoOrphanCrates(root)
+			if err == nil {
+				t.Fatal("expected the escaping path to be rejected, got nil")
+			}
+			// The orphan itself must still be reported — a bad ledger line must
+			// not suppress the finding it was aimed at.
+			if !strings.Contains(err.Error(), "code/packages/rust/alpha") {
+				t.Errorf("the real orphan should still be reported, got: %v", err)
+			}
+		})
+	}
+}
+
+// Build artifacts and vendored sources hold Cargo.toml files that are not this
+// repo's packages.
+func TestOrphans_SkippedDirectoriesAreNotScanned(t *testing.T) {
+	root := newRepo(t, []crateSpec{
+		{path: "code/packages/rust/alpha", hasCargo: true, hasBuild: true},
+		{path: "code/packages/rust/alpha/target/debug/somedep", hasCargo: true},
+		{path: "code/packages/typescript/thing/node_modules/pkg", hasCargo: true},
+	}, "")
+
+	if err := ValidateNoOrphanCrates(root); err != nil {
+		t.Fatalf("artifact directories must not be scanned, got: %v", err)
 	}
 }

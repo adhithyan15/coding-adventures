@@ -1,18 +1,25 @@
-# BUILD-EXEMPTIONS — crates that have a Cargo.toml but no BUILD file
+# BUILD-EXEMPTIONS — crates not covered by any BUILD file
 #
-# The build tool discovers work by scanning for BUILD files. A crate without
-# one is therefore invisible to it: never built, its test targets never
+# The build tool discovers work by scanning for BUILD files. A crate that no
+# BUILD covers is therefore invisible to it: never built, its test targets never
 # compiled, its assertions never run, and `cargo clippy --all-targets -- -D
 # warnings` never applied. In a Cargo workspace that failure is silent, because
 # every sibling listing the crate as a path dependency keeps it COMPILING while
 # nothing tests or lints it. That is how 84 crates accumulated unnoticed, two of
 # them carrying live clippy errors.
 #
-# `build-tool -validate-build-files` now fails on any crate directory that has a
-# Cargo.toml, no BUILD, and no entry here. A brand-new crate is in neither state,
-# so it fails the first time it is pushed. That is the point: writing the missing
-# BUILD files fixes today's omissions, but only this gate makes the next one
-# impossible.
+# `build-tool -validate-build-files` now fails on any directory that has a
+# Cargo.toml, no covering BUILD, and no entry here. A brand-new crate is in
+# neither state, so it fails the first time it is pushed. That is the point:
+# writing the missing BUILD files fixes today's omissions, but only this gate
+# makes the next one impossible.
+#
+# A crate counts as covered when it OR ANY ANCESTOR holds a BUILD with at least
+# one runnable line. The ancestor rule matters: ~170 native-extension crates sit
+# inside another language's package (code/packages/python/conduit/ext/
+# conduit_native is compiled by code/packages/python/conduit/BUILD), and flagging
+# those would make the gate noise. An empty BUILD does NOT count — it satisfies
+# discovery while running nothing, which would be a one-`touch` bypass.
 #
 # FORMAT
 #
@@ -30,118 +37,76 @@
 # The reason is mandatory. An exemption with no reason is indistinguishable from
 # an oversight, which is the thing this file exists to make impossible.
 #
-# STALE ENTRIES ARE ALSO AN ERROR. If a listed crate gains a BUILD file, or its
+# STALE ENTRIES ARE ALSO AN ERROR. If a listed crate becomes covered, or its
 # directory disappears, validation fails until the line is deleted. So landing a
 # BUILD for a PENDING crate forces the same change to remove its entry here, and
 # this list cannot quietly outlive the problem it describes.
-#
+
+
 # ---------------------------------------------------------------------------
 # EXCLUDED — never gets a BUILD
 # ---------------------------------------------------------------------------
 
-EXCLUDED code/packages/rust/conduit-jni  # compile-only JNI bridge; cdylib loaded by code/packages/java/conduit, which builds and tests it
-EXCLUDED code/packages/rust/engram-core-wasm  # wasm32-only cdylib; built and tested via engram-wasm, which has its own BUILD
+EXCLUDED code/packages/rust  # virtual workspace manifest (`[workspace]`, no `[package]`) — there is no crate here to build; its 1100+ members each carry their own BUILD
+EXCLUDED code/packages/rust/conduit-jni  # compile-only JNI bridge; the cdylib is built and its behaviour tested by code/packages/java/conduit
+EXCLUDED code/packages/rust/jni-bridge  # compile-only JNI helper; exercised through md5-native-jni / sha256-native-jni / silicon-rust-jni, each of which has its own BUILD
 EXCLUDED code/packages/rust/irc-server-native-jni  # compile-only JNI bridge for code/packages/java/irc-server-native, which builds and tests it
-EXCLUDED code/packages/rust/jit-loader-macos  # macOS-only mmap/mprotect JIT loader; no host-portable test target
-EXCLUDED code/packages/rust/jni-bridge  # compile-only JNI helper crate; exercised through md5-native-jni / sha256-native-jni / silicon-rust-jni, which have their own BUILDs
-EXCLUDED code/packages/rust/spreadsheet-android-jni  # compile-only JNI bridge; built by code/programs/kotlin/visicalc-android/scripts/build.sh against the Android NDK, not the host toolchain
+EXCLUDED code/packages/rust/spreadsheet-android-jni  # compile-only JNI bridge; built by code/programs/kotlin/visicalc-android/scripts/build.sh against the Android NDK, never the host toolchain
+EXCLUDED code/packages/rust/engram-core-wasm  # wasm32-only cdylib; built and tested via engram-wasm, which has its own BUILD
+EXCLUDED code/packages/typescript/directed-graph-native  # napi-rs cdylib with no Rust test target; built and tested through the TypeScript package that loads it
 
 # ---------------------------------------------------------------------------
 # PENDING — known gaps, each needs a BUILD file
 #
-# Every crate below is a workspace member with a spec under code/specs/, so none
-# of them is dead code. They are simply undiscovered. Ordered by area; the
-# dependent count in each reason is the number of in-repo crates that already
-# depend on it, which is the rough order to work through them in.
+# Every crate below is real code with a spec behind it; none is dead. Each is
+# here because it could not be verified from this host, not because it was
+# waved through — the reason says what is in the way.
 # ---------------------------------------------------------------------------
 
-# Backends and encoders
-PENDING code/packages/rust/aarch64-backend  # 2 in-repo dependents (jit-loader-macos, twig-aot); never built, tested or linted
-PENDING code/packages/rust/x86_64-backend  # 2 in-repo dependents (twig-aot, x86-simulator); never built, tested or linted
-PENDING code/packages/rust/iir-refinement-pass  # 1 in-repo dependent (twig-aot); never built, tested or linted
+# Needs a non-Windows host to verify
+PENDING code/packages/rust/jit-loader-macos  # macOS-only mmap/mprotect JIT loader; needs a BUILD gated on `[ "$(uname)" = Darwin ]` and a macOS host to verify — cannot be checked from here
+PENDING code/packages/rust/twig-module-driver  # 2 dependents (twig-vm, twigc); 7 deep-recursion self-compile tests reserve 768 MiB / 3 GiB thread stacks and fail on a Windows host — needs Linux verification before it can be watched
+PENDING code/packages/rust/sir-conformance  # cross-backend conformance harness; test suite is red on a Windows host — needs Linux triage before it can be watched
 
-# Compiler frontends and language bridges
-PENDING code/packages/rust/brainfuck-clr-compiler  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/nib-clr-compiler  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/dartmouth-basic-ge225-compiler  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/dartmouth-basic-ir-compiler  # 1 in-repo dependent (dartmouth-basic-ge225-compiler); never built, tested or linted
-PENDING code/packages/rust/nib-iir-compiler  # 3 in-repo dependents (jit-loader-macos, lang-aot, nib-dap); never built, tested or linted
-PENDING code/packages/rust/oct-iir-compiler  # 2 in-repo dependents (lang-aot, oct-dap); never built, tested or linted
-PENDING code/packages/rust/oct-type-checker  # 1 in-repo dependent (oct-iir-compiler); never built, tested or linted
-PENDING code/packages/rust/twig-type-checker  # 2 in-repo dependents (twig-ir-compiler, twig-module-driver); never built, tested or linted
-PENDING code/packages/rust/grammar-type-checker  # 1 in-repo dependent (twig-type-checker); never built, tested or linted
-PENDING code/packages/rust/twig-dap  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/twig-lsp-bridge  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/twig-module-driver  # 7 deep-recursion self-compile tests reserve 768 MiB / 3 GiB thread stacks and fail on a Windows host; needs Linux verification before it can be watched
-PENDING code/packages/rust/lang-refinement-checker  # 2 in-repo dependents (iir-refinement-pass, lang-refinement-protocol); never built, tested or linted
-PENDING code/packages/rust/lang-refinement-protocol  # 1 in-repo dependent (twig-type-checker); never built, tested or linted
-PENDING code/packages/rust/sir-bench  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/sir-conformance  # no in-repo dependents; never built, tested or linted
+# Paint VM backends — each needs a native graphics library (cairo, skia, mesa,
+# OpenCL/GL, Vulkan, wgpu) present at build time, so their BUILDs need platform
+# guards and a host with those libraries installed to verify.
+PENDING code/packages/rust/paint-vm-cairo  # 5 dependents (barcode-1d, barcode-2d, html-to-paint, venture-browser-cairo, venture-browser-core); needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-runtime  # 11 dependents including paint-vm-direct2d and paint-vm-gdi; needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-skia  # 2 dependents (barcode-1d, barcode-2d); needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-gpu-core  # 5 dependents; needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-mesa  # no in-repo dependents; needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-opencl  # no in-repo dependents; needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-opengl  # no in-repo dependents; needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-vulkan  # no in-repo dependents; needs a native graphics toolchain to build
+PENDING code/packages/rust/paint-vm-wgpu  # no in-repo dependents; needs a native graphics toolchain to build
 
-# Spreadsheet / R function catalog
-PENDING code/packages/rust/array-core  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/data-frame  # 1 in-repo dependent (database-core); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/database-core  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/engineering-core  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/financial-core  # 1 in-repo dependent (spreadsheet-core); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/lookup-core  # 1 in-repo dependent (spreadsheet-core); never built, tested or linted
-PENDING code/packages/rust/math-core  # 1 in-repo dependent (spreadsheet-core); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/number-format-core  # 1 in-repo dependent (spreadsheet-core); never built, tested or linted
-PENDING code/packages/rust/statistics-core  # 2 in-repo dependents (s-runtime, spreadsheet-core); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/text-core  # 1 in-repo dependent (spreadsheet-core); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/wall-clock  # 3 in-repo dependents (datetime-core, financial-core, spreadsheet-core); never built, tested or linted; also missing README.md + CHANGELOG.md
+# Mosaic packages — these ship .mil/.mll/.msl sources as their real deliverable;
+# the Cargo.toml exists only to host an integration smoke test against
+# mosaic-compile. Those smoke tests have never run, which is exactly the failure
+# this gate exists to catch, so they need BUILDs rather than exclusion.
+PENDING code/packages/mosaic/mosaic-pkg-calendar  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-card  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-dialog  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-grid  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-notes  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-project-nav  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-sheet  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
+PENDING code/packages/mosaic/mosaic-pkg-toolkit  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
 
-# Paint VM backends (need native graphics libraries)
-PENDING code/packages/rust/paint-vm-cairo  # 5 in-repo dependents (barcode-1d, barcode-2d, html-to-paint, venture-browser-cairo, …); never built, tested or linted
-PENDING code/packages/rust/paint-vm-gpu-core  # 5 in-repo dependents (paint-vm-mesa, paint-vm-opencl, paint-vm-opengl, paint-vm-vulkan, …); never built, tested or linted
-PENDING code/packages/rust/paint-vm-mesa  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/paint-vm-opencl  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/paint-vm-opengl  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/paint-vm-runtime  # 11 in-repo dependents (barcode-1d, barcode-2d, paint-vm-cairo, paint-vm-direct2d, …); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/paint-vm-skia  # 2 in-repo dependents (barcode-1d, barcode-2d); never built, tested or linted
-PENDING code/packages/rust/paint-vm-vulkan  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/paint-vm-wgpu  # no in-repo dependents; never built, tested or linted
+# ADJ spec fixtures — standalone cargo projects under code/specs/data holding
+# worked examples for the adjudication specs.
+PENDING code/specs/data/adj46  # standalone ADJ spec fixture crate; never built, tested or linted
+PENDING code/specs/data/adj48  # standalone ADJ spec fixture crate; never built, tested or linted
+PENDING code/specs/data/adj49  # standalone ADJ spec fixture crate; never built, tested or linted
+PENDING code/specs/data/adj50  # standalone ADJ spec fixture crate; never built, tested or linted
+PENDING code/specs/data/adj51  # standalone ADJ spec fixture crate; never built, tested or linted
+PENDING code/specs/data/adj52  # standalone ADJ spec fixture crate; never built, tested or linted
 
-# Data structures
-PENDING code/packages/rust/avl-tree  # 1 in-repo dependent (tree-set); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/binary-search-tree  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/binary-tree  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/red-black-tree  # 1 in-repo dependent (tree-set); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/rope  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/segment-tree  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/suffix-tree  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/treap  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-
-# Machine learning / numerics
-PENDING code/packages/rust/activation-functions  # 3 in-repo dependents (mansion-classifier, perceptron, space-launch-predictor); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/perceptron  # 2 in-repo dependents (mansion-classifier, space-launch-predictor); never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/matrix  # 4 in-repo dependents (house-price-predictor, mansion-classifier, perceptron, space-launch-predictor); never built, tested or linted
-
-# Hardware / synthesis
-PENDING code/packages/rust/synthesis  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-PENDING code/packages/rust/core  # no in-repo dependents; never built, tested or linted; also missing README.md + CHANGELOG.md
-
-# DSP
-PENDING code/packages/rust/dsp-conv  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/dsp-dct  # 2 in-repo dependents (dsp-stft, image-codec-jpeg); never built, tested or linted
-PENDING code/packages/rust/dsp-filters  # 2 in-repo dependents (dsp-conv, dsp-stft); never built, tested or linted
-PENDING code/packages/rust/dsp-stft  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/dsp-wavelets  # no in-repo dependents; never built, tested or linted
-
-# Adjudication / engram / mosaic / constraint
-PENDING code/packages/rust/adjudication-rulebook  # 1 in-repo dependent (adjudication-tsa-demo); never built, tested or linted
-PENDING code/packages/rust/constraint-vm  # 1 in-repo dependent (lang-refinement-checker); never built, tested or linted
-PENDING code/packages/rust/engram-anki-package  # 2 in-repo dependents (engram-capi, engram-core-wasm); never built, tested or linted
-PENDING code/packages/rust/engram-core  # 3 in-repo dependents (engram-anki-package, engram-capi, engram-core-wasm); never built, tested or linted
-PENDING code/packages/rust/mosaic-driver  # no in-repo dependents; never built, tested or linted
-PENDING code/packages/rust/mosaic-emit-paint  # 1 in-repo dependent (mosaic-compile); never built, tested or linted
-PENDING code/packages/rust/task-mosaic-app  # no in-repo dependents; never built, tested or linted; also missing CHANGELOG.md
-
-# Programs — Rust ports of multi-language program families (Python/TypeScript/Go
-# siblings of each already build); these are separate cargo projects, not members
-# of the code/packages/rust workspace.
-PENDING code/programs/rust/celsius-to-fahrenheit-predictor  # Rust port of a multi-language program family; never built, tested or linted
-PENDING code/programs/rust/cowsay  # Rust port of a multi-language program family; never built, tested or linted
-PENDING code/programs/rust/house-price-predictor  # Rust port of a multi-language program family; never built, tested or linted
-PENDING code/programs/rust/mansion-classifier  # Rust port of a multi-language program family; never built, tested or linted
-PENDING code/programs/rust/space-launch-predictor  # Rust port of a multi-language program family; never built, tested or linted
+# Rust programs — separate cargo projects, not members of the
+# code/packages/rust workspace.
+PENDING code/programs/rust/celsius-to-fahrenheit-predictor  # Rust port of a multi-language program family (Python/TypeScript siblings already build)
+PENDING code/programs/rust/cowsay  # Rust port of the cross-language cowsay family; every other language's port already builds
+PENDING code/programs/rust/house-price-predictor  # Rust port of a multi-language program family (Python/TypeScript siblings already build)
+PENDING code/programs/rust/mansion-classifier  # Rust port of a multi-language program family (Go/Python/TypeScript siblings already build)
+PENDING code/programs/rust/space-launch-predictor  # Rust port of a multi-language program family (Python/TypeScript siblings already build)
