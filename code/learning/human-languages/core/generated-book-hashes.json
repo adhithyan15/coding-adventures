@@ -10158,6 +10158,97 @@
       "tex": "telugu/book/chapters/ch66-the-field.tex"
     },
     {
+      "language": "telugu",
+      "chapter": 67,
+      "sourceHash": "fnv1a64:da5af949620c8c8c",
+      "lessonIds": [
+        "TE-C67-wall",
+        "TE-C67-roof",
+        "TE-C67-threshold",
+        "TE-C67-step",
+        "TE-C67-window"
+      ],
+      "tex": "telugu/book/chapters/ch67-the-house-itself.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 68,
+      "sourceHash": "fnv1a64:e5186807429aa68f",
+      "lessonIds": [
+        "TE-C68-sound",
+        "TE-C68-voice",
+        "TE-C68-song",
+        "TE-C68-shout",
+        "TE-C68-message"
+      ],
+      "tex": "telugu/book/chapters/ch68-sound-and-voice.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 69,
+      "sourceHash": "fnv1a64:ba8b4a5a9d5b7880",
+      "lessonIds": [
+        "TE-C69-axe",
+        "TE-C69-saw",
+        "TE-C69-spade",
+        "TE-C69-hammer",
+        "TE-C69-stick"
+      ],
+      "tex": "telugu/book/chapters/ch69-tools.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 70,
+      "sourceHash": "fnv1a64:ee73ed3a966ae223",
+      "lessonIds": [
+        "TE-C70-mouse",
+        "TE-C70-frog",
+        "TE-C70-mosquito",
+        "TE-C70-squirrel",
+        "TE-C70-spider"
+      ],
+      "tex": "telugu/book/chapters/ch70-small-creatures.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 71,
+      "sourceHash": "fnv1a64:a6f0ada84d0aae87",
+      "lessonIds": [
+        "TE-C71-uncle",
+        "TE-C71-aunt",
+        "TE-C71-brother-in-law",
+        "TE-C71-sister-in-law",
+        "TE-C71-son-in-law"
+      ],
+      "tex": "telugu/book/chapters/ch71-the-wider-family.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 72,
+      "sourceHash": "fnv1a64:1d356c6e2b1cf591",
+      "lessonIds": [
+        "TE-C72-shop",
+        "TE-C72-money",
+        "TE-C72-price",
+        "TE-C72-weight",
+        "TE-C72-bargain"
+      ],
+      "tex": "telugu/book/chapters/ch72-the-market.tex"
+    },
+    {
+      "language": "telugu",
+      "chapter": 73,
+      "sourceHash": "fnv1a64:09bfc9fb2fb5aa9a",
+      "lessonIds": [
+        "TE-C73-sweet",
+        "TE-C73-sour",
+        "TE-C73-bitter",
+        "TE-C73-pungent",
+        "TE-C73-astringent"
+      ],
+      "tex": "telugu/book/chapters/ch73-tastes.tex"
+    },
+    {
       "language": "urdu",
       "chapter": 2,
       "sourceHash": "fnv1a64:cfca1c3146b05ede",

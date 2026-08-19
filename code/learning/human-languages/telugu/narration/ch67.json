@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 67,
+  "title": "The House Itself",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:65df7d9b6d34d095",
+  "lessons": [
+    {
+      "id": "TE-C67-wall",
+      "sequence": 2180,
+      "title": "గోడ (gōḍa) — a wall",
+      "headword": "గోడ",
+      "romanization": "gōḍa",
+      "gloss": "a wall",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a4bd33f270598663",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did paṇṭa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గోడ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గోడ (gōḍa) — \"a wall\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గోడ (gōḍa) is a wall: the built side of a room. A village house puts up four of them in mud or in brick, and everything after that — the తలుపు, the కుర్చీ pushed back against one of them — is placed by where they stand."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited, and it does the same figurative work English asks of a wall. Somebody who will not listen is a గోడ (gōḍa), and a family with nothing hidden has no గోడ (gōḍa) inside it."
+            },
+            {
+              "kind": "speech",
+              "text": "Whitewashing the గోడ (gōḍa) before a festival is its own small season in a Telugu house. A guest who arrives to a fresh one has been told they were expected, and the right thing to say at that moment is నమస్కారం."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One. What a house is measured by before anything is put inside it."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōḍa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōḍa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōḍa, then namaskāram, as though greeting somebody at a freshly painted one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōḍa*, then *namaskāram*, as though greeting somebody at a freshly painted one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గోడ (gōḍa) mean? (\"a wall\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C67-roof",
+      "sequence": 2190,
+      "title": "కప్పు (kappu) — a roof",
+      "headword": "కప్పు",
+      "romanization": "kappu",
+      "gloss": "a roof",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c470610f67ec1a59",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gōḍa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కప్పు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కప్పు (kappu) — \"a roof\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కప్పు (kappu) is the roof — the thing that covers. It comes from the same stem as the everyday word for covering something over, so a lid on a గిన్నె and the roof over a room are one idea in Telugu."
+            },
+            {
+              "kind": "speech",
+              "text": "Village roofs were గడ్డి over beams for centuries and are tile or concrete now. The material changed and the word did not, which is usually a sign of a very old one."
+            },
+            {
+              "kind": "speech",
+              "text": "To be under somebody's కప్పు (kappu) is to be their guest, and it binds the person underneath as much as the person above. నమస్కారం comes first, and everything else follows it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two: గోడ (gōḍa) and కప్పు (kappu). Sides, and a lid."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kappu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kappu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gōḍa, then kappu, and say which one holds up the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gōḍa*, then *kappu*, and say which one holds up the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కప్పు (kappu) mean? (\"a roof\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C67-threshold",
+      "sequence": 2200,
+      "title": "గడప (gaḍapa) — a threshold",
+      "headword": "గడప",
+      "romanization": "gaḍapa",
+      "gloss": "a threshold",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0530295990a9ae23",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kappu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గడప",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గడప (gaḍapa) — \"a threshold\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గడప (gaḍapa) is the threshold: the raised strip of stone or wood under the తలుపు that you step over on the way in."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the most watched piece of a Telugu house. The ముగ్గు is drawn just outside it, water is thrown across it at ఉదయం, and nobody steps on it if they can help it."
+            },
+            {
+              "kind": "speech",
+              "text": "Because it marks in from out, గడప (gaḍapa) also does the work of the word household. Asking whose గడప (gaḍapa) somebody comes from is asking about their family, not about their doorstep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three. The line you cross to be inside."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḍapa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḍapa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "gaḍapa, then muggu, and say which one is drawn beside the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *gaḍapa*, then *muggu*, and say which one is drawn beside the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గడప (gaḍapa) mean? (\"a threshold\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C67-step",
+      "sequence": 2210,
+      "title": "మెట్టు (meṭṭu) — a step",
+      "headword": "మెట్టు",
+      "romanization": "meṭṭu",
+      "gloss": "a step",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea2062c887d5f51f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did gaḍapa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: మెట్టు",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "మెట్టు (meṭṭu) — \"a step\"."
+            },
+            {
+              "kind": "speech",
+              "text": "మెట్టు (meṭṭu) is a step — one of a flight, cut in stone or built up in mud."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu counts them and remembers them. The steps down to a చెరువు are named in some villages, and a house with a మెట్టు (meṭṭu) at its గడప (gaḍapa) is a house standing a little above the street."
+            },
+            {
+              "kind": "speech",
+              "text": "The word carries rank as well. A person who has risen has climbed a మెట్టు (meṭṭu), which is how a stair turns into a career with nobody explaining it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. Something to climb before you cross."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṭṭu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṭṭu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "meṭṭu, then gaḍapa, in the order your feet meet them",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *meṭṭu*, then *gaḍapa*, in the order your feet meet them]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does మెట్టు (meṭṭu) mean? (\"a step\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C67-window",
+      "sequence": 2220,
+      "title": "కిటికీ (kiṭikī) — a window",
+      "headword": "కిటికీ",
+      "romanization": "kiṭikī",
+      "gloss": "a window",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27e3c7db1c3a6c31",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did meṭṭu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కిటికీ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కిటికీ (kiṭikī) — \"a window\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కిటికీ (kiṭikī) is a window. It is a borrowing, ultimately from Portuguese, and it arrived carrying the shape of window it names: a framed opening in a గోడ (gōḍa), rather than the small unglazed gap older houses left for గాలి."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu kept the borrowed word and the older habit side by side. A కిటికీ (kiṭikī) is opened at ఉదయం, shut against the sun in the middle of the day, and opened again by సాయంత్రం."
+            },
+            {
+              "kind": "speech",
+              "text": "A house with a గోడ (gōḍa), a కప్పు (kappu), a గడప (gaḍapa), a మెట్టు (meṭṭu) and a కిటికీ (kiṭikī) is a whole house. Whoever is standing at any one of them is somebody you can greet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: గోడ (gōḍa), కప్పు (kappu), గడప (gaḍapa), మెట్టు (meṭṭu), కిటికీ (kiṭikī). A house you could walk up to and greet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kiṭikī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kiṭikī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then namaskāram at the last one",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *namaskāram* at the last one]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కిటికీ (kiṭikī) mean? (\"a window\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

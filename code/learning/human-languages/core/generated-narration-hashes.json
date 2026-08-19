@@ -16033,6 +16033,132 @@
       "jsonHash": "fnv1a64:d0d151b8ee96ee2d"
     },
     {
+      "language": "telugu",
+      "chapter": 67,
+      "sourceHash": "fnv1a64:65df7d9b6d34d095",
+      "lessonIds": [
+        "TE-C67-wall",
+        "TE-C67-roof",
+        "TE-C67-threshold",
+        "TE-C67-step",
+        "TE-C67-window"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch67.txt",
+      "json": "telugu/narration/ch67.json",
+      "textHash": "fnv1a64:0a14430bfb44a175",
+      "jsonHash": "fnv1a64:2b3b885458af22da"
+    },
+    {
+      "language": "telugu",
+      "chapter": 68,
+      "sourceHash": "fnv1a64:7bd5592b97c4660c",
+      "lessonIds": [
+        "TE-C68-sound",
+        "TE-C68-voice",
+        "TE-C68-song",
+        "TE-C68-shout",
+        "TE-C68-message"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch68.txt",
+      "json": "telugu/narration/ch68.json",
+      "textHash": "fnv1a64:f9672d855cfed426",
+      "jsonHash": "fnv1a64:720983e59cde71c9"
+    },
+    {
+      "language": "telugu",
+      "chapter": 69,
+      "sourceHash": "fnv1a64:8e5eed3fa725a3c9",
+      "lessonIds": [
+        "TE-C69-axe",
+        "TE-C69-saw",
+        "TE-C69-spade",
+        "TE-C69-hammer",
+        "TE-C69-stick"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch69.txt",
+      "json": "telugu/narration/ch69.json",
+      "textHash": "fnv1a64:8e7470d061416763",
+      "jsonHash": "fnv1a64:dcad1be6b16fd397"
+    },
+    {
+      "language": "telugu",
+      "chapter": 70,
+      "sourceHash": "fnv1a64:0ea9d47aa46c71be",
+      "lessonIds": [
+        "TE-C70-mouse",
+        "TE-C70-frog",
+        "TE-C70-mosquito",
+        "TE-C70-squirrel",
+        "TE-C70-spider"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch70.txt",
+      "json": "telugu/narration/ch70.json",
+      "textHash": "fnv1a64:33648e914ae7646d",
+      "jsonHash": "fnv1a64:3eaae05ebf909a11"
+    },
+    {
+      "language": "telugu",
+      "chapter": 71,
+      "sourceHash": "fnv1a64:d0877f93206c1754",
+      "lessonIds": [
+        "TE-C71-uncle",
+        "TE-C71-aunt",
+        "TE-C71-brother-in-law",
+        "TE-C71-sister-in-law",
+        "TE-C71-son-in-law"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch71.txt",
+      "json": "telugu/narration/ch71.json",
+      "textHash": "fnv1a64:f31a36024e104b89",
+      "jsonHash": "fnv1a64:38fc98b470b3796b"
+    },
+    {
+      "language": "telugu",
+      "chapter": 72,
+      "sourceHash": "fnv1a64:1ab1362caf4450a0",
+      "lessonIds": [
+        "TE-C72-shop",
+        "TE-C72-money",
+        "TE-C72-price",
+        "TE-C72-weight",
+        "TE-C72-bargain"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch72.txt",
+      "json": "telugu/narration/ch72.json",
+      "textHash": "fnv1a64:d582d58c0c3ab67f",
+      "jsonHash": "fnv1a64:9f7587deeb4e5a17"
+    },
+    {
+      "language": "telugu",
+      "chapter": 73,
+      "sourceHash": "fnv1a64:36d42d74129e6538",
+      "lessonIds": [
+        "TE-C73-sweet",
+        "TE-C73-sour",
+        "TE-C73-bitter",
+        "TE-C73-pungent",
+        "TE-C73-astringent"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "telugu/narration/ch73.txt",
+      "json": "telugu/narration/ch73.json",
+      "textHash": "fnv1a64:c2ad8a3097ab9557",
+      "jsonHash": "fnv1a64:4b637c3feb85b3a3"
+    },
+    {
       "language": "urdu",
       "chapter": 1,
       "sourceHash": "fnv1a64:6f9688165869e235",

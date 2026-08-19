@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "telugu",
+  "chapter": 69,
+  "title": "Tools",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8e5eed3fa725a3c9",
+  "lessons": [
+    {
+      "id": "TE-C69-axe",
+      "sequence": 2280,
+      "title": "గొడ్డలి (goḍḍali) — an axe",
+      "headword": "గొడ్డలి",
+      "romanization": "goḍḍali",
+      "gloss": "an axe",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b91f042b56e45f6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kaburu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: గొడ్డలి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "గొడ్డలి (goḍḍali) — \"an axe\"."
+            },
+            {
+              "kind": "speech",
+              "text": "గొడ్డలి (goḍḍali) is an axe — an iron head on a wooden handle, for cutting a చెట్టు down or splitting firewood at the గడప."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited and old. Its first piece turns up in other Telugu words about striking, so the name says plainly what the thing does."
+            },
+            {
+              "kind": "speech",
+              "text": "Asking for one is the ordinary polite request: దయచేసి, and then the word. The person hands it over handle first, and nobody throws a గొడ్డలి (goḍḍali)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One. Heavy, and handed over rather than thrown."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍḍali",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍḍali*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dayacēsi, then goḍḍali, in that order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dayacēsi*, then *goḍḍali*, in that order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does గొడ్డలి (goḍḍali) mean? (\"an axe\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C69-saw",
+      "sequence": 2290,
+      "title": "రంపం (rampaṁ) — a saw",
+      "headword": "రంపం",
+      "romanization": "rampaṁ",
+      "gloss": "a saw",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ea0fc73c7a627bc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did goḍḍali mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: రంపం",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "రంపం (rampaṁ) — \"a saw\"."
+            },
+            {
+              "kind": "speech",
+              "text": "రంపం (rampaṁ) is a saw. Where the గొడ్డలి (goḍḍali) breaks wood apart, the రంపం (rampaṁ) takes it apart along a line."
+            },
+            {
+              "kind": "speech",
+              "text": "It is a borrowing, and it came in with the trade rather than ahead of it: the long two-man saw and its name reached the carpenter's shed together."
+            },
+            {
+              "kind": "speech",
+              "text": "The noise is half the word. Telugu calls a rasping sound a రంపం (rampaṁ) sound, and somebody who repeats a complaint until you give way is running a రంపం (rampaṁ) over your చెవి."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two. Both of them cut; only one cuts straight."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "rampaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *rampaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "goḍḍali, then rampaṁ, and say which one leaves a straight edge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *goḍḍali*, then *rampaṁ*, and say which one leaves a straight edge]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does రంపం (rampaṁ) mean? (\"a saw\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C69-spade",
+      "sequence": 2300,
+      "title": "పార (pāra) — a spade",
+      "headword": "పార",
+      "romanization": "pāra",
+      "gloss": "a spade",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a68f6613e70c357e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did rampaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: పార",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "పార (pāra) — \"a spade\"."
+            },
+            {
+              "kind": "speech",
+              "text": "పార (pāra) is a spade — a broad iron blade on a handle, for digging and for shifting బురద or ఇసుక."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the tool of the రైతు out of season: clearing a channel, banking up the edge of a పొలం, cutting a way for water to run."
+            },
+            {
+              "kind": "speech",
+              "text": "The word is inherited and it stays narrow. It does not stretch into anything figurative at all, which by itself says how firmly it belongs to the ground."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three. The first one here you push rather than swing."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pāra, then rampaṁ, and say which one you push",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pāra*, then *rampaṁ*, and say which one you push]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does పార (pāra) mean? (\"a spade\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C69-hammer",
+      "sequence": 2310,
+      "title": "సుత్తి (sutti) — a hammer",
+      "headword": "సుత్తి",
+      "romanization": "sutti",
+      "gloss": "a hammer",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:35e0491375fbdcbc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pāra mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: సుత్తి",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "సుత్తి (sutti) — \"a hammer\"."
+            },
+            {
+              "kind": "speech",
+              "text": "సుత్తి (sutti) is a hammer: an iron head on a short handle, for driving things in and for beating things straight."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu turned it into a word about people. Somebody who makes the same point until you give in is doing సుత్తి (sutti), and telling them to stop the సుత్తి (sutti) is telling them to stop going on."
+            },
+            {
+              "kind": "speech",
+              "text": "In a city that second sense is now the commoner one, which is worth knowing before somebody uses it about you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four. The one whose second meaning you are likelier to hear."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutti",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutti*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sutti, then goḍḍali, and say which one has a short handle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sutti*, then *goḍḍali*, and say which one has a short handle]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does సుత్తి (sutti) mean? (\"a hammer\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TE-C69-stick",
+      "sequence": 2320,
+      "title": "కర్ర (karra) — a stick",
+      "headword": "కర్ర",
+      "romanization": "karra",
+      "gloss": "a stick",
+      "script": "telugu",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9465176812d9dee8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did sutti mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: కర్ర",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "కర్ర (karra) — \"a stick\"."
+            },
+            {
+              "kind": "speech",
+              "text": "కర్ర (karra) is a stick — a length of wood, cut or picked up, for everything the other four are too particular for."
+            },
+            {
+              "kind": "speech",
+              "text": "It is inherited and completely ordinary: a walking stick for a తాత, a herding stick behind a మేక, the handle still waiting for a గొడ్డలి (goḍḍali) head."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the right thing to ask for first. దయచేసి and a కర్ర (karra) costs nobody anything, and by the time you want the సుత్తి (sutti) you already know how to ask."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: గొడ్డలి (goḍḍali), రంపం (rampaṁ), పార (pāra), సుత్తి (sutti), కర్ర (karra). Enough to ask for anything in a shed."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karra",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karra*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then dayacēsi and the one you would borrow first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *dayacēsi* and the one you would borrow first]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does కర్ర (karra) mean? (\"a stick\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

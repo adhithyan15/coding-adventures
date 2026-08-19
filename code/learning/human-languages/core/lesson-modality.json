@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:9233561565958123",
+  "sourceHash": "fnv1a64:84af32c2e3a71053",
   "summary": {
-    "totalLessons": 3357,
-    "voice": 2429,
+    "totalLessons": 3392,
+    "voice": 2464,
     "sight": 590,
     "pen": 338,
-    "drivableLessons": 2429,
-    "drivablePercent": 72,
+    "drivableLessons": 2464,
+    "drivablePercent": 73,
     "trackCount": 22,
-    "chapterCount": 996,
-    "drivablePrefixTotal": 2181,
-    "fullyDrivableChapters": 662,
+    "chapterCount": 1003,
+    "drivablePrefixTotal": 2216,
+    "fullyDrivableChapters": 669,
     "unstartableChapters": 203,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -16156,12 +16156,12 @@
     },
     {
       "language": "telugu",
-      "lessonCount": 241,
-      "voice": 177,
+      "lessonCount": 276,
+      "voice": 212,
       "sight": 40,
       "pen": 24,
-      "drivablePercent": 73,
-      "drivablePrefixTotal": 163,
+      "drivablePercent": 77,
+      "drivablePrefixTotal": 198,
       "modalities": [
         "voice",
         "sight",
@@ -17346,6 +17346,146 @@
             "TE-C66-grass",
             "TE-C66-threshing-floor",
             "TE-C66-harvest"
+          ]
+        },
+        {
+          "chapter": 67,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C67-wall",
+            "TE-C67-roof",
+            "TE-C67-threshold",
+            "TE-C67-step",
+            "TE-C67-window"
+          ]
+        },
+        {
+          "chapter": 68,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C68-sound",
+            "TE-C68-voice",
+            "TE-C68-song",
+            "TE-C68-shout",
+            "TE-C68-message"
+          ]
+        },
+        {
+          "chapter": 69,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C69-axe",
+            "TE-C69-saw",
+            "TE-C69-spade",
+            "TE-C69-hammer",
+            "TE-C69-stick"
+          ]
+        },
+        {
+          "chapter": 70,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C70-mouse",
+            "TE-C70-frog",
+            "TE-C70-mosquito",
+            "TE-C70-squirrel",
+            "TE-C70-spider"
+          ]
+        },
+        {
+          "chapter": 71,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C71-uncle",
+            "TE-C71-aunt",
+            "TE-C71-brother-in-law",
+            "TE-C71-sister-in-law",
+            "TE-C71-son-in-law"
+          ]
+        },
+        {
+          "chapter": 72,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C72-shop",
+            "TE-C72-money",
+            "TE-C72-price",
+            "TE-C72-weight",
+            "TE-C72-bargain"
+          ]
+        },
+        {
+          "chapter": 73,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TE-C73-sweet",
+            "TE-C73-sour",
+            "TE-C73-bitter",
+            "TE-C73-pungent",
+            "TE-C73-astringent"
           ]
         }
       ]
@@ -80027,6 +80167,636 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:c6a2a94db3af3e1a"
+    },
+    {
+      "id": "TE-C67-wall",
+      "language": "telugu",
+      "chapter": 67,
+      "sequence": 2180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a4bd33f270598663"
+    },
+    {
+      "id": "TE-C67-roof",
+      "language": "telugu",
+      "chapter": 67,
+      "sequence": 2190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c470610f67ec1a59"
+    },
+    {
+      "id": "TE-C67-threshold",
+      "language": "telugu",
+      "chapter": 67,
+      "sequence": 2200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0530295990a9ae23"
+    },
+    {
+      "id": "TE-C67-step",
+      "language": "telugu",
+      "chapter": 67,
+      "sequence": 2210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ea2062c887d5f51f"
+    },
+    {
+      "id": "TE-C67-window",
+      "language": "telugu",
+      "chapter": 67,
+      "sequence": 2220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:27e3c7db1c3a6c31"
+    },
+    {
+      "id": "TE-C68-sound",
+      "language": "telugu",
+      "chapter": 68,
+      "sequence": 2230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:610f33346d5e2021"
+    },
+    {
+      "id": "TE-C68-voice",
+      "language": "telugu",
+      "chapter": 68,
+      "sequence": 2240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1bfaf7019e350eb6"
+    },
+    {
+      "id": "TE-C68-song",
+      "language": "telugu",
+      "chapter": 68,
+      "sequence": 2250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f6793537b3da4ddf"
+    },
+    {
+      "id": "TE-C68-shout",
+      "language": "telugu",
+      "chapter": 68,
+      "sequence": 2260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f2c33752b09b825a"
+    },
+    {
+      "id": "TE-C68-message",
+      "language": "telugu",
+      "chapter": 68,
+      "sequence": 2270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2ff59e7edfc9d738"
+    },
+    {
+      "id": "TE-C69-axe",
+      "language": "telugu",
+      "chapter": 69,
+      "sequence": 2280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4b91f042b56e45f6"
+    },
+    {
+      "id": "TE-C69-saw",
+      "language": "telugu",
+      "chapter": 69,
+      "sequence": 2290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ea0fc73c7a627bc4"
+    },
+    {
+      "id": "TE-C69-spade",
+      "language": "telugu",
+      "chapter": 69,
+      "sequence": 2300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a68f6613e70c357e"
+    },
+    {
+      "id": "TE-C69-hammer",
+      "language": "telugu",
+      "chapter": 69,
+      "sequence": 2310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:35e0491375fbdcbc"
+    },
+    {
+      "id": "TE-C69-stick",
+      "language": "telugu",
+      "chapter": 69,
+      "sequence": 2320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9465176812d9dee8"
+    },
+    {
+      "id": "TE-C70-mouse",
+      "language": "telugu",
+      "chapter": 70,
+      "sequence": 2330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ab7dd7ea911ba11a"
+    },
+    {
+      "id": "TE-C70-frog",
+      "language": "telugu",
+      "chapter": 70,
+      "sequence": 2340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:946043903d1c34b0"
+    },
+    {
+      "id": "TE-C70-mosquito",
+      "language": "telugu",
+      "chapter": 70,
+      "sequence": 2350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d2323029708995cf"
+    },
+    {
+      "id": "TE-C70-squirrel",
+      "language": "telugu",
+      "chapter": 70,
+      "sequence": 2360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2208d7e6ea8f777c"
+    },
+    {
+      "id": "TE-C70-spider",
+      "language": "telugu",
+      "chapter": 70,
+      "sequence": 2370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:86f0920ea37e0044"
+    },
+    {
+      "id": "TE-C71-uncle",
+      "language": "telugu",
+      "chapter": 71,
+      "sequence": 2380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:85f71d8322695bbe"
+    },
+    {
+      "id": "TE-C71-aunt",
+      "language": "telugu",
+      "chapter": 71,
+      "sequence": 2390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6d825e02c27948d5"
+    },
+    {
+      "id": "TE-C71-brother-in-law",
+      "language": "telugu",
+      "chapter": 71,
+      "sequence": 2400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f7463aa695c0b22c"
+    },
+    {
+      "id": "TE-C71-sister-in-law",
+      "language": "telugu",
+      "chapter": 71,
+      "sequence": 2410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ced08a7784ed74db"
+    },
+    {
+      "id": "TE-C71-son-in-law",
+      "language": "telugu",
+      "chapter": 71,
+      "sequence": 2420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1b139ca8cce20bab"
+    },
+    {
+      "id": "TE-C72-shop",
+      "language": "telugu",
+      "chapter": 72,
+      "sequence": 2430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bb51716e62cb83d8"
+    },
+    {
+      "id": "TE-C72-money",
+      "language": "telugu",
+      "chapter": 72,
+      "sequence": 2440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1ac7c7113ab20cc7"
+    },
+    {
+      "id": "TE-C72-price",
+      "language": "telugu",
+      "chapter": 72,
+      "sequence": 2450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fbf4b734da5a0f01"
+    },
+    {
+      "id": "TE-C72-weight",
+      "language": "telugu",
+      "chapter": 72,
+      "sequence": 2460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7491b0e24826e360"
+    },
+    {
+      "id": "TE-C72-bargain",
+      "language": "telugu",
+      "chapter": 72,
+      "sequence": 2470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8da58490eae5f710"
+    },
+    {
+      "id": "TE-C73-sweet",
+      "language": "telugu",
+      "chapter": 73,
+      "sequence": 2480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:00fe99b34a290951"
+    },
+    {
+      "id": "TE-C73-sour",
+      "language": "telugu",
+      "chapter": 73,
+      "sequence": 2490,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:19d08410d34dd156"
+    },
+    {
+      "id": "TE-C73-bitter",
+      "language": "telugu",
+      "chapter": 73,
+      "sequence": 2500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6a1d208c61a765f2"
+    },
+    {
+      "id": "TE-C73-pungent",
+      "language": "telugu",
+      "chapter": 73,
+      "sequence": 2510,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b777a1e4b8a8af3d"
+    },
+    {
+      "id": "TE-C73-astringent",
+      "language": "telugu",
+      "chapter": 73,
+      "sequence": 2520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7edf9e9e12600c58"
     },
     {
       "id": "UR-C01-ji-han",

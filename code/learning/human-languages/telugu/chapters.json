@@ -1393,6 +1393,153 @@
           "TE-LEX-C66-FIELD-05"
         ]
       }
+    },
+    {
+      "chapter": 67,
+      "title": "The House Itself",
+      "label": "ch:te-the-house-itself",
+      "canDo": "I can name the parts a Telugu house is built from, and greet the people inside it.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TE-C67-window",
+        "kind": "production",
+        "summary": "Complete TE-C67-window and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C67-WALL-01",
+          "TE-LEX-C67-WALL-02",
+          "TE-LEX-C67-WALL-03",
+          "TE-LEX-C67-WALL-04",
+          "TE-LEX-C67-WALL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 68,
+      "title": "Sound and Voice",
+      "label": "ch:te-sound-and-voice",
+      "canDo": "I can name the sounds a Telugu house makes, and give my name aloud in a message.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TE-C68-message",
+        "kind": "production",
+        "summary": "Complete TE-C68-message and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C68-SOUND-01",
+          "TE-LEX-C68-SOUND-02",
+          "TE-LEX-C68-SOUND-03",
+          "TE-LEX-C68-SOUND-04",
+          "TE-LEX-C68-SOUND-05"
+        ]
+      }
+    },
+    {
+      "chapter": 69,
+      "title": "Tools",
+      "label": "ch:te-tools",
+      "canDo": "I can name five Telugu tools and ask politely to borrow one.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TE-C69-stick",
+        "kind": "production",
+        "summary": "Complete TE-C69-stick and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C69-TOOL-01",
+          "TE-LEX-C69-TOOL-02",
+          "TE-LEX-C69-TOOL-03",
+          "TE-LEX-C69-TOOL-04",
+          "TE-LEX-C69-TOOL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 70,
+      "title": "Small Creatures",
+      "label": "ch:te-small-creatures",
+      "canDo": "I can name five small Telugu creatures and answer yes or no about them.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TE-C70-spider",
+        "kind": "production",
+        "summary": "Complete TE-C70-spider and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C70-CREATURE-01",
+          "TE-LEX-C70-CREATURE-02",
+          "TE-LEX-C70-CREATURE-03",
+          "TE-LEX-C70-CREATURE-04",
+          "TE-LEX-C70-CREATURE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 71,
+      "title": "The Wider Family",
+      "label": "ch:te-the-wider-family",
+      "canDo": "I can name the family a Telugu marriage adds, and ask after each of them.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TE-C71-son-in-law",
+        "kind": "production",
+        "summary": "Complete TE-C71-son-in-law and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C71-KIN-01",
+          "TE-LEX-C71-KIN-02",
+          "TE-LEX-C71-KIN-03",
+          "TE-LEX-C71-KIN-04",
+          "TE-LEX-C71-KIN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 72,
+      "title": "The Market",
+      "label": "ch:te-the-market",
+      "canDo": "I can buy something in a Telugu shop, ask the price, and thank the seller.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TE-C72-bargain",
+        "kind": "production",
+        "summary": "Complete TE-C72-bargain and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C72-MARKET-01",
+          "TE-LEX-C72-MARKET-02",
+          "TE-LEX-C72-MARKET-03",
+          "TE-LEX-C72-MARKET-04",
+          "TE-LEX-C72-MARKET-05"
+        ]
+      }
+    },
+    {
+      "chapter": 73,
+      "title": "Tastes",
+      "label": "ch:te-tastes",
+      "canDo": "I can name the tastes of a Telugu meal and take my leave when it is finished.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TE-C73-astringent",
+        "kind": "production",
+        "summary": "Complete TE-C73-astringent and demonstrate the chapter promise.",
+        "assesses": [
+          "TE-LEX-C73-TASTE-01",
+          "TE-LEX-C73-TASTE-02",
+          "TE-LEX-C73-TASTE-03",
+          "TE-LEX-C73-TASTE-04",
+          "TE-LEX-C73-TASTE-05"
+        ]
+      }
     }
   ]
 }
