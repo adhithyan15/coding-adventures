@@ -910,12 +910,18 @@ where
         f(ctx, rt);
         return;
     };
-    let mut params = D2D1_LAYER_PARAMETERS::default();
-    params.contentBounds = ctx.scene_bounds;
-    params.maskAntialiasMode = D2D1_ANTIALIAS_MODE_PER_PRIMITIVE;
-    params.maskTransform = identity_matrix();
-    params.opacity = opacity;
-    params.layerOptions = D2D1_LAYER_OPTIONS_NONE;
+    // Build the layer description in one initializer. The `..Default::default()`
+    // tail covers the two fields we deliberately leave unset — `geometricMask`
+    // (no clip geometry: the layer is bounded by `contentBounds` alone) and
+    // `opacityBrush` (no per-pixel opacity mask: `opacity` is uniform).
+    let params = D2D1_LAYER_PARAMETERS {
+        contentBounds: ctx.scene_bounds,
+        maskAntialiasMode: D2D1_ANTIALIAS_MODE_PER_PRIMITIVE,
+        maskTransform: identity_matrix(),
+        opacity,
+        layerOptions: D2D1_LAYER_OPTIONS_NONE,
+        ..Default::default()
+    };
     rt.PushLayer(&params, &layer);
     f(ctx, rt);
     rt.PopLayer();
@@ -1131,7 +1137,11 @@ fn parse_font_weight(value: &str, fallback: u16) -> u16 {
 fn map_font_family(family: &str) -> String {
     match family.trim().to_ascii_lowercase().as_str() {
         "system-ui" | "ui-sans-serif" => "Segoe UI".to_string(),
-        other if other.is_empty() => "Segoe UI".to_string(),
+        // An all-whitespace (or empty) family name means "caller had no
+        // preference" — fall back to the Windows UI font like the generic
+        // family names above. `trim()` has already run, so a bare `""`
+        // pattern catches both cases.
+        "" => "Segoe UI".to_string(),
         _ => family.trim().to_string(),
     }
 }
@@ -1296,6 +1306,21 @@ impl PaintRenderer for Direct2DPaintBackend {
 }
 
 /// Render a [`PaintScene`] directly into an existing Win32 HWND.
+///
+/// # Safety
+///
+/// `hwnd` must be a valid, live Win32 window handle that has not been
+/// destroyed — Direct2D dereferences it when it creates the HWND render
+/// target, and a stale or forged handle is undefined behaviour.
+///
+/// This function must also be called from a thread that either has already
+/// initialized COM as single-threaded-apartment, or has not initialized COM
+/// at all (this function will then initialize it as STA). Calling it from a
+/// thread that initialized COM as multi-threaded leaves the apartment model
+/// mismatched with the window's message pump.
+///
+/// The caller must keep `hwnd` alive for the whole call; concurrent
+/// destruction of the window from another thread is a data race.
 #[cfg(target_os = "windows")]
 pub unsafe fn render_to_hwnd(hwnd: HWND, scene: &PaintScene) -> windows::core::Result<()> {
     let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);
@@ -1337,16 +1362,33 @@ pub unsafe fn render_to_hwnd(hwnd: HWND, scene: &PaintScene) -> windows::core::R
 }
 
 /// Open a simple Win32 window and paint the scene through the Direct2D backend.
+///
+/// # Safety
+///
+/// This function must be called from the process's main/UI thread: it creates
+/// a native window, installs a paint callback, and runs a blocking Win32
+/// message loop, all of which Win32 requires to happen on the thread that owns
+/// the window.
+///
+/// It leaks a raw `Box<PaintScene>` pointer into the window's user data for the
+/// lifetime of the message loop and reclaims it afterwards, so the callback
+/// registered here must not be invoked after this function returns — which
+/// holds as long as the window is not resurrected or driven by another thread.
+///
+/// The same COM apartment requirement as [`render_to_hwnd`] applies, since the
+/// paint callback ultimately calls into it.
 #[cfg(target_os = "windows")]
 pub unsafe fn show_scene_in_window(scene: &PaintScene, title: &str) {
     let scene_size = (scene.width.max(200.0), scene.height.max(100.0));
     let scene = scene.clone();
     let scene_ptr = Box::into_raw(Box::new(scene)) as isize;
     let mut backend = Win32Backend::new();
-    let mut attributes = WindowAttributes::default();
-    attributes.title = title.to_string();
-    attributes.initial_size = LogicalSize::new(scene_size.0, scene_size.1);
-    attributes.preferred_surface = SurfacePreference::Direct2D;
+    let attributes = WindowAttributes {
+        title: title.to_string(),
+        initial_size: LogicalSize::new(scene_size.0, scene_size.1),
+        preferred_surface: SurfacePreference::Direct2D,
+        ..Default::default()
+    };
 
     if let Err(err) =
         backend.create_native_window(attributes, Some(render_paint_callback), scene_ptr)
@@ -1376,6 +1418,58 @@ unsafe extern "system" fn render_paint_callback(hwnd: HWND, user_data: isize) {
             .expect("scene pointer provided by show_scene_in_window")
     };
     let _ = render_to_hwnd(hwnd, scene);
+}
+
+/// Recover one straight-alpha colour channel from its premultiplied value.
+///
+/// ## The arithmetic
+///
+/// Premultiplication scales each colour channel down by the pixel's coverage:
+///
+/// ```text
+/// premultiplied = round(straight * alpha / 255)
+/// ```
+///
+/// so recovering the original channel means undoing that scale:
+///
+/// ```text
+/// straight = round(premultiplied * 255 / alpha)
+/// ```
+///
+/// ## Why there is no explicit clamp
+///
+/// In a *well-formed* premultiplied pixel, `premultiplied <= alpha` always
+/// holds — you cannot have more colour than coverage — so the quotient lands
+/// in `0..=255` and no clamping is needed. But this data comes back from a
+/// GPU-backed Direct2D surface, and nothing in the type system forces that
+/// invariant: a rounding artefact or a driver quirk can hand us a pixel where
+/// `premultiplied > alpha`. The quotient then exceeds 255 (worst case
+/// `255 * 255 / 1 = 65025`), and the correct thing to do is clamp to white.
+///
+/// That clamp is exactly what the `as u8` cast performs. Since Rust 1.45,
+/// float-to-integer `as` casts are defined to **saturate**: values above the
+/// target maximum become `u8::MAX`, values below the minimum become 0, and
+/// `NaN` becomes 0. So the cast on the last line is the clamp — it is load
+/// bearing, not merely a type conversion.
+///
+/// This function used to end with a redundant `.min(255)` applied *after* the
+/// cast. That comparison could never fire (a `u8` is never greater than 255),
+/// so clippy's `unnecessary_min_or_max` flagged it. It was dead code rather
+/// than a latent bug: the saturating cast had already produced the same value
+/// the clamp was intended to produce, for every input. The unit tests below
+/// pin that equivalence so a future refactor cannot quietly lose the clamp.
+///
+/// # Panics
+///
+/// Never panics. `alpha == 0` is not meaningful here — a fully transparent
+/// pixel carries no recoverable colour — and the caller handles that case
+/// separately before reaching this function.
+#[cfg(target_os = "windows")]
+#[inline]
+fn unpremultiply_channel(premultiplied: u8, alpha: u8) -> u8 {
+    // The `as u8` cast saturates at 255; see the doc comment above. Do not
+    // "simplify" it into a wrapping or unchecked conversion.
+    (premultiplied as f32 * 255.0 / alpha as f32).round() as u8
 }
 
 /// The actual rendering logic, wrapped in `unsafe` for COM/D2D FFI calls.
@@ -1520,11 +1614,11 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
                 rgba_data[dst_offset + 2] = pb; // B
                 rgba_data[dst_offset + 3] = 255; // A
             } else {
-                // General case: un-premultiply
-                let a_f = a as f32;
-                rgba_data[dst_offset] = ((pr as f32 * 255.0 / a_f).round() as u8).min(255);
-                rgba_data[dst_offset + 1] = ((pg as f32 * 255.0 / a_f).round() as u8).min(255);
-                rgba_data[dst_offset + 2] = ((pb as f32 * 255.0 / a_f).round() as u8).min(255);
+                // General case: un-premultiply. Out-of-range quotients are
+                // clamped to 255 by the saturating cast inside the helper.
+                rgba_data[dst_offset] = unpremultiply_channel(pr, a);
+                rgba_data[dst_offset + 1] = unpremultiply_channel(pg, a);
+                rgba_data[dst_offset + 2] = unpremultiply_channel(pb, a);
                 rgba_data[dst_offset + 3] = a;
             }
         }
@@ -1574,6 +1668,64 @@ mod tests {
     #[test]
     fn version_exists() {
         assert_eq!(VERSION, "0.1.0");
+    }
+
+    // ── Un-premultiplication ────────────────────────────────────────────
+    //
+    // These tests pin the contract described on `unpremultiply_channel`:
+    // the `as u8` cast is the clamp. They exist because clippy correctly
+    // pointed out that the old trailing `.min(255)` was unreachable, and
+    // removing an unreachable clamp is only safe if something else is
+    // doing the clamping. Something else is: the saturating cast.
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn unpremultiply_recovers_the_original_channel() {
+        // A half-covered pure-red pixel: straight R=255 at alpha=128
+        // premultiplies to R=128, and must come back as (near) 255.
+        assert_eq!(unpremultiply_channel(128, 128), 255);
+        // Half-brightness red under the same coverage: 64 * 255 / 128
+        // = 127.5, which rounds away from zero to 128.
+        assert_eq!(unpremultiply_channel(64, 128), 128);
+        // No colour is still no colour, at any coverage.
+        assert_eq!(unpremultiply_channel(0, 17), 0);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn unpremultiply_clamps_inconsistent_pixels_to_white() {
+        // `premultiplied > alpha` violates the premultiplied-alpha
+        // invariant and cannot be represented as a straight-alpha colour.
+        // The quotient overshoots 255 and must clamp, not wrap.
+        //
+        // 200 * 255 / 100 = 510 — double the representable maximum.
+        assert_eq!(unpremultiply_channel(200, 100), 255);
+        // The worst case the u8 domain allows: 255 * 255 / 1 = 65025.
+        // A wrapping conversion would yield 65025 % 256 = 1, i.e. near
+        // black instead of white — the failure this test guards against.
+        assert_eq!(unpremultiply_channel(255, 1), 255);
+        // Exactly at the boundary, no clamping should occur.
+        assert_eq!(unpremultiply_channel(254, 254), 255);
+    }
+
+    #[cfg(target_os = "windows")]
+    #[test]
+    fn unpremultiply_saturating_cast_matches_an_explicit_clamp_everywhere() {
+        // Exhaustive proof that dropping the old `.min(255)` changed no
+        // output: for every (premultiplied, alpha) pair the general-case
+        // branch can produce, the saturating cast agrees with clamping
+        // before the cast. If a future edit breaks the clamp, this fails.
+        for premultiplied in 0u16..=255 {
+            for alpha in 1u16..=254 {
+                let quotient = premultiplied as f32 * 255.0 / alpha as f32;
+                let clamped_before_cast = quotient.round().clamp(0.0, 255.0) as u8;
+                assert_eq!(
+                    unpremultiply_channel(premultiplied as u8, alpha as u8),
+                    clamped_before_cast,
+                    "mismatch at premultiplied={premultiplied}, alpha={alpha}"
+                );
+            }
+        }
     }
 
     #[cfg(target_os = "windows")]
