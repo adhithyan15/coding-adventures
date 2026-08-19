@@ -1812,8 +1812,30 @@ jobs:
           retention-days: 3
 
       # ── Run the build ─────────────────────────────────────────
+      #
+      # Why this step carries an explicit timeout-minutes:
+      #
+      # `vault-pm-cli-drill`'s crash/fault matrix (VLT-PM41/47) pays a real
+      # production Argon2id derivation per prompt across dozens of
+      # crash-injection landing points, parallelized internally up to the
+      # runner's own core count. That is a legitimate, previously-measured
+      # cost — its CHANGELOG records 1182s for the rotation sweep alone on a
+      # hosted runner — not a bug: a from-scratch build and 2-CPU-constrained
+      # run of the whole 18-test suite (including the two VLT-PM47 attachment
+      # drills this PR added) reproduced clean in this investigation at
+      # 11-14 minutes with no failures, so nothing here is unbounded by
+      # construction. Without a ceiling, though, a genuine stall — a runner
+      # anomaly, resource contention, anything this investigation could not
+      # reproduce locally — is indistinguishable from "still legitimately
+      # working" for the whole 360-minute default job timeout, which is
+      # exactly what happened on this PR (2+ hours, `in_progress`, zero
+      # visible test output). 150 minutes gives comfortable headroom above
+      # every measured baseline (the historical ~91-minute whole-step run,
+      # plus this PR's modest additions) while still turning a real hang into
+      # a fast, loud CI failure instead of an hours-long silent stall.
       - name: Build and test affected packages
         if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true')
+        timeout-minutes: 150
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
@@ -1830,8 +1852,12 @@ jobs:
             -language all
 
       # ── Force full build on main ──────────────────────────────
+      # Same bounded-hang rationale as "Build and test affected packages"
+      # above — this step runs the identical build-tool invocation, just
+      # forced and sharded, on every merge to main.
       - name: Full build on main merge
         if: needs.detect.outputs.is_main == 'true'
+        timeout-minutes: 150
         shell: bash
         run: |
           if [ "$RUNNER_OS" = "Windows" ]; then BT=./build-tool.exe; else BT=./build-tool; fi
