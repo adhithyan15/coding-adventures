@@ -242,6 +242,18 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // ── SIR23 symbolic/pattern (Tier A pattern matcher, Phase A Slice 4) ──
+    // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll` all route into
+    // `sir_sym_*` helpers, an inlined port of the already-proven
+    // `semantic-ir-to-javascript` `Symbolic` sub-runtime's Tier A slice
+    // (see `runtime.rs`). Tier B (`evalTerm`) is out of scope; no arithmetic
+    // handler is wired here. `Feature::Rationals` is shared with the SIR22
+    // array/matrix domain rather than a flag of its own — mirroring the
+    // TypeScript/JavaScript backends' identical choice.
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    Feature::Rationals,
 ];
 
 impl Backend for RubyBackend {
