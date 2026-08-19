@@ -1,5 +1,30 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — reject CSS units XAML cannot parse
+
+The length path stripped `px` and rejected `%`, but every other CSS unit fell
+straight through into the emitted attribute. The generated TaskApp shipped
+
+    <StackPanel Orientation="Horizontal" MinHeight="100vh">
+
+`vh` is a CSS viewport unit; WinUI lengths are `Double`, so that value is
+unparseable. It was silent at build time.
+
+Two changes:
+
+- `100vh` / `100vw` on a size setter now lower to `VerticalAlignment="Stretch"`
+  / `HorizontalAlignment="Stretch"`. In a desktop app the window is the
+  viewport, so "fill the viewport" and "fill the parent" coincide.
+- Any other unparseable unit (`em`, `rem`, `ch`, `pt`, fractional `vh`) is
+  refused rather than emitted, so an element is sized by its parent instead of
+  carrying an attribute the runtime cannot read.
+
+**This does not fix the app's layout.** Verified by screenshot before and
+after: identical. XAML was evidently already discarding the bad value, so
+removing it changed nothing visible. It is a correctness fix — no invalid
+attribute in generated output — not the fix for the window-filling symptom,
+which remains open.
+
 ## [Unreleased] — width/height 100% become stretch alignments
 
 `width: 100%` is a *sizing* property in CSS but an *alignment* in XAML: WinUI's
