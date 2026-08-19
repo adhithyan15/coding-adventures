@@ -6,14 +6,14 @@ Human Languages curriculum gap report
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 17 mixed, 5 version-2 schema tracks
 2662 drivable lessons (85% of the corpus)
-levels: 1864 pre-A1, 573 A1, 547 A2, 40 B1, 17 B2, 10 C1, 18 C2; 78 unmapped (98% placed)
-ramp: 46 lessons above 3 new atoms (592 unmeasurable, 81% measurable); 22 chapters above 12
+levels: 1865 pre-A1, 573 A1, 547 A2, 40 B1, 17 B2, 10 C1, 18 C2; 77 unmapped (98% placed)
+ramp: 46 lessons above 3 new atoms (586 unmeasurable, 81% measurable); 23 chapters above 12
 script ramp: 62 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 213 lessons show another script (max 27 glyphs) — context, never charged to the budget
 script closure: 756 lessons ask the reader to decode a glyph nobody taught them, across 16 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 305 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2220 glyphs and makes 176 lessons clean on its own
 order: 307 lessons with no declared sequence across 11 tracks; 137 prerequisites and 160 reviews pointing forward
-reinforcement: 614 of 4331 atoms never revisited (14%); missed windows R1 1164, R2 3367, R3 3201, R4 1764
+reinforcement: 615 of 4337 atoms never revisited (14%); missed windows R1 1166, R2 3368, R3 3207, R4 1770
 forward references: 504 uses of material a later lesson teaches
 VOCABULARY vs HL09 §3.1 targets: spanish 118/300 at-or-below pre-A1 (297 total), sanskrit 139/300 at-or-below pre-A1 (205 total), telugu 151/300 at-or-below pre-A1 (204 total), hindi 120/300 at-or-below pre-A1 (177 total), malayalam 119/300 at-or-below pre-A1 (177 total); 22 of 22 tracks short of the level they are working on
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
