@@ -16438,11 +16438,6 @@ mod tests {
         out
     }
 
-    /// Seal `item_count` distinct, tiny, peer-authored opaque item
-    /// revisions and return their frames alongside the sorted
-    /// `(item_id, revision_id)` pairs a catalog entry list needs. Entry
-    /// count is exactly the caller's choice, independent of any bound this
-    /// device's own admission path applies.
     /// Publish a peer-authored catalog that ends up carrying `item_count`
     /// distinct items, then adopt its final head locally.
     ///

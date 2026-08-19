@@ -1075,10 +1075,10 @@ So admission and decode use different bounds, on purpose:
   tight, margined `MAX_CATALOG_ENTRIES` (18,064). Reaching it refuses the
   *next* item with `BoundExceeded`, before that catalog is ever built, which
   is the actual fix: the failure moves from re-encode time to admission
-  time, and a catalog admission has already bounded can always still be
-  edited, deleted from, and re-encoded — the freeze this section opened
-  with cannot recur, because admission never lets the catalog reach a size
-  that re-encode can't recover from.
+  time, and a catalog admission has already bounded stays editable, can
+  always be deleted from, and always re-encodes — the freeze this section
+  opened with cannot recur, because admission never lets the catalog reach
+  a size that re-encode can't recover from.
 - **Decode** (`CatalogV1::decode`) uses the looser, unmargined
   `MAX_ENCODABLE_CATALOG_ENTRIES` (19,064) — the proven ceiling, not this
   device's own admission policy. This runs on the open path, through
