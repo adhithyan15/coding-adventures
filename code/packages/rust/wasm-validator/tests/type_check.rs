@@ -975,6 +975,44 @@ fn invalid_f32x4_splat_with_an_i32_operand() {
 }
 
 #[test]
+fn valid_i8x16_swizzle_pops_two_v128_pushes_v128() {
+    // SIMD widen PR18: i8x16.swizzle -- same pop-two-push-one v128 shape
+    // as every other binary SIMD op (i8x16.add/etc.), just an
+    // index-vector-driven permutation instead of an arithmetic/bitwise
+    // combine at the runtime level -- invisible to the type checker.
+    assert_valid("(module (func (param v128 v128) (result v128) (i8x16.swizzle (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i8x16_extract_lane_s_and_u_pop_v128_push_i32() {
+    // SIMD widen PR18: i8x16.extract_lane_s/_u -- same "pop v128 + lane
+    // immediate, push i32" shape as i32x4.extract_lane, just at i8x16's
+    // width (0-15 lane range, not enforced at the type level -- see
+    // wasm-execution's own runtime bounds check).
+    assert_valid(
+        r#"(module
+             (func (param v128) (result i32) (i8x16.extract_lane_s 0 (local.get 0)))
+             (func (param v128) (result i32) (i8x16.extract_lane_u 15 (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn valid_i8x16_replace_lane_pops_v128_and_i32_pushes_v128() {
+    // SIMD widen PR18: i8x16.replace_lane -- the genuinely new shape:
+    // lane-index immediate PLUS a mixed-type (v128, then i32) binary
+    // pop, producing a v128.
+    assert_valid("(module (func (param v128 i32) (result v128) (i8x16.replace_lane 7 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_replace_lane_given_a_v128_in_the_i32_slot() {
+    // Confirms the type checker actually enforces I32 in the value
+    // slot, not just accepting whatever's on the stack -- both operands
+    // here are v128, so the second pop (expecting I32) must reject it.
+    assert_invalid("(module (func (param v128 v128) (result v128) (i8x16.replace_lane 7 (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

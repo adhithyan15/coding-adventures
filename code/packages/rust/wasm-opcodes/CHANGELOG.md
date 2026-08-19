@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.23] - 2026-08-19 - SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane (task #171-173)
+
+### Added
+
+- 4 new `SIMD_OPS` entries filling the `0x0E`/`0x15`-`0x17` gap inside
+  the already-implemented `0x0C`-`0x22` const/splat/extract_lane
+  encoding run: `i8x16.swizzle` (`0x0E`), `i8x16.extract_lane_s`
+  (`0x15`), `i8x16.extract_lane_u` (`0x16`), `i8x16.replace_lane`
+  (`0x17`). 124 SIMD opcodes total, up from 120. `swizzle` reuses the
+  plain BINARY `v128,v128->v128` shape (same as `i8x16.add`);
+  `extract_lane_s`/`_u` reuse `i32x4.extract_lane`'s "v128 + lane
+  immediate -> i32" shape, just at `i8x16`'s 0-15 lane range with a
+  genuine signed/unsigned split (the first `extract_lane` family
+  member to need one). `replace_lane` is a GENUINELY NEW shape: the
+  first kind to combine a lane-index immediate with a mixed-type
+  (`v128`, `i32`) binary pop that produces a `v128` -- deliberately
+  not force-fit into `ExtractLane`'s shape, since neither its pop
+  count nor its result type match. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against the already-implemented `i32x4.extract_lane` (`0x1B`)/
+  `i8x16.eq` (`0x23`) entries, which sit exactly one past this run's
+  own end (both matched exactly, confirming the whole `0x0C`-`0x23`
+  run is contiguous and self-consistent).
+- `SimdOpKind::Swizzle`/`ExtractLaneI8x16S`/`ExtractLaneI8x16U`/
+  `ReplaceLaneI8x16`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.22] - 2026-08-19 - SIMD: float splat family, first float-lane ops (task #168-170)
 
 ### Added
