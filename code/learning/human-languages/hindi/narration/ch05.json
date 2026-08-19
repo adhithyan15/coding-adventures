@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:184c01edb54d88f7",
+  "sourceHash": "fnv1a64:2d9f4dcbd7e52fe5",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ae78ad2f330261be",
+      "sourceHash": "fnv1a64:48916d08e1d6055c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -152,145 +152,8 @@
       ]
     },
     {
-      "id": "HI-C05-main-hindi-bolta-hun",
-      "sequence": 410,
-      "title": "मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) — \"I speak Hindi\"",
-      "headword": "मैं हिंदी बोलता हूँ",
-      "romanization": "",
-      "gloss": "I speak Hindi (gendered)",
-      "script": "devanagari",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:d1c08f17c09d8ef0",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your first complete, moving sentence — subject, object, and a verb that acts."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "हिंदी (hindī): ह (ha) + ि becomes हि + the anusvāra ं + दी (dī). And बोलता (boltā) = the stem bol- + -ता (-tā), the present-habitual, masculine."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The sentence, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "मैं हिंदी बोलता हूँ = मैं (maiṁ, \"I\") + हिंदी (hindī, \"Hindi,\" the object) + बोलता (boltā, \"speak,\" m.) + हूँ (hūṁ, \"am\") becomes literally \"I Hindi speaking am.\" Verb-frame last, exactly as always."
-            },
-            {
-              "kind": "speech",
-              "text": "The name हिंदी itself is a traveller: from सिन्धु (sindhu, the river Indus) becomes Persian hind (the land past that river) becomes hindī (\"of Hind\"). The same sindhu gave Greek Indos becomes English India, Indus, Hindu. The language is named, at two removes, after a river."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the frame you already have",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The verb here is the present habitual — stem + -tā/-tī/-te + honā — which बोलता हूँ built one lesson ago. Nothing about it is new; this sentence is the first place you get to use it on a real object."
-            },
-            {
-              "kind": "speech",
-              "text": "What is new is the word order: मैं हिंदी बोलता हूँ puts the object before the verb frame, so the sentence ends on hūṁ. Hindi's verb goes last, always."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "speech",
-              "text": "[YOU SAY (m.): maiṁ hindī boltā hūṁ, (f.): maiṁ hindī boltī hūṁ]."
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"you (resp.) speak Hindi\" — āp hindī bolte haiṁ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"you (resp.) speak Hindi\" — *āp hindī bolte haiṁ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the river hidden in the word hindī (sindhu, the Indus)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the river hidden in the word *hindī* (*sindhu*, the Indus)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Build \"I speak Hindi\" as a woman, and name the river behind hindī. (Maiṁ hindī boltī hūṁ; the Sindhu/Indus.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "HI-C05-rahna",
-      "sequence": 420,
+      "sequence": 410,
       "title": "रहना (rahnā) — \"to live, to stay\"",
       "headword": "रहना",
       "romanization": "",
@@ -302,7 +165,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ca46ccaaa68ffc75",
+      "sourceHash": "fnv1a64:c6878088b621d894",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -432,7 +295,7 @@
     },
     {
       "id": "HI-C05-karna",
-      "sequence": 430,
+      "sequence": 420,
       "title": "करना (karnā) — \"to do,\" the most useful verb in Hindi",
       "headword": "करना",
       "romanization": "",
@@ -443,7 +306,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5520670f09c9cd1b",
+      "sourceHash": "fnv1a64:2fa43a63ad331f6e",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -609,7 +472,7 @@
     },
     {
       "id": "HI-C05-bolta-hun",
-      "sequence": 440,
+      "sequence": 430,
       "title": "बोलता हूँ (boltā hūṁ) — one stem, and the two things Hindi makes it agree with",
       "headword": "बोलता हूँ, बोलती हूँ, बोलते हैं",
       "romanization": "",
@@ -620,7 +483,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ffb053b363a48206",
+      "sourceHash": "fnv1a64:926eab697b3d54c3",
       "notice": null,
       "blocks": [
         {
@@ -771,6 +634,143 @@
       ]
     },
     {
+      "id": "HI-C05-main-hindi-bolta-hun",
+      "sequence": 440,
+      "title": "मैं हिंदी बोलता हूँ (maiṁ hindī boltā hūṁ) — \"I speak Hindi\"",
+      "headword": "मैं हिंदी बोलता हूँ",
+      "romanization": "",
+      "gloss": "I speak Hindi (gendered)",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:64de2a7ed25c1785",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first complete, moving sentence — subject, object, and a verb that acts."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हिंदी (hindī): ह (ha) + ि becomes हि + the anusvāra ं + दी (dī). And बोलता (boltā) = the stem bol- + -ता (-tā), the present-habitual, masculine."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मैं हिंदी बोलता हूँ = मैं (maiṁ, \"I\") + हिंदी (hindī, \"Hindi,\" the object) + बोलता (boltā, \"speak,\" m.) + हूँ (hūṁ, \"am\") becomes literally \"I Hindi speaking am.\" Verb-frame last, exactly as always."
+            },
+            {
+              "kind": "speech",
+              "text": "The name हिंदी itself is a traveller: from सिन्धु (sindhu, the river Indus) becomes Persian hind (the land past that river) becomes hindī (\"of Hind\"). The same sindhu gave Greek Indos becomes English India, Indus, Hindu. The language is named, at two removes, after a river."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the frame you already have",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The verb here is the present habitual — stem + -tā/-tī/-te + honā — which बोलता हूँ built one lesson ago. Nothing about it is new; this sentence is the first place you get to use it on a real object."
+            },
+            {
+              "kind": "speech",
+              "text": "What is new is the word order: मैं हिंदी बोलता हूँ puts the object before the verb frame, so the sentence ends on hūṁ. Hindi's verb goes last, always."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "speech",
+              "text": "[YOU SAY (m.): maiṁ hindī boltā hūṁ, (f.): maiṁ hindī boltī hūṁ]."
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"you (resp.) speak Hindi\" — āp hindī bolte haiṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"you (resp.) speak Hindi\" — *āp hindī bolte haiṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the river hidden in the word hindī (sindhu, the Indus)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the river hidden in the word *hindī* (*sindhu*, the Indus)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Build \"I speak Hindi\" as a woman, and name the river behind hindī. (Maiṁ hindī boltī hūṁ; the Sindhu/Indus.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "HI-C05-practice",
       "sequence": 450,
       "title": "Chapter 5 — The first verbs",
@@ -783,7 +783,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b47a31c332e56c2b",
+      "sourceHash": "fnv1a64:d36b7ed52adbe147",
       "notice": null,
       "blocks": [
         {
@@ -805,8 +805,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
+          "type": "guided-production",
+          "title": "How to answer — build the sentences",
           "segments": [
             {
               "kind": "pause",
@@ -854,8 +854,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The engine",
+          "type": "grammar",
+          "title": "Grammar lens — the engine",
           "segments": [
             {
               "kind": "pause",
@@ -894,8 +894,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",
