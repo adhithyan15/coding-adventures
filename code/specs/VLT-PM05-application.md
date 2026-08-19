@@ -376,6 +376,13 @@ and the remaining keys are kind-specific. Kind codes are:
 | 2 | `CatalogV1` | item ID to current revision candidates |
 | 3 | `DeviceCertificateV1` | exact VLT-PM01 certificate bytes |
 | 4 | `CommitV1` | exact VLT-PM01 signed commit bytes |
+| 5 | `AuditEventV1` | exact VLT-PM15 signed operation-audit event bytes |
+| 6 | `AttachmentManifestV1` | one attachment's metadata and chunk references |
+| 7 | `AttachmentChunkV1` | one VLT14 sealed attachment chunk |
+
+Code 5 has existed since VLT-PM15 and was missing from this table; it is
+recorded here rather than assigned. Codes 6 and 7 are added by
+`VLT-PM47-cli-attachments.md` §4.1.
 
 All maps include version `1` and the kind code. Unknown fields or kinds are
 rejected. Plaintext object size is limited to 16 MiB in Phase 1A even though the
@@ -400,6 +407,13 @@ ItemRevisionV1 {
 The domain `RevisionId` is the encrypted frame's `ObjectId`, converted
 losslessly. A revision never embeds its own randomized ciphertext identity.
 Direct causal parents are limited by VLT-PM03 and must exist.
+
+Since `VLT-PM47-cli-attachments.md` §4.7 the live-state map carries an optional
+tenth field mapping each retained `AttachmentId` to its manifest `ObjectId`. It
+is present exactly when the field-9 observed set has at least one retained
+value, and its key set must equal that set: an item with no attachments encodes
+the same nine keys, byte for byte, as before that document. Membership with no
+manifest pointer, and a pointer with no membership, are both integrity failures.
 
 `ItemDocumentV1` encodes every VLT-PM03 field. Each observed set serializes
 every `retained_value`, then its sorted retained add operations and removal

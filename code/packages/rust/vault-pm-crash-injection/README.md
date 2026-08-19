@@ -77,6 +77,15 @@ Two environment variables drive one process:
 A `VAULT_PM_CRASH_AT` that is not a positive decimal integer is a hard error. A
 typo must not silently turn a crash drill into an ordinary successful run.
 
+## Why attachments added one step and not two
+
+`attachment.artifact` brackets the file an `attachment export` writes. The
+attachment *write into the vault* got no step of its own, and that is a
+statement about the design rather than an omission: every chunk, the manifest,
+the revision, the catalog, and the audit event go through the ordinary storage
+backend, which `CrashInjectingStorageBackend` already brackets. Only the export
+leaves the backend, exactly as the portable-export artifact does.
+
 ## Why `SIGKILL`
 
 `std::process::exit` runs `atexit` handlers and flushes standard output.

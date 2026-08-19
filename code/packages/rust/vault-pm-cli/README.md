@@ -652,6 +652,71 @@ lands. A live refreshing display is deferred by `VLT-PM45` §8, which records
 what it would first have to decide about the idle-lock bound, per-redraw audit
 events, and terminal raw-mode handling.
 
+## Attaching a file
+
+```text
+vault-pm [--vault NAME] attachment add ITEM FILE
+vault-pm [--vault NAME] attachment list ITEM
+vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE
+```
+
+`add` reads the source and validates its base name **before** the passphrase
+prompt, so a missing file, a directory, or one over `MAX_ATTACHMENT_BYTES`
+costs no terminal interaction — the same position the clipboard-availability
+and policy checks sit in, for the same reason. The directory the file came from
+is never stored: only the base name is, and a name that is empty, over 255
+bytes, `.`, `..`, or contains a control character or a path separator is
+rejected rather than repaired.
+
+`list` prints identity, byte length, content hash, and name on ordinary
+standard output. The hash is what makes the byte-identical round trip checkable
+by hand, and it is a hash of plaintext the operator can already obtain.
+
+`export` is a disclosure, and it runs the same ceremony as `item reveal`: audit
+clock and randomness reserved before unlock, an interactive confirmation, a
+durable `ItemRead` published *before* the plaintext is released, and `Denied`
+recorded on refusal. Only the last step differs, and so does the sentence:
+
+```text
+Write this attachment's contents to a plaintext file? Type yes to continue:
+```
+
+A third prompt rather than a reused one, because neither existing sentence
+describes writing vault content into an ordinary unencrypted file this product
+will not track, clear, or know about again.
+
+**The destination is required and never defaulted from the stored name.** In a
+synced vault that name is authored by whoever attached the file, which need not
+be this person, so no code path here turns a stored name into a filesystem
+path. The write refuses to replace an existing destination, creates owner-only,
+`fsync`s, and removes the incomplete file if anything fails.
+
+The name is printed **quoted and escaped**, through the same helper every other
+stored string here passes through. The application layer already rejects the
+characters that make a name render as a different name — Unicode Cc, Cf, and
+the line and paragraph separators — on decode as well as on ingest, so this is
+the second of two gates. It is here because a validator is a statement about
+what was stored and an escape is a statement about what reaches a terminal, and
+the operator is reading the terminal when they choose which attachment to
+export.
+
+`attachment remove` is not implemented. Removing the reference while every byte
+stays in the store until a garbage collection this product has not built would
+say something false; it lands with `gc run`.
+
+**Export, import, and restore announce what did not travel.** A snapshot
+carries records and not blobs, so an attachment stays in the source vault. All
+three ceremonies that can observe that write a fixed sentence to standard
+error — `vault-pm: portable export does not carry attachments` — leaving
+standard output and the exit class untouched, the same shape as the recovery
+notice above.
+
+`restore` is the one that matters most, because its own success line says
+*verified*. That word is true about what the ceremony compared — attachments
+are normalised out of both sides, so the comparison is sound — but a person
+restoring a vault reads it as "everything came back". A backup somebody
+believes carries their recovery codes and does not is worse than no backup.
+
 ## The durable-write seam
 
 This package is the layer that knows what "durable" means. `vault-pm-application`

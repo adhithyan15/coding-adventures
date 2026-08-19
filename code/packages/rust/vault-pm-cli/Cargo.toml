@@ -39,3 +39,8 @@ libc = "0.2"
 # feature, unlike the crash-injection seam which must stay out of any build the
 # product executable can reach.
 coding_adventures_vault_pm_storage = { path = "../vault-pm-storage" }
+# VLT-PM47's round-trip test re-derives the content hash the attachment
+# listing renders, so it checks the rendered value against an independent
+# computation rather than against the code that produced it. Same argument as
+# the line above: already in the graph, and no feature is enabled.
+coding_adventures_sha256 = { path = "../sha256" }

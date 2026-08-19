@@ -176,6 +176,23 @@ process cleanly. Both spawn the shell with the same injected piped stdin every
 other drill uses, so a redirected stdin is proven unable to supply a command as
 well as unable to supply a secret.
 
+## Attachments, end to end through the real executable
+
+The end-to-end suite round-trips an attachment of two 64 KiB chunks plus 1,234
+bytes through a pseudo-terminal: `attachment add`, `attachment list`,
+`attachment export`, and a byte-for-byte comparison of the exported file
+against the source. The length is deliberately not a chunk multiple, so the
+short final chunk is exercised — a payload that happened to be an exact
+multiple would leave the tail path untested and make "it round-tripped" a
+weaker statement than it looks.
+
+Three negatives ride along, and they are the point as much as the round trip
+is. Neither an interior run of the plaintext nor the file's name appears
+anywhere under the platform roots, so the store holds ciphertext and metadata
+alike. A refusal at the export prompt writes no file at all and still leaves a
+denied row in the audit chain. And the chain names neither the attachment nor
+its bytes.
+
 ## The crash/fault drill
 
 `tests/local_cli_e2e.rs` proves what this executable does when it is allowed to

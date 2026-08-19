@@ -169,6 +169,13 @@ pub enum DurableStep {
     ConfigReplace,
     /// Creation of one encrypted portable export artifact.
     ExportArtifact,
+    /// Creation of one exported attachment file (VLT-PM47 §6.5).
+    ///
+    /// The attachment *write* into the vault needs no step of its own: it goes
+    /// through the ordinary storage backend, which is already bracketed. Only
+    /// the export leaves the backend, and it is a plaintext file, so a drill
+    /// that kills either side of it is checking that no partial one survives.
+    AttachmentArtifact,
 }
 
 impl DurableStep {
@@ -182,6 +189,7 @@ impl DurableStep {
             Self::ConfigCreate => "config.create",
             Self::ConfigReplace => "config.replace",
             Self::ExportArtifact => "export.artifact",
+            Self::AttachmentArtifact => "attachment.artifact",
         }
     }
 }
@@ -545,6 +553,7 @@ mod tests {
             DurableStep::ConfigCreate,
             DurableStep::ConfigReplace,
             DurableStep::ExportArtifact,
+            DurableStep::AttachmentArtifact,
         ];
         let mut labels: Vec<&str> = steps.iter().map(|step| step.label()).collect();
         let total = labels.len();
@@ -558,6 +567,10 @@ mod tests {
         assert_eq!(DurableStep::ConfigCreate.label(), "config.create");
         assert_eq!(DurableStep::ConfigReplace.label(), "config.replace");
         assert_eq!(DurableStep::ExportArtifact.label(), "export.artifact");
+        assert_eq!(
+            DurableStep::AttachmentArtifact.label(),
+            "attachment.artifact"
+        );
         assert_eq!(Phase::Before.to_string(), "before");
         assert_eq!(Phase::After.to_string(), "after");
         assert!(Phase::Before < Phase::After);

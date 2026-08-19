@@ -453,6 +453,22 @@ impl CliHost for SessionHost<'_> {
         self.inner.read_import_passphrase()
     }
 
+    fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        self.inner.read_attachment_source(source)
+    }
+
+    fn write_attachment_export(
+        &self,
+        destination: &Path,
+        contents: &[u8],
+    ) -> Result<(), HostError> {
+        self.inner.write_attachment_export(destination, contents)
+    }
+
+    fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+        self.inner.confirm_attachment_export()
+    }
+
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
         self.inner.fill_entropy(output)
     }
