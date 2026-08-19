@@ -1,5 +1,49 @@
 # Changelog
 
+## 0.27.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
+
+Part of the SIR22/SIR23 backend-expansion initiative (see
+`code/specs/SIR23-symbolic-pattern-semantic-ir.md`'s "Backend impact"
+section). This backend now implements SIR23's Tier A pattern matcher:
+`SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/
+`SymRule`/`SymReplaceAll`, gated on the new `Feature::SymbolicExpr`/
+`Feature::PatternMatching`/`Feature::Rationals` flags. Tier B (the
+`evalTerm` arithmetic/calculus/user-function evaluator) is explicitly OUT
+OF SCOPE — a `SymApply` builds an inert term tree, nothing more; no
+`Add`/`Sin`/`D`/... folding exists here.
+
+**New runtime functions** (`runtime.rs`'s "SIR23 symbolic expressions"
+section): term constructors `sir_sym_symbol`/`sir_sym_int`/
+`sir_sym_rational`/`sir_sym_float`/`sir_sym_string`/`sir_sym_apply`;
+pattern/rule vocabulary `sir_sym_blank`/`sir_sym_blank_typed`/
+`sir_sym_named`/`sir_sym_rule`/`sir_sym_rule_delayed`; the matcher itself
+`sir_sym_match_pattern`/`sir_sym_substitute`/`sir_sym_apply_rule`; and
+`sir_sym_replace_all`/`sir_sym_replace_repeated`/`sir_sym_unwrap`, each
+depth-capped at `SIR_SYM_MAX_TERM_DEPTH = 512` (mirroring the JS backend's
+own `MAX_TERM_DEPTH`, already cross-validated against the published
+`sir-runtime-symbolic` TypeScript package) with `replace_repeated` also
+enforcing a separate `max_iterations` (default 100) rewrite-cycle cap —
+both guards raise a plain `RuntimeError` via `sir_sym_unwrap` rather than
+overflowing the native Ruby stack or looping forever, verified against a
+REAL runtime-built 600-level-deep term in `tests/sir23_symbolic.rs`, not
+a hand-built static AST. A minimal `sir_sym_to_s` display helper (wired
+into `sir_fmt`) lets `print`/`puts` render a term via the generic
+`head(args, ...)` form — the Derive-specific precedence-aware pretty-
+printer (SIR23 addendum item 4) is separate follow-up work, not part of
+this port.
+
+**New `emit.rs` arms**: the seven node kinds each lower to a call into
+their matching `sir_sym_*` helper, plus a new `emit_sym_operand` helper
+(mirrors the JS/TS backends' identically-named function) that wraps a
+bare `IntLit`/`FloatLit`/`StrLit` operand through the matching leaf-term
+constructor before it can sit inside a term tree.
+
+**New tests**: `tests/sir23_symbolic.rs` — 5 real-`ruby`-execution tests
+(ported from `semantic-ir-to-javascript`'s own `tests/sir23_symbolic.rs`,
+Tier A cases only) proving `//.`'s fixed-point behavior, `/.`'s
+single-pass behavior, typed-blank head-constraint matching, rational
+reduction at construction time, and the depth-limit guard.
+
 ## 0.26.0 — SIR22 "APL addendum" (Phase A Slice 3)
 
 Part of the SIR22/SIR23 backend-expansion initiative (see
