@@ -750,6 +750,13 @@
     },
     {
       "language": "bengali",
+      "chapter": 1,
+      "output": "bengali/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
       "chapter": 6,
       "output": "bengali/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Bengali",
@@ -5493,11 +5500,6 @@
       "language": "arabic",
       "chapter": 2,
       "output": "arabic/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 1,
-      "output": "bengali/book/chapters/ch01-greetings.tex"
     },
     {
       "language": "bengali",

@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: BN-C01-hyan-na
+spine_node: SPINE-RESPOND-BASIC
+sequence: 30
 chapter: 1
 type: word
 headword: হ্যাঁ / না
@@ -8,24 +11,39 @@ concept_tag: RESPONSE-YESNO
 prerequisites: [BN-C01-dhonnobad]
 sounds: [ho, y-phola, chandrabindu-nasal]
 roots: [na-negative]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-CONCEPT-C01-DHONNOBAD-01]
+introduces:
+  knowledge: [BN-CONCEPT-C01-HYANNA-01]
+practises:
+  knowledge: [BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-bengali
 reviews_of: []
 ---
 
 # হ্যাঁ / না (hyã / nā) — "yes" and "no"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01] -->
 
 [PAUSE 2s] Two words no conversation survives without — and one is an old cousin
 of English.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[BN-CONCEPT-C01-HYANNA-01]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01] -->
 
 New: **হ** hô, the *y-phola* **্য** that glides the sound, and the nasal mark
 *chandrabindu* **ঁ** — a little moon-with-dot that sends the vowel through the
 nose. **না** is simply **ন** + **া**, *nā*.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01] -->
 
 **হ্যাঁ** (*hyã*, "yes") and **না** (*nā*, "no"). That "no" rides the ancient
 negative **na-** — the same Proto-Indo-European *ne* behind English **no**,
@@ -34,18 +52,21 @@ shortest, bare *nā*: the family resemblance to English *no* sits right on the
 surface.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01] -->
 
 The *chandrabindu* (that nasal moon-dot) is everywhere in Bengali and gives the
 language part of its soft, nasal music. Hear the breath leave through the nose at
 the end of *hyã* — that mark is doing the work.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: read them — hyã / nā]
 - [YOU SAY: the shared ancestor of Bengali *nā* and English *no* (PIE *ne)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C01-DHONNOBAD-01, BN-CONCEPT-C01-HYANNA-01] -->
 
 [PAUSE 3s] What does the *chandrabindu* do, and what links Bengali *nā* to English
 *no*? (It nasalises the vowel; both descend from Proto-Indo-European *ne, "not.")

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:0452218b0889f563",
+  "sourceHash": "fnv1a64:04bfef0a60aef6f3",
   "summary": {
     "totalLessons": 3147,
     "voice": 2220,
@@ -635,7 +635,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "BN-C01-achchha",
+          "firstNonVoiceLesson": "BN-C01-nomoshkar",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -18749,10 +18749,10 @@
       ]
     },
     {
-      "id": "BN-C01-achchha",
+      "id": "BN-C01-nomoshkar",
       "language": "bengali",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 10,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -18764,28 +18764,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:84972988a9ab9cfe",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "BN-C01-ashi",
-      "language": "bengali",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:6a2efd84816feecc",
+      "sourceHash": "fnv1a64:37ad9c0ce50424d5",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -18794,7 +18773,7 @@
       "id": "BN-C01-dhonnobad",
       "language": "bengali",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -18806,7 +18785,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:46d50e117712ba2c",
+      "sourceHash": "fnv1a64:9aa186b35b85d38c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -18815,7 +18794,7 @@
       "id": "BN-C01-hyan-na",
       "language": "bengali",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 30,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -18827,16 +18806,16 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d86583f11bfbb6a7",
+      "sourceHash": "fnv1a64:bf4a90a829fb912d",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "BN-C01-nomoshkar",
+      "id": "BN-C01-achchha",
       "language": "bengali",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 40,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -18848,7 +18827,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d1f13ec389f3ef0c",
+      "sourceHash": "fnv1a64:be623bf0a09d344b",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "BN-C01-ashi",
+      "language": "bengali",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:229c996df6c5e123",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -18857,7 +18857,7 @@
       "id": "BN-C01-practice",
       "language": "bengali",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 60,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -18869,7 +18869,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a0c79554855f2825"
+      "sourceHash": "fnv1a64:eb0e3fe35ab662b1"
     },
     {
       "id": "BN-C02-alaap",
