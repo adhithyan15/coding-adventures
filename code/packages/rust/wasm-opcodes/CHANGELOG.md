@@ -2,6 +2,47 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.30] - 2026-08-19 - SIMD widen PR27: narrow saturating family (task #196-198)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `i8x16.narrow_i16x8_s` (`0x65`),
+  `i8x16.narrow_i16x8_u` (`0x66`), `i16x8.narrow_i32x4_s` (`0x85`),
+  `i16x8.narrow_i32x4_u` (`0x86`) -- the "narrow" family, the
+  saturating-demote OPPOSITE of PR26's "extend" family. 150 SIMD
+  opcodes total, up from 146. Each sub-opcode byte fetched live from
+  the SIMD proposal's own `BinarySIMD.md` and cross-checked against
+  the already-implemented `i8x16.bitmask` (`0x64`)/`i16x8.all_true`
+  (`0x83`)/`i16x8.bitmask` (`0x84`) entries: `0x65`/`0x66` sit
+  immediately past `i8x16.bitmask`'s `0x64` with no gap, `0x85`/`0x86`
+  sit immediately past `i16x8.bitmask`'s `0x84` with no gap -- both
+  confirmed free of collision with every existing `SIMD_OPS` entry.
+- `SimdOpKind::NarrowI16x8S`/`NarrowI16x8U`/`NarrowI32x4S`/
+  `NarrowI32x4U`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): BINARY
+  (pop TWO `v128`s, push one `v128`) -- unlike PR26's UNARY "extend"
+  family. `i8x16.narrow_i16x8_s/u` reinterpret both operands as 8 `i16`
+  lanes each, saturate every lane to the `i8` range (signed:
+  `i8::MIN..=i8::MAX`; unsigned: `0..=u8::MAX`, a negative lane
+  saturates to 0, it does NOT wrap), and concatenate: the FIRST
+  operand's 8 saturated lanes become the LOW half (0-7) of the
+  `i8x16` result, the SECOND operand's 8 saturated lanes become the
+  HIGH half (8-15). Same pattern one lane width up for
+  `i16x8.narrow_i32x4_s/u` (4 `i32` lanes per operand, saturated to
+  the `i16` range, LOW 0-3 / HIGH 4-7).
+- **Staged campaign, no corpus vendoring yet.** These 4 opcodes are the
+  second of a 3-PR sequence (`extend_low`/`high` done in PR26,
+  `narrow` here, `promote`/`demote`/`convert_low` in a future PR)
+  needed to unlock the upstream `simd_conversions.wast` corpus file --
+  its modules bundle all 16 together, so it can't be vendored until
+  every PR in the set has landed (12 of 16 opcodes done after this
+  PR). This PR is opcode-only, verified by unit tests.
+- Table-size test bumped from 146 to 150 entries; new dedicated
+  sub-opcode-value test added alongside the existing per-family tests.
+
 ## [0.2.29] - 2026-08-19 - SIMD widen PR26: extend_low/high family (task #193-195)
 
 ### Added

@@ -1488,7 +1488,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U
-                    | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S => {
+                    | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S
+                    | wasm_opcodes::SimdOpKind::NarrowI16x8S
+                    | wasm_opcodes::SimdOpKind::NarrowI16x8U
+                    | wasm_opcodes::SimdOpKind::NarrowI32x4S
+                    | wasm_opcodes::SimdOpKind::NarrowI32x4U => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1512,6 +1516,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // final "extmul" rung -- same reasoning: the
                         // `i32x4` -> `i64x2` widening is entirely a
                         // runtime concern, invisible to the type checker.
+                        // `i8x16.narrow_i16x8_s`/`_u`/`i16x8.narrow_i32x4_s`/
+                        // `_u` (SIMD widen PR27) join too: the "narrow"
+                        // family is genuinely BINARY (two v128 operands,
+                        // unlike the UNARY "extend" family in PR26 above),
+                        // and its saturating-then-narrowing runtime
+                        // behavior is, same as every other kind in this
+                        // arm, entirely invisible to the type checker --
+                        // still just two V128 pops, one V128 push.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);

@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.39] - 2026-08-19 (task #196-198 — SIMD widen PR27: narrow saturating family type rules)
+
+### Added
+
+- `SimdOpKind::NarrowI16x8S`/`NarrowI16x8U`/`NarrowI32x4S`/
+  `NarrowI32x4U` join the existing BINARY `v128` op type-check arm (pop
+  two `V128`s, push `V128`) alongside `AddI8x16`/`SubI8x16`/
+  `ExtmulLowI16x8S`/etc. -- the per-lane saturating clamp and the
+  operand-to-half (first operand -> low half, second operand -> high
+  half) concatenation are entirely runtime concerns, invisible to the
+  type checker, which only ever sees the opaque `V128` type in both
+  operand slots and the result.
+- 6 new tests: one valid-module case covering all 4 new ops, four
+  invalid-module regressions confirming each op genuinely rejects an
+  `i32` operand instead of `v128`, one confirming a single-operand
+  stack (only one of the required two `v128`s) is rejected, and one
+  confirming an empty stack (no operand at all) is also rejected.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** These 4 opcodes are the
+  second of a 3-PR sequence (`extend_low`/`high` done in PR26, `narrow`
+  here, `promote`/`demote`/`convert_low` in a future PR) needed to
+  unlock the upstream `simd_conversions.wast` corpus file. This PR is
+  opcode-only.
+
 ## [0.2.38] - 2026-08-19 (task #193-195 — SIMD widen PR26: extend_low/high family type rules)
 
 ### Added

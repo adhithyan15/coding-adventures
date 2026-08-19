@@ -1,5 +1,34 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.49 — 2026-08-19 — SIMD widen PR27: narrow saturating family text-form (task #196-198)
+
+### Added
+
+- `SimdOpKind::NarrowI16x8S`/`NarrowI16x8U`/`NarrowI32x4S`/
+  `NarrowI32x4U` join the shared "no immediate beyond the opcode byte
+  itself" SIMD dispatch arm (already used for `AddI8x16`/`Swizzle`/
+  `ExtendLowI8x16S`/etc.) in both the folded (`encode_stream_instr`)
+  and flat (`encode_flat_instr`) instruction encoders -- verified
+  byte-identical at both call sites before editing, per this
+  campaign's own documented past gotcha. All four sub-opcodes are
+  looked up by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`), so no separate name-parsing change was
+  needed beyond the two match-arm additions. Unlike `ExtendLow/
+  HighI8x16S/_U` (PR26, UNARY), the "narrow" family is BINARY -- two
+  v128 operands -- but has the identical no-immediate encoding shape.
+- 1 new test confirming all 4 `narrow` opcodes encode their real
+  sub-opcodes -- `0x65`/`0x66` as single-byte LEB128 (`< 128`),
+  `0x85`/`0x86` as real 2-byte LEB128 (`>= 128`) -- in both folded and
+  flat/stream syntax.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** These 4 opcodes are the
+  second of a 3-PR sequence (`extend_low`/`high` done in PR26, `narrow`
+  here, `promote`/`demote`/`convert_low` in a future PR) needed to
+  unlock the upstream `simd_conversions.wast` corpus file. This PR is
+  opcode-only.
+
 ## 0.1.48 — 2026-08-19 — SIMD widen PR26: extend_low/high family text-form (task #193-195)
 
 ### Added
