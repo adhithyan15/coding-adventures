@@ -1,0 +1,19 @@
+% ============================================================================
+% heredity-term.query.adj — worked recall over the heredity-term library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what is a gene?" (direct
+% binding of `gene`'s definition) or "which heredity term means 'a specific
+% characteristic of an individual'?" (reverse binding) — it states no fact of
+% its own, it only `import`s the grounded table and asks binding queries. The
+% final query demonstrates honest abstention: `chromosome` is a real NHGRI
+% glossary term but is NOT part of this table's curated seven-term core
+% (gene/allele/dominant/recessive/genotype/phenotype/trait), so recalling it
+% abstains rather than inventing a definition this slice never fetched.
+% ============================================================================
+
+import "heredity-term.adj"
+
+? heredity_term(gene, $D)         % expect basic_unit_of_inheritance (direct)
+? heredity_term(dominant, $D)     % expect one_allele_is_expressed_and_the_effect_of_the_other_allele_is_masked (direct)
+? heredity_term($T, a_specific_characteristic_of_an_individual)   % expect trait (reverse)
+? heredity_term(chromosome, $D)   % expect abstain -- a real glossary term, but outside this table's curated seven-term core
