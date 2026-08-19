@@ -5888,16 +5888,26 @@ func _sir_ndarray_catenate(av Value, bv Value) *NDArray {
 //
 // ## DoS guard (CWE-674): `panic` directly, not a sentinel value
 //
-// `_sir_cas_match_pattern`/`_sir_cas_substitute`/`_sir_cas_apply_rule`
-// recurse, but only as deep as a single RULE's own author-written
-// pattern/RHS shape — always shallow regardless of how deep the TARGET
-// expression is — so they carry NO depth cap of their own (this exact
-// reasoning is in the JS reference's own doc comments). `_sir_cas_walk_
-// once`/`_sir_cas_replace_repeated`, by contrast, walk the ENTIRE target
-// expression tree, which ordinary compiled-program data (e.g. a runtime
-// loop nesting `Wrap(Wrap(...))` `sirCasMaxTermDepth` levels deep) CAN
-// build to unbounded depth — so THOSE two need an explicit cap, mirroring
-// the JS reference's `MAX_TERM_DEPTH = 512` exactly.
+// The JS/Ruby references leave `matchPattern`/`substituteTerm`/
+// `applyRuleTerm` UNCAPPED, reasoning that they recurse only as deep as
+// a single RULE's own author-written pattern/RHS shape — always shallow
+// regardless of how deep the TARGET expression is. That reasoning
+// describes the recursion MECHANICS correctly, but this port does NOT
+// rely on it: nothing in this IR actually restricts a `SymRule`'s
+// `lhs`/`rhs` to a small, source-authored shape — `emit_sym_operand`
+// passes any `Expr` through unchanged (including a `VarRef` to a local
+// holding a runtime-constructed term), so a compiled program CAN bind
+// an arbitrarily deep term as a rule's `lhs`/`rhs`. A caught security
+// review (see this crate's PR history) confirmed that gap, so `_sir_
+// cas_match_pattern`/`_sir_cas_substitute` below DO thread and cap
+// `depth` — the SAME `sirCasMaxTermDepth` guard the tree-walk functions
+// use — even though a well-behaved rule never approaches it.
+// `_sir_cas_walk_once`/`_sir_cas_replace_repeated` separately walk the
+// ENTIRE target expression tree, which ordinary compiled-program data
+// (e.g. a runtime loop nesting `Wrap(Wrap(...))` `sirCasMaxTermDepth`
+// levels deep) CAN build to unbounded depth — so they need the identical
+// cap for their own, independent reason, mirroring the JS reference's
+// `MAX_TERM_DEPTH = 512` exactly.
 //
 // Unlike the Ruby/JS references (which return a sentinel "depth-limit"/
 // "rewrite-cycle" value threaded back up through every recursive return,
@@ -5924,12 +5934,14 @@ func _sir_ndarray_catenate(av Value, bv Value) *NDArray {
 // recursive call per firing, so it costs O(1) native stack frames
 // regardless of how many times it fires before hitting the cap.
 
-// sirCasMaxTermDepth caps every SIR23 tree WALK (replaceAll's single
-// pass, replaceRepeated's fixed-point loop, term-equality, and display) —
-// NOT the matcher functions (`_sir_cas_match_pattern`/`_sir_cas_
-// substitute`/`_sir_cas_apply_rule`), which recurse only as deep as one
-// rule's own shape and need no cap. Matches the JS/Ruby references'
-// `MAX_TERM_DEPTH = 512` exactly.
+// sirCasMaxTermDepth caps every SIR23 recursive tree traversal: the two
+// tree WALKS (replaceAll's single pass, replaceRepeated's fixed-point
+// loop), term-equality, display, AND (unlike the JS/Ruby references —
+// see the "DoS guard" doc above for why this port diverges) the matcher
+// functions `_sir_cas_match_pattern`/`_sir_cas_substitute` too, since
+// this IR does not itself bound a rule's `lhs`/`rhs` shape. Matches the
+// JS/Ruby references' `MAX_TERM_DEPTH = 512` VALUE exactly, even though
+// this port applies it more broadly than they do.
 const sirCasMaxTermDepth = 512
 
 // sirCasMaxIterationsDefault is `_sir_cas_replace_repeated`'s default
@@ -6025,9 +6037,25 @@ func _sir_cas_gcd_abs(a int64, b int64) int64 {
 // time, mirroring the Ruby/JS references exactly — a term's `Numer`/
 // `Denom` fields are always already in lowest terms; nothing downstream
 // (matching, equality, display) re-reduces.
+//
+// SECURITY (CWE-190): `math.MinInt64` is rejected up front, BEFORE any
+// sign-normalizing negation or `_sir_cas_gcd_abs` call. Two's-complement
+// negation of the minimum `int64` wraps back to itself (`-MinInt64 ==
+// MinInt64`, still negative) — undetected, this would silently corrupt
+// a rational's sign (`_sir_cas_gcd_abs`'s own `a = -a`/`b = -b` have the
+// identical wraparound), producing a term whose `Denom` field can end up
+// negative, violating this struct's own documented "always positive"
+// invariant with no panic or visible error — exactly the kind of silent
+// corruption this domain's "types carry, don't verify" discipline
+// otherwise avoids. Reachable directly from a source-level `SymRational
+// { numer: i64::MIN, .. }` (or `denom: i64::MIN`) literal, which
+// `emit.rs` emits verbatim as a Go literal argument here.
 func _sir_cas_rational(numer int64, denom int64) *SirCasTerm {
 	if denom == 0 {
 		panic("sir-runtime-symbolic: rational denominator cannot be zero")
+	}
+	if numer == math.MinInt64 || denom == math.MinInt64 {
+		panic("sir-runtime-symbolic: rational numerator/denominator cannot be math.MinInt64 (negation would overflow)")
 	}
 	if denom < 0 {
 		numer = -numer
@@ -6265,11 +6293,32 @@ func _sir_cas_effective_head_name(node *SirCasTerm) string {
 //
 // `Blank()`, `Blank(T)`, `Pattern(name, inner)`, compound-vs-compound
 // (recurse head + every arg, same arity required), and plain structural
-// equality — a direct port of `cas-pattern-matching::matchPattern`. NOT
-// depth-capped (see the module-level "DoS guard" doc above): recursion
-// here tracks the SHAPE of one rule's own author-written `lhs`, never the
-// target expression's own depth.
-func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]Value) (map[string]Value, bool) {
+// equality — a direct port of `cas-pattern-matching::matchPattern`.
+//
+// SECURITY (CWE-674): the JS/Ruby references leave this recursion
+// UNCAPPED, reasoning that it tracks the SHAPE of one rule's own
+// author-written `lhs`, never the target expression's own depth — true
+// of recursion MECHANICS, but this IR does not actually enforce that a
+// `SymRule`'s `lhs` is small or author-written: `emit_sym_operand`
+// passes any `Expr` through unchanged (including a `VarRef` to a local
+// holding a runtime-constructed term — exactly what this port's own
+// `depth_limit_guard_panics_instead_of_crashing_the_go_stack` test
+// builds via a compiled loop), and `validator.rs`'s `Expr::SymRule` arm
+// applies no shape/depth restriction of its own. So a compiled program
+// CAN bind an arbitrarily deep runtime-built term as a rule's `lhs` (or
+// `rhs`, for `_sir_cas_substitute` below) and this matcher would recurse
+// to match it — a plain Go stack overflow past ~1M frames is a FATAL,
+// unrecoverable error (unlike this runtime's deliberate `panic()`
+// calls, `recover()` cannot catch it), which would defeat every other
+// guard in this file. This port therefore diverges from the JS/Ruby
+// references here: `_sir_cas_match_pattern` (and `_sir_cas_substitute`
+// below) DO thread and cap `depth` against `sirCasMaxTermDepth`, exactly
+// like the tree-walk functions, even though a well-behaved rule never
+// approaches the cap.
+func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]Value, depth int) (map[string]Value, bool) {
+	if depth > sirCasMaxTermDepth {
+		panic(fmt.Sprintf("sir-runtime-symbolic: depth-limit (%d) exceeded during pattern matching", sirCasMaxTermDepth))
+	}
 	pattern := _sir_cas_as_term(patternV)
 	if _sir_cas_is_blank(pattern) {
 		constraint, has := _sir_cas_blank_head_constraint(pattern)
@@ -6284,7 +6333,7 @@ func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]V
 	if _sir_cas_is_pattern(pattern) {
 		name := _sir_cas_pattern_name(pattern)
 		inner := _sir_cas_pattern_inner(pattern)
-		matched, ok := _sir_cas_match_pattern(inner, targetV, bindings)
+		matched, ok := _sir_cas_match_pattern(inner, targetV, bindings, depth+1)
 		if !ok {
 			return nil, false
 		}
@@ -6301,7 +6350,7 @@ func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]V
 		if target.Kind != sirCasApply {
 			return nil, false
 		}
-		current, ok := _sir_cas_match_pattern(pattern.Head, target.Head, bindings)
+		current, ok := _sir_cas_match_pattern(pattern.Head, target.Head, bindings, depth+1)
 		if !ok {
 			return nil, false
 		}
@@ -6309,7 +6358,7 @@ func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]V
 			return nil, false
 		}
 		for i, p := range pattern.Args {
-			current, ok = _sir_cas_match_pattern(p, target.Args[i], current)
+			current, ok = _sir_cas_match_pattern(p, target.Args[i], current, depth+1)
 			if !ok {
 				return nil, false
 			}
@@ -6326,9 +6375,15 @@ func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]V
 // bound in `bindings` with its captured term, leaving an UNBOUND pattern
 // variable as-is (mirrors the Ruby/JS references — a `RuleDelayed` RHS
 // that mentions a name the LHS never bound is a rule-authoring bug, not
-// a runtime error here). NOT depth-capped, for the same reason `_sir_
-// cas_match_pattern` is not: recursion tracks one rule's own RHS shape.
-func _sir_cas_substitute(templateV Value, bindings map[string]Value) Value {
+// a runtime error here). Depth-capped for the SAME reason `_sir_cas_
+// match_pattern` above now is: a `SymRule`'s `rhs` is equally unrestricted
+// by this IR, so a runtime-built deep term substituted in via a bound
+// pattern variable — or used directly as `rhs` — must not recurse
+// unboundedly either.
+func _sir_cas_substitute(templateV Value, bindings map[string]Value, depth int) Value {
+	if depth > sirCasMaxTermDepth {
+		panic(fmt.Sprintf("sir-runtime-symbolic: depth-limit (%d) exceeded during substitution", sirCasMaxTermDepth))
+	}
 	template := _sir_cas_as_term(templateV)
 	if _sir_cas_is_pattern(template) {
 		if captured, ok := bindings[_sir_cas_pattern_name(template)]; ok {
@@ -6339,9 +6394,9 @@ func _sir_cas_substitute(templateV Value, bindings map[string]Value) Value {
 	if template.Kind == sirCasApply {
 		newArgs := make([]Value, len(template.Args))
 		for i, a := range template.Args {
-			newArgs[i] = _sir_cas_substitute(a, bindings)
+			newArgs[i] = _sir_cas_substitute(a, bindings, depth+1)
 		}
-		return _sir_cas_apply(_sir_cas_substitute(template.Head, bindings), newArgs)
+		return _sir_cas_apply(_sir_cas_substitute(template.Head, bindings, depth+1), newArgs)
 	}
 	return template
 }
@@ -6351,7 +6406,11 @@ func _sir_cas_substitute(templateV Value, bindings map[string]Value) Value {
 // true)`. Returns `(nil, false)` — never a panic — on a non-matching
 // `expr`, since "this rule doesn't apply here" is the ordinary, expected
 // outcome every `_sir_cas_walk_once`/`_sir_cas_replace_repeated` call
-// site handles by trying the next rule.
+// site handles by trying the next rule. Seeds both `_sir_cas_match_
+// pattern`/`_sir_cas_substitute` with `depth: 0` — each is a FRESH
+// bounded walk of that rule's own `lhs`/`rhs`, independent of how deep
+// the surrounding `_sir_cas_walk_once`/`_sir_cas_replace_repeated` tree
+// walk that invoked this rule already is.
 func _sir_cas_apply_rule(ruleV Value, exprV Value) (Value, bool) {
 	rule := _sir_cas_as_term(ruleV)
 	if !_sir_cas_is_rule(rule) {
@@ -6359,11 +6418,11 @@ func _sir_cas_apply_rule(ruleV Value, exprV Value) (Value, bool) {
 	}
 	lhs := rule.Args[0]
 	rhs := rule.Args[1]
-	bindings, ok := _sir_cas_match_pattern(lhs, exprV, map[string]Value{})
+	bindings, ok := _sir_cas_match_pattern(lhs, exprV, map[string]Value{}, 0)
 	if !ok {
 		return nil, false
 	}
-	return _sir_cas_substitute(rhs, bindings), true
+	return _sir_cas_substitute(rhs, bindings, 0), true
 }
 
 // ── replaceAll / replaceRepeated (`/.` / `//.`) + depth guard ───────────
