@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C01-zdravstvuyte
+spine_node: SPINE-MEET-GREET
+sequence: 10
 chapter: 1
 type: word
 headword: здравствуйте
@@ -10,18 +13,38 @@ prerequisites: [RU-C01-privet]
 sounds: [cyrillic-false-friends, silent-v, stress-unmarked]
 roots: [zdorov]
 etymology_hook: "здравствуйте ← здоровье 'health' → literally 'be healthy!'"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-PRIVET]
+introduces:
+  knowledge: [RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]
+practises:
+  knowledge: [RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C01-privet]
 ---
 
 # здравствуйте (zdrávstvuyte) — "be healthy," the formal hello
 
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PRIVET] -->
+
+[PAUSE 2s] You can say **привет** to a friend. Now the word for everyone
+else — longer, older, and worth the effort.
+
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER]; assesses=[RU-LEX-PRIVET] -->
 
 - the **[привет](./RU-C01-privet.md)** lesson — this is its formal opposite,
   and it reuses в=v, е=ye, т=t, р=r from there.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER] -->
 
 *(Skim if you read Cyrillic.)* It's a long word, but you already know six of
 its letters. The new ones:
@@ -45,6 +68,7 @@ consonants.
 > **здравствуйте** = **zdrávstvuyte** ("ZDRAST-vooy-tye")
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER] -->
 
 **здравствуйте** is a wish for **health**. Its core is **здоровье**
 (*zdoróvye*, "health") / **здоров** (*zdoróv*, "healthy") — so the greeting
@@ -62,6 +86,7 @@ is Germanic). The *idea* is the shared one: many languages greet by wishing
 *salud*) or **peace** (Arabic *salām*, Hebrew *shalom*). Russian picked health.
 
 ## Grammar Lens — Russian's formal *you* is plural
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER] -->
 
 The *-те* ending here is your first taste of a rule that runs through Russian:
 **politeness = plural.** To address one person formally, Russian uses the
@@ -70,6 +95,7 @@ The *-те* ending here is your first taste of a rule that runs through Russian:
 said to a *вы* — one respected person, addressed as if plural.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER] -->
 
 [PAUSE 1s]
 - [YOU SAY: "ZDRAST-vooy-tye" — let the first в go silent]
@@ -77,6 +103,7 @@ said to a *вы* — one respected person, addressed as if plural.
 - [YOU SAY: "здравствуйте" to a stranger; "привет" to a friend]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-ZDRAVSTVUYTE, RU-PRAGMATICS-GREETING-REGISTER] -->
 
 [PAUSE 3s] Read **здравствуйте**. What does it literally wish? (Health — "be
 healthy.") Formal or informal, and how do you know? (Formal — the polite plural

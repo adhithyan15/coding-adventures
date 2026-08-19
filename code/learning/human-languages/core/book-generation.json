@@ -2726,6 +2726,13 @@
     },
     {
       "language": "russian",
+      "chapter": 1,
+      "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
       "chapter": 2,
       "output": "russian/book/chapters/ch02-introducing-yourself.tex",
       "unicodeScript": "Cyrillic",
@@ -5806,11 +5813,6 @@
       "language": "punjabi",
       "chapter": 5,
       "output": "punjabi/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "russian",
-      "chapter": 1,
-      "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
     },
     {
       "language": "sanskrit",

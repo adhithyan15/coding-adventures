@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-W02-false-friends-s-n
+spine_node: SPINE-MEET-GREET
+sequence: 45
 chapter: 1
 delivery: script
 type: writing
@@ -9,20 +12,34 @@ romanization: "s, n"
 prerequisites: [RU-W01-false-friends-v-r]
 sounds: [cyrillic-false-friends]
 roots: [greek-sigma]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-SCRIPT-V-01]
+introduces:
+  knowledge: [RU-SCRIPT-S-01, RU-SCRIPT-N-01]
+practises:
+  knowledge: [RU-SCRIPT-N-01, RU-SCRIPT-S-01, RU-SCRIPT-V-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-W01-false-friends-v-r, RU-C01-spasibo, RU-C01-net]
 ---
 
 # с and н — the last two false friends
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01] -->
 
 [PAUSE 2s] Two more letters that wear a Latin mask. **с** looks like Latin *C*
 but says **s**; **н** looks like Latin *H* but says **n**. You've already read
 them — *с* opens *спасибо*, *н* opens *нет* — now write them and the four-letter
 false-friend set (в р с н) is complete.
 
-## Break it apart, then write it
+## Writing — break it apart, then write it
+<!-- hl-knowledge: introduces=[RU-SCRIPT-S-01, RU-SCRIPT-N-01]; assesses=[RU-SCRIPT-V-01] -->
 
 **с** ("s") — *a single open curve*:
 
@@ -44,7 +61,8 @@ So **н** is drawn exactly like a capital *H* — two posts and a rung — but i
 an **n**. (Russian's letter for the *H*-sound doesn't exist; the "h" of foreign
 words is usually spelled with **г** or **х**.)
 
-## The four false friends, together
+## Script — the four false friends, together
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-S-01, RU-SCRIPT-N-01] -->
 
 | letter | looks like | actually says | from |
 |---|---|---|---|
@@ -57,6 +75,7 @@ Learn these four and the rest of Cyrillic stops ambushing you — most other
 letters either look foreign (so you can't be fooled) or behave.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-S-01, RU-SCRIPT-N-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: trace с — "one open curve" — sound "s"]
@@ -64,6 +83,7 @@ letters either look foreign (so you can't be fooled) or behave.
 - [YOU WRITE: *спасибо* (find the с) and *нет* (find the н)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-S-01, RU-SCRIPT-N-01] -->
 
 [PAUSE 3s] Draw **с** — one stroke, what sound and which Latin look-alike? ("s";
 looks like *C*.) Draw **н** — three strokes, what sound and look-alike? ("n";

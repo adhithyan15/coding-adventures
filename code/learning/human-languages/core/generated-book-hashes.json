@@ -4434,6 +4434,26 @@
     },
     {
       "language": "russian",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:dc92887cccce9ba4",
+      "lessonIds": [
+        "RU-C01-privet",
+        "RU-C01-zdravstvuyte",
+        "RU-C01-da",
+        "RU-C01-net",
+        "RU-C01-spasibo",
+        "RU-C01-pozhaluysta",
+        "RU-C01-practice",
+        "RU-W01-false-friends-v-r",
+        "RU-W02-false-friends-s-n",
+        "RU-W03-new-shapes-b-d",
+        "RU-W04-privet-letters-p-i",
+        "RU-W05-privet-letters-e-t"
+      ],
+      "tex": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
+    },
+    {
+      "language": "russian",
       "chapter": 2,
       "sourceHash": "fnv1a64:96db0b007be2e9be",
       "lessonIds": [

@@ -7726,27 +7726,27 @@
     {
       "language": "russian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:91ed0c7d13757bb9",
+      "sourceHash": "fnv1a64:36fb7b7d712393ce",
       "lessonIds": [
+        "RU-C01-privet",
+        "RU-C01-zdravstvuyte",
         "RU-C01-da",
         "RU-C01-net",
+        "RU-C01-spasibo",
         "RU-C01-pozhaluysta",
         "RU-C01-practice",
-        "RU-C01-privet",
-        "RU-C01-spasibo",
-        "RU-C01-zdravstvuyte",
         "RU-W01-false-friends-v-r",
         "RU-W02-false-friends-s-n",
         "RU-W03-new-shapes-b-d",
         "RU-W04-privet-letters-p-i",
         "RU-W05-privet-letters-e-t"
       ],
-      "voiceLessons": 1,
+      "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "russian/narration/ch01.txt",
       "json": "russian/narration/ch01.json",
-      "textHash": "fnv1a64:9768af78741c3526",
-      "jsonHash": "fnv1a64:f9c8ba1ba91d4456"
+      "textHash": "fnv1a64:20574a22bd49071d",
+      "jsonHash": "fnv1a64:044d392372ca83d3"
     },
     {
       "language": "russian",

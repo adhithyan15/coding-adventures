@@ -6,7 +6,12 @@
       "id": "RU-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "RU-C01-privet"
+        "RU-C01-privet",
+        "RU-W01-false-friends-v-r",
+        "RU-W02-false-friends-s-n",
+        "RU-W03-new-shapes-b-d",
+        "RU-W04-privet-letters-p-i",
+        "RU-W05-privet-letters-e-t"
       ],
       "before": [],
       "inline": [
@@ -67,6 +72,18 @@
       "after": [
         "RU-EXT-020-SCRIPT-ELEVEN"
       ]
+    },
+    {
+      "id": "RU-PATH-005A",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "RU-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "RU-EXT-001-CONSOLIDATION"
+      ],
+      "after": []
     },
     {
       "id": "RU-PATH-006",
@@ -258,7 +275,8 @@
     "SPINE-MEET-GREET": {
       "segments": [
         "RU-PATH-001",
-        "RU-PATH-004"
+        "RU-PATH-004",
+        "RU-PATH-005A"
       ],
       "omits": [
         "GREETING-PEACE",
@@ -667,7 +685,12 @@
       "canDo": "I can recognize the first Russian script pattern inside a greeting I already understand.",
       "prerequisites": [],
       "lessons": [
-        "RU-C01-privet"
+        "RU-C01-privet",
+        "RU-W01-false-friends-v-r",
+        "RU-W02-false-friends-s-n",
+        "RU-W03-new-shapes-b-d",
+        "RU-W04-privet-letters-p-i",
+        "RU-W05-privet-letters-e-t"
       ]
     },
     {
@@ -826,6 +849,19 @@
         "RU-W07-y-short",
         "RU-W07-yu",
         "RU-C15-practice"
+      ]
+    },
+    {
+      "id": "RU-EXT-001-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can run the whole first exchange -- greet formally or informally, answer yes or no, thank, and say please -- and I can hand-write every letter the greeting needs.",
+      "prerequisites": [
+        "RU-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "RU-C01-practice"
       ]
     }
   ]

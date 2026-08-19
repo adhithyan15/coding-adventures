@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-W05-privet-letters-e-t
+spine_node: SPINE-MEET-GREET
+sequence: 60
 chapter: 1
 delivery: script
 type: writing
@@ -9,19 +12,33 @@ romanization: "e, t"
 prerequisites: [RU-W04-privet-letters-p-i]
 sounds: [cyrillic-honest, e-ye]
 roots: [greek-tau]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-SCRIPT-P-01]
+introduces:
+  knowledge: [RU-SCRIPT-E-01, RU-SCRIPT-T-01]
+practises:
+  knowledge: [RU-SCRIPT-E-01, RU-SCRIPT-P-01, RU-SCRIPT-T-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-W04-privet-letters-p-i, RU-C01-privet]
 ---
 
 # е and т — the last two letters of привет
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-P-01] -->
 
 [PAUSE 2s] The finish line. **е** and **т** are two of Cyrillic's most **honest**
 letters — they look like their Latin twins *and* sound close to them. Learn these
 and you can hand-write the whole of *привет* from memory.
 
-## е ("ye") — the honest vowel
+## Script — е ("ye") — the honest vowel
+<!-- hl-knowledge: introduces=[RU-SCRIPT-E-01, RU-SCRIPT-T-01]; assesses=[RU-SCRIPT-P-01] -->
 
 **е** looks like a Latin **e** and sounds close to one — with a small twist: at the
 start of a syllable it carries a **y**-glide, "**ye**" (as in *yes*). So *привет*
@@ -35,9 +52,10 @@ Break it apart — *a curve, then a middle bar* (exactly like writing a Latin *e
 
 No trap here: what you see is what you get.
 
-## т ("t") — Greek tau, honest too
+## Script — т ("t") — Greek tau, honest too
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-E-01, RU-SCRIPT-T-01] -->
 
-**т** is Greek **tau** (τ), and it looks and sounds like Latin **T**: a crossbar on
+**т** is Greek **tau**, and it looks and sounds like Latin **T**: a crossbar on
 a stem. (In *handwriting* Russians often make lowercase *т* look like an *m* with a
 bar over it, but the printed citation form is the clean T-shape you see here.)
 
@@ -46,7 +64,8 @@ Break it apart — *a central downstroke, then a top bar*:
 1. **the downstroke** — a vertical stem.
 2. **the top bar** — a horizontal across the top, centred on the stem.
 
-## Now write the whole word
+## Writing — now write the whole word
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-E-01, RU-SCRIPT-T-01] -->
 
 You now own every letter of **привет**:
 
@@ -56,6 +75,7 @@ Two of them are false friends (**р**=r, **в**=v), one is a quiet one (**и**=e
 three are honest (**п, е, т**). Write it slowly, naming each letter's sound.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-E-01, RU-SCRIPT-T-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: trace е — "curve, middle bar" — sound "ye"]
@@ -63,6 +83,7 @@ three are honest (**п, е, т**). Write it slowly, naming each letter's sound.
 - [YOU WRITE: the full word — *привет* — start to finish, from memory]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-E-01, RU-SCRIPT-T-01] -->
 
 [PAUSE 3s] Draw **е** — what sound, and what does *iotated* mean? ("Ye"; it carries
 a *y*-onset.) Draw **т** — what sound and which Greek letter? ("t"; Greek **tau**.)

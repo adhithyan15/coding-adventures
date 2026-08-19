@@ -7,13 +7,13 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ad09cda20bca0244",
+  "sourceHash": "fnv1a64:f2f8f0c8765e7cff",
   "summary": {
     "totalLessons": 3147,
-    "voice": 2221,
-    "sight": 588,
+    "voice": 2220,
+    "sight": 589,
     "pen": 338,
-    "drivableLessons": 2221,
+    "drivableLessons": 2220,
     "drivablePercent": 71,
     "trackCount": 22,
     "chapterCount": 954,
@@ -8223,10 +8223,10 @@
     {
       "language": "russian",
       "lessonCount": 84,
-      "voice": 46,
-      "sight": 14,
+      "voice": 45,
+      "sight": 15,
       "pen": 24,
-      "drivablePercent": 55,
+      "drivablePercent": 54,
       "drivablePrefixTotal": 36,
       "modalities": [
         "voice",
@@ -8237,16 +8237,15 @@
         {
           "chapter": 1,
           "lessonCount": 12,
-          "voice": 1,
-          "sight": 6,
+          "voice": 0,
+          "sight": 7,
           "pen": 5,
           "modalities": [
-            "voice",
             "sight",
             "pen"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "RU-C01-da",
+          "firstNonVoiceLesson": "RU-C01-privet",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -50001,91 +50000,10 @@
       "delivery": "script"
     },
     {
-      "id": "RU-C01-da",
-      "language": "russian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:fcaf3fa3908abd78",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "RU-C01-net",
-      "language": "russian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:1bb4f36be79471f9",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "RU-C01-pozhaluysta",
-      "language": "russian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:7022b561af758fe6",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "RU-C01-practice",
-      "language": "russian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0950a92805f6dabf"
-    },
-    {
       "id": "RU-C01-privet",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 5,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -50097,28 +50015,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a7b65079625fcbc6",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "RU-C01-spasibo",
-      "language": "russian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b0643a84e1f4bcb",
+      "sourceHash": "fnv1a64:b291ddfbdb67bdb6",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -50127,7 +50024,7 @@
       "id": "RU-C01-zdravstvuyte",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 10,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -50139,106 +50036,238 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1129d225cc1a7f6e",
+      "sourceHash": "fnv1a64:0af02edc36d6f7ac",
       "detachableSegments": [
         "The letters in this word"
+      ]
+    },
+    {
+      "id": "RU-C01-da",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 15,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fbeba526677daaf0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "RU-C01-net",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 20,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cc1f5901dc23a480",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "RU-C01-spasibo",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 25,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fe8adc7c184b920d",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "RU-C01-pozhaluysta",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9a8fcda3e2cd042a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "RU-C01-practice",
+      "language": "russian",
+      "chapter": 1,
+      "sequence": 35,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ccd26dcf20e25208",
+      "detachableSegments": [
+        "Script — the four false friends, one more time",
+        "Script — read them cold"
       ]
     },
     {
       "id": "RU-W01-false-friends-v-r",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 40,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
       "reasons": [
-        "writing-type"
+        "writing-type",
+        "writing-block"
       ],
       "coreModality": "pen",
       "coreReasons": [
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:c1ce748ed4860e6c",
+      "sourceHash": "fnv1a64:f5ad0c1967df1fea",
+      "detachableSegments": [
+        "Writing — break it apart, then write it"
+      ],
       "delivery": "script"
     },
     {
       "id": "RU-W02-false-friends-s-n",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 45,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
       "reasons": [
         "writing-type",
+        "writing-block",
+        "script-block",
         "wide-table"
       ],
       "coreModality": "pen",
       "coreReasons": [
-        "writing-type",
-        "wide-table"
+        "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:1c40a3b05e3872b3",
+      "sourceHash": "fnv1a64:de071969205ce289",
+      "detachableSegments": [
+        "Writing — break it apart, then write it",
+        "Script — the four false friends, together"
+      ],
       "delivery": "script"
     },
     {
       "id": "RU-W03-new-shapes-b-d",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 50,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
       "reasons": [
-        "writing-type"
+        "writing-type",
+        "script-block"
       ],
       "coreModality": "pen",
       "coreReasons": [
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:42fb11f174a24ce8",
+      "sourceHash": "fnv1a64:c8d3311d1cb735b9",
+      "detachableSegments": [
+        "Script — б (\"b\") — and how it differs from в",
+        "Script — д (\"d\") — the delta on little feet"
+      ],
       "delivery": "script"
     },
     {
       "id": "RU-W04-privet-letters-p-i",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 55,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
       "reasons": [
-        "writing-type"
+        "writing-type",
+        "script-block"
       ],
       "coreModality": "pen",
       "coreReasons": [
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:68c6daf9d2cb5607",
+      "sourceHash": "fnv1a64:dfba12bb7e7c93ff",
+      "detachableSegments": [
+        "Script — п (\"p\") — the Greek gate",
+        "Script — и (\"ee\") — the backwards N"
+      ],
       "delivery": "script"
     },
     {
       "id": "RU-W05-privet-letters-e-t",
       "language": "russian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 60,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
       "reasons": [
-        "writing-type"
+        "writing-type",
+        "writing-block",
+        "script-block"
       ],
       "coreModality": "pen",
       "coreReasons": [
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:7e891f4076ef4524",
+      "sourceHash": "fnv1a64:db5db2c8d7ae9d47",
+      "detachableSegments": [
+        "Script — е (\"ye\") — the honest vowel",
+        "Script — т (\"t\") — Greek tau, honest too",
+        "Writing — now write the whole word"
+      ],
       "delivery": "script"
     },
     {
