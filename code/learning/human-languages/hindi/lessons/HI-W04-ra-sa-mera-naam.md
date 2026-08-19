@@ -67,7 +67,7 @@ Back to the normal frame, with a curl and a body:
 **स** and English **S** may be related — and the story is worth telling carefully,
 because half of it is certain and half is not.
 
-The certain half: English **S** comes from Latin, Latin from Greek **Σ** (sigma),
+The certain half: English **S** comes from Latin, Latin from Greek **sigma**,
 and Greek from the **Phoenician** letter *šin*. That western line is not in doubt.
 
 The uncertain half: **Brahmi**, the ancestor of Devanagari, is *most likely*
@@ -86,7 +86,7 @@ cousins," not "cousins."
 [PAUSE 1s]
 - [YOU WRITE: र — "shoulder, downstroke, bar" — **no spine**]
 - [YOU WRITE: स — "curl, body, spine, bar"]
-- [YOU SAY: the probable cousins — "Σ · S from *šin* … and **probably** स too"]
+- [YOU SAY: the probable cousins — "sigma · S from *šin* … and **probably** स too"]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-W04-RA-SA-MERA-NAAM-01, HI-CONCEPT-W04-RA-SA-MERA-NAAM-02] -->
@@ -95,6 +95,6 @@ cousins," not "cousins."
 right-hand spine** — just a shoulder and a downstroke.) Is it the only spineless
 letter? (**No** — **द** is one too, and there are a few others.) Draw **स** — four pieces? (Curl, body,
 spine, bar.) Which English letter might स be related to, and how sure are we?
-(**S** — certainly *šin* → Σ → S going west; the eastern leg through Aramaic to
+(**S** — certainly *šin* → sigma → S going west; the eastern leg through Aramaic to
 **Brahmi** is the **leading view, not settled**.) Next: assemble those letters
 into "my name" and let the word boundary break the head-line.

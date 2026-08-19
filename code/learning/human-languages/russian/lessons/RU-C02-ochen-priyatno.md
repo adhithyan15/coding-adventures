@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C02-ochen-priyatno
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 125
 chapter: 2
 type: phrase
 headword: очень приятно
@@ -10,18 +13,32 @@ prerequisites: [RU-C02-kak-cross-language]
 sounds: [cyrillic-false-friends, stress-unmarked]
 roots: [pie-preyh]
 etymology_hook: "приятно 'pleasant' comes from Slavic prijati 'to favour, be well-disposed' ← PIE *preyH- 'to love, please' — the same root that gave Germanic its word for FRIEND (one who is dear) and, most likely, FREE (originally 'belonging to the beloved household, not a slave')"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT]
+introduces:
+  knowledge: [RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND]
+practises:
+  knowledge: [RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C02-kak-vas-zovut, RU-C01-spasibo]
 ---
 
 # очень приятно — "pleased to meet you"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-KAK-VAS-ZOVUT] -->
 
 [PAUSE 2s] The reply that closes an introduction — and the best etymology in the
 chapter.
 
-## The phrase
+## The two words
+<!-- hl-knowledge: introduces=[RU-LEX-OCHEN-PRIYATNO]; assesses=[RU-LEX-MENYA-ZOVUT] -->
 
 > **Очень приятно.** — *Óchen priyátno.* — "Pleased to meet you."
 
@@ -36,7 +53,8 @@ left out "my" and "name."
 Both **ч** (*ch*) and **я** are letters the writing track hasn't reached. Read
 them; you'll draw them later.
 
-## приятно is related to "friend"
+## приятно, taken apart — and its cousin "friend"
+<!-- hl-knowledge: introduces=[RU-ETYMON-PRIYATNO-FRIEND]; assesses=[RU-LEX-OCHEN-PRIYATNO] -->
 
 *Приятно* comes from Slavic ***prijati***, "to favour, to be well-disposed
 toward" — which gives Russian **приятель** (*priyátel'*), a friend.
@@ -60,6 +78,7 @@ opposed to the slaves in it — and only later meant "not in bondage." *Free* an
 Saying *очень приятно* is, at the root, calling the meeting **friendly**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND, RU-LEX-KAK-VAS-ZOVUT, RU-LEX-MENYA-ZOVUT] -->
 
 [PAUSE 1s]
 - [YOU SAY: "Очень приятно"]
@@ -67,6 +86,7 @@ Saying *очень приятно* is, at the root, calling the meeting **friend
 - [YOU SAY: the family — "**прия**тно … **прия**тель … **friend**"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-OCHEN-PRIYATNO, RU-ETYMON-PRIYATNO-FRIEND] -->
 
 [PAUSE 3s] Say "pleased to meet you." (*Очень приятно*.) What does it literally
 mean? ("**Very pleasant**" — no "I am," no "to meet you.") What is *приятно*

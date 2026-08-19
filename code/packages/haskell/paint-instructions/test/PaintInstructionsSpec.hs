@@ -51,7 +51,8 @@ spec = do
 
     it "stores x, y, width, height, fill" $ do
       let r = PaintRect { prX = 10, prY = 20, prW = 80, prH = 40
-                        , prFill = "#2563eb", prMeta = Map.empty }
+                        , prFill = "#2563eb", prStroke = "", prStrokeWidth = 0
+                        , prMeta = Map.empty }
       prX r    `shouldBe` 10.0
       prY r    `shouldBe` 20.0
       prW r    `shouldBe` 80.0
@@ -60,8 +61,16 @@ spec = do
 
     it "allows empty fill (transparent)" $ do
       let r = PaintRect { prX = 0, prY = 0, prW = 100, prH = 50
-                        , prFill = "", prMeta = Map.empty }
+                        , prFill = "", prStroke = "", prStrokeWidth = 0
+                        , prMeta = Map.empty }
       prFill r `shouldBe` ""
+
+    it "stores stroke and stroke width" $ do
+      let r = PaintRect { prX = 0, prY = 0, prW = 10, prH = 10
+                        , prFill = "", prStroke = "#000000", prStrokeWidth = 1
+                        , prMeta = Map.empty }
+      prStroke r      `shouldBe` "#000000"
+      prStrokeWidth r `shouldBe` 1.0
 
     it "metadata defaults to empty Map" $ do
       let r = makeRect 0 0 10 10 "#fff"

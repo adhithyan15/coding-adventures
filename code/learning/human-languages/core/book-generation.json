@@ -750,6 +750,41 @@
     },
     {
       "language": "bengali",
+      "chapter": 2,
+      "output": "bengali/book/chapters/ch02-introductions.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 3,
+      "output": "bengali/book/chapters/ch03-responding.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 4,
+      "output": "bengali/book/chapters/ch04-farewells.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 5,
+      "output": "bengali/book/chapters/ch05-first-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 1,
+      "output": "bengali/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
       "chapter": 6,
       "output": "bengali/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Bengali",
@@ -882,6 +917,27 @@
       "scriptCommand": "zh"
     },
     {
+      "language": "chinese",
+      "chapter": 9,
+      "output": "chinese/book/chapters/ch09-shenme.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 10,
+      "output": "chinese/book/chapters/ch10-xiexie.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
+      "language": "chinese",
+      "chapter": 11,
+      "output": "chinese/book/chapters/ch11-qing.tex",
+      "unicodeScript": "Han",
+      "scriptCommand": "zh"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "output": "french/book/chapters/ch17-head-and-hand.tex"
@@ -960,6 +1016,11 @@
       "language": "french",
       "chapter": 32,
       "output": "french/book/chapters/ch32-questions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 33,
+      "output": "french/book/chapters/ch33-modaux.tex"
     },
     {
       "language": "german",
@@ -1091,6 +1152,36 @@
       "output": "gujarati/book/chapters/ch13-script-first.tex",
       "unicodeScript": "Gujarati",
       "scriptCommand": "gu"
+    },
+    {
+      "language": "hindi",
+      "chapter": 4,
+      "output": "hindi/book/chapters/ch04-farewells.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 5,
+      "output": "hindi/book/chapters/ch05-first-verbs.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 3,
+      "output": "hindi/book/chapters/ch03-responding.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 2,
+      "output": "hindi/book/chapters/ch02-introductions.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 1,
+      "output": "hindi/book/chapters/ch01-greetings.tex",
+      "scriptSet": "hindi-main"
     },
     {
       "language": "hindi",
@@ -1790,6 +1881,11 @@
     },
     {
       "language": "latin",
+      "chapter": 1,
+      "output": "latin/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "latin",
       "chapter": 2,
       "output": "latin/book/chapters/ch02-numbers-1-10.tex"
     },
@@ -2407,6 +2503,13 @@
     },
     {
       "language": "persian",
+      "chapter": 2,
+      "output": "persian/book/chapters/ch02-give-your-name.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "fa"
+    },
+    {
+      "language": "persian",
       "chapter": 3,
       "output": "persian/book/chapters/ch03-ask-and-answer-names.tex",
       "unicodeScript": "Arabic",
@@ -2685,6 +2788,20 @@
       "output": "punjabi/book/chapters/ch14-script-first.tex",
       "unicodeScript": "Gurmukhi",
       "scriptCommand": "pa"
+    },
+    {
+      "language": "russian",
+      "chapter": 1,
+      "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
+    },
+    {
+      "language": "russian",
+      "chapter": 2,
+      "output": "russian/book/chapters/ch02-introducing-yourself.tex",
+      "unicodeScript": "Cyrillic",
+      "scriptCommand": "ru"
     },
     {
       "language": "russian",
@@ -5088,6 +5205,13 @@
     },
     {
       "language": "urdu",
+      "chapter": 2,
+      "output": "urdu/book/chapters/ch02-give-your-name.tex",
+      "unicodeScript": "Arabic",
+      "scriptCommand": "ur"
+    },
+    {
+      "language": "urdu",
       "chapter": 3,
       "output": "urdu/book/chapters/ch03-ask-and-answer-names.tex",
       "unicodeScript": "Arabic",
@@ -5448,31 +5572,6 @@
       "output": "arabic/book/chapters/ch02-introductions.tex"
     },
     {
-      "language": "bengali",
-      "chapter": 1,
-      "output": "bengali/book/chapters/ch01-greetings.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 2,
-      "output": "bengali/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 3,
-      "output": "bengali/book/chapters/ch03-responding.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 4,
-      "output": "bengali/book/chapters/ch04-farewells.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 5,
-      "output": "bengali/book/chapters/ch05-first-verbs.tex"
-    },
-    {
       "language": "french",
       "chapter": 1,
       "output": "french/book/chapters/ch01-greetings.tex"
@@ -5658,31 +5757,6 @@
       "output": "gujarati/book/chapters/ch05-first-verbs.tex"
     },
     {
-      "language": "hindi",
-      "chapter": 1,
-      "output": "hindi/book/chapters/ch01-greetings.tex"
-    },
-    {
-      "language": "hindi",
-      "chapter": 2,
-      "output": "hindi/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "hindi",
-      "chapter": 3,
-      "output": "hindi/book/chapters/ch03-responding.tex"
-    },
-    {
-      "language": "hindi",
-      "chapter": 4,
-      "output": "hindi/book/chapters/ch04-farewells.tex"
-    },
-    {
-      "language": "hindi",
-      "chapter": 5,
-      "output": "hindi/book/chapters/ch05-first-verbs.tex"
-    },
-    {
       "language": "italian",
       "chapter": 1,
       "output": "italian/book/chapters/ch01-greetings.tex"
@@ -5711,11 +5785,6 @@
       "language": "kannada",
       "chapter": 5,
       "output": "kannada/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "latin",
-      "chapter": 1,
-      "output": "latin/book/chapters/ch01-greetings.tex"
     },
     {
       "language": "malayalam",
@@ -5773,11 +5842,6 @@
       "output": "persian/book/chapters/ch01-greetings-and-responses.tex"
     },
     {
-      "language": "persian",
-      "chapter": 2,
-      "output": "persian/book/chapters/ch02-give-your-name.tex"
-    },
-    {
       "language": "portuguese",
       "chapter": 1,
       "output": "portuguese/book/chapters/ch01-greetings.tex"
@@ -5806,16 +5870,6 @@
       "language": "punjabi",
       "chapter": 5,
       "output": "punjabi/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "russian",
-      "chapter": 1,
-      "output": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
-    },
-    {
-      "language": "russian",
-      "chapter": 2,
-      "output": "russian/book/chapters/ch02-introducing-yourself.tex"
     },
     {
       "language": "sanskrit",
@@ -5896,11 +5950,6 @@
       "language": "urdu",
       "chapter": 1,
       "output": "urdu/book/chapters/ch01-greetings-and-responses.tex"
-    },
-    {
-      "language": "urdu",
-      "chapter": 2,
-      "output": "urdu/book/chapters/ch02-give-your-name.tex"
     }
   ]
 }

@@ -146,6 +146,55 @@
         "ZH-EXT-022-MINGZI"
       ],
       "after": []
+    },
+    {
+      "id": "ZH-PATH-008",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ZH-W09-shen",
+        "ZH-W09-me",
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-023-SHENME-SCRIPT",
+        "ZH-EXT-024-QUESTION-WHAT"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-009",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-025-YAN-RADICAL",
+        "ZH-EXT-026-REDUPLICATION",
+        "ZH-EXT-027-PREDICT-SANDHI"
+      ],
+      "after": []
+    },
+    {
+      "id": "ZH-PATH-010",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "before": [],
+      "inline": [
+        "ZH-EXT-028-PHONETIC-COMPONENT",
+        "ZH-EXT-029-QING-INVITES"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -161,11 +210,11 @@
       "relocates": {}
     },
     "SPINE-COURTESY-THANK": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-009"
+      ],
       "omits": [
-        "COURTESY-THANKS",
-        "COURTESY-THANKS-CASUAL",
-        "COURTESY-YOUREWELCOME"
+        "COURTESY-THANKS-CASUAL"
       ],
       "relocates": {}
     },
@@ -182,10 +231,10 @@
     },
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
-        "ZH-PATH-007"
+        "ZH-PATH-007",
+        "ZH-PATH-008"
       ],
       "omits": [
-        "QUESTION-WHAT",
         "PRONOUN-ME",
         "PRONOUN-YOU",
         "PRONOUN-MY",
@@ -208,9 +257,10 @@
       "relocates": {}
     },
     "SPINE-POLITE-REQUEST-REPAIR": {
-      "segments": [],
+      "segments": [
+        "ZH-PATH-010"
+      ],
       "omits": [
-        "COURTESY-PLEASE",
         "COURTESY-SORRY"
       ],
       "relocates": {}
@@ -836,6 +886,102 @@
         "ZH-W08-ming",
         "ZH-W08-zi",
         "ZH-C08-mingzi"
+      ]
+    },
+    {
+      "id": "ZH-EXT-023-SHENME-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 什 and 么, and I know that 么 carries no tone even standing alone, not merely inside a word.",
+      "prerequisites": [
+        "ZH-EXT-022-MINGZI"
+      ],
+      "lessons": [
+        "ZH-W09-shen",
+        "ZH-W09-me"
+      ]
+    },
+    {
+      "id": "ZH-EXT-024-QUESTION-WHAT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "pragmatics",
+      "canDo": "I can say 什么 to ask what, use it alone to get something repeated, and I know it is blunt with a stranger -- and that its two characters carry the word's sound, not its meaning.",
+      "prerequisites": [
+        "ZH-EXT-023-SHENME-SCRIPT"
+      ],
+      "lessons": [
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-025-YAN-RADICAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢 that carries it, and I can name 亻 for a person and 讠 for speech, two components that carry meaning rather than sound.",
+      "prerequisites": [
+        "ZH-EXT-024-QUESTION-WHAT"
+      ],
+      "lessons": [
+        "ZH-W10-yan",
+        "ZH-W10-xie"
+      ]
+    },
+    {
+      "id": "ZH-EXT-026-REDUPLICATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "lexis",
+      "canDo": "I can build a word by doubling a character, as 谢 doubles into 谢谢, and I know the second copy goes neutral -- so the light syllable belongs to the word, not to the character.",
+      "prerequisites": [
+        "ZH-EXT-025-YAN-RADICAL"
+      ],
+      "lessons": [
+        "ZH-C10-xiexie"
+      ]
+    },
+    {
+      "id": "ZH-EXT-027-PREDICT-SANDHI",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "phonology",
+      "canDo": "I can predict a tone change before hearing a word said, applying the 不 rule to 不谢 from knowing only that 谢 is fourth tone.",
+      "prerequisites": [
+        "ZH-EXT-026-REDUPLICATION"
+      ],
+      "lessons": [
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-028-PHONETIC-COMPONENT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can write 请, and I know a character half can point at the SOUND rather than the meaning -- 青 is qing and 请 is qing -- so meeting an unknown character I can find a half I recognise and ask which job it is doing.",
+      "prerequisites": [
+        "ZH-EXT-027-PREDICT-SANDHI"
+      ],
+      "lessons": [
+        "ZH-W11-qing",
+        "ZH-C11-practice"
+      ]
+    },
+    {
+      "id": "ZH-EXT-029-QING-INVITES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "pragmatics",
+      "canDo": "I can say 请 on its own to mean after you, and I know it invites rather than softens -- so Mandarin uses it far less often than English uses please, and leaving it out is not rude.",
+      "prerequisites": [
+        "ZH-EXT-028-PHONETIC-COMPONENT"
+      ],
+      "lessons": [
+        "ZH-C11-qing"
       ]
     }
   ]

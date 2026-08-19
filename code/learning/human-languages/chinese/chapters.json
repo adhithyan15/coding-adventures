@@ -188,6 +188,68 @@
           "ZH-DIALOGUE-INTRODUCE"
         ]
       }
+    },
+    {
+      "chapter": 9,
+      "title": "What?",
+      "label": "ch:zh-shenme",
+      "canDo": "I can write 什 and 么, ask 什么 to mean what, use it on its own to get something repeated, judge that it is blunt with a stranger, and I know its two characters carry the word's sound rather than its meaning.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ZH-C09-practice",
+        "kind": "dialogue",
+        "summary": "The first exchange in the track that goes wrong -- one speaker mishears -- and the first the reader can repair, which matters more than another memorised line because it is what keeps a conversation alive when the Mandarin runs out.",
+        "assesses": [
+          "ZH-SCRIPT-SHEN",
+          "ZH-SCRIPT-ME",
+          "ZH-LEX-SHENME",
+          "ZH-DIALOGUE-ASK"
+        ]
+      }
+    },
+    {
+      "chapter": 10,
+      "title": "One Character, Two Courtesies",
+      "label": "ch:zh-xiexie",
+      "canDo": "I can write the speech radical 讠 and the twelve-stroke 谢, thank someone with 谢谢, answer thanks with 不谢, and predict from the rule alone that 不 rises before 谢 because 谢 is a falling tone.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ZH-C10-practice",
+        "kind": "dialogue",
+        "summary": "A whole courtesy exchange bought with one new character -- doubled for the thanks, negated for the reply -- and the first place the reader predicts a tone change from a rule rather than being told how a word sounds.",
+        "assesses": [
+          "ZH-SCRIPT-YAN",
+          "ZH-SCRIPT-XIE",
+          "ZH-LEX-XIEXIE",
+          "ZH-LEX-BUXIE",
+          "ZH-TONE-SANDHI-BU",
+          "ZH-DIALOGUE-THANK"
+        ]
+      }
+    },
+    {
+      "chapter": 11,
+      "title": "After You",
+      "label": "ch:zh-qing",
+      "canDo": "I can write 请, say it on its own to mean after you, explain that it invites rather than softens and so is used far less than English please, and I know a character half can point at the sound instead of the meaning.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ZH-C11-practice",
+        "kind": "dialogue",
+        "summary": "A complete courtesy in four words, and the point at which the reader learns a character can carry two kinds of hint at once -- one half for what it means, the other for how it sounds -- which is what makes the writing system learnable rather than thousands of unrelated pictures.",
+        "assesses": [
+          "ZH-SCRIPT-QING",
+          "ZH-SCRIPT-PHONETIC",
+          "ZH-LEX-QING",
+          "ZH-DIALOGUE-POLITE"
+        ]
+      }
     }
   ]
 }

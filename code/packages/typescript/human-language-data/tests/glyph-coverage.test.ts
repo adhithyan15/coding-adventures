@@ -268,9 +268,21 @@ describe("hostile preamble input", () => {
   it("matches a font family declaration in linear time", () => {
     // Two nullable `\s*` around an optional group split whitespace ambiguously:
     // 2,530ms at 64k spaces.
+    //
+    // THE BOUND IS 2s, NOT 500ms, AND THE GAP IS THE POINT. Measured on this
+    // input, the fixed scanner takes 1ms median and 3ms worst of seven runs --
+    // so 500ms was never measuring the scanner, it was measuring whether the
+    // process got descheduled. It duly failed at 530ms locally and 578ms on a
+    // macOS runner, on changes that touched only lesson markdown.
+    //
+    // 2s still separates the two cases decisively: healthy is ~1ms, the
+    // ambiguous-regex regression is ~2,530ms, and a machine loaded enough to
+    // stretch 1ms past 2s would have stretched 2,530ms far past it too. Do not
+    // tighten this back toward the healthy time -- the headroom is protecting
+    // against scheduler noise, not slack in the scanner.
     const started = Date.now();
     scriptWrappers("\\newfontfamily\\af" + " ".repeat(64_000) + "{A.ttf}");
-    expect(Date.now() - started).toBeLessThan(500);
+    expect(Date.now() - started).toBeLessThan(2_000);
   });
 
   it("is linear on many UNTERMINATED declaration heads", () => {
@@ -278,10 +290,17 @@ describe("hostile preamble input", () => {
     // `[^\]]*` inside `\[...\]` rescanned to end-of-input from every
     // unterminated `[`, so N heads cost O(N^2). Fixing the whitespace split left
     // this standing. Both shapes CodeQL reported are covered.
+    //
+    // 2s for the same reason as the test above, but this one was the tighter of
+    // the two and nobody had noticed: measured, the fixed scanner takes 196ms
+    // and 207ms on these two inputs, so a 500ms bound left barely 2.4x of head-
+    // room. The sibling test flaked first only because process starvation hits
+    // a 1ms call more visibly than a 200ms one; this bound was closer to the
+    // edge all along.
     for (const unit of ["\\newfontfamily\\a[", "\\newfontfamily\\a{{"]) {
       const started = Date.now();
       scriptWrappers(unit.repeat(32_000));
-      expect(Date.now() - started).toBeLessThan(500);
+      expect(Date.now() - started).toBeLessThan(2_000);
     }
   });
 

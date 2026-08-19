@@ -41,6 +41,18 @@
       "after": []
     },
     {
+      "id": "HI-PATH-003A",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-001-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-100",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
@@ -114,6 +126,18 @@
       "after": []
     },
     {
+      "id": "HI-PATH-004A",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C02-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-002-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-005",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
@@ -167,6 +191,18 @@
       "after": []
     },
     {
+      "id": "HI-PATH-006A",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-003-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-009",
       "spine_node": "SPINE-TAKE-LEAVE",
       "lessons": [
@@ -183,17 +219,42 @@
       "after": []
     },
     {
+      "id": "HI-PATH-009A",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-004-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-028",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
         "HI-C05-bolna",
         "HI-C05-bolta-hun",
         "HI-C05-rahna",
-        "HI-C05-karna"
+        "HI-C05-karna",
+        "HI-C05-main-hindi-bolta-hun"
       ],
       "before": [],
       "inline": [
         "HI-EXT-028-LANGUAGE-SPECIFIC"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-028A",
+      "spine_node": "SPINE-SAY-WHAT-I-DO",
+      "lessons": [
+        "HI-C05-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-005-CONSOLIDATION"
       ],
       "after": []
     },
@@ -806,6 +867,7 @@
     "SPINE-MEET-GREET": {
       "segments": [
         "HI-PATH-001",
+        "HI-PATH-003A",
         "HI-PATH-100",
         "HI-PATH-030",
         "HI-PATH-51-WELCOME",
@@ -842,6 +904,7 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "HI-PATH-004",
+        "HI-PATH-004A",
         "HI-PATH-007",
         "HI-PATH-015",
         "HI-PATH-020",
@@ -858,6 +921,7 @@
       "segments": [
         "HI-PATH-006",
         "HI-PATH-027",
+        "HI-PATH-006A",
         "HI-PATH-016",
         "HI-PATH-032",
         "HI-PATH-46-BODY",
@@ -884,6 +948,7 @@
       "segments": [
         "HI-PATH-003",
         "HI-PATH-009",
+        "HI-PATH-009A",
         "HI-PATH-025",
         "HI-PATH-49-LEAVE",
         "HI-PATH-56-ROAD"
@@ -941,6 +1006,7 @@
       "segments": [
         "HI-PATH-008",
         "HI-PATH-028",
+        "HI-PATH-028A",
         "HI-PATH-029",
         "HI-PATH-42-VERBS",
         "HI-PATH-43-SEESAY"
@@ -1472,7 +1538,8 @@
       "canDo": "I can build the Hindi present habitual — stem + -tā/-tī/-te plus honā — on any verb stem I know.",
       "prerequisites": [],
       "lessons": [
-        "HI-C05-bolta-hun"
+        "HI-C05-bolta-hun",
+        "HI-C05-main-hindi-bolta-hun"
       ]
     },
     {
@@ -1835,6 +1902,71 @@
         "HI-W12-ya",
         "HI-W12-ba",
         "HI-W12-da-retroflex"
+      ]
+    },
+    {
+      "id": "HI-EXT-001-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can run the whole first exchange -- greet formally or informally, thank in two registers, and take my leave -- and read every word of it in Devanagari.",
+      "prerequisites": [
+        "HI-EXT-001-SCRIPT"
+      ],
+      "lessons": [
+        "HI-C01-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-002-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask someone's name and give my own in Hindi, holding the verb to the end of the sentence, and I can read every word of the exchange in Devanagari.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C02-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-003-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask how someone is, answer that I am well, and welcome someone -- holding the verb to the end each time.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C03-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-004-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can take my leave in Hindi at three levels of formality, and say when I expect to meet again.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C04-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-005-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can say what I do in Hindi -- speak, live, make -- putting the verb last and matching it to myself.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C05-practice"
       ]
     }
   ]

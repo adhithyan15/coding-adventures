@@ -777,6 +777,46 @@ describe("the manifest covers the corpus", () => {
   });
 });
 
+describe("chapter order against the back matter", () => {
+  const root = defaultCurriculumRoot();
+
+  // Six books printed chapters AFTER \backmatter and after all four appendices:
+  // hindi 18, sanskrit 24, telugu 24, kannada 17, malayalam 17, tamil 16 -- 116
+  // chapters in all. Every one of them began at a "more-verbs" chapter, so a single
+  // tranche appended past the back matter and every later tranche inherited the
+  // mistake by appending after it in turn.
+  //
+  // The reader saw the pronunciation guide, glossary, answer key and index wedged
+  // between two chapters, and `book`'s \backmatter also strips chapter numbering,
+  // so those 116 chapters printed unnumbered. Nothing caught it: book.tex is
+  // hand-maintained, and every gate here reads the CHAPTER FILES rather than the
+  // order the entrypoint inputs them in.
+  it("inputs every chapter before the back matter, in ascending order", () => {
+    const registry = JSON.parse(
+      readFileSync(join(root, "core", "languages.json"), "utf8"),
+    ) as { languages: Array<{ id: string }> };
+    expect(registry.languages.length).toBeGreaterThan(0);
+    for (const { id } of registry.languages) {
+      const lines = readFileSync(join(root, id, "book", "book.tex"), "utf8").split("\n");
+      const backmatter = lines.findIndex((line) => line.trim() === "\\backmatter");
+      if (backmatter < 0) continue;
+      const isChapter = (line: string) => line.startsWith("\\input{chapters/ch");
+      const stranded = lines.slice(backmatter).filter(isChapter);
+      expect(stranded, `${id}: chapters input after \\backmatter`).toEqual([]);
+
+      // Ascending, and parsed as a full integer -- reading only two digits makes
+      // ch100 sort as ch10 and reports a false failure on the long tracks.
+      const numbers = lines
+        .slice(0, backmatter)
+        .filter(isChapter)
+        .map((line) => Number(/\/ch(\d+)/.exec(line)?.[1]));
+      expect(numbers, `${id}: chapter inputs out of order`).toEqual(
+        [...numbers].sort((left, right) => left - right),
+      );
+    }
+  });
+});
+
 describe("chapter label validation", () => {
   // `label` is interpolated RAW into \label{...} by the generator -- the only
   // author-controlled field in chapters.json that had no guard. A security review

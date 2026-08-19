@@ -15,7 +15,7 @@ The letters in this word.
 (Skim if you read Devanagari.) Left to right: न (na) + ा (the long-ā mātrā) becomes ना (nā), then म (ma). Read ना, म becomes nām.
 
 The word, taken apart.
-नाम (nām) from Sanskrit नामन् (nāman), from Proto-Indo-European h₃nómn̥ — the same ancient root as:
+नाम (nām) from Sanskrit नामन् (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same ancient root as:
 English name, Latin nōmen ( becomes English noun, nominate), Greek onoma.
 So Hindi nām and English name are cousins from before either language existed — one of the clearest bridges between the Indian and European branches of one family.
 
@@ -31,7 +31,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn̥ — name, noun, nominate.)
+What Sanskrit and PIE root is नाम from, and what English words share it? (nāman / h₃nómn — name, noun, nominate.)
 
 
 Lesson 2 of 16.
@@ -113,7 +113,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the three atoms you just traced — merā, nām, hai — into the sentence for meeting anyone.
 
-The phrase, assembled.
+The two words — assembled.
 Three atoms, each already rooted — merā (my, from ma-), nām (name, from nāman), hai (is, from asti):
 मेरा नाम (merā nām) … है (hai) = "my name … is" = "my name is…"
 Merā nām Arun hai. becomes "My name is Arun." Slot your name into the gap; hai stays at the end.
@@ -209,7 +209,7 @@ Warm-up.
 [pause 2 seconds]
 Assemble the question: your + name + what + is.
 
-The phrase, assembled.
+The two words — assembled.
 आपका (āpkā, "your") = आप (you) + का (kā, the possessive "of," the same agreeing kā/kī/ke that matches the noun).
 आपका नाम क्या (kyā) है (hai)? = literally "your name what is?" = "what's your name?"
 Hindi keeps the verb last again, and simply drops the question-word kyā into the object slot — no reordering, no inversion.
@@ -238,7 +238,7 @@ Warm-up.
 [pause 2 seconds]
 The close to an introduction — and a word from Hindi's other vocabulary.
 
-The phrase.
+The two words.
 The Hindi "pleased to meet you" is आपसे मिलकर ख़ुशी हुई (āp-se milkar khushī huī) — literally "having met you, happiness happened."
 
 The word, taken apart.
@@ -352,7 +352,7 @@ the right spine.
 the top bar — last.
 A possible very distant cousin.
 स and English S may be related — and the story is worth telling carefully, because half of it is certain and half is not.
-The certain half: English S comes from Latin, Latin from Greek Σ (sigma), and Greek from the Phoenician letter šin. That western line is not in doubt.
+The certain half: English S comes from Latin, Latin from Greek sigma, and Greek from the Phoenician letter šin. That western line is not in doubt.
 The uncertain half: Brahmi, the ancestor of Devanagari, is most likely descended from the same Semitic family, arriving in India by way of Aramaic. That is the leading scholarly view, but it is not settled — some scholars argue Brahmi was an indigenous invention, and even among those who accept a Semitic source, which letter became which is disputed.
 So: if the mainstream account holds, स and S share a great-great-grandparent some three thousand years back, with no family resemblance left at all. Say "probably cousins," not "cousins."
 
@@ -360,12 +360,12 @@ Guided Practice.
 [pause 1 second]
 [once you have stopped driving — write: र — "shoulder, downstroke, bar" — no spine]
 [once you have stopped driving — write: स — "curl, body, spine, bar"]
-[your turn — say: the probable cousins — "Σ, S from šin … and probably स too"]
+[your turn — say: the probable cousins — "sigma, S from šin … and probably स too"]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What makes र unlike the letters you've written so far? (No right-hand spine — just a shoulder and a downstroke.) Is it the only spineless letter? (No — द is one too, and there are a few others.) Draw स — four pieces? (Curl, body, spine, bar.) Which English letter might स be related to, and how sure are we? (S — certainly šin becomes Σ becomes S going west; the eastern leg through Aramaic to Brahmi is the leading view, not settled.) Next: assemble those letters into "my name" and let the word boundary break the head-line.
+What makes र unlike the letters you've written so far? (No right-hand spine — just a shoulder and a downstroke.) Is it the only spineless letter? (No — द is one too, and there are a few others.) Draw स — four pieces? (Curl, body, spine, bar.) Which English letter might स be related to, and how sure are we? (S — certainly šin becomes sigma becomes S going west; the eastern leg through Aramaic to Brahmi is the leading view, not settled.) Next: assemble those letters into "my name" and let the word boundary break the head-line.
 
 
 Lesson 12 of 16.
@@ -499,7 +499,7 @@ Warm-up.
 [pause 2 seconds]
 Every atom is built and rooted. Here's the exchange it was for.
 
-The dialogue.
+The exchange.
 [a table of 4 rows, read aloud]
 मेरा नाम मीरा है। (merā nām Mira hai) means My name is Mira.
 आपका नाम क्या है? (āpkā nām kyā hai) means What's your name?

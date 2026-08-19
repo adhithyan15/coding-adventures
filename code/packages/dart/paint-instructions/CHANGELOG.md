@@ -8,6 +8,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- `PaintLine` — a straight stroked line segment (x1, y1, x2, y2, stroke,
+  strokeWidth)
+- `PaintGlyphPlacement` — a single glyph (`glyphId`, `x`, `y`); for the
+  ASCII backend, `glyphId` is a literal Unicode code point rather than a
+  font-internal glyph index (see `P2D02-paint-vm-ascii.md`)
+- `PaintGlyphRun` — a run of `PaintGlyphPlacement`s sharing a font
+  reference, size, and fill
+- `Transform2D` — a 2D affine transform (`a, b, c, d, e, f`) with a static
+  `identity` constant and an `isIdentity` getter
+- `PaintGroup` — a list of child instructions sharing an optional
+  transform and opacity
+- `PaintClip` — a list of child instructions clipped to a rectangle
+- `PaintLayer` — a list of child instructions sharing optional filters,
+  blend mode, opacity, and transform
+- `stroke` and `strokeWidth` fields on `PaintRect`, defaulting to `''` and
+  `0.0` (fully backward compatible — existing `PaintRect(...)` call sites
+  and the `paintRect()` helper are unaffected)
+- `paintLine()`, `paintGlyphRun()`, `paintGroup()`, `paintClip()`, and
+  `paintLayer()` builder helpers, matching the existing `paintRect()`/
+  `paintPath()` helper conventions
+- These additions bring `PaintInstruction` to the full `P2D02-paint-vm-ascii.md`
+  contract (rect/line/glyph_run/group/clip/layer), consumed by the new
+  `coding_adventures_paint_vm_ascii` package and the Dart `cowsay` port
+  (see `code/specs/cowsay-paintvm-pipeline.md`)
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

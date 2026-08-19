@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -635,6 +636,244 @@ class PaintInstructionsTest {
             assertEquals("M 0.0 0.0", dispatchCmd(new PathCommand.MoveTo(0, 0)));
             assertEquals("L 10.0 5.0", dispatchCmd(new PathCommand.LineTo(10, 5)));
             assertEquals("Z", dispatchCmd(PathCommand.ClosePath.INSTANCE));
+        }
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintRect — stroke (P2D02 extension)
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintInstruction.PaintRect stroke")
+    class PaintRectStrokeTests {
+
+        @Test
+        @DisplayName("stroke and strokeWidth default to empty/zero on the pre-P2D02 constructor")
+        void strokeDefaults() {
+            var r = new PaintInstruction.PaintRect(0, 0, 10, 10, "#000");
+            assertEquals("", r.stroke);
+            assertEquals(0.0, r.strokeWidth, 1e-9);
+        }
+
+        @Test
+        @DisplayName("stroke and strokeWidth are stored when provided explicitly")
+        void storesStroke() {
+            var r = new PaintInstruction.PaintRect(0, 0, 10, 10, "", "#000000", 1.5, Map.of());
+            assertEquals("#000000", r.stroke);
+            assertEquals(1.5, r.strokeWidth, 1e-9);
+        }
+
+        @Test
+        @DisplayName("equality accounts for stroke fields")
+        void equalityAccountsForStroke() {
+            var a = new PaintInstruction.PaintRect(0, 0, 10, 10, "", "#000", 1, Map.of());
+            var b = new PaintInstruction.PaintRect(0, 0, 10, 10, "", "#fff", 1, Map.of());
+            assertNotEquals(a, b);
+        }
+    }
+
+    // =========================================================================
+    // Transform2D
+    // =========================================================================
+
+    @Nested
+    @DisplayName("Transform2D")
+    class Transform2DTests {
+
+        @Test
+        @DisplayName("IDENTITY reports isIdentity true")
+        void identityIsIdentity() {
+            assertTrue(Transform2D.IDENTITY.isIdentity());
+        }
+
+        @Test
+        @DisplayName("a non-identity transform reports isIdentity false")
+        void nonIdentityIsNotIdentity() {
+            var t = new Transform2D(2, 0, 0, 1, 0, 0);
+            assertFalse(t.isIdentity());
+        }
+
+        @Test
+        @DisplayName("equality — same values equal")
+        void equalitySameValues() {
+            var a = new Transform2D(1, 0, 0, 1, 5, 5);
+            var b = new Transform2D(1, 0, 0, 1, 5, 5);
+            assertEquals(a, b);
+            assertEquals(a.hashCode(), b.hashCode());
+        }
+    }
+
+    // =========================================================================
+    // PaintGlyphPlacement
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintGlyphPlacement")
+    class PaintGlyphPlacementTests {
+
+        @Test
+        @DisplayName("stores glyphId, x, y")
+        void storesFields() {
+            var p = new PaintGlyphPlacement((int) 'h', 8.0, 16.0);
+            assertEquals((int) 'h', p.glyphId);
+            assertEquals(8.0, p.x, 1e-9);
+            assertEquals(16.0, p.y, 1e-9);
+        }
+
+        @Test
+        @DisplayName("equality — same values equal")
+        void equalitySameValues() {
+            var a = new PaintGlyphPlacement(1, 2, 3);
+            var b = new PaintGlyphPlacement(1, 2, 3);
+            assertEquals(a, b);
+            assertEquals(a.hashCode(), b.hashCode());
+        }
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintLine
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintInstruction.PaintLine")
+    class PaintLineTests {
+
+        @Test
+        @DisplayName("stores endpoints, stroke, and strokeWidth")
+        void storesFields() {
+            var line = PaintInstructions.paintLine(0, 0, 10, 20, "#000000", 1.0);
+            assertEquals(0, line.x1, 1e-9);
+            assertEquals(0, line.y1, 1e-9);
+            assertEquals(10, line.x2, 1e-9);
+            assertEquals(20, line.y2, 1e-9);
+            assertEquals("#000000", line.stroke);
+            assertEquals(1.0, line.strokeWidth, 1e-9);
+        }
+
+        @Test
+        @DisplayName("null stroke throws NullPointerException")
+        void nullStrokeThrows() {
+            assertThrows(NullPointerException.class,
+                    () -> new PaintInstruction.PaintLine(0, 0, 1, 1, null, 1, Map.of()));
+        }
+
+        @Test
+        @DisplayName("is instance of PaintInstruction (sealed hierarchy)")
+        void isPaintInstruction() {
+            PaintInstruction instr = PaintInstructions.paintLine(0, 0, 1, 1, "#000", 1);
+            assertInstanceOf(PaintInstruction.PaintLine.class, instr);
+        }
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintGlyphRun
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintInstruction.PaintGlyphRun")
+    class PaintGlyphRunTests {
+
+        @Test
+        @DisplayName("stores glyphs, fontRef, fontSize, fill")
+        void storesFields() {
+            var glyphs = List.of(new PaintGlyphPlacement((int) 'h', 0, 0), new PaintGlyphPlacement((int) 'i', 8, 0));
+            var run = PaintInstructions.paintGlyphRun(glyphs, "terminal-mono", 16, "#000000");
+            assertEquals(2, run.glyphs.size());
+            assertEquals("terminal-mono", run.fontRef);
+            assertEquals(16, run.fontSize, 1e-9);
+            assertEquals("#000000", run.fill);
+        }
+
+        @Test
+        @DisplayName("glyphs list is immutable")
+        void glyphsImmutable() {
+            var run = PaintInstructions.paintGlyphRun(List.of(), "font", 1, "#000");
+            assertThrows(UnsupportedOperationException.class,
+                    () -> run.glyphs.add(new PaintGlyphPlacement(0, 0, 0)));
+        }
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintGroup
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintInstruction.PaintGroup")
+    class PaintGroupTests {
+
+        @Test
+        @DisplayName("a plain group has no transform and no opacity")
+        void plainGroupDefaults() {
+            var group = PaintInstructions.paintGroup(List.of());
+            assertTrue(group.transform.isEmpty());
+            assertTrue(group.opacity.isEmpty());
+        }
+
+        @Test
+        @DisplayName("children are preserved in order")
+        void preservesChildren() {
+            var rect = new PaintInstruction.PaintRect(0, 0, 1, 1, "#000");
+            var group = PaintInstructions.paintGroup(List.of(rect));
+            assertEquals(1, group.children.size());
+            assertSame(rect, group.children.get(0));
+        }
+
+        @Test
+        @DisplayName("an explicit transform and opacity are stored")
+        void explicitTransformAndOpacity() {
+            var group = new PaintInstruction.PaintGroup(
+                    List.of(), Optional.of(new Transform2D(2, 0, 0, 2, 0, 0)), Optional.of(0.5), Map.of());
+            assertEquals(2.0, group.transform.get().a, 1e-9);
+            assertEquals(0.5, group.opacity.get(), 1e-9);
+        }
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintClip
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintInstruction.PaintClip")
+    class PaintClipTests {
+
+        @Test
+        @DisplayName("stores clip bounds and children")
+        void storesFields() {
+            var glyph = PaintInstructions.paintGlyphRun(
+                    List.of(new PaintGlyphPlacement((int) 'a', 0, 0)), "font", 1, "#000");
+            var clip = PaintInstructions.paintClip(0, 0, 8, 16, List.of(glyph));
+            assertEquals(0, clip.x, 1e-9);
+            assertEquals(0, clip.y, 1e-9);
+            assertEquals(8, clip.width, 1e-9);
+            assertEquals(16, clip.height, 1e-9);
+            assertEquals(1, clip.children.size());
+        }
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintLayer
+    // =========================================================================
+
+    @Nested
+    @DisplayName("PaintInstruction.PaintLayer")
+    class PaintLayerTests {
+
+        @Test
+        @DisplayName("a plain layer has no filters and no transform/opacity/blend mode")
+        void plainLayerDefaults() {
+            var layer = PaintInstructions.paintLayer(List.of());
+            assertFalse(layer.hasFilters);
+            assertTrue(layer.blendMode.isEmpty());
+            assertTrue(layer.opacity.isEmpty());
+            assertTrue(layer.transform.isEmpty());
+        }
+
+        @Test
+        @DisplayName("hasFilters can be set explicitly")
+        void explicitFilters() {
+            var layer = new PaintInstruction.PaintLayer(
+                    List.of(), true, Optional.empty(), Optional.empty(), Optional.empty(), Map.of());
+            assertTrue(layer.hasFilters);
         }
     }
 

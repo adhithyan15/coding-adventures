@@ -2,6 +2,7 @@ package com.codingadventures.paintinstructions;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -195,5 +196,69 @@ public final class PaintInstructions {
             int width, int height, String background,
             List<PaintInstruction> instructions) {
         return createScene(width, height, background, instructions, Map.of());
+    }
+
+    // =========================================================================
+    // paintLine — builder helper
+    // =========================================================================
+
+    /** Build a {@link PaintInstruction.PaintLine} with empty metadata. */
+    public static PaintInstruction.PaintLine paintLine(
+            double x1, double y1, double x2, double y2, String stroke, double strokeWidth) {
+        return new PaintInstruction.PaintLine(x1, y1, x2, y2, stroke, strokeWidth, Map.of());
+    }
+
+    // =========================================================================
+    // paintGlyphRun — builder helper
+    // =========================================================================
+
+    /** Build a {@link PaintInstruction.PaintGlyphRun} with empty metadata. */
+    public static PaintInstruction.PaintGlyphRun paintGlyphRun(
+            List<PaintGlyphPlacement> glyphs, String fontRef, double fontSize, String fill) {
+        return new PaintInstruction.PaintGlyphRun(glyphs, fontRef, fontSize, fill, Map.of());
+    }
+
+    // =========================================================================
+    // paintGroup — builder helper
+    // =========================================================================
+
+    /** Build a plain (untransformed, fully opaque) {@link PaintInstruction.PaintGroup}. */
+    public static PaintInstruction.PaintGroup paintGroup(List<PaintInstruction> children) {
+        return new PaintInstruction.PaintGroup(children, Optional.empty(), Optional.empty(), Map.of());
+    }
+
+    // =========================================================================
+    // paintClip — builder helper
+    // =========================================================================
+
+    /** Build a {@link PaintInstruction.PaintClip} with empty metadata. */
+    public static PaintInstruction.PaintClip paintClip(
+            double x, double y, double width, double height, List<PaintInstruction> children) {
+        return new PaintInstruction.PaintClip(x, y, width, height, children, Map.of());
+    }
+
+    // =========================================================================
+    // paintLayer — builder helper
+    // =========================================================================
+
+    /** Build a plain (untransformed, unfiltered, fully opaque, normal-blend) {@link PaintInstruction.PaintLayer}. */
+    public static PaintInstruction.PaintLayer paintLayer(List<PaintInstruction> children) {
+        return new PaintInstruction.PaintLayer(
+                children, false, Optional.empty(), Optional.empty(), Optional.empty(), Map.of());
+    }
+
+    // =========================================================================
+    // paintRect (stroked) — builder helper
+    // =========================================================================
+
+    /**
+     * Build a {@link PaintInstruction.PaintRect} with an explicit stroke, and
+     * empty metadata.
+     */
+    public static PaintInstruction.PaintRect paintRect(
+            int x, int y, int width, int height, String fill, String stroke, double strokeWidth) {
+        String effectiveFill = (fill == null) ? "" : fill;
+        String effectiveStroke = (stroke == null) ? "" : stroke;
+        return new PaintInstruction.PaintRect(x, y, width, height, effectiveFill, effectiveStroke, strokeWidth, Map.of());
     }
 }

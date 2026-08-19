@@ -26,14 +26,27 @@ Input data
 
 ## Types
 
-| Type               | Description                                              |
-|--------------------|----------------------------------------------------------|
-| `PathCommand`      | Sealed: `MoveTo`, `LineTo`, `Close`                      |
-| `PaintInstruction` | Sealed base: `PaintRect`, `PaintPath`                    |
-| `PaintRect`        | Axis-aligned filled rectangle                            |
-| `PaintPath`        | Filled polygon described by `PathCommand` list           |
-| `PaintScene`       | Complete frame: width, height, background, instructions  |
-| `PaintColorRGBA8`  | Parsed RGBA colour (one byte per channel)                |
+| Type                   | Description                                                        |
+|------------------------|----------------------------------------------------------------------|
+| `PathCommand`          | Sealed: `MoveTo`, `LineTo`, `Close`                                 |
+| `PaintInstruction`     | Sealed base: `PaintRect`, `PaintPath`, `PaintLine`, `PaintGlyphRun`, `PaintGroup`, `PaintClip`, `PaintLayer` |
+| `PaintRect`            | Axis-aligned rectangle, filled and/or stroked                      |
+| `PaintPath`            | Filled polygon described by `PathCommand` list                     |
+| `PaintLine`            | Straight stroked line segment                                      |
+| `PaintGlyphPlacement`  | A single glyph (`glyphId`, `x`, `y`)                                |
+| `PaintGlyphRun`        | A run of `PaintGlyphPlacement`s sharing a font ref/size/fill        |
+| `Transform2D`          | 2D affine transform (`a, b, c, d, e, f`)                            |
+| `PaintGroup`           | Child instructions sharing an optional transform/opacity           |
+| `PaintClip`            | Child instructions clipped to a rectangle                          |
+| `PaintLayer`           | Child instructions sharing optional filters/blend mode/opacity/transform |
+| `PaintScene`           | Complete frame: width, height, background, instructions            |
+| `PaintColorRGBA8`      | Parsed RGBA colour (one byte per channel)                           |
+
+This is the full `P2D02-paint-vm-ascii.md` instruction set (rect, line,
+glyph_run, group, clip, layer). For the ASCII backend specifically,
+`PaintGlyphPlacement.glyphId` is treated as a literal Unicode code point
+rather than a font-internal glyph index — see
+`code/specs/cowsay-paintvm-pipeline.md`.
 
 ## Usage
 

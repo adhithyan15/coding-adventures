@@ -32,11 +32,33 @@ language, on the smallest possible vocabulary:
 The chapter deliberately teaches two characters and one greeting. The ramp is
 slow on purpose: the new machinery, not the vocabulary, is the load.
 
-## Thanks, and the speech radical *(planned)*
+## Thanks, and the speech radical *(delivered, HL-C245)*
 
-**谢谢** *xièxie*. Introduces the 讠 "speech" component and the reduplication
-that turns 谢 into an everyday thank-you, plus the neutral tone on the second
-syllable. Realises `SPINE-COURTESY-THANK`.
+**谢谢** *xièxie*. Introduces the 讠 "speech" component and the reduplication that
+turns 谢 into an everyday thank-you, plus the neutral tone on the second syllable.
+`SPINE-COURTESY-THANK` is realised: `COURTESY-THANKS` on 谢谢 and
+`COURTESY-YOUREWELCOME` on **不谢**. Only `COURTESY-THANKS-CASUAL` remains
+omitted, and it has no Mandarin realisation to claim — the taxonomy defines it as
+the Perso-Arabic alternative some Indic tracks carry.
+
+The chapter is built around one economy: **谢 is the only new character, and it
+buys both halves of the exchange.** Doubled it gives the thanks; negated with the
+不 the reader has had since 不好 it gives the reply. That is also where the track
+first asks the reader to *predict* a tone rather than be told one — 谢 is fourth
+tone, so 不 must rise, and 不谢 is *bú xiè* before anyone says it aloud.
+
+讠 is the second meaning-carrying component the track owns, after 亻, and the two
+are taught as a pair: a person on the left, or speech on the left. 身 and 寸 are
+shown inside 谢 without being taught, the same no-cost route used for 十 in 早, 儿
+in 见 and 夕 in 名.
+
+谢 is twelve strokes, the longest character in the book, and the lesson uses that
+deliberately: it is *easier* than the seven-stroke 我, because it comes apart into
+three pieces where 我 came apart into none. That is the argument for structure
+over stroke-counting, made where the reader can feel it.
+
+**Still owed:** 不客气, the commoner reply, needs 客 and 气 — both absent from the
+vendored subset.
 
 ## Yes, no, and 不 — *delivered across two chapters*
 
@@ -102,9 +124,22 @@ the practice lesson names the gap to the reader instead of papering over it.
 
 Unblocking it needs one `letters` entry plus a **network re-subset**, since 叫,
 的 and 姓 appear nowhere in `chinese.json` — this is the genuine re-subset case,
-unlike 夕 below. 什么 *shénme* is separately ready (什 = 亻 + 十, both already
-shown; 么 inventoried) and can carry `QUESTION-WHAT` on its own whenever it is
-worth a chapter.
+unlike 夕 below.
+
+**Half of it is now delivered (HL-C244).** 什么 *shénme* carries `QUESTION-WHAT`
+in its own chapter: 什 = 亻 (taught) + 十 (shown in 早), 么 is inventoried, and the
+whole chapter cost no new obligation. The reader has the *what* of "what is your
+name?" and not yet the rest of it, which the lessons say plainly rather than
+implying the question is available.
+
+That chapter also does two things worth keeping when the rest of the question
+lands. It refuses a decomposition **at the word level**, and is careful to say so
+at that level: 什 and 么 carry the word's **sound**, while the pieces inside the
+character 什 belong to that character and explain nothing about *what*. Reading
+"person plus ten" out of 什么 would be inventing a story of exactly the kind this
+track otherwise labels as a hook. And it flags **register** — a bare 什么? is blunt,
+fine with friends and heavy with a stranger — which is the first time the book
+has told the reader that a correct sentence can still be the wrong move.
 
 **名 needed care but was not blocked.** 名 itself is inventoried and has a ductus.
 **夕**, the piece above 口 that makes 名 decomposable, is *not* inventoried and
@@ -128,6 +163,35 @@ So there are two different costs, and they should not be confused:
 Chapter 1 promises the reader "never a character you have not been shown the
 parts of first", so 名 had to show 夕 either way. The component route satisfied
 that promise at no cost, and is what shipped.
+
+## Please, and the half that carries the sound *(delivered, HL-C246)*
+
+**请** *qǐng*. Realises `SPINE-POLITE-REQUEST-REPAIR` in part, claiming
+`COURTESY-PLEASE`. `COURTESY-SORRY` stays omitted — every Mandarin apology needs
+characters the vendored subset does not contain.
+
+The chapter carries the track's most important reading idea. 请 is 讠 + 青, and
+**青 is *qīng* while 请 is *qǐng*** — same consonant, same vowel, different tone.
+That is a phonetic component the reader can actually hear, which 尔 in 你 was
+not — so the claim the first chapter made in passing about 尔 becomes one the
+reader can check by ear. It lets the writing system stop looking like thousands
+of unrelated pictures: a character can carry **two hints at once**, one half for what it means
+and one for how it sounds. From here a reader meeting an unknown character has
+something to do besides look it up.
+
+It also corrects an over-translation before it sets. 请 is glossed *please*, but
+it **hands the action over** where English *please* softens a demand, and it
+comes before the action it invites rather than being bolted on after it. The
+practical consequence is stated plainly: **Mandarin uses 请 far less than English
+uses please** — with intimates it can read as distancing — and omitting it is not
+rude.
+
+**Still owed on this node.** 请 + a verb is the polite-request frame, and the
+reader has no verbs yet. 请再说 — *please say it again*, which would let the blunt
+bare 什么? of the question-word chapter end with a remedy — needs **说**, which is
+in the font but has **no `letters` entry and no ductus**. That is the one
+genuinely blocked next step in this corner of the track, and it costs a
+hand-authored, font-checked ductus rather than a re-subset.
 
 ## Times of day *(planned)*
 

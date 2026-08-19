@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-W01-false-friends-v-r
+spine_node: SPINE-MEET-GREET
+sequence: 40
 chapter: 1
 delivery: script
 type: writing
@@ -9,29 +12,44 @@ romanization: "v, r"
 prerequisites: [RU-C01-privet]
 sounds: [cyrillic-false-friends]
 roots: [greek-beta, greek-rho]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-PRIVET]
+introduces:
+  knowledge: [RU-SCRIPT-V-01, RU-SCRIPT-R-01]
+practises:
+  knowledge: [RU-LEX-PRIVET, RU-SCRIPT-R-01, RU-SCRIPT-V-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C01-privet]
 ---
 
 # в and р — writing the two great false friends
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PRIVET] -->
 
 [PAUSE 2s] You *read* these two in *привет*. Now you'll **write** them. **в** and
 **р** are the letters that fool every beginner — they wear Latin faces (*B* and
 *P*) but say *v* and *r*. Forming them by hand is the fastest way to stop your
 eye from lying to you.
 
-## Why they fool you
+## Why it's said this way — why they fool you
+<!-- hl-knowledge: introduces=[RU-SCRIPT-V-01, RU-SCRIPT-R-01]; assesses=[RU-LEX-PRIVET] -->
 
 Both came from **Greek**, not Latin, so the shape and the sound drifted apart:
 
-- **в** is Greek **beta** (β) — beta made the "v" sound in later Greek, and
+- **в** is Greek **beta** — beta made the "v" sound in later Greek, and
   Cyrillic kept it. It looks like Latin *B*; it says **v**.
-- **р** is Greek **rho** (ρ) — always an "r." It looks like Latin *P*; it says a
+- **р** is Greek **rho** — always an "r." It looks like Latin *P*; it says a
   rolled **r**.
 
-## Break it apart, then write it
+## Writing — break it apart, then write it
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01, RU-SCRIPT-R-01] -->
 
 **в** ("v") — *a vertical, then two stacked bowls*:
 
@@ -51,6 +69,7 @@ Two bellies stacked on a spine — that's what tells **в** apart from Latin *B*
 So **р** is drawn like a Latin lowercase *p*, tail and all — but it is an **r**.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01, RU-SCRIPT-R-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: trace в — "vertical, upper bowl, lower bowl" — and say its sound, "v"]
@@ -58,6 +77,7 @@ So **р** is drawn like a Latin lowercase *p*, tail and all — but it is an **r
 - [YOU WRITE: *привет* slowly, pausing on the в and the р]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01, RU-SCRIPT-R-01] -->
 
 [PAUSE 3s] Draw **в** from its three strokes — what sound? ("v"; a vertical + two
 stacked bowls.) Draw **р** — what sound, and which Greek letter? ("r"; Greek

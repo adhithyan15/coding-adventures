@@ -4,6 +4,29 @@ All notable changes to this package are documented here.
 Follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- `PaintInstruction` gains five new permitted subtypes, bringing the sealed
+  hierarchy up to the set the new `paint-vm-ascii` backend needs to
+  implement the full `P2D02-paint-vm-ascii.md` contract:
+  - `PaintLine` — a stroked line segment.
+  - `PaintGlyphRun` — pre-positioned glyphs (`PaintGlyphPlacement`), plus
+    the new `PaintGlyphPlacement` data class itself.
+  - `PaintGroup` — a child list with an optional `Transform2D` and opacity.
+  - `PaintClip` — a rectangular clip region wrapping a child list.
+  - `PaintLayer` — a child list with a filter flag, blend mode, opacity,
+    and transform.
+- `PaintRect` gains `stroke`/`strokeWidth` fields with default values
+  (`""`/`0.0`), so every existing call site keeps working unchanged.
+- New `Transform2D` data class (six-value affine transform, Canvas/SVG
+  convention) with an `IDENTITY` constant and `isIdentity()`.
+- New builder helpers: `paintLine`, `paintGlyphRun`, `paintGroup`,
+  `paintClip`, `paintLayer`.
+- This package is now consumed by the Kotlin `cowsay` port (see
+  `code/specs/cowsay-paintvm-pipeline.md`).
+
 ## [0.1.0] — 2026-04-24
 
 ### Added

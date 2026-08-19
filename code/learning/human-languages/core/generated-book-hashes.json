@@ -350,6 +350,76 @@
     },
     {
       "language": "bengali",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:9234aa6ecbf0d14b",
+      "lessonIds": [
+        "BN-C01-nomoshkar",
+        "BN-C01-dhonnobad",
+        "BN-C01-hyan-na",
+        "BN-C01-achchha",
+        "BN-C01-ashi",
+        "BN-C01-practice"
+      ],
+      "tex": "bengali/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:f24593ebe1c98778",
+      "lessonIds": [
+        "BN-C02-naam",
+        "BN-C02-amar",
+        "BN-C02-amar-naam",
+        "BN-C02-alaap",
+        "BN-C02-ki",
+        "BN-C02-tumi-apni",
+        "BN-C02-tomar-naam-ki",
+        "BN-C02-practice"
+      ],
+      "tex": "bengali/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:5a20f87379c8ea8e",
+      "lessonIds": [
+        "BN-C03-ami",
+        "BN-C03-kemon",
+        "BN-C03-tumi-kemon-achho",
+        "BN-C03-bhalo",
+        "BN-C03-kono-bepar-na",
+        "BN-C03-practice"
+      ],
+      "tex": "bengali/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:33fee036d310eac5",
+      "lessonIds": [
+        "BN-C04-abar",
+        "BN-C04-dekha-hobe",
+        "BN-C04-abar-dekha-hobe",
+        "BN-C04-kal-dekha-hobe",
+        "BN-C04-practice"
+      ],
+      "tex": "bengali/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:2d84707b81a775fc",
+      "lessonIds": [
+        "BN-C05-bola",
+        "BN-C05-ami-bangla-boli",
+        "BN-C05-kaj-kora",
+        "BN-C05-thaka",
+        "BN-C05-practice"
+      ],
+      "tex": "bengali/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:04fde9b62723721f",
       "lessonIds": [
@@ -602,6 +672,42 @@
       "tex": "chinese/book/chapters/ch08-mingzi.tex"
     },
     {
+      "language": "chinese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:44bcdc857065ad05",
+      "lessonIds": [
+        "ZH-W09-shen",
+        "ZH-W09-me",
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ],
+      "tex": "chinese/book/chapters/ch09-shenme.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:35e11539b70daa41",
+      "lessonIds": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "tex": "chinese/book/chapters/ch10-xiexie.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:efeb50daae8dbbb0",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "tex": "chinese/book/chapters/ch11-qing.tex"
+    },
+    {
       "language": "french",
       "chapter": 17,
       "sourceHash": "fnv1a64:e82573b5bfc33017",
@@ -778,6 +884,18 @@
         "FR-C32-quel"
       ],
       "tex": "french/book/chapters/ch32-questions.tex"
+    },
+    {
+      "language": "french",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:35ea0518c5abb30c",
+      "lessonIds": [
+        "FR-C33-vouloir",
+        "FR-C33-pouvoir",
+        "FR-C33-devoir",
+        "FR-C33-practice"
+      ],
+      "tex": "french/book/chapters/ch33-modaux.tex"
     },
     {
       "language": "german",
@@ -1040,6 +1158,91 @@
         "GU-W01-namaste-read"
       ],
       "tex": "gujarati/book/chapters/ch13-script-first.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:f4b2337360cb276c",
+      "lessonIds": [
+        "HI-C01-namaste",
+        "HI-C01-namaskar",
+        "HI-C01-dhanyavad",
+        "HI-C01-shukriya",
+        "HI-C01-alvida",
+        "HI-W01-shirorekha-na-ma",
+        "HI-W01-na-ma",
+        "HI-W02-abugida-ka-ta",
+        "HI-W02-ka-ta-mouth-order",
+        "HI-C01-practice"
+      ],
+      "tex": "hindi/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:c1a07f2bc049fd1f",
+      "lessonIds": [
+        "HI-C02-naam",
+        "HI-C02-meraa",
+        "HI-C02-hai",
+        "HI-C02-mera-naam-hai",
+        "HI-C02-aap-tum",
+        "HI-C02-kya",
+        "HI-C02-aapka-naam-kya-hai",
+        "HI-C02-khushi",
+        "HI-W03-matras-naam",
+        "HI-W03-preposed-i",
+        "HI-W04-ra-sa-mera-naam",
+        "HI-W04-write-mera-naam",
+        "HI-W05-virama-namaste",
+        "HI-W05-conjuncts",
+        "HI-W05-write-namaste",
+        "HI-C02-practice"
+      ],
+      "tex": "hindi/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:3c51e95aa7bf0ce2",
+      "lessonIds": [
+        "HI-C03-kaise",
+        "HI-C03-aap-kaise-hain",
+        "HI-C03-main",
+        "HI-C03-hun",
+        "HI-C03-thik",
+        "HI-C03-aapka-swagat-hai",
+        "HI-C03-practice"
+      ],
+      "tex": "hindi/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:27623451b14bac16",
+      "lessonIds": [
+        "HI-C04-phir",
+        "HI-C04-milenge",
+        "HI-C04-phir-milenge",
+        "HI-C04-kal-milte-hain",
+        "HI-C04-chalta-hun",
+        "HI-C04-practice"
+      ],
+      "tex": "hindi/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:0dea8590c0d94d96",
+      "lessonIds": [
+        "HI-C05-bolna",
+        "HI-C05-rahna",
+        "HI-C05-karna",
+        "HI-C05-bolta-hun",
+        "HI-C05-main-hindi-bolta-hun",
+        "HI-C05-practice"
+      ],
+      "tex": "hindi/book/chapters/ch05-first-verbs.tex"
     },
     {
       "language": "hindi",
@@ -2692,6 +2895,20 @@
     },
     {
       "language": "latin",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:fc742a0558a5aef5",
+      "lessonIds": [
+        "LA-C01-salve",
+        "LA-C01-ave",
+        "LA-C01-vale",
+        "LA-C01-gratias",
+        "LA-C01-ita-non",
+        "LA-C01-practice"
+      ],
+      "tex": "latin/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:e487ced01dcb7f2f",
       "lessonIds": [
@@ -3887,6 +4104,15 @@
     },
     {
       "language": "persian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:497f80f61dd5767f",
+      "lessonIds": [
+        "FA-C02-esm-e-man"
+      ],
+      "tex": "persian/book/chapters/ch02-give-your-name.tex"
+    },
+    {
+      "language": "persian",
       "chapter": 3,
       "sourceHash": "fnv1a64:83038f638b3ba424",
       "lessonIds": [
@@ -4451,6 +4677,44 @@
         "PA-W01-namaste-read"
       ],
       "tex": "punjabi/book/chapters/ch14-script-first.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:dc92887cccce9ba4",
+      "lessonIds": [
+        "RU-C01-privet",
+        "RU-C01-zdravstvuyte",
+        "RU-C01-da",
+        "RU-C01-net",
+        "RU-C01-spasibo",
+        "RU-C01-pozhaluysta",
+        "RU-C01-practice",
+        "RU-W01-false-friends-v-r",
+        "RU-W02-false-friends-s-n",
+        "RU-W03-new-shapes-b-d",
+        "RU-W04-privet-letters-p-i",
+        "RU-W05-privet-letters-e-t"
+      ],
+      "tex": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:96db0b007be2e9be",
+      "lessonIds": [
+        "RU-C02-ya",
+        "RU-C02-ty-vy",
+        "RU-C02-vy-formality",
+        "RU-C02-menya-zovut",
+        "RU-C02-kak-vas-zovut",
+        "RU-C02-kak-cross-language",
+        "RU-C02-ochen-priyatno",
+        "RU-C02-practice",
+        "RU-C02-practice-cases",
+        "RU-C02-practice-zero-copula"
+      ],
+      "tex": "russian/book/chapters/ch02-introducing-yourself.tex"
     },
     {
       "language": "russian",
@@ -9366,6 +9630,15 @@
         "TE-C66-harvest"
       ],
       "tex": "telugu/book/chapters/ch66-the-field.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:cfca1c3146b05ede",
+      "lessonIds": [
+        "UR-C02-mera-naam"
+      ],
+      "tex": "urdu/book/chapters/ch02-give-your-name.tex"
     },
     {
       "language": "urdu",

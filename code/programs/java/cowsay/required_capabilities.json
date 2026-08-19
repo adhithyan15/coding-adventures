@@ -1,0 +1,14 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "java/cowsay",
+  "capabilities": [
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "code/specs/**",
+      "justification": "Loads the CLI spec (code/specs/cowsay.json) via CliBuilder and cow-art templates from code/specs/cows/*.cow at startup."
+    }
+  ],
+  "justification": "Reads its CLI spec and cow-art templates from the repository's code/specs directory. No network, process, or environment-variable access."
+}

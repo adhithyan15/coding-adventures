@@ -1,6 +1,8 @@
 ---
+schema_version: 2
 id: HI-C05-karna
-sequence: 430
+sequence: 420
+spine_node: SPINE-SAY-WHAT-I-DO
 chapter: 5
 type: word
 headword: करना
@@ -9,23 +11,38 @@ concept_tag: VERB-DO-MAKE
 prerequisites: [HI-C05-bolna]
 sounds: [matra-a]
 roots: [kr-do]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [HI-CONCEPT-C05-BOLNA-01]
+introduces:
+  knowledge: [HI-CONCEPT-C05-KARNA-01]
+practises:
+  knowledge: [HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-KARNA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-hindi
 reviews_of: [HI-C05-bolna, HI-C05-rahna]
 ---
 
 # करना (karnā) — "to do," the most useful verb in Hindi
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01] -->
 
 [PAUSE 2s] One verb powers a thousand phrases — and its root already sits inside
 a word you learned back in Chapter 1.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[HI-CONCEPT-C05-KARNA-01]; assesses=[HI-CONCEPT-C05-BOLNA-01] -->
 
 **क** (*ka*) + **र** (*ra*) + **ना** (*nā*) → **करना** (*karnā*). Simple letters,
 enormous reach.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-KARNA-01] -->
 
 **करना** (*karnā*, "to do, to make") is from Sanskrit **√कृ** (*√kṛ*, "to do,
 make") — one of the most productive roots in all of Sanskrit, and from
@@ -40,6 +57,7 @@ So *karnā* is the everyday face of the root behind *karma*, *namaskār*, and th
 name *Sanskrit* itself.
 
 ## Grammar Lens: करना makes verbs out of anything
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-KARNA-01] -->
 
 Hindi builds countless verbs as **noun + करना**:
 
@@ -57,6 +75,7 @@ unlock a whole grammar of "do-verbs."
 करना.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-KARNA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "karnā"]
@@ -64,6 +83,7 @@ unlock a whole grammar of "do-verbs."
 - [YOU SAY: the Chapter 1 word that shares its root (*namaskār* — the "making" of a bow)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[HI-CONCEPT-C05-BOLNA-01, HI-CONCEPT-C05-KARNA-01] -->
 
 [PAUSE 3s] What Sanskrit root is *karnā* from, and name two words
 built on it. (*√kṛ* "to do"; any two of *karma*, *namaskār*, *Sanskrit*.)

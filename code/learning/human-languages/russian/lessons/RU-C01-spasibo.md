@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C01-spasibo
+spine_node: SPINE-COURTESY-THANK
+sequence: 25
 chapter: 1
 type: word
 headword: спасибо
@@ -10,18 +13,38 @@ prerequisites: [RU-C01-privet]
 sounds: [cyrillic-false-friends, b-vs-v, o-reduction]
 roots: [spasti, bog]
 etymology_hook: "спасибо ← спаси Бог 'God save [you]' — like adiós (a Dios), goodbye (God be with ye)"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-PRIVET]
+introduces:
+  knowledge: [RU-LEX-SPASIBO]
+practises:
+  knowledge: [RU-LEX-PRIVET, RU-LEX-SPASIBO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C01-privet, RU-C01-zdravstvuyte]
 ---
 
 # спасибо (spasíbo) — "God save you," now just "thanks"
 
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PRIVET] -->
+
+[PAUSE 2s] You can greet someone. Now thank them — and this word has a whole
+sentence folded inside it.
+
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[RU-LEX-SPASIBO]; assesses=[RU-LEX-PRIVET] -->
 
 - **[привет](./RU-C01-privet.md)** for с=s (false friend), and to contrast
   **б** (b) with the **в** (v) you met there.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 *(Skim if you read Cyrillic.)* Six letters: **с · п · а · с · и · б · о**.
 
@@ -38,6 +61,7 @@ natives say *"spa-SEE-ba."* Unstressed Russian *о* almost always softens to an
 > **спасибо** = **spasíbo** ("spa-SEE-ba")
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 **спасибо** is a **frozen prayer**. It is a worn-down contraction of
 **спаси Бог** (*spasí Bog*) — **"God save [you]"**:
@@ -48,17 +72,12 @@ natives say *"spa-SEE-ba."* Unstressed Russian *о* almost always softens to an
 Over centuries *спаси Бог* fused and shed its final consonant into today's
 *спасибо*. You are, etymologically, blessing whoever helped you.
 
-This is a pattern you can now spot across languages — everyday courtesy words
-that are fossilised blessings:
+Courtesy words are often fossilised blessings — Spanish **adiós** is *a Dios*,
+English **goodbye** is *God be with ye*. *спасибо* belongs to that family: a
+little "God save you," said so often the prayer wore invisible.
 
-- Spanish **adiós** = *a Dios*, "to God."
-- English **goodbye** = *God be with ye.*
-- English **bless you** after a sneeze.
-
-*спасибо* belongs to that family: a little "God save you," said so often the
-prayer wore invisible.
-
-## Across the family — thanks, and where it comes from
+## The word, taken apart — across the family: thanks, and where it comes from
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 - Russian **спасибо** — **"God save you."**
 - Spanish **gracias** — Latin *gratia*, "grace."
@@ -70,6 +89,7 @@ Every culture built "thanks" from a different metaphor — grace, reward, mindfu
 thought — and Russian built it from a **blessing**.
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 Because it began as *спаси Бог*, older or very devout speakers sometimes still
 feel the "God" in it; a few religious communities prefer **благодарю**
@@ -78,6 +98,7 @@ everyday modern Russian, *спасибо* is simply **the** word for thanks, its
 long dissolved.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 [PAUSE 1s]
 - [YOU SAY: "spa-SEE-ba" — reduce that first о to an *a*]
@@ -85,6 +106,7 @@ long dissolved.
 - [YOU SAY: "спасибо" — and recall the hidden *спаси Бог*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
 
 [PAUSE 3s] Read **спасибо**. What two words is it worn down from, and what do
 they mean? (*спаси Бог* — "God save [you].") Which other courtesy words are

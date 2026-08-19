@@ -1,5 +1,134 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — reject CSS units XAML cannot parse
+
+The length path stripped `px` and rejected `%`, but every other CSS unit fell
+straight through into the emitted attribute. The generated TaskApp shipped
+
+    <StackPanel Orientation="Horizontal" MinHeight="100vh">
+
+`vh` is a CSS viewport unit; WinUI lengths are `Double`, so that value is
+unparseable. It was silent at build time.
+
+Two changes:
+
+- `100vh` / `100vw` on a size setter now lower to `VerticalAlignment="Stretch"`
+  / `HorizontalAlignment="Stretch"`. In a desktop app the window is the
+  viewport, so "fill the viewport" and "fill the parent" coincide.
+- Any other unparseable unit (`em`, `rem`, `ch`, `pt`, fractional `vh`) is
+  refused rather than emitted, so an element is sized by its parent instead of
+  carrying an attribute the runtime cannot read.
+
+**This does not fix the app's layout.** Verified by screenshot before and
+after: identical. XAML was evidently already discarding the bad value, so
+removing it changed nothing visible. It is a correctness fix — no invalid
+attribute in generated output — not the fix for the window-filling symptom,
+which remains open.
+
+## [Unreleased] — width/height 100% become stretch alignments
+
+`width: 100%` is a *sizing* property in CSS but an *alignment* in XAML: WinUI's
+`Width` is an absolute `Double` with no percentage form, and the way an element
+fills its parent's cross axis is `HorizontalAlignment="Stretch"`.
+
+Value translation alone could not express that, so the property was dropped
+outright and the element fell back to sizing itself to its content.
+
+Deliberately narrow: only `100%` maps this cleanly. Other percentages need
+proportional (star) sizing, which is a `Grid` change of a different magnitude —
+those still drop rather than being approximated.
+
+In the generated TaskApp this turns 0 stretch alignments into 14. Visible
+effect is real but modest — the project rail rows now fill their column instead
+of collapsing to a sliver. It does **not** fix the app hugging the top-left of
+an empty window; that needs the flex→Grid lowering.
+
+## [Unreleased] — HostButton labels from row expressions
+
+A `HostButton` whose `label` is a row expression emitted **no `Content`
+attribute at all**, so the button rendered blank.
+
+The `label` match handled `SlotRef`, `String` and `Keyword`; `label: ( row[1] )`
+parses as `LayoutPropValue::Expr`, which had no arm, and the trailing `_ => {}`
+swallowed it silently. Adding the `Expr` arm routes it through
+`lower_expr_for_xbind` — the same helper the `Text` lowering already used
+successfully two elements away inside the same template.
+
+This was not a binding-mode problem. There was no attribute for a mode to
+apply to.
+
+**Scope.** Every `HostButton` inside a `For`. In the generated TaskApp that
+meant the task name, the completion toggle, every project-rail row and every
+notes row rendered as empty buttons. It read as a styling gap for weeks
+because an empty button is invisible rather than obviously broken.
+
+Verified live: the UI Automation tree went from listing only `Delete` for a
+task row to listing `[○]`, `[Ship the XAML fix]` and `[Delete]`, and the
+project rail from a blank row to `[Inbox]`.
+
+`host_button_with_row_expression_label_emits_content` guards it, asserting
+both that the binding is emitted and — more generally — that no emitted
+`<Button>` lacks `Content`.
+
+## [Unreleased] — every x:Bind declares its mode
+
+`x:Bind` defaults to **OneTime** in WinUI, and each emission site chose its
+binding mode by hand, so coverage drifted. In the generated TaskApp that left
+118 of 153 bindings frozen after first render: every event reached the Rust
+engine and the engine computed correctly, but none of it reached the screen.
+
+A previous change fixed `Text=` and `AutomationProperties.Name=`. Every
+remaining site now emits `Mode=OneWay`:
+
+- **`Visibility=`** on the `If` lowering — the one that mattered most, since it
+  pinned every conditional surface to its first-render value and made view
+  switching a no-op
+- `Content=` (7 sites, including the two literal `Content="{x:Bind Index}"`
+  forms), `Source=`, `Glyph=`, `IsReadOnly=`, `GroupName=`, `NavigateUri=`,
+  `ToolTipService.ToolTip=`
+- the UI31 table cell/header attributes (`Row=`, `Column=`, `Header=`,
+  `Value=`, `AutomationProperties.Name=`)
+- the GROUP C `Width=` injection, whose own doc comment already claimed a mode
+  it did not emit
+- `ItemsRepeater.ItemsSource`, where the mode was conditional on there being a
+  projection property — so a repeater bound directly to a slot got the
+  OneTime default and never re-rendered when its list changed
+
+### The guard
+
+`every_xbind_emission_site_declares_its_mode` scans **this file's own source**
+and fails on any emission site whose `x:Bind` carries no `Mode`, naming each
+offender by line.
+
+Scanning source rather than emitted output is deliberate, and was learned the
+hard way. The first version of this test compiled a fixture and scanned the
+resulting XAML — but a fixture only reaches the sites it happens to exercise.
+It used a `Text` and an `If`, both already correct, so it passed while roughly
+twenty sites were still emitting mode-less bindings. A fixture-based test would
+also have gone stale the moment someone added a site it did not cover, which is
+exactly how the original defect arose.
+
+It handles both emission forms — the doubled-brace `format!` form and the
+literal single-brace form used by `inject_attr_into_first_element` — and
+brace-matches rather than stopping at the first `}}`, so a binding carrying a
+nested `Converter={StaticResource …}` parses correctly. It scans only up to
+`#[cfg(test)]`, since tests legitimately pass mode-less bindings as *input*.
+
+Verified by regression: reverting a single site to the mode-less form makes the
+test fail and name that binding.
+
+## The actual deliverable
+
+`every_emitted_xbind_declares_its_mode` scans emitted XAML and fails on any
+`{x:Bind …}` without an explicit `Mode`, naming the offenders. It brace-matches
+rather than scanning to the first `}`, so a binding carrying a nested
+`Converter={StaticResource …}` is parsed correctly.
+
+Verified by regression: reverting a single site to the mode-less form makes the
+test fail and name that binding. Without that check the test would be
+decoration — a per-site fix list goes stale the moment a new emission site is
+added, which is exactly how this defect arose.
+
 ## [Unreleased] — accessible HostSlider names
 
 Literal and slot-backed `HostSlider.a11y-label` values now lower to

@@ -1,0 +1,124 @@
+{
+  "issue": 1611,
+  "spec": "code/specs/cowsay-paintvm-pipeline.md",
+  "reference_impl": "code/programs/go/cowsay/main.go",
+  "pilot_pr": {
+    "number": 12031,
+    "status": "merged",
+    "language": "csharp",
+    "note": "First paint-vm-ascii consumer; established the PaintGlyphRun-per-line pattern and the CliBuilder argv[0] convention gotcha (see lessons.md, 'C#' section)."
+  },
+  "known_gotchas": [
+    "CliBuilder.Parser expects argv[0] to be a program name (C/Go convention); language's real args must be prepended with a placeholder, not passed raw.",
+    "LoadCow-equivalent file-path building from a user-supplied cowfile flag needs path-traversal / rooted-path-override protection (see cowsay.cs LoadCow for the pattern: GetFileName-only + reject rooted + verify containment).",
+    "paint-vm-ascii's glyph_run treats glyph_id as a literal Unicode code point (ASCII-backend-specific relaxation), not a font-internal glyph index -- see spec section 3.1.",
+    "Output must be verified byte-identical against an existing port (e.g. Go) for several flag combos, modulo paint-vm-ascii's spec-mandated trailing-blank-line trimming.",
+    "Gradle (java/kotlin): must redirect build output away from build/ (collides with BUILD file on case-insensitive filesystems) -- see lessons.md Gradle entries.",
+    "Swift on Windows needs the winget toolchain + vcvars setup -- see memory 'Swift on Windows setup'.",
+    "Lua rockspecs must pin immutable refs (tag/SHA), not moving branch tips -- see lessons.md Lua section.",
+    "build-tool's requiresExplicitPrereqs list (validator.go) is currently {python, typescript, perl} -- haskell is NOT in it, so cabal.project is the source of truth there (must list every transitive local package per lessons.md's Haskell section). For languages that ARE in the list, BUILD must textually reference every transitive local prerequisite's path (e.g. -I../../../packages/<lang>/<dep>/lib) -- use lib/import statements inside source files are invisible to the validator. Verify locally by building code/programs/go/build-tool and running -validate-build-files -detect-languages before pushing any language's cowsay PR; costly to discover only from a CI failure. See lessons.md 'Perl' section for the full writeup."
+  ],
+  "backlog": [
+    {
+      "id": "doc-fix-swift-row",
+      "title": "Fix swift's paint-instructions status in cowsay-paintvm-pipeline.md (missed in PR #12031 due to a merge race)",
+      "depends_on": [],
+      "status": "folded-into-fsharp-cowsay",
+      "priority": 1,
+      "notes": "Folded into the fsharp-cowsay branch/PR as its first commit."
+    },
+    {
+      "id": "fsharp-cowsay",
+      "title": "F# cowsay via existing paint-vm-ascii",
+      "depends_on": [],
+      "status": "merged",
+      "pr_number": 12040,
+      "priority": 2,
+      "backend_work": "none -- fsharp/paint-vm-ascii already implements glyph_run",
+      "notes": "Merged clean (verified origin/main contains all files + the swift-row doc fix, no race this time)."
+    },
+    {
+      "id": "perl-cowsay",
+      "title": "Perl cowsay: add glyph_run to paint-vm-ascii, then cowsay",
+      "depends_on": [],
+      "status": "merged",
+      "pr_number": 12043,
+      "priority": 3,
+      "backend_work": "add glyph_run instruction handling to perl/paint-vm-ascii (currently rect-only) -- delivered the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer), not just glyph_run",
+      "notes": "Also fixed a spec-divergence bug in the pre-existing rect handler (undefined fill defaulted to black instead of no-fill), and a real CI validator failure (BUILD needed explicit -I refs to sibling packages -- see known_gotchas). Merged clean, verified on origin/main."
+    },
+    {
+      "id": "haskell-cowsay",
+      "title": "Haskell cowsay: add glyph_run to paint-vm-ascii, then cowsay",
+      "depends_on": [],
+      "status": "merged",
+      "pr_number": 12074,
+      "merge_commit": "89afea0efa",
+      "priority": 4,
+      "backend_work": "delivered the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer) to haskell/paint-vm-ascii, not just glyph_run -- same scope as perl-cowsay",
+      "notes": "Found and fixed a real undefined-thunk bug in barcode-layout-1d (constructed PaintRect directly instead of via makeRect, missed by the initial grep-based consumer sweep -- only caught by actually running barcode-1d's test suite). Went through 5 rounds of /security-review; fixed unvalidated line/clip geometry, a product-only scene-size-cap bypass (zero-width/height scene), and an unsaturated Double->Int cell-coordinate conversion that could hit Int's minBound and defeat downstream clip clamping via integer wraparound (see lessons.md Haskell section, the \"finite is not safely convertible to Int\" lesson). Verified byte-identical to merged Perl port. Merged clean -- verified merge commit 89afea0efa on origin/main contains all security fixes (no stale-HEAD race)."
+    },
+    {
+      "id": "java-cowsay",
+      "title": "Java cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "merged",
+      "pr_number": 12079,
+      "merge_commit": "37384f3d4e",
+      "priority": 5,
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended java/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive constructor overloads)",
+      "notes": "Applied every hardening lesson learned from haskell-cowsay's 5 review rounds from the start (geometry validation incl. sum-to-infinity, per-axis+total scene caps, saturating coordinate conversion, glyph safety filter incl. Java-specific surrogate-pair rejection). One /security-review round still found and fixed an uncaught IOException in Main leaking a raw stack trace. Verified byte-identical to merged Perl port. Merged clean -- verified merge commit 37384f3d4e on origin/main contains all 32 files including the IOException fix."
+    },
+    {
+      "id": "kotlin-cowsay",
+      "title": "Kotlin cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "merged",
+      "pr_number": 12084,
+      "merge_commit": "cc0ec7e0e3",
+      "priority": 6,
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended kotlin/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive default-valued constructor params)",
+      "notes": "Built by directly translating the already-reviewed Java paint-vm-ascii design into Kotlin idioms, carrying every hardening lesson forward from the start. /security-review of the translation found one JVM-Stream-API-specific gap (Files.list()'s UncheckedIOException not caught alongside IOException) and fixed it. Verified byte-identical to merged Perl port. Merged clean -- verified merge commit cc0ec7e0e3 on origin/main contains all 26 files including the UncheckedIOException fix."
+    },
+    {
+      "id": "dart-cowsay",
+      "title": "Dart cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pr-open",
+      "pr_number": 12091,
+      "priority": 7,
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended dart/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive named-optional constructor params)",
+      "notes": "Found and fixed a real Bresenham line-drawing infinite-loop bug (error seeded to 0 instead of deltaCol - deltaRow) -- same bug verbatim in the already-merged haskell/java/kotlin paint-vm-ascii ports, logged in discovered_work rather than expanding this PR's scope. /security-review (2 rounds) found and fixed an unbounded PaintGroup/PaintClip/PaintLayer recursion depth (added a 64-level cap, new SceneTooDeep error) and an uncaught FormatException on malformed stdin UTF-8. Verified byte-identical to merged Perl port."
+    },
+    {
+      "id": "swift-cowsay",
+      "title": "Swift cowsay: build paint-vm-ascii backend from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 8,
+      "backend_work": "new PaintVmAscii package implementing full P2D02 contract (swift already has PaintInstructions)"
+    },
+    {
+      "id": "lua-cowsay",
+      "title": "Lua cowsay: build paint-instructions AND paint-vm-ascii from scratch, then cowsay",
+      "depends_on": [],
+      "status": "pending",
+      "priority": 9,
+      "backend_work": "new paint-instructions package + new paint-vm-ascii package implementing full P2D02 contract",
+      "notes": "Most work of the 8 remaining items -- neither prerequisite package exists yet. Prior attempt at Lua cowsay (PR #1535, closed) was destructive; must be additive-only."
+    }
+  ],
+  "discovered_work": [
+    {
+      "id": "bresenham-zero-error-hang",
+      "title": "paint-vm-ascii's diagonal-line Bresenham loop can hang forever for some slopes",
+      "found_during": "dart-cowsay (building paint-vm-ascii from scratch)",
+      "severity": "high -- infinite loop / hang, not a crash, so it can't even be caught by a try/catch; a DoS if any caller feeds attacker-controlled line coordinates",
+      "details": "renderLine's Bresenham loop seeds `error = 0` instead of the standard `error = deltaCol - deltaRow`. With error=0, for some (deltaRow, deltaCol) ratios (verified: deltaRow=1, deltaCol=3, e.g. a line from (0,0) to a clip-clamped target (row=1, col=3)) the `row` cursor overshoots `r2` and never returns to it, so the loop's `row == r2 && col == c2` break condition never becomes true again -- infinite loop. Confirmed by direct simulation (not just the Dart translation): the exact same `error = 0` initialization is present verbatim in code/packages/kotlin/paint-vm-ascii/src/main/kotlin/com/codingadventures/paintvmascii/PaintVmAscii.kt's renderLine, and (by inspection, same authorship pattern) very likely code/packages/java/paint-vm-ascii and code/packages/haskell/paint-vm-ascii's line-drawing too -- all three are already merged to main. Fixed in the new Dart port (this PR) by seeding `error = deltaCol - deltaRow` instead; verified against several slopes (steep, shallow, 45-degree, reversed direction) all converge correctly with the fix.",
+      "note": "None of the merged cowsay ports currently call PaintLine (cowsay only emits PaintGlyphRun, and PaintRect for nothing that reaches this path), so this bug is dormant in production cowsay usage today -- but it's a real hang vector in a shared, already-merged package's public contract (P2D02 paint-vm-ascii) for any other/future consumer. Needs a fix PR (or three) against haskell/java/kotlin's paint-vm-ascii, or one GitHub issue tracking all three -- deliberately NOT expanding scope to fix them from inside dart-cowsay.",
+      "status": "open",
+      "next_action": "before starting swift-cowsay or lua-cowsay (both need a fresh paint-vm-ascii built from scratch), build the line-drawing loop with `error = deltaCol - deltaRow` from the start rather than repeating the bug a fourth/fifth time; also open a GitHub issue (or issues) for the haskell/java/kotlin fix, since 'use GitHub issues liberally' is standing guidance for incidentally-found bugs"
+    }
+  ],
+  "last_updated_by": "autonomous loop, issue #1611"
+}

@@ -24,9 +24,15 @@ MaxiCode    ─┘                  ──→  Canvas backend
 | Type | Description |
 |------|-------------|
 | `PaintScene` | Canvas dimensions + background colour + ordered instruction list |
-| `PaintInstruction.PaintRect` | Filled axis-aligned rectangle |
+| `PaintInstruction.PaintRect` | Rectangle (fill and/or stroke) |
 | `PaintInstruction.PaintPath` | Filled closed polygon (for hex modules) |
+| `PaintInstruction.PaintLine` | Stroked line segment |
+| `PaintInstruction.PaintGlyphRun` | Pre-positioned glyphs (`PaintGlyphPlacement`) |
+| `PaintInstruction.PaintGroup` | Child list with optional transform/opacity |
+| `PaintInstruction.PaintClip` | Rectangular clip region wrapping a child list |
+| `PaintInstruction.PaintLayer` | Child list with filter flag, blend mode, opacity, transform |
 | `PathCommand` | `MoveTo`, `LineTo`, `ClosePath` drawing commands |
+| `Transform2D` | Six-value affine transform (`PaintGroup`/`PaintLayer`) |
 | `PaintColorRGBA8` | 32-bit RGBA colour |
 | `Metadata` | `Map<String, String>` annotation bag |
 

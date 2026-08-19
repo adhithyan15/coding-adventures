@@ -1397,6 +1397,24 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
             Some(k) => k,
             None => continue,
         };
+
+        // `width: 100%` / `height: 100%` express "fill the cross axis", and
+        // XAML says that with an alignment, not a length. Translating the
+        // value alone cannot do this — WinUI's Width/Height are absolute
+        // Doubles — so the percentage was previously dropped entirely and the
+        // element fell back to sizing itself to its content. That is a large
+        // part of why generated apps hug the top-left of an otherwise empty
+        // window instead of filling it.
+        //
+        // Only 100% maps this cleanly. Any other percentage needs
+        // proportional sizing (a Grid with star columns), which is a
+        // different and much larger change — those keep being dropped rather
+        // than guessed at.
+        if let Some(alignment_key) = stretch_alignment_for(&key, &p.value) {
+            upsert_style_attr(&mut parts, alignment_key.to_string(), "Stretch".to_string());
+            continue;
+        }
+
         // X5: translate the *value* into the form the WinUI 3 markup
         // compiler accepts. `translate_xaml_value` may return `None`
         // when the whole property must be dropped (e.g. a percentage
@@ -1468,6 +1486,57 @@ fn edge_thickness(edge: &str, value: &str) -> String {
     }
 }
 
+/// Map a full-width/full-height declaration onto the XAML alignment that
+/// expresses it, or `None` when this is not that case.
+///
+/// `width: 100%` is a *sizing* property in CSS but an *alignment* in XAML:
+/// WinUI's `Width` is an absolute `Double` with no percentage form, and the
+/// way an element fills its parent's cross axis is
+/// `HorizontalAlignment="Stretch"`.
+///
+/// Deliberately narrow. Percentages other than 100% need proportional
+/// sizing — a `Grid` with star columns — which is a much larger change;
+/// those still drop rather than being approximated.
+fn stretch_alignment_for(key: &str, value: &str) -> Option<&'static str> {
+    let v = value.trim();
+    match (key, v) {
+        // Percentage of the parent.
+        ("Width", "100%") => Some("HorizontalAlignment"),
+        ("Height", "100%") => Some("VerticalAlignment"),
+
+        // Viewport units. `min-height: 100vh` is how a web shell says "fill
+        // the window", and it was reaching XAML verbatim as
+        // `MinHeight="100vh"` — not a Double, so the shell never got a
+        // height. In a desktop app the window IS the viewport, so filling it
+        // is the same stretch.
+        ("Height" | "MinHeight" | "MaxHeight", "100vh") => Some("VerticalAlignment"),
+        ("Width" | "MinWidth" | "MaxWidth", "100vw") => Some("HorizontalAlignment"),
+        _ => None,
+    }
+}
+
+/// Reject a length carrying a CSS unit XAML cannot parse.
+///
+/// The length path strips `px` and rejects `%`, but every other CSS unit fell
+/// straight through into the emitted attribute — `MinHeight="100vh"` shipped
+/// this way. WinUI lengths are `Double`, so such a value is not merely wrong,
+/// it is unparseable, and the failure is silent at build time.
+///
+/// Anything ending in an alphabetic suffix that is not `px` is refused here.
+/// Callers drop the property, which is the honest outcome: better an element
+/// sized by its parent than an attribute the runtime cannot read.
+fn has_unsupported_length_unit(value: &str) -> bool {
+    let v = value.trim();
+    let Some(first_alpha) = v.find(|c: char| c.is_ascii_alphabetic()) else {
+        return false;
+    };
+    // A leading-alpha value is a keyword (`Auto`, `Stretch`), not a length.
+    if first_alpha == 0 {
+        return false;
+    }
+    !v[first_alpha..].eq_ignore_ascii_case("px")
+}
+
 /// Translate a mosstyle CSS *value* into the form the WinUI 3 XAML
 /// markup compiler accepts for the given setter `key`. Returns `None`
 /// when the whole property must be dropped (e.g. a percentage width).
@@ -1514,6 +1583,13 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
         // Doubles. Drop the whole property; the layout container
         // (StackPanel / Grid `*`) sizes the element instead.
         if trimmed.ends_with('%') {
+            return None;
+        }
+        // Any other CSS unit (`vh`, `vw`, `em`, `rem`, `ch`, …) is equally
+        // unparseable as a Double, and previously fell straight through into
+        // the attribute. `MinHeight="100vh"` shipped that way, which is how
+        // the generated shell lost its full-window height.
+        if has_unsupported_length_unit(trimmed) {
             return None;
         }
         return Some(strip_px_units(trimmed));
@@ -2858,7 +2934,7 @@ fn emit_text(
             // the React backend's behaviour pre-PR-2).
             if ctx.lookup_for_binding(k).is_some() || ctx.lookup_for_index(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
-                format!(" Text=\"{{x:Bind {pascal}}}\"")
+                format!(" Text=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
             } else {
                 let escaped = escape_xaml_attr(k);
                 format!(" Text=\"{escaped}\"")
@@ -2915,7 +2991,7 @@ fn emit_image(
             if !is_safe_identifier(&property) {
                 return Err(PipelineEmitError::UnsafeSlotName(property));
             }
-            format!(" Source=\"{{x:Bind {}}}\"", ctx.slot_xbind_path(slot))
+            format!(" Source=\"{{x:Bind {}, Mode=OneWay}}\"", ctx.slot_xbind_path(slot))
         }
         Some(LayoutPropValue::String(s)) => format!(" Source=\"{}\"", escape_xaml_attr(s)),
         _ => String::new(),
@@ -2998,7 +3074,7 @@ fn emit_icon(
         Some(LayoutPropValue::String(s)) => format!(" Glyph=\"{}\"", escape_xaml_attr(s)),
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            format!(" Glyph=\"{{x:Bind {pascal}}}\"")
+            format!(" Glyph=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
         }
         _ => String::new(),
     };
@@ -4718,7 +4794,7 @@ fn emit_for(
     // into that opening tag so the column renders at the colgroup's
     // fixed pixel width regardless of cell content.
     if is_cell_loop {
-        body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width}\"");
+        body = inject_attr_into_first_element(&body, "Width=\"{x:Bind Width, Mode=OneWay}\"");
     }
 
     if !template_visual_state_groups.is_empty() {
@@ -4737,7 +4813,7 @@ fn emit_for(
     if let Some((role, _, _, entry_depth)) = native_table_entry {
         let wrapper = match role {
             NativeTableRole::Header if entry_depth == 0 => Some(format!(
-                "local:{}MosaicTableHeaderCell Column=\"{{x:Bind Index}}\" Header=\"{{x:Bind {element_property}}}\" AutomationProperties.Name=\"{{x:Bind {element_property}}}\"",
+                "local:{}MosaicTableHeaderCell Column=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{{x:Bind {element_property}, Mode=OneWay}}\" AutomationProperties.Name=\"{{x:Bind {element_property}, Mode=OneWay}}\"",
                 ctx.component_name
             )),
             NativeTableRole::Body if is_cell_loop => {
@@ -4748,7 +4824,7 @@ fn emit_for(
                     .map(kebab_to_pascal_case)
                     .unwrap_or_else(|| "Index".to_string());
                 Some(format!(
-                    "local:{}MosaicTableCell Row=\"{{x:Bind {row_index_property}}}\" Column=\"{{x:Bind Index}}\" Header=\"{{x:Bind MosaicTableHeader}}\" Value=\"{{x:Bind {element_property}}}\" AutomationProperties.Name=\"{{x:Bind MosaicTableName}}\"",
+                    "local:{}MosaicTableCell Row=\"{{x:Bind {row_index_property}, Mode=OneWay}}\" Column=\"{{x:Bind Index, Mode=OneWay}}\" Header=\"{{x:Bind MosaicTableHeader, Mode=OneWay}}\" Value=\"{{x:Bind {element_property}, Mode=OneWay}}\" AutomationProperties.Name=\"{{x:Bind MosaicTableName, Mode=OneWay}}\"",
                     ctx.component_name
                 ))
             }
@@ -4775,15 +4851,15 @@ fn emit_for(
     let pad3 = " ".repeat(indent + 8);
     let style = part_style_attr(node, part_styles);
     let items_source = projection_property.as_deref().unwrap_or(&items_path);
-    let binding_mode = if projection_property.is_some() {
-        ", Mode=OneWay"
-    } else {
-        ""
-    };
+    // Always OneWay. This was previously conditional on there being a
+    // projection property, which meant a repeater bound directly to a slot
+    // got the x:Bind default — OneTime — and so never re-rendered when the
+    // list changed. The distinction was never load-bearing: both forms read
+    // a collection that the host reassigns wholesale on every prop update.
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}{binding_mode}}}\"{style}>"
+        "{pad}<ItemsRepeater ItemsSource=\"{{x:Bind {items_source}, Mode=OneWay}}\"{style}>"
     )
     .unwrap();
     writeln!(out, "{pad2}<ItemsRepeater.ItemTemplate>").unwrap();
@@ -4959,7 +5035,7 @@ fn emit_if(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}}}\">"
+        "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, Mode=OneWay}}\">"
     )
     .unwrap();
     out.push_str(&then_body);
@@ -4973,7 +5049,7 @@ fn emit_if(
             emit_xaml_single_content_children(&else_node.children, indent + 4, part_styles, ctx)?;
         writeln!(
             out,
-            "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert}}\">"
+            "{pad}<ContentControl Visibility=\"{{x:Bind {when_path}, Converter={{StaticResource BoolToVisibilityConverter}}, ConverterParameter=invert, Mode=OneWay}}\">"
         )
         .unwrap();
         out.push_str(&else_body);
@@ -5130,7 +5206,7 @@ fn emit_row_vm_source(component: &str, vm: &RowVm, options: &EmitOptions) -> Str
             out,
             "/// <remarks>\n\
              /// GROUP C â€” fixed per-column widths. This VM carries a `Width`\n\
-             /// (double) the cell element binds via `Width=\"{{x:Bind Width}}\"`.\n\
+             /// (double) the cell element binds via `Width=\"{{x:Bind Width, Mode=OneWay}}\"`.\n\
              /// The enclosing generated row projection zips each cell index\n\
              /// with the component's authored `column-widths` slot.\n\
              /// </remarks>"
@@ -6920,7 +6996,7 @@ fn emit_host_input(
     match find_prop_value(node, "read-only") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {pascal}}}\""));
+            attrs.push_str(&format!(" IsReadOnly=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::Keyword(k)) if k == "true" => {
             attrs.push_str(" IsReadOnly=\"True\"");
@@ -7077,7 +7153,7 @@ fn emit_host_button(
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
@@ -7085,13 +7161,33 @@ fn emit_host_button(
         Some(LayoutPropValue::Keyword(k)) => {
             if ctx.lookup_for_binding(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
-                attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+                attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
             } else if ctx.lookup_for_index(k).is_some() {
-                attrs.push_str(" Content=\"{x:Bind Index}\"");
+                attrs.push_str(" Content=\"{x:Bind Index, Mode=OneWay}\"");
             } else {
                 attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
             }
         }
+        // An expression label — `label: ( row[1] )` is the common shape.
+        //
+        // This arm was missing, and the catch-all below swallowed it, so a
+        // button whose label came from a row expression emitted NO Content
+        // attribute at all. That is why every task row, project-rail row and
+        // notes row rendered a blank button: not a binding-mode problem, the
+        // attribute simply never existed. The Text lowering already routes
+        // expressions through the same helper successfully two elements away
+        // in the same template.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
         _ => {}
     }
 
@@ -7541,7 +7637,7 @@ fn emit_host_checkbox(
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
@@ -7686,7 +7782,7 @@ fn emit_host_radio(
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+            attrs.push_str(&format!(" Content=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
@@ -7701,7 +7797,7 @@ fn emit_host_radio(
     match find_prop_value(node, "group") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" GroupName=\"{{x:Bind {pascal}}}\""));
+            attrs.push_str(&format!(" GroupName=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
             attrs.push_str(&format!(" GroupName=\"{}\"", escape_xaml_attr(s)));
@@ -7809,7 +7905,7 @@ fn emit_host_slider(
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
             attrs.push_str(&format!(
-                " AutomationProperties.Name=\"{{x:Bind {}}}\"",
+                " AutomationProperties.Name=\"{{x:Bind {}, Mode=OneWay}}\"",
                 ctx.slot_xbind_path(slot)
             ));
         }
@@ -8011,7 +8107,7 @@ fn emit_host_link(
     match find_prop_value(node, "label") {
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+            content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         Some(LayoutPropValue::String(s)) => {
             content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(s)));
@@ -8019,9 +8115,9 @@ fn emit_host_link(
         Some(LayoutPropValue::Keyword(k)) => {
             if ctx.lookup_for_binding(k).is_some() {
                 let pascal = kebab_to_pascal_case(k);
-                content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}}}\""));
+                content_attr.push_str(&format!(" Content=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
             } else if ctx.lookup_for_index(k).is_some() {
-                content_attr.push_str(" Content=\"{x:Bind Index}\"");
+                content_attr.push_str(" Content=\"{x:Bind Index, Mode=OneWay}\"");
             } else {
                 content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
             }
@@ -8068,7 +8164,7 @@ fn emit_host_link(
             }
             Some(LayoutPropValue::SlotRef(slot)) => {
                 let pascal = ctx.slot_xbind_path(slot);
-                attrs.push_str(&format!(" NavigateUri=\"{{x:Bind {pascal}}}\""));
+                attrs.push_str(&format!(" NavigateUri=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
             }
             _ => {}
         }
@@ -8110,7 +8206,7 @@ fn emit_host_tooltip(
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            format!(" ToolTipService.ToolTip=\"{{x:Bind {pascal}}}\"")
+            format!(" ToolTipService.ToolTip=\"{{x:Bind {pascal}, Mode=OneWay}}\"")
         }
         _ => String::new(),
     };
@@ -8189,7 +8285,7 @@ fn emit_host_number_input(
         }
         Some(LayoutPropValue::SlotRef(slot)) => {
             let pascal = ctx.slot_xbind_path(slot);
-            attrs.push_str(&format!(" PlaceholderText=\"{{x:Bind {pascal}}}\""));
+            attrs.push_str(&format!(" PlaceholderText=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
         }
         _ => {}
     }
@@ -8640,7 +8736,7 @@ fn emit_native_host_table(
             let property = ctx.slot_property_name(slot);
             if is_safe_identifier(&property) {
                 format!(
-                    " FlowDirection=\"{{x:Bind {}}}\"",
+                    " FlowDirection=\"{{x:Bind {}, Mode=OneWay}}\"",
                     ctx.slot_xbind_path(slot)
                 )
             } else {
@@ -8690,7 +8786,7 @@ fn emit_native_host_table(
     let mut out = String::new();
     writeln!(
         out,
-        "{pad}<local:{table_type} RowCount=\"{{x:Bind {rows_path}.Count}}\" ColumnCount=\"{{x:Bind {header_path}.Count}}\" AutomationProperties.Name=\"{}\"{flow_direction_attr}{style}>",
+        "{pad}<local:{table_type} RowCount=\"{{x:Bind {rows_path}.Count, Mode=OneWay}}\" ColumnCount=\"{{x:Bind {header_path}.Count, Mode=OneWay}}\" AutomationProperties.Name=\"{}\"{flow_direction_attr}{style}>",
         escape_xaml_attr(&table_name)
     )
     .unwrap();
@@ -8775,7 +8871,7 @@ fn emit_host_table(
             let property = ctx.slot_property_name(slot);
             if is_safe_identifier(&property) {
                 format!(
-                    " FlowDirection=\"{{x:Bind {}}}\"",
+                    " FlowDirection=\"{{x:Bind {}, Mode=OneWay}}\"",
                     ctx.slot_xbind_path(slot)
                 )
             } else {
@@ -9065,7 +9161,7 @@ fn emit_component_reference(
                     return Err(PipelineEmitError::UnsafeSlotName(property));
                 }
                 attrs.push_str(&format!(
-                    " {attr_name}=\"{{x:Bind {}}}\"",
+                    " {attr_name}=\"{{x:Bind {}, Mode=OneWay}}\"",
                     ctx.slot_xbind_path(slot)
                 ));
             }
@@ -9078,7 +9174,7 @@ fn emit_component_reference(
             LayoutPropValue::Keyword(k) => {
                 if ctx.lookup_for_binding(k).is_some() || ctx.lookup_for_index(k).is_some() {
                     let pascal = kebab_to_pascal_case(k);
-                    attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {pascal}}}\""));
+                    attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {pascal}, Mode=OneWay}}\""));
                 } else {
                     attrs.push_str(&format!(" {attr_name}=\"{}\"", escape_xaml_attr(k)));
                 }
@@ -9088,10 +9184,10 @@ fn emit_component_reference(
             }
             LayoutPropValue::Expr(src) => match lower_expr_for_xbind(src, ctx) {
                 ExprLowering::Bindable(path) => {
-                    attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {path}}}\""));
+                    attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {path}, Mode=OneWay}}\""));
                 }
                 ExprLowering::Helper(call) => {
-                    attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {call}}}\""));
+                    attrs.push_str(&format!(" {attr_name}=\"{{x:Bind {call}, Mode=OneWay}}\""));
                 }
                 ExprLowering::Unsupported(reason) => {
                     return Err(PipelineEmitError::UnsupportedExpression(reason));
@@ -9805,7 +9901,7 @@ mod tests {
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
-        assert!(r.xaml.contains("<Image Source=\"{x:Bind AvatarUrl}\""));
+        assert!(r.xaml.contains("<Image Source=\"{x:Bind AvatarUrl, Mode=OneWay}\""));
     }
 
     #[test]
@@ -9954,7 +10050,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(r.xaml.contains("<FontIcon"), "got:\n{}", r.xaml);
         assert!(
-            r.xaml.contains("Glyph=\"{x:Bind GlyphName}\""),
+            r.xaml.contains("Glyph=\"{x:Bind GlyphName, Mode=OneWay}\""),
             "expected x:Bind passthrough, got:\n{}",
             r.xaml
         );
@@ -10748,7 +10844,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
             r.xaml
-                .contains("FlowDirection=\"{x:Bind LayoutDirection}\""),
+                .contains("FlowDirection=\"{x:Bind LayoutDirection, Mode=OneWay}\""),
             "expected FlowDirection=\"{{x:Bind LayoutDirection}}\", got:\n{}",
             r.xaml
         );
@@ -10943,7 +11039,7 @@ mod tests {
         );
         let r = compile_with_registry(&c, &l, &empty_style("Demo"), &reg);
         assert!(
-            r.xaml.contains("Rows=\"{x:Bind Rows}\""),
+            r.xaml.contains("Rows=\"{x:Bind Rows, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -11503,7 +11599,7 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("Content=\"{x:Bind ButtonLabel}\""),
+            r.xaml.contains("Content=\"{x:Bind ButtonLabel, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -11563,7 +11659,7 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("Content=\"{x:Bind Item}\""),
+            r.xaml.contains("Content=\"{x:Bind Item, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -11613,7 +11709,7 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
-            r.xaml.contains("Content=\"{x:Bind Option}\""),
+            r.xaml.contains("Content=\"{x:Bind Option, Mode=OneWay}\""),
             "got:\n{}",
             r.xaml
         );
@@ -11949,7 +12045,7 @@ mod tests {
             r.xaml
         );
         // Inner Text binds to the for-bound name.
-        assert!(r.xaml.contains("Text=\"{x:Bind Row}\""), "got:\n{}", r.xaml);
+        assert!(r.xaml.contains("Text=\"{x:Bind Row, Mode=OneWay}\""), "got:\n{}", r.xaml);
     }
 
     #[test]
@@ -12172,7 +12268,7 @@ mod tests {
         let r = compile(&c, &l, &empty_style("Foo"));
         assert!(
             r.xaml
-                .contains("<ContentControl Visibility=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}}\">"),
+                .contains("<ContentControl Visibility=\"{x:Bind Editable, Converter={StaticResource BoolToVisibilityConverter}, Mode=OneWay}\">"),
             "got:\n{}",
             r.xaml
         );
@@ -12478,6 +12574,388 @@ mod tests {
             r.xaml
         );
         assert!(r.xaml.contains("Padding=\"8\""), "got:\n{}", r.xaml);
+    }
+
+    /// Scan emitted XAML for any `{x:Bind ...}` that does not declare an
+    /// explicit `Mode`.
+    ///
+    /// This is the guard that matters. `x:Bind` defaults to **OneTime**, so a
+    /// binding emitted without a mode renders once and then never updates
+    /// again. Because each emission site used to choose its own mode by hand,
+    /// coverage drifted: `Text=` and `Content=` had `Mode=OneWay` while
+    /// `Visibility=` did not, which silently froze every conditional surface
+    /// in a generated app while the engine behind it worked perfectly.
+    ///
+    /// Returns the offending binding substrings so a failure names them.
+    fn xbinds_missing_mode(xaml: &str) -> Vec<String> {
+        let mut missing = Vec::new();
+        let mut rest = xaml;
+        while let Some(start) = rest.find("{x:Bind ") {
+            // A binding may embed a nested markup extension (a Converter),
+            // so match braces rather than scanning to the first '}'.
+            let tail = &rest[start..];
+            let mut depth = 0usize;
+            let mut end = None;
+            for (i, ch) in tail.char_indices() {
+                match ch {
+                    '{' => depth += 1,
+                    '}' => {
+                        depth -= 1;
+                        if depth == 0 {
+                            end = Some(i + 1);
+                            break;
+                        }
+                    }
+                    _ => {}
+                }
+            }
+            let Some(end) = end else { break };
+            let binding = &tail[..end];
+            if !binding.contains("Mode=") {
+                missing.push(binding.to_string());
+            }
+            rest = &tail[end..];
+        }
+        missing
+    }
+
+    /// Every `x:Bind` emission site in this file must declare its mode.
+    ///
+    /// This scans the emitter's own source rather than emitted output,
+    /// deliberately. A fixture-based test only covers the sites its fixture
+    /// happens to reach — the first version of this test exercised a Text and
+    /// an If, both already correct, and passed while roughly twenty other
+    /// sites still emitted mode-less bindings. Scanning the source is the
+    /// only form that actually holds the invariant.
+    #[test]
+    fn every_xbind_emission_site_declares_its_mode() {
+        let src = include_str!("pipeline.rs");
+        let mut offenders = Vec::new();
+
+        // Scan only the emitter, not this test module. Tests legitimately
+        // pass mode-less `{x:Bind …}` strings as *input* (translate_xaml_value
+        // cases) and assert on pre-existing output shapes; neither is an
+        // emission site. Cutting at the module boundary is exact, where
+        // string filters were not.
+        let emitter_src = match src.find("#[cfg(test)]") {
+            Some(i) => &src[..i],
+            None => src,
+        };
+
+        for (n, line) in emitter_src.lines().enumerate() {
+            let trimmed = line.trim();
+            // Skip prose — only emission code counts.
+            if trimmed.starts_with("//") || trimmed.starts_with("///") {
+                continue;
+            }
+            // The format-string form the emitter uses: `{{x:Bind ...}}`.
+            //
+            // Walk `{{`/`}}` pairs rather than stopping at the first `}}` —
+            // a binding may embed a nested markup extension, as the If
+            // lowering does with `Converter={{StaticResource ...}}`, and
+            // `Mode=` sits *after* that nested close.
+            for (idx, _) in line.match_indices("{{x:Bind ") {
+                let rest = &line[idx..];
+                let bytes = rest.as_bytes();
+                let mut depth = 0usize;
+                let mut end = None;
+                let mut i = 0usize;
+                while i + 1 < bytes.len() {
+                    if bytes[i] == b'{' && bytes[i + 1] == b'{' {
+                        depth += 1;
+                        i += 2;
+                    } else if bytes[i] == b'}' && bytes[i + 1] == b'}' {
+                        depth -= 1;
+                        if depth == 0 {
+                            end = Some(i);
+                            break;
+                        }
+                        i += 2;
+                    } else {
+                        i += 1;
+                    }
+                }
+                // An unterminated binding means the format string wraps
+                // across lines; the closing line carries the mode, so skip.
+                let Some(end) = end else { continue };
+                if !rest[..end].contains("Mode=") {
+                    offenders.push(format!("line {}: {}", n + 1, trimmed));
+                }
+            }
+
+            // Some sites emit a literal (non-format) string, so the braces
+            // are single rather than doubled — `inject_attr_into_first_element`
+            // is the one that does this today. Those need the same guard;
+            // missing it is how the GROUP C `Width` binding stayed OneTime
+            // while its own doc comment claimed otherwise.
+            for (idx, _) in line.match_indices("{x:Bind ") {
+                // Skip the doubled form already handled above.
+                if idx > 0 && line.as_bytes()[idx - 1] == b'{' {
+                    continue;
+                }
+                let rest = &line[idx..];
+                let Some(end) = rest.find('}') else { continue };
+                if !rest[..end].contains("Mode=") {
+                    offenders.push(format!("line {}: {}", n + 1, trimmed));
+                }
+            }
+        }
+
+        assert!(
+            offenders.is_empty(),
+            "these x:Bind emission sites declare no Mode, so WinUI defaults \
+             them to OneTime and whatever they render freezes after the first \
+             pass:\n{}",
+            offenders.join("\n")
+        );
+    }
+
+    /// `width: 100%` must become an alignment, not vanish.
+    ///
+    /// CSS treats full-width as a sizing property; XAML treats it as an
+    /// alignment, because WinUI's `Width` is an absolute `Double` with no
+    /// percentage form. Translating the value alone therefore could not
+    /// express it, and the property was dropped outright — leaving the
+    /// element to size itself to its content, which is a large part of why
+    /// generated apps hug the top-left of an empty window.
+    #[test]
+    fn full_width_and_height_become_stretch_alignments() {
+        assert_eq!(
+            stretch_alignment_for("Width", "100%"),
+            Some("HorizontalAlignment")
+        );
+        assert_eq!(
+            stretch_alignment_for("Height", "100%"),
+            Some("VerticalAlignment")
+        );
+        // Tolerate incidental whitespace from the stylesheet.
+        assert_eq!(
+            stretch_alignment_for("Width", " 100% "),
+            Some("HorizontalAlignment")
+        );
+
+        // Other percentages need proportional (star) sizing, which is a
+        // different change — they must NOT be silently approximated to
+        // "fill the parent".
+        assert_eq!(stretch_alignment_for("Width", "50%"), None);
+        assert_eq!(stretch_alignment_for("Height", "33%"), None);
+        // Absolute lengths are unaffected.
+        assert_eq!(stretch_alignment_for("Width", "34"), None);
+        // Only the two size setters map this way.
+        assert_eq!(stretch_alignment_for("FontSize", "100%"), None);
+        assert_eq!(stretch_alignment_for("Padding", "100%"), None);
+    }
+
+    /// `min-height: 100vh` is how a web shell says "fill the window", and it
+    /// was reaching XAML verbatim as `MinHeight="100vh"` — not a Double, so
+    /// the generated shell silently lost its full-window height. This is the
+    /// single declaration the whole TaskApp shell relies on for its height.
+    #[test]
+    fn viewport_units_become_stretch_alignments() {
+        assert_eq!(
+            stretch_alignment_for("MinHeight", "100vh"),
+            Some("VerticalAlignment")
+        );
+        assert_eq!(
+            stretch_alignment_for("Height", "100vh"),
+            Some("VerticalAlignment")
+        );
+        assert_eq!(
+            stretch_alignment_for("MinWidth", "100vw"),
+            Some("HorizontalAlignment")
+        );
+        // A viewport unit that is not the full viewport is proportional
+        // sizing, not a stretch — it must not be approximated.
+        assert_eq!(stretch_alignment_for("MinHeight", "50vh"), None);
+    }
+
+    /// CSS units XAML cannot parse must be refused, not emitted.
+    ///
+    /// WinUI lengths are `Double`. Before this, only `px` and `%` were
+    /// handled and every other unit fell through into the attribute, so the
+    /// failure was silent at build time and only visible as a mis-laid-out
+    /// window.
+    #[test]
+    fn unsupported_length_units_are_refused() {
+        for bad in ["100vh", "50vw", "2em", "1.5rem", "10ch", "3pt"] {
+            assert!(
+                has_unsupported_length_unit(bad),
+                "{bad} should be refused as a XAML length"
+            );
+            assert_eq!(
+                translate_xaml_value("MinHeight", bad),
+                None,
+                "{bad} must not reach the emitted attribute"
+            );
+        }
+        // Plain numbers and px are fine.
+        for ok in ["100", "12.5", "34px", " 8 "] {
+            assert!(
+                !has_unsupported_length_unit(ok),
+                "{ok} should be accepted as a XAML length"
+            );
+        }
+        // Keywords are not lengths and must not be mistaken for one.
+        assert!(!has_unsupported_length_unit("Auto"));
+        assert!(!has_unsupported_length_unit("Stretch"));
+    }
+
+    /// End-to-end: a part declaring `width: 100%` emits a stretch alignment
+    /// rather than nothing at all.
+    #[test]
+    fn part_with_full_width_emits_stretch_not_nothing() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = StyleDef {
+            component_name: "Foo".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "width".to_string(),
+                    value: "100%".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: Vec::new(),
+            }],
+        };
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("HorizontalAlignment=\"Stretch\""),
+            "expected a stretch alignment, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Width=\"100%\""),
+            "must not emit a percentage as an absolute Width:\n{}",
+            r.xaml
+        );
+    }
+
+    /// A `HostButton` whose label is a row expression must emit `Content`.
+    ///
+    /// `label: ( row[1] )` lands on `LayoutPropValue::Expr`, and that arm was
+    /// missing from the label match — the catch-all swallowed it, so the
+    /// button emitted no `Content` attribute at all and rendered blank. It
+    /// looked like a styling gap for weeks because an empty button is
+    /// invisible rather than obviously broken; it affected every task row,
+    /// project-rail row and notes row.
+    #[test]
+    fn host_button_with_row_expression_label_emits_content() {
+        let c = component(
+            "Foo",
+            vec![slot(
+                "rows",
+                // list<list<text>> — a list of rows, each a list of cells,
+                // which is the shape task-rows actually has.
+                SlotType::List(Box::new(ListInnerType::List(Box::new(
+                    ListInnerType::Text,
+                )))),
+                true,
+            )],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![for_node(
+                    LayoutPropValue::SlotRef("rows".to_string()),
+                    "row",
+                    None,
+                    vec![LayoutNode {
+                        tag: "HostButton".to_string(),
+                        part_name: None,
+                        props: vec![LayoutProp {
+                            name: "label".to_string(),
+                            value: LayoutPropValue::Expr("row[1]".to_string()),
+                        }],
+                        children: Vec::new(),
+                    }],
+                )],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        // Every emitted Button must carry a Content attribute — a button that
+        // renders empty is the failure mode this guards against.
+        for line in r.xaml.lines() {
+            let t = line.trim();
+            if t.starts_with("<Button ") {
+                assert!(
+                    t.contains("Content="),
+                    "emitted a Button with no Content, which renders blank:\n{t}\n\nfull XAML:\n{}",
+                    r.xaml
+                );
+            }
+        }
+        assert!(
+            r.xaml.contains("Content=\"{x:Bind"),
+            "row-expression label should lower to a binding, got:\n{}",
+            r.xaml
+        );
+    }
+
+    /// Companion to the source scan: emitted output for a representative
+    /// layout carries no mode-less binding either.
+    #[test]
+    fn every_emitted_xbind_declares_its_mode() {
+        fn text_bound_to(slot_name: &str) -> LayoutNode {
+            LayoutNode {
+                tag: "Text".to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "content".to_string(),
+                    value: LayoutPropValue::SlotRef(slot_name.to_string()),
+                }],
+                children: Vec::new(),
+            }
+        }
+
+        let c = component(
+            "Foo",
+            vec![
+                slot("title", SlotType::Text, true),
+                slot("editable", SlotType::Bool, true),
+            ],
+            vec![],
+        );
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: Vec::new(),
+                children: vec![
+                    // A plain slot-bound text binding.
+                    text_bound_to("title"),
+                    // A conditional — the site that was still OneTime and
+                    // froze every view switch in the generated TaskApp.
+                    if_node(
+                        LayoutPropValue::SlotRef("editable".to_string()),
+                        vec![text_bound_to("title")],
+                    ),
+                ],
+            },
+        );
+        let r = compile(&c, &l, &empty_style("Foo"));
+
+        let missing = xbinds_missing_mode(&r.xaml);
+        assert!(
+            missing.is_empty(),
+            "these bindings default to OneTime and will freeze after first \
+             render; give each an explicit Mode: {missing:#?}\n\nfull XAML:\n{}",
+            r.xaml
+        );
     }
 
     /// CSS `rgb()`/`rgba()` are function calls, not XAML literals. They
@@ -13590,7 +14068,7 @@ mod tests {
             .contains("AutomationProperties.AutomationId=\"volume-slider\""));
         assert!(r
             .xaml
-            .contains("AutomationProperties.Name=\"{x:Bind Label}\""));
+            .contains("AutomationProperties.Name=\"{x:Bind Label, Mode=OneWay}\""));
         assert!(r.xaml.contains("Value=\"{x:Bind Volume, Mode=OneWay}\""));
         assert!(r.xaml.contains("Minimum=\"-10\""));
         assert!(r.xaml.contains("Maximum=\"10\""));
@@ -13809,7 +14287,7 @@ mod tests {
         );
         let r = compile(&c, &l, &empty_style("Nav"));
         assert!(
-            r.xaml.contains("Content=\"{x:Bind Item}\""),
+            r.xaml.contains("Content=\"{x:Bind Item, Mode=OneWay}\""),
             "expected HostLink label to bind For item, got:\n{}",
             r.xaml
         );
@@ -15005,7 +15483,7 @@ mod tests {
 
         // The cell element binds the width.
         assert!(
-            r.xaml.contains("Width=\"{x:Bind Width}\""),
+            r.xaml.contains("Width=\"{x:Bind Width, Mode=OneWay}\""),
             "cell element must bind Width, got:\n{}",
             r.xaml
         );
