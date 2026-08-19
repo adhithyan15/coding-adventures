@@ -235,15 +235,6 @@ pub enum ScanHit {
     /// A `Scope::ClassVar` name (`@@x`) that is not a valid Ruby class-variable
     /// name (`@@<identifier>`) — injection guard at the class-variable positions.
     ClassVarName(String, semantic_ir::Span),
-    /// SIR22 "APL addendum" node (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-    /// `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) — shares
-    /// `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut this
-    /// slice implements, so a bare feature-flag check cannot tell a module
-    /// using one of these nine apart from a safe base-cut-only module.
-    /// Rejected cleanly here rather than reaching `emit_expr`'s
-    /// `unreachable!` — mirrors JS/TS's own (since-removed, once the
-    /// addendum shipped there) `find_unimplemented_sir22_addendum_node`.
-    Sir22AddendumNode(&'static str, semantic_ir::Span),
 }
 
 /// Scan the module — in a SINGLE traversal shared with the unsupported-builtin
@@ -956,23 +947,25 @@ impl Scan {
                 IndexArg::Whole => None,
             })
         }),
-        // ── SIR22 "APL addendum" — deferred, rejected cleanly ────────
-        // Shares NDArrays/MatrixOps/ArrayColumnMajor with the base cut
-        // above, so it must be checked explicitly here (not just at the
-        // feature-flag gate) — see `ScanHit::Sir22AddendumNode`'s doc.
-        Expr::Reduce { span, .. } => Some(ScanHit::Sir22AddendumNode("Reduce", span.clone())),
-        Expr::Scan { span, .. } => Some(ScanHit::Sir22AddendumNode("Scan", span.clone())),
-        Expr::OuterProduct { span, .. } => {
-            Some(ScanHit::Sir22AddendumNode("OuterProduct", span.clone()))
+        // ── SIR22 "APL addendum" (Phase A Slice 3) ───────────────────
+        // Now implemented (see `emit_expr`'s own arms and `runtime.rs`'s
+        // "SIR22 addendum" section) — sub-expressions may themselves hide
+        // a deferred builtin or injectable name, so recurse into them,
+        // matching every other composite expr arm above (e.g. `MatMul`/
+        // `ElementwiseOp` just above).
+        Expr::Reduce { target, .. } => self.expr(target),
+        Expr::Scan { target, .. } => self.expr(target),
+        Expr::OuterProduct { lhs, rhs, .. } => self.expr(lhs).or_else(|| self.expr(rhs)),
+        Expr::Shape { target, .. } => self.expr(target),
+        Expr::Reshape { shape, target, .. } => {
+            self.expr(shape).or_else(|| self.expr(target))
         }
-        Expr::Shape { span, .. } => Some(ScanHit::Sir22AddendumNode("Shape", span.clone())),
-        Expr::Reshape { span, .. } => Some(ScanHit::Sir22AddendumNode("Reshape", span.clone())),
-        Expr::IndexGenerator { span, .. } => {
-            Some(ScanHit::Sir22AddendumNode("IndexGenerator", span.clone()))
-        }
-        Expr::IndexOf { span, .. } => Some(ScanHit::Sir22AddendumNode("IndexOf", span.clone())),
-        Expr::Ravel { span, .. } => Some(ScanHit::Sir22AddendumNode("Ravel", span.clone())),
-        Expr::Catenate { span, .. } => Some(ScanHit::Sir22AddendumNode("Catenate", span.clone())),
+        Expr::IndexGenerator { count, .. } => self.expr(count),
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => self.expr(haystack).or_else(|| self.expr(needle)),
+        Expr::Ravel { target, .. } => self.expr(target),
+        Expr::Catenate { lhs, rhs, .. } => self.expr(lhs).or_else(|| self.expr(rhs)),
         _ => None,
     }
     }
@@ -1566,6 +1559,78 @@ fn emit_expr(e: &Expr) -> String {
                 "sir_array_index_get({}, [{}])",
                 emit_expr(target),
                 emit_index_args(indices)
+            )
+        }
+        // ── SIR22 addendum: APL primitive operators (Phase A Slice 3) ──
+        // Each of the nine maps 1:1 onto a call into `sir_array_*` (see
+        // `runtime.rs`'s "SIR22 addendum" section) — the same treatment
+        // `ElementwiseOp`/`Transpose`/`MatMul` above already get for the
+        // SIR22 base cut. `Reduce`/`Scan`/`OuterProduct` carry an
+        // `ElementwiseOpKind` and so reuse `elementwise_op_ruby_name`
+        // exactly like `ElementwiseOp` does; the remaining six have no
+        // `op` field at all (they are "bespoke, not BinOp-shaped" per the
+        // SIR22 spec addendum and `apl-runtime::builtins`'s own doc
+        // comment) and just recurse into their operand(s).
+        Expr::Reduce { op, target, .. } => {
+            format!(
+                "sir_array_reduce({}, {})",
+                elementwise_op_ruby_name(*op),
+                emit_expr(target)
+            )
+        }
+        Expr::Scan { op, target, .. } => {
+            format!(
+                "sir_array_scan({}, {})",
+                elementwise_op_ruby_name(*op),
+                emit_expr(target)
+            )
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            format!(
+                "sir_array_outer({}, {}, {})",
+                elementwise_op_ruby_name(*op),
+                emit_expr(lhs),
+                emit_expr(rhs)
+            )
+        }
+        Expr::Shape { target, .. } => {
+            format!("sir_array_shape({})", emit_expr(target))
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs`) — `sir_array_reshape(shape_arg, target)` takes the
+        // same order, so no argument reordering is needed at this call
+        // site (contrast `Expr::Range`'s `start, step, stop` vs.
+        // `sir_array_range`'s `start, stop, step` above, which DOES
+        // reorder).
+        Expr::Reshape { shape, target, .. } => {
+            format!(
+                "sir_array_reshape({}, {})",
+                emit_expr(shape),
+                emit_expr(target)
+            )
+        }
+        Expr::IndexGenerator { count, .. } => {
+            format!("sir_array_index_generator({})", emit_expr(count))
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            format!(
+                "sir_array_index_of({}, {})",
+                emit_expr(haystack),
+                emit_expr(needle)
+            )
+        }
+        Expr::Ravel { target, .. } => {
+            format!("sir_array_ravel({})", emit_expr(target))
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            format!(
+                "sir_array_catenate({}, {})",
+                emit_expr(lhs),
+                emit_expr(rhs)
             )
         }
         other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),

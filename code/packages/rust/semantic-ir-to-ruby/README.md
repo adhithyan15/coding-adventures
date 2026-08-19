@@ -122,10 +122,13 @@ native Ruby Integer/Float type propagation rather than JS's uniform-double
 storage (`Div`/`Pow` force a Float result; `Add`/`Sub`/`Mul` don't), so an
 all-integer computation prints without a spurious `.0` — see
 `runtime.rs`'s own module doc and the CHANGELOG for the full reasoning.
-The nine-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/etc.)
-shares these same three features with the base cut, so a dedicated
-pre-emit scan (`ScanHit::Sir22AddendumNode`) rejects it cleanly until its
-own later slice lands.
+The nine-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) shares these same
+three features with the base cut and is now implemented too (Phase A Slice
+3), also routing into `sir_array_*`. `IndexGenerator`/`IndexOf` are
+1-based (`⍳n` = `[1, ..., n]`) — a deliberate exception to this domain's
+otherwise-universal 0-based indexing, matching `apl-runtime`'s own ground
+truth.
 Rejects `TailCalls`, `Intrinsics`, and every other not-yet-wired feature
 (array-pattern destructuring; built-in collection methods; plus a
 namespaced class/constant definition or a non-`@@x`-init class/module

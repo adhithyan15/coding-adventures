@@ -232,14 +232,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // nothing emits it yet, so this declares acceptance ahead of any
     // frontend using it.
     Feature::ConsoleIO,
-    // ── SIR22 array/matrix base cut (second-wave backend rollout) ────
+    // ── SIR22 array/matrix (base cut + APL addendum) ──────────────────
     // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
-    // (+ `Stmt::IndexSet`) route into `sir_array_*` helpers, an inlined
-    // port of the already-proven `semantic-ir-to-javascript` `ArrayRt`
-    // sub-runtime (see `runtime.rs`). The SIR22 "APL addendum" nodes
-    // share these same three features but stay deferred — rejected by a
-    // dedicated pre-emit scan (`ScanHit::Sir22AddendumNode`), not this
-    // capability gate, since the gate alone can't distinguish them.
+    // (+ `Stmt::IndexSet`), and the nine-node "APL addendum"
+    // (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+    // `IndexOf`/`Ravel`/`Catenate`, Phase A Slice 3), all route into
+    // `sir_array_*` helpers, an inlined port of the already-proven
+    // `semantic-ir-to-javascript` `ArrayRt` sub-runtime (see `runtime.rs`).
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
@@ -357,16 +356,6 @@ impl Backend for RubyBackend {
                     message: format!(
                         "the Ruby backend cannot emit the class variable `{name}` \
                          (not a valid `@@identifier`)"
-                    ),
-                    span,
-                });
-            }
-            Some(emit::ScanHit::Sir22AddendumNode(kind, span)) => {
-                return Err(BackendError {
-                    kind: BackendErrorKind::UnsupportedFeature,
-                    message: format!(
-                        "the Ruby backend does not yet implement the SIR22 addendum node `{kind}` \
-                         (deferred to a later slice)"
                     ),
                     span,
                 });

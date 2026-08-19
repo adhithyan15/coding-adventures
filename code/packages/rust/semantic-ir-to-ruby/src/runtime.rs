@@ -343,11 +343,11 @@ end
 # REAL Float, e.g. from `Div`).
 #
 # The SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-# `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) is deferred —
-# these nine share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base
-# cut above, so `lib.rs`'s `compile` adds a dedicated pre-emit scan
-# (`ScanHit::Sir22AddendumNode`) rejecting them cleanly, beyond the
-# ordinary feature-flag capability check.
+# `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`, Phase A Slice 3) —
+# these nine are implemented below, in the "SIR22 addendum" section further
+# down this file — an inlined port of `semantic-ir-to-javascript`'s own
+# already-proven addendum functions, following the exact same
+# `sir_array_*` naming/style convention as the base cut above.
 SirNDArray = Struct.new(:shape, :data)
 
 # SECURITY: every factory below validates a shape/output size *before*
@@ -717,5 +717,342 @@ def sir_array_index_set(a, indices, value)
     return
   end
   raise "sir_array_index_set: only 1 or 2 index arguments are supported (rank <= 2 scope), got #{indices.length}"
+end
+
+# ── SIR22 addendum: APL primitive operators (Phase A Slice 3) ──
+#
+# `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+# `IndexOf`/`Ravel`/`Catenate` lower to the `sir_array_*` functions below —
+# an inlined port of `semantic-ir-to-javascript`'s own already-proven
+# addendum functions (`runtime.rs`'s own "SIR22 addendum: APL primitive
+# operators" section, itself ported 1:1 from `apl-runtime::builtins` /
+# `array_runtime::ops`), following the exact same naming/style convention
+# as the base cut above. `SIR_ARRAY_MAX_ELEMENTS` (defined above) is reused
+# as-is for every new bounded-allocation check here — this file has exactly
+# one array-size cap, not one per domain.
+
+# `+/A` (APL reduce, dyadic-op monadic-adverb) — fold `target` with `op`
+# along its one axis. Ported 1:1 from `array_runtime::ops::reduce`:
+# - rank 0 (scalar): nothing to fold, returns `target` itself.
+# - rank 1 (vector `[n]`): left-fold across all `n` elements
+#   (`op(op(op(v0, v1), v2), ...)`); an EMPTY vector is a clean error --
+#   unlike `sum`/`mean` (which have a built-in identity, 0), `reduce` is
+#   generic over any `op`, and guessing an identity (is it `0` for `Add`,
+#   `1` for `Mul`, `-Infinity` for `Max`?) for an arbitrary, possibly-future
+#   op would be silently wrong for most of them.
+# - rank 2 (matrix `[r, c]`): folds EACH ROW independently across its `c`
+#   columns, producing a `[r]` vector (one folded value per row).
+#   Column-major storage means element `(row, col)` lives at
+#   `col * r + row` -- the row loop reads `d[row]` as the seed (column 0)
+#   then walks `d[col * r + row]` for `col = 1..c`; getting `row` and `col`
+#   swapped here silently transposes the result instead of raising, so this
+#   indexing is the single easiest place to introduce a wrong-answer bug
+#   when reading this function.
+def sir_array_reduce(op, a)
+  a = sir_array_to_array_value(a)
+  shape = a.shape
+  return a if shape.empty?
+  if shape.length == 1
+    n = shape[0]
+    raise "sir_array_reduce: cannot fold an empty vector (no identity element for an arbitrary op)" if n == 0
+    d = a.data
+    acc = d[0]
+    (1...n).each { |i| acc = sir_array_apply_op(op, acc, d[i]) }
+    return sir_array_ndarray([], [acc])
+  end
+  if shape.length == 2
+    r, c = shape
+    raise "sir_array_reduce: cannot fold an empty row (no identity element for an arbitrary op)" if c == 0
+    d = a.data
+    out = Array.new(r)
+    (0...r).each do |row|
+      acc = d[row] # column-major: (row, 0) lives at plain `row`
+      (1...c).each { |col| acc = sir_array_apply_op(op, acc, d[col * r + row]) }
+      out[row] = acc
+    end
+    return sir_array_ndarray([r], out)
+  end
+  raise "sir_array_reduce: rank > 2 not yet supported (shape #{shape})"
+end
+
+# `+\A` (APL scan) — the same fold as `sir_array_reduce`, but keeping EVERY
+# intermediate result instead of only the last; output has the same shape
+# as `target`. Ported 1:1 from `array_runtime::ops::scan`. An empty axis is
+# NOT an error here (unlike `reduce`): there is simply nothing to scan, and
+# the (empty) output shape already says so.
+def sir_array_scan(op, a)
+  a = sir_array_to_array_value(a)
+  shape = a.shape
+  return a if shape.empty?
+  if shape.length == 1
+    n = shape[0]
+    d = a.data
+    out = Array.new(n)
+    acc = nil
+    started = false
+    (0...n).each do |i|
+      acc = started ? sir_array_apply_op(op, acc, d[i]) : d[i]
+      started = true
+      out[i] = acc
+    end
+    return sir_array_ndarray([n], out)
+  end
+  if shape.length == 2
+    r, c = shape
+    d = a.data
+    out = Array.new(d.length)
+    (0...r).each do |row|
+      acc = nil
+      started = false
+      (0...c).each do |col|
+        x = d[col * r + row] # column-major
+        acc = started ? sir_array_apply_op(op, acc, x) : x
+        started = true
+        out[col * r + row] = acc
+      end
+    end
+    return sir_array_ndarray([r, c], out)
+  end
+  raise "sir_array_scan: rank > 2 not yet supported (shape #{shape})"
+end
+
+# `A∘.×B` (APL outer product) — apply `op` to every pair `(aᵢ, bⱼ)`,
+# producing a result of rank `rank(a) + rank(b)`. Ported 1:1 from
+# `array_runtime::ops::outer`, scoped identically to `rank(a) <= 1` and
+# `rank(b) <= 1` (the vector⊗vector case below already reaches this
+# domain's rank-2 ceiling). `sir_array_checked_shape_size` validates the
+# `[m, n]` output shape *before* allocating — `m`/`n` are two INDEPENDENT
+# operand lengths, each individually under `SIR_ARRAY_MAX_ELEMENTS`, but
+# nothing bounds their product alone (the same outer-product-shaped
+# allocation `sir_array_matmul`/`sir_array_index_get` above guard).
+def sir_array_outer(op, a, b)
+  a = sir_array_to_array_value(a)
+  b = sir_array_to_array_value(b)
+  as = a.shape
+  bs = b.shape
+  if as.empty? && bs.empty?
+    return sir_array_ndarray([], [sir_array_apply_op(op, a.data[0], b.data[0])])
+  end
+  if as.empty? && bs.length == 1
+    x = a.data[0]
+    return sir_array_ndarray([bs[0]], b.data.map { |y| sir_array_apply_op(op, x, y) })
+  end
+  if as.length == 1 && bs.empty?
+    y = b.data[0]
+    return sir_array_ndarray([as[0]], a.data.map { |x| sir_array_apply_op(op, x, y) })
+  end
+  if as.length == 1 && bs.length == 1
+    m = as[0]
+    n = bs[0]
+    out_len = sir_array_checked_shape_size([m, n])
+    ad = a.data
+    bd = b.data
+    out = Array.new(out_len)
+    (0...n).each do |j|
+      (0...m).each { |i| out[j * m + i] = sir_array_apply_op(op, ad[i], bd[j]) } # column-major
+    end
+    return sir_array_ndarray([m, n], out)
+  end
+  raise "sir_array_outer: operands of rank > 1 not yet supported (shapes #{as}, #{bs})"
+end
+
+# Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order — last
+# axis varies fastest. `a` itself stores COLUMN-major
+# (`sir_array_get`'s own doc comment), so a matrix must be walked "row,
+# then column" via `sir_array_get` to produce true row-major order;
+# returning the raw column-major buffer would silently ravel in the WRONG
+# order. Always returns a FRESH Array (`.dup`, never `a.data` itself, even
+# in the rank <= 1 no-op case) — mirrors `apl_runtime::builtins::flatten`
+# returning an owned `Vec`, not a borrow, so the result never accidentally
+# aliases `a`'s own buffer (a caller mutating the returned Array must not
+# also mutate `a`).
+def sir_array_flatten_row_major(a)
+  shape = a.shape
+  return a.data.dup if shape.length <= 1
+  if shape.length == 2
+    r, c = shape
+    out = Array.new(r * c)
+    k = 0
+    (0...r).each do |row|
+      (0...c).each do |col|
+        out[k] = sir_array_get(a, row, col)
+        k += 1
+      end
+    end
+    return out
+  end
+  # Unreachable in practice (this domain's rank <= 2 ceiling) -- total
+  # rather than raising, mirroring the JS reference's own fallback.
+  a.data.dup
+end
+
+# Monadic `⍴` (shape-of) — `target`'s dimensions as a vector. Ported 1:1
+# from `apl_runtime::builtins::shape`: a SCALAR has zero dimensions, so its
+# shape is the EMPTY vector (not a scalar!) — `⍴5` is a length-0 vector,
+# mirroring `shape.length == 0` exactly. A vector `[n]` has shape `[n]`
+# (one element); a matrix `[r, c]` has shape `[r, c]` (two elements).
+def sir_array_shape(a)
+  a = sir_array_to_array_value(a)
+  sir_array_ndarray([a.shape.length], a.shape.dup)
+end
+
+# Dyadic `⍴` (reshape) — reinterpret `target`'s data under the new
+# dimensions `shape_arg`. Ported 1:1 from `apl_runtime::builtins::reshape`.
+# `shape_arg` must itself be a scalar or vector (rank <= 1) of
+# non-negative integers, and is itself capped at rank <= 2 (this domain's
+# ceiling — a longer target shape is a clean error, not a silent
+# truncation). `target`'s elements are ravelled (`sir_array_flatten_row_major`)
+# then cyclically repeated or truncated to fill the target shape's element
+# count.
+#
+# CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+# fills the LAST axis fastest, same convention as ravel), but this
+# domain's storage is COLUMN-major — so for a rank-2 target the row-major
+# `filled` sequence must be TRANSPOSED into column-major storage
+# (`data[col * r + row] = filled[row * c + col]`) before calling
+# `sir_array_ndarray`. Handing `filled` straight to `sir_array_ndarray`
+# would silently reshape column-major instead of APL's row-major
+# convention — a wrong answer that still LOOKS plausible (right multiset
+# of values, wrong positions).
+def sir_array_reshape(shape_arg, target)
+  shape_arg = sir_array_to_array_value(shape_arg)
+  target = sir_array_to_array_value(target)
+  if shape_arg.shape.length > 1
+    raise "sir_array_reshape: shape argument must be a scalar or vector (got rank #{shape_arg.shape.length})"
+  end
+  dims = shape_arg.data.map do |x|
+    unless sir_array_integer_dim?(x) && x >= 0
+      raise "sir_array_reshape: shape elements must be non-negative integers, got #{x}"
+    end
+    x.to_i
+  end
+  if dims.length > 2
+    raise "sir_array_reshape: reshape to rank > 2 is not yet supported (target shape #{dims})"
+  end
+  total = sir_array_checked_shape_size(dims)
+  source = sir_array_flatten_row_major(target)
+  if total > 0 && source.empty?
+    raise "sir_array_reshape: cannot reshape an empty source into a non-empty shape"
+  end
+  filled = Array.new(total)
+  (0...total).each { |k| filled[k] = source[k % source.length] }
+  return sir_array_ndarray(dims, filled) if dims.length <= 1
+  r, c = dims
+  data = Array.new(total)
+  (0...r).each do |row|
+    (0...c).each do |col|
+      data[col * r + row] = filled[row * c + col]
+    end
+  end
+  sir_array_ndarray(dims, data)
+end
+
+# Monadic `⍳` (index generator / iota) — `⍳n` is the 1-BASED vector
+# `[1, 2, ..., n]`. Ported 1:1 from `apl_runtime::builtins::
+# index_generator` — note this is 1-based, unlike every 0-based index
+# elsewhere in this domain (`sir_array_index_get`/`sir_array_index_set`),
+# because that is genuinely what APL's `⍳` means at the SURFACE-SYNTAX
+# level (see `apl-runtime`'s own tests, e.g.
+# `index_generator_produces_one_based_run`). `sir_array_checked_shape_size`
+# both validates `n` is a non-negative integer AND caps it at
+# `SIR_ARRAY_MAX_ELEMENTS` before allocating — `n` is a runtime value a
+# compiled program computes, not a fixed constant, so `⍳` of an absurd size
+# must fail cleanly.
+def sir_array_index_generator(a)
+  a = sir_array_to_array_value(a)
+  raise "sir_array_index_generator: monadic argument must be a scalar" unless sir_array_is_scalar(a)
+  x = a.data[0]
+  unless sir_array_integer_dim?(x) && x >= 0
+    raise "sir_array_index_generator: monadic argument must be a non-negative integer, got #{x}"
+  end
+  n = sir_array_checked_shape_size([x.to_i])
+  sir_array_ndarray([n], Array.new(n) { |i| i + 1 })
+end
+
+# Dyadic `⍳` (index-of / search) — for every element of `needle`, the
+# 1-based index of its first occurrence in the vector `haystack` (or
+# `haystack.length + 1` if not found — "not found" is a valid,
+# always-in-range position, not `-1`/`nil`). Ported 1:1 from
+# `apl_runtime::builtins::index_of`: plain EXACT equality (`Array#index`
+# uses `==`, so `Float::NAN` correctly never matches itself, same as
+# Rust's `==`). The work done is O(len(haystack) * len(needle)) (a full
+# linear scan per needle element) — `sir_array_checked_shape_size` is
+# reused here purely for its "product <= SIR_ARRAY_MAX_ELEMENTS" check
+# (both lengths are already valid non-negative integers, so its
+# dimension-validity half is a no-op) to cap the PRODUCT before scanning,
+# since each operand individually staying under `SIR_ARRAY_MAX_ELEMENTS`
+# does not bound their product (up to ~4.5 * 10^15 comparisons otherwise).
+def sir_array_index_of(a, b)
+  a = sir_array_to_array_value(a)
+  b = sir_array_to_array_value(b)
+  if a.shape.length > 1
+    raise "sir_array_index_of: left argument must be a scalar or vector (got rank #{a.shape.length})"
+  end
+  sir_array_checked_shape_size([a.data.length, b.data.length])
+  haystack = a.data
+  out = b.data.map do |needle|
+    idx = haystack.index(needle)
+    idx.nil? ? haystack.length + 1 : idx + 1
+  end
+  sir_array_ndarray(b.shape, out)
+end
+
+# Monadic `,` (ravel) — flatten `target` to a rank-1 vector, in row-major
+# order (see `sir_array_flatten_row_major`'s own doc comment for the
+# column-major-storage-vs-row-major-order subtlety). Ported 1:1 from
+# `apl_runtime::builtins::ravel`.
+def sir_array_ravel(a)
+  a = sir_array_to_array_value(a)
+  flat = sir_array_flatten_row_major(a)
+  sir_array_ndarray([flat.length], flat)
+end
+
+# Dyadic `,` (catenate) — supports scalar-scalar, scalar-vector,
+# vector-scalar, vector-vector (all producing a vector), and
+# matrix-matrix-with-equal-row-counts (column/last-axis catenate,
+# producing `[r, ca + cb]`). Any other rank combination is a clean "not
+# yet supported" error. Ported 1:1 from `apl_runtime::builtins::catenate`.
+# The combined-length cap check happens ONCE, up front, regardless of
+# which rank combination follows (mirroring the Rust reference's own
+# structure) — neither operand alone need be oversized for the RESULT to
+# be, since a script that repeatedly catenates a value with itself
+# (`A <- A,A`) doubles the size every line with no other ceiling.
+def sir_array_catenate(a, b)
+  a = sir_array_to_array_value(a)
+  b = sir_array_to_array_value(b)
+  sir_array_checked_shape_size([a.data.length + b.data.length])
+  ra = a.shape.length
+  rb = b.shape.length
+  if ra == 0 && rb == 0
+    return sir_array_ndarray([2], [a.data[0], b.data[0]])
+  end
+  if ra == 0 && rb == 1
+    out = [a.data[0]] + b.data
+    return sir_array_ndarray([out.length], out)
+  end
+  if ra == 1 && rb == 0
+    out = a.data + [b.data[0]]
+    return sir_array_ndarray([out.length], out)
+  end
+  if ra == 1 && rb == 1
+    out = a.data + b.data
+    return sir_array_ndarray([out.length], out)
+  end
+  if ra == 2 && rb == 2
+    r = sir_array_nrows(a)
+    unless r == sir_array_nrows(b)
+      raise "sir_array_catenate: matrix catenate needs equal row counts (#{r} vs #{sir_array_nrows(b)})"
+    end
+    ca = sir_array_ncols(a)
+    cb = sir_array_ncols(b)
+    out_len = sir_array_checked_shape_size([r, ca + cb])
+    data = Array.new(out_len)
+    (0...r).each do |row|
+      (0...ca).each { |col| data[col * r + row] = sir_array_get(a, row, col) }
+      (0...cb).each { |col| data[(ca + col) * r + row] = sir_array_get(b, row, col) }
+    end
+    return sir_array_ndarray([r, ca + cb], data)
+  end
+  raise "sir_array_catenate: catenate of rank #{ra} and rank #{rb} is not yet supported"
 end
 "####;
