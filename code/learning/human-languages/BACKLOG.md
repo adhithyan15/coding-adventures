@@ -86,6 +86,22 @@ automatically: the same tranche cleared मिट्टी, बीज, अना
 the sentences, because the gloss was of an English word, a different word, or an
 absence. A rule that only rejects is a filter.
 
+**KNOWN LIMIT, found by running it first on sanskrit:** the check operates on
+SCRIPT tokens, so a word glossed only in ROMANIZATION is invisible to it. Sanskrit's
+कथा was caught by a person reading `SA-C03-katham`, which glosses *kathā* as "a
+telling, a story" without ever printing the Devanagari. **Run the same three steps a
+second time over romanized forms**, or accept that a human still has to read the
+etymology notes. The mechanized pass narrows the field; it does not close it.
+
+Sanskrit's numbers, running it FIRST rather than last: **267 glossed-but-never-taught
+tokens out of 495 distinct**. It reshaped the word list instead of invalidating it —
+3 discarded (मृगः glossed outright in a ROAD lesson; कथा; शीतम् glossed inside
+"himam is snow, and cold generally"), 3 turned INTO teaching (सिंहः, handed over
+twice inside the names *Siṁhapura* and *Narasiṁha*; शब्दः, which three earlier
+headwords END in without any of them naming it; प्रकाशः, whose काश् root a SKY
+lesson had already given away), and 2 examined and kept because the colliding
+sentence was an English description rather than a gloss.
+
 Worth building as `report --glossed-not-taught <track>`. Until then, the three
 steps above are cheap to run inline and catch the class that nothing else does.
 

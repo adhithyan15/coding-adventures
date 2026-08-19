@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "sanskrit",
+  "chapter": 51,
+  "title": "More of the Family",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:a0be78232ec466ac",
+  "lessons": [
+    {
+      "id": "SA-C51-husband",
+      "sequence": 2480,
+      "title": "पतिः (patiḥ) — a husband",
+      "headword": "पतिः",
+      "romanization": "patiḥ",
+      "gloss": "a husband",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:95dfafc6f54aa580",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did ślokaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पतिः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पतिः (patiḥ) — \"a husband\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पतिः (patiḥ) is a husband, and more widely the master of a household."
+            },
+            {
+              "kind": "speech",
+              "text": "It is one of the oldest words the family holds: Latin potis, \"able, in command\", behind English possible and power, and Greek posis, a husband. The -pati that ends a great many Indian names and titles is this word doing the same work."
+            },
+            {
+              "kind": "speech",
+              "text": "Beside kuṭumbam, the household you can already name, पतिः (patiḥ) is the one who answers for it. Ends in -iḥ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "One end of a household, named."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patiḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ślokaḥ, then patiḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ślokaḥ*, then *patiḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पतिः (patiḥ) mean? (\"a husband\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C51-wife",
+      "sequence": 2490,
+      "title": "पत्नी (patnī) — a wife",
+      "headword": "पत्नी",
+      "romanization": "patnī",
+      "gloss": "a wife",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:517b4df0563dd7fd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did patiḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पत्नी",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पत्नी (patnī) — \"a wife\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पत्नी (patnī) is a wife, the mistress of the household."
+            },
+            {
+              "kind": "speech",
+              "text": "It is पतिः (patiḥ) with a feminine ending laid on it, and the two have travelled together since before Sanskrit was Sanskrit: Greek potnia, \"lady\", is the very same formation made in the very same way."
+            },
+            {
+              "kind": "speech",
+              "text": "So the second word costs almost nothing once the first is yours. Feminine, ending in -ī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The pair that a household is built on."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patnī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patiḥ, then patnī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patiḥ*, then *patnī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पत्नी (patnī) mean? (\"a wife\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C51-grandfather",
+      "sequence": 2500,
+      "title": "पितामहः (pitāmahaḥ) — a grandfather",
+      "headword": "पितामहः",
+      "romanization": "pitāmahaḥ",
+      "gloss": "a grandfather",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:30059e18e6fb35ed",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did patnī mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: पितामहः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "पितामहः (pitāmahaḥ) — \"a grandfather\"."
+            },
+            {
+              "kind": "speech",
+              "text": "पितामहः (pitāmahaḥ) is a grandfather — and, precisely, the father's father."
+            },
+            {
+              "kind": "speech",
+              "text": "Both halves are already yours. पिता is the father, and महत् is big; the ending shifts a little in the joining, but the sense does not. A grandfather is the great father."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit keeps the two sides of a family apart, so this word does not stretch to the mother's side. Ends in -अः."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A new word made of two old ones."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitāmahaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitāmahaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "patnī, then pitāmahaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *patnī*, then *pitāmahaḥ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does पितामहः (pitāmahaḥ) mean? (\"a grandfather\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C51-grandmother",
+      "sequence": 2510,
+      "title": "मातामही (mātāmahī) — a grandmother",
+      "headword": "मातामही",
+      "romanization": "mātāmahī",
+      "gloss": "a grandmother",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:09ea19850275df4e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new word: what did pitāmahaḥ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मातामही",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मातामही (mātāmahī) — \"a grandmother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मातामही (mātāmahī) is a grandmother — and, precisely, the mother's mother."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built exactly as पितामहः (pitāmahaḥ) is, with माता standing in front instead of पिता. Having watched the joining once, you can read this one before it is explained."
+            },
+            {
+              "kind": "speech",
+              "text": "The pair also shows the line Sanskrit draws down the middle of a family: one word for each side, and no word covering both. Feminine, ending in -ī."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The same joining, worked a second time."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātāmahī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātāmahī*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pitāmahaḥ, then mātāmahī",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pitāmahaḥ*, then *mātāmahī*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मातामही (mātāmahī) mean? (\"a grandmother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "SA-C51-uncle",
+      "sequence": 2520,
+      "title": "मातुलः (mātulaḥ) — a mother's brother",
+      "headword": "मातुलः",
+      "romanization": "mātulaḥ",
+      "gloss": "a mother's brother",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d0c08631066f37ba",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last word of the chapter: what did pitāmahaḥ mean, and what did mātāmahī mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: मातुलः",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "मातुलः (mātulaḥ) — \"a mother's brother\"."
+            },
+            {
+              "kind": "speech",
+              "text": "मातुलः (mātulaḥ) is a mother's brother."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit has no single word covering both uncles, and this is the one for the mother's side, with माता standing plainly inside it. The line drawn by पितामहः (pitāmahaḥ) and मातामही (mātāmahī) is drawn here too."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin drew it in the same place: avunculus was the mother's brother, and it is the word English wore down into uncle. Two languages, one distinction, one border apart. Ends in -अः."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five more of a household: a husband, a wife, a grandfather, a grandmother, a mother's brother."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātulaḥ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātulaḥ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then patiḥ and mātulaḥ together",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *patiḥ* and *mātulaḥ* together]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does मातुलः (mātulaḥ) mean? (\"a mother's brother\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
