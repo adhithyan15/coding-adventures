@@ -5441,7 +5441,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                      xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
                      xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n    \
                      xmlns:local=\"using:{ns}\"\n    \
-                     Title=\"{name} â€” Mosaic â†’ XAML demo\">\n    \
+                     Title=\"{name} — Mosaic → XAML demo\">\n    \
                      <Grid>\n        \
                          <Grid.RowDefinitions>\n            \
                              <RowDefinition Height=\"*\"/>\n            \
@@ -5450,7 +5450,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                          <TextBlock Grid.Row=\"0\" Margin=\"40\" FontSize=\"18\" TextWrapping=\"Wrap\"\n                   \
                                     Text=\"Mosaic-authored {name} dialog. Click the button to open it.\"/>\n        \
                          <TextBlock Grid.Row=\"1\" Margin=\"40,0,40,20\" x:Name=\"StatusText\" Foreground=\"#888\"\n                   \
-                                    Text=\"Status: waiting for dispatchâ€¦\"/>\n        \
+                                    Text=\"Status: waiting for dispatch…\"/>\n        \
                          <Button Grid.Row=\"1\" HorizontalAlignment=\"Right\" Margin=\"0,0,40,20\"\n                \
                                  x:Name=\"OpenButton\" Content=\"Open the dialog\" Click=\"OnOpenButtonClick\"/>\n    \
                      </Grid>\n\
@@ -5466,7 +5466,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                      xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
                      xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n    \
                      xmlns:gen=\"using:{ns}\"\n    \
-                     Title=\"{name} â€” Mosaic â†’ XAML demo\">\n    \
+                     Title=\"{name} — Mosaic → XAML demo\">\n    \
                      <Grid>\n        \
                          <Grid.RowDefinitions>\n            \
                              <RowDefinition Height=\"*\"/>\n            \
@@ -5474,7 +5474,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                          </Grid.RowDefinitions>\n        \
                          <gen:{name} Grid.Row=\"0\" x:Name=\"Component\"/>\n        \
                          <TextBlock Grid.Row=\"1\" Margin=\"20\" x:Name=\"StatusText\" Foreground=\"#888\"\n                   \
-                                    Text=\"Status: waiting for dispatchâ€¦\"/>\n    \
+                                    Text=\"Status: waiting for dispatch…\"/>\n    \
                      </Grid>\n\
                  </Window>\n"
             )
@@ -13082,6 +13082,31 @@ mod tests {
         assert!(p.csproj.contains("FlattenNativeRuntimeDlls"));
         assert!(p.csproj.contains("CopyMosaicNativeHostLibraries"));
         assert!(p.csproj.contains("$(MSBuildProjectDirectory)\\*.dll"));
+        // The window title must be correctly encoded UTF-8.
+        //
+        // Every generated WinUI app displayed `TaskApp â€" Mosaic â†' XAML
+        // demo` in its title bar: the em dash and arrow were double-encoded
+        // in the emitter's own source literal, so the mojibake shipped to
+        // every consumer. It survived because nothing asserted on the
+        // title's bytes -- cosmetic, always visible, easy to stop noticing.
+        assert!(
+            p.main_window_xaml.contains('\u{2014}'),
+            "title should carry a real em dash (U+2014), got:\n{}",
+            p.main_window_xaml
+        );
+        assert!(
+            p.main_window_xaml.contains('\u{2192}'),
+            "title should carry a real rightwards arrow (U+2192), got:\n{}",
+            p.main_window_xaml
+        );
+        // `Ã¢` is the giveaway: a UTF-8 em dash reinterpreted as Latin-1 and
+        // re-encoded.
+        assert!(
+            !p.main_window_xaml.contains('\u{00e2}'),
+            "title contains a double-encoded character, got:\n{}",
+            p.main_window_xaml
+        );
+
         // App.xaml.cs references MainWindow.
         assert!(p.app_xaml_cs.contains("new MainWindow()"));
         // MainWindow.xaml.cs has the dispatch stub.
