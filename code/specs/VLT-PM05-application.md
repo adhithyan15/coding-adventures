@@ -435,10 +435,13 @@ CatalogV1 {
 }
 ```
 
-V1 permits 100,000 entries and at most 16 current candidates per item. Every
-candidate frame must decrypt as `ItemRevisionV1` with the same item ID. Empty
-candidate sets, duplicate item IDs, wrong-kind frames, dangling references, and
-candidate amplification are corruption.
+V1 permits at most 16 current candidates per item. Entry count is bounded by
+two different numbers depending on which side of the wire is asking — see
+§13.4 for the derivation and why decode and admission deliberately disagree —
+rather than one flat, round figure. Every candidate frame must decrypt as
+`ItemRevisionV1` with the same item ID. Empty candidate sets, duplicate item
+IDs, wrong-kind frames, dangling references, and candidate amplification are
+corruption.
 
 Catalogs are immutable snapshots. Phase 1A rewrites one encrypted catalog frame
 per mutation. A later tree format may optimize this without changing domain or
@@ -682,8 +685,8 @@ After authentication, the opener strictly decodes the closed snapshot, checks
 the exact candidate count and domain-separated hash, and verifies the embedded
 bootstrap's authority public key and self-signature. Candidate entries must be
 strictly increasing by source item/revision identity, unique, bounded to
-100,000 items and 16 candidates per item, canonically decode as item revisions,
-and reproduce the entry's item identity. Every intermediate plaintext CBOR
+`MAX_CATALOG_ENTRIES` items (§13.4) and 16 candidates per item, canonically
+decode as item revisions, and reproduce the entry's item identity. Every intermediate plaintext CBOR
 tree, passphrase, derived key, ciphertext copy, bootstrap, encoded revision,
 and hash preimage is wiped on every return path.
 
@@ -740,7 +743,8 @@ Additional V1 bounds are checked before allocation:
 |---|---:|
 | local state bytes | 32 MiB |
 | prepared/pending publication objects | 4,096 |
-| catalog entries | 100,000 |
+| catalog entries admitted by this device (`MAX_CATALOG_ENTRIES`) | 18,064 |
+| catalog entries this device will still decode (`MAX_ENCODABLE_CATALOG_ENTRIES`) | 19,064 |
 | candidates per item | 16 |
 | application plaintext object | 16 MiB |
 | search query | 256 bytes |
@@ -918,7 +922,10 @@ correct.
 
 It is about *materialisation*, not about the whole open. Open still fails
 closed on the things it should: a corrupt frame, a broken pin, a failed
-signature, a catalog with more entries than `MAX_CATALOG_ENTRIES`.
+signature, a catalog with more entries than the decode-time ceiling
+(`MAX_ENCODABLE_CATALOG_ENTRIES` as of §13.4 — this bound was named
+`MAX_CATALOG_ENTRIES` and set to a flat, unreachable `100,000` when this
+section was written).
 
 And it is about *size*, not about every per-item failure. A revision that
 does not decode still denies open, and one case of that is reachable from
@@ -977,6 +984,144 @@ was declined. The third could not be answered that way, because on the
 open path a closed error *is* the loss. Fixing it meant removing the
 failure rather than reporting it — which was available, because the
 re-encode was never needed in the first place.
+
+### 13.4 The catalog's own entry ceiling was fictional
+
+§13.1 gave every record encode a `BoundExceeded` outcome instead of an abort,
+including `CatalogV1::encode` itself. That fix assumed the catalog's own
+admission check — `entries.len() > MAX_CATALOG_ENTRIES`, with
+`MAX_CATALOG_ENTRIES` a flat, round `100,000` — was merely the *looser* of
+two bounds, the same relationship the plaintext gate has to the encoder's
+ceiling everywhere else in this layer. It was not. `100,000` was never
+reachable: `CatalogV1::encode`'s own comment already said so — "an ordinary
+vault crosses the codec's ceiling somewhere below twenty thousand items" —
+but the number the catalog *admitted* was never brought down to match the
+number it could actually carry.
+
+**Why this one has no delete escape hatch.** §13.2 names deletion as the
+recourse for an oversized individual record: a tombstone revision carries
+only the item id and a timestamp, so it never re-triggers the record encode
+that failed. That recourse does not exist for an oversized *catalog*, because
+catalog entries are not removed by deletion — an item's tombstone is still a
+catalog entry, the same size on the wire as the live entry it replaced. A
+catalog that has reached the real ceiling stays at that size forever. Every
+subsequent mutation that has to re-encode the full catalog — `item add`,
+`item edit`, `item delete`, every authored conflict merge, and `export` —
+fails the same way, permanently, with no operation left inside the product
+that shrinks the catalog back under the ceiling. An ordinary vault that grew
+past roughly nineteen thousand items had no recourse at all, and needed no
+hostile peer to get there.
+
+**The derivation.** `CatalogV1::encode`'s wire shape for one entry with one
+candidate is exactly:
+
+```text
+  entry map header (2 pairs, < 24)              1
+  key 1 (unsigned < 24)                          1
+  item id   bytes header (len 16, < 24)          1
+            item id bytes                       16
+  key 2 (unsigned < 24)                          1
+  candidates  array header (1 elem, < 24)        1
+    revision id  bytes header (len 32, >= 24)    2
+                 revision id bytes               32
+                                                ----
+                                                 55
+```
+
+`ItemId` and `RevisionId` are fixed-width byte strings, and canonical-CBOR's
+header for a definite-length byte string depends only on its length, never
+its content, so 55 bytes is exact, not an estimate — and it is the *cheapest*
+an entry can encode to: a second candidate (a conflict) costs 34 more bytes,
+never fewer. With a 16-byte conservative allowance for the frame around the
+entries array (the outer map's three fields plus the entries array's own
+length header), the largest entry count any encode of a `CatalogV1` can ever
+reach is:
+
+```text
+MAX_ENCODABLE_CATALOG_ENTRIES = (MAX_ENCODED_SIZE - 16) / 55 = 19,064
+```
+
+No catalog produced by any device honouring `MAX_ENCODED_SIZE` — this one,
+past or present, or any other implementation of this wire format — can ever
+exceed 19,064 entries. That makes it a *proven* ceiling rather than a policy
+choice, which is what lets it be used as a decode-time bound with zero
+backward-compatibility cost (below).
+
+Admission then subtracts a safety margin of 1,000 entries — 55,000 bytes of
+slack, enough to absorb on the order of a thousand simultaneously-conflicted
+items (each extra candidate costs 34 bytes, not a full entry) without a
+per-entry accounting — arriving at:
+
+```text
+MAX_CATALOG_ENTRIES = MAX_ENCODABLE_CATALOG_ENTRIES - 1,000 = 18,064
+```
+
+**Two bounds, not one, and why they must differ.** The fix is not "lower
+`MAX_CATALOG_ENTRIES` to the real number." A single tightened bound applied
+uniformly would repeat, at the catalog level, the exact mistake §13.3
+corrected for individual records: a hard reject on the *open* path over
+*size*, which does not refuse one mutation, it denies the whole vault. A
+catalog between the two bounds is not hypothetical residue — under the old
+`100,000`-entry admission check, this device's own past self could
+legitimately have grown a catalog anywhere up to the *real* 19,064-entry
+ceiling before this fix shipped, and any other device honouring the same
+wire format could have too. That catalog must stay openable.
+
+So admission and decode use different bounds, on purpose:
+
+- **Admission** (`validate_catalog`, and therefore `CatalogV1::new` and every
+  local mutation that builds a new catalog — `item add`, `item delete`,
+  `item edit`, the authored conflict merges, and portable import) uses the
+  tight, margined `MAX_CATALOG_ENTRIES` (18,064). Reaching it refuses the
+  *next* item with `BoundExceeded`, before that catalog is ever built, which
+  is the actual fix: the failure moves from re-encode time to admission
+  time, and a catalog admission has already bounded can always still be
+  edited, deleted from, and re-encoded — the freeze this section opened
+  with cannot recur, because admission never lets the catalog reach a size
+  that re-encode can't recover from.
+- **Decode** (`CatalogV1::decode`) uses the looser, unmargined
+  `MAX_ENCODABLE_CATALOG_ENTRIES` (19,064) — the proven ceiling, not this
+  device's own admission policy. This runs on the open path, through
+  `materialize_current_catalog`, so a hard reject here denies the whole
+  vault rather than one mutation; using the proven ceiling means the only
+  catalogs it ever rejects are ones no honest encoder, old or new, could
+  ever have produced. A catalog this device would no longer *admit*
+  building fresh — because it exceeds 18,064 — still opens, because it
+  might be exactly what a past version of this device, or any honest peer,
+  legitimately wrote. Only past 19,064 is a catalog certainly the product
+  of a peer whose own encoder does not honour `MAX_ENCODED_SIZE` — hand-
+  crafting wire bytes rather than running a compliant encoder — and that is
+  the case this closes: a peer cannot install a catalog this device could
+  decode but never again re-encode.
+
+`materialize_current_catalog`'s own cross-head merge check (reachable when
+several unreconciled concurrent heads each individually decode within bounds
+but their union does not) uses the same proven ceiling as decode, for the
+same reason. A merged view that does exceed it cannot have come from any
+device honouring this wire format, so denying open there remains one of the
+cases open should still fail closed on — §13.3 already named exactly this,
+"a catalog with more entries than `MAX_CATALOG_ENTRIES`," as the accepted
+exception to the invariant it otherwise established.
+
+**Tests.** `codec.rs` pins the derivation directly against the real encoder:
+`catalog_entry_byte_cost_is_exact` measures the 55-byte cost;
+`max_encodable_catalog_entries_is_a_proven_ceiling` shows the encoder accepts
+exactly 19,064 single-candidate entries and refuses one more, from any
+caller, not only this device's own admission path;
+`admission_refuses_growth_before_the_catalog_is_ever_unencodable` shows
+admission refuses the 18,065th entry itself, rather than building a catalog
+that fails later on encode; `decode_stays_open_to_a_legacy_or_peer_catalog_
+admission_would_now_refuse` and `decode_rejects_a_catalog_no_honest_encoder_
+could_have_produced` cover the two decode-time halves. `open.rs` reproduces
+the bug end to end against a real, unlocked vault: `a_synced_catalog_at_the_
+proven_ceiling_opens` and `a_synced_catalog_past_the_proven_ceiling_denies_
+open` bracket 19,064 exactly, through `open_active_vault` against a
+peer-authored catalog delivered the way a real sync would deliver one (many
+small publications, since one commit cannot itself carry more than
+`MAX_ADDED_OBJECTS` new objects); `a_catalog_at_the_admission_ceiling_can_
+still_be_deleted_from` reproduces the named symptom directly — a real
+`delete_current_item` call succeeds on a catalog sitting at this device's own
+admission ceiling, and a subsequent `add_item` is correctly refused.
 
 ## 14. Required verification
 

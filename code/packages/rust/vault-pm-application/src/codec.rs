@@ -2,7 +2,9 @@ use crate::{
     ApplicationError, ObjectKind, ATTACHMENT_CHUNK_BYTES, ATTACHMENT_DEK_BYTES,
     MAX_ATTACHMENT_BYTES, MAX_ATTACHMENT_CHUNKS, MAX_ATTACHMENT_NAME_BYTES,
 };
-use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborError, CborValue};
+use coding_adventures_canonical_cbor::{
+    decode, encode, try_encode, CborError, CborValue, MAX_ENCODED_SIZE,
+};
 use coding_adventures_vault_attachments::{BlobId, EncryptedChunk};
 use coding_adventures_vault_pm_audit::SignedAuditEventV1;
 use coding_adventures_vault_pm_domain::{
@@ -24,8 +26,112 @@ const VERSION: u64 = 1;
 const LIVE_STATE: u64 = 1;
 const TOMBSTONE_STATE: u64 = 2;
 pub(crate) const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
-pub(crate) const MAX_CATALOG_ENTRIES: usize = 100_000;
 pub(crate) const MAX_CANDIDATES_PER_ITEM: usize = 16;
+
+// ─────────────────────────────────────────────────────────────────────
+// Catalog entry bounds — derived from MAX_ENCODED_SIZE, not eyeballed
+// ─────────────────────────────────────────────────────────────────────
+//
+// This used to be one flat, round `100_000` used for admission, decode,
+// and cross-head merging alike. `100_000` was never reachable: canonical-
+// CBOR's own 1 MiB `MAX_ENCODED_SIZE` (this crate's *inner* bound, see
+// `CatalogV1::encode`'s doc comment and VLT-PM05 §13.1) refuses to emit a
+// catalog anywhere near that many entries. An ordinary vault crossed the
+// real ceiling somewhere below twenty thousand items, and because catalog
+// entries are never removed — a deleted item becomes a tombstone *entry*,
+// not a smaller one — nothing this product does from inside a session
+// could ever bring an over-ceiling catalog back under it. Every mutation
+// that had to re-encode the catalog, delete included, failed the same way
+// forever. See VLT-PM05 §13.2 for the full account.
+//
+// The fix is two numbers, not one, because "can we still open a catalog
+// bigger than what we would create" and "how big a catalog are we willing
+// to keep growing" are different questions with different backward-
+// compatibility answers:
+
+/// Exact byte cost of one catalog entry with exactly one candidate
+/// revision: `{1: bytes(item_id), 2: [bytes(revision_id)]}`.
+///
+/// `ItemId` is a fixed 16-byte value and `RevisionId` a fixed 32-byte
+/// value, and canonical-CBOR's header for a definite-length byte string
+/// is fully determined by its length, never its content — so this is not
+/// an estimate, it is an exact count:
+///
+/// ```text
+///   entry map header (2 pairs, < 24)              1
+///   key 1 (unsigned < 24)                          1
+///   item id   bytes header (len 16, < 24)          1
+///             item id bytes                       16
+///   key 2 (unsigned < 24)                          1
+///   candidates  array header (1 elem, < 24)        1
+///     revision id  bytes header (len 32, >= 24)    2
+///                  revision id bytes               32
+///                                                ----
+///                                                  55
+/// ```
+///
+/// One candidate is the cheapest an entry can be — a second candidate
+/// (a conflict) adds 34 more bytes, never fewer — so this is a lower
+/// bound on real per-entry cost and therefore an *upper* bound on how
+/// many entries any valid catalog can hold. Pinned against the real
+/// encoder by `catalog_entry_byte_cost_is_exact` below.
+const CATALOG_ENTRY_BYTES: usize = 55;
+
+/// Conservative upper bound on the bytes *outside* the per-entry cost:
+/// the outer map's three fields (version, kind, entries array) plus the
+/// entries array's own length header, which grows from 1 byte
+/// (< 24 elements) to 2 (< 256), 3 (< 65,536), or 5 (< 2^32) as the
+/// catalog grows. 16 bytes covers all of that with room to spare in the
+/// size range this bound actually operates in (tens of thousands of
+/// entries, a 3-byte array header) without needing a separate case for
+/// the exact crossover point.
+const CATALOG_FRAME_OVERHEAD_BYTES: usize = 16;
+
+/// The real ceiling: the largest entry count *any* valid encode of a
+/// `CatalogV1` can reach, on this device or any other honouring the same
+/// wire format. Because `CATALOG_ENTRY_BYTES` is the cheapest an entry
+/// can ever be, no catalog — however its entries are distributed between
+/// single-candidate and conflicted — can exceed this many entries and
+/// still fit inside `MAX_ENCODED_SIZE`. That makes it safe to use as a
+/// decode-time bound with zero backward-compatibility cost: nothing
+/// honestly produced by this wire format, past or present, can be turned
+/// away by it. Only a peer that does not honour `MAX_ENCODED_SIZE` at all
+/// — hand-crafting bytes rather than running this encoder — can ever
+/// author a catalog object this large.
+pub(crate) const MAX_ENCODABLE_CATALOG_ENTRIES: usize =
+    (MAX_ENCODED_SIZE - CATALOG_FRAME_OVERHEAD_BYTES) / CATALOG_ENTRY_BYTES;
+
+/// Entries of headroom subtracted from [`MAX_ENCODABLE_CATALOG_ENTRIES`]
+/// to get the admission-time ceiling below. Two things eat into the exact
+/// ceiling without changing entry *count*: items that have gone through
+/// conflict resolution carry more than one candidate revision (34 extra
+/// bytes each), and this margin needs to absorb that without a per-entry
+/// accounting. 1,000 entries of margin is 55,000 bytes of slack — room
+/// for on the order of a thousand simultaneously-conflicted items, far
+/// past what concurrent editing of a personal vault produces in
+/// practice. A vault that legitimately exceeds even that is the
+/// pre-existing, tracked residual VLT-PM05 §13.2 names for the
+/// conflicted-item case, not a new one this change introduces.
+const CATALOG_ADMISSION_SAFETY_MARGIN: usize = 1_000;
+
+/// The admission-time ceiling this device applies to catalogs it
+/// constructs itself: [`MAX_ENCODABLE_CATALOG_ENTRIES`] minus
+/// [`CATALOG_ADMISSION_SAFETY_MARGIN`]. Used by `validate_catalog`, and
+/// therefore by every local mutation that builds a new `CatalogV1` —
+/// `item add`, `item delete`, `item edit`, the authored conflict merges,
+/// and portable import. Reaching this ceiling refuses the *next* item
+/// admitted, with `BoundExceeded`, before the catalog is ever built —
+/// which is the actual fix: the old code let admission run all the way
+/// to a fictional `100_000` and only discovered the real ceiling on
+/// re-encode, by which point every entry already admitted was
+/// permanently stuck in an unencodable catalog. A catalog that stays
+/// under this ceiling can always be edited, deleted from, and
+/// re-encoded — the escape hatch VLT-PM05 §13.2 already relies on for
+/// oversized individual records now also holds for the catalog as a
+/// whole, because admission never lets the catalog reach a size that
+/// escape hatch can't recover from.
+pub(crate) const MAX_CATALOG_ENTRIES: usize =
+    MAX_ENCODABLE_CATALOG_ENTRIES - CATALOG_ADMISSION_SAFETY_MARGIN;
 
 /// Owner-private authority and device seeds persisted only as encrypted state.
 #[derive(PartialEq, Eq)]
@@ -162,57 +268,60 @@ impl CatalogV1 {
     ///
     /// # Why this encode is checked
     ///
-    /// `validate_catalog` admits up to `MAX_CATALOG_ENTRIES` (100,000)
-    /// items, and each entry costs roughly sixty bytes once the item id
-    /// and its candidate revision ids are encoded. A full catalog is
-    /// therefore several megabytes — comfortably past canonical-CBOR's
-    /// 1 MiB `MAX_ENCODED_SIZE`, which this crate's own 16 MiB plaintext
-    /// gate does not bound (VLT-PM05 section 13.1).
+    /// `validate_catalog` admits up to `MAX_CATALOG_ENTRIES` entries, which
+    /// is derived (see the constant's own doc comment) to stay under
+    /// canonical-CBOR's 1 MiB `MAX_ENCODED_SIZE` — the *inner* bound this
+    /// crate's own 16 MiB plaintext gate does not itself enforce (VLT-PM05
+    /// §13.1). Because admission already refuses the entry that would have
+    /// pushed a catalog past what can be re-encoded, this call is not
+    /// expected to fail on entry count: `self.entries` can only have been
+    /// built through [`CatalogV1::new`] or [`CatalogV1::empty`], both of
+    /// which already ran `validate_catalog`.
     ///
-    /// Unlike the record encodes, this one needs no hostile peer: an
-    /// ordinary vault crosses the codec's ceiling somewhere below twenty
-    /// thousand items, and the catalog is re-encoded by every mutation.
-    /// So the bound this function's own validation advertises is not the
-    /// binding one, and the encode reports `BoundExceeded` rather than
-    /// aborting the process.
+    /// It re-validates and re-checks anyway, for the same reason the record
+    /// encodes keep `check_plaintext_bound` after their own inner checks
+    /// (§13.1): a conflicted item can carry more than one candidate
+    /// revision, and enough conflicted entries at once can still exhaust
+    /// `MAX_CATALOG_ENTRIES`'s safety margin even though entry *count*
+    /// stayed under the admission ceiling. That residual is narrow — it
+    /// needs on the order of a thousand simultaneously-conflicted items —
+    /// and reports `BoundExceeded` the same as every other re-encode this
+    /// layer performs, rather than aborting the process.
     pub fn encode(&self) -> Result<Vec<u8>, ApplicationError> {
         validate_catalog(&self.entries)?;
-        let entries = self
-            .entries
-            .iter()
-            .map(|(item, candidates)| {
-                CborValue::Map(vec![
-                    field(1, bytes(item.as_bytes())),
-                    field(
-                        2,
-                        CborValue::Array(
-                            candidates
-                                .iter()
-                                .map(|candidate| bytes(candidate.as_bytes()))
-                                .collect(),
-                        ),
-                    ),
-                ])
-            })
-            .collect();
-        let encoded = try_encode(&CborValue::Map(vec![
-            field(1, CborValue::Unsigned(VERSION)),
-            field(2, CborValue::Unsigned(ObjectKind::Catalog.code())),
-            field(3, CborValue::Array(entries)),
-        ]))
-        .map_err(map_encode_error)?;
-        check_plaintext_bound(&encoded)?;
-        Ok(encoded)
+        encode_catalog_entries(&self.entries)
     }
 
     /// Strictly decode one closed canonical V1 catalog.
+    ///
+    /// # Why this uses the looser of the two entry bounds
+    ///
+    /// This checks entry count against [`MAX_ENCODABLE_CATALOG_ENTRIES`],
+    /// not the tighter admission-time [`MAX_CATALOG_ENTRIES`]. The two
+    /// differ by design: [`MAX_ENCODABLE_CATALOG_ENTRIES`] is a *proven*
+    /// ceiling — with one candidate per entry, the cheapest an entry can
+    /// ever encode to, no valid `CatalogV1::encode` output from any device
+    /// honouring this wire format can exceed it — so rejecting past it
+    /// costs nothing for any honestly-produced catalog, old client or new.
+    /// Using the tighter, margined `MAX_CATALOG_ENTRIES` here instead would
+    /// repeat the mistake VLT-PM05 §13.3 already corrected once for
+    /// individual records: this decode runs on the open path (through
+    /// `materialize_current_catalog`), and a hard reject there does not
+    /// refuse one mutation, it denies the whole vault. A catalog a past
+    /// version of this device (or any honest peer) legitimately produced
+    /// between the two bounds must stay openable even though this device
+    /// would no longer *admit* growing a catalog that large; only a
+    /// catalog no honest encoder could ever have produced — because it
+    /// exceeds the proven ceiling — is rejected here, which is exactly the
+    /// case of a peer installing a catalog this device could never itself
+    /// re-encode.
     pub fn decode(encoded: &[u8]) -> Result<Self, ApplicationError> {
         check_plaintext_bound(encoded)?;
         let mut fields = closed_fields(encoded, &[1, 2, 3])?;
         check_version(take_uint(&mut fields, 1)?)?;
         check_kind(take_uint(&mut fields, 2)?, ObjectKind::Catalog)?;
         let encoded_entries = take_array(&mut fields, 3)?;
-        if encoded_entries.len() > MAX_CATALOG_ENTRIES {
+        if encoded_entries.len() > MAX_ENCODABLE_CATALOG_ENTRIES {
             return Err(ApplicationError::BoundExceeded);
         }
         let mut entries = BTreeMap::new();
@@ -238,8 +347,51 @@ impl CatalogV1 {
             }
             entries.insert(item, candidates);
         }
-        Self::new(entries)
+        // Not `Self::new`: that runs `validate_catalog`, which applies the
+        // *admission* ceiling. The structural checks above (sorted, unique,
+        // non-empty, within `MAX_CANDIDATES_PER_ITEM`) are exactly what
+        // `validate_catalog` would otherwise re-check per entry; the only
+        // thing it would add is the tighter entry-count bound this function
+        // deliberately does not apply. See the decode doc comment above.
+        Ok(Self { entries })
     }
+}
+
+/// Encode `entries` into the exact closed canonical V1 catalog body,
+/// without checking entry count against either bound.
+///
+/// Factored out of [`CatalogV1::encode`] so tests can construct catalog
+/// bytes past the admission ceiling — modelling a peer whose own
+/// validation is looser than this device's — without reaching into the
+/// wire format by hand.
+pub(crate) fn encode_catalog_entries(
+    entries: &BTreeMap<ItemId, Vec<RevisionId>>,
+) -> Result<Vec<u8>, ApplicationError> {
+    let encoded_entries = entries
+        .iter()
+        .map(|(item, candidates)| {
+            CborValue::Map(vec![
+                field(1, bytes(item.as_bytes())),
+                field(
+                    2,
+                    CborValue::Array(
+                        candidates
+                            .iter()
+                            .map(|candidate| bytes(candidate.as_bytes()))
+                            .collect(),
+                    ),
+                ),
+            ])
+        })
+        .collect();
+    let encoded = try_encode(&CborValue::Map(vec![
+        field(1, CborValue::Unsigned(VERSION)),
+        field(2, CborValue::Unsigned(ObjectKind::Catalog.code())),
+        field(3, CborValue::Array(encoded_entries)),
+    ]))
+    .map_err(map_encode_error)?;
+    check_plaintext_bound(&encoded)?;
+    Ok(encoded)
 }
 
 impl Debug for CatalogV1 {
@@ -1198,6 +1350,11 @@ fn encode_any_record(record: &AnyRecord) -> Result<Vec<u8>, ApplicationError> {
     }
 }
 
+/// Admission-time validation for a catalog this device is about to build
+/// or publish. Applies the tight, margined [`MAX_CATALOG_ENTRIES`] — not
+/// the looser [`MAX_ENCODABLE_CATALOG_ENTRIES`] `CatalogV1::decode` uses —
+/// because this runs on the write path, where refusing the *next* item is
+/// the correct, cheap failure, unlike decode's open-path hard reject.
 fn validate_catalog(entries: &BTreeMap<ItemId, Vec<RevisionId>>) -> Result<(), ApplicationError> {
     if entries.len() > MAX_CATALOG_ENTRIES {
         return Err(ApplicationError::BoundExceeded);
@@ -1593,33 +1750,184 @@ mod tests {
         .unwrap()
     }
 
-    #[test]
-    fn oversized_catalog_is_reported_rather_than_aborting_the_process() {
-        // The catalog's own validation admits 100,000 entries, but the
-        // encoder beneath it stops at 1 MiB, so the advertised bound is
-        // not the binding one. No hostile input is involved here: this is
-        // an ordinary vault that grew, and the catalog is re-encoded on
-        // every mutation.
+    /// Build `count` distinct, sorted, single-candidate catalog entries.
+    fn many_single_candidate_entries(count: usize) -> BTreeMap<ItemId, Vec<RevisionId>> {
         let mut entries = BTreeMap::new();
-        for index in 0..30_000_u32 {
+        for index in 0..count {
+            let index = u64::try_from(index).unwrap();
             let mut id = [0_u8; 16];
-            id[..4].copy_from_slice(&index.to_be_bytes());
+            id[..8].copy_from_slice(&index.to_be_bytes());
             entries.insert(ItemId::new(id), vec![RevisionId::new([1; 32])]);
         }
-        let catalog = CatalogV1::new(entries).unwrap();
-        assert_eq!(catalog.encode(), Err(ApplicationError::BoundExceeded));
+        entries
+    }
+
+    /// One CBOR definite-length header: major type `major`, argument `len`,
+    /// smallest form. Independent of `try_encode` so tests can author bytes
+    /// no honest use of this crate's own encoder could ever produce --
+    /// modelling a peer whose encoder does not share `MAX_ENCODED_SIZE`.
+    fn raw_cbor_header(major: u8, len: usize) -> Vec<u8> {
+        let major = major << 5;
+        if len <= 23 {
+            vec![major | len as u8]
+        } else if len <= 0xFF {
+            vec![major | 24, len as u8]
+        } else if len <= 0xFFFF {
+            let mut out = vec![major | 25];
+            out.extend_from_slice(&(len as u16).to_be_bytes());
+            out
+        } else {
+            let mut out = vec![major | 26];
+            out.extend_from_slice(&(len as u32).to_be_bytes());
+            out
+        }
+    }
+
+    /// Hand-assemble `count` catalog entries directly onto the wire,
+    /// bypassing `try_encode` (and therefore `MAX_ENCODED_SIZE`) entirely.
+    /// This is what a peer whose own encoder has a larger — or absent —
+    /// framing budget would produce: valid canonical CBOR this device's own
+    /// encoder could never have written.
+    fn raw_catalog_bytes(count: usize) -> Vec<u8> {
+        let mut out = vec![0xa3, 0x01, 0x01, 0x02, 0x02, 0x03];
+        out.extend(raw_cbor_header(4, count));
+        for index in 0..count {
+            let index = u64::try_from(index).unwrap();
+            let mut item_id = [0_u8; 16];
+            item_id[..8].copy_from_slice(&index.to_be_bytes());
+            out.extend([0xa2, 0x01]);
+            out.extend(raw_cbor_header(2, 16));
+            out.extend_from_slice(&item_id);
+            out.extend([0x02, 0x81]);
+            out.extend(raw_cbor_header(2, 32));
+            out.extend_from_slice(&[1_u8; 32]);
+        }
+        out
+    }
+
+    #[test]
+    fn catalog_entry_byte_cost_is_exact() {
+        // `CATALOG_ENTRY_BYTES` is asserted, not measured, in the constant's
+        // own doc comment. Pin it against the real encoder so a change to
+        // `ItemId`/`RevisionId` width, or to the CBOR profile, fails this
+        // test instead of silently invalidating every bound derived from it.
+        let empty = encode_catalog_entries(&BTreeMap::new()).unwrap();
+        let one = encode_catalog_entries(&many_single_candidate_entries(1)).unwrap();
+        assert_eq!(one.len() - empty.len(), CATALOG_ENTRY_BYTES);
+
+        // The hand-assembled wire form used by the tests below must be
+        // byte-for-byte what the real encoder produces, or the "peer" bytes
+        // those tests build would not be modelling this wire format at all.
+        assert_eq!(raw_catalog_bytes(0), empty);
+        assert_eq!(raw_catalog_bytes(1), one);
+        assert_eq!(
+            raw_catalog_bytes(500),
+            encode_catalog_entries(&many_single_candidate_entries(500)).unwrap(),
+        );
+    }
+
+    #[test]
+    fn max_encodable_catalog_entries_is_a_proven_ceiling() {
+        // No valid encode of any catalog, from this device or any other
+        // honouring MAX_ENCODED_SIZE, can exceed this many entries: one
+        // candidate per entry is the cheapest an entry can be, so this is
+        // the theoretical maximum, not an estimate. Proven two ways: the
+        // real encoder accepts exactly this many single-candidate entries
+        // and refuses one more (going through `encode_catalog_entries`,
+        // which -- unlike `CatalogV1::encode` -- does not apply the
+        // tighter admission ceiling, so this measures the wire format's
+        // limit and nothing about this device's own policy).
+        let at_ceiling = many_single_candidate_entries(MAX_ENCODABLE_CATALOG_ENTRIES);
+        let encoded = encode_catalog_entries(&at_ceiling).unwrap();
+        assert!(encoded.len() <= coding_adventures_canonical_cbor::MAX_ENCODED_SIZE);
+
+        let one_more = many_single_candidate_entries(MAX_ENCODABLE_CATALOG_ENTRIES + 1);
+        assert_eq!(
+            encode_catalog_entries(&one_more),
+            Err(ApplicationError::BoundExceeded),
+        );
+    }
+
+    #[test]
+    fn admission_refuses_growth_before_the_catalog_is_ever_unencodable() {
+        // Before this fix, `validate_catalog` admitted up to a flat,
+        // eyeballed 100,000 entries -- a number the encoder beneath it
+        // could never actually reach. Admission now refuses the entry that
+        // would make the catalog unencodable, before that catalog is ever
+        // built, rather than discovering the failure on the next re-encode.
+        let at_ceiling = many_single_candidate_entries(MAX_CATALOG_ENTRIES);
+        let catalog = CatalogV1::new(at_ceiling).unwrap();
+        let encoded = catalog.encode().unwrap();
+        assert_eq!(CatalogV1::decode(&encoded).unwrap(), catalog);
+
+        let one_more = many_single_candidate_entries(MAX_CATALOG_ENTRIES + 1);
+        assert_eq!(
+            CatalogV1::new(one_more),
+            Err(ApplicationError::BoundExceeded),
+            "admission must reject the (MAX_CATALOG_ENTRIES + 1)-th item \
+             itself, not merely fail later on encode",
+        );
 
         // A catalog that does fit still encodes and round trips, so the
         // check has not simply closed the door on every large vault.
-        let mut small = BTreeMap::new();
-        for index in 0..1_000_u32 {
-            let mut id = [0_u8; 16];
-            id[..4].copy_from_slice(&index.to_be_bytes());
-            small.insert(ItemId::new(id), vec![RevisionId::new([1; 32])]);
-        }
+        let small = many_single_candidate_entries(1_000);
         let catalog = CatalogV1::new(small).unwrap();
         let encoded = catalog.encode().unwrap();
         assert_eq!(CatalogV1::decode(&encoded).unwrap(), catalog);
+    }
+
+    #[test]
+    fn decode_stays_open_to_a_legacy_or_peer_catalog_admission_would_now_refuse() {
+        // Between the two bounds -- admission's MAX_CATALOG_ENTRIES and the
+        // proven MAX_ENCODABLE_CATALOG_ENTRIES ceiling -- is exactly the
+        // band a fully honest encoder (this device before this fix shipped,
+        // or any other device honouring the same wire format) could
+        // legitimately have produced, but this device would no longer admit
+        // building itself. Decode must still accept it: denying it would
+        // turn "this device won't grow the catalog further" into "this
+        // device can no longer open its own history," which is the failure
+        // VLT-PM05 section 13.3 already ruled out once for individual
+        // records.
+        const BETWEEN: usize = MAX_CATALOG_ENTRIES + 500;
+        const _: () = assert!(MAX_CATALOG_ENTRIES < MAX_ENCODABLE_CATALOG_ENTRIES);
+        const _: () = assert!(BETWEEN < MAX_ENCODABLE_CATALOG_ENTRIES);
+        let between = BETWEEN;
+
+        let entries = many_single_candidate_entries(between);
+        // This device would no longer admit constructing it fresh...
+        assert_eq!(
+            CatalogV1::new(entries.clone()),
+            Err(ApplicationError::BoundExceeded),
+        );
+        // ...but it decodes and opens, because a past version of this
+        // device (or any honest peer) could have produced these exact
+        // bytes through this exact encoder.
+        let encoded = encode_catalog_entries(&entries).unwrap();
+        let decoded = CatalogV1::decode(&encoded).unwrap();
+        assert_eq!(decoded.entries(), &entries);
+    }
+
+    #[test]
+    fn decode_rejects_a_catalog_no_honest_encoder_could_have_produced() {
+        // Past MAX_ENCODABLE_CATALOG_ENTRIES, no device honouring
+        // MAX_ENCODED_SIZE -- old or new -- could ever have written these
+        // bytes, so rejecting them costs no legitimate peer or legacy vault
+        // anything. This is the decode-time half of the fix: a peer whose
+        // own framing budget is looser than this wire format's cannot hand
+        // this device a catalog it can decode but never again re-encode.
+        let too_many = MAX_ENCODABLE_CATALOG_ENTRIES + 1;
+        let peer_bytes = raw_catalog_bytes(too_many);
+        assert!(peer_bytes.len() <= MAX_PLAINTEXT_BYTES);
+        assert_eq!(
+            CatalogV1::decode(&peer_bytes),
+            Err(ApplicationError::BoundExceeded),
+        );
+
+        // The control: one entry under the same ceiling, built the same
+        // hand-assembled way, must still decode -- so the rejection above
+        // is about count, not about how the bytes were authored.
+        let at_ceiling = raw_catalog_bytes(MAX_ENCODABLE_CATALOG_ENTRIES);
+        assert!(CatalogV1::decode(&at_ceiling).is_ok());
     }
 
     #[test]

@@ -30,7 +30,10 @@ use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
-use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
+use crate::codec::MAX_CANDIDATES_PER_ITEM;
+#[cfg(test)]
+use crate::codec::MAX_CATALOG_ENTRIES;
+use crate::codec::MAX_ENCODABLE_CATALOG_ENTRIES;
 
 /// Default maximum number of historical revisions returned for one item.
 pub const DEFAULT_ITEM_HISTORY_LIMIT: usize = 100;
@@ -4181,6 +4184,25 @@ pub fn open_active_vault(
     })
 }
 
+/// Merge every reachable head's catalog into the one current view.
+///
+/// # Why the merge cap is `MAX_ENCODABLE_CATALOG_ENTRIES`, not `MAX_CATALOG_ENTRIES`
+///
+/// Each catalog object decoded here already passed `CatalogV1::decode`'s own
+/// bound at the same value (VLT-PM05 §13.2's derivation), so a single head
+/// can never contribute more than that many distinct items. This loop's own
+/// check exists for the case of *several* unreconciled concurrent heads
+/// whose entries only partly overlap: the union across heads can in
+/// principle exceed what any one of them could encode alone. Using the
+/// proven, unmargined ceiling here (rather than the tighter admission bound)
+/// keeps that union check from denying `open_active_vault` over a size any
+/// honest set of heads could legitimately reach — VLT-PM05 §13.3 already
+/// established that open must not fail closed over size where a narrower,
+/// correctly-calibrated bound suffices. A merged view that does exceed even
+/// this proven ceiling cannot have come from any device honouring this wire
+/// format, so denying open here is deliberate: VLT-PM05 §13.3 names exactly
+/// this case — "a catalog with more entries than `MAX_CATALOG_ENTRIES`" —
+/// as one of the things open should still fail closed on.
 fn materialize_current_catalog(
     keys: &V1Keys,
     repository: &dyn ApplicationRepository,
@@ -4207,7 +4229,9 @@ fn materialize_current_catalog(
         let catalog = CatalogV1::decode(&catalog_plaintext)?;
 
         for (item_id, revision_ids) in catalog.entries() {
-            if !materialized.contains_key(item_id) && materialized.len() == MAX_CATALOG_ENTRIES {
+            if !materialized.contains_key(item_id)
+                && materialized.len() == MAX_ENCODABLE_CATALOG_ENTRIES
+            {
                 return Err(ApplicationError::IntegrityFailure);
             }
             let candidates = materialized.entry(*item_id).or_default();
@@ -16371,6 +16395,244 @@ mod tests {
         let candidates = &session.current_catalog.items[&item_id];
         assert_eq!(candidates.len(), 1);
         assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // A synced peer's oversized *catalog* -- the item count crossed, not
+    // any one record's size (VLT-PM05 §13.2's admission/decode fix)
+    //
+    // Mirrors the opaque-record class above one level up: instead of one
+    // poisoned record, the catalog object itself carries more entries
+    // than this device's own (now-tighter) admission ceiling would ever
+    // build, delivered the way a sync delivers it. The two tests bracket
+    // `MAX_ENCODABLE_CATALOG_ENTRIES` exactly: at the ceiling, no honest
+    // encoder could have produced more, so it must still open even though
+    // this device would refuse to grow a catalog that large itself; one
+    // entry past it, no honest encoder -- old or new -- could have
+    // produced it at all, so `materialize_current_catalog` denies open,
+    // which VLT-PM05 §13.3 names as one of the cases open should still
+    // fail closed on.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// One CBOR definite-length header in the smallest form, independent of
+    /// this crate's own encoder -- see [`cbor_header`] above, reused here at
+    /// the catalog level.
+    fn raw_catalog_bytes_for(entries: &[(ItemId, RevisionId)]) -> Vec<u8> {
+        let mut out = vec![
+            0xa3,
+            0x01,
+            0x01,
+            0x02,
+            ObjectKind::Catalog.code() as u8,
+            0x03,
+        ];
+        out.extend(cbor_header(4, entries.len()));
+        for (item_id, revision_id) in entries {
+            out.extend([0xa2, 0x01]);
+            out.extend(cbor_header(2, 16));
+            out.extend_from_slice(item_id.as_bytes());
+            out.extend([0x02, 0x81]);
+            out.extend(cbor_header(2, 32));
+            out.extend_from_slice(revision_id.as_bytes());
+        }
+        out
+    }
+
+    /// Seal `item_count` distinct, tiny, peer-authored opaque item
+    /// revisions and return their frames alongside the sorted
+    /// `(item_id, revision_id)` pairs a catalog entry list needs. Entry
+    /// count is exactly the caller's choice, independent of any bound this
+    /// device's own admission path applies.
+    /// Publish a peer-authored catalog that ends up carrying `item_count`
+    /// distinct items, then adopt its final head locally.
+    ///
+    /// One commit cannot carry more than `MAX_ADDED_OBJECTS` (4,096) new
+    /// objects -- VLT-PM format's own bound on one publication, unrelated
+    /// to the catalog-entry bound this fix derives -- so a catalog this
+    /// size cannot be delivered as a single implausible mega-sync. It is
+    /// delivered the way a catalog this size actually comes to exist:
+    /// many small publications, each adding a batch of new items and a
+    /// fresh cumulative catalog snapshot, exactly the shape ordinary
+    /// incremental growth already takes. This is not a simplification for
+    /// the test's sake -- it is what "an ordinary vault that grew" (the
+    /// bug's own framing, VLT-PM05 §13.2) looks like at the object-store
+    /// level.
+    fn publish_peer_catalog_with_item_count(
+        locator: BootstrapLocator,
+        local: &MemoryLocalStateStore,
+        bootstrap: &MemoryBootstrapStore,
+        factory: &V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        item_count: usize,
+    ) {
+        const BATCH_SIZE: usize = 4_000;
+        let mut accumulated: BTreeMap<ItemId, RevisionId> = BTreeMap::new();
+        let mut next_index = 0_usize;
+        while next_index < item_count {
+            let batch_end = (next_index + BATCH_SIZE).min(item_count);
+
+            let exact_active = local.0.lock().unwrap().clone().unwrap();
+            let LocalVaultStateV1::Active(active) =
+                LocalVaultStateV1::decode(&exact_active).unwrap()
+            else {
+                panic!("fixture must be active")
+            };
+            let fixture = generation_zero_bytes();
+            let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+            let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+
+            let mut frames = Vec::with_capacity(batch_end - next_index);
+            for index in next_index..batch_end {
+                let counter = u64::try_from(index).unwrap();
+                let mut item_id_bytes = [0_u8; 16];
+                item_id_bytes[..8].copy_from_slice(&counter.to_be_bytes());
+                let item_id = ItemId::new(item_id_bytes);
+
+                let mut dek = [0xd0_u8; 32];
+                dek[..8].copy_from_slice(&counter.to_be_bytes());
+                let mut wrap_nonce = [0xd1_u8; 24];
+                wrap_nonce[..8].copy_from_slice(&counter.to_be_bytes());
+                let mut payload_nonce = [0xd2_u8; 24];
+                payload_nonce[..8].copy_from_slice(&counter.to_be_bytes());
+
+                let frame = seal_object(
+                    &keys,
+                    ObjectKind::ItemRevision,
+                    &peer_opaque_revision_plaintext(item_id, 8),
+                    &ObjectRandomness::new(dek, wrap_nonce, payload_nonce),
+                )
+                .unwrap();
+                let revision_id = RevisionId::new(*frame.id().unwrap().as_bytes());
+                accumulated.insert(item_id, revision_id);
+                frames.push(frame);
+            }
+
+            let entries: Vec<(ItemId, RevisionId)> =
+                accumulated.iter().map(|(id, rev)| (*id, *rev)).collect();
+            let catalog_plaintext = raw_catalog_bytes_for(&entries);
+            let batch_counter = u64::try_from(next_index).unwrap();
+            let mut catalog_dek = [0xd4_u8; 32];
+            catalog_dek[..8].copy_from_slice(&batch_counter.to_be_bytes());
+            let mut catalog_wrap_nonce = [0xd5_u8; 24];
+            catalog_wrap_nonce[..8].copy_from_slice(&batch_counter.to_be_bytes());
+            let mut catalog_payload_nonce = [0xd6_u8; 24];
+            catalog_payload_nonce[..8].copy_from_slice(&batch_counter.to_be_bytes());
+            let catalog_frame = seal_object(
+                &keys,
+                ObjectKind::Catalog,
+                &catalog_plaintext,
+                &ObjectRandomness::new(catalog_dek, catalog_wrap_nonce, catalog_payload_nonce),
+            )
+            .unwrap();
+            let publication = publication_for_catalog(&active, frames, catalog_frame);
+            peer_publishes(locator, local, bootstrap, factory, publication);
+
+            next_index = batch_end;
+        }
+    }
+
+    #[test]
+    fn a_synced_catalog_at_the_proven_ceiling_opens() {
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            MAX_ENCODABLE_CATALOG_ENTRIES,
+        );
+
+        // No honest encoder -- this device's own included -- could have
+        // produced one entry more, so this is the largest catalog any
+        // peer could legitimately have handed over. It still opens, even
+        // though this device's own tighter admission ceiling would refuse
+        // to grow a catalog to this size itself.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(
+            session.current_catalog.items.len(),
+            MAX_ENCODABLE_CATALOG_ENTRIES
+        );
+    }
+
+    #[test]
+    fn a_synced_catalog_past_the_proven_ceiling_denies_open() {
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            MAX_ENCODABLE_CATALOG_ENTRIES + 1,
+        );
+
+        // Past the proven ceiling, no device honouring MAX_ENCODED_SIZE --
+        // old or new -- could ever have written these bytes, and
+        // `CatalogV1::decode` refuses them with `BoundExceeded` before
+        // `materialize_current_catalog`'s own cross-head merge check is
+        // ever reached (that check exists for a different case: several
+        // *individually* in-bounds heads whose union exceeds the ceiling).
+        // Denying open here is deliberate either way: VLT-PM05 §13.3 names
+        // exactly this case, a catalog with more entries than the derived
+        // bound, as one of the things open should still fail closed on,
+        // distinct from the individual-record-size case that section fixed
+        // to never deny open.
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        );
+        assert_eq!(result.map(|_| ()), Err(ApplicationError::BoundExceeded));
+    }
+
+    #[test]
+    fn a_catalog_at_the_admission_ceiling_can_still_be_deleted_from() {
+        // The bug this fix closes, reproduced directly. Before it, a
+        // catalog that reached the real (undocumented, far lower than the
+        // advertised 100,000) encode ceiling could never again be
+        // re-encoded by *any* mutation -- delete included, because a
+        // deleted item becomes a tombstone *entry*, not a smaller one. An
+        // ordinary vault that grew this large had no recourse from inside
+        // the product at all. Now that admission keeps this device's own
+        // catalogs under a ceiling that always survives re-encode, delete
+        // -- the escape hatch VLT-PM05 §13.2 already relies on for
+        // oversized individual records -- keeps working even once the
+        // catalog is as large as this device will ever grow one itself,
+        // and admission correctly refuses to grow it further.
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            MAX_CATALOG_ENTRIES,
+        );
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), MAX_CATALOG_ENTRIES);
+        let item_id = ItemId::new([0; 16]);
+        session
+            .delete_current_item(item_id, 900, 901, delete_item_randomness(0x5e), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), MAX_CATALOG_ENTRIES);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+
+        // The other half of the same bug: admission still correctly
+        // refuses to grow this catalog past the ceiling it is already at
+        // -- deleting one item did not "make room," because catalog
+        // entries are never removed.
+        let randomness = add_item_randomness(0x5f);
+        let document = new_login_document(randomness.item_id(), "One too many", "x");
+        assert_eq!(
+            session
+                .add_item(document, 902, randomness, &local)
+                .map(|_| ()),
+            Err(ApplicationError::BoundExceeded),
+        );
     }
 
     // ---------------------------------------------------------------------
