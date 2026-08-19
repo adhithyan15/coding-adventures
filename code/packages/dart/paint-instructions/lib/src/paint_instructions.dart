@@ -291,6 +291,12 @@ final class PaintRect extends PaintInstruction {
   @override
   final Metadata metadata;
 
+  /// CSS hex stroke colour. Empty (the default) means no stroke.
+  final String stroke;
+
+  /// Stroke width in pixels. Ignored when [stroke] is empty.
+  final double strokeWidth;
+
   @override
   String get instructionKind => 'rect';
 
@@ -301,11 +307,14 @@ final class PaintRect extends PaintInstruction {
     required this.height,
     required this.fill,
     required this.metadata,
+    this.stroke = '',
+    this.strokeWidth = 0.0,
   }) : super._();
 
   @override
   String toString() =>
-      'PaintRect(x=$x, y=$y, w=$width, h=$height, fill=$fill)';
+      'PaintRect(x=$x, y=$y, w=$width, h=$height, fill=$fill, '
+      'stroke=$stroke, strokeWidth=$strokeWidth)';
 
   @override
   bool operator ==(Object other) =>
@@ -315,10 +324,333 @@ final class PaintRect extends PaintInstruction {
           other.y == y &&
           other.width == width &&
           other.height == height &&
-          other.fill == fill;
+          other.fill == fill &&
+          other.stroke == stroke &&
+          other.strokeWidth == strokeWidth;
 
   @override
-  int get hashCode => Object.hash(instructionKind, x, y, width, height, fill);
+  int get hashCode => Object.hash(
+        instructionKind,
+        x,
+        y,
+        width,
+        height,
+        fill,
+        stroke,
+        strokeWidth,
+      );
+}
+
+// ============================================================================
+// PaintLine
+// ============================================================================
+
+/// A stroked line segment between two points.
+///
+/// A line with no stroke is invisible, so unlike [PaintRect] [stroke] is
+/// required, not optional.
+final class PaintLine extends PaintInstruction {
+  final double x1;
+  final double y1;
+  final double x2;
+  final double y2;
+
+  /// CSS hex stroke colour. Required — a line with no stroke is invisible.
+  final String stroke;
+
+  /// Stroke width in pixels.
+  final double strokeWidth;
+
+  @override
+  final Metadata metadata;
+
+  @override
+  String get fill => '';
+
+  @override
+  String get instructionKind => 'line';
+
+  const PaintLine({
+    required this.x1,
+    required this.y1,
+    required this.x2,
+    required this.y2,
+    required this.stroke,
+    required this.strokeWidth,
+    required this.metadata,
+  }) : super._();
+
+  @override
+  String toString() =>
+      'PaintLine(x1=$x1, y1=$y1, x2=$x2, y2=$y2, stroke=$stroke)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaintLine &&
+          other.x1 == x1 &&
+          other.y1 == y1 &&
+          other.x2 == x2 &&
+          other.y2 == y2 &&
+          other.stroke == stroke &&
+          other.strokeWidth == strokeWidth;
+
+  @override
+  int get hashCode =>
+      Object.hash(instructionKind, x1, y1, x2, y2, stroke, strokeWidth);
+}
+
+// ============================================================================
+// PaintGlyphPlacement / PaintGlyphRun
+// ============================================================================
+
+/// One glyph's position within a [PaintGlyphRun].
+///
+/// [glyphId] is a font-internal glyph index in the general contract, but
+/// text-mode ("ascii") backends relax this to a literal Unicode code point
+/// — see `P2D02-paint-vm-ascii.md` §"Glyph runs" for the rationale.
+final class PaintGlyphPlacement {
+  final int glyphId;
+  final double x;
+  final double y;
+
+  const PaintGlyphPlacement({
+    required this.glyphId,
+    required this.x,
+    required this.y,
+  });
+
+  @override
+  String toString() => 'PaintGlyphPlacement(glyphId=$glyphId, x=$x, y=$y)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaintGlyphPlacement &&
+          other.glyphId == glyphId &&
+          other.x == x &&
+          other.y == y;
+
+  @override
+  int get hashCode => Object.hash(glyphId, x, y);
+}
+
+/// Pre-positioned glyphs, each already placed in scene coordinates.
+///
+/// [fontRef], [fontSize], and [fill] are required fields but are ignored by
+/// text-mode (ASCII) backends.
+final class PaintGlyphRun extends PaintInstruction {
+  final List<PaintGlyphPlacement> glyphs;
+  final String fontRef;
+  final double fontSize;
+
+  @override
+  final String fill;
+
+  @override
+  final Metadata metadata;
+
+  @override
+  String get instructionKind => 'glyph_run';
+
+  const PaintGlyphRun({
+    required this.glyphs,
+    required this.fontRef,
+    required this.fontSize,
+    required this.fill,
+    required this.metadata,
+  }) : super._();
+
+  @override
+  String toString() => 'PaintGlyphRun(glyphs=${glyphs.length}, '
+      'fontRef=$fontRef)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is PaintGlyphRun &&
+          other.fontRef == fontRef &&
+          other.fontSize == fontSize &&
+          other.fill == fill &&
+          _glyphsEqual(other.glyphs, glyphs);
+
+  bool _glyphsEqual(List<PaintGlyphPlacement> a, List<PaintGlyphPlacement> b) {
+    if (a.length != b.length) return false;
+    for (var i = 0; i < a.length; i++) {
+      if (a[i] != b[i]) return false;
+    }
+    return true;
+  }
+
+  @override
+  int get hashCode => Object.hash(
+        instructionKind,
+        fontRef,
+        fontSize,
+        fill,
+        Object.hashAll(glyphs),
+      );
+}
+
+// ============================================================================
+// Transform2D
+// ============================================================================
+
+/// A six-value affine transform, matching the Canvas/SVG convention:
+///
+/// ```
+///   x' = a*x + c*y + e
+///   y' = b*x + d*y + f
+/// ```
+final class Transform2D {
+  final double a;
+  final double b;
+  final double c;
+  final double d;
+  final double e;
+  final double f;
+
+  const Transform2D({
+    required this.a,
+    required this.b,
+    required this.c,
+    required this.d,
+    required this.e,
+    required this.f,
+  });
+
+  /// The identity transform — no rotation, scale, or translation.
+  static const identity = Transform2D(a: 1, b: 0, c: 0, d: 1, e: 0, f: 0);
+
+  /// Whether this transform is (bitwise) equal to the identity transform.
+  bool get isIdentity => a == 1 && b == 0 && c == 0 && d == 1 && e == 0 && f == 0;
+
+  @override
+  String toString() => 'Transform2D(a=$a, b=$b, c=$c, d=$d, e=$e, f=$f)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Transform2D &&
+          other.a == a &&
+          other.b == b &&
+          other.c == c &&
+          other.d == d &&
+          other.e == e &&
+          other.f == f;
+
+  @override
+  int get hashCode => Object.hash(a, b, c, d, e, f);
+}
+
+// ============================================================================
+// PaintGroup
+// ============================================================================
+
+/// A child list with an optional [Transform2D] and opacity.
+final class PaintGroup extends PaintInstruction {
+  final List<PaintInstruction> children;
+
+  /// Optional affine transform applied to all children. Null means no transform.
+  final Transform2D? transform;
+
+  /// Optional group-level compositing opacity (0.0-1.0). Null means fully opaque.
+  final double? opacity;
+
+  @override
+  final Metadata metadata;
+
+  @override
+  String get fill => '';
+
+  @override
+  String get instructionKind => 'group';
+
+  const PaintGroup({
+    required this.children,
+    this.transform,
+    this.opacity,
+    this.metadata = const {},
+  }) : super._();
+
+  @override
+  String toString() => 'PaintGroup(children=${children.length})';
+}
+
+// ============================================================================
+// PaintClip
+// ============================================================================
+
+/// A rectangular clip region wrapping a child list.
+final class PaintClip extends PaintInstruction {
+  final double x;
+  final double y;
+  final double width;
+  final double height;
+  final List<PaintInstruction> children;
+
+  @override
+  final Metadata metadata;
+
+  @override
+  String get fill => '';
+
+  @override
+  String get instructionKind => 'clip';
+
+  const PaintClip({
+    required this.x,
+    required this.y,
+    required this.width,
+    required this.height,
+    required this.children,
+    this.metadata = const {},
+  }) : super._();
+
+  @override
+  String toString() =>
+      'PaintClip(x=$x, y=$y, w=$width, h=$height, children=${children.length})';
+}
+
+// ============================================================================
+// PaintLayer
+// ============================================================================
+
+/// A child list with a filter flag, blend mode, opacity, and transform.
+///
+/// [hasFilters] is a simplified stand-in for the full filter-effect union —
+/// no backend in this repository's Dart port implements pixel-level
+/// filters, so all that matters for dispatch is whether to reject the layer.
+final class PaintLayer extends PaintInstruction {
+  final List<PaintInstruction> children;
+  final bool hasFilters;
+
+  /// Optional blend mode name. Null or "normal" means standard alpha compositing.
+  final String? blendMode;
+  final double? opacity;
+  final Transform2D? transform;
+
+  @override
+  final Metadata metadata;
+
+  @override
+  String get fill => '';
+
+  @override
+  String get instructionKind => 'layer';
+
+  const PaintLayer({
+    required this.children,
+    this.hasFilters = false,
+    this.blendMode,
+    this.opacity,
+    this.transform,
+    this.metadata = const {},
+  }) : super._();
+
+  @override
+  String toString() =>
+      'PaintLayer(children=${children.length}, hasFilters=$hasFilters)';
 }
 
 // ============================================================================
@@ -539,6 +871,8 @@ PaintRect paintRect({
   required int height,
   String fill = '#000000',
   Metadata? metadata,
+  String stroke = '',
+  double strokeWidth = 0.0,
 }) {
   return PaintRect(
     x: x,
@@ -547,7 +881,83 @@ PaintRect paintRect({
     height: height,
     fill: fill.isEmpty ? '#000000' : fill,
     metadata: metadata ?? {},
+    stroke: stroke,
+    strokeWidth: strokeWidth,
   );
+}
+
+/// Create a [PaintLine] instruction.
+PaintLine paintLine({
+  required double x1,
+  required double y1,
+  required double x2,
+  required double y2,
+  required String stroke,
+  required double strokeWidth,
+  Metadata? metadata,
+}) {
+  return PaintLine(
+    x1: x1,
+    y1: y1,
+    x2: x2,
+    y2: y2,
+    stroke: stroke,
+    strokeWidth: strokeWidth,
+    metadata: metadata ?? {},
+  );
+}
+
+/// Create a [PaintGlyphRun] instruction.
+PaintGlyphRun paintGlyphRun({
+  required List<PaintGlyphPlacement> glyphs,
+  required String fontRef,
+  required double fontSize,
+  required String fill,
+  Metadata? metadata,
+}) {
+  return PaintGlyphRun(
+    glyphs: glyphs,
+    fontRef: fontRef,
+    fontSize: fontSize,
+    fill: fill,
+    metadata: metadata ?? {},
+  );
+}
+
+/// Create a plain (untransformed, fully opaque) [PaintGroup] instruction.
+PaintGroup paintGroup({
+  required List<PaintInstruction> children,
+  Metadata? metadata,
+}) {
+  return PaintGroup(children: children, metadata: metadata ?? {});
+}
+
+/// Create a [PaintClip] instruction.
+PaintClip paintClip({
+  required double x,
+  required double y,
+  required double width,
+  required double height,
+  required List<PaintInstruction> children,
+  Metadata? metadata,
+}) {
+  return PaintClip(
+    x: x,
+    y: y,
+    width: width,
+    height: height,
+    children: children,
+    metadata: metadata ?? {},
+  );
+}
+
+/// Create a plain (untransformed, unfiltered, fully opaque, normal-blend)
+/// [PaintLayer] instruction.
+PaintLayer paintLayer({
+  required List<PaintInstruction> children,
+  Metadata? metadata,
+}) {
+  return PaintLayer(children: children, metadata: metadata ?? {});
 }
 
 /// Create a [PaintPath] instruction.

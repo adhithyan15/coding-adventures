@@ -73,18 +73,22 @@
       "id": "kotlin-cowsay",
       "title": "Kotlin cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "pr-open-auto-merge",
+      "status": "merged",
       "pr_number": 12084,
+      "merge_commit": "cc0ec7e0e3",
       "priority": 6,
       "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended kotlin/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive default-valued constructor params)",
-      "notes": "Built by directly translating the already-reviewed Java paint-vm-ascii design into Kotlin idioms, carrying every hardening lesson forward from the start. /security-review of the translation found one JVM-Stream-API-specific gap (Files.list()'s UncheckedIOException not caught alongside IOException) and fixed it. Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
+      "notes": "Built by directly translating the already-reviewed Java paint-vm-ascii design into Kotlin idioms, carrying every hardening lesson forward from the start. /security-review of the translation found one JVM-Stream-API-specific gap (Files.list()'s UncheckedIOException not caught alongside IOException) and fixed it. Verified byte-identical to merged Perl port. Merged clean -- verified merge commit cc0ec7e0e3 on origin/main contains all 26 files including the UncheckedIOException fix."
+    },
     {
       "id": "dart-cowsay",
       "title": "Dart cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "pending",
+      "status": "pr-open",
+      "pr_number": 12091,
       "priority": 7,
-      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract"
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended dart/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive named-optional constructor params)",
+      "notes": "Found and fixed a real Bresenham line-drawing infinite-loop bug (error seeded to 0 instead of deltaCol - deltaRow) -- same bug verbatim in the already-merged haskell/java/kotlin paint-vm-ascii ports, logged in discovered_work rather than expanding this PR's scope. /security-review (2 rounds) found and fixed an unbounded PaintGroup/PaintClip/PaintLayer recursion depth (added a 64-level cap, new SceneTooDeep error) and an uncaught FormatException on malformed stdin UTF-8. Verified byte-identical to merged Perl port."
     },
     {
       "id": "swift-cowsay",
@@ -104,6 +108,17 @@
       "notes": "Most work of the 8 remaining items -- neither prerequisite package exists yet. Prior attempt at Lua cowsay (PR #1535, closed) was destructive; must be additive-only."
     }
   ],
-  "discovered_work": [],
+  "discovered_work": [
+    {
+      "id": "bresenham-zero-error-hang",
+      "title": "paint-vm-ascii's diagonal-line Bresenham loop can hang forever for some slopes",
+      "found_during": "dart-cowsay (building paint-vm-ascii from scratch)",
+      "severity": "high -- infinite loop / hang, not a crash, so it can't even be caught by a try/catch; a DoS if any caller feeds attacker-controlled line coordinates",
+      "details": "renderLine's Bresenham loop seeds `error = 0` instead of the standard `error = deltaCol - deltaRow`. With error=0, for some (deltaRow, deltaCol) ratios (verified: deltaRow=1, deltaCol=3, e.g. a line from (0,0) to a clip-clamped target (row=1, col=3)) the `row` cursor overshoots `r2` and never returns to it, so the loop's `row == r2 && col == c2` break condition never becomes true again -- infinite loop. Confirmed by direct simulation (not just the Dart translation): the exact same `error = 0` initialization is present verbatim in code/packages/kotlin/paint-vm-ascii/src/main/kotlin/com/codingadventures/paintvmascii/PaintVmAscii.kt's renderLine, and (by inspection, same authorship pattern) very likely code/packages/java/paint-vm-ascii and code/packages/haskell/paint-vm-ascii's line-drawing too -- all three are already merged to main. Fixed in the new Dart port (this PR) by seeding `error = deltaCol - deltaRow` instead; verified against several slopes (steep, shallow, 45-degree, reversed direction) all converge correctly with the fix.",
+      "note": "None of the merged cowsay ports currently call PaintLine (cowsay only emits PaintGlyphRun, and PaintRect for nothing that reaches this path), so this bug is dormant in production cowsay usage today -- but it's a real hang vector in a shared, already-merged package's public contract (P2D02 paint-vm-ascii) for any other/future consumer. Needs a fix PR (or three) against haskell/java/kotlin's paint-vm-ascii, or one GitHub issue tracking all three -- deliberately NOT expanding scope to fix them from inside dart-cowsay.",
+      "status": "open",
+      "next_action": "before starting swift-cowsay or lua-cowsay (both need a fresh paint-vm-ascii built from scratch), build the line-drawing loop with `error = deltaCol - deltaRow` from the start rather than repeating the bug a fourth/fifth time; also open a GitHub issue (or issues) for the haskell/java/kotlin fix, since 'use GitHub issues liberally' is standing guidance for incidentally-found bugs"
+    }
+  ],
   "last_updated_by": "autonomous loop, issue #1611"
 }
