@@ -54,7 +54,18 @@ vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION
 vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION
+vault-pm storage add filesystem|removable NAME PATH
+vault-pm storage list
+vault-pm storage check NAME
+vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]
 ```
+
+`storage add|list|check` take no `--vault` selector — they read or extend
+configuration itself, not one vault's contents. `storage migrate` does take
+one, because it is the verb that rewrites a vault's `local_store`/
+`remote_stores`. `gdrive`/`webdav`/`s3` still parse for `storage add` and
+always fail closed with the unsupported class before touching configuration
+— Phase 2's job, the same closed-grammar answer `import kdbx` already gets.
 
 `password generate` is the one exception to everything below: it opens no
 vault, takes no `--vault` selector, collects no passphrase, and runs on a home
@@ -195,6 +206,21 @@ anywhere under the platform roots, so the store holds ciphertext and metadata
 alike. A refusal at the export prompt writes no file at all and still leaves a
 denied row in the audit chain. And the chain names neither the attachment nor
 its bytes.
+
+## Removable storage and migration, end to end through the real executable
+
+`storage add`/`storage list` need no pseudo-terminal at all — they take no
+passphrase and touch no vault — so the drill runs them as plain child
+processes. `storage migrate` does need one: its confirmation is a real
+independent unlock of the migrated copy under the vault's real passphrase,
+proven the same way every other authenticated command's prompt is. The drill
+registers a new filesystem location, confirms `storage check` reports it
+`unreachable` before it is ever materialized (no vault opened, no prompt
+issued), migrates a real on-disk vault onto it, confirms the item created
+before the migration is still readable afterward, then drops a real
+Syncthing-style `.sync-conflict-` filename into the migrated location's
+object directory and confirms `storage check` both detects it and never
+prints the offending filename itself anywhere in its report.
 
 ## The crash/fault drill
 

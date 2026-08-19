@@ -3174,3 +3174,81 @@ fn real_cli_imports_bitwarden_json_and_leaks_no_secret_anywhere() {
     assert!(!kdbx_result.status.success());
     assert!(stdout_string(&kdbx_result).is_empty());
 }
+
+fn first_subdirectory(root: &Path) -> PathBuf {
+    fs::read_dir(root)
+        .unwrap()
+        .flatten()
+        .find(|entry| entry.file_type().map(|kind| kind.is_dir()).unwrap_or(false))
+        .map(|entry| entry.path())
+        .expect("a migrated storage root must contain at least one bucket directory")
+}
+
+/// VLT-PM00 §23 item 14, through the real executable with a real PTY:
+/// `storage add`/`storage list` are entirely non-interactive; `storage check`
+/// reports an unreachable, not-yet-materialized location without opening any
+/// vault or prompting; `storage migrate` prompts for the vault's real
+/// passphrase (its confirmation ceremony is a real independent unlock of the
+/// migrated copy) and switches the vault onto the new location while leaving
+/// its item readable; and a real third-party sync tool's conflict-copy
+/// naming convention dropped into the migrated location's object directory
+/// is detected and reported by `storage check`, with the offending filename
+/// itself never appearing anywhere in the report.
+#[test]
+fn real_cli_storage_add_check_and_migrate_a_real_vault() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+    let (added_item_status, _) = run_add_secure_note_in_pty(&home);
+    assert!(added_item_status.success());
+
+    let new_location = home.0.join("new-primary-storage");
+    let added = run_plain(
+        &home,
+        &[
+            "storage",
+            "add",
+            "filesystem",
+            "new",
+            new_location.to_str().expect("UTF-8 test path"),
+        ],
+    );
+    assert!(added.status.success(), "{}", stdout_string(&added));
+    let listed = run_plain(&home, &["storage", "list"]);
+    assert!(listed.status.success(), "{}", stdout_string(&listed));
+    assert!(stdout_string(&listed).contains("new\tfilesystem\t"));
+    assert!(stdout_string(&listed).contains("local\tfilesystem\t"));
+
+    let unreachable = run_plain(&home, &["storage", "check", "new"]);
+    assert!(!unreachable.status.success());
+    assert!(stdout_string(&unreachable).contains("unreachable"));
+
+    let (migrated_status, migrated_transcript) = run_unlock_in_pty(
+        &home,
+        &["storage", "migrate", "local", "new"],
+        b"Storage migrated.",
+    );
+    assert!(migrated_status.success(), "{migrated_transcript}");
+    assert_transcript_excludes_secrets(&migrated_transcript);
+
+    let (listed_after_status, listed_after_transcript) =
+        run_unlock_in_pty(&home, &["item", "list"], b"Recovery note");
+    assert!(listed_after_status.success(), "{listed_after_transcript}");
+
+    let healthy = run_plain(&home, &["storage", "check", "new"]);
+    assert!(healthy.status.success(), "{}", stdout_string(&healthy));
+    assert_eq!(stdout_string(&healthy), "Storage new: healthy\n");
+
+    let bucket_dir = first_subdirectory(&new_location);
+    fs::write(bucket_dir.join("deadbeef"), b"not a real object").unwrap();
+    fs::write(
+        bucket_dir.join("deadbeef.sync-conflict-20260819-000000-ABCDEFG"),
+        b"not a real object",
+    )
+    .unwrap();
+    let dirty = run_plain(&home, &["storage", "check", "new"]);
+    assert!(!dirty.status.success());
+    let dirty_stdout = stdout_string(&dirty);
+    assert!(dirty_stdout.contains("sync_interference_detected"));
+    assert!(dirty_stdout.contains("conflict_copy: 1"));
+    assert!(!dirty_stdout.contains("sync-conflict-20260819"));
+}
