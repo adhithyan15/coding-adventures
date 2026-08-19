@@ -91,10 +91,12 @@ const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
 /// Host-level ceiling for a `vault-pm import bitwarden|csv` source file
-/// (VLT-PM49 §4). Each adapter crate enforces its own, generally tighter,
-/// internal bound after this one; this is only the metadata/read-time
-/// ceiling before any format-specific decoding begins.
-const MAX_EXTERNAL_IMPORT_SOURCE_BYTES: usize = 64 * 1024 * 1024;
+/// (VLT-PM49 §4), matching the tightest adapter-level `MAX_SOURCE_BYTES`
+/// (both `vault-import-bitwarden` and `vault-import-csv` currently use
+/// 16 MiB) rather than a looser bound, so a file too large for either
+/// adapter is refused at the read step instead of being fully read into
+/// memory first only to be rejected one function call later.
+const MAX_EXTERNAL_IMPORT_SOURCE_BYTES: usize = 16 * 1024 * 1024;
 
 /// The verb this binary re-executes itself with to perform a timed clear.
 ///

@@ -67,12 +67,18 @@
 //!
 //! * **Untrusted bytes.** [`MAX_SOURCE_BYTES`] bounds the whole input
 //!   before any parsing begins. [`MAX_ITEMS`], [`MAX_URIS_PER_LOGIN`],
-//!   and [`MAX_CUSTOM_FIELDS_PER_ITEM`] bound every array this adapter
-//!   walks; [`MAX_FIELD_LEN`] bounds every string it copies out. None of
-//!   these can be exceeded by a file within the byte cap producing an
-//!   unbounded *decoded* structure, because JSON (unlike XML) has no
-//!   entity-expansion mechanism — a bounded-length document cannot decode
-//!   to an unboundedly large tree.
+//!   [`MAX_CUSTOM_FIELDS_PER_ITEM`], and [`MAX_KEYS_PER_OBJECT`] bound
+//!   every array and object this adapter walks; [`MAX_FIELD_LEN`] bounds
+//!   every string it copies out. A file within the byte cap cannot decode
+//!   to an *unboundedly* large tree — JSON, unlike XML, has no
+//!   entity-expansion mechanism — but the underlying parser has no
+//!   per-object key-count limit of its own (only a nesting-depth cap), so
+//!   a single object padded with many short junk keys still amplifies
+//!   somewhat past the raw byte count before [`MAX_KEYS_PER_OBJECT`] gets
+//!   a chance to reject it. [`MAX_SOURCE_BYTES`] is kept deliberately
+//!   small (real exports are low single-digit megabytes) precisely to
+//!   bound how large that worst case can get, rather than claiming the
+//!   amplification factor is zero.
 //! * **Deeply nested documents.** Handled by `json-parser`'s built-in
 //!   depth cap, exercised in this crate's own test suite rather than
 //!   only trusted by citation.
@@ -89,9 +95,12 @@
 //!   exports are JSON. `vault-import-csv`'s docs carry that concern.
 //! * **Plaintext residue.** Every secret-shaped field this adapter
 //!   produces — `password`, `totp_seed`, and every `custom_fields` value
-//!   — is `Zeroizing` at the [`PortableRecord`] boundary already; this
-//!   crate introduces no separate plaintext buffer that outlives the
-//!   call.
+//!   — is `Zeroizing` at the [`PortableRecord`] boundary. The *source*
+//!   copies inside the generic parsed JSON tree are ordinary `String`s —
+//!   `json-value` has no reason to know any of them are sensitive — so
+//!   [`decode`] recursively zeroizes the whole parsed tree in place
+//!   (`zeroize_object`/`zeroize_json_value`) immediately after every
+//!   record has been extracted from it, before that tree drops.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
@@ -100,15 +109,31 @@ use coding_adventures_json_value::{JsonNumber, JsonValue};
 use coding_adventures_vault_import_export::{
     ImportError, Importer, PortableRecord, PortableRecordKind,
 };
-use coding_adventures_zeroize::Zeroizing;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use std::collections::BTreeMap;
 
 // === Bounds =================================================================
 
 /// Maximum accepted raw source bytes, checked before any parsing begins.
-pub const MAX_SOURCE_BYTES: usize = 64 * 1024 * 1024;
+///
+/// A real Bitwarden export for even a very large personal vault is low
+/// single-digit megabytes; this ceiling is generous headroom over that,
+/// not an estimate of a plausible file. Kept deliberately smaller than an
+/// earlier 64 MiB draft: the underlying JSON parser has no per-object key
+/// count limit (only a nesting-depth cap), so an adversarial object with
+/// millions of short junk keys inside this byte ceiling still amplifies
+/// into a materially larger in-memory `Vec<(String, JsonValue)>` before
+/// [`MAX_KEYS_PER_OBJECT`] below ever gets a chance to reject it — a
+/// smaller byte ceiling directly bounds how bad that worst case can get.
+pub const MAX_SOURCE_BYTES: usize = 16 * 1024 * 1024;
 /// Maximum accepted `items` array length.
 pub const MAX_ITEMS: usize = 50_000;
+/// Maximum accepted key-value pairs in any single JSON object this adapter
+/// destructures (root, one item, `login`, `card`, one `fields[]`/`uris[]`
+/// entry). Bounds a single crafted object with many junk keys; see
+/// [`MAX_SOURCE_BYTES`] for why this cannot bound *peak* memory during
+/// parsing, only how much further processing a pathological object gets.
+pub const MAX_KEYS_PER_OBJECT: usize = 128;
 /// Maximum accepted `login.uris` entries kept per login (first becomes
 /// `url`; the rest become bounded `custom_fields` entries).
 pub const MAX_URIS_PER_LOGIN: usize = 32;
@@ -147,9 +172,10 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
         .map_err(|_| ImportError::Decode("source is not valid UTF-8"))?;
     let root = coding_adventures_json_value::parse(text)
         .map_err(|_| ImportError::Decode("source is not valid JSON"))?;
-    let JsonValue::Object(root_pairs) = root else {
+    let JsonValue::Object(mut root_pairs) = root else {
         return Err(ImportError::Decode("root value must be a JSON object"));
     };
+    check_object_size(&root_pairs)?;
     let items = match find(&root_pairs, "items") {
         Some(JsonValue::Array(items)) => items,
         Some(_) => return Err(ImportError::Decode("`items` must be an array")),
@@ -162,7 +188,41 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
     for item in items {
         decode_item(item, &mut records)?;
     }
+    // Every secret-shaped value this adapter reads (password, TOTP seed,
+    // card number/CVV, custom-field values) is copied out into a
+    // `Zeroizing`-held `PortableRecord` field above, but the *source*
+    // copy inside this generic JSON parse tree is an ordinary `String`
+    // that the general-purpose `json-value` crate has no reason to know
+    // is sensitive. Left alone, that source copy would be freed with the
+    // rest of `root_pairs` at the end of this function without ever
+    // being overwritten -- recoverable plaintext in freed heap. Scrub the
+    // whole tree in place before it drops, the same property
+    // `read_external_import_source`'s `Zeroizing` buffer already gives
+    // the raw bytes this tree was parsed from.
+    zeroize_object(&mut root_pairs);
     Ok(records)
+}
+
+/// Recursively wipe every string in a parsed object's pair list, in place.
+fn zeroize_object(pairs: &mut [(String, JsonValue)]) {
+    for (key, value) in pairs.iter_mut() {
+        key.zeroize();
+        zeroize_json_value(value);
+    }
+}
+
+/// Recursively wipe every string reachable from a parsed JSON value.
+fn zeroize_json_value(value: &mut JsonValue) {
+    match value {
+        JsonValue::String(s) => s.zeroize(),
+        JsonValue::Object(pairs) => zeroize_object(pairs),
+        JsonValue::Array(items) => {
+            for item in items.iter_mut() {
+                zeroize_json_value(item);
+            }
+        }
+        JsonValue::Number(_) | JsonValue::Bool(_) | JsonValue::Null => {}
+    }
 }
 
 /// Resolve a key in an object's pair list, **last write wins** on
@@ -171,6 +231,20 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
 /// order (see `reject...duplicate_key` tests below).
 fn find<'a>(pairs: &'a [(String, JsonValue)], key: &str) -> Option<&'a JsonValue> {
     pairs.iter().rev().find(|(k, _)| k == key).map(|(_, v)| v)
+}
+
+/// Reject an object with more keys than [`MAX_KEYS_PER_OBJECT`], regardless
+/// of which keys this adapter actually reads. Called at every point this
+/// adapter destructures a `JsonValue::Object`, so a crafted object padded
+/// with junk keys is refused before any further per-key work is spent on
+/// it, rather than only bounding the handful of key names this adapter
+/// happens to look up.
+fn check_object_size(pairs: &[(String, JsonValue)]) -> Result<(), ImportError> {
+    if pairs.len() > MAX_KEYS_PER_OBJECT {
+        Err(ImportError::TooLarge("MAX_KEYS_PER_OBJECT"))
+    } else {
+        Ok(())
+    }
 }
 
 fn as_str<'a>(value: &'a JsonValue, what: &'static str) -> Result<&'a str, ImportError> {
@@ -206,6 +280,7 @@ fn decode_item(item: &JsonValue, out: &mut Vec<PortableRecord>) -> Result<(), Im
     let JsonValue::Object(pairs) = item else {
         return Err(ImportError::Decode("each item must be a JSON object"));
     };
+    check_object_size(pairs)?;
     let title = match find(pairs, "name") {
         Some(value) => as_str(value, "name")?,
         None => return Err(ImportError::Decode("item missing `name`")),
@@ -269,7 +344,10 @@ fn decode_login(
     out: &mut Vec<PortableRecord>,
 ) -> Result<(), ImportError> {
     let login = match find(pairs, "login") {
-        Some(JsonValue::Object(login_pairs)) => login_pairs.as_slice(),
+        Some(JsonValue::Object(login_pairs)) => {
+            check_object_size(login_pairs)?;
+            login_pairs.as_slice()
+        }
         Some(_) => return Err(ImportError::Decode("`login` must be an object")),
         None => &[],
     };
@@ -291,6 +369,7 @@ fn decode_login(
             let JsonValue::Object(uri_pairs) = entry else {
                 return Err(ImportError::Decode("`login.uris[]` must be an object"));
             };
+            check_object_size(uri_pairs)?;
             let Some(uri) = optional_str(uri_pairs, "uri", "login.uris[].uri")? else {
                 continue;
             };
@@ -348,7 +427,10 @@ fn decode_card(
     out: &mut Vec<PortableRecord>,
 ) -> Result<(), ImportError> {
     let card = match find(pairs, "card") {
-        Some(JsonValue::Object(card_pairs)) => card_pairs.as_slice(),
+        Some(JsonValue::Object(card_pairs)) => {
+            check_object_size(card_pairs)?;
+            card_pairs.as_slice()
+        }
         Some(_) => return Err(ImportError::Decode("`card` must be an object")),
         None => &[],
     };
@@ -408,6 +490,7 @@ fn decode_custom_fields(
                 "each `fields[]` entry must be an object",
             ));
         };
+        check_object_size(field_pairs)?;
         let name = match find(field_pairs, "name") {
             Some(JsonValue::Null) | None => continue,
             Some(value) => as_str(value, "fields[].name")?,
@@ -640,6 +723,65 @@ mod tests {
             decode(json.as_bytes()),
             Err(ImportError::TooLarge(_))
         ));
+    }
+
+    #[test]
+    fn rejects_item_object_with_too_many_junk_keys() {
+        let mut item = String::from(r#"{"type":2,"name":"n""#);
+        for i in 0..(MAX_KEYS_PER_OBJECT + 1) {
+            item.push_str(&format!(r#","junk{i}":0"#));
+        }
+        item.push('}');
+        let json = format!(r#"{{"items":[{item}]}}"#);
+        assert!(matches!(
+            decode(json.as_bytes()),
+            Err(ImportError::TooLarge(_))
+        ));
+    }
+
+    #[test]
+    fn rejects_root_object_with_too_many_junk_keys() {
+        let mut json = String::from(r#"{"items":[]"#);
+        for i in 0..(MAX_KEYS_PER_OBJECT + 1) {
+            json.push_str(&format!(r#","junk{i}":0"#));
+        }
+        json.push('}');
+        assert!(matches!(
+            decode(json.as_bytes()),
+            Err(ImportError::TooLarge(_))
+        ));
+    }
+
+    #[test]
+    fn zeroize_json_value_wipes_strings_in_place() {
+        let mut value = JsonValue::Object(vec![
+            (
+                "password".to_owned(),
+                JsonValue::String("hunter2".to_owned()),
+            ),
+            (
+                "uris".to_owned(),
+                JsonValue::Array(vec![JsonValue::String("https://example.com".to_owned())]),
+            ),
+        ]);
+        zeroize_json_value(&mut value);
+        let JsonValue::Object(pairs) = &value else {
+            panic!("expected object");
+        };
+        for (key, val) in pairs {
+            assert!(key.is_empty(), "key not wiped: {key:?}");
+            match val {
+                JsonValue::String(s) => assert!(s.is_empty(), "string not wiped: {s:?}"),
+                JsonValue::Array(items) => {
+                    for item in items {
+                        if let JsonValue::String(s) = item {
+                            assert!(s.is_empty(), "array string not wiped: {s:?}");
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
     }
 
     #[test]

@@ -54,7 +54,12 @@
 //!
 //! * **Untrusted bytes.** [`MAX_SOURCE_BYTES`] bounds the whole input
 //!   before parsing. [`MAX_ROWS`] and [`MAX_COLUMNS`] bound the decoded
-//!   shape; [`MAX_FIELD_LEN`] bounds every string copied out.
+//!   shape; [`MAX_FIELD_LEN`] bounds every string copied out. `MAX_COLUMNS`
+//!   can only reject a wide row *after* `coding_adventures_csv_parser` has
+//!   already fully materialized it into a `HashMap`, so
+//!   [`MAX_SOURCE_BYTES`] is kept deliberately small (real exports are low
+//!   single-digit megabytes) to directly bound how far that amplification
+//!   can go, rather than claiming it is zero.
 //! * **CSV structure attacks.** Parsing is delegated to this
 //!   repository's existing RFC 4180 state-machine parser
 //!   (`coding_adventures_csv_parser`), which already handles embedded
@@ -75,8 +80,11 @@
 //!   guidance; that responsibility does not exist yet because there is
 //!   no writer to carry it.
 //! * **Plaintext residue.** `password` and `totp_seed` are `Zeroizing` at
-//!   the `PortableRecord` boundary already; this crate introduces no
-//!   separate plaintext buffer that outlives the call.
+//!   the `PortableRecord` boundary, but the source cell values inside the
+//!   parsed `rows: Vec<HashMap<String, String>>` are ordinary `String`s --
+//!   `coding_adventures_csv_parser` has no reason to know any column is
+//!   sensitive. [`decode`] zeroizes every cell value in `rows` in place
+//!   once every record has been extracted from it, before `rows` drops.
 
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
@@ -85,13 +93,22 @@ use coding_adventures_csv_parser::{parse_csv, CsvError};
 use coding_adventures_vault_import_export::{
     ImportError, Importer, PortableRecord, PortableRecordKind,
 };
-use coding_adventures_zeroize::Zeroizing;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use std::collections::{BTreeMap, HashMap};
 
 // === Bounds =================================================================
 
 /// Maximum accepted raw source bytes, checked before any parsing begins.
-pub const MAX_SOURCE_BYTES: usize = 32 * 1024 * 1024;
+///
+/// A real login-manager CSV export, even a large one, is low single-digit
+/// megabytes; this ceiling is generous headroom over that, not an estimate
+/// of a plausible file. Kept deliberately smaller than an earlier 32 MiB
+/// draft: [`MAX_COLUMNS`] can only reject a wide row *after*
+/// `coding_adventures_csv_parser` has already fully materialized it into a
+/// `HashMap`, so a smaller byte ceiling directly bounds how large that
+/// worst case can get rather than claiming the amplification factor is
+/// zero.
+pub const MAX_SOURCE_BYTES: usize = 16 * 1024 * 1024;
 /// Maximum accepted data rows (header excluded).
 pub const MAX_ROWS: usize = 200_000;
 /// Maximum accepted columns in the header row.
@@ -148,7 +165,7 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
     }
     let text = core::str::from_utf8(input)
         .map_err(|_| ImportError::Decode("source is not valid UTF-8"))?;
-    let rows = parse_csv(text).map_err(|error| match error {
+    let mut rows = parse_csv(text).map_err(|error| match error {
         CsvError::UnclosedQuote => ImportError::Decode("unclosed quoted CSV field"),
     })?;
     if rows.len() > MAX_ROWS {
@@ -160,6 +177,23 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
             return Err(ImportError::TooLarge("MAX_COLUMNS"));
         }
         records.push(decode_row(row, index + 1)?);
+    }
+    // Every secret-shaped *value* this adapter reads (password, TOTP
+    // seed) is copied out into a `Zeroizing`-held `PortableRecord` field
+    // above, but the source copy inside `rows` is an ordinary `String` --
+    // `coding_adventures_csv_parser` has no reason to know any column is
+    // sensitive. Left alone, that source copy would be freed with `rows`
+    // at the end of this function without ever being overwritten. Scrub
+    // every cell value in place before `rows` drops, the same property
+    // `read_external_import_source`'s `Zeroizing` buffer already gives
+    // the raw bytes this table was parsed from. Keys are column *names*
+    // (`"password"`, `"url"`, ...), never secret-shaped, and `HashMap`
+    // only exposes them as `&String` through `values_mut`/`iter_mut`
+    // regardless, so they are left alone.
+    for row in rows.iter_mut() {
+        for value in row.values_mut() {
+            value.zeroize();
+        }
     }
     Ok(records)
 }
