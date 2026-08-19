@@ -9,3 +9,8 @@
   process or pipe failures so timeout remains the sole auto-approval path.
 - Require an explicit post-presentation `ready` acknowledgement before a live
   decision-window timeout can be treated as Tier 1 auto-approval.
+- Measure coverage with tarpaulin's LLVM engine instead of its default ptrace
+  engine. The integration test re-executes its own binary as the approval
+  helper, and ptrace-based instrumentation aborted the run with `SIGILL` when a
+  breakpointed thread forked to spawn that child. No test or assertion changed;
+  only the coverage collection method did.
