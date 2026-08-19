@@ -744,6 +744,7 @@ fn record_content_type(record: &AnyRecord) -> &str {
         AnyRecord::ApiKey(_) => API_KEY_V1,
         AnyRecord::DatabaseCredential(_) => DATABASE_CREDENTIAL_V1,
         AnyRecord::Opaque { content_type, .. } => content_type,
+        AnyRecord::Quarantined { content_type, .. } => content_type,
     }
 }
 
@@ -1203,6 +1204,23 @@ pub enum RedactedRecordView {
         /// Payload omission marker.
         payload: RedactedSecret,
     },
+    /// A record whose declared content type this crate recognises, but
+    /// whose payload does not decode as that type's schema — a peer
+    /// authored (by bug or by malice) a first-party-tagged record this
+    /// client cannot materialise. See `AnyRecord::Quarantined`.
+    Quarantined {
+        /// The declared (but unreadable) content type.
+        content_type: ContentType,
+        /// Canonical payload byte count.
+        payload_bytes: usize,
+        /// Static, non-sensitive description of what failed to decode,
+        /// e.g. `"Login.password missing"`. Safe to surface as-is: this
+        /// is always one of a fixed set of literals this crate's own
+        /// typed decoders define, never input-derived text.
+        reason: &'static str,
+        /// Payload omission marker.
+        payload: RedactedSecret,
+    },
 }
 
 impl RedactedRecordView {
@@ -1272,6 +1290,16 @@ impl RedactedRecordView {
                 payload_bytes: payload_bytes.len(),
                 payload: RedactedSecret,
             },
+            AnyRecord::Quarantined {
+                content_type,
+                payload_bytes,
+                reason,
+            } => Self::Quarantined {
+                content_type: ContentType::new(content_type.clone())?,
+                payload_bytes: payload_bytes.len(),
+                reason,
+                payload: RedactedSecret,
+            },
         })
     }
 
@@ -1285,6 +1313,7 @@ impl RedactedRecordView {
             Self::ApiKey { .. } => VaultRecordKind::ApiKey,
             Self::DatabaseCredential { .. } => VaultRecordKind::DatabaseCredential,
             Self::Opaque { .. } => VaultRecordKind::Opaque,
+            Self::Quarantined { .. } => VaultRecordKind::Quarantined,
         }
     }
 }
@@ -1313,6 +1342,16 @@ impl core::fmt::Debug for RedactedRecordView {
                 .debug_struct("Opaque")
                 .field("content_type", &"<redacted>")
                 .field("payload_bytes", payload_bytes)
+                .finish(),
+            Self::Quarantined {
+                payload_bytes,
+                reason,
+                ..
+            } => f
+                .debug_struct("Quarantined")
+                .field("content_type", &"<redacted>")
+                .field("payload_bytes", payload_bytes)
+                .field("reason", reason)
                 .finish(),
         }
     }
@@ -1383,6 +1422,7 @@ impl Zeroize for RedactedRecordView {
                 username.zeroize();
             }
             Self::Opaque { content_type, .. } => content_type.0.zeroize(),
+            Self::Quarantined { content_type, .. } => content_type.0.zeroize(),
         }
     }
 }
