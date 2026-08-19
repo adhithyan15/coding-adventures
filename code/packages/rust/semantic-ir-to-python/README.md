@@ -112,12 +112,46 @@ function), all nine addendum nodes are `Expr`s, so one `emit_expr` match
 arm per node is enough — every position already routes through that one
 function.
 
+## SIR23 Tier A symbolic-expression / pattern-matching domain
+
+`SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/
+`SymRule`/`SymReplaceAll` — the SIR23 spec's Tier A cut (a term-tree type,
+a structural pattern matcher, and the `/.`/`//.` rewrite operators; **no**
+general expression evaluator — Tier B, `Add`/`Sin`/`D`/user-function-
+dispatch folding, is explicitly out of scope) — all lower to calls into
+`_sir_sym_*`, imported from the published `coding-adventures-sir-runtime-
+symbolic` pip package, following the exact same imported-package model the
+SIR22 array/matrix domain above uses (not this backend's own usual
+inlined-runtime convention). The import is gated by `uses_symbolic` (any of
+`Feature::SymbolicExpr`/`PatternMatching`/`Rationals`), so a module with no
+symbolic-expression use never gains the dependency.
+`coding_adventures_sir_runtime_symbolic` itself builds on two further
+published packages, `coding-adventures-symbolic-ir` (the term-tree type)
+and `coding-adventures-cas-pattern-matching` (the structural matcher) — see
+that package's own README/CHANGELOG for the full API and DoS-guard design
+notes (`MAX_TERM_DEPTH = 512` bounding `replace_all`'s/`replace_repeated`'s
+tree walk — not the matcher functions, whose recursion is bounded by a
+single rule's own static pattern/RHS shape rather than runtime data — plus
+an independent `max_iterations` cap on `replace_repeated`'s fixed-point
+loop, implemented as a local retry loop rather than a recursive call so it
+bounds CPU time, never native stack depth).
+
+A `SymApply`/`SymRule`/`SymReplaceAll` operand that is a bare `IntLit`/
+`FloatLit`/`StrLit` is wrapped through `emit_sym_operand` into the matching
+`_sir_sym_int`/`_sir_sym_float`/`_sir_sym_string` leaf-term constructor
+first — a raw Python literal is never a valid symbolic term. `SymReplaceAll`
+wraps its whole call in `_sir_sym_unwrap(...)`, converting either DoS-guard
+sentinel the imported package's `replace_all`/`replace_repeated` can return
+into a raised `ValueError` at the point a `SymReplaceAll` expression must
+evaluate to a real term or fail loudly.
+
 ## Capability declaration
 
 Accepts: `Closures`, `Pairs`, `Symbols`, `Strings`, `DynamicTyping`,
 `OptionalTypeAnnotations`, `MutualRecursion`, `Globals`, `DefaultParams`,
-`NDArrays`, `MatrixOps`, `ArrayColumnMajor` (and the SIR16/17 expression,
-mutation, loop, OOP and exception features).
+`NDArrays`, `MatrixOps`, `ArrayColumnMajor`, `SymbolicExpr`,
+`PatternMatching`, `Rationals` (and the SIR16/17 expression, mutation,
+loop, OOP and exception features).
 
 **`ConsoleIO`** (SIR28): `__sys_write__("stdout"|"stderr",
 "none"|"per_value"|"once", unpack_arrays, ...values)` → `_sir_write(...)`
