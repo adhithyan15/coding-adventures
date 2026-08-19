@@ -1,5 +1,40 @@
 # Changelog
 
+## 0.27.1 — Security fix: depth cap on SIR23 rule-pattern matching
+
+Follow-up fix to 0.27.0's SIR23 Tier A pattern matcher, discovered by
+independent security reviews of this same slice's C, Go, and Python
+backend ports: `sir_sym_match_pattern`/`sir_sym_substitute` shipped with
+**no depth cap at all**, on an unverified assumption (inherited from the
+JS reference this was ported from) that a `SymRule`'s `lhs`/`rhs` is
+always author-written and therefore shallow. That premise does not hold
+in this backend — `Expr::SymRule`'s operands are ordinary `Expr`s, and
+`emit_sym_operand`'s catch-all passes a `VarRef` through unchanged, so a
+rule's pattern or template can be a local variable holding a term a
+compiled `for`-loop built to unbounded depth at runtime, the identical
+CWE-674 hazard `sir_sym_replace_all`/`replace_repeated`'s own
+`SIR_SYM_MAX_TERM_DEPTH` guard was already built to catch — just on the
+rule side instead of the target-tree side. Notably, this gap could NOT be
+caught by `replace_all`/`replace_repeated`'s own target-tree depth
+tracking alone: a rule shaped `Blank() -> <deep RHS>` matches a
+one-node, perfectly shallow target instantly, but `sir_sym_substitute`
+still has to rebuild the entire deep RHS to produce the replacement.
+
+Both functions now thread a `depth` parameter (mirroring `sir_sym_
+term_equals`'s existing signature), capped at the same `SIR_SYM_MAX_
+TERM_DEPTH = 512`, reset to 0 at each fresh `sir_sym_apply_rule` call so
+one rule's match/substitute gets its own independent depth budget. Past
+the cap, both **raise** the same `"sir-runtime-symbolic: depth-limit"`
+error `sir_sym_unwrap` already raises for the target-tree guards — not a
+silent `nil`/truncated fallback, matching this repo's standing
+never-trade-loud-for-silent discipline for a safety-relevant path.
+
+New regression test `deep_rule_rhs_reports_depth_limit_error_not_a_
+crash_even_with_a_shallow_target` in `tests/sir23_symbolic.rs`, built via
+a REAL compiled 600-iteration `for`-loop (not a hand-built static AST),
+proves the exploit was real before this fix (Ruby's own uncontrolled
+`SystemStackError`) and is now a clean, catchable error after it.
+
 ## 0.27.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
 
 Part of the SIR22/SIR23 backend-expansion initiative (see
