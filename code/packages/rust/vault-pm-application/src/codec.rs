@@ -1214,7 +1214,18 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
         None => BTreeMap::new(),
         Some(value) => decode_attachment_manifest_references(value)?,
     };
-    let record_bytes = take_bytes(&mut fields, 8)?;
+    // `record_bytes` is the record's own still-encoded plaintext -- a
+    // Login's password, a Card's PAN and CVV, a TotpSeed's secret, and so
+    // on, depending on content type -- so it is wrapped the same way every
+    // other secret-bearing decode buffer in this module is (`Zeroizing`,
+    // e.g. `take_secret_fixed` below). Without it, `record_bytes` would
+    // drop unwiped on every exit: the error path if `decode_record` fails
+    // (a malformed envelope can still carry a genuine secret payload in a
+    // well-formed `"d"` field), and, with a strictly larger exposure
+    // window, the ordinary success path -- `record_bytes` is not read again
+    // after this line, so nothing else would ever wipe it before it goes
+    // out of scope at the end of this function.
+    let record_bytes = Zeroizing::new(take_bytes(&mut fields, 8)?);
     let payload = decode_record(&record_bytes).map_err(|_| ApplicationError::IntegrityFailure)?;
     ItemDocument::new(
         id,

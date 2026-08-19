@@ -1300,6 +1300,19 @@ depends on which order the `remove` calls happen in, and reordering closes
 the window: the statement immediately after `payload` is bound is
 `ItemDocument::new`, with no fallible step between them.
 
+A second round of review found the identical gap one line earlier, on
+`record_bytes` — the record's still-encoded plaintext that `decode_record`
+reads `payload` from. It is not `Quarantined`-specific (every content type
+carries genuine secret plaintext in this buffer) and was not introduced by
+this fix, but it sits inside the exact function this fix already touches
+and the same threat model applies: a malformed `{t,d}` envelope around a
+genuinely secret `"d"` payload makes `decode_record` itself fail, dropping
+`record_bytes` unwiped, and — a strictly larger window than the one above —
+`record_bytes` is read only once and otherwise sits unwiped for the rest of
+every successful decode too. `record_bytes` is now wrapped in `Zeroizing`,
+matching the convention this module already applies to every other
+secret-bearing decode buffer (e.g. `take_secret_fixed`).
+
 **One new gap this closes in passing.** Before this fix, an item's
 `schema()` field (the revision's own declared content type, checked for
 agreement with `record_content_type(&payload)` by `ItemDocument::validate`)
