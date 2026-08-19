@@ -2439,6 +2439,48 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 60,
+      "output": "malayalam/book/chapters/ch60-animals-around-a-house.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 61,
+      "output": "malayalam/book/chapters/ch61-on-the-kitchen-shelf.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 62,
+      "output": "malayalam/book/chapters/ch62-made-by-hand.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 63,
+      "output": "malayalam/book/chapters/ch63-how-the-body-reports.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 64,
+      "output": "malayalam/book/chapters/ch64-five-words-that-join.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 65,
+      "output": "malayalam/book/chapters/ch65-asking-well.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 66,
+      "output": "malayalam/book/chapters/ch66-out-in-the-paddy.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
