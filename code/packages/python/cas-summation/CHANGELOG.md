@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../cas-pattern-matching` and `../cas-substitution`,
+declared runtime dependencies that `BUILD` already installed.
+
 ## 2.28.0 - 2026-05-29
 
 ### Added

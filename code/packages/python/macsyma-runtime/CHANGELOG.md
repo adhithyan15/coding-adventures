@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs the full CAS chain (`cas-pattern-matching`,
+`cas-substitution`, `cas-mnewton`, `cas-simplify`, `cas-factor`, `cas-solve`,
+`cas-laplace`, `cas-fourier`, `cas-list-operations`, `cas-matrix`, `cas-limit-series`,
+`cas-number-theory`, `cas-complex`, `cas-trig`, `cas-algebraic`, `cas-multivariate`,
+`cas-ode`, `cas-summation`, `cas-pretty-printer`) in the same leaf-to-root order as
+`BUILD`. Windows previously installed only through `macsyma-compiler` and
+`symbolic-vm`, so fifteen declared dependencies were absent from a clean build.
+
 ## 1.27.0 — 2026-05-29
 
 **Track M1: runtime `load("name")` directive and orthogonal-polynomial loadable package.**

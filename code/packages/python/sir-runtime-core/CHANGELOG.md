@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../sir-runtime-exceptions`, a declared runtime
+dependency that `BUILD` already installed.
+
 ## 0.6.0 — SIR21 T3b-2 Slice 2: `trunc_div`/`utrunc_div`/`true_div`
 
 Additive-only: adds the three genuinely-new division functions from the

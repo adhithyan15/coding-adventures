@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../cas-solve`, a declared runtime dependency that
+`BUILD` already installed. Without it a clean Windows build resolved `cas-solve`
+from PyPI rather than the local source tree.
+
 ## 0.3.1 — 2026-05-14
 
 **Bug fix: determinant uses binary `Add` fold instead of n-ary `IRApply(ADD, …)`.**

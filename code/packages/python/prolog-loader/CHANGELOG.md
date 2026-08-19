@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fixed `BUILD_windows`: it now installs `..\logic-stdlib`, a declared runtime
+  dependency that `BUILD` already installed, so a clean Windows build resolves it
+  from the local source tree.
 - adapt source-level standard stream aliases and richer stream options,
   including `user_input`, `user_output`, `user_error`, `reposition/1`,
   `eof_action/1`, `buffer/1`, and `close_on_abort/1`

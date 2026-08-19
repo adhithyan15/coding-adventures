@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../../../packages/python/irc-net-selectors`, the event
+loop this program actually imports and declares in `pyproject.toml`. It previously
+installed `irc-net-stdlib`, which is neither imported nor declared — so a clean
+Windows build installed the wrong package and omitted a real dependency.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.2.0] - 2026-04-23

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Fixed `BUILD_windows`: it now installs the full CAS chain
+  (`cas-pattern-matching`, `cas-substitution`, `cas-mnewton`, `cas-simplify`,
+  `cas-factor`, `cas-solve`, `cas-laplace`, `cas-fourier`, `cas-list-operations`,
+  `cas-matrix`, `cas-limit-series`, `cas-number-theory`, `cas-complex`, `cas-trig`,
+  `cas-algebraic`, `cas-multivariate`, `cas-ode`, `cas-summation`) in the same
+  leaf-to-root order as `BUILD`. Fourteen declared dependencies were previously
+  absent from a clean Windows build.
 - Added `?` / `? topic` help queries backed by the shared MACSYMA help catalog.
 - Route visible REPL output through `macsyma_runtime.output_text_for(...)`, so
   `ev(expr, display2d)` displays the 2D MACSYMA box layout in interactive and

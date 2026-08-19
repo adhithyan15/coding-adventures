@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Fixed `BUILD_windows`: it now installs `../logic-stdlib`, `../logic-bytecode` and
+  `../logic-bytecode-vm` in leaf-to-root order. These are declared runtime
+  dependencies that `BUILD` already installed, so a clean Windows build was missing
+  three local packages.
 - Run standard stream aliases and richer accepted stream options through
   structured and bytecode VM paths, including `user_input`, `user_output`,
   `user_error`, `reposition/1`, `eof_action/1`, `buffer/1`, and

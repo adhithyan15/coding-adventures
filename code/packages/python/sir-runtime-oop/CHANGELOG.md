@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../sir-runtime-exceptions`, a declared runtime
+dependency that `BUILD` already installed, before `../sir-runtime-core`.
+
 All notable changes to `coding-adventures-sir-runtime-oop` are documented here.
 
 ## 0.2.0 — reflection on a rescued exception

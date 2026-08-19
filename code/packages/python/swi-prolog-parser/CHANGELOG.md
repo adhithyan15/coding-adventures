@@ -13,6 +13,9 @@
 
 ## Unreleased
 
+- Fixed `BUILD_windows`: it now installs `../prolog-core` and
+  `../prolog-operator-parser`, declared runtime dependencies that `BUILD` already
+  installed.
 - Parse natural SWI CLP(FD) infix syntax such as `X in 1..4`,
   `[X,Y] ins 1..4`, and `Z #= X + Y`.
 - Expose `parse_swi_term(...)` for single-term parsing with named variable

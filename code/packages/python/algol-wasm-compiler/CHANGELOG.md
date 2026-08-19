@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../cli-builder`, a declared dependency that `BUILD`
+already installed. Without it a clean Windows build could not satisfy the package
+from local sources alone.
+
 All notable changes to this package will be documented in this file.
 
 ## [Unreleased]

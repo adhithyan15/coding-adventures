@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now installs `../prolog-core` and `../prolog-operator-parser`,
+declared runtime dependencies that `BUILD` already installed.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.1] - 2026-08-17
