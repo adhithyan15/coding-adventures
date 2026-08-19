@@ -5073,8 +5073,6 @@ SirValue _sir_array_reshape(SirValue shapev, SirValue targetv) {
     int64_t total;
     int64_t source_len;
     double *source;
-    double *filled;
-    int64_t k;
 
     if (_sir_array_logical_rank(shape_arr) == 2) {
         fprintf(stderr, "sir: reshape: shape argument must be a scalar or vector (got a matrix)\n");
@@ -5101,15 +5099,36 @@ SirValue _sir_array_reshape(SirValue shapev, SirValue targetv) {
         fprintf(stderr, "sir: reshape: cannot reshape an empty source into a non-empty shape\n");
         exit(1);
     }
-    filled = (total > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)total) : NULL;
-    for (k = 0; k < total; k++) {
-        filled[k] = source[k % source_len];
-    }
 
+    /* SECURITY (DoS/memory-amplification fix): the 0-/1-element target
+     * shapes below need only ONE `total`-sized buffer — the cyclically-
+     * filled row-major sequence itself IS the final result (a 1-element
+     * target is its own row-major order; see this function's own CRITICAL
+     * doc comment above `data[col * r + row] = ...`). Only the 2-element
+     * (matrix) target genuinely needs the row-major-to-column-major
+     * TRANSPOSE — so ONLY that branch allocates a second buffer, and it
+     * computes each transposed cell directly from `source[(row * c + col)
+     * % source_len]` rather than first materializing a full `total`-sized
+     * row-major `filled` buffer and then copying out of it. An earlier
+     * version of this function built `filled` unconditionally before
+     * branching, so the matrix case held THREE `<= SIR_ARRAY_MAX_ELEMENTS`
+     * buffers live at once (`source`, `filled`, `data`) — up to 3x this
+     * domain's per-call memory ceiling that every other addendum/base-cut
+     * function (`matmul`/`outer`/`indexGenerator`/`catenate`) holds to at
+     * most one or two buffers — a real memory-exhaustion amplification a
+     * compiled program could trigger by reshaping an already-large array
+     * to an equally large 2-D target, found in this slice's own security
+     * review. This version allocates at most 2 buffers (`source` + the
+     * single final result buffer) for every target rank. */
     if (ndims == 0) {
-        return _sir_array_scalar(filled[0]);
+        return _sir_array_scalar(source[0 % source_len]);
     }
     if (ndims == 1) {
+        double *filled = (total > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)total) : NULL;
+        int64_t k;
+        for (k = 0; k < total; k++) {
+            filled[k] = source[k % source_len];
+        }
         return _sir_array_new_matrix(1, dims[0], filled, "reshape");
     }
     {
@@ -5117,7 +5136,7 @@ SirValue _sir_array_reshape(SirValue shapev, SirValue targetv) {
         double *data = (total > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)total) : NULL;
         for (row = 0; row < r; row++) {
             for (col = 0; col < c; col++) {
-                data[col * r + row] = filled[row * c + col];
+                data[col * r + row] = source[(row * c + col) % source_len];
             }
         }
         return _sir_array_new_matrix(r, c, data, "reshape");
