@@ -4,145 +4,11 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:79852e715c7e5696",
+  "sourceHash": "fnv1a64:24d3c03d7c8adefc",
   "lessons": [
     {
-      "id": "BN-C05-ami-bangla-boli",
-      "sequence": null,
-      "title": "আমি বাংলা বলি (āmi bānglā bôli) — \"I speak Bengali\"",
-      "headword": "আমি বাংলা বলি",
-      "romanization": "",
-      "gloss": "I speak Bengali",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:71f11d270c7b77e9",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your first complete, moving sentence — and the language's own name for itself."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "বাংলা (bānglā): বা (bā) + ং (the anusvāra nasal) + লা (lā)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The sentence, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "আমি বাংলা বলি = আমি (āmi, \"I\") + বাংলা (bānglā, the object) + বলি (bôli, \"speak\") — \"I Bengali speak,\" the verb last as always. The name বাংলা (bānglā) is the language's own word for itself (English \"Bengali\" comes from it, via Bangla becomes Bengal). It descends from বঙ্গ (bôngo), the ancient name of the region — so the language is named after its land, the great delta of the Ganges."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: no gender, so the sentence is the same for anyone",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Because Bengali verbs carry no gender, আমি বাংলা বলি is exactly the same whether a man or a woman says it — unlike Hindi (maiṁ … boltā/boltī hūṁ). And because the -i ending already means \"I,\" you could even drop āmi: bānglā bôli is a complete \"I speak Bengali.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"āmi bānglā bôli\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"āmi bānglā bôli\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what bānglā is named after (bôngo, the ancient region — the Ganges delta)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what *bānglā* is named after (*bôngo*, the ancient region — the Ganges delta)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "does the sentence change for a man vs. a woman? (No — Bengali has no gender)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"I speak Bengali,\" and give the origin of the name bānglā. (Āmi bānglā bôli; from bôngo, the ancient name of the Bengal region.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "BN-C05-bola",
-      "sequence": null,
+      "sequence": 260,
       "title": "বলা (bôlā) — \"to speak,\" your first full verb",
       "headword": "বলা",
       "romanization": "",
@@ -153,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:03bcf22359a87d4e",
+      "sourceHash": "fnv1a64:b87f9dba2d8150eb",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -275,8 +141,142 @@
       ]
     },
     {
+      "id": "BN-C05-ami-bangla-boli",
+      "sequence": 270,
+      "title": "আমি বাংলা বলি (āmi bānglā bôli) — \"I speak Bengali\"",
+      "headword": "আমি বাংলা বলি",
+      "romanization": "",
+      "gloss": "I speak Bengali",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e58c5d27d449db25",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first complete, moving sentence — and the language's own name for itself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "বাংলা (bānglā): বা (bā) + ং (the anusvāra nasal) + লা (lā)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The sentence, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আমি বাংলা বলি = আমি (āmi, \"I\") + বাংলা (bānglā, the object) + বলি (bôli, \"speak\") — \"I Bengali speak,\" the verb last as always. The name বাংলা (bānglā) is the language's own word for itself (English \"Bengali\" comes from it, via Bangla becomes Bengal). It descends from বঙ্গ (bôngo), the ancient name of the region — so the language is named after its land, the great delta of the Ganges."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: no gender, so the sentence is the same for anyone",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Because Bengali verbs carry no gender, আমি বাংলা বলি is exactly the same whether a man or a woman says it — unlike Hindi (maiṁ … boltā/boltī hūṁ). And because the -i ending already means \"I,\" you could even drop āmi: bānglā bôli is a complete \"I speak Bengali.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"āmi bānglā bôli\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"āmi bānglā bôli\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what bānglā is named after (bôngo, the ancient region — the Ganges delta)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *bānglā* is named after (*bôngo*, the ancient region — the Ganges delta)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "does the sentence change for a man vs. a woman? (No — Bengali has no gender)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"I speak Bengali,\" and give the origin of the name bānglā. (Āmi bānglā bôli; from bôngo, the ancient name of the Bengal region.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-C05-kaj-kora",
-      "sequence": null,
+      "sequence": 280,
       "title": "কাজ করা (kāj kôrā) — \"to work\"",
       "headword": "কাজ করা",
       "romanization": "",
@@ -287,7 +287,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:88ae3d7246caf29a",
+      "sourceHash": "fnv1a64:dc58edf3dabd8fc8",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -410,178 +410,8 @@
       ]
     },
     {
-      "id": "BN-C05-practice",
-      "sequence": null,
-      "title": "Chapter 5 — The first verbs",
-      "headword": "(dialogue)",
-      "romanization": "",
-      "gloss": "Chapter 5 recap — the first verbs",
-      "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:08dee411f79d123f",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "No new words. Three verbs, one gender-free engine — build real sentences about yourself."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Build the sentences",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": true,
-              "source": "[PAUSE 1s each]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I speak Bengali\" — āmi bānglā bôli",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I speak Bengali\" — *āmi bānglā bôli*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I live in Kolkata\" — āmi Kolkātāy thāki",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I live in Kolkata\" — *āmi Kolkātāy thāki*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"I work\" — āmi kāj kôri",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"I work\" — *āmi kāj kôri*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"he speaks\" and \"she speaks\" — se bôle (the same for both!)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"he speaks\" and \"she speaks\" — *se bôle* (the same for both!)]"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The engine",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the \"I\" ending on every present verb (-i)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the \"I\" ending on every present verb (*-i*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the one thing Bengali verbs never mark (gender)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the one thing Bengali verbs never mark (gender)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where the verb sits, and where \"in\" sits (verb last; -y/-te after the noun)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where the verb sits, and where \"in\" sits (verb last; *-y/-te* after the noun)]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "bôlā \"to speak\" (native; bol-, like Hindi/Punjabi)."
-            },
-            {
-              "kind": "speech",
-              "text": "thākā \"to live\" from Sanskrit sthā becomes English stand/stay/state."
-            },
-            {
-              "kind": "speech",
-              "text": "kôrā \"to do\" from √kṛ — root of nômoshkar; kāj \"work\" from kārya (also √kṛ)."
-            },
-            {
-              "kind": "speech",
-              "text": "bānglā from bôngo, the ancient region — the Ganges delta."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "In one breath, say your language, your city, and your work in Bengali — and note what stays the same for anyone. (Āmi bānglā bôli. Āmi … thāki. Āmi kāj kôri — no gender, so it's the same for a man or a woman.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "BN-C05-thaka",
-      "sequence": null,
+      "sequence": 290,
       "title": "থাকা (thākā) — \"to live, to stay\"",
       "headword": "থাকা",
       "romanization": "",
@@ -592,7 +422,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f1a739ff51404a22",
+      "sourceHash": "fnv1a64:de1113bd6536b746",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -708,6 +538,176 @@
             {
               "kind": "speech",
               "text": "What Sanskrit/PIE root is thākā from, and its English cousins? (Sanskrit sthā / PIE steh₂- \"to stand\"; English stand, stay, state.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C05-practice",
+      "sequence": 300,
+      "title": "Chapter 5 — The first verbs",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 5 recap — the first verbs",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:324eb3f21df6567b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. Three verbs, one gender-free engine — build real sentences about yourself."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "How to answer — build the sentences",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I speak Bengali\" — āmi bānglā bôli",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I speak Bengali\" — *āmi bānglā bôli*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I live in Kolkata\" — āmi Kolkātāy thāki",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I live in Kolkata\" — *āmi Kolkātāy thāki*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"I work\" — āmi kāj kôri",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"I work\" — *āmi kāj kôri*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"he speaks\" and \"she speaks\" — se bôle (the same for both!)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"he speaks\" and \"she speaks\" — *se bôle* (the same for both!)]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar lens — the engine",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the \"I\" ending on every present verb (-i)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the \"I\" ending on every present verb (*-i*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the one thing Bengali verbs never mark (gender)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the one thing Bengali verbs never mark (gender)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "where the verb sits, and where \"in\" sits (verb last; -y/-te after the noun)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: where the verb sits, and where \"in\" sits (verb last; *-y/-te* after the noun)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "bôlā \"to speak\" (native; bol-, like Hindi/Punjabi)."
+            },
+            {
+              "kind": "speech",
+              "text": "thākā \"to live\" from Sanskrit sthā becomes English stand/stay/state."
+            },
+            {
+              "kind": "speech",
+              "text": "kôrā \"to do\" from √kṛ — root of nômoshkar; kāj \"work\" from kārya (also √kṛ)."
+            },
+            {
+              "kind": "speech",
+              "text": "bānglā from bôngo, the ancient region — the Ganges delta."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "In one breath, say your language, your city, and your work in Bengali — and note what stays the same for anyone. (Āmi bānglā bôli. Āmi … thāki. Āmi kāj kôri — no gender, so it's the same for a man or a woman.)"
             }
           ]
         }

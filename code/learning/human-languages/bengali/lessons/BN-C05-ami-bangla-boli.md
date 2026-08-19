@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: BN-C05-ami-bangla-boli
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 270
 chapter: 5
 type: phrase
 headword: আমি বাংলা বলি
@@ -8,22 +11,37 @@ concept_tag: BN-WORD-BANGLA
 prerequisites: [BN-C05-bola, BN-C03-ami]
 sounds: [anusvara, long-aa]
 roots: [banga]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C03-AMI-01]
+introduces:
+  knowledge: [BN-CONCEPT-C05-AMIBANGLABOLI-01]
+practises:
+  knowledge: [BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-bengali
 reviews_of: [BN-C05-bola, BN-C03-ami]
 ---
 
 # আমি বাংলা বলি (āmi bānglā bôli) — "I speak Bengali"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C03-AMI-01] -->
 
 [PAUSE 2s] Your first complete, moving sentence — and the language's own name for
 itself.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[BN-CONCEPT-C05-AMIBANGLABOLI-01]; assesses=[BN-CONCEPT-C05-BOLA-01, BN-CONCEPT-C03-AMI-01] -->
 
 **বাংলা** (*bānglā*): **বা** (*bā*) + **ং** (the *anusvāra* nasal) + **লা** (*lā*).
 
 ## The sentence, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01] -->
 
 **আমি বাংলা বলি** = **আমি** (*āmi*, "I") + **বাংলা** (*bānglā*, the object) +
 **বলি** (*bôli*, "speak") — "I Bengali speak," the verb last as always. The name
@@ -33,6 +51,7 @@ ancient name of the region — so the language is named after its land, the grea
 delta of the Ganges.
 
 ## Grammar Lens: no gender, so the sentence is the same for anyone
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01] -->
 
 Because Bengali verbs carry no gender, **আমি বাংলা বলি** is exactly the same
 whether a man or a woman says it — unlike Hindi (*maiṁ … boltā/boltī hūṁ*). And
@@ -40,6 +59,7 @@ because the *-i* ending already means "I," you could even drop *āmi*: *bānglā
 bôli* is a complete "I speak Bengali."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "āmi bānglā bôli"]
@@ -47,6 +67,7 @@ bôli* is a complete "I speak Bengali."
 - [YOU SAY: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[BN-CONCEPT-C03-AMI-01, BN-CONCEPT-C05-AMIBANGLABOLI-01, BN-CONCEPT-C05-BOLA-01] -->
 
 [PAUSE 3s] Say "I speak Bengali," and give the origin of the name *bānglā*. (*Āmi
 bānglā bôli*; from *bôngo*, the ancient name of the Bengal region.)

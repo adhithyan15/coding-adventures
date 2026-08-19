@@ -40,8 +40,12 @@
         "lesson": "BN-C02-practice",
         "kind": "task",
         "summary": "Complete BN-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Bengali, give my name, and understand the other person's name.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "BN-CONCEPT-C02-ALAAP-01",
+          "BN-CONCEPT-C02-AMARNAAM-01",
+          "BN-CONCEPT-C02-PRACTICE-01",
+          "BN-CONCEPT-C02-TOMARNAAMKI-01"
+        ]
       }
     },
     {
@@ -58,8 +62,12 @@
         "lesson": "BN-C03-practice",
         "kind": "task",
         "summary": "Complete BN-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Bengali, answer naturally, and return the question.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "BN-CONCEPT-C03-BHALO-01",
+          "BN-CONCEPT-C03-KONOBEPARNA-01",
+          "BN-CONCEPT-C03-PRACTICE-01",
+          "BN-CONCEPT-C03-TUMIKEMONACHHO-01"
+        ]
       }
     },
     {
@@ -74,8 +82,11 @@
         "lesson": "BN-C04-practice",
         "kind": "task",
         "summary": "Complete BN-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Bengali conversation politely and choose a farewell that fits the situation.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
+          "BN-CONCEPT-C04-KALDEKHAHOBE-01",
+          "BN-CONCEPT-C04-PRACTICE-01"
+        ]
       }
     },
     {
@@ -90,8 +101,13 @@
         "lesson": "BN-C05-practice",
         "kind": "task",
         "summary": "Complete BN-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Bengali sentences with the chapter's first verbs.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+          "BN-CONCEPT-C05-BOLA-01",
+          "BN-CONCEPT-C05-KAJKORA-01",
+          "BN-CONCEPT-C05-PRACTICE-01",
+          "BN-CONCEPT-C05-THAKA-01"
+        ]
       }
     },
     {

@@ -4,11 +4,11 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:28db9f1b151935e5",
+  "sourceHash": "fnv1a64:95b8a11959317c33",
   "lessons": [
     {
       "id": "BN-C04-abar",
-      "sequence": null,
+      "sequence": 210,
       "title": "আবার (ābār) — \"again,\" the seed of \"see you again\"",
       "headword": "আবার",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:bdbcded841cd4265",
+      "sourceHash": "fnv1a64:e82dd6c8fc56ae37",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -121,111 +121,8 @@
       ]
     },
     {
-      "id": "BN-C04-abar-dekha-hobe",
-      "sequence": null,
-      "title": "আবার দেখা হবে (ābār dækhā hôbe) — \"we'll meet again\"",
-      "headword": "আবার দেখা হবে",
-      "romanization": "",
-      "gloss": "we'll meet again (goodbye)",
-      "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:33d3aab992b566ea",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The warm, everyday goodbye — the fuller cousin of Chapter 1's āshi."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "আবার দেখা হবে = আবার (ābār, \"again\") + দেখা হবে (dækhā hôbe, \"[a] seeing will happen\") — \"we'll meet again\" (literally \"again a seeing will happen\"). Chapter 1 gave you the tender আসি (āshi, \"I'll come [again]\"), the \"promise of return\" goodbye; ābār dækhā hôbe is its warm, explicit form. It is the sibling of the whole subcontinent's parting habit (Hindi phir milenge, Tamil pōy varugiṟēṉ): never a blunt \"goodbye,\" always a return promised."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the warm goodbye — ābār dækhā hôbe",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the warm goodbye — *ābār dækhā hôbe*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two pieces (ābār + dækhā hôbe)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the two pieces (*ābār* + *dækhā hôbe*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Chapter-1 goodbye it deepens (āshi)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Chapter-1 goodbye it deepens (*āshi*)]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ābār dækhā hôbe literally say, and how does it relate to āshi? (\"Again a seeing will happen\"; it is the fuller, explicit form of Ch.1's \"promise of return\" goodbye.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "BN-C04-dekha-hobe",
-      "sequence": null,
+      "sequence": 220,
       "title": "দেখা হবে (dækhā hôbe) — \"(we) will meet\"",
       "headword": "দেখা হবে",
       "romanization": "",
@@ -236,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:b8f661e6e0594a07",
+      "sourceHash": "fnv1a64:4e69cc199d65ed6f",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -358,8 +255,111 @@
       ]
     },
     {
+      "id": "BN-C04-abar-dekha-hobe",
+      "sequence": 230,
+      "title": "আবার দেখা হবে (ābār dækhā hôbe) — \"we'll meet again\"",
+      "headword": "আবার দেখা হবে",
+      "romanization": "",
+      "gloss": "we'll meet again (goodbye)",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cb222a12664e6489",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm, everyday goodbye — the fuller cousin of Chapter 1's āshi."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আবার দেখা হবে = আবার (ābār, \"again\") + দেখা হবে (dækhā hôbe, \"[a] seeing will happen\") — \"we'll meet again\" (literally \"again a seeing will happen\"). Chapter 1 gave you the tender আসি (āshi, \"I'll come [again]\"), the \"promise of return\" goodbye; ābār dækhā hôbe is its warm, explicit form. It is the sibling of the whole subcontinent's parting habit (Hindi phir milenge, Tamil pōy varugiṟēṉ): never a blunt \"goodbye,\" always a return promised."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the warm goodbye — ābār dækhā hôbe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the warm goodbye — *ābār dækhā hôbe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two pieces (ābār + dækhā hôbe)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two pieces (*ābār* + *dækhā hôbe*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Chapter-1 goodbye it deepens (āshi)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Chapter-1 goodbye it deepens (*āshi*)]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ābār dækhā hôbe literally say, and how does it relate to āshi? (\"Again a seeing will happen\"; it is the fuller, explicit form of Ch.1's \"promise of return\" goodbye.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-C04-kal-dekha-hobe",
-      "sequence": null,
+      "sequence": 240,
       "title": "কাল দেখা হবে (kāl dækhā hôbe) — \"see you tomorrow\"",
       "headword": "কাল দেখা হবে",
       "romanization": "",
@@ -370,7 +370,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5a5040768b99964e",
+      "sourceHash": "fnv1a64:9cd8d6a17e79f31b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -482,7 +482,7 @@
     },
     {
       "id": "BN-C04-practice",
-      "sequence": null,
+      "sequence": 250,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4cfb9c1b606ded5f",
+      "sourceHash": "fnv1a64:64754e386a5b42cc",
       "notice": null,
       "blocks": [
         {
@@ -515,8 +515,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the farewells",
           "segments": [
             {
               "kind": "pause",
@@ -555,8 +555,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "etymology",
+          "title": "The word, taken apart — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -595,8 +595,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",

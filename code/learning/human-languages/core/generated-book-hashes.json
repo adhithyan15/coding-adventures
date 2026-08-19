@@ -364,6 +364,62 @@
     },
     {
       "language": "bengali",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:f24593ebe1c98778",
+      "lessonIds": [
+        "BN-C02-naam",
+        "BN-C02-amar",
+        "BN-C02-amar-naam",
+        "BN-C02-alaap",
+        "BN-C02-ki",
+        "BN-C02-tumi-apni",
+        "BN-C02-tomar-naam-ki",
+        "BN-C02-practice"
+      ],
+      "tex": "bengali/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:5a20f87379c8ea8e",
+      "lessonIds": [
+        "BN-C03-ami",
+        "BN-C03-kemon",
+        "BN-C03-tumi-kemon-achho",
+        "BN-C03-bhalo",
+        "BN-C03-kono-bepar-na",
+        "BN-C03-practice"
+      ],
+      "tex": "bengali/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:33fee036d310eac5",
+      "lessonIds": [
+        "BN-C04-abar",
+        "BN-C04-dekha-hobe",
+        "BN-C04-abar-dekha-hobe",
+        "BN-C04-kal-dekha-hobe",
+        "BN-C04-practice"
+      ],
+      "tex": "bengali/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "bengali",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:2d84707b81a775fc",
+      "lessonIds": [
+        "BN-C05-bola",
+        "BN-C05-ami-bangla-boli",
+        "BN-C05-kaj-kora",
+        "BN-C05-thaka",
+        "BN-C05-practice"
+      ],
+      "tex": "bengali/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:04fde9b62723721f",
       "lessonIds": [

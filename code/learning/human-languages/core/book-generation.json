@@ -750,6 +750,34 @@
     },
     {
       "language": "bengali",
+      "chapter": 2,
+      "output": "bengali/book/chapters/ch02-introductions.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 3,
+      "output": "bengali/book/chapters/ch03-responding.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 4,
+      "output": "bengali/book/chapters/ch04-farewells.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
+      "chapter": 5,
+      "output": "bengali/book/chapters/ch05-first-verbs.tex",
+      "unicodeScript": "Bengali",
+      "scriptCommand": "bn"
+    },
+    {
+      "language": "bengali",
       "chapter": 1,
       "output": "bengali/book/chapters/ch01-greetings.tex",
       "unicodeScript": "Bengali",
@@ -5500,26 +5528,6 @@
       "language": "arabic",
       "chapter": 2,
       "output": "arabic/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 2,
-      "output": "bengali/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 3,
-      "output": "bengali/book/chapters/ch03-responding.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 4,
-      "output": "bengali/book/chapters/ch04-farewells.tex"
-    },
-    {
-      "language": "bengali",
-      "chapter": 5,
-      "output": "bengali/book/chapters/ch05-first-verbs.tex"
     },
     {
       "language": "french",
