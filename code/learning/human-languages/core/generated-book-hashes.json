@@ -1059,6 +1059,77 @@
     },
     {
       "language": "gujarati",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:c5b09ea90cec9a61",
+      "lessonIds": [
+        "GU-C01-namaste",
+        "GU-C01-aabhaar",
+        "GU-C01-aavjo",
+        "GU-C01-haa-naa",
+        "GU-C01-saarun",
+        "GU-C01-practice"
+      ],
+      "tex": "gujarati/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:d5b0e868e7ad8b29",
+      "lessonIds": [
+        "GU-C02-naam",
+        "GU-C02-maarun",
+        "GU-C02-chhe",
+        "GU-C02-maarun-naam-chhe",
+        "GU-C02-anand",
+        "GU-C02-tu-tame",
+        "GU-C02-shun",
+        "GU-C02-tamarun-naam-shun-chhe",
+        "GU-C02-practice"
+      ],
+      "tex": "gujarati/book/chapters/ch02-introductions.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:cae11c3d6233e8ef",
+      "lessonIds": [
+        "GU-C03-hun",
+        "GU-C03-kem",
+        "GU-C03-tame-kem-chho",
+        "GU-C03-majaa",
+        "GU-C03-vandho-nahi",
+        "GU-C03-practice"
+      ],
+      "tex": "gujarati/book/chapters/ch03-responding.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:e9c89a04a63fdf2c",
+      "lessonIds": [
+        "GU-C04-malishun",
+        "GU-C04-kaale",
+        "GU-C04-pachha",
+        "GU-C04-pachha-malishun",
+        "GU-C04-practice"
+      ],
+      "tex": "gujarati/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:85cfbdfb2d1b62c4",
+      "lessonIds": [
+        "GU-C05-bolvun",
+        "GU-C05-hun-gujarati-bolun-chhun",
+        "GU-C05-kaam-karvun",
+        "GU-C05-rahevun",
+        "GU-C05-practice"
+      ],
+      "tex": "gujarati/book/chapters/ch05-first-verbs.tex"
+    },
+    {
+      "language": "gujarati",
       "chapter": 6,
       "sourceHash": "fnv1a64:c231d5277ecc1fed",
       "lessonIds": [
