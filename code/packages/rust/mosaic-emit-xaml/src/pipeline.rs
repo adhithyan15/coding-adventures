@@ -1397,6 +1397,24 @@ fn build_style_fragment(props: &[mosstyle_compiler::StyleProp]) -> String {
             Some(k) => k,
             None => continue,
         };
+
+        // `width: 100%` / `height: 100%` express "fill the cross axis", and
+        // XAML says that with an alignment, not a length. Translating the
+        // value alone cannot do this — WinUI's Width/Height are absolute
+        // Doubles — so the percentage was previously dropped entirely and the
+        // element fell back to sizing itself to its content. That is a large
+        // part of why generated apps hug the top-left of an otherwise empty
+        // window instead of filling it.
+        //
+        // Only 100% maps this cleanly. Any other percentage needs
+        // proportional sizing (a Grid with star columns), which is a
+        // different and much larger change — those keep being dropped rather
+        // than guessed at.
+        if let Some(alignment_key) = stretch_alignment_for(&key, &p.value) {
+            upsert_style_attr(&mut parts, alignment_key.to_string(), "Stretch".to_string());
+            continue;
+        }
+
         // X5: translate the *value* into the form the WinUI 3 markup
         // compiler accepts. `translate_xaml_value` may return `None`
         // when the whole property must be dropped (e.g. a percentage
@@ -1465,6 +1483,29 @@ fn edge_thickness(edge: &str, value: &str) -> String {
         "bottom" => format!("0,0,0,{value}"),
         "left" => format!("{value},0,0,0"),
         _ => value.to_string(),
+    }
+}
+
+/// Map a full-width/full-height declaration onto the XAML alignment that
+/// expresses it, or `None` when this is not that case.
+///
+/// `width: 100%` is a *sizing* property in CSS but an *alignment* in XAML:
+/// WinUI's `Width` is an absolute `Double` with no percentage form, and the
+/// way an element fills its parent's cross axis is
+/// `HorizontalAlignment="Stretch"`.
+///
+/// Deliberately narrow. Percentages other than 100% need proportional
+/// sizing — a `Grid` with star columns — which is a much larger change;
+/// those still drop rather than being approximated.
+fn stretch_alignment_for(key: &str, value: &str) -> Option<&'static str> {
+    let v = value.trim();
+    if v != "100%" {
+        return None;
+    }
+    match key {
+        "Width" => Some("HorizontalAlignment"),
+        "Height" => Some("VerticalAlignment"),
+        _ => None,
     }
 }
 
@@ -12631,6 +12672,81 @@ mod tests {
              them to OneTime and whatever they render freezes after the first \
              pass:\n{}",
             offenders.join("\n")
+        );
+    }
+
+    /// `width: 100%` must become an alignment, not vanish.
+    ///
+    /// CSS treats full-width as a sizing property; XAML treats it as an
+    /// alignment, because WinUI's `Width` is an absolute `Double` with no
+    /// percentage form. Translating the value alone therefore could not
+    /// express it, and the property was dropped outright — leaving the
+    /// element to size itself to its content, which is a large part of why
+    /// generated apps hug the top-left of an empty window.
+    #[test]
+    fn full_width_and_height_become_stretch_alignments() {
+        assert_eq!(
+            stretch_alignment_for("Width", "100%"),
+            Some("HorizontalAlignment")
+        );
+        assert_eq!(
+            stretch_alignment_for("Height", "100%"),
+            Some("VerticalAlignment")
+        );
+        // Tolerate incidental whitespace from the stylesheet.
+        assert_eq!(
+            stretch_alignment_for("Width", " 100% "),
+            Some("HorizontalAlignment")
+        );
+
+        // Other percentages need proportional (star) sizing, which is a
+        // different change — they must NOT be silently approximated to
+        // "fill the parent".
+        assert_eq!(stretch_alignment_for("Width", "50%"), None);
+        assert_eq!(stretch_alignment_for("Height", "33%"), None);
+        // Absolute lengths are unaffected.
+        assert_eq!(stretch_alignment_for("Width", "34"), None);
+        // Only the two size setters map this way.
+        assert_eq!(stretch_alignment_for("FontSize", "100%"), None);
+        assert_eq!(stretch_alignment_for("Padding", "100%"), None);
+    }
+
+    /// End-to-end: a part declaring `width: 100%` emits a stretch alignment
+    /// rather than nothing at all.
+    #[test]
+    fn part_with_full_width_emits_stretch_not_nothing() {
+        let c = component("Foo", vec![], vec![]);
+        let l = layout_with_root(
+            "Foo",
+            LayoutNode {
+                tag: "Box".to_string(),
+                part_name: Some("panel".to_string()),
+                props: Vec::new(),
+                children: Vec::new(),
+            },
+        );
+        let s = StyleDef {
+            component_name: "Foo".to_string(),
+            parts: vec![PartStyle {
+                name: "panel".to_string(),
+                base: vec![StyleProp {
+                    name: "width".to_string(),
+                    value: "100%".to_string(),
+                }],
+                transitions: Vec::new(),
+                states: Vec::new(),
+            }],
+        };
+        let r = compile(&c, &l, &s);
+        assert!(
+            r.xaml.contains("HorizontalAlignment=\"Stretch\""),
+            "expected a stretch alignment, got:\n{}",
+            r.xaml
+        );
+        assert!(
+            !r.xaml.contains("Width=\"100%\""),
+            "must not emit a percentage as an absolute Width:\n{}",
+            r.xaml
         );
     }
 
