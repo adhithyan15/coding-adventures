@@ -156,27 +156,42 @@ impl Simulator {
                 let v = self.state.get(Reg::Rdi) as i64;
                 self.stdout.extend(v.to_string().into_bytes());
             }
-            // `void __twig_gc_write_barrier(parent, child)` — accepted, does nothing.
+            // `void __twig_gc_write_barrier(i64 parent, i64 child)` — deliberately
+            // a **no-op here**, and that is a real implementation, not a stub.
             //
-            // The x86_64-backend emits this call after every `field_store` and
-            // `array_set` (#10489), because a *real* run links against the
-            // generational collector in `gc-core-capi`, where the barrier records
-            // an old→young edge in the remembered set so a minor collection does
-            // not free a young object that only an old object still points at.
+            // On a real target this is the *generational* write barrier
+            // (`gc-core-capi`'s `__gc_write_barrier`): when the mutator stores a
+            // reference `child` into a field of an already-**old** object
+            // `parent`, the collector must remember `parent`, because a later
+            // *minor* collection only traces the young generation and would
+            // otherwise never discover that an old object now points at a young
+            // one — and would free a live object. The barrier's whole job is to
+            // add `parent` to that remembered set. `child` is never dereferenced.
             //
-            // This simulator has no collector to remember anything *for*: `Memory`
-            // is a bump allocator that never reclaims, so every object stays live
-            // for the whole run by construction and the remembered set has no
-            // reader. The barrier is therefore *semantically* a no-op here — not
-            // merely unimplemented — and the two arguments in rdi/rsi are read by
-            // nobody. What matters is only that it resolves: a `ret`-equivalent, so
-            // the array programs in the language matrix run past their stores
-            // instead of trapping `UnresolvedExternal`.
+            // None of that machinery exists in this simulator. `Memory::alloc`
+            // (the `__twig_alloc_bytes` shim above) is a **monotonic bump
+            // allocator**: `heap_next` only ever moves forward, nothing is ever
+            // freed, swept, promoted, or relocated, and there is exactly one
+            // generation because there is no collector at all. With no minor
+            // collection to run, a remembered set has no reader, so recording
+            // into one would be pure bookkeeping no observable behaviour depends
+            // on. Doing nothing is therefore *semantically exact*, not an
+            // approximation — a simulated program cannot distinguish this from a
+            // real barrier, since the only way to observe a missed barrier is to
+            // watch the collector reclaim a live object, and this heap never
+            // reclaims anything.
             //
-            // Note this is a `void` shim: it deliberately leaves rax alone rather
-            // than zeroing it, matching the C prototype (a caller that reads rax
-            // after a void call is already wrong, and clobbering it would mask that).
-            "__twig_gc_write_barrier" => {}
+            // Consequently we read both arguments purely to document the System V
+            // signature the `x86_64-backend` emits against — `parent` in RDI,
+            // `child` in RSI (see `array_set`/`field_store`, which reload both
+            // fresh from their stack slots into `abi.arg_regs()[0..2]` right
+            // before the `call`). Being `void`, it leaves RAX alone, exactly like
+            // the `__twig_print_i64` shim above: SysV treats RAX as
+            // caller-clobbered, so a caller may not rely on its value either way.
+            "__twig_gc_write_barrier" => {
+                let _parent = self.state.get(Reg::Rdi);
+                let _child = self.state.get(Reg::Rsi);
+            }
             other => return Err(Trap::UnresolvedExternal(other.to_string())),
         }
         Ok(())
@@ -202,5 +217,72 @@ mod tests {
             .build("main")
             .expect("entry exists");
         assert_eq!(sim.run().unwrap(), 42, "the simulator runs real x86_64 codegen → 42");
+    }
+
+    // The shape `x86_64-backend` emits after every `field_store` / `array_set`:
+    // a `call rel32` to the GC write barrier (relocated at offset 1), then `ret`.
+    // `E8 00000000` is the un-patched call; the harness records offset 1 as an
+    // external relocation, so `Flow::Call` routes it through `host_call`.
+    const BARRIER_CALL_FN: &[u8] = &[0xE8, 0x00, 0x00, 0x00, 0x00, 0xC3];
+
+    /// Regression guard for the gap that made three LANG-FULL matrix cells
+    /// (`basic_array`, `algol_static_array`, `algol_for_loop_array`) trap with
+    /// `UnresolvedExternal("__twig_gc_write_barrier")`: once the precise-GC track
+    /// taught the backend to emit a write barrier on heap stores, every array /
+    /// field store in the matrix reached a symbol this dispatch table did not
+    /// know. Any program doing a heap store now routes through here, so a
+    /// regression would break far more than one test — this asserts the symbol
+    /// resolves at all, independent of any particular frontend.
+    #[test]
+    fn gc_write_barrier_resolves_instead_of_trapping() {
+        let relocs = [harness::Reloc { patch_offset: 1, symbol: "__twig_gc_write_barrier".into() }];
+        let mut sim = harness::MachineCodeHarness::new()
+            .function("main", BARRIER_CALL_FN, &relocs)
+            .build("main")
+            .expect("entry exists");
+        assert_eq!(
+            sim.run(),
+            Ok(0),
+            "a call to __twig_gc_write_barrier must run to a clean ret, not trap as an unresolved external",
+        );
+    }
+
+    /// The barrier must be a *silent* no-op, not merely a resolved symbol: it may
+    /// not allocate, and it may not emit output. This pins the two observable
+    /// channels a wrong implementation would disturb — an accidental `alloc`
+    /// would move the bump cursor (corrupting every later heap address the guest
+    /// computed), and an accidental write would corrupt captured stdout.
+    #[test]
+    fn gc_write_barrier_is_a_silent_no_op() {
+        let mut sim = harness::MachineCodeHarness::new()
+            .function("main", MIN_FN, &[])
+            .build("main")
+            .expect("entry exists");
+        // Non-zero, deliberately bogus arguments: the barrier never dereferences
+        // either operand, so even a wild `child` must be harmless.
+        sim.state.set(Reg::Rdi, 0x4141_4141);
+        sim.state.set(Reg::Rsi, 0x4242_4242);
+        // `alloc(0)` is an idempotent probe of the bump cursor: it reserves
+        // nothing and returns the current (aligned) `heap_next`.
+        let heap_before = sim.mem.alloc(0).expect("heap probe");
+        sim.host_call("__twig_gc_write_barrier").expect("the barrier shim resolves");
+        let heap_after = sim.mem.alloc(0).expect("heap probe");
+        assert_eq!(heap_before, heap_after, "the barrier must not allocate — the heap cursor may not move");
+        assert!(sim.stdout.is_empty(), "the barrier must not write to stdout");
+    }
+
+    /// The fix must not have widened the dispatch table into a catch-all: an
+    /// unknown symbol still has to fail closed.
+    #[test]
+    fn an_unknown_external_still_traps() {
+        let mut sim = harness::MachineCodeHarness::new()
+            .function("main", MIN_FN, &[])
+            .build("main")
+            .expect("entry exists");
+        assert_eq!(
+            sim.host_call("__twig_not_a_real_symbol"),
+            Err(Trap::UnresolvedExternal("__twig_not_a_real_symbol".to_string())),
+            "unknown externals must still trap, not silently no-op",
+        );
     }
 }

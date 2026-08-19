@@ -1,24 +1,42 @@
 # Changelog — x86-simulator
 
-## 0.7.7 — 2026-08-19 — resolve `__twig_gc_write_barrier`
+## 0.7.7 — 2026-08-19 — host shim for `__twig_gc_write_barrier`
 
-Accept `__twig_gc_write_barrier(parent, child)` as a host shim, so array and
-field stores run instead of trapping.
+Fixes a **latent** breakage: three LANG-FULL matrix cells
+(`basic_array_runs_on_x86_sim`, `algol_static_array_runs_on_x86_sim`,
+`algol_for_loop_array_runs_on_x86_sim`) failed with
 
-Since #10489 the x86_64-backend emits a call to that symbol after **every**
-`field_store` and `array_set` — unconditionally, because at that IR level
-nothing distinguishes a pointer element from a scalar one. A real link supplies
-it from `gc-core-capi`, where it records an old→young edge in the remembered set
-so a minor collection cannot free a young object that only an old object still
-references. The simulator had no such symbol, so the three array cells in the
-language matrix (`algol_for_loop_array`, `algol_static_array`, `basic_array`)
-died on `UnresolvedExternal("__twig_gc_write_barrier")` the moment they stored
-an element.
+```
+UnresolvedExternal("__twig_gc_write_barrier")
+```
 
-The shim is a no-op, and that is the *correct* semantics here rather than a
-stub: `Memory` is a bump allocator that never reclaims, so every object is live
-for the whole run and the remembered set has no reader. It is also a `void`
-shim — rax is left untouched to match the C prototype.
+When the precise-GC track (AOT00-T8 follow-up) taught `x86_64-backend` to emit a
+generational write barrier after every `field_store` / `array_set`, this
+simulator's `host_call` dispatch table was not extended to match — so every
+program performing a heap store trapped. Nothing in a recent PR caused it; this
+crate's BUILD simply is not re-run by main's diff-based CI unless a change lands
+in its dependency cone, so the break sat on main silently until an unrelated
+near-full-repo rebuild surfaced it.
+
+**The shim is a genuine no-op, not a stub.** `__twig_gc_write_barrier(parent,
+child)` exists to add `parent` to a remembered set so a later *minor* collection
+does not free a young object reachable only from an old one. This simulator's
+`Memory::alloc` is a monotonic bump allocator — nothing is ever freed, swept,
+promoted, or relocated, and there is only one generation because there is no
+collector — so the remembered set has no reader and doing nothing is
+semantically exact. `src/lib.rs` carries the full reasoning inline so the arm is
+not mistaken for unfinished work.
+
+Three new unit tests, all of which fail against the pre-fix dispatch table where
+applicable: the symbol resolves to a clean `ret` rather than trapping; the shim
+is *silent* (moves neither the heap bump cursor nor stdout, and never
+dereferences either operand); and an unknown symbol still fails closed, so the
+fix did not widen the table into a catch-all.
+
+Scope: `x86-simulator` is the only crate in the repo with a host-runtime symbol
+dispatch table (it is the sole `fn host_call` / `Trap::UnresolvedExternal` site),
+so no sibling simulator shares this gap. `aarch64-backend` emits the same
+barrier, but has no simulator executing its output.
 
 ## 0.7.6 — 2026-06-23 — int ⇄ real conversions (LANG-FULL E8 PR-6b)
 
