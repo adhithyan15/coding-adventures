@@ -1201,6 +1201,153 @@
           "TA-LEX-C57-FIRE-05"
         ]
       }
+    },
+    {
+      "chapter": 58,
+      "title": "Around the Yard",
+      "label": "ch:ta-around-the-yard",
+      "canDo": "I can name a cow, a goat, a hen, a crow and a bird in Tamil.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "TA-C58-bird",
+        "kind": "production",
+        "summary": "Complete TA-C58-bird and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C58-ANIMAL-01",
+          "TA-LEX-C58-ANIMAL-02",
+          "TA-LEX-C58-ANIMAL-03",
+          "TA-LEX-C58-ANIMAL-04",
+          "TA-LEX-C58-ANIMAL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 59,
+      "title": "In the Kitchen",
+      "label": "ch:ta-in-the-kitchen",
+      "canDo": "I can name curd, ghee, oil, jaggery and sugar in Tamil.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "TA-C59-sugar",
+        "kind": "production",
+        "summary": "Complete TA-C59-sugar and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C59-KITCHEN-01",
+          "TA-LEX-C59-KITCHEN-02",
+          "TA-LEX-C59-KITCHEN-03",
+          "TA-LEX-C59-KITCHEN-04",
+          "TA-LEX-C59-KITCHEN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 60,
+      "title": "Things People Make",
+      "label": "ch:ta-things-people-make",
+      "canDo": "I can name a needle, a rope, an umbrella, a broom and a comb in Tamil.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "TA-C60-comb",
+        "kind": "production",
+        "summary": "Complete TA-C60-comb and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C60-MADE-01",
+          "TA-LEX-C60-MADE-02",
+          "TA-LEX-C60-MADE-03",
+          "TA-LEX-C60-MADE-04",
+          "TA-LEX-C60-MADE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 61,
+      "title": "How the Body Feels",
+      "label": "ch:ta-how-the-body-feels",
+      "canDo": "I can say I am hungry, thirsty, sleepy, feverish or in pain in Tamil.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "TA-C61-pain",
+        "kind": "production",
+        "summary": "Complete TA-C61-pain and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C61-FEEL-01",
+          "TA-LEX-C61-FEEL-02",
+          "TA-LEX-C61-FEEL-03",
+          "TA-LEX-C61-FEEL-04",
+          "TA-LEX-C61-FEEL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 62,
+      "title": "Only and Still",
+      "label": "ch:ta-only-and-still",
+      "canDo": "I can say only, still, soon, at once and first of all in Tamil.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "TA-C62-first-of-all",
+        "kind": "production",
+        "summary": "Complete TA-C62-first-of-all and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C62-JOIN-01",
+          "TA-LEX-C62-JOIN-02",
+          "TA-LEX-C62-JOIN-03",
+          "TA-LEX-C62-JOIN-04",
+          "TA-LEX-C62-JOIN-05"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "Asking Well",
+      "label": "ch:ta-asking-well",
+      "canDo": "I can name a request, permission, hesitancy, trust and humility in Tamil.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "TA-C63-humility",
+        "kind": "production",
+        "summary": "Complete TA-C63-humility and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C63-MANNERS-01",
+          "TA-LEX-C63-MANNERS-02",
+          "TA-LEX-C63-MANNERS-03",
+          "TA-LEX-C63-MANNERS-04",
+          "TA-LEX-C63-MANNERS-05"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
+      "title": "The Harvest",
+      "label": "ch:ta-the-harvest",
+      "canDo": "I can name paddy, grass, a standing crop, a threshing floor and the harvest in Tamil.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "TA-C64-harvest",
+        "kind": "production",
+        "summary": "Complete TA-C64-harvest and say all five words in order.",
+        "assesses": [
+          "TA-LEX-C64-HARVEST-01",
+          "TA-LEX-C64-HARVEST-02",
+          "TA-LEX-C64-HARVEST-03",
+          "TA-LEX-C64-HARVEST-04",
+          "TA-LEX-C64-HARVEST-05"
+        ]
+      }
     }
   ]
 }
