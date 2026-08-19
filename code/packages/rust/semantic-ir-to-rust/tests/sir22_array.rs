@@ -1,25 +1,32 @@
-//! SIR22 base-cut execution proof: `ArrayLit`/`Range`/`MatMul`/
-//! `ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet` on the Rust
-//! backend — hand-builds a module calling each node directly (bypassing
-//! the frontend, since no frontend targets this backend for SIR22 yet),
-//! emits Rust, compiles it with a real `rustc`, runs the binary, and
-//! asserts stdout. Mirrors `compile_and_run_floats.rs`'s pattern; skips
-//! (does not fail) when no `rustc` is on `PATH` or no usable linker is
-//! present, exactly like every other `compile_and_run_*` test in this
-//! crate.
+//! SIR22 execution proof: `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+//! `Transpose`/`IndexGet`/`Stmt::IndexSet` (the "base cut", Phase A
+//! Slice 2) AND `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+//! `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` (the 9-node "APL
+//! addendum", Phase A Slice 3) on the Rust backend — hand-builds a module
+//! calling each node directly (bypassing the frontend, since no frontend
+//! targets this backend for SIR22 yet), emits Rust, compiles it with a
+//! real `rustc`, runs the binary, and asserts stdout. Mirrors
+//! `compile_and_run_floats.rs`'s pattern; skips (does not fail) when no
+//! `rustc` is on `PATH` or no usable linker is present, exactly like every
+//! other `compile_and_run_*` test in this crate.
 //!
-//! Ported from `semantic-ir-to-javascript`'s own already-proven
-//! `tests/sir22_array.rs` (and cross-checked against
-//! `semantic-ir-to-ruby`'s own port of the same suite) — same worked
-//! examples, adapted to this backend's own value-type convention: this
-//! port's `array_*` runtime (`runtime.rs`) stores every element as `f64`
-//! (mirroring the JS backend's `Float64Array`, not Ruby's Int/Float-
-//! preserving choice — see `runtime.rs`'s own module doc for why), so
-//! `Expr::IndexGet` on a scalar position always yields a `Value::Float`.
-//! Every printed assertion below therefore expects the `.0`-suffixed
-//! float rendering (`format_float` in `runtime.rs`), e.g. `"19.0"` rather
-//! than `"19"` — a deliberate, documented divergence from the Ruby
-//! reference's Integer-preserving output, not a bug.
+//! The base-cut tests were ported from `semantic-ir-to-javascript`'s own
+//! already-proven `tests/sir22_array.rs` (and cross-checked against
+//! `semantic-ir-to-ruby`'s own port of the same suite). Neither the JS nor
+//! the Ruby backend has addendum execution tests yet (both still reject
+//! the nine addendum nodes at this repo's current HEAD) — the addendum
+//! tests below are new, hand-derived from `apl_runtime::builtins`'s own
+//! ground-truth tests (`code/packages/rust/apl-runtime/src/builtins.rs`)
+//! and this backend's own `runtime.rs` doc comments.
+//!
+//! This port's `array_*` runtime (`runtime.rs`) stores every element as
+//! `f64` (mirroring the JS backend's `Float64Array`, not Ruby's
+//! Int/Float-preserving choice — see `runtime.rs`'s own module doc for
+//! why), so `Expr::IndexGet` on a scalar position always yields a
+//! `Value::Float`. Every printed assertion below therefore expects the
+//! `.0`-suffixed float rendering (`format_float` in `runtime.rs`), e.g.
+//! `"19.0"` rather than `"19"` — a deliberate, documented divergence from
+//! the Ruby reference's Integer-preserving output, not a bug.
 //!
 //! Every test constructs `Module`s directly via `print_stmt`'s scalar
 //! `IndexGet` reads (top-left/bottom-right element, etc.) — sidesteps
@@ -70,6 +77,59 @@ fn scalar(i: i64) -> IndexArg {
 }
 fn index_get(target: Expr, indices: Vec<IndexArg>) -> Expr {
     Expr::IndexGet { target: Box::new(target), indices, span: s() }
+}
+
+// ── SIR22 "APL addendum" node constructors ──────────────────────────
+
+/// Build a genuine RANK-1 vector `Value` from a list of ints. `array_lit`
+/// alone always produces rank 2 (`array_from_rows` unconditionally shapes
+/// its output `[nrows, ncols]`, even for a single row) — this ravels a
+/// single-row `ArrayLit` to collapse it to rank 1. This matters: several
+/// addendum functions dispatch on rank (`array_reduce`/`array_scan`/
+/// `array_outer`/`array_index_of`/`array_catenate` each have a DIFFERENT
+/// code path for rank 1 than for rank 2), so a "vector" test must hand
+/// them a value that is genuinely rank 1, not a 1-row rank-2 matrix that
+/// would silently exercise the WRONG branch while still producing a
+/// plausible-looking answer.
+fn vector1(values: Vec<i64>) -> Expr {
+    let row = array_lit(vec![values.into_iter().map(ilit).collect()]);
+    Expr::Ravel { target: Box::new(row), span: s() }
+}
+
+fn reduce_expr(op: ElementwiseOpKind, target: Expr) -> Expr {
+    Expr::Reduce { op, target: Box::new(target), span: s() }
+}
+
+fn scan_expr(op: ElementwiseOpKind, target: Expr) -> Expr {
+    Expr::Scan { op, target: Box::new(target), span: s() }
+}
+
+fn outer_expr(op: ElementwiseOpKind, lhs: Expr, rhs: Expr) -> Expr {
+    Expr::OuterProduct { op, lhs: Box::new(lhs), rhs: Box::new(rhs), span: s() }
+}
+
+fn shape_expr(target: Expr) -> Expr {
+    Expr::Shape { target: Box::new(target), span: s() }
+}
+
+fn reshape_expr(shape: Expr, target: Expr) -> Expr {
+    Expr::Reshape { shape: Box::new(shape), target: Box::new(target), span: s() }
+}
+
+fn index_generator_expr(count: Expr) -> Expr {
+    Expr::IndexGenerator { count: Box::new(count), span: s() }
+}
+
+fn index_of_expr(haystack: Expr, needle: Expr) -> Expr {
+    Expr::IndexOf { haystack: Box::new(haystack), needle: Box::new(needle), span: s() }
+}
+
+fn ravel_expr(target: Expr) -> Expr {
+    Expr::Ravel { target: Box::new(target), span: s() }
+}
+
+fn catenate_expr(lhs: Expr, rhs: Expr) -> Expr {
+    Expr::Catenate { lhs: Box::new(lhs), rhs: Box::new(rhs), span: s() }
 }
 
 const ARRAY_FEATURES: &[Feature] =
@@ -304,24 +364,236 @@ fn index_set_mutates_in_place() {
     }
 }
 
-// ── SIR22 "APL addendum": deferred, rejected cleanly (compile-time) ────
+// ── SIR22 "APL addendum": real execution proofs (Phase A Slice 3) ──────
 
 #[test]
-fn reduce_node_is_rejected_cleanly_not_a_compile_time_panic() {
-    // `Reduce` shares NDArrays/MatrixOps/ArrayColumnMajor with the base
-    // cut, so the ordinary feature-flag check alone can't reject it --
-    // proves the dedicated `reject_sir22_addendum` pre-emit scan does,
-    // with a clean `Err`, not an `emit_expr` internal-bug panic.
-    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)]]);
-    let m = array_module(vec![print_stmt(Expr::Reduce {
-        op: ElementwiseOpKind::Add,
-        target: Box::new(target),
-        span: s(),
-    })]);
-    let err = semantic_ir_to_rust::compile(&m).expect_err("Reduce must be rejected, not emitted");
-    assert!(
-        err.message.contains("Reduce"),
-        "error should name the rejected node: {}",
-        err.message
-    );
+fn reduce_of_a_vector_folds_across_all_elements() {
+    // +/[1 2 3 4] = 10 -- a rank-0 result, read back with a single linear
+    // index (`array_index_get` supports that regardless of rank).
+    let m = array_module(vec![
+        let_binding("r", reduce_expr(ElementwiseOpKind::Add, vector1(vec![1, 2, 3, 4]))),
+        print_stmt(index_get(local("r"), vec![scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "10.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn reduce_of_a_matrix_folds_each_row_independently() {
+    // [[1 2] [3 4] [5 6]] (3 rows x 2 cols) reduced with `+` folds EACH ROW
+    // independently: row sums [3, 7, 11], a rank-1 [3] result -- not the
+    // column sums [9, 12] a row/col-swapped column-major indexing bug
+    // would produce. `runtime.rs`'s own doc comment on `array_reduce`
+    // calls this "the single easiest place to introduce a wrong-answer
+    // bug" in the whole addendum -- this test pins it.
+    let matrix =
+        array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)], vec![ilit(5), ilit(6)]]);
+    let m = array_module(vec![
+        let_binding("r", reduce_expr(ElementwiseOpKind::Add, matrix)),
+        print_stmt(index_get(local("r"), vec![scalar(0)])),
+        print_stmt(index_get(local("r"), vec![scalar(1)])),
+        print_stmt(index_get(local("r"), vec![scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "3.0\n7.0\n11.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn scan_of_a_vector_keeps_every_running_fold() {
+    // +\[1 2 3 4] = [1 3 6 10] -- every prefix sum, not just the last.
+    let m = array_module(vec![
+        let_binding("s", scan_expr(ElementwiseOpKind::Add, vector1(vec![1, 2, 3, 4]))),
+        print_stmt(index_get(local("s"), vec![scalar(0)])),
+        print_stmt(index_get(local("s"), vec![scalar(3)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1.0\n10.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn outer_product_of_two_vectors_computes_every_pairwise_product() {
+    // [1 2] outer* [3 4 5] -- a [2, 3] result; column-major storage means
+    // out[j*m+i] = a[i]*b[j], so as a matrix: row0 = [3, 4, 5],
+    // row1 = [6, 8, 10].
+    let m = array_module(vec![
+        let_binding(
+            "o",
+            outer_expr(ElementwiseOpKind::Mul, vector1(vec![1, 2]), vector1(vec![3, 4, 5])),
+        ),
+        print_stmt(index_get(local("o"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("o"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "3.0\n10.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_scalar_is_the_empty_vector_not_a_scalar() {
+    // `shape(5)` must be the EMPTY vector (rank 1, length 0) -- NOT a
+    // scalar (the trickiest part of this domain's `shape` semantics).
+    // Proven by taking `shape` a SECOND time: `shape(shape(5))` reads the
+    // dimensions of that empty vector, which is itself the single-element
+    // vector `[0]` (one dimension, of size 0), so `index_get(0)` reads
+    // back `0.0`. Had `array_shape` wrongly returned a genuine SCALAR for
+    // `shape(5)` instead (rank 0, not rank 1 length 0), the outer `shape`
+    // call would ALSO see rank 0 and (per `array_shape`'s own "a scalar
+    // has 0 dimensions" rule) return the empty vector again -- at which
+    // point `index_get(0)` finds no element at position 0 and RAISES
+    // ("out of bounds"), which `run_array_program` surfaces as a non-zero
+    // exit and fails the test. So a clean `"0.0"` here is only reachable
+    // through the correct rank-1-length-0 representation.
+    let m = array_module(vec![
+        let_binding("sh", shape_expr(shape_expr(ilit(5)))),
+        print_stmt(index_get(local("sh"), vec![scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "0.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_matrix_is_a_two_element_vector() {
+    // shape([[1 2 3][4 5 6]]) (2 rows x 3 cols) = [2, 3].
+    let matrix = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let m = array_module(vec![
+        let_binding("sh", shape_expr(matrix)),
+        print_stmt(index_get(local("sh"), vec![scalar(0)])),
+        print_stmt(index_get(local("sh"), vec![scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2.0\n3.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn reshape_fills_row_major_then_transposes_into_column_major_storage() {
+    // Source [[1 2 3][4 5 6]] (2x3) ravels (row-major) to [1 2 3 4 5 6].
+    // Reshaping that sequence into a [3, 2] target must fill ROW-major
+    // (APL's convention: last axis fastest) THEN transpose into this
+    // domain's column-major storage -- so as a matrix, the [3, 2] result
+    // reads back as rows [1,2], [3,4], [5,6] (the row-major
+    // reinterpretation of the flat sequence). A reshape that (wrongly)
+    // handed the row-major `filled` sequence straight to the column-major
+    // constructor would instead read back as [1,4], [2,5], [3,6] -- a
+    // DIFFERENT, still-plausible-looking (same multiset of values) wrong
+    // answer. This test checks POSITIONS, not just membership, which is
+    // exactly what `array_reshape`'s own "CRITICAL" doc comment warns is
+    // needed.
+    let source = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let target_shape = vector1(vec![3, 2]);
+    let m = array_module(vec![
+        let_binding("re", reshape_expr(target_shape, source)),
+        print_stmt(index_get(local("re"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("re"), vec![scalar(0), scalar(1)])),
+        print_stmt(index_get(local("re"), vec![scalar(1), scalar(0)])),
+        print_stmt(index_get(local("re"), vec![scalar(2), scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1.0\n2.0\n3.0\n6.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn index_generator_is_one_based_not_zero_based() {
+    // Iota 4 = [1 2 3 4] -- 1-based, unlike every 0-based index elsewhere
+    // in this domain (a deliberate, documented APL surface-syntax
+    // exception, not a bug -- see `array_index_generator`'s doc comment).
+    let m = array_module(vec![
+        let_binding("ix", index_generator_expr(ilit(4))),
+        print_stmt(index_get(local("ix"), vec![scalar(0)])),
+        print_stmt(index_get(local("ix"), vec![scalar(3)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1.0\n4.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn index_of_reports_a_one_based_position_when_found() {
+    // [10 20 30] index-of [20] -- 20 is the SECOND element, so index-of
+    // reports the 1-based position 2 (not the 0-based 1).
+    let m = array_module(vec![
+        let_binding("found", index_of_expr(vector1(vec![10, 20, 30]), vector1(vec![20]))),
+        print_stmt(index_get(local("found"), vec![scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn index_of_reports_haystack_length_plus_one_when_not_found() {
+    // [10 20 30] index-of [99] -- 99 is absent, so index-of reports
+    // `haystack.len() + 1 == 4`, never `-1`/a sentinel outside the valid
+    // range ("not found" is a valid, always-in-range position).
+    let m = array_module(vec![
+        let_binding("missing", index_of_expr(vector1(vec![10, 20, 30]), vector1(vec![99]))),
+        print_stmt(index_get(local("missing"), vec![scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "4.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn ravel_flattens_a_matrix_in_row_major_order() {
+    // ravel([[1 2 3][4 5 6]]) = [1 2 3 4 5 6] -- row-major order (last
+    // axis fastest), even though the matrix itself is stored column-major.
+    let matrix = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let m = array_module(vec![
+        let_binding("flat", ravel_expr(matrix)),
+        print_stmt(index_get(local("flat"), vec![scalar(0)])),
+        print_stmt(index_get(local("flat"), vec![scalar(1)])),
+        print_stmt(index_get(local("flat"), vec![scalar(5)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1.0\n2.0\n6.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn catenate_of_two_vectors_concatenates_end_to_end() {
+    // [1 2] catenate [3 4 5] = [1 2 3 4 5]
+    let m = array_module(vec![
+        let_binding("cat", catenate_expr(vector1(vec![1, 2]), vector1(vec![3, 4, 5]))),
+        print_stmt(index_get(local("cat"), vec![scalar(0)])),
+        print_stmt(index_get(local("cat"), vec![scalar(4)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1.0\n5.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
+}
+
+#[test]
+fn catenate_of_two_matrices_with_equal_row_counts_joins_columns() {
+    // [[1 2][3 4]] catenate [[5][6]] -- both have 2 rows, so catenate
+    // joins along columns: [[1 2 5][3 4 6]].
+    let a = array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)]]);
+    let b = array_lit(vec![vec![ilit(5)], vec![ilit(6)]]);
+    let m = array_module(vec![
+        let_binding("cat", catenate_expr(a, b)),
+        print_stmt(index_get(local("cat"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("cat"), vec![scalar(0), scalar(2)])),
+        print_stmt(index_get(local("cat"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1.0\n5.0\n6.0\n"),
+        None => eprintln!("skip: no usable rustc/linker on PATH"),
+    }
 }

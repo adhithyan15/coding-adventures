@@ -29,7 +29,7 @@ mod runtime;
 
 use semantic_ir::{
     Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Expr, Feature, IndexArg,
-    Module, ParamKind, Scope, Stmt, Visitor, walk_expr_default,
+    Module, ParamKind, Scope, Stmt,
 };
 
 pub use emit::sanitize_ident;
@@ -212,18 +212,21 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // nothing emits it yet, so this declares acceptance ahead of any
     // frontend using it.
     Feature::ConsoleIO,
-    // ── SIR22 array/matrix base cut (second-wave backend rollout) ────
+    // ── SIR22 array/matrix domain (second-wave backend rollout) ──────
     // `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`
-    // (+ `Stmt::IndexSet`) route into `__sir::array_*` helpers, an
-    // inlined port of the already-proven `semantic-ir-to-javascript`
-    // `ArrayRt` sub-runtime (see `runtime.rs`'s "SIR22 array/matrix
-    // domain" section) — this backend's existing "self-contained, no
-    // external crate" convention, same as `seq_*`/`map_*`.  The SIR22
-    // "APL addendum" nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) share these
-    // same three features but stay deferred — rejected by a dedicated
-    // pre-emit scan (`reject_sir22_addendum`, below), not this capability
-    // gate, since the gate alone can't distinguish them.
+    // (+ `Stmt::IndexSet`) — the "base cut" (Phase A Slice 2) — and the
+    // 9-node "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`, Phase A
+    // Slice 3) route into `__sir::array_*` helpers, an inlined port of
+    // the already-proven `semantic-ir-to-javascript` `ArrayRt` sub-
+    // runtime (see `runtime.rs`'s "SIR22 array/matrix domain" and "SIR22
+    // addendum: APL primitive operators" sections) — this backend's
+    // existing "self-contained, no external crate" convention, same as
+    // `seq_*`/`map_*`. All 16 SIR22 node kinds now share the same three
+    // features below with no need for a dedicated pre-emit scan to tell
+    // any subset apart — Slice 2's `reject_sir22_addendum` (which used
+    // to reject the addendum nine) was removed once Slice 3 gave them
+    // real codegen.
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
@@ -282,15 +285,6 @@ impl Backend for RustBackend {
             return Err(e);
         }
         if let Some(e) = reject_const_ref(module) {
-            return Err(e);
-        }
-
-        // 2d. SIR22 "APL addendum" soundness gate — shares
-        //     `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the SIR22
-        //     base cut this backend now implements, so the feature-flag
-        //     capability check above cannot tell the two groups apart.
-        //     See `reject_sir22_addendum`'s doc.
-        if let Some(e) = reject_sir22_addendum(module) {
             return Err(e);
         }
 
@@ -758,75 +752,6 @@ fn const_ref_in_expr(e: &Expr) -> Option<BackendError> {
         // Leaf / already-supported expressions carry no nested Const.
         _ => None,
     }
-}
-
-/// Reject a module containing any of the nine SIR22 "APL addendum" nodes
-/// (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
-/// `IndexOf`/`Ravel`/`Catenate`).
-///
-/// These share `Feature::NDArrays`/`Feature::MatrixOps`/
-/// `Feature::ArrayColumnMajor` with the SIR22 **base cut** this backend now
-/// implements (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/
-/// `IndexGet`/`Stmt::IndexSet`) — see the SIR22 spec's "Backend impact"
-/// section. That means `check_module`'s ordinary feature-flag capability
-/// check cannot tell a module using one of these nine apart from a safe
-/// base-cut-only module: both declare the identical three features. A
-/// dedicated pre-emit scan is the only way to reject them cleanly, mirroring
-/// `semantic-ir-to-ruby`'s own `ScanHit::Sir22AddendumNode` (implemented for
-/// this exact rollout wave) and `semantic-ir-to-javascript`'s (since-removed,
-/// once that backend's own addendum codegen shipped)
-/// `find_unimplemented_sir22_addendum_node`.
-///
-/// Unlike `reject_stateful_class`/`reject_const_ref` above (hand-rolled
-/// recursive walks over a hand-picked subset of `Stmt`/`Expr` positions),
-/// this uses `semantic_ir`'s shared [`semantic_ir::Visitor`] walker: with
-/// ~40 `Expr` variants and growing, a hand-picked-subset walk is exactly the
-/// kind of check that can silently drift out of sync with the emitter as new
-/// node kinds are added — the shared walker's `walk_expr_default`/
-/// `walk_stmt_default` guarantee every position the validator itself visits
-/// is covered here too, so this check can never miss a nested occurrence
-/// (inside a closure capture, a `TryCatch` body, a parameter default, …).
-///
-/// Returns `Some(err)` for the FIRST offending node found (fail-fast, like
-/// the other capability checks), or `None` if the module is clean.
-fn reject_sir22_addendum(module: &Module) -> Option<BackendError> {
-    struct Finder(Option<(&'static str, semantic_ir::Span)>);
-
-    impl Visitor for Finder {
-        fn visit_expr(&mut self, e: &Expr, depth: usize) {
-            if self.0.is_some() {
-                return;
-            }
-            let hit = match e {
-                Expr::Reduce { span, .. } => Some(("Reduce", span.clone())),
-                Expr::Scan { span, .. } => Some(("Scan", span.clone())),
-                Expr::OuterProduct { span, .. } => Some(("OuterProduct", span.clone())),
-                Expr::Shape { span, .. } => Some(("Shape", span.clone())),
-                Expr::Reshape { span, .. } => Some(("Reshape", span.clone())),
-                Expr::IndexGenerator { span, .. } => Some(("IndexGenerator", span.clone())),
-                Expr::IndexOf { span, .. } => Some(("IndexOf", span.clone())),
-                Expr::Ravel { span, .. } => Some(("Ravel", span.clone())),
-                Expr::Catenate { span, .. } => Some(("Catenate", span.clone())),
-                _ => None,
-            };
-            if hit.is_some() {
-                self.0 = hit;
-                return;
-            }
-            walk_expr_default(self, e, depth);
-        }
-    }
-
-    let mut finder = Finder(None);
-    finder.visit_module(module);
-    finder.0.map(|(kind, span)| BackendError {
-        kind: BackendErrorKind::UnsupportedFeature,
-        message: format!(
-            "the rust backend does not yet implement the SIR22 addendum node `{kind}` \
-             (deferred to a later slice)"
-        ),
-        span,
-    })
 }
 
 fn unsupported_const(span: semantic_ir::Span) -> BackendError {
