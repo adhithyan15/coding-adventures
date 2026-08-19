@@ -1,1 +1,6 @@
+# build-tool: deps=rust/irc-server-capi
+# The dependency declaration must be repeated here: the build tool reads the
+# `deps=` directive out of the BUILD file it selects for the current platform,
+# so a directive that lives only in BUILD is invisible on Windows and the
+# rust/irc-server-capi edge silently disappears from the graph.
 ( cd ../../rust/irc-server-capi && cargo build --release ) && (where swift >/dev/null 2>/dev/null && ( copy ..\..\rust\target\release\irc_server_capi.lib Sources\CIrcServer\ && swift test ) || echo Swift not available on this runner — irc-server-capi built, skipping swift test)

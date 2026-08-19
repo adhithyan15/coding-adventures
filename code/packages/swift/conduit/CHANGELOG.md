@@ -1,5 +1,14 @@
 # Changelog — Conduit (Swift)
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now carries the `# build-tool: deps=rust/conduit-capi` declaration.
+The build tool reads that directive out of whichever BUILD file it selects for the
+current platform, so a directive present only in `BUILD` left the `conduit-capi` edge
+missing from the dependency graph on Windows.
+
 ## [0.1.0] - 2026-06-13
 
 ### Added — WEB12 Swift Conduit port

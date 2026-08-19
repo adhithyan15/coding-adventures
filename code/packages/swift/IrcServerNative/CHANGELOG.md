@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+`BUILD_windows` now carries the `# build-tool: deps=rust/irc-server-capi` declaration.
+The build tool reads that directive out of whichever BUILD file it selects for the
+current platform, so a directive present only in `BUILD` left the `irc-server-capi`
+edge missing from the dependency graph on Windows.
+
 All notable changes to this package will be documented in this file.
 
 ## [0.1.0] - 2026-06-14
