@@ -77,11 +77,14 @@ uses a **sentinel + body-prologue** strategy:
   sentinel, which the prologue resolves.  `IndirectCall`/closure defaults are
   deferred.
 
-## SIR22 array/matrix base cut
+## SIR22 array/matrix domain
 
 `ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet` (+
-`Stmt::IndexSet`) lower to calls into `_sir_array_*`, imported from the
-published `coding-adventures-sir-runtime-array` pip package — **this
+`Stmt::IndexSet`) — the SIR22 base cut — and the nine-node "APL addendum"
+(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+`IndexOf`/`Ravel`/`Catenate`, which shares these same three features with
+no flag of its own) all lower to calls into `_sir_array_*`, imported from
+the published `coding-adventures-sir-runtime-array` pip package — **this
 backend follows the TypeScript backend's imported-package model here**,
 not its own usual inlined-runtime convention (contrast the OOP/
 exceptions/pairs/regex/shell/range imports above, and C/Go/Rust/Ruby's
@@ -95,13 +98,19 @@ operands are; `Div` always true-divides), matching MATLAB's `./`
 semantics without a spurious `.0` on an all-integer computation — see
 that package's own README/CHANGELOG for the full design and security
 notes (NaN-safe AND-form bounds checks, DoS-safe shape validation before
-allocation).
+allocation, including for every addendum function that computes an
+output/allocation size from two independently-controlled operands —
+`outer`, `index_of`, `catenate`, `reshape`, `index_generator`).
 
-The nine-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/
-`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) shares
-these same three features with the base cut, so a dedicated pre-emit
-tree-walk (`find_unimplemented_sir22_addendum_node` in `lib.rs`) rejects
-it cleanly until its own later slice lands.
+`Reduce`/`Scan`/`OuterProduct` carry an `ElementwiseOpKind` and reuse
+`elementwise_op_py_name` exactly like `ElementwiseOp` does; the remaining
+six addendum nodes have no `op` field ("bespoke, not `BinOp`-shaped") and
+just recurse into their operand(s). Unlike `Stmt::IndexSet` above (which
+needs separate handling in both statement position and the walrus-tuple
+expression-position path, since `Stmt` has no single shared emit
+function), all nine addendum nodes are `Expr`s, so one `emit_expr` match
+arm per node is enough — every position already routes through that one
+function.
 
 ## Capability declaration
 

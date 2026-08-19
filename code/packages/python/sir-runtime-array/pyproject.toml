@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-sir-runtime-array"
-version = "0.1.0"
-description = "SIR22 N-D array/matrix runtime for Semantic-IR-emitted Python — dense column-major NDArray value model, matmul/elementwise/transpose/range/indexed get-set"
+version = "0.2.0"
+description = "SIR22 N-D array/matrix runtime for Semantic-IR-emitted Python — dense column-major NDArray value model, matmul/elementwise/transpose/range/indexed get-set plus the APL-primitive addendum (reduce/scan/outer/shape/reshape/index-generator/index-of/ravel/catenate)"
 requires-python = ">=3.12"
 dependencies = []
 license = "MIT"

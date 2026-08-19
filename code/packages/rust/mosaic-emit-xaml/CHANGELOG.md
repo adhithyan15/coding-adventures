@@ -1,5 +1,27 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — fix double-encoded characters in the generated host
+
+Every generated WinUI app displayed a mojibake title bar:
+
+    TaskApp â€” Mosaic â†’ XAML demo
+
+The em dash and arrow were double-encoded **in the emitter's own source
+literal** — UTF-8 bytes reinterpreted as Latin-1 and re-encoded — so the
+corruption shipped to every consumer. The status text carried the same defect
+in its ellipsis (`waiting for dispatchâ€¦`).
+
+Four literals fixed across both `RootShape` variants. Guarded by an assertion
+on the generated `MainWindow.xaml` that it contains real U+2014/U+2192 and no
+U+00E2 — the tell-tale of a Latin-1 round trip.
+
+Verified on the running app: the live window title's non-ASCII code points are
+now exactly `U+2014` and `U+2192`.
+
+Worth noting for anyone re-checking this: `Get-Content` and many terminals
+default to ANSI and will *display* correct UTF-8 as mojibake. Both the earlier
+misdiagnosis and the verification here needed a byte-level or code-point-level
+check, not a visual one.
 ## [Unreleased] — reject CSS units XAML cannot parse
 
 The length path stripped `px` and rejected `%`, but every other CSS unit fell

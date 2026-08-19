@@ -913,6 +913,26 @@ fn valid_simd_shift_family() {
 }
 
 #[test]
+fn valid_v128_load_and_store() {
+    // SIMD widen PR15: v128.load/v128.store -- the first SIMD ops that
+    // need a declared memory. load pops an i32 address, pushes a v128;
+    // store pops a v128 value then an i32 address, pushes nothing --
+    // mirrors the existing scalar i32.load/i32.store type rules exactly,
+    // just with V128 instead of I32 on the value side.
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32) (result v128) (v128.load (local.get 0)))
+             (func (param i32 v128) (v128.store (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_v128_load_and_store_with_no_memory_at_all() {
+    assert_invalid("(module (func (param i32) (result v128) (v128.load (local.get 0))))");
+    assert_invalid("(module (func (param i32 v128) (v128.store (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree
@@ -1297,6 +1317,48 @@ fn invalid_truncated_ref_null_heap_type_immediate() {
     let module = module_with_body(wasm_types::FuncType { params: vec![], results: vec![] }, vec![0xD0]);
     let result = wasm_validator::validate(&module);
     assert!(result.is_err(), "a truncated ref.null immediate must be rejected");
+}
+
+/// `/security-review` finding (task #162-164, PR15): `v128.load`/
+/// `v128.store`'s executor unconditionally targets memory 0 (this first
+/// PR's deliberate scope -- see `wasm-execution`'s own doc comments), so
+/// an EXPLICIT, otherwise in-bounds, non-zero `memidx` must be REJECTED
+/// at validation time, not merely bounds-checked against
+/// `ctx.memory_count` (the scalar `0x28..=0x3E` arm's own rule, which
+/// this crate's new SIMD arm deliberately does NOT copy verbatim).
+/// Bounds-checking alone would let a module that declares 2 real
+/// memories and explicitly encodes `v128.load memidx=1` validate
+/// successfully and then silently read/write memory 0 at execution time
+/// instead -- a cross-memory data-confusion path, not a caught error.
+/// `wasm-wast-parser`'s text form has no leading-memidx syntax for
+/// `v128.load`/`v128.store` (unlike `i32.load`, WASM92), so this can
+/// only be reached via hand-crafted bytecode -- exactly the adversarial-
+/// input shape this "Security regressions" section exists to cover.
+#[test]
+fn invalid_v128_load_explicit_nonzero_memidx_is_rejected_not_silently_redirected_to_memory_0() {
+    let module = wasm_types::WasmModule {
+        types: vec![wasm_types::FuncType { params: vec![wasm_types::ValueType::I32], results: vec![wasm_types::ValueType::V128] }],
+        functions: vec![0],
+        memories: vec![
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+            wasm_types::MemoryType { limits: wasm_types::Limits { min: 1, max: None }, shared: false },
+        ],
+        code: vec![wasm_types::FunctionBody {
+            locals: vec![],
+            code: vec![
+                0x20, 0x00, // local.get 0 (address)
+                0xFD, 0x00, // v128.load
+                0x40, 0x00, 0x01, // align=0 with the multi-memory flag (0x40) set, offset=0, memidx=1
+                0x0B, // end
+            ],
+        }],
+        ..Default::default()
+    };
+    let result = wasm_validator::validate(&module);
+    assert!(
+        result.is_err(),
+        "v128.load explicitly targeting a real, in-bounds memory 1 must be rejected -- the executor only ever targets memory 0"
+    );
 }
 
 #[test]
