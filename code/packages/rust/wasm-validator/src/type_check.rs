@@ -1611,10 +1611,19 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // 0x3E` arm's own `MULTI_MEMORY_FLAG` handling)
                         // so a stray multi-memory encoding still
                         // consumes the right number of bytes and doesn't
-                        // desync the rest of the function body, even
-                        // though this first slice always
-                        // validates/executes against memory 0 (see
-                        // wasm-execution's own scope note).
+                        // desync the rest of the function body. Unlike
+                        // the scalar arm, this first slice's EXECUTOR
+                        // unconditionally targets memory 0 (see
+                        // wasm-execution's own scope note) -- so an
+                        // explicit non-zero memidx must be REJECTED here,
+                        // not merely bounds-checked against
+                        // `ctx.memory_count`. Bounds-checking alone would
+                        // let a module targeting a real, in-bounds memory
+                        // 1 validate successfully and then silently read/
+                        // write memory 0 at execution time instead --
+                        // fail closed until multi-memory v128.load/store
+                        // is actually implemented (security review
+                        // finding, task #162-164).
                         if !ctx.has_memory {
                             err!("v128.load/v128.store used, but module declares no memory");
                         }
@@ -1625,8 +1634,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
                         offset += sz1 + sz2;
                         if has_memidx {
-                            let (_memidx, sz3) = decode_idx(code, offset)?;
+                            let (memidx, sz3) = decode_idx(code, offset)?;
                             offset += sz3;
+                            if memidx != 0 {
+                                err!("v128.load/v128.store: multi-memory (memory index {memidx}) is not yet supported -- only memory 0");
+                            }
                         }
                         match simd_op.kind {
                             wasm_opcodes::SimdOpKind::Load => {

@@ -20,6 +20,26 @@ All notable changes to this package will be documented in this file.
   and an invalid-module pair proving each op is rejected when the
   module declares no memory at all.
 
+### Fixed
+
+- `/security-review` finding: unlike the scalar `0x28..=0x3E` memory
+  arm (which bounds-checks an explicit `memidx` against
+  `ctx.memory_count`, since its executor genuinely honors any valid
+  memory index), the new SIMD arm now REJECTS any explicit non-zero
+  `memidx` outright rather than bounds-checking it -- because
+  `wasm-execution`'s `v128.load`/`v128.store` handlers unconditionally
+  target memory 0 for this first PR (see their own scope note).
+  Bounds-checking alone would have let a module that declares 2+ real
+  memories and explicitly encodes `v128.load memidx=1` validate
+  successfully and then silently read/write memory 0 at execution time
+  instead -- a cross-memory data-confusion path at a trust boundary,
+  fixed by failing closed until multi-memory `v128.load`/`v128.store`
+  is actually implemented. 1 new regression test builds a raw
+  `WasmModule` directly (this crate's text-form parser has no
+  leading-memidx syntax for `v128.load`/`v128.store`, so the only way
+  to reach this path is hand-crafted bytecode) proving the explicit,
+  in-bounds `memidx=1` case is rejected.
+
 See `code/specs/W13-wasm-simd-v128-first-slice.md`.
 
 ## [0.2.28] - 2026-08-18 (task #159-161 — SIMD: shift family type rules)
