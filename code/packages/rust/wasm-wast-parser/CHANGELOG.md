@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.47 — 2026-08-19 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero text-form (task #190-192)
+
+### Added
+
+- `SimdOpKind::TruncSatF64x2SZero`/`TruncSatF64x2UZero` join the shared
+  "no immediate beyond the opcode byte itself" SIMD dispatch arm
+  (already used for `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U`) in both
+  the folded (`encode_stream_instr`) and flat (`encode_flat_instr`)
+  instruction encoders -- verified byte-identical at both call sites
+  before editing, per this campaign's own documented past gotcha. Both
+  sub-opcodes are looked up by name from `wasm_opcodes::SIMD_OPS`
+  (data-driven, via `get_simd_op_by_name`), so no separate name-parsing
+  change was needed beyond the two match-arm additions.
+- 1 new test confirming `i32x4.trunc_sat_f64x2_s_zero`/`_u_zero` each
+  encode their real 2-byte LEB128 sub-opcode (`0xFC, 0x01`/`0xFD, 0x01`,
+  both `>= 128`) in both folded and flat syntax.
+
 ## 0.1.46 — 2026-08-19 — SIMD widen PR22: i16x8.q15mulr_sat_s text-form (task #183-185)
 
 ### Added

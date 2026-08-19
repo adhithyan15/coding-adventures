@@ -79,7 +79,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                pinned commit, no re-pin),
                extended 2026-08-19 (task #188-189 --
                simd_i32x4_trunc_sat_f32x4.wast, pure vendoring, zero new
-               opcodes, same pinned commit, no re-pin)
+               opcodes, same pinned commit, no re-pin),
+               extended 2026-08-19 (task #190-192 --
+               simd_i32x4_trunc_sat_f64x2.wast, 2 new opcodes
+               (i32x4.trunc_sat_f64x2_s_zero/_u_zero), same pinned
+               commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -680,6 +684,30 @@ not just a static opcode-inventory claim: 100% pass on every directive
 `wasm-conformance`'s own fixtures/baseline/version/changelog are touched
 by this PR, same as PR23 -- no `wasm-execution`/`wasm-validator`/
 `wasm-wast-parser`/`wasm-opcodes` source changes at all.
+
+SIMD widen PR25 (task #190-192) implements `i32x4.trunc_sat_f64x2_s_zero`/
+`_u_zero` (`0xFC`/`0xFD`) and vendors `simd_i32x4_trunc_sat_f64x2.wast` --
+the f64x2-source rung of the "_zero" `trunc_sat` family, joining the
+already-implemented `i32x4.trunc_sat_f32x4_s`/`_u` (PR20) f32x4-source
+pair. Unlike PR23/PR24, this PR DOES add new opcodes to `wasm-opcodes`
+(and matching `wasm-execution`/`wasm-validator`/`wasm-wast-parser`
+support), mirroring PR24's own vendoring shape almost exactly -- just one
+PR earlier in the campaign than PR24's "pure vendoring" pattern, since
+this is the FIRST PR to both implement and vendor the corpus file for a
+given opcode pair in one pass. `f64x2` is a narrower-lane-COUNT
+(2 vs. 4), wider-lane-WIDTH (8 bytes vs. 4) shape than `f32x4`; the result
+is still 4 `i32` lanes (matching `i32x4`'s own width), with lanes 0-1
+holding the two truncated `f64` results and lanes 2-3 always zero -- the
+"_zero" in the op name. Each sub-opcode byte fetched live from
+`BinarySIMD.md` and cross-checked against the already-implemented
+`i32x4.trunc_sat_f32x4_s`/`_u` (`0xF8`/`0xF9`)/`f32x4.convert_i32x4_s`/`_u`
+(`0xFA`/`0xFB`) entries (all four matched exactly, confirming `0xFC`/`0xFD`
+sit immediately past that conversion family with no gap). 100% pass on
+every directive (1/1 module, 102/102 assert_return, 4/4 assert_invalid).
+Aggregate `assert_return` rose from 24436/24453 to 24538/24555 (+102
+pass, +102 gradeable, exactly this file's own `assert_return` count);
+`assert_invalid` rose from 1724/1724 to 1728/1728 (+4, still 100.0% of
+gradeable directives); `module` pass count rose from 1169 to 1170 (+1).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

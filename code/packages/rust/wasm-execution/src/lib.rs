@@ -6110,6 +6110,43 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::TruncSatF64x2SZero | SimdOpKind::TruncSatF64x2UZero => {
+                // i32x4.trunc_sat_f64x2_s_zero/_u_zero (SIMD widen PR25):
+                // UNARY, pop one v128, read it as 2 `f64` lanes (not 4
+                // `f32` lanes like TruncSatF32x4S/U's operand -- f64x2 is
+                // narrower-lane-COUNT/wider-lane-WIDTH than f32x4), convert
+                // each to a SATURATING i32 (signed for `_s`, unsigned bit
+                // pattern for `_u`) using the exact same saturating `as`
+                // cast discipline as TruncSatF32x4S/U above (NaN -> 0,
+                // out-of-range -> the nearest bound, truncate-toward-zero
+                // otherwise -- Rust's `as` cast from f64 to i32/u32 has had
+                // this exact saturating semantic since Rust 1.45, same as
+                // every other trunc_sat handler in this crate), and push
+                // one v128 with 4 i32 lanes: lanes 0-1 hold the two
+                // truncated results (same order as the source f64 lanes),
+                // lanes 2-3 are ALWAYS zero -- the "_zero" in this op's
+                // name refers to exactly that upper-half zero-fill, since
+                // f64x2 only has 2 lanes to widen i32x4's 4.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out_bytes = match op.kind {
+                        SimdOpKind::TruncSatF64x2SZero => (v as i32).to_le_bytes(),
+                        SimdOpKind::TruncSatF64x2UZero => (v as u32).to_le_bytes(),
+                        _ => unreachable!("only TruncSatF64x2SZero/UZero reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out_bytes);
+                }
+                // Lanes 2-3 stay zero: `result` was zero-initialized above
+                // and only indices 0..4 and 4..8 (lanes 0-1) were written.
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -9057,6 +9094,19 @@ mod tests {
             *lane = f32::from_le_bytes(bytes.0[i * 4..i * 4 + 4].try_into().unwrap());
         }
         lanes
+    }
+
+    /// Same v128 literal encoding as [`v128_const_bytes_f32x4`], but for
+    /// the 2-lane `f64x2` floating-point shape SIMD widen PR25's
+    /// `i32x4.trunc_sat_f64x2_s_zero`/`_u_zero` read as their source
+    /// operand -- 8-byte lanes, same width as [`v128_const_bytes_i64x2`]
+    /// but interpreted as `f64` instead of `i64`.
+    fn v128_const_bytes_f64x2(lanes: [f64; 2]) -> Vec<u8> {
+        let mut bytes = Vec::with_capacity(16);
+        for lane in lanes {
+            bytes.extend_from_slice(&lane.to_le_bytes());
+        }
+        bytes
     }
 
     /// `v128.const` + `i32x4.extract_lane` round-trip: proves the const
@@ -14060,5 +14110,154 @@ mod tests {
         let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
         let out = f32x4_lanes(results[0].unwrap());
         assert_eq!(out, [7.0, 100.0, 0.0, 65535.0], "convert_i32x4_u must convert ordinary positive lanes normally");
+    }
+
+    // ── i32x4.trunc_sat_f64x2_s/u_zero (SIMD widen PR25, task #190-192) ─────
+
+    /// Build the code for `i32x4.trunc_sat_f64x2_s_zero`/`_u_zero`
+    /// (sub-opcodes 0xFC/0xFD) applied to a single `v128.const f64x2`
+    /// operand.
+    fn trunc_sat_f64x2_zero_code(lanes: [f64; 2], sub_opcode: u8) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lanes));
+        code.extend([0xFD, sub_opcode, 0x01]); // LEB128: [sub_opcode, 0x01] since 0xFC/0xFD >= 128
+        code.push(0x0B);
+        code
+    }
+
+    /// `i32x4.trunc_sat_f64x2_s_zero`: ordinary in-range values truncate
+    /// toward zero into lanes 0-1, and lanes 2-3 are always zero -- the
+    /// "_zero" half of this op's semantics, proven independently of any
+    /// saturation edge case.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_s_zero_ordinary_value_truncates_toward_zero_and_zero_fills_upper_lanes() {
+        let code = trunc_sat_f64x2_zero_code([3.7f64, -3.7f64], 0xFC);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([3, -3, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_s_zero must truncate toward zero in lanes 0-1 and zero-fill lanes 2-3"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_s_zero`: a NaN lane saturates to `0`, never
+    /// traps -- same non-trapping discipline as `trunc_sat_f32x4_s`.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_s_zero_nan_saturates_to_zero_not_trap() {
+        let code = trunc_sat_f64x2_zero_code([f64::NAN, f64::NAN], 0xFC);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([0, 0, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_s_zero must saturate NaN lanes to 0, never trap"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_s_zero`: `+infinity`/`-infinity` saturate to
+    /// `i32::MAX`/`i32::MIN` respectively in lanes 0-1; lanes 2-3 stay zero.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_s_zero_infinities_saturate_to_i32_bounds() {
+        let code = trunc_sat_f64x2_zero_code([f64::INFINITY, f64::NEG_INFINITY], 0xFC);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([i32::MAX, i32::MIN, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_s_zero must saturate +/-infinity to i32::MAX/MIN"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_s_zero`: a finite value WAY over `i32::MAX`
+    /// (`1e20`) must still saturate to `i32::MAX`, not wrap or panic.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_s_zero_huge_finite_value_saturates_to_i32_max() {
+        let code = trunc_sat_f64x2_zero_code([1e20f64, 1e20f64], 0xFC);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([i32::MAX, i32::MAX, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_s_zero must saturate a huge finite value (1e20) to i32::MAX"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_u_zero`: an ordinary in-range positive value
+    /// truncates toward zero, same as the `_s` case, with lanes 2-3 zero.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_u_zero_ordinary_value_truncates_toward_zero() {
+        let code = trunc_sat_f64x2_zero_code([3.7f64, 100.0f64], 0xFD);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([3, 100, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_u_zero must truncate toward zero on ordinary in-range values"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_u_zero`: a NaN lane saturates to 0, same as
+    /// `_s`.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_u_zero_nan_saturates_to_zero_not_trap() {
+        let code = trunc_sat_f64x2_zero_code([f64::NAN, f64::NAN], 0xFD);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([0, 0, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_u_zero must saturate NaN lanes to 0, never trap"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_u_zero`: a NEGATIVE value must saturate to
+    /// the unsigned minimum (`0`), NOT wrap around to a huge unsigned
+    /// value -- same saturating-to-bound semantic as `trunc_sat_f32x4_u`.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_u_zero_negative_value_saturates_to_zero_not_wrap() {
+        let code = trunc_sat_f64x2_zero_code([-5.0f64, -5.0f64], 0xFD);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(v128_const_bytes([0, 0, 0, 0]).try_into().unwrap())),
+            "trunc_sat_f64x2_u_zero must saturate a negative value to 0 (unsigned min), not wrap"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_u_zero`: `+infinity` saturates to
+    /// `u32::MAX`'s bit pattern in lanes 0-1; lanes 2-3 stay zero.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_u_zero_positive_infinity_saturates_to_u32_max_bit_pattern() {
+        let code = trunc_sat_f64x2_zero_code([f64::INFINITY, f64::INFINITY], 0xFD);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        for i in 0..2 {
+            expected[i * 4..i * 4 + 4].copy_from_slice(&u32::MAX.to_le_bytes());
+        }
+        assert_eq!(
+            results[0],
+            Some(V128Bytes(expected)),
+            "trunc_sat_f64x2_u_zero must saturate +infinity lanes to u32::MAX's bit pattern, lanes 2-3 zero"
+        );
+    }
+
+    /// `i32x4.trunc_sat_f64x2_s_zero`: confirms lanes 2-3 are ALWAYS zero
+    /// even when lanes 0-1 hold non-zero, non-saturating ordinary values --
+    /// the dedicated "_zero" behavior test, isolated from any
+    /// saturation/NaN edge case that might otherwise coincidentally
+    /// produce zero bytes.
+    #[test]
+    fn i32x4_trunc_sat_f64x2_s_zero_upper_lanes_are_always_zero() {
+        let code = trunc_sat_f64x2_zero_code([42.0f64, -17.0f64], 0xFC);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let bytes = results[0].unwrap().0;
+        assert_eq!(&bytes[8..12], &0i32.to_le_bytes(), "lane 2 must always be zero");
+        assert_eq!(&bytes[12..16], &0i32.to_le_bytes(), "lane 3 must always be zero");
+        assert_eq!(&bytes[0..4], &42i32.to_le_bytes(), "lane 0 must hold the truncated first f64 lane");
+        assert_eq!(&bytes[4..8], &(-17i32).to_le_bytes(), "lane 1 must hold the truncated second f64 lane");
     }
 }

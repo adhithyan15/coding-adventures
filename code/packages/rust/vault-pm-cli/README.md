@@ -31,15 +31,25 @@ items through the unmodified `item add` publication path, once per record,
 rather than the disaster-recovery ceremony `import portable` uses.
 `import kdbx FILE` parses but always fails closed with the `unsupported`
 class before opening its file — KDBX's own encrypted container format is
-explicitly deferred. The executable is a thin caller of this package.
+explicitly deferred. `storage add|list|check|migrate`
+(`VLT-PM50-cli-storage-migration.md`, `VLT-PM00` §23 item 14) add named
+storage locations, third-party sync-tool conflict-copy detection, and
+byte-for-byte migration with a real independent-unlock verification step. The
+executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
 It acquires the persistent cross-process writer lock before loading
 configuration or constructing either backend. Configuration is parsed by the
-closed VLT-PM07 codec. The first vault's filesystem location must exactly match
-the prepared platform object root; named targets use only their
-locator-derived child roots before storage is touched.
+closed VLT-PM07 codec. A vault's storage may be any registered
+`filesystem`/`removable` location — `configured_vault`'s check used to accept
+only the two paths this composition root itself creates, back when `storage
+add` did not exist; that restriction is gone. Every repository this crate
+opens is wrapped in `vault-pm-storage::ReplicaSetObjectStore` (transparently,
+with zero configured mirrors, unless a vault's `remote_stores` names one or
+more `storage add`ed locations), so a vault mirrored with `storage migrate
+--mirror` gets ongoing, best-effort mirror-write propagation on every later
+mutation rather than a one-time copy.
 
 Initialization collects a new passphrase only through the injected fixed
 secret-input boundary, fills the complete generation-zero randomness block

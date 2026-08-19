@@ -179,6 +179,20 @@ fn hex_nibble(byte: u8) -> Result<u8, ConfigError> {
 pub enum StorageKind {
     /// Local or mounted filesystem storage.
     Filesystem,
+    /// A user-managed removable or third-party-synced folder (VLT-PM00 §12,
+    /// §23 item 14).
+    ///
+    /// Same on-disk immutable object format as [`Self::Filesystem`] — this is
+    /// a variant, not a new transport. The only difference is what the
+    /// storage layer *assumes*: a plain `filesystem` location is exclusively
+    /// written by this product, so a foreign file appearing next to its
+    /// objects is always worth investigating, whereas a `removable` location
+    /// may also be written by a third-party sync tool (Dropbox, OneDrive,
+    /// Syncthing, a NAS client) or physically moved between machines, so
+    /// `vault-pm-storage-removable`'s conflict-copy detection is expected to
+    /// fire there in ordinary use and is reported as a warning rather than
+    /// silently proceeding or refusing to open.
+    Removable,
     /// Google Drive storage.
     GoogleDrive,
     /// WebDAV storage.
@@ -188,9 +202,11 @@ pub enum StorageKind {
 }
 
 impl StorageKind {
-    fn parse(value: &str) -> Result<Self, ConfigError> {
+    /// Parse the closed set of TOML/CLI spellings for a storage kind.
+    pub fn parse(value: &str) -> Result<Self, ConfigError> {
         match value {
             "filesystem" => Ok(Self::Filesystem),
+            "removable" => Ok(Self::Removable),
             "gdrive" => Ok(Self::GoogleDrive),
             "webdav" => Ok(Self::WebDav),
             "s3" => Ok(Self::S3),
@@ -198,13 +214,22 @@ impl StorageKind {
         }
     }
 
-    fn as_str(self) -> &'static str {
+    /// Return the canonical TOML/CLI spelling.
+    pub fn as_str(self) -> &'static str {
         match self {
             Self::Filesystem => "filesystem",
+            Self::Removable => "removable",
             Self::GoogleDrive => "gdrive",
             Self::WebDav => "webdav",
             Self::S3 => "s3",
         }
+    }
+
+    /// Whether this kind is backed by an ordinary local directory tree in the
+    /// `storage-fs` on-disk shape (VLT-PM00 §12's `filesystem`/`removable`
+    /// rows). Cloud kinds are not, and stay `Unsupported` in Phase 1B.
+    pub const fn is_local_directory(self) -> bool {
+        matches!(self, Self::Filesystem | Self::Removable)
     }
 }
 
@@ -895,6 +920,30 @@ credential_ref = "google-primary"
             config.storage()[&ConfigName::new("backup").unwrap()].kind(),
             StorageKind::GoogleDrive
         );
+    }
+
+    #[test]
+    fn removable_kind_parses_renders_and_is_a_local_directory() {
+        assert_eq!(StorageKind::parse("removable"), Ok(StorageKind::Removable));
+        assert_eq!(StorageKind::Removable.as_str(), "removable");
+        assert!(StorageKind::Removable.is_local_directory());
+        assert!(StorageKind::Filesystem.is_local_directory());
+        assert!(!StorageKind::GoogleDrive.is_local_directory());
+        assert!(!StorageKind::WebDav.is_local_directory());
+        assert!(!StorageKind::S3.is_local_directory());
+
+        let mut config = parse_config(&source()).unwrap();
+        config.storage.insert(
+            ConfigName::new("thumbdrive").unwrap(),
+            StorageConfigV1::new(
+                StorageKind::Removable,
+                StorageLocation::new("/media/usb/vault").unwrap(),
+                CredentialRef::none(),
+            ),
+        );
+        let rendered = render_config(&config);
+        assert!(rendered.contains("kind = \"removable\""));
+        assert_eq!(parse_config(&rendered).unwrap(), config);
     }
 
     #[test]

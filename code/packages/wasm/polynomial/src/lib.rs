@@ -129,6 +129,20 @@ pub extern "C" fn poly_had_error() -> u32 {
 ///
 /// Sets the error flag and returns null. The caller should check
 /// `poly_had_error()` if a null is returned for a non-zero `len`.
+///
+/// ## Safety
+///
+/// This function dereferences nothing and is sound to call with any `len`;
+/// it is `unsafe` because it is one half of a manual allocation pair whose
+/// *other* half is not. The obligation it creates for the caller is:
+///
+/// - Every non-null, non-empty pointer returned here must eventually be
+///   passed to `poly_dealloc(ptr, len)` with the **same** `len`, exactly
+///   once. Forgetting leaks WASM linear memory, which is never returned to
+///   the host; freeing twice, or with a different `len`, corrupts the heap.
+/// - The pointer returned for `len == 0` is a dangling sentinel. It is
+///   aligned but points at no allocation: never read it, write it, or free
+///   it.
 #[no_mangle]
 pub unsafe extern "C" fn poly_alloc(len: u32) -> *mut f64 {
     if len == 0 {
@@ -305,6 +319,31 @@ static DIVMOD_REMAINDER_LEN: AtomicU32 = AtomicU32::new(0);
 /// Pointer to the normalized result. Use `poly_last_result_len()` for the length.
 /// Caller must free with `poly_dealloc`. Returns null and sets error on null input
 /// with non-zero len.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `len` reads past the end of the allocation.
+/// - The `len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_normalize(ptr: *const f64, len: u32) -> *mut f64 {
     LAST_ERROR.store(false, Ordering::Relaxed);
@@ -332,6 +371,31 @@ pub unsafe extern "C" fn poly_normalize(ptr: *const f64, len: u32) -> *mut f64 {
 /// ## Returns
 /// Degree as a `u32`. No heap allocation; no need to call `poly_dealloc`.
 /// Returns 0 and sets error flag if ptr is null with non-zero len.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `len` reads past the end of the allocation.
+/// - The `len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_degree(ptr: *const f64, len: u32) -> u32 {
     LAST_ERROR.store(false, Ordering::Relaxed);
@@ -357,6 +421,41 @@ pub unsafe extern "C" fn poly_degree(ptr: *const f64, len: u32) -> u32 {
 /// ## Returns
 /// Pointer to result. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
 /// Returns null and sets error if either pointer is null with non-zero len.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `a_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(a_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `a_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `a_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `a_len` reads past the end of the allocation.
+/// - The `a_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `b_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(b_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `b_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `b_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `b_len` reads past the end of the allocation.
+/// - The `b_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_add(
     a_ptr: *const f64,
@@ -397,6 +496,41 @@ pub unsafe extern "C" fn poly_add(
 /// ## Returns
 /// Pointer to result. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
 /// Returns null and sets error if either pointer is null with non-zero len.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `a_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(a_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `a_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `a_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `a_len` reads past the end of the allocation.
+/// - The `a_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `b_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(b_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `b_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `b_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `b_len` reads past the end of the allocation.
+/// - The `b_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_subtract(
     a_ptr: *const f64,
@@ -439,6 +573,41 @@ pub unsafe extern "C" fn poly_subtract(
 /// ## Returns
 /// Pointer to result. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
 /// Returns null and sets error if either pointer is null with non-zero len.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `a_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(a_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `a_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `a_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `a_len` reads past the end of the allocation.
+/// - The `a_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `b_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(b_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `b_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `b_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `b_len` reads past the end of the allocation.
+/// - The `b_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_multiply(
     a_ptr: *const f64,
@@ -484,6 +653,41 @@ pub unsafe extern "C" fn poly_multiply(
 /// ## On error (divisor is zero polynomial, or null pointer with non-zero len)
 ///
 /// Sets `poly_had_error() = 1`. Both cached pointers are set to null, lengths to 0.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `dividend_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(dividend_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `dividend_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `dividend_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `dividend_len` reads past the end of the allocation.
+/// - The `dividend_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `divisor_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(divisor_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `divisor_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `divisor_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `divisor_len` reads past the end of the allocation.
+/// - The `divisor_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_divmod(
     dividend_ptr: *const f64,
@@ -624,6 +828,41 @@ pub extern "C" fn poly_divmod_remainder_len() -> u32 {
 /// ## Returns
 /// Pointer to quotient. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
 /// Returns null and sets error on null input pointer with non-zero len, or on panic.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `a_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(a_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `a_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `a_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `a_len` reads past the end of the allocation.
+/// - The `a_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `b_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(b_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `b_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `b_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `b_len` reads past the end of the allocation.
+/// - The `b_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_divide(
     a_ptr: *const f64,
@@ -666,6 +905,41 @@ pub unsafe extern "C" fn poly_divide(
 /// ## Returns
 /// Pointer to remainder. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
 /// Returns null and sets error on null input pointer with non-zero len, or on panic.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `a_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(a_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `a_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `a_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `a_len` reads past the end of the allocation.
+/// - The `a_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `b_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(b_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `b_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `b_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `b_len` reads past the end of the allocation.
+/// - The `b_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_modulo(
     a_ptr: *const f64,
@@ -712,6 +986,31 @@ pub unsafe extern "C" fn poly_modulo(
 /// ## Returns
 /// The scalar result as an `f64`. No heap allocation; no `poly_dealloc` needed.
 /// Returns 0.0 and sets error flag if ptr is null with non-zero len.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `len` reads past the end of the allocation.
+/// - The `len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_evaluate(ptr: *const f64, len: u32, x: f64) -> f64 {
     LAST_ERROR.store(false, Ordering::Relaxed);
@@ -737,6 +1036,41 @@ pub unsafe extern "C" fn poly_evaluate(ptr: *const f64, len: u32, x: f64) -> f64
 /// ## Returns
 /// Pointer to GCD polynomial. Length via `poly_last_result_len()`. Free with `poly_dealloc`.
 /// Returns null and sets error on null input pointer with non-zero len, or on panic.
+///
+/// ## Safety
+///
+/// This is a C-ABI export: the caller is the WASM host, and the compiler
+/// cannot check anything it passes in. The contract for every `(ptr, len)`
+/// pair below is the module's memory protocol, documented at the top of this
+/// file:
+///
+/// - `a_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(a_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `a_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `a_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `a_len` reads past the end of the allocation.
+/// - The `a_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - `b_ptr` must be null, or a pointer this module handed out — the
+///   return value of `poly_alloc(b_len)` or of an earlier operation whose
+///   `poly_last_result_len()` was `b_len` — and must not have been passed
+///   to `poly_dealloc` yet. A pointer from anywhere else (host-side
+///   arithmetic, a stale pointer, another module's memory) is undefined
+///   behaviour.
+/// - `b_len` must be exactly the length that pointer was allocated with.
+///   Passing a larger `b_len` reads past the end of the allocation.
+/// - The `b_len` `f64`s must already be initialized; the host writes them
+///   after `poly_alloc` and before calling in here.
+/// - Nothing may mutate that memory for the duration of this call. WASM is
+///   single-threaded in the browser, so in practice this means the host must
+///   not re-enter the module from inside a callback.
+///
+/// Null itself is *handled*, not undefined: a null pointer with a non-zero
+/// length sets the error flag (`poly_had_error()`) and returns the documented
+/// failure value instead of dereferencing.
 #[no_mangle]
 pub unsafe extern "C" fn poly_gcd(
     a_ptr: *const f64,
