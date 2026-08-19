@@ -1,0 +1,6 @@
+packages: .
+          ../../../packages/haskell/cli-builder
+          ../../../packages/haskell/json-serializer
+          ../../../packages/haskell/json-value
+          ../../../packages/haskell/paint-instructions
+          ../../../packages/haskell/paint-vm-ascii

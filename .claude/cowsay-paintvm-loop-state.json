@@ -15,7 +15,8 @@
     "Output must be verified byte-identical against an existing port (e.g. Go) for several flag combos, modulo paint-vm-ascii's spec-mandated trailing-blank-line trimming.",
     "Gradle (java/kotlin): must redirect build output away from build/ (collides with BUILD file on case-insensitive filesystems) -- see lessons.md Gradle entries.",
     "Swift on Windows needs the winget toolchain + vcvars setup -- see memory 'Swift on Windows setup'.",
-    "Lua rockspecs must pin immutable refs (tag/SHA), not moving branch tips -- see lessons.md Lua section."
+    "Lua rockspecs must pin immutable refs (tag/SHA), not moving branch tips -- see lessons.md Lua section.",
+    "build-tool's requiresExplicitPrereqs list (validator.go) is currently {python, typescript, perl} -- haskell is NOT in it, so cabal.project is the source of truth there (must list every transitive local package per lessons.md's Haskell section). For languages that ARE in the list, BUILD must textually reference every transitive local prerequisite's path (e.g. -I../../../packages/<lang>/<dep>/lib) -- use lib/import statements inside source files are invisible to the validator. Verify locally by building code/programs/go/build-tool and running -validate-build-files -detect-languages before pushing any language's cowsay PR; costly to discover only from a CI failure. See lessons.md 'Perl' section for the full writeup."
   ],
   "backlog": [
     {
@@ -40,19 +41,21 @@
       "id": "perl-cowsay",
       "title": "Perl cowsay: add glyph_run to paint-vm-ascii, then cowsay",
       "depends_on": [],
-      "status": "pr-open",
+      "status": "merged",
       "pr_number": 12043,
       "priority": 3,
       "backend_work": "add glyph_run instruction handling to perl/paint-vm-ascii (currently rect-only) -- delivered the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer), not just glyph_run",
-      "notes": "Also fixed a spec-divergence bug in the pre-existing rect handler (undefined fill defaulted to black instead of no-fill). Auto-merge enabled."
+      "notes": "Also fixed a spec-divergence bug in the pre-existing rect handler (undefined fill defaulted to black instead of no-fill), and a real CI validator failure (BUILD needed explicit -I refs to sibling packages -- see known_gotchas). Merged clean, verified on origin/main."
     },
     {
       "id": "haskell-cowsay",
       "title": "Haskell cowsay: add glyph_run to paint-vm-ascii, then cowsay",
       "depends_on": [],
-      "status": "pending",
+      "status": "pr-open-auto-merge",
+      "pr_number": 12074,
       "priority": 4,
-      "backend_work": "add glyph_run instruction handling to haskell/paint-vm-ascii (currently rect-only)"
+      "backend_work": "delivered the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer) to haskell/paint-vm-ascii, not just glyph_run -- same scope as perl-cowsay",
+      "notes": "Found and fixed a real undefined-thunk bug in barcode-layout-1d (constructed PaintRect directly instead of via makeRect, missed by the initial grep-based consumer sweep -- only caught by actually running barcode-1d's test suite). Went through 5 rounds of /security-review; fixed unvalidated line/clip geometry, a product-only scene-size-cap bypass (zero-width/height scene), and an unsaturated Double->Int cell-coordinate conversion that could hit Int's minBound and defeat downstream clip clamping via integer wraparound (see lessons.md Haskell section, the \"finite is not safely convertible to Int\" lesson). Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
     },
     {
       "id": "java-cowsay",

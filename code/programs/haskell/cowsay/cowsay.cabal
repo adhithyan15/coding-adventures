@@ -1,0 +1,53 @@
+cabal-version: 3.0
+name:          cowsay
+version:       0.1.0
+synopsis:      A configurable ASCII cow that speaks or thinks, rendered through paint-vm-ascii
+license:       MIT
+author:        Adhithya Rajasekaran
+maintainer:    Adhithya Rajasekaran
+build-type:    Simple
+
+library
+    exposed-modules:  Cowsay
+    build-depends:    base >=4.14
+                    , containers
+                    , directory
+                    , filepath
+                    , json-value
+                    , paint-instructions
+                    , paint-vm-ascii
+    hs-source-dirs:   src
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+executable cowsay
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    base >=4.14
+                    , containers
+                    , cli-builder
+                    , cowsay
+                    , directory
+                    , filepath
+                    , json-value
+                    , paint-vm-ascii
+    ghc-options:      -Wall
+    default-language: Haskell2010
+
+test-suite spec
+    type:             exitcode-stdio-1.0
+    main-is:          Spec.hs
+    other-modules:    CowsaySpec
+    hs-source-dirs:   test
+    build-depends:    base >=4.14
+                    , cli-builder
+                    , containers
+                    , cowsay
+                    , directory
+                    , filepath
+                    , json-value
+                    , paint-instructions
+                    , paint-vm-ascii
+                    , hspec == 2.*
+    ghc-options:      -Wall
+    default-language: Haskell2010

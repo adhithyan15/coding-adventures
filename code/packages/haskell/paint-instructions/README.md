@@ -23,8 +23,13 @@ A `PaintScene` is a plain Haskell value.
 | Type | Description |
 |------|-------------|
 | `PathCommand` | One pen-plotter step: `MoveTo`, `LineTo`, `ClosePath` |
-| `PaintInstruction` | A rect (`PaintRect`) or path (`PaintPath`) |
+| `PaintInstruction` | `PaintRect` (fill and/or stroke), `PaintPath`, `PaintGlyphRun`, `PaintLine`, `PaintGroup`, `PaintClip`, or `PaintLayer` |
+| `PaintGlyphPlacement` | One glyph's position within a `PaintGlyphRun` |
+| `Transform2D` | A six-value affine transform (`PaintGroup`/`PaintLayer`) |
 | `PaintScene` | Canvas dimensions + background + ordered instruction list |
+
+Builder helpers exist for every instruction kind: `makeRect`, `makePath`,
+`makeGlyphRun`, `makeLine`, `makeGroup`, `makeClip`, `makeLayer`.
 
 ## Usage
 
