@@ -2,6 +2,66 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.38] - 2026-08-19 (task #199-201 — SIMD widen PR28: promote/demote/convert_low family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms:
+  - `SimdOpKind::DemoteF64x2Zero` (`f32x4.demote_f64x2_zero`): pops one
+    `v128`, reads 2 `f64` lanes, demotes each to `f32` via the exact
+    same plain `as f32` cast the scalar `f32.demote_f64` handler
+    (`0xB6`) already uses -- no hand-rolled saturation or NaN handling,
+    so an out-of-range magnitude correctly overflows to `f32::INFINITY`/
+    `f32::NEG_INFINITY` per IEEE-754 (expected, not an error) and a NaN
+    lane demotes to a NaN (payload canonicalization is Rust/LLVM's
+    call, same as every other float-narrowing path in this crate).
+    Writes 4 `f32` lanes: 0-1 demoted, 2-3 ALWAYS zero (mirrors PR25's
+    `TruncSatF64x2SZero`/`UZero` zero-fill shape).
+  - `SimdOpKind::PromoteLowF32x4` (`f64x2.promote_low_f32x4`): pops one
+    `v128`, reads 4 `f32` lanes but uses ONLY the LOW 2 (indices 0-1;
+    2-3 are DROPPED, never read at all -- the opposite discipline from
+    `DemoteF64x2Zero`'s zero-FILL, since promoting from 4 lanes to 2
+    can't invent extra output lanes to zero), promotes each to `f64`
+    via the same plain `as f64` cast the scalar `f64.promote_f32`
+    handler (`0xBB`) uses (exact, lossless for every finite value).
+    Writes 2 `f64` lanes.
+  - `SimdOpKind::ConvertLowI32x4S | ConvertLowI32x4U`
+    (`f64x2.convert_low_i32x4_s`/`_u`): pops one `v128`, reads 4 `i32`
+    lanes, uses only the LOW 2 (same lane-dropping discipline as
+    `PromoteLowF32x4`), converts each to `f64` -- signed (`v as f64`)
+    or, for `_u`, the lane's bit pattern reinterpreted as `u32` first
+    (`(v as u32) as f64`), same signed/unsigned split as
+    `ConvertI32x4S`/`ConvertI32x4U` (PR20). Both directions are exact
+    and lossless (every `i32`/`u32` fits precisely in `f64`'s 52-bit
+    mantissa) -- no rounding or NaN case to consider. Writes 2 `f64`
+    lanes. The reverse direction of PR25's `TruncSatF64x2SZero`/
+    `UZero` (that went `f64x2` -> `i32x4` with zero-padding; this goes
+    `i32x4` -> `f64x2` with lane-dropping).
+- New test helper `f64x2_lanes` (decode a `V128Bytes` result back into
+  its 2 `f64` lanes), the `f64x2` counterpart of the existing
+  `f32x4_lanes`.
+- 11 new unit tests: `demote_f64x2_zero`'s ordinary-value + zero-fill
+  proof, a NaN-lane proof, and BOTH signed-overflow-to-infinity
+  directions (huge positive -> `+infinity`, huge negative ->
+  `-infinity`); `promote_low_f32x4`'s ordinary-value proof, a
+  dedicated LANE-DROPPING proof (distinguishing values in the high
+  half that must NOT influence the result), and a NaN-lane proof;
+  `convert_low_i32x4_s`'s ordinary-value proof and its own
+  lane-dropping proof; `convert_low_i32x4_u`'s high-bit-set
+  (`0xFFFFFFFF` must read as `u32::MAX`, not sign-extend to `-1.0`) and
+  ordinary-positive-value proofs.
+
+### Notes
+
+- Mirrors PR25's `i32x4.trunc_sat_f64x2_s/u_zero` (zero-padding
+  `f64x2` -> `i32x4`) in reverse, and PR20's `f32x4.convert_i32x4_s/u`
+  (int -> float, same signed/unsigned discipline) one lane width up.
+- **Campaign complete, corpus now vendored.** With this PR, all 16
+  opcodes needed by the upstream `simd_conversions.wast` corpus file
+  exist (`extend_low`/`high` from PR26, `narrow` from PR27, this PR's
+  4), so `wasm-conformance` now vendors that file for the first time --
+  100% pass on every directive. See `wasm-conformance`'s own CHANGELOG.
+
 ## [0.9.37] - 2026-08-19 (task #196-198 — SIMD widen PR27: narrow saturating family)
 
 ### Added

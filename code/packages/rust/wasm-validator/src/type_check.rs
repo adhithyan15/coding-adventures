@@ -1601,7 +1601,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtendLowI16x8S
                     | wasm_opcodes::SimdOpKind::ExtendHighI16x8S
                     | wasm_opcodes::SimdOpKind::ExtendLowI16x8U
-                    | wasm_opcodes::SimdOpKind::ExtendHighI16x8U => {
+                    | wasm_opcodes::SimdOpKind::ExtendHighI16x8U
+                    | wasm_opcodes::SimdOpKind::DemoteF64x2Zero
+                    | wasm_opcodes::SimdOpKind::PromoteLowF32x4
+                    | wasm_opcodes::SimdOpKind::ConvertLowI32x4S
+                    | wasm_opcodes::SimdOpKind::ConvertLowI32x4U => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
@@ -1631,6 +1635,18 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // reasoning as `ExtaddPairwiseI16x8S`/`_U` above --
                         // the type checker only ever sees the opaque
                         // `V128` type, never the narrower interpretation.
+                        // `DemoteF64x2Zero`/`PromoteLowF32x4`/
+                        // `ConvertLowI32x4S`/`_U` (SIMD widen PR28, the
+                        // final PR of the 16-opcode `extend`/`narrow`/
+                        // `promote`/`demote`/`convert_low` set) join too:
+                        // all UNARY, and even though they cross both lane
+                        // COUNT (4<->2) and lane TYPE (int/float, f32/f64)
+                        // boundaries, the type checker still only ever
+                        // sees the opaque `V128` type on both sides --
+                        // the zero-fill (`DemoteF64x2Zero`) vs.
+                        // lane-dropping (the other three) distinction is,
+                        // like every other lane-shape detail above,
+                        // entirely a runtime concern.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

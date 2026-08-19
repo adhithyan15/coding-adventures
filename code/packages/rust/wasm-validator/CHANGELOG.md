@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.40] - 2026-08-19 (task #199-201 — SIMD widen PR28: promote/demote/convert_low family type rules)
+
+### Added
+
+- `SimdOpKind::DemoteF64x2Zero`/`PromoteLowF32x4`/`ConvertLowI32x4S`/
+  `ConvertLowI32x4U` join the existing UNARY `v128` op type-check arm
+  (pop one `V128`, push `V128`) alongside `ExtendLow/HighI8x16S/_U`/
+  etc. -- even though these four cross both lane COUNT (4<->2) and
+  lane TYPE (int/float, f32/f64) boundaries at runtime, the type
+  checker only ever sees the opaque `V128` type on both sides; the
+  zero-fill (`DemoteF64x2Zero`) vs. lane-dropping (the other three)
+  distinction is entirely a runtime concern, invisible here.
+- 7 new tests: one valid-module case covering all 4 new ops, four
+  invalid-module regressions confirming each op genuinely rejects an
+  `i32` operand instead of `v128`, and two confirming an empty stack
+  (no operand at all) is also rejected.
+
+### Notes
+
+- **Campaign complete, corpus now vendored.** These 4 opcodes are the
+  third and FINAL PR of a 3-PR sequence (`extend_low`/`high` done in
+  PR26, `narrow` done in PR27, `promote`/`demote`/`convert_low` here)
+  needed to land all 16 opcodes the upstream `simd_conversions.wast`
+  corpus file's modules bundle together -- see `wasm-conformance`'s
+  own CHANGELOG for the vendoring result (100% pass, 280/280
+  directives).
+
 ## [0.2.39] - 2026-08-19 (task #196-198 — SIMD widen PR27: narrow saturating family type rules)
 
 ### Added
