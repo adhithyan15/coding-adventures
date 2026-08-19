@@ -76,7 +76,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                pinned commit, no re-pin),
                extended 2026-08-19 (task #186-187 -- simd_select.wast/
                simd_address.wast, pure vendoring, zero new opcodes, same
-               pinned commit, no re-pin)
+               pinned commit, no re-pin),
+               extended 2026-08-19 (task #188-189 --
+               simd_i32x4_trunc_sat_f32x4.wast, pure vendoring, zero new
+               opcodes, same pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -657,6 +660,26 @@ from 1164 to 1168 (+4, one per newly-vendored module, all passing). Only
 by this PR -- no `wasm-execution`/`wasm-validator`/`wasm-wast-parser`/
 `wasm-opcodes` source changes at all, the first PR in this campaign of
 which that is true.
+
+SIMD widen PR24 (task #188-189) vendors `simd_i32x4_trunc_sat_f32x4.wast`
+-- like PR23, ZERO new opcodes added to `wasm-opcodes`. The file exercises
+only `i32x4.trunc_sat_f32x4_s`/`i32x4.trunc_sat_f32x4_u`, both already
+fully implemented since SIMD widen PR20 (task #177-179) -- and already
+observed passing indirectly via `simd_load.wast`'s own
+`as-i32x4.trunc_sat_f32x4_s-operand` directive (PR20's own NOTICE entry
+above). This is the dedicated upstream file for that opcode pair's own
+full boundary-value corpus (zero/negative-zero/fractional/exact-integer/
+just-inside-range/just-outside-range/huge-finite/subnormal/inf/nan/
+signed-and-quiet-nan-payload/octal-literal cases, `_s` and `_u` each
+tested independently) plus its own `assert_invalid` type-check coverage
+(wrong-operand-type, empty-argument for both ops) -- not just a single
+directive reachable through a `v128.load` wrapper like `simd_load.wast`'s
+own coverage was. Verified by actually vendoring and grading the file,
+not just a static opcode-inventory claim: 100% pass on every directive
+(1/1 module, 102/102 assert_return, 4/4 assert_invalid). Only
+`wasm-conformance`'s own fixtures/baseline/version/changelog are touched
+by this PR, same as PR23 -- no `wasm-execution`/`wasm-validator`/
+`wasm-wast-parser`/`wasm-opcodes` source changes at all.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
