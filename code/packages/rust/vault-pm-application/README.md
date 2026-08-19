@@ -504,9 +504,14 @@ vault that reached the real ceiling could never shrink back under it from
 inside the product — every later mutation that had to re-encode the full
 catalog failed the same way, permanently, delete included. `MAX_CATALOG_ENTRIES`
 is now *derived* from `MAX_ENCODED_SIZE` — the exact per-entry byte cost (55
-bytes) plus a safety margin — so admission refuses the entry that would make
+bytes) plus a safety margin — so admission refuses the item that would make
 the catalog unencodable before that catalog is ever built, rather than
-discovering the failure on the next re-encode. See VLT-PM05 section 13.4.
+discovering the failure on the next re-encode. Only genuine growth is held to
+that tighter bound, though: `CatalogV1::new_for_mutation` checks a non-growing
+mutation (an edit, a delete, a restore) against the looser, proven
+`MAX_ENCODABLE_CATALOG_ENTRIES` instead, so a catalog already sitting above
+the admission ceiling — synced from a peer, say — stays editable and
+deletable-from, not merely openable. See VLT-PM05 section 13.4.
 
 The remaining ones — a first-party record, the revision framing around it, and
 the re-encode of entries imported from someone else's artifact — are reachable

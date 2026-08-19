@@ -1069,30 +1069,56 @@ wire format could have too. That catalog must stay openable.
 
 So admission and decode use different bounds, on purpose:
 
-- **Admission** (`validate_catalog`, and therefore `CatalogV1::new` and every
-  local mutation that builds a new catalog — `item add`, `item delete`,
-  `item edit`, the authored conflict merges, and portable import) uses the
-  tight, margined `MAX_CATALOG_ENTRIES` (18,064). Reaching it refuses the
-  *next* item with `BoundExceeded`, before that catalog is ever built, which
-  is the actual fix: the failure moves from re-encode time to admission
-  time, and a catalog admission has already bounded stays editable, can
-  always be deleted from, and always re-encodes — the freeze this section
-  opened with cannot recur, because admission never lets the catalog reach
-  a size that re-encode can't recover from.
-- **Decode** (`CatalogV1::decode`) uses the looser, unmargined
-  `MAX_ENCODABLE_CATALOG_ENTRIES` (19,064) — the proven ceiling, not this
-  device's own admission policy. This runs on the open path, through
-  `materialize_current_catalog`, so a hard reject here denies the whole
-  vault rather than one mutation; using the proven ceiling means the only
-  catalogs it ever rejects are ones no honest encoder, old or new, could
-  ever have produced. A catalog this device would no longer *admit*
-  building fresh — because it exceeds 18,064 — still opens, because it
-  might be exactly what a past version of this device, or any honest peer,
-  legitimately wrote. Only past 19,064 is a catalog certainly the product
-  of a peer whose own encoder does not honour `MAX_ENCODED_SIZE` — hand-
-  crafting wire bytes rather than running a compliant encoder — and that is
-  the case this closes: a peer cannot install a catalog this device could
-  decode but never again re-encode.
+- **Admission of new growth** (`validate_catalog`, used by `CatalogV1::new`
+  — portable import, and any construction with no "previous" catalog to
+  compare against) applies the tight, margined `MAX_CATALOG_ENTRIES`
+  (18,064) to the whole entry count. Reaching it refuses the *next* item
+  with `BoundExceeded`, before that catalog is ever built.
+- **Ordinary item mutation** (`CatalogV1::new_for_mutation`, used by every
+  local mutation that touches one item — `item add`, `item delete`, `item
+  edit`, restore, and the authored conflict merges) is more careful,
+  because it does not build a catalog from scratch: it carries forward
+  every entry the vault already had and touches exactly one, so the
+  resulting entry count is either unchanged (an edit, delete, restore, or
+  conflict-resolution of an item that already had a catalog entry) or one
+  more than before (a genuinely new item — the only case that is actual
+  growth). Only the growth case is checked against the tight
+  `MAX_CATALOG_ENTRIES`; a mutation that does not grow the catalog is
+  checked against the looser, proven `MAX_ENCODABLE_CATALOG_ENTRIES`
+  instead. `CatalogV1::encode` does not independently re-apply either
+  bound — it trusts whichever constructor built its `self.entries` already
+  chose the right one, and confirms only that the actual bytes still fit
+  `MAX_ENCODED_SIZE`.
+
+  This split was caught in security review, not designed in from the
+  start: an earlier version of this fix applied the tight ceiling to
+  *every* catalog rebuild uniformly, admission and mutation alike. That
+  reopened this section's own bug at a narrower band — a catalog synced
+  from a peer, or grown under this device's own pre-fix admission policy,
+  with an entry count anywhere in `(MAX_CATALOG_ENTRIES,
+  MAX_ENCODABLE_CATALOG_ENTRIES]` decoded and opened fine (decode already
+  used the looser bound) but then failed *every* subsequent mutation,
+  delete included, because rebuilding that same, unchanged entry count
+  still ran into the tight bound regardless of whether the mutation added
+  anything. The lesson generalises: an admission ceiling on total entry
+  count is only correct for constructions where every entry is new growth.
+  Anywhere a mutation carries forward entries that already existed,
+  admission has to ask whether *this* mutation grows the catalog, not
+  merely how big the catalog already is.
+- **Decode** (`CatalogV1::decode`) uses the same looser, unmargined
+  `MAX_ENCODABLE_CATALOG_ENTRIES` (19,064) as a non-growing mutation — the
+  proven ceiling, not this device's own admission policy. This runs on the
+  open path, through `materialize_current_catalog`, so a hard reject here
+  denies the whole vault rather than one mutation; using the proven ceiling
+  means the only catalogs it ever rejects are ones no honest encoder, old
+  or new, could ever have produced. A catalog this device would no longer
+  *admit* building fresh — because it exceeds 18,064 — still opens, because
+  it might be exactly what a past version of this device, or any honest
+  peer, legitimately wrote. Only past 19,064 is a catalog certainly the
+  product of a peer whose own encoder does not honour `MAX_ENCODED_SIZE` —
+  hand-crafting wire bytes rather than running a compliant encoder — and
+  that is the case this closes: a peer cannot install a catalog this
+  device could decode but never again re-encode.
 
 `materialize_current_catalog`'s own cross-head merge check (reachable when
 several unreconciled concurrent heads each individually decode within bounds
@@ -1122,6 +1148,13 @@ small publications, since one commit cannot itself carry more than
 still_be_deleted_from` reproduces the named symptom directly — a real
 `delete_current_item` call succeeds on a catalog sitting at this device's own
 admission ceiling, and a subsequent `add_item` is correctly refused.
+`mutation_of_an_above_admission_catalog_succeeds_when_it_does_not_grow`
+(`codec.rs`) and `a_catalog_above_the_admission_ceiling_can_still_be_deleted_
+from` (`open.rs`) pin the growth-vs-non-growth correction above directly:
+the latter opens a real, peer-synced vault whose catalog already exceeds the
+admission ceiling and performs two real `delete_current_item` calls against
+it, which is exactly the scenario security review found broken in the first
+version of this fix.
 
 ## 14. Required verification
 

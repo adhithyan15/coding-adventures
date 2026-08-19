@@ -70,6 +70,28 @@ All notable changes to this package are documented here.
     anything that could actually have existed — it is the admission ceiling
     catching up to the encode ceiling that was always the real one.
 
+  - **Caught in security review before merge:** applying the tight
+    `MAX_CATALOG_ENTRIES` unconditionally to *every* catalog rebuild —
+    including a delete, edit, or restore that does not add an entry —
+    reopened this exact bug at a narrower band: a catalog synced from a
+    peer, or grown under this device's own pre-fix admission policy, with an
+    entry count anywhere in `(MAX_CATALOG_ENTRIES,
+    MAX_ENCODABLE_CATALOG_ENTRIES]` would decode and open fine, then fail
+    *every* subsequent mutation — delete included — because rebuilding that
+    same, unchanged entry count still ran into the tight admission ceiling.
+    `CatalogV1::new_for_mutation` fixes this: it only applies the tight
+    ceiling when a mutation's entry count actually grows past what it
+    already was, and the looser, proven `MAX_ENCODABLE_CATALOG_ENTRIES`
+    otherwise. `CatalogV1::encode` no longer re-runs `validate_catalog`
+    either, for the same reason — that re-check does not know whether the
+    catalog was built as new growth or as a non-growing mutation, and
+    applying the tight bound there unconditionally would undo
+    `new_for_mutation`'s fix at the encode step. Regression tests:
+    `mutation_of_an_above_admission_catalog_succeeds_when_it_does_not_grow`
+    (`codec.rs`) and `a_catalog_above_the_admission_ceiling_can_still_be_
+    deleted_from` (`open.rs`, a real `delete_current_item` call against a
+    real synced vault whose catalog already exceeds the admission ceiling).
+
 ## [0.66.0] - 2026-08-18
 
 ### Added

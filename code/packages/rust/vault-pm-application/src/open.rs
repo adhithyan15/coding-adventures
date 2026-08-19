@@ -16630,6 +16630,67 @@ mod tests {
         );
     }
 
+    #[test]
+    fn a_catalog_above_the_admission_ceiling_can_still_be_deleted_from() {
+        // A sharper reproduction than the test above: this vault is synced
+        // from a peer whose catalog *already* exceeds this device's own
+        // admission ceiling -- squarely in the band (MAX_CATALOG_ENTRIES,
+        // MAX_ENCODABLE_CATALOG_ENTRIES] that a fully honest peer (or this
+        // device's own pre-fix past self) could legitimately have produced.
+        // An earlier version of this fix opened such a vault fine but then
+        // refused every subsequent mutation, including delete, because
+        // rebuilding the catalog's unchanged entry count still ran through
+        // the tight admission ceiling regardless of whether anything grew
+        // -- the exact bug this fix exists to close, just relocated to a
+        // higher threshold instead of eliminated. `delete_current_item`
+        // succeeding here is the actual fix: a mutation that does not grow
+        // the catalog is never blocked by how large the catalog already is.
+        const ABOVE_ADMISSION: usize = MAX_CATALOG_ENTRIES + 500;
+        const _: () = assert!(ABOVE_ADMISSION < MAX_ENCODABLE_CATALOG_ENTRIES);
+
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            ABOVE_ADMISSION,
+        );
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), ABOVE_ADMISSION);
+        let item_id = ItemId::new([0; 16]);
+        session
+            .delete_current_item(item_id, 900, 901, delete_item_randomness(0x5f), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), ABOVE_ADMISSION);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+
+        // A second delete on a different item, to be sure the first one
+        // wasn't a fluke of exactly matching some boundary -- the catalog
+        // stays exactly the same size delete after delete, and each one
+        // must keep succeeding.
+        // Item index 1's id, matching `publish_peer_catalog_with_item_count`'s
+        // scheme: the counter's big-endian bytes in the first 8 bytes, the
+        // rest zero.
+        let second_item_id = ItemId::new([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
+        session
+            .delete_current_item(
+                second_item_id,
+                902,
+                903,
+                delete_item_randomness(0x60),
+                &local,
+            )
+            .unwrap();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), ABOVE_ADMISSION);
+    }
+
     // ---------------------------------------------------------------------
     // VLT-PM43 — passphrase rotation
     // ---------------------------------------------------------------------

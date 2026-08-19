@@ -246,9 +246,69 @@ pub struct CatalogV1 {
 }
 
 impl CatalogV1 {
-    /// Validate and construct a canonical catalog snapshot.
+    /// Validate and construct a canonical catalog snapshot from scratch.
+    ///
+    /// Every entry here is new growth — this is what portable import and
+    /// tests use, where there is no "previous" catalog to compare against —
+    /// so the whole entry count is checked against the tight, margined
+    /// [`MAX_CATALOG_ENTRIES`]. An ordinary item mutation, which carries
+    /// forward every entry that already existed and touches at most one,
+    /// should use [`CatalogV1::new_for_mutation`] instead: that constructor
+    /// is what keeps a catalog already sitting above the admission ceiling
+    /// editable and deletable-from rather than merely openable. See that
+    /// constructor's doc comment, and VLT-PM05 §13.4, for why the two must
+    /// differ.
     pub fn new(entries: BTreeMap<ItemId, Vec<RevisionId>>) -> Result<Self, ApplicationError> {
         validate_catalog(&entries)?;
+        Ok(Self { entries })
+    }
+
+    /// Validate and construct a catalog for one ordinary item mutation,
+    /// given the entry count immediately before it.
+    ///
+    /// # Why this is not just `CatalogV1::new`
+    ///
+    /// `validate_catalog` (used by [`CatalogV1::new`]) rejects any entry
+    /// count over the tight, margined [`MAX_CATALOG_ENTRIES`] — correct
+    /// for admitting *new growth*, wrong for a mutation that does not grow
+    /// the catalog at all. A single item mutation carries forward every
+    /// entry `current_items` already had and touches exactly one: entry
+    /// count after the mutation is `previous_entry_count` unchanged (edit,
+    /// delete, restore, or conflict-resolution of an item that already had
+    /// a catalog entry) or `previous_entry_count + 1` (a brand-new item,
+    /// the only case that is genuinely new growth).
+    ///
+    /// Applying the tight bound unconditionally — as an earlier version of
+    /// this fix did — reopened the exact bug VLT-PM05 §13.4 exists to
+    /// close, just at a narrower band: a catalog synced from a peer, or
+    /// grown under this device's own pre-fix admission policy, with an
+    /// entry count anywhere in `(MAX_CATALOG_ENTRIES,
+    /// MAX_ENCODABLE_CATALOG_ENTRIES]` would decode and open (§13.4's
+    /// decode-time bound is the looser, proven ceiling) but then fail
+    /// *every* subsequent mutation — including delete, the escape hatch —
+    /// because rebuilding that same, unchanged entry count through
+    /// `validate_catalog` always exceeded the tighter admission ceiling,
+    /// regardless of whether the mutation added anything.
+    ///
+    /// So the ceiling this function applies depends on whether the
+    /// mutation is growing the catalog: [`MAX_CATALOG_ENTRIES`] only if
+    /// `entries.len() > previous_entry_count`, otherwise the looser
+    /// [`MAX_ENCODABLE_CATALOG_ENTRIES`] — the same proven ceiling decode
+    /// already trusts, so a catalog decode accepted can always still be
+    /// edited, deleted from, and restored, not merely opened.
+    pub(crate) fn new_for_mutation(
+        entries: BTreeMap<ItemId, Vec<RevisionId>>,
+        previous_entry_count: usize,
+    ) -> Result<Self, ApplicationError> {
+        let ceiling = if entries.len() > previous_entry_count {
+            MAX_CATALOG_ENTRIES
+        } else {
+            MAX_ENCODABLE_CATALOG_ENTRIES
+        };
+        if entries.len() > ceiling {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        validate_catalog_structure(&entries)?;
         Ok(Self { entries })
     }
 
@@ -266,29 +326,36 @@ impl CatalogV1 {
 
     /// Encode the exact closed canonical V1 application object.
     ///
-    /// # Why this encode is checked
+    /// # Why this does not re-run `validate_catalog`
     ///
-    /// `validate_catalog` admits up to `MAX_CATALOG_ENTRIES` entries, which
-    /// is derived (see the constant's own doc comment) to stay under
-    /// canonical-CBOR's 1 MiB `MAX_ENCODED_SIZE` — the *inner* bound this
-    /// crate's own 16 MiB plaintext gate does not itself enforce (VLT-PM05
-    /// §13.1). Because admission already refuses the entry that would have
-    /// pushed a catalog past what can be re-encoded, this call is not
-    /// expected to fail on entry count: `self.entries` can only have been
-    /// built through [`CatalogV1::new`] or [`CatalogV1::empty`], both of
-    /// which already ran `validate_catalog`.
+    /// An earlier version of this method called `validate_catalog(&self.
+    /// entries)` here, applying the tight, margined `MAX_CATALOG_ENTRIES`
+    /// unconditionally before encoding. That was wrong for exactly the
+    /// catalogs [`CatalogV1::new_for_mutation`] exists to allow: a catalog
+    /// already sitting above the admission ceiling — synced from a peer,
+    /// or grown under this device's own pre-fix admission policy — whose
+    /// entry count does not increase (an edit, a delete, a restore) is
+    /// legitimately constructed by `new_for_mutation` against the looser,
+    /// proven [`MAX_ENCODABLE_CATALOG_ENTRIES`], and re-checking it here
+    /// against the tighter bound would refuse to encode a catalog that
+    /// constructor had already correctly accepted — reopening, at the
+    /// encode step, the exact bug VLT-PM05 §13.4 exists to close. See that
+    /// constructor's doc comment for the full account.
     ///
-    /// It re-validates and re-checks anyway, for the same reason the record
-    /// encodes keep `check_plaintext_bound` after their own inner checks
-    /// (§13.1): a conflicted item can carry more than one candidate
-    /// revision, and enough conflicted entries at once can still exhaust
-    /// `MAX_CATALOG_ENTRIES`'s safety margin even though entry *count*
-    /// stayed under the admission ceiling. That residual is narrow — it
-    /// needs on the order of a thousand simultaneously-conflicted items —
-    /// and reports `BoundExceeded` the same as every other re-encode this
-    /// layer performs, rather than aborting the process.
+    /// `self.entries` was already validated by whichever constructor built
+    /// this value ([`CatalogV1::new`], [`CatalogV1::new_for_mutation`], or
+    /// [`CatalogV1::empty`]), each against the ceiling appropriate to how
+    /// it was built. This encode's own job is only to confirm the *bytes*
+    /// still fit `MAX_ENCODED_SIZE` — the inner bound this crate's own
+    /// 16 MiB plaintext gate does not itself enforce (VLT-PM05 §13.1) —
+    /// which `encode_catalog_entries` checks unconditionally regardless of
+    /// entry count. That inner check is what actually can still fail here:
+    /// a conflicted item carries more than one candidate revision, and
+    /// enough conflicted entries at once can exhaust a margin no entry-
+    /// count ceiling accounts for. It reports `BoundExceeded` the same as
+    /// every other re-encode this layer performs, rather than aborting the
+    /// process.
     pub fn encode(&self) -> Result<Vec<u8>, ApplicationError> {
-        validate_catalog(&self.entries)?;
         encode_catalog_entries(&self.entries)
     }
 
@@ -1350,15 +1417,26 @@ fn encode_any_record(record: &AnyRecord) -> Result<Vec<u8>, ApplicationError> {
     }
 }
 
-/// Admission-time validation for a catalog this device is about to build
-/// or publish. Applies the tight, margined [`MAX_CATALOG_ENTRIES`] — not
-/// the looser [`MAX_ENCODABLE_CATALOG_ENTRIES`] `CatalogV1::decode` uses —
-/// because this runs on the write path, where refusing the *next* item is
-/// the correct, cheap failure, unlike decode's open-path hard reject.
+/// Admission-time validation for a catalog built entirely from scratch —
+/// used by [`CatalogV1::new`]. Applies the tight, margined
+/// [`MAX_CATALOG_ENTRIES`] to the *whole* entry count, which is correct
+/// exactly when every entry is new growth (portable import, tests) and
+/// wrong for an ordinary item mutation that carries forward entries that
+/// already existed — see [`CatalogV1::new_for_mutation`] for that case.
 fn validate_catalog(entries: &BTreeMap<ItemId, Vec<RevisionId>>) -> Result<(), ApplicationError> {
     if entries.len() > MAX_CATALOG_ENTRIES {
         return Err(ApplicationError::BoundExceeded);
     }
+    validate_catalog_structure(entries)
+}
+
+/// Structural checks shared by every catalog construction path, regardless
+/// of which entry-count ceiling applies: every item's candidate list is
+/// non-empty, within [`MAX_CANDIDATES_PER_ITEM`], and sorted with no
+/// duplicates.
+fn validate_catalog_structure(
+    entries: &BTreeMap<ItemId, Vec<RevisionId>>,
+) -> Result<(), ApplicationError> {
     for candidates in entries.values() {
         if candidates.is_empty() || candidates.len() > MAX_CANDIDATES_PER_ITEM {
             return Err(ApplicationError::InvalidInput);
@@ -1905,6 +1983,55 @@ mod tests {
         let encoded = encode_catalog_entries(&entries).unwrap();
         let decoded = CatalogV1::decode(&encoded).unwrap();
         assert_eq!(decoded.entries(), &entries);
+    }
+
+    #[test]
+    fn mutation_of_an_above_admission_catalog_succeeds_when_it_does_not_grow() {
+        // A first version of this fix applied the tight MAX_CATALOG_ENTRIES
+        // ceiling unconditionally to every catalog rebuild, admission and
+        // mutation alike. That reopened the exact bug this fix exists to
+        // close, just at a narrower band: a catalog synced from a peer, or
+        // grown under this device's own pre-fix admission policy, with an
+        // entry count anywhere in (MAX_CATALOG_ENTRIES,
+        // MAX_ENCODABLE_CATALOG_ENTRIES] would decode and open (decode uses
+        // the looser ceiling) but then fail *every* subsequent mutation --
+        // including delete -- because rebuilding that same, unchanged entry
+        // count through the tight bound always failed, regardless of
+        // whether the mutation added anything. `new_for_mutation` is the
+        // fix: it only applies the tight ceiling when entry count actually
+        // grows past what it already was.
+        const ABOVE_ADMISSION: usize = MAX_CATALOG_ENTRIES + 500;
+        const _: () = assert!(ABOVE_ADMISSION < MAX_ENCODABLE_CATALOG_ENTRIES);
+
+        let entries = many_single_candidate_entries(ABOVE_ADMISSION);
+
+        // Same entry count as "before" (an edit, delete, or restore of an
+        // item that already had a catalog entry): allowed, because nothing
+        // grew, even though the count is already past MAX_CATALOG_ENTRIES.
+        let catalog = CatalogV1::new_for_mutation(entries.clone(), ABOVE_ADMISSION).unwrap();
+        // And it must actually re-encode -- this is the failure mode the
+        // bug exhibited: admission accepting a catalog that then can't be
+        // turned back into bytes.
+        let encoded = catalog.encode().unwrap();
+        assert_eq!(CatalogV1::decode(&encoded).unwrap(), catalog);
+
+        // One MORE entry than "before" (a brand-new item): this is genuine
+        // growth, so the tight admission ceiling still applies and refuses
+        // it, exactly as it should.
+        let mut grown = entries.clone();
+        grown.insert(ItemId::new([0xff; 16]), vec![RevisionId::new([1; 32])]);
+        assert_eq!(
+            CatalogV1::new_for_mutation(grown, ABOVE_ADMISSION),
+            Err(ApplicationError::BoundExceeded),
+        );
+
+        // Fewer entries than "before" is never growth either, so it is
+        // allowed on the same terms as the unchanged case, all the way up
+        // to the proven ceiling.
+        let mut shrunk = entries;
+        shrunk.remove(shrunk.keys().next().copied().as_ref().unwrap());
+        let catalog = CatalogV1::new_for_mutation(shrunk, ABOVE_ADMISSION).unwrap();
+        assert!(catalog.encode().is_ok());
     }
 
     #[test]
