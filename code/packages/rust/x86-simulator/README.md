@@ -52,8 +52,10 @@ The harness lays the function bytes into a flat sandboxed address space, patches
 internal `call` relocations, resolves the **`_twig_globals` data symbol** (a
 zeroed 512-slot region between the code and heap — the `PcRel32` `lea` to it is
 patched the same way the real linker would), routes external calls
-(`__twig_alloc_bytes` via a bump heap, `putchar` / `print_i64` via captured I/O)
-to host shims, sets up a stack with a return sentinel, and runs from the entry —
+(`__twig_alloc_bytes` via a bump heap, `putchar` / `print_i64` via captured I/O,
+and `__twig_gc_write_barrier` as a no-op — the bump heap never collects, so there
+is no remembered set to notify) to host shims, sets up a stack with a return
+sentinel, and runs from the entry —
 returning `rax & 0xFF` as the exit code (the same convention as `run_native` /
 `run_wasm`). With `_twig_globals` support, programs that use **module globals**
 (LANG-FULL E6 captured scalars, O3 Oct `static`, AL6 ALGOL `own`) run locally.
