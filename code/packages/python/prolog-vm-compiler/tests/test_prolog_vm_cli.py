@@ -999,9 +999,9 @@ def test_cli_query_module_rejects_non_query_modes(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     family_path = tmp_path / "family.pl"
-    family_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+    family_path.write_text("parent(homer, bart).\n", encoding="utf-8", newline="")
     app_path = tmp_path / "app.pl"
-    app_path.write_text(":- module(app, []).\n", encoding="utf-8")
+    app_path.write_text(":- module(app, []).\n", encoding="utf-8", newline="")
 
     status = main([
         str(app_path),
@@ -1022,7 +1022,7 @@ def test_cli_query_module_rejects_non_project_inputs(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     source_path = tmp_path / "family.pl"
-    source_path.write_text("parent(homer, bart).\n", encoding="utf-8")
+    source_path.write_text("parent(homer, bart).\n", encoding="utf-8", newline="")
 
     status = main([
         str(source_path),
