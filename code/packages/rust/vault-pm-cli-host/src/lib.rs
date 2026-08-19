@@ -576,7 +576,7 @@ impl ControllingTerminal {
 /// have left an unwiped copy behind — is the correct trade for a security
 /// invariant like this one.
 fn escaped_revealed_text(value: &str) -> Zeroizing<String> {
-    let capacity = 2 + value.len().saturating_mul(6);
+    let capacity = value.len().saturating_mul(6).saturating_add(2);
     let mut out = Zeroizing::new(String::with_capacity(capacity));
     // `core::fmt::Write for String` never returns `Err` — the only error
     // the trait can report is a formatter failure, and none of `Debug`'s
@@ -1210,7 +1210,7 @@ mod tests {
         // including the empty string.
         for len in [0_usize, 1, 8, 32, 256, 4096] {
             let value = "s".repeat(len);
-            let expected_capacity = 2 + value.len().saturating_mul(6);
+            let expected_capacity = value.len().saturating_mul(6).saturating_add(2);
             let escaped = escaped_revealed_text(&value);
             assert_eq!(
                 escaped.capacity(),
@@ -1224,7 +1224,7 @@ mod tests {
         // for, so this exercises the bound at its tightest.
         for len in [0_usize, 1, 8, 64, 512] {
             let value = "\u{7f}".repeat(len);
-            let expected_capacity = 2 + value.len().saturating_mul(6);
+            let expected_capacity = value.len().saturating_mul(6).saturating_add(2);
             let escaped = escaped_revealed_text(&value);
             assert_eq!(
                 escaped.capacity(),
@@ -1236,7 +1236,7 @@ mod tests {
         // A realistic mixed secret: printable characters, a couple of the
         // 2-byte named escapes, and one of the widest per-byte cases.
         let value = format!("correct-horse-battery-staple-{}\n\"\u{1b}", "x".repeat(97));
-        let expected_capacity = 2 + value.len().saturating_mul(6);
+        let expected_capacity = value.len().saturating_mul(6).saturating_add(2);
         let escaped = escaped_revealed_text(&value);
         assert_eq!(
             escaped.capacity(),
