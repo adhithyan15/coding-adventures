@@ -131,6 +131,15 @@
       "details": "build(windows-latest) failed with 6 package failures: python/ir-to-jvm-class-file (issue #12178, deliberately not fixed), rust/embeddable-tcp-server + rust/irc-net-reactor (known pre-existing Windows network-stack limitations, out of scope), and 3 NEW fixable gaps -- python/brainfuck-iir-compiler and python/twig-jit-wasm had no BUILD_windows at all (fell back to running BUILD verbatim under cmd.exe, hitting the forward-slash '.venv/bin/python' misparse), and python/macsyma-runtime's BUILD_windows existed but was stale -- missing 4 deps present in BUILD (cas-mnewton, cas-laplace, cas-fourier, cas-ode), causing pip to try to resolve coding-adventures-cas-fourier from PyPI instead of the local editable path. Fixed all 3: created BUILD_windows for brainfuck-iir-compiler and twig-jit-wasm (translating .venv/bin/python -> .venv\\Scripts\\python per the known forward-slash gotcha), and synced macsyma-runtime's BUILD_windows dep list to match BUILD. Verified all 3 locally: macsyma-runtime (499 tests, 91.06% coverage), twig-jit-wasm (23 tests, 100% coverage), brainfuck-iir-compiler (74 tests, 96.82% coverage) -- all pass with the fixed BUILD_windows install commands. Confirms the windows-build-affected-set-cascade pattern (see the PR's own commit history/notes) is still producing new-but-mechanical instances of the same 2 known root causes (missing BUILD_windows, stale/out-of-sync deps) even this late in the cascade.",
       "status": "fixed",
       "next_action": "none -- fixed and pushed as part of PR #12162 round 7. If build(windows-latest) still fails after this push, keep applying the same triage: known issues (#12178, the 2 rust network tests) vs new mechanical BUILD_windows gaps."
+    },
+    {
+      "id": "ir-to-jvm-class-file-windows-symlink-safety",
+      "title": "write_class_file()'s POSIX-only dir_fd/O_DIRECTORY symlink-attack prevention has no Windows equivalent",
+      "found_during": "PR #12162 (issue #12152 fix), round 4 -- windows-build-affected-set-cascade pulled this package in for the first time",
+      "severity": "medium -- currently just a Windows test failure (build-blocking), but the underlying gap is a real one: this package's symlink-attack hardening simply doesn't exist on Windows at all right now",
+      "status": "issue-filed",
+      "github_issue": 12178,
+      "next_action": "Needs a real design decision (different Windows-safe traversal strategy, or an explicit documented reduced guarantee on Windows) from whoever owns this package -- deliberately not attempted as a quick fix in PR #12162 since a wrong one could reintroduce the exact symlink attack the original code prevents."
     }
   ],
   "last_updated_by": "autonomous loop, issue #1611"
