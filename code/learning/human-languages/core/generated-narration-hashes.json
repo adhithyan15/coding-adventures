@@ -7751,7 +7751,7 @@
     {
       "language": "russian",
       "chapter": 2,
-      "sourceHash": "fnv1a64:8253ed9209494389",
+      "sourceHash": "fnv1a64:274b74af14be125a",
       "lessonIds": [
         "RU-C02-ya",
         "RU-C02-ty-vy",
@@ -7759,8 +7759,8 @@
         "RU-C02-menya-zovut",
         "RU-C02-kak-vas-zovut",
         "RU-C02-kak-cross-language",
-        "RU-C02-practice",
         "RU-C02-ochen-priyatno",
+        "RU-C02-practice",
         "RU-C02-practice-cases",
         "RU-C02-practice-zero-copula"
       ],
@@ -7768,8 +7768,8 @@
       "drivablePrefix": 8,
       "text": "russian/narration/ch02.txt",
       "json": "russian/narration/ch02.json",
-      "textHash": "fnv1a64:231b0451122c8000",
-      "jsonHash": "fnv1a64:9f7f1b7a28c4494c"
+      "textHash": "fnv1a64:5b93b72e8cb06ba3",
+      "jsonHash": "fnv1a64:0b2639456d045ced"
     },
     {
       "language": "russian",

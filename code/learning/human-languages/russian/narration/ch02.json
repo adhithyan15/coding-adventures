@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:8253ed9209494389",
+  "sourceHash": "fnv1a64:274b74af14be125a",
   "lessons": [
     {
       "id": "RU-C02-ya",
@@ -912,6 +912,164 @@
       ]
     },
     {
+      "id": "RU-C02-ochen-priyatno",
+      "sequence": 125,
+      "title": "очень приятно (óchen priyátno) — \"pleased to meet you\"",
+      "headword": "очень приятно",
+      "romanization": "óchen priyátno",
+      "gloss": "pleased to meet you — literally 'very pleasant', and a cousin of English FRIEND",
+      "script": "cyrillic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9074012a8cf85eb7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The reply that closes an introduction — and the best etymology in the chapter."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Очень приятно. — Óchen priyátno. — \"Pleased to meet you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Literally: \"very pleasant.\""
+            },
+            {
+              "kind": "speech",
+              "text": "очень — ochen — very. приятно — priyatno — pleasant, agreeable."
+            },
+            {
+              "kind": "speech",
+              "text": "There is no \"to meet you\" and no \"I am.\" Russian states the quality of the moment and leaves the rest understood — the same economy as меня зовут, which left out \"my\" and \"name.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Both ч (ch) and я (ya) are letters the writing track hasn't reached. Read them; you'll draw them later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "приятно, taken apart — and its cousin \"friend\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Приятно comes from Slavic prijati, \"to favour, to be well-disposed toward\" — which gives Russian приятель (priyátel'), a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "That root goes back to PIE preyH-, \"to love, to please.\" And it went into Germanic too:"
+            },
+            {
+              "kind": "speech",
+              "text": "Russian приятно, pleasant, and приятель, a friend."
+            },
+            {
+              "kind": "speech",
+              "text": "English friend — literally \"one who is loving,\" an old participle of a verb meaning to love."
+            },
+            {
+              "kind": "speech",
+              "text": "German Freund."
+            },
+            {
+              "kind": "speech",
+              "text": "So приятно and friend are the same root, arriving from opposite ends of Europe."
+            },
+            {
+              "kind": "speech",
+              "text": "Free almost certainly belongs to the family too. The usual account: the word first meant \"belonging to the beloved household\" — the members of a family as opposed to the slaves in it — and only later meant \"not in bondage.\" Free and friend start in the same place."
+            },
+            {
+              "kind": "speech",
+              "text": "Saying очень приятно (óchen priyátno) is, at the root, calling the meeting friendly."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Очень приятно\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Очень приятно\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the whole exchange — \"Как вас зовут?\", \"Меня зовут…\", \"Очень приятно\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the whole exchange — \"Как вас зовут?\" · \"Меня зовут…\" · \"Очень приятно\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the family — \"приятно … приятель … friend\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the family — \"**прия**тно … **прия**тель … **friend**\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say \"pleased to meet you.\" (Очень приятно.) What does it literally mean? (\"Very pleasant\" — no \"I am,\" no \"to meet you.\") What is приятно related to? (Slavic prijati \"to favour\" becomes приятель \"friend\" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally \"belonging to the beloved household,\" i.e. not a slave.) Next: putting the chapter together."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "RU-C02-practice",
       "sequence": 130,
       "title": "Chapter 2 practice — run the exchange",
@@ -1081,166 +1239,8 @@
       ]
     },
     {
-      "id": "RU-C02-ochen-priyatno",
-      "sequence": null,
-      "title": "очень приятно (óchen priyátno) — \"pleased to meet you\"",
-      "headword": "очень приятно",
-      "romanization": "óchen priyátno",
-      "gloss": "pleased to meet you — literally 'very pleasant', and a cousin of English FRIEND",
-      "script": "cyrillic",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:97f4b12fe17053b5",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The reply that closes an introduction — and the best etymology in the chapter."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Очень приятно. — Óchen priyátno. — \"Pleased to meet you.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Literally: \"very pleasant.\""
-            },
-            {
-              "kind": "speech",
-              "text": "очень — ochen — very. приятно — priyatno — pleasant, agreeable."
-            },
-            {
-              "kind": "speech",
-              "text": "There is no \"to meet you\" and no \"I am.\" Russian states the quality of the moment and leaves the rest understood — the same economy as меня зовут, which left out \"my\" and \"name.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Both ч (ch) and я (ya) are letters the writing track hasn't reached. Read them; you'll draw them later."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "приятно is related to \"friend\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Приятно comes from Slavic prijati, \"to favour, to be well-disposed toward\" — which gives Russian приятель (priyátel'), a friend."
-            },
-            {
-              "kind": "speech",
-              "text": "That root goes back to PIE preyH-, \"to love, to please.\" And it went into Germanic too:"
-            },
-            {
-              "kind": "speech",
-              "text": "Russian приятно, pleasant, and приятель, a friend."
-            },
-            {
-              "kind": "speech",
-              "text": "English friend — literally \"one who is loving,\" an old participle of a verb meaning to love."
-            },
-            {
-              "kind": "speech",
-              "text": "German Freund."
-            },
-            {
-              "kind": "speech",
-              "text": "So приятно and friend are the same root, arriving from opposite ends of Europe."
-            },
-            {
-              "kind": "speech",
-              "text": "Free almost certainly belongs to the family too. The usual account: the word first meant \"belonging to the beloved household\" — the members of a family as opposed to the slaves in it — and only later meant \"not in bondage.\" Free and friend start in the same place."
-            },
-            {
-              "kind": "speech",
-              "text": "Saying очень приятно (óchen priyátno) is, at the root, calling the meeting friendly."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Очень приятно\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Очень приятно\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the whole exchange — \"Как вас зовут?\", \"Меня зовут…\", \"Очень приятно\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the whole exchange — \"Как вас зовут?\" · \"Меня зовут…\" · \"Очень приятно\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the family — \"приятно … приятель … friend\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the family — \"**прия**тно … **прия**тель … **friend**\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Say \"pleased to meet you.\" (Очень приятно.) What does it literally mean? (\"Very pleasant\" — no \"I am,\" no \"to meet you.\") What is приятно related to? (Slavic prijati \"to favour\" becomes приятель \"friend\" — and, from the same PIE root preyH-, English friend and German Freund.) And free? (Most likely the same family — originally \"belonging to the beloved household,\" i.e. not a slave.) Next: putting the chapter together."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "RU-C02-practice-cases",
-      "sequence": null,
+      "sequence": 132,
       "title": "Chapter 2 practice — the two person shapes",
       "headword": "Chapter 2 practice: person shapes",
       "romanization": "",
@@ -1251,7 +1251,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ee5e553eef015dca",
+      "sourceHash": "fnv1a64:c7ef7209c92b3fe2",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1280,8 +1280,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Cover and retrieve",
+          "type": "grammar",
+          "title": "Grammar lens — cover and retrieve",
           "segments": [
             {
               "kind": "speech",
@@ -1310,8 +1310,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Put each shape in the frame",
+          "type": "guided-production",
+          "title": "How to answer — each shape in the frame",
           "segments": [
             {
               "kind": "speech",
@@ -1401,7 +1401,7 @@
     },
     {
       "id": "RU-C02-practice-zero-copula",
-      "sequence": null,
+      "sequence": 134,
       "title": "Chapter 2 practice — what Russian leaves out",
       "headword": "Chapter 2 practice: what Russian leaves out",
       "romanization": "",
@@ -1412,7 +1412,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:97d645e1b389a3a3",
+      "sourceHash": "fnv1a64:30eca8ce373c454a",
       "notice": null,
       "blocks": [
         {
@@ -1434,8 +1434,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Three phrases, three English expansions",
+          "type": "grammar",
+          "title": "Grammar lens — three phrases, three English expansions",
           "segments": [
             {
               "kind": "speech",
