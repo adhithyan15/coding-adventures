@@ -471,12 +471,16 @@ impl HostReconcileOutcome {
 
     /// Return the durable status after the tick.
     ///
-    /// This is the stored status in every case, including a
-    /// [`ReconcileAction::Failed`] one. A failure does not mean nothing was
-    /// written: a start that fails has already claimed its transition and then
-    /// recorded the crash, so two writes happened before the error surfaced.
-    /// Reporting the pre-tick status here would contradict the record for
-    /// exactly the hosts an operator is looking at.
+    /// For a [`ReconcileAction::Failed`] outcome this is still the stored
+    /// status, not the status from before the tick. A failure does not mean
+    /// nothing was written: a start that fails has already claimed its
+    /// transition and then recorded the crash, so two writes happened before
+    /// the error surfaced, and reporting the earlier status would contradict
+    /// the record for exactly the hosts an operator is looking at.
+    ///
+    /// One exception, and it is the fallback rather than the rule: if the
+    /// re-read needed to establish that status itself fails, this is the
+    /// pre-tick status, because there is nothing better to say.
     pub fn status(&self) -> &HostStatus {
         &self.status
     }
@@ -607,20 +611,31 @@ impl<'a> ServiceReconciler<'a> {
             match self.reconcile_one(supervisor, host, now_ns) {
                 Ok(outcome) => outcomes.push(outcome),
                 Err(error) => {
-                    // Re-read rather than reporting the pre-tick status. A
-                    // failed start has already written its claim and then its
-                    // crash record, so the status this host had when the walk
-                    // reached it is not the status it has now. If the re-read
-                    // also fails there is nothing better to say than what we
-                    // came in with.
-                    let status = self
-                        .registry
-                        .load(&host_name)
-                        .ok()
-                        .flatten()
-                        .map_or(status, |reloaded| {
-                            reloaded.entry().observation().status().clone()
-                        });
+                    // Re-read only when a write could have landed. A failed
+                    // start has already written its claim and then its crash
+                    // record, so the status this host had when the walk reached
+                    // it is not the status it has now.
+                    //
+                    // Not on every failure, though. `load` re-initialises the
+                    // backend, which for the filesystem backend the daemon
+                    // actually uses means reading every record under the state
+                    // directory -- around half a second on an 8 MB one. A
+                    // failing `inspect` writes nothing and costs an attacker
+                    // nothing, so re-reading there would let one host buy a
+                    // full state-directory scan every tick, and this walk is
+                    // serial across all hosts. For the paths that write
+                    // nothing, the status we came in with is already exact.
+                    let status = if wrote_before_failing(&error) {
+                        self.registry
+                            .load(&host_name)
+                            .ok()
+                            .flatten()
+                            .map_or(status, |reloaded| {
+                                reloaded.entry().observation().status().clone()
+                            })
+                    } else {
+                        status
+                    };
                     outcomes.push(HostReconcileOutcome::failed(
                         host_name,
                         status,
@@ -1101,6 +1116,23 @@ fn deferred_status(observation: &HostObservation, boot_id: u64, now_ns: u64) -> 
         HostStatus::Running => HostStatus::Crashed { exit_code: None },
         _ => HostStatus::Stopped,
     }
+}
+
+/// Whether this failure could have left a durable write behind it.
+///
+/// A start or stop claims its transition before it calls the supervisor, so a
+/// supervisor failure on either means the record has already moved. Everything
+/// else fails before writing: an `inspect` failure never reaches a write, a
+/// future observation is rejected at validation, and a registry error *is* the
+/// write failing.
+fn wrote_before_failing<E>(error: &ReconcileError<E>) -> bool {
+    matches!(
+        error,
+        ReconcileError::Supervisor {
+            operation: SupervisorOperation::Start | SupervisorOperation::Stop,
+            ..
+        }
+    )
 }
 
 fn restart_after_exit(policy: RestartPolicy, exit_code: Option<i32>) -> bool {
@@ -2736,5 +2768,48 @@ mod tests {
             None,
             "the stale heartbeat belonged to a start that is over"
         );
+    }
+
+    /// Only a failed start or stop can have left a write behind it.
+    ///
+    /// This classification is a cost decision as much as a correctness one.
+    /// Re-reading calls `load`, which re-initialises the backend, which for the
+    /// filesystem backend means reading every record under the state directory.
+    /// A failing `inspect` costs an attacker nothing to trigger, so if it
+    /// re-read, one host could buy a full state-directory scan every tick --
+    /// and the walk is serial, so every other host waits for it.
+    ///
+    /// The cases that skip the re-read must genuinely write nothing, or the
+    /// outcome reports a status the record does not have.
+    #[test]
+    fn only_a_failed_start_or_stop_can_have_written() {
+        let host_name = HostName::new("mail-host").unwrap();
+        let supervisor = |operation| ReconcileError::<&str>::Supervisor {
+            host_name: host_name.clone(),
+            operation,
+            source: "boom",
+        };
+
+        // A start and a stop both claim their transition before calling the
+        // supervisor, so the record has already moved.
+        assert!(wrote_before_failing(&supervisor(
+            SupervisorOperation::Start
+        )));
+        assert!(wrote_before_failing(&supervisor(SupervisorOperation::Stop)));
+
+        // An inspect failure never reaches a write.
+        assert!(!wrote_before_failing(&supervisor(
+            SupervisorOperation::Inspect
+        )));
+        // A future observation is rejected at validation, before any write.
+        assert!(!wrote_before_failing(
+            &ReconcileError::<&str>::FutureObservation {
+                host_name: host_name.clone(),
+            }
+        ));
+        // A registry error *is* the write failing.
+        assert!(!wrote_before_failing(&ReconcileError::<&str>::Registry(
+            RegistryError::CorruptRecord("boom".to_string())
+        )));
     }
 }

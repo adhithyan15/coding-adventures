@@ -36,3 +36,7 @@
 - Drop a carried-forward heartbeat when the live instance reports a later start.
   The pair is rejected at construction, and nothing durable changed on the
   failing tick, so the host was wedged for good.
+- Re-read only after a failed start or stop, the two paths that can have
+  written. `load` re-initialises the backend, so re-reading on a failing
+  `inspect` -- which writes nothing and costs an attacker nothing to trigger --
+  let one host buy a full state-directory scan per tick. See #12139.
