@@ -69,6 +69,10 @@ use coding_adventures_vault_pm_password_policy::{
     generate_password, CharacterClassesV1, PasswordPolicyError, PasswordPolicyV1,
     DEFAULT_PASSWORD_LENGTH,
 };
+use coding_adventures_vault_pm_storage::ReplicaSetObjectStore;
+use coding_adventures_vault_pm_storage_removable::{
+    copy_object_tree, scan_object_root, CopyError, SyncInterferenceKind,
+};
 use coding_adventures_vault_pm_storage_storage_core::StorageCoreObjectStore;
 use coding_adventures_vault_records::{
     AnyRecord, ApiKey, Card, DatabaseCredential, Login, SecureNote, TotpSeed, API_KEY_V1, CARD_V1,
@@ -106,7 +110,7 @@ const MAX_EXTERNAL_IMPORT_SOURCE_BYTES: usize = 16 * 1024 * 1024;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n  vault-pm storage add filesystem NAME PATH\n  vault-pm storage add removable NAME PATH\n  vault-pm storage list\n  vault-pm storage check NAME\n  vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -1029,6 +1033,38 @@ enum Command {
         item_id: ItemId,
         base_revision: RevisionId,
     },
+    /// Register a new named storage location (VLT-PM00 §23 item 14).
+    ///
+    /// Does not open or touch any vault -- it only adds one `[storage.NAME]`
+    /// declaration to configuration, exactly like `vault create` adds one
+    /// vault. `gdrive`/`webdav`/`s3` still parse -- the closed-grammar
+    /// principle VLT-PM49 §8 used for `import kdbx` -- but always fail
+    /// closed with the `unsupported` exit class before touching
+    /// configuration, because Phase 1B implements only the local-directory
+    /// kinds (`filesystem`, `removable`).
+    StorageAdd {
+        name: ConfigName,
+        kind: StorageKind,
+        path: PathBuf,
+    },
+    /// List every configured named storage location.
+    StorageList,
+    /// Report one named storage location's reachability and, for a
+    /// local-directory kind, its third-party sync-interference scan
+    /// (VLT-PM00 §12, §23 item 14) and any replica health it owns as a
+    /// vault's configured mirror (§19.2).
+    StorageCheck {
+        name: ConfigName,
+    },
+    /// Copy one storage's committed objects to another, then either switch
+    /// the selected vault's primary storage to it or, with `--mirror`, add
+    /// it as a replica alongside the existing primary (VLT-PM00 §19.1,
+    /// §19.2, §23 item 14).
+    StorageMigrate {
+        source: ConfigName,
+        target: ConfigName,
+        mirror: bool,
+    },
     Help,
 }
 
@@ -1150,6 +1186,7 @@ where
         "attachment" => parse_attachment(tail),
         "history" => parse_history(tail),
         "conflict" => parse_conflict(tail),
+        "storage" => parse_storage(tail),
         _ => Err(CliFailure::InvalidCommand),
     }?;
     // A `--vault` selector names a target for the command to operate on.
@@ -1158,9 +1195,14 @@ where
     // all, and the three agent *lifecycle* verbs act on the agent process
     // itself rather than one vault (VLT-PM48 §6) — `agent unlock` and `agent
     // lock` are the ones that do take a selector, matching every other
-    // authenticated command. For the six listed here the selector would be a
-    // statement with no referent, and accepting it silently would let a
-    // person believe they had aimed a command that was never aimable.
+    // authenticated command. `storage add`/`storage list`/`storage check`
+    // (VLT-PM00 §23 item 14) join the same list for the same reason: they
+    // read or extend configuration itself, not any one vault's contents —
+    // `storage migrate` is the one storage verb that *does* take a selector,
+    // because it names which vault's `local_store`/`remote_stores` to
+    // rewrite. For the nine listed here the selector would be a statement
+    // with no referent, and accepting it silently would let a person believe
+    // they had aimed a command that was never aimable.
     if selected_vault.is_some()
         && matches!(
             &command,
@@ -1172,6 +1214,9 @@ where
                 | Command::AgentStart
                 | Command::AgentStop
                 | Command::AgentRunForeground
+                | Command::StorageAdd { .. }
+                | Command::StorageList
+                | Command::StorageCheck { .. }
         )
     {
         return Err(CliFailure::InvalidCommand);
@@ -1236,6 +1281,41 @@ fn parse_vault(arguments: &[String]) -> Result<Command, CliFailure> {
         [action, name] if action == "create" => Ok(Command::VaultCreate {
             vault: ConfigName::new(name.clone()).map_err(|_| CliFailure::InvalidCommand)?,
         }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+/// Parse the `storage` verb (VLT-PM00 §23 item 14).
+///
+/// `storage add` takes a location `PATH` as a required fourth argument. §14.4
+/// originally wrote the surface without one; a location cannot be defaulted
+/// the way `init`'s two default names can; the same divergence VLT-PM47 §2.1
+/// recorded for `attachment export`'s destination applies here.
+fn parse_storage(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, kind, name, path] if action == "add" && !name.is_empty() && !path.is_empty() => {
+            Ok(Command::StorageAdd {
+                kind: StorageKind::parse(kind).map_err(|_| CliFailure::InvalidCommand)?,
+                name: ConfigName::new(name.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+                path: PathBuf::from(path),
+            })
+        }
+        [action] if action == "list" => Ok(Command::StorageList),
+        [action, name] if action == "check" => Ok(Command::StorageCheck {
+            name: ConfigName::new(name.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
+        [action, source, target] if action == "migrate" => Ok(Command::StorageMigrate {
+            source: ConfigName::new(source.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+            target: ConfigName::new(target.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+            mirror: false,
+        }),
+        [action, source, target, flag] if action == "migrate" && flag == "--mirror" => {
+            Ok(Command::StorageMigrate {
+                source: ConfigName::new(source.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+                target: ConfigName::new(target.clone()).map_err(|_| CliFailure::InvalidCommand)?,
+                mirror: true,
+            })
+        }
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -2062,6 +2142,14 @@ fn dispatch(
             item_id,
             base_revision,
         } => conflict_merge_opaque(host, paths, writer, selected_vault, item_id, base_revision),
+        Command::StorageAdd { name, kind, path } => storage_add(writer, name, kind, path),
+        Command::StorageList => storage_list(writer),
+        Command::StorageCheck { name } => storage_check(writer, name),
+        Command::StorageMigrate {
+            source,
+            target,
+            mirror,
+        } => storage_migrate(host, paths, writer, selected_vault, source, target, mirror),
         Command::Help
         | Command::Shell
         | Command::PasswordGenerate { .. }
@@ -5685,8 +5773,25 @@ fn decode_config(exact: &[u8]) -> Result<VaultPmConfigV1, CliFailure> {
     parse_config(text).map_err(|_| CliFailure::Integrity)
 }
 
+/// Resolve and validate one configured vault's storage.
+///
+/// Before `storage add`/`storage migrate` (§23 item 14) existed, a vault's
+/// `local_store` could only ever be one of the two paths this composition
+/// root itself created (`paths.object_root()` or its per-target-vault
+/// subdirectory), so this function used to check the location string against
+/// exactly those two values. That restriction is gone: any storage entry of
+/// a local-directory kind (`filesystem` or `removable`, VLT-PM00 §12) is now
+/// a legitimate `local_store`, because a person can register one at an
+/// arbitrary path with `storage add` and switch to it with `storage
+/// migrate`. Cloud kinds remain `Unsupported` — Phase 2's job.
+///
+/// `remote_stores` (VLT-PM07's replica list) is no longer rejected outright
+/// either: every named remote must itself resolve to a local-directory-kind
+/// storage entry with no credential, exactly like the primary. A cloud
+/// mirror is `Unsupported` in Phase 1B for the same reason a cloud primary
+/// is.
 fn configured_vault<'a>(
-    paths: &LocalVaultPaths,
+    _paths: &LocalVaultPaths,
     config: &'a VaultPmConfigV1,
     selected_vault: Option<&ConfigName>,
 ) -> Result<&'a VaultConfigV1, CliFailure> {
@@ -5697,9 +5802,6 @@ fn configured_vault<'a>(
             CliFailure::Integrity
         }
     })?;
-    if !vault.remote_stores().is_empty() {
-        return Err(CliFailure::Unsupported);
-    }
     let storage = config
         .storage()
         .get(vault.local_store())
@@ -5710,24 +5812,25 @@ fn configured_vault<'a>(
                 .storage()
                 .get(candidate.local_store())
                 .is_some_and(|candidate_storage| {
-                    candidate_storage.kind() == StorageKind::Filesystem
+                    candidate_storage.kind().is_local_directory()
                         && candidate_storage.location() == storage.location()
                 })
     }) {
         return Err(CliFailure::Unsupported);
     }
-    let root_location = paths
-        .object_root()
-        .to_str()
-        .ok_or(CliFailure::Unsupported)?;
-    let target_location = target_object_root(paths, vault.locator().as_bytes());
-    let target_location = target_location.to_str().ok_or(CliFailure::Unsupported)?;
-    if storage.kind() != StorageKind::Filesystem
-        || (storage.location().as_str() != root_location
-            && storage.location().as_str() != target_location)
-        || storage.credential_ref().as_str() != "none"
-    {
+    if !storage.kind().is_local_directory() || storage.credential_ref().as_str() != "none" {
         return Err(CliFailure::Unsupported);
+    }
+    for remote_name in vault.remote_stores() {
+        let remote_storage = config
+            .storage()
+            .get(remote_name)
+            .ok_or(CliFailure::Integrity)?;
+        if !remote_storage.kind().is_local_directory()
+            || remote_storage.credential_ref().as_str() != "none"
+        {
+            return Err(CliFailure::Unsupported);
+        }
     }
     Ok(vault)
 }
@@ -5740,21 +5843,355 @@ fn application_store(paths: &LocalVaultPaths) -> StorageCoreApplicationStore<Loc
     StorageCoreApplicationStore::new(crash::backend(paths.application_state_root()))
 }
 
-fn repository_factory(
-    object_root: &Path,
-) -> V1ApplicationRepositoryFactory<StorageCoreObjectStore<LocalBackend>> {
-    V1ApplicationRepositoryFactory::new(StorageCoreObjectStore::new(crash::backend(object_root)))
+/// The concrete object store every repository in this composition root uses:
+/// one primary filesystem-family backend, plus zero or more best-effort
+/// mirror replicas (VLT-PM00 §11.5, §19.2, §23 item 14). With zero
+/// configured mirrors — every vault before `storage migrate --mirror` ever
+/// runs, and every vault today — [`ReplicaSetObjectStore::single`] is a
+/// transparent pass-through, so this rewiring changes no existing behavior.
+type LocalObjectStore = ReplicaSetObjectStore<StorageCoreObjectStore<LocalBackend>>;
+
+fn repository_factory(object_root: &Path) -> V1ApplicationRepositoryFactory<LocalObjectStore> {
+    V1ApplicationRepositoryFactory::new(ReplicaSetObjectStore::single(StorageCoreObjectStore::new(
+        crash::backend(object_root),
+    )))
 }
 
 fn configured_repository_factory(
     config: &VaultPmConfigV1,
     vault: &VaultConfigV1,
-) -> Result<V1ApplicationRepositoryFactory<StorageCoreObjectStore<LocalBackend>>, CliFailure> {
+) -> Result<V1ApplicationRepositoryFactory<LocalObjectStore>, CliFailure> {
     let storage = config
         .storage()
         .get(vault.local_store())
         .ok_or(CliFailure::Integrity)?;
-    Ok(repository_factory(Path::new(storage.location().as_str())))
+    let primary =
+        StorageCoreObjectStore::new(crash::backend(Path::new(storage.location().as_str())));
+    let mut mirrors = Vec::with_capacity(vault.remote_stores().len());
+    for remote_name in vault.remote_stores() {
+        let remote_storage = config
+            .storage()
+            .get(remote_name)
+            .ok_or(CliFailure::Integrity)?;
+        mirrors.push(StorageCoreObjectStore::new(crash::backend(Path::new(
+            remote_storage.location().as_str(),
+        ))));
+    }
+    Ok(V1ApplicationRepositoryFactory::new(
+        ReplicaSetObjectStore::new(primary, mirrors),
+    ))
+}
+
+/// Register one new named storage location (VLT-PM00 §23 item 14).
+///
+/// Touches only configuration -- it neither creates the target directory
+/// (the filesystem-family backend does that lazily, on first
+/// `initialize()`, exactly as it already does for the default storage `init`
+/// creates) nor opens any vault. `gdrive`/`webdav`/`s3` still parse and are
+/// rejected here with the `unsupported` exit class rather than at the
+/// grammar layer, the same closed-grammar answer VLT-PM49 §8 gave `import
+/// kdbx`: Phase 1B implements only the two local-directory kinds.
+fn storage_add(
+    writer: &LocalWriterGuard,
+    name: ConfigName,
+    kind: StorageKind,
+    path: PathBuf,
+) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    if !kind.is_local_directory() {
+        return Err(CliFailure::Unsupported);
+    }
+    if config.storage().contains_key(&name) {
+        return Err(CliFailure::Conflict);
+    }
+    let location = path.to_str().ok_or(CliFailure::Unsupported)?;
+    let storage_config = StorageConfigV1::new(
+        kind,
+        StorageLocation::new(location).map_err(|_| CliFailure::Unsupported)?,
+        CredentialRef::none(),
+    );
+    let mut storage = config.storage().clone();
+    storage.insert(name, storage_config);
+    let replacement = VaultPmConfigV1::new(
+        config.default_vault().clone(),
+        config.vaults().clone(),
+        storage,
+    )
+    .map_err(|_| CliFailure::Conflict)?;
+    let rendered = render_config(&replacement);
+    crash::around_config_replace(|| {
+        writer.compare_exchange_config(&exact_config, rendered.as_bytes())
+    })
+    .map_err(map_local_host)?;
+    Ok(CliOutput::success("Storage added.\n"))
+}
+
+/// List every configured named storage location, one per line as
+/// `NAME<TAB>KIND<TAB>LOCATION`, in deterministic name order.
+///
+/// The location is the operator's own configured value (a local path today),
+/// not attacker-controlled input, so unlike a scanned filename it is safe to
+/// echo back to them -- the same reasoning `item list` already applies to a
+/// person's own item titles.
+fn storage_list(writer: &LocalWriterGuard) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let mut output = String::new();
+    for (name, storage) in config.storage() {
+        output.push_str(name.as_str());
+        output.push('\t');
+        output.push_str(storage.kind().as_str());
+        output.push('\t');
+        output.push_str(storage.location().as_str());
+        output.push('\n');
+    }
+    Ok(CliOutput::success(output))
+}
+
+const INTERFERENCE_KINDS: [SyncInterferenceKind; 4] = [
+    SyncInterferenceKind::ConflictCopy,
+    SyncInterferenceKind::HiddenMetadata,
+    SyncInterferenceKind::PartialTransfer,
+    SyncInterferenceKind::Unknown,
+];
+
+fn interference_kind_label(kind: SyncInterferenceKind) -> &'static str {
+    match kind {
+        SyncInterferenceKind::ConflictCopy => "conflict_copy",
+        SyncInterferenceKind::HiddenMetadata => "hidden_metadata",
+        SyncInterferenceKind::PartialTransfer => "partial_transfer",
+        SyncInterferenceKind::Unknown => "unknown",
+    }
+}
+
+/// Report one named storage location's reachability, third-party
+/// sync-interference scan, and -- for any vault using it as a primary -- its
+/// configured mirrors' coarse health (VLT-PM00 §12, §19.2, §23 item 14).
+///
+/// A scanned filename never appears in the output (`vault-pm-storage-removable`'s
+/// own closed contract); only bounded counts by classification do.
+fn storage_check(writer: &LocalWriterGuard, name: ConfigName) -> Result<CliOutput, CliFailure> {
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let storage = config.storage().get(&name).ok_or(CliFailure::NotFound)?;
+    if !storage.kind().is_local_directory() {
+        return Ok(CliOutput {
+            exit_code: ExitCode::Unsupported,
+            stdout: format!("Storage {}: unsupported\n", name.as_str()),
+            stderr: String::new(),
+        });
+    }
+    let scan = scan_object_root(Path::new(storage.location().as_str()));
+    let (label, exit_code) = match &scan {
+        Ok(report) if report.is_clean() => ("healthy", ExitCode::Success),
+        Ok(_) => ("sync_interference_detected", ExitCode::Integrity),
+        Err(_) => ("unreachable", ExitCode::Provider),
+    };
+    let mut output = format!("Storage {}: {label}\n", name.as_str());
+    if let Ok(report) = &scan {
+        for kind in INTERFERENCE_KINDS {
+            let count = report.count_of(kind);
+            if count > 0 {
+                output.push_str(&format!("  {}: {count}\n", interference_kind_label(kind)));
+            }
+        }
+    }
+    output.push_str(&replica_health_lines(&config, &name));
+    Ok(CliOutput {
+        exit_code,
+        stdout: output,
+        stderr: String::new(),
+    })
+}
+
+/// Render one `  replica NAME: STATUS` line per configured mirror of every
+/// vault whose `local_store` is `primary_name`.
+///
+/// `STATUS` is a structural heuristic -- an object-file *count* comparison
+/// between the primary's and the mirror's own directory scan -- not a
+/// cryptographic guarantee. That is deliberately the whole of what this
+/// slice promises (VLT-PM00 §23 item 14's documented deferral): the richer
+/// `sync --wait` durability ceremony with a configurable `one`/`all`/quorum
+/// target is future work built on top of the write-time propagation and
+/// per-mirror `ReplicaHealth` this PR ships in `vault-pm-storage`.
+fn replica_health_lines(config: &VaultPmConfigV1, primary_name: &ConfigName) -> String {
+    let mut output = String::new();
+    let Some(primary_storage) = config.storage().get(primary_name) else {
+        return output;
+    };
+    let primary_objects = scan_object_root(Path::new(primary_storage.location().as_str()))
+        .ok()
+        .map(|report| report.ordinary_objects);
+    for vault in config.vaults().values() {
+        if vault.local_store() != primary_name {
+            continue;
+        }
+        for remote_name in vault.remote_stores() {
+            let status = replica_status(config, remote_name, primary_objects);
+            output.push_str(&format!("  replica {}: {status}\n", remote_name.as_str()));
+        }
+    }
+    output
+}
+
+fn replica_status(
+    config: &VaultPmConfigV1,
+    remote_name: &ConfigName,
+    primary_objects: Option<usize>,
+) -> String {
+    let Some(remote_storage) = config.storage().get(remote_name) else {
+        return "unconfigured".to_owned();
+    };
+    if !remote_storage.kind().is_local_directory() {
+        return "unsupported".to_owned();
+    }
+    match scan_object_root(Path::new(remote_storage.location().as_str())) {
+        Err(_) => "unreachable".to_owned(),
+        Ok(report) => match primary_objects {
+            Some(primary) if report.ordinary_objects < primary => {
+                format!(
+                    "behind_by_approximately_{}_objects",
+                    primary - report.ordinary_objects
+                )
+            }
+            _ => "in_sync".to_owned(),
+        },
+    }
+}
+
+fn map_copy_error(error: CopyError) -> CliFailure {
+    match error {
+        CopyError::SourceUnavailable | CopyError::TargetUnavailable | CopyError::IoFailed => {
+            CliFailure::Provider
+        }
+        CopyError::Conflict => CliFailure::Conflict,
+        CopyError::ObjectTooLarge | CopyError::TooManyEntries => CliFailure::Integrity,
+    }
+}
+
+/// `storage migrate SOURCE TARGET [--mirror]` (VLT-PM00 §19.1, §23 item 14).
+///
+/// Implements the filesystem-family slice of §19.1's seven steps: verifies
+/// and copies every committed object (`copy_object_tree`, itself steps 2-4),
+/// then proves the copy is real by independently unlocking `TARGET` under
+/// the freshly collected passphrase over a repository factory pointed *only*
+/// at `TARGET`'s objects (step 6) -- a wrong passphrase or a corrupt copy
+/// both fail this exact step, before configuration is ever touched. Only
+/// then does it switch `local_store` to `TARGET` (or, with `--mirror`, add
+/// `TARGET` to `remote_stores` and leave `local_store` unchanged) and persist
+/// that with the same compare-and-exchange every other configuration
+/// mutation in this composition root uses (step 7). `SOURCE` is never
+/// deleted or modified (step 8's default).
+///
+/// **Deferred**: the interactive confirmation prompt this step's "explicit
+/// confirmation" language could also describe is not a separate ceremony --
+/// successfully unlocking `TARGET` with the real passphrase *is* the
+/// confirmation, matching every other authenticated command in this grammar
+/// rather than inventing a second one.
+#[allow(clippy::too_many_arguments)]
+fn storage_migrate(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    source: ConfigName,
+    target: ConfigName,
+    mirror: bool,
+) -> Result<CliOutput, CliFailure> {
+    if source == target {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let exact_config = writer
+        .load_config()
+        .map_err(map_local_host)?
+        .ok_or(CliFailure::InvalidCommand)?;
+    let config = decode_config(&exact_config)?;
+    let vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let vault = configured_vault(paths, &config, Some(&vault_name))?;
+    if vault.local_store() != &source {
+        return Err(CliFailure::InvalidCommand);
+    }
+    let target_storage = config.storage().get(&target).ok_or(CliFailure::NotFound)?;
+    if !target_storage.kind().is_local_directory()
+        || target_storage.credential_ref().as_str() != "none"
+    {
+        return Err(CliFailure::Unsupported);
+    }
+    // `vault` (and therefore `source`) already passed `configured_vault`'s
+    // local-directory check above.
+    let source_storage = config.storage().get(&source).ok_or(CliFailure::Integrity)?;
+    let source_path = Path::new(source_storage.location().as_str());
+    let target_path = Path::new(target_storage.location().as_str());
+
+    copy_object_tree(source_path, target_path).map_err(map_copy_error)?;
+
+    let locator = application_locator(vault.locator());
+    let application_store = application_store(paths);
+    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let target_repository_factory = repository_factory(target_path);
+    let mut probe = VaultAccessV1::locked(locator);
+    probe
+        .unlock(
+            passphrase,
+            &application_store,
+            &application_store,
+            &target_repository_factory,
+        )
+        .map_err(map_application)?;
+    probe.lock();
+
+    let updated_vault = if mirror {
+        let mut remotes = vault.remote_stores().to_vec();
+        remotes.push(target.clone());
+        VaultConfigV1::new(
+            vault.locator(),
+            vault.local_store().clone(),
+            remotes,
+            vault.auto_lock_seconds(),
+            vault.clipboard_clear_seconds(),
+        )
+    } else {
+        VaultConfigV1::new(
+            vault.locator(),
+            target.clone(),
+            vault.remote_stores().to_vec(),
+            vault.auto_lock_seconds(),
+            vault.clipboard_clear_seconds(),
+        )
+    }
+    .map_err(|_| CliFailure::Conflict)?;
+
+    let mut vaults = config.vaults().clone();
+    vaults.insert(vault_name, updated_vault);
+    let replacement = VaultPmConfigV1::new(
+        config.default_vault().clone(),
+        vaults,
+        config.storage().clone(),
+    )
+    .map_err(|_| CliFailure::Internal)?;
+    let rendered = render_config(&replacement);
+    crash::around_config_replace(|| {
+        writer.compare_exchange_config(&exact_config, rendered.as_bytes())
+    })
+    .map_err(map_local_host)?;
+
+    Ok(CliOutput::success(if mirror {
+        "Storage mirrored.\n"
+    } else {
+        "Storage migrated.\n"
+    }))
 }
 
 fn target_object_root(paths: &LocalVaultPaths, locator: &[u8; 32]) -> PathBuf {
@@ -6014,6 +6451,14 @@ mod tests {
                 self.0.join("cache"),
             )
             .unwrap()
+        }
+
+        /// A fresh subdirectory path under this root, for a `storage add`
+        /// location distinct from the default vault layout. Not created --
+        /// the filesystem-family backend creates it lazily, exactly as it
+        /// does for the storage `init` itself creates.
+        fn child(&self, name: &str) -> PathBuf {
+            self.0.join(name)
         }
     }
 
@@ -13525,5 +13970,534 @@ mod tests {
         assert_eq!(rendered.len(), 64);
         assert!(rendered.starts_with("0a"));
         assert!(rendered.ends_with("b0"));
+    }
+
+    // -------------------------------------------------------------------
+    // VLT-PM00 §23 item 14: `storage add|list|check|migrate`.
+    // -------------------------------------------------------------------
+
+    /// Read and decode the durable client configuration directly, bypassing
+    /// the CLI grammar -- used by the tests below to assert on
+    /// `local_store`/`remote_stores` the way no `storage list` output alone
+    /// can, and to inject a cloud-kind storage entry `storage add` itself
+    /// refuses to create in this Phase 1B slice.
+    fn loaded_config(paths: &LocalVaultPaths) -> VaultPmConfigV1 {
+        let prepared = paths.prepare().unwrap();
+        let writer = prepared.try_acquire_writer().unwrap();
+        let exact = writer.load_config().unwrap().unwrap();
+        decode_config(&exact).unwrap()
+    }
+
+    #[test]
+    fn storage_grammar_parses_every_documented_shape_and_rejects_malformed_ones() {
+        assert_eq!(
+            parse(["storage", "add", "filesystem", "backup", "/tmp/x"]),
+            default_invocation(Command::StorageAdd {
+                kind: StorageKind::Filesystem,
+                name: ConfigName::new("backup").unwrap(),
+                path: PathBuf::from("/tmp/x"),
+            })
+        );
+        assert_eq!(
+            parse(["storage", "add", "removable", "usb", "/media/usb"]),
+            default_invocation(Command::StorageAdd {
+                kind: StorageKind::Removable,
+                name: ConfigName::new("usb").unwrap(),
+                path: PathBuf::from("/media/usb"),
+            })
+        );
+        assert_eq!(
+            parse(["storage", "add", "gdrive", "cloud", "appDataFolder"]),
+            default_invocation(Command::StorageAdd {
+                kind: StorageKind::GoogleDrive,
+                name: ConfigName::new("cloud").unwrap(),
+                path: PathBuf::from("appDataFolder"),
+            })
+        );
+        assert_eq!(
+            parse(["storage", "list"]),
+            default_invocation(Command::StorageList)
+        );
+        assert_eq!(
+            parse(["storage", "check", "local"]),
+            default_invocation(Command::StorageCheck {
+                name: ConfigName::new("local").unwrap(),
+            })
+        );
+        assert_eq!(
+            parse(["storage", "migrate", "local", "backup"]),
+            default_invocation(Command::StorageMigrate {
+                source: ConfigName::new("local").unwrap(),
+                target: ConfigName::new("backup").unwrap(),
+                mirror: false,
+            })
+        );
+        assert_eq!(
+            parse(["storage", "migrate", "local", "backup", "--mirror"]),
+            default_invocation(Command::StorageMigrate {
+                source: ConfigName::new("local").unwrap(),
+                target: ConfigName::new("backup").unwrap(),
+                mirror: true,
+            })
+        );
+        for arguments in [
+            vec!["storage"],
+            vec!["storage", "add"],
+            vec!["storage", "add", "filesystem"],
+            vec!["storage", "add", "filesystem", "name"],
+            vec!["storage", "add", "unknown-kind", "name", "/tmp/x"],
+            vec!["storage", "add", "filesystem", "bad.name", "/tmp/x"],
+            vec!["storage", "add", "filesystem", "name", ""],
+            vec!["storage", "list", "extra"],
+            vec!["storage", "check"],
+            vec!["storage", "check", "a", "b"],
+            vec!["storage", "migrate"],
+            vec!["storage", "migrate", "a"],
+            vec!["storage", "migrate", "a", "b", "--wrong-flag"],
+            vec!["storage", "migrate", "a", "b", "--mirror", "extra"],
+            vec!["storage", "bogus"],
+        ] {
+            assert_eq!(
+                parse(arguments.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{arguments:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn storage_add_list_and_check_refuse_a_vault_selector_but_migrate_accepts_one() {
+        for arguments in [
+            vec![
+                "--vault",
+                "work",
+                "storage",
+                "add",
+                "filesystem",
+                "n",
+                "/tmp/x",
+            ],
+            vec!["--vault", "work", "storage", "list"],
+            vec!["--vault", "work", "storage", "check", "local"],
+        ] {
+            assert_eq!(
+                parse(arguments.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{arguments:?}"
+            );
+        }
+        assert!(parse(["--vault", "work", "storage", "migrate", "local", "backup"]).is_ok());
+    }
+
+    #[test]
+    fn storage_add_registers_a_location_and_rejects_duplicates_and_cloud_kinds() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let mirror_path = root.child("backup-location");
+        let added = run(
+            [
+                "storage",
+                "add",
+                "filesystem",
+                "backup",
+                mirror_path.to_str().unwrap(),
+            ],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        assert_eq!(added.stdout(), "Storage added.\n");
+
+        let listed = run(["storage", "list"], &TestHost::new(paths.clone(), []));
+        assert_eq!(listed.exit_code(), ExitCode::Success);
+        assert!(listed.stdout().contains("backup\tfilesystem\t"));
+        assert!(listed.stdout().contains("local\tfilesystem\t"));
+
+        let duplicate = run(
+            [
+                "storage",
+                "add",
+                "filesystem",
+                "backup",
+                mirror_path.to_str().unwrap(),
+            ],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(duplicate.exit_code(), ExitCode::Conflict);
+
+        let cloud = run(
+            ["storage", "add", "gdrive", "cloud", "appDataFolder"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(cloud.exit_code(), ExitCode::Unsupported);
+        let after_cloud = run(["storage", "list"], &TestHost::new(paths.clone(), []));
+        assert!(!after_cloud.stdout().contains("cloud"));
+    }
+
+    #[test]
+    fn storage_check_reports_unreachable_healthy_sync_interference_and_unsupported() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let removable_path = root.child("removable-location");
+        assert_eq!(
+            run(
+                [
+                    "storage",
+                    "add",
+                    "removable",
+                    "usb",
+                    removable_path.to_str().unwrap(),
+                ],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        // Registered but not yet materialized on disk.
+        let missing = run(
+            ["storage", "check", "usb"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(missing.exit_code(), ExitCode::Provider);
+        assert_eq!(missing.stdout(), "Storage usb: unreachable\n");
+
+        fs::create_dir_all(&removable_path).unwrap();
+        let healthy = run(
+            ["storage", "check", "usb"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(healthy.exit_code(), ExitCode::Success);
+        assert_eq!(healthy.stdout(), "Storage usb: healthy\n");
+
+        // A Dropbox-style conflict copy sitting next to a real object.
+        let bucket_dir = removable_path.join("2121");
+        fs::create_dir_all(&bucket_dir).unwrap();
+        fs::write(bucket_dir.join("aabbcc"), b"object").unwrap();
+        fs::write(
+            bucket_dir.join("aabbcc (Jane's conflicted copy 2026-08-17)"),
+            b"object",
+        )
+        .unwrap();
+        let dirty = run(
+            ["storage", "check", "usb"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(dirty.exit_code(), ExitCode::Integrity);
+        assert!(dirty.stdout().contains("sync_interference_detected"));
+        assert!(dirty.stdout().contains("conflict_copy: 1"));
+        // The offending filename never appears in the report.
+        assert!(!dirty.stdout().contains("Jane"));
+
+        let missing_name = run(
+            ["storage", "check", "does-not-exist"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(missing_name.exit_code(), ExitCode::NotFound);
+
+        // Inject a cloud-kind entry directly -- `storage add` itself refuses
+        // to create one in this Phase 1B slice -- to exercise `storage
+        // check`'s Phase 2 branch.
+        {
+            let prepared = paths.prepare().unwrap();
+            let writer = prepared.try_acquire_writer().unwrap();
+            let exact = writer.load_config().unwrap().unwrap();
+            let config = decode_config(&exact).unwrap();
+            let mut storage = config.storage().clone();
+            storage.insert(
+                ConfigName::new("cloud").unwrap(),
+                StorageConfigV1::new(
+                    StorageKind::GoogleDrive,
+                    StorageLocation::new("appDataFolder").unwrap(),
+                    CredentialRef::new("token").unwrap(),
+                ),
+            );
+            let replacement = VaultPmConfigV1::new(
+                config.default_vault().clone(),
+                config.vaults().clone(),
+                storage,
+            )
+            .unwrap();
+            writer
+                .compare_exchange_config(&exact, render_config(&replacement).as_bytes())
+                .unwrap();
+        }
+        let cloud_check = run(
+            ["storage", "check", "cloud"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(cloud_check.exit_code(), ExitCode::Unsupported);
+    }
+
+    #[test]
+    fn storage_migrate_switches_primary_storage_and_leaves_source_untouched() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"secret note body".to_vec()],
+            ["Before migrate".to_owned()],
+        );
+        assert_eq!(
+            run(["item", "add", "secure-note"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+
+        let new_location = root.child("new-primary-location");
+        assert_eq!(
+            run(
+                [
+                    "storage",
+                    "add",
+                    "filesystem",
+                    "new",
+                    new_location.to_str().unwrap(),
+                ],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let source_location = loaded_config(&paths).storage()[&ConfigName::new("local").unwrap()]
+            .location()
+            .as_str()
+            .to_owned();
+        let source_entries_before = fs::read_dir(&source_location).unwrap().count();
+        assert!(source_entries_before > 0);
+
+        let migrated = run(
+            ["storage", "migrate", "local", "new"],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(migrated.exit_code(), ExitCode::Success, "{migrated:?}");
+        assert_eq!(migrated.stdout(), "Storage migrated.\n");
+
+        let config_after = loaded_config(&paths);
+        let vault = config_after.select_vault(None).unwrap();
+        assert_eq!(vault.local_store().as_str(), "new");
+        assert!(vault.remote_stores().is_empty());
+
+        // The item is still readable through the switched configuration.
+        let list_after = run(
+            ["item", "list"],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(list_after.exit_code(), ExitCode::Success, "{list_after:?}");
+        assert!(list_after.stdout().contains(SECURE_NOTE_V1));
+
+        // The source directory was never modified or deleted.
+        assert_eq!(
+            fs::read_dir(&source_location).unwrap().count(),
+            source_entries_before
+        );
+    }
+
+    #[test]
+    fn storage_migrate_mirror_adds_a_replica_and_future_writes_propagate_to_it() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let mirror_location = root.child("mirror-location");
+        assert_eq!(
+            run(
+                [
+                    "storage",
+                    "add",
+                    "filesystem",
+                    "mirror",
+                    mirror_location.to_str().unwrap(),
+                ],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let mirrored = run(
+            ["storage", "migrate", "local", "mirror", "--mirror"],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(mirrored.exit_code(), ExitCode::Success, "{mirrored:?}");
+        assert_eq!(mirrored.stdout(), "Storage mirrored.\n");
+
+        let config_after = loaded_config(&paths);
+        let vault = config_after.select_vault(None).unwrap();
+        assert_eq!(vault.local_store().as_str(), "local");
+        assert_eq!(vault.remote_stores().len(), 1);
+        assert_eq!(vault.remote_stores()[0].as_str(), "mirror");
+
+        // A write made *after* mirroring propagates to the replica through
+        // the ordinary authenticated path -- VLT-PM00 §19.2's write-time
+        // propagation, exercised end to end through the real CLI.
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [passphrase.clone(), b"mirrored note body".to_vec()],
+            ["After mirror".to_owned()],
+        );
+        assert_eq!(
+            run(["item", "add", "secure-note"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+
+        let mirror_scan = scan_object_root(&mirror_location).unwrap();
+        assert!(mirror_scan.ordinary_objects > 0);
+        assert!(mirror_scan.is_clean());
+
+        let check = run(
+            ["storage", "check", "local"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(check.exit_code(), ExitCode::Success, "{check:?}");
+        assert!(check.stdout().contains("replica mirror: in_sync"));
+    }
+
+    #[test]
+    fn storage_migrate_with_a_wrong_passphrase_copies_but_never_switches_config() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let new_location = root.child("new-primary-location");
+        assert_eq!(
+            run(
+                [
+                    "storage",
+                    "add",
+                    "filesystem",
+                    "new",
+                    new_location.to_str().unwrap(),
+                ],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let wrong_host = TestHost::new(paths.clone(), [b"totally the wrong passphrase".to_vec()]);
+        let migrated = run(["storage", "migrate", "local", "new"], &wrong_host);
+        assert_eq!(migrated.exit_code(), ExitCode::Locked, "{migrated:?}");
+
+        let config_after = loaded_config(&paths);
+        assert_eq!(
+            config_after
+                .select_vault(None)
+                .unwrap()
+                .local_store()
+                .as_str(),
+            "local"
+        );
+
+        // The verified-by-readback copy happened anyway -- retrying with the
+        // right passphrase does not have to redo it from scratch.
+        assert!(new_location.exists());
+        let retry = run(
+            ["storage", "migrate", "local", "new"],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(retry.exit_code(), ExitCode::Success, "{retry:?}");
+    }
+
+    #[test]
+    fn storage_migrate_rejects_matching_names_missing_targets_and_the_wrong_source() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        assert_eq!(
+            run(
+                ["storage", "migrate", "local", "local"],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::InvalidInput
+        );
+        assert_eq!(
+            run(
+                ["storage", "migrate", "local", "does-not-exist"],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::NotFound
+        );
+
+        let other_location = root.child("other-location");
+        assert_eq!(
+            run(
+                [
+                    "storage",
+                    "add",
+                    "filesystem",
+                    "other",
+                    other_location.to_str().unwrap(),
+                ],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+        // "other" is not this vault's current `local_store`.
+        assert_eq!(
+            run(
+                ["storage", "migrate", "other", "local"],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::InvalidInput
+        );
     }
 }

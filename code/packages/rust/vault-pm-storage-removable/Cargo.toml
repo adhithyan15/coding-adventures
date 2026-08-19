@@ -1,0 +1,7 @@
+[package]
+name = "coding_adventures_vault_pm_storage_removable"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM00 §12/§23 item 14: removable/synced-folder conflict-copy detection and byte-for-byte object-root migration copy"
+
+[dependencies]

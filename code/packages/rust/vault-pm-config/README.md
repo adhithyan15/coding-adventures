@@ -12,15 +12,18 @@ locator encodings. The renderer produces deterministic TOML with sorted table
 names, so a host adapter can persist and compare exact bytes.
 
 This package does not read paths, open files, resolve platform directories,
-load credentials, or instantiate a storage provider. Filesystem, Google Drive,
-WebDAV, and S3 are typed adapter selections; the opaque `path` string is
-interpreted only by the selected host adapter.
+load credentials, or instantiate a storage provider. Filesystem, removable,
+Google Drive, WebDAV, and S3 are typed adapter selections; the opaque `path`
+string is interpreted only by the selected host adapter. `removable` (VLT-PM00
+§12, §23 item 14) is a variant of `filesystem` sharing the identical on-disk
+object format — `StorageKind::is_local_directory` reports both as one group so
+a host adapter can route them to the same filesystem code path and reserve the
+distinction for `vault-pm-storage-removable`'s conflict-copy detection.
 
 Sensitive or identifying values use redacted `Debug` output, and all errors
-are stable and payload blind. Eighteen tests cover the closed schema,
+are stable and payload blind. Nineteen tests cover the closed schema,
 cross-references, canonical escaping, all supported storage kinds, bounds,
-malformed input, and redaction. Tarpaulin's LLVM engine measures 397 of 407
-production lines covered (97.54%).
+malformed input, and redaction.
 
 ## Verification
 
