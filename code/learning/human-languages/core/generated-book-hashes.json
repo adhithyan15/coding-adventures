@@ -350,6 +350,20 @@
     },
     {
       "language": "bengali",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:9234aa6ecbf0d14b",
+      "lessonIds": [
+        "BN-C01-nomoshkar",
+        "BN-C01-dhonnobad",
+        "BN-C01-hyan-na",
+        "BN-C01-achchha",
+        "BN-C01-ashi",
+        "BN-C01-practice"
+      ],
+      "tex": "bengali/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "bengali",
       "chapter": 6,
       "sourceHash": "fnv1a64:04fde9b62723721f",
       "lessonIds": [

@@ -4,22 +4,22 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fee72d60309a5ae8",
+  "sourceHash": "fnv1a64:7dc88c24276e2ef1",
   "lessons": [
     {
-      "id": "BN-C01-achchha",
-      "sequence": null,
-      "title": "আচ্ছা (āchchhā) — \"okay / I see\"",
-      "headword": "আচ্ছা",
+      "id": "BN-C01-nomoshkar",
+      "sequence": 10,
+      "title": "নমস্কার (nômoshkar) — \"hello\"",
+      "headword": "নমস্কার",
       "romanization": "",
-      "gloss": "okay / alright / I see (āchchhā)",
+      "gloss": "hello / goodbye (nômoshkar)",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:84972988a9ab9cfe",
+      "sourceHash": "fnv1a64:37ad9c0ce50424d5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "The little word that keeps every Bengali conversation moving."
+              "text": "The first Bengali word — and it hides the single sound-shift that makes Bengali Bengali."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "New: আ — the independent vowel ā, the shape a word uses when it starts with a vowel. (A built-in vowel rides a consonant; a standalone one gets its own letter.) Then the doubled চ্ছ (চ ch + ছ chh). Read আ, চ্ছা, ā-chchhā."
+              "text": "(If you already read Bengali, skim this.) Bengali runs left to right under a top line; every consonant carries a built-in vowel — but in Bengali that vowel is ô (an open \"o\"), not \"a.\" ন nô, ম mô, ক kô, র rô. A vowel sign changes it (া ā); a hasanta under স্ strips its vowel so it joins the next as a conjunct: স্ + ক becomes স্ক."
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আচ্ছা (āchchhā) is the all-purpose \"okay, alright, I see, go on\" — a true workhorse of spoken Bengali, from Sanskrit acchā (\"good, clear\"). It is the word a Bengali speaker peppers through speech the way an English speaker says \"right… right,\" a nod made audible."
+              "text": "নমস্কার is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
             }
           ]
         },
@@ -77,7 +77,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Note it opens with আ, a standalone vowel-letter — your first. This is the other half of how the script handles vowels: attached to a consonant they are little signs (া), but on their own they stand as full letters (আ). Same sound, two shapes, chosen by position."
+              "text": "Nômoshkar, palms together, is the everyday respectful greeting — hello and often goodbye — the broad, secular-to-Hindu default in Bengal. Bengali is the language of Tagore, the only tongue to have written the national anthem of two countries: India and Bangladesh."
             }
           ]
         },
@@ -95,20 +95,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — ā, chchhā",
+              "instruction": "read it — nô, mosh, kar",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — ā · chchhā]"
+              "source": "[YOU SAY: read it — nô · mosh · kar]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "why আ is written in full here (the word starts with a vowel)",
+              "instruction": "the two shifts that made namaskāra into nômoshkar (a becomes ô, s becomes sh)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: why আ is written in full here (the word starts with a vowel)]"
+              "source": "[YOU SAY: the two shifts that made *namaskāra* into *nômoshkar* (a→ô, s→sh)]"
             }
           ]
         },
@@ -125,132 +125,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does āchchhā do in conversation, and why is its first vowel a full letter, not a sign? (It means \"okay / I see / go on\"; a word-initial vowel takes its standalone form আ.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C01-ashi",
-      "sequence": null,
-      "title": "আসি (āshi) — \"I'll be going\" (goodbye)",
-      "headword": "আসি",
-      "romanization": "",
-      "gloss": "goodbye, lit. \"I'll come [again]\" (āshi)",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:6a2efd84816feecc",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Bengalis do not say \"I'm leaving.\" They say \"I'll come again.\" Here is why."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "New: স again — here truly \"sh\" — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি = আ + সি, ā-shi."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "আসি (āshi) literally means \"I come,\" from the verb āsā (\"to come,\" a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never \"I'm leaving\" (unlucky, too final) but \"I'll come [again]\": আসি, or the fuller āschhi (\"I am coming\"). It is the very same \"promise of return\" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "And notice: āshi is \"I come\" whether a man or a woman says it — Bengali marks no gender on the verb. That sets it apart from Marathi (yeto m. / yete f.) and, in this one respect, makes Bengali's verbs simpler than its neighbours'."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read it — ā, shi (remember স = \"sh\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read it — ā · shi (remember স = \"sh\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what āshi literally means and why it means goodbye (\"I come\" becomes \"I'll come again\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what *āshi* literally means and why it means goodbye (\"I come\" → \"I'll come again\")]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why does \"I come\" mean goodbye in Bengali, and what does Bengali not mark on this verb? (Saying \"I'll come again\" avoids the finality of \"leaving\"; no gender.)"
+              "text": "What Sanskrit word is nômoshkar, and what two Bengali sound-shifts disguise it? (Namaskāra, \"the making of a bow\"; the inherent a becomes ô and s becomes sh.)"
             }
           ]
         }
@@ -258,7 +133,7 @@
     },
     {
       "id": "BN-C01-dhonnobad",
-      "sequence": null,
+      "sequence": 20,
       "title": "ধন্যবাদ (dhônyobad) — \"thank you\"",
       "headword": "ধন্যবাদ",
       "romanization": "",
@@ -269,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:46d50e117712ba2c",
+      "sourceHash": "fnv1a64:9aa186b35b85d38c",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -383,7 +258,7 @@
     },
     {
       "id": "BN-C01-hyan-na",
-      "sequence": null,
+      "sequence": 30,
       "title": "হ্যাঁ / না (hyã / nā) — \"yes\" and \"no\"",
       "headword": "হ্যাঁ / না",
       "romanization": "",
@@ -394,7 +269,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d86583f11bfbb6a7",
+      "sourceHash": "fnv1a64:bf4a90a829fb912d",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -507,19 +382,19 @@
       ]
     },
     {
-      "id": "BN-C01-nomoshkar",
-      "sequence": null,
-      "title": "নমস্কার (nômoshkar) — \"hello\"",
-      "headword": "নমস্কার",
+      "id": "BN-C01-achchha",
+      "sequence": 40,
+      "title": "আচ্ছা (āchchhā) — \"okay / I see\"",
+      "headword": "আচ্ছা",
       "romanization": "",
-      "gloss": "hello / goodbye (nômoshkar)",
+      "gloss": "okay / alright / I see (āchchhā)",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:d1f13ec389f3ef0c",
+      "sourceHash": "fnv1a64:be623bf0a09d344b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -544,7 +419,7 @@
             },
             {
               "kind": "speech",
-              "text": "The first Bengali word — and it hides the single sound-shift that makes Bengali Bengali."
+              "text": "The little word that keeps every Bengali conversation moving."
             }
           ]
         },
@@ -555,7 +430,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Bengali, skim this.) Bengali runs left to right under a top line; every consonant carries a built-in vowel — but in Bengali that vowel is ô (an open \"o\"), not \"a.\" ন nô, ম mô, ক kô, র rô. A vowel sign changes it (া ā); a hasanta under স্ strips its vowel so it joins the next as a conjunct: স্ + ক becomes স্ক."
+              "text": "New: আ — the independent vowel ā, the shape a word uses when it starts with a vowel. (A built-in vowel rides a consonant; a standalone one gets its own letter.) Then the doubled চ্ছ (চ ch + ছ chh). Read আ, চ্ছা, ā-chchhā."
             }
           ]
         },
@@ -566,7 +441,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "নমস্কার is the same word as the Sanskrit namaskāra behind Hindi's and Marathi's greeting — namas (\"a bow\") + kāra (\"the making of\"). But hear what Bengali does: the inherent \"a\" becomes ô, and s shifts to sh, so written namaskāra is spoken nô, mosh, kar. That habit — a becomes ô, s becomes sh — is Bengali's fingerprint; once you hear it, you can un-shift almost any word back to its Sanskrit cousin."
+              "text": "আচ্ছা (āchchhā) is the all-purpose \"okay, alright, I see, go on\" — a true workhorse of spoken Bengali, from Sanskrit acchā (\"good, clear\"). It is the word a Bengali speaker peppers through speech the way an English speaker says \"right… right,\" a nod made audible."
             }
           ]
         },
@@ -577,7 +452,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Nômoshkar, palms together, is the everyday respectful greeting — hello and often goodbye — the broad, secular-to-Hindu default in Bengal. Bengali is the language of Tagore, the only tongue to have written the national anthem of two countries: India and Bangladesh."
+              "text": "Note it opens with আ, a standalone vowel-letter — your first. This is the other half of how the script handles vowels: attached to a consonant they are little signs (া), but on their own they stand as full letters (আ). Same sound, two shapes, chosen by position."
             }
           ]
         },
@@ -595,20 +470,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read it — nô, mosh, kar",
+              "instruction": "read it — ā, chchhā",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read it — nô · mosh · kar]"
+              "source": "[YOU SAY: read it — ā · chchhā]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two shifts that made namaskāra into nômoshkar (a becomes ô, s becomes sh)",
+              "instruction": "why আ is written in full here (the word starts with a vowel)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two shifts that made *namaskāra* into *nômoshkar* (a→ô, s→sh)]"
+              "source": "[YOU SAY: why আ is written in full here (the word starts with a vowel)]"
             }
           ]
         },
@@ -625,7 +500,132 @@
             },
             {
               "kind": "speech",
-              "text": "What Sanskrit word is nômoshkar, and what two Bengali sound-shifts disguise it? (Namaskāra, \"the making of a bow\"; the inherent a becomes ô and s becomes sh.)"
+              "text": "What does āchchhā do in conversation, and why is its first vowel a full letter, not a sign? (It means \"okay / I see / go on\"; a word-initial vowel takes its standalone form আ.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C01-ashi",
+      "sequence": 50,
+      "title": "আসি (āshi) — \"I'll be going\" (goodbye)",
+      "headword": "আসি",
+      "romanization": "",
+      "gloss": "goodbye, lit. \"I'll come [again]\" (āshi)",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:229c996df6c5e123",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Bengalis do not say \"I'm leaving.\" They say \"I'll come again.\" Here is why."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "New: স again — here truly \"sh\" — and the ি sign (i), which in Bengali is written before the consonant it follows but read after it. আসি = আ + সি, ā-shi."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আসি (āshi) literally means \"I come,\" from the verb āsā (\"to come,\" a Sanskrit root shared with Hindi ānā). Yet it is how Bengalis say goodbye — never \"I'm leaving\" (unlucky, too final) but \"I'll come [again]\": আসি, or the fuller āschhi (\"I am coming\"). It is the very same \"promise of return\" farewell Tamil and Marathi reach for — a whole culture's optimism folded into one verb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "And notice: āshi is \"I come\" whether a man or a woman says it — Bengali marks no gender on the verb. That sets it apart from Marathi (yeto m. / yete f.) and, in this one respect, makes Bengali's verbs simpler than its neighbours'."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read it — ā, shi (remember স = \"sh\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read it — ā · shi (remember স = \"sh\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what āshi literally means and why it means goodbye (\"I come\" becomes \"I'll come again\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *āshi* literally means and why it means goodbye (\"I come\" → \"I'll come again\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why does \"I come\" mean goodbye in Bengali, and what does Bengali not mark on this verb? (Saying \"I'll come again\" avoids the finality of \"leaving\"; no gender.)"
             }
           ]
         }
@@ -633,7 +633,7 @@
     },
     {
       "id": "BN-C01-practice",
-      "sequence": null,
+      "sequence": 60,
       "title": "Chapter 1 — Practice and Recall",
       "headword": "—",
       "romanization": "",
@@ -644,7 +644,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0c79554855f2825",
+      "sourceHash": "fnv1a64:eb0e3fe35ab662b1",
       "notice": null,
       "blocks": [
         {
@@ -666,8 +666,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Rapid recall",
+          "type": "guided-production",
+          "title": "How to answer — rapid recall",
           "segments": [
             {
               "kind": "pause",
@@ -724,8 +724,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The one habit",
+          "type": "grammar",
+          "title": "Grammar lens — the one habit",
           "segments": [
             {
               "kind": "pause",
@@ -768,8 +768,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",
