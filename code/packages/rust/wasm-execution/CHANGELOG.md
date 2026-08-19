@@ -2,6 +2,39 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.37] - 2026-08-19 (task #196-198 — SIMD widen PR27: narrow saturating family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms:
+  - `SimdOpKind::NarrowI16x8S | NarrowI16x8U` pops TWO `v128`s, reads
+    each as 8 `i16` lanes, saturates every lane to the `i8` range
+    (signed: `i8::MIN..=i8::MAX`; unsigned: `0..=u8::MAX`, negative
+    saturates to 0, does NOT wrap), and writes an `i8x16` result: the
+    FIRST operand's 8 saturated lanes become the LOW half (indices
+    0-7), the SECOND operand's 8 saturated lanes become the HIGH half
+    (indices 8-15). The saturating-demote OPPOSITE of the `ExtendLow/
+    HighI8x16S/U` arm (PR26): BINARY where extend is UNARY.
+  - `SimdOpKind::NarrowI32x4S | NarrowI32x4U` is the same pattern one
+    lane width up: 4 `i32` lanes per operand, saturated to the `i16`
+    range, LOW (0-3) / HIGH (4-7), `i16x8` result.
+- 6 new unit tests: two operand-ordering proofs (distinct in-range
+  values per operand, confirming FIRST operand -> LOW half, SECOND
+  operand -> HIGH half — the classic bug spot for this opcode family),
+  two SIGNED-saturation boundary tests (mirror-image operand arrays so
+  an ordering bug is ALSO caught), and two UNSIGNED-saturation tests
+  specifically confirming a negative source lane (`-1` is the sharpest
+  case) saturates to `0`, not a wrapped large-unsigned bit pattern
+  (`0xFF`/`0xFFFF`) — the classic gotcha for `narrow_u`.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** These 4 opcodes are the
+  second of a 3-PR sequence (`extend_low`/`high` done in PR26, `narrow`
+  here, `promote`/`demote`/`convert_low` in a future PR) needed to
+  unlock the upstream `simd_conversions.wast` corpus file. This PR is
+  opcode-only.
+
 ## [0.9.36] - 2026-08-19 (task #193-195 — SIMD widen PR26: extend_low/high family)
 
 ### Added

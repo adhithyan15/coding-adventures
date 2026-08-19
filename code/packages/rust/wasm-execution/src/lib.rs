@@ -5440,6 +5440,97 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::NarrowI16x8S | SimdOpKind::NarrowI16x8U => {
+                // i8x16.narrow_i16x8_s/_u (SIMD widen PR27): BINARY --
+                // pop TWO v128s, each read as 8 i16 lanes. Each i16 lane
+                // is SATURATED (not wrapped) down to one i8x16-lane byte:
+                // signed range `i8::MIN..=i8::MAX` for `_s`, unsigned
+                // range `0..=u8::MAX` for `_u` -- a negative lane
+                // saturates to 0 for `_u`, it does NOT wrap to a large
+                // unsigned byte via bit-reinterpretation (the classic bug
+                // for this family). The FIRST (bottom-of-stack) operand's
+                // 8 saturated lanes become the LOW half (indices 0-7) of
+                // the result; the SECOND (top-of-stack) operand's 8
+                // saturated lanes become the HIGH half (indices 8-15) --
+                // this operand-to-half ordering matches the WASM SIMD
+                // spec's own narrow pseudocode (`result[i] =
+                // Saturate(a[i])` for `i` in `0..N`, then `result[N+i] =
+                // Saturate(b[i])` for `i` in `0..N`), and is covered by
+                // an explicit operand-ordering unit test below. `.clamp`
+                // runs BEFORE the narrowing `as` cast, so the cast is
+                // always a value-preserving truncation of an
+                // already-in-range value -- never UB, never a silent
+                // wrap of an out-of-range value. This is the saturating-
+                // demote OPPOSITE of `ExtendLow/HighI8x16S/U` above (one
+                // v128 in -> two widened v128s out there; here, two
+                // v128s in -> one narrowed v128 out).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let lane16 = |b: &[u8; 16], i: usize| i16::from_le_bytes(b[i * 2..i * 2 + 2].try_into().unwrap());
+                let narrow = |v: i16| -> u8 {
+                    match op.kind {
+                        SimdOpKind::NarrowI16x8S => v.clamp(i8::MIN as i16, i8::MAX as i16) as i8 as u8,
+                        SimdOpKind::NarrowI16x8U => v.clamp(0, u8::MAX as i16) as u8,
+                        _ => unreachable!("only NarrowI16x8S/U reach this arm"),
+                    }
+                };
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    result[i] = narrow(lane16(&lhs, i));
+                    result[i + 8] = narrow(lane16(&rhs, i));
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::NarrowI32x4S | SimdOpKind::NarrowI32x4U => {
+                // i16x8.narrow_i32x4_s/_u (SIMD widen PR27): same BINARY
+                // saturate-then-concatenate shape as `NarrowI16x8S/U`
+                // above, one lane width up -- pop two v128s, each read as
+                // 4 i32 lanes, saturate each to `i16::MIN..=i16::MAX`
+                // (`_s`) or `0..=u16::MAX` (`_u`, negative saturates to
+                // 0, does not wrap), first operand's 4 saturated lanes ->
+                // LOW half (indices 0-3), second operand's 4 saturated
+                // lanes -> HIGH half (indices 4-7) of the i16x8 result.
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let lane32 = |b: &[u8; 16], i: usize| i32::from_le_bytes(b[i * 4..i * 4 + 4].try_into().unwrap());
+                let narrow = |v: i32| -> u16 {
+                    match op.kind {
+                        SimdOpKind::NarrowI32x4S => v.clamp(i16::MIN as i32, i16::MAX as i32) as i16 as u16,
+                        SimdOpKind::NarrowI32x4U => v.clamp(0, u16::MAX as i32) as u16,
+                        _ => unreachable!("only NarrowI32x4S/U reach this arm"),
+                    }
+                };
+
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    result[i * 2..i * 2 + 2].copy_from_slice(&narrow(lane32(&lhs, i)).to_le_bytes());
+                    result[8 + i * 2..8 + i * 2 + 2].copy_from_slice(&narrow(lane32(&rhs, i)).to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtmulLowI64x2S | SimdOpKind::ExtmulHighI64x2S | SimdOpKind::ExtmulLowI64x2U | SimdOpKind::ExtmulHighI64x2U => {
                 // i64x2.extmul_low/high_i32x4_s/u: reinterpret BOTH popped
                 // v128s as 4 i32 lanes each; take only the LOW (indices
@@ -10312,6 +10403,200 @@ mod tests {
         let mut high_u = simd_engine_returning_v128(code_for(0xAA)); // extend_high_i16x8_u
         let (_, high_u_bytes) = high_u.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes([32767; 4]).try_into().unwrap())), "extend_high_u(i16::MAX) must agree with signed since 32767 is positive");
+    }
+
+    /// `i8x16.narrow_i16x8_s`/`_u` (SIMD widen PR27): explicit
+    /// operand-ordering proof, mirroring the ordering proofs already used
+    /// for `extend_low`/`high` above -- distinct, IN-RANGE (no
+    /// saturation involved) values in each operand so a swapped operand
+    /// order would produce an unambiguously different result. The FIRST
+    /// pushed `v128.const` (bottom of stack, popped SECOND as `lhs`)
+    /// must land in the LOW half (indices 0-7); the SECOND pushed
+    /// `v128.const` (top of stack, popped FIRST as `rhs`) must land in
+    /// the HIGH half (indices 8-15).
+    #[test]
+    fn i8x16_narrow_i16x8_preserves_operand_order_first_operand_low_second_operand_high() {
+        let lhs: [i16; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
+        let rhs: [i16; 8] = [10, 11, 12, 13, 14, 15, 16, 17];
+
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i16x8(rhs));
+            code.extend([0xFD, sub_opcode]); // 0x65/0x66 are < 128 -- single-byte LEB128
+            code.push(0x0B);
+            code
+        };
+
+        let mut s_engine = simd_engine_returning_v128(code_for(0x65)); // i8x16.narrow_i16x8_s
+        let (_, s_bytes) = s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            s_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17]).try_into().unwrap())),
+            "narrow_s must place the FIRST operand's lanes in the LOW half and the SECOND operand's lanes in the HIGH half"
+        );
+
+        let mut u_engine = simd_engine_returning_v128(code_for(0x66)); // i8x16.narrow_i16x8_u
+        let (_, u_bytes) = u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            u_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i8x16([0, 1, 2, 3, 4, 5, 6, 7, 10, 11, 12, 13, 14, 15, 16, 17]).try_into().unwrap())),
+            "narrow_u must place the FIRST operand's lanes in the LOW half and the SECOND operand's lanes in the HIGH half"
+        );
+    }
+
+    /// `i8x16.narrow_i16x8_s` (SIMD widen PR27): SIGNED saturation --
+    /// `i16` lanes outside `i8::MIN..=i8::MAX` clamp to the nearer bound,
+    /// lanes already in range pass through unchanged. `lhs`/`rhs` are
+    /// mirror-image arrays (not equal to each other) so an operand-order
+    /// bug would ALSO be caught by this test, not just the saturation
+    /// math.
+    #[test]
+    fn i8x16_narrow_i16x8_s_saturates_out_of_range_lanes_to_the_i8_bound() {
+        let lhs: [i16; 8] = [i16::MIN, -200, -128, -1, 0, 100, 127, i16::MAX];
+        let rhs: [i16; 8] = [i16::MAX, 127, 100, 0, -1, -128, -200, i16::MIN];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i16x8(rhs));
+        code.extend([0xFD, 0x65]); // i8x16.narrow_i16x8_s
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(
+                v128_const_bytes_i8x16([-128, -128, -128, -1, 0, 100, 127, 127, 127, 127, 100, 0, -1, -128, -128, -128])
+                    .try_into()
+                    .unwrap()
+            )),
+            "i16::MIN/-200 must clamp to i8::MIN, i16::MAX/127-and-above must clamp to i8::MAX, in-range lanes pass through unchanged"
+        );
+    }
+
+    /// `i8x16.narrow_i16x8_u` (SIMD widen PR27): UNSIGNED saturation --
+    /// the classic gotcha for this opcode family. A negative `i16` lane
+    /// must saturate to `0`, NOT wrap to a large unsigned byte via bit-
+    /// reinterpretation. `-1_i16` is the sharpest case: a buggy `as u8`
+    /// wrapping cast (skipping the clamp) would produce `0xFF` (255,
+    /// i.e. `-1` as `i8`), while the correct saturating clamp produces
+    /// `0x00`. `-100_i16` similarly wraps to `156` (`0x9C`) under a
+    /// buggy cast but must saturate to `0`.
+    #[test]
+    fn i8x16_narrow_i16x8_u_saturates_negative_lanes_to_zero_not_a_wrapped_unsigned_value() {
+        let lhs: [i16; 8] = [-1, i16::MIN, -100, 0, 100, 255, 256, i16::MAX];
+        let rhs: [i16; 8] = [0; 8];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes_i16x8(rhs));
+        code.extend([0xFD, 0x66]); // i8x16.narrow_i16x8_u
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            // 0/i16::MIN/-100 must saturate to 0 (byte 0x00), NOT wrap to
+            // 0xFF/0x9C; 255/256/i16::MAX must saturate to 255 (0xFF,
+            // i.e. -1 as i8); 100 is unchanged.
+            Some(V128Bytes(v128_const_bytes_i8x16([0, 0, 0, 0, 100, -1, -1, -1, 0, 0, 0, 0, 0, 0, 0, 0]).try_into().unwrap())),
+            "negative i16 lanes must saturate to 0, not wrap to a large unsigned byte; out-of-range-high lanes must saturate to 255"
+        );
+    }
+
+    /// `i16x8.narrow_i32x4_s`/`_u` (SIMD widen PR27): same
+    /// operand-ordering proof as
+    /// `i8x16_narrow_i16x8_preserves_operand_order_first_operand_low_second_operand_high`
+    /// above, one lane width up -- `i32x4` operands, `i16x8` result.
+    #[test]
+    fn i16x8_narrow_i32x4_preserves_operand_order_first_operand_low_second_operand_high() {
+        let lhs: [i32; 4] = [0, 1, 2, 3];
+        let rhs: [i32; 4] = [10, 11, 12, 13];
+
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes(lhs));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes(rhs));
+            code.extend([0xFD, sub_opcode, 0x01]); // LEB128: 0x85/0x86 need the continuation byte
+            code.push(0x0B);
+            code
+        };
+
+        let mut s_engine = simd_engine_returning_v128(code_for(0x85)); // i16x8.narrow_i32x4_s
+        let (_, s_bytes) = s_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            s_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0, 1, 2, 3, 10, 11, 12, 13]).try_into().unwrap())),
+            "narrow_s must place the FIRST operand's lanes in the LOW half and the SECOND operand's lanes in the HIGH half"
+        );
+
+        let mut u_engine = simd_engine_returning_v128(code_for(0x86)); // i16x8.narrow_i32x4_u
+        let (_, u_bytes) = u_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            u_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0, 1, 2, 3, 10, 11, 12, 13]).try_into().unwrap())),
+            "narrow_u must place the FIRST operand's lanes in the LOW half and the SECOND operand's lanes in the HIGH half"
+        );
+    }
+
+    /// `i16x8.narrow_i32x4_s` (SIMD widen PR27): SIGNED saturation one
+    /// lane width up from `i8x16_narrow_i16x8_s_saturates_out_of_range_lanes_to_the_i8_bound`
+    /// -- `i32` lanes outside `i16::MIN..=i16::MAX` clamp to the nearer
+    /// bound.
+    #[test]
+    fn i16x8_narrow_i32x4_s_saturates_out_of_range_lanes_to_the_i16_bound() {
+        let lhs: [i32; 4] = [i32::MIN, -40_000, -32_768, 32_767];
+        let rhs: [i32; 4] = [40_000, 32_768, -32_769, i32::MAX];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(rhs));
+        code.extend([0xFD, 0x85, 0x01]); // i16x8.narrow_i32x4_s
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            Some(V128Bytes(
+                v128_const_bytes_i16x8([i16::MIN, i16::MIN, i16::MIN, i16::MAX, i16::MAX, i16::MAX, i16::MIN, i16::MAX]).try_into().unwrap()
+            )),
+            "i32::MIN/-40000 must clamp to i16::MIN, 40000/i32::MAX must clamp to i16::MAX, in-range lanes pass through unchanged"
+        );
+    }
+
+    /// `i16x8.narrow_i32x4_u` (SIMD widen PR27): UNSIGNED saturation one
+    /// lane width up from
+    /// `i8x16_narrow_i16x8_u_saturates_negative_lanes_to_zero_not_a_wrapped_unsigned_value`
+    /// -- a negative `i32` lane must saturate to `0`, NOT wrap to a large
+    /// unsigned `i16` bit pattern. `-1_i32` is the sharpest case: a buggy
+    /// `as u16` wrapping cast would produce `0xFFFF` (`-1` as `i16`),
+    /// while the correct saturating clamp produces `0x0000`.
+    #[test]
+    fn i16x8_narrow_i32x4_u_saturates_negative_lanes_to_zero_not_a_wrapped_unsigned_value() {
+        let lhs: [i32; 4] = [-1, i32::MIN, -100, 70_000];
+        let rhs: [i32; 4] = [0; 4];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lhs));
+        code.extend([0xFD, 0x0C]);
+        code.extend(v128_const_bytes(rhs));
+        code.extend([0xFD, 0x86, 0x01]); // i16x8.narrow_i32x4_u
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            bytes[0],
+            // -1/i32::MIN/-100 must saturate to 0 (0x0000), NOT wrap to
+            // 0xFFFF/0xFF9C; 70000 must saturate to 65535 (0xFFFF, i.e.
+            // -1 as i16).
+            Some(V128Bytes(v128_const_bytes_i16x8([0, 0, 0, -1, 0, 0, 0, 0]).try_into().unwrap())),
+            "negative i32 lanes must saturate to 0, not wrap to a large unsigned i16 bit pattern; the out-of-range-high lane must saturate to 65535"
+        );
     }
 
     /// `v128.not`: bitwise complement of all 128 bits, lane-width-

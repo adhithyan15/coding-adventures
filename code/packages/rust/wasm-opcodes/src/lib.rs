@@ -1477,6 +1477,43 @@ pub enum SimdOpKind {
     /// `i32x4.extend_high_i16x8_u` -- same HIGH-4-lanes shape as
     /// [`Self::ExtendHighI16x8S`], but zero-extended, not sign-extended.
     ExtendHighI16x8U,
+    /// `i8x16.narrow_i16x8_s` -- BINARY (the opposite shape from
+    /// [`Self::ExtendLowI8x16S`]'s UNARY): pop TWO `v128`s, each read as
+    /// 8 `i16` lanes. Each `i16` lane of BOTH operands is SIGNED-
+    /// saturated to the `i8` range (`i8::MIN..=i8::MAX`) and cast down
+    /// to `i8`, producing one `i8x16` result -- the FIRST (bottom of
+    /// stack) operand's 8 saturated lanes become the LOW half (indices
+    /// 0-7) of the result, the SECOND (top of stack) operand's 8
+    /// saturated lanes become the HIGH half (indices 8-15). This
+    /// operand-to-half ordering is the classic bug spot for this
+    /// opcode family -- verified against the WASM SIMD spec's own
+    /// `narrow` pseudocode (`result[i] = Saturate(a[i])` for `i` in
+    /// `0..N`, `result[N+i] = Saturate(b[i])` for `i` in `0..N`) before
+    /// implementing. Part of the 16-opcode set (`extend_low`/`high`,
+    /// `narrow`, `promote`/`demote`/`convert_low`) needed to unlock the
+    /// upstream `simd_conversions.wast` corpus file -- see this crate's
+    /// `SIMD_OPS` doc comment.
+    NarrowI16x8S,
+    /// `i8x16.narrow_i16x8_u` -- same BINARY/lane-ordering shape as
+    /// [`Self::NarrowI16x8S`], but UNSIGNED-saturates each `i16` lane
+    /// to `0..=u8::MAX` (255) instead of the signed `i8` range. The
+    /// classic gotcha here: a negative `i16` lane (e.g. `-1`) saturates
+    /// to `0`, NOT to a large unsigned value via bit-reinterpretation
+    /// -- this is a genuine clamp on the lane's SIGNED value, not a
+    /// wrapping cast.
+    NarrowI16x8U,
+    /// `i16x8.narrow_i32x4_s` -- same pattern one lane width up from
+    /// [`Self::NarrowI16x8S`]: pop TWO `v128`s, each read as 4 `i32`
+    /// lanes, SIGNED-saturate each to the `i16` range
+    /// (`i16::MIN..=i16::MAX`), cast down to `i16`. First operand's 4
+    /// saturated lanes -> LOW half (indices 0-3) of the `i16x8` result,
+    /// second operand's 4 saturated lanes -> HIGH half (indices 4-7).
+    NarrowI32x4S,
+    /// `i16x8.narrow_i32x4_u` -- same shape as [`Self::NarrowI32x4S`],
+    /// but UNSIGNED-saturates each `i32` lane to `0..=u16::MAX` (65535)
+    /// instead of the signed `i16` range -- same "negative saturates to
+    /// zero, not wraps" discipline as [`Self::NarrowI16x8U`].
+    NarrowI32x4U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1801,6 +1838,33 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i32x4.extend_high_i16x8_s", sub_opcode: 0xA8, kind: SimdOpKind::ExtendHighI16x8S },
     SimdOpInfo { name: "i32x4.extend_low_i16x8_u", sub_opcode: 0xA9, kind: SimdOpKind::ExtendLowI16x8U },
     SimdOpInfo { name: "i32x4.extend_high_i16x8_u", sub_opcode: 0xAA, kind: SimdOpKind::ExtendHighI16x8U },
+    // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u
+    // (0x65/0x66) and i16x8.narrow_i32x4_s/_u (0x85/0x86) -- the
+    // "narrow" family, the saturating-demote OPPOSITE of PR26's
+    // "extend" family: BINARY (two v128 operands, not one), each
+    // lane SATURATED (not wrapped) down to the narrower width and
+    // concatenated (first operand -> low half, second operand -> high
+    // half of the result). Each sub-opcode byte fetched live from
+    // BinarySIMD.md (this is the SIMD sub-opcode space behind the
+    // `0xFD` prefix -- an entirely separate byte space from the
+    // single-byte `OPCODES` table above, so no collision is possible
+    // with e.g. `f64x2.le`'s unrelated `0x65` there) and cross-checked
+    // against the already-implemented `i8x16.bitmask` (0x64)/
+    // `i16x8.all_true` (0x83)/`i16x8.bitmask` (0x84) `SIMD_OPS`
+    // entries: 0x65/0x66 sit immediately past `i8x16.bitmask`'s 0x64
+    // with no gap, and 0x85/0x86 sit immediately past
+    // `i16x8.bitmask`'s 0x84 with no gap -- both confirmed free of
+    // collision with every existing `SIMD_OPS` entry (PR26's 0x87-0x8A
+    // and 0xA7-0xAA run don't overlap either). Second of three PRs
+    // (extend done in PR26, narrow here, promote/demote/convert_low to
+    // follow) needed to land all 16 opcodes the upstream
+    // simd_conversions.wast corpus file bundles together -- still NO
+    // corpus vendoring in this PR, opcode-only, verified by unit
+    // tests.
+    SimdOpInfo { name: "i8x16.narrow_i16x8_s", sub_opcode: 0x65, kind: SimdOpKind::NarrowI16x8S },
+    SimdOpInfo { name: "i8x16.narrow_i16x8_u", sub_opcode: 0x66, kind: SimdOpKind::NarrowI16x8U },
+    SimdOpInfo { name: "i16x8.narrow_i32x4_s", sub_opcode: 0x85, kind: SimdOpKind::NarrowI32x4S },
+    SimdOpInfo { name: "i16x8.narrow_i32x4_u", sub_opcode: 0x86, kind: SimdOpKind::NarrowI32x4U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2219,8 +2283,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_146_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 146);
+    fn simd_ops_table_has_the_expected_150_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 150);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2863,6 +2927,31 @@ mod tests {
             ("i32x4.extend_high_i16x8_s", 0xA8, SimdOpKind::ExtendHighI16x8S),
             ("i32x4.extend_low_i16x8_u", 0xA9, SimdOpKind::ExtendLowI16x8U),
             ("i32x4.extend_high_i16x8_u", 0xAA, SimdOpKind::ExtendHighI16x8U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_narrow_saturating_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u
+        // (0x65/0x66) and i16x8.narrow_i32x4_s/_u (0x85/0x86) -- fetched
+        // live from BinarySIMD.md, cross-checked against the already-
+        // implemented i8x16.bitmask (0x64)/i16x8.all_true (0x83)/
+        // i16x8.bitmask (0x84) entries: 0x65/0x66 sit immediately past
+        // i8x16.bitmask's 0x64 with no gap, 0x85/0x86 sit immediately
+        // past i16x8.bitmask's 0x84 with no gap. Second of three PRs
+        // needed to unlock simd_conversions.wast (extend done in PR26,
+        // promote/demote/convert_low to follow); no corpus vendoring
+        // happens until all 16 opcodes across those PRs are in.
+        for (name, sub_opcode, kind) in [
+            ("i8x16.narrow_i16x8_s", 0x65, SimdOpKind::NarrowI16x8S),
+            ("i8x16.narrow_i16x8_u", 0x66, SimdOpKind::NarrowI16x8U),
+            ("i16x8.narrow_i32x4_s", 0x85, SimdOpKind::NarrowI32x4S),
+            ("i16x8.narrow_i32x4_u", 0x86, SimdOpKind::NarrowI32x4U),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);
