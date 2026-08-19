@@ -2807,6 +2807,21 @@
       "source_cas_hashes": [],
       "benchmark_paths": [],
       "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
+    },
+    {
+      "id": "adj.science.6to8.heredity_term",
+      "title": "Recall the defining sentence for a core NGSS MS-LS3 heredity term (gene, allele, dominant, recessive, genotype, phenotype, trait)",
+      "band": "6-8",
+      "domain": "science",
+      "competency": "recall",
+      "coverage_roots": ["ngss"],
+      "standards": [],
+      "prerequisites": [],
+      "libraries": ["code/specs/data/adj-facts-stdlib/biology/heredity-term.adj"],
+      "modalities": ["text"],
+      "source_cas_hashes": [],
+      "benchmark_paths": [],
+      "status": {"implementation": "present", "provenance": "source_labeled", "tests": "present", "benchmark": "missing", "crosswalk": "unmapped"}
     }
   ]
 }

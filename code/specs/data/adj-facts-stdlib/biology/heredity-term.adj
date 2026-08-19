@@ -1,0 +1,124 @@
+% ============================================================================
+% heredity-term — the core NGSS MS-LS3 heredity vocabulary (gene, allele,
+% dominant, recessive, genotype, phenotype, trait) and the defining sentence
+% each gets from NHGRI's Talking Glossary of Genomic and Genetic Terms
+% (adj-facts-stdlib, BIOLOGY).
+% ============================================================================
+% This grounds "heredity" — ADJ-STDLIB-COVERAGE.md §5.1/§5.2's Major Gap that,
+% unlike "experiments" (`science/scientific-method-step.adj`), "models"
+% (`science/scientific-model-type.adj`), and "engineering design"
+% (`engineering/engineering-design-step.adj`), had ONLY ever been checked by
+% the causal-explanation RULE-COMPOSITION technique — asking "does an
+% already-shipped heredity table join another already-shipped table on a
+% literal key?" — never by searching for a genuinely NEW primary source.
+% This item's own notes record that check running dry twice (`biology/
+% dna-base-pairs.adj` and `biology/cell-division-genetic-outcome.adj` each
+% have no honest composable second table anywhere in the stdlib). This cycle
+% tried the OTHER technique instead: a fresh WebFetch for heredity itself.
+%
+% CANDIDATE SOURCES TRIED, in order:
+%   1. The classic K-8 "dominant/recessive HUMAN TRAIT" worksheets (widow's
+%      peak, attached/free earlobes, tongue rolling, dimples, hitchhiker's
+%      thumb) that fill nearly every search result for "dominant recessive
+%      traits middle school". REJECTED even though table-shaped and
+%      widely taught: University of Utah's Genetic Science Learning Center
+%      and a University of Delaware genetics-myths page each independently
+%      confirm no published study supports single-gene dominant/recessive
+%      inheritance for ANY of these classroom staples (tongue rolling can be
+%      learned with age; identical twins do not always share it) — shipping
+%      that table would encode a well-documented genetics-education MYTH as
+%      a fact an ADJ reasoner treats as ground truth, which this stdlib's
+%      honesty discipline forbids regardless of how commonly it is taught.
+%   2. NHGRI's (National Human Genome Research Institute, genome.gov) own
+%      "Talking Glossary of Genomic and Genetic Terms" — WebFetched directly
+%      (curl, `<p class="dm en">` definition block, byte-for-byte, no
+%      paraphrase) for seven individual glossary pages: Gene, Allele,
+%      Dominant, Recessive-Traits-Alleles, genotype, Phenotype, Trait. Every
+%      one resolved (HTTP 200) to a real, citable, primary-government
+%      definition sentence that never asserts a specific human trait's
+%      inheritance pattern at all — these are the ABSTRACT vocabulary a
+%      correct heredity claim is built FROM, not a disputed specific claim.
+%      This is what the table below grounds.
+%
+% A full-tree grep for `\bgene\b`, `\ballele\b`, `\bgenotype\b`,
+% `\bphenotype\b`, `\bdominant\b`, `\brecessive\b` across the whole shipped
+% stdlib (confirming no duplication before scoping, per this item's own
+% playbook) found zero table `row` hits on any of these atoms — only two
+% incidental prose mentions (`biology/genetic-code.adj`'s own header prose
+% "where genotype becomes phenotype", and `biology/blood-groups.query.adj`'s
+% comment about "ABO phenotypes") — neither is a table row, so this is the
+% FIRST genuine heredity-vocabulary content anywhere in this stdlib.
+%
+% Recall is a binding query:
+%
+%     ? heredity_term(gene, $D)
+%       % basic_unit_of_inheritance
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `heredity_term(term, definition)` carrying the citation, so the
+% lookup above is the ordinary SLD binding query — the engine returns the
+% definition WITH its source, on the CPU, with zero model calls, and abstains
+% on any term this curated slice does not include (see below). The query
+% also runs BACKWARD — bind a definition and recall which term it defines:
+%
+%     ? heredity_term($T, a_specific_characteristic_of_an_individual)
+%       % trait
+%
+% The seven terms, each with the exact NHGRI sentence(s) the atom below is
+% drawn from (wording never reordered or invented, only trimmed of
+% surrounding sentences that are true but not part of the core definition):
+%
+%     term        definition (atom)                                                    quote (verbatim, NHGRI Talking Glossary of Genomic and Genetic Terms)
+%     ----------  -----------------------------------------------------------------    -----------------------------------------------------------------------------------------------------------------------------------------------------------
+%     gene        basic_unit_of_inheritance                                            "The gene is considered the basic unit of inheritance."
+%     allele      one_of_two_or_more_versions_of_dna_sequence_at_a_given_genomic_location  "An allele is one of two or more versions of DNA sequence (a single base or a segment of bases) at a given genomic location."
+%     dominant    one_allele_is_expressed_and_the_effect_of_the_other_allele_is_masked  "If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked."
+%     recessive   both_alleles_must_be_present_to_express_the_trait                     "In the case of a recessive trait, ... both (recessive) alleles must be present to express the trait."
+%     genotype    a_scoring_of_the_type_of_variant_present_at_a_given_location_in_the_genome  "A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome."
+%     phenotype   an_individuals_observable_traits                                      "Phenotype refers to an individual's observable traits, such as height, eye color and blood type."
+%     trait       a_specific_characteristic_of_an_individual                            "A trait, as related to genetics, is a specific characteristic of an individual."
+%
+% This is a curated CORE slice of seven terms directly on the gene -> allele
+% -> dominant/recessive -> genotype -> phenotype/trait chain of ideas, not
+% the entirety of NHGRI's ~256-term glossary. Querying any other glossary
+% term this slice does not include (`chromosome`, `mutation`, `dna`, ...)
+% ABSTAINS honestly rather than inventing a definition — the table never
+% claims to be exhaustive of the glossary, only of this curated core (see
+% the query file).
+%
+% Provenance: quoted verbatim (via direct HTTP fetch, `<p class="dm en">`
+% definition block) from NHGRI's (National Human Genome Research Institute)
+% "Talking Glossary of Genomic and Genetic Terms" at genome.gov — the SAME
+% primary U.S. government genetics reference `biology/dna-base-pairs.adj`
+% and `biology/cell-division-genetic-outcome.adj` already cite, hence
+% `trust authoritative` (matching their tier, not `consensus`). An ADJ
+% `table` carries ONE provenance envelope, so `source`/`locator`/`trust`
+% below hold the strongest single span (the `gene` row's text, which fixes
+% the first row); every OTHER row's own verbatim text is quoted above and
+% additionally carried as its own `cites` entry below, so each term remains
+% independently checkable. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table heredity_term {
+    columns term, definition
+
+    row (gene, basic_unit_of_inheritance)
+    row (allele, one_of_two_or_more_versions_of_dna_sequence_at_a_given_genomic_location)
+    row (dominant, one_allele_is_expressed_and_the_effect_of_the_other_allele_is_masked)
+    row (recessive, both_alleles_must_be_present_to_express_the_trait)
+    row (genotype, a_scoring_of_the_type_of_variant_present_at_a_given_location_in_the_genome)
+    row (phenotype, an_individuals_observable_traits)
+    row (trait, a_specific_characteristic_of_an_individual)
+
+    source "The gene is considered the basic unit of inheritance."
+    locator "https://www.genome.gov/genetics-glossary/Gene"
+    trust authoritative
+
+    cites "An allele is one of two or more versions of DNA sequence (a single base or a segment of bases) at a given genomic location." locator "https://www.genome.gov/genetics-glossary/Allele"
+    cites "If the alleles of a gene are different, one allele will be expressed; it is the dominant gene. The effect of the other allele, called recessive, is masked." locator "https://www.genome.gov/genetics-glossary/Dominant"
+    cites "In the case of a recessive trait, the alleles of the trait-causing gene are the same, and both (recessive) alleles must be present to express the trait." locator "https://www.genome.gov/genetics-glossary/Recessive-Traits-Alleles"
+    cites "A genotype is a scoring of the type of variant present at a given location (i.e., a locus) in the genome." locator "https://www.genome.gov/genetics-glossary/genotype"
+    cites "Phenotype refers to an individual's observable traits, such as height, eye color and blood type." locator "https://www.genome.gov/genetics-glossary/Phenotype"
+    cites "A trait, as related to genetics, is a specific characteristic of an individual." locator "https://www.genome.gov/genetics-glossary/Trait"
+}
