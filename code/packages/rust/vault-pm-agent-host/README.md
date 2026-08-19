@@ -84,20 +84,24 @@ dependencies.
 
 ## Verification
 
-Twenty tests cover the retention store's idle-bound policy (unlock, expiry
-at point-of-use, replace-and-restart, forget-one/forget-all, background
-sweep), framing (round trip, oversized-frame refusal before allocation,
-truncated reads), the peer-authorization comparison against a fabricated
-mismatched UID, real bind/accept/dispatch round trips for every request over
-a real socket (including a second bind being refused, a stale socket being
-reclaimed only after an ownership check, a non-socket path never being
-deleted, and an oversized or garbage connection being dropped without a
-response while the server keeps serving), and a real detached process
-outliving its parent. Tarpaulin's LLVM engine measures 223 of 251 lines
-covered (88.84%); the remainder is mostly client-side I/O error branches
-that require a genuinely failing socket to reach; and the post-`fork` half of
-the detached-spawn closure runs in a child process coverage instrumentation
-does not attribute back to this crate's own measurement.
+Twenty-one tests cover the retention store's idle-bound policy (unlock,
+expiry at point-of-use, replace-and-restart, forget-one/forget-all,
+background sweep), framing (round trip, oversized-frame refusal before
+allocation, truncated reads), the peer-authorization comparison against a
+fabricated mismatched UID, real bind/accept/dispatch round trips for every
+request over a real socket (including a second bind being refused, a stale
+socket being reclaimed only after an ownership check, a non-socket path
+never being deleted, an oversized or garbage connection being dropped
+without a response while the server keeps serving, and — the fix for a real
+finding from this feature's security review — a silent connection held open
+by one peer provably never delaying a concurrent well-behaved one, now that
+every connection is handled on its own thread rather than serially), and a
+real detached process outliving its parent. Tarpaulin's LLVM engine measures
+222 of 250 lines covered (88.80%); the remainder is mostly client-side I/O
+error branches that require a genuinely failing socket to reach, and the
+post-`fork` half of the detached-spawn closure runs in a child process
+coverage instrumentation does not attribute back to this crate's own
+measurement.
 
 ```bash
 bash BUILD

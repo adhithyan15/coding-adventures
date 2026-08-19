@@ -106,9 +106,34 @@ fn encode_optional_name(out: &mut Vec<u8>, name: Option<&str>) -> Result<(), Pro
     Ok(())
 }
 
+/// Whether every byte of `bytes` is a character a real vault name could
+/// contain.
+///
+/// Matches `vault-pm-config::ConfigName`'s own rule exactly — ASCII
+/// alphanumeric, or `_`/`-` past the first byte — rather than merely UTF-8
+/// and a length bound. This is load-bearing, not cosmetic: the peer on the
+/// other end of this socket is authenticated only as "the same local user"
+/// (`vault-pm-agent-host::peer`), never as "the genuine `vault-pm` binary",
+/// so any same-user process can open a raw connection and send a
+/// hand-crafted `Unlock` whose name it controls completely. That name is
+/// later rendered into `agent status`'s plain-text and `--json` output
+/// (`vault-pm-cli::agent::render_agent_status`) without further escaping. A
+/// name containing a quote, a backslash, or a raw terminal escape sequence
+/// would otherwise reach a person's JSON parser or terminal emulator
+/// unescaped. Restricting the *character set* a name can ever decode to is
+/// simpler and more robust than trying to escape it correctly at every
+/// present and future render site.
+fn is_valid_name_bytes(bytes: &[u8]) -> bool {
+    !bytes.is_empty()
+        && bytes.len() <= MAX_VAULT_NAME_BYTES
+        && bytes.iter().enumerate().all(|(index, byte)| {
+            byte.is_ascii_alphanumeric() || (index > 0 && matches!(byte, b'_' | b'-'))
+        })
+}
+
 fn encode_name(out: &mut Vec<u8>, name: &str) -> Result<(), ProtocolError> {
     let bytes = name.as_bytes();
-    if bytes.is_empty() || bytes.len() > MAX_VAULT_NAME_BYTES {
+    if !is_valid_name_bytes(bytes) {
         return Err(ProtocolError);
     }
     #[allow(clippy::cast_possible_truncation)]
@@ -123,6 +148,14 @@ fn decode_name(input: &[u8], offset: &mut usize) -> Result<String, ProtocolError
         return Err(ProtocolError);
     }
     let bytes = read_bytes(input, offset, length)?;
+    if !is_valid_name_bytes(bytes) {
+        return Err(ProtocolError);
+    }
+    // `is_valid_name_bytes` already restricts every byte to ASCII, so this
+    // can never fail — but going through `str::from_utf8` rather than
+    // `String::from_utf8_unchecked` costs nothing here and keeps this
+    // function free of the one `unsafe` shortcut that would otherwise be
+    // tempting.
     String::from_utf8(bytes.to_vec()).map_err(|_| ProtocolError)
 }
 
@@ -253,8 +286,15 @@ impl AgentRequest {
     /// exceed [`MAX_VAULT_NAME_BYTES`], a terminal-collected secret cannot
     /// exceed [`MAX_PASSPHRASE_BYTES`]), so this is defense in depth rather
     /// than an expected path.
-    pub fn encode(&self) -> Result<Vec<u8>, ProtocolError> {
-        let mut out = vec![PROTOCOL_VERSION];
+    ///
+    /// The returned buffer is [`Zeroizing`]: an `Unlock` request's encoding
+    /// contains the passphrase in plaintext (that is the whole point of the
+    /// wire — the agent must actually receive it), so the buffer that holds
+    /// it is wiped on drop the same way every other passphrase-bearing
+    /// buffer in this product is, rather than left for the allocator to hand
+    /// back unscrubbed.
+    pub fn encode(&self) -> Result<Zeroizing<Vec<u8>>, ProtocolError> {
+        let mut out = Zeroizing::new(vec![PROTOCOL_VERSION]);
         match self {
             Self::Ping => out.push(TAG_PING),
             Self::Unlock {
@@ -418,8 +458,12 @@ impl AgentResponse {
     /// Returns [`ProtocolError`] if a carried passphrase or status list
     /// exceeds this protocol's bounds — see [`AgentRequest::encode`] for why
     /// this is defense in depth rather than an expected path.
-    pub fn encode(&self) -> Result<Vec<u8>, ProtocolError> {
-        let mut out = vec![PROTOCOL_VERSION];
+    ///
+    /// The returned buffer is [`Zeroizing`], for the same reason
+    /// [`AgentRequest::encode`]'s is: a `Passphrase` response's encoding
+    /// contains the retained passphrase in plaintext.
+    pub fn encode(&self) -> Result<Zeroizing<Vec<u8>>, ProtocolError> {
+        let mut out = Zeroizing::new(vec![PROTOCOL_VERSION]);
         match self {
             Self::Ok => out.push(TAG_OK),
             Self::Passphrase(passphrase) => {
@@ -722,37 +766,74 @@ mod tests {
         );
     }
 
+    /// A hand-crafted frame — never produced by [`AgentRequest::encode`] —
+    /// naming a vault outside the allowed character set is refused at
+    /// decode time.
+    ///
+    /// This is the attack this test exists to close: the socket's peer check
+    /// (`vault-pm-agent-host::peer`) authenticates only "the same local
+    /// user," never "the genuine `vault-pm` binary," so any same-user
+    /// process can write raw bytes to the socket. Without this check, a
+    /// crafted `Unlock` naming a vault such as `personal","evil":true` (or
+    /// containing a raw terminal escape sequence) would be retained
+    /// verbatim and later rendered, unescaped, into `agent status`'s
+    /// plain-text and `--json` output.
+    #[test]
+    fn a_vault_name_outside_the_allowed_character_set_is_refused_at_decode_time() {
+        for hostile in [
+            "personal\",\"evil\":true".as_bytes(),
+            b"personal\"".as_slice(),
+            b"personal\\",
+            b"personal\n",
+            b"personal\x1b[31m",
+            b" personal",
+            b"-leading-dash",
+            b"_leading-underscore",
+        ] {
+            let mut frame = vec![PROTOCOL_VERSION, TAG_GET_PASSPHRASE];
+            #[allow(clippy::cast_possible_truncation)]
+            frame.push(hostile.len() as u8);
+            frame.extend_from_slice(hostile);
+            assert!(
+                matches!(AgentRequest::decode(&frame), Err(ProtocolError)),
+                "{hostile:?} must be refused"
+            );
+        }
+        // The one legitimate case adjacent to the refused ones above: a
+        // non-leading `-`/`_` is fine, matching `ConfigName`'s own rule.
+        let mut legitimate = vec![PROTOCOL_VERSION, TAG_GET_PASSPHRASE, 12];
+        legitimate.extend_from_slice(b"work-laptop_");
+        assert!(AgentRequest::decode(&legitimate).is_ok());
+    }
+
     #[test]
     fn oversized_fields_are_refused_at_encode_time() {
         let long_name = "a".repeat(MAX_VAULT_NAME_BYTES + 1);
-        assert_eq!(
+        assert!(matches!(
             AgentRequest::GetPassphrase {
                 vault_name: long_name
             }
-            .encode()
-            .unwrap_err(),
-            ProtocolError
-        );
+            .encode(),
+            Err(ProtocolError)
+        ));
         let long_passphrase = vec![b'x'; MAX_PASSPHRASE_BYTES + 1];
-        assert_eq!(
+        assert!(matches!(
             AgentRequest::Unlock {
                 vault_name: "personal".to_owned(),
                 passphrase: Zeroizing::new(long_passphrase),
                 idle_bound_ms: 1_000,
             }
-            .encode()
-            .unwrap_err(),
-            ProtocolError
-        );
+            .encode(),
+            Err(ProtocolError)
+        ));
         let empty_name = String::new();
-        assert_eq!(
+        assert!(matches!(
             AgentRequest::GetPassphrase {
                 vault_name: empty_name
             }
-            .encode()
-            .unwrap_err(),
-            ProtocolError
-        );
+            .encode(),
+            Err(ProtocolError)
+        ));
     }
 
     #[test]
@@ -763,10 +844,10 @@ mod tests {
                 remaining_ms: 0,
             })
             .collect();
-        assert_eq!(
-            AgentResponse::Status(entries).encode().unwrap_err(),
-            ProtocolError
-        );
+        assert!(matches!(
+            AgentResponse::Status(entries).encode(),
+            Err(ProtocolError)
+        ));
     }
 
     #[test]

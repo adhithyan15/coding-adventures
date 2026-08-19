@@ -31,9 +31,16 @@ const MAX_RESPONSE_BYTES: usize = 1 + 1 + 1 + MAX_STATUS_VAULTS * (1 + MAX_VAULT
 const POLL_INTERVAL: Duration = Duration::from_millis(200);
 
 /// Bound on a single connection's read and write, so a peer that connects
-/// and then never sends anything cannot hold a slot in the accept loop
-/// indefinitely.
-const CONNECTION_TIMEOUT: Duration = Duration::from_secs(5);
+/// and then never sends anything cannot hold a connection handler thread
+/// open indefinitely.
+///
+/// A real round trip on this transport is a handful of milliseconds; this is
+/// generous headroom for a loaded machine, not an expected wait. It is
+/// deliberately short rather than merely bounded, because every connection
+/// is now served on its own thread (see [`AgentServer::run`]) and a
+/// same-user peer could otherwise open many connections and send nothing on
+/// each, tying up one thread per connection for the whole timeout.
+const CONNECTION_TIMEOUT: Duration = Duration::from_secs(2);
 
 /// A bound, listening agent socket, ready to run.
 pub struct AgentServer {
@@ -93,30 +100,43 @@ impl AgentServer {
     /// process, not a value a caller reuses. The socket file is removed
     /// before this returns, whichever path ends the loop, so a later `agent
     /// start` never has to reason about a leftover file from a clean exit.
+    ///
+    /// Each accepted connection is handled on its own short-lived thread,
+    /// spawned into the same scope as the sweep thread, rather than served
+    /// synchronously in the accept loop. A serial accept loop would let any
+    /// process running as this same local user — already this transport's
+    /// trusted-reachability boundary, but never its availability boundary —
+    /// starve every other caller by opening one connection, sending nothing,
+    /// and repeating: [`CONNECTION_TIMEOUT`] bounds how long that blocks the
+    /// *one* connection it holds, but a serial loop would still let it block
+    /// every connection queued behind it for that same span, indefinitely.
+    /// One thread per connection removes that head-of-line dependency
+    /// entirely; `thread::scope` guarantees every one of them has finished
+    /// (including the one that observed a `Shutdown`) before this function
+    /// returns.
     pub fn run(self, signal: &AtomicBool) {
         std::thread::scope(|scope| {
             scope.spawn(|| self.sweep_loop(signal));
-            self.accept_loop(signal);
+            loop {
+                match self.listener.accept() {
+                    Ok((stream, _address)) => {
+                        scope.spawn(|| self.handle_connection(stream, signal));
+                    }
+                    Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
+                        std::thread::sleep(POLL_INTERVAL);
+                    }
+                    // A transient accept failure is logged nowhere (this
+                    // product never logs to a shared stream that could carry
+                    // secrets by accident) and simply retried after the same
+                    // bounded pause.
+                    Err(_) => std::thread::sleep(POLL_INTERVAL),
+                }
+                if signal.load(Ordering::SeqCst) {
+                    break;
+                }
+            }
         });
         let _ = fs::remove_file(&self.socket_path);
-    }
-
-    fn accept_loop(&self, signal: &AtomicBool) {
-        loop {
-            match self.listener.accept() {
-                Ok((stream, _address)) => self.handle_connection(stream, signal),
-                Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
-                    std::thread::sleep(POLL_INTERVAL);
-                }
-                // A transient accept failure is logged nowhere (this product
-                // never logs to a shared stream that could carry secrets by
-                // accident) and simply retried after the same bounded pause.
-                Err(_) => std::thread::sleep(POLL_INTERVAL),
-            }
-            if signal.load(Ordering::SeqCst) {
-                return;
-            }
-        }
     }
 
     fn sweep_loop(&self, signal: &AtomicBool) {
@@ -351,6 +371,37 @@ mod tests {
         }
         // The server must still be alive and answering afterward.
         assert!(client::ping(&path).unwrap());
+
+        client::shutdown(&path).unwrap();
+        handle.join().unwrap();
+    }
+
+    /// A connection that sends nothing must not delay any other connection.
+    ///
+    /// This is the fix for the head-of-line DoS a serial accept loop would
+    /// have: every connection is handled on its own thread (see
+    /// `AgentServer::run`'s doc comment), so a peer that connects and never
+    /// writes a byte only ever blocks *itself*, for at most
+    /// `CONNECTION_TIMEOUT` — never the accept loop, and never a second,
+    /// well-behaved caller. Proven directly: hold one silent connection open,
+    /// then confirm a concurrent `Ping` completes almost immediately rather
+    /// than waiting anywhere near the silent connection's own timeout.
+    #[test]
+    fn a_silent_connection_never_blocks_a_concurrent_well_behaved_one() {
+        let path = scratch_socket_path();
+        let (handle, path) = run_in_background(path);
+        assert!(client::wait_until_ready(&path, Duration::from_secs(2)));
+
+        // Connect and hold the stream open without sending anything. Kept
+        // alive for the whole test via this binding.
+        let _silent = UnixStream::connect(&path).unwrap();
+
+        let started = Instant::now();
+        assert!(client::ping(&path).unwrap());
+        assert!(
+            started.elapsed() < CONNECTION_TIMEOUT / 2,
+            "a concurrent silent connection must not slow down an unrelated request"
+        );
 
         client::shutdown(&path).unwrap();
         handle.join().unwrap();

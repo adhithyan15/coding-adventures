@@ -29,3 +29,21 @@
   from `vault-pm-cli-host::clipboard`'s clearer spawn because the two have
   different standard-stream contracts (the agent takes no piped parameter
   block at all).
+- Security review, before first release: every accepted connection is now
+  handled on its own short-lived thread instead of serially in the accept
+  loop, and `CONNECTION_TIMEOUT` is lowered from 5 s to 2 s. A serial loop let
+  any process running as this same local user starve every other caller by
+  opening a connection, sending nothing, and repeating; per-connection
+  threads remove that head-of-line dependency (`AgentState`'s `Mutex` already
+  serializes the state the threads share), proven directly by a test that
+  holds one silent connection open and confirms a concurrent `Ping` still
+  completes promptly.
+- Security review, before first release: `transport::read_frame` now returns
+  `Zeroizing<Vec<u8>>` unconditionally, so a frame carrying a plaintext
+  passphrase (an `Unlock` request or a `Passphrase` response) is wiped on
+  drop on both the client and server side of every round trip, not only in
+  `AgentState`'s own long-lived retention.
+- Security review, before first release: `peer::peer_uid` (Linux) now also
+  verifies `getsockopt`'s returned length still equals `sizeof(ucred)`
+  before trusting the credentials it wrote, failing closed rather than
+  reading a partially uninitialized structure.

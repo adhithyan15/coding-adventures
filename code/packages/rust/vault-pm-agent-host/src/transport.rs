@@ -7,6 +7,7 @@
 //! given, and that the length prefix is checked *before* any payload byte is
 //! read.
 
+use coding_adventures_zeroize::Zeroizing;
 use std::io::{self, Read, Write};
 
 /// Byte width of the length prefix.
@@ -64,14 +65,24 @@ pub fn write_frame(
 /// connection, or a stream failure (including a configured read timeout
 /// elapsing, which the caller is expected to have set on the underlying
 /// stream — this function performs no timing of its own).
-pub fn read_frame(reader: &mut impl Read, max_len: usize) -> Result<Vec<u8>, TransportError> {
+///
+/// The returned buffer is [`Zeroizing`] unconditionally. This module has no
+/// way to know in advance whether a given frame carries a passphrase (an
+/// `Unlock` request or a `Passphrase` response both do; every other message
+/// does not) — the wire format is `vault-pm-agent-protocol`'s concern, not
+/// this one's — so every frame this function reads is wiped on drop, at a
+/// cost that is negligible at these sizes.
+pub fn read_frame(
+    reader: &mut impl Read,
+    max_len: usize,
+) -> Result<Zeroizing<Vec<u8>>, TransportError> {
     let mut length_bytes = [0_u8; LENGTH_PREFIX_BYTES];
     reader.read_exact(&mut length_bytes)?;
     let length = u32::from_be_bytes(length_bytes) as usize;
     if length > max_len {
         return Err(TransportError::FrameTooLarge);
     }
-    let mut payload = vec![0_u8; length];
+    let mut payload = Zeroizing::new(vec![0_u8; length]);
     reader.read_exact(&mut payload)?;
     Ok(payload)
 }
@@ -86,7 +97,7 @@ mod tests {
         let mut buffer = Vec::new();
         write_frame(&mut buffer, b"hello agent", 64).unwrap();
         let mut cursor = Cursor::new(buffer);
-        assert_eq!(read_frame(&mut cursor, 64).unwrap(), b"hello agent");
+        assert_eq!(&*read_frame(&mut cursor, 64).unwrap(), b"hello agent");
     }
 
     #[test]

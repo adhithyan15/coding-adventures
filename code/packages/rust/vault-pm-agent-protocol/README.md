@@ -53,11 +53,17 @@ inheriting the CLI's transport, and vice versa.
 
 ## Verification
 
-Eleven tests cover every request and response round-tripping through
+Twelve tests cover every request and response round-tripping through
 `encode`/`decode`, redacted `Debug` formatting for every variant, malformed
-and truncated input being refused rather than guessed at, and every
-oversized field or frame being rejected at encode time. Tarpaulin's LLVM
-engine measures 162 of 176 lines covered (92.05%).
+and truncated input being refused rather than guessed at, every oversized
+field or frame being rejected at encode time, and a hand-crafted frame naming
+a vault outside the allowed character set being refused at *decode* time —
+the fix for a real finding from this feature's security review: the socket's
+peer check authenticates only "the same local user," never "the genuine
+`vault-pm` binary," so any same-user process can write raw bytes to this
+wire, and an unvalidated name would otherwise have reached `agent status`'s
+JSON and terminal output unescaped. Tarpaulin's LLVM engine measures 169 of
+183 lines covered (92.35%).
 
 ```bash
 bash BUILD

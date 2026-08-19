@@ -276,6 +276,21 @@ Shutdown                                -> Ok
 (anything malformed)                    -> connection dropped, or Err(code)
 ```
 
+Every carried vault name is restricted to the exact character set
+`vault-pm-config::ConfigName` already enforces — ASCII alphanumeric, or
+`_`/`-` past the first byte — checked on both encode and decode, not merely
+bounded in length and required to be valid UTF-8. This closed a real finding
+from this feature's own security review: the socket's peer check
+authenticates only "the same local user," never "the genuine `vault-pm`
+binary," so any same-user process can write a hand-crafted frame directly to
+the socket. A name outside `ConfigName`'s character set would otherwise have
+been retained verbatim and later rendered — unescaped — into `agent
+status`'s plain-text and `--json` output, corrupting the JSON or carrying
+raw terminal control sequences to whoever read it. Restricting the
+character set at decode time closes this at the one place every renderer of
+a vault name already trusts, rather than requiring every present and future
+render site to escape correctly.
+
 Every request/response round trip from the CLI side
 (`vault-pm-agent-host::client`) is bounded by a fixed timeout
 (`DEFAULT_TIMEOUT`, 1.5 seconds). A slow or wedged agent must fail exactly as
@@ -285,11 +300,32 @@ explicitly ask for (`wait_until_ready`, used only by `agent start`).
 
 One connection carries exactly one request and one response. There is no
 multiplexing and no keep-alive: the client connects, sends a frame, reads a
-frame, and disconnects. This keeps the accept loop and the shutdown path
-simple, at the cost of one TCP-like handshake per opportunistic lookup — an
-acceptable cost against a `AF_UNIX` socket on the same machine, and simpler
-to reason about than a protocol that has to cancel an in-flight request out
-from under a client.
+frame, and disconnects. This keeps the shutdown path simple, at the cost of
+one connect/disconnect per opportunistic lookup — an acceptable cost against
+a `AF_UNIX` socket on the same machine, and simpler to reason about than a
+protocol that has to cancel an in-flight request out from under a client.
+
+Every accepted connection is handled on its own short-lived thread rather
+than serially in the accept loop — also a security-review fix, not the
+original design. A serial accept loop would let any process running as this
+same local user (already this transport's trusted-reachability boundary,
+never its availability boundary) starve every legitimate caller by opening
+one connection, sending nothing, and repeating: the per-connection read/write
+timeout (`server::CONNECTION_TIMEOUT`, 2 seconds) bounds how long *that one*
+connection can block, but a serial loop would still let it block every
+connection queued behind it for the same span, indefinitely. One thread per
+connection removes that head-of-line dependency; `AgentState`'s `Mutex`
+already serializes the only state the threads actually share.
+
+Every buffer that can carry a passphrase in plaintext — an encoded `Unlock`
+request, an encoded `Passphrase` response, and every frame `transport::
+read_frame` reads, since the transport layer cannot know in advance which
+frames are secret-bearing — is `Zeroizing`, wiped on drop, the same
+discipline every other passphrase buffer in this product already follows.
+This closes the third security-review finding: `AgentState`'s own retained
+copies were always wipe-on-drop, but the plaintext copies that necessarily
+exist for the few milliseconds a passphrase is actually in transit were, in
+the first draft, ordinary un-scrubbed heap buffers.
 
 ## 5. Auto-lock state machine
 

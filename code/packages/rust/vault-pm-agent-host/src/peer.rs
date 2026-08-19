@@ -46,7 +46,8 @@ pub fn peer_uid(stream: &UnixStream) -> Result<u32, PeerCredentialError> {
     use std::mem::size_of;
     use std::os::unix::io::AsRawFd;
     let mut credentials: libc::ucred = unsafe { std::mem::zeroed() };
-    let mut length = size_of::<libc::ucred>() as libc::socklen_t;
+    let expected_length = size_of::<libc::ucred>() as libc::socklen_t;
+    let mut length = expected_length;
     // SAFETY: `credentials` is a local, correctly sized `libc::ucred`, and
     // `length` is set to its exact size before the call, which the kernel
     // will only ever shrink, not grow.
@@ -59,7 +60,11 @@ pub fn peer_uid(stream: &UnixStream) -> Result<u32, PeerCredentialError> {
             &mut length,
         )
     };
-    if result != 0 {
+    // The kernel is trusted to fill exactly `sizeof(ucred)` bytes on
+    // success; a shorter write would mean `credentials.uid` was read from
+    // memory this call never actually initialized. Both a nonzero return and
+    // a shrunk `length` fail closed the same way.
+    if result != 0 || length != expected_length {
         return Err(PeerCredentialError);
     }
     Ok(credentials.uid)
