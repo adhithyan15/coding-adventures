@@ -232,17 +232,31 @@ class PaintInstructionsTest {
 
     @Test
     fun `PaintInstruction when expression exhaustive`() {
+        // Deliberately exercises every permitted subtype with no `else`
+        // branch: adding an eighth subtype to PaintInstruction should make
+        // this fail to compile (exhaustiveness check), not fail silently at
+        // runtime -- that's the whole point of a sealed class.
         val instructions: List<PaintInstruction> = listOf(
             PaintInstruction.PaintRect(0, 0, 10, 10, "#000"),
             PaintInstruction.PaintPath(emptyList(), "#fff"),
+            PaintInstruction.PaintLine(0.0, 0.0, 1.0, 1.0, "#000", 1.0),
+            PaintInstruction.PaintGlyphRun(emptyList(), "font", 1.0, "#000"),
+            PaintInstruction.PaintGroup(emptyList()),
+            PaintInstruction.PaintClip(0.0, 0.0, 1.0, 1.0, emptyList()),
+            PaintInstruction.PaintLayer(emptyList()),
         )
         val kinds = instructions.map { instr ->
             when (instr) {
                 is PaintInstruction.PaintRect -> "rect"
                 is PaintInstruction.PaintPath -> "path"
+                is PaintInstruction.PaintLine -> "line"
+                is PaintInstruction.PaintGlyphRun -> "glyph_run"
+                is PaintInstruction.PaintGroup -> "group"
+                is PaintInstruction.PaintClip -> "clip"
+                is PaintInstruction.PaintLayer -> "layer"
             }
         }
-        assertEquals(listOf("rect", "path"), kinds)
+        assertEquals(listOf("rect", "path", "line", "glyph_run", "group", "clip", "layer"), kinds)
     }
 
     // =========================================================================
@@ -472,5 +486,142 @@ class PaintInstructionsTest {
         assertEquals(0xBB, c.g)
         assertEquals(0x11, c.b)
         assertEquals(0xFF, c.a)
+    }
+
+    // =========================================================================
+    // PaintRect stroke (P2D02 extension)
+    // =========================================================================
+
+    @Test
+    fun `PaintRect stroke and strokeWidth default to empty and zero`() {
+        val r = PaintInstruction.PaintRect(0, 0, 10, 10, "#000")
+        assertEquals("", r.stroke)
+        assertEquals(0.0, r.strokeWidth)
+    }
+
+    @Test
+    fun `PaintRect stroke and strokeWidth are stored when provided`() {
+        val r = PaintInstruction.PaintRect(0, 0, 10, 10, "", stroke = "#000000", strokeWidth = 1.5)
+        assertEquals("#000000", r.stroke)
+        assertEquals(1.5, r.strokeWidth)
+    }
+
+    // =========================================================================
+    // Transform2D
+    // =========================================================================
+
+    @Test
+    fun `Transform2D IDENTITY reports isIdentity true`() {
+        assertTrue(Transform2D.IDENTITY.isIdentity())
+    }
+
+    @Test
+    fun `Transform2D non-identity reports isIdentity false`() {
+        assertTrue(!Transform2D(2.0, 0.0, 0.0, 1.0, 0.0, 0.0).isIdentity())
+    }
+
+    // =========================================================================
+    // PaintGlyphPlacement
+    // =========================================================================
+
+    @Test
+    fun `PaintGlyphPlacement stores glyphId x y`() {
+        val p = PaintGlyphPlacement('h'.code, 8.0, 16.0)
+        assertEquals('h'.code, p.glyphId)
+        assertEquals(8.0, p.x)
+        assertEquals(16.0, p.y)
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintLine
+    // =========================================================================
+
+    @Test
+    fun `paintLine stores endpoints stroke and strokeWidth`() {
+        val line = paintLine(0.0, 0.0, 10.0, 20.0, "#000000", 1.0)
+        assertEquals(0.0, line.x1)
+        assertEquals(0.0, line.y1)
+        assertEquals(10.0, line.x2)
+        assertEquals(20.0, line.y2)
+        assertEquals("#000000", line.stroke)
+        assertEquals(1.0, line.strokeWidth)
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintGlyphRun
+    // =========================================================================
+
+    @Test
+    fun `paintGlyphRun stores glyphs fontRef fontSize fill`() {
+        val glyphs = listOf(PaintGlyphPlacement('h'.code, 0.0, 0.0), PaintGlyphPlacement('i'.code, 8.0, 0.0))
+        val run = paintGlyphRun(glyphs, "terminal-mono", 16.0, "#000000")
+        assertEquals(2, run.glyphs.size)
+        assertEquals("terminal-mono", run.fontRef)
+        assertEquals(16.0, run.fontSize)
+        assertEquals("#000000", run.fill)
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintGroup
+    // =========================================================================
+
+    @Test
+    fun `paintGroup has no transform and no opacity by default`() {
+        val group = paintGroup(emptyList())
+        assertEquals(null, group.transform)
+        assertEquals(null, group.opacity)
+    }
+
+    @Test
+    fun `paintGroup preserves children in order`() {
+        val rect = PaintInstruction.PaintRect(0, 0, 1, 1, "#000")
+        val group = paintGroup(listOf(rect))
+        assertEquals(1, group.children.size)
+        assertEquals(rect, group.children[0])
+    }
+
+    @Test
+    fun `PaintGroup explicit transform and opacity are stored`() {
+        val group = PaintInstruction.PaintGroup(
+            emptyList(),
+            transform = Transform2D(2.0, 0.0, 0.0, 2.0, 0.0, 0.0),
+            opacity = 0.5,
+        )
+        assertEquals(2.0, group.transform?.a)
+        assertEquals(0.5, group.opacity)
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintClip
+    // =========================================================================
+
+    @Test
+    fun `paintClip stores clip bounds and children`() {
+        val glyph = paintGlyphRun(listOf(PaintGlyphPlacement('a'.code, 0.0, 0.0)), "font", 1.0, "#000")
+        val clip = paintClip(0.0, 0.0, 8.0, 16.0, listOf(glyph))
+        assertEquals(0.0, clip.x)
+        assertEquals(0.0, clip.y)
+        assertEquals(8.0, clip.width)
+        assertEquals(16.0, clip.height)
+        assertEquals(1, clip.children.size)
+    }
+
+    // =========================================================================
+    // PaintInstruction.PaintLayer
+    // =========================================================================
+
+    @Test
+    fun `paintLayer has no filters and no transform opacity blendMode by default`() {
+        val layer = paintLayer(emptyList())
+        assertEquals(false, layer.hasFilters)
+        assertEquals(null, layer.blendMode)
+        assertEquals(null, layer.opacity)
+        assertEquals(null, layer.transform)
+    }
+
+    @Test
+    fun `PaintLayer hasFilters can be set explicitly`() {
+        val layer = PaintInstruction.PaintLayer(emptyList(), hasFilters = true)
+        assertTrue(layer.hasFilters)
     }
 }
