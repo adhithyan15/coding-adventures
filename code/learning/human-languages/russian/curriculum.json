@@ -79,7 +79,9 @@
         "RU-C02-kak-vas-zovut",
         "RU-C02-kak-cross-language",
         "RU-C02-ochen-priyatno",
-        "RU-C02-practice"
+        "RU-C02-practice",
+        "RU-C02-practice-cases",
+        "RU-C02-practice-zero-copula"
       ],
       "before": [],
       "inline": [
@@ -636,7 +638,9 @@
       "canDo": "I can retrieve and combine the Russian material introduced in this part of the path.",
       "prerequisites": [],
       "lessons": [
-        "RU-C02-practice"
+        "RU-C02-practice",
+        "RU-C02-practice-cases",
+        "RU-C02-practice-zero-copula"
       ]
     },
     {

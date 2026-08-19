@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c3922faa9a470bf4",
+  "sourceHash": "fnv1a64:ad09cda20bca0244",
   "summary": {
     "totalLessons": 3147,
     "voice": 2221,
@@ -8270,8 +8270,8 @@
             "RU-C02-menya-zovut",
             "RU-C02-kak-vas-zovut",
             "RU-C02-kak-cross-language",
-            "RU-C02-practice",
-            "RU-C02-ochen-priyatno"
+            "RU-C02-ochen-priyatno",
+            "RU-C02-practice"
           ]
         },
         {
@@ -50350,6 +50350,24 @@
       "sourceHash": "fnv1a64:c47d172e1777208b"
     },
     {
+      "id": "RU-C02-ochen-priyatno",
+      "language": "russian",
+      "chapter": 2,
+      "sequence": 125,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9074012a8cf85eb7"
+    },
+    {
       "id": "RU-C02-practice",
       "language": "russian",
       "chapter": 2,
@@ -50368,28 +50386,10 @@
       "sourceHash": "fnv1a64:953e87b3df5651af"
     },
     {
-      "id": "RU-C02-ochen-priyatno",
-      "language": "russian",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:97f4b12fe17053b5"
-    },
-    {
       "id": "RU-C02-practice-cases",
       "language": "russian",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 132,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -50401,13 +50401,13 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ee5e553eef015dca"
+      "sourceHash": "fnv1a64:c7ef7209c92b3fe2"
     },
     {
       "id": "RU-C02-practice-zero-copula",
       "language": "russian",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 134,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -50419,7 +50419,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:97d645e1b389a3a3"
+      "sourceHash": "fnv1a64:30eca8ce373c454a"
     },
     {
       "id": "RU-C03-byt",

@@ -148,7 +148,7 @@ enter cross-language review only after focused retrieval.
 | [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi | 71 | 64 | 14 chapters; through Ch. 14; 9 generated |
 | [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 80 | 76 | 16 chapters; through Ch. 16; 11 generated |
 | [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 69 | 65 | 13 chapters; through Ch. 13; 8 generated |
-| [Russian](./russian/README.md) | Slavic / Cyrillic | 84 | 76 | 15 chapters; through Ch. 15; 13 generated |
+| [Russian](./russian/README.md) | Slavic / Cyrillic | 84 | 78 | 15 chapters; through Ch. 15; 14 generated |
 | [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 231 | 228 | 44 chapters; through Ch. 44; 39 generated |
 | [Persian](./persian/README.md) | Iranian / Perso-Arabic | 69 | 69 | 15 chapters; through Ch. 15; 14 generated |
 | [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 68 | 68 | 16 chapters; through Ch. 16; 15 generated |
