@@ -4661,7 +4661,8 @@ mod tests {
         VaultObjectStore,
     };
     use coding_adventures_vault_records::{
-        AnyRecord, Login, SecureNote, TotpSeed, LOGIN_V1, SECURE_NOTE_V1, TOTP_SEED_V1,
+        encode_record, AnyRecord, Login, SecureNote, TotpSeed, LOGIN_V1, SECURE_NOTE_V1,
+        TOTP_SEED_V1,
     };
     use coding_adventures_zeroize::Zeroize;
     use std::sync::{
@@ -16395,6 +16396,269 @@ mod tests {
         let candidates = &session.current_catalog.items[&item_id];
         assert_eq!(candidates.len(), 1);
         assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // A synced peer's *schema-mismatched* record -- not oversized, just
+    // malformed relative to its declared content type (VLT-PM05 §13.3's
+    // adjacent, previously-unrepaired residual)
+    //
+    // The bug this closes is the same shape as the oversized-opaque one
+    // above but reached through a different door and with no "return the
+    // original bytes" escape hatch available: the payload here decoded
+    // through the strict canonical CBOR decoder (so the bytes are legal
+    // CBOR and could be returned verbatim) but does not satisfy the
+    // schema its declared content type names -- a `Login` missing its
+    // `password` field. There is no typed `Login` value to hand back, so
+    // the repair is `AnyRecord::Quarantined` instead of a re-encode fix.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// Canonical CBOR bytes for a `vault/login/v1` record whose payload
+    /// is missing the required `password` field -- otherwise well-formed
+    /// (valid CBOR, a `{t,d}` envelope, `d` a map with `title`,
+    /// `username`, and an empty `urls` array).
+    ///
+    /// This is the same defect as vault-records'
+    /// `login_missing_password_is_schema_mismatch` fixture, reproduced
+    /// here (rather than imported) because it has to be embedded inside
+    /// a full sealed item revision, which vault-records has no notion of.
+    fn schema_mismatched_login_record_bytes() -> Vec<u8> {
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("t"), CborValue::text(LOGIN_V1.to_string())),
+            (
+                CborValue::text("d"),
+                CborValue::Map(vec![
+                    (
+                        CborValue::text("title"),
+                        CborValue::text("Peer Login".to_string()),
+                    ),
+                    (
+                        CborValue::text("username"),
+                        CborValue::text("mallory".to_string()),
+                    ),
+                    (CborValue::text("urls"), CborValue::Array(vec![])),
+                ]),
+            ),
+        ]);
+        encode_cbor(&envelope)
+    }
+
+    /// The revision plaintext a peer seals for one live `Login` item whose
+    /// payload is schema-mismatched (missing `password`).
+    ///
+    /// Same technique as [`peer_opaque_revision_plaintext`]: encode the
+    /// revision with a placeholder record through the product's own
+    /// encoder (so field framing, timestamps, and the observed sets are
+    /// exactly what this product would write), then splice out the
+    /// placeholder record's bytes for the schema-mismatched ones. Unlike
+    /// the oversized-opaque fixture there is no size pressure here -- the
+    /// swap is small-for-small -- but the splice is still required
+    /// because there is no way to *construct* a `Login` Rust value with a
+    /// missing field; only hand-built wire bytes can carry that defect.
+    fn peer_schema_mismatched_login_revision_plaintext(item_id: ItemId) -> Vec<u8> {
+        let placeholder_login = Login {
+            title: "placeholder".to_string(),
+            username: "placeholder".to_string(),
+            password: "placeholder".to_string(),
+            urls: vec![],
+            notes: None,
+        };
+        let document = ItemDocument::new(
+            item_id,
+            ContentType::new(LOGIN_V1).unwrap(),
+            700,
+            700,
+            LwwRegister::new(false, 700, OperationId::new([0xe0; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(placeholder_login),
+            ObservedSet::new(),
+            BTreeMap::new(),
+        )
+        .unwrap();
+        let candidate = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Live(Box::new(document)),
+        )
+        .unwrap();
+        let plaintext =
+            encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap();
+
+        let placeholder_record = encode_record(&Login {
+            title: "placeholder".to_string(),
+            username: "placeholder".to_string(),
+            password: "placeholder".to_string(),
+            urls: vec![],
+            notes: None,
+        })
+        .unwrap();
+        let broken_record = schema_mismatched_login_record_bytes();
+        let mut placeholder_field = cbor_header(2, placeholder_record.len());
+        placeholder_field.extend_from_slice(&placeholder_record);
+        let mut broken_field = cbor_header(2, broken_record.len());
+        broken_field.extend_from_slice(&broken_record);
+        splice_only_occurrence(&plaintext, &placeholder_field, &broken_field)
+    }
+
+    /// A peer commit carrying one live `Login` item whose payload is
+    /// schema-mismatched.
+    fn peer_schema_mismatched_login_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, RevisionId) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &peer_schema_mismatched_login_revision_plaintext(item_id),
+            &ObjectRandomness::new([0xd1; 32], [0xd2; 24], [0xd3; 24]),
+        )
+        .unwrap();
+        let revision_id = RevisionId::new(*frame.id().unwrap().as_bytes());
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, vec![revision_id])])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xd4; 32], [0xd5; 24], [0xd6; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, vec![frame], catalog_frame),
+            revision_id,
+        )
+    }
+
+    /// Sync one peer-authored schema-mismatched `Login` item into a fresh
+    /// vault and return everything needed to reopen it.
+    #[allow(clippy::type_complexity)]
+    fn vault_with_synced_schema_mismatched_login_item() -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        ItemId,
+        RevisionId,
+    ) {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x5e; 16]);
+        let (publication, revision_id) = peer_schema_mismatched_login_publication(&active, item_id);
+        peer_publishes(locator, &local, &bootstrap, &factory, publication);
+        (locator, local, bootstrap, factory, item_id, revision_id)
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_record_leaves_the_vault_openable() {
+        // The reachability proof. Before the fix in this test's history,
+        // `decode_record`'s `Login` arm propagated `SchemaMismatch`,
+        // `decode_live` mapped it to `IntegrityFailure` (see
+        // VLT-PM05 §13.3's residual paragraph), and that denied
+        // `open_active_vault` for the whole vault -- exactly the blast
+        // radius of the oversized-opaque bug, reached without ever
+        // crossing a size ceiling.
+        let (locator, local, bootstrap, factory, item_id, revision_id) =
+            vault_with_synced_schema_mismatched_login_item();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].revision_id(), revision_id);
+
+        let ItemState::Live(document) = candidates[0].state() else {
+            panic!("the synced candidate must be live")
+        };
+        let AnyRecord::Quarantined {
+            content_type,
+            reason,
+            ..
+        } = document.payload()
+        else {
+            panic!("a schema-mismatched Login must decode as Quarantined")
+        };
+        assert_eq!(content_type, LOGIN_V1);
+        assert!(reason.contains("password"));
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_item_is_visible_in_the_redacted_list() {
+        // The item must not just fail to deny open -- it has to actually
+        // show up where an operator would look for it, or the fix
+        // degrades to "the vault opens but the item silently vanishes,"
+        // which trades one failure mode for a quieter one.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_schema_mismatched_login_item();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let views = session.list_items().unwrap();
+        let view = views
+            .iter()
+            .find(|view| view.item_id == item_id)
+            .expect("the quarantined item must still appear in the item list");
+        let RedactedRecordView::Quarantined {
+            content_type,
+            reason,
+            ..
+        } = &view.record
+        else {
+            panic!("expected Quarantined, got {:?}", view.record)
+        };
+        assert_eq!(content_type.as_str(), LOGIN_V1);
+        assert!(reason.contains("password"));
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_item_can_be_deleted() {
+        // The escape hatch this section restores, on the same terms as
+        // the oversized-opaque case: deletion writes a tombstone, which
+        // carries only the item id and a timestamp and never touches the
+        // unreadable payload, so it works even though nothing can repair
+        // or even fully interpret the record itself.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_schema_mismatched_login_item();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        session
+            .delete_current_item(item_id, 701, 702, delete_item_randomness(0x5e), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_item_denies_edit_as_login() {
+        // Editing requires decoding the current record as the type being
+        // edited (`login_edit_precondition`'s `let AnyRecord::Login(_) =
+        // current.payload() else { .. }`). Before quarantine existed, an
+        // item whose `schema()` field said `vault/login/v1` was
+        // guaranteed to decode as `AnyRecord::Login` -- that was a true
+        // invariant, which is why the *defensive* copy of this same
+        // check inside `replacement_login_document` reports
+        // `InternalInvariant` on failure. Quarantine breaks that
+        // invariant for the first time: `schema()` can now say
+        // `vault/login/v1` while `payload()` is `Quarantined`. This test
+        // pins that the *first* gate a real `item edit` call reaches
+        // (`login_edit_precondition`) already treats "any variant other
+        // than Login" uniformly regardless of *why* -- Opaque or
+        // Quarantined both take the same `else` branch -- so the ordinary
+        // edit ceremony reports `Unsupported`, a normal declined-command
+        // outcome, and never reaches the inner defensive check at all.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_schema_mismatched_login_item();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(
+            session.prepare_login_edit(item_id).err(),
+            Some(ApplicationError::Unsupported)
+        );
     }
 
     // ─────────────────────────────────────────────────────────────────

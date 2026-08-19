@@ -279,16 +279,69 @@ pub fn encode_record<T: VaultRecord>(rec: &T) -> Result<Vec<u8>, VaultRecordErro
 /// pattern-matches on the content type. Unknown types are returned
 /// as `AnyRecord::Opaque` so old clients do not crash on records
 /// produced by newer ones.
+///
+/// # Why a schema mismatch on a *known* content type does not fail
+///
+/// A payload tagged with a first-party content type (e.g.
+/// `vault/login/v1`) but missing a required field, or carrying a
+/// field of the wrong shape, used to make this function return
+/// `Err(SchemaMismatch)`. That looks like the correct behaviour in
+/// isolation — the bytes genuinely are not a `Login` — but one layer
+/// up it repeats the exact defect this function's opaque arm was
+/// fixed for (see the comment below): `decode_record` runs during
+/// vault *open*, and the caller (`decode_live` in the application
+/// layer) mapped every decode error, `SchemaMismatch` included, to
+/// `IntegrityFailure`. One peer authoring a `Login` with a missing
+/// `password` field denied the whole vault, not just that one item —
+/// the identical blast radius as the oversized-opaque bug, reached
+/// through a different door.
+///
+/// Unlike the oversized-opaque case, there is no "return the original
+/// bytes as the same type" escape hatch here: the payload cannot be
+/// materialised as a `Login` at all, by definition. What *is* available
+/// is the same technique the opaque arm already uses — the payload's
+/// own already-validated CBOR bytes, sliced rather than re-encoded —
+/// just attached to a new [`AnyRecord::Quarantined`] variant instead of
+/// a typed struct. The record is still identifiable (its declared
+/// content type is retained) and still round-trips losslessly (its
+/// bytes are retained verbatim); it just cannot be interpreted as the
+/// schema it claims. That is enough for the vault to open, for the item
+/// to be listed, and for it to be deleted — the same floor `Opaque`
+/// already stands on.
+///
+/// Only [`VaultRecordError::SchemaMismatch`] is treated this way. Any
+/// other error from a typed decoder still fails `decode_record` outright,
+/// because `VaultRecord::decode_payload` is documented to return
+/// `SchemaMismatch` and nothing else — this is a defensive branch, not a
+/// currently-reachable one, kept so a future decoder that starts
+/// returning some other error is not silently swallowed into quarantine.
 pub fn decode_record(bytes: &[u8]) -> Result<AnyRecord, VaultRecordError> {
     let (content_type, payload, payload_span) = split_envelope(bytes)?;
+    // Decode a known first-party type, quarantining a schema mismatch
+    // instead of propagating it. See the function doc comment above.
+    macro_rules! typed_or_quarantine {
+        ($ctor:expr) => {
+            match $ctor(&payload) {
+                Ok(record) => record,
+                Err(VaultRecordError::SchemaMismatch { what }) => {
+                    return Ok(AnyRecord::Quarantined {
+                        content_type,
+                        payload_bytes: bytes[payload_span].to_vec(),
+                        reason: what,
+                    })
+                }
+                Err(other) => return Err(other),
+            }
+        };
+    }
     Ok(match content_type.as_str() {
-        LOGIN_V1 => AnyRecord::Login(Login::decode_payload(&payload)?),
-        SECURE_NOTE_V1 => AnyRecord::SecureNote(SecureNote::decode_payload(&payload)?),
-        CARD_V1 => AnyRecord::Card(Card::decode_payload(&payload)?),
-        TOTP_SEED_V1 => AnyRecord::TotpSeed(TotpSeed::decode_payload(&payload)?),
-        API_KEY_V1 => AnyRecord::ApiKey(ApiKey::decode_payload(&payload)?),
+        LOGIN_V1 => AnyRecord::Login(typed_or_quarantine!(Login::decode_payload)),
+        SECURE_NOTE_V1 => AnyRecord::SecureNote(typed_or_quarantine!(SecureNote::decode_payload)),
+        CARD_V1 => AnyRecord::Card(typed_or_quarantine!(Card::decode_payload)),
+        TOTP_SEED_V1 => AnyRecord::TotpSeed(typed_or_quarantine!(TotpSeed::decode_payload)),
+        API_KEY_V1 => AnyRecord::ApiKey(typed_or_quarantine!(ApiKey::decode_payload)),
         DATABASE_CREDENTIAL_V1 => {
-            AnyRecord::DatabaseCredential(DatabaseCredential::decode_payload(&payload)?)
+            AnyRecord::DatabaseCredential(typed_or_quarantine!(DatabaseCredential::decode_payload))
         }
         // Unknown / app-specific / future-version: hand back the
         // payload's own bytes and return as opaque.
@@ -385,8 +438,10 @@ fn split_envelope(
     }
 }
 
-/// One of the known record types, or an opaque pass-through for
-/// content types this crate doesn't recognise.
+/// One of the known record types, an opaque pass-through for content
+/// types this crate doesn't recognise, or a quarantined record whose
+/// declared type it recognises but whose payload doesn't parse as
+/// that type's schema.
 #[derive(Clone, PartialEq, Eq)]
 pub enum AnyRecord {
     /// `vault/login/v1`
@@ -411,6 +466,42 @@ pub enum AnyRecord {
         /// The canonical-CBOR-encoded payload bytes.
         payload_bytes: Vec<u8>,
     },
+    /// A first-party content type (`vault/login/v1` and friends) whose
+    /// payload does not decode as that type's schema — a required field
+    /// missing, or present with the wrong shape.
+    ///
+    /// This differs from `Opaque` in *why* the type could not be
+    /// materialised: `Opaque` means "this crate doesn't recognise the
+    /// content type at all," which is an ordinary forward-compatibility
+    /// case (an older client seeing a newer peer's record). `Quarantined`
+    /// means "this crate recognises the content type and the payload is
+    /// still wrong," which only happens if a peer authored a malformed
+    /// record — by bug or by malice. The two get the same downstream
+    /// treatment (visible in `item list`, redacted in `item show`,
+    /// deletable, inert in search) because a caller's remedy is the same
+    /// either way — it cannot repair the record, only remove it — but
+    /// they are kept as distinct variants because *why* a record is
+    /// unreadable is worth preserving for diagnostics, and conflating
+    /// the two would make "how many records has this vault received
+    /// that this client cannot even parse against its own claimed type"
+    /// unanswerable.
+    Quarantined {
+        /// The content_type string from the wire (one of this crate's
+        /// own `*_V1` constants — otherwise decoding would have taken
+        /// the `Opaque` arm instead).
+        content_type: String,
+        /// The payload's own canonical-CBOR bytes, sliced rather than
+        /// re-encoded for the same reason `Opaque`'s are: the bytes came
+        /// from the strict canonical decoder, so they already are the
+        /// one legal spelling of that value, and slicing a
+        /// parser-measured range cannot fail on input that decoded.
+        payload_bytes: Vec<u8>,
+        /// Static description of what went wrong, e.g.
+        /// `"Login.password missing"`. Never attacker-controlled text —
+        /// it is always one of a fixed set of literals defined by this
+        /// crate's own typed decoders.
+        reason: &'static str,
+    },
 }
 
 impl core::fmt::Debug for AnyRecord {
@@ -423,6 +514,7 @@ impl core::fmt::Debug for AnyRecord {
             Self::ApiKey(_) => "AnyRecord::ApiKey(<redacted>)",
             Self::DatabaseCredential(_) => "AnyRecord::DatabaseCredential(<redacted>)",
             Self::Opaque { .. } => "AnyRecord::Opaque(<redacted>)",
+            Self::Quarantined { .. } => "AnyRecord::Quarantined(<redacted>)",
         };
         f.write_str(variant)
     }
@@ -445,10 +537,19 @@ pub enum VaultRecordKind {
     DatabaseCredential,
     /// Unknown, app-specific, or future-version content type.
     Opaque,
+    /// A first-party content type whose payload failed schema decode.
+    Quarantined,
 }
 
 impl VaultRecordKind {
     /// Static content type for first-party records.
+    ///
+    /// Returns `None` for `Quarantined` even though the record's *wire*
+    /// content type is one of this crate's own `*_V1` constants — this
+    /// method returns a `&'static str` and a quarantined record's content
+    /// type is only known at runtime (it is read straight off `AnyRecord`,
+    /// same as `Opaque`'s). Use `AnyRecord`'s own content-type accessor
+    /// (in the application layer) when the dynamic string is needed.
     pub fn content_type(self) -> Option<&'static str> {
         match self {
             Self::Login => Some(LOGIN_V1),
@@ -457,11 +558,16 @@ impl VaultRecordKind {
             Self::TotpSeed => Some(TOTP_SEED_V1),
             Self::ApiKey => Some(API_KEY_V1),
             Self::DatabaseCredential => Some(DATABASE_CREDENTIAL_V1),
-            Self::Opaque => None,
+            Self::Opaque | Self::Quarantined => None,
         }
     }
 
     /// True for first-party records understood by this crate.
+    ///
+    /// `Quarantined` is `false` here even though its wire content type
+    /// names a first-party schema: this predicate means "successfully
+    /// decoded as one of the six typed schemas," and a quarantined
+    /// record by definition did not.
     pub fn is_first_party(self) -> bool {
         self.content_type().is_some()
     }
@@ -495,9 +601,11 @@ pub struct VaultRecordSummary {
     pub has_expiry: bool,
     /// Whether the record carries a lease reference.
     pub has_lease: bool,
-    /// Length of an opaque record's content type. Zero for first-party records.
+    /// Length of an opaque or quarantined record's content type. Zero for
+    /// records decoded as one of the six typed schemas.
     pub opaque_content_type_len: usize,
-    /// Canonical-CBOR payload byte length for opaque records. Zero for first-party records.
+    /// Canonical-CBOR payload byte length for opaque or quarantined
+    /// records. Zero for records decoded as one of the six typed schemas.
     pub opaque_payload_bytes: usize,
 }
 
@@ -526,6 +634,12 @@ impl VaultRecordSummary {
     pub fn is_opaque(&self) -> bool {
         self.kind == VaultRecordKind::Opaque
     }
+
+    /// True when the record's declared type is known but its payload
+    /// failed schema decode.
+    pub fn is_quarantined(&self) -> bool {
+        self.kind == VaultRecordKind::Quarantined
+    }
 }
 
 impl AnyRecord {
@@ -539,6 +653,7 @@ impl AnyRecord {
             Self::ApiKey(_) => VaultRecordKind::ApiKey,
             Self::DatabaseCredential(_) => VaultRecordKind::DatabaseCredential,
             Self::Opaque { .. } => VaultRecordKind::Opaque,
+            Self::Quarantined { .. } => VaultRecordKind::Quarantined,
         }
     }
 
@@ -620,6 +735,20 @@ impl AnyRecord {
                 opaque_content_type_len: content_type.len(),
                 opaque_payload_bytes: payload_bytes.len(),
             },
+            Self::Quarantined {
+                content_type,
+                payload_bytes,
+                reason: _,
+            } => VaultRecordSummary {
+                kind: VaultRecordKind::Quarantined,
+                secret_field_count: 0,
+                optional_field_count: 0,
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: content_type.len(),
+                opaque_payload_bytes: payload_bytes.len(),
+            },
         }
     }
 }
@@ -637,6 +766,19 @@ impl Zeroize for AnyRecord {
                 content_type,
                 payload_bytes,
             } => {
+                content_type.zeroize();
+                payload_bytes.zeroize();
+            }
+            AnyRecord::Quarantined {
+                content_type,
+                payload_bytes,
+                reason: _,
+            } => {
+                // `reason` is a `&'static str` literal owned by this
+                // crate's own source, never attacker-controlled, so
+                // there is nothing to wipe there. `content_type` and
+                // `payload_bytes` came off the wire and get the same
+                // treatment as `Opaque`'s.
                 content_type.zeroize();
                 payload_bytes.zeroize();
             }
@@ -658,6 +800,19 @@ impl Zeroize for AnyRecord {
 // future-version content type), the caller should call
 // `.zeroize()` explicitly via the `Zeroize` trait impl above
 // before letting the value drop.
+//
+// `AnyRecord::Quarantined { content_type, payload_bytes, reason }`
+// gets the same non-`Drop` treatment for the same structural reason
+// (no typed struct to hold a per-type `Drop`), but unlike `Opaque` its
+// bytes usually ARE known to be sensitive: the declared content type
+// names one of this crate's own secret-bearing schemas (a `Login`
+// missing its `password` field, say, still has a *username* sitting in
+// `payload_bytes`). Callers that materialise a `Quarantined` record —
+// today, only `decode_record`'s typed-dispatch arms — should treat its
+// `payload_bytes` as sensitive by default and hold it the same way they
+// would hold the typed record it failed to become (e.g. wrapped in
+// `Zeroizing<_>`), rather than assuming safety the way `Opaque`'s
+// genuinely-unknown-type bytes get to.
 
 /// Re-encode an [`AnyRecord::Opaque`] back to its full
 /// envelope-wrapped canonical CBOR bytes. Useful for forwarding a
@@ -2117,6 +2272,133 @@ mod tests {
         let bytes = encode_record(&t).unwrap();
         let err = decode_record_as::<TotpSeed>(&bytes).unwrap_err();
         assert!(matches!(err, VaultRecordError::SchemaMismatch { .. }));
+    }
+
+    // --- Schema mismatch through `decode_record` is quarantined, not denied ---
+    //
+    // The three tests above prove `decode_record_as::<T>` — a caller asking
+    // for one specific type — still fails closed on schema mismatch. These
+    // prove `decode_record` — the general decoder `decode_live` in the
+    // application layer calls at vault-open time — does not: it must
+    // materialise something rather than propagate the error, because
+    // propagating it here is exactly the bug this quarantine variant
+    // exists to close (see the `decode_record` doc comment).
+
+    #[test]
+    fn login_missing_password_via_decode_record_is_quarantined_not_denied() {
+        // Same malformed bytes as `login_missing_password_is_schema_mismatch`,
+        // but through the general decoder instead of the type-specific one.
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("t"), CborValue::text(LOGIN_V1.to_string())),
+            (
+                CborValue::text("d"),
+                CborValue::Map(vec![
+                    (CborValue::text("title"), CborValue::text("x".to_string())),
+                    (
+                        CborValue::text("username"),
+                        CborValue::text("y".to_string()),
+                    ),
+                    (CborValue::text("urls"), CborValue::Array(vec![])),
+                ]),
+            ),
+        ]);
+        let bytes = encode(&envelope);
+
+        let any = decode_record(&bytes).expect(
+            "a schema-mismatched but well-formed-envelope record must still decode \
+             (as Quarantined), never deny the whole decode",
+        );
+        match any {
+            AnyRecord::Quarantined {
+                content_type,
+                payload_bytes,
+                reason,
+            } => {
+                assert_eq!(content_type, LOGIN_V1);
+                assert!(reason.contains("password"));
+                // The quarantined bytes are exactly the inner "d" payload's
+                // own canonical CBOR — the same slice-not-re-encode contract
+                // the Opaque arm already gives.
+                let payload = decode(&payload_bytes).unwrap();
+                if let CborValue::Map(entries) = payload {
+                    assert_eq!(entries.len(), 3);
+                } else {
+                    panic!("expected map");
+                }
+            }
+            other => panic!("expected Quarantined, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn card_with_invalid_month_via_decode_record_is_quarantined() {
+        let mut c = sample_card();
+        c.expiry_month = 13;
+        let bytes = encode_record(&c).unwrap();
+        let any = decode_record(&bytes).unwrap();
+        match any {
+            AnyRecord::Quarantined {
+                content_type,
+                reason,
+                ..
+            } => {
+                assert_eq!(content_type, CARD_V1);
+                assert!(reason.contains("month"));
+            }
+            other => panic!("expected Quarantined, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn quarantined_record_kind_and_summary_are_distinct_from_opaque() {
+        let mut t = sample_totp();
+        t.digits = 100;
+        let bytes = encode_record(&t).unwrap();
+        let any = decode_record(&bytes).unwrap();
+
+        assert_eq!(any.kind(), VaultRecordKind::Quarantined);
+        assert_ne!(any.kind(), VaultRecordKind::Opaque);
+        assert!(!any.kind().is_first_party());
+
+        let summary = any.summary();
+        assert_eq!(summary.kind, VaultRecordKind::Quarantined);
+        assert!(summary.is_quarantined());
+        assert!(!summary.is_opaque());
+        assert!(!summary.is_first_party());
+        assert_eq!(summary.opaque_content_type_len, TOTP_SEED_V1.len());
+        assert!(summary.opaque_payload_bytes > 0);
+    }
+
+    #[test]
+    fn quarantined_record_debug_is_value_redacted() {
+        let mut c = sample_card();
+        c.expiry_month = 13;
+        let bytes = encode_record(&c).unwrap();
+        let any = decode_record(&bytes).unwrap();
+        assert_eq!(format!("{any:?}"), "AnyRecord::Quarantined(<redacted>)");
+    }
+
+    #[test]
+    fn a_malformed_envelope_still_denies_decode_record_entirely() {
+        // Quarantine only widens the *schema-mismatch* case. A record whose
+        // envelope itself is broken (not a {t,d} map, "t" the wrong type,
+        // etc.) is not something any content type can be attributed to, and
+        // must still fail outright rather than being silently accepted as
+        // some fabricated quarantine record.
+        let not_a_record = encode(&CborValue::Array(vec![CborValue::Unsigned(1)]));
+        assert!(matches!(
+            decode_record(&not_a_record),
+            Err(VaultRecordError::NotARecord)
+        ));
+
+        let bad_envelope = CborValue::Map(vec![
+            (CborValue::text("t"), CborValue::Unsigned(1)),
+            (CborValue::text("d"), CborValue::Map(vec![])),
+        ]);
+        assert!(matches!(
+            decode_record(&encode(&bad_envelope)),
+            Err(VaultRecordError::BadEnvelope)
+        ));
     }
 
     // --- Envelope rejection ---

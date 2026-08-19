@@ -187,7 +187,8 @@ impl SearchEntryV1 {
             RedactedRecordView::SecureNote { .. }
             | RedactedRecordView::Card { .. }
             | RedactedRecordView::TotpSeed { .. }
-            | RedactedRecordView::Opaque { .. } => {}
+            | RedactedRecordView::Opaque { .. }
+            | RedactedRecordView::Quarantined { .. } => {}
         }
         for tag in document.tags().values() {
             push_normalized(&mut normalized_text, tag);
@@ -209,7 +210,7 @@ fn display_title(record: &RedactedRecordView) -> Option<&str> {
         RedactedRecordView::TotpSeed { label, .. }
         | RedactedRecordView::ApiKey { label, .. }
         | RedactedRecordView::DatabaseCredential { label, .. } => Some(label),
-        RedactedRecordView::Opaque { .. } => None,
+        RedactedRecordView::Opaque { .. } | RedactedRecordView::Quarantined { .. } => None,
     }
 }
 
@@ -321,6 +322,7 @@ mod tests {
             AnyRecord::ApiKey(_) => API_KEY_V1,
             AnyRecord::DatabaseCredential(_) => DATABASE_CREDENTIAL_V1,
             AnyRecord::Opaque { content_type, .. } => content_type,
+            AnyRecord::Quarantined { content_type, .. } => content_type,
         };
         let document = ItemDocument::new(
             item_id,

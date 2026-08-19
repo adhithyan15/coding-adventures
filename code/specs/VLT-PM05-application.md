@@ -933,14 +933,14 @@ the same threat model: a peer authoring a first-party record whose
 payload does not match the schema its content type names — a `Login`
 missing a required field — yields `SchemaMismatch`, which
 `decode_live` maps to `IntegrityFailure`, which travels the same path
-shown above. That residual is pre-existing, is unchanged by this change,
-and is deliberately not repaired here. The size failure could be *removed*
-because the re-encode was never needed; a payload that does not match its
-schema has to be represented somehow instead, which means deciding what a
+shown above. That residual was pre-existing when this section was
+written and was left deliberately unrepaired here, because unlike the
+size failure it could not be *removed* the same way — a payload that does
+not match its schema has to be represented somehow instead of an
+already-typed value handed back verbatim, which means deciding what a
 partly-unreadable item looks like to search, list, show, conflict
-resolution, export, and restore — a design question, not a local fix. It
-is tracked as follow-on work against this section, alongside the two
-repairs named in §13.2.
+resolution, export, and restore. **This one is now fixed too; §13.5
+states the repair.**
 
 Also newly reachable, and fixed here rather than deferred: `encode_any_record`'s
 opaque arm folded every `encode_opaque` failure into `IntegrityFailure`.
@@ -1155,6 +1155,163 @@ the latter opens a real, peer-synced vault whose catalog already exceeds the
 admission ceiling and performs two real `delete_current_item` calls against
 it, which is exactly the scenario security review found broken in the first
 version of this fix.
+
+### 13.5 A schema-mismatched payload has no bytes to hand back
+
+§13.3 named this residual and left it deliberately unrepaired: a peer
+authoring a first-party record whose payload does not match the schema its
+content type names — a `Login` missing its `password` field is the running
+example — decodes into `SchemaMismatch`, which `decode_live` mapped to
+`IntegrityFailure`, which travels the same `decode_record → decode_
+item_revision → read_candidate → materialize_current_catalog →
+open_active_vault` chain the oversized-opaque bug did. One synced record
+denied the whole vault, the identical blast radius, reached without ever
+crossing a size ceiling.
+
+**Confirmed reachable, not assumed.** Before writing any fix, this was
+proven with a real reproduction rather than trusted from the code reading
+above: `a_synced_schema_mismatched_login_record_leaves_the_vault_openable`
+(`open.rs`) synthesises a peer-authored `Login` revision whose payload is
+valid canonical CBOR — decodable, and legal to hold under
+`MAX_PLAINTEXT_BYTES` — but missing `password`, delivers it through the
+shared object store the way a real sync would, and opens the vault.
+Temporarily reverting only the repair below (keeping everything else, so
+the test still compiles) reproduces the exact failure: `active_session`
+panics on `Err(IntegrityFailure)` from `open_active_vault`. The fix in this
+section is what turns that panic back into a normal open.
+
+**Why this is not §13.3's fix again.** §13.3's oversized-opaque payload
+decoded successfully — the failure was purely in a needless re-encode on
+the way out, so the repair was "hand back the bytes that already decoded
+correctly, don't re-encode them." A schema-mismatched payload never
+decodes as its declared type at all: there is no `Login` value to hand
+back, because none was ever constructed. "Return the original bytes"
+therefore cannot mean "return the original *typed value*" here; it can
+only mean "return the original *record's raw bytes*, unintepreted" — which
+is exactly the shape `AnyRecord::Opaque` already uses for a different
+reason (a content type this crate doesn't recognise at all). The repair
+reuses that shape under a new variant rather than folding into `Opaque`
+itself, because *why* a record is unreadable is worth keeping distinct from
+*whether* it is:
+
+```rust
+// coding_adventures_vault_records::AnyRecord (vault-records/src/lib.rs)
+Quarantined {
+    content_type: String,   // one of this crate's own *_V1 constants
+    payload_bytes: Vec<u8>, // the payload's own canonical-CBOR bytes
+    reason: &'static str,   // e.g. "Login.password missing" — never
+                             // attacker-controlled, always a literal
+                             // from this crate's own typed decoders
+},
+```
+
+`Opaque` means "this crate doesn't recognise the content type" — an
+ordinary forward-compatibility case, no different in kind from an older
+client seeing a newer peer's record. `Quarantined` means "this crate
+recognises the content type and the payload is still wrong" — which only
+happens if a peer authored a malformed record, by bug or by malice. The two
+get identical downstream treatment (below) because a caller's remedy is the
+same either way: it cannot repair the record, only remove it. They stay
+distinct variants because *why* a record is unreadable is a fact worth
+preserving — collapsing them would make "how many records has this vault
+received that this client cannot even parse against the type they
+themselves claim" permanently unanswerable, which matters for anyone
+auditing a vault for peer misbehaviour after the fact.
+
+`decode_record`'s six typed-dispatch arms now catch `SchemaMismatch`
+specifically and quarantine instead of propagating; every other
+`VaultRecordError` variant (a broken `{t,d}` envelope, `t` the wrong CBOR
+type, and so on) still denies decode outright, because those describe a
+record no content type can be attributed to — quarantine needs a content
+type to quarantine *under*. `decode_record_as::<T>`, used only when a
+caller specifically requires one exact type, is untouched and still
+returns `SchemaMismatch` directly; only the general decoder `decode_live`
+calls at open time changed behaviour.
+
+**What each affected surface does with a quarantined item**, mirroring the
+precedent §13.3 and §13.2 already set for the oversized-opaque case:
+
+- **Open.** `open_active_vault` no longer fails. The item materialises into
+  the current catalog as any other item would.
+- **`item list`.** The item appears. `RedactedRecordView` gained a matching
+  `Quarantined { content_type, payload_bytes, reason, payload:
+  RedactedSecret }` variant (`vault-pm-domain`), and the CLI's title
+  fallback (`record_title`) uses the declared content type as the display
+  title — the same fallback `Opaque` already uses, since neither has a
+  title field. A quarantined item silently missing from `item list` would
+  trade one failure mode (vault won't open) for a quieter one (item exists,
+  operator never learns it does).
+- **`item show`.** Unlike `Opaque` — an ordinary content type this build
+  simply has no renderer for, which `item show` declines with
+  `Unsupported` — a quarantined item's declared type *is* recognised; only
+  its payload failed to parse. `item show` therefore succeeds with a
+  redacted placeholder (`Content: could not be read (<reason>)`) instead of
+  erroring, because an `Unsupported` error reads the same as "this command
+  doesn't handle that item kind," which is the wrong message for "this item
+  is broken."
+- **Search.** Indexed the same as `Opaque`: no title text contributed (there
+  is none to index), tags still index normally. A quarantined item can be
+  found by tag but not by guessing at its unreadable content.
+- **Conflict resolution.** `conflict choose` (`resolve_item_conflict`) never
+  matches on `AnyRecord` at all — it operates on whichever candidate's
+  revision id is selected without decoding its payload — so it is
+  unaffected by construction. The six typed `conflict merge <type>`
+  ceremonies each gate on a `let AnyRecord::<Type>(_) = base.payload() else
+  { return Err(Unsupported) }` precondition (`login_conflict_merge_
+  precondition` and its five siblings) that already treated every non-
+  matching variant uniformly; `Quarantined` falls into that same `else`
+  branch as `Opaque` always has, so `conflict merge login` against a
+  quarantined base already returned `Unsupported` with no code change.
+  `a_synced_schema_mismatched_login_item_denies_edit_as_login` pins the
+  identically-shaped `item edit` precondition (`login_edit_precondition`)
+  directly, since editing and conflict-merging share this exact pattern.
+- **Deletion.** Unaffected, by the same structural argument as §13.2 and
+  §13.3: a tombstone revision carries only the item id and a timestamp, so
+  `delete_current_item` never reaches `encode_any_record` and never touches
+  the unreadable bytes.
+- **`export` / `history restore` / conflict merges that re-encode.**
+  `encode_any_record` gained a `Quarantined` arm that forwards through
+  `encode_opaque(content_type, payload_bytes)` — the identical call the
+  `Opaque` arm already makes. The record round-trips byte for byte: still
+  unreadable, never silently repaired, never dropped.
+
+**One new gap this closes in passing.** Before this fix, an item's
+`schema()` field (the revision's own declared content type, checked for
+agreement with `record_content_type(&payload)` by `ItemDocument::validate`)
+matching a first-party constant was a true guarantee that `payload()`
+decoded as that type — `AnyRecord::Login(_)` could not fail to match if
+`schema() == LOGIN_V1`. That is exactly why the defensive re-check inside
+`replacement_login_document` (and its five siblings) reports
+`InternalInvariant` on mismatch: reaching it meant this crate's own code
+had a bug, never that a peer did. Quarantine breaks that guarantee for the
+first time — `schema()` can now say `vault/login/v1` while `payload()` is
+`Quarantined` — but only *before* the first real precondition gate
+(`login_edit_precondition` and siblings), which every ordinary `item edit`
+and `conflict merge` call path reaches first and which already reports the
+ordinary `Unsupported` outcome instead. The inner defensive checks remain
+correctly unreachable through any call this product's own commands can
+make; nothing needed to change there.
+
+**Tests.** `vault-records` pins the decode primitive directly:
+`login_missing_password_via_decode_record_is_quarantined_not_denied` and
+`card_with_invalid_month_via_decode_record_is_quarantined` show
+`decode_record` quarantines instead of failing, while
+`login_missing_password_is_schema_mismatch` (unchanged) confirms
+`decode_record_as::<T>` still fails closed for a caller that wants one
+exact type; `quarantined_record_kind_and_summary_are_distinct_from_opaque`
+and `quarantined_record_debug_is_value_redacted` cover the new
+`VaultRecordKind` and redaction surfaces; `a_malformed_envelope_still_
+denies_decode_record_entirely` confirms envelope-level corruption (not
+attributable to any content type) still fails outright. `open.rs`
+reproduces the bug end to end and pins the fix against a real, peer-synced
+vault: `a_synced_schema_mismatched_login_record_leaves_the_vault_openable`
+(the reachability proof — see above), `a_synced_schema_mismatched_login_
+item_is_visible_in_the_redacted_list`, `a_synced_schema_mismatched_login_
+item_can_be_deleted`, and `a_synced_schema_mismatched_login_item_denies_
+edit_as_login`. `vault-pm-cli` pins the two rendering surfaces directly:
+`record_title_falls_back_to_content_type_for_a_quarantined_record` and
+`render_item_shows_a_redacted_placeholder_for_a_quarantined_record_
+instead_of_erroring`.
 
 ## 14. Required verification
 

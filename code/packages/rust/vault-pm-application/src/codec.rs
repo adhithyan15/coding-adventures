@@ -1414,6 +1414,19 @@ fn encode_any_record(record: &AnyRecord) -> Result<Vec<u8>, ApplicationError> {
             content_type,
             payload_bytes,
         } => encode_opaque(content_type, payload_bytes).map_err(map_record_encode_error),
+        // A quarantined record's `payload_bytes` are the inner payload's own
+        // already-canonical CBOR bytes (VLT-PM05 §13.3's decode-time fix —
+        // see `decode_record`'s doc comment in vault-records), the exact
+        // same shape `Opaque` carries. Re-wrapping them with `encode_opaque`
+        // forwards the record faithfully on write paths that walk every
+        // live candidate (`export`, `history restore`, conflict merges):
+        // still unreadable, still round-trips byte-for-byte, never silently
+        // repaired or dropped.
+        AnyRecord::Quarantined {
+            content_type,
+            payload_bytes,
+            reason: _,
+        } => encode_opaque(content_type, payload_bytes).map_err(map_record_encode_error),
     }
 }
 
