@@ -2803,6 +2803,97 @@
       "tex": "kannada/book/chapters/ch59-weather-and-ground.tex"
     },
     {
+      "language": "kannada",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:e81f597c74c71154",
+      "lessonIds": [
+        "KA-C60-cow",
+        "KA-C60-goat",
+        "KA-C60-hen",
+        "KA-C60-crow",
+        "KA-C60-bird"
+      ],
+      "tex": "kannada/book/chapters/ch60-animals.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:736c142d5ce0bc55",
+      "lessonIds": [
+        "KA-C61-curd",
+        "KA-C61-ghee",
+        "KA-C61-oil",
+        "KA-C61-jaggery",
+        "KA-C61-sugar"
+      ],
+      "tex": "kannada/book/chapters/ch61-in-the-kitchen.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:2596850f9648e1c4",
+      "lessonIds": [
+        "KA-C62-thread",
+        "KA-C62-needle",
+        "KA-C62-rope",
+        "KA-C62-broom",
+        "KA-C62-umbrella"
+      ],
+      "tex": "kannada/book/chapters/ch62-things-people-make.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:c69e57aac38d566c",
+      "lessonIds": [
+        "KA-C63-hunger",
+        "KA-C63-sleep",
+        "KA-C63-fever",
+        "KA-C63-pain",
+        "KA-C63-health"
+      ],
+      "tex": "kannada/book/chapters/ch63-hunger-sleep-health.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:16f128fc2f103bad",
+      "lessonIds": [
+        "KA-C64-after",
+        "KA-C64-also",
+        "KA-C64-still",
+        "KA-C64-soon",
+        "KA-C64-in-that-case"
+      ],
+      "tex": "kannada/book/chapters/ch64-joining-words.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:1e856eb64f618895",
+      "lessonIds": [
+        "KA-C65-request",
+        "KA-C65-permission",
+        "KA-C65-hesitancy",
+        "KA-C65-trust",
+        "KA-C65-manners"
+      ],
+      "tex": "kannada/book/chapters/ch65-more-good-manners.tex"
+    },
+    {
+      "language": "kannada",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:b8c295fdca86607c",
+      "lessonIds": [
+        "KA-C66-field",
+        "KA-C66-grass",
+        "KA-C66-paddy",
+        "KA-C66-crop",
+        "KA-C66-harvest"
+      ],
+      "tex": "kannada/book/chapters/ch66-the-field.tex"
+    },
+    {
       "language": "latin",
       "chapter": 1,
       "sourceHash": "fnv1a64:fc742a0558a5aef5",

@@ -1,0 +1,625 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 63,
+  "title": "Hunger, Sleep and Health",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ba827695e2beb87a",
+  "lessons": [
+    {
+      "id": "KA-C63-hunger",
+      "sequence": 1990,
+      "title": "ಹಸಿವು (hasivu) — hunger",
+      "headword": "ಹಸಿವು",
+      "romanization": "hasivu",
+      "gloss": "hunger",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bfd38571cbe97733",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did porake mean, and what did koḍe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹಸಿವು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹಸಿವು (hasivu) — \"hunger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹಸಿವು (hasivu) is the naming-word made out of the everyday word for going hungry, and it takes a shape you have had since the knowing-sentence: ನನಗೆ ಹಸಿವು (hasivu). The ನನಗೆ in front, the thing standing plain, and nothing joining them."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the whole design. Hunger happens to you in Kannada rather than being something you have, and the sentence is built to say so."
+            },
+            {
+              "kind": "speech",
+              "text": "It begins like ಹಸು and has nothing to do with cows. Two words can share an opening and share no history at all."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words for how a body is."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasivu, then nanage hasivu, and say who is hungry",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasivu*, then *nanage hasivu*, and say who is hungry]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹಸಿವು (hasivu) mean? (\"hunger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C63-sleep",
+      "sequence": 2000,
+      "title": "ನಿದ್ದೆ (nidde) — sleep",
+      "headword": "ನಿದ್ದೆ",
+      "romanization": "nidde",
+      "gloss": "sleep",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fe1ae06904095062",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did hasivu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನಿದ್ದೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನಿದ್ದೆ (nidde) — \"sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನಿದ್ದೆ (nidde) is a Sanskrit word worn smooth by everyday use — the original had a hard cluster in the middle that Kannada softened into the doubled sound you hear now."
+            },
+            {
+              "kind": "speech",
+              "text": "It takes the same frame ಹಸಿವು (hasivu) took: ನನಗೆ ನಿದ್ದೆ (nidde). Learn one of these sentences and you have the shape for the rest of the chapter, which is why they are grouped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nidde",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nidde*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hasivu, then nidde, and say which one a night fixes",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hasivu*, then *nidde*, and say which one a night fixes]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನಿದ್ದೆ (nidde) mean? (\"sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C63-fever",
+      "sequence": 2010,
+      "title": "ಜ್ವರ (jvara) — a fever",
+      "headword": "ಜ್ವರ",
+      "romanization": "jvara",
+      "gloss": "a fever",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:774c39fe418ab7fc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nidde mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಜ್ವರ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಜ್ವರ (jvara) — \"a fever\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಜ್ವರ (jvara) came in from Sanskrit whole, cluster and all, and Kannada did not smooth this one — which tells you it arrived through books and doctors rather than through kitchens."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the word you hand a ವೈದ್ಯ first. ನನಗೆ ಜ್ವರ (jvara), with the same three pieces as the last two lessons, and you have said the most useful sentence in the chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvara",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvara*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "jvara, then vaidya, and say which one you go to",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *jvara*, then *vaidya*, and say which one you go to]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಜ್ವರ (jvara) mean? (\"a fever\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C63-pain",
+      "sequence": 2020,
+      "title": "ನೋವು (nōvu) — pain",
+      "headword": "ನೋವು",
+      "romanization": "nōvu",
+      "gloss": "pain",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ba60decf65c29c0a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did jvara mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ನೋವು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ನೋವು (nōvu) — \"pain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ನೋವು (nōvu) is inherited, and it is the most useful word here because it attaches to everything you already have. ತಲೆ ನೋವು (nōvu), ಹೊಟ್ಟೆ ನೋವು (nōvu), ಹಲ್ಲು ನೋವು (nōvu), ಬೆನ್ನು ನೋವು (nōvu) — the body part goes in front and the whole thing is one compound."
+            },
+            {
+              "kind": "speech",
+              "text": "Every part of the body this book has taught you can be put in that slot. That is a sentence for every body part this book has given you, out of one new word, which is the best trade in the chapter."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōvu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōvu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nōvu, then tale nōvu, then hoṭṭe nōvu, and say where it hurts",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nōvu*, then *tale nōvu*, then *hoṭṭe nōvu*, and say where it hurts]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ನೋವು (nōvu) mean? (\"pain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C63-health",
+      "sequence": 2030,
+      "title": "ಆರೋಗ್ಯ (ārōgya) — health",
+      "headword": "ಆರೋಗ್ಯ",
+      "romanization": "ārōgya",
+      "gloss": "health",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:082b7b0b468dab29",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nōvu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಆರೋಗ್ಯ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಆರೋಗ್ಯ (ārōgya) — \"health\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಆರೋಗ್ಯ (ārōgya) is Sanskrit, and it is built the negative way round: a piece meaning being unwell, with a not fixed on the front of it. Health is named by what is missing rather than by what is there."
+            },
+            {
+              "kind": "speech",
+              "text": "It gives you a better answer than you had. ನೀವು ಹೇಗಿದ್ದೀರಾ? has been answered with ಚೆನ್ನಾಗಿ since the how-are-you chapter, which says you are doing well. ಆರೋಗ್ಯ (ārōgya) says the body itself is sound, and it is the word a ವೈದ್ಯ wants."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಹಸಿವು (hasivu), ನಿದ್ದೆ (nidde), ಜ್ವರ (jvara), ನೋವು (nōvu), ಆರೋಗ್ಯ (ārōgya). Enough to say how you are and to ask it back."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ārōgya",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ārōgya*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then nīvu hēgiddīrā to whoever asked you first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *nīvu hēgiddīrā* to whoever asked you first]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಆರೋಗ್ಯ (ārōgya) mean? (\"health\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

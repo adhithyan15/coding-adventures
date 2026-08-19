@@ -763,6 +763,118 @@
         "KA-EXT-59-GROUND"
       ],
       "after": []
+    },
+    {
+      "id": "KA-PATH-60-ANIMAL",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "KA-C60-cow",
+        "KA-C60-goat",
+        "KA-C60-hen",
+        "KA-C60-crow",
+        "KA-C60-bird"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-60-ANIMAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-61-KITCHEN",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "KA-C61-curd",
+        "KA-C61-ghee",
+        "KA-C61-oil",
+        "KA-C61-jaggery",
+        "KA-C61-sugar"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-61-KITCHEN"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-62-MADE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "KA-C62-thread",
+        "KA-C62-needle",
+        "KA-C62-rope",
+        "KA-C62-broom",
+        "KA-C62-umbrella"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-62-MADE"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-63-HEALTH",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "KA-C63-hunger",
+        "KA-C63-sleep",
+        "KA-C63-fever",
+        "KA-C63-pain",
+        "KA-C63-health"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-63-HEALTH"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-64-JOIN",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "KA-C64-after",
+        "KA-C64-also",
+        "KA-C64-still",
+        "KA-C64-soon",
+        "KA-C64-in-that-case"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-64-JOIN"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-65-MANNERS",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "KA-C65-request",
+        "KA-C65-permission",
+        "KA-C65-hesitancy",
+        "KA-C65-trust",
+        "KA-C65-manners"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-65-MANNERS"
+      ],
+      "after": []
+    },
+    {
+      "id": "KA-PATH-66-FIELD",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "KA-C66-field",
+        "KA-C66-grass",
+        "KA-C66-paddy",
+        "KA-C66-crop",
+        "KA-C66-harvest"
+      ],
+      "before": [],
+      "inline": [
+        "KA-EXT-66-FIELD"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -771,7 +883,8 @@
         "KA-PATH-001",
         "KA-PATH-100",
         "KA-PATH-52-WELCOME",
-        "KA-PATH-53-SKY"
+        "KA-PATH-53-SKY",
+        "KA-PATH-60-ANIMAL"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -785,7 +898,8 @@
         "KA-PATH-002",
         "KA-PATH-008",
         "KA-PATH-51-COURTESY",
-        "KA-PATH-56-HOUSE"
+        "KA-PATH-56-HOUSE",
+        "KA-PATH-65-MANNERS"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -796,7 +910,8 @@
       "segments": [
         "KA-PATH-003",
         "KA-PATH-49-REPLY",
-        "KA-PATH-58-REPLY"
+        "KA-PATH-58-REPLY",
+        "KA-PATH-64-JOIN"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -813,7 +928,8 @@
         "KA-PATH-027",
         "KA-PATH-028",
         "KA-PATH-48-ROLE",
-        "KA-PATH-54-TREE"
+        "KA-PATH-54-TREE",
+        "KA-PATH-61-KITCHEN"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -829,7 +945,8 @@
         "KA-PATH-029",
         "KA-PATH-030",
         "KA-PATH-47-BODY",
-        "KA-PATH-57-BODY"
+        "KA-PATH-57-BODY",
+        "KA-PATH-63-HEALTH"
       ],
       "omits": [
         "WORD-GOOD",
@@ -844,7 +961,8 @@
         "KA-PATH-031",
         "KA-PATH-032",
         "KA-PATH-46-ASK",
-        "KA-PATH-55-ROAD"
+        "KA-PATH-55-ROAD",
+        "KA-PATH-62-MADE"
       ],
       "omits": [],
       "relocates": {}
@@ -853,7 +971,8 @@
       "segments": [
         "KA-PATH-009",
         "KA-PATH-50-LEAVE",
-        "KA-PATH-59-GROUND"
+        "KA-PATH-59-GROUND",
+        "KA-PATH-66-FIELD"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1788,6 +1907,111 @@
         "KA-C59-sand",
         "KA-C59-mud",
         "KA-C59-fire"
+      ]
+    },
+    {
+      "id": "KA-EXT-60-ANIMAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five common animals in Kannada, and greet the house that keeps them.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C60-cow",
+        "KA-C60-goat",
+        "KA-C60-hen",
+        "KA-C60-crow",
+        "KA-C60-bird"
+      ]
+    },
+    {
+      "id": "KA-EXT-61-KITCHEN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five everyday things in a Kannada kitchen, and swap names with the person cooking.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C61-curd",
+        "KA-C61-ghee",
+        "KA-C61-oil",
+        "KA-C61-jaggery",
+        "KA-C61-sugar"
+      ]
+    },
+    {
+      "id": "KA-EXT-62-MADE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Kannada household makes or keeps, and ask politely for one of them.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C62-thread",
+        "KA-C62-needle",
+        "KA-C62-rope",
+        "KA-C62-broom",
+        "KA-C62-umbrella"
+      ]
+    },
+    {
+      "id": "KA-EXT-63-HEALTH",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say in Kannada that I am hungry, sleepy or unwell, and ask after somebody else's health.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C63-hunger",
+        "KA-C63-sleep",
+        "KA-C63-fever",
+        "KA-C63-pain",
+        "KA-C63-health"
+      ]
+    },
+    {
+      "id": "KA-EXT-64-JOIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can keep a Kannada conversation moving with five joining words instead of yes or no.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C64-after",
+        "KA-C64-also",
+        "KA-C64-still",
+        "KA-C64-soon",
+        "KA-C64-in-that-case"
+      ]
+    },
+    {
+      "id": "KA-EXT-65-MANNERS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the five Kannada courtesy words that sit behind please and thank you.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C65-request",
+        "KA-C65-permission",
+        "KA-C65-hesitancy",
+        "KA-C65-trust",
+        "KA-C65-manners"
+      ]
+    },
+    {
+      "id": "KA-EXT-66-FIELD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a Kannada field, what grows on it, and the season that takes it in.",
+      "prerequisites": [],
+      "lessons": [
+        "KA-C66-field",
+        "KA-C66-grass",
+        "KA-C66-paddy",
+        "KA-C66-crop",
+        "KA-C66-harvest"
       ]
     }
   ]

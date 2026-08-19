@@ -1,0 +1,625 @@
+{
+  "version": 1,
+  "language": "kannada",
+  "chapter": 66,
+  "title": "The Field",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:cae668c73bf557db",
+  "lessons": [
+    {
+      "id": "KA-C66-field",
+      "sequence": 2140,
+      "title": "ಹೊಲ (hola) — a field",
+      "headword": "ಹೊಲ",
+      "romanization": "hola",
+      "gloss": "a field",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b041b66aa13de3a9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run: what did nambike mean, and what did saujanya mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹೊಲ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹೊಲ (hola) — \"a field\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹೊಲ (hola) is inherited, and it is the dry field — ground that is ploughed and planted and waits on the ಮಳೆಗಾಲ for its water."
+            },
+            {
+              "kind": "speech",
+              "text": "It lies past the edge of the ಹಳ್ಳಿ, along the ದಾರಿ you learned to ask for, and it is where the ರೈತ is when he is not at home."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five field words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hola",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hola*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hola, then raita, and say which one works the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hola*, then *raita*, and say which one works the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹೊಲ (hola) mean? (\"a field\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C66-grass",
+      "sequence": 2150,
+      "title": "ಹುಲ್ಲು (hullu) — grass",
+      "headword": "ಹುಲ್ಲು",
+      "romanization": "hullu",
+      "gloss": "grass",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:61d3ce52b1d828bd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did hola mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಹುಲ್ಲು",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಹುಲ್ಲು (hullu) — \"grass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಹುಲ್ಲು (hullu) is what comes up on ground nobody planted, and it is why the ಹಸು and the ಮೇಕೆ from the animal chapter are walked out of the yard at all."
+            },
+            {
+              "kind": "speech",
+              "text": "Say it carefully against ಹಲ್ಲು, the tooth-word. One vowel sign separates them and the rest of the two words is identical. It is the closest pair this book has handed you, and the good news is that the ಹಸು eats the one with your teeth."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hullu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hullu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "hallu, then hullu, and say which one is in your mouth",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *hallu*, then *hullu*, and say which one is in your mouth]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಹುಲ್ಲು (hullu) mean? (\"grass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C66-paddy",
+      "sequence": 2160,
+      "title": "ಭತ್ತ (bhatta) — paddy, rice in the husk",
+      "headword": "ಭತ್ತ",
+      "romanization": "bhatta",
+      "gloss": "paddy, rice in the husk",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0868f858e28f726b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did hullu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಭತ್ತ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಭತ್ತ (bhatta) — \"paddy, rice in the husk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಭತ್ತ (bhatta) completes a set you have been assembling since the water-and-rice chapter. One plant, three names, and Kannada keeps them strictly apart: ಭತ್ತ (bhatta) standing in the ಹೊಲ (hola), ಅಕ್ಕಿ once it is husked and in the sack, ಅನ್ನ once it is cooked and on the plate."
+            },
+            {
+              "kind": "speech",
+              "text": "English makes do with rice for all three and adds a word when it must. Kannada gives each stage its own name, and a speaker who used the wrong one would be understood but marked as not from here."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhatta",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhatta*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhatta, then akki, then anna, in that order",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhatta*, then *akki*, then *anna*, in that order]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಭತ್ತ (bhatta) mean? (\"paddy, rice in the husk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C66-crop",
+      "sequence": 2170,
+      "title": "ಬೆಳೆ (beḷe) — a crop",
+      "headword": "ಬೆಳೆ",
+      "romanization": "beḷe",
+      "gloss": "a crop",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d8812cdc093d1861",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bhatta mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಬೆಳೆ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಬೆಳೆ (beḷe) — \"a crop\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಬೆಳೆ (beḷe) is the general one: ಭತ್ತ (bhatta) is a ಬೆಳೆ (beḷe), and so is everything else a ಹೊಲ (hola) is put to. Native, and made from the everyday word for growing — so the same shape names the growing and the grown thing, the way ನೂಲು named the thread and the spinning."
+            },
+            {
+              "kind": "speech",
+              "text": "The chain runs the length of this book by now. A ಬೀಜ goes into the ground, the ಮಳೆಗಾಲ arrives, and a ಬೆಳೆ (beḷe) stands in the ಹೊಲ (hola)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "beḷe",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *beḷe*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bīja, then beḷe, and say which one comes first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bīja*, then *beḷe*, and say which one comes first]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಬೆಳೆ (beḷe) mean? (\"a crop\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "KA-C66-harvest",
+      "sequence": 2180,
+      "title": "ಸುಗ್ಗಿ (suggi) — the harvest",
+      "headword": "ಸುಗ್ಗಿ",
+      "romanization": "suggi",
+      "gloss": "the harvest",
+      "script": "kannada",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f1db36c6d6191c4d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did beḷe mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ಸುಗ್ಗಿ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ಸುಗ್ಗಿ (suggi) — \"the harvest\"."
+            },
+            {
+              "kind": "speech",
+              "text": "ಸುಗ್ಗಿ (suggi) is not only the cutting. It is the season, and it is the mood of the season — the stretch of weeks when the ಬೆಳೆ (beḷe) is in and there is enough, and Karnataka's harvest festival carries the word in its name."
+            },
+            {
+              "kind": "speech",
+              "text": "So these five words end where a farming year does. It opened with ಮಳೆಗಾಲ in the seasons chapter, ran through the ಬೀಜ and the ಬೆಳೆ (beḷe), and arrives at the ಸುಗ್ಗಿ (suggi) with the ಹೊಲ (hola) empty and the house full."
+            },
+            {
+              "kind": "speech",
+              "text": "Which makes this the right place to take your leave of the ಹಳ್ಳಿ. You can name what it grows now, and thank the people who grew it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: ಹೊಲ (hola), ಹುಲ್ಲು (hullu), ಭತ್ತ (bhatta), ಬೆಳೆ (beḷe), ಸುಗ್ಗಿ (suggi). A field, what grows on it, and the season that takes it in."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "suggi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *suggi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then hōgi baruttēne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *hōgi baruttēne*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ಸುಗ್ಗಿ (suggi) mean? (\"the harvest\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

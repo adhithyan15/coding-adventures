@@ -5435,6 +5435,48 @@
       "scriptSet": "kannada-comparisons"
     },
     {
+      "language": "kannada",
+      "chapter": 60,
+      "output": "kannada/book/chapters/ch60-animals.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 61,
+      "output": "kannada/book/chapters/ch61-in-the-kitchen.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 62,
+      "output": "kannada/book/chapters/ch62-things-people-make.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 63,
+      "output": "kannada/book/chapters/ch63-hunger-sleep-health.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 64,
+      "output": "kannada/book/chapters/ch64-joining-words.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 65,
+      "output": "kannada/book/chapters/ch65-more-good-manners.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
+      "language": "kannada",
+      "chapter": 66,
+      "output": "kannada/book/chapters/ch66-the-field.tex",
+      "scriptSet": "kannada-comparisons"
+    },
+    {
       "language": "spanish",
       "chapter": 289,
       "output": "spanish/book/chapters/ch289-lo-de-arriba.tex"
