@@ -1499,14 +1499,42 @@ fn edge_thickness(edge: &str, value: &str) -> String {
 /// those still drop rather than being approximated.
 fn stretch_alignment_for(key: &str, value: &str) -> Option<&'static str> {
     let v = value.trim();
-    if v != "100%" {
-        return None;
-    }
-    match key {
-        "Width" => Some("HorizontalAlignment"),
-        "Height" => Some("VerticalAlignment"),
+    match (key, v) {
+        // Percentage of the parent.
+        ("Width", "100%") => Some("HorizontalAlignment"),
+        ("Height", "100%") => Some("VerticalAlignment"),
+
+        // Viewport units. `min-height: 100vh` is how a web shell says "fill
+        // the window", and it was reaching XAML verbatim as
+        // `MinHeight="100vh"` — not a Double, so the shell never got a
+        // height. In a desktop app the window IS the viewport, so filling it
+        // is the same stretch.
+        ("Height" | "MinHeight" | "MaxHeight", "100vh") => Some("VerticalAlignment"),
+        ("Width" | "MinWidth" | "MaxWidth", "100vw") => Some("HorizontalAlignment"),
         _ => None,
     }
+}
+
+/// Reject a length carrying a CSS unit XAML cannot parse.
+///
+/// The length path strips `px` and rejects `%`, but every other CSS unit fell
+/// straight through into the emitted attribute — `MinHeight="100vh"` shipped
+/// this way. WinUI lengths are `Double`, so such a value is not merely wrong,
+/// it is unparseable, and the failure is silent at build time.
+///
+/// Anything ending in an alphabetic suffix that is not `px` is refused here.
+/// Callers drop the property, which is the honest outcome: better an element
+/// sized by its parent than an attribute the runtime cannot read.
+fn has_unsupported_length_unit(value: &str) -> bool {
+    let v = value.trim();
+    let Some(first_alpha) = v.find(|c: char| c.is_ascii_alphabetic()) else {
+        return false;
+    };
+    // A leading-alpha value is a keyword (`Auto`, `Stretch`), not a length.
+    if first_alpha == 0 {
+        return false;
+    }
+    !v[first_alpha..].eq_ignore_ascii_case("px")
 }
 
 /// Translate a mosstyle CSS *value* into the form the WinUI 3 XAML
@@ -1555,6 +1583,13 @@ fn translate_xaml_value(key: &str, raw: &str) -> Option<String> {
         // Doubles. Drop the whole property; the layout container
         // (StackPanel / Grid `*`) sizes the element instead.
         if trimmed.ends_with('%') {
+            return None;
+        }
+        // Any other CSS unit (`vh`, `vw`, `em`, `rem`, `ch`, …) is equally
+        // unparseable as a Double, and previously fell straight through into
+        // the attribute. `MinHeight="100vh"` shipped that way, which is how
+        // the generated shell lost its full-window height.
+        if has_unsupported_length_unit(trimmed) {
             return None;
         }
         return Some(strip_px_units(trimmed));
@@ -12709,6 +12744,60 @@ mod tests {
         // Only the two size setters map this way.
         assert_eq!(stretch_alignment_for("FontSize", "100%"), None);
         assert_eq!(stretch_alignment_for("Padding", "100%"), None);
+    }
+
+    /// `min-height: 100vh` is how a web shell says "fill the window", and it
+    /// was reaching XAML verbatim as `MinHeight="100vh"` — not a Double, so
+    /// the generated shell silently lost its full-window height. This is the
+    /// single declaration the whole TaskApp shell relies on for its height.
+    #[test]
+    fn viewport_units_become_stretch_alignments() {
+        assert_eq!(
+            stretch_alignment_for("MinHeight", "100vh"),
+            Some("VerticalAlignment")
+        );
+        assert_eq!(
+            stretch_alignment_for("Height", "100vh"),
+            Some("VerticalAlignment")
+        );
+        assert_eq!(
+            stretch_alignment_for("MinWidth", "100vw"),
+            Some("HorizontalAlignment")
+        );
+        // A viewport unit that is not the full viewport is proportional
+        // sizing, not a stretch — it must not be approximated.
+        assert_eq!(stretch_alignment_for("MinHeight", "50vh"), None);
+    }
+
+    /// CSS units XAML cannot parse must be refused, not emitted.
+    ///
+    /// WinUI lengths are `Double`. Before this, only `px` and `%` were
+    /// handled and every other unit fell through into the attribute, so the
+    /// failure was silent at build time and only visible as a mis-laid-out
+    /// window.
+    #[test]
+    fn unsupported_length_units_are_refused() {
+        for bad in ["100vh", "50vw", "2em", "1.5rem", "10ch", "3pt"] {
+            assert!(
+                has_unsupported_length_unit(bad),
+                "{bad} should be refused as a XAML length"
+            );
+            assert_eq!(
+                translate_xaml_value("MinHeight", bad),
+                None,
+                "{bad} must not reach the emitted attribute"
+            );
+        }
+        // Plain numbers and px are fine.
+        for ok in ["100", "12.5", "34px", " 8 "] {
+            assert!(
+                !has_unsupported_length_unit(ok),
+                "{ok} should be accepted as a XAML length"
+            );
+        }
+        // Keywords are not lengths and must not be mistaken for one.
+        assert!(!has_unsupported_length_unit("Auto"));
+        assert!(!has_unsupported_length_unit("Stretch"));
     }
 
     /// End-to-end: a part declaring `width: 100%` emits a stretch alignment
