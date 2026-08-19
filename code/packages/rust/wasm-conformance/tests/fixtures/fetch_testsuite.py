@@ -422,6 +422,21 @@ TESTSUITE_FILES = [
     # this repo did not previously vendor at all -- not a re-fetch of an
     # already-vendored file whose baseline improves via a later PR.
     "simd_i64x2_extmul_i32x4.wast",
+    # SIMD widen PR23 (task #186-187): simd_select.wast/simd_address.wast --
+    # unlike every prior PR in this campaign, ZERO new opcodes. Both files
+    # use only opcodes this interpreter already fully implements:
+    # simd_select.wast exercises untyped `select` with v128 operands (the
+    # parametric `select` (0x1B) opcode is generic over `WasmValue` in both
+    # `wasm-execution` and the validator's type-check rule -- no
+    # SIMD-specific special-casing anywhere gates it to scalar types), and
+    # simd_address.wast exercises v128.load/v128.store (PR15) memarg
+    # offset/align edge cases (including the same `offset=-1` malformed and
+    # `offset=4294967296` invalid cases already covered by the vendored
+    # load.wast/store.wast/simd_load.wast/simd_store.wast). Verified by
+    # actually vendoring and grading both files, not just by static opcode
+    # inventory -- both come back 100% passing.
+    "simd_select.wast",
+    "simd_address.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under
