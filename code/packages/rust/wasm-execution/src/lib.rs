@@ -5735,6 +5735,35 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, bytes)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::SplatF32x4 => {
+                // f32x4.splat (SIMD widen PR17): pop one f32, broadcast
+                // its 4 little-endian bytes into all 4 lanes -- the
+                // FIRST floating-point-typed SIMD op in this crate. A
+                // pure bit-pattern broadcast (via to_le_bytes(), not a
+                // numeric conversion), so no rounding/NaN handling is
+                // needed.
+                let scalar = pop_wasm(vm)?.as_f32().map_err(VMError::from)?;
+                let lane = scalar.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..4 {
+                    bytes[i * 4..i * 4 + 4].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::SplatF64x2 => {
+                // f64x2.splat (SIMD widen PR17): pop one f64, broadcast
+                // its 8 little-endian bytes into both lanes. Same
+                // shape as SplatF32x4, one lane width wider.
+                let scalar = pop_wasm(vm)?.as_f64().map_err(VMError::from)?;
+                let lane = scalar.to_le_bytes();
+                let mut bytes = [0u8; 16];
+                for i in 0..2 {
+                    bytes[i * 8..i * 8 + 8].copy_from_slice(&lane);
+                }
+                let handle = push_v128(ctx, bytes)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -8743,6 +8772,56 @@ mod tests {
             v128_results[0],
             Some(V128Bytes(v128_const_bytes_i64x2([0x1_0000_0001i64; 2]).try_into().unwrap())),
             "i64x2.splat must broadcast the full 64-bit value, not just its low 32 bits"
+        );
+    }
+
+    /// `f32x4.splat` (SIMD widen PR17): the FIRST floating-point-typed
+    /// SIMD op in this crate -- pop an f32, broadcast its exact 4-byte
+    /// IEEE-754 bit pattern into all 4 lanes. Uses a non-trivial value
+    /// (not 0.0/1.0, whose bit patterns could accidentally match a
+    /// broken implementation) to prove the real bits are broadcast, not
+    /// a rounded/reinterpreted approximation.
+    #[test]
+    fn f32x4_splat_broadcasts_the_exact_bit_pattern_into_every_lane() {
+        let value: f32 = 3.5;
+        let mut code = vec![0x43]; // f32.const
+        code.extend(value.to_le_bytes());
+        code.extend([0xFD, 0x13]); // f32x4.splat
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        for i in 0..4 {
+            expected[i * 4..i * 4 + 4].copy_from_slice(&value.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "f32x4.splat must broadcast the exact IEEE-754 bit pattern into every lane"
+        );
+    }
+
+    /// `f64x2.splat` (SIMD widen PR17): same shape as
+    /// `f32x4_splat_broadcasts_the_exact_bit_pattern_into_every_lane`,
+    /// one lane width wider -- pop an f64, broadcast its exact 8-byte
+    /// bit pattern into both lanes.
+    #[test]
+    fn f64x2_splat_broadcasts_the_exact_bit_pattern_into_every_lane() {
+        let value: f64 = 3.5;
+        let mut code = vec![0x44]; // f64.const
+        code.extend(value.to_le_bytes());
+        code.extend([0xFD, 0x14]); // f64x2.splat
+        code.push(0x0B);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, v128_results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let mut expected = [0u8; 16];
+        for i in 0..2 {
+            expected[i * 8..i * 8 + 8].copy_from_slice(&value.to_le_bytes());
+        }
+        assert_eq!(
+            v128_results[0],
+            Some(V128Bytes(expected)),
+            "f64x2.splat must broadcast the exact IEEE-754 bit pattern into every lane"
         );
     }
 

@@ -1,5 +1,20 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.41 — 2026-08-19 — SIMD: float splat family text-form (task #168-170)
+
+### Added
+
+- `SimdOpKind::SplatF32x4`/`SplatF64x2` join the shared "no immediate
+  beyond the opcode byte itself" SIMD dispatch arm in both the folded
+  and flat instruction encoders -- the mixed `f32`/`f64` operand
+  TYPES are invisible to this encoder (a type-checker concern -- see
+  `wasm-validator`), same as every prior SIMD op.
+- Dedicated encoding test proving the real single-byte LEB128 bytes
+  for both (`[0xFD, 0x13]`/`[0xFD, 0x14]`), in both folded and flat
+  form.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.40 — 2026-08-19 — SIMD: splat family text-form; NaN payload underscore fix (task #165-167)
 
 ### Added

@@ -2,6 +2,24 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.29] - 2026-08-19 (task #168-170 — SIMD: float splat family, first float-lane ops)
+
+### Added
+
+- `register_simd` gains two new dispatch arms: `SimdOpKind::SplatF32x4`
+  pops an `f32` and broadcasts its 4 little-endian bytes into all 4
+  lanes; `SplatF64x2` pops an `f64` and broadcasts its 8 little-endian
+  bytes into both lanes. A pure bit-pattern broadcast via
+  `to_le_bytes()` (not a numeric conversion), so no rounding or NaN
+  handling is needed -- the FIRST floating-point-typed SIMD ops in
+  this crate.
+- 2 new tests, each verifying the EXACT IEEE-754 bit pattern is
+  broadcast into every lane (using `3.5`, a value whose bit pattern
+  couldn't accidentally match a broken implementation the way `0.0`
+  could).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.28] - 2026-08-19 (task #165-167 — SIMD: splat family widening)
 
 ### Added
