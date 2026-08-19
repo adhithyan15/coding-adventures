@@ -986,35 +986,110 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
             emit_index_args(out, indices, indent);
             out.push_str("})");
         }
-        // ── SIR22 addendum: APL primitive operators (still deferred) ──
-        // These nine share `Feature::NDArrays`/`MatrixOps`/
-        // `ArrayColumnMajor` with the base cut just above, so the SIR10
-        // capability gate alone can no longer reject them now that this
-        // backend accepts those three features — `lib.rs`'s
-        // `check_exception_soundness` (a dedicated structural soundness
-        // gate; see its doc comment) is what actually rejects a module
-        // using one of these, with a clean `Err`, BEFORE `compile` ever
-        // calls `emit_module`. Reaching this arm at runtime would mean
-        // that gate has a bug, not a user error.
-        Expr::Reduce { .. }
-        | Expr::Scan { .. }
-        | Expr::OuterProduct { .. }
-        | Expr::Shape { .. }
-        | Expr::Reshape { .. }
-        | Expr::IndexGenerator { .. }
-        | Expr::IndexOf { .. }
-        | Expr::Ravel { .. }
-        | Expr::Catenate { .. }
+        // ── SIR22 addendum: APL primitive operators — real codegen ────
+        // Each of the nine maps 1:1 onto a call into the ported
+        // `_sir_ndarray_*` sub-runtime (see `runtime.rs`'s "SIR22
+        // addendum" section) — the same treatment `ElementwiseOp`/
+        // `Transpose`/`MatMul` above already get for the SIR22 base cut.
+        // `Reduce`/`Scan`/`OuterProduct` carry an `ElementwiseOpKind` and
+        // so reuse `elementwise_op_go_name` exactly like `ElementwiseOp`
+        // does; the remaining six have no `op` field at all (they are
+        // "bespoke, not BinOp-shaped" per the SIR22 spec addendum and
+        // `apl_runtime::builtins`'s own doc comment) and just recurse
+        // into their operand(s). These nine were previously rejected by
+        // `lib.rs`'s `check_exception_soundness` structural soundness
+        // gate (shared `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
+        // base cut meant the plain capability gate couldn't tell them
+        // apart) — that gate no longer rejects them either, now that
+        // real codegen exists here.
+        Expr::Reduce { op, target, .. } => {
+            let _ = write!(
+                out,
+                "_sir_ndarray_reduce({}, ",
+                quote_go_string(elementwise_op_go_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Scan { op, target, .. } => {
+            let _ = write!(
+                out,
+                "_sir_ndarray_scan({}, ",
+                quote_go_string(elementwise_op_go_name(*op))
+            );
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::OuterProduct { op, lhs, rhs, .. } => {
+            let _ = write!(
+                out,
+                "_sir_ndarray_outer({}, ",
+                quote_go_string(elementwise_op_go_name(*op))
+            );
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::Shape { target, .. } => {
+            out.push_str("_sir_ndarray_shape(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        // Field order here is `shape, target` (per the SIR22 spec: the
+        // shape vector is not interchangeable with the data being
+        // reshaped, so the node spells out the roles instead of reusing
+        // `lhs`/`rhs`) — `_sir_ndarray_reshape(shapeArgV, targetV)` takes
+        // the same order, so no argument reordering is needed at this
+        // call site (contrast `Expr::Range`'s `start, step, stop` vs.
+        // `_sir_ndarray_range`'s `start, stop, step` above, which DOES
+        // reorder).
+        Expr::Reshape { shape, target, .. } => {
+            out.push_str("_sir_ndarray_reshape(");
+            emit_expr(out, shape, indent);
+            out.push_str(", ");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::IndexGenerator { count, .. } => {
+            out.push_str("_sir_ndarray_index_generator(");
+            emit_expr(out, count, indent);
+            out.push(')');
+        }
+        Expr::IndexOf {
+            haystack, needle, ..
+        } => {
+            out.push_str("_sir_ndarray_index_of(");
+            emit_expr(out, haystack, indent);
+            out.push_str(", ");
+            emit_expr(out, needle, indent);
+            out.push(')');
+        }
+        Expr::Ravel { target, .. } => {
+            out.push_str("_sir_ndarray_ravel(");
+            emit_expr(out, target, indent);
+            out.push(')');
+        }
+        Expr::Catenate { lhs, rhs, .. } => {
+            out.push_str("_sir_ndarray_catenate(");
+            emit_expr(out, lhs, indent);
+            out.push_str(", ");
+            emit_expr(out, rhs, indent);
+            out.push(')');
+        }
         // SIR26 `Convert` — unrelated to SIR22; this backend still does
         // not accept `Feature::Conversions`, so the ordinary SIR10
         // capability gate (not the SIR22-specific soundness gate above)
-        // rejects any module using it before emit is ever reached —
-        // unaffected by this PR.
-        | Expr::Convert { .. } => {
+        // rejects any module using it before emit is ever reached — its
+        // own dedicated arm, kept separate from the nine addendum arms
+        // above (they previously shared ONE combined `panic!` arm with
+        // this node; splitting them out to real codegen must not change
+        // `Convert`'s own untouched behavior here).
+        Expr::Convert { span, .. } => {
             panic!(
-                "go backend reached a deferred SIR22-addendum/SIR26 expression ({}) at {} — not accepted yet",
+                "go backend reached a deferred SIR26 expression ({}) at {} — not accepted yet",
                 e.kind_name(),
-                e.span()
+                span
             );
         }
         // ── SIR23 (symbolic expression + pattern/rewrite IR) ──────────

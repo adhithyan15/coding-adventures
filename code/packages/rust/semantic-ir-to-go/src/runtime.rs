@@ -5360,6 +5360,437 @@ func _sir_ndarray_index_set(av Value, indices []_sirIndexArg, value Value) {
 	}
 }
 
+// ── SIR22 addendum: APL primitive operators ────────────────────────
+// Ported 1:1 from `semantic-ir-to-javascript`'s own already-proven
+// `ArrayRt` addendum functions (`runtime.rs`, the FIRST "SIR22 addendum:
+// APL primitive operators" section -- NOT the second occurrence inside
+// that file's `#[cfg(test)]` module), which are themselves 1:1 ports of
+// `array_runtime::ops::{reduce,scan,outer}` (the three that take an
+// `ElementwiseOpKind`) and `apl_runtime::builtins`'s bespoke,
+// non-`BinOp`-shaped `shape`/`reshape`/`index_generator`/`index_of`/
+// `ravel`/`catenate`. `Reduce`/`Scan`/`OuterProduct` reuse
+// `_sir_ndarray_apply_op` above -- the same dispatch table
+// `_sir_ndarray_elementwise` uses -- so an `op` string here is the exact
+// same `elementwise_op_go_name` spelling (`"Add"`, not `"add"`).
+// `_sirNdarrayMaxElements`/`_sir_ndarray_checked_shape_size` (defined
+// above) are reused as-is for every new bounded-allocation check below --
+// this runtime has exactly one array-size cap, not one per domain.
+
+// `+/A` (APL reduce, dyadic-op monadic-adverb) -- fold `target` with `op`
+// along its one axis. Ported 1:1 from `array_runtime::ops::reduce`:
+//   - rank 0 (scalar): nothing to fold, returns `target` itself.
+//   - rank 1 (vector `[n]`): left-fold across all `n` elements
+//     (`op(op(op(v0, v1), v2), ...)`); an EMPTY vector is a clean error --
+//     unlike `sum`/`mean` (which have a built-in identity, 0), `reduce`
+//     is generic over any `op`, and guessing an identity (`0` for `Add`,
+//     `1` for `Mul`, `-Inf` for `Max`, ...) for an arbitrary, possibly
+//     future op would be silently wrong for most of them.
+//   - rank 2 (matrix `[r, c]`): folds EACH ROW independently across its
+//     `c` columns, producing a `[r]` vector (one folded value per row).
+//     Column-major storage means element `(row, col)` lives at
+//     `col*r+row` -- the row loop reads `d[row]` as the seed (column 0)
+//     then walks `d[col*r+row]` for `col = 1..c`; getting `row`/`col`
+//     swapped here silently transposes the result instead of panicking,
+//     so this indexing is the single easiest place to introduce a
+//     wrong-answer bug when reading this function.
+func _sir_ndarray_reduce(op string, av Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	shape := a.Shape
+	if len(shape) == 0 {
+		return a
+	}
+	if len(shape) == 1 {
+		n := shape[0]
+		if n == 0 {
+			panic("reduce: cannot fold an empty vector (no identity element for an arbitrary op)")
+		}
+		d := a.Data
+		acc := d[0]
+		for i := 1; i < n; i++ {
+			acc = _sir_ndarray_apply_op(op, acc, d[i])
+		}
+		return _sir_ndarray_new([]int{}, []float64{acc})
+	}
+	if len(shape) == 2 {
+		r, c := shape[0], shape[1]
+		if c == 0 {
+			panic("reduce: cannot fold an empty row (no identity element for an arbitrary op)")
+		}
+		d := a.Data
+		out := make([]float64, r)
+		for row := 0; row < r; row++ {
+			acc := d[row] // column-major: (row, 0) lives at plain `row`
+			for col := 1; col < c; col++ {
+				acc = _sir_ndarray_apply_op(op, acc, d[col*r+row])
+			}
+			out[row] = acc
+		}
+		return _sir_ndarray_new([]int{r}, out)
+	}
+	panic(fmt.Sprintf("reduce: rank > 2 not yet supported (shape %v)", shape))
+}
+
+// `+\A` (APL scan) -- the same fold as `reduce`, but keeping EVERY
+// intermediate result instead of only the last; output has the same
+// shape as `target`. Ported 1:1 from `array_runtime::ops::scan`. An
+// empty axis is NOT an error here (unlike `reduce`): there is simply
+// nothing to scan, and the (empty) output shape already says so.
+func _sir_ndarray_scan(op string, av Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	shape := a.Shape
+	if len(shape) == 0 {
+		return a
+	}
+	if len(shape) == 1 {
+		n := shape[0]
+		d := a.Data
+		out := make([]float64, n)
+		var acc float64
+		started := false
+		for i := 0; i < n; i++ {
+			if started {
+				acc = _sir_ndarray_apply_op(op, acc, d[i])
+			} else {
+				acc = d[i]
+			}
+			started = true
+			out[i] = acc
+		}
+		return _sir_ndarray_new([]int{n}, out)
+	}
+	if len(shape) == 2 {
+		r, c := shape[0], shape[1]
+		d := a.Data
+		out := make([]float64, len(d))
+		for row := 0; row < r; row++ {
+			var acc float64
+			started := false
+			for col := 0; col < c; col++ {
+				x := d[col*r+row] // column-major
+				if started {
+					acc = _sir_ndarray_apply_op(op, acc, x)
+				} else {
+					acc = x
+				}
+				started = true
+				out[col*r+row] = acc
+			}
+		}
+		return _sir_ndarray_new([]int{r, c}, out)
+	}
+	panic(fmt.Sprintf("scan: rank > 2 not yet supported (shape %v)", shape))
+}
+
+// `A o.x B` (APL outer product) -- apply `op` to every pair `(ai, bj)`,
+// producing a result of rank `rank(a) + rank(b)`. Ported 1:1 from
+// `array_runtime::ops::outer`, scoped identically to `rank(a) <= 1` and
+// `rank(b) <= 1` (the vector<x>vector case below already reaches this
+// domain's rank-2 ceiling). `_sir_ndarray_checked_shape_size` validates
+// the `[m, n]` output shape BEFORE allocating -- `m`/`n` are two
+// INDEPENDENT operand lengths, each individually under
+// `_sirNdarrayMaxElements`, but nothing bounds their product alone (the
+// same outer-product-shaped allocation `_sir_ndarray_matmul`/
+// `_sir_ndarray_index_get` above guard).
+func _sir_ndarray_outer(op string, av Value, bv Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	b := _sir_ndarray_to_array_value(bv)
+	as := a.Shape
+	bs := b.Shape
+	switch {
+	case len(as) == 0 && len(bs) == 0:
+		return _sir_ndarray_new([]int{}, []float64{_sir_ndarray_apply_op(op, a.Data[0], b.Data[0])})
+	case len(as) == 0 && len(bs) == 1:
+		x := a.Data[0]
+		out := make([]float64, len(b.Data))
+		for i, y := range b.Data {
+			out[i] = _sir_ndarray_apply_op(op, x, y)
+		}
+		return _sir_ndarray_new([]int{bs[0]}, out)
+	case len(as) == 1 && len(bs) == 0:
+		y := b.Data[0]
+		out := make([]float64, len(a.Data))
+		for i, x := range a.Data {
+			out[i] = _sir_ndarray_apply_op(op, x, y)
+		}
+		return _sir_ndarray_new([]int{as[0]}, out)
+	case len(as) == 1 && len(bs) == 1:
+		m := as[0]
+		n := bs[0]
+		outLen := _sir_ndarray_checked_shape_size([]int{m, n})
+		ad := a.Data
+		bd := b.Data
+		out := make([]float64, outLen)
+		for j := 0; j < n; j++ {
+			for i := 0; i < m; i++ {
+				out[j*m+i] = _sir_ndarray_apply_op(op, ad[i], bd[j]) // column-major
+			}
+		}
+		return _sir_ndarray_new([]int{m, n}, out)
+	default:
+		panic(fmt.Sprintf("outer: operands of rank > 1 not yet supported (shapes %v, %v)", as, bs))
+	}
+}
+
+// Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order --
+// last axis varies fastest. `a` itself stores COLUMN-major
+// (`_sir_ndarray_get`'s own doc comment), so a matrix must be walked
+// "row, then column" via `_sir_ndarray_get` to produce true row-major
+// order; returning the raw column-major buffer would silently ravel in
+// the WRONG order. Always returns a FRESH slice (never `a.Data` itself,
+// even in the rank <= 1 no-op case) -- mirrors `apl_runtime::builtins::
+// flatten` returning an owned `Vec`, not a borrow, so the result never
+// accidentally aliases `a`'s own buffer (a later in-place `IndexSet` on
+// `a` must not silently mutate an already-returned ravel/reshape
+// result).
+func _sir_ndarray_flatten_row_major(a *NDArray) []float64 {
+	shape := a.Shape
+	if len(shape) <= 1 {
+		out := make([]float64, len(a.Data))
+		copy(out, a.Data)
+		return out
+	}
+	if len(shape) == 2 {
+		r, c := shape[0], shape[1]
+		out := make([]float64, r*c)
+		k := 0
+		for row := 0; row < r; row++ {
+			for col := 0; col < c; col++ {
+				v, _ := _sir_ndarray_get(a, row, col) // always in-bounds by construction
+				out[k] = v
+				k++
+			}
+		}
+		return out
+	}
+	// Unreachable in practice (this domain's rank <= 2 ceiling) -- total
+	// rather than panicking, mirroring the JS/Rust reference's own
+	// fallback.
+	out := make([]float64, len(a.Data))
+	copy(out, a.Data)
+	return out
+}
+
+// Monadic shape-of (rho) -- `target`'s dimensions as a vector. Ported 1:1
+// from `apl_runtime::builtins::shape`: a SCALAR has zero dimensions, so
+// its shape is the EMPTY vector (not a scalar!) -- shape-of a scalar is a
+// length-0 vector, mirroring `len(a.Shape) == 0` exactly. A vector `[n]`
+// has shape `[n]` (one element); a matrix `[r, c]` has shape `[r, c]`
+// (two elements).
+func _sir_ndarray_shape(av Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	dims := make([]float64, len(a.Shape))
+	for i, d := range a.Shape {
+		dims[i] = float64(d)
+	}
+	return _sir_ndarray_new([]int{len(dims)}, dims)
+}
+
+// Dyadic reshape (rho) -- reinterpret `target`'s data under the new
+// dimensions `shapeArg`. Ported 1:1 from `apl_runtime::builtins::
+// reshape`. `shapeArg` must itself be a scalar or vector (rank <= 1) of
+// non-negative integers, and the TARGET reshape rank is itself capped at
+// <= 2 (this domain's ceiling -- a longer target shape is a clean error,
+// not a silent truncation). `target`'s elements are ravelled
+// (`_sir_ndarray_flatten_row_major`) then cyclically repeated or
+// truncated to fill the target shape's element count.
+//
+// CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+// fills the LAST axis fastest, same convention as ravel), but this
+// domain's storage is COLUMN-major -- so for a rank-2 target the
+// row-major `filled` sequence must be TRANSPOSED into column-major
+// storage (`data[col*r+row] = filled[row*c+col]`) before constructing
+// the result. Handing `filled` straight to `_sir_ndarray_new` would
+// silently reshape column-major instead of APL's row-major convention --
+// a wrong answer that still LOOKS plausible (right multiset of values,
+// wrong positions).
+//
+// SECURITY: `shapeArg`'s elements are validated with the same
+// NaN/Inf-safe form `_sir_ndarray_assert_valid_position` uses
+// (`math.IsNaN`/`math.IsInf` checked explicitly, not just `x !=
+// math.Trunc(x)`) -- `+Inf` passes a bare `x == math.Trunc(x)` check
+// (`math.Trunc(+Inf) == +Inf`) and is `>= 0`, so without the explicit
+// `IsInf` guard a reshape with an infinite dimension would slip through
+// this validation and reach `_sir_ndarray_checked_shape_size` with a
+// non-finite dimension.
+func _sir_ndarray_reshape(shapeArgV Value, targetV Value) *NDArray {
+	shapeArg := _sir_ndarray_to_array_value(shapeArgV)
+	target := _sir_ndarray_to_array_value(targetV)
+	if len(shapeArg.Shape) > 1 {
+		panic(fmt.Sprintf("reshape: shape argument must be a scalar or vector (got rank %d)", len(shapeArg.Shape)))
+	}
+	dims := make([]int, len(shapeArg.Data))
+	for i, x := range shapeArg.Data {
+		if math.IsNaN(x) || math.IsInf(x, 0) || x != math.Trunc(x) || x < 0 {
+			panic(fmt.Sprintf("reshape: shape elements must be non-negative integers, got %v", x))
+		}
+		dims[i] = int(x)
+	}
+	if len(dims) > 2 {
+		panic(fmt.Sprintf("reshape: reshape to rank > 2 is not yet supported (target shape %v)", dims))
+	}
+	total := _sir_ndarray_checked_shape_size(dims)
+	source := _sir_ndarray_flatten_row_major(target)
+	if total > 0 && len(source) == 0 {
+		panic("reshape: cannot reshape an empty source into a non-empty shape")
+	}
+	filled := make([]float64, total)
+	for k := 0; k < total; k++ {
+		filled[k] = source[k%len(source)]
+	}
+	if len(dims) <= 1 {
+		return _sir_ndarray_new(dims, filled)
+	}
+	r, c := dims[0], dims[1]
+	data := make([]float64, total)
+	for row := 0; row < r; row++ {
+		for col := 0; col < c; col++ {
+			data[col*r+row] = filled[row*c+col]
+		}
+	}
+	return _sir_ndarray_new(dims, data)
+}
+
+// Monadic index generator / iota -- of `n` is the 1-BASED vector `[1, 2,
+// ..., n]`. Ported 1:1 from `apl_runtime::builtins::index_generator` (see
+// that function's own tests, e.g.
+// `index_generator_produces_one_based_run`) -- note this is 1-based,
+// unlike every 0-based index elsewhere in this domain
+// (`_sir_ndarray_index_get`/`_sir_ndarray_index_set`), because that is
+// genuinely what APL's iota means at the SURFACE-SYNTAX level. (A stale
+// doc comment on `semantic-ir`'s own `Expr::IndexGenerator` node claims
+// 0-based -- `apl_runtime::builtins::index_generator`'s own source and
+// tests are the ground truth this port follows; that doc comment is
+// wrong and worth fixing separately.) `_sir_ndarray_checked_shape_size`
+// both validates `n` is representable AND caps it at
+// `_sirNdarrayMaxElements` before allocating -- `n` is a runtime value a
+// compiled program computes, not a fixed constant, so this must fail
+// cleanly on an absurd size.
+func _sir_ndarray_index_generator(av Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	if !_sir_ndarray_is_scalar(a) {
+		panic("indexGenerator: monadic argument must be a scalar")
+	}
+	x := a.Data[0]
+	if math.IsNaN(x) || math.IsInf(x, 0) || x != math.Trunc(x) || x < 0 {
+		panic(fmt.Sprintf("indexGenerator: monadic argument must be a non-negative integer, got %v", x))
+	}
+	n := _sir_ndarray_checked_shape_size([]int{int(x)})
+	out := make([]float64, n)
+	for i := 0; i < n; i++ {
+		out[i] = float64(i + 1) // 1-based, per apl_runtime::builtins::index_generator
+	}
+	return _sir_ndarray_new([]int{n}, out)
+}
+
+// Dyadic index-of / search -- for every element of `needle`, the 1-based
+// index of its first occurrence in the vector `haystack` (or
+// `len(haystack) + 1` if not found -- "not found" is a valid,
+// always-in-range position, not `-1`). Ported 1:1 from
+// `apl_runtime::builtins::index_of`: plain EXACT equality (no
+// floating-point tolerance -- `NaN` correctly never matches itself, same
+// as Rust's `==`). The work done is O(len(haystack) * len(needle)) (a
+// full linear scan per needle element) -- `_sir_ndarray_checked_shape_size`
+// is reused here purely for its "product <= _sirNdarrayMaxElements"
+// check (both lengths are already valid non-negative integers, so its
+// dimension-validity half is a no-op) to cap the PRODUCT before
+// scanning, since each operand individually staying under
+// `_sirNdarrayMaxElements` does not bound their product (up to
+// ~4.5 * 10^15 comparisons otherwise).
+func _sir_ndarray_index_of(av Value, bv Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	b := _sir_ndarray_to_array_value(bv)
+	if len(a.Shape) > 1 {
+		panic(fmt.Sprintf("indexOf: left argument must be a scalar or vector (got rank %d)", len(a.Shape)))
+	}
+	_sir_ndarray_checked_shape_size([]int{len(a.Data), len(b.Data)})
+	haystack := a.Data
+	out := make([]float64, len(b.Data))
+	for i, needle := range b.Data {
+		found := -1
+		for j, x := range haystack {
+			if x == needle {
+				found = j
+				break
+			}
+		}
+		if found == -1 {
+			out[i] = float64(len(haystack) + 1)
+		} else {
+			out[i] = float64(found + 1)
+		}
+	}
+	return _sir_ndarray_new(b.Shape, out)
+}
+
+// Monadic ravel -- flatten `target` to a rank-1 vector, in row-major
+// order (see `_sir_ndarray_flatten_row_major`'s own doc comment for the
+// column-major-storage-vs-row-major-order subtlety). Ported 1:1 from
+// `apl_runtime::builtins::ravel`.
+func _sir_ndarray_ravel(av Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	flat := _sir_ndarray_flatten_row_major(a)
+	return _sir_ndarray_new([]int{len(flat)}, flat)
+}
+
+// Dyadic catenate -- supports scalar-scalar, scalar-vector, vector-scalar,
+// vector-vector (all producing a vector), and
+// matrix-matrix-with-equal-row-counts (column/last-axis catenate,
+// producing `[r, ca+cb]`). Any other rank combination is a clean "not
+// yet supported" error. Ported 1:1 from `apl_runtime::builtins::
+// catenate`. The combined-length cap check happens ONCE, up front,
+// regardless of which rank combination follows (mirroring the Rust
+// reference's own structure) -- neither operand alone need be oversized
+// for the RESULT to be, since a script that repeatedly catenates a value
+// with itself doubles the size every line with no other ceiling.
+func _sir_ndarray_catenate(av Value, bv Value) *NDArray {
+	a := _sir_ndarray_to_array_value(av)
+	b := _sir_ndarray_to_array_value(bv)
+	_sir_ndarray_checked_shape_size([]int{len(a.Data) + len(b.Data)})
+	ra := len(a.Shape)
+	rb := len(b.Shape)
+	switch {
+	case ra == 0 && rb == 0:
+		return _sir_ndarray_new([]int{2}, []float64{a.Data[0], b.Data[0]})
+	case ra == 0 && rb == 1:
+		out := make([]float64, 1+len(b.Data))
+		out[0] = a.Data[0]
+		copy(out[1:], b.Data)
+		return _sir_ndarray_new([]int{len(out)}, out)
+	case ra == 1 && rb == 0:
+		out := make([]float64, len(a.Data)+1)
+		copy(out, a.Data)
+		out[len(a.Data)] = b.Data[0]
+		return _sir_ndarray_new([]int{len(out)}, out)
+	case ra == 1 && rb == 1:
+		out := make([]float64, len(a.Data)+len(b.Data))
+		copy(out, a.Data)
+		copy(out[len(a.Data):], b.Data)
+		return _sir_ndarray_new([]int{len(out)}, out)
+	case ra == 2 && rb == 2:
+		r := _sir_ndarray_nrows(a)
+		if r != _sir_ndarray_nrows(b) {
+			panic(fmt.Sprintf("catenate: matrix catenate needs equal row counts (%d vs %d)", r, _sir_ndarray_nrows(b)))
+		}
+		ca := _sir_ndarray_ncols(a)
+		cb := _sir_ndarray_ncols(b)
+		outLen := _sir_ndarray_checked_shape_size([]int{r, ca + cb})
+		data := make([]float64, outLen)
+		for row := 0; row < r; row++ {
+			for col := 0; col < ca; col++ {
+				v, _ := _sir_ndarray_get(a, row, col)
+				data[col*r+row] = v
+			}
+			for col := 0; col < cb; col++ {
+				v, _ := _sir_ndarray_get(b, row, col)
+				data[(ca+col)*r+row] = v
+			}
+		}
+		return _sir_ndarray_new([]int{r, ca + cb}, data)
+	default:
+		panic(fmt.Sprintf("catenate: catenate of rank %d and rank %d is not yet supported", ra, rb))
+	}
+}
+
 "##;
 
 #[cfg(test)]

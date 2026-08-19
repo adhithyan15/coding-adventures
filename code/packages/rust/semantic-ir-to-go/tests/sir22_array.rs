@@ -1,10 +1,12 @@
-//! SIR22 base-cut execution proof: `ArrayLit`/`Range`/`MatMul`/
-//! `ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet` on the Go
-//! backend — hand-builds `Module`s directly (bypassing any frontend,
-//! since none targets this backend for SIR22 yet), emits Go, runs it
-//! with a real `go run`, and asserts stdout. Mirrors
-//! `compile_and_run_division_ops.rs`'s pattern; skips (does not fail)
-//! when no `go` is on `PATH`.
+//! SIR22 execution proof, base cut + APL addendum: `ArrayLit`/`Range`/
+//! `MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet`
+//! (Phase A Slice 2) and `Reduce`/`Scan`/`OuterProduct`/`Shape`/
+//! `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` (Phase A
+//! Slice 3) on the Go backend — hand-builds `Module`s directly
+//! (bypassing any frontend, since none targets this backend for SIR22
+//! yet), emits Go, runs it with a real `go run`, and asserts stdout.
+//! Mirrors `compile_and_run_division_ops.rs`'s pattern; skips (does not
+//! fail) when no `go` is on `PATH`.
 //!
 //! Ported from `semantic-ir-to-javascript`'s own already-proven
 //! `tests/sir22_array.rs` (and cross-checked against the sibling Ruby
@@ -322,25 +324,282 @@ fn matmul_output_shape_exceeding_the_element_cap_panics_cleanly() {
     }
 }
 
-// ── SIR22 "APL addendum": deferred, rejected cleanly (compile-time) ────
+// ── SIR22 "APL addendum": real codegen (Phase A Slice 3) ───────────────
+//
+// None of the addendum node kinds have direct literal syntax in this
+// crate's hand-built `Module`s, so a genuine rank-1 "vector" (as opposed
+// to a `[1, n]` row-vector-shaped MATRIX, which is what `array_lit` with
+// one row and `Range` both produce) is built via nested `Catenate` of
+// bare scalars -- `Catenate(scalar, scalar)` is itself one of the nodes
+// under test, and is the only base-available way to reach a true rank-1
+// shape here, mirroring how the JS/Ruby sibling ports' own SIR22
+// addendum tests do the same thing.
+
+fn cat(lhs: Expr, rhs: Expr) -> Expr {
+    Expr::Catenate { lhs: Box::new(lhs), rhs: Box::new(rhs), span: s() }
+}
+
+/// `[a, b, c]` as a genuine rank-1 vector via nested scalar `Catenate`.
+fn vec3(a: i64, b: i64, c: i64) -> Expr {
+    cat(cat(ilit(a), ilit(b)), ilit(c))
+}
 
 #[test]
-fn reduce_node_is_rejected_cleanly_not_a_compile_time_panic() {
-    // `Reduce` shares NDArrays/MatrixOps/ArrayColumnMajor with the base
-    // cut, so the ordinary feature-flag check alone can't reject it --
-    // proves the dedicated structural soundness check (`lib.rs`'s
-    // `check_exception_soundness`, extended for SIR22) does, with a
-    // clean `Err`, not an `emit_expr` `panic!`.
-    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)]]);
-    let m = array_module(vec![print_stmt(Expr::Reduce {
-        op: ElementwiseOpKind::Add,
-        target: Box::new(target),
+fn reduce_folds_a_vector_left_to_right() {
+    // reduce(+, [1, 2, 3]) = ((1+2)+3) = 6, a rank-0 (scalar-shaped)
+    // result -- read back via a two-scalar-index IndexGet, since
+    // `_sir_ndarray_nrows`/`ncols` treat a rank-0 array as 1x1.
+    let target = vec3(1, 2, 3);
+    let reduced = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("r", reduced),
+        print_stmt(index_get(local("r"), vec![scalar(0), scalar(0)])),
+    ]);
+    match run(&m, "reduce_vector") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["6.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn reduce_folds_each_row_of_a_matrix_independently() {
+    // reduce(+, [1 2 3; 4 5 6]) = [6, 15] -- one folded value PER ROW,
+    // not one grand total. This is the exact case the runtime's own doc
+    // comment calls out as "the single easiest place to introduce a
+    // wrong-answer bug" (column-major indexing inside the row loop) --
+    // a row/col swap there would silently TRANSPOSE the fold instead of
+    // panicking, so this test pins the correct row-independent result.
+    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let reduced = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("r", reduced),
+        print_stmt(index_get(local("r"), vec![scalar(0)])),
+        print_stmt(index_get(local("r"), vec![scalar(1)])),
+    ]);
+    match run(&m, "reduce_matrix") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["6.0", "15.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn scan_keeps_every_intermediate_fold_result() {
+    // scan(+, [1, 2, 3]) = [1, 3, 6] -- every prefix fold, not just the
+    // last (that's `reduce`'s job).
+    let target = vec3(1, 2, 3);
+    let scanned = Expr::Scan { op: ElementwiseOpKind::Add, target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("s", scanned),
+        print_stmt(index_get(local("s"), vec![scalar(0)])),
+        print_stmt(index_get(local("s"), vec![scalar(1)])),
+        print_stmt(index_get(local("s"), vec![scalar(2)])),
+    ]);
+    match run(&m, "scan_vector") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1.0", "3.0", "6.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn outer_product_of_two_vectors_computes_every_pairwise_product() {
+    // outer(*, [1, 2], [3, 4, 5]) -- a 2x3 matrix, out[i][j] = a[i]*b[j].
+    let a = cat(ilit(1), ilit(2));
+    let b = vec3(3, 4, 5);
+    let outer =
+        Expr::OuterProduct { op: ElementwiseOpKind::Mul, lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("o", outer),
+        print_stmt(index_get(local("o"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("o"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run(&m, "outer_product") {
+        // (row 0, col 0) = 1*3 = 3; (row 1, col 2) = 2*5 = 10.
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["3.0", "10.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_scalar_is_the_empty_vector_not_a_scalar() {
+    // `shape(5)` must be a length-0 VECTOR (rank 1, zero elements), never
+    // a scalar -- the trickiest of the nine to get right, per the
+    // runtime's own doc comment. Proven by taking `shape` TWICE:
+    // `shape(shape(5))` reads the INNER shape's own dimensions. If
+    // `shape(5)` is correctly a rank-1, length-0 array (`Shape: [0]`),
+    // then `shape` of THAT is a length-1 vector containing `0` (one
+    // dimension, of size 0) -- so index 0 of the double-shape reads
+    // `0.0`. If `shape(5)` were wrongly a bare scalar (rank 0) instead,
+    // `shape` of THAT would be a length-0 vector, and reading index 0 of
+    // it would panic (out of bounds) -- a different, test-failing
+    // outcome, not a silently-wrong number.
+    let double_shape = Expr::Shape {
+        target: Box::new(Expr::Shape { target: Box::new(ilit(5)), span: s() }),
         span: s(),
-    })]);
-    let err = compile(&m).expect_err("Reduce must be rejected, not emitted");
-    assert!(
-        err.message.contains("Reduce"),
-        "error should name the rejected node: {}",
-        err.message
-    );
+    };
+    let m = array_module(vec![print_stmt(index_get(double_shape, vec![scalar(0)]))]);
+    match run(&m, "shape_scalar") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["0.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_matrix_reports_both_dimensions() {
+    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let sh = Expr::Shape { target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("sh", sh),
+        print_stmt(index_get(local("sh"), vec![scalar(0)])),
+        print_stmt(index_get(local("sh"), vec![scalar(1)])),
+    ]);
+    match run(&m, "shape_matrix") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["2.0", "3.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn reshape_fills_row_major_then_transposes_into_column_major_storage() {
+    // reshape([1 2 3; 4 5 6], [3, 2]) must equal [1 2; 3 4; 5 6] -- APL's
+    // reshape fills the TARGET in row-major order from the source's own
+    // row-major ravel (here that ravel is already [1,2,3,4,5,6], since
+    // total element count matches exactly, no cyclic repeat needed), but
+    // this domain stores COLUMN-major. A backend that forgot to
+    // transpose the row-major-filled sequence before storing it would
+    // instead produce [1 4; 2 5; 3 6] -- same six values, WRONG
+    // positions, which is exactly why this needs a real numeric
+    // assertion rather than just "did it crash".
+    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let new_shape = cat(ilit(3), ilit(2));
+    let reshaped =
+        Expr::Reshape { shape: Box::new(new_shape), target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("re", reshaped),
+        print_stmt(index_get(local("re"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("re"), vec![scalar(1), scalar(0)])),
+        print_stmt(index_get(local("re"), vec![scalar(2), scalar(1)])),
+    ]);
+    match run(&m, "reshape") {
+        // (0,0)=1, (1,0)=3 (NOT 2 -- that's the transposition bug), (2,1)=6.
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1.0", "3.0", "6.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn index_generator_is_one_based_not_zero_based() {
+    // `IndexGenerator(5)` (APL monadic `iota`) is `[1, 2, 3, 4, 5]` --
+    // deliberately 1-based, unlike every 0-based index elsewhere in this
+    // domain (`IndexGet`/`IndexSet`). Reading linear position 0 must
+    // therefore be `1.0`, not `0.0`.
+    let gen = Expr::IndexGenerator { count: Box::new(ilit(5)), span: s() };
+    let m = array_module(vec![
+        let_binding("g", gen),
+        print_stmt(index_get(local("g"), vec![scalar(0)])),
+        print_stmt(index_get(local("g"), vec![scalar(4)])),
+    ]);
+    match run(&m, "index_generator") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1.0", "5.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn index_of_reports_one_based_position_or_length_plus_one_when_absent() {
+    // haystack = [10, 20, 30]; needle = [20, 99]. 20 is found at 0-based
+    // position 1, reported 1-based as `2`; 99 is absent, reported as
+    // `haystack.length + 1 = 4` -- a valid, always-in-range sentinel,
+    // never `-1`.
+    let haystack = cat(cat(ilit(10), ilit(20)), ilit(30));
+    let needle = cat(ilit(20), ilit(99));
+    let idx = Expr::IndexOf { haystack: Box::new(haystack), needle: Box::new(needle), span: s() };
+    let m = array_module(vec![
+        let_binding("i", idx),
+        print_stmt(index_get(local("i"), vec![scalar(0)])),
+        print_stmt(index_get(local("i"), vec![scalar(1)])),
+    ]);
+    match run(&m, "index_of") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["2.0", "4.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn ravel_flattens_a_matrix_in_row_major_order() {
+    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let raveled = Expr::Ravel { target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("rv", raveled),
+        print_stmt(index_get(local("rv"), vec![scalar(0)])),
+        print_stmt(index_get(local("rv"), vec![scalar(5)])),
+    ]);
+    match run(&m, "ravel") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1.0", "6.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn catenate_joins_two_vectors_end_to_end() {
+    let a = cat(ilit(1), ilit(2));
+    let b = cat(ilit(3), ilit(4));
+    let joined = Expr::Catenate { lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("j", joined),
+        print_stmt(index_get(local("j"), vec![scalar(0)])),
+        print_stmt(index_get(local("j"), vec![scalar(3)])),
+    ]);
+    match run(&m, "catenate_vectors") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["1.0", "4.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+#[test]
+fn catenate_joins_two_matrices_with_equal_row_counts_along_columns() {
+    // [1 2; 3 4] , [5 6; 7 8] -> [1 2 5 6; 3 4 7 8] (column/last-axis
+    // catenate; both operands have 2 rows).
+    let a = array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)]]);
+    let b = array_lit(vec![vec![ilit(5), ilit(6)], vec![ilit(7), ilit(8)]]);
+    let joined = Expr::Catenate { lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("j", joined),
+        print_stmt(index_get(local("j"), vec![scalar(0), scalar(2)])),
+        print_stmt(index_get(local("j"), vec![scalar(1), scalar(3)])),
+    ]);
+    match run(&m, "catenate_matrices") {
+        Some(out) => assert_eq!(out.lines().collect::<Vec<_>>(), vec!["5.0", "8.0"]),
+        None => eprintln!("skip: no go on PATH"),
+    }
+}
+
+// ── DoS guard: addendum shape-size cap enforced BEFORE allocation ──────
+
+#[test]
+fn outer_product_output_shape_exceeding_the_element_cap_panics_cleanly() {
+    // Two INDEPENDENT 9000-element vectors (each individually far under
+    // the 2^26-element cap) whose OUTER PRODUCT output shape
+    // (9000x9000 = 81,000,000 elements) exceeds it -- same
+    // "product of two independently-bounded dimensions isn't itself
+    // bounded" gap `matmul_output_shape_exceeding_the_element_cap_panics_
+    // cleanly` proves above, now for `_sir_ndarray_outer`.
+    let a = Expr::IndexGenerator { count: Box::new(ilit(9000)), span: s() };
+    let b = Expr::IndexGenerator { count: Box::new(ilit(9000)), span: s() };
+    let outer =
+        Expr::OuterProduct { op: ElementwiseOpKind::Add, lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![Stmt::ExprStmt { expr: outer, span: s() }]);
+    match run_raw(&m, "outer_overflow") {
+        Some(out) => {
+            assert!(
+                !out.status.success(),
+                "expected a clean panic (nonzero exit) for an over-cap shape, got success"
+            );
+            let stderr = String::from_utf8_lossy(&out.stderr);
+            assert!(
+                stderr.contains("exceeds the 67108864-element cap"),
+                "expected the checkedShapeSize cap message on stderr, got:\n{stderr}"
+            );
+        }
+        None => eprintln!("skip: no go on PATH"),
+    }
 }
