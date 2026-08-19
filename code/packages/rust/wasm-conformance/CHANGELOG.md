@@ -1,5 +1,23 @@
 # Changelog — wasm-conformance
 
+## 0.1.56 — 2026-08-19 — vendor simd_i64x2_extmul_i32x4.wast: i64x2.extmul_i32x4 widening-multiply family (task #180-182)
+
+### Added
+
+- Vendored `simd_i64x2_extmul_i32x4.wast` (new file, not a re-fetch of
+  an already-vendored one) at the existing pinned commit
+  `28864811cf03bdbf880733786148feaba339582d` -- `i64x2.extmul_low`/
+  `high_i32x4_s`/`_u` (see `wasm-opcodes`'s own CHANGELOG entry) are
+  the third and final "extmul" rung this crate now implements. 100%
+  pass on EVERY directive kind in the new file (1/1 module, 104/104
+  assert_return, 12/12 assert_invalid) on the first baseline regen
+  after implementation. Aggregate `assert_return` rose from
+  24162/24179 to 24266/24283 (+104 pass, +104 gradeable, exactly this
+  file's own `assert_return` count); `assert_invalid` rose from
+  1703/1703 to 1715/1715 (+12, still 100.0% of gradeable directives);
+  `module` pass count rose from 1162 to 1163 (+1). See
+  `tests/fixtures/testsuite/NOTICE` for the full breakdown.
+
 ## 0.1.55 — 2026-08-19 — baseline regen: i32x4/f32x4 trunc_sat/convert fully resolve simd_load.wast (task #177-179)
 
 ### Changed

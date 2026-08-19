@@ -1067,6 +1067,33 @@ fn invalid_f32x4_convert_i32x4_u_given_an_i32_operand_instead_of_v128() {
 }
 
 #[test]
+fn valid_i64x2_from_i32x4_widening() {
+    // SIMD widen PR21 (task #180-182): extmul_low/high_i32x4_s/_u
+    // (v128,v128->v128, same shape as sub/mul/min/max) -- the third and
+    // final rung of this crate's "extmul" widening-multiply family,
+    // mirroring `valid_i32x4_from_i16x8_widening` one lane width up. No
+    // i64x2.dot_i32x4_s -- WASM SIMD does not define a dot-product for
+    // this pair, same as the i16x8-from-i8x16 rung. These read their
+    // operands as `i32x4` internally, but the TYPE CHECKER only sees
+    // plain `v128`s, same as every other SIMD op in this widening arc.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i64x2.extmul_low_i32x4_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.extmul_high_i32x4_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.extmul_low_i32x4_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.extmul_high_i32x4_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_i64x2_extmul_low_i32x4_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i64x2.extmul_low_i32x4_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

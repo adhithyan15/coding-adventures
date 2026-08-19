@@ -1,6 +1,6 @@
 [package]
 name = "wasm-execution"
-version = "0.9.32"
+version = "0.9.33"
 edition = "2021"
 description = "WebAssembly 1.0 wasm-execution"
 

@@ -2,6 +2,22 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.35] - 2026-08-19 (task #180-182 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply type rules)
+
+### Added
+
+- `SimdOpKind::ExtmulLowI64x2S | ExtmulHighI64x2S | ExtmulLowI64x2U |
+  ExtmulHighI64x2U` join the existing binary-`v128`-op type-check arm
+  (pop two `V128`, push `V128`) -- the third and final "extmul" rung,
+  mirroring the already-implemented `ExtmulLowI16x8S`/`ExtmulLowI8x16S`
+  entries in the same arm. The `i32x4` -> `i64x2` widening is entirely
+  a runtime concern, invisible to the type checker (WASM's type system
+  doesn't distinguish lane widths).
+- 2 new tests: a valid-module case covering all 4 new ops, plus an
+  invalid-module regression confirming `i64x2.extmul_low_i32x4_s`
+  genuinely rejects an `i32` in one of its two `v128` operand slots,
+  not just accepting whatever's on the stack.
+
 ## [0.2.34] - 2026-08-19 (task #177-179 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert type rules)
 
 ### Added

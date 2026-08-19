@@ -70,7 +70,10 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                re-pin),
                extended 2026-08-19 (task #165-167 -- simd_splat.wast,
                i8x16.splat/i16x8.splat/i64x2.splat, same pinned commit,
-               no re-pin)
+               no re-pin),
+               extended 2026-08-19 (task #180-182 -- simd_i64x2_extmul_
+               i32x4.wast, i64x2.extmul_low/high_i32x4_s/_u, same
+               pinned commit, no re-pin)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -572,6 +575,27 @@ uses that this crate still doesn't implement found 16 before this PR
 whole on those remaining 14 opcodes, so it -- and all of its
 `assert_return` directives -- stays `NotYetSupported` until a future,
 larger widening pass covers the rest.
+
+SIMD widen PR21 (task #180-182) implements `i64x2.extmul_low`/
+`high_i32x4_s`/`_u` -- the third and final rung of this repo's "extmul"
+widening-multiply family (`i8x16`->`i16x8` via PR10, `i16x8`->`i32x4`
+via task #121-124's own PR). Unlike every prior entry in this NOTICE,
+`simd_i64x2_extmul_i32x4.wast` is a BRAND-NEW vendored file, not a
+baseline regeneration against an already-vendored one -- this repo never
+previously fetched it (the file did not exist in the corpus slice at
+all). Each sub-opcode byte (`0xDC`-`0xDF`) fetched live from
+`BinarySIMD.md` and cross-checked against the already-implemented
+`i32x4.extmul_low_i16x8_s` (`0xBC`)/`i64x2.abs` (`0xC0`)/`i64x2.ge_s`
+(`0xDB`) entries (all three matched exactly, confirming the new range
+sits immediately past `i64x2`'s own comparison family with no gap). No
+`i64x2.dot_i32x4_s` -- WASM SIMD does not define a dot-product for this
+pair, same as the `i16x8`-from-`i8x16` rung. 100% pass on EVERY
+directive kind (1/1 module, 104/104 assert_return, 12/12
+assert_invalid) on the first baseline regen after implementation.
+Aggregate `assert_return` rose from 24162/24179 to 24266/24283 (+104
+pass, +104 gradeable, exactly this file's own `assert_return` count);
+`assert_invalid` rose from 1703/1703 to 1715/1715 (+12, still 100.0% of
+gradeable directives); `module` pass count rose from 1162 to 1163 (+1).
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

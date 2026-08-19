@@ -2,6 +2,32 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.26] - 2026-08-19 - SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply family (task #180-182)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `i64x2.extmul_low_i32x4_s` (`0xDC`),
+  `i64x2.extmul_high_i32x4_s` (`0xDD`), `i64x2.extmul_low_i32x4_u`
+  (`0xDE`), `i64x2.extmul_high_i32x4_u` (`0xDF`) -- the third and
+  final rung of this table's "extmul" widening-multiply family, now
+  complete: `i8x16.extmul_low/high` (widens to `i16x8`), `i32x4.
+  extmul_low/high_i16x8` (widens `i16x8` to `i32x4`), and now this
+  PR's `i32x4` -> `i64x2` rung. 135 SIMD opcodes total, up from 131.
+  Same narrow-input/wide-output BINARY shape as
+  `SimdOpKind::ExtmulLowI16x8S`/etc., just `i32x4` operands producing
+  an `i64x2` result -- `_low` reads lane indices 0-1, `_high` reads
+  lane indices 2-3, `_s` sign-extends each `i32` lane to `i64` before
+  multiplying, `_u` zero-extends. No `i64x2.dot_i32x4_s` -- WASM SIMD
+  does not define a dot-product for this pair, same as the
+  `i16x8`-from-`i8x16` rung. Each sub-opcode byte fetched live from
+  the SIMD proposal's own `BinarySIMD.md` and cross-checked against
+  the already-implemented `i32x4.extmul_low_i16x8_s` (`0xBC`)/
+  `i64x2.abs` (`0xC0`)/`i64x2.ge_s` (`0xDB`) entries (all three
+  matched exactly, confirming `0xDC`-`0xDF` sits immediately past
+  `i64x2`'s own comparison family with no gap).
+- `SimdOpKind::ExtmulLowI64x2S`/`ExtmulHighI64x2S`/`ExtmulLowI64x2U`/
+  `ExtmulHighI64x2U`.
+
 ## [0.2.25] - 2026-08-19 - SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert conversion family (task #177-179)
 
 ### Added

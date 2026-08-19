@@ -399,6 +399,18 @@ TESTSUITE_FILES = [
     # file and the 3 new opcodes are correctly implemented and tested
     # via dedicated unit tests in the meantime.
     "simd_splat.wast",
+    # SIMD widen PR21 (task #180-182): simd_i64x2_extmul_i32x4.wast --
+    # i64x2.extmul_low/high_i32x4_s/_u, the third and final rung of this
+    # repo's "extmul" widening-multiply family (i8x16->i16x8, i16x8->
+    # i32x4, and now i32x4->i64x2). Mirrors the already-implemented
+    # simd_i32x4_extmul_i16x8.wast one lane width up. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against the
+    # already-implemented i32x4.extmul_low_i16x8_s/i64x2.abs/i64x2.ge_s
+    # entries, same discipline as every prior addition. Unlike every
+    # other file added to this list so far, this is a BRAND-NEW file
+    # this repo did not previously vendor at all -- not a re-fetch of an
+    # already-vendored file whose baseline improves via a later PR.
+    "simd_i64x2_extmul_i32x4.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

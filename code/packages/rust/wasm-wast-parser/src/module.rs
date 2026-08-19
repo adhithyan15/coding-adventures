@@ -1876,7 +1876,11 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::TruncSatF32x4S
             | wasm_opcodes::SimdOpKind::TruncSatF32x4U
             | wasm_opcodes::SimdOpKind::ConvertI32x4S
-            | wasm_opcodes::SimdOpKind::ConvertI32x4U => {
+            | wasm_opcodes::SimdOpKind::ConvertI32x4U
+            | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
+            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
+            | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
+            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -2612,7 +2616,11 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::TruncSatF32x4S
             | wasm_opcodes::SimdOpKind::TruncSatF32x4U
             | wasm_opcodes::SimdOpKind::ConvertI32x4S
-            | wasm_opcodes::SimdOpKind::ConvertI32x4U => {
+            | wasm_opcodes::SimdOpKind::ConvertI32x4U
+            | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
+            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
+            | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
+            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U => {
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
@@ -5629,6 +5637,30 @@ mod tests {
             assert!(code.windows(3).any(|w| w == [0xFD, 0xFA, 0x01]), "missing f32x4.convert_i32x4_s: {code:?}");
             assert!(code.windows(3).any(|w| w == [0xFD, 0xFB, 0x01]), "missing f32x4.convert_i32x4_u: {code:?}");
         }
+    }
+
+    #[test]
+    fn simd_i64x2_from_i32x4_widening_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR21 (task #180-182): i64x2.extmul_low_i32x4_s/_u,
+        // i64x2.extmul_high_i32x4_s/_u -- the third and final rung of the
+        // "extmul" widening-multiply family, mirroring
+        // `simd_i32x4_from_i16x8_widening_encodes_the_real_sub_opcodes`
+        // one lane width up. All four sub-opcodes are >= 128, so each
+        // encodes as a real 2-byte LEB128 sequence (`[byte, 0x01]`), same
+        // shape as `i32x4.extmul_low/high_i16x8_s/_u` above. Each real
+        // sub-opcode verified against wasm-opcodes' own CHANGELOG entry.
+        let m = parse_module(
+            r#"(module
+                 (func (param v128 v128) (result v128) (i64x2.extmul_low_i32x4_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i64x2.extmul_high_i32x4_s (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i64x2.extmul_low_i32x4_u (local.get 0) (local.get 1)))
+                 (func (param v128 v128) (result v128) (i64x2.extmul_high_i32x4_u (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(3).any(|w| w == [0xFD, 0xDC, 0x01]), "i64x2.extmul_low_i32x4_s: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0xDD, 0x01]), "i64x2.extmul_high_i32x4_s: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xDE, 0x01]), "i64x2.extmul_low_i32x4_u: {:?}", code_of(&m, 2));
+        assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0xDF, 0x01]), "i64x2.extmul_high_i32x4_u: {:?}", code_of(&m, 3));
     }
 
     #[test]
