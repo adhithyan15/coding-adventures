@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 22,
-    "totalLessons": 3147,
+    "totalLessons": 3217,
     "authoredBooks": 22,
     "durationViolations": 2,
     "unknownPrerequisites": 0,
@@ -37,7 +37,7 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 10,
-    "drivableLessons": 2662,
+    "drivableLessons": 2732,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 97,
     "unexplainedModalityOverrides": 0
@@ -1237,7 +1237,14 @@
           292,
           293,
           294,
-          295
+          295,
+          296,
+          297,
+          298,
+          299,
+          300,
+          301,
+          302
         ],
         "bookChapters": [
           1,
@@ -1534,7 +1541,14 @@
           292,
           293,
           294,
-          295
+          295,
+          296,
+          297,
+          298,
+          299,
+          300,
+          301,
+          302
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -2194,7 +2208,14 @@
           56,
           57,
           58,
-          59
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
         ],
         "bookChapters": [
           1,
@@ -2255,7 +2276,14 @@
           56,
           57,
           58,
-          59
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3096,9 +3124,9 @@
       {
         "language": "spanish",
         "status": "version-2",
-        "lessonCount": 549,
+        "lessonCount": 584,
         "versions": {
-          "2": 549
+          "2": 584
         }
       },
       {
@@ -3156,10 +3184,10 @@
       {
         "language": "kannada",
         "status": "mixed",
-        "lessonCount": 207,
+        "lessonCount": 242,
         "versions": {
           "1": 30,
-          "2": 177
+          "2": 212
         }
       },
       {
@@ -3917,8 +3945,8 @@
       },
       {
         "language": "kannada",
-        "bookChapters": 59,
-        "declaredChapters": 59,
+        "bookChapters": 66,
+        "declaredChapters": 66,
         "missingCapability": 0,
         "findings": 3,
         "clean": false
@@ -3989,8 +4017,8 @@
       },
       {
         "language": "spanish",
-        "bookChapters": 295,
-        "declaredChapters": 295,
+        "bookChapters": 302,
+        "declaredChapters": 302,
         "missingCapability": 0,
         "findings": 26,
         "clean": false
@@ -4021,8 +4049,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 954,
-      "declaredChapters": 954,
+      "bookChapters": 968,
+      "declaredChapters": 968,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 79,
@@ -4034,9 +4062,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3147,
+    "totalLessons": 3217,
     "byLevel": {
-      "pre-A1": 1872,
+      "pre-A1": 1942,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4184,9 +4212,9 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 207,
+        "lessonCount": 242,
         "byLevel": {
-          "pre-A1": 143,
+          "pre-A1": 178,
           "A1": 38,
           "A2": 22,
           "B1": 0,
@@ -4319,9 +4347,9 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 549,
+        "lessonCount": 584,
         "byLevel": {
-          "pre-A1": 151,
+          "pre-A1": 186,
           "A1": 155,
           "A2": 158,
           "B1": 40,
@@ -4953,8 +4981,8 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 207,
-        "measurable": 177,
+        "lessonCount": 242,
+        "measurable": 212,
         "unmeasurable": 30,
         "lessonViolations": 1,
         "chapterViolations": 0
@@ -5025,8 +5053,8 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 549,
-        "measurable": 453,
+        "lessonCount": 584,
+        "measurable": 488,
         "unmeasurable": 96,
         "lessonViolations": 6,
         "chapterViolations": 0
@@ -5896,7 +5924,7 @@
           "language": "kannada",
           "script": "kannada",
           "latinScript": false,
-          "lessonCount": 207,
+          "lessonCount": 242,
           "totalGlyphs": 69,
           "lessonViolations": 7,
           "systemViolations": 0,
@@ -5986,7 +6014,7 @@
           "language": "spanish",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 549,
+          "lessonCount": 584,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6045,7 +6073,7 @@
       "lessonViolations": 46,
       "chapterViolations": 24,
       "unmeasurableLessons": 528,
-      "measurablePercent": 83,
+      "measurablePercent": 84,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -13620,6 +13648,19 @@
         "revisits": 0
       },
       {
+        "atom": "KA-LEX-GIVE",
+        "language": "kannada",
+        "introducedBy": "KA-C43-give",
+        "introducedAt": 128,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
         "atom": "KA-SCRIPT-RECOG-01",
         "language": "kannada",
         "introducedBy": "KA-S01-letter-na",
@@ -16993,6 +17034,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-ETYMON-CAMA",
+        "language": "spanish",
+        "introducedBy": "ES-C279-cama",
+        "introducedAt": 470,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-CAMINAR-09",
         "language": "spanish",
         "introducedBy": "ES-C36-caminar",
@@ -17135,6 +17188,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-DINERO",
+        "language": "spanish",
+        "introducedBy": "ES-C280-dinero",
+        "introducedAt": 474,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-DORMIR-05",
@@ -17353,6 +17418,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-HUEVO",
+        "language": "spanish",
+        "introducedBy": "ES-C280-huevo",
+        "introducedAt": 472,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-IBA",
         "language": "spanish",
         "introducedBy": "ES-C16-ir-imperfecto",
@@ -17473,6 +17550,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-LIMPIO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-limpio",
+        "introducedAt": 477,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-LOCUS",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta-luego",
@@ -17483,6 +17572,18 @@
           "R3"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-ETYMON-MANZANA",
+        "language": "spanish",
+        "introducedBy": "ES-C280-manzana",
+        "introducedAt": 473,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-MEUS-TUUS-SUUS",
@@ -17555,6 +17656,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-NUEVO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-nuevo",
+        "introducedAt": 475,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-NUMBERS-1-5",
@@ -17749,6 +17862,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-QUESO",
+        "language": "spanish",
+        "introducedBy": "ES-C280-queso",
+        "introducedAt": 471,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-QUID",
         "language": "spanish",
         "introducedBy": "ES-C07-que",
@@ -17857,6 +17982,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-ETYMON-SILLA",
+        "language": "spanish",
+        "introducedBy": "ES-C279-silla",
+        "introducedAt": 469,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-ETYMON-SPATIUM-02",
         "language": "spanish",
         "introducedBy": "ES-R02-mas-despacio",
@@ -17879,6 +18016,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-SUCIO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-sucio",
+        "introducedAt": 478,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-TAMBIEN-TAN-BIEN",
@@ -18011,6 +18160,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-ETYMON-VIEJO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-viejo",
+        "introducedAt": 476,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-VIENTO",
@@ -19717,6 +19878,306 @@
         "revisits": 3
       },
       {
+        "atom": "ES-LEX-C282-MEET-01",
+        "language": "spanish",
+        "introducedBy": "ES-C282-bienvenido",
+        "introducedAt": 479,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C282-MEET-02",
+        "language": "spanish",
+        "introducedBy": "ES-C282-saludo",
+        "introducedAt": 480,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C282-MEET-03",
+        "language": "spanish",
+        "introducedBy": "ES-C282-abrazo",
+        "introducedAt": 481,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C282-MEET-04",
+        "language": "spanish",
+        "introducedBy": "ES-C282-sonrisa",
+        "introducedAt": 482,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C282-MEET-05",
+        "language": "spanish",
+        "introducedBy": "ES-C282-invitado",
+        "introducedAt": 483,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C283-COURTESY-01",
+        "language": "spanish",
+        "introducedBy": "ES-C283-disculpe",
+        "introducedAt": 484,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C283-COURTESY-02",
+        "language": "spanish",
+        "introducedBy": "ES-C283-permiso",
+        "introducedAt": 485,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C283-COURTESY-03",
+        "language": "spanish",
+        "introducedBy": "ES-C283-amable",
+        "introducedAt": 486,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C283-COURTESY-04",
+        "language": "spanish",
+        "introducedBy": "ES-C283-mil-gracias",
+        "introducedAt": 487,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C283-COURTESY-05",
+        "language": "spanish",
+        "introducedBy": "ES-C283-no-hay-de-que",
+        "introducedAt": 488,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C284-REPLY-01",
+        "language": "spanish",
+        "introducedBy": "ES-C284-de-acuerdo",
+        "introducedAt": 489,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C284-REPLY-02",
+        "language": "spanish",
+        "introducedBy": "ES-C284-seguro",
+        "introducedAt": 490,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C284-REPLY-03",
+        "language": "spanish",
+        "introducedBy": "ES-C284-cierto",
+        "introducedAt": 491,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C284-REPLY-04",
+        "language": "spanish",
+        "introducedBy": "ES-C284-exacto",
+        "introducedAt": 492,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C284-REPLY-05",
+        "language": "spanish",
+        "introducedBy": "ES-C284-por-supuesto",
+        "introducedAt": 493,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C285-ROLE-01",
+        "language": "spanish",
+        "introducedBy": "ES-C285-vecino",
+        "introducedAt": 494,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C285-ROLE-02",
+        "language": "spanish",
+        "introducedBy": "ES-C285-amiga",
+        "introducedAt": 495,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C285-ROLE-03",
+        "language": "spanish",
+        "introducedBy": "ES-C285-maestro",
+        "introducedAt": 496,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C285-ROLE-04",
+        "language": "spanish",
+        "introducedBy": "ES-C285-enfermera",
+        "introducedAt": 497,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C285-ROLE-05",
+        "language": "spanish",
+        "introducedBy": "ES-C285-cocinero",
+        "introducedAt": 498,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C286-BODY-01",
+        "language": "spanish",
+        "introducedBy": "ES-C286-ojo",
+        "introducedAt": 499,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C286-BODY-02",
+        "language": "spanish",
+        "introducedBy": "ES-C286-boca",
+        "introducedAt": 500,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C286-BODY-03",
+        "language": "spanish",
+        "introducedBy": "ES-C286-garganta",
+        "introducedAt": 501,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C286-BODY-04",
+        "language": "spanish",
+        "introducedBy": "ES-C286-dolor",
+        "introducedAt": 502,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C286-BODY-05",
+        "language": "spanish",
+        "introducedBy": "ES-C286-fiebre",
+        "introducedAt": 503,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-CABEZA-01",
         "language": "spanish",
         "introducedBy": "ES-C24-cabeza",
@@ -19727,6 +20188,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-CAMA",
+        "language": "spanish",
+        "introducedBy": "ES-C279-cama",
+        "introducedAt": 470,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-CAMINAR-07",
@@ -19921,6 +20394,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-LEX-DINERO",
+        "language": "spanish",
+        "introducedBy": "ES-C280-dinero",
+        "introducedAt": 474,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-EL-PRONOUN",
         "language": "spanish",
         "introducedBy": "ES-W01-tilde-diacritica",
@@ -20113,6 +20598,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-LEX-HUEVO",
+        "language": "spanish",
+        "introducedBy": "ES-C280-huevo",
+        "introducedAt": 472,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-JUGAR-07",
         "language": "spanish",
         "introducedBy": "ES-C39-jugar",
@@ -20159,6 +20656,18 @@
           "R4"
         ],
         "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-LIMPIO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-limpio",
+        "introducedAt": 477,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-LLAMO",
@@ -20245,6 +20754,18 @@
         "revisits": 1
       },
       {
+        "atom": "ES-LEX-MANZANA",
+        "language": "spanish",
+        "introducedBy": "ES-C280-manzana",
+        "introducedAt": 473,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-MAS-LITERARY",
         "language": "spanish",
         "introducedBy": "ES-C276-mas",
@@ -20327,6 +20848,18 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-NUEVO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-nuevo",
+        "introducedAt": 475,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-NUMBERS-1-5",
@@ -20533,6 +21066,18 @@
         "revisits": 2
       },
       {
+        "atom": "ES-LEX-QUESO",
+        "language": "spanish",
+        "introducedBy": "ES-C280-queso",
+        "introducedAt": 471,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "ES-LEX-QUIEN",
         "language": "spanish",
         "introducedBy": "ES-C61-quien",
@@ -20639,6 +21184,30 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-SILLA",
+        "language": "spanish",
+        "introducedBy": "ES-C279-silla",
+        "introducedAt": 469,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-SUCIO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-sucio",
+        "introducedAt": 478,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-SUPONGO-QUE",
@@ -20759,6 +21328,18 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "ES-LEX-VIEJO",
+        "language": "spanish",
+        "introducedBy": "ES-C281-viejo",
+        "introducedAt": 476,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
       },
       {
         "atom": "ES-LEX-VINO-04",
@@ -24721,6 +25302,306 @@
         "revisits": 1
       },
       {
+        "atom": "KA-LEX-C46-ASK-01",
+        "language": "kannada",
+        "introducedBy": "KA-C46-fruit",
+        "introducedAt": 137,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-02",
+        "language": "kannada",
+        "introducedBy": "KA-C46-cloth",
+        "introducedAt": 138,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-03",
+        "language": "kannada",
+        "introducedBy": "KA-C46-lamp",
+        "introducedAt": 139,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-04",
+        "language": "kannada",
+        "introducedBy": "KA-C46-salt",
+        "introducedAt": 140,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C46-ASK-05",
+        "language": "kannada",
+        "introducedBy": "KA-C46-book",
+        "introducedAt": 141,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C47-leg",
+        "introducedAt": 142,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-02",
+        "language": "kannada",
+        "introducedBy": "KA-C47-tooth",
+        "introducedAt": 143,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C47-hair",
+        "introducedAt": 144,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C47-finger",
+        "introducedAt": 145,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C47-BODY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C47-stomach",
+        "introducedAt": 146,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C48-teacher",
+        "introducedAt": 147,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C48-student",
+        "introducedAt": 148,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-03",
+        "language": "kannada",
+        "introducedBy": "KA-C48-doctor",
+        "introducedAt": 149,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-04",
+        "language": "kannada",
+        "introducedBy": "KA-C48-farmer",
+        "introducedAt": 150,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C48-ROLE-05",
+        "language": "kannada",
+        "introducedBy": "KA-C48-guest",
+        "introducedAt": 151,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C49-REPLY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C49-true",
+        "introducedAt": 152,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C49-REPLY-02",
+        "language": "kannada",
+        "introducedBy": "KA-C49-enough",
+        "introducedAt": 153,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C49-REPLY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C49-certainly",
+        "introducedAt": 154,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C49-REPLY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C49-perhaps",
+        "introducedAt": 155,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C49-REPLY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C49-just-so",
+        "introducedAt": 156,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C50-LEAVE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C50-now",
+        "introducedAt": 157,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C50-LEAVE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C50-day-after",
+        "introducedAt": 158,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C50-LEAVE-03",
+        "language": "kannada",
+        "introducedBy": "KA-C50-journey",
+        "introducedAt": 159,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C50-LEAVE-04",
+        "language": "kannada",
+        "introducedBy": "KA-C50-set-out",
+        "introducedAt": 160,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C50-LEAVE-05",
+        "language": "kannada",
+        "introducedBy": "KA-C50-farewell",
+        "introducedAt": 161,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "KA-LEX-COME",
         "language": "kannada",
         "introducedBy": "KA-C43-come",
@@ -24733,22 +25614,118 @@
         "revisits": 1
       },
       {
-        "atom": "KA-LEX-GIVE",
+        "atom": "KA-LEX-GRANDFATHER",
         "language": "kannada",
-        "introducedBy": "KA-C43-give",
-        "introducedAt": 128,
+        "introducedBy": "KA-C45-grandfather",
+        "introducedAt": 133,
         "missed": [
-          "R1",
           "R2",
-          "R3"
+          "R3",
+          "R4"
         ],
-        "revisits": 0
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-GRANDMOTHER",
+        "language": "kannada",
+        "introducedBy": "KA-C45-grandmother",
+        "introducedAt": 134,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-HUSBAND",
+        "language": "kannada",
+        "introducedBy": "KA-C45-husband",
+        "introducedAt": 135,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-LISTEN",
+        "language": "kannada",
+        "introducedBy": "KA-C44-listen",
+        "introducedAt": 130,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-LOOK",
+        "language": "kannada",
+        "introducedBy": "KA-C44-look",
+        "introducedAt": 129,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "KA-LEX-SIT",
         "language": "kannada",
         "introducedBy": "KA-C43-sit",
         "introducedAt": 126,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-SPEAK",
+        "language": "kannada",
+        "introducedBy": "KA-C44-speak",
+        "introducedAt": 131,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-STAND",
+        "language": "kannada",
+        "introducedBy": "KA-C43-stand",
+        "introducedAt": 127,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "KA-LEX-WIFE",
+        "language": "kannada",
+        "introducedBy": "KA-C45-wife",
+        "introducedAt": 136,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-WRITE",
+        "language": "kannada",
+        "introducedBy": "KA-C44-write",
+        "introducedAt": 132,
         "missed": [
           "R2",
           "R3",
@@ -33052,17 +34029,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-ETYMON-CAMA",
-        "language": "spanish",
-        "introducedBy": "ES-C279-cama",
-        "introducedAt": 470,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-ETYMON-CLAUDERE-06",
         "language": "spanish",
         "introducedBy": "ES-C37-cerrar",
@@ -33092,17 +34058,6 @@
         "missed": [
           "R2",
           "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-ETYMON-DINERO",
-        "language": "spanish",
-        "introducedBy": "ES-C280-dinero",
-        "introducedAt": 474,
-        "missed": [
-          "R2",
-          "R3"
         ],
         "revisits": 2
       },
@@ -33173,17 +34128,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-ETYMON-HUEVO",
-        "language": "spanish",
-        "introducedBy": "ES-C280-huevo",
-        "introducedAt": 472,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-ETYMON-IRE-VADERE",
         "language": "spanish",
         "introducedBy": "ES-C10-ir",
@@ -33193,39 +34137,6 @@
           "R2"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "ES-ETYMON-LIMPIO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-limpio",
-        "introducedAt": 477,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-ETYMON-MANZANA",
-        "language": "spanish",
-        "introducedBy": "ES-C280-manzana",
-        "introducedAt": 473,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-ETYMON-NUEVO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-nuevo",
-        "introducedAt": 475,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-PENSAR-02",
@@ -33239,17 +34150,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-ETYMON-QUESO",
-        "language": "spanish",
-        "introducedBy": "ES-C280-queso",
-        "introducedAt": 471,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-ETYMON-ROMANCE-FUTURE-CONDITIONAL",
         "language": "spanish",
         "introducedBy": "ES-C17-futuro",
@@ -33259,17 +34159,6 @@
           "R4"
         ],
         "revisits": 7
-      },
-      {
-        "atom": "ES-ETYMON-SILLA",
-        "language": "spanish",
-        "introducedBy": "ES-C279-silla",
-        "introducedAt": 469,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-ETYMON-STUDERE",
@@ -33283,32 +34172,10 @@
         "revisits": 2
       },
       {
-        "atom": "ES-ETYMON-SUCIO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-sucio",
-        "introducedAt": 478,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-ETYMON-TENERE",
         "language": "spanish",
         "introducedBy": "ES-C08-tener",
         "introducedAt": 112,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-ETYMON-VIEJO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-viejo",
-        "introducedAt": 476,
         "missed": [
           "R2",
           "R3"
@@ -34196,281 +35063,6 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C282-MEET-01",
-        "language": "spanish",
-        "introducedBy": "ES-C282-bienvenido",
-        "introducedAt": 479,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C282-MEET-02",
-        "language": "spanish",
-        "introducedBy": "ES-C282-saludo",
-        "introducedAt": 480,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C282-MEET-03",
-        "language": "spanish",
-        "introducedBy": "ES-C282-abrazo",
-        "introducedAt": 481,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C282-MEET-04",
-        "language": "spanish",
-        "introducedBy": "ES-C282-sonrisa",
-        "introducedAt": 482,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C282-MEET-05",
-        "language": "spanish",
-        "introducedBy": "ES-C282-invitado",
-        "introducedAt": 483,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C283-COURTESY-01",
-        "language": "spanish",
-        "introducedBy": "ES-C283-disculpe",
-        "introducedAt": 484,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C283-COURTESY-02",
-        "language": "spanish",
-        "introducedBy": "ES-C283-permiso",
-        "introducedAt": 485,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C283-COURTESY-03",
-        "language": "spanish",
-        "introducedBy": "ES-C283-amable",
-        "introducedAt": 486,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C283-COURTESY-04",
-        "language": "spanish",
-        "introducedBy": "ES-C283-mil-gracias",
-        "introducedAt": 487,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C283-COURTESY-05",
-        "language": "spanish",
-        "introducedBy": "ES-C283-no-hay-de-que",
-        "introducedAt": 488,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C284-REPLY-01",
-        "language": "spanish",
-        "introducedBy": "ES-C284-de-acuerdo",
-        "introducedAt": 489,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C284-REPLY-02",
-        "language": "spanish",
-        "introducedBy": "ES-C284-seguro",
-        "introducedAt": 490,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C284-REPLY-03",
-        "language": "spanish",
-        "introducedBy": "ES-C284-cierto",
-        "introducedAt": 491,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C284-REPLY-04",
-        "language": "spanish",
-        "introducedBy": "ES-C284-exacto",
-        "introducedAt": 492,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C284-REPLY-05",
-        "language": "spanish",
-        "introducedBy": "ES-C284-por-supuesto",
-        "introducedAt": 493,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C285-ROLE-01",
-        "language": "spanish",
-        "introducedBy": "ES-C285-vecino",
-        "introducedAt": 494,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C285-ROLE-02",
-        "language": "spanish",
-        "introducedBy": "ES-C285-amiga",
-        "introducedAt": 495,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C285-ROLE-03",
-        "language": "spanish",
-        "introducedBy": "ES-C285-maestro",
-        "introducedAt": 496,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C285-ROLE-04",
-        "language": "spanish",
-        "introducedBy": "ES-C285-enfermera",
-        "introducedAt": 497,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C285-ROLE-05",
-        "language": "spanish",
-        "introducedBy": "ES-C285-cocinero",
-        "introducedAt": 498,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C286-BODY-01",
-        "language": "spanish",
-        "introducedBy": "ES-C286-ojo",
-        "introducedAt": 499,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-C286-BODY-02",
-        "language": "spanish",
-        "introducedBy": "ES-C286-boca",
-        "introducedAt": 500,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "ES-LEX-C286-BODY-03",
-        "language": "spanish",
-        "introducedBy": "ES-C286-garganta",
-        "introducedAt": 501,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C286-BODY-04",
-        "language": "spanish",
-        "introducedBy": "ES-C286-dolor",
-        "introducedAt": 502,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-C286-BODY-05",
-        "language": "spanish",
-        "introducedBy": "ES-C286-fiebre",
-        "introducedAt": 503,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-C287-ASK-01",
         "language": "spanish",
         "introducedBy": "ES-C287-jabon",
@@ -34746,10 +35338,384 @@
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-CAMA",
+        "atom": "ES-LEX-C292-LAND-01",
         "language": "spanish",
-        "introducedBy": "ES-C279-cama",
-        "introducedAt": 470,
+        "introducedBy": "ES-C292-pueblo",
+        "introducedAt": 529,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C292-LAND-02",
+        "language": "spanish",
+        "introducedBy": "ES-C292-colina",
+        "introducedAt": 530,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C292-LAND-03",
+        "language": "spanish",
+        "introducedBy": "ES-C292-valle",
+        "introducedAt": 531,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C292-LAND-04",
+        "language": "spanish",
+        "introducedBy": "ES-C292-lago",
+        "introducedAt": 532,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C292-LAND-05",
+        "language": "spanish",
+        "introducedBy": "ES-C292-montana",
+        "introducedAt": 533,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C293-BODY-01",
+        "language": "spanish",
+        "introducedBy": "ES-C293-cuello",
+        "introducedAt": 534,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C293-BODY-02",
+        "language": "spanish",
+        "introducedBy": "ES-C293-hombro",
+        "introducedAt": 535,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C293-BODY-03",
+        "language": "spanish",
+        "introducedBy": "ES-C293-espalda",
+        "introducedAt": 536,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C293-BODY-04",
+        "language": "spanish",
+        "introducedBy": "ES-C293-rodilla",
+        "introducedAt": 537,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C293-BODY-05",
+        "language": "spanish",
+        "introducedBy": "ES-C293-tobillo",
+        "introducedAt": 538,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-01",
+        "language": "spanish",
+        "introducedBy": "ES-C294-cuchillo",
+        "introducedAt": 539,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-02",
+        "language": "spanish",
+        "introducedBy": "ES-C294-taza",
+        "introducedAt": 540,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-03",
+        "language": "spanish",
+        "introducedBy": "ES-C294-olla",
+        "introducedAt": 541,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-04",
+        "language": "spanish",
+        "introducedBy": "ES-C294-manta",
+        "introducedAt": 542,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C294-HOME-05",
+        "language": "spanish",
+        "introducedBy": "ES-C294-escoba",
+        "introducedAt": 543,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-01",
+        "language": "spanish",
+        "introducedBy": "ES-C295-sendero",
+        "introducedAt": 544,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-02",
+        "language": "spanish",
+        "introducedBy": "ES-C295-puente",
+        "introducedAt": 545,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-03",
+        "language": "spanish",
+        "introducedBy": "ES-C295-orilla",
+        "introducedAt": 546,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-04",
+        "language": "spanish",
+        "introducedBy": "ES-C295-isla",
+        "introducedAt": 547,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C295-PATH-05",
+        "language": "spanish",
+        "introducedBy": "ES-C295-niebla",
+        "introducedAt": 548,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C296-BEAST-01",
+        "language": "spanish",
+        "introducedBy": "ES-C296-caballo",
+        "introducedAt": 549,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C296-BEAST-02",
+        "language": "spanish",
+        "introducedBy": "ES-C296-vaca",
+        "introducedAt": 550,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C296-BEAST-03",
+        "language": "spanish",
+        "introducedBy": "ES-C296-oveja",
+        "introducedAt": 551,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C296-BEAST-04",
+        "language": "spanish",
+        "introducedBy": "ES-C296-gallina",
+        "introducedAt": 552,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C296-BEAST-05",
+        "language": "spanish",
+        "introducedBy": "ES-C296-burro",
+        "introducedAt": 553,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C297-COOK-01",
+        "language": "spanish",
+        "introducedBy": "ES-C297-sarten",
+        "introducedAt": 554,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C297-COOK-02",
+        "language": "spanish",
+        "introducedBy": "ES-C297-horno",
+        "introducedAt": 555,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C297-COOK-03",
+        "language": "spanish",
+        "introducedBy": "ES-C297-tenedor",
+        "introducedAt": 556,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C297-COOK-04",
+        "language": "spanish",
+        "introducedBy": "ES-C297-ajo",
+        "introducedAt": 557,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C297-COOK-05",
+        "language": "spanish",
+        "introducedBy": "ES-C297-sopa",
+        "introducedAt": 558,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C298-ANSWER-01",
+        "language": "spanish",
+        "introducedBy": "ES-C298-tal-vez",
+        "introducedAt": 559,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "ES-LEX-C298-ANSWER-02",
+        "language": "spanish",
+        "introducedBy": "ES-C298-puede-ser",
+        "introducedAt": 560,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "ES-LEX-C298-ANSWER-03",
+        "language": "spanish",
+        "introducedBy": "ES-C298-en-efecto",
+        "introducedAt": 561,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C298-ANSWER-04",
+        "language": "spanish",
+        "introducedBy": "ES-C298-sin-duda",
+        "introducedAt": 562,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "ES-LEX-C298-ANSWER-05",
+        "language": "spanish",
+        "introducedBy": "ES-C298-ni-hablar",
+        "introducedAt": 563,
         "missed": [
           "R2",
           "R3"
@@ -34832,17 +35798,6 @@
           "R4"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-DINERO",
-        "language": "spanish",
-        "introducedBy": "ES-C280-dinero",
-        "introducedAt": 474,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-LEX-DONDE",
@@ -34933,17 +35888,6 @@
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-HUEVO",
-        "language": "spanish",
-        "introducedBy": "ES-C280-huevo",
-        "introducedAt": 472,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-LEVANTARSE-09",
         "language": "spanish",
         "introducedBy": "ES-C37-levantarse",
@@ -34966,32 +35910,10 @@
         "revisits": 25
       },
       {
-        "atom": "ES-LEX-LIMPIO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-limpio",
-        "introducedAt": 477,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-LUEGO",
         "language": "spanish",
         "introducedBy": "ES-C05-hasta-luego",
         "introducedAt": 58,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-MANZANA",
-        "language": "spanish",
-        "introducedBy": "ES-C280-manzana",
-        "introducedAt": 473,
         "missed": [
           "R2",
           "R3"
@@ -35063,17 +35985,6 @@
           "R3"
         ],
         "revisits": 4
-      },
-      {
-        "atom": "ES-LEX-NUEVO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-nuevo",
-        "introducedAt": 475,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-LEX-PERRO-03",
@@ -35164,17 +36075,6 @@
         "revisits": 11
       },
       {
-        "atom": "ES-LEX-QUESO",
-        "language": "spanish",
-        "introducedBy": "ES-C280-queso",
-        "introducedAt": 471,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "ES-LEX-REGULAR",
         "language": "spanish",
         "introducedBy": "ES-C04-regular",
@@ -35215,28 +36115,6 @@
         "missed": [
           "R2",
           "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-SILLA",
-        "language": "spanish",
-        "introducedBy": "ES-C279-silla",
-        "introducedAt": 469,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "ES-LEX-SUCIO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-sucio",
-        "introducedAt": 478,
-        "missed": [
-          "R2",
-          "R3"
         ],
         "revisits": 2
       },
@@ -35283,17 +36161,6 @@
           "R3"
         ],
         "revisits": 5
-      },
-      {
-        "atom": "ES-LEX-VIEJO",
-        "language": "spanish",
-        "introducedBy": "ES-C281-viejo",
-        "introducedAt": 476,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
       },
       {
         "atom": "ES-LEX-VIENTO",
@@ -39465,281 +40332,6 @@
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C46-ASK-01",
-        "language": "kannada",
-        "introducedBy": "KA-C46-fruit",
-        "introducedAt": 137,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "KA-LEX-C46-ASK-02",
-        "language": "kannada",
-        "introducedBy": "KA-C46-cloth",
-        "introducedAt": 138,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C46-ASK-03",
-        "language": "kannada",
-        "introducedBy": "KA-C46-lamp",
-        "introducedAt": 139,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C46-ASK-04",
-        "language": "kannada",
-        "introducedBy": "KA-C46-salt",
-        "introducedAt": 140,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C46-ASK-05",
-        "language": "kannada",
-        "introducedBy": "KA-C46-book",
-        "introducedAt": 141,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C47-BODY-01",
-        "language": "kannada",
-        "introducedBy": "KA-C47-leg",
-        "introducedAt": 142,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "KA-LEX-C47-BODY-02",
-        "language": "kannada",
-        "introducedBy": "KA-C47-tooth",
-        "introducedAt": 143,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C47-BODY-03",
-        "language": "kannada",
-        "introducedBy": "KA-C47-hair",
-        "introducedAt": 144,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C47-BODY-04",
-        "language": "kannada",
-        "introducedBy": "KA-C47-finger",
-        "introducedAt": 145,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C47-BODY-05",
-        "language": "kannada",
-        "introducedBy": "KA-C47-stomach",
-        "introducedAt": 146,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C48-ROLE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C48-teacher",
-        "introducedAt": 147,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "KA-LEX-C48-ROLE-02",
-        "language": "kannada",
-        "introducedBy": "KA-C48-student",
-        "introducedAt": 148,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C48-ROLE-03",
-        "language": "kannada",
-        "introducedBy": "KA-C48-doctor",
-        "introducedAt": 149,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C48-ROLE-04",
-        "language": "kannada",
-        "introducedBy": "KA-C48-farmer",
-        "introducedAt": 150,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C48-ROLE-05",
-        "language": "kannada",
-        "introducedBy": "KA-C48-guest",
-        "introducedAt": 151,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C49-REPLY-01",
-        "language": "kannada",
-        "introducedBy": "KA-C49-true",
-        "introducedAt": 152,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "KA-LEX-C49-REPLY-02",
-        "language": "kannada",
-        "introducedBy": "KA-C49-enough",
-        "introducedAt": 153,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C49-REPLY-03",
-        "language": "kannada",
-        "introducedBy": "KA-C49-certainly",
-        "introducedAt": 154,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C49-REPLY-04",
-        "language": "kannada",
-        "introducedBy": "KA-C49-perhaps",
-        "introducedAt": 155,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C49-REPLY-05",
-        "language": "kannada",
-        "introducedBy": "KA-C49-just-so",
-        "introducedAt": 156,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C50-LEAVE-01",
-        "language": "kannada",
-        "introducedBy": "KA-C50-now",
-        "introducedAt": 157,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "KA-LEX-C50-LEAVE-02",
-        "language": "kannada",
-        "introducedBy": "KA-C50-day-after",
-        "introducedAt": 158,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "KA-LEX-C50-LEAVE-03",
-        "language": "kannada",
-        "introducedBy": "KA-C50-journey",
-        "introducedAt": 159,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C50-LEAVE-04",
-        "language": "kannada",
-        "introducedBy": "KA-C50-set-out",
-        "introducedAt": 160,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "KA-LEX-C50-LEAVE-05",
-        "language": "kannada",
-        "introducedBy": "KA-C50-farewell",
-        "introducedAt": 161,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "KA-LEX-C51-COURTESY-01",
         "language": "kannada",
         "introducedBy": "KA-C51-gratitude",
@@ -40015,32 +40607,32 @@
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-GRANDFATHER",
+        "atom": "KA-LEX-C56-HOUSE-01",
         "language": "kannada",
-        "introducedBy": "KA-C45-grandfather",
-        "introducedAt": 133,
+        "introducedBy": "KA-C56-mat",
+        "introducedAt": 187,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 4
       },
       {
-        "atom": "KA-LEX-GRANDMOTHER",
+        "atom": "KA-LEX-C56-HOUSE-02",
         "language": "kannada",
-        "introducedBy": "KA-C45-grandmother",
-        "introducedAt": 134,
+        "introducedBy": "KA-C56-basket",
+        "introducedAt": 188,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 3
       },
       {
-        "atom": "KA-LEX-HUSBAND",
+        "atom": "KA-LEX-C56-HOUSE-03",
         "language": "kannada",
-        "introducedBy": "KA-C45-husband",
-        "introducedAt": 135,
+        "introducedBy": "KA-C56-knife",
+        "introducedAt": 189,
         "missed": [
           "R2",
           "R3"
@@ -40048,54 +40640,10 @@
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-LISTEN",
+        "atom": "KA-LEX-C56-HOUSE-04",
         "language": "kannada",
-        "introducedBy": "KA-C44-listen",
-        "introducedAt": 130,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-LOOK",
-        "language": "kannada",
-        "introducedBy": "KA-C44-look",
-        "introducedAt": 129,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-SPEAK",
-        "language": "kannada",
-        "introducedBy": "KA-C44-speak",
-        "introducedAt": 131,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-STAND",
-        "language": "kannada",
-        "introducedBy": "KA-C43-stand",
-        "introducedAt": 127,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "KA-LEX-WIFE",
-        "language": "kannada",
-        "introducedBy": "KA-C45-wife",
-        "introducedAt": 136,
+        "introducedBy": "KA-C56-vessel",
+        "introducedAt": 190,
         "missed": [
           "R2",
           "R3"
@@ -40103,15 +40651,345 @@
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-WRITE",
+        "atom": "KA-LEX-C56-HOUSE-05",
         "language": "kannada",
-        "introducedBy": "KA-C44-write",
-        "introducedAt": 132,
+        "introducedBy": "KA-C56-box",
+        "introducedAt": 191,
         "missed": [
           "R2",
           "R3"
         ],
-        "revisits": 1
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C57-BODY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C57-neck",
+        "introducedAt": 192,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C57-BODY-02",
+        "language": "kannada",
+        "introducedBy": "KA-C57-back",
+        "introducedAt": 193,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C57-BODY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C57-lip",
+        "introducedAt": 194,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C57-BODY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C57-shoulder",
+        "introducedAt": 195,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C57-BODY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C57-bone",
+        "introducedAt": 196,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C58-REPLY-01",
+        "language": "kannada",
+        "introducedBy": "KA-C58-a-little",
+        "introducedAt": 197,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C58-REPLY-02",
+        "language": "kannada",
+        "introducedBy": "KA-C58-more",
+        "introducedAt": 198,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C58-REPLY-03",
+        "language": "kannada",
+        "introducedBy": "KA-C58-less",
+        "introducedAt": 199,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C58-REPLY-04",
+        "language": "kannada",
+        "introducedBy": "KA-C58-no-thanks",
+        "introducedAt": 200,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C58-REPLY-05",
+        "language": "kannada",
+        "introducedBy": "KA-C58-thats-all",
+        "introducedAt": 201,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C59-GROUND-01",
+        "language": "kannada",
+        "introducedBy": "KA-C59-wind",
+        "introducedAt": 202,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C59-GROUND-02",
+        "language": "kannada",
+        "introducedBy": "KA-C59-mist",
+        "introducedAt": 203,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C59-GROUND-03",
+        "language": "kannada",
+        "introducedBy": "KA-C59-sand",
+        "introducedAt": 204,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C59-GROUND-04",
+        "language": "kannada",
+        "introducedBy": "KA-C59-mud",
+        "introducedAt": 205,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C59-GROUND-05",
+        "language": "kannada",
+        "introducedBy": "KA-C59-fire",
+        "introducedAt": 206,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C60-ANIMAL-01",
+        "language": "kannada",
+        "introducedBy": "KA-C60-cow",
+        "introducedAt": 207,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C60-ANIMAL-02",
+        "language": "kannada",
+        "introducedBy": "KA-C60-goat",
+        "introducedAt": 208,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C60-ANIMAL-03",
+        "language": "kannada",
+        "introducedBy": "KA-C60-hen",
+        "introducedAt": 209,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C60-ANIMAL-04",
+        "language": "kannada",
+        "introducedBy": "KA-C60-crow",
+        "introducedAt": 210,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C60-ANIMAL-05",
+        "language": "kannada",
+        "introducedBy": "KA-C60-bird",
+        "introducedAt": 211,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C61-KITCHEN-01",
+        "language": "kannada",
+        "introducedBy": "KA-C61-curd",
+        "introducedAt": 212,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C61-KITCHEN-02",
+        "language": "kannada",
+        "introducedBy": "KA-C61-ghee",
+        "introducedAt": 213,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C61-KITCHEN-03",
+        "language": "kannada",
+        "introducedBy": "KA-C61-oil",
+        "introducedAt": 214,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C61-KITCHEN-04",
+        "language": "kannada",
+        "introducedBy": "KA-C61-jaggery",
+        "introducedAt": 215,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C61-KITCHEN-05",
+        "language": "kannada",
+        "introducedBy": "KA-C61-sugar",
+        "introducedAt": 216,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C62-MADE-01",
+        "language": "kannada",
+        "introducedBy": "KA-C62-thread",
+        "introducedAt": 217,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "KA-LEX-C62-MADE-02",
+        "language": "kannada",
+        "introducedBy": "KA-C62-needle",
+        "introducedAt": 218,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "KA-LEX-C62-MADE-03",
+        "language": "kannada",
+        "introducedBy": "KA-C62-rope",
+        "introducedAt": 219,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C62-MADE-04",
+        "language": "kannada",
+        "introducedBy": "KA-C62-broom",
+        "introducedAt": 220,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "KA-LEX-C62-MADE-05",
+        "language": "kannada",
+        "introducedBy": "KA-C62-umbrella",
+        "introducedAt": 221,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "KA-PRAGMATICS-C17-MADHYAAHNA-MADHYARAATRI-03",
@@ -49747,150 +50625,150 @@
         "revisits": 13
       },
       {
-        "atom": "ES-LEX-C292-LAND-01",
+        "atom": "ES-LEX-C299-FARM-01",
         "language": "spanish",
-        "introducedBy": "ES-C292-pueblo",
-        "introducedAt": 529,
+        "introducedBy": "ES-C299-campo",
+        "introducedAt": 564,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "ES-LEX-C292-LAND-02",
+        "atom": "ES-LEX-C299-FARM-02",
         "language": "spanish",
-        "introducedBy": "ES-C292-colina",
-        "introducedAt": 530,
+        "introducedBy": "ES-C299-granja",
+        "introducedAt": 565,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-C292-LAND-03",
+        "atom": "ES-LEX-C299-FARM-03",
         "language": "spanish",
-        "introducedBy": "ES-C292-valle",
-        "introducedAt": 531,
+        "introducedBy": "ES-C299-ganado",
+        "introducedAt": 566,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C292-LAND-04",
+        "atom": "ES-LEX-C299-FARM-04",
         "language": "spanish",
-        "introducedBy": "ES-C292-lago",
-        "introducedAt": 532,
+        "introducedBy": "ES-C299-cosecha",
+        "introducedAt": 567,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C292-LAND-05",
+        "atom": "ES-LEX-C299-FARM-05",
         "language": "spanish",
-        "introducedBy": "ES-C292-montana",
-        "introducedAt": 533,
+        "introducedBy": "ES-C299-pastor",
+        "introducedAt": 568,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C293-BODY-01",
+        "atom": "ES-LEX-C300-BODY-01",
         "language": "spanish",
-        "introducedBy": "ES-C293-cuello",
-        "introducedAt": 534,
+        "introducedBy": "ES-C300-sed",
+        "introducedAt": 569,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "ES-LEX-C293-BODY-02",
+        "atom": "ES-LEX-C300-BODY-02",
         "language": "spanish",
-        "introducedBy": "ES-C293-hombro",
-        "introducedAt": 535,
+        "introducedBy": "ES-C300-sueno",
+        "introducedAt": 570,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-C293-BODY-03",
+        "atom": "ES-LEX-C300-BODY-03",
         "language": "spanish",
-        "introducedBy": "ES-C293-espalda",
-        "introducedAt": 536,
+        "introducedBy": "ES-C300-piel",
+        "introducedAt": 571,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C293-BODY-04",
+        "atom": "ES-LEX-C300-BODY-04",
         "language": "spanish",
-        "introducedBy": "ES-C293-rodilla",
-        "introducedAt": 537,
+        "introducedBy": "ES-C300-sangre",
+        "introducedAt": 572,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C293-BODY-05",
+        "atom": "ES-LEX-C300-BODY-05",
         "language": "spanish",
-        "introducedBy": "ES-C293-tobillo",
-        "introducedAt": 538,
+        "introducedBy": "ES-C300-remedio",
+        "introducedAt": 573,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C294-HOME-01",
+        "atom": "ES-LEX-C301-ASK-01",
         "language": "spanish",
-        "introducedBy": "ES-C294-cuchillo",
-        "introducedAt": 539,
+        "introducedBy": "ES-C301-cuerda",
+        "introducedAt": 574,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "ES-LEX-C294-HOME-02",
+        "atom": "ES-LEX-C301-ASK-02",
         "language": "spanish",
-        "introducedBy": "ES-C294-taza",
-        "introducedAt": 540,
+        "introducedBy": "ES-C301-aguja",
+        "introducedAt": 575,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "ES-LEX-C294-HOME-03",
+        "atom": "ES-LEX-C301-ASK-03",
         "language": "spanish",
-        "introducedBy": "ES-C294-olla",
-        "introducedAt": 541,
+        "introducedBy": "ES-C301-hilo",
+        "introducedAt": 576,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C294-HOME-04",
+        "atom": "ES-LEX-C301-ASK-04",
         "language": "spanish",
-        "introducedBy": "ES-C294-manta",
-        "introducedAt": 542,
+        "introducedBy": "ES-C301-cesta",
+        "introducedAt": 577,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "ES-LEX-C294-HOME-05",
+        "atom": "ES-LEX-C301-ASK-05",
         "language": "spanish",
-        "introducedBy": "ES-C294-escoba",
-        "introducedAt": 543,
+        "introducedBy": "ES-C301-papel",
+        "introducedAt": 578,
         "missed": [
           "R2"
         ],
@@ -53037,150 +53915,150 @@
         "revisits": 1
       },
       {
-        "atom": "KA-LEX-C56-HOUSE-01",
+        "atom": "KA-LEX-C63-HEALTH-01",
         "language": "kannada",
-        "introducedBy": "KA-C56-mat",
-        "introducedAt": 187,
+        "introducedBy": "KA-C63-hunger",
+        "introducedAt": 222,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "KA-LEX-C56-HOUSE-02",
+        "atom": "KA-LEX-C63-HEALTH-02",
         "language": "kannada",
-        "introducedBy": "KA-C56-basket",
-        "introducedAt": 188,
+        "introducedBy": "KA-C63-sleep",
+        "introducedAt": 223,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C56-HOUSE-03",
+        "atom": "KA-LEX-C63-HEALTH-03",
         "language": "kannada",
-        "introducedBy": "KA-C56-knife",
-        "introducedAt": 189,
+        "introducedBy": "KA-C63-fever",
+        "introducedAt": 224,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C56-HOUSE-04",
+        "atom": "KA-LEX-C63-HEALTH-04",
         "language": "kannada",
-        "introducedBy": "KA-C56-vessel",
-        "introducedAt": 190,
+        "introducedBy": "KA-C63-pain",
+        "introducedAt": 225,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C56-HOUSE-05",
+        "atom": "KA-LEX-C63-HEALTH-05",
         "language": "kannada",
-        "introducedBy": "KA-C56-box",
-        "introducedAt": 191,
+        "introducedBy": "KA-C63-health",
+        "introducedAt": 226,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C57-BODY-01",
+        "atom": "KA-LEX-C64-JOIN-01",
         "language": "kannada",
-        "introducedBy": "KA-C57-neck",
-        "introducedAt": 192,
+        "introducedBy": "KA-C64-after",
+        "introducedAt": 227,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "KA-LEX-C57-BODY-02",
+        "atom": "KA-LEX-C64-JOIN-02",
         "language": "kannada",
-        "introducedBy": "KA-C57-back",
-        "introducedAt": 193,
+        "introducedBy": "KA-C64-also",
+        "introducedAt": 228,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C57-BODY-03",
+        "atom": "KA-LEX-C64-JOIN-03",
         "language": "kannada",
-        "introducedBy": "KA-C57-lip",
-        "introducedAt": 194,
+        "introducedBy": "KA-C64-still",
+        "introducedAt": 229,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C57-BODY-04",
+        "atom": "KA-LEX-C64-JOIN-04",
         "language": "kannada",
-        "introducedBy": "KA-C57-shoulder",
-        "introducedAt": 195,
+        "introducedBy": "KA-C64-soon",
+        "introducedAt": 230,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C57-BODY-05",
+        "atom": "KA-LEX-C64-JOIN-05",
         "language": "kannada",
-        "introducedBy": "KA-C57-bone",
-        "introducedAt": 196,
+        "introducedBy": "KA-C64-in-that-case",
+        "introducedAt": 231,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C58-REPLY-01",
+        "atom": "KA-LEX-C65-MANNERS-01",
         "language": "kannada",
-        "introducedBy": "KA-C58-a-little",
-        "introducedAt": 197,
+        "introducedBy": "KA-C65-request",
+        "introducedAt": 232,
         "missed": [
           "R2"
         ],
         "revisits": 4
       },
       {
-        "atom": "KA-LEX-C58-REPLY-02",
+        "atom": "KA-LEX-C65-MANNERS-02",
         "language": "kannada",
-        "introducedBy": "KA-C58-more",
-        "introducedAt": 198,
+        "introducedBy": "KA-C65-permission",
+        "introducedAt": 233,
         "missed": [
           "R2"
         ],
         "revisits": 3
       },
       {
-        "atom": "KA-LEX-C58-REPLY-03",
+        "atom": "KA-LEX-C65-MANNERS-03",
         "language": "kannada",
-        "introducedBy": "KA-C58-less",
-        "introducedAt": 199,
+        "introducedBy": "KA-C65-hesitancy",
+        "introducedAt": 234,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C58-REPLY-04",
+        "atom": "KA-LEX-C65-MANNERS-04",
         "language": "kannada",
-        "introducedBy": "KA-C58-no-thanks",
-        "introducedAt": 200,
+        "introducedBy": "KA-C65-trust",
+        "introducedAt": 235,
         "missed": [
           "R2"
         ],
         "revisits": 2
       },
       {
-        "atom": "KA-LEX-C58-REPLY-05",
+        "atom": "KA-LEX-C65-MANNERS-05",
         "language": "kannada",
-        "introducedBy": "KA-C58-thats-all",
-        "introducedAt": 201,
+        "introducedBy": "KA-C65-manners",
+        "introducedAt": 236,
         "missed": [
           "R2"
         ],
@@ -60978,11 +61856,11 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 207,
+        "lessonCount": 242,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 247,
+        "atomsTaught": 282,
         "atomsNeverRevisited": 8,
         "forwardReferences": 17
       },
@@ -61068,11 +61946,11 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 549,
+        "lessonCount": 584,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 841,
+        "atomsTaught": 876,
         "atomsNeverRevisited": 128,
         "forwardReferences": 91
       },
@@ -61112,14 +61990,14 @@
       "tracksWithUnorderedLessons": 10,
       "forwardPrerequisites": 123,
       "forwardReviews": 149,
-      "atomsTaught": 4395,
+      "atomsTaught": 4465,
       "atomsNeverRevisited": 624,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
         "R1": 1181,
-        "R2": 3408,
-        "R3": 3262,
-        "R4": 1798
+        "R2": 3478,
+        "R3": 3332,
+        "R4": 1878
       },
       "forwardReferences": 502
     }
@@ -61207,7 +62085,7 @@
       {
         "language": "kannada",
         "script": "kannada",
-        "lessonCount": 207,
+        "lessonCount": 242,
         "scriptLessons": 24,
         "taughtGlyphs": 51,
         "shownGlyphs": 69,
@@ -66860,8 +67738,8 @@
         "blockers": [
           {
             "criterion": "vocabulary",
-            "detail": "teaches 117 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 183
+            "detail": "teaches 152 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 148
           },
           {
             "criterion": "atom-budget",
@@ -66874,7 +67752,7 @@
             "shortfall": 47
           }
         ],
-        "vocabulary": 169
+        "vocabulary": 204
       },
       {
         "language": "latin",
@@ -67051,8 +67929,8 @@
         "blockers": [
           {
             "criterion": "vocabulary",
-            "detail": "teaches 118 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 182
+            "detail": "teaches 153 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 147
           },
           {
             "criterion": "reinforcement",
@@ -67060,7 +67938,7 @@
             "shortfall": 24
           }
         ],
-        "vocabulary": 297
+        "vocabulary": 332
       },
       {
         "language": "tamil",
@@ -67151,11 +68029,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3147,
-    "voice": 2220,
+    "totalLessons": 3217,
+    "voice": 2290,
     "sight": 589,
     "pen": 338,
-    "coreVoice": 2662,
+    "coreVoice": 2732,
     "lessonsWithWritingSegments": 136,
     "drivablePercent": 85,
     "tracks": [
@@ -70557,13 +71435,13 @@
       },
       {
         "language": "kannada",
-        "lessonCount": 207,
-        "voice": 150,
+        "lessonCount": 242,
+        "voice": 185,
         "sight": 33,
         "pen": 24,
-        "coreVoice": 174,
-        "drivablePercent": 84,
-        "drivablePrefixTotal": 168,
+        "coreVoice": 209,
+        "drivablePercent": 86,
+        "drivablePrefixTotal": 203,
         "chapters": [
           {
             "language": "kannada",
@@ -71417,6 +72295,104 @@
           {
             "language": "kannada",
             "chapter": 59,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 60,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 61,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 62,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 63,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 64,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 65,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "kannada",
+            "chapter": 66,
             "lessonCount": 5,
             "voice": 5,
             "sight": 0,
@@ -74890,13 +75866,13 @@
       },
       {
         "language": "spanish",
-        "lessonCount": 549,
-        "voice": 497,
+        "lessonCount": 584,
+        "voice": 532,
         "sight": 45,
         "pen": 7,
-        "coreVoice": 497,
+        "coreVoice": 532,
         "drivablePercent": 91,
-        "drivablePrefixTotal": 477,
+        "drivablePrefixTotal": 512,
         "chapters": [
           {
             "language": "spanish",
@@ -79043,6 +80019,104 @@
             ],
             "drivablePrefix": 5,
             "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 296,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 297,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 298,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 299,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 300,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 301,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
+          },
+          {
+            "language": "spanish",
+            "chapter": 302,
+            "lessonCount": 5,
+            "voice": 5,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 5,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 5,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -81628,7 +82702,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3147,
+    "lessons": 3217,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -81638,10 +82712,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 52,
-    "lessonsUsingTerms": 3065,
-    "usesBeforeIntroduction": 11608,
-    "technicalUsesBeforeIntroduction": 3148,
-    "technicalLessons": 1626,
+    "lessonsUsingTerms": 3129,
+    "usesBeforeIntroduction": 11753,
+    "technicalUsesBeforeIntroduction": 3153,
+    "technicalLessons": 1631,
     "worstTerms": [
       {
         "term": "verb",
@@ -81670,12 +82744,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3147,
+    "lessonsScanned": 3217,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1086,
+    "filesScanned": 1100,
     "mainCharacters": 126,
     "scriptCharacters": 692,
     "gaps": 0
