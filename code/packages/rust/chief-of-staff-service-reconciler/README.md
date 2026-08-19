@@ -80,9 +80,11 @@ below is part of this rule rather than a separate concern.
 **A host that fails is an outcome, not an error.** The reconciler walks every
 host per tick, so any per-host failure raised *out* of that walk takes every
 other host down with it. `reconcile_all` therefore reports failures:
-`ReconcileAction::Failed`, carrying the reason, with the walk continuing. Only a
-registry listing failure -- which is not attributable to any one host and would
-recur for all of them -- ends the tick.
+`ReconcileAction::Failed`, carrying the reason and the status the record
+actually holds, with the walk continuing. A registry *listing* failure still
+ends the tick. That is not because a listing failure is unattributable -- one
+undecodable record fails the whole listing, so it is very much attributable --
+but because nothing in this crate can currently read past it. Tracked in #12137.
 
 This is load-bearing for the bound above, not a nicety. The daemon's scheduler
 treats a reconcile error as terminal: it stops the server and returns. So while
@@ -95,7 +97,16 @@ intensity quarantine. Crash the daemon, get a fresh budget, repeat.
 That made the restart bound bypassable by exactly the actor it exists to bound.
 The bound's per-run scoping is only defensible because a supervised host cannot
 force a daemon restart, and until this changed, it could. The claim and the code
-now agree.
+now agree, for that actor: no per-host condition returns an error, no reachable
+panic exists on the path, and the outcomes vector is bounded by `MAX_HOSTS`.
+
+Two honest caveats. An undecodable registry record still stops the daemon
+(#12123) -- not host-triggerable, but bit rot or a restored backup would do it.
+And a `Failed` outcome is currently produced and not consumed: nothing logs it,
+counts it, or backs off. A host whose `inspect` fails every tick is now retried
+forever in silence, where it used to stop the daemon loudly. That trade is
+correct on the security axis and worse on the operability one, and closing it is
+#12138.
 
 ## Validation
 

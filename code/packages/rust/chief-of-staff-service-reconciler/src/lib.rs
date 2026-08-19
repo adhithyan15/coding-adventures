@@ -471,9 +471,12 @@ impl HostReconcileOutcome {
 
     /// Return the durable status after the tick.
     ///
-    /// For a [`ReconcileAction::Failed`] outcome this is the status as it stood
-    /// *before* the tick: nothing was written, because the failure is what
-    /// stopped the write.
+    /// This is the stored status in every case, including a
+    /// [`ReconcileAction::Failed`] one. A failure does not mean nothing was
+    /// written: a start that fails has already claimed its transition and then
+    /// recorded the crash, so two writes happened before the error surfaced.
+    /// Reporting the pre-tick status here would contradict the record for
+    /// exactly the hosts an operator is looking at.
     pub fn status(&self) -> &HostStatus {
         &self.status
     }
@@ -604,6 +607,20 @@ impl<'a> ServiceReconciler<'a> {
             match self.reconcile_one(supervisor, host, now_ns) {
                 Ok(outcome) => outcomes.push(outcome),
                 Err(error) => {
+                    // Re-read rather than reporting the pre-tick status. A
+                    // failed start has already written its claim and then its
+                    // crash record, so the status this host had when the walk
+                    // reached it is not the status it has now. If the re-read
+                    // also fails there is nothing better to say than what we
+                    // came in with.
+                    let status = self
+                        .registry
+                        .load(&host_name)
+                        .ok()
+                        .flatten()
+                        .map_or(status, |reloaded| {
+                            reloaded.entry().observation().status().clone()
+                        });
                     outcomes.push(HostReconcileOutcome::failed(
                         host_name,
                         status,
@@ -1153,15 +1170,29 @@ fn inactive_observation(
     status: HostStatus,
     instance: Option<&SupervisorInstance>,
 ) -> Result<HostObservation, RegistryError> {
+    let started_at_ns = instance
+        .and_then(SupervisorInstance::started_at_ns)
+        .or(previous.started_at_ns());
+    // Carry the previous heartbeat only while it still belongs to the start it
+    // is being paired with. A live instance can supply a newer `started_at_ns`
+    // than the heartbeat this record remembers, and `HostObservation::new`
+    // rejects a heartbeat that precedes its start -- which would fail this
+    // host's tick, and every later one, with no durable progress to break the
+    // loop. `ProcessHostSupervisor` never produces that pairing, because
+    // `start_instance` clears both fields before it spawns, but that is a
+    // convention across two crates and this trait is injected.
+    let last_heartbeat_ns = instance
+        .and_then(SupervisorInstance::last_heartbeat_ns)
+        .or_else(|| {
+            previous
+                .last_heartbeat_ns()
+                .filter(|heartbeat| started_at_ns.is_none_or(|started| *heartbeat >= started))
+        });
     HostObservation::new(
         status,
         None,
-        instance
-            .and_then(SupervisorInstance::started_at_ns)
-            .or(previous.started_at_ns()),
-        instance
-            .and_then(SupervisorInstance::last_heartbeat_ns)
-            .or(previous.last_heartbeat_ns()),
+        started_at_ns,
+        last_heartbeat_ns,
         None,
         previous.restarts(),
     )
@@ -2613,5 +2644,97 @@ mod tests {
             "a launch retry is charged, but it is still a launch"
         );
         assert_eq!(persisted.observation().restart_count(), 1);
+    }
+
+    /// A failed outcome reports the status the record actually holds.
+    ///
+    /// "Failed" does not mean "nothing was written". A start that fails has
+    /// already claimed its transition and then recorded the crash, so two
+    /// writes landed before the error surfaced. The outcome used to carry the
+    /// status the host had when the walk reached it, which contradicted the
+    /// record for exactly the hosts an operator is looking at -- and the suite
+    /// asserted both values, two lines apart, without noticing.
+    #[test]
+    fn a_failed_outcome_reports_the_stored_status() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::stopped(),
+        );
+
+        let mut supervisor = FakeSupervisor {
+            fail_start: true,
+            ..FakeSupervisor::default()
+        };
+        let report = reconciler(&backend)
+            .reconcile_all(&mut supervisor, NOW)
+            .expect("a failed start is one host's problem");
+
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        assert_eq!(
+            outcome.status(),
+            load(&backend, "mail-host").observation().status(),
+            "the reported status must be the stored one"
+        );
+        assert_eq!(
+            outcome.status(),
+            &HostStatus::Crashed { exit_code: None },
+            "and the failed start did write a crash record"
+        );
+    }
+
+    /// A stale carried heartbeat does not wedge a host forever.
+    ///
+    /// `inactive_observation` used to keep the previous record's heartbeat
+    /// beside a `started_at_ns` taken from the live instance. When the live
+    /// start post-dates the remembered heartbeat, `HostObservation::new`
+    /// rejects the pair -- and since nothing durable changes, every later tick
+    /// fails the same way. Under the old error contract that stopped the
+    /// daemon; under the new one it is a host that is silently never
+    /// supervised again, which is worse to diagnose.
+    #[test]
+    fn a_stale_carried_heartbeat_does_not_wedge_the_host() {
+        let backend = InMemoryStorageBackend::new();
+        // `Never` so the exited host is recorded rather than restarted, which
+        // is what puts the carried heartbeat beside the live start.
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Never,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Restarting,
+                Some(42),
+                Some(700),
+                Some(800),
+                None,
+                ledger(1, Some(600)),
+            )
+            .unwrap(),
+        );
+
+        // The live instance reports a start *after* the remembered heartbeat.
+        let observed = SupervisorObservation::exited([7; 32], Some(9), Some(900), None).unwrap();
+        let mut supervisor = FakeSupervisor::with("mail-host", observed);
+        let report = reconciler(&backend)
+            .reconcile_all(&mut supervisor, NOW)
+            .expect("the tick must complete");
+
+        assert_ne!(
+            only_outcome(&report).action(),
+            ReconcileAction::Failed,
+            "a heartbeat older than the start must be dropped, not rejected"
+        );
+        let persisted = load(&backend, "mail-host");
+        assert_eq!(persisted.observation().started_at_ns(), Some(900));
+        assert_eq!(
+            persisted.observation().last_heartbeat_ns(),
+            None,
+            "the stale heartbeat belonged to a start that is over"
+        );
     }
 }

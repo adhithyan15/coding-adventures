@@ -30,4 +30,9 @@
   unique value has failed.
 - Stamp intensity quarantine deadlines with the daemon run that set them, so a
   deadline from a previous run does not hold a host down for that run's uptime.
-
+- Report the stored status on a failed outcome. A failed start has already
+  written its claim and its crash record, so the pre-tick status contradicted
+  the register for exactly the hosts under investigation.
+- Drop a carried-forward heartbeat when the live instance reports a later start.
+  The pair is rejected at construction, and nothing durable changed on the
+  failing tick, so the host was wedged for good.
