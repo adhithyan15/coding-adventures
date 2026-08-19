@@ -27,21 +27,56 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `custom_fields["uri_2"]`, `["uri_3"]`, … instead of silently dropped.
 - Bounded parsing built on this repo's existing depth-capped
   `json-lexer`/`json-parser`/`json-value` pipeline rather than a new
-  hand-rolled JSON decoder: `MAX_SOURCE_BYTES` (64 MiB), `MAX_ITEMS`
-  (50,000), `MAX_URIS_PER_LOGIN` (32), `MAX_CUSTOM_FIELDS_PER_ITEM` (64),
-  `MAX_FIELD_LEN` (64 KiB).
-- 27 unit tests: happy-path decode of each mapped kind, TOTP-splits-into-
+  hand-rolled JSON decoder: `MAX_SOURCE_BYTES` (16 MiB), `MAX_ITEMS`
+  (50,000), `MAX_KEYS_PER_OBJECT` (128), `MAX_URIS_PER_LOGIN` (32),
+  `MAX_CUSTOM_FIELDS_PER_ITEM` (64), `MAX_FIELD_LEN` (64 KiB).
+- 36 unit tests: happy-path decode of each mapped kind, TOTP-splits-into-
   two-records, extra-URIs-preserved, card-field mapping, identity/unknown-
   type preservation as `Custom`, custom-field decode and override
   precedence, and a broad adversarial matrix — empty input, oversize
   input, invalid UTF-8, malformed JSON, non-object root, missing/wrong-
   typed `items`, non-object item, missing/empty `name`, missing/wrong-
   typed `type`, non-object `login`, over-bound items/URIs/custom-fields/
-  field-length, duplicate-key last-write-wins (both nested and top-level),
-  a 10,000-deep nested array proving the inherited depth cap prevents a
-  stack overflow instead of only being cited, null-vs-absent field
-  handling, and `Send + Sync`.
+  keys-per-object/field-length, duplicate-key last-write-wins (both
+  nested and top-level), a 10,000-deep nested array proving the inherited
+  depth cap prevents a stack overflow instead of only being cited,
+  null-vs-absent field handling, the recursive zeroize pass wiping every
+  string in a parsed tree, and `Send + Sync`.
 - `#![forbid(unsafe_code)]` + `#![deny(missing_docs)]`.
+
+### Security hardening (pre-merge review)
+
+Three findings flagged across four review rounds before push, all fixed
+inline:
+
+- **HIGH** — `decode_external_totp_field`/`parse_otpauth_totp_uri` (in
+  `vault-pm-cli`, the consumer of this crate's output) indexed an
+  untrusted `&str` at a fixed byte offset (`&s[..10]`), which panics —
+  a straight DoS via `vault-pm import bitwarden` — if a multi-byte UTF-8
+  character straddles that offset. Fixed with `str::get(..N)`; noted
+  here because it was found while reviewing this crate's consumer, not
+  this crate itself.
+- **MEDIUM** — `MAX_ITEMS`/`MAX_URIS_PER_LOGIN`/`MAX_CUSTOM_FIELDS_PER_ITEM`
+  bounded *array* lengths but not the number of keys in an arbitrary JSON
+  *object*; `json-value` has no per-object key-count limit of its own,
+  only a nesting-depth cap. A single object padded with many short junk
+  keys could amplify past the raw byte count before any check ran.
+  Mitigated by lowering `MAX_SOURCE_BYTES` from an earlier 64 MiB draft
+  to 16 MiB (real exports are low single-digit megabytes) and adding
+  `MAX_KEYS_PER_OBJECT`, checked at every object-destructuring site
+  (root, item, `login`, `card`, each `uris[]`/`fields[]` entry).
+- **LOW/MEDIUM** — every parsed JSON string (including every password,
+  TOTP seed, card PAN, and CVV) lived in an ordinary, non-zeroizing
+  `String` inside the `json-value` parse tree until `decode()` returned,
+  so a secret already extracted into a `Zeroizing` `PortableRecord`
+  field left an unwiped copy in freed heap. Fixed with a recursive
+  `zeroize_object`/`zeroize_json_value` pass over the whole tree, run
+  unconditionally on every return path out of `decode()` — including a
+  decode error partway through the file, which an earlier version of
+  this fix missed (the zeroize call initially ran only after every item
+  decoded successfully, silently skipping the wipe on exactly the
+  malformed/adversarial input this crate's threat model exists to
+  survive).
 
 ### Out of scope (documented, not silently dropped)
 

@@ -37,7 +37,7 @@ CSV structure (quoting, embedded commas/newlines, `""` escaping, ragged
 rows) is handled entirely by this repository's existing RFC 4180
 state-machine parser (`coding_adventures_csv_parser`); this adapter adds
 no CSV-syntax parsing of its own. Untrusted-input bounds:
-`MAX_SOURCE_BYTES` (32 MiB), `MAX_ROWS` (200,000), `MAX_COLUMNS` (256),
+`MAX_SOURCE_BYTES` (16 MiB), `MAX_ROWS` (200,000), `MAX_COLUMNS` (256),
 `MAX_FIELD_LEN` (64 KiB).
 
 **CSV formula injection** — a cell starting with `=`, `+`, `-`, or `@`

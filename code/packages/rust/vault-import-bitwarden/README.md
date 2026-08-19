@@ -51,14 +51,23 @@ JSON export to import in the first place).
 
 Untrusted bytes in, so every array this adapter walks is bounded
 (`MAX_ITEMS`, `MAX_URIS_PER_LOGIN`, `MAX_CUSTOM_FIELDS_PER_ITEM`), every
-string it copies is bounded (`MAX_FIELD_LEN`), and the whole source is
-bounded before parsing even starts (`MAX_SOURCE_BYTES`). JSON parsing
-reuses this repo's existing depth-capped `json-lexer`/`json-parser`/
-`json-value` pipeline rather than a new hand-rolled decoder, so an
-adversarial deeply-nested document is refused instead of overflowing the
-stack. Duplicate JSON object keys resolve last-write-wins, matching every
-mainstream JSON parser, and are covered by an explicit regression test
-rather than left as an accident of iteration order.
+object it destructures is bounded (`MAX_KEYS_PER_OBJECT`), every string it
+copies is bounded (`MAX_FIELD_LEN`), and the whole source is bounded
+before parsing even starts (`MAX_SOURCE_BYTES`, kept to 16 MiB precisely
+because the underlying parser has no per-object key-count limit of its
+own, only a nesting-depth cap — a smaller byte ceiling directly bounds
+how far a crafted object's junk-key amplification can go before
+`MAX_KEYS_PER_OBJECT` rejects it). JSON parsing reuses this repo's
+existing depth-capped `json-lexer`/`json-parser`/`json-value` pipeline
+rather than a new hand-rolled decoder, so an adversarial deeply-nested
+document is refused instead of overflowing the stack. Duplicate JSON
+object keys resolve last-write-wins, matching every mainstream JSON
+parser, and are covered by an explicit regression test rather than left
+as an accident of iteration order. Every secret-shaped source string
+inside the parsed JSON tree — not just the copies extracted into
+`Zeroizing` `PortableRecord` fields — is recursively zeroized in place
+before the tree drops, on every return path including a decode error
+partway through the file.
 
 ## Usage
 
@@ -79,9 +88,9 @@ assert_eq!(importer.name(), "bitwarden-json");
 
 ## Bounds
 
-`MAX_SOURCE_BYTES = 64 MiB`, `MAX_ITEMS = 50_000`,
-`MAX_URIS_PER_LOGIN = 32`, `MAX_CUSTOM_FIELDS_PER_ITEM = 64`,
-`MAX_FIELD_LEN = 64 KiB`.
+`MAX_SOURCE_BYTES = 16 MiB`, `MAX_ITEMS = 50_000`,
+`MAX_KEYS_PER_OBJECT = 128`, `MAX_URIS_PER_LOGIN = 32`,
+`MAX_CUSTOM_FIELDS_PER_ITEM = 64`, `MAX_FIELD_LEN = 64 KiB`.
 
 ## Out of scope
 

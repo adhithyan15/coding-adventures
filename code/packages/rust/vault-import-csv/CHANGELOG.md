@@ -26,9 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delegates all CSV structural parsing (quoting, embedded commas/
   newlines, `""` escaping, ragged rows) to this repository's existing
   RFC 4180 `csv-parser` crate rather than writing new CSV-syntax parsing.
-- Bounded: `MAX_SOURCE_BYTES` (32 MiB), `MAX_ROWS` (200,000),
+- Bounded: `MAX_SOURCE_BYTES` (16 MiB), `MAX_ROWS` (200,000),
   `MAX_COLUMNS` (256), `MAX_FIELD_LEN` (64 KiB).
-- 20 unit tests: happy-path decode for each vendor's column shape,
+- 22 unit tests: happy-path decode for each vendor's column shape,
   case-insensitive/whitespace-trimmed header matching, embedded comma/
   newline preservation, multi-row decoding, an explicit CSV
   formula-injection test proving `=`/`+`/`-`/`@`-prefixed payloads round-
@@ -37,6 +37,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   ragged short/long rows, over-bound rows/columns/field-length, and
   `Send + Sync`.
 - `#![forbid(unsafe_code)]` + `#![deny(missing_docs)]`.
+
+### Security hardening (pre-merge review)
+
+Three findings flagged across four review rounds before push, all fixed
+inline:
+
+- **MEDIUM** — `MAX_COLUMNS` could only reject a wide row after
+  `csv-parser` had already fully materialized it into a `HashMap`, so a
+  crafted file within the byte cap could amplify past its raw size before
+  that check ran. Mitigated by lowering `MAX_SOURCE_BYTES` from an
+  earlier 32 MiB draft to 16 MiB, directly shrinking the worst case (real
+  exports are low single-digit megabytes).
+- **LOW/MEDIUM** — every parsed CSV cell value lived in an ordinary,
+  non-zeroizing `String` inside `rows: Vec<HashMap<String, String>>`
+  until the function returned, so a password or TOTP seed already
+  extracted into a `Zeroizing` `PortableRecord` field left an unwiped
+  copy in freed heap. Fixed by zeroizing every cell value in `rows` in
+  place before it drops.
+- **MEDIUM** — that zeroize pass initially ran only after every row
+  decoded successfully, so a malformed row partway through the file (an
+  over-`MAX_COLUMNS` row, an over-`MAX_FIELD_LEN` cell) skipped the wipe
+  for every row already decoded before it — exactly the adversarial
+  input this crate's threat model exists to survive. Fixed by capturing
+  the decode loop's result and running the zeroize pass unconditionally,
+  on both its `Ok` and `Err` paths, before propagating it.
 
 ### Out of scope (documented, not silently dropped)
 
