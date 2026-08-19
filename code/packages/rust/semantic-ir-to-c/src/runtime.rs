@@ -5695,7 +5695,18 @@ SirSymTerm *_sir_symterm_rational_raw(int64_t numer, int64_t denom) {
     t->kind = SIR_SYMTERM_RATIONAL;
     t->name = "";
     t->as.rat.denom = (ud > (uint64_t)INT64_MAX) ? INT64_MAX : (int64_t)ud;
-    {
+    /* SECURITY (CWE-682, /security-review finding): unlike the denominator
+     * (always positive, so its true magnitude 2^63 genuinely cannot fit in
+     * a positive int64_t and MUST saturate), a negative numerator's
+     * magnitude 2^63 IS exactly representable as INT64_MIN — saturating it
+     * to INT64_MAX first and then negating would silently corrupt an exact
+     * value (e.g. sir_symterm_rational(INT64_MIN, 1)) into
+     * -9223372036854775807 instead of the correct -9223372036854775808.
+     * Special-case that one exactly-representable boundary before falling
+     * back to the same saturate-then-negate logic for every other case. */
+    if (neg && un == (uint64_t)INT64_MAX + 1) {
+        t->as.rat.numer = INT64_MIN;
+    } else {
         int64_t mag = (un > (uint64_t)INT64_MAX) ? INT64_MAX : (int64_t)un;
         t->as.rat.numer = neg ? -mag : mag; /* mag <= INT64_MAX, so -mag never overflows */
     }

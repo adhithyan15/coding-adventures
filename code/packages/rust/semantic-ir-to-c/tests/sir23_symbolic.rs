@@ -246,6 +246,30 @@ fn a_rational_term_prints_reduced() {
 }
 
 #[test]
+fn a_rational_with_int64_min_numerator_prints_exactly_not_saturated() {
+    // Regression test (/security-review finding): `_sir_symterm_rational`'s
+    // gcd-reduction avoids `-INT64_MIN` signed-overflow UB by tracking sign
+    // separately and computing magnitudes in `uint64_t`, then narrowing
+    // back to `int64_t` on the way out. `INT64_MIN`'s magnitude (2^63) is
+    // NOT representable as a positive `int64_t`, so the denominator's own
+    // narrowing correctly saturates it to `INT64_MAX` when it can't fit —
+    // but the numerator, being SIGNED, CAN represent that exact magnitude
+    // as `INT64_MIN` itself. Applying denominator-style saturation to the
+    // numerator too would silently round the exact value
+    // `-9223372036854775808` to `-9223372036854775807` with no error. This
+    // must print the exact boundary value, not an off-by-one-corrupted one.
+    let r = Expr::SymRational { numer: i64::MIN, denom: 1, span: s() };
+    let m = symbolic_module(vec![print_stmt(r)]);
+    match run(&m) {
+        Some((stdout, ok, stderr)) => {
+            assert!(ok, "expected success, got stderr:\n{stderr}");
+            assert_eq!(stdout.trim_end(), "-9223372036854775808/1");
+        }
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
 fn depth_limit_guard_aborts_instead_of_crashing() {
     // A runtime-built term nested past SIR_SYMTERM_MAX_TERM_DEPTH (512)
     // must abort cleanly (fprintf + exit(1)) from `_sir_symterm_replace_
