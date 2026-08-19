@@ -1,5 +1,114 @@
 # Changelog
 
+## 0.2.0 — SIR22 "APL addendum" (Phase A Slice 3)
+
+Adds the nine-node SIR22 "APL addendum" this package's 0.1.0 release
+explicitly scoped out: `reduce`/`scan`/`outer`/`shape`/`reshape`/
+`index_generator`/`index_of`/`ravel`/`catenate`, plus the internal
+`_flatten_row_major` helper both `reshape` and `ravel` share. Every new
+function reuses this package's own existing `checked_shape_size`/
+`ndarray`/`get`/`apply_op`/`to_array_value` helpers rather than
+duplicating logic — no new module-level state, no new dependencies.
+
+**Port source: `semantic-ir-to-javascript`'s inlined `ArrayRt`, not the
+published TypeScript package.** This package's 0.1.0 base cut ported from
+`@coding-adventures/sir-runtime-array` (TS); at the time of this release
+that package still had no addendum functions of its own (per the SIR22
+spec's own note that TS's package lagged behind JS's inline port), so the
+JS backend's own `semantic-ir-to-javascript/src/runtime.rs` — the
+already-shipped, already-tested implementation — was the closer, more
+direct reference instead. Ported 1:1 algorithmically, adapted from JS's
+`Float64Array`-backed, always-double storage to this package's own
+`list`-backed, native `int`/`float`-preserving storage (see 0.1.0's own
+"Design notes" for why that divergence is deliberate, not a bug).
+
+### Added
+
+- `reduce(op, a)` — APL `+/A`: rank 0 is a no-op; rank 1 left-folds across
+  the vector (an empty vector is a clean error — no generic identity
+  element exists for an arbitrary `op`); rank 2 folds **each row
+  independently**, producing a rank-1 vector. The row loop reads
+  `d[row]` as the seed (column 0) then walks `d[col * r + row]` for
+  `col = 1..c-1` — column-major storage means swapping `row`/`col` here
+  silently *transposes* the result instead of raising, the single
+  easiest place to introduce a wrong-answer bug in this whole release
+  (matches the JS reference's own docstring warning verbatim).
+- `scan(op, a)` — APL `+\A`: the same fold as `reduce`, but keeping every
+  intermediate result (output shape == input shape). Unlike `reduce`, an
+  empty axis is not an error — there's simply nothing to scan.
+- `outer(op, a, b)` — APL `A∘.×B`: scoped to `rank(a) <= 1` and
+  `rank(b) <= 1` (four sub-cases: scalar-scalar, scalar-vector,
+  vector-scalar, vector-vector); anything of higher rank is a clean
+  "not yet supported" error.
+- `shape(a)` — APL monadic `⍴A`: `a`'s dimensions as a vector. **A scalar's
+  shape is the EMPTY vector, not a scalar** — `⍴5` is a length-0 vector.
+  Covered by an explicit test asserting `shape == (0,)`, not just an
+  element-count check.
+- `reshape(shape_arg, target)` — APL dyadic `A⍴B`: `shape_arg` must be a
+  scalar/vector (rank <= 1) of non-negative integers, and is itself
+  capped at rank <= 2. `target`'s elements are raveled then cyclically
+  repeated/truncated to fill the new shape's element count. **CRITICAL**:
+  the cyclic fill runs in ROW-major order (APL's own convention — the
+  last axis varies fastest), but this package's storage is COLUMN-major,
+  so a rank-2 target requires transposing the row-major-filled sequence
+  back into column-major storage (`data[col * r + row] =
+  filled[row * c + col]`) before returning it — handing the row-major
+  buffer straight to `ndarray` would silently reshape in the wrong axis
+  order, a wrong answer that still *looks* plausible (right multiset of
+  values, wrong positions). Regression-tested with a non-square 3x2
+  target.
+- `index_generator(a)` — APL monadic `⍳n`: **1-based** — `⍳4` is
+  `[1, 2, 3, 4]`, unlike every other 0-based index in this package
+  (`index_get`/`index_set`). This is a genuine fact about APL's own
+  surface syntax (`apl_runtime::builtins::index_generator`'s own doc
+  comment makes the same point), not an inconsistency introduced here.
+- `index_of(haystack, needle)` — APL dyadic `A⍳B`: for each element of
+  `needle`, the 1-based index of its first occurrence in `haystack`, or
+  `len(haystack) + 1` if not found — "not found" is a valid,
+  always-in-range position, never `-1`/`None`. Plain exact equality (no
+  float tolerance), so `NaN` correctly never matches.
+- `ravel(a)` — APL monadic `,A`: flatten to a rank-1 vector, in row-major
+  order (reuses `_flatten_row_major`).
+- `catenate(a, b)` — APL dyadic `A,B`: five supported rank combinations
+  (0+0, 0+1, 1+0, 1+1 all producing a vector; 2+2 with equal row counts
+  producing column/last-axis catenation); any other combination is a
+  clean "not yet supported" error.
+
+### Security
+
+Every new function was re-examined specifically for the SAME bug class
+0.1.0's own security review found and fixed in `matmul` (validating only
+the *output* shape, not a shared dimension fed by two independent
+operands — letting an unbounded op count through from two
+individually-legal inputs): `outer`'s `(m, n)` output shape, `index_of`'s
+`len(haystack) * len(needle)` scan-cost product (an O(n²) hazard the
+trivially-small *output* length alone would never catch), `catenate`'s
+combined length (checked ONCE up front, before any of its five rank
+branches run — a script that repeatedly self-catenates has no other
+ceiling), `index_generator`'s `n`, and `reshape`'s target element count
+are all validated via `checked_shape_size` — this package's one existing
+`MAX_ELEMENTS`-capped guard, reused as-is rather than reintroducing a
+second, competing cap — *before* allocating or looping, not after. Every
+one of these is explicitly called out with a `# SECURITY:` comment at its
+own call site in `array.py`, and every one has a dedicated
+`tests/test_array.py` regression test proving the guard actually
+triggers (e.g. `TestOuter::test_outer_product_dos_guard_caps_before_allocating`,
+`TestIndexOf::test_indexof_product_dos_guard_caps_before_scanning`,
+`TestCatenate::test_combined_length_dos_guard_caps_before_any_branch_allocates`).
+
+### Tests
+
+170 tests in `tests/test_array.py` (up from the 0.1.0 baseline), 100%
+statement coverage of `array.py`/`__init__.py`, `ruff check` and
+`mypy --strict` clean. New coverage includes the reduce/scan
+column-major-row-indexing correctness case (a 2x3 matrix, proving rows —
+not columns — are folded), the reshape row-major-fill-then-transpose
+case, the index-generator/index-of 1-based convention (including the
+"not found" sentinel value), and every DoS-guard regression described
+above.
+
+`coding-adventures-sir-runtime-array` 0.1.0 -> 0.2.0.
+
 ## 0.1.0 — initial release
 
 **Security fix (pre-release, found during this release's own security

@@ -11,6 +11,14 @@ SIR22-array-matrix-semantic-ir.md``): ``ArrayLit``, ``Range``, ``MatMul``,
     b = from_rows([[5, 6], [7, 8]])
     matmul(a, b).data   # [19, 43, 22, 50]  (column-major: [[19, 22], [43, 50]])
 
+...as well as the nine-node SIR22 "APL addendum" that shares these same
+features -- ``Reduce``, ``Scan``, ``OuterProduct``, ``Shape``, ``Reshape``,
+``IndexGenerator``, ``IndexOf``, ``Ravel``, ``Catenate``::
+
+    from coding_adventures_sir_runtime_array import from_vec, reduce
+    v = from_vec([1, 2, 3, 4])
+    reduce("Add", v).data   # [10]
+
 This mirrors the TypeScript backend's *imported-package* model
 (``semantic-ir-to-typescript`` imports ``@coding-adventures/
 sir-runtime-array``) rather than ``semantic-ir-to-python``'s usual inline-
@@ -30,12 +38,15 @@ from .array import (
     NDArray,
     Val,
     apply_op,
+    catenate,
     checked_shape_size,
     elementwise,
     from_rows,
     from_vec,
     get,
+    index_generator,
     index_get,
+    index_of,
     index_range,
     index_scalar,
     index_set,
@@ -46,9 +57,15 @@ from .array import (
     ndarray,
     ndims,
     nrows,
+    outer,
     range_,
+    ravel,
+    reduce,
+    reshape,
     scalar,
+    scan,
     set_,
+    shape,
     to_array_value,
     transpose,
     zeros,
@@ -70,12 +87,15 @@ __all__ = [
     "NDArray",
     "Val",
     "apply_op",
+    "catenate",
     "checked_shape_size",
     "elementwise",
     "from_rows",
     "from_vec",
     "get",
+    "index_generator",
     "index_get",
+    "index_of",
     "index_range",
     "index_scalar",
     "index_set",
@@ -86,11 +106,17 @@ __all__ = [
     "ndims",
     "ncols",
     "nrows",
+    "outer",
     "range",
     "range_",
+    "ravel",
+    "reduce",
+    "reshape",
     "scalar",
+    "scan",
     "set",
     "set_",
+    "shape",
     "to_array_value",
     "transpose",
     "zeros",

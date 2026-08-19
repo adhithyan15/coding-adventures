@@ -4,19 +4,21 @@ from __future__ import annotations
 
 import math
 
-import pytest
-
 import coding_adventures_sir_runtime_array.array as array_mod
+import pytest
 from coding_adventures_sir_runtime_array import (
     MAX_ELEMENTS,
     NDArray,
     apply_op,
+    catenate,
     checked_shape_size,
     elementwise,
     from_rows,
     from_vec,
     get,
+    index_generator,
     index_get,
+    index_of,
     index_range,
     index_scalar,
     index_set,
@@ -27,7 +29,13 @@ from coding_adventures_sir_runtime_array import (
     ndarray,
     ndims,
     nrows,
+    outer,
+    ravel,
+    reduce,
+    reshape,
     scalar,
+    scan,
+    shape,
     to_array_value,
     transpose,
     zeros,
@@ -584,3 +592,434 @@ class TestMathIsfiniteSanity:
         assert math.isfinite(1.0)
         assert not math.isfinite(float("nan"))
         assert not math.isfinite(float("inf"))
+
+
+# ── SIR22 "APL addendum" ──────────────────────────────────────────────────
+
+
+class TestReduce:
+    def test_scalar_is_a_no_op(self) -> None:
+        r = reduce("Add", scalar(5))
+        assert r.shape == ()
+        assert r.data == [5]
+
+    def test_vector_left_folds_across_all_elements(self) -> None:
+        # +/1 2 3 4 = 10
+        r = reduce("Add", from_vec([1, 2, 3, 4]))
+        assert r.shape == ()
+        assert r.data == [10]
+
+    def test_matrix_folds_each_row_independently(self) -> None:
+        # [[1, 2, 3], [4, 5, 6]] -- row 0 sums to 6, row 1 sums to 15.
+        # Proves the column-major indexing (`d[col * r + row]`) is not
+        # transposed: a swapped row/col would instead sum the COLUMNS
+        # (1+4=5, 2+5=7, 3+6=9), which this asserts is NOT the result.
+        a = from_rows([[1, 2, 3], [4, 5, 6]])
+        r = reduce("Add", a)
+        assert r.shape == (2,)
+        assert r.data == [6, 15]
+
+    def test_empty_vector_raises(self) -> None:
+        with pytest.raises(ValueError, match="cannot fold an empty vector"):
+            reduce("Add", from_vec([]))
+
+    def test_empty_row_matrix_raises(self) -> None:
+        with pytest.raises(ValueError, match="cannot fold an empty row"):
+            reduce("Add", zeros(2, 0))
+
+    def test_rank_greater_than_two_raises(self) -> None:
+        a = NDArray((2, 2, 2), [0] * 8)
+        with pytest.raises(ValueError, match="rank > 2 not yet supported"):
+            reduce("Add", a)
+
+    def test_reduce_with_mul_op(self) -> None:
+        # */1 2 3 4 = 24
+        r = reduce("Mul", from_vec([1, 2, 3, 4]))
+        assert r.data == [24]
+
+
+class TestScan:
+    def test_scalar_is_a_no_op(self) -> None:
+        r = scan("Add", scalar(5))
+        assert r.shape == ()
+        assert r.data == [5]
+
+    def test_vector_keeps_every_intermediate_result(self) -> None:
+        # +\1 2 3 4 = 1 3 6 10
+        r = scan("Add", from_vec([1, 2, 3, 4]))
+        assert r.shape == (4,)
+        assert r.data == [1, 3, 6, 10]
+
+    def test_empty_vector_is_not_an_error(self) -> None:
+        # Unlike reduce, an empty axis is fine -- nothing to scan.
+        r = scan("Add", from_vec([]))
+        assert r.shape == (0,)
+        assert r.data == []
+
+    def test_matrix_scans_each_row_independently(self) -> None:
+        a = from_rows([[1, 2, 3], [4, 5, 6]])
+        r = scan("Add", a)
+        assert r.shape == (2, 3)
+        # Row 0: 1, 3, 6 -- row 1: 4, 9, 15.
+        assert get(r, 0, 0) == 1
+        assert get(r, 0, 1) == 3
+        assert get(r, 0, 2) == 6
+        assert get(r, 1, 0) == 4
+        assert get(r, 1, 1) == 9
+        assert get(r, 1, 2) == 15
+
+    def test_rank_greater_than_two_raises(self) -> None:
+        a = NDArray((2, 2, 2), [0] * 8)
+        with pytest.raises(ValueError, match="rank > 2 not yet supported"):
+            scan("Add", a)
+
+
+class TestOuter:
+    def test_vector_outer_vector_produces_a_matrix(self) -> None:
+        # [1, 2] outer-times [10, 20, 30] = [[10, 20, 30], [20, 40, 60]]
+        a = from_vec([1, 2])
+        b = from_vec([10, 20, 30])
+        r = outer("Mul", a, b)
+        assert r.shape == (2, 3)
+        assert get(r, 0, 0) == 10
+        assert get(r, 0, 1) == 20
+        assert get(r, 0, 2) == 30
+        assert get(r, 1, 0) == 20
+        assert get(r, 1, 1) == 40
+        assert get(r, 1, 2) == 60
+
+    def test_scalar_outer_scalar(self) -> None:
+        r = outer("Add", scalar(2), scalar(3))
+        assert r.shape == ()
+        assert r.data == [5]
+
+    def test_scalar_outer_vector(self) -> None:
+        r = outer("Mul", scalar(2), from_vec([1, 2, 3]))
+        assert r.shape == (3,)
+        assert r.data == [2, 4, 6]
+
+    def test_vector_outer_scalar(self) -> None:
+        r = outer("Mul", from_vec([1, 2, 3]), scalar(2))
+        assert r.shape == (3,)
+        assert r.data == [2, 4, 6]
+
+    def test_rank_greater_than_one_operand_raises(self) -> None:
+        a = from_rows([[1, 2], [3, 4]])
+        with pytest.raises(ValueError, match="operands of rank > 1 not yet supported"):
+            outer("Add", a, from_vec([1, 2]))
+
+    def test_outer_product_dos_guard_caps_before_allocating(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SECURITY regression, same class matmul's own security-review fix
+        # caught: `m`/`n` are each individually small, but their PRODUCT
+        # (the (m, n) output) must be capped before the double loop
+        # allocates/iterates. Lower MAX_ELEMENTS so this doesn't need to
+        # actually allocate anything huge.
+        monkeypatch.setattr(array_mod, "MAX_ELEMENTS", 100)
+        a = from_vec(list(range(20)))
+        b = from_vec(list(range(20)))
+        with pytest.raises(ValueError, match="exceeds the .*-element cap"):
+            outer("Mul", a, b)
+
+
+class TestShape:
+    def test_scalar_shape_is_the_empty_vector_not_a_scalar(self) -> None:
+        # Critical APL semantics: `⍴5` is a length-0 vector, NOT a
+        # rank-0 scalar -- a common off-by-one-domain bug if written
+        # carelessly.
+        r = shape(scalar(5))
+        assert r.shape == (0,)
+        assert r.data == []
+
+    def test_vector_shape_is_a_one_element_vector(self) -> None:
+        r = shape(from_vec([1, 2, 3]))
+        assert r.shape == (1,)
+        assert r.data == [3]
+
+    def test_matrix_shape_is_a_two_element_vector(self) -> None:
+        r = shape(from_rows([[1, 2, 3], [4, 5, 6]]))
+        assert r.shape == (2,)
+        assert r.data == [2, 3]
+
+    def test_bare_number_is_coerced_to_scalar_first(self) -> None:
+        r = shape(5)
+        assert r.shape == (0,)
+        assert r.data == []
+
+
+class TestReshape:
+    def test_reshape_to_a_non_square_matrix_transposes_row_major_fill(self) -> None:
+        # 2x3 -> 3x2: source raveled row-major is [1, 2, 3, 4, 5, 6].
+        # APL fills the LAST axis fastest (row-major), so a 3x2 target's
+        # rows are (1,2), (3,4), (5,6) -- but storage here is
+        # COLUMN-major, so the naive "just copy `filled` in order" bug
+        # would instead produce rows (1,4), (2,5), (3,6) (a silent
+        # transpose). This pins down the CORRECT, non-transposed answer.
+        a = from_rows([[1, 2, 3], [4, 5, 6]])
+        r = reshape(from_vec([3, 2]), a)
+        assert r.shape == (3, 2)
+        assert get(r, 0, 0) == 1
+        assert get(r, 0, 1) == 2
+        assert get(r, 1, 0) == 3
+        assert get(r, 1, 1) == 4
+        assert get(r, 2, 0) == 5
+        assert get(r, 2, 1) == 6
+
+    def test_reshape_to_a_vector(self) -> None:
+        a = from_rows([[1, 2], [3, 4]])
+        r = reshape(from_vec([4]), a)
+        assert r.shape == (4,)
+        # Row-major ravel of [[1,2],[3,4]] is [1, 2, 3, 4].
+        assert r.data == [1, 2, 3, 4]
+
+    def test_reshape_cyclically_repeats_a_shorter_source(self) -> None:
+        r = reshape(from_vec([5]), from_vec([1, 2]))
+        assert r.data == [1, 2, 1, 2, 1]
+
+    def test_reshape_truncates_a_longer_source(self) -> None:
+        r = reshape(from_vec([2]), from_vec([1, 2, 3, 4]))
+        assert r.data == [1, 2]
+
+    def test_reshape_scalar_shape_argument(self) -> None:
+        r = reshape(scalar(3), from_vec([9]))
+        assert r.shape == (3,)
+        assert r.data == [9, 9, 9]
+
+    def test_reshape_rejects_rank_greater_than_one_shape_argument(self) -> None:
+        with pytest.raises(ValueError, match="must be a scalar or vector"):
+            reshape(from_rows([[1, 2], [3, 4]]), from_vec([1]))
+
+    def test_reshape_rejects_negative_shape_element(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            reshape(from_vec([-1]), from_vec([1]))
+
+    def test_reshape_rejects_non_integer_shape_element(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            reshape(from_vec([1.5]), from_vec([1]))
+
+    def test_reshape_rejects_rank_greater_than_two_target(self) -> None:
+        with pytest.raises(ValueError, match="reshape to rank > 2 is not yet supported"):
+            reshape(from_vec([1, 2, 3]), from_vec([1]))
+
+    def test_reshape_of_empty_source_into_nonempty_shape_raises(self) -> None:
+        with pytest.raises(ValueError, match="cannot reshape an empty source"):
+            reshape(from_vec([3]), from_vec([]))
+
+    def test_reshape_of_empty_source_into_empty_shape_is_fine(self) -> None:
+        r = reshape(from_vec([0]), from_vec([]))
+        assert r.shape == (0,)
+        assert r.data == []
+
+
+class TestIndexGenerator:
+    def test_is_one_based_unlike_index_get_index_set(self) -> None:
+        # ⍳4 = [1, 2, 3, 4] -- 1-based, unlike every 0-based index
+        # elsewhere in this module.
+        r = index_generator(scalar(4))
+        assert r.shape == (4,)
+        assert r.data == [1, 2, 3, 4]
+
+    def test_of_zero_is_empty(self) -> None:
+        r = index_generator(scalar(0))
+        assert r.shape == (0,)
+        assert r.data == []
+
+    def test_bare_number_argument_is_coerced_first(self) -> None:
+        r = index_generator(3)
+        assert r.data == [1, 2, 3]
+
+    def test_rejects_non_scalar_argument(self) -> None:
+        with pytest.raises(ValueError, match="must be a scalar"):
+            index_generator(from_vec([1, 2]))
+
+    def test_rejects_negative_argument(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            index_generator(scalar(-1))
+
+    def test_rejects_non_integer_argument(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            index_generator(scalar(1.5))
+
+    def test_caps_n_before_allocating(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        monkeypatch.setattr(array_mod, "MAX_ELEMENTS", 10)
+        with pytest.raises(ValueError, match="exceeds the .*-element cap"):
+            index_generator(scalar(11))
+
+
+class TestIndexOf:
+    def test_found_returns_one_based_position_of_first_occurrence(self) -> None:
+        # 10 20 30 ⍳ 20 = 2 (1-based)
+        haystack = from_vec([10, 20, 30])
+        r = index_of(haystack, scalar(20))
+        assert r.data == [2]
+
+    def test_not_found_returns_haystack_length_plus_one_never_negative(self) -> None:
+        haystack = from_vec([10, 20, 30])
+        r = index_of(haystack, scalar(99))
+        # "not found" must be haystack.length + 1 (4), never -1/None.
+        assert r.data == [4]
+
+    def test_multiple_needles_each_resolved_independently(self) -> None:
+        haystack = from_vec([10, 20, 30])
+        r = index_of(haystack, from_vec([30, 99, 10]))
+        assert r.shape == (3,)
+        assert r.data == [3, 4, 1]
+
+    def test_uses_exact_equality_nan_never_matches(self) -> None:
+        haystack = from_vec([1.0, float("nan"), 3.0])
+        r = index_of(haystack, scalar(float("nan")))
+        # NaN != NaN under plain equality, so it must never be found --
+        # not even against a NaN sitting right there in the haystack.
+        assert r.data == [4]
+
+    def test_rejects_rank_greater_than_one_haystack(self) -> None:
+        with pytest.raises(ValueError, match="must be a scalar or vector"):
+            index_of(from_rows([[1, 2], [3, 4]]), scalar(1))
+
+    def test_indexof_product_dos_guard_caps_before_scanning(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SECURITY regression -- the exact matmul-shaped bug class: each
+        # operand is individually small, but the O(len(haystack) *
+        # len(needle)) scan cost is a PRODUCT of two independent lengths,
+        # which the (trivially small) output-length alone would never
+        # catch. Must be capped before the scan loop runs.
+        monkeypatch.setattr(array_mod, "MAX_ELEMENTS", 100)
+        haystack = from_vec(list(range(20)))
+        needles = from_vec(list(range(20)))
+        with pytest.raises(ValueError, match="exceeds the .*-element cap"):
+            index_of(haystack, needles)
+
+
+class TestRavel:
+    def test_ravel_of_a_vector_is_unchanged(self) -> None:
+        r = ravel(from_vec([1, 2, 3]))
+        assert r.shape == (3,)
+        assert r.data == [1, 2, 3]
+
+    def test_ravel_of_a_matrix_flattens_row_major(self) -> None:
+        # [[1, 2, 3], [4, 5, 6]] raveled row-major (last axis fastest) is
+        # [1, 2, 3, 4, 5, 6] -- NOT the raw column-major storage order
+        # ([1, 4, 2, 5, 3, 6]), which this asserts against implicitly by
+        # pinning the correct answer.
+        a = from_rows([[1, 2, 3], [4, 5, 6]])
+        r = ravel(a)
+        assert r.shape == (6,)
+        assert r.data == [1, 2, 3, 4, 5, 6]
+
+    def test_ravel_of_a_scalar(self) -> None:
+        r = ravel(scalar(7))
+        assert r.shape == (1,)
+        assert r.data == [7]
+
+    def test_ravel_never_aliases_the_source_data_buffer(self) -> None:
+        a = from_vec([1, 2, 3])
+        r = ravel(a)
+        r.data[0] = 999
+        assert a.data == [1, 2, 3]
+
+
+class TestCatenate:
+    def test_scalar_catenate_scalar(self) -> None:
+        r = catenate(scalar(1), scalar(2))
+        assert r.shape == (2,)
+        assert r.data == [1, 2]
+
+    def test_scalar_catenate_vector(self) -> None:
+        r = catenate(scalar(1), from_vec([2, 3]))
+        assert r.data == [1, 2, 3]
+
+    def test_vector_catenate_scalar(self) -> None:
+        r = catenate(from_vec([1, 2]), scalar(3))
+        assert r.data == [1, 2, 3]
+
+    def test_vector_catenate_vector(self) -> None:
+        r = catenate(from_vec([1, 2]), from_vec([3, 4]))
+        assert r.shape == (4,)
+        assert r.data == [1, 2, 3, 4]
+
+    def test_matrix_catenate_matrix_with_equal_row_counts(self) -> None:
+        # [[1, 2], [3, 4]] , [[5], [6]] -> [[1, 2, 5], [3, 4, 6]]
+        a = from_rows([[1, 2], [3, 4]])
+        b = from_rows([[5], [6]])
+        r = catenate(a, b)
+        assert r.shape == (2, 3)
+        assert get(r, 0, 0) == 1
+        assert get(r, 0, 1) == 2
+        assert get(r, 0, 2) == 5
+        assert get(r, 1, 0) == 3
+        assert get(r, 1, 1) == 4
+        assert get(r, 1, 2) == 6
+
+    def test_matrix_catenate_unequal_row_counts_raises(self) -> None:
+        a = from_rows([[1, 2]])
+        b = from_rows([[1, 2], [3, 4]])
+        with pytest.raises(ValueError, match="equal row counts"):
+            catenate(a, b)
+
+    def test_rank_combination_not_supported_raises(self) -> None:
+        a = from_rows([[1, 2], [3, 4]])
+        b = from_vec([1, 2])
+        with pytest.raises(ValueError, match="not yet supported"):
+            catenate(a, b)
+
+    def test_combined_length_dos_guard_caps_before_any_branch_allocates(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        # SECURITY regression: a script that repeatedly self-catenates
+        # (`A <- A,A`) has no other ceiling on the combined size -- each
+        # operand can be individually small while the SUM still exceeds
+        # the cap, and this must be caught once, up front, regardless of
+        # which of the five rank-combination branches would otherwise
+        # run.
+        monkeypatch.setattr(array_mod, "MAX_ELEMENTS", 10)
+        a = from_vec(list(range(6)))
+        b = from_vec(list(range(6)))
+        with pytest.raises(ValueError, match="exceeds the .*-element cap"):
+            catenate(a, b)
+
+
+class TestFlattenRowMajor:
+    def test_flatten_of_rank_zero_is_a_fresh_list(self) -> None:
+        a = scalar(5)
+        flat = array_mod._flatten_row_major(a)
+        assert flat == [5]
+        flat[0] = 999
+        assert a.data == [5]
+
+    def test_flatten_of_rank_one_is_a_fresh_list(self) -> None:
+        a = from_vec([1, 2, 3])
+        flat = array_mod._flatten_row_major(a)
+        assert flat == [1, 2, 3]
+        flat[0] = 999
+        assert a.data == [1, 2, 3]
+
+    def test_flatten_of_rank_two_reorders_column_major_to_row_major(self) -> None:
+        a = from_rows([[1, 2, 3], [4, 5, 6]])
+        assert a.data == [1, 4, 2, 5, 3, 6]  # raw column-major storage
+        assert array_mod._flatten_row_major(a) == [1, 2, 3, 4, 5, 6]  # row-major order
+
+    def test_flatten_of_rank_greater_than_two_falls_back_to_raw_data(self) -> None:
+        a = NDArray((2, 2, 2), list(range(8)))
+        assert array_mod._flatten_row_major(a) == list(range(8))
+
+
+class TestNonNegativeInt:
+    def test_accepts_plain_int(self) -> None:
+        assert array_mod._non_negative_int(3, who="test") == 3
+
+    def test_accepts_integer_valued_float(self) -> None:
+        assert array_mod._non_negative_int(3.0, who="test") == 3
+
+    def test_rejects_bool(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            array_mod._non_negative_int(True, who="test")
+
+    def test_rejects_fractional_float(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            array_mod._non_negative_int(3.5, who="test")
+
+    def test_rejects_negative(self) -> None:
+        with pytest.raises(ValueError, match="non-negative integer"):
+            array_mod._non_negative_int(-1, who="test")

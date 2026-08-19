@@ -72,10 +72,21 @@ which would otherwise let a boundary-legal call still exhaust CPU time
 **Deliberately out of scope**, matching ``array-runtime`` and the TS
 reference exactly: ``Complex``/``Rational`` scalars (``transpose``'s
 ``conjugate`` flag is accepted for API-shape parity but is a no-op on
-real data); rank > 2 (no operation here defines it); the nine-node SIR22
-"APL addendum" (``Reduce``/``Scan``/``OuterProduct``/``Shape``/
-``Reshape``/``IndexGenerator``/``IndexOf``/``Ravel``/``Catenate``) --
-this package covers only the SIR22 *base cut*, a separate later slice.
+real data); rank > 2 (no operation here defines it).
+
+**The SIR22 "APL addendum"** (``Reduce``/``Scan``/``OuterProduct``/
+``Shape``/``Reshape``/``IndexGenerator``/``IndexOf``/``Ravel``/
+``Catenate`` -- nine more ``Expr`` node kinds sharing this same
+``NDArrays``/``MatrixOps``/``ArrayColumnMajor`` feature trio, but with no
+flag of their own) is implemented below, in the module's final section.
+Ported 1:1 from ``semantic-ir-to-javascript``'s inlined ``ArrayRt`` sub-
+runtime (``code/packages/rust/semantic-ir-to-javascript/src/runtime.rs``,
+the "SIR22 addendum: APL primitive operators" section) rather than from
+the TypeScript package this module's base cut above mirrors -- at the
+time of this port, ``@coding-adventures/sir-runtime-array`` (TS) had not
+yet grown these nine functions itself, so JS's already-proven inline port
+was the closer, more-direct reference. See that section's own module doc
+comment below for the full design discussion.
 
 See ``code/specs/sir-runtime.md`` and ``code/specs/
 SIR22-array-matrix-semantic-ir.md``.
@@ -703,3 +714,428 @@ def index_set(a: NDArray, indices: Sequence[IndexArg], value: Val | NDArray) -> 
         "index_set: only 1 or 2 index arguments are supported "
         f"(rank <= 2 scope), got {len(indices)}"
     )
+
+
+# ── SIR22 addendum: APL primitive operators ──────────────────────────────
+#
+# The nine functions below extend this package to cover the SIR22 "APL
+# addendum" (``code/specs/SIR22-array-matrix-semantic-ir.md``): array-family
+# primitive *operators* APL exposes as bare glyphs (`+/A` reduce, `+\A`
+# scan, `A∘.×B` outer product, `⍴`/`⍳`/`,` shape-reshape /
+# index-generator-index-of / ravel-catenate) that this package's SIR22
+# *base cut* above does not cover. Ported 1:1 from
+# `semantic-ir-to-javascript`'s inlined `ArrayRt` sub-runtime (see the
+# module docstring's "Deliberately out of scope" section for why JS, not
+# TS, is the port source here) -- `reduce`/`scan`/`outer` reuse `apply_op`
+# (the SAME dispatch table `elementwise` above uses); the remaining six
+# have no `op` field at all ("bespoke, not BinOp-shaped", per the SIR22
+# spec addendum and `apl-runtime::builtins`'s own doc comment) and just
+# recurse into their operand(s).
+#
+# SECURITY: every function below that computes an output/allocation size
+# from two or more independently-controlled numbers (`outer`'s `(m, n)`
+# output, `index_of`'s `len(haystack) * len(needle)` scan-cost product,
+# `catenate`'s combined length, `index_generator`'s `n`, `reshape`'s
+# target element count) routes through :func:`checked_shape_size` --
+# this module's ONE existing `MAX_ELEMENTS`-capped guard, reused as-is
+# rather than reintroducing a second, competing cap -- *before*
+# allocating or looping, not after. This mirrors the exact discipline
+# this package's own `matmul` docstring documents (and the exact bug
+# class the Slice 2 security review found and fixed there: validating
+# only the OUTPUT shape while leaving a shared inner dimension
+# unchecked). Every one of the nine functions below was re-examined
+# specifically for that bug class while porting: `outer`'s `m`/`n` are
+# each individually bounded by `MAX_ELEMENTS` but their PRODUCT is not,
+# so the `(m, n)` output check happens before the double loop, exactly
+# like `matmul`'s `(m, n)` output check; `index_of`'s two lengths are
+# each individually bounded but their product (the O(len*len) scan cost)
+# is not, so `checked_shape_size((len(haystack), len(needle)))` caps that
+# product before the scan loop runs, not just the (trivially small)
+# output length; `catenate`'s two operand lengths are each individually
+# bounded but their SUM is not (and a script that repeatedly self-
+# catenates has no other ceiling), so the combined-length check happens
+# ONCE, up front, before any of the five rank-combination branches run.
+
+
+def reduce(op: ElementwiseOpKind, a: Val | NDArray) -> NDArray:  # noqa: A001
+    """``+/A`` (APL reduce) -- fold `a` with `op` along its one axis.
+    Ported 1:1 from ``array_runtime::ops::reduce`` (via
+    ``semantic-ir-to-javascript``'s ``reduce``, this section's port
+    source):
+
+    - rank 0 (scalar): nothing to fold, returns `a` itself (coerced to an
+      :class:`NDArray` first).
+    - rank 1 (vector ``(n,)``): left-fold across all ``n`` elements
+      (``op(op(op(v0, v1), v2), ...)``); an EMPTY vector is a clean
+      error -- unlike ``sum``/``mean`` (which have a built-in identity,
+      0), ``reduce`` is generic over any ``op``, and guessing an identity
+      (is it 0 for ``Add``, 1 for ``Mul``, ``-inf`` for ``Max``?) for an
+      arbitrary, possibly-future op would be silently wrong for most of
+      them.
+    - rank 2 (matrix ``(r, c)``): folds EACH ROW independently across its
+      ``c`` columns, producing a ``(r,)`` vector (one folded value per
+      row). Column-major storage means element ``(row, col)`` lives at
+      ``col * r + row`` -- the row loop reads ``d[row]`` as the seed
+      (column 0) then walks ``d[col * r + row]`` for
+      ``col = 1 .. c - 1``; getting `row` and `col` swapped here silently
+      TRANSPOSES the result instead of raising, so this indexing is the
+      single easiest place to introduce a wrong-answer bug when reading
+      this function (matches the JS reference's own docstring warning).
+
+    Trailing ``# noqa: A001`` (here and on ``scan``/``shape``/``ravel``
+    below): these names shadow no *Python* builtin (``reduce`` lives in
+    ``functools``, not ``builtins``; ``shape``/``ravel`` are common
+    NumPy-ism names, not reserved words) -- ruff's ``A001`` flags them
+    only because they read as builtin-ISH names, not because they
+    collide with anything real; matches the SIR22 node's own name
+    (``Expr::Reduce``/``Shape``/``Ravel``) rather than inventing an
+    arbitrary synonym.
+    """
+    a2 = to_array_value(a)
+    shape_ = a2.shape
+    if len(shape_) == 0:
+        return a2
+    if len(shape_) == 1:
+        n = shape_[0]
+        if n == 0:
+            raise ValueError(
+                "reduce: cannot fold an empty vector (no identity element for an arbitrary op)"
+            )
+        d = a2.data
+        acc: Val = d[0]
+        for i in range(1, n):
+            acc = apply_op(op, acc, d[i])
+        return ndarray((), [acc])
+    if len(shape_) == 2:
+        r, c = shape_
+        if c == 0:
+            raise ValueError(
+                "reduce: cannot fold an empty row (no identity element for an arbitrary op)"
+            )
+        d = a2.data
+        out: list[Val] = [0] * r
+        for row in range(r):
+            acc = d[row]  # column-major: (row, 0) lives at plain `row`
+            for col in range(1, c):
+                acc = apply_op(op, acc, d[col * r + row])
+            out[row] = acc
+        return ndarray((r,), out)
+    raise ValueError(f"reduce: rank > 2 not yet supported (shape {shape_!r})")
+
+
+def scan(op: ElementwiseOpKind, a: Val | NDArray) -> NDArray:  # noqa: A001
+    """``+\\A`` (APL scan) -- the same fold as :func:`reduce`, but keeping
+    EVERY intermediate result instead of only the last; output has the
+    same shape as `a`. Ported 1:1 from ``array_runtime::ops::scan``. An
+    empty axis is NOT an error here (unlike :func:`reduce`): there is
+    simply nothing to scan, and the (empty) output shape already says so.
+    """
+    a2 = to_array_value(a)
+    shape_ = a2.shape
+    if len(shape_) == 0:
+        return a2
+    if len(shape_) == 1:
+        n = shape_[0]
+        d = a2.data
+        out: list[Val] = [0] * n
+        acc: Val = 0
+        started = False
+        for i in range(n):
+            acc = apply_op(op, acc, d[i]) if started else d[i]
+            started = True
+            out[i] = acc
+        return ndarray((n,), out)
+    if len(shape_) == 2:
+        r, c = shape_
+        d = a2.data
+        out = [0] * len(d)
+        for row in range(r):
+            acc = 0
+            started = False
+            for col in range(c):
+                x = d[col * r + row]  # column-major
+                acc = apply_op(op, acc, x) if started else x
+                started = True
+                out[col * r + row] = acc
+        return ndarray((r, c), out)
+    raise ValueError(f"scan: rank > 2 not yet supported (shape {shape_!r})")
+
+
+def outer(op: ElementwiseOpKind, a: Val | NDArray, b: Val | NDArray) -> NDArray:
+    """``A∘.×B`` (APL outer product) -- apply `op` to every pair
+    ``(a_i, b_j)``, producing a result of combined rank. Ported 1:1 from
+    ``array_runtime::ops::outer``, scoped identically to ``rank(a) <= 1``
+    and ``rank(b) <= 1`` (the vector-outer-vector case below already
+    reaches this domain's rank-2 ceiling; anything of higher rank is a
+    clean "not yet supported" error).
+
+    SECURITY: :func:`checked_shape_size` validates the ``(m, n)`` output
+    shape *before* allocating -- `m`/`n` are two INDEPENDENT operand
+    lengths, each individually under :data:`MAX_ELEMENTS`, but nothing
+    bounds their product alone (the same outer-product-shaped allocation
+    :func:`matmul`/:func:`index_get` elsewhere in this module guard
+    against).
+    """
+    a2 = to_array_value(a)
+    b2 = to_array_value(b)
+    a_shape = a2.shape
+    b_shape = b2.shape
+    if len(a_shape) == 0 and len(b_shape) == 0:
+        return ndarray((), [apply_op(op, a2.data[0], b2.data[0])])
+    if len(a_shape) == 0 and len(b_shape) == 1:
+        x = a2.data[0]
+        return ndarray((b_shape[0],), [apply_op(op, x, y) for y in b2.data])
+    if len(a_shape) == 1 and len(b_shape) == 0:
+        y = b2.data[0]
+        return ndarray((a_shape[0],), [apply_op(op, x, y) for x in a2.data])
+    if len(a_shape) == 1 and len(b_shape) == 1:
+        m = a_shape[0]
+        n = b_shape[0]
+        out_len = checked_shape_size((m, n))
+        ad, bd = a2.data, b2.data
+        out: list[Val] = [0] * out_len
+        for j in range(n):
+            for i in range(m):
+                out[j * m + i] = apply_op(op, ad[i], bd[j])  # column-major
+        return ndarray((m, n), out)
+    raise ValueError(
+        f"outer: operands of rank > 1 not yet supported (shapes {a_shape!r}, {b_shape!r})"
+    )
+
+
+def _flatten_row_major(a: NDArray) -> list[Val]:
+    """Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order
+    -- last axis varies fastest. `a` itself stores COLUMN-major
+    (:func:`get`'s own docstring), so a matrix must be walked "row, then
+    column" via :func:`get` to produce true row-major order; returning
+    the raw column-major buffer would silently ravel in the WRONG order.
+    Always returns a fresh ``list`` (never ``a.data`` itself, even in the
+    rank <= 1 no-op case) -- mirrors ``apl_runtime::builtins::flatten``
+    returning an owned ``Vec``, not a borrow, so the result never
+    accidentally aliases `a`'s own buffer. Used by both :func:`reshape`
+    and :func:`ravel` below.
+    """
+    shape_ = a.shape
+    if len(shape_) <= 1:
+        return list(a.data)
+    if len(shape_) == 2:
+        r, c = shape_
+        out: list[Val] = [0] * (r * c)
+        k = 0
+        for row in range(r):
+            for col in range(c):
+                v = get(a, row, col)
+                assert v is not None  # `row`/`col` are in-range by construction
+                out[k] = v
+                k += 1
+        return out
+    # Unreachable in practice (this domain's rank <= 2 ceiling) -- total
+    # rather than raising, mirroring the JS reference's own fallback.
+    return list(a.data)
+
+
+def shape(a: Val | NDArray) -> NDArray:  # noqa: A001
+    """Monadic ``⍴A`` (APL shape) -- `a`'s dimensions as a vector. Ported
+    1:1 from ``apl_runtime::builtins::shape``: a SCALAR has zero
+    dimensions, so its shape is the EMPTY vector (not a scalar!) --
+    ``⍴5`` is a length-0 vector. A vector ``(n,)`` has shape ``(n,)``
+    (one element); a matrix ``(r, c)`` has shape ``(r, c)`` (two
+    elements).
+    """
+    a2 = to_array_value(a)
+    dims: list[Val] = list(a2.shape)
+    return ndarray((len(dims),), dims)
+
+
+def _non_negative_int(x: Val, *, who: str) -> int:
+    """Validate `x` is a non-negative-integer-*valued* number (an ``int``
+    outright, or a ``float`` with no fractional part) and return it as a
+    plain ``int``. Shared by :func:`reshape` (validating its shape-vector
+    elements) and :func:`index_generator` (validating its scalar
+    argument) -- both need the exact same "is this really a non-negative
+    integer" check the JS reference spells inline at each call site
+    (``Number.isInteger(x) && x >= 0``); factored here once so the two
+    ports can't silently drift out of sync with each other.
+    """
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        raise ValueError(f"{who}: must be a non-negative integer, got {x!r}")
+    if isinstance(x, float) and not x.is_integer():
+        raise ValueError(f"{who}: must be a non-negative integer, got {x!r}")
+    if x < 0:
+        raise ValueError(f"{who}: must be a non-negative integer, got {x!r}")
+    return int(x)
+
+
+def reshape(shape_arg: Val | NDArray, target: Val | NDArray) -> NDArray:
+    """Dyadic ``A⍴B`` (APL reshape) -- reinterpret `target`'s data under
+    the new dimensions `shape_arg`. Ported 1:1 from
+    ``apl_runtime::builtins::reshape``. `shape_arg` must itself be a
+    scalar or vector (rank <= 1) of non-negative integers, and is itself
+    capped at rank <= 2 (this domain's ceiling -- a longer target shape
+    is a clean error, not a silent truncation). `target`'s elements are
+    ravelled (:func:`_flatten_row_major`) then cyclically repeated or
+    truncated to fill the target shape's element count.
+
+    CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+    fills the LAST axis fastest, same convention as ravel), but this
+    domain's storage is COLUMN-major -- so for a rank-2 target the
+    row-major ``filled`` sequence must be TRANSPOSED into column-major
+    storage (``data[col * r + row] = filled[row * c + col]``) before
+    calling :func:`ndarray`. Handing ``filled`` straight to
+    :func:`ndarray` would silently reshape column-major instead of APL's
+    row-major convention -- a wrong answer that still LOOKS plausible
+    (right multiset of values, wrong positions).
+    """
+    shape_arg2 = to_array_value(shape_arg)
+    target2 = to_array_value(target)
+    if len(shape_arg2.shape) > 1:
+        raise ValueError(
+            "reshape: shape argument must be a scalar or vector "
+            f"(got rank {len(shape_arg2.shape)})"
+        )
+    dims = [_non_negative_int(x, who="reshape: shape elements") for x in shape_arg2.data]
+    if len(dims) > 2:
+        raise ValueError(
+            f"reshape: reshape to rank > 2 is not yet supported (target shape {dims!r})"
+        )
+    total = checked_shape_size(dims)
+    source = _flatten_row_major(target2)
+    if total > 0 and len(source) == 0:
+        raise ValueError("reshape: cannot reshape an empty source into a non-empty shape")
+    filled: list[Val] = [0] * total
+    for k in range(total):
+        filled[k] = source[k % len(source)]
+    if len(dims) <= 1:
+        return ndarray(tuple(dims), filled)
+    r, c = dims
+    data: list[Val] = [0] * total
+    for row in range(r):
+        for col in range(c):
+            data[col * r + row] = filled[row * c + col]
+    return ndarray((r, c), data)
+
+
+def index_generator(a: Val | NDArray) -> NDArray:
+    """Monadic ``⍳n`` (APL iota / index generator) -- ``⍳n`` is the
+    1-BASED vector ``[1, 2, ..., n]``. Ported 1:1 from
+    ``apl_runtime::builtins::index_generator`` -- note this is 1-based,
+    unlike every 0-based index elsewhere in this domain (:func:`index_get`
+    /:func:`index_set`), because that is genuinely what APL's ``⍳`` means
+    at the SURFACE-SYNTAX level (the same fact the JS reference's own
+    ``indexGenerator`` docstring and its
+    ``index_generator_is_one_based_unlike_the_rest_of_this_domain`` test
+    both call out). :func:`checked_shape_size` both validates `n` is a
+    non-negative integer AND caps it at :data:`MAX_ELEMENTS` before
+    allocating -- `n` is a runtime value a compiled program computes, not
+    a fixed constant, so ``⍳`` of an absurd size must fail cleanly.
+    """
+    a2 = to_array_value(a)
+    if not is_scalar(a2):
+        raise ValueError("index_generator: monadic argument must be a scalar")
+    x = _non_negative_int(a2.data[0], who="index_generator: monadic argument")
+    n = checked_shape_size((x,))
+    return ndarray((n,), list(range(1, n + 1)))
+
+
+def index_of(haystack: Val | NDArray, needle: Val | NDArray) -> NDArray:
+    """Dyadic ``A⍳B`` (APL index-of / search) -- for every element of
+    `needle`, the 1-based index of its first occurrence in the vector
+    `haystack` (or ``len(haystack) + 1`` if not found -- "not found" is a
+    valid, always-in-range position, not ``-1``/``None``). Ported 1:1
+    from ``apl_runtime::builtins::index_of``: plain EXACT equality (no
+    floating-point tolerance -- Python's ``list.index`` already uses
+    plain ``==``, so ``NaN`` correctly never matches, same as Rust's
+    ``==``).
+
+    SECURITY: the work done is O(len(haystack) * len(needle)) (a full
+    linear scan per needle element) -- :func:`checked_shape_size` is
+    reused here purely for its "product <= MAX_ELEMENTS" check (both
+    lengths are already valid non-negative integers by construction, so
+    its dimension-validity half is a no-op) to cap the PRODUCT before
+    scanning, since each operand individually staying under
+    :data:`MAX_ELEMENTS` does not bound their product (up to
+    ~4.5 * 10**15 comparisons otherwise -- the exact same "two
+    individually-legal operands, unbounded product" hazard
+    :func:`matmul`'s own docstring documents for its shared inner
+    dimension).
+    """
+    a2 = to_array_value(haystack)
+    b2 = to_array_value(needle)
+    if len(a2.shape) > 1:
+        raise ValueError(
+            f"index_of: left argument must be a scalar or vector (got rank {len(a2.shape)})"
+        )
+    # SECURITY: caps the O(len*len) scan cost *before* the loop below runs
+    # -- see this section's own module doc comment.
+    checked_shape_size((len(a2.data), len(b2.data)))
+    hay = a2.data
+    out: list[Val] = []
+    for needle_val in b2.data:
+        try:
+            idx = hay.index(needle_val)
+        except ValueError:
+            idx = -1
+        out.append(idx + 1 if idx != -1 else len(hay) + 1)
+    return ndarray(b2.shape, out)
+
+
+def ravel(a: Val | NDArray) -> NDArray:  # noqa: A001
+    """Monadic ``,A`` (APL ravel) -- flatten `a` to a rank-1 vector, in
+    row-major order (see :func:`_flatten_row_major`'s own docstring for
+    the column-major-storage-vs-row-major-order subtlety). Ported 1:1
+    from ``apl_runtime::builtins::ravel``.
+    """
+    a2 = to_array_value(a)
+    flat = _flatten_row_major(a2)
+    return ndarray((len(flat),), flat)
+
+
+def catenate(a: Val | NDArray, b: Val | NDArray) -> NDArray:
+    """Dyadic ``A,B`` (APL catenate) -- supports scalar-scalar,
+    scalar-vector, vector-scalar, vector-vector (all producing a vector),
+    and matrix-matrix-with-equal-row-counts (column/last-axis catenate,
+    producing ``(r, ca + cb)``). Any other rank combination is a clean
+    "not yet supported" error. Ported 1:1 from
+    ``apl_runtime::builtins::catenate``.
+
+    SECURITY: the combined-length cap check happens ONCE, up front,
+    regardless of which rank combination follows below (mirroring the
+    Rust/JS references' own structure) -- neither operand alone need be
+    oversized for the RESULT to be, since a script that repeatedly
+    catenates a value with itself (``A <- A,A``) doubles the size every
+    line with no other ceiling.
+    """
+    a2 = to_array_value(a)
+    b2 = to_array_value(b)
+    # SECURITY: validated up front, before any of the five branches below
+    # allocate -- see this section's own module doc comment.
+    checked_shape_size((len(a2.data) + len(b2.data),))
+    ra, rb = len(a2.shape), len(b2.shape)
+    if ra == 0 and rb == 0:
+        return ndarray((2,), [a2.data[0], b2.data[0]])
+    if ra == 0 and rb == 1:
+        return ndarray((1 + len(b2.data),), [a2.data[0], *b2.data])
+    if ra == 1 and rb == 0:
+        return ndarray((len(a2.data) + 1,), [*a2.data, b2.data[0]])
+    if ra == 1 and rb == 1:
+        return ndarray((len(a2.data) + len(b2.data),), [*a2.data, *b2.data])
+    if ra == 2 and rb == 2:
+        r = nrows(a2)
+        if r != nrows(b2):
+            raise ValueError(
+                f"catenate: matrix catenate needs equal row counts ({r} vs {nrows(b2)})"
+            )
+        ca, cb = ncols(a2), ncols(b2)
+        out_len = checked_shape_size((r, ca + cb))
+        data: list[Val] = [0] * out_len
+        for row in range(r):
+            for col in range(ca):
+                v = get(a2, row, col)
+                assert v is not None  # in-range by construction
+                data[col * r + row] = v
+            for col in range(cb):
+                v = get(b2, row, col)
+                assert v is not None  # in-range by construction
+                data[(ca + col) * r + row] = v
+        return ndarray((r, ca + cb), data)
+    raise ValueError(f"catenate: catenate of rank {ra} and rank {rb} is not yet supported")
