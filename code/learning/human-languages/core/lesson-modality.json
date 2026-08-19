@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:acd629f2286f9342",
+  "sourceHash": "fnv1a64:4c5587a248a49504",
   "summary": {
     "totalLessons": 3147,
     "voice": 2220,
@@ -27684,7 +27684,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:62a6529e9adc7296",
+      "sourceHash": "fnv1a64:d66b7864b3a43c7a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27705,7 +27705,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9267a09fd940a8d3",
+      "sourceHash": "fnv1a64:ed4078b55b808f1d",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27726,7 +27726,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c7c0a5854835a6e9",
+      "sourceHash": "fnv1a64:114d68a91d9c4fa1",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27747,7 +27747,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:011fd624d0601732",
+      "sourceHash": "fnv1a64:65fe038ab66acf6a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27768,7 +27768,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:77490446403001c4",
+      "sourceHash": "fnv1a64:2db0ea8b5923ef3c",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27789,7 +27789,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7c67b59efd32f37d",
+      "sourceHash": "fnv1a64:9b569e69ad4ab9ad",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27810,7 +27810,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:610adca36748f2c6"
+      "sourceHash": "fnv1a64:c0401c7b43f1cd42"
     },
     {
       "id": "HI-C04-phir",

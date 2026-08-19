@@ -157,7 +157,7 @@ The letters in this word.
 The word, taken apart.
 ठीक (ṭhīk) means "correct, right, fine, exactly, OK." It is a genuinely native Indian word — no European cousin to hand — and one of the most useful in the language: ṭhīk hai ("OK / agreed"), ṭhīk samay ("the right time"), sab ṭhīk? ("all well?"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core.
 
-The reply.
+The exchange — the reply.
 Put it together with Chapter 3's atoms: मैं ठीक हूँ (maiṁ ṭhīk hūṁ) — "I am fine." Literally "I fine am," verb last. Add thanks: maiṁ ṭhīk hūṁ, dhanyavād. And the whole exchange stands:
 — āp kaise haiṁ? ("How are you?") — maiṁ ṭhīk hūṁ, dhanyavād. ("I'm fine, thank you.")
 
@@ -232,7 +232,7 @@ The exchange.
 [your turn — say: the familiar version of the question — tum kaise ho?]
 [pause 8 seconds for the answer]
 
-The atoms.
+The word, taken apart — the atoms.
 [pause 2 seconds]
 [your turn — say: the k- question-word for "how" (kaise)]
 [pause 8 seconds for the answer]
@@ -241,7 +241,7 @@ The atoms.
 [your turn — say: the copula trio you now hold (hūṁ / hai / haiṁ)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+What you've built — roots you now carry.
 [pause 2 seconds]
 kaise from the interrogative k- (PIE kʷo-), cousin of English how/what.
 maiṁ from ma- (PIE me-), cousin of English me/my.
