@@ -3365,6 +3365,132 @@
       "jsonHash": "fnv1a64:1bdd0b6905f60c0e"
     },
     {
+      "language": "hindi",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:f2c83bd0cde13f9a",
+      "lessonIds": [
+        "HI-C60-monkey",
+        "HI-C60-snake",
+        "HI-C60-hen",
+        "HI-C60-buffalo",
+        "HI-C60-peacock"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch60.txt",
+      "json": "hindi/narration/ch60.json",
+      "textHash": "fnv1a64:536891dc2552ac8b",
+      "jsonHash": "fnv1a64:0205756a571975b8"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:c1de04e43cfe9e0e",
+      "lessonIds": [
+        "HI-C61-vessel",
+        "HI-C61-spoon",
+        "HI-C61-tumbler",
+        "HI-C61-griddle",
+        "HI-C61-stove"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch61.txt",
+      "json": "hindi/narration/ch61.json",
+      "textHash": "fnv1a64:796376d0fa109d58",
+      "jsonHash": "fnv1a64:ea9ba6e7a0052d9d"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:82c5aef2b02fc633",
+      "lessonIds": [
+        "HI-C62-rope",
+        "HI-C62-needle",
+        "HI-C62-basket",
+        "HI-C62-clay",
+        "HI-C62-wood"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch62.txt",
+      "json": "hindi/narration/ch62.json",
+      "textHash": "fnv1a64:8b11d09b6ee9ee81",
+      "jsonHash": "fnv1a64:662aa4a26539c25e"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:7b4cf6d7f73efefd",
+      "lessonIds": [
+        "HI-C63-hunger",
+        "HI-C63-thirst",
+        "HI-C63-sleep",
+        "HI-C63-fever",
+        "HI-C63-pain"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch63.txt",
+      "json": "hindi/narration/ch63.json",
+      "textHash": "fnv1a64:a8c848733ac8d964",
+      "jsonHash": "fnv1a64:d851d75598e8dd60"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:409567282553f4de",
+      "lessonIds": [
+        "HI-C64-now",
+        "HI-C64-quickly",
+        "HI-C64-slowly",
+        "HI-C64-little",
+        "HI-C64-more"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch64.txt",
+      "json": "hindi/narration/ch64.json",
+      "textHash": "fnv1a64:3c75d97a8c4ff25b",
+      "jsonHash": "fnv1a64:bc2ffa22eca3aecc"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:202dac5979ee5bb1",
+      "lessonIds": [
+        "HI-C65-kindness",
+        "HI-C65-entreaty",
+        "HI-C65-permission",
+        "HI-C65-trust",
+        "HI-C65-manners"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch65.txt",
+      "json": "hindi/narration/ch65.json",
+      "textHash": "fnv1a64:a983e2119b40040d",
+      "jsonHash": "fnv1a64:b5f4d77b6962a2ea"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:a7181f2d7972b24f",
+      "lessonIds": [
+        "HI-C66-seed",
+        "HI-C66-crop",
+        "HI-C66-grain",
+        "HI-C66-grass",
+        "HI-C66-well"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "hindi/narration/ch66.txt",
+      "json": "hindi/narration/ch66.json",
+      "textHash": "fnv1a64:24d787644697334f",
+      "jsonHash": "fnv1a64:1ed0199368e6c4d5"
+    },
+    {
       "language": "italian",
       "chapter": 1,
       "sourceHash": "fnv1a64:3e905f2b1c3dd36b",

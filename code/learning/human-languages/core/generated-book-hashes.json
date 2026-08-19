@@ -1870,6 +1870,97 @@
       "tex": "hindi/book/chapters/ch59-script-second-wave.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:362d39681c5b8a62",
+      "lessonIds": [
+        "HI-C60-monkey",
+        "HI-C60-snake",
+        "HI-C60-hen",
+        "HI-C60-buffalo",
+        "HI-C60-peacock"
+      ],
+      "tex": "hindi/book/chapters/ch60-animals-in-the-yard.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:fb87ffcfd3419b08",
+      "lessonIds": [
+        "HI-C61-vessel",
+        "HI-C61-spoon",
+        "HI-C61-tumbler",
+        "HI-C61-griddle",
+        "HI-C61-stove"
+      ],
+      "tex": "hindi/book/chapters/ch61-at-the-cooking-fire.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:63ff8f05655588b6",
+      "lessonIds": [
+        "HI-C62-rope",
+        "HI-C62-needle",
+        "HI-C62-basket",
+        "HI-C62-clay",
+        "HI-C62-wood"
+      ],
+      "tex": "hindi/book/chapters/ch62-what-hands-work-with.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:e85accb25c929c1f",
+      "lessonIds": [
+        "HI-C63-hunger",
+        "HI-C63-thirst",
+        "HI-C63-sleep",
+        "HI-C63-fever",
+        "HI-C63-pain"
+      ],
+      "tex": "hindi/book/chapters/ch63-what-the-body-tells-you.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:1db2e332e520cde1",
+      "lessonIds": [
+        "HI-C64-now",
+        "HI-C64-quickly",
+        "HI-C64-slowly",
+        "HI-C64-little",
+        "HI-C64-more"
+      ],
+      "tex": "hindi/book/chapters/ch64-how-much-and-how-fast.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:1c30a200e9dbbff3",
+      "lessonIds": [
+        "HI-C65-kindness",
+        "HI-C65-entreaty",
+        "HI-C65-permission",
+        "HI-C65-trust",
+        "HI-C65-manners"
+      ],
+      "tex": "hindi/book/chapters/ch65-asking-nicely.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:9ca2c03773a116a7",
+      "lessonIds": [
+        "HI-C66-seed",
+        "HI-C66-crop",
+        "HI-C66-grain",
+        "HI-C66-grass",
+        "HI-C66-well"
+      ],
+      "tex": "hindi/book/chapters/ch66-the-field-and-the-well.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
