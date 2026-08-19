@@ -51,10 +51,15 @@ values are compared against the clock, and both carry a `boot_id`:
 treated as elapsed rather than compared against.
 
 Note the precise claim. The host record also persists `started_at_ns`,
-`last_heartbeat_ns` and `last_restart_ns` bare, and those are fine *because
-nothing compares them across runs* -- they are reported, or compared against
-each other inside a single record. Heartbeat staleness uses the live supervisor
-reading, never the stored one. The property that holds is about comparison, not
+`last_heartbeat_ns` and `last_restart_ns` bare, and those are fine because
+nothing compares them *against a clock*. Heartbeat staleness uses the live
+supervisor reading, never the stored one. There is one comparison that mixes a
+durable reading with a live one -- `inactive_observation` may keep the previous
+record's heartbeat beside a live `started_at_ns`, and `HostObservation::new`
+checks that the heartbeat does not precede the start. It is benign, because a
+previous run'''s monotonic readings are larger rather than smaller and
+`start_instance` clears both fields, but it is the one place the rule is a
+convention rather than a type. The property that holds is about comparison, not
 storage, and an earlier version of this paragraph claimed the broader thing.
 
 Both halves matter, and shipping only the first was a real bug. A window that

@@ -1110,6 +1110,7 @@ fn decode_status(reader: &mut Reader<'_>, version: u8) -> Result<HostStatus, Reg
                     let ns = reader.u64()?;
                     QuarantineDeadline::Until { boot_id, ns }
                 }
+                2 => QuarantineDeadline::Lapsed,
                 _ => {
                     return Err(RegistryError::CorruptRecord(
                         "invalid quarantine deadline".to_string(),
@@ -1355,18 +1356,31 @@ mod tests {
             HostStatus::Crashed {
                 exit_code: Some(-9),
             },
+            // Every deadline variant, not just one. An earlier version of this
+            // test covered `Until` alone while claiming "every status shape" in
+            // its name, and missed that `Lapsed` encoded to a tag the decoder
+            // rejected -- an asymmetry that destroys the record it is asked to
+            // save, and then stops the daemon that reads it back.
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Permanent,
+                reason: "panic threshold".to_string(),
+            },
             HostStatus::Quarantined {
                 until: QuarantineDeadline::Until {
-                    boot_id: BOOT_ID,
+                    boot_id: 0xD18,
                     ns: 999,
                 },
+                reason: "panic threshold".to_string(),
+            },
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Lapsed,
                 reason: "panic threshold".to_string(),
             },
         ];
         for status in statuses {
             let active = matches!(status, HostStatus::Running);
             let observation = HostObservation::new(
-                status,
+                status.clone(),
                 active.then_some(42),
                 active.then_some(100),
                 active.then_some(110),
@@ -1379,10 +1393,9 @@ mod tests {
                 DesiredState::Running,
                 observation,
             );
-            assert_eq!(
-                decode_host_entry(&encode_host_entry(&entry)).unwrap(),
-                entry
-            );
+            let decoded = decode_host_entry(&encode_host_entry(&entry))
+                .unwrap_or_else(|error| panic!("{status:?} must round trip: {error}"));
+            assert_eq!(decoded.observation().status(), &status);
         }
     }
 

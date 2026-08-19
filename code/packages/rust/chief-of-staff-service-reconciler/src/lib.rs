@@ -830,15 +830,22 @@ impl<'a> ServiceReconciler<'a> {
         // be a separate builder call, so the restart path set it and every
         // other write silently dropped it, and a host that stayed up for one
         // tick between crashes was never counted at all.
-        let restarts = if retrying_claim && !restarting {
-            // Retrying a first-launch claim. A host that has never run has not
-            // restarted, and the bound is on restarts.
-            previous.restarts()
-        } else if restarting {
+        // A retried claim is charged whether it was a launch or a restart. The
+        // earlier version exempted launch retries on the reasoning that a host
+        // which has never run has not restarted -- true, and beside the point:
+        // `Starting` with no process id rewrites itself to `Starting` with no
+        // process id, so the exemption was a fixed point. A host whose first
+        // launch never materialised took a start every tick, forever, counted
+        // against nothing. That is the exact failure this rule exists to stop,
+        // and the README's own opening sentence describes it.
+        //
+        // The genuine first launch is still free: it arrives from `Stopped` or
+        // from no record at all, not from a claim.
+        let restarts = if restarting || retrying_claim {
             // The bound goes here, beside the lifetime counter and before it is
             // spent, because this is the single point every restart passes
-            // through -- exited hosts, stale-heartbeat hosts, and the
-            // absent-host backoff path all reach `start_instance`.
+            // through -- exited hosts, stale-heartbeat hosts, claim retries,
+            // and the absent-host backoff path all reach `start_instance`.
             //
             // Quarantine rather than an error: `reconcile_all` walks every host
             // per tick, so a per-host failure raised out of that walk would
@@ -1672,11 +1679,11 @@ mod tests {
     #[test]
     fn absent_cached_states_apply_recovery_policy() {
         let cases = [
-            // Retrying a first-launch claim is not a restart, so the tally
-            // stays put. Retrying a *restart* claim with no window from this
-            // run to vouch for it does cost one -- those starts used to be
-            // free, counted against neither the window nor the lifetime tally.
-            (HostStatus::Starting, RestartPolicy::Never, true, 1),
+            // Both are claim retries, and both are charged. Neither used to
+            // be: the starts were counted against neither the window nor the
+            // lifetime tally, and `Starting` with no process id is a fixed
+            // point, so the host could take them without limit.
+            (HostStatus::Starting, RestartPolicy::Never, true, 2),
             (HostStatus::Restarting, RestartPolicy::Never, true, 2),
             (HostStatus::Running, RestartPolicy::OnFailure, true, 2),
             (HostStatus::Running, RestartPolicy::Never, false, 1),
@@ -2385,5 +2392,83 @@ mod tests {
 
         assert!(!QuarantineDeadline::Permanent.has_elapsed(BOOT_ID, u64::MAX));
         assert!(!QuarantineDeadline::Permanent.has_elapsed(BOOT_ID + 1, u64::MAX));
+    }
+
+    /// A first launch that never materialises is bounded like anything else.
+    ///
+    /// `Starting` with no process id rewrites itself to `Starting` with no
+    /// process id. While launch retries were exempt from the bound, that made
+    /// it a fixed point: a supervisor reporting the host absent handed out a
+    /// start every tick, forever, against a budget of three, with the lifetime
+    /// tally stuck at 1 and the window never opening at all.
+    #[test]
+    fn a_first_launch_that_never_materialises_is_still_bounded() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Starting,
+                None,
+                None,
+                None,
+                None,
+                RestartLedger::NEVER,
+            )
+            .unwrap(),
+        );
+        let config = ReconcileConfig::new(BOOT_ID, 100)
+            .unwrap()
+            .with_restart_intensity(1_000_000, 3)
+            .unwrap();
+
+        let mut starts = 0;
+        for _ in 0..200 {
+            let mut supervisor = FakeSupervisor::default();
+            ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+                .reconcile_all(&mut supervisor, NOW)
+                .unwrap();
+            starts += supervisor.starts.len();
+        }
+
+        assert_eq!(starts, 3, "a launch retry is a claim retry and is charged");
+        assert!(
+            matches!(
+                load(&backend, "mail-host").observation().status(),
+                HostStatus::Quarantined { reason, .. }
+                    if reason.as_str() == RESTART_INTENSITY_EXCEEDED
+            ),
+            "the launch-retry loop must end in a quarantine"
+        );
+    }
+
+    /// A genuine first launch is still free.
+    ///
+    /// The bound is on retries of a claim, not on starting a host that has
+    /// never run. A host arriving from `Stopped` must start without spending
+    /// anything, or a fleet coming up after a reboot would quarantine itself.
+    #[test]
+    fn a_genuine_first_launch_spends_nothing() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::stopped(),
+        );
+
+        let mut supervisor = FakeSupervisor::default();
+        reconciler(&backend)
+            .reconcile_all(&mut supervisor, NOW)
+            .unwrap();
+
+        assert_eq!(supervisor.starts.len(), 1);
+        let persisted = load(&backend, "mail-host");
+        assert_eq!(persisted.observation().restart_count(), 0);
+        assert_eq!(persisted.observation().restarts_in_window(), 0);
+        assert_eq!(persisted.observation().status(), &HostStatus::Starting);
     }
 }
