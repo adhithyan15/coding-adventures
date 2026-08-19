@@ -1408,6 +1408,33 @@ pub enum SimdOpKind {
     /// MVP-SIMD `q15mulr_sat_s` instruction, popular in DSP/audio code for
     /// exactly this rounding fixed-point multiply.
     Q15mulrSatI16x8S,
+    /// `i32x4.trunc_sat_f64x2_s_zero` -- pop one `v128`, read it as 2 `f64`
+    /// lanes (not 4 `f32` lanes -- `f64x2` is a NARROWER-lane-COUNT, WIDER-
+    /// lane-WIDTH shape than [`Self::TruncSatF32x4S`]'s `f32x4` operand),
+    /// convert each to a SIGNED SATURATING `i32` the same way
+    /// [`Self::TruncSatF32x4S`] does (NaN saturates to `0`, out-of-range
+    /// saturates to `i32::MIN`/`i32::MAX`, in-range truncates toward zero,
+    /// via Rust's saturating `as` cast -- `lane as i32`, no hand-rolled
+    /// bounds checking needed, same Rust-1.45-since discipline as
+    /// [`Self::TruncSatF32x4S`]'s own doc comment), and push one `v128`
+    /// with 4 `i32` lanes: lanes 0-1 hold the two truncated results (in
+    /// the SAME order as the source `f64` lanes), lanes 2-3 are always
+    /// `0`. The "_zero" in this op's name refers to exactly that
+    /// zero-fill of the upper half -- `f64x2` only has 2 lanes to widen
+    /// `i32x4`'s 4, so the SIMD proposal defines this family as
+    /// "truncate what you have, zero-extend the rest" rather than, say,
+    /// repeating or NaN-filling the upper 2 lanes.
+    TruncSatF64x2SZero,
+    /// `i32x4.trunc_sat_f64x2_u_zero` -- same shape as
+    /// [`Self::TruncSatF64x2SZero`] (2 `f64` lanes in, 4 `i32` lanes out,
+    /// upper 2 always zero), but each `f64` lane saturates to an UNSIGNED
+    /// `i32` interpretation instead, same signed/unsigned split as
+    /// [`Self::TruncSatF32x4U`] vs. [`Self::TruncSatF32x4S`]: a NaN lane
+    /// saturates to `0`, a lane below `0` saturates to `0` (not wrapped),
+    /// a lane above `u32::MAX` saturates to `u32::MAX`, and the result is
+    /// stored as a `u32` bit pattern in the same 4-byte lane slot every
+    /// other `i32x4`-lane op in this table uses.
+    TruncSatF64x2UZero,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1697,6 +1724,16 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i64x2.extmul_low_i32x4_u", sub_opcode: 0xDE, kind: SimdOpKind::ExtmulLowI64x2U },
     SimdOpInfo { name: "i64x2.extmul_high_i32x4_u", sub_opcode: 0xDF, kind: SimdOpKind::ExtmulHighI64x2U },
     SimdOpInfo { name: "i16x8.q15mulr_sat_s", sub_opcode: 0x82, kind: SimdOpKind::Q15mulrSatI16x8S },
+    // SIMD widen PR25 (task #190-192): i32x4.trunc_sat_f64x2_s_zero/
+    // _u_zero -- the f64x2-source rung of the "_zero" trunc_sat family,
+    // immediately past f32x4.convert_i32x4_u's 0xFB with no gap. Each
+    // sub-opcode byte fetched live from BinarySIMD.md and cross-checked
+    // against the already-implemented i32x4.trunc_sat_f32x4_s/_u (0xF8/
+    // 0xF9)/f32x4.convert_i32x4_s/_u (0xFA/0xFB) entries (all four
+    // matched exactly, confirming 0xFC/0xFD sit immediately past that
+    // conversion family with no gap).
+    SimdOpInfo { name: "i32x4.trunc_sat_f64x2_s_zero", sub_opcode: 0xFC, kind: SimdOpKind::TruncSatF64x2SZero },
+    SimdOpInfo { name: "i32x4.trunc_sat_f64x2_u_zero", sub_opcode: 0xFD, kind: SimdOpKind::TruncSatF64x2UZero },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2115,8 +2152,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_136_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 136);
+    fn simd_ops_table_has_the_expected_138_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 138);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2717,5 +2754,25 @@ mod tests {
         assert_eq!(op.name, "i16x8.q15mulr_sat_s");
         assert_eq!(op.kind, SimdOpKind::Q15mulrSatI16x8S);
         assert_eq!(get_simd_op_by_name("i16x8.q15mulr_sat_s").map(|o| o.sub_opcode), Some(0x82));
+    }
+
+    #[test]
+    fn simd_i32x4_trunc_sat_f64x2_zero_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR25 (task #190-192): `i32x4.trunc_sat_f64x2_s_zero`
+        // (0xFC) / `i32x4.trunc_sat_f64x2_u_zero` (0xFD) -- fetched live
+        // from BinarySIMD.md, cross-checked against the already-
+        // implemented `i32x4.trunc_sat_f32x4_s`/`_u` (0xF8/0xF9) and
+        // `f32x4.convert_i32x4_s`/`_u` (0xFA/0xFB) entries: all four
+        // matched exactly, confirming 0xFC/0xFD sit immediately past
+        // that conversion family with no gap.
+        for (name, sub_opcode, kind) in [
+            ("i32x4.trunc_sat_f64x2_s_zero", 0xFC, SimdOpKind::TruncSatF64x2SZero),
+            ("i32x4.trunc_sat_f64x2_u_zero", 0xFD, SimdOpKind::TruncSatF64x2UZero),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
     }
 }

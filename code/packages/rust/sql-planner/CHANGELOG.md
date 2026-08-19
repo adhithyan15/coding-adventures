@@ -4,6 +4,17 @@ All notable changes to this package will be documented in this file.
 
 ## [0.2.34] - Unreleased
 
+### Fixed
+
+- `clippy::manual_is_multiple_of` in `decode_blob_literal`: the odd-digit
+  guard now reads `!body.len().is_multiple_of(2)` instead of
+  `body.len() % 2 != 0`. Equivalent for an unsigned length; the named
+  predicate states the intent. This error had been sitting on `main`
+  undetected because this package's BUILD begins with `set -e`, and the
+  build tool's clippy gate only inspected a BUILD's *first* line when
+  deciding whether the package runs cargo — so it emitted no clippy step
+  for `sql-planner` at all.
+
 ### Added
 
 - **Positional `ORDER BY <n>` over an aggregate binds by output index.** A key

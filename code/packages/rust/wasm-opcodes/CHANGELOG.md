@@ -2,6 +2,33 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.28] - 2026-08-19 - SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero (task #190-192)
+
+### Added
+
+- 2 new `SIMD_OPS` entries: `i32x4.trunc_sat_f64x2_s_zero` (`0xFC`) and
+  `i32x4.trunc_sat_f64x2_u_zero` (`0xFD`) -- the f64x2-source rung of the
+  "_zero" `trunc_sat` family, joining the already-implemented
+  `i32x4.trunc_sat_f32x4_s`/`_u` (PR20) f32x4-source pair. 138 SIMD
+  opcodes total, up from 136. Each sub-opcode byte fetched live from the
+  SIMD proposal's own `BinarySIMD.md` and cross-checked against the
+  already-implemented `i32x4.trunc_sat_f32x4_s`/`_u` (`0xF8`/`0xF9`) and
+  `f32x4.convert_i32x4_s`/`_u` (`0xFA`/`0xFB`) entries (all four matched
+  exactly, confirming `0xFC`/`0xFD` sit immediately past that conversion
+  family with no gap).
+- `SimdOpKind::TruncSatF64x2SZero`/`TruncSatF64x2UZero`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): UNARY,
+  read the operand `v128` as 2 `f64` lanes (not 4 `f32` lanes), convert
+  each to a SATURATING `i32` (signed for `_s_zero`, unsigned bit pattern
+  for `_u_zero`) the same way `trunc_sat_f32x4_s`/`_u` does, and produce
+  a `v128` with 4 `i32` lanes: lanes 0-1 hold the two truncated results,
+  lanes 2-3 are ALWAYS zero -- hence "_zero" in the name.
+- Table-size test bumped from 136 to 138 entries; new dedicated
+  sub-opcode-value test added alongside the existing per-family tests.
+
 ## [0.2.27] - 2026-08-19 - SIMD widen PR22: i16x8.q15mulr_sat_s (task #183-185)
 
 ### Added

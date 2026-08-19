@@ -762,6 +762,98 @@ func TestClippyStepFor(t *testing.T) {
 			want:     "",
 			wantOK:   false,
 		},
+		// ── Regression: the cargo line is not the first line ──────────
+		//
+		// These are the shapes that silently disabled the gate when
+		// clippyStepFor only inspected buildCommands[0]. Every one of them is
+		// taken from a real BUILD file in this repo.
+		{
+			// code/packages/rust/sql-codegen/BUILD — `#!/bin/sh` is stripped as
+			// a comment, so `set -e` is the first command the executor sees.
+			name: "preamble before cargo (set -e + export)",
+			commands: []string{
+				"set -e",
+				"export CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld",
+				"cargo test --package coding-adventures-sql-codegen",
+			},
+			want:   clippy,
+			wantOK: true,
+		},
+		{
+			// code/packages/rust/sql-vm/BUILD — progress `echo`s interleaved
+			// with the cargo invocations.
+			name: "echo progress lines before cargo",
+			commands: []string{
+				"set -e",
+				`WORKSPACE="$(cd "$(dirname "$0")/.." && pwd)"`,
+				`cd "$WORKSPACE"`,
+				`echo "[sql-vm] Building package..."`,
+				"cargo build --package coding-adventures-sql-vm",
+			},
+			want:   clippy,
+			wantOK: true,
+		},
+		{
+			// A guarded command that does NOT run cargo must not stop the scan:
+			// the unconditional cargo further down still means "lint here".
+			name: "non-cargo guard first, unconditional cargo later",
+			commands: []string{
+				`if [ -n "$CI" ]; then echo "CI build"; fi`,
+				"cargo test -p widget",
+			},
+			want:   clippy,
+			wantOK: true,
+		},
+		{
+			// Unconditional beats guarded regardless of order: the crate
+			// compiles on this platform, so the lint must not hide behind
+			// someone else's platform guard.
+			name: "guarded cargo first, unconditional cargo later",
+			commands: []string{
+				`if [ "$(uname)" = "Darwin" ]; then cargo build -p mac-extra; fi`,
+				"cargo test -p widget",
+			},
+			want:   clippy,
+			wantOK: true,
+		},
+		{
+			// Still no cargo anywhere → still no clippy step. This is the case
+			// that must NOT regress: it is what keeps the Linux/macOS legs from
+			// trying to lint a Windows-only crate.
+			name: "preamble but no cargo anywhere",
+			commands: []string{
+				"set -e",
+				`echo "SKIP: paint-vm-gdi requires Windows — not supported on Linux/macOS"`,
+			},
+			want:   "",
+			wantOK: false,
+		},
+		{
+			// code/packages/rust/font-parser-node/BUILD — a compile-only crate
+			// that PRINTS the cargo line it cannot run. Scanning every command
+			// must not mistake documentation for an invocation.
+			name: "cargo mentioned only inside an echo string",
+			commands: []string{
+				`echo "font-parser-node: compile-only crate (requires Node.js dev headers to link)"`,
+				`echo "  To build: cargo build -p font-parser-node --release"`,
+			},
+			want:   "",
+			wantOK: false,
+		},
+		{
+			// Env-prefixed and `&&`-chained invocations are real cargo runs and
+			// must still be recognised once quoted spans are erased.
+			name:     "env-prefixed cargo doc",
+			commands: []string{`RUSTDOCFLAGS="-D warnings" cargo doc -p widget --no-deps`},
+			want:     clippy,
+			wantOK:   true,
+		},
+		{
+			name:     "cargo after cd and &&",
+			commands: []string{`cd "$WORKSPACE" && cargo test --package widget`},
+			want:     clippy,
+			wantOK:   true,
+		},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {

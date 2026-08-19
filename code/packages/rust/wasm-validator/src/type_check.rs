@@ -1579,7 +1579,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::TruncSatF32x4S
                     | wasm_opcodes::SimdOpKind::TruncSatF32x4U
                     | wasm_opcodes::SimdOpKind::ConvertI32x4S
-                    | wasm_opcodes::SimdOpKind::ConvertI32x4U => {
+                    | wasm_opcodes::SimdOpKind::ConvertI32x4U
+                    | wasm_opcodes::SimdOpKind::TruncSatF64x2SZero
+                    | wasm_opcodes::SimdOpKind::TruncSatF64x2UZero => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
@@ -1597,6 +1599,12 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // doesn't distinguish "i32-lane v128" from
                         // "f32-lane v128" -- both are just the opaque
                         // `V128` type here, same pop-one-push-one shape.
+                        // `TruncSatF64x2SZero`/`_UZero` (SIMD widen PR25)
+                        // join too, same reasoning: even though the
+                        // runtime reads only 2 f64 lanes and writes 4 i32
+                        // lanes (2 real + 2 zero-filled), the type
+                        // checker still sees plain pop-one-`V128`-push-
+                        // one-`V128`.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }

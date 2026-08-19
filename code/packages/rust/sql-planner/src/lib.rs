@@ -3544,7 +3544,12 @@ fn decode_blob_literal(raw: &str) -> Result<Vec<u8>, PlanError> {
         .and_then(|s| s.strip_suffix('\''))
         .unwrap_or(raw);
 
-    if body.len() % 2 != 0 {
+    // `!n.is_multiple_of(2)` rather than `n % 2 != 0`: the two are exactly
+    // equivalent for an unsigned length, and the named predicate says what the
+    // check *means* (an odd digit count cannot be split into whole bytes)
+    // instead of making the reader decode the arithmetic. This is also what
+    // clippy's `manual_is_multiple_of` asks for.
+    if !body.len().is_multiple_of(2) {
         return Err(PlanError::UnsupportedStatement(format!(
             "blob literal has an odd number of hex digits: x'{body}'"
         )));

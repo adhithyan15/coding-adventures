@@ -6629,6 +6629,12 @@ mod tests {
         }
     }
 
+    // `3.14159` here is printf *input*, chosen because its rounding behaviour
+    // under `%.2f` and `%012.2e` is easy to read in the expected strings below.
+    // Clippy sees a truncated π and suggests `std::f64::consts::PI` — but PI is
+    // 3.14159265…, so swapping it in would change every expected string in this
+    // test for no benefit. The literal is data, not an attempt at π.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn builtin_printf_formats_integers_and_strings() {
         let txt = |s: &str| SqlValue::Text(s.into());
@@ -6914,6 +6920,10 @@ mod tests {
         assert!(call_builtin("LIKELIHOOD", vec![SqlValue::Int(1)]).is_err());
     }
 
+    // `3.14` is just "some float" — the point of the assertion is that LENGTH
+    // rejects a float argument, and any float would do. Clippy reads it as a
+    // rough π; using the real constant would make the test no clearer.
+    #[allow(clippy::approx_constant)]
     #[test]
     fn builtin_length_blob_and_number() {
         let len = |v: SqlValue| call_builtin("LENGTH", vec![v]).unwrap();
