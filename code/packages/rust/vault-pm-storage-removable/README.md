@@ -30,6 +30,19 @@ signatures above this layer (VLT-PM00 §7.1).
   object with genuinely different bytes is refused as a conflict rather than
   overwritten.
 
+## Symlinks are refused, never followed
+
+Every filesystem touch in this crate — the scan and the migration copy
+alike — checks `fs::symlink_metadata` before `fs::metadata`/`File::open`
+(which follow links), and the migration copy's staging file is created
+with `OpenOptions::create_new` rather than `File::create`, closing the gap
+between checking a predictable path and writing to it. This is not a
+theoretical hardening: `source`/`target` are exactly the directories a
+third-party sync tool, a second machine sharing removable media, or a
+configured mirror can also write to, so a hex-named symlink planted there
+is a realistic way to read an arbitrary local file into the migrated
+copy, or to redirect a write outside the intended object tree.
+
 ## Why no filenames ever leave this crate
 
 A third-party sync tool's filename is attacker-adjacent input the moment a

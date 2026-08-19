@@ -52,6 +52,14 @@
   count comparison), not a cryptographic guarantee, and says so in its own
   documentation.
 
+  `configured_vault`'s cross-vault storage-collision check now falls back
+  to comparing canonicalized paths when two locations' raw strings differ
+  (`same_local_directory`), so a relative path or a symlink cannot make
+  two different-looking `storage add`ed locations silently alias one real
+  directory — found in this PR's own security review, since the previous
+  exact-string comparison predates any location but the two this
+  composition root itself created ever being possible.
+
   Tests: closed-grammar coverage for all four verbs including `--mirror`
   and the `--vault` selector split (`add`/`list`/`check` refuse one,
   `migrate` accepts one); registering and listing a location, duplicate and

@@ -340,6 +340,37 @@ a trust boundary worth naming explicitly:
   an error, and never returned from the crate's public API (§5.1). The
   classification function (`classify`) is a pure, total function over a
   bounded `&str` with no filesystem access of its own.
+- **A symlink planted inside `source` or `target` is refused, never
+  followed.** Caught by this PR's own security review before merge:
+  `DirEntry::file_type()`'s *negative* `!is_dir()` check (the first draft
+  of both `scan_object_root` and `copy_object_tree`'s directory walks)
+  lets a symlink through as an "ordinary object" whenever its name
+  happens to be hex-shaped, and `read_bounded`'s `File::open` follows it —
+  so a planted `<hex-name> -> ~/.ssh/id_rsa` inside `source` would have
+  been read and copied into `target` under an innocuous object name, a
+  real data-exfiltration path when `target` is itself synced or
+  cloud-backed (exactly the situation this item's own "provider →
+  mirrored configuration" case creates). Fixed by requiring the positive
+  `is_file()` everywhere an object is treated as copyable, checking
+  `fs::symlink_metadata` (which does not follow the link) before every
+  `fs::metadata`/`File::open` call, and opening the migration copy's
+  staging file with `OpenOptions::create_new` instead of `File::create`
+  to close the TOCTOU window between checking a predictable path and
+  writing to it. Six regression tests in `vault-pm-storage-removable`
+  cover a symlinked source object, a symlinked source bucket directory,
+  and pre-existing symlinks standing in for a target bucket directory, a
+  target object, and the top-level target itself.
+- **Two different-looking storage locations resolving to one real
+  directory.** `configured_vault`'s cross-vault collision check compared
+  location strings exactly; once `storage add` allows an arbitrary path
+  (rather than one of two fixed ones this composition root creates for
+  itself), two different spellings — a relative path, a symlink, a
+  trailing separator — could resolve to the same physical directory and
+  bypass the check, letting two vaults' object stores silently interleave.
+  `same_local_directory` now falls back to comparing `fs::canonicalize`d
+  paths when the raw strings differ, closing that gap for any location
+  that already exists (one that does not yet cannot collide with anything
+  in the first place).
 
 ## 8. Reuse map correction
 

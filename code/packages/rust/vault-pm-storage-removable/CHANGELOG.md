@@ -34,3 +34,29 @@ All notable changes to this package are documented here.
   already exists with different bytes than the source.
 - Every read is bounded by `MAX_COPY_OBJECT_BYTES` before allocation, and
   every directory walk is bounded by `MAX_SCANNED_ENTRIES`.
+- **Symlinks are refused, never followed, everywhere this crate touches the
+  filesystem** (`CopyError::UnexpectedSymlink`). `source`/`target` are
+  exactly the directories a third-party sync tool, a second machine sharing
+  removable media, or a mirror configuration may also write to, so an
+  attacker-planted symlink here is a real, not merely theoretical, threat:
+  a hex-shaped symlink to an arbitrary local file (e.g. `~/.ssh/id_rsa`)
+  inside `source` would otherwise be read and copied into `target` under
+  an innocuous object name — a data-exfiltration primitive if `target` is
+  itself synced or cloud-backed — and a symlink standing in for a bucket
+  directory or an object file inside `target` would otherwise let
+  `fs::create_dir_all`'s or `File::create`'s symlink-following behavior
+  redirect a write to an attacker-chosen location. Every read and every
+  directory-creation check now inspects `fs::symlink_metadata` (which does
+  not follow the link) before ever calling `fs::metadata`/`File::open`
+  (which do); the migration-copy staging file is opened with
+  `OpenOptions::create_new` rather than `File::create`, closing the
+  TOCTOU window between checking a predictable staging path and writing to
+  it. `scan_object_root` also now positively requires `is_file()` (not a
+  negative `!is_dir()` check) before counting an entry as an ordinary
+  object, so a symlink is reported as an unexpected entry — never silently
+  accepted as healthy — even when its name happens to be hex-shaped. Found
+  in this PR's own security review and fixed before merge; six regression
+  tests cover a symlinked source object, a symlinked source bucket
+  directory, a pre-existing symlinked target bucket directory, a
+  pre-existing symlinked target object, a symlinked top-level target, and
+  `scan_object_root`'s own detection of a hex-named symlink.

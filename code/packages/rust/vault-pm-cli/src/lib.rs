@@ -5813,7 +5813,7 @@ fn configured_vault<'a>(
                 .get(candidate.local_store())
                 .is_some_and(|candidate_storage| {
                     candidate_storage.kind().is_local_directory()
-                        && candidate_storage.location() == storage.location()
+                        && same_local_directory(candidate_storage.location(), storage.location())
                 })
     }) {
         return Err(CliFailure::Unsupported);
@@ -5833,6 +5833,34 @@ fn configured_vault<'a>(
         }
     }
     Ok(vault)
+}
+
+/// Whether two configured local-directory storage locations name the same
+/// physical directory.
+///
+/// An exact string match is checked first (the only comparison this
+/// function used to make, before `storage add` let a location be any
+/// registered path rather than one of two fixed ones this composition root
+/// created for itself). When the strings differ, both are canonicalized
+/// and compared as resolved paths, so a relative path, a trailing
+/// separator, or a symlink cannot make two configured vaults silently
+/// share one filesystem location behind two different-looking spellings.
+/// A location that does not exist yet (`storage add` deliberately allows
+/// registering one before it is created) fails to canonicalize and is
+/// therefore compared as unequal to anything but its own exact spelling —
+/// the safe direction, since the collision this check exists to prevent
+/// cannot occur between two locations until at least one of them is real.
+fn same_local_directory(a: &StorageLocation, b: &StorageLocation) -> bool {
+    if a.as_str() == b.as_str() {
+        return true;
+    }
+    match (
+        std::fs::canonicalize(a.as_str()),
+        std::fs::canonicalize(b.as_str()),
+    ) {
+        (Ok(left), Ok(right)) => left == right,
+        _ => false,
+    }
 }
 
 fn application_locator(locator: ConfigVaultLocator) -> BootstrapLocator {
@@ -6075,7 +6103,9 @@ fn map_copy_error(error: CopyError) -> CliFailure {
             CliFailure::Provider
         }
         CopyError::Conflict => CliFailure::Conflict,
-        CopyError::ObjectTooLarge | CopyError::TooManyEntries => CliFailure::Integrity,
+        CopyError::ObjectTooLarge | CopyError::TooManyEntries | CopyError::UnexpectedSymlink => {
+            CliFailure::Integrity
+        }
     }
 }
 
@@ -14499,5 +14529,112 @@ mod tests {
             .exit_code(),
             ExitCode::InvalidInput
         );
+    }
+
+    #[test]
+    fn same_local_directory_matches_exact_strings_and_canonicalized_real_paths() {
+        let root = TestRoot::new();
+        let real = root.child("real-storage-location");
+        fs::create_dir_all(&real).unwrap();
+
+        let exact = StorageLocation::new(real.to_str().unwrap()).unwrap();
+        assert!(same_local_directory(&exact, &exact));
+
+        // A relative-looking (but still absolute-rooted) alternate spelling
+        // of the exact same directory, reached through `.`.
+        let via_dot = real.join(".");
+        let alternate_spelling = StorageLocation::new(via_dot.to_str().unwrap()).unwrap();
+        assert_ne!(exact.as_str(), alternate_spelling.as_str());
+        assert!(same_local_directory(&exact, &alternate_spelling));
+
+        // A location that does not exist yet never collides with anything
+        // but its own exact spelling -- `storage add` deliberately allows
+        // registering one before it is created.
+        let not_yet_created =
+            StorageLocation::new(root.child("does-not-exist-yet").to_str().unwrap()).unwrap();
+        assert!(!same_local_directory(&exact, &not_yet_created));
+        assert!(same_local_directory(&not_yet_created, &not_yet_created));
+
+        let different =
+            StorageLocation::new(root.child("a-different-location").to_str().unwrap()).unwrap();
+        assert!(!same_local_directory(&exact, &different));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn configured_vault_catches_a_symlink_aliased_storage_collision() {
+        use std::os::unix::fs::symlink;
+
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"correct horse battery staple".to_vec();
+        assert_eq!(
+            run(
+                ["init"],
+                &TestHost::new(paths.clone(), [passphrase.clone()])
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        // A symlink pointing at the exact same directory `local` already
+        // resolves to, registered under a different name and a different
+        // (non-canonical) spelling.
+        let real_location = loaded_config(&paths).storage()[&ConfigName::new("local").unwrap()]
+            .location()
+            .as_str()
+            .to_owned();
+        let alias_path = root.child("aliased-local-storage");
+        symlink(&real_location, &alias_path).unwrap();
+
+        assert_eq!(
+            run(
+                [
+                    "storage",
+                    "add",
+                    "filesystem",
+                    "alias",
+                    alias_path.to_str().unwrap(),
+                ],
+                &TestHost::new(paths.clone(), []),
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        // A second vault whose `local_store` is the symlinked alias must be
+        // refused: without canonicalization this would otherwise let two
+        // vaults' object stores silently interleave on one real directory.
+        let mut config = loaded_config(&paths);
+        let mut vaults = config.vaults().clone();
+        let aliased_vault = VaultConfigV1::new(
+            ConfigVaultLocator::new([9; 32]),
+            ConfigName::new("alias").unwrap(),
+            Vec::new(),
+            DEFAULT_AUTO_LOCK_SECONDS,
+            DEFAULT_CLIPBOARD_CLEAR_SECONDS,
+        )
+        .unwrap();
+        vaults.insert(ConfigName::new("second").unwrap(), aliased_vault);
+        config = VaultPmConfigV1::new(
+            config.default_vault().clone(),
+            vaults,
+            config.storage().clone(),
+        )
+        .unwrap();
+        {
+            let prepared = paths.prepare().unwrap();
+            let writer = prepared.try_acquire_writer().unwrap();
+            let exact = writer.load_config().unwrap().unwrap();
+            writer
+                .compare_exchange_config(&exact, render_config(&config).as_bytes())
+                .unwrap();
+        }
+
+        let refused = run(
+            ["--vault", "second", "status"],
+            &TestHost::new(paths.clone(), []),
+        );
+        assert_eq!(refused.exit_code(), ExitCode::Unsupported, "{refused:?}");
     }
 }

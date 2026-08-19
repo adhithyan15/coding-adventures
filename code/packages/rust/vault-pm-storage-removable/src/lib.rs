@@ -68,7 +68,7 @@
 #![forbid(unsafe_code)]
 #![deny(missing_docs)]
 
-use std::fs::{self, File};
+use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::{Path, PathBuf};
 
@@ -276,11 +276,20 @@ pub fn scan_object_root(root: &Path) -> Result<ScanReport, ScanError> {
             for inner_entry in read_dir_sorted(&top_entry.path())? {
                 bump(&mut scanned)?;
                 let inner_name = entry_name(&inner_entry)?;
-                let inner_is_dir = inner_entry
+                // A positive `is_file()` check, not a negative `!is_dir()`
+                // one: `DirEntry::file_type()` does not follow symlinks, so
+                // a symlink's type is neither "dir" nor "file". A negative
+                // check would let a symlink through as an "ordinary
+                // object" whenever its name happened to be hex-shaped --
+                // exactly the case a removable/synced folder makes
+                // plausible (VLT-PM50 §7) -- and this crate never opens an
+                // object it has classified as ordinary; `copy_object_tree`
+                // does, and must draw the identical line (below).
+                let inner_is_file = inner_entry
                     .file_type()
                     .map_err(|_| ScanError::ReadFailed)?
-                    .is_dir();
-                if !inner_is_dir && (is_hex_name(&inner_name) || is_hex_tmp_name(&inner_name)) {
+                    .is_file();
+                if inner_is_file && (is_hex_name(&inner_name) || is_hex_tmp_name(&inner_name)) {
                     report.ordinary_objects += 1;
                 } else {
                     report.warnings.push(InterferenceWarning {
@@ -358,6 +367,15 @@ pub enum CopyError {
     ObjectTooLarge,
     /// [`MAX_SCANNED_ENTRIES`] was exceeded.
     TooManyEntries,
+    /// A symlink was found exactly where this function needs a real file or
+    /// directory: a bucket directory, an object file being read, or the
+    /// exact path this function is about to create. Refused rather than
+    /// followed, because `source`/`target` are exactly the directories a
+    /// third-party sync tool or a second machine sharing removable media may
+    /// also write to (VLT-PM50 §7) -- a planted symlink there could
+    /// otherwise redirect a read to an arbitrary file this process can see,
+    /// or a write to overwrite one.
+    UnexpectedSymlink,
 }
 
 impl std::fmt::Display for CopyError {
@@ -369,6 +387,7 @@ impl std::fmt::Display for CopyError {
             Self::Conflict => "vault-pm-storage-removable: immutability conflict",
             Self::ObjectTooLarge => "vault-pm-storage-removable: object too large",
             Self::TooManyEntries => "vault-pm-storage-removable: too many entries",
+            Self::UnexpectedSymlink => "vault-pm-storage-removable: unexpected symlink",
         })
     }
 }
@@ -399,13 +418,7 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
         ScanError::TooManyEntries => CopyError::TooManyEntries,
     })?;
 
-    fs::create_dir_all(target).map_err(|_| CopyError::TargetUnavailable)?;
-    if !fs::metadata(target)
-        .map_err(|_| CopyError::TargetUnavailable)?
-        .is_dir()
-    {
-        return Err(CopyError::TargetUnavailable);
-    }
+    ensure_real_directory(target)?;
 
     let mut report = CopyReport {
         source_warnings,
@@ -419,6 +432,12 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
             .file_name()
             .into_string()
             .map_err(|_| CopyError::IoFailed)?;
+        // A positive `is_dir()` requirement on the *unfollowed* link type:
+        // `DirEntry::file_type()` reports a symlink's own type, never the
+        // type of what it points to, so a symlink can be neither `is_dir()`
+        // nor `is_file()` here and is silently excluded from the walk
+        // either way -- it is still visible in `source_warnings` above,
+        // since `scan_object_root` classifies it as an unexpected entry.
         if !bucket_entry
             .file_type()
             .map_err(|_| CopyError::IoFailed)?
@@ -428,7 +447,7 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
             continue;
         }
         let target_bucket_dir = target.join(&bucket_name);
-        fs::create_dir_all(&target_bucket_dir).map_err(|_| CopyError::TargetUnavailable)?;
+        ensure_real_directory(&target_bucket_dir)?;
 
         for object_entry in fs::read_dir(bucket_entry.path()).map_err(|_| CopyError::IoFailed)? {
             let object_entry = object_entry.map_err(|_| CopyError::IoFailed)?;
@@ -437,13 +456,22 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
                 .file_name()
                 .into_string()
                 .map_err(|_| CopyError::IoFailed)?;
-            if object_entry
+            // Positive `is_file()`, not `!is_dir()`: the latter would let a
+            // symlink through whenever its name happened to be hex-shaped,
+            // and `read_bounded` below follows symlinks by design (it opens
+            // whatever `File::open` resolves to) -- so a symlink must never
+            // reach it. `source`/`target` are exactly the directories a
+            // third-party sync tool or a second machine may also write to
+            // (VLT-PM50 §7); a planted `<hex-name> -> /etc/shadow` symlink
+            // must never be silently read and copied as if it were an
+            // ordinary sealed object.
+            if !object_entry
                 .file_type()
                 .map_err(|_| CopyError::IoFailed)?
-                .is_dir()
+                .is_file()
                 || !is_hex_name(&object_name)
             {
-                continue; // `.tmp` writes and anything unexpected are skipped.
+                continue; // `.tmp` writes, symlinks, and anything else are skipped.
             }
             copy_one_object(
                 &object_entry.path(),
@@ -453,6 +481,30 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
         }
     }
     Ok(report)
+}
+
+/// Ensure `path` is a real (non-symlink) directory, creating it if absent.
+///
+/// Refuses rather than follows an existing symlink at `path`: `storage-fs`
+/// never creates one, so one being there already means something else
+/// wrote it, and blindly treating it as "the directory exists, proceed"
+/// (`fs::create_dir_all`'s own behavior, since its own re-check follows
+/// symlinks) would let a planted symlink redirect an entire bucket's worth
+/// of writes to an attacker-chosen location.
+fn ensure_real_directory(path: &Path) -> Result<(), CopyError> {
+    match fs::symlink_metadata(path) {
+        Ok(metadata) => {
+            if metadata.file_type().is_symlink() {
+                return Err(CopyError::UnexpectedSymlink);
+            }
+            if metadata.is_dir() {
+                Ok(())
+            } else {
+                Err(CopyError::TargetUnavailable)
+            }
+        }
+        Err(_) => fs::create_dir_all(path).map_err(|_| CopyError::TargetUnavailable),
+    }
 }
 
 fn bump_copy(scanned: &mut usize) -> Result<(), CopyError> {
@@ -470,7 +522,10 @@ fn copy_one_object(
 ) -> Result<(), CopyError> {
     let source_bytes = read_bounded(source_path)?;
 
-    if let Ok(existing) = fs::metadata(target_path) {
+    if let Ok(existing) = fs::symlink_metadata(target_path) {
+        if existing.file_type().is_symlink() {
+            return Err(CopyError::UnexpectedSymlink);
+        }
         if existing.is_file() {
             let target_bytes = read_bounded(target_path)?;
             return if target_bytes == source_bytes {
@@ -485,7 +540,11 @@ fn copy_one_object(
 
     // Write-tmp-then-rename, the same discipline `storage-fs` itself uses,
     // so a crash mid-copy leaves either nothing or one fully written file at
-    // the final path, never a truncated one.
+    // the final path, never a truncated one. The staging name is
+    // predictable (this function's own fixed convention), so the file is
+    // opened with `create_new` -- which atomically refuses to follow or
+    // replace *anything* already at that path, symlink included, rather
+    // than the TOCTOU-prone "check then create" `File::create` would be.
     let mut staging_path: PathBuf = target_path.to_path_buf();
     let staged_name = format!(
         "{}.migrate-tmp",
@@ -495,8 +554,13 @@ fn copy_one_object(
             .ok_or(CopyError::IoFailed)?
     );
     staging_path.set_file_name(staged_name);
+    remove_stale_staging_file(&staging_path)?;
     {
-        let mut staging_file = File::create(&staging_path).map_err(|_| CopyError::IoFailed)?;
+        let mut staging_file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&staging_path)
+            .map_err(|_| CopyError::IoFailed)?;
         staging_file
             .write_all(&source_bytes)
             .map_err(|_| CopyError::IoFailed)?;
@@ -514,8 +578,44 @@ fn copy_one_object(
     Ok(())
 }
 
+/// Remove a non-symlink leftover at the fixed staging path from an
+/// interrupted previous attempt, so a retried migration stays idempotent.
+///
+/// A symlink found here is refused, not removed: only this function's own
+/// write path ever creates a regular file at this exact predictable name,
+/// so a symlink means something else placed it, and the caller's
+/// subsequent `create_new` must be allowed to refuse it rather than have
+/// this step silently clear the way.
+fn remove_stale_staging_file(staging_path: &Path) -> Result<(), CopyError> {
+    match fs::symlink_metadata(staging_path) {
+        Ok(metadata) => {
+            if metadata.file_type().is_symlink() {
+                return Err(CopyError::UnexpectedSymlink);
+            }
+            fs::remove_file(staging_path).map_err(|_| CopyError::IoFailed)
+        }
+        Err(_) => Ok(()),
+    }
+}
+
+/// Read `path`'s bytes, refusing rather than following a symlink there.
+///
+/// `source`/`target` (VLT-PM50 §7) are exactly the directories a
+/// third-party sync tool, a second machine sharing removable media, or a
+/// mirror configuration may also write to, so this is a real trust
+/// boundary: without this check a planted `<hex-name> -> /etc/shadow` (or
+/// any other file this process can read) would be opened, its bytes copied
+/// into `target` under an innocuous object name, and — if `target` is
+/// itself synced or cloud-backed — silently exfiltrated. Checking
+/// `symlink_metadata` (which does not follow the link) before `File::open`
+/// (which does) closes that path; the length bound is read from the same
+/// non-following call, so a symlink to a zero-reporting special file (e.g.
+/// `/dev/zero`) cannot bypass it either.
 fn read_bounded(path: &Path) -> Result<Vec<u8>, CopyError> {
-    let metadata = fs::metadata(path).map_err(|_| CopyError::IoFailed)?;
+    let metadata = fs::symlink_metadata(path).map_err(|_| CopyError::IoFailed)?;
+    if metadata.file_type().is_symlink() {
+        return Err(CopyError::UnexpectedSymlink);
+    }
     if metadata.len() > MAX_COPY_OBJECT_BYTES {
         return Err(CopyError::ObjectTooLarge);
     }
@@ -775,6 +875,144 @@ mod tests {
         );
     }
 
+    // -----------------------------------------------------------------
+    // Symlink attacks. `source`/`target` are exactly the directories a
+    // third-party sync tool, a second machine sharing removable media, or
+    // another vault's mirror configuration may also write to (VLT-PM50
+    // §7) -- these prove a planted symlink is refused rather than
+    // followed, on both the read and the write side.
+    // -----------------------------------------------------------------
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_object_in_source_is_never_read_or_copied() {
+        use std::os::unix::fs::symlink;
+
+        let source = TempDir::new();
+        let target = TempDir::new();
+        let secret = source.path().join("outside-the-object-tree.secret");
+        fs::write(&secret, b"arbitrary local file contents").unwrap();
+
+        let bucket_dir = source.path().join("2121");
+        fs::create_dir_all(&bucket_dir).unwrap();
+        // A hex-shaped name, so it would pass the naming check -- only the
+        // positive `is_file()` (not `!is_dir()`) requirement excludes it.
+        symlink(&secret, bucket_dir.join("aabbcc")).unwrap();
+        write_object(source.path(), "2121", "ddeeff", b"a real object");
+
+        let report = copy_object_tree(source.path(), target.path()).unwrap();
+        // Only the real object was copied; the symlink was skipped, not
+        // followed and copied under an innocuous object name.
+        assert_eq!(report.copied_objects, 1);
+        assert!(!target.path().join("2121").join("aabbcc").exists());
+        // It is still visible in the scan, exactly like any other
+        // unexpected entry -- never silently accepted as a clean object.
+        assert!(!report.source_warnings.is_clean());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_bucket_directory_in_source_is_never_descended_into() {
+        use std::os::unix::fs::symlink;
+
+        let source = TempDir::new();
+        let target = TempDir::new();
+        let elsewhere = TempDir::new();
+        write_object(
+            elsewhere.path(),
+            "9999",
+            "aabbcc",
+            b"not part of this vault",
+        );
+        // A hex-shaped bucket-level name pointing at an unrelated directory.
+        symlink(elsewhere.path(), source.path().join("2121")).unwrap();
+        write_object(source.path(), "3131", "ddeeff", b"a real object");
+
+        let report = copy_object_tree(source.path(), target.path()).unwrap();
+        assert_eq!(report.copied_objects, 1);
+        assert!(!target.path().join("2121").exists());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_preexisting_symlinked_bucket_directory_in_target_is_refused() {
+        use std::os::unix::fs::symlink;
+
+        let source = TempDir::new();
+        let target = TempDir::new();
+        let elsewhere = TempDir::new();
+        write_object(source.path(), "2121", "aabbcc", b"object bytes");
+        fs::create_dir_all(target.path()).unwrap();
+        // Planted before the migration runs: a symlink standing in for the
+        // bucket directory `copy_object_tree` is about to write into.
+        symlink(elsewhere.path(), target.path().join("2121")).unwrap();
+
+        assert_eq!(
+            copy_object_tree(source.path(), target.path()),
+            Err(CopyError::UnexpectedSymlink)
+        );
+        // Nothing was written through the planted symlink.
+        assert!(fs::read_dir(elsewhere.path()).unwrap().next().is_none());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_preexisting_symlinked_target_object_is_refused_not_read_through() {
+        use std::os::unix::fs::symlink;
+
+        let source = TempDir::new();
+        let target = TempDir::new();
+        let secret = TempDir::new();
+        fs::write(secret.path().join("shadow"), b"root:x:0:0").unwrap();
+        write_object(source.path(), "2121", "aabbcc", b"object bytes");
+        fs::create_dir_all(target.path().join("2121")).unwrap();
+        symlink(
+            secret.path().join("shadow"),
+            target.path().join("2121").join("aabbcc"),
+        )
+        .unwrap();
+
+        assert_eq!(
+            copy_object_tree(source.path(), target.path()),
+            Err(CopyError::UnexpectedSymlink)
+        );
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_symlinked_top_level_target_is_refused() {
+        use std::os::unix::fs::symlink;
+
+        let source = TempDir::new();
+        let elsewhere = TempDir::new();
+        let parent = TempDir::new();
+        let target = parent.path().join("target-link");
+        symlink(elsewhere.path(), &target).unwrap();
+        write_object(source.path(), "2121", "aabbcc", b"object bytes");
+
+        assert_eq!(
+            copy_object_tree(source.path(), &target),
+            Err(CopyError::UnexpectedSymlink)
+        );
+        assert!(fs::read_dir(elsewhere.path()).unwrap().next().is_none());
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn scan_flags_a_symlink_even_when_its_name_is_hex_shaped() {
+        use std::os::unix::fs::symlink;
+
+        let root = TempDir::new();
+        write_object(root.path(), "2121", "aabbcc", b"real object");
+        let target_file = root.path().join("elsewhere.txt");
+        fs::write(&target_file, b"x").unwrap();
+        symlink(&target_file, root.path().join("2121").join("ddeeff")).unwrap();
+
+        let report = scan_object_root(root.path()).unwrap();
+        assert!(!report.is_clean());
+        assert_eq!(report.ordinary_objects, 1);
+    }
+
     #[test]
     fn missing_source_is_source_unavailable() {
         let source = TempDir::new();
@@ -837,6 +1075,7 @@ mod tests {
             CopyError::Conflict,
             CopyError::ObjectTooLarge,
             CopyError::TooManyEntries,
+            CopyError::UnexpectedSymlink,
         ] {
             assert!(error.to_string().starts_with("vault-pm-storage-removable"));
         }
