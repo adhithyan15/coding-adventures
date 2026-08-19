@@ -298,31 +298,35 @@ backend emits — bare `"print"`/`"puts"` `BuiltinCall`s and the `print`/
 every frontend finished migrating to `__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
-**`NDArrays` / `MatrixOps` / `ArrayColumnMajor`** (SIR22 array/matrix base
-cut, Phase A Slice 2): `Expr::ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
-`Transpose`/`IndexGet` and `Stmt::IndexSet` route into a new `__sir::array_*`
-sub-runtime — an inlined port of `semantic-ir-to-javascript`'s own
-already-proven `ArrayRt` sub-runtime (this backend inlines its runtime
-helpers, same as `seq_*`/`map_*`, since the generated program has no
-`Cargo.toml`/dependency graph to hang a real crate dependency off). Array
-data is stored uniformly as `f64` (mirroring the JS backend's
-`Float64Array`), so `IndexGet` on a scalar position always yields a
-`Value::Float`. `Stmt::IndexSet` mutates through the new
+**`NDArrays` / `MatrixOps` / `ArrayColumnMajor`** (SIR22 array/matrix
+domain, Phase A Slices 2-3): `Expr::ArrayLit`/`Range`/`MatMul`/
+`ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet` (the "base cut",
+Slice 2) and `Expr::Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` (the 9-node "APL addendum",
+Slice 3) all route into a new `__sir::array_*` sub-runtime — an inlined
+port of `semantic-ir-to-javascript`'s own already-proven `ArrayRt`
+sub-runtime (this backend inlines its runtime helpers, same as
+`seq_*`/`map_*`, since the generated program has no `Cargo.toml`/
+dependency graph to hang a real crate dependency off). Array data is
+stored uniformly as `f64` (mirroring the JS backend's `Float64Array`), so
+`IndexGet` on a scalar position always yields a `Value::Float`.
+`Stmt::IndexSet` mutates through the new
 `Value::NDArray(Rc<RefCell<SirNDArray>>)` handle — the same shared-mutable
 pattern `Seq`/`Map` already use, so every alias of an array binding
-observes the write. The 9-node SIR22 "APL addendum"
-(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
-`IndexOf`/`Ravel`/`Catenate`) shares these same three features with the
-base cut but stays deferred to a later slice — rejected cleanly by a
-dedicated pre-emit scan (`reject_sir22_addendum` in `lib.rs`) rather than
-this capability gate, since the gate alone can't tell the two groups
-apart. See [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
+observes the write. All 16 SIR22 node kinds now share the same three
+features with no capability-check ambiguity left to resolve — Slice 2's
+dedicated pre-emit scan (`reject_sir22_addendum` in `lib.rs`), which used
+to reject the addendum nine specifically, was removed once Slice 3 gave
+them real codegen. `IndexGenerator`/`IndexOf` are 1-based (`⍳n` =
+`[1, …, n]`; "not found" = `haystack.len() + 1`), a deliberate APL
+surface-syntax exception documented on `array_index_generator`/
+`array_index_of` in `runtime.rs`. See
+[SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
 
 Rejects: `TailCalls` (Rust does not guarantee TCO), `Intrinsics`
 (empty whitelist in v0), `StringInterpolation`, a stateful (non-empty
 body) `Class`/`Module` or a non-name-slot `Const` reference (rejected
-cleanly by the soundness gates), and the SIR22 "APL addendum" nodes above
-(rejected cleanly by `reject_sir22_addendum`, not this capability gate).
+cleanly by the soundness gates).
 
 ## Value model
 

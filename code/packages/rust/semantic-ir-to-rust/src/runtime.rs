@@ -1322,11 +1322,19 @@ pub const RUNTIME: &str = r##"mod __sir {
     // other backend's port of this same runtime.
     //
     // The SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) is
-    // deferred — these nine share `NDArrays`/`MatrixOps`/
-    // `ArrayColumnMajor` with the base cut above, so `lib.rs`'s `compile`
-    // adds a dedicated pre-emit scan (`reject_sir22_addendum`) rejecting
-    // them cleanly, beyond the ordinary feature-flag capability check.
+    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) is now
+    // implemented too (Phase A Slice 3) — see the `array_reduce`/
+    // `array_scan`/`array_outer`/`array_flatten_row_major`/`array_shape`/
+    // `array_reshape`/`array_index_generator`/`array_index_of`/
+    // `array_ravel`/`array_catenate` functions further down this section,
+    // a 1:1 port of `semantic-ir-to-javascript`'s own `reduce`/`scan`/
+    // `outer`/`flattenRowMajor`/`shape`/`reshape`/`indexGenerator`/
+    // `indexOf`/`ravel`/`catenate`. These nine share `NDArrays`/
+    // `MatrixOps`/`ArrayColumnMajor` with the base cut above, so the
+    // ordinary feature-flag capability check alone could never tell them
+    // apart from the base cut; Slice 2's dedicated pre-emit scan
+    // (`reject_sir22_addendum` in `lib.rs`) that used to reject them is
+    // now removed, since real codegen exists for all nine.
 
     /// Element cap for any array/matrix allocation in this domain —
     /// mirrors the JS/TS/Ruby backends' identical `MAX_ELEMENTS`/
@@ -1873,6 +1881,441 @@ pub const RUNTIME: &str = r##"mod __sir {
             n => array_raise(format!(
                 "array_index_set: only 1 or 2 index arguments are supported (rank <= 2 scope), got {}",
                 n
+            )),
+        }
+    }
+
+    // ── SIR22 addendum: APL primitive operators ─────────────────────
+    //
+    // `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+    // `IndexOf`/`Ravel`/`Catenate` — a 1:1 port of
+    // `semantic-ir-to-javascript`'s own already-proven `reduce`/`scan`/
+    // `outer`/`flattenRowMajor`/`shape`/`reshape`/`indexGenerator`/
+    // `indexOf`/`ravel`/`catenate` (this section's own module doc there,
+    // and `apl_runtime::builtins`, are the two ground-truth references
+    // every function below matches). `ARRAY_MAX_ELEMENTS` (defined above)
+    // is reused as-is for every bounded-allocation check here — this file
+    // has exactly one array-size cap, not one per domain, so `⍳`/dyadic
+    // `⍴`/`⍳` (index-of)/`,` (catenate) share it with `array_matmul`/
+    // `array_range`/`array_index_get` rather than reintroducing
+    // `apl_runtime::builtins::MAX_ARRAY_LENGTH`'s smaller 1,000,000
+    // figure as a second, competing constant.
+
+    /// `+/A` (APL reduce, dyadic-op monadic-adverb) — fold `target` with
+    /// `op` along its one axis. Ported 1:1 from `array_runtime::ops::
+    /// reduce` (via the JS reference's `reduce`):
+    /// - rank 0 (scalar): nothing to fold, returns `target` itself.
+    /// - rank 1 (vector `[n]`): left-fold across all `n` elements
+    ///   (`op(op(op(v0, v1), v2), …)`); an EMPTY vector is a clean error —
+    ///   unlike `sum`/`mean` (which have a built-in identity, 0), `reduce`
+    ///   is generic over any `op`, and guessing an identity (is it `0` for
+    ///   `Add`, `1` for `Mul`, `-Infinity` for `Max`?) for an arbitrary,
+    ///   possibly-future op would be silently wrong for most of them.
+    /// - rank 2 (matrix `[r, c]`): folds EACH ROW independently across its
+    ///   `c` columns, producing a `[r]` vector (one folded value per row).
+    ///   Column-major storage means element `(row, col)` lives at
+    ///   `col * r + row` — the row loop reads `d[row]` as the seed (column
+    ///   0) then walks `d[col * r + row]` for `col = 1..c`; getting `row`
+    ///   and `col` swapped here silently transposes the result instead of
+    ///   raising, so this indexing is the single easiest place to
+    ///   introduce a wrong-answer bug when reading this function.
+    pub fn array_reduce(op: &str, target: &Value) -> Value {
+        let a = array_coerce(target);
+        if a.shape.is_empty() {
+            return array_ndarray(a.shape, a.data);
+        }
+        if a.shape.len() == 1 {
+            let n = a.shape[0];
+            if n == 0 {
+                array_raise(
+                    "array_reduce: cannot fold an empty vector (no identity element for an \
+                     arbitrary op)"
+                        .to_string(),
+                );
+            }
+            let mut acc = a.data[0];
+            for i in 1..n {
+                acc = array_apply_op(op, acc, a.data[i]);
+            }
+            return array_ndarray(vec![], vec![acc]);
+        }
+        if a.shape.len() == 2 {
+            let (r, c) = (a.shape[0], a.shape[1]);
+            if c == 0 {
+                array_raise(
+                    "array_reduce: cannot fold an empty row (no identity element for an \
+                     arbitrary op)"
+                        .to_string(),
+                );
+            }
+            let mut out = vec![0.0f64; r];
+            for row in 0..r {
+                let mut acc = a.data[row]; // column-major: (row, 0) lives at plain `row`
+                for col in 1..c {
+                    acc = array_apply_op(op, acc, a.data[col * r + row]);
+                }
+                out[row] = acc;
+            }
+            return array_ndarray(vec![r], out);
+        }
+        array_raise(format!(
+            "array_reduce: rank > 2 not yet supported (shape {:?})",
+            a.shape
+        ));
+    }
+
+    /// `+\A` (APL scan) — the same fold as `array_reduce`, but keeping
+    /// EVERY intermediate result instead of only the last; output has the
+    /// same shape as `target`. Ported 1:1 from `array_runtime::ops::scan`
+    /// (via the JS reference's `scan`). An empty axis is NOT an error here
+    /// (unlike `array_reduce`): there is simply nothing to scan, and the
+    /// (empty) output shape already says so.
+    pub fn array_scan(op: &str, target: &Value) -> Value {
+        let a = array_coerce(target);
+        if a.shape.is_empty() {
+            return array_ndarray(a.shape, a.data);
+        }
+        if a.shape.len() == 1 {
+            let n = a.shape[0];
+            let mut out = vec![0.0f64; n];
+            let mut acc = 0.0f64;
+            let mut started = false;
+            for i in 0..n {
+                acc = if started { array_apply_op(op, acc, a.data[i]) } else { a.data[i] };
+                started = true;
+                out[i] = acc;
+            }
+            return array_ndarray(vec![n], out);
+        }
+        if a.shape.len() == 2 {
+            let (r, c) = (a.shape[0], a.shape[1]);
+            let mut out = vec![0.0f64; a.data.len()];
+            for row in 0..r {
+                let mut acc = 0.0f64;
+                let mut started = false;
+                for col in 0..c {
+                    let x = a.data[col * r + row]; // column-major
+                    acc = if started { array_apply_op(op, acc, x) } else { x };
+                    started = true;
+                    out[col * r + row] = acc;
+                }
+            }
+            return array_ndarray(vec![r, c], out);
+        }
+        array_raise(format!(
+            "array_scan: rank > 2 not yet supported (shape {:?})",
+            a.shape
+        ));
+    }
+
+    /// `A∘.×B` (APL outer product) — apply `op` to every pair `(aᵢ, bⱼ)`,
+    /// producing a result of rank `rank(a) + rank(b)`. Ported 1:1 from
+    /// `array_runtime::ops::outer`, scoped identically to `rank(a) <= 1`
+    /// and `rank(b) <= 1` (the vector⊗vector case below already reaches
+    /// this domain's rank-2 ceiling). `array_checked_shape_size` validates
+    /// the `[m, n]` output shape *before* allocating — `m`/`n` are two
+    /// INDEPENDENT operand lengths, each individually under
+    /// `ARRAY_MAX_ELEMENTS`, but nothing bounds their product alone (the
+    /// same outer-product-shaped allocation `array_matmul`/
+    /// `array_index_get` above guard).
+    pub fn array_outer(op: &str, lhs: &Value, rhs: &Value) -> Value {
+        let a = array_coerce(lhs);
+        let b = array_coerce(rhs);
+        match (a.shape.len(), b.shape.len()) {
+            (0, 0) => array_ndarray(vec![], vec![array_apply_op(op, a.data[0], b.data[0])]),
+            (0, 1) => {
+                let x = a.data[0];
+                let data: Vec<f64> = b.data.iter().map(|&y| array_apply_op(op, x, y)).collect();
+                array_ndarray(vec![b.shape[0]], data)
+            }
+            (1, 0) => {
+                let y = b.data[0];
+                let data: Vec<f64> = a.data.iter().map(|&x| array_apply_op(op, x, y)).collect();
+                array_ndarray(vec![a.shape[0]], data)
+            }
+            (1, 1) => {
+                let m = a.shape[0];
+                let n = b.shape[0];
+                let out_len = array_checked_shape_size(&[m, n]);
+                let mut out = vec![0.0f64; out_len];
+                for j in 0..n {
+                    for i in 0..m {
+                        out[j * m + i] = array_apply_op(op, a.data[i], b.data[j]); // column-major
+                    }
+                }
+                array_ndarray(vec![m, n], out)
+            }
+            _ => array_raise(format!(
+                "array_outer: operands of rank > 1 not yet supported (shapes {:?}, {:?})",
+                a.shape, b.shape
+            )),
+        }
+    }
+
+    /// Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order —
+    /// last axis varies fastest. `a` itself stores COLUMN-major
+    /// (`array_get`'s own doc comment), so a matrix must be walked "row,
+    /// then column" to produce true row-major order; returning the raw
+    /// column-major buffer would silently ravel in the WRONG order. Always
+    /// returns a fresh `Vec` (never `a.data` itself, even in the rank <= 1
+    /// no-op case) — mirrors `apl_runtime::builtins::flatten` returning an
+    /// owned `Vec`, not a borrow, so the result never accidentally
+    /// aliases `a`'s own buffer.
+    fn array_flatten_row_major(a: &SirNDArray) -> Vec<f64> {
+        if a.shape.len() <= 1 {
+            return a.data.clone();
+        }
+        if a.shape.len() == 2 {
+            let (r, c) = (a.shape[0], a.shape[1]);
+            let mut out = vec![0.0f64; r * c];
+            let mut k = 0;
+            for row in 0..r {
+                for col in 0..c {
+                    out[k] = a.data[col * r + row]; // column-major read
+                    k += 1;
+                }
+            }
+            return out;
+        }
+        // Unreachable in practice (this domain's rank <= 2 ceiling) --
+        // total rather than raising, mirroring the JS reference's own
+        // fallback.
+        a.data.clone()
+    }
+
+    /// Monadic `⍴` (shape-of) — `target`'s dimensions as a vector. Ported
+    /// 1:1 from `apl_runtime::builtins::shape`: a SCALAR has zero
+    /// dimensions, so its shape is the EMPTY vector (not a scalar!) — `⍴5`
+    /// is a length-0 vector, mirroring `shape.len() == 0` exactly. A
+    /// vector `[n]` has shape `[n]` (one element); a matrix `[r, c]` has
+    /// shape `[r, c]` (two elements).
+    pub fn array_shape(target: &Value) -> Value {
+        let a = array_coerce(target);
+        let dims: Vec<f64> = a.shape.iter().map(|&d| d as f64).collect();
+        let n = dims.len();
+        array_ndarray(vec![n], dims)
+    }
+
+    /// Dyadic `⍴` (reshape) — reinterpret `target`'s data under the new
+    /// dimensions `shape_arg`. Ported 1:1 from `apl_runtime::builtins::
+    /// reshape`. `shape_arg` must itself be a scalar or vector (rank <= 1)
+    /// of non-negative integers, and is itself capped at rank <= 2 (this
+    /// domain's ceiling — a longer target shape is a clean error, not a
+    /// silent truncation). `target`'s elements are ravelled
+    /// (`array_flatten_row_major`) then cyclically repeated or truncated
+    /// to fill the target shape's element count.
+    ///
+    /// CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+    /// fills the LAST axis fastest, same convention as ravel), but this
+    /// domain's storage is COLUMN-major — so for a rank-2 target the
+    /// row-major `filled` sequence must be TRANSPOSED into column-major
+    /// storage (`data[col * r + row] = filled[row * c + col]`) before
+    /// calling `array_ndarray`. Handing `filled` straight to `array_ndarray`
+    /// would silently reshape column-major instead of APL's row-major
+    /// convention — a wrong answer that still LOOKS plausible (right
+    /// multiset of values, wrong positions).
+    pub fn array_reshape(shape_arg: &Value, target: &Value) -> Value {
+        let shape_arg = array_coerce(shape_arg);
+        let target = array_coerce(target);
+        if shape_arg.shape.len() > 1 {
+            array_raise(format!(
+                "array_reshape: shape argument must be a scalar or vector (got rank {})",
+                shape_arg.shape.len()
+            ));
+        }
+        let dims: Vec<usize> = shape_arg
+            .data
+            .iter()
+            .map(|&x| {
+                if !(x.is_finite() && x == x.trunc() && x >= 0.0) {
+                    array_raise(format!(
+                        "array_reshape: shape elements must be non-negative integers, got {}",
+                        x
+                    ));
+                }
+                x as usize
+            })
+            .collect();
+        if dims.len() > 2 {
+            array_raise(format!(
+                "array_reshape: reshape to rank > 2 is not yet supported (target shape {:?})",
+                dims
+            ));
+        }
+        let total = array_checked_shape_size(&dims);
+        let source = array_flatten_row_major(&target);
+        if total > 0 && source.is_empty() {
+            array_raise(
+                "array_reshape: cannot reshape an empty source into a non-empty shape".to_string(),
+            );
+        }
+        let mut filled = vec![0.0f64; total];
+        for (k, slot) in filled.iter_mut().enumerate() {
+            *slot = source[k % source.len()];
+        }
+        if dims.len() <= 1 {
+            return array_ndarray(dims, filled);
+        }
+        let (r, c) = (dims[0], dims[1]);
+        let mut data = vec![0.0f64; total];
+        for row in 0..r {
+            for col in 0..c {
+                data[col * r + row] = filled[row * c + col];
+            }
+        }
+        array_ndarray(dims, data)
+    }
+
+    /// Monadic `⍳` (index generator / iota) — `⍳n` is the 1-BASED vector
+    /// `[1, 2, …, n]`. Ported 1:1 from `apl_runtime::builtins::
+    /// index_generator` — note this is 1-based, unlike every 0-based index
+    /// elsewhere in this domain (`array_index_get`/`array_index_set`),
+    /// because that is genuinely what APL's `⍳` means at the
+    /// SURFACE-SYNTAX level. (The `Expr::IndexGenerator` doc comment in
+    /// `semantic-ir`'s `nodes.rs` describes the underlying `Array` as
+    /// 0-based; that doc comment is stale relative to
+    /// `apl_runtime::builtins::index_generator`'s own ground-truth
+    /// behaviour and tests — e.g.
+    /// `index_generator_produces_one_based_run` — which this backend
+    /// matches, exactly like the JS/Ruby references already do.)
+    /// `array_checked_shape_size([n])` both validates `n` is a
+    /// non-negative integer AND caps it at `ARRAY_MAX_ELEMENTS` before
+    /// allocating — `n` is a runtime value a compiled program computes,
+    /// not a fixed constant, so `⍳` of an absurd size must fail cleanly.
+    pub fn array_index_generator(count: &Value) -> Value {
+        let a = array_coerce(count);
+        if !array_is_scalar(&a) {
+            array_raise("array_index_generator: monadic argument must be a scalar".to_string());
+        }
+        let x = a.data[0];
+        if !(x.is_finite() && x == x.trunc() && x >= 0.0) {
+            array_raise(format!(
+                "array_index_generator: monadic argument must be a non-negative integer, got {}",
+                x
+            ));
+        }
+        let n = array_checked_shape_size(&[x as usize]);
+        let mut out = vec![0.0f64; n];
+        for (i, slot) in out.iter_mut().enumerate() {
+            *slot = (i + 1) as f64;
+        }
+        array_ndarray(vec![n], out)
+    }
+
+    /// Dyadic `⍳` (index-of / search) — for every element of `needle`, the
+    /// 1-based index of its first occurrence in the vector `haystack` (or
+    /// `haystack.len() + 1` if not found — "not found" is a valid,
+    /// always-in-range position, not `-1`). Ported 1:1 from
+    /// `apl_runtime::builtins::index_of`: plain EXACT equality (no
+    /// floating-point tolerance), so `NaN` correctly never matches. The
+    /// work done is O(len(haystack) * len(needle)) (a full linear scan per
+    /// needle element) — `array_checked_shape_size` is reused here purely
+    /// for its "product <= ARRAY_MAX_ELEMENTS" check (both lengths are
+    /// already valid non-negative integers, so its dimension-validity half
+    /// is a no-op) to cap the PRODUCT before scanning, since each operand
+    /// individually staying under `ARRAY_MAX_ELEMENTS` does not bound
+    /// their product.
+    pub fn array_index_of(haystack: &Value, needle: &Value) -> Value {
+        let a = array_coerce(haystack);
+        let b = array_coerce(needle);
+        if a.shape.len() > 1 {
+            array_raise(format!(
+                "array_index_of: left argument must be a scalar or vector (got rank {})",
+                a.shape.len()
+            ));
+        }
+        array_checked_shape_size(&[a.data.len(), b.data.len()]);
+        let haystack_len = a.data.len();
+        let out: Vec<f64> = b
+            .data
+            .iter()
+            .map(|&needle_val| match a.data.iter().position(|&x| x == needle_val) {
+                Some(idx) => (idx + 1) as f64,
+                None => (haystack_len + 1) as f64,
+            })
+            .collect();
+        array_ndarray(b.shape.clone(), out)
+    }
+
+    /// Monadic `,` (ravel) — flatten `target` to a rank-1 vector, in
+    /// row-major order (see `array_flatten_row_major`'s own doc comment
+    /// for the column-major-storage-vs-row-major-order subtlety). Ported
+    /// 1:1 from `apl_runtime::builtins::ravel`.
+    pub fn array_ravel(target: &Value) -> Value {
+        let a = array_coerce(target);
+        let flat = array_flatten_row_major(&a);
+        let n = flat.len();
+        array_ndarray(vec![n], flat)
+    }
+
+    /// Dyadic `,` (catenate) — supports scalar-scalar, scalar-vector,
+    /// vector-scalar, vector-vector (all producing a vector), and
+    /// matrix-matrix-with-equal-row-counts (column/last-axis catenate,
+    /// producing `[r, ca + cb]`). Any other rank combination is a clean
+    /// "not yet supported" error. Ported 1:1 from
+    /// `apl_runtime::builtins::catenate`. The combined-length cap check
+    /// happens ONCE, up front, regardless of which rank combination
+    /// follows (mirroring the JS reference's own structure) — neither
+    /// operand alone need be oversized for the RESULT to be, since a
+    /// script that repeatedly catenates a value with itself (`A = [A, A]`)
+    /// doubles the size every line with no other ceiling. (`a.data.len()`/
+    /// `b.data.len()` are each already bounded by `ARRAY_MAX_ELEMENTS` —
+    /// every `Value::NDArray` in existence was itself built through
+    /// `array_ndarray`/`array_checked_shape_size` — so their sum cannot
+    /// overflow `usize` before this check runs.)
+    pub fn array_catenate(lhs: &Value, rhs: &Value) -> Value {
+        let a = array_coerce(lhs);
+        let b = array_coerce(rhs);
+        array_checked_shape_size(&[a.data.len() + b.data.len()]);
+        let ra = a.shape.len();
+        let rb = b.shape.len();
+        match (ra, rb) {
+            (0, 0) => array_ndarray(vec![2], vec![a.data[0], b.data[0]]),
+            (0, 1) => {
+                let mut out = vec![0.0f64; 1 + b.data.len()];
+                out[0] = a.data[0];
+                out[1..].copy_from_slice(&b.data);
+                let n = out.len();
+                array_ndarray(vec![n], out)
+            }
+            (1, 0) => {
+                let mut out = a.data.clone();
+                out.push(b.data[0]);
+                let n = out.len();
+                array_ndarray(vec![n], out)
+            }
+            (1, 1) => {
+                let mut out = a.data.clone();
+                out.extend_from_slice(&b.data);
+                let n = out.len();
+                array_ndarray(vec![n], out)
+            }
+            (2, 2) => {
+                let r = array_nrows(&a);
+                if r != array_nrows(&b) {
+                    array_raise(format!(
+                        "array_catenate: matrix catenate needs equal row counts ({} vs {})",
+                        r,
+                        array_nrows(&b)
+                    ));
+                }
+                let ca = array_ncols(&a);
+                let cb = array_ncols(&b);
+                let out_len = array_checked_shape_size(&[r, ca + cb]);
+                let mut data = vec![0.0f64; out_len];
+                for row in 0..r {
+                    for col in 0..ca {
+                        data[col * r + row] = a.data[col * r + row]; // column-major
+                    }
+                    for col in 0..cb {
+                        data[(ca + col) * r + row] = b.data[col * r + row]; // column-major
+                    }
+                }
+                array_ndarray(vec![r, ca + cb], data)
+            }
+            _ => array_raise(format!(
+                "array_catenate: catenate of rank {} and rank {} is not yet supported",
+                ra, rb
             )),
         }
     }

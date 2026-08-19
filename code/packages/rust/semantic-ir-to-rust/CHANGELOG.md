@@ -1,5 +1,129 @@
 # Changelog
 
+## 0.43.0 — SIR22 "APL addendum" (Phase A Slice 3, second-wave backend rollout)
+
+Implements the 9-node SIR22 "APL addendum" this backend deferred in Slice 2:
+`Expr::Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+`IndexOf`/`Ravel`/`Catenate`. Shares `Feature::{NDArrays, MatrixOps,
+ArrayColumnMajor}` with the base cut (`ArrayLit`/`Range`/`MatMul`/
+`ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet`) already shipped —
+all 16 SIR22 node kinds are now real codegen for this backend, and the
+dedicated `reject_sir22_addendum` pre-emit scan Slice 2 added specifically
+to reject these nine cleanly (since the shared feature flags alone could
+not distinguish them from the safe base cut) is **removed**: real codegen
+makes it dead code. Part of the SIR22/SIR23 second-wave backend-expansion
+initiative — one of 5 parallel, independent backend PRs for this slice.
+
+**Runtime port** (`runtime.rs`, new "SIR22 addendum: APL primitive
+operators" section, inserted right after the base cut's `array_index_set`):
+a 1:1 port of `semantic-ir-to-javascript`'s already-proven `reduce`/`scan`/
+`outer`/`flattenRowMajor`/`shape`/`reshape`/`indexGenerator`/`indexOf`/
+`ravel`/`catenate`, reusing this backend's existing `array_coerce`/
+`array_apply_op`/`array_checked_shape_size`/`array_ndarray`/`array_nrows`/
+`array_ncols`/`array_is_scalar` helpers from the base cut rather than
+duplicating any of that logic. New functions: `array_reduce`/`array_scan`/
+`array_outer`/`array_flatten_row_major` (an internal helper, not itself
+one of the nine node-backing functions — `array_reshape`/`array_ravel` both
+need it)/`array_shape`/`array_reshape`/`array_index_generator`/
+`array_index_of`/`array_ravel`/`array_catenate`.
+
+**Three subtleties ported exactly, each independently capable of producing
+a silently-wrong-but-plausible answer if gotten wrong** (all three are
+covered by dedicated test cases below, not just described in prose):
+
+- `array_reduce`/`array_scan` on a rank-2 (matrix) target fold EACH ROW
+  independently, not the whole matrix and not each column. Column-major
+  storage means element `(row, col)` lives at `col * r + row` — swapping
+  `row`/`col` in that indexing silently transposes the result instead of
+  raising, which the runtime doc comment calls "the single easiest place
+  to introduce a wrong-answer bug" in the whole addendum.
+- `array_reshape` cyclically repeats/truncates `target`'s RAVELED (row-
+  major) elements to fill the new shape, but this domain's storage is
+  COLUMN-major — so a rank-2 target must TRANSPOSE the row-major-filled
+  sequence into column-major storage before construction
+  (`data[col * r + row] = filled[row * c + col]`). Handing the row-major
+  sequence straight to the constructor produces a wrong answer with the
+  right multiset of values in the wrong positions — the kind of bug a
+  membership-only test would miss entirely.
+- `array_index_generator` (APL `⍳n`) and `array_index_of` (dyadic `⍳`) are
+  both **1-based** (`[1, 2, …, n]`; "not found" is `haystack.len() + 1`,
+  never `-1`), unlike every 0-based index elsewhere in this domain
+  (`array_index_get`/`array_index_set`) — a deliberate, documented
+  exception matching APL's own surface-syntax meaning, not a bug. Note:
+  the `Expr::IndexGenerator` doc comment in `semantic-ir`'s `nodes.rs`
+  currently describes this as 0-based — that doc comment is *stale*
+  relative to `apl_runtime::builtins::index_generator`'s own ground-truth
+  behaviour and tests (`index_generator_produces_one_based_run`), which
+  every backend implementing this addendum (JS reference included)
+  actually follows. This PR does not fix that stale doc comment (out of
+  this backend-only slice's scope — it lives in the shared `semantic-ir`
+  crate other backends also depend on) but flags it explicitly in
+  `array_index_generator`'s own doc comment so the next reader isn't
+  misled by it.
+
+**Security discipline**: every function validates its output size via
+`array_checked_shape_size` (the base cut's existing `checked_mul`-based,
+overflow-safe validator) BEFORE allocating — `array_outer`'s `[m, n]`
+output, `array_index_of`'s `haystack.len() * needle.len()` product,
+`array_catenate`'s combined length, `array_index_generator`'s `n`,
+`array_reshape`'s target size — each of these could otherwise let a
+compiled program exhaust memory from two individually-small-looking
+operands (e.g. a script that repeatedly catenates a value with itself,
+`A = [A, A]`, doubles the size every line with no other ceiling). Reuses
+`ARRAY_MAX_ELEMENTS` (defined for the base cut) as the one array-size cap
+for this whole domain, rather than introducing a second, competing bound.
+
+**Emitter** (`emit.rs`): 9 new `Expr` arms, replacing the panic-on-reach
+placeholder Slice 2 left for these nodes ("SIR22 addendum ... — same
+deferral rationale"). `Reduce`/`Scan`/`OuterProduct` reuse
+`elementwise_op_rs_name` exactly like `ElementwiseOp` does (they carry an
+`op: ElementwiseOpKind` field); the remaining six have no `op` field and
+just recurse into their operand(s), matching the JS reference's own
+`emit.rs` call shapes 1:1 (including `Reshape`'s `shape, target` field/
+argument order, which — unlike `Range`'s `start, step, stop` vs.
+`array_range`'s `start, stop, step` — does NOT get reordered at the call
+site). `collect_expr_assigned` (used to pre-declare `let mut` locals) now
+recurses into these nine nodes' real sub-expressions instead of the
+previous "rejected before emit, nothing reachable" no-op — this is the
+`collect_*_assigned` helper-recursion gap Slice 2's own summary flagged as
+a recurring risk class for this crate (the same gap Slice 2 itself had to
+fix for the base cut, relative to an even earlier no-op baseline); this
+slice closes it for the addendum the same way, before it could ever miss a
+nested `Assign` inside a `Reduce`/`Reshape`/etc. operand.
+
+**Removed**: `lib.rs`'s `reject_sir22_addendum` function, its call site in
+`compile`, and the now-unused `Visitor`/`walk_expr_default` imports it was
+the only user of — confirmed unused via a full-crate grep before removal.
+
+**Tests**: `tests/sir22_array.rs` gains 12 new tests (20 total in the
+file). Neither the JS nor the Ruby backend has addendum execution tests
+yet at this repo's current HEAD (both still reject these nine nodes), so
+these are new, hand-derived from `apl_runtime::builtins`'s own ground-truth
+tests and this PR's own runtime doc comments — not ported from an existing
+suite. Covers: `reduce` on a vector AND a matrix (pins the row-independent-
+fold / column-major-indexing correctness called out above), `scan` on a
+vector, `outer` product of two vectors, `shape` of a scalar (an explicit,
+discriminating assertion that a wrong scalar-shaped implementation fails
+the test with a runtime "out of bounds" raise rather than silently passing
+— see the test's own comment for the full argument) and of a matrix,
+`reshape` with a non-square target (pins the row-major-fill-then-
+column-major-transpose correctness above; a wrong implementation produces
+a different, still-plausible-looking answer, not a crash), `indexGenerator`
+(1-based), `indexOf` found AND not-found (confirms `length + 1`, not `-1`),
+`ravel` of a matrix, and `catenate` of two vectors AND two matrices with
+equal row counts. New `vector1` test helper builds a genuine RANK-1 vector
+via `ArrayLit` + `Ravel` (`ArrayLit` alone always produces rank 2, even for
+a single row) — several addendum functions dispatch on rank, so a "vector"
+test must hand them something genuinely rank 1, not a 1-row rank-2 matrix
+that would silently exercise the wrong branch. All new tests run through
+the same real-`rustc` `run_array_program` helper the base-cut tests already
+use, skipping (not failing) when no `rustc`/usable linker is on the host.
+
+**Docs**: `README.md`'s `NDArrays`/`MatrixOps`/`ArrayColumnMajor` capability
+description updated — no longer describes the addendum as deferred/
+rejected; `lib.rs`'s `ACCEPTED_FEATURES` doc comment and `runtime.rs`'s
+"SIR22 array/matrix domain" module doc updated the same way.
+
 ## 0.42.0 — SIR22 array/matrix base cut (Phase A Slice 2, second-wave backend rollout)
 
 Opens this backend to `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}` and
