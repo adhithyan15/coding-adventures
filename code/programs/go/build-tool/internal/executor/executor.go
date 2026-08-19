@@ -113,35 +113,120 @@ func clippyGatedCommands(pkg discovery.Package, clippy bool) []string {
 //     crate's native platform its BUILD_windows resolves to unconditional cargo
 //     and the first shape applies.
 //
+// # Why every command is scanned, not just the first
+//
+// This function used to look at `buildCommands[0]` alone. That silently
+// disabled the whole clippy gate for any Rust package whose BUILD opens with a
+// *preamble* rather than with cargo — and plenty do:
+//
+//	set -e
+//	export CARGO_TARGET_X86_64_PC_WINDOWS_MSVC_LINKER=rust-lld
+//	cargo test --package coding-adventures-sql-planner
+//
+// (`#!/bin/sh` and `#`-comments are already stripped by the BUILD reader, but
+// `set -e`, `export …`, `cd …` and `echo "[pkg] Building…"` are not.) The first
+// line is `set -e`, which contains no `cargo `, so the old code returned
+// ("", false) and the package was never linted at all — on any platform, on
+// any CI leg. `coding-adventures-sql-planner` had a live
+// `clippy::manual_is_multiple_of` error sitting on main because of exactly
+// this. Scanning the *whole* command list closes that hole: a package is
+// linted iff its BUILD runs cargo anywhere.
+//
+// When both shapes appear, unconditional wins: if any command runs cargo
+// unguarded, the crate compiles on this platform, so the lint should not be
+// hidden behind some other command's platform guard.
+//
 // Returns (command, true) when a clippy step should run, or ("", false) when the
 // resolved BUILD does not compile the crate on this platform.
 func clippyStepFor(buildCommands []string) (string, bool) {
-	if len(buildCommands) == 0 {
-		return "", false
-	}
 	const clippy = "cargo clippy --all-targets -- -D warnings"
-	first := strings.TrimSpace(buildCommands[0])
 
-	// Platform-guarded: `if <cond>; then <body>; ...`. Reuse <cond> iff the
-	// guarded body actually runs cargo on the matching platform.
-	if strings.HasPrefix(first, "if ") {
-		if idx := strings.Index(first, "; then "); idx != -1 {
-			cond := first[len("if "):idx]
-			body := first[idx+len("; then "):]
-			if strings.Contains(body, "cargo ") {
-				return fmt.Sprintf("if %s; then %s; fi", cond, clippy), true
+	guarded := ""
+	for _, raw := range buildCommands {
+		command := strings.TrimSpace(raw)
+
+		// Platform-guarded: `if <cond>; then <body>; ...`. Reuse <cond> iff the
+		// guarded body actually runs cargo on the matching platform. Remember
+		// the first such guard but keep scanning — an unconditional cargo later
+		// in the list is the stronger signal.
+		if strings.HasPrefix(command, "if ") {
+			if idx := strings.Index(command, "; then "); idx != -1 && guarded == "" {
+				cond := command[len("if "):idx]
+				body := command[idx+len("; then "):]
+				if runsCargo(body) {
+					guarded = fmt.Sprintf("if %s; then %s; fi", cond, clippy)
+				}
 			}
+			continue
 		}
-		return "", false
+
+		// Unconditional cargo build/test: lint unconditionally.
+		if runsCargo(command) {
+			return clippy, true
+		}
 	}
 
-	// No cargo at all (e.g. a bare `echo SKIP`): nothing to lint here.
-	if !strings.Contains(first, "cargo ") {
-		return "", false
+	if guarded != "" {
+		return guarded, true
 	}
 
-	// Unconditional cargo build/test: lint unconditionally.
-	return clippy, true
+	// No cargo anywhere (e.g. a bare `echo SKIP`): nothing to lint here.
+	return "", false
+}
+
+// runsCargo reports whether a shell command actually *invokes* cargo, as
+// opposed to merely mentioning it.
+//
+// The distinction matters because several compile-only crates document their
+// manual build command inside an `echo`:
+//
+//	echo "font-parser-node: compile-only crate (requires Node.js dev headers)"
+//	echo "  To build: cargo build -p font-parser-node --release"
+//
+// A naive `strings.Contains(command, "cargo ")` sees the second line and
+// concludes the crate is built here — so it would attach a clippy step to a
+// package whose BUILD deliberately builds nothing. That is the mirror image of
+// the bug this function exists to prevent, and it would turn CI red for crates
+// that CI cannot even link.
+//
+// The rule: erase every single- and double-quoted span, then look for a bare
+// `cargo` word in what remains. Quoted text is data (an echo argument, a commit
+// message, a `--message-format` value); unquoted text is the command line.
+// This keeps the shapes that genuinely run cargo behind a prefix:
+//
+//	RUSTDOCFLAGS="-D warnings" cargo doc -p x --no-deps   → env assignment
+//	cd "$WORKSPACE" && cargo test --package y             → after `&&`
+//
+// Shell quoting is far richer than this (escapes, `$(…)`, heredocs), but BUILD
+// files in this repo are deliberately simple one-liners, and the failure mode
+// is symmetric and visible: a missed cargo means a missing lint step, which is
+// what the surrounding tests pin.
+func runsCargo(command string) bool {
+	var unquoted strings.Builder
+	quote := rune(0)
+	for _, r := range command {
+		switch {
+		case quote != 0:
+			if r == quote {
+				quote = 0
+			}
+		case r == '\'' || r == '"':
+			quote = r
+			// Keep a separator so `echo"cargo"` cannot fuse into a word.
+			unquoted.WriteByte(' ')
+		default:
+			unquoted.WriteRune(r)
+		}
+	}
+
+	for _, field := range strings.FieldsFunc(unquoted.String(), func(r rune) bool {
+		return r == ' ' || r == '\t' || r == ';' || r == '&' || r == '|' || r == '(' || r == ')'
+	}) {
+		if field == "cargo" {
+			return true
+		}
+	}
+	return false
 }
 
 // runCommands executes an explicit command list for a package sequentially,

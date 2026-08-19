@@ -4,7 +4,40 @@ All notable changes to the Go build tool will be documented in this file.
 
 ## [Unreleased]
 
+### Fixed
+
+- **`clippyStepFor` scanned only the first BUILD command, silently disabling
+  the clippy gate for every Rust package whose BUILD opens with a preamble.**
+  `#!/bin/sh` and `#` comments are stripped by the BUILD reader, but `set -e`,
+  `export VAR=...`, `cd ...` and `echo "[pkg] Building..."` are not — so a BUILD
+  like sql-codegen's (`set -e` / `export CARGO_TARGET_...` / `cargo test ...`)
+  presented `set -e` as command zero, matched no `cargo`, and got no clippy
+  step on any platform. 22 packages were uncovered this way, including
+  `coding-adventures-sql-planner`, which had a live `manual_is_multiple_of`
+  error sitting on `main`. The derivation now scans every command, and prefers
+  an unconditional cargo invocation over a platform-guarded one.
+- **`strings.Contains(cmd, "cargo ")` counted a mention as an invocation.**
+  Compile-only crates print the command they cannot run
+  (`echo "  To build: cargo build -p font-parser-node --release"`); scanning
+  every line would have attached a clippy step to packages whose BUILD
+  deliberately builds nothing. Detection now erases single- and double-quoted
+  spans before looking for a bare `cargo` word, so `RUSTDOCFLAGS="-D warnings"
+  cargo doc` and `cd "$WORKSPACE" && cargo test` still count while an `echo`
+  does not.
+
 ### Added
+
+- **Windows-only Rust crates are now linted, by a new CI step rather than by
+  this tool.** `paint-vm-direct2d` and `paint-vm-gdi` `compile_error!` off
+  Windows, so their default `BUILD` is a bare `echo SKIP` and the Linux/macOS
+  legs correctly emit no clippy step; their `BUILD_windows` never ran because
+  CI skips the build step on the Windows leg. The result was two crates linted
+  by nobody, one of which had accumulated 8 `-D warnings` errors that broke
+  clippy for every crate depending on it. `.github/workflows/ci.yml` gains a
+  `Clippy Windows-only Rust crates` step on the Windows leg, with the crate
+  list derived by grepping for the `#[cfg(not(target_os = "windows"))]
+  compile_error!` declaration itself, so a new Windows-only crate joins the
+  gate automatically.
 
 - **Reject BUILD commands that silently run less than they say.** A BUILD file
   is not a shell script: `discovery.readLines` splits it on newlines and the
