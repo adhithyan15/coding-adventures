@@ -933,6 +933,187 @@ fn invalid_v128_load_and_store_with_no_memory_at_all() {
 }
 
 #[test]
+fn valid_splat_family() {
+    // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
+    // "pop scalar, push v128" shape as the already-implemented
+    // i32x4.splat, just widening lane-width coverage. i64x2.splat is
+    // the FIRST splat that pops I64 rather than I32.
+    assert_valid(
+        r#"(module
+             (func (param i32) (result v128) (i8x16.splat (local.get 0)))
+             (func (param i32) (result v128) (i16x8.splat (local.get 0)))
+             (func (param i64) (result v128) (i64x2.splat (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_i64x2_splat_with_an_i32_operand() {
+    // i64x2.splat is the first splat whose popped operand type differs
+    // from i32 -- confirms the type checker actually enforces I64, not
+    // just accepting whatever scalar type is on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (i64x2.splat (local.get 0))))");
+}
+
+#[test]
+fn valid_float_splat_family() {
+    // SIMD widen PR17: f32x4.splat/f64x2.splat -- the FIRST
+    // floating-point-typed SIMD ops in this crate's type rules. Same
+    // "pop scalar, push v128" shape as every prior splat, just popping
+    // F32/F64 instead of I32/I64.
+    assert_valid(
+        r#"(module
+             (func (param f32) (result v128) (f32x4.splat (local.get 0)))
+             (func (param f64) (result v128) (f64x2.splat (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_splat_with_an_i32_operand() {
+    // Confirms the type checker actually enforces F32, not just
+    // accepting whatever scalar type is on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.splat (local.get 0))))");
+}
+
+#[test]
+fn valid_i8x16_swizzle_pops_two_v128_pushes_v128() {
+    // SIMD widen PR18: i8x16.swizzle -- same pop-two-push-one v128 shape
+    // as every other binary SIMD op (i8x16.add/etc.), just an
+    // index-vector-driven permutation instead of an arithmetic/bitwise
+    // combine at the runtime level -- invisible to the type checker.
+    assert_valid("(module (func (param v128 v128) (result v128) (i8x16.swizzle (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i8x16_extract_lane_s_and_u_pop_v128_push_i32() {
+    // SIMD widen PR18: i8x16.extract_lane_s/_u -- same "pop v128 + lane
+    // immediate, push i32" shape as i32x4.extract_lane, just at i8x16's
+    // width (0-15 lane range, not enforced at the type level -- see
+    // wasm-execution's own runtime bounds check).
+    assert_valid(
+        r#"(module
+             (func (param v128) (result i32) (i8x16.extract_lane_s 0 (local.get 0)))
+             (func (param v128) (result i32) (i8x16.extract_lane_u 15 (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn valid_i8x16_replace_lane_pops_v128_and_i32_pushes_v128() {
+    // SIMD widen PR18: i8x16.replace_lane -- the genuinely new shape:
+    // lane-index immediate PLUS a mixed-type (v128, then i32) binary
+    // pop, producing a v128.
+    assert_valid("(module (func (param v128 i32) (result v128) (i8x16.replace_lane 7 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_replace_lane_given_a_v128_in_the_i32_slot() {
+    // Confirms the type checker actually enforces I32 in the value
+    // slot, not just accepting whatever's on the stack -- both operands
+    // here are v128, so the second pop (expecting I32) must reject it.
+    assert_invalid("(module (func (param v128 v128) (result v128) (i8x16.replace_lane 7 (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_f32x4_arith3_family() {
+    // SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min -- the FIRST
+    // genuine floating-point ARITHMETIC ops in this crate's type rules
+    // (PR17's float splats were pure bit-pattern broadcasts). `abs` is
+    // UNARY (pop one v128, push one); `mul`/`min` are BINARY (pop two,
+    // push one) -- same shapes as the existing integer arith families,
+    // just at f32x4's width. Their NaN/signed-zero runtime subtlety
+    // (see wasm-opcodes' `SimdOpKind::MinF32x4` doc comment) is entirely
+    // invisible to the type checker.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f32x4.abs (local.get 0)))
+             (func (param v128 v128) (result v128) (f32x4.mul (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.min (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_mul_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.mul (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i32x4_f32x4_conversion_family() {
+    // SIMD widen PR20 (task #177-179): i32x4.trunc_sat_f32x4_s/_u,
+    // f32x4.convert_i32x4_s/_u -- the FIRST i32x4<->f32x4 CONVERSION
+    // ops in this crate's type rules (a lane TYPE change, not just a
+    // value change within one lane type, unlike every prior f32x4
+    // addition). All 4 are UNARY at the type level (pop one v128, push
+    // one v128) -- WASM's type system doesn't distinguish "i32-lane
+    // v128" from "f32-lane v128", so this is the exact same shape as
+    // f32x4.abs above, even though the runtime semantics genuinely
+    // reinterpret the lane bytes as a different numeric type.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i32x4.trunc_sat_f32x4_s (local.get 0)))
+             (func (param v128) (result v128) (i32x4.trunc_sat_f32x4_u (local.get 0)))
+             (func (param v128) (result v128) (f32x4.convert_i32x4_s (local.get 0)))
+             (func (param v128) (result v128) (f32x4.convert_i32x4_u (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_convert_i32x4_u_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in the operand
+    // slot, not just accepting whatever's on the stack -- the operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.convert_i32x4_u (local.get 0))))");
+}
+
+#[test]
+fn valid_i64x2_from_i32x4_widening() {
+    // SIMD widen PR21 (task #180-182): extmul_low/high_i32x4_s/_u
+    // (v128,v128->v128, same shape as sub/mul/min/max) -- the third and
+    // final rung of this crate's "extmul" widening-multiply family,
+    // mirroring `valid_i32x4_from_i16x8_widening` one lane width up. No
+    // i64x2.dot_i32x4_s -- WASM SIMD does not define a dot-product for
+    // this pair, same as the i16x8-from-i8x16 rung. These read their
+    // operands as `i32x4` internally, but the TYPE CHECKER only sees
+    // plain `v128`s, same as every other SIMD op in this widening arc.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i64x2.extmul_low_i32x4_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.extmul_high_i32x4_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.extmul_low_i32x4_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i64x2.extmul_high_i32x4_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_i64x2_extmul_low_i32x4_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i64x2.extmul_low_i32x4_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn valid_i16x8_q15mulr_sat_s() {
+    // SIMD widen PR22 (task #183-185): i16x8.q15mulr_sat_s
+    // (v128,v128->v128, same shape as i16x8.add/sub/mul above) -- a Q15
+    // fixed-point rounding saturating multiply. The runtime formula
+    // (sign-extend to i32, add the 0x4000 rounding constant, shift right
+    // 15, clamp to i16 range) is entirely a runtime concern -- the type
+    // checker only ever sees plain `v128`s, same as every other SIMD
+    // binary op in this table.
+    assert_valid(r#"(module (func (param v128 v128) (result v128) (i16x8.q15mulr_sat_s (local.get 0) (local.get 1))))"#);
+}
+
+#[test]
+fn invalid_i16x8_q15mulr_sat_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.q15mulr_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

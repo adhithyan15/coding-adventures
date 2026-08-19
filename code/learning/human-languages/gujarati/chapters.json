@@ -18,8 +18,14 @@
         "lesson": "GU-C01-practice",
         "kind": "task",
         "summary": "Complete GU-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Gujarati, recognize the reply, and choose an appropriate response.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "GU-CONCEPT-C01-AABHAAR-01",
+          "GU-CONCEPT-C01-AAVJO-01",
+          "GU-CONCEPT-C01-HAANAA-01",
+          "GU-CONCEPT-C01-NAMASTE-01",
+          "GU-CONCEPT-C01-PRACTICE-01",
+          "GU-CONCEPT-C01-SAARUN-01"
+        ]
       }
     },
     {
@@ -34,8 +40,17 @@
         "lesson": "GU-C02-practice",
         "kind": "task",
         "summary": "Complete GU-C02-practice, the canonical closing checkpoint, and demonstrate the chapter promise: introduce myself in Gujarati, give my name, and understand the other person's name.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "GU-CONCEPT-C02-ANAND-01",
+          "GU-CONCEPT-C02-CHHE-01",
+          "GU-CONCEPT-C02-MAARUN-01",
+          "GU-CONCEPT-C02-MAARUNNAAMCHHE-01",
+          "GU-CONCEPT-C02-NAAM-01",
+          "GU-CONCEPT-C02-PRACTICE-01",
+          "GU-CONCEPT-C02-SHUN-01",
+          "GU-CONCEPT-C02-TAMARUNNAAMSHUNCHHE-01",
+          "GU-CONCEPT-C02-TUTAME-01"
+        ]
       }
     },
     {
@@ -52,8 +67,14 @@
         "lesson": "GU-C03-practice",
         "kind": "task",
         "summary": "Complete GU-C03-practice, the canonical closing checkpoint, and demonstrate the chapter promise: ask how someone is in Gujarati, answer naturally, and return the question.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "GU-CONCEPT-C03-HUN-01",
+          "GU-CONCEPT-C03-KEM-01",
+          "GU-CONCEPT-C03-MAJAA-01",
+          "GU-CONCEPT-C03-PRACTICE-01",
+          "GU-CONCEPT-C03-TAMEKEMCHHO-01",
+          "GU-CONCEPT-C03-VANDHONAHI-01"
+        ]
       }
     },
     {
@@ -68,8 +89,14 @@
         "lesson": "GU-C04-practice",
         "kind": "task",
         "summary": "Complete GU-C04-practice, the canonical closing checkpoint, and demonstrate the chapter promise: end a Gujarati conversation politely and choose a farewell that fits the situation.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "GU-CONCEPT-C01-AAVJO-01",
+          "GU-CONCEPT-C04-KAALE-01",
+          "GU-CONCEPT-C04-MALISHUN-01",
+          "GU-CONCEPT-C04-PACHHA-01",
+          "GU-CONCEPT-C04-PACHHAMALISHUN-01",
+          "GU-CONCEPT-C04-PRACTICE-01"
+        ]
       }
     },
     {
@@ -84,8 +111,14 @@
         "lesson": "GU-C05-practice",
         "kind": "task",
         "summary": "Complete GU-C05-practice, the canonical closing checkpoint, and demonstrate the chapter promise: build short present-tense Gujarati sentences with the chapter's first verbs.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "GU-CONCEPT-C03-HUN-01",
+          "GU-CONCEPT-C05-BOLVUN-01",
+          "GU-CONCEPT-C05-HUNGUJARATIBOLUNCHHUN-01",
+          "GU-CONCEPT-C05-KAAMKARVUN-01",
+          "GU-CONCEPT-C05-PRACTICE-01",
+          "GU-CONCEPT-C05-RAHEVUN-01"
+        ]
       }
     },
     {
@@ -129,9 +162,9 @@
           "GU-LEX-AAVVU",
           "GU-LEX-KHAAVU",
           "GU-LEX-JOVU",
-          "GU-LEX-JAANVU",
           "GU-GRAMMAR-VU-NEUTER-INFINITIVE",
           "GU-GRAMMAR-PRESENT-STEM-PERSON-COPULA",
+          "GU-LEX-JAANVU",
           "GU-ETYMON-JAANVU-KNOW"
         ]
       }
@@ -149,16 +182,16 @@
         "kind": "production",
         "summary": "Say હું મારું નામ લખું છું, run the chapter's four verbs back with the four things their roots meant — vichārvũ from a root meaning to range about, samajvũ from one meaning to wake, vā̃chvũ from one meaning to speak, lakhvũ from one meaning to scratch — place the medial nasal of vā̃ch- and the assimilate-then-simplify path from dhy to j, and say which of the four honestly has no English cousin at all.",
         "assesses": [
-          "GU-LEX-VICHARVU",
-          "GU-ETYMON-VICHAR-TURN",
-          "GU-LEX-SAMAJVU",
-          "GU-ETYMON-BUDH-AWAKE",
-          "GU-SOUND-DHY-JJH-J",
+          "GU-LEX-LAKHVU",
+          "GU-ETYMON-LIKH-SCRATCH",
           "GU-LEX-VANCHVU",
           "GU-ETYMON-VAC-VOICE",
           "GU-SCRIPT-ANUSVARA-MEDIAL",
-          "GU-LEX-LAKHVU",
-          "GU-ETYMON-LIKH-SCRATCH",
+          "GU-LEX-SAMAJVU",
+          "GU-ETYMON-BUDH-AWAKE",
+          "GU-SOUND-DHY-JJH-J",
+          "GU-LEX-VICHARVU",
+          "GU-ETYMON-VICHAR-TURN",
           "GU-LEX-KHAAVU",
           "GU-ETYMON-KHAAVU-NO-ENGLISH-COUSIN",
           "GU-ETYMON-JOVU-UNSETTLED",
@@ -182,16 +215,16 @@
         "kind": "production",
         "summary": "Say મને ગુજરાતી ગમે છે and hear that you are not its subject, set it against હું ગુજરાતી બોલું છું where you are, trace ગમવું back to gamyate — the passive of gam- 'to go', so the verb was born without a doer and is English come besides — and run the chapter's four verbs back with where each came from: Sanskrit prek- behind pūchhvũ, lebh- behind levũ, Arabic madad through Persian, and the feminine ending madad forces onto karvī.",
         "assesses": [
-          "GU-LEX-LEVU",
-          "GU-ETYMON-LABH-GAIN",
-          "GU-LEX-PUCHHVU",
-          "GU-ETYMON-PRACH-ASK",
-          "GU-LEX-MADAD-KARVI",
-          "GU-ETYMON-MADAD-ARABIC",
-          "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
           "GU-LEX-GAMVU",
           "GU-GRAMMAR-DATIVE-LIKING",
           "GU-ETYMON-GAM-GO",
+          "GU-LEX-MADAD-KARVI",
+          "GU-ETYMON-MADAD-ARABIC",
+          "GU-GRAMMAR-INFINITIVE-OBJECT-GENDER",
+          "GU-LEX-PUCHHVU",
+          "GU-ETYMON-PRACH-ASK",
+          "GU-LEX-LEVU",
+          "GU-ETYMON-LABH-GAIN",
           "GU-LEX-AAVVU",
           "GU-ETYMON-AAVVU-REACH",
           "GU-LEX-JAVU",

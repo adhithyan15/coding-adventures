@@ -30,6 +30,17 @@ pub enum ObjectKind {
     Commit,
     /// One exact device-signed VLT-PM15 operation-audit event.
     AuditEvent,
+    /// One attachment's metadata, key, and ordered chunk references.
+    ///
+    /// VLT-PM47 §4.3. The manifest is what makes an attachment cost the item
+    /// revision a fixed forty-eight bytes instead of growing with the file.
+    AttachmentManifest,
+    /// One VLT14 sealed attachment chunk.
+    ///
+    /// VLT-PM47 §4.2. The kind is bound into both associated-data strings, so
+    /// a chunk frame presented where a manifest is expected is an integrity
+    /// failure rather than a value that decodes into the wrong shape.
+    AttachmentChunk,
 }
 
 impl ObjectKind {
@@ -41,6 +52,8 @@ impl ObjectKind {
             Self::DeviceCertificate => 3,
             Self::Commit => 4,
             Self::AuditEvent => 5,
+            Self::AttachmentManifest => 6,
+            Self::AttachmentChunk => 7,
         }
     }
 }

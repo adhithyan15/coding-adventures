@@ -5,6 +5,36 @@ landed and why, not a semver-tracked API.
 
 ## Unreleased
 
+- `biology/consumer-trophic-level.adj` (new) — a `table` naming the three consumer trophic levels
+  an ecosystem's food chain runs on (primary, secondary, tertiary consumer) and what each one eats,
+  quoted verbatim from National Geographic Education's "Consumers" article (curl- and
+  WebFetch-verified against the raw page HTML, a new source never before cited in this stdlib):
+  `consumer_trophic_level(level, eats)`, primary_consumer → primary_producers, secondary_consumer →
+  primary_consumers, tertiary_consumer → other_carnivores. This is the SECOND instance of the
+  "ecosystems" Major Gap (ADJ-STDLIB-COVERAGE.md §5.1/§5.2), after `animal-habitat-definition.adj`,
+  and the first to ground it with a fresh source rather than composing two already-shipped tables —
+  a scoping pass across the three remaining single-instance K-8-science gaps (Earth-processes,
+  observation/measurement, ecosystems) checked composition first (a full-tree literal-atom census
+  restricted to each gap's relevant subject directories) and found every candidate pair either
+  already-disqualified as a trivial column-split of siblings sharing ONE citation (e.g.
+  `geology/fossil-preservation-subtype.adj` + `geology/fossil-preservation-type.adj`, and
+  `geology/rock-type-formation-component.adj` + `earth-science/metamorphism-cause.adj`, both pairs
+  decoding the SAME USGS/NPS sentence already used once), or too thin to generalize from (a single
+  matching row). Grounds NGSS MS-LS2-3/5-LS2-1 ("matter and energy... among living... parts of an
+  ecosystem") — the finer-grained "who eats whom" chain the already-shipped `food-chain-roles.adj`
+  (NOAA, producer/consumer/decomposer) has no room for in its own flat `consumer` row. Honest
+  abstention on `producer` and `decomposer` (the cited article's own structure keeps both OUTSIDE
+  the three consumer trophic levels — its decomposer paragraph opens "In addition to consumers...");
+  on `quaternary_consumer` (WebFetch-confirmed absent, two passes); and deliberately does NOT assert
+  a numbered trophic-level rank, since the cited article's own body text ("the second trophic
+  level") and its own embedded vocabulary glossary ("three" total positions, collapsing secondary
+  and tertiary into one shared "third") disagree with each other on the count — encoding only the
+  unambiguous "eats" relationship and abstaining on the level-number question entirely rather than
+  picking a side. `trust consensus` (National Geographic Education, the same tier
+  `animal-habitat-definition.adj`'s own `biome-type.adj` dependency already uses). New manifest
+  objective `adj.science.6to8.consumer_trophic_level` (recall, NGSS, band 6-8). New e2e test
+  `facts_consumertrophiclevel_e2e.rs` (3 tests: direct recall across all three levels, reverse
+  binding, honest abstention on `decomposer`).
 - `physics/energy-conversion-example.adj` (new) — a `table` naming four everyday processes and
   which form of energy goes IN and which comes OUT of each, grounding the U.S. EIA's own "law of
   conservation of energy" statement that energy is never created or destroyed, only changed from
@@ -91,6 +121,61 @@ landed and why, not a semver-tracked API.
   band since the derivation's ceiling is set by the more advanced source table). New e2e test
   `facts_animalhabitatdefinition_e2e.rs` (3 tests: derivation with dual citations, reverse binding,
   honest abstention).
+- `engineering/engineering-design-step.adj` (new) — a `table` naming the six-step engineering
+  design process (identify the problem, identify criteria and constraints, brainstorm possible
+  solutions, select a design, build/test/refine, share the design), quoted verbatim from a NASA
+  classroom worksheet PDF: `engineering_design_step(step, action)`. The first table in a new
+  `engineering/` subject directory, and the FIRST fresh-WebFetch slice into the "engineering
+  design" Major Gap (ADJ-STDLIB-COVERAGE.md §5.1/§5.2) after six prior cycles' exhaustive
+  causal-composition sweep found no composable pair anywhere in the stdlib for it (the existing
+  `physics/simple-machines.adj` family all decodes the SAME NASA sentence and shares no atom with
+  any independently-sourced second table; "engineering design" as an NGSS practice is the
+  repeatable PROCESS an engineer follows, not "name the six simple machines"). `trust
+  authoritative` (nasa.gov). New manifest objective `adj.science.6to8.engineering_design_step`.
+  New e2e test `facts_engineeringdesignstep_e2e.rs`.
+- `science/scientific-method-step.adj` (new) — a `table` naming the seven steps of the scientific
+  method (ask a question/state a hypothesis, define variables and controls, research, design the
+  experiment, run it and record data, analyze the data, draw conclusions and write a report),
+  quoted verbatim from NASA Space Place's student science-fair page:
+  `scientific_method_step(step, action)`. The first table in a new `science/` subject directory,
+  and grounds the "experiments" Major Gap, fully untouched through six prior causal-composition
+  cycles (a full-tree atom-overlap census found no table anywhere addressing the scientific
+  method, hypotheses, variables, or experimental design). Explicitly a DIFFERENT process from
+  `engineering-design-step.adj` (scientist testing an existing idea vs. engineer building
+  something new) — the two tables share zero atoms. `trust authoritative` (nasa.gov, spaceplace
+  subdomain). New manifest objective `adj.science.3to5.scientific_method_step`. New e2e test
+  `facts_scientificmethodstep_e2e.rs`.
+- `science/scientific-model-type.adj` (new) — a `table` naming three kinds of scientific model
+  (physical, conceptual, mathematical) and each one's one-sentence definition, quoted verbatim from
+  a K12 LibreTexts Earth Science chapter on "Scientific Models": `scientific_model_type(type,
+  definition)`. Closes the THIRD and last of the three K-8-science Major Gaps flagged as fully
+  untouched (alongside "experiments" and "engineering design") — two prior cycles flagged "models"
+  as harder to source than its siblings; this cycle tried and rejected three angles (a historical
+  atomic-model sequence from MIT OCW — presented as separate narrative paragraphs, not a unified
+  table; several NASA/NOAA/NIST "types of models" pages — dead links or no dedicated table; the
+  NGSS Framework Appendix F's own definitional sentence — a flat six-noun list with no
+  per-item definition) before landing on the K12 LibreTexts chapter, which gives each of three
+  model types (a fourth, "computer models," is described only as a special case of mathematical
+  models, not a fourth peer type) its own clean defining sentence. `trust consensus` (LibreTexts, a
+  curated open-education resource, not a primary standards body). New manifest objective
+  `adj.science.6to8.scientific_model_type`. New e2e test `facts_scientificmodeltype_e2e.rs`.
+- `biology/heredity-term.adj` (new) — a `table` naming seven core NGSS MS-LS3 heredity vocabulary
+  terms (gene, allele, dominant, recessive, genotype, phenotype, trait), each definition quoted
+  verbatim from NHGRI's (National Human Genome Research Institute, genome.gov) Talking Glossary of
+  Genomic and Genetic Terms: `heredity_term(term, definition)`. The FOURTH fresh-WebFetch slice
+  into this item, and the first to ground "heredity" via a genuinely new primary source rather than
+  the causal-composition rule-joining technique (two prior cycles had only ever checked, and
+  rejected, whether an already-shipped heredity table joins another on a literal key — `biology/
+  dna-base-pairs.adj` and `biology/cell-division-genetic-outcome.adj` each have no honest
+  composable second table). FIRST CANDIDATE REJECTED: the classic K-8 "dominant/recessive human
+  trait" worksheets (widow's peak, earlobe attachment, tongue rolling, dimples) — University of
+  Utah's Genetic Science Learning Center and a University of Delaware genetics-myths page each
+  independently confirm no published study supports single-gene Mendelian inheritance for any of
+  these classroom staples, so shipping it would have encoded a documented genetics-education myth
+  as fact. Shipped instead: NHGRI's own glossary, sidestepping the myth trap by grounding the
+  VOCABULARY a correct heredity claim is built from rather than a specific (and wrong)
+  trait-inheritance claim. `trust authoritative` (genome.gov). New manifest objective
+  `adj.science.6to8.heredity_term`. New e2e test `facts_heredityterm_e2e.rs`.
 
 - `chemistry/measuring-tool-si-unit.adj` (new) — a `rule` composing the already-shipped
   `measuring_tool(tool, quantity)` table (`chemistry/measuring-tools.adj`, Chemistry LibreTexts)

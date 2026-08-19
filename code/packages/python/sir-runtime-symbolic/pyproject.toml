@@ -1,0 +1,64 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "coding-adventures-sir-runtime-symbolic"
+version = "0.1.0"
+description = "SIR23 Tier A symbolic-expression + pattern/rewrite runtime for Semantic-IR-emitted Python -- term-tree constructors, the structural pattern matcher, and the depth/iteration-capped replace-all / replace-repeated rewrite operators"
+requires-python = ">=3.12"
+license = "MIT"
+authors = [{ name = "Adhithya Rajasekaran" }]
+readme = "README.md"
+keywords = ["sir", "semantic-ir", "runtime", "symbolic", "pattern-matching", "rewrite-rules", "cas", "compiler", "cross-language", "education"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Education",
+    "Topic :: Education",
+    "Topic :: Software Development :: Compilers",
+    "Programming Language :: Python :: 3.12",
+    "License :: OSI Approved :: MIT License",
+    "Typing :: Typed",
+]
+dependencies = [
+    "coding-adventures-symbolic-ir",
+    "coding-adventures-cas-pattern-matching",
+]
+
+[project.urls]
+Homepage = "https://github.com/adhithyan15/coding-adventures"
+Repository = "https://github.com/adhithyan15/coding-adventures"
+Documentation = "https://github.com/adhithyan15/coding-adventures/tree/main/code/specs/SIR23-symbolic-pattern-semantic-ir.md"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.4", "mypy>=1.10"]
+
+[tool.uv.sources]
+coding-adventures-symbolic-ir = { path = "../symbolic-ir", editable = true }
+coding-adventures-cas-pattern-matching = { path = "../cas-pattern-matching", editable = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/coding_adventures_sir_runtime_symbolic"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+strict = true
+python_version = "3.12"
+files = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=coding_adventures_sir_runtime_symbolic --cov-report=term-missing --cov-fail-under=95"
+
+[tool.coverage.run]
+source = ["src/coding_adventures_sir_runtime_symbolic"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true

@@ -1,5 +1,130 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.46 — 2026-08-19 — SIMD widen PR22: i16x8.q15mulr_sat_s text-form (task #183-185)
+
+### Added
+
+- `SimdOpKind::Q15mulrSatI16x8S` joins the shared "no immediate beyond
+  the opcode byte itself" SIMD dispatch arm (already used for
+  `AddI16x8`/`SubI16x8`/`MulI16x8`/`NegI16x8`) in both the folded and
+  flat instruction encoders -- verified byte-identical at both call
+  sites before using `replace_all`, per this campaign's own documented
+  past gotcha.
+- 1 new test confirming `i16x8.q15mulr_sat_s` encodes its real 2-byte
+  LEB128 sub-opcode (`0x82, 0x01`, `>= 128`) in both folded and flat
+  syntax.
+
+## 0.1.45 — 2026-08-19 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply text-form (task #180-182)
+
+### Added
+
+- `SimdOpKind::ExtmulLowI64x2S`/`ExtmulHighI64x2S`/`ExtmulLowI64x2U`/
+  `ExtmulHighI64x2U` join the shared "no immediate beyond the opcode
+  byte itself" SIMD dispatch arm (already used for
+  `ExtmulLowI16x8S`/etc.) in both the folded and flat instruction
+  encoders -- verified byte-identical at both call sites before using
+  `replace_all`, per this campaign's own documented past gotcha. The
+  third and final "extmul" rung's text-form support.
+- 1 new test covering all 4 new ops, confirming each encodes its real
+  2-byte LEB128 sub-opcode (`0xDC`/`0xDD`/`0xDE`/`0xDF`, all `>= 128`).
+
+## 0.1.44 — 2026-08-19 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert text-form (task #177-179)
+
+### Added
+
+- `SimdOpKind::TruncSatF32x4S`/`TruncSatF32x4U`/`ConvertI32x4S`/
+  `ConvertI32x4U` join the shared "no immediate beyond the opcode byte
+  itself" SIMD dispatch arm (already used for `f32x4.abs`/`mul`/`min`)
+  in both the folded and flat instruction encoders -- these change the
+  lane TYPE at the runtime/type-checker level, but that distinction is
+  invisible at this encoding shape, same as PR19's own additions.
+- 1 new test covering all 4 new ops (folded + flat), confirming each
+  encodes its real 2-byte LEB128 sub-opcode (`0xF8`/`0xF9`/`0xFA`/
+  `0xFB`, all `>= 128`).
+
+## 0.1.43 — 2026-08-19 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min text-form (task #174-176)
+
+### Added
+
+- `SimdOpKind::AbsF32x4`/`MulF32x4`/`MinF32x4` join the shared "no
+  immediate beyond the opcode byte itself" SIMD dispatch arm (already
+  used for `i8x16.add`/`Swizzle`/etc.) in both the folded and flat
+  instruction encoders -- the unary/binary distinction only matters at
+  the type-checker/runtime level, not at this encoding shape.
+- 1 new test covering all 3 new ops (folded + flat), confirming each
+  encodes its real 2-byte LEB128 sub-opcode (`0xE0`/`0xE6`/`0xE8`, all
+  `>= 128`) -- the first SIMD widen PR whose new opcodes all need the
+  genuine multi-byte LEB128 path rather than the single-byte
+  happy-path most of this table's opcodes take.
+
+## 0.1.42 — 2026-08-19 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane text-form (task #171-173)
+
+### Added
+
+- `SimdOpKind::Swizzle` joins the shared "no immediate beyond the
+  opcode byte itself" SIMD dispatch arm (already used for
+  `i8x16.add`/etc.) in both the folded and flat instruction encoders.
+- `SimdOpKind::ExtractLaneI8x16S`/`ExtractLaneI8x16U` join the
+  existing `ExtractLane` arm in both encoders -- same "lane index
+  leads in folded form (`(i8x16.extract_lane_s <lane> <v128-expr>)`),
+  trails in flat/stream form" shape as `i32x4.extract_lane`, just at
+  `i8x16`'s 0-15 lane range instead of `i32x4`'s 0-3.
+- New `SimdOpKind::ReplaceLaneI8x16` arm in both encoders: the
+  genuinely new shape at the runtime/type level (see `wasm-opcodes`'s
+  own CHANGELOG entry), but mechanically the SAME encoding call
+  `ExtractLane*` makes -- lane index leads/trails, `encode_instr_list`
+  handles the (now two, not one) trailing operand expressions in
+  source order regardless of count.
+- 3 new encoding tests: `i8x16.swizzle` (folded + flat, no immediate);
+  `i8x16.extract_lane_s`/`_u` (folded + flat, lane index leading/
+  trailing, covering both ends of the 0-15 range); `i8x16.replace_lane`
+  (folded + flat, confirming both operands encode in source order
+  around the trailing lane-index byte).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.41 — 2026-08-19 — SIMD: float splat family text-form (task #168-170)
+
+### Added
+
+- `SimdOpKind::SplatF32x4`/`SplatF64x2` join the shared "no immediate
+  beyond the opcode byte itself" SIMD dispatch arm in both the folded
+  and flat instruction encoders -- the mixed `f32`/`f64` operand
+  TYPES are invisible to this encoder (a type-checker concern -- see
+  `wasm-validator`), same as every prior SIMD op.
+- Dedicated encoding test proving the real single-byte LEB128 bytes
+  for both (`[0xFD, 0x13]`/`[0xFD, 0x14]`), in both folded and flat
+  form.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.40 — 2026-08-19 — SIMD: splat family text-form; NaN payload underscore fix (task #165-167)
+
+### Added
+
+- `SimdOpKind::SplatI8x16`/`SplatI16x8`/`SplatI64x2` join the shared
+  "no immediate beyond the opcode byte itself" SIMD dispatch arm
+  (already used for `i32x4.splat` and every other no-operand SIMD op)
+  in both the folded and flat instruction encoders. Name-to-op
+  resolution is fully generic (`get_simd_op_by_name`), so no separate
+  name-matching logic was needed.
+- Dedicated encoding test proving the real single-byte LEB128 bytes
+  for all three (`[0xFD, 0x0F]`/`[0xFD, 0x10]`/`[0xFD, 0x12]`), in
+  both folded and flat form.
+
+### Fixed
+
+- Real corpus bug found while vendoring `simd_splat.wast` (see
+  `wasm-conformance`'s own CHANGELOG): `nan:0x7f_ffff` (a `_` digit
+  separator inside a NaN payload literal) made the WHOLE script fail
+  to parse, since `parse_f32_bits`/`parse_f64_bits`'s `nan:0x<payload>`
+  arm called `from_str_radix` directly on the raw payload text instead
+  of routing it through `strip_underscores` first, unlike every other
+  numeric literal path in `numeric.rs`. 2 new regression tests confirm
+  underscored payloads now parse correctly for both `f32` and `f64`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.39 — 2026-08-18 — SIMD: v128.load/v128.store text-form (task #162-164)
 
 ### Added

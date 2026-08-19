@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_vault_import_csv"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM49 -- browser/LastPass-style CSV export adapter. Implements vault-import-export's (VLT15) Importer trait, decoding a header-keyed login CSV (Chrome, Edge, Firefox, LastPass, Bitwarden CSV) into PortableRecords for vault-pm's `import csv` ceremony."
+license = "MIT"
+
+[dependencies]
+coding_adventures_vault_import_export = { path = "../vault-import-export" }
+coding-adventures-csv-parser = { path = "../csv-parser" }
+coding_adventures_zeroize = { path = "../zeroize" }

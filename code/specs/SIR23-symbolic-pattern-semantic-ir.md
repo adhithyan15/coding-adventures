@@ -187,32 +187,62 @@ isn't SIR" boundary the native runtimes already draw.)
 
 ## Backend impact
 
-- **JS/TS**: new `match` arms construct/consume a tagged term-tree value at
-  runtime via `sir-runtime-symbolic` (`__SirSym.apply(head, args)`,
-  `__SirSym.replaceAll(expr, rules)`, `__SirSym.replaceRepeated(expr, rules,
-  cap)`), imported only when `Feature::SymbolicExpr`/`PatternMatching` is in
-  the manifest. Per this spec's own Addendum below, this is the **matcher
-  only** (Tier A) — `SymApply` compiles to a pure, inert term constructor;
-  no backend has an evaluator (Tier B) as of this writing.
-- **C/Go/Rust/Python/Ruby backends** — **second wave, planned**: the
-  original text here named only Rust/Go/Python as declining this domain
-  "in this first wave" — C and Ruby decline identically today but were
-  never actually named, an omission fixed here since all five behave the
-  same way. This is now a planned second wave, scoped explicitly
-  to **Tier A (the matcher) only** — the evaluator remains out of scope
-  for every backend, including JS/TS, and is its own later, per-backend
-  arc. **C/Go/Rust/Ruby** will port the matcher subset only of JS's
-  `Symbolic` IIFE (`matchPattern`/`substituteTerm`/`applyRuleTerm`/
-  `replaceAllTerm`/`replaceRepeatedTerm` — explicitly excluding
-  `evalTerm` and the environment/held-form/function-dispatch machinery)
-  into each backend's own runtime; **Python** will get a new
+- **JS**: new `match` arms construct/consume a tagged term-tree value at
+  runtime via an inlined `Symbolic` IIFE (`__Sir.Symbolic.apply(head,
+  args)`, `__Sir.Symbolic.replaceAll(expr, rules)`,
+  `__Sir.Symbolic.replaceRepeated(expr, rules, cap)`), gated on
+  `Feature::SymbolicExpr`/`PatternMatching`. This backend has since gone
+  beyond the matcher: per this spec's own Addendum below,
+  `Symbolic.evalTerm` gives JS a real Tier B evaluator too, making it the
+  only backend with both tiers as of this writing.
+- **TS**: new `match` arms construct/consume the same tagged term-tree
+  shape via the *imported* `sir-runtime-symbolic` package
+  (`__SirSym.apply`/`replaceAll`/`replaceRepeated`), imported only when
+  `Feature::SymbolicExpr`/`PatternMatching` is in the manifest. This
+  remains **matcher only** (Tier A) — `sir-runtime-symbolic` re-exports
+  no evaluator, so `SymApply` compiles to a pure, inert term constructor
+  here; Tier B for TS is still deferred (see the Addendum's own "Why
+  now" section).
+- **C/Go/Rust/Python/Ruby backends** — **done**: the original text here
+  named only Rust/Go/Python as declining this domain "in this first
+  wave" — C and Ruby declined identically at the time but were never
+  actually named. That second wave has since landed in full, scoped
+  exactly as planned to **Tier A (the matcher) only** — the evaluator
+  remains out of scope for these five backends (and for TS), and is its
+  own later, per-backend arc. **C/Go/Rust/Ruby** ported the matcher
+  subset only of JS's `Symbolic` IIFE (`matchPattern`/`substituteTerm`/
+  `applyRuleTerm`/`replaceAllTerm`/`replaceRepeatedTerm` — explicitly
+  excluding `evalTerm` and the environment/held-form/function-dispatch
+  machinery) into each backend's own runtime; **Python** got a new
   `code/packages/python/sir-runtime-symbolic` package ported from
-  `code/packages/typescript/sir-runtime-symbolic`, which per this spec's
-  own scope boundary already re-exports the matcher only — already
-  exactly Tier A, the ideal minimal port source. Each backend's
-  `SymReplaceAll` depth cap must be its own empirically-measured constant
-  (this spec's own CWE-674 methodology below) — JS's `512` does not
-  transfer to a different language's stack-frame cost.
+  `code/packages/typescript/sir-runtime-symbolic`, which per this
+  spec's own scope boundary already re-exported the matcher only —
+  already exactly Tier A, the ideal minimal port source. Each backend's
+  `SymReplaceAll` depth cap is its own empirically-measured constant
+  (this spec's own CWE-674 methodology below) — JS's `512` did not
+  transfer to any other language's stack-frame cost. Independent
+  security review of this rollout also surfaced a shared gap none of
+  the ports had originally caught: the depth cap covered only the
+  target-tree side of `replace_all`/`replace_repeated`, not the
+  rule-pattern (`lhs`/`rhs`) side — a `SymRule`'s operands are ordinary
+  `Expr`s that can reference a runtime-built term of unbounded depth via
+  a variable reference, not just author-written literals, so a rule
+  shaped `Blank() -> <deep RHS>` could still overflow the native stack
+  substituting into a shallow target. Every backend closes this, though
+  the mechanism differs by language: C/Go/Rust/Ruby thread a `depth`
+  parameter through their matcher/substitution functions; Python
+  validates every rule's `lhs`/`rhs` against the depth cap up front with
+  an iterative (non-recursive) pre-flight check before the target-tree
+  walk ever starts, so that checking a maliciously deep rule cannot
+  itself overflow the stack. Both approaches raise a typed depth-limit
+  error rather than truncating or overflowing silently.
+
+  All seven backends (JS, TS, C, Go, Rust, Python, Ruby) now declare
+  `SymbolicExpr`/`PatternMatching`/`Rationals` in `ACCEPTED_FEATURES`
+  and implement Tier A in full. Tier B (the `evalTerm`-style arithmetic/
+  calculus evaluator) exists only on JS; TS and the five second-wave
+  backends all still decline to evaluate — they construct and
+  pattern-match terms but never fold them.
 
 ## Versioning
 

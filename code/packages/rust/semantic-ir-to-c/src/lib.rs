@@ -221,6 +221,31 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // ── SIR23 Tier A pattern matcher (Phase A Slice 4, second-wave backend
+    // rollout) ─────────────────────────────────────────────────────────
+    // `Expr::SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll` route into the new
+    // `_sir_symterm_*` helpers appended to `runtime.rs`'s "SIR23 symbolic
+    // expressions" section — an inlined port of the already-proven
+    // `semantic-ir-to-javascript` `Symbolic` sub-runtime's Tier A (matcher)
+    // slice, following this crate's existing inlined-runtime convention
+    // (this backend always inlines, unlike the TS/Python imported-package
+    // model; mirrors the already-merged `semantic-ir-to-ruby` SIR23 PR's
+    // own inlined `sir_sym_*` port). Tier B (the `evalTerm` arithmetic/
+    // calculus/user-function evaluator) is explicitly OUT OF SCOPE for this
+    // slice — a `SymApply` builds an inert term tree, nothing more; no
+    // `Add`/`Sin`/`D`/… folding exists here.
+    //
+    // `Feature::Rationals` is new to this crate's `ACCEPTED_FEATURES` —
+    // neither the SIR22 base cut nor its APL addendum ever needed it (an
+    // NDArray element is always a `double`, never a `SirType::Rational`),
+    // so this is the first slice to declare it. It is shared with the
+    // SIR22 array/matrix domain rather than gated by a flag of its own,
+    // matching the JS backend's own identical doc note on this exact
+    // point.
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    Feature::Rationals,
 ];
 
 impl Backend for CBackend {

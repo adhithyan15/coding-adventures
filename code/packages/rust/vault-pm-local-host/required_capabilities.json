@@ -32,7 +32,19 @@
       "action": "call",
       "target": "libc descriptor-relative file APIs and Windows file/token/security APIs",
       "justification": "Uses no-follow handles, native identity and access-control inspection, atomic publication, durable synchronization, and platform file locking unavailable through path-only filesystem calls."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "system temporary directory (VLT-PM48 agent runtime root)",
+      "justification": "Resolves and verifies the owner-private directory the local agent's Unix domain socket is bound at, deriving its path from a hash of the data root rather than any caller-supplied value."
+    },
+    {
+      "category": "fs",
+      "action": "create",
+      "target": "system temporary directory (VLT-PM48 agent runtime root)",
+      "justification": "Creates the owner-private (0700) runtime directory on first use by `agent start` or an opportunistic client lookup, verifying owner and mode with the same no-follow discipline as every other private root, but without walking that directory's platform-owned ancestry (see PreparedLocalVault::ensure_runtime_root)."
     }
   ],
-  "justification": "Local CLI trust-boundary adapter for platform-standard paths, owner-private directories and configuration, and one-process-at-a-time vault access."
+  "justification": "Local CLI trust-boundary adapter for platform-standard paths, owner-private directories and configuration, one-process-at-a-time vault access, and (VLT-PM48) the short owner-private runtime directory the local agent's socket is resolved beneath."
 }

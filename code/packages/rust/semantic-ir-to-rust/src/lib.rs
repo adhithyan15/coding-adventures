@@ -230,6 +230,29 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // ── SIR23 symbolic-expression/pattern-matcher domain, Tier A (Phase A
+    // Slice 4) ─────────────────────────────────────────────────────────
+    // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll` route into
+    // `__sir::sir_sym_*` helpers, an inlined port of the already-proven
+    // `semantic-ir-to-javascript` `Symbolic` sub-runtime's Tier A (matcher)
+    // slice — see `runtime.rs`'s "SIR23 symbolic expressions" section for
+    // the full value-model / DoS-guard rationale, and `emit.rs`'s SIR23
+    // arms for the lowering. Tier A ONLY: no `evalTerm`-equivalent
+    // arithmetic/calculus/user-function-dispatch evaluator exists — a
+    // `SymApply` builds an inert term tree, nothing more (Tier B is
+    // explicitly out of scope for this slice, matching the SIR23 spec's
+    // own split).
+    //
+    // `Rationals` (a `SirType::Rational`) is NOT a new flag introduced by
+    // this slice — it already exists in `semantic_ir::Feature`, shared with
+    // the SIR22 array/matrix domain rather than owned by SIR23, matching
+    // the JS reference's own comment on the same point. `SymRational`
+    // observes it (see `semantic-ir`'s `validator.rs`), so it must be
+    // declared here too for a module using `SymRational` to validate.
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    Feature::Rationals,
 ];
 
 impl Backend for RustBackend {
