@@ -7,18 +7,18 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a64c9aa9e7e9ad5c",
+  "sourceHash": "fnv1a64:a2ebf99c36a068f4",
   "summary": {
-    "totalLessons": 3217,
-    "voice": 2290,
+    "totalLessons": 3252,
+    "voice": 2325,
     "sight": 589,
     "pen": 338,
-    "drivableLessons": 2290,
+    "drivableLessons": 2325,
     "drivablePercent": 71,
     "trackCount": 22,
-    "chapterCount": 968,
-    "drivablePrefixTotal": 2041,
-    "fullyDrivableChapters": 634,
+    "chapterCount": 975,
+    "drivablePrefixTotal": 2076,
+    "fullyDrivableChapters": 641,
     "unstartableChapters": 203,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
@@ -6061,12 +6061,12 @@
     },
     {
       "language": "malayalam",
-      "lessonCount": 212,
-      "voice": 147,
+      "lessonCount": 247,
+      "voice": 182,
       "sight": 41,
       "pen": 24,
-      "drivablePercent": 69,
-      "drivablePrefixTotal": 137,
+      "drivablePercent": 74,
+      "drivablePrefixTotal": 172,
       "modalities": [
         "voice",
         "sight",
@@ -7118,6 +7118,146 @@
             "ML-C59-mud",
             "ML-C59-smoke",
             "ML-C59-ember"
+          ]
+        },
+        {
+          "chapter": 60,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C60-cow",
+            "ML-C60-goat",
+            "ML-C60-hen",
+            "ML-C60-crow",
+            "ML-C60-elephant"
+          ]
+        },
+        {
+          "chapter": 61,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C61-coconut",
+            "ML-C61-oil",
+            "ML-C61-curd",
+            "ML-C61-jaggery",
+            "ML-C61-chilli"
+          ]
+        },
+        {
+          "chapter": 62,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C62-rope",
+            "ML-C62-thread",
+            "ML-C62-needle",
+            "ML-C62-broom",
+            "ML-C62-winnowing-tray"
+          ]
+        },
+        {
+          "chapter": 63,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C63-hunger",
+            "ML-C63-tiredness",
+            "ML-C63-pain",
+            "ML-C63-cough",
+            "ML-C63-fever"
+          ]
+        },
+        {
+          "chapter": 64,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C64-then",
+            "ML-C64-soon",
+            "ML-C64-sometimes",
+            "ML-C64-only",
+            "ML-C64-but"
+          ]
+        },
+        {
+          "chapter": 65,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C65-request",
+            "ML-C65-permission",
+            "ML-C65-consent",
+            "ML-C65-manners",
+            "ML-C65-trust"
+          ]
+        },
+        {
+          "chapter": 66,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "ML-C66-paddy",
+            "ML-C66-grass",
+            "ML-C66-ear-of-grain",
+            "ML-C66-plough",
+            "ML-C66-harvest"
           ]
         }
       ]
@@ -44927,6 +45067,636 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:565fec087415206a"
+    },
+    {
+      "id": "ML-C60-cow",
+      "language": "malayalam",
+      "chapter": 60,
+      "sequence": 1890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:57d6593df7c06c45"
+    },
+    {
+      "id": "ML-C60-goat",
+      "language": "malayalam",
+      "chapter": 60,
+      "sequence": 1900,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e1f346d81b1bd519"
+    },
+    {
+      "id": "ML-C60-hen",
+      "language": "malayalam",
+      "chapter": 60,
+      "sequence": 1910,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:92590b8023dfc72f"
+    },
+    {
+      "id": "ML-C60-crow",
+      "language": "malayalam",
+      "chapter": 60,
+      "sequence": 1920,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2aafc0debd45c539"
+    },
+    {
+      "id": "ML-C60-elephant",
+      "language": "malayalam",
+      "chapter": 60,
+      "sequence": 1930,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:741c3e6535400da2"
+    },
+    {
+      "id": "ML-C61-coconut",
+      "language": "malayalam",
+      "chapter": 61,
+      "sequence": 1940,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7a67a90271f58d96"
+    },
+    {
+      "id": "ML-C61-oil",
+      "language": "malayalam",
+      "chapter": 61,
+      "sequence": 1950,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:66d4a35e0677e696"
+    },
+    {
+      "id": "ML-C61-curd",
+      "language": "malayalam",
+      "chapter": 61,
+      "sequence": 1960,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d574bcf0c1acde1d"
+    },
+    {
+      "id": "ML-C61-jaggery",
+      "language": "malayalam",
+      "chapter": 61,
+      "sequence": 1970,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3b86ed085cb7874e"
+    },
+    {
+      "id": "ML-C61-chilli",
+      "language": "malayalam",
+      "chapter": 61,
+      "sequence": 1980,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:26175bda90358a81"
+    },
+    {
+      "id": "ML-C62-rope",
+      "language": "malayalam",
+      "chapter": 62,
+      "sequence": 1990,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1eb72d3243c7904a"
+    },
+    {
+      "id": "ML-C62-thread",
+      "language": "malayalam",
+      "chapter": 62,
+      "sequence": 2000,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9ecbf56f90687216"
+    },
+    {
+      "id": "ML-C62-needle",
+      "language": "malayalam",
+      "chapter": 62,
+      "sequence": 2010,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5332ecff7671bb45"
+    },
+    {
+      "id": "ML-C62-broom",
+      "language": "malayalam",
+      "chapter": 62,
+      "sequence": 2020,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0abcd5ced9bf3225"
+    },
+    {
+      "id": "ML-C62-winnowing-tray",
+      "language": "malayalam",
+      "chapter": 62,
+      "sequence": 2030,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2eccd1de9d3b473a"
+    },
+    {
+      "id": "ML-C63-hunger",
+      "language": "malayalam",
+      "chapter": 63,
+      "sequence": 2040,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fb260fe0789ec858"
+    },
+    {
+      "id": "ML-C63-tiredness",
+      "language": "malayalam",
+      "chapter": 63,
+      "sequence": 2050,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:97b8cfdfa619d0d6"
+    },
+    {
+      "id": "ML-C63-pain",
+      "language": "malayalam",
+      "chapter": 63,
+      "sequence": 2060,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0e3f8cffbb4dc7dc"
+    },
+    {
+      "id": "ML-C63-cough",
+      "language": "malayalam",
+      "chapter": 63,
+      "sequence": 2070,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:de2a193272609910"
+    },
+    {
+      "id": "ML-C63-fever",
+      "language": "malayalam",
+      "chapter": 63,
+      "sequence": 2080,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a1277a74f66e6f73"
+    },
+    {
+      "id": "ML-C64-then",
+      "language": "malayalam",
+      "chapter": 64,
+      "sequence": 2090,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:aaf632ea1dea77fa"
+    },
+    {
+      "id": "ML-C64-soon",
+      "language": "malayalam",
+      "chapter": 64,
+      "sequence": 2100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1edbf20ef4ecbb55"
+    },
+    {
+      "id": "ML-C64-sometimes",
+      "language": "malayalam",
+      "chapter": 64,
+      "sequence": 2110,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9581e87a46ea34c1"
+    },
+    {
+      "id": "ML-C64-only",
+      "language": "malayalam",
+      "chapter": 64,
+      "sequence": 2120,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a44aa23ea801ca16"
+    },
+    {
+      "id": "ML-C64-but",
+      "language": "malayalam",
+      "chapter": 64,
+      "sequence": 2130,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:54ef12595b4ea47b"
+    },
+    {
+      "id": "ML-C65-request",
+      "language": "malayalam",
+      "chapter": 65,
+      "sequence": 2140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2421b2f64f2a78dd"
+    },
+    {
+      "id": "ML-C65-permission",
+      "language": "malayalam",
+      "chapter": 65,
+      "sequence": 2150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:81531cf484416559"
+    },
+    {
+      "id": "ML-C65-consent",
+      "language": "malayalam",
+      "chapter": 65,
+      "sequence": 2160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cdba8f132834820f"
+    },
+    {
+      "id": "ML-C65-manners",
+      "language": "malayalam",
+      "chapter": 65,
+      "sequence": 2170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a322ab8518c206ac"
+    },
+    {
+      "id": "ML-C65-trust",
+      "language": "malayalam",
+      "chapter": 65,
+      "sequence": 2180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9b343f50b587c174"
+    },
+    {
+      "id": "ML-C66-paddy",
+      "language": "malayalam",
+      "chapter": 66,
+      "sequence": 2190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9798967a115815a5"
+    },
+    {
+      "id": "ML-C66-grass",
+      "language": "malayalam",
+      "chapter": 66,
+      "sequence": 2200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6c6c469c54ef4cff"
+    },
+    {
+      "id": "ML-C66-ear-of-grain",
+      "language": "malayalam",
+      "chapter": 66,
+      "sequence": 2210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a0eba34e130871ee"
+    },
+    {
+      "id": "ML-C66-plough",
+      "language": "malayalam",
+      "chapter": 66,
+      "sequence": 2220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9152bce5b8a73152"
+    },
+    {
+      "id": "ML-C66-harvest",
+      "language": "malayalam",
+      "chapter": 66,
+      "sequence": 2230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2a77f6745297efb1"
     },
     {
       "id": "MR-C01-baram",

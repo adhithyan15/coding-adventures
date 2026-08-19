@@ -3991,6 +3991,97 @@
       "tex": "malayalam/book/chapters/ch59-what-the-air-carries.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:dd1d6c896ddd02b4",
+      "lessonIds": [
+        "ML-C60-cow",
+        "ML-C60-goat",
+        "ML-C60-hen",
+        "ML-C60-crow",
+        "ML-C60-elephant"
+      ],
+      "tex": "malayalam/book/chapters/ch60-animals-around-a-house.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:b2a87db045213eb8",
+      "lessonIds": [
+        "ML-C61-coconut",
+        "ML-C61-oil",
+        "ML-C61-curd",
+        "ML-C61-jaggery",
+        "ML-C61-chilli"
+      ],
+      "tex": "malayalam/book/chapters/ch61-on-the-kitchen-shelf.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:c873ee0828d10d9b",
+      "lessonIds": [
+        "ML-C62-rope",
+        "ML-C62-thread",
+        "ML-C62-needle",
+        "ML-C62-broom",
+        "ML-C62-winnowing-tray"
+      ],
+      "tex": "malayalam/book/chapters/ch62-made-by-hand.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:6f9666b39c97a91f",
+      "lessonIds": [
+        "ML-C63-hunger",
+        "ML-C63-tiredness",
+        "ML-C63-pain",
+        "ML-C63-cough",
+        "ML-C63-fever"
+      ],
+      "tex": "malayalam/book/chapters/ch63-how-the-body-reports.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:d3377b6f9b153394",
+      "lessonIds": [
+        "ML-C64-then",
+        "ML-C64-soon",
+        "ML-C64-sometimes",
+        "ML-C64-only",
+        "ML-C64-but"
+      ],
+      "tex": "malayalam/book/chapters/ch64-five-words-that-join.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:cb0e67c932a36e31",
+      "lessonIds": [
+        "ML-C65-request",
+        "ML-C65-permission",
+        "ML-C65-consent",
+        "ML-C65-manners",
+        "ML-C65-trust"
+      ],
+      "tex": "malayalam/book/chapters/ch65-asking-well.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:287208dc84f9d747",
+      "lessonIds": [
+        "ML-C66-paddy",
+        "ML-C66-grass",
+        "ML-C66-ear-of-grain",
+        "ML-C66-plough",
+        "ML-C66-harvest"
+      ],
+      "tex": "malayalam/book/chapters/ch66-out-in-the-paddy.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:c4cd9fddda234365",
