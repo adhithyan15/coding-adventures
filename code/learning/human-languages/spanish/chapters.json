@@ -5735,6 +5735,153 @@
           "ES-LEX-C295-PATH-05"
         ]
       }
+    },
+    {
+      "chapter": 296,
+      "title": "Animals About the House --- Horse, Cow, Sheep, Hen, Donkey",
+      "label": "ch:animales",
+      "canDo": "I can name the horse, the cow, the sheep, the hen and the donkey in Spanish.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ES-C296-burro",
+        "kind": "production",
+        "summary": "Complete ES-C296-burro: name all five animals in order, and say which one English took back off Spanish.",
+        "assesses": [
+          "ES-LEX-C296-BEAST-01",
+          "ES-LEX-C296-BEAST-02",
+          "ES-LEX-C296-BEAST-03",
+          "ES-LEX-C296-BEAST-04",
+          "ES-LEX-C296-BEAST-05"
+        ]
+      }
+    },
+    {
+      "chapter": 297,
+      "title": "More of the Kitchen --- Pan, Oven, Fork, Garlic, Soup",
+      "label": "ch:la-cocina",
+      "canDo": "I can name the pan, the oven, the fork, the garlic and the soup in Spanish, and thank somebody for the meal.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ES-C297-sopa",
+        "kind": "production",
+        "summary": "Complete ES-C297-sopa: name all five of the kitchen in order and thank somebody for what came out of it.",
+        "assesses": [
+          "ES-LEX-C297-COOK-01",
+          "ES-LEX-C297-COOK-02",
+          "ES-LEX-C297-COOK-03",
+          "ES-LEX-C297-COOK-04",
+          "ES-LEX-C297-COOK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 298,
+      "title": "Five More Short Answers --- Maybe, Could Be, Indeed, No Doubt, Out of the Question",
+      "label": "ch:mas-respuestas",
+      "canDo": "I can answer someone in Spanish anywhere from maybe to out of the question, and say how strong each answer is.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ES-C298-ni-hablar",
+        "kind": "production",
+        "summary": "Complete ES-C298-ni-hablar: give all five answers in order, from the weakest to the flattest.",
+        "assesses": [
+          "ES-LEX-C298-ANSWER-01",
+          "ES-LEX-C298-ANSWER-02",
+          "ES-LEX-C298-ANSWER-03",
+          "ES-LEX-C298-ANSWER-04",
+          "ES-LEX-C298-ANSWER-05"
+        ]
+      }
+    },
+    {
+      "chapter": 299,
+      "title": "The Field and the Farm --- Field, Farm, Livestock, Harvest, Shepherd",
+      "label": "ch:la-granja",
+      "canDo": "I can name the field, the farm, the livestock, the harvest and the shepherd in Spanish, and say I am from the country.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ES-C299-pastor",
+        "kind": "production",
+        "summary": "Complete ES-C299-pastor: name all five of a holding in order, and say what three of them were named after.",
+        "assesses": [
+          "ES-LEX-C299-FARM-01",
+          "ES-LEX-C299-FARM-02",
+          "ES-LEX-C299-FARM-03",
+          "ES-LEX-C299-FARM-04",
+          "ES-LEX-C299-FARM-05"
+        ]
+      }
+    },
+    {
+      "chapter": 300,
+      "title": "What the Body Says --- Thirst, Sleep, Skin, Blood, Remedy",
+      "label": "ch:el-cuerpo-dice",
+      "canDo": "I can say in Spanish that I am thirsty or sleepy, name the skin and the blood, and say there is no remedy.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ES-C300-remedio",
+        "kind": "production",
+        "summary": "Complete ES-C300-remedio: name all five, and put three of them into a sentence with tengo or no hay.",
+        "assesses": [
+          "ES-LEX-C300-BODY-01",
+          "ES-LEX-C300-BODY-02",
+          "ES-LEX-C300-BODY-03",
+          "ES-LEX-C300-BODY-04",
+          "ES-LEX-C300-BODY-05"
+        ]
+      }
+    },
+    {
+      "chapter": 301,
+      "title": "Five More Things You Ask For --- Rope, Needle, Thread, Basket, Paper",
+      "label": "ch:mas-cosas-que-pedir",
+      "canDo": "I can ask for a rope, a needle, thread, a basket and paper in Spanish, politely.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ES-C301-papel",
+        "kind": "production",
+        "summary": "Complete ES-C301-papel: ask for all five in turn, with por favor on the end of each.",
+        "assesses": [
+          "ES-LEX-C301-ASK-01",
+          "ES-LEX-C301-ASK-02",
+          "ES-LEX-C301-ASK-03",
+          "ES-LEX-C301-ASK-04",
+          "ES-LEX-C301-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 302,
+      "title": "Out and Away --- Street, Corner, Footprint, Harbour, Lighthouse",
+      "label": "ch:calle-y-faro",
+      "canDo": "I can name the street, the corner, the footprint, the harbour and the lighthouse in Spanish.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ES-C302-faro",
+        "kind": "production",
+        "summary": "Complete ES-C302-faro: name all five of a leaving in order, from the street to the light behind you.",
+        "assesses": [
+          "ES-LEX-C302-AWAY-01",
+          "ES-LEX-C302-AWAY-02",
+          "ES-LEX-C302-AWAY-03",
+          "ES-LEX-C302-AWAY-04",
+          "ES-LEX-C302-AWAY-05"
+        ]
+      }
     }
   ]
 }
