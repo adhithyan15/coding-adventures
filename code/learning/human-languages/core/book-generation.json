@@ -3210,6 +3210,55 @@
       "scriptCommand": "sk"
     },
     {
+      "language": "sanskrit",
+      "chapter": 45,
+      "output": "sanskrit/book/chapters/ch45-times-of-the-day.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 46,
+      "output": "sanskrit/book/chapters/ch46-sun-and-shade.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 47,
+      "output": "sanskrit/book/chapters/ch47-parts-of-a-house.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 48,
+      "output": "sanskrit/book/chapters/ch48-more-animals.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 49,
+      "output": "sanskrit/book/chapters/ch49-small-answers.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 50,
+      "output": "sanskrit/book/chapters/ch50-sound-and-song.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 51,
+      "output": "sanskrit/book/chapters/ch51-more-of-the-family.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
       "language": "spanish",
       "chapter": 1,
       "output": "spanish/book/chapters/ch01-first-words.tex"
