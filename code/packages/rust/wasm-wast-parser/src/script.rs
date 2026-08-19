@@ -69,6 +69,37 @@ pub enum ConstValue {
     V128([u8; 16]),
 }
 
+/// One `f32` LANE of a `v128.const f32x4` literal used as an
+/// `assert_return` EXPECTED value (SIMD widen PR28) — either an exact bit
+/// pattern, or a NaN *class*, same `nan:canonical`/`nan:arithmetic`
+/// vocabulary as [`Expected::NanCanonicalF32`]/[`Expected::NanArithmeticF32`]
+/// already support for a whole scalar `f32` result. Needed because a
+/// `v128.const`'s existing [`ConstValue::V128`] representation is exact
+/// BYTES only — it has no way to say "this lane must be SOME NaN, exact
+/// payload unconstrained" the way the scalar `Expected` variants can for a
+/// single float. First needed by `simd_conversions.wast`'s
+/// `f64x2.promote_low_f32x4`/`f32x4.demote_f64x2_zero` NaN-payload
+/// directives: promoting/demoting a NaN can canonicalize its payload (see
+/// `wasm-execution`'s `SimdOpKind::DemoteF64x2Zero`/`PromoteLowF32x4` doc
+/// comments), so the upstream corpus itself expects a NaN *class* per
+/// lane, not an exact payload.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum F32LaneExpected {
+    Exact(u32),
+    NanCanonical,
+    NanArithmetic,
+}
+
+/// The `f64`-lane counterpart of [`F32LaneExpected`], used by
+/// `v128.const f64x2` expected values (SIMD widen PR28) -- same three
+/// cases, `f64` width.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum F64LaneExpected {
+    Exact(u64),
+    NanCanonical,
+    NanArithmetic,
+}
+
 /// One expected result slot in `assert_return` — either an exact value, or
 /// (float-only) a NaN *class*: any quiet or signaling NaN bit pattern
 /// satisfies `NanArithmetic`; only the canonical quiet-NaN bit pattern (or
@@ -82,6 +113,17 @@ pub enum Expected {
     NanArithmeticF32,
     NanCanonicalF64,
     NanArithmeticF64,
+    /// `(v128.const f32x4 lane0 lane1 lane2 lane3)` used as an
+    /// `assert_return` expected value where AT LEAST ONE lane is a NaN
+    /// class (`nan:canonical`/`nan:arithmetic`) rather than an exact
+    /// literal (SIMD widen PR28) -- see [`F32LaneExpected`]. A
+    /// `v128.const f32x4` with NO NaN-class lanes never reaches this
+    /// variant; it still parses to the plain, pre-existing
+    /// `Expected::Value(ConstValue::V128(_))` byte-exact path, unchanged.
+    V128F32x4([F32LaneExpected; 4]),
+    /// Same as [`Self::V128F32x4`], but for the 2-lane `f64x2` shape --
+    /// see [`F64LaneExpected`].
+    V128F64x2([F64LaneExpected; 2]),
     /// Bare `(ref.null)` with no heap-type keyword (WASM17) — matches the
     /// null reference of ANY reference type. Used by the real testsuite
     /// when the static result type is ambiguous at the script level (e.g.
@@ -319,6 +361,72 @@ fn parse_const_value(e: &SExpr) -> Result<ConstValue, WastParseError> {
     }
 }
 
+/// Does this `v128.const` lane token's text denote a NaN *class*
+/// (`nan:canonical`/`nan:arithmetic`), not an exact literal? A leading
+/// `-` sign is stripped first -- WAST allows `-nan:canonical` (the class
+/// check itself is sign-agnostic either way, see
+/// `wasm-conformance::value_matches_expected`'s existing scalar
+/// `NanCanonicalF32`/etc. arms), so `-nan:canonical`/`-nan:arithmetic`
+/// count as NaN-class tokens too, same as the unsigned spelling.
+fn lane_is_nan_class(text: &str) -> bool {
+    let stripped = text.strip_prefix('-').unwrap_or(text);
+    stripped == "nan:canonical" || stripped == "nan:arithmetic"
+}
+
+/// Parse one `f32x4` lane token to a [`F32LaneExpected`] -- an exact
+/// literal (reusing the same `parse_f32_bits` every other f32 literal in
+/// this crate goes through) unless it's a NaN-class token (SIMD widen
+/// PR28), which [`lane_is_nan_class`] already confirmed the caller only
+/// reaches for.
+fn parse_f32_lane_expected(text: &str, pos: usize) -> Result<F32LaneExpected, WastParseError> {
+    match text.strip_prefix('-').unwrap_or(text) {
+        "nan:canonical" => Ok(F32LaneExpected::NanCanonical),
+        "nan:arithmetic" => Ok(F32LaneExpected::NanArithmetic),
+        _ => Ok(F32LaneExpected::Exact(parse_f32_bits(text, pos)?)),
+    }
+}
+
+/// The `f64x2` counterpart of [`parse_f32_lane_expected`].
+fn parse_f64_lane_expected(text: &str, pos: usize) -> Result<F64LaneExpected, WastParseError> {
+    match text.strip_prefix('-').unwrap_or(text) {
+        "nan:canonical" => Ok(F64LaneExpected::NanCanonical),
+        "nan:arithmetic" => Ok(F64LaneExpected::NanArithmetic),
+        _ => Ok(F64LaneExpected::Exact(parse_f64_bits(text, pos)?)),
+    }
+}
+
+/// Parse a `v128.const f32x4`/`f64x2` expected value once
+/// [`parse_expected`]'s own match guard has already confirmed at least one
+/// lane is a NaN-class token -- `shape` is exactly `"f32x4"` or
+/// `"f64x2"`, guaranteed by that same guard.
+fn parse_v128_expected_lanes(shape: &str, lanes: &[SExpr], pos: usize) -> Result<Expected, WastParseError> {
+    match shape {
+        "f32x4" => {
+            if lanes.len() < 4 {
+                return Err(WastParseError::UnexpectedEof);
+            }
+            let mut out = [F32LaneExpected::Exact(0); 4];
+            for (slot, lane) in out.iter_mut().zip(&lanes[..4]) {
+                let text = lane.as_atom().ok_or(WastParseError::UnexpectedToken { pos, found: "".into(), expected: "a numeric literal" })?;
+                *slot = parse_f32_lane_expected(text, lane.pos())?;
+            }
+            Ok(Expected::V128F32x4(out))
+        }
+        "f64x2" => {
+            if lanes.len() < 2 {
+                return Err(WastParseError::UnexpectedEof);
+            }
+            let mut out = [F64LaneExpected::Exact(0); 2];
+            for (slot, lane) in out.iter_mut().zip(&lanes[..2]) {
+                let text = lane.as_atom().ok_or(WastParseError::UnexpectedToken { pos, found: "".into(), expected: "a numeric literal" })?;
+                *slot = parse_f64_lane_expected(text, lane.pos())?;
+            }
+            Ok(Expected::V128F64x2(out))
+        }
+        _ => unreachable!("shape already validated as f32x4/f64x2 by parse_expected's own match guard"),
+    }
+}
+
 fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
     let items = e.as_list().ok_or(WastParseError::UnexpectedToken { pos: e.pos(), found: "".into(), expected: "an expected result" })?;
     let kind = expect_get(items, 0)?.as_atom().unwrap_or("");
@@ -328,6 +436,17 @@ fn parse_expected(e: &SExpr) -> Result<Expected, WastParseError> {
         ("f32.const", Some("nan:arithmetic")) => Ok(Expected::NanArithmeticF32),
         ("f64.const", Some("nan:canonical")) => Ok(Expected::NanCanonicalF64),
         ("f64.const", Some("nan:arithmetic")) => Ok(Expected::NanArithmeticF64),
+        // `(v128.const f32x4/f64x2 lane0 ...)` where at least one lane is a
+        // NaN-class token (SIMD widen PR28) -- see [`Expected::V128F32x4`]/
+        // [`Expected::V128F64x2`]'s own doc comments for why this needs a
+        // dedicated per-lane representation instead of the plain
+        // byte-exact `ConstValue::V128` path every other v128.const
+        // (including f32x4/f64x2 ones with ONLY exact lanes) still uses.
+        ("v128.const", Some(shape @ ("f32x4" | "f64x2")))
+            if items.get(2..).unwrap_or(&[]).iter().any(|l| l.as_atom().is_some_and(lane_is_nan_class)) =>
+        {
+            parse_v128_expected_lanes(shape, items.get(2..).unwrap_or(&[]), e.pos())
+        }
         // Bare `(ref.null)` / `(ref.func)` (WASM17) -- wildcard expectations
         // only meaningful as an `assert_return` result, see [`Expected`]'s
         // own doc comments. `lit` is `None` here precisely because these
@@ -672,6 +791,67 @@ mod tests {
                     want[lane * 4..lane * 4 + 4].copy_from_slice(&5i32.to_le_bytes());
                 }
                 assert_eq!(*expected, vec![Expected::Value(ConstValue::V128(want))]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn v128_const_f32x4_with_nan_class_lanes_as_assert_return_expected_value() {
+        // SIMD widen PR28's own `simd_conversions.wast` shape (e.g.
+        // `f32x4.demote_f64x2_zero`'s NaN-payload directives): a
+        // `v128.const f32x4` expected value where SOME lanes are exact
+        // literals and OTHERS are NaN-class tokens -- something the
+        // plain byte-exact `ConstValue::V128` path can't represent at
+        // all (see `Expected::V128F32x4`'s own doc comment). Mixes
+        // `nan:canonical` and `nan:arithmetic` in the same literal to
+        // prove both tokens parse, alongside two ordinary exact-zero
+        // lanes to prove the exact/NaN-class lanes coexist correctly.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (v128.const f32x4 nan:canonical nan:arithmetic 0 0))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(
+                    *expected,
+                    vec![Expected::V128F32x4([
+                        F32LaneExpected::NanCanonical,
+                        F32LaneExpected::NanArithmetic,
+                        F32LaneExpected::Exact(0),
+                        F32LaneExpected::Exact(0),
+                    ])]
+                );
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn v128_const_f64x2_with_nan_class_lanes_as_assert_return_expected_value() {
+        // The `f64x2` counterpart, matching `f64x2.promote_low_f32x4`'s
+        // own NaN-payload directives in `simd_conversions.wast` -- both
+        // lanes are NaN-class here (no exact lane mixed in), since that's
+        // the real corpus's own shape for this particular op.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (v128.const f64x2 nan:canonical nan:arithmetic))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert_eq!(*expected, vec![Expected::V128F64x2([F64LaneExpected::NanCanonical, F64LaneExpected::NanArithmetic])]);
+            }
+            other => panic!("expected AssertReturn, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn v128_const_f32x4_with_no_nan_class_lanes_still_uses_the_plain_byte_exact_path() {
+        // A `v128.const f32x4` expected value with ONLY exact lanes must
+        // NOT be routed through the new `Expected::V128F32x4` machinery --
+        // confirms `parse_expected`'s match guard genuinely gates on "at
+        // least one NaN-class lane", not "shape is f32x4/f64x2", so every
+        // pre-existing exact-value v128 test (e.g.
+        // `v128_const_literal_as_assert_return_expected_value` above)
+        // keeps working unchanged.
+        let dirs = parse_script(r#"(assert_return (invoke "f") (v128.const f32x4 1.5 2.5 3.5 4.5))"#).unwrap();
+        match &dirs[0] {
+            Directive::AssertReturn { expected, .. } => {
+                assert!(matches!(expected[0], Expected::Value(ConstValue::V128(_))), "expected the plain byte-exact V128 path, got {:?}", expected[0]);
             }
             other => panic!("expected AssertReturn, got {other:?}"),
         }

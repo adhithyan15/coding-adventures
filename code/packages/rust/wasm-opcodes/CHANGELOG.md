@@ -2,6 +2,53 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.31] - 2026-08-19 - SIMD widen PR28: promote/demote/convert_low family (task #199-201)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `f32x4.demote_f64x2_zero` (`0x5E`),
+  `f64x2.promote_low_f32x4` (`0x5F`), `f64x2.convert_low_i32x4_s`
+  (`0xFE`), `f64x2.convert_low_i32x4_u` (`0xFF`) -- the
+  "promote/demote/convert_low" family, the THIRD and FINAL PR of a
+  3-PR sequence (PR26 "extend", 8 opcodes; PR27 "narrow", 4 opcodes;
+  this PR, 4 opcodes) needed to land all 16 opcodes the upstream
+  `simd_conversions.wast` corpus file's two modules bundle together.
+  154 SIMD opcodes total, up from 150. Each sub-opcode byte fetched
+  live from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against this table's own already-implemented neighbors: `0x5E`/
+  `0x5F` sit immediately past `v128.xor`'s (`0x51`)/`v128.bitselect`'s
+  (`0x52`) run with no collision; `0xFE`/`0xFF` sit immediately past
+  `i32x4.trunc_sat_f64x2_u_zero`'s `0xFD` (PR25) with no gap.
+- `SimdOpKind::DemoteF64x2Zero`/`PromoteLowF32x4`/`ConvertLowI32x4S`/
+  `ConvertLowI32x4U`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): all
+  UNARY (pop one `v128`, push one). `f32x4.demote_f64x2_zero` reads 2
+  `f64` lanes, demotes each to `f32` (plain IEEE-754 narrowing -- CAN
+  overflow to +/-infinity for out-of-range magnitudes, that's expected
+  behavior, not saturation), writes 4 `f32` lanes: 0-1 demoted, 2-3
+  ALWAYS zero (mirrors PR25's `trunc_sat_f64x2_*_zero` zero-fill
+  shape). `f64x2.promote_low_f32x4` reads 4 `f32` lanes but only uses
+  the LOW 2 (indices 0-1 are promoted, 2-3 are DROPPED, never read),
+  writes 2 `f64` lanes (exact, lossless widening). `f64x2.convert_low_
+  i32x4_s`/`_u` read 4 `i32` lanes, use only the LOW 2 (same
+  lane-DROPPING as `promote_low_f32x4`), convert each to `f64` (signed
+  or unsigned-bit-pattern interpretation), write 2 `f64` lanes -- the
+  reverse direction of PR25's `trunc_sat_f64x2_s/u_zero` (that went
+  `f64x2` -> `i32x4` with zero-padding; this goes `i32x4` -> `f64x2`
+  with lane-dropping).
+- **Campaign complete, corpus now vendored.** With this PR, all 16
+  opcodes across PR26/PR27/PR28 exist, so `wasm-conformance` now
+  vendors `simd_conversions.wast` for the first time -- 100% pass on
+  every directive (2/2 modules, 232/232 `assert_return`, 18/18
+  `assert_invalid`, 30/30 `assert_malformed`), zero `NotYetSupported`.
+  See `wasm-conformance`'s own CHANGELOG for the full grading detail,
+  including a real parser gap this vendoring surfaced and fixed
+  (`nan:canonical`/`nan:arithmetic` NaN-class lanes inside a
+  `v128.const f32x4`/`f64x2` expected value, previously unsupported).
+
 ## [0.2.30] - 2026-08-19 - SIMD widen PR27: narrow saturating family (task #196-198)
 
 ### Added

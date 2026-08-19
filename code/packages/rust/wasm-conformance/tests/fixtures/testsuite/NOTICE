@@ -83,7 +83,11 @@ Fetched:       2026-08-13 (initial slice, W05/PR3), extended 2026-08-14 (WASM08)
                extended 2026-08-19 (task #190-192 --
                simd_i32x4_trunc_sat_f64x2.wast, 2 new opcodes
                (i32x4.trunc_sat_f64x2_s_zero/_u_zero), same pinned
-               commit, no re-pin)
+               commit, no re-pin),
+               extended 2026-08-19 (task #199-201 -- simd_conversions.wast,
+               4 new opcodes (f32x4.demote_f64x2_zero/
+               f64x2.promote_low_f32x4/f64x2.convert_low_i32x4_s/_u), same
+               pinned commit, no re-pin -- see below)
 Fetch method:  code/packages/rust/wasm-conformance/tests/fixtures/fetch_testsuite.py
 
 The pinned commit was resolved via:
@@ -708,6 +712,50 @@ Aggregate `assert_return` rose from 24436/24453 to 24538/24555 (+102
 pass, +102 gradeable, exactly this file's own `assert_return` count);
 `assert_invalid` rose from 1724/1724 to 1728/1728 (+4, still 100.0% of
 gradeable directives); `module` pass count rose from 1169 to 1170 (+1).
+
+SIMD widen PR28 (task #199-201) implements `f32x4.demote_f64x2_zero`
+(`0x5E`), `f64x2.promote_low_f32x4` (`0x5F`), `f64x2.convert_low_i32x4_s`
+(`0xFE`), `f64x2.convert_low_i32x4_u` (`0xFF`) and vendors
+`simd_conversions.wast` -- the THIRD and FINAL PR of a 3-PR sequence (PR26
+"extend", 8 opcodes; PR27 "narrow", 4 opcodes; this PR, 4 opcodes) needed
+to land all 16 opcodes this file's two modules bundle together. Unlike
+every earlier SIMD file vendored above, `simd_conversions.wast` could NOT
+be partially vendored -- both modules export functions exercising opcodes
+from all three PRs at once, so PR26 and PR27 each left this file
+un-vendored (opcode-only, unit-test-verified in their own crates) until
+this PR's 4 new opcodes completed the set. `f32x4.demote_f64x2_zero`
+narrows 2 `f64` lanes to `f32` (plain IEEE-754 narrowing, can overflow to
++/-infinity, expected per-spec behavior not an error), writing 4 `f32`
+lanes with 2-3 always zero. `f64x2.promote_low_f32x4` widens the LOW 2 of
+4 `f32` lanes to `f64` (lanes 2-3 dropped, never read). `f64x2.convert_low_
+i32x4_s`/`_u` convert the LOW 2 of 4 `i32` lanes to `f64` (signed or
+unsigned-bit-pattern), same lane-dropping discipline -- the reverse
+direction of PR25's `trunc_sat_f64x2_s/u_zero` zero-padding family. Each
+sub-opcode byte fetched live from `BinarySIMD.md` and cross-checked
+against this crate's own already-implemented neighbors (`v128.xor`
+`0x51`/`v128.bitselect` `0x52` for `0x5E`/`0x5F`;
+`i32x4.trunc_sat_f64x2_u_zero` `0xFD` for `0xFE`/`0xFF`), no collisions.
+
+Vendoring this file surfaced a genuine parser gap, not just an opcode
+gap: two of its directives use `(v128.const f64x2 nan:canonical
+nan:canonical)` as an EXPECTED value -- NaN-CLASS tokens inside individual
+v128 lanes, which `wasm-wast-parser` had never needed to represent before
+(only whole-scalar `f32.const`/`f64.const` NaN classes existed). Without
+a fix this was a hard SCRIPT PARSE FAILURE blocking ALL 280 of this
+file's directives, not a handful of NotYetSupported edge cases. Fixed by
+adding a new `Expected::V128F32x4`/`V128F64x2` per-lane representation to
+`wasm-wast-parser` (gated so a `v128.const` with no NaN-class lanes still
+uses the pre-existing byte-exact path, unchanged) and matching grading
+logic in this crate's own `value_matches_expected`. Result: 100% pass on
+EVERY directive (2/2 modules, 232/232 assert_return, 18/18
+assert_invalid, 30/30 assert_malformed -- 280 total), zero
+NotYetSupported anywhere -- the first real integration test exercising
+opcodes from all three PRs (extend/narrow/promote-demote-convert_low)
+together in one corpus file. Aggregate `assert_return` rose from
+24538/24555 to 24770/24787 (+232, exactly this file's own count);
+`assert_invalid` rose from 1728/1728 to 1746/1746 (+18); `assert_malformed`
+rose from 277/277 to 307/307 (+30); `module` pass count rose from 1170 to
+1172 (+2). No other already-vendored file's stats changed.
 
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same

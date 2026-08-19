@@ -6309,6 +6309,112 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::DemoteF64x2Zero => {
+                // f32x4.demote_f64x2_zero (SIMD widen PR28): UNARY, pop
+                // one v128, read it as 2 `f64` lanes, demote each to
+                // `f32` via the exact same plain `as f32` cast the
+                // scalar f32.demote_f64 handler (0xB6, above) uses --
+                // NO special-cased saturation or NaN handling, mirroring
+                // that scalar handler precisely (see this op's
+                // `SimdOpKind` doc comment for why: Rust's `as` cast/
+                // LLVM's `fptrunc` canonicalizes NaN payloads and
+                // correctly overflows out-of-range magnitudes to
+                // +/-infinity per IEEE-754 -- not an error, not a
+                // saturating clamp like the `trunc_sat` family above).
+                // Push one v128 with 4 f32 lanes: lanes 0-1 hold the two
+                // demoted results (same order as the source f64 lanes),
+                // lanes 2-3 are ALWAYS zero -- the "_zero" in this op's
+                // name, same zero-fill discipline as
+                // TruncSatF64x2SZero/UZero above.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f64::from_le_bytes(bytes[i * 8..i * 8 + 8].try_into().unwrap());
+                    let out = v as f32;
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+                // Lanes 2-3 stay zero: `result` was zero-initialized above
+                // and only indices 0..4 and 4..8 (lanes 0-1) were written.
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::PromoteLowF32x4 => {
+                // f64x2.promote_low_f32x4 (SIMD widen PR28): UNARY, pop
+                // one v128, read it as 4 `f32` lanes, take only the LOW
+                // 2 lanes (indices 0-1) -- lanes 2-3 are DROPPED, never
+                // read at all (the opposite discipline from
+                // DemoteF64x2Zero's zero-FILL: this is lane-DROPPING,
+                // since promoting from 4 input lanes to 2 output lanes
+                // can't invent extra output lanes to zero-fill). Each
+                // low-half lane is promoted to `f64` via the exact same
+                // plain `as f64` cast the scalar f64.promote_f32 handler
+                // (0xBB, above) uses -- exact, lossless IEEE-754 widening
+                // for every finite value; same NaN-payload-
+                // canonicalization caveat as DemoteF64x2Zero. Push one
+                // v128 with 2 f64 lanes holding the two promoted
+                // results, in the same order as the source low-half f32
+                // lanes.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = f32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = v as f64;
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                // Lanes 2-3 of the SOURCE (bytes[8..16]) are simply never
+                // read above -- lane-dropping, not lane-zeroing.
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ConvertLowI32x4S | SimdOpKind::ConvertLowI32x4U => {
+                // f64x2.convert_low_i32x4_s/_u (SIMD widen PR28): UNARY,
+                // pop one v128, read it as 4 `i32` lanes, take only the
+                // LOW 2 lanes (indices 0-1, same lane-DROPPING discipline
+                // as PromoteLowF32x4 -- lanes 2-3 are never read into the
+                // result). Convert each low-half lane to `f64`: signed
+                // for `_s` (`v as f64`), or -- for `_u` -- reinterpret the
+                // lane's bit pattern as `u32` BEFORE the f64 conversion
+                // (`(v as u32) as f64`), same signed/unsigned split as
+                // ConvertI32x4S/U above (a lane with the high bit set,
+                // e.g. bit pattern 0xFFFFFFFF / -1 as i32, must convert
+                // to 4294967295.0f64 / u32::MAX, NOT -1.0f64). Both
+                // conversions are exact and lossless: every i32/u32 value
+                // fits precisely in f64's 52-bit mantissa, so unlike the
+                // float-source conversions above there's no rounding or
+                // NaN case to consider at all. Push one v128 with 2 f64
+                // lanes holding the two converted results, in the same
+                // order as the source low-half i32 lanes. This is the
+                // reverse direction of TruncSatF64x2SZero/UZero (that
+                // went f64x2 -> i32x4 with zero-PADDING; this goes
+                // i32x4 -> f64x2 with lane-DROPPING).
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let mut result = [0u8; 16];
+                for i in 0..2 {
+                    let v = i32::from_le_bytes(bytes[i * 4..i * 4 + 4].try_into().unwrap());
+                    let out = match op.kind {
+                        SimdOpKind::ConvertLowI32x4S => v as f64,
+                        SimdOpKind::ConvertLowI32x4U => (v as u32) as f64,
+                        _ => unreachable!("only ConvertLowI32x4S/U reach this arm"),
+                    };
+                    result[i * 8..i * 8 + 8].copy_from_slice(&out.to_le_bytes());
+                }
+                // Lanes 2-3 of the SOURCE (bytes[8..16]) are simply never
+                // read above -- lane-dropping, not lane-zeroing.
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
         }
 
         vm.advance_pc();
@@ -9269,6 +9375,20 @@ mod tests {
             bytes.extend_from_slice(&lane.to_le_bytes());
         }
         bytes
+    }
+
+    /// Decode a [`V128Bytes`] result back into its 2 `f64` lanes,
+    /// little-endian -- the `f64x2` counterpart of [`f32x4_lanes`],
+    /// needed by SIMD widen PR28's `f64x2.promote_low_f32x4`/
+    /// `f64x2.convert_low_i32x4_s`/`_u` tests below, since those ops
+    /// WRITE 2 `f64` lanes (unlike `trunc_sat_f64x2_*_zero` above,
+    /// which only READS `f64x2` as its source operand).
+    fn f64x2_lanes(bytes: V128Bytes) -> [f64; 2] {
+        let mut lanes = [0.0f64; 2];
+        for (i, lane) in lanes.iter_mut().enumerate() {
+            *lane = f64::from_le_bytes(bytes.0[i * 8..i * 8 + 8].try_into().unwrap());
+        }
+        lanes
     }
 
     /// `v128.const` + `i32x4.extract_lane` round-trip: proves the const
@@ -14760,5 +14880,209 @@ mod tests {
         assert_eq!(&bytes[12..16], &0i32.to_le_bytes(), "lane 3 must always be zero");
         assert_eq!(&bytes[0..4], &42i32.to_le_bytes(), "lane 0 must hold the truncated first f64 lane");
         assert_eq!(&bytes[4..8], &(-17i32).to_le_bytes(), "lane 1 must hold the truncated second f64 lane");
+    }
+
+    // ── f32x4.demote_f64x2_zero / f64x2.promote_low_f32x4 /
+    //    f64x2.convert_low_i32x4_s/_u (SIMD widen PR28, task #199-201) ──────
+
+    /// Build the code for `f32x4.demote_f64x2_zero` (sub-opcode `0x5E`,
+    /// a SINGLE-byte LEB128 value since `0x5E < 128` -- unlike the
+    /// `>= 128` sub-opcodes above (`0xFA`-`0xFF`), no `0x01`
+    /// continuation byte follows it) applied to a single
+    /// `v128.const f64x2` operand.
+    fn demote_f64x2_zero_code(lanes: [f64; 2]) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f64x2(lanes));
+        code.extend([0xFD, 0x5E]);
+        code.push(0x0B);
+        code
+    }
+
+    /// Build the code for `f64x2.promote_low_f32x4` (sub-opcode `0x5F`,
+    /// same single-byte LEB128 shape as [`demote_f64x2_zero_code`]
+    /// above) applied to a single `v128.const f32x4` operand.
+    fn promote_low_f32x4_code(lanes: [f32; 4]) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_f32x4(lanes));
+        code.extend([0xFD, 0x5F]);
+        code.push(0x0B);
+        code
+    }
+
+    /// Build the code for `f64x2.convert_low_i32x4_s`/`_u` (sub-opcodes
+    /// `0xFE`/`0xFF`, TWO-byte LEB128 like `trunc_sat_f64x2_*_zero`/
+    /// `convert_i32x4_*` above since they're `>= 128`) applied to a
+    /// single `v128.const i32x4` operand.
+    fn convert_low_i32x4_code(lanes: [i32; 4], sub_opcode: u8) -> Vec<u8> {
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes(lanes));
+        code.extend([0xFD, sub_opcode, 0x01]); // LEB128: [sub_opcode, 0x01] since 0xFE/0xFF >= 128
+        code.push(0x0B);
+        code
+    }
+
+    /// `f32x4.demote_f64x2_zero`: ordinary in-range values demote into
+    /// lanes 0-1, and lanes 2-3 are always zero -- the "_zero" half of
+    /// this op's semantics, proven independently of any overflow edge
+    /// case, same shape as `trunc_sat_f64x2_s_zero`'s own ordinary-value
+    /// test above.
+    #[test]
+    fn f32x4_demote_f64x2_zero_ordinary_value_demotes_and_zero_fills_upper_lanes() {
+        let code = demote_f64x2_zero_code([3.5f64, -2.25f64]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(
+            out,
+            [3.5f32, -2.25f32, 0.0f32, 0.0f32],
+            "demote_f64x2_zero must demote lanes 0-1 to f32 and zero-fill lanes 2-3"
+        );
+    }
+
+    /// `f32x4.demote_f64x2_zero`: a NaN lane demotes to a NaN (not zero,
+    /// not a trap, not saturation -- demote is a plain IEEE-754 float
+    /// narrowing, NOT part of the `trunc_sat` saturating family above).
+    /// Can't assert an exact bit pattern (Rust's `as` cast/LLVM's
+    /// `fptrunc` is free to canonicalize the NaN payload -- see this
+    /// op's `SimdOpKind::DemoteF64x2Zero` doc comment), only that the
+    /// lane is still recognizably NaN.
+    #[test]
+    fn f32x4_demote_f64x2_zero_nan_lane_demotes_to_nan_not_zero() {
+        let code = demote_f64x2_zero_code([f64::NAN, 1.0f64]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert!(out[0].is_nan(), "demote_f64x2_zero must demote a NaN f64 lane to a NaN f32 lane, not zero");
+        assert_eq!(out[1], 1.0f32, "the other lane must demote normally");
+    }
+
+    /// `f32x4.demote_f64x2_zero`: a finite `f64` magnitude beyond
+    /// `f32::MAX` overflows to `f32::INFINITY` -- expected IEEE-754
+    /// narrowing behavior, NOT a saturating clamp (unlike the
+    /// `trunc_sat_f64x2_*_zero` family, which explicitly saturates) and
+    /// NOT a panic/trap.
+    #[test]
+    fn f32x4_demote_f64x2_zero_huge_positive_value_overflows_to_positive_infinity() {
+        let code = demote_f64x2_zero_code([1e300f64, 1e300f64]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], f32::INFINITY, "demote_f64x2_zero must overflow a huge positive f64 to f32::INFINITY, not saturate or panic");
+        assert_eq!(out[1], f32::INFINITY);
+    }
+
+    /// `f32x4.demote_f64x2_zero`: the negative-magnitude mirror of the
+    /// overflow-to-infinity test above -- a huge negative `f64` overflows
+    /// to `f32::NEG_INFINITY`.
+    #[test]
+    fn f32x4_demote_f64x2_zero_huge_negative_value_overflows_to_negative_infinity() {
+        let code = demote_f64x2_zero_code([-1e300f64, -1e300f64]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f32x4_lanes(results[0].unwrap());
+        assert_eq!(out[0], f32::NEG_INFINITY, "demote_f64x2_zero must overflow a huge negative f64 to f32::NEG_INFINITY, not saturate or panic");
+        assert_eq!(out[1], f32::NEG_INFINITY);
+    }
+
+    /// `f64x2.promote_low_f32x4`: ordinary values in the LOW 2 lanes
+    /// (indices 0-1) promote exactly to `f64`, lossless widening.
+    #[test]
+    fn f64x2_promote_low_f32x4_ordinary_value_promotes_losslessly() {
+        let code = promote_low_f32x4_code([1.5f32, -2.25f32, 999.0f32, -999.0f32]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [1.5f64, -2.25f64], "promote_low_f32x4 must promote lanes 0-1 losslessly to f64");
+    }
+
+    /// `f64x2.promote_low_f32x4`: THE lane-dropping test. Lanes 2-3 of
+    /// the source `f32x4` hold values wildly different from lanes 0-1 --
+    /// if the handler mistakenly read the HIGH half instead of the LOW
+    /// half (or averaged/mixed lanes together), this would produce a
+    /// visibly wrong result. Only lanes 0-1 may influence the output.
+    #[test]
+    fn f64x2_promote_low_f32x4_drops_high_lanes_not_reads_them() {
+        let code = promote_low_f32x4_code([7.0f32, -7.0f32, 12345.0f32, -12345.0f32]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(
+            out,
+            [7.0f64, -7.0f64],
+            "promote_low_f32x4 must use ONLY the low 2 source lanes (0-1), dropping lanes 2-3 entirely"
+        );
+    }
+
+    /// `f64x2.promote_low_f32x4`: a NaN in the low half promotes to a
+    /// NaN (widening f32->f64 is exact/lossless for every OTHER value,
+    /// but NaN payload canonicization is still LLVM's call, same caveat
+    /// as `demote_f64x2_zero` above) -- must not become zero or trap.
+    #[test]
+    fn f64x2_promote_low_f32x4_nan_lane_promotes_to_nan() {
+        let code = promote_low_f32x4_code([f32::NAN, 2.0f32, 0.0f32, 0.0f32]);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert!(out[0].is_nan(), "promote_low_f32x4 must promote a NaN f32 lane to a NaN f64 lane, not zero");
+        assert_eq!(out[1], 2.0f64);
+    }
+
+    /// `f64x2.convert_low_i32x4_s`: ordinary positive and negative
+    /// signed `i32` lanes in the LOW half convert exactly and losslessly
+    /// to `f64` (every i32 fits exactly in f64's 52-bit mantissa).
+    #[test]
+    fn f64x2_convert_low_i32x4_s_converts_positive_and_negative_values() {
+        let code = convert_low_i32x4_code([42, -42, 999999, -999999], 0xFE);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [42.0f64, -42.0f64], "convert_low_i32x4_s must convert the low 2 signed i32 lanes to f64 directly");
+    }
+
+    /// `f64x2.convert_low_i32x4_s`: THE lane-dropping test for the
+    /// signed conversion -- lanes 2-3 hold values that would produce an
+    /// obviously wrong result if mistakenly read instead of lanes 0-1.
+    #[test]
+    fn f64x2_convert_low_i32x4_s_drops_high_lanes_not_reads_them() {
+        let code = convert_low_i32x4_code([5, -5, i32::MAX, i32::MIN], 0xFE);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(
+            out,
+            [5.0f64, -5.0f64],
+            "convert_low_i32x4_s must use ONLY the low 2 source lanes (0-1), dropping lanes 2-3 entirely"
+        );
+    }
+
+    /// `f64x2.convert_low_i32x4_u`: THE MOST IMPORTANT test for the
+    /// unsigned conversion, same bug class as
+    /// `f32x4_convert_i32x4_u_high_bit_set_lane_converts_as_unsigned_not_sign_extended`
+    /// above. A low-half lane with the high bit set -- bit pattern
+    /// `0xFFFFFFFF`, `-1` as SIGNED `i32` -- must convert to
+    /// `4294967295.0f64` (`u32::MAX`), NOT `-1.0f64`.
+    #[test]
+    fn f64x2_convert_low_i32x4_u_high_bit_set_lane_converts_as_unsigned_not_sign_extended() {
+        let code = convert_low_i32x4_code([-1i32, -1i32, 0, 0], 0xFF);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(
+            out,
+            [4294967295.0f64, 4294967295.0f64],
+            "convert_low_i32x4_u must read the 0xFFFFFFFF bit pattern as u32::MAX (4294967295.0), NOT sign-extend it to -1.0 -- got {out:?}"
+        );
+    }
+
+    /// `f64x2.convert_low_i32x4_u`: an ordinary small positive value (no
+    /// high bit set) converts the same whether read as signed or
+    /// unsigned -- the normal, non-edge-case path.
+    #[test]
+    fn f64x2_convert_low_i32x4_u_ordinary_positive_value_converts_normally() {
+        let code = convert_low_i32x4_code([7, 100, 0, 65535], 0xFF);
+        let mut engine = simd_engine_returning_v128(code);
+        let (_, results) = engine.call_function_with_v128(0, &[]).unwrap();
+        let out = f64x2_lanes(results[0].unwrap());
+        assert_eq!(out, [7.0f64, 100.0f64], "convert_low_i32x4_u must convert the low 2 ordinary positive lanes normally");
     }
 }

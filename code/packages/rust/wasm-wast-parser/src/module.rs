@@ -1895,7 +1895,11 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::NarrowI16x8S
             | wasm_opcodes::SimdOpKind::NarrowI16x8U
             | wasm_opcodes::SimdOpKind::NarrowI32x4S
-            | wasm_opcodes::SimdOpKind::NarrowI32x4U => {
+            | wasm_opcodes::SimdOpKind::NarrowI32x4U
+            | wasm_opcodes::SimdOpKind::DemoteF64x2Zero
+            | wasm_opcodes::SimdOpKind::PromoteLowF32x4
+            | wasm_opcodes::SimdOpKind::ConvertLowI32x4S
+            | wasm_opcodes::SimdOpKind::ConvertLowI32x4U => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -1929,7 +1933,15 @@ fn encode_stream_instr(
                 // but still has this same no-immediate encoding shape as
                 // every other kind in this arm; the saturating clamp and
                 // operand-to-half ordering are entirely runtime concerns,
-                // invisible here.
+                // invisible here. `DemoteF64x2Zero`/`PromoteLowF32x4`/
+                // `ConvertLowI32x4S`/`_U` (SIMD widen PR28, the FINAL PR
+                // of this 16-opcode set) join too: all UNARY, same
+                // no-immediate shape -- the zero-fill vs. lane-dropping
+                // distinction between `DemoteF64x2Zero` (writes 4 lanes,
+                // 2 zeroed) and the other three (write exactly 2 lanes,
+                // reading only the source's low half and dropping the
+                // rest) is, once again, entirely a runtime concern,
+                // invisible at this encoding level.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2666,7 +2678,11 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::NarrowI16x8S
             | wasm_opcodes::SimdOpKind::NarrowI16x8U
             | wasm_opcodes::SimdOpKind::NarrowI32x4S
-            | wasm_opcodes::SimdOpKind::NarrowI32x4U => {
+            | wasm_opcodes::SimdOpKind::NarrowI32x4U
+            | wasm_opcodes::SimdOpKind::DemoteF64x2Zero
+            | wasm_opcodes::SimdOpKind::PromoteLowF32x4
+            | wasm_opcodes::SimdOpKind::ConvertLowI32x4S
+            | wasm_opcodes::SimdOpKind::ConvertLowI32x4U => {
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
@@ -2683,7 +2699,10 @@ fn encode_flat_instr(
                 // `NarrowI16x8S/_U`/`NarrowI32x4S/_U` (SIMD widen PR27)
                 // join too, same reasoning -- BINARY like `AddI8x16`
                 // (not UNARY like `ExtendLow/HighI8x16S/_U` just above),
-                // but still no immediate of its own.
+                // but still no immediate of its own. `DemoteF64x2Zero`/
+                // `PromoteLowF32x4`/`ConvertLowI32x4S`/`_U` (SIMD widen
+                // PR28, the final PR of this 16-opcode set) join too,
+                // same reasoning -- all UNARY, no immediate of their own.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5878,6 +5897,53 @@ mod tests {
         assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x66]), "missing i8x16.narrow_i16x8_u: {flat_code:?}");
         assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x85, 0x01]), "missing i16x8.narrow_i32x4_s: {flat_code:?}");
         assert!(flat_code.windows(3).any(|w| w == [0xFD, 0x86, 0x01]), "missing i16x8.narrow_i32x4_u: {flat_code:?}");
+    }
+
+    #[test]
+    fn simd_promote_demote_convert_low_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR28 (task #199-201): f32x4.demote_f64x2_zero
+        // (0x5E), f64x2.promote_low_f32x4 (0x5F), f64x2.convert_low_i32x4_s
+        // (0xFE), f64x2.convert_low_i32x4_u (0xFF) -- the final PR of the
+        // 16-opcode extend/narrow/promote-demote-convert_low set. 0x5E/
+        // 0x5F are both < 128, so each encodes as a single-byte LEB128
+        // (`[0xFD, sub_opcode]`); 0xFE/0xFF are both >= 128, so each
+        // encodes as a real 2-byte LEB128 sequence (`[0xFD, sub_opcode,
+        // 0x01]`). All four are UNARY (one v128 operand). Exercised in
+        // both folded and flat/stream form, same as this file's other
+        // SIMD-widen family tests.
+        let folded = parse_module(
+            r#"(module
+                 (func (param v128) (result v128) (f32x4.demote_f64x2_zero (local.get 0)))
+                 (func (param v128) (result v128) (f64x2.promote_low_f32x4 (local.get 0)))
+                 (func (param v128) (result v128) (f64x2.convert_low_i32x4_s (local.get 0)))
+                 (func (param v128) (result v128) (f64x2.convert_low_i32x4_u (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&folded, 0).windows(2).any(|w| w == [0xFD, 0x5E]), "f32x4.demote_f64x2_zero: {:?}", code_of(&folded, 0));
+        assert!(code_of(&folded, 1).windows(2).any(|w| w == [0xFD, 0x5F]), "f64x2.promote_low_f32x4: {:?}", code_of(&folded, 1));
+        assert!(code_of(&folded, 2).windows(3).any(|w| w == [0xFD, 0xFE, 0x01]), "f64x2.convert_low_i32x4_s: {:?}", code_of(&folded, 2));
+        assert!(code_of(&folded, 3).windows(3).any(|w| w == [0xFD, 0xFF, 0x01]), "f64x2.convert_low_i32x4_u: {:?}", code_of(&folded, 3));
+
+        let flat = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 local.get 0
+                 f32x4.demote_f64x2_zero
+                 drop
+                 local.get 0
+                 f64x2.promote_low_f32x4
+                 drop
+                 local.get 0
+                 f64x2.convert_low_i32x4_s
+                 drop
+                 local.get 0
+                 f64x2.convert_low_i32x4_u))"#,
+        )
+        .unwrap();
+        let flat_code = code_of(&flat, 0);
+        assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x5E]), "missing f32x4.demote_f64x2_zero: {flat_code:?}");
+        assert!(flat_code.windows(2).any(|w| w == [0xFD, 0x5F]), "missing f64x2.promote_low_f32x4: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xFE, 0x01]), "missing f64x2.convert_low_i32x4_s: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xFF, 0x01]), "missing f64x2.convert_low_i32x4_u: {flat_code:?}");
     }
 
     #[test]
