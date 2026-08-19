@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- **Added `read_external_import_source`** (`VLT-PM49-cli-external-import.md`),
+  the filesystem half of `vault-pm import bitwarden`/`import csv`. Same
+  exact-length-read shape as `read_attachment_source` and for the same
+  reason: a Bitwarden or browser-CSV export *is* the person's plaintext
+  secrets rather than an already-encrypted artifact, so the returned buffer
+  is `Zeroizing`, opens with `O_NONBLOCK | O_NOCTTY` on Unix, and never
+  reallocates mid-read. Reuses the existing `InvalidImportSource`/
+  `ImportReadFailed` error variants rather than adding new ones, since "the
+  import source was empty/not-a-file/over-bound/unreadable" is exactly what
+  those already mean.
+
 - **Added `read_attachment_source` and `write_attachment_export`**, the
   filesystem halves of `VLT-PM47-cli-attachments.md`. The read returns
   `Zeroizing` bytes because what it holds is the person's file rather than an

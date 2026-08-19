@@ -21,10 +21,17 @@ complete user-authored login/secure-note merges.
 `item reveal ITEM FIELD` adds explicitly confirmed, publish-before-release
 interactive access to one schema-specific current secret without returning the
 revision capability or complete document to CLI orchestration.
-`export FILE`, `import FILE`, `restore verify FILE`, and the
+`export FILE`, `import portable FILE`, `restore verify FILE`, and the
 composed `--vault TARGET restore FILE` add the encrypted recovery-artifact
 round trip, retryable independent verification, and a completed-and-verified
-ceremony. The executable is a thin caller of this package.
+ceremony. `import bitwarden FILE` and `import csv FILE`
+(`VLT-PM49-cli-external-import.md`) add two more, unencrypted, format
+adapters: each decodes a competing product's plaintext export and creates new
+items through the unmodified `item add` publication path, once per record,
+rather than the disaster-recovery ceremony `import portable` uses.
+`import kdbx FILE` parses but always fails closed with the `unsupported`
+class before opening its file — KDBX's own encrypted container format is
+explicitly deferred. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -285,16 +292,37 @@ writes and synchronizes the complete artifact, and returns only a path-free
 success line. A destination write failure occurs after artifact release and
 therefore does not rewrite the truthful successful access event.
 
-`import FILE` requires the configured target to be independently initialized,
-logically empty, and audit-enabled. After target unlock it reads one bounded
-regular artifact, collects its passphrase through the fixed hidden
-`Import passphrase:` prompt, authenticates and validates the complete snapshot
-without writes, and obtains the exact count-derived CSPRNG block. Host,
-artifact, and target failures publish a failed itemless `PortableImport`
-before their error; success re-identifies every item/candidate and publishes
-its event atomically with the new catalog. Output contains aggregate item and
-candidate counts only. A later list/show reopens the target through the
-ordinary audited redacted-read boundary.
+`import portable FILE` requires the configured target to be independently
+initialized, logically empty, and audit-enabled. After target unlock it reads
+one bounded regular artifact, collects its passphrase through the fixed
+hidden `Import passphrase:` prompt, authenticates and validates the complete
+snapshot without writes, and obtains the exact count-derived CSPRNG block.
+Host, artifact, and target failures publish a failed itemless
+`PortableImport` before their error; success re-identifies every
+item/candidate and publishes its event atomically with the new catalog.
+Output contains aggregate item and candidate counts only. A later list/show
+reopens the target through the ordinary audited redacted-read boundary.
+
+`import bitwarden FILE` and `import csv FILE`
+(`VLT-PM49-cli-external-import.md`) take a different shape entirely, because
+the source is a plaintext export from a different product rather than
+another vault-pm vault: no source passphrase, no empty-target requirement,
+and no shared item-identity space to merge or restore against. Each reads
+one bounded plaintext source through a new `Zeroizing`-returning host method
+(`read_external_import_source`), decodes it with a small adapter crate
+(`vault-import-bitwarden`, `vault-import-csv`) that has no vault-pm
+dependency at all, and maps each decoded record onto vault-pm's own typed
+records. Every mapped record is then created through the unmodified `item
+add` publication path, once per record — no new mutation or audit primitive
+was introduced — so it carries the exact same `ItemCreate` audit event and
+crash-resumable publication a manually typed item does. A record whose kind
+has no vault-pm equivalent (an SSH key, a Bitwarden identity) is *skipped*,
+counted, and never silently dropped. Output is
+`Import complete: created=C skipped=S failed=F` — aggregate counts only,
+never a title, username, URL, or secret. `import kdbx FILE` parses the same
+shape but always answers the closed `unsupported` exit class before opening
+its file: KDBX's own Argon2d/AES-or-ChaCha20 encrypted container is
+explicitly deferred (VLT-PM49 §8), not silently missing from the grammar.
 
 `restore verify FILE` is a separately retryable, no-mutation ceremony against
 the currently configured target. It reserves its trace/time/randomness before

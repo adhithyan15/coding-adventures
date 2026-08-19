@@ -19,6 +19,9 @@ coding_adventures_vault_pm_password_policy = { path = "../vault-pm-password-poli
 coding_adventures_vault_records = { path = "../vault-records" }
 coding_adventures_vault_pm_storage_storage_core = { path = "../vault-pm-storage-storage-core" }
 coding_adventures_zeroize = { path = "../zeroize" }
+coding_adventures_vault_import_export = { path = "../vault-import-export" }
+coding_adventures_vault_import_bitwarden = { path = "../vault-import-bitwarden" }
+coding_adventures_vault_import_csv = { path = "../vault-import-csv" }
 
 [features]
 # Test-only real-process crash injection (VLT-PM41). Only

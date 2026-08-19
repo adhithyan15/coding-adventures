@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Command surface gains `import portable|bitwarden|csv|kdbx FILE`
+  (`VLT-PM49-cli-external-import.md`), replacing the old bare
+  `import FILE`. Added `real_cli_imports_bitwarden_json_and_leaks_no_secret_
+  anywhere` to `tests/local_cli_e2e.rs`: a real Bitwarden JSON export on
+  disk, through the real `vault-pm` binary over a real pseudo-terminal,
+  becomes a real redacted item, and the fixture's plaintext password is
+  proven absent from stdout, `item list`, and every durable `audit list`
+  row — not merely absent from one of them. The same test proves
+  `import kdbx` fails closed against a nonexistent path exactly like it
+  would against a real one, i.e. without ever opening it.
+
 - Fixed the actual cause of PR #12042's "Build and test affected packages"
   step running 2h46m before its 150-minute job timeout fired, with the build
   tool's progress line frozen and zero log output for over two hours:

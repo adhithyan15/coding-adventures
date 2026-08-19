@@ -23,6 +23,9 @@ mod crash;
 /// the instrumentation out of a product binary; refusing to compile with it is.
 pub const CRASH_INJECTION_COMPILED: bool = cfg!(feature = "crash-injection");
 
+use coding_adventures_vault_import_bitwarden::BitwardenJsonImporter;
+use coding_adventures_vault_import_csv::CsvLoginImporter;
+use coding_adventures_vault_import_export::{Importer, PortableRecord, PortableRecordKind};
 use coding_adventures_vault_pm_application::{
     attachment_name_from_path, attachment_random_bytes, complete_generation_zero,
     open_portable_with_passphrase, portable_import_random_bytes, prepare_audited_generation_zero,
@@ -48,8 +51,9 @@ use coding_adventures_vault_pm_cli_host::clipboard::{
     copy_and_schedule_clear, read_clear_request_from_stdin, run_scheduled_clear, PlatformClipboard,
 };
 use coding_adventures_vault_pm_cli_host::{
-    read_attachment_source, read_portable_export, write_attachment_export, write_portable_export,
-    CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
+    read_attachment_source, read_external_import_source, read_portable_export,
+    write_attachment_export, write_portable_export, CliHostError, ControllingTerminal, OsEntropy,
+    SecretPrompt, TextPrompt,
 };
 use coding_adventures_vault_pm_config::{
     parse_config, render_config, ConfigName, CredentialRef, StorageConfigV1, StorageKind,
@@ -86,6 +90,11 @@ const PRODUCTION_KDF_ITERATIONS: u32 = 3;
 const PRODUCTION_KDF_LANES: u8 = 1;
 const ITEM_OPERATION_RANDOM_BYTES: usize = 32;
 const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
+/// Host-level ceiling for a `vault-pm import bitwarden|csv` source file
+/// (VLT-PM49 §4). Each adapter crate enforces its own, generally tighter,
+/// internal bound after this one; this is only the metadata/read-time
+/// ceiling before any format-specific decoding begins.
+const MAX_EXTERNAL_IMPORT_SOURCE_BYTES: usize = 64 * 1024 * 1024;
 
 /// The verb this binary re-executes itself with to perform a timed clear.
 ///
@@ -95,7 +104,7 @@ const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import portable FILE\n  vault-pm [--vault NAME] import bitwarden FILE\n  vault-pm [--vault NAME] import csv FILE\n  vault-pm [--vault NAME] import kdbx FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -364,6 +373,13 @@ pub trait CliHost {
 
     /// Collect the passphrase for an existing portable artifact without echo.
     fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
+
+    /// Read one explicit external-format import source (Bitwarden JSON,
+    /// CSV, ...) under the V1 size ceiling (VLT-PM49 §4).
+    ///
+    /// The buffer is `Zeroizing`: unlike a vault-pm portable artifact
+    /// (already ciphertext), this file *is* the person's plaintext secrets.
+    fn read_external_import_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError>;
 
     /// Fill the entire generation-zero randomness block.
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError>;
@@ -658,6 +674,11 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
+    fn read_external_import_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        read_external_import_source(source, MAX_EXTERNAL_IMPORT_SOURCE_BYTES)
+            .map_err(map_native_cli_host)
+    }
+
     fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
         read_attachment_source(source, MAX_ATTACHMENT_BYTES).map_err(map_native_cli_host)
     }
@@ -888,6 +909,22 @@ enum Command {
         destination: PathBuf,
     },
     PortableImport {
+        source: PathBuf,
+    },
+    /// Decode an unencrypted Bitwarden JSON export and create new items from
+    /// it (VLT-PM49).
+    ImportBitwarden {
+        source: PathBuf,
+    },
+    /// Decode a header-keyed browser/LastPass-style login CSV export and
+    /// create new items from it (VLT-PM49).
+    ImportCsv {
+        source: PathBuf,
+    },
+    /// Parses, but always fails closed with the `unsupported` exit class
+    /// before opening `source` (VLT-PM49 §8): KDBX's own encrypted-container
+    /// format is explicitly deferred, not silently missing from the grammar.
+    ImportKdbx {
         source: PathBuf,
     },
     PortableRestore {
@@ -1215,9 +1252,30 @@ fn parse_restore(arguments: &[String]) -> Result<Command, CliFailure> {
     }
 }
 
+/// Parse the `import` verb (VLT-PM49 §3).
+///
+/// V1 requires an explicit format keyword -- `portable`, `bitwarden`,
+/// `csv`, or `kdbx` -- rather than letting one format own the bare
+/// `import FILE` form VLT-PM18 originally specified. `kdbx` still parses
+/// (VLT-PM49 §8): the grammar names every format VLT-PM00 §14.4
+/// documents, and a format missing from `--help` with no explanation is
+/// worse than one that always answers `unsupported`.
 fn parse_import(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
-        [source] if !source.is_empty() => Ok(Command::PortableImport {
+        [format, source] if !source.is_empty() && format == "portable" => {
+            Ok(Command::PortableImport {
+                source: PathBuf::from(source),
+            })
+        }
+        [format, source] if !source.is_empty() && format == "bitwarden" => {
+            Ok(Command::ImportBitwarden {
+                source: PathBuf::from(source),
+            })
+        }
+        [format, source] if !source.is_empty() && format == "csv" => Ok(Command::ImportCsv {
+            source: PathBuf::from(source),
+        }),
+        [format, source] if !source.is_empty() && format == "kdbx" => Ok(Command::ImportKdbx {
             source: PathBuf::from(source),
         }),
         _ => Err(CliFailure::InvalidCommand),
@@ -1871,6 +1929,25 @@ fn dispatch(
         Command::PortableImport { source } => {
             portable_import(host, paths, writer, selected_vault, &source)
         }
+        Command::ImportBitwarden { source } => import_external(
+            host,
+            paths,
+            writer,
+            selected_vault,
+            &source,
+            &BitwardenJsonImporter,
+        ),
+        Command::ImportCsv { source } => import_external(
+            host,
+            paths,
+            writer,
+            selected_vault,
+            &source,
+            &CsvLoginImporter,
+        ),
+        // VLT-PM49 §8: always fails closed before opening `source`. KDBX's
+        // own encrypted-container format is explicitly deferred.
+        Command::ImportKdbx { source: _ } => Err(CliFailure::Unsupported),
         Command::PortableRestore { source } => {
             portable_restore(host, paths, writer, selected_vault, &source)
         }
@@ -3110,6 +3187,322 @@ fn parse_card_expiry_year(value: &str) -> Result<u16, CliFailure> {
     (year != 0)
         .then_some(year)
         .ok_or(CliFailure::InvalidCommand)
+}
+
+// === VLT-PM49: Bitwarden JSON / browser CSV external import ================
+
+/// Read, decode, and create vault-pm items from an external plaintext
+/// export (VLT-PM49). Each mapped record is created through the exact same
+/// audited `item add` publication path a person typing at the CLI uses,
+/// once per record -- see VLT-PM49 §4 for why this reuses that path rather
+/// than a new bulk-mutation primitive.
+fn import_external(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    source: &Path,
+    importer: &dyn Importer,
+) -> Result<CliOutput, CliFailure> {
+    // No vault is opened yet: a missing/oversize/malformed source is
+    // refused before any authentication prompt, and needs no audit event,
+    // because nothing vault-side has happened (VLT-PM49 §4 step 1-2).
+    let bytes = host.read_external_import_source(source).map_err(map_host)?;
+    let records = importer
+        .import(&bytes)
+        .map_err(|_| CliFailure::InvalidCommand)?;
+    drop(bytes);
+
+    let mut skipped: u64 = 0;
+    let mut failed: u64 = 0;
+    let mut to_create: Vec<(&'static str, AnyRecord)> = Vec::new();
+    for record in &records {
+        match map_portable_record(record) {
+            None => skipped += 1,
+            Some(outcomes) => {
+                for outcome in outcomes {
+                    match outcome {
+                        Ok(item) => to_create.push(item),
+                        Err(()) => failed += 1,
+                    }
+                }
+            }
+        }
+    }
+    drop(records);
+
+    // Nothing to create: report the outcome and open no vault at all. An
+    // import that creates nothing is not a mutation (VLT-PM49 §4 step 4).
+    if to_create.is_empty() {
+        return Ok(CliOutput::success(format!(
+            "Import complete: created=0 skipped={skipped} failed={failed}\n"
+        )));
+    }
+
+    let mut created: u64 = 0;
+    for (content_type, record) in to_create {
+        // Re-authenticates every iteration by construction: `add_item`
+        // consumes its session so a successful caller cannot keep using
+        // stale pins or catalog contents (VLT-PM49 §4.1). A failure here
+        // (e.g. locked) aborts the remaining import; whatever was already
+        // durably created stays created (VLT-PM49 §6).
+        let context = prepare_item_create(host, paths, writer, selected_vault)?;
+        match context.document(content_type, record) {
+            Ok(document) => match context.complete(document) {
+                Ok(_) => created += 1,
+                Err(_) => failed += 1,
+            },
+            Err(error) => {
+                // Publishes its own audited host-failure event, matching
+                // every interactive `item add` form's existing behavior on
+                // a document-construction failure.
+                let _ = context.fail(error);
+                failed += 1;
+            }
+        }
+    }
+
+    Ok(CliOutput::success(format!(
+        "Import complete: created={created} skipped={skipped} failed={failed}\n"
+    )))
+}
+
+/// Map one decoded external record onto zero, one, or two vault-pm records
+/// (VLT-PM49 §5). `None` means the record's kind has no vault-pm
+/// equivalent and is counted as *skipped*; `Some` carries one outcome per
+/// vault-pm item this record should become, each independently `Ok` (ready
+/// to create) or `Err` (mapping failed, counted as *failed*).
+fn map_portable_record(
+    record: &PortableRecord,
+) -> Option<Vec<Result<(&'static str, AnyRecord), ()>>> {
+    match &record.kind {
+        PortableRecordKind::Login => {
+            let mut outcomes = Vec::with_capacity(2);
+            outcomes.push(Ok((
+                LOGIN_V1,
+                AnyRecord::Login(Login {
+                    title: record.title.clone(),
+                    username: record.username.clone().unwrap_or_default(),
+                    password: record.password.as_deref().cloned().unwrap_or_default(),
+                    urls: record.url.clone().into_iter().collect(),
+                    notes: record.notes.clone(),
+                }),
+            )));
+            if let Some(seed) = &record.totp_seed {
+                outcomes.push(
+                    decode_external_totp_field(&record.title, seed)
+                        .map(|totp| (TOTP_SEED_V1, AnyRecord::TotpSeed(totp))),
+                );
+            }
+            Some(outcomes)
+        }
+        PortableRecordKind::SecureNote => Some(vec![Ok((
+            SECURE_NOTE_V1,
+            AnyRecord::SecureNote(SecureNote {
+                title: record.title.clone(),
+                body: record.notes.clone().unwrap_or_default(),
+            }),
+        ))]),
+        PortableRecordKind::Card => Some(vec![map_card_record(record)]),
+        PortableRecordKind::Totp => Some(vec![match &record.totp_seed {
+            Some(seed) => decode_external_totp_field(&record.title, seed)
+                .map(|totp| (TOTP_SEED_V1, AnyRecord::TotpSeed(totp))),
+            None => Err(()),
+        }]),
+        // `SshKey` has no vault-pm item type yet; `Custom(_)` is every
+        // format adapter's catch-all for a kind it recognized but this
+        // product doesn't model (e.g. Bitwarden identities). Both are
+        // *skipped*, not silently dropped: the caller still counts them.
+        // `PortableRecordKind` is `#[non_exhaustive]` upstream, so a future
+        // added variant also falls through here rather than failing to
+        // compile -- it is treated the same as any other unmapped kind
+        // until this match is deliberately extended.
+        PortableRecordKind::SshKey | PortableRecordKind::Custom(_) => None,
+        _ => None,
+    }
+}
+
+fn map_card_record(record: &PortableRecord) -> Result<(&'static str, AnyRecord), ()> {
+    let holder = card_custom_field(record, "holder").ok_or(())?;
+    let number = card_custom_field(record, "number").ok_or(())?;
+    validate_ascii_digits(&number, 8, 19).map_err(|_| ())?;
+    let expiry_month =
+        parse_card_expiry_month(&card_custom_field(record, "expiry_month").ok_or(())?)
+            .map_err(|_| ())?;
+    let expiry_year = parse_card_expiry_year(&card_custom_field(record, "expiry_year").ok_or(())?)
+        .map_err(|_| ())?;
+    let cvv = card_custom_field(record, "cvv").ok_or(())?;
+    validate_ascii_digits(&cvv, 3, 4).map_err(|_| ())?;
+    let billing_zip = card_custom_field(record, "billing_zip");
+    Ok((
+        CARD_V1,
+        AnyRecord::Card(Card {
+            title: record.title.clone(),
+            holder,
+            number,
+            expiry_month,
+            expiry_year,
+            cvv,
+            billing_zip,
+        }),
+    ))
+}
+
+fn card_custom_field(record: &PortableRecord, key: &str) -> Option<String> {
+    record.custom_fields.get(key).map(|value| (**value).clone())
+}
+
+/// Maximum accepted bytes for a raw TOTP field or an `otpauth://` query
+/// string (VLT-PM49 §5.3) -- generous for any real export, and small
+/// enough that a crafted field cannot force meaningful extra work.
+const MAX_EXTERNAL_TOTP_FIELD_BYTES: usize = 2_048;
+
+/// Decode a TOTP seed carried by an external record, as either a raw
+/// (possibly padded/lowercase/whitespace-separated) Base32 string or an
+/// `otpauth://totp/...` URI (VLT-PM49 §5.3). `hotp` URIs are refused,
+/// matching VLT-PM29's TOTP-only scope.
+fn decode_external_totp_field(title: &str, raw: &str) -> Result<TotpSeed, ()> {
+    let trimmed = raw.trim();
+    if trimmed.is_empty() || trimmed.len() > MAX_EXTERNAL_TOTP_FIELD_BYTES {
+        return Err(());
+    }
+    if trimmed.len() >= 10 && trimmed[..10].eq_ignore_ascii_case("otpauth://") {
+        return parse_otpauth_totp_uri(title, trimmed);
+    }
+    let normalized: String = trimmed
+        .chars()
+        .filter(|c| !c.is_whitespace() && *c != '=')
+        .map(|c| c.to_ascii_uppercase())
+        .collect();
+    let secret = decode_totp_base32(&normalized).map_err(|_| ())?;
+    Ok(TotpSeed {
+        label: title.to_owned(),
+        issuer: None,
+        secret: secret.into_inner(),
+        algorithm: "SHA1".to_owned(),
+        digits: 6,
+        period: 30,
+    })
+}
+
+fn parse_otpauth_totp_uri(title: &str, uri: &str) -> Result<TotpSeed, ()> {
+    const PREFIX: &str = "otpauth://totp/";
+    if uri.len() < PREFIX.len() || !uri[..PREFIX.len()].eq_ignore_ascii_case(PREFIX) {
+        return Err(());
+    }
+    let rest = &uri[PREFIX.len()..];
+    let query = match rest.find('?') {
+        Some(position) => &rest[position + 1..],
+        None => return Err(()),
+    };
+    if query.len() > MAX_EXTERNAL_TOTP_FIELD_BYTES {
+        return Err(());
+    }
+    let mut secret: Option<Zeroizing<Vec<u8>>> = None;
+    let mut issuer: Option<String> = None;
+    let mut algorithm = "SHA1".to_owned();
+    let mut digits: u8 = 6;
+    let mut period: u32 = 30;
+    for pair in query.split('&') {
+        if pair.is_empty() {
+            continue;
+        }
+        let Some(equals) = pair.find('=') else {
+            return Err(());
+        };
+        let key = &pair[..equals];
+        let value = percent_decode(&pair[equals + 1..])?;
+        match key {
+            "secret" => {
+                let normalized: String = value
+                    .chars()
+                    .filter(|c| !c.is_whitespace() && *c != '=')
+                    .map(|c| c.to_ascii_uppercase())
+                    .collect();
+                secret = Some(decode_totp_base32(&normalized).map_err(|_| ())?);
+            }
+            "issuer" => {
+                if value.is_empty() || value.len() > 256 {
+                    return Err(());
+                }
+                issuer = Some(value);
+            }
+            "algorithm" => {
+                let upper = value.to_ascii_uppercase();
+                if !matches!(upper.as_str(), "SHA1" | "SHA256" | "SHA512") {
+                    return Err(());
+                }
+                algorithm = upper;
+            }
+            "digits" => {
+                digits = match value.as_str() {
+                    "6" => 6,
+                    "8" => 8,
+                    _ => return Err(()),
+                };
+            }
+            "period" => {
+                period = parse_totp_period(&value).map_err(|_| ())?;
+            }
+            // Unknown query parameters (e.g. a peer's future extension)
+            // are ignored rather than rejected -- the same
+            // forward-compatible stance VLT-PM49 §2 takes for unknown
+            // Bitwarden JSON top-level keys.
+            _ => {}
+        }
+    }
+    let secret = secret.ok_or(())?;
+    Ok(TotpSeed {
+        label: title.to_owned(),
+        issuer,
+        secret: secret.into_inner(),
+        algorithm,
+        digits,
+        period,
+    })
+}
+
+/// Bounded percent-decoder for one `otpauth://` query value. `+` decodes
+/// to a literal space (the `application/x-www-form-urlencoded` convention
+/// real `otpauth://` producers use for an issuer containing spaces).
+fn percent_decode(value: &str) -> Result<String, ()> {
+    if value.len() > MAX_EXTERNAL_TOTP_FIELD_BYTES {
+        return Err(());
+    }
+    let bytes = value.as_bytes();
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'%' => {
+                if index + 2 >= bytes.len() {
+                    return Err(());
+                }
+                let high = hex_nibble(bytes[index + 1]).ok_or(())?;
+                let low = hex_nibble(bytes[index + 2]).ok_or(())?;
+                out.push((high << 4) | low);
+                index += 3;
+            }
+            b'+' => {
+                out.push(b' ');
+                index += 1;
+            }
+            byte => {
+                out.push(byte);
+                index += 1;
+            }
+        }
+    }
+    String::from_utf8(out).map_err(|_| ())
+}
+
+fn hex_nibble(byte: u8) -> Option<u8> {
+    match byte {
+        b'0'..=b'9' => Some(byte - b'0'),
+        b'a'..=b'f' => Some(byte - b'a' + 10),
+        b'A'..=b'F' => Some(byte - b'A' + 10),
+        _ => None,
+    }
 }
 
 fn item_list(
@@ -6129,6 +6522,18 @@ mod tests {
             read_attachment_source(source, MAX_ATTACHMENT_BYTES).map_err(map_native_cli_host)
         }
 
+        // Real filesystem, like the pair above: the point of this crate's
+        // tests is the ceremony around the read, and a fake that never
+        // touched a disk could not show that a malformed/oversize source is
+        // refused before any vault is opened.
+        fn read_external_import_source(
+            &self,
+            source: &Path,
+        ) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            read_external_import_source(source, MAX_EXTERNAL_IMPORT_SOURCE_BYTES)
+                .map_err(map_native_cli_host)
+        }
+
         fn write_attachment_export(
             &self,
             destination: &Path,
@@ -6985,14 +7390,52 @@ mod tests {
     #[test]
     fn portable_import_parser_accepts_exactly_one_explicit_source() {
         assert_eq!(
-            parse(["import", "backup.vpm"]),
+            parse(["import", "portable", "backup.vpm"]),
             default_invocation(Command::PortableImport {
                 source: PathBuf::from("backup.vpm")
             })
         );
         assert_eq!(parse(["import"]), Err(CliFailure::InvalidCommand));
         assert_eq!(
-            parse(["import", "backup.vpm", "extra"]),
+            parse(["import", "portable"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["import", "portable", "backup.vpm", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+    }
+
+    #[test]
+    fn external_import_parser_requires_an_explicit_format_keyword() {
+        assert_eq!(
+            parse(["import", "bitwarden", "export.json"]),
+            default_invocation(Command::ImportBitwarden {
+                source: PathBuf::from("export.json")
+            })
+        );
+        assert_eq!(
+            parse(["import", "csv", "export.csv"]),
+            default_invocation(Command::ImportCsv {
+                source: PathBuf::from("export.csv")
+            })
+        );
+        assert_eq!(
+            parse(["import", "kdbx", "export.kdbx"]),
+            default_invocation(Command::ImportKdbx {
+                source: PathBuf::from("export.kdbx")
+            })
+        );
+        assert_eq!(
+            parse(["import", "bitwarden"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["import", "bitwarden", "export.json", "extra"]),
+            Err(CliFailure::InvalidCommand)
+        );
+        assert_eq!(
+            parse(["import", "1password", "export.1pux"]),
             Err(CliFailure::InvalidCommand)
         );
     }
@@ -7526,6 +7969,447 @@ mod tests {
         assert!(!audit.stdout().contains("portable failure passphrase"));
     }
 
+    // === VLT-PM49: Bitwarden JSON / browser CSV external import ============
+
+    #[test]
+    fn import_bitwarden_creates_a_login_item_and_leaks_no_secret() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"bitwarden import passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("bitwarden.json");
+        fs::write(
+            &source,
+            br#"{"items":[{"type":1,"name":"GitHub Import","notes":null,
+                "login":{"username":"alice","password":"hunter2-super-secret",
+                "uris":[{"uri":"https://github.com"}]}}]}"#,
+        )
+        .unwrap();
+
+        let import_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let imported = run(
+            ["import", "bitwarden", source.to_str().unwrap()],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=1 skipped=0 failed=0\n"
+        );
+        assert!(!imported.stdout().contains("hunter2"));
+        assert!(!imported.stdout().contains("GitHub"));
+
+        let list_host = TestHost::new(paths, [passphrase]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("GitHub Import"));
+        assert!(listed.stdout().contains(LOGIN_V1));
+        assert!(!listed.stdout().contains("hunter2"));
+    }
+
+    /// A Bitwarden login carrying a TOTP seed becomes two `to_create`
+    /// entries, and the command attempts both through independent
+    /// authenticated sessions (VLT-PM49 §4). `mapping_login_with_totp_
+    /// produces_two_outcomes` above proves the actual splitting/mapping
+    /// logic in isolation; what this end-to-end test can additionally
+    /// prove without a real OS CSPRNG is that the command runs both
+    /// attempts to completion, reports a real outcome for each, and never
+    /// echoes the seed -- not that a fixed-pattern *test* entropy source
+    /// happens to avoid a same-length collision across the two attempts
+    /// the way a genuine CSPRNG always would.
+    #[test]
+    fn import_bitwarden_login_with_totp_attempts_both_items_and_leaks_no_seed() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"bitwarden totp import passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("bitwarden-totp.json");
+        fs::write(
+            &source,
+            br#"{"items":[{"type":1,"name":"AWS Root",
+                "login":{"username":"root","password":"pw",
+                "totp":"JBSWY3DPEHPK3PXP","uris":[]}}]}"#,
+        )
+        .unwrap();
+
+        let import_host = TestHost::new(paths, [passphrase.clone(), passphrase]);
+        let imported = run(
+            ["import", "bitwarden", source.to_str().unwrap()],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert!(!imported.stdout().contains("JBSWY3DPEHPK3PXP"));
+        let counts: Vec<u64> = imported
+            .stdout()
+            .split(|c: char| !c.is_ascii_digit())
+            .filter(|s| !s.is_empty())
+            .map(|s| s.parse().unwrap())
+            .collect();
+        assert_eq!(counts.len(), 3, "{imported:?}");
+        let [created, skipped, failed] = [counts[0], counts[1], counts[2]];
+        assert_eq!(skipped, 0);
+        // Both attempts ran (nothing was silently dropped from the count):
+        // created + failed accounts for both the login and the derived
+        // TOTP item.
+        assert_eq!(created + failed, 2, "{imported:?}");
+        assert!(created >= 1, "the login half must succeed: {imported:?}");
+    }
+
+    #[test]
+    fn import_csv_creates_a_login_item_and_leaks_no_secret() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"csv import passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("chrome-export.csv");
+        fs::write(
+            &source,
+            "name,url,username,password\nExample Site,https://example.test,carol,csv-secret-pw\n",
+        )
+        .unwrap();
+
+        let import_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let imported = run(["import", "csv", source.to_str().unwrap()], &import_host);
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=1 skipped=0 failed=0\n"
+        );
+        assert!(!imported.stdout().contains("csv-secret-pw"));
+
+        let list_host = TestHost::new(paths, [passphrase]);
+        let listed = run(["item", "list"], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(listed.stdout().contains("Example Site"));
+        assert!(!listed.stdout().contains("csv-secret-pw"));
+    }
+
+    /// A file whose every record is an unsupported kind must never
+    /// authenticate a vault (VLT-PM49 §9 gate 4): an empty secrets queue
+    /// would turn any attempted prompt into a `Provider` failure, not
+    /// `Success`.
+    #[test]
+    fn import_bitwarden_with_only_unsupported_items_opens_no_vault() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"unsupported only passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("identity-only.json");
+        fs::write(&source, br#"{"items":[{"type":4,"name":"My Passport"}]}"#).unwrap();
+
+        let import_host = TestHost::new(paths, []);
+        let imported = run(
+            ["import", "bitwarden", source.to_str().unwrap()],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=0 skipped=1 failed=0\n"
+        );
+    }
+
+    /// One supported and one unsupported record in the same file: the
+    /// unsupported one is skipped without ever calling `fill_entropy`, so
+    /// this stays within one entropy draw and exercises the mixed count.
+    #[test]
+    fn import_bitwarden_mixed_supported_and_unsupported_reports_both_counts() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"mixed import passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("mixed.json");
+        fs::write(
+            &source,
+            br#"{"items":[
+                {"type":4,"name":"Skipped Identity"},
+                {"type":2,"name":"Kept Note","notes":"body"}
+            ]}"#,
+        )
+        .unwrap();
+
+        let import_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let imported = run(
+            ["import", "bitwarden", source.to_str().unwrap()],
+            &import_host,
+        );
+        assert_eq!(imported.exit_code(), ExitCode::Success, "{imported:?}");
+        assert_eq!(
+            imported.stdout(),
+            "Import complete: created=1 skipped=1 failed=0\n"
+        );
+
+        let list_host = TestHost::new(paths, [passphrase]);
+        let listed = run(["item", "list"], &list_host);
+        assert!(listed.stdout().contains("Kept Note"));
+        assert!(!listed.stdout().contains("Skipped Identity"));
+    }
+
+    /// KDBX always fails closed with the `unsupported` exit class, before
+    /// `source` is ever opened (VLT-PM49 §8): a nonexistent path must fail
+    /// the *same* way a real one would, proving no filesystem access was
+    /// attempted.
+    #[test]
+    fn import_kdbx_always_fails_closed_without_opening_source() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"kdbx unsupported passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let absent_source = root.0.join("does-not-exist.kdbx");
+        let host = TestHost::new(paths, []);
+        let result = run(["import", "kdbx", absent_source.to_str().unwrap()], &host);
+        assert_eq!(result.exit_code(), ExitCode::Unsupported, "{result:?}");
+        assert!(result.stdout().is_empty());
+    }
+
+    #[test]
+    fn import_kdbx_grammar_accepts_exactly_one_source() {
+        assert_eq!(
+            parse(["import", "kdbx", "vault.kdbx"]),
+            default_invocation(Command::ImportKdbx {
+                source: PathBuf::from("vault.kdbx")
+            })
+        );
+    }
+
+    #[test]
+    fn import_bitwarden_rejects_malformed_source_before_any_vault_access() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"malformed bitwarden passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        for (name, bytes) in [
+            ("not-json.json", b"{not json".as_slice()),
+            ("wrong-root.json", b"[1,2,3]".as_slice()),
+            ("missing-items.json", br#"{"folders":[]}"#.as_slice()),
+            ("item-not-object.json", br#"{"items":[42]}"#.as_slice()),
+        ] {
+            let source = root.0.join(name);
+            fs::write(&source, bytes).unwrap();
+            let host = TestHost::new(paths.clone(), []);
+            let result = run(["import", "bitwarden", source.to_str().unwrap()], &host);
+            assert_eq!(
+                result.exit_code(),
+                ExitCode::InvalidInput,
+                "{name}: {result:?}"
+            );
+            assert!(result.stdout().is_empty());
+        }
+    }
+
+    #[test]
+    fn import_csv_rejects_malformed_source_before_any_vault_access() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"malformed csv passphrase".to_vec();
+        let init_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+
+        let source = root.0.join("unclosed.csv");
+        fs::write(&source, "name,url\n\"unterminated,https://x.example\n").unwrap();
+        let host = TestHost::new(paths, []);
+        let result = run(["import", "csv", source.to_str().unwrap()], &host);
+        assert_eq!(result.exit_code(), ExitCode::InvalidInput, "{result:?}");
+        assert!(result.stdout().is_empty());
+    }
+
+    // --- Pure mapping/decoding logic (no I/O, no entropy) ---
+
+    fn portable_login(title: &str, username: &str, password: &str, url: &str) -> PortableRecord {
+        PortableRecord {
+            kind: PortableRecordKind::Login,
+            title: title.to_owned(),
+            username: Some(username.to_owned()),
+            password: Some(Zeroizing::new(password.to_owned())),
+            url: Some(url.to_owned()),
+            notes: None,
+            totp_seed: None,
+            tags: Vec::new(),
+            custom_fields: BTreeMap::new(),
+        }
+    }
+
+    #[test]
+    fn mapping_login_produces_one_outcome_without_totp() {
+        let record = portable_login("Site", "user", "pw", "https://x.example");
+        let outcomes = map_portable_record(&record).expect("login must be mapped");
+        assert_eq!(outcomes.len(), 1);
+        let (content_type, item) = outcomes[0].as_ref().unwrap();
+        assert_eq!(*content_type, LOGIN_V1);
+        match item {
+            AnyRecord::Login(login) => {
+                assert_eq!(login.title, "Site");
+                assert_eq!(login.username, "user");
+                assert_eq!(login.password, "pw");
+                assert_eq!(login.urls, vec!["https://x.example".to_string()]);
+            }
+            _ => panic!("expected a Login record"),
+        }
+    }
+
+    #[test]
+    fn mapping_login_with_totp_produces_two_outcomes() {
+        let mut record = portable_login("Site", "user", "pw", "https://x.example");
+        record.totp_seed = Some(Zeroizing::new("JBSWY3DPEHPK3PXP".to_owned()));
+        let outcomes = map_portable_record(&record).expect("login must be mapped");
+        assert_eq!(outcomes.len(), 2);
+        assert!(outcomes[1].is_ok());
+        let (content_type, item) = outcomes[1].as_ref().unwrap();
+        assert_eq!(*content_type, TOTP_SEED_V1);
+        assert!(matches!(item, AnyRecord::TotpSeed(_)));
+    }
+
+    #[test]
+    fn mapping_login_with_malformed_totp_field_fails_only_the_totp_outcome() {
+        let mut record = portable_login("Site", "user", "pw", "https://x.example");
+        record.totp_seed = Some(Zeroizing::new("not valid base32!!".to_owned()));
+        let outcomes = map_portable_record(&record).expect("login must be mapped");
+        assert_eq!(outcomes.len(), 2);
+        assert!(outcomes[0].is_ok(), "the login half must still succeed");
+        assert!(outcomes[1].is_err(), "the malformed totp half must fail");
+    }
+
+    #[test]
+    fn mapping_secure_note_and_unsupported_kinds() {
+        let note = PortableRecord {
+            kind: PortableRecordKind::SecureNote,
+            title: "Note".to_owned(),
+            username: None,
+            password: None,
+            url: None,
+            notes: Some("body".to_owned()),
+            totp_seed: None,
+            tags: Vec::new(),
+            custom_fields: BTreeMap::new(),
+        };
+        let outcomes = map_portable_record(&note).expect("secure note must be mapped");
+        assert_eq!(outcomes.len(), 1);
+        assert!(matches!(
+            outcomes[0].as_ref().unwrap().1,
+            AnyRecord::SecureNote(_)
+        ));
+
+        let ssh = PortableRecord {
+            kind: PortableRecordKind::SshKey,
+            title: "key".to_owned(),
+            username: None,
+            password: None,
+            url: None,
+            notes: None,
+            totp_seed: None,
+            tags: Vec::new(),
+            custom_fields: BTreeMap::new(),
+        };
+        assert!(map_portable_record(&ssh).is_none());
+
+        let custom = PortableRecord {
+            kind: PortableRecordKind::Custom("bitwarden-type-4".to_owned()),
+            title: "x".to_owned(),
+            username: None,
+            password: None,
+            url: None,
+            notes: None,
+            totp_seed: None,
+            tags: Vec::new(),
+            custom_fields: BTreeMap::new(),
+        };
+        assert!(map_portable_record(&custom).is_none());
+    }
+
+    fn card_fields(omit: Option<&str>) -> BTreeMap<String, Zeroizing<String>> {
+        let mut fields = BTreeMap::new();
+        for (key, value) in [
+            ("holder", "Ada"),
+            ("number", "41111111"),
+            ("expiry_month", "12"),
+            ("expiry_year", "2030"),
+            ("cvv", "123"),
+        ] {
+            if Some(key) == omit {
+                continue;
+            }
+            fields.insert(key.to_owned(), Zeroizing::new(value.to_owned()));
+        }
+        fields
+    }
+
+    fn card_record(custom_fields: BTreeMap<String, Zeroizing<String>>) -> PortableRecord {
+        PortableRecord {
+            kind: PortableRecordKind::Card,
+            title: "Amex".to_owned(),
+            username: None,
+            password: None,
+            url: None,
+            notes: None,
+            totp_seed: None,
+            tags: Vec::new(),
+            custom_fields,
+        }
+    }
+
+    #[test]
+    fn mapping_card_requires_every_field_present_and_valid() {
+        let complete = card_record(card_fields(None));
+        let outcomes = map_portable_record(&complete).expect("card must be mapped");
+        assert_eq!(outcomes.len(), 1);
+        assert!(outcomes[0].is_ok());
+
+        let incomplete = card_record(card_fields(Some("cvv")));
+        let outcomes = map_portable_record(&incomplete).expect("card must still be mapped");
+        assert!(outcomes[0].is_err(), "a missing required field must fail");
+    }
+
+    #[test]
+    fn decode_external_totp_field_accepts_padded_lowercase_base32() {
+        let totp = decode_external_totp_field("Label", "jbswy3dpehpk3pxp===")
+            .expect("padded lowercase base32 must decode");
+        assert_eq!(totp.algorithm, "SHA1");
+        assert_eq!(totp.digits, 6);
+        assert_eq!(totp.period, 30);
+        assert!(!totp.secret.is_empty());
+    }
+
+    #[test]
+    fn decode_external_totp_field_accepts_otpauth_uri_with_all_parameters() {
+        let uri = "otpauth://totp/GitHub:alice?secret=JBSWY3DPEHPK3PXP&issuer=GitHub&\
+                    algorithm=SHA256&digits=8&period=60";
+        let totp = decode_external_totp_field("Label", uri).expect("otpauth URI must decode");
+        assert_eq!(totp.issuer.as_deref(), Some("GitHub"));
+        assert_eq!(totp.algorithm, "SHA256");
+        assert_eq!(totp.digits, 8);
+        assert_eq!(totp.period, 60);
+    }
+
+    #[test]
+    fn decode_external_totp_field_rejects_hotp_and_missing_secret() {
+        assert!(decode_external_totp_field("L", "otpauth://hotp/x?secret=JBSWY3DP").is_err());
+        assert!(decode_external_totp_field("L", "otpauth://totp/x?issuer=Y").is_err());
+        assert!(decode_external_totp_field("L", "").is_err());
+        assert!(decode_external_totp_field("L", "not-base32-or-a-uri!!").is_err());
+    }
+
+    #[test]
+    fn percent_decode_handles_plus_as_space_and_hex_escapes() {
+        assert_eq!(percent_decode("a+b%20c").unwrap(), "a b c");
+        assert_eq!(percent_decode("plain").unwrap(), "plain");
+        assert!(percent_decode("bad%2").is_err());
+        assert!(percent_decode("bad%zz").is_err());
+    }
+
     #[test]
     fn portable_import_logs_failure_then_restores_audit_first_target_independently() {
         let source_root = TestRoot::new();
@@ -7601,6 +8485,7 @@ mod tests {
         let wrong = run(
             [
                 "import",
+                "portable",
                 artifact_path.to_str().expect("UTF-8 test artifact path"),
             ],
             &wrong_host,
@@ -7616,6 +8501,7 @@ mod tests {
         let imported = run(
             [
                 "import",
+                "portable",
                 artifact_path.to_str().expect("UTF-8 test artifact path"),
             ],
             &import_host,
@@ -7901,6 +8787,7 @@ mod tests {
                 "--vault",
                 "retry",
                 "import",
+                "portable",
                 artifact_path.to_str().expect("UTF-8 test artifact path"),
             ],
             &repeated_import,
@@ -10979,6 +11866,15 @@ mod tests {
             assert_eq!(source, Path::new("source"));
             self.record("read_attachment_source");
             Ok(Zeroizing::new(b"read_attachment_source".to_vec()))
+        }
+
+        fn read_external_import_source(
+            &self,
+            source: &Path,
+        ) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            assert_eq!(source, Path::new("source"));
+            self.record("read_external_import_source");
+            Ok(Zeroizing::new(b"read_external_import_source".to_vec()))
         }
 
         fn write_attachment_export(
