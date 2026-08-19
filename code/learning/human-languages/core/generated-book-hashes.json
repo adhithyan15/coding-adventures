@@ -1091,6 +1091,24 @@
     },
     {
       "language": "hindi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:f4b2337360cb276c",
+      "lessonIds": [
+        "HI-C01-namaste",
+        "HI-C01-namaskar",
+        "HI-C01-dhanyavad",
+        "HI-C01-shukriya",
+        "HI-C01-alvida",
+        "HI-W01-shirorekha-na-ma",
+        "HI-W01-na-ma",
+        "HI-W02-abugida-ka-ta",
+        "HI-W02-ka-ta-mouth-order",
+        "HI-C01-practice"
+      ],
+      "tex": "hindi/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "hindi",
       "chapter": 6,
       "sourceHash": "fnv1a64:06cd03dcec0f8c10",
       "lessonIds": [

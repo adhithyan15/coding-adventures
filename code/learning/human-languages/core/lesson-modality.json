@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:f2f8f0c8765e7cff",
+  "sourceHash": "fnv1a64:ffb287d5591f46c8",
   "summary": {
     "totalLessons": 3147,
     "voice": 2220,
@@ -27171,7 +27171,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6d48303ca8dca56e",
+      "sourceHash": "fnv1a64:441441397b13f343",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27192,7 +27192,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:40befbc05ec1de23",
+      "sourceHash": "fnv1a64:eb684ab95ec1df4b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27213,7 +27213,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:972c7a81178b8b43",
+      "sourceHash": "fnv1a64:b580a357b2218355",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27234,7 +27234,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b8a489f2b5fa561e",
+      "sourceHash": "fnv1a64:869442adc06e067a",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27255,7 +27255,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9f47fd60c0ff364b",
+      "sourceHash": "fnv1a64:33bfc4ea75cf3edf",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -27354,7 +27354,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0c45b634daf5db69"
+      "sourceHash": "fnv1a64:1b38d284cac849f0"
     },
     {
       "id": "HI-C02-naam",

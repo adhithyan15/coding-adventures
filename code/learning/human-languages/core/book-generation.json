@@ -1120,6 +1120,12 @@
     },
     {
       "language": "hindi",
+      "chapter": 1,
+      "output": "hindi/book/chapters/ch01-greetings.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
       "chapter": 6,
       "output": "hindi/book/chapters/ch06-numbers-1-5.tex",
       "scriptSet": "hindi-main"
@@ -5673,11 +5679,6 @@
       "language": "gujarati",
       "chapter": 5,
       "output": "gujarati/book/chapters/ch05-first-verbs.tex"
-    },
-    {
-      "language": "hindi",
-      "chapter": 1,
-      "output": "hindi/book/chapters/ch01-greetings.tex"
     },
     {
       "language": "hindi",

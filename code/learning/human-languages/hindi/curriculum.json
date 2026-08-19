@@ -41,6 +41,18 @@
       "after": []
     },
     {
+      "id": "HI-PATH-003A",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C01-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-001-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-100",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
@@ -806,6 +818,7 @@
     "SPINE-MEET-GREET": {
       "segments": [
         "HI-PATH-001",
+        "HI-PATH-003A",
         "HI-PATH-100",
         "HI-PATH-030",
         "HI-PATH-51-WELCOME",
@@ -1835,6 +1848,19 @@
         "HI-W12-ya",
         "HI-W12-ba",
         "HI-W12-da-retroflex"
+      ]
+    },
+    {
+      "id": "HI-EXT-001-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can run the whole first exchange -- greet formally or informally, thank in two registers, and take my leave -- and read every word of it in Devanagari.",
+      "prerequisites": [
+        "HI-EXT-001-SCRIPT"
+      ],
+      "lessons": [
+        "HI-C01-practice"
       ]
     }
   ]
