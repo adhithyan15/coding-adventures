@@ -1,5 +1,22 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.39 — 2026-08-18 — SIMD: v128.load/v128.store text-form (task #162-164)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms gain a new `SimdOpKind::Load | SimdOpKind::Store`
+  case -- the FIRST SIMD ops this crate encodes that carry a `memarg`
+  immediate (`offset=`/`align=` attributes). Reuses the existing
+  `parse_memarg` helper the scalar `i32.load`/etc. family already
+  uses, then emits `0xFD`, the sub-opcode LEB128, and the memarg's
+  align/offset LEB128s -- same encoding shape as the scalar ops, just
+  behind the `0xFD` SIMD prefix. Verified via a dedicated test covering
+  the folded form (with an explicit `offset=` attribute, for both
+  `v128.load` and `v128.store`) and the flat/stream form.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.38 — 2026-08-18 — SIMD: shift family text-form (task #159-161)
 
 ### Added

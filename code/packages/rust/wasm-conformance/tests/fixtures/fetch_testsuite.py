@@ -376,6 +376,17 @@ TESTSUITE_FILES = [
     # width's shl/shr_s/shr_u triple sits immediately before that
     # width's own `add` sub-opcode).
     "simd_bit_shift.wast",
+    # SIMD widen PR15 (task #162-164): simd_load.wast/simd_store.wast --
+    # v128.load/v128.store, the FIRST SIMD ops touching real linear memory
+    # (every prior SIMD op only reads/writes the per-instance v128 heap).
+    # Both single-byte sub-opcodes (0x00/0x0B); scoped to memory-0-only
+    # execution for this first PR (see wasm-execution's DecodedOperand
+    # packing for why -- multi-memory v128 load/store is deferred).
+    # Landing this also retroactively resolves 14 assert_return directives
+    # in the already-vendored simd_bitwise.wast (PR11) that were stuck at
+    # NotYetSupported pending a real v128.load.
+    "simd_load.wast",
+    "simd_store.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

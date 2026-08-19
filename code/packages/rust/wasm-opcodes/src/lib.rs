@@ -1193,6 +1193,22 @@ pub enum SimdOpKind {
     /// `shr_u` for `i64x2` -- shifting has no notion of "unsigned
     /// magnitude comparison" to omit.
     ShrUI64x2,
+    /// `v128.load` -- read 16 bytes from linear memory at the effective
+    /// address (`i32` base popped from the stack, plus this
+    /// instruction's own `memarg` offset immediate), push a new `v128`.
+    /// The FIRST SIMD load/store opcode in this table -- carries a
+    /// `memarg` immediate (like every scalar `iNN.load`), not the
+    /// 16-byte raw literal `Const` uses or the no-immediate shape most
+    /// SIMD ops use. This first slice always targets memory 0 (no
+    /// multi-memory support yet, unlike the scalar load/store family --
+    /// see `code/specs/W13-wasm-simd-v128-first-slice.md` for the scope
+    /// note).
+    Load,
+    /// `v128.store` -- pop a `v128`, pop an `i32` base address, write
+    /// 16 bytes to linear memory at the effective address (base + this
+    /// instruction's own `memarg` offset immediate). Same `memarg`
+    /// shape and memory-0-only scope as [`Self::Load`].
+    Store,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1414,6 +1430,8 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i64x2.shl", sub_opcode: 0xCB, kind: SimdOpKind::ShlI64x2 },
     SimdOpInfo { name: "i64x2.shr_s", sub_opcode: 0xCC, kind: SimdOpKind::ShrSI64x2 },
     SimdOpInfo { name: "i64x2.shr_u", sub_opcode: 0xCD, kind: SimdOpKind::ShrUI64x2 },
+    SimdOpInfo { name: "v128.load", sub_opcode: 0x00, kind: SimdOpKind::Load },
+    SimdOpInfo { name: "v128.store", sub_opcode: 0x0B, kind: SimdOpKind::Store },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1832,8 +1850,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_113_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 113);
+    fn simd_ops_table_has_the_expected_115_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 115);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2246,6 +2264,29 @@ mod tests {
             ("i64x2.shl", 0xCB, SimdOpKind::ShlI64x2),
             ("i64x2.shr_s", 0xCC, SimdOpKind::ShrSI64x2),
             ("i64x2.shr_u", 0xCD, SimdOpKind::ShrUI64x2),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_load_and_store_have_the_real_verified_sub_opcode_values() {
+        // Fetched live from BinarySIMD.md. The FIRST SIMD load/store
+        // opcodes in this table -- `v128.load` (0x00) is the very first
+        // 0xFD sub-opcode of all (immediately before `v128.load8x8_s`
+        // (0x01), the next extended-load variant this repo doesn't
+        // implement yet); `v128.store` (0x0B) sits right before
+        // `v128.const` (0x0C, already implemented) in the same
+        // contiguous load/store/const cluster. Both carry a `memarg`
+        // immediate, like every scalar `iNN.load`/`iNN.store` -- not the
+        // 16-byte raw literal `v128.const` uses, and not the
+        // no-immediate shape most other SIMD ops in this table use.
+        for (name, sub_opcode, kind) in [
+            ("v128.load", 0x00, SimdOpKind::Load),
+            ("v128.store", 0x0B, SimdOpKind::Store),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);
