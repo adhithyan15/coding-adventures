@@ -861,6 +861,118 @@
         "HI-EXT-58-HOUSE"
       ],
       "after": []
+    },
+    {
+      "id": "HI-PATH-60-YARD",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "HI-C60-monkey",
+        "HI-C60-snake",
+        "HI-C60-hen",
+        "HI-C60-buffalo",
+        "HI-C60-peacock"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-60-YARD"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-61-FIRE",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "HI-C61-vessel",
+        "HI-C61-spoon",
+        "HI-C61-tumbler",
+        "HI-C61-griddle",
+        "HI-C61-stove"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-61-FIRE"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-62-HANDS",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C62-rope",
+        "HI-C62-needle",
+        "HI-C62-basket",
+        "HI-C62-clay",
+        "HI-C62-wood"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-62-HANDS"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-63-STATE",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "HI-C63-hunger",
+        "HI-C63-thirst",
+        "HI-C63-sleep",
+        "HI-C63-fever",
+        "HI-C63-pain"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-63-STATE"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-64-MEASURE",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "HI-C64-now",
+        "HI-C64-quickly",
+        "HI-C64-slowly",
+        "HI-C64-little",
+        "HI-C64-more"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-64-MEASURE"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-65-GRACE",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "HI-C65-kindness",
+        "HI-C65-entreaty",
+        "HI-C65-permission",
+        "HI-C65-trust",
+        "HI-C65-manners"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-65-GRACE"
+      ],
+      "after": []
+    },
+    {
+      "id": "HI-PATH-66-FIELD",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "HI-C66-seed",
+        "HI-C66-crop",
+        "HI-C66-grain",
+        "HI-C66-grass",
+        "HI-C66-well"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-66-FIELD"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -871,7 +983,8 @@
         "HI-PATH-100",
         "HI-PATH-030",
         "HI-PATH-51-WELCOME",
-        "HI-PATH-58-HOUSE"
+        "HI-PATH-58-HOUSE",
+        "HI-PATH-60-YARD"
       ],
       "omits": [
         "GREETING-PEACE",
@@ -884,7 +997,8 @@
         "HI-PATH-002",
         "HI-PATH-005",
         "HI-PATH-50-COURTESY",
-        "HI-PATH-57-GIFT"
+        "HI-PATH-57-GIFT",
+        "HI-PATH-65-GRACE"
       ],
       "omits": [],
       "relocates": {}
@@ -893,7 +1007,8 @@
       "segments": [
         "HI-PATH-011",
         "HI-PATH-48-REPLY",
-        "HI-PATH-55-SKY"
+        "HI-PATH-55-SKY",
+        "HI-PATH-64-MEASURE"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -910,7 +1025,8 @@
         "HI-PATH-020",
         "HI-PATH-033",
         "HI-PATH-47-ROLE",
-        "HI-PATH-54-ANIMAL"
+        "HI-PATH-54-ANIMAL",
+        "HI-PATH-62-HANDS"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -925,7 +1041,8 @@
         "HI-PATH-016",
         "HI-PATH-032",
         "HI-PATH-46-BODY",
-        "HI-PATH-53-BODY"
+        "HI-PATH-53-BODY",
+        "HI-PATH-63-STATE"
       ],
       "omits": [
         "WORD-GOOD",
@@ -939,7 +1056,8 @@
         "HI-PATH-018",
         "HI-PATH-031",
         "HI-PATH-45-ASK",
-        "HI-PATH-52-KITCHEN"
+        "HI-PATH-52-KITCHEN",
+        "HI-PATH-61-FIRE"
       ],
       "omits": [],
       "relocates": {}
@@ -951,7 +1069,8 @@
         "HI-PATH-009A",
         "HI-PATH-025",
         "HI-PATH-49-LEAVE",
-        "HI-PATH-56-ROAD"
+        "HI-PATH-56-ROAD",
+        "HI-PATH-66-FIELD"
       ],
       "omits": [
         "FAREWELL-SOON"
@@ -1967,6 +2086,111 @@
       ],
       "lessons": [
         "HI-C05-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-60-YARD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more animals a Hindi household lives beside.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C60-monkey",
+        "HI-C60-snake",
+        "HI-C60-hen",
+        "HI-C60-buffalo",
+        "HI-C60-peacock"
+      ]
+    },
+    {
+      "id": "HI-EXT-61-FIRE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Hindi kitchen cooks with.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C61-vessel",
+        "HI-C61-spoon",
+        "HI-C61-tumbler",
+        "HI-C61-griddle",
+        "HI-C61-stove"
+      ]
+    },
+    {
+      "id": "HI-EXT-62-HANDS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five materials and tools a Hindi household keeps.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C62-rope",
+        "HI-C62-needle",
+        "HI-C62-basket",
+        "HI-C62-clay",
+        "HI-C62-wood"
+      ]
+    },
+    {
+      "id": "HI-EXT-63-STATE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five states a body reports, from hunger to pain.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C63-hunger",
+        "HI-C63-thirst",
+        "HI-C63-sleep",
+        "HI-C63-fever",
+        "HI-C63-pain"
+      ]
+    },
+    {
+      "id": "HI-EXT-64-MEASURE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer with how much and how fast, not only with yes and no.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C64-now",
+        "HI-C64-quickly",
+        "HI-C64-slowly",
+        "HI-C64-little",
+        "HI-C64-more"
+      ]
+    },
+    {
+      "id": "HI-EXT-65-GRACE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five words a Hindi speaker reaches for when asking a favour.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C65-kindness",
+        "HI-C65-entreaty",
+        "HI-C65-permission",
+        "HI-C65-trust",
+        "HI-C65-manners"
+      ]
+    },
+    {
+      "id": "HI-EXT-66-FIELD",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things a Hindi field and its well hold.",
+      "prerequisites": [],
+      "lessons": [
+        "HI-C66-seed",
+        "HI-C66-crop",
+        "HI-C66-grain",
+        "HI-C66-grass",
+        "HI-C66-well"
       ]
     }
   ]

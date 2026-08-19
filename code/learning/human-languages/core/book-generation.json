@@ -5677,6 +5677,48 @@
       "chapter": 59,
       "output": "hindi/book/chapters/ch59-script-second-wave.tex",
       "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 60,
+      "output": "hindi/book/chapters/ch60-animals-in-the-yard.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "output": "hindi/book/chapters/ch61-at-the-cooking-fire.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "output": "hindi/book/chapters/ch62-what-hands-work-with.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "output": "hindi/book/chapters/ch63-what-the-body-tells-you.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "output": "hindi/book/chapters/ch64-how-much-and-how-fast.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "output": "hindi/book/chapters/ch65-asking-nicely.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "output": "hindi/book/chapters/ch66-the-field-and-the-well.tex",
+      "scriptSet": "hindi-main"
     }
   ],
   "handwritten": [
