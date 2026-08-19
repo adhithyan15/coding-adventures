@@ -2,6 +2,25 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.21] - 2026-08-19 - SIMD: splat family widening (task #165-167)
+
+### Added
+
+- 3 new `SIMD_OPS` entries widening lane-width coverage of the
+  already-implemented `i32x4.splat` (`0x11`): `i8x16.splat` (`0x0F`),
+  `i16x8.splat` (`0x10`), `i64x2.splat` (`0x12`) -- 118 SIMD opcodes
+  total, up from 115. Same "pop one scalar, push one v128" shape as
+  `i32x4.splat`; `i64x2.splat` is the first splat whose popped operand
+  type differs from `i32` (it pops a real `i64`). Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against the already-implemented `i32x4.splat` entry
+  (matched exactly, and confirms this crate's whole `0x0C`(const)/
+  `0x0E`(swizzle, not yet implemented)/`0x0F`-`0x14`(splat family)
+  encoding-space run is self-consistent).
+- `SimdOpKind::SplatI8x16`/`SplatI16x8`/`SplatI64x2`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.20] - 2026-08-18 - SIMD: v128.load/v128.store (task #162-164)
 
 ### Added

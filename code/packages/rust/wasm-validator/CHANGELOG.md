@@ -2,6 +2,23 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.30] - 2026-08-19 (task #165-167 — SIMD: splat family widening type rules)
+
+### Added
+
+- `SimdOpKind::Splat | SplatI8x16 | SplatI16x8` now share one type-check
+  arm (pop `I32`, push `V128`) alongside the pre-existing `i32x4.splat`
+  rule. New separate arm for `SimdOpKind::SplatI64x2` (pop `I64`, push
+  `V128`) -- the first splat whose popped operand type differs from
+  `i32`, so it genuinely needed its own arm rather than joining the
+  shared one.
+- 2 new tests: a valid module exercising all three new splat ops, and
+  an invalid-module case confirming `i64x2.splat` genuinely rejects an
+  `i32` operand (not just accepting whatever scalar type is on the
+  stack).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.29] - 2026-08-18 (task #162-164 — SIMD: v128.load/v128.store type rules)
 
 ### Added

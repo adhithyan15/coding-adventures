@@ -933,6 +933,28 @@ fn invalid_v128_load_and_store_with_no_memory_at_all() {
 }
 
 #[test]
+fn valid_splat_family() {
+    // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
+    // "pop scalar, push v128" shape as the already-implemented
+    // i32x4.splat, just widening lane-width coverage. i64x2.splat is
+    // the FIRST splat that pops I64 rather than I32.
+    assert_valid(
+        r#"(module
+             (func (param i32) (result v128) (i8x16.splat (local.get 0)))
+             (func (param i32) (result v128) (i16x8.splat (local.get 0)))
+             (func (param i64) (result v128) (i64x2.splat (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_i64x2_splat_with_an_i32_operand() {
+    // i64x2.splat is the first splat whose popped operand type differs
+    // from i32 -- confirms the type checker actually enforces I64, not
+    // just accepting whatever scalar type is on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (i64x2.splat (local.get 0))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

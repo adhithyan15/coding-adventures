@@ -1414,8 +1414,20 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         offset += 16;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Splat => {
+                    wasm_opcodes::SimdOpKind::Splat
+                    | wasm_opcodes::SimdOpKind::SplatI8x16
+                    | wasm_opcodes::SimdOpKind::SplatI16x8 => {
+                        // i8x16.splat/i16x8.splat (SIMD widen PR16): same
+                        // "pop I32, push V128" shape as i32x4.splat --
+                        // only the low bits of the popped i32 matter at
+                        // runtime, invisible to the type checker.
                         pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::SplatI64x2 => {
+                        // i64x2.splat (SIMD widen PR16): the FIRST splat
+                        // that pops I64 instead of I32.
+                        pop_expect(&mut stack, frame!(), ValueType::I64)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Add
