@@ -62,20 +62,22 @@
       "id": "java-cowsay",
       "title": "Java cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "pr-open-auto-merge",
+      "status": "merged",
       "pr_number": 12079,
+      "merge_commit": "37384f3d4e",
       "priority": 5,
       "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended java/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive constructor overloads)",
-      "notes": "Applied every hardening lesson learned from haskell-cowsay's 5 review rounds from the start (geometry validation incl. sum-to-infinity, per-axis+total scene caps, saturating coordinate conversion, glyph safety filter incl. Java-specific surrogate-pair rejection). One /security-review round still found and fixed an uncaught IOException in Main leaking a raw stack trace. Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
+      "notes": "Applied every hardening lesson learned from haskell-cowsay's 5 review rounds from the start (geometry validation incl. sum-to-infinity, per-axis+total scene caps, saturating coordinate conversion, glyph safety filter incl. Java-specific surrogate-pair rejection). One /security-review round still found and fixed an uncaught IOException in Main leaking a raw stack trace. Verified byte-identical to merged Perl port. Merged clean -- verified merge commit 37384f3d4e on origin/main contains all 32 files including the IOException fix."
     },
     {
       "id": "kotlin-cowsay",
       "title": "Kotlin cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "pending",
+      "status": "pr-open-auto-merge",
+      "pr_number": 12084,
       "priority": 6,
-      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract"
-    },
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended kotlin/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive default-valued constructor params)",
+      "notes": "Built by directly translating the already-reviewed Java paint-vm-ascii design into Kotlin idioms, carrying every hardening lesson forward from the start. /security-review of the translation found one JVM-Stream-API-specific gap (Files.list()'s UncheckedIOException not caught alongside IOException) and fixed it. Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
     {
       "id": "dart-cowsay",
       "title": "Dart cowsay: build paint-vm-ascii backend from scratch, then cowsay",

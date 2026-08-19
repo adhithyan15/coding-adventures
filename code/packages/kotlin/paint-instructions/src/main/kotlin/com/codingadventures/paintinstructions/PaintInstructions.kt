@@ -233,6 +233,85 @@ sealed class PaintInstruction {
         val height: Int,
         val fill: String,
         val metadata: Metadata = emptyMap(),
+        /** CSS stroke colour. Empty (the default) means no stroke. */
+        val stroke: String = "",
+        /** Stroke width in pixels. Ignored when [stroke] is empty. */
+        val strokeWidth: Double = 0.0,
+    ) : PaintInstruction()
+
+    /**
+     * A stroked line segment between two points.
+     *
+     * A line with no stroke is invisible, so unlike [PaintRect], [stroke] has
+     * no default — it must always be given some value for the line to be
+     * drawn at all.
+     *
+     * @param x1 Start point x. @param y1 Start point y.
+     * @param x2 End point x. @param y2 End point y.
+     * @param stroke CSS stroke colour.
+     * @param strokeWidth Stroke width in pixels.
+     * @param metadata Optional key/value annotations.
+     */
+    data class PaintLine(
+        val x1: Double,
+        val y1: Double,
+        val x2: Double,
+        val y2: Double,
+        val stroke: String,
+        val strokeWidth: Double,
+        val metadata: Metadata = emptyMap(),
+    ) : PaintInstruction()
+
+    /**
+     * Pre-positioned glyphs, each already placed in scene coordinates.
+     *
+     * [fontRef], [fontSize], and [fill] are required fields but are ignored
+     * by text-mode (ASCII) backends.
+     */
+    data class PaintGlyphRun(
+        val glyphs: List<PaintGlyphPlacement>,
+        val fontRef: String,
+        val fontSize: Double,
+        val fill: String,
+        val metadata: Metadata = emptyMap(),
+    ) : PaintInstruction()
+
+    /** A child list with an optional [Transform2D] and opacity. */
+    data class PaintGroup(
+        val children: List<PaintInstruction>,
+        /** Optional affine transform applied to all children. Null means no transform. */
+        val transform: Transform2D? = null,
+        /** Optional group-level compositing opacity (0.0-1.0). Null means fully opaque. */
+        val opacity: Double? = null,
+        val metadata: Metadata = emptyMap(),
+    ) : PaintInstruction()
+
+    /** A rectangular clip region wrapping a child list. */
+    data class PaintClip(
+        val x: Double,
+        val y: Double,
+        val width: Double,
+        val height: Double,
+        val children: List<PaintInstruction>,
+        val metadata: Metadata = emptyMap(),
+    ) : PaintInstruction()
+
+    /**
+     * A child list with a filter flag, blend mode, opacity, and transform.
+     *
+     * [hasFilters] is a simplified stand-in for the full filter-effect union
+     * — no backend in this repository's Kotlin port implements pixel-level
+     * filters, so all that matters for dispatch is whether to reject the
+     * layer.
+     */
+    data class PaintLayer(
+        val children: List<PaintInstruction>,
+        val hasFilters: Boolean = false,
+        /** Optional blend mode name. Null or "normal" means standard alpha compositing. */
+        val blendMode: String? = null,
+        val opacity: Double? = null,
+        val transform: Transform2D? = null,
+        val metadata: Metadata = emptyMap(),
     ) : PaintInstruction()
 
     /**
@@ -268,6 +347,52 @@ sealed class PaintInstruction {
         val fill: String,
         val metadata: Metadata = emptyMap(),
     ) : PaintInstruction()
+}
+
+// ============================================================================
+// PaintGlyphPlacement — one glyph's position within a PaintGlyphRun
+// ============================================================================
+
+/**
+ * One glyph's position within a [PaintInstruction.PaintGlyphRun].
+ *
+ * [glyphId] is a font-internal glyph index in the general contract, but
+ * text-mode ("ascii") backends relax this to a literal Unicode code point —
+ * see `P2D02-paint-vm-ascii.md` §"Glyph runs" for the rationale.
+ */
+data class PaintGlyphPlacement(
+    val glyphId: Int,
+    val x: Double,
+    val y: Double,
+)
+
+// ============================================================================
+// Transform2D — a six-value affine transform
+// ============================================================================
+
+/**
+ * A six-value affine transform, matching the Canvas/SVG convention:
+ *
+ * ```
+ *   x' = a*x + c*y + e
+ *   y' = b*x + d*y + f
+ * ```
+ */
+data class Transform2D(
+    val a: Double,
+    val b: Double,
+    val c: Double,
+    val d: Double,
+    val e: Double,
+    val f: Double,
+) {
+    /** Whether this transform is (bitwise) equal to the identity transform. */
+    fun isIdentity(): Boolean = a == 1.0 && b == 0.0 && c == 0.0 && d == 1.0 && e == 0.0 && f == 0.0
+
+    companion object {
+        /** The identity transform — no rotation, scale, or translation. */
+        val IDENTITY = Transform2D(1.0, 0.0, 0.0, 1.0, 0.0, 0.0)
+    }
 }
 
 // ============================================================================
@@ -350,6 +475,8 @@ fun paintRect(
     height: Int,
     fill: String = "#000000",
     metadata: Metadata = emptyMap(),
+    stroke: String = "",
+    strokeWidth: Double = 0.0,
 ): PaintInstruction.PaintRect =
     PaintInstruction.PaintRect(
         x = x,
@@ -358,6 +485,8 @@ fun paintRect(
         height = height,
         fill = fill.ifBlank { "#000000" },
         metadata = metadata,
+        stroke = stroke,
+        strokeWidth = strokeWidth,
     )
 
 /**
@@ -429,6 +558,53 @@ fun createScene(
         instructions = instructions,
         metadata = metadata,
     )
+
+/** Build a [PaintInstruction.PaintLine]. */
+fun paintLine(
+    x1: Double,
+    y1: Double,
+    x2: Double,
+    y2: Double,
+    stroke: String,
+    strokeWidth: Double,
+    metadata: Metadata = emptyMap(),
+): PaintInstruction.PaintLine =
+    PaintInstruction.PaintLine(x1, y1, x2, y2, stroke, strokeWidth, metadata)
+
+/** Build a [PaintInstruction.PaintGlyphRun]. */
+fun paintGlyphRun(
+    glyphs: List<PaintGlyphPlacement>,
+    fontRef: String,
+    fontSize: Double,
+    fill: String,
+    metadata: Metadata = emptyMap(),
+): PaintInstruction.PaintGlyphRun =
+    PaintInstruction.PaintGlyphRun(glyphs, fontRef, fontSize, fill, metadata)
+
+/** Build a plain (untransformed, fully opaque) [PaintInstruction.PaintGroup]. */
+fun paintGroup(
+    children: List<PaintInstruction>,
+    metadata: Metadata = emptyMap(),
+): PaintInstruction.PaintGroup =
+    PaintInstruction.PaintGroup(children, metadata = metadata)
+
+/** Build a [PaintInstruction.PaintClip]. */
+fun paintClip(
+    x: Double,
+    y: Double,
+    width: Double,
+    height: Double,
+    children: List<PaintInstruction>,
+    metadata: Metadata = emptyMap(),
+): PaintInstruction.PaintClip =
+    PaintInstruction.PaintClip(x, y, width, height, children, metadata)
+
+/** Build a plain (untransformed, unfiltered, fully opaque, normal-blend) [PaintInstruction.PaintLayer]. */
+fun paintLayer(
+    children: List<PaintInstruction>,
+    metadata: Metadata = emptyMap(),
+): PaintInstruction.PaintLayer =
+    PaintInstruction.PaintLayer(children, metadata = metadata)
 
 // ============================================================================
 // parseColorRGBA8 — CSS hex string parser
