@@ -79,13 +79,16 @@
       "priority": 6,
       "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended kotlin/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive default-valued constructor params)",
       "notes": "Built by directly translating the already-reviewed Java paint-vm-ascii design into Kotlin idioms, carrying every hardening lesson forward from the start. /security-review of the translation found one JVM-Stream-API-specific gap (Files.list()'s UncheckedIOException not caught alongside IOException) and fixed it. Verified byte-identical to merged Perl port. Merged clean -- verified merge commit cc0ec7e0e3 on origin/main contains all 26 files including the UncheckedIOException fix."
+    },
     {
       "id": "dart-cowsay",
       "title": "Dart cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "in-progress",
+      "status": "pr-open",
+      "pr_number": 12091,
       "priority": 7,
-      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract"
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended dart/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive named-optional constructor params)",
+      "notes": "Found and fixed a real Bresenham line-drawing infinite-loop bug (error seeded to 0 instead of deltaCol - deltaRow) -- same bug verbatim in the already-merged haskell/java/kotlin paint-vm-ascii ports, logged in discovered_work rather than expanding this PR's scope. /security-review (2 rounds) found and fixed an unbounded PaintGroup/PaintClip/PaintLayer recursion depth (added a 64-level cap, new SceneTooDeep error) and an uncaught FormatException on malformed stdin UTF-8. Verified byte-identical to merged Perl port."
     },
     {
       "id": "swift-cowsay",
