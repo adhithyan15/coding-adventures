@@ -370,7 +370,32 @@ a trust boundary worth naming explicitly:
   `same_local_directory` now falls back to comparing `fs::canonicalize`d
   paths when the raw strings differ, closing that gap for any location
   that already exists (one that does not yet cannot collide with anything
-  in the first place).
+  in the first place). A follow-up review round asked whether two
+  *concurrent* `vault-pm` processes could each pass this check against
+  two not-yet-created aliasing locations before either creates its
+  directory; verified against `vault-pm-local-host::LocalWriterGuard`
+  that they cannot — it is one non-blocking `try_lock` per config root
+  (not per vault), acquired before configuration is even loaded and held
+  for the whole command, so a second concurrent invocation against the
+  same config root fails closed with `LocalHostError::AlreadyLocked`
+  rather than racing past this check.
+- The migration-copy read/directory-creation checks (§5.2) close the
+  *static* symlink-planting case (a symlink already present when
+  `storage migrate` runs) completely, and additionally narrow — via
+  `O_NOFOLLOW` on Unix (`open_no_follow`) and an atomic non-recursive
+  `fs::create_dir` for bucket directories (`ensure_real_bucket_
+  directory`) — the *dynamic* case (a symlink planted in the instant
+  between a `symlink_metadata` check and the following read/create call)
+  to a true kernel-enforced atomic refusal on the read path and the
+  bucket-directory path. The top-level `target` directory's own creation
+  still uses a check-then-`create_dir_all` pattern (needed for its
+  recursive parent creation), so a symlink race remains theoretically
+  possible there against a truly adversarial concurrent write to that
+  exact path component during the single instant between the check and
+  the call — assessed as acceptable given `target` is a location the
+  operator explicitly configured via `storage add`, not one discovered
+  or influenced by scanning an untrusted directory the way object names
+  are.
 
 ## 8. Reuse map correction
 

@@ -43,6 +43,12 @@ configured mirror can also write to, so a hex-named symlink planted there
 is a realistic way to read an arbitrary local file into the migrated
 copy, or to redirect a write outside the intended object tree.
 
+Reads additionally open with `O_NOFOLLOW` on Unix, and bucket-directory
+creation uses the atomic, non-recursive `fs::create_dir` rather than a
+check-then-`create_dir_all` pattern — closing not just the case where a
+symlink is already present, but the narrower window where one is planted
+in the instant between the check and the following call.
+
 ## Why no filenames ever leave this crate
 
 A third-party sync tool's filename is attacker-adjacent input the moment a

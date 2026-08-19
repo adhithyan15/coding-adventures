@@ -447,7 +447,7 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
             continue;
         }
         let target_bucket_dir = target.join(&bucket_name);
-        ensure_real_directory(&target_bucket_dir)?;
+        ensure_real_bucket_directory(&target_bucket_dir)?;
 
         for object_entry in fs::read_dir(bucket_entry.path()).map_err(|_| CopyError::IoFailed)? {
             let object_entry = object_entry.map_err(|_| CopyError::IoFailed)?;
@@ -483,14 +483,19 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
     Ok(report)
 }
 
-/// Ensure `path` is a real (non-symlink) directory, creating it if absent.
+/// Ensure `path` is a real (non-symlink) directory, creating it (and any
+/// missing parents) if absent.
 ///
 /// Refuses rather than follows an existing symlink at `path`: `storage-fs`
 /// never creates one, so one being there already means something else
 /// wrote it, and blindly treating it as "the directory exists, proceed"
 /// (`fs::create_dir_all`'s own behavior, since its own re-check follows
-/// symlinks) would let a planted symlink redirect an entire bucket's worth
-/// of writes to an attacker-chosen location.
+/// symlinks) would let a planted symlink redirect an entire object root's
+/// worth of writes to an attacker-chosen location. Used only for `target`
+/// itself, a caller-supplied path this function's own retry cannot avoid
+/// re-checking non-atomically; [`ensure_real_bucket_directory`] is the
+/// atomic, race-free version used one level below it, where a plain
+/// `create_dir` suffices.
 fn ensure_real_directory(path: &Path) -> Result<(), CopyError> {
     match fs::symlink_metadata(path) {
         Ok(metadata) => {
@@ -504,6 +509,33 @@ fn ensure_real_directory(path: &Path) -> Result<(), CopyError> {
             }
         }
         Err(_) => fs::create_dir_all(path).map_err(|_| CopyError::TargetUnavailable),
+    }
+}
+
+/// Ensure `bucket_dir` (always exactly one path component below an already
+/// validated `target`) is a real directory, creating it if absent.
+///
+/// Unlike [`ensure_real_directory`], this never needs `create_dir_all`'s
+/// recursive parent creation, so it can use the atomic, race-free
+/// `fs::create_dir` instead of the check-then-`create_dir_all` pattern:
+/// `create_dir` fails with `AlreadyExists` if *anything* — a symlink
+/// included — is already at that path, without ever following it, closing
+/// the narrow window between a separate existence check and the creation
+/// call that `ensure_real_directory` cannot fully close on its own.
+fn ensure_real_bucket_directory(bucket_dir: &Path) -> Result<(), CopyError> {
+    match fs::create_dir(bucket_dir) {
+        Ok(()) => Ok(()),
+        Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {
+            let metadata = fs::symlink_metadata(bucket_dir).map_err(|_| CopyError::IoFailed)?;
+            if metadata.file_type().is_symlink() {
+                Err(CopyError::UnexpectedSymlink)
+            } else if metadata.is_dir() {
+                Ok(())
+            } else {
+                Err(CopyError::TargetUnavailable)
+            }
+        }
+        Err(_) => Err(CopyError::TargetUnavailable),
     }
 }
 
@@ -607,10 +639,14 @@ fn remove_stale_staging_file(staging_path: &Path) -> Result<(), CopyError> {
 /// any other file this process can read) would be opened, its bytes copied
 /// into `target` under an innocuous object name, and — if `target` is
 /// itself synced or cloud-backed — silently exfiltrated. Checking
-/// `symlink_metadata` (which does not follow the link) before `File::open`
-/// (which does) closes that path; the length bound is read from the same
-/// non-following call, so a symlink to a zero-reporting special file (e.g.
-/// `/dev/zero`) cannot bypass it either.
+/// `symlink_metadata` (which does not follow the link) before opening
+/// closes that path for a symlink already present at the check; opening
+/// with `O_NOFOLLOW` on Unix (`open_no_follow`, below) additionally closes
+/// the narrower window between that check and the open itself, so a
+/// symlink planted in the instant between them is refused by the kernel
+/// rather than raced. The length bound is read from the same
+/// non-following `symlink_metadata` call, so a symlink to a
+/// zero-reporting special file (e.g. `/dev/zero`) cannot bypass it either.
 fn read_bounded(path: &Path) -> Result<Vec<u8>, CopyError> {
     let metadata = fs::symlink_metadata(path).map_err(|_| CopyError::IoFailed)?;
     if metadata.file_type().is_symlink() {
@@ -619,7 +655,7 @@ fn read_bounded(path: &Path) -> Result<Vec<u8>, CopyError> {
     if metadata.len() > MAX_COPY_OBJECT_BYTES {
         return Err(CopyError::ObjectTooLarge);
     }
-    let mut file = File::open(path).map_err(|_| CopyError::IoFailed)?;
+    let mut file = open_no_follow(path)?;
     let mut bytes = Vec::with_capacity(metadata.len() as usize);
     file.read_to_end(&mut bytes)
         .map_err(|_| CopyError::IoFailed)?;
@@ -627,6 +663,36 @@ fn read_bounded(path: &Path) -> Result<Vec<u8>, CopyError> {
         return Err(CopyError::ObjectTooLarge);
     }
     Ok(bytes)
+}
+
+/// Open `path` for reading, refusing to follow a symlink at the final path
+/// component even if one is planted there after [`read_bounded`]'s own
+/// `symlink_metadata` check has already passed.
+///
+/// On Unix this passes `O_NOFOLLOW`, which makes the kernel itself refuse
+/// atomically -- closing the check-then-open race a userspace-only check
+/// cannot. Elsewhere this is a plain open; `symlink_metadata`'s check
+/// immediately beforehand still covers the non-racing case identically on
+/// every platform.
+#[cfg(unix)]
+fn open_no_follow(path: &Path) -> Result<File, CopyError> {
+    use std::os::unix::fs::OpenOptionsExt;
+    OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_NOFOLLOW)
+        .open(path)
+        .map_err(|error| {
+            if error.raw_os_error() == Some(libc::ELOOP) {
+                CopyError::UnexpectedSymlink
+            } else {
+                CopyError::IoFailed
+            }
+        })
+}
+
+#[cfg(not(unix))]
+fn open_no_follow(path: &Path) -> Result<File, CopyError> {
+    File::open(path).map_err(|_| CopyError::IoFailed)
 }
 
 #[cfg(test)]

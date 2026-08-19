@@ -60,3 +60,22 @@ All notable changes to this package are documented here.
   directory, a pre-existing symlinked target bucket directory, a
   pre-existing symlinked target object, a symlinked top-level target, and
   `scan_object_root`'s own detection of a hex-named symlink.
+- **Second review round: narrowed the remaining check-then-use race
+  window.** The fix above closes the *static* case (a symlink already
+  present when a scan/copy runs) completely, but a second review round
+  correctly noted that a `symlink_metadata` check followed by a separate
+  `File::open`/`fs::create_dir_all` call cannot, on its own, close the
+  *dynamic* case (a symlink planted in the instant between the two).
+  `read_bounded` now opens with `O_NOFOLLOW` on Unix (`open_no_follow`),
+  making the kernel itself refuse a symlink at that exact instant rather
+  than racing a userspace check against it (`libc` is now a Unix-only
+  dependency). Bucket-directory creation (always exactly one path
+  component below an already-validated `target`) now uses the atomic,
+  non-recursive `fs::create_dir` (`ensure_real_bucket_directory`) instead
+  of a check-then-`create_dir_all` pattern, closing the same class of
+  window there. The top-level `target` directory still uses
+  check-then-`create_dir_all` (it needs recursive parent creation);
+  documented in `VLT-PM50-cli-storage-migration.md` §7 as an accepted,
+  narrower residual, since `target` is an operator-configured path via
+  `storage add`, not content discovered by scanning an untrusted
+  directory.
