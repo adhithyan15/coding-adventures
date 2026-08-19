@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:8fb04a68a96e6d62",
+  "sourceHash": "fnv1a64:059f31dc1c2646cb",
   "summary": {
     "totalLessons": 3357,
     "voice": 2429,
@@ -30152,7 +30152,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:855f30fc2772ef89"
+      "sourceHash": "fnv1a64:5699c07d488dfa2e"
     },
     {
       "id": "HI-C32-evening-register",
@@ -30188,7 +30188,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9d84a15fe3b1a2f5"
+      "sourceHash": "fnv1a64:843cef41c7488f23"
     },
     {
       "id": "HI-C34-sochna",
