@@ -2,6 +2,34 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.36] - 2026-08-19 (task #193-195 — SIMD widen PR26: extend_low/high family)
+
+### Added
+
+- `register_simd` gains two new dispatch arms:
+  - `SimdOpKind::ExtendLowI8x16S | ExtendHighI8x16S | ExtendLowI8x16U |
+    ExtendHighI8x16U` pops one `v128`, reads it as 16 `i8` lanes, takes
+    only the LOW (indices 0-7) or HIGH (indices 8-15) 8 lanes,
+    sign-/zero-extends each to `i16`, and writes an `i16x8` result.
+    Exactly the lane-selection + extend half of the already-implemented
+    `ExtmulLowI8x16S`/`ExtmulHighI8x16S`/etc. arm, minus the multiply.
+  - `SimdOpKind::ExtendLowI16x8S | ExtendHighI16x8S | ExtendLowI16x8U |
+    ExtendHighI16x8U` is the same pattern one lane width up: 8 `i16`
+    lanes in, LOW (0-3) or HIGH (4-7) 4 lanes selected, extended to
+    `i32`, `i32x4` result.
+- 4 new unit tests: two "lane order preserved, correct half selected"
+  tests (sequential `0..16`/`0..8` operands make each source lane's
+  position visible in the result) and two "signed vs. unsigned disagree
+  at the sign boundary" tests (`i8::MIN`/`i8::MAX` and
+  `i16::MIN`/`i16::MAX`), one pair per lane-width rung.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** Part of the 16-opcode
+  set (`extend_low`/`high` here, `narrow` and `promote`/`demote`/
+  `convert_low` in future PRs) needed to unlock the upstream
+  `simd_conversions.wast` corpus file. This PR is opcode-only.
+
 ## [0.9.35] - 2026-08-19 (task #190-192 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero)
 
 ### Added
