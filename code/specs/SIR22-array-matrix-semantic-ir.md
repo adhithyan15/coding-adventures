@@ -327,24 +327,33 @@ is lowered as a `Stmt`-position operation (like `Assign`), not a value-producing
   hands it a bare number (fixed in `sir-runtime-array` 0.4.0, reusing the
   `elementwise.ts` module's existing `toArrayValue` bare-scalar
   normaliser rather than re-solving the same problem a third time).
-- **C/Go/Rust/Python/Ruby backends** — **second wave, planned**: the
-  original text here named only Rust/Go/Python as declining this domain
-  "in the first wave... no code changes required" — C and Ruby decline
-  identically today (same capability-rejection path, same panic-stub
-  match arms forced by Rust's exhaustiveness checking) but were never
-  actually named, an omission fixed here since all five behave the same
-  way. This is now a planned second wave, not a permanent scope boundary:
-  **C/Go/Rust/Ruby** will
-  follow JS's *inlined* runtime-port model (new source text ported from
-  `semantic-ir-to-javascript`'s own `ArrayRt` sub-runtime, appended to
-  each backend's own `RUNTIME` constant); **Python** will follow TS's
-  *imported-package* model (a new `code/packages/python/sir-runtime-array`
-  pip package, ported from `code/packages/typescript/sir-runtime-array`,
-  wired via Python's existing gated-import pattern). The base cut
-  (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
-  `IndexSet`) and the nine-node APL addendum are separate rollout slices
-  on each backend, mirroring how JS/TS themselves shipped the addendum
-  as a later, separate PR rather than bundled with the base cut.
+- **C/Go/Rust/Python/Ruby backends** — **done**: this was originally
+  scoped as a second wave ("no code changes required to these backends
+  for this spec to land safely"), naming only Rust/Go/Python as the
+  first wave's decliners (C and Ruby declined identically at the time
+  but were never actually named). That second wave has since landed in
+  full, in two rollout slices per backend, mirroring how JS/TS
+  themselves shipped the APL addendum as a later, separate PR rather
+  than bundled with the base cut:
+  - **Base cut** (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/
+    `Transpose`/`IndexGet`/`IndexSet`): **C/Go/Rust/Ruby** followed JS's
+    *inlined* runtime-port model (source text ported from
+    `semantic-ir-to-javascript`'s own `ArrayRt` sub-runtime, appended to
+    each backend's own `RUNTIME` constant); **Python** followed TS's
+    *imported-package* model (`code/packages/python/sir-runtime-array`,
+    ported from `code/packages/typescript/sir-runtime-array`, wired via
+    Python's existing gated-import pattern).
+  - **APL addendum** (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+    `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`): real codegen landed
+    on all five backends, replacing each backend's own
+    `find_unimplemented_sir22_addendum_node`-equivalent tree-walk
+    rejection check the same way JS/TS's own checks were retired once
+    they became dead code.
+
+  All seven backends (JS, TS, C, Go, Rust, Python, Ruby) now declare
+  `NDArrays`/`MatrixOps`/`ArrayColumnMajor` in `ACCEPTED_FEATURES` and
+  emit real codegen for every SIR22 node, base cut and addendum alike.
+  There is no longer a backend that declines this domain.
 
 ## Versioning
 
