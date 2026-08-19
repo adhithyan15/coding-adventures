@@ -5003,6 +5003,56 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::Q15mulrSatI16x8S => {
+                // i16x8.q15mulr_sat_s: same 8-lane `i16` BINARY shape as
+                // `AddI16x8`/`SubI16x8`/`MulI16x8` above (pop rhs then lhs,
+                // read each lane pair as little-endian `i16`, write back
+                // little-endian `i16`), but a genuinely different formula
+                // -- a Q15 fixed-point ROUNDING SATURATING multiply, not a
+                // plain wrapping op. Per lane: widen both `i16`s to `i32`
+                // via sign-extending `as i32` (never overflows -- max
+                // magnitude is `32768 * 32768 == 2^30`, well inside `i32`'s
+                // `2^31 - 1` bound, so this uses ordinary `*`/`+`, NOT
+                // `wrapping_mul`/`wrapping_add`, since overflow here would
+                // indicate a bug, not an expected wraparound -- and this
+                // interpreter is built in debug mode where unexpected
+                // overflow panics, which is exactly the safety net we
+                // want). Add the Q15 rounding constant `0x4000` (round to
+                // nearest when rescaling the Q30 product back to Q15),
+                // arithmetic-shift right by 15 (`>>` on a signed `i32` in
+                // Rust is already arithmetic/sign-extending, matching Q15's
+                // requirement), then clamp to `i16::MIN..=i16::MAX` with
+                // `.clamp(...)` -- a real saturating clamp, not a
+                // wrapping `as i16` cast. The clamp only ever fires for
+                // the single (a=i16::MIN, b=i16::MIN) lane pair: `(-32768
+                // * -32768 + 0x4000) >> 15 == 32768`, one past
+                // `i16::MAX`, which `.clamp` pins to `32767` rather than
+                // letting it wrap to `-32768` (the bug this whole PR
+                // exists to avoid).
+                let rhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let lhs_handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let rhs = *ctx
+                    .v128_heap
+                    .get(rhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+                let lhs = *ctx
+                    .v128_heap
+                    .get(lhs_handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let l = i16::from_le_bytes(lhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let r = i16::from_le_bytes(rhs[i * 2..i * 2 + 2].try_into().unwrap());
+                    let product = (l as i32) * (r as i32);
+                    let rounded = (product + 0x4000) >> 15;
+                    let out = rounded.clamp(i16::MIN as i32, i16::MAX as i32) as i16;
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::NegI16x8 => {
                 // i16x8.neg: UNARY, same shape as `i8x16.neg`/`i32x4.neg`/
                 // `.abs` -- pops exactly ONE v128, negates each of the 8
@@ -9541,6 +9591,70 @@ mod tests {
             wrap_bytes[0],
             Some(V128Bytes(v128_const_bytes_i16x8([i16::MIN; 8]).try_into().unwrap())),
             "i16::MAX + 1 must wrap to i16::MIN"
+        );
+    }
+
+    /// `i16x8.q15mulr_sat_s`: same 8-lane `i16` BINARY shape as
+    /// `i16x8.add`/`.sub`/`.mul` above, but a Q15 fixed-point ROUNDING
+    /// SATURATING multiply, not plain wrapping arithmetic. All four
+    /// reference values below were hand-derived (and cross-checked with a
+    /// scratch Python calculation) from the formula
+    /// `((a as i32 * b as i32) + 0x4000) >> 15`, clamped to
+    /// `i16::MIN..=i16::MAX`:
+    /// - `q15mulr_sat_s(0, 0) == 0` (the trivial identity case).
+    /// - `q15mulr_sat_s(32767, 32767) == 32766`:
+    ///   `(32767*32767 + 0x4000) >> 15 == (1073676289 + 16384) >> 15 ==
+    ///   1073692673 >> 15 == 32766` -- close to but NOT `i16::MAX`, so this
+    ///   also proves the rounding step doesn't over-round into saturating
+    ///   when it shouldn't.
+    /// - `q15mulr_sat_s(i16::MIN, i16::MIN) == i16::MAX` (`32767`): the
+    ///   WHOLE POINT of the "sat" in this op's name --
+    ///   `(-32768*-32768 + 0x4000) >> 15 == (1073741824 + 16384) >> 15 ==
+    ///   1073758208 >> 15 == 32768`, one past `i16::MAX`, so the saturating
+    ///   clamp MUST fire here and pin the result to `32767`, never letting
+    ///   it wrap to `i16::MIN` (the exact bug a `as i16` truncating cast
+    ///   instead of `.clamp()` would introduce).
+    /// - `q15mulr_sat_s(i16::MIN, i16::MAX) == -32767`:
+    ///   `(-32768*32767 + 0x4000) >> 15 == (-1073709056 + 16384) >> 15 ==
+    ///   -1073692672 >> 15 == -32767` (Rust's `>>` on `i32` is arithmetic/
+    ///   sign-extending, matching Q15's requirement) -- close to but NOT
+    ///   `i16::MIN`, confirming this direction doesn't spuriously saturate
+    ///   either.
+    #[test]
+    fn i16x8_q15mulr_sat_s_computes_real_rounding_saturating_fixed_point_multiply() {
+        let run = |a: i16, b: i16| -> i16 {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8([a; 8]));
+            code.extend([0xFD, 0x0C]);
+            code.extend(v128_const_bytes_i16x8([b; 8]));
+            code.extend([0xFD, 0x82, 0x01]); // i16x8.q15mulr_sat_s (LEB128 for sub-opcode 0x82)
+            code.push(0x0B);
+            let mut engine = simd_engine_returning_v128(code);
+            let (_, bytes) = engine.call_function_with_v128(0, &[]).unwrap();
+            let V128Bytes(raw) = bytes[0].expect("result must be a v128");
+            i16::from_le_bytes(raw[0..2].try_into().unwrap())
+        };
+
+        assert_eq!(run(0, 0), 0, "q15mulr_sat_s(0, 0) must be 0");
+        assert_eq!(run(32767, 32767), 32766, "q15mulr_sat_s(32767, 32767) must be 32766, not saturate to 32767");
+        assert_eq!(run(i16::MIN, i16::MIN), i16::MAX, "q15mulr_sat_s(MIN, MIN) must saturate to i16::MAX, not wrap to i16::MIN");
+        assert_eq!(run(i16::MIN, i16::MAX), -32767, "q15mulr_sat_s(MIN, MAX) must be -32767, not saturate to i16::MIN");
+
+        // Full-vector sanity check: every lane computed independently,
+        // matching the 8-lane shape all other i16x8 binary ops in this
+        // test module already verify.
+        let mut vec_code = vec![0xFD, 0x0C];
+        vec_code.extend(v128_const_bytes_i16x8([0, 32767, i16::MIN, i16::MIN, 1, -1, 100, -100]));
+        vec_code.extend([0xFD, 0x0C]);
+        vec_code.extend(v128_const_bytes_i16x8([0, 32767, i16::MIN, i16::MAX, 1, 1, 100, 100]));
+        vec_code.extend([0xFD, 0x82, 0x01]);
+        vec_code.push(0x0B);
+        let mut vec_engine = simd_engine_returning_v128(vec_code);
+        let (_, vec_bytes) = vec_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            vec_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0, 32766, i16::MAX, -32767, 0, 0, 0, 0]).try_into().unwrap())),
+            "per-lane q15mulr_sat_s must match independently for each of the 8 lanes"
         );
     }
 

@@ -1487,7 +1487,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
-                    | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U => {
+                    | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U
+                    | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/

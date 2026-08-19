@@ -1387,6 +1387,27 @@ pub enum SimdOpKind {
     /// as [`Self::ExtmulHighI64x2S`], but zero-extended, not
     /// sign-extended.
     ExtmulHighI64x2U,
+    /// `i16x8.q15mulr_sat_s` -- pop two `v128`s, treat each of the 8 `i16`
+    /// lane pairs as SIGNED Q15 fixed-point values (the range
+    /// `[-32768, 32767]` represents `[-1.0, ~1.0)` in Q15), and compute a
+    /// ROUNDING SATURATING fixed-point multiply per lane, push one `v128`.
+    /// A GENUINELY NEW shape/semantic in this table -- every prior BINARY
+    /// "pop two v128s, push one" op ([`Self::MulI16x8`] and friends) is
+    /// either a plain wrapping arithmetic op or a min/max/compare; this is
+    /// the first FIXED-POINT rounding multiply. Per lane: sign-extend both
+    /// `i16`s to `i32` (`a as i32 * b as i32` cannot overflow `i32` --
+    /// max magnitude is `32768 * 32768 == 2^30`, well inside `i32::MAX ==
+    /// 2^31 - 1`), add the Q15 rounding constant `0x4000` (`2^14`, i.e.
+    /// "round to nearest" when rescaling from the Q30 product back to
+    /// Q15), then arithmetic-shift right by 15. That rescaled value can
+    /// exceed `i16::MAX` in exactly ONE case -- both lanes at
+    /// `i16::MIN` (`-32768`): `(-32768 * -32768 + 0x4000) >> 15 ==
+    /// 32768`, one past `i16::MAX` -- so the final step SATURATES
+    /// (clamps) the result to `i16::MIN..=i16::MAX` rather than truncating
+    /// or wrapping. This is the WASM "relaxed"-adjacent but actually
+    /// MVP-SIMD `q15mulr_sat_s` instruction, popular in DSP/audio code for
+    /// exactly this rounding fixed-point multiply.
+    Q15mulrSatI16x8S,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1675,6 +1696,7 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i64x2.extmul_high_i32x4_s", sub_opcode: 0xDD, kind: SimdOpKind::ExtmulHighI64x2S },
     SimdOpInfo { name: "i64x2.extmul_low_i32x4_u", sub_opcode: 0xDE, kind: SimdOpKind::ExtmulLowI64x2U },
     SimdOpInfo { name: "i64x2.extmul_high_i32x4_u", sub_opcode: 0xDF, kind: SimdOpKind::ExtmulHighI64x2U },
+    SimdOpInfo { name: "i16x8.q15mulr_sat_s", sub_opcode: 0x82, kind: SimdOpKind::Q15mulrSatI16x8S },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2093,8 +2115,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_135_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 135);
+    fn simd_ops_table_has_the_expected_136_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 136);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2679,5 +2701,21 @@ mod tests {
             assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
         }
         assert!(get_simd_op_by_name("i64x2.dot_i32x4_s").is_none(), "WASM SIMD defines no i64x2.dot_i32x4_s");
+    }
+
+    #[test]
+    fn simd_i16x8_q15mulr_sat_s_has_the_real_verified_sub_opcode_value() {
+        // SIMD widen PR22 (task #183-185): `i16x8.q15mulr_sat_s` (0x82) --
+        // fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented `i16x8.neg` (0x81) and `i16x8.all_true`
+        // (0x83) entries, which straddle it on either side -- 0x82 was the
+        // one gap in that run and is not used by any other SIMD_OPS entry.
+        // A genuinely new op family: a Q15 fixed-point ROUNDING SATURATING
+        // multiply, not a plain wrapping/compare/min-max op like every
+        // other i16x8 binary entry in this table.
+        let op = get_simd_op(0x82).expect("0x82 should be i16x8.q15mulr_sat_s");
+        assert_eq!(op.name, "i16x8.q15mulr_sat_s");
+        assert_eq!(op.kind, SimdOpKind::Q15mulrSatI16x8S);
+        assert_eq!(get_simd_op_by_name("i16x8.q15mulr_sat_s").map(|o| o.sub_opcode), Some(0x82));
     }
 }

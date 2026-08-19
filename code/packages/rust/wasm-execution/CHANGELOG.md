@@ -2,6 +2,27 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.34] - 2026-08-19 (task #183-185 — SIMD widen PR22: i16x8.q15mulr_sat_s)
+
+### Added
+
+- `register_simd` gains a new dispatch arm: `SimdOpKind::Q15mulrSatI16x8S`
+  pops two `v128`s, reads each of the 8 `i16` lane pairs, and computes a
+  Q15 fixed-point ROUNDING SATURATING multiply per lane: sign-extend
+  both lanes to `i32` (`l as i32 * r as i32` -- never overflows `i32`,
+  max magnitude is `32768 * 32768 == 2^30`), add the rounding constant
+  `0x4000`, arithmetic-shift right by 15 (Rust's `>>` on `i32` is
+  already arithmetic), then `.clamp(i16::MIN as i32, i16::MAX as i32)`
+  -- a REAL saturating clamp, not a wrapping `as i16` cast. The clamp
+  only ever fires for the single `(i16::MIN, i16::MIN)` lane pair, where
+  the unsaturated formula computes `32768`, one past `i16::MAX`.
+- 1 new unit test covering all 4 hand-verified reference cases
+  (`q15mulr_sat_s(0, 0) == 0`, `q15mulr_sat_s(32767, 32767) == 32766`,
+  `q15mulr_sat_s(i16::MIN, i16::MIN) == i16::MAX` -- the saturating
+  edge case, the whole point of this op -- and
+  `q15mulr_sat_s(i16::MIN, i16::MAX) == -32767`), plus a full 8-lane
+  vector sanity check proving every lane computes independently.
+
 ## [0.9.33] - 2026-08-19 (task #180-182 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply family)
 
 ### Added

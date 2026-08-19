@@ -1094,6 +1094,26 @@ fn invalid_i64x2_extmul_low_i32x4_s_given_an_i32_operand_instead_of_v128() {
 }
 
 #[test]
+fn valid_i16x8_q15mulr_sat_s() {
+    // SIMD widen PR22 (task #183-185): i16x8.q15mulr_sat_s
+    // (v128,v128->v128, same shape as i16x8.add/sub/mul above) -- a Q15
+    // fixed-point rounding saturating multiply. The runtime formula
+    // (sign-extend to i32, add the 0x4000 rounding constant, shift right
+    // 15, clamp to i16 range) is entirely a runtime concern -- the type
+    // checker only ever sees plain `v128`s, same as every other SIMD
+    // binary op in this table.
+    assert_valid(r#"(module (func (param v128 v128) (result v128) (i16x8.q15mulr_sat_s (local.get 0) (local.get 1))))"#);
+}
+
+#[test]
+fn invalid_i16x8_q15mulr_sat_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.q15mulr_sat_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

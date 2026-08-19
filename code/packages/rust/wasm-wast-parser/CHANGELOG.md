@@ -1,5 +1,19 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.46 — 2026-08-19 — SIMD widen PR22: i16x8.q15mulr_sat_s text-form (task #183-185)
+
+### Added
+
+- `SimdOpKind::Q15mulrSatI16x8S` joins the shared "no immediate beyond
+  the opcode byte itself" SIMD dispatch arm (already used for
+  `AddI16x8`/`SubI16x8`/`MulI16x8`/`NegI16x8`) in both the folded and
+  flat instruction encoders -- verified byte-identical at both call
+  sites before using `replace_all`, per this campaign's own documented
+  past gotcha.
+- 1 new test confirming `i16x8.q15mulr_sat_s` encodes its real 2-byte
+  LEB128 sub-opcode (`0x82, 0x01`, `>= 128`) in both folded and flat
+  syntax.
+
 ## 0.1.45 — 2026-08-19 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply text-form (task #180-182)
 
 ### Added

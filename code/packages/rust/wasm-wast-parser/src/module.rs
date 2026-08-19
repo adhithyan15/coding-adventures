@@ -1869,6 +1869,7 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::SubI16x8
             | wasm_opcodes::SimdOpKind::MulI16x8
             | wasm_opcodes::SimdOpKind::NegI16x8
+            | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S
             | wasm_opcodes::SimdOpKind::Swizzle
             | wasm_opcodes::SimdOpKind::AbsF32x4
             | wasm_opcodes::SimdOpKind::MulF32x4
@@ -2609,6 +2610,7 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::SubI16x8
             | wasm_opcodes::SimdOpKind::MulI16x8
             | wasm_opcodes::SimdOpKind::NegI16x8
+            | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S
             | wasm_opcodes::SimdOpKind::Swizzle
             | wasm_opcodes::SimdOpKind::AbsF32x4
             | wasm_opcodes::SimdOpKind::MulF32x4
@@ -5661,6 +5663,32 @@ mod tests {
         assert!(code_of(&m, 1).windows(3).any(|w| w == [0xFD, 0xDD, 0x01]), "i64x2.extmul_high_i32x4_s: {:?}", code_of(&m, 1));
         assert!(code_of(&m, 2).windows(3).any(|w| w == [0xFD, 0xDE, 0x01]), "i64x2.extmul_low_i32x4_u: {:?}", code_of(&m, 2));
         assert!(code_of(&m, 3).windows(3).any(|w| w == [0xFD, 0xDF, 0x01]), "i64x2.extmul_high_i32x4_u: {:?}", code_of(&m, 3));
+    }
+
+    #[test]
+    fn simd_i16x8_q15mulr_sat_s_encodes_the_real_sub_opcode() {
+        // SIMD widen PR22 (task #183-185): i16x8.q15mulr_sat_s -- a Q15
+        // fixed-point rounding saturating multiply, the first genuinely
+        // new SIMD op family since the "extmul" arc completed in PR21.
+        // Sub-opcode 0x82 (130 decimal) is >= 128, so it encodes as a real
+        // 2-byte LEB128 sequence (`[0x82, 0x01]`), same shape as
+        // `i16x8.neg` (0x81) and `i16x8.all_true` (0x83), the two entries
+        // that straddle it. Verified against wasm-opcodes' own CHANGELOG
+        // entry and live against BinarySIMD.md.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128) (i16x8.q15mulr_sat_s (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0
+                 local.get 1
+                 i16x8.q15mulr_sat_s))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0x82, 0x01]), "missing i16x8.q15mulr_sat_s: {code:?}");
+        }
     }
 
     #[test]
