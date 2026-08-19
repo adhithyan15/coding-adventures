@@ -127,6 +127,19 @@ pub const RUNTIME: &str = r##"mod __sir {
         // `SeqSet`/`MapSet`. Cloning a `Value::NDArray` clones the `Rc`,
         // not the backing storage.
         NDArray(Rc<RefCell<SirNDArray>>),
+        // ── SIR23 symbolic-expression/pattern-matcher domain (Tier A,
+        // Phase A Slice 4) ──────────────────────────────────────────
+        // An immutable symbolic-expression term (Wolfram-style `head[args…]`
+        // data — see the "SIR23 symbolic expressions" section further down
+        // this file for the full value-model rationale). Plain `Rc`, no
+        // `RefCell`: unlike `Seq`/`Map`/`NDArray`, a term is NEVER mutated
+        // in place once built — every `sir_sym_*` constructor and every
+        // matcher/substitution helper below produces a FRESH term rather
+        // than editing an existing one (mirroring the JS reference's
+        // `Object.freeze` discipline). Cloning a `Value::SymTerm` clones the
+        // `Rc` (a cheap shared handle onto the same immutable tree), not the
+        // tree itself.
+        SymTerm(Rc<SirSymTerm>),
     }
 
     pub struct Pair {
@@ -982,6 +995,16 @@ pub const RUNTIME: &str = r##"mod __sir {
                 s.push(']');
                 s
             }
+            // A symbolic term renders in the generic Wolfram `head(args,
+            // …)` form — see `sir_sym_to_s` (SIR23 section, below) for the
+            // full per-kind breakdown and its own depth cap (a term built
+            // via `sir_sym_apply` is not depth-capped at CONSTRUCTION time,
+            // only at WALK time, so a runtime-built term can be arbitrarily
+            // deep — `sir_sym_to_s` guards against that independently of
+            // this `visited`-based cycle guard, since a term tree can never
+            // actually cycle — it is built bottom-up from immutable,
+            // already-frozen sub-terms, unlike `Seq`/`Map`).
+            Value::SymTerm(t) => sir_sym_to_s(t, 0),
         }
     }
 
@@ -2448,6 +2471,15 @@ pub const RUNTIME: &str = r##"mod __sir {
             // the same class and message; no backend does that today, and
             // matching Ruby here alone would create a fresh divergence.)
             (Value::Exception(x), Value::Exception(y)) => Rc::ptr_eq(x, y),
+            // Two symbolic terms compare STRUCTURALLY (Wolfram `SameQ`-
+            // style value equality, not identity) — matching how `Pair`/
+            // `Seq`/`Map` above compare, and reusing the SAME depth-capped
+            // `sir_sym_term_equals` the pattern matcher itself uses for a
+            // repeated pattern-variable's "same term every occurrence"
+            // check. No cycle guard is needed here (unlike `Seq`/`Map`): a
+            // term tree is immutable and built bottom-up from already-
+            // frozen sub-terms, so it can never contain itself.
+            (Value::SymTerm(x), Value::SymTerm(y)) => sir_sym_term_equals(x, y, 0),
             _ => false,
         }
     }
@@ -2639,6 +2671,17 @@ pub const RUNTIME: &str = r##"mod __sir {
             Value::Instance(id) => instance_class(*id),
             Value::Missing => "Object".to_string(),
             Value::NDArray(_) => "NDArray".to_string(),
+            // Neither Ruby nor a symbolic term has a real Ruby class of its
+            // own — this mirrors `semantic-ir-to-javascript`'s own
+            // `rubyClassName`, which does not special-case its `Symbolic`
+            // term shape either and falls through to its generic "Object"
+            // default (that function's final `return "Object"`). This arm
+            // exists only because THIS backend's `ruby_class_name` is an
+            // exhaustive match (no wildcard) — every `Value` variant needs
+            // an arm to compile — not because a symbolic term is expected
+            // to reach a `NoMethodError` message in practice (Tier A never
+            // calls a method ON a term; see this section's own doc note).
+            Value::SymTerm(_) => "Object".to_string(),
         }
     }
 
@@ -5958,6 +6001,640 @@ pub const RUNTIME: &str = r##"mod __sir {
             });
         }
         val
+    }
+
+    // ── SIR23 symbolic expressions + pattern/rewrite (Tier A, Phase A
+    // Slice 4) ──────────────────────────────────────────────────────────
+    //
+    // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll` lower to calls into the
+    // `sir_sym_*` helpers below — an inlined port of
+    // `semantic-ir-to-javascript`'s already-proven `Symbolic` sub-runtime's
+    // Tier A (matcher) slice: term construction, `matchPattern`/
+    // `substituteTerm`/`applyRuleTerm`, and `replaceAll`/`replaceRepeated`
+    // with their `MAX_TERM_DEPTH` guard — cross-checked against
+    // `semantic-ir-to-ruby`'s own (also-Tier-A-only) port for algorithm
+    // parity. Tier B (`evalTerm`, the arithmetic/calculus/user-function
+    // evaluator) is explicitly OUT OF SCOPE for this slice — matching the
+    // SIR23 spec's own Tier A/Tier B split — so no `Add`/`Sin`/`D`/…
+    // folding exists here; a `SymApply` builds an inert term tree, nothing
+    // more.
+    //
+    // ## Value model
+    //
+    // Unlike the JS/Ruby ports (a `{kind, ...}` frozen object / a single
+    // `Struct` with unused fields left `nil`), this port uses a genuine
+    // Rust `enum` — `SirSymTerm` — discriminated at the TYPE level, one
+    // variant per term kind, each carrying only the fields that kind uses.
+    // This is the idiomatic-Rust shape for exactly this "closed sum of
+    // heterogeneous leaf/compound node kinds" problem (the same reason
+    // `Expr`/`Stmt` in `semantic-ir` itself are enums), and it gets
+    // exhaustiveness checking for free: every `match node { … }` below is
+    // required by `rustc` to cover every kind, so a future SIR23 addendum
+    // adding an 8th term kind cannot silently fall through a forgotten arm.
+    //
+    // A `SirSymTerm::Apply`'s `head`/`args` are `Rc<SirSymTerm>` (not
+    // `Value`) — the matcher/substitution helpers work directly on terms
+    // without re-checking "is this really a symbolic term" at every
+    // recursive step; only the OUTERMOST boundary (a `sir_sym_*` function
+    // called from emitted code, which always deals in `Value`) needs to
+    // unwrap/wrap between `Value::SymTerm(Rc<SirSymTerm>)` and a bare
+    // `Rc<SirSymTerm>` — see `sir_sym_term_of`.
+    //
+    // A term is never mutated in place once built (mirroring the JS
+    // reference's `Object.freeze` discipline): every constructor and every
+    // matcher/substitution helper below produces a FRESH `Rc<SirSymTerm>`
+    // rather than editing an existing one, so `Value::SymTerm`'s plain `Rc`
+    // (no `RefCell`) is sufficient — unlike `Value::Seq`/`Value::Map`/
+    // `Value::NDArray`, which all need `Rc<RefCell<…>>` because SIR16/
+    // SIR22 give them real in-place mutation statements (`SeqSet`/`MapSet`/
+    // `IndexSet`). SIR23 adds NO mutation statement at all (its own spec
+    // note: building, matching, and substituting a symbolic term has no
+    // observable side effect distinct from the value it computes).
+    //
+    // This backend's own `Expr::IntLit`/`Expr::FloatLit`/`Expr::StrLit`
+    // already emit UNBOUNDED-capacity `Value::Int(i64)`/`Value::Float(f64)`/
+    // `Value::Str(Rc<str>)` (no `Number.isSafeInteger`-style ceiling the
+    // JS backend's own `Symbolic.int`/`.rational` must enforce for THAT
+    // runtime's untagged-`number` value model) — so `sir_sym_int`/
+    // `sir_sym_float` here need no extra range check beyond "is this
+    // already the `Value` variant we expect" / "is this float finite".
+    #[derive(Debug)]
+    pub enum SirSymTerm {
+        /// A bare symbolic-expression symbol — Wolfram `x`, `Plus`, `f`
+        /// used as DATA rather than evaluated as a variable reference.
+        Symbol { name: String },
+        Integer { value: i64 },
+        /// Always held in REDUCED form (numerator/denominator share no
+        /// common factor; denominator positive) — `sir_sym_rational`
+        /// normalizes at construction time, exactly as the JS/Ruby
+        /// references do; this type itself does not re-validate that
+        /// invariant (SIR10 "types carry, don't verify").
+        Rational { numer: i64, denom: i64 },
+        Float { value: f64 },
+        Str { value: String },
+        /// `head[args…]` / `head(args…)` as data. `head` is itself a full
+        /// term (not a bare name) because a COMPUTED head is legal Wolfram
+        /// (`f[x][y]` applies the result of `f[x]` to `y`) — usually a
+        /// `Symbol`, but this type does not narrow it.
+        Apply {
+            head: Rc<SirSymTerm>,
+            args: Vec<Rc<SirSymTerm>>,
+        },
+    }
+
+    /// Generic term → `String` rendering (`head(args, …)`) — wired into
+    /// `format_d`'s `Value::SymTerm` arm (above) so `print`/`puts` on a
+    /// term behaves like every other displayable SIR value. A direct port
+    /// of the JS reference's `toDisplayString`'s generic (non-`SIR_DISPLAY_
+    /// DERIVE`) branch ONLY — the Derive-specific infix/precedence
+    /// pretty-printer (SIR23 addendum item 4) is separate follow-up work,
+    /// not part of this Tier A matcher port.
+    ///
+    /// SECURITY (CWE-674): depth-capped with the SAME `SIR_SYM_MAX_TERM_
+    /// DEPTH` guard the matcher's own tree walks use below, for the
+    /// identical reason: a term built via `sir_sym_apply` is not depth-
+    /// capped at CONSTRUCTION time (only the tree WALK below enforces the
+    /// cap), so a runtime-built term (e.g. a compiled loop lowered to
+    /// repeated `SymApply` nesting — see the `depth_limit_*` test in
+    /// `tests/sir23_symbolic.rs`) can be arbitrarily deep. Past the cap,
+    /// `"..."` is the safe, contained answer — this function DOES NOT
+    /// `raise` (unlike `sir_sym_walk_once`/`sir_sym_replace_repeated`
+    /// below): a `print` on a too-deep term should degrade to a truncated
+    /// string, not abort the whole program, matching the JS/Ruby
+    /// references' own choice for this specific function.
+    ///
+    /// ## Whether an `NDArray` display precedent applies here
+    ///
+    /// SIR22's `Value::NDArray` DOES participate in `format_d` (see that
+    /// arm's own doc note: "a defensive rendering only… not the primary
+    /// display story for this domain"), so there is no "arrays opt out of
+    /// display entirely" precedent to follow either way. This port wires
+    /// symbolic terms into `format_d` because `tests/sir23_symbolic.rs`
+    /// (ported from the JS reference's own execution-proof suite) asserts
+    /// on PRINTED term output — e.g. a `replace_repeated` result reducing
+    /// to the bare symbol `z`, or a rejected-match term round-tripping as
+    /// `"f(z)"` — so a real display path is load-bearing for this slice's
+    /// own tests, not merely a nice-to-have.
+    fn sir_sym_to_s(node: &SirSymTerm, depth: usize) -> String {
+        if depth > SIR_SYM_MAX_TERM_DEPTH {
+            return "...".to_string();
+        }
+        match node {
+            SirSymTerm::Symbol { name } => name.clone(),
+            SirSymTerm::Integer { value } => value.to_string(),
+            SirSymTerm::Rational { numer, denom } => format!("{numer}/{denom}"),
+            SirSymTerm::Float { value } => format_float(*value),
+            // `{:?}` (Debug) quotes and escapes the string, matching the
+            // JS reference's `JSON.stringify` / the Ruby reference's
+            // `.inspect` — a term's OWN string leaf renders quoted, unlike
+            // `Value::Str`'s bare (unquoted) `format_d` arm above, exactly
+            // as the JS/Ruby references' generic term renderer does.
+            SirSymTerm::Str { value } => format!("{:?}", value),
+            SirSymTerm::Apply { head, args } => {
+                let head_s = sir_sym_to_s(head, depth + 1);
+                let args_s: Vec<String> =
+                    args.iter().map(|a| sir_sym_to_s(a, depth + 1)).collect();
+                format!("{head_s}({})", args_s.join(", "))
+            }
+        }
+    }
+
+    /// Raise a catchable `RuntimeError` from this domain — mirrors
+    /// `array_raise` (SIR22 section, above) exactly: every symbolic-domain
+    /// error is a `raise` (`std::panic::panic_any` with a `SirError`
+    /// payload, via `raise` in the exceptions section above), never a bare
+    /// Rust panic, so a malformed rational/non-finite float/depth-limit/
+    /// rewrite-cycle fails with a clean, `TryCatch`-rescuable error instead
+    /// of an uncatchable process abort. This is ALSO why `sir_sym_walk_once`/
+    /// `sir_sym_replace_repeated` below need no JS/Ruby-style sentinel-
+    /// value-threaded-through-every-return-path plumbing (their `{kind:
+    /// "depth_limit", …}` objects / `{kind: :depth_limit, …}` Hashes, plus
+    /// every caller checking for one and propagating it up): Rust's own
+    /// unwinding panic IS that propagation mechanism, automatically, at
+    /// every stack frame — `sir_sym_raise` below simply never returns, and
+    /// the existing `catch_unwind`/`report_uncaught` machinery the
+    /// exceptions section already provides handles the rest, exactly as it
+    /// does for `array_raise`.
+    fn sir_sym_raise(msg: String) -> ! {
+        raise("RuntimeError", Value::Str(Rc::from(msg.as_str())))
+    }
+
+    /// Unwrap a `Value` that must already be a symbolic term (every
+    /// `sir_sym_*` function taking a term OPERAND — as opposed to a raw
+    /// `Value::Int`/`Value::Float`/`Value::Str` LEAF constructor input —
+    /// goes through this). A non-`SymTerm` `Value` reaching here is an
+    /// internal bug (the emitter's own `emit_sym_operand`, mirrored from
+    /// the JS/Ruby backends, wraps every bare `IntLit`/`FloatLit`/`StrLit`
+    /// operand through the matching leaf constructor before it can sit
+    /// inside a term tree — see `emit.rs`), so this panics with a plain
+    /// Rust panic (never a catchable `raise`) exactly like the `Intrinsic`/
+    /// `Convert` "backend should have rejected it" arms in `emit.rs`.
+    fn sir_sym_term_of(v: &Value) -> Rc<SirSymTerm> {
+        match v {
+            Value::SymTerm(t) => t.clone(),
+            other => panic!(
+                "sir_sym: expected a Symbolic term operand, got a {}",
+                ruby_class_name(other)
+            ),
+        }
+    }
+
+    pub fn sir_sym_symbol(name: &str) -> Value {
+        Value::SymTerm(Rc::new(SirSymTerm::Symbol { name: name.to_string() }))
+    }
+
+    /// `v` must already be a `Value::Int` — the emitter routes a bare
+    /// `Expr::IntLit` operand through this via `emit_sym_operand` (see
+    /// `emit.rs`), so `v` is always `__sir::Value::Int(<literal>)` in
+    /// practice; the `other` arm is defensive only.
+    pub fn sir_sym_int(v: Value) -> Value {
+        match v {
+            Value::Int(value) => Value::SymTerm(Rc::new(SirSymTerm::Integer { value })),
+            other => panic!("sir_sym_int: expected an Int value, got a {}", ruby_class_name(&other)),
+        }
+    }
+
+    fn sir_sym_gcd_abs(a: i64, b: i64) -> i64 {
+        let mut a = a.abs();
+        let mut b = b.abs();
+        while b != 0 {
+            let t = b;
+            b = a % b;
+            a = t;
+        }
+        if a == 0 { 1 } else { a }
+    }
+
+    /// `numer`/`denom` are Rust `i64` CONSTANTS the emitter bakes directly
+    /// from `Expr::SymRational`'s own fields — not routed through
+    /// `emit_sym_operand`/`Value`, since `SymRational` carries its
+    /// numerator/denominator as plain IR-level integers, not sub-`Expr`s.
+    pub fn sir_sym_rational(numer: i64, denom: i64) -> Value {
+        if denom == 0 {
+            sir_sym_raise("sir_sym_rational: denominator cannot be zero".to_string());
+        }
+        let (mut numer, mut denom) = (numer, denom);
+        if denom < 0 {
+            numer = -numer;
+            denom = -denom;
+        }
+        let g = sir_sym_gcd_abs(numer, denom);
+        Value::SymTerm(Rc::new(SirSymTerm::Rational { numer: numer / g, denom: denom / g }))
+    }
+
+    /// `v` must already be a `Value::Float` — see `sir_sym_int`'s doc for
+    /// why (the `emit_sym_operand` wrapping contract).
+    pub fn sir_sym_float(v: Value) -> Value {
+        match v {
+            Value::Float(value) if value.is_finite() => {
+                Value::SymTerm(Rc::new(SirSymTerm::Float { value }))
+            }
+            Value::Float(_) => sir_sym_raise("sir_sym_float: value must be finite".to_string()),
+            other => panic!("sir_sym_float: expected a Float value, got a {}", ruby_class_name(&other)),
+        }
+    }
+
+    /// `v` must already be a `Value::Str` — see `sir_sym_int`'s doc for why.
+    pub fn sir_sym_string(v: Value) -> Value {
+        match v {
+            Value::Str(s) => Value::SymTerm(Rc::new(SirSymTerm::Str { value: s.to_string() })),
+            other => panic!("sir_sym_string: expected a Str value, got a {}", ruby_class_name(&other)),
+        }
+    }
+
+    pub fn sir_sym_apply(head: Value, args: Vec<Value>) -> Value {
+        let head_t = sir_sym_term_of(&head);
+        let arg_ts: Vec<Rc<SirSymTerm>> = args.iter().map(sir_sym_term_of).collect();
+        Value::SymTerm(Rc::new(SirSymTerm::Apply { head: head_t, args: arg_ts }))
+    }
+
+    /// Structural equality — used by the matcher (a repeated pattern
+    /// variable must bind to the SAME term every occurrence), by
+    /// `sir_sym_bindings_bind`'s "already bound to this exact term" fast
+    /// path, by `sir_sym_replace_repeated`'s "did this firing actually
+    /// change anything" fixed-point check, and by `value_eq_d`'s
+    /// `Value::SymTerm` arm (above).
+    ///
+    /// SECURITY (CWE-674): depth-capped with the SAME `SIR_SYM_MAX_TERM_
+    /// DEPTH` guard `sir_sym_walk_once`/`sir_sym_replace_repeated` use
+    /// below — a term built via `sir_sym_apply` is not depth-capped at
+    /// CONSTRUCTION time (only the tree WALK below enforces the cap), so a
+    /// runtime-built term could be arbitrarily deep. Past the cap, `false`
+    /// ("not structurally equal") is the safe, contained answer, mirroring
+    /// `sir_sym_match_pattern`'s own "give up cleanly" contract for a
+    /// failed match.
+    fn sir_sym_term_equals(a: &SirSymTerm, b: &SirSymTerm, depth: usize) -> bool {
+        if depth > SIR_SYM_MAX_TERM_DEPTH {
+            return false;
+        }
+        match (a, b) {
+            (SirSymTerm::Symbol { name: x }, SirSymTerm::Symbol { name: y }) => x == y,
+            (SirSymTerm::Integer { value: x }, SirSymTerm::Integer { value: y }) => x == y,
+            (
+                SirSymTerm::Rational { numer: xn, denom: xd },
+                SirSymTerm::Rational { numer: yn, denom: yd },
+            ) => xn == yn && xd == yd,
+            (SirSymTerm::Float { value: x }, SirSymTerm::Float { value: y }) => x == y,
+            (SirSymTerm::Str { value: x }, SirSymTerm::Str { value: y }) => x == y,
+            (
+                SirSymTerm::Apply { head: xh, args: xa },
+                SirSymTerm::Apply { head: yh, args: ya },
+            ) => {
+                sir_sym_term_equals(xh, yh, depth + 1)
+                    && xa.len() == ya.len()
+                    && xa.iter().zip(ya.iter()).all(|(x, y)| sir_sym_term_equals(x, y, depth + 1))
+            }
+            _ => false,
+        }
+    }
+
+    fn sir_sym_head_name(node: &SirSymTerm) -> &str {
+        match node {
+            SirSymTerm::Symbol { name } => name,
+            _ => "",
+        }
+    }
+
+    // ── pattern/rule vocabulary (cas-pattern-matching) ──────────────────
+    const SIR_SYM_BLANK: &str = "Blank";
+    const SIR_SYM_PATTERN: &str = "Pattern";
+    const SIR_SYM_RULE: &str = "Rule";
+    const SIR_SYM_RULE_DELAYED: &str = "RuleDelayed";
+
+    fn sir_sym_is_head(node: &SirSymTerm, name: &str) -> bool {
+        if let SirSymTerm::Apply { head, .. } = node {
+            if let SirSymTerm::Symbol { name: n } = head.as_ref() {
+                return n == name;
+            }
+        }
+        false
+    }
+    fn sir_sym_is_blank(node: &SirSymTerm) -> bool {
+        sir_sym_is_head(node, SIR_SYM_BLANK)
+    }
+    fn sir_sym_is_pattern(node: &SirSymTerm) -> bool {
+        sir_sym_is_head(node, SIR_SYM_PATTERN)
+    }
+    fn sir_sym_is_rule(node: &SirSymTerm) -> bool {
+        if let SirSymTerm::Apply { head, args } = node {
+            if let SirSymTerm::Symbol { name } = head.as_ref() {
+                return (name == SIR_SYM_RULE || name == SIR_SYM_RULE_DELAYED) && args.len() == 2;
+            }
+        }
+        false
+    }
+
+    pub fn sir_sym_blank() -> Value {
+        sir_sym_apply(sir_sym_symbol(SIR_SYM_BLANK), vec![])
+    }
+    pub fn sir_sym_blank_typed(head: &str) -> Value {
+        sir_sym_apply(sir_sym_symbol(SIR_SYM_BLANK), vec![sir_sym_symbol(head)])
+    }
+    pub fn sir_sym_named(name: &str, inner: Value) -> Value {
+        sir_sym_apply(sir_sym_symbol(SIR_SYM_PATTERN), vec![sir_sym_symbol(name), inner])
+    }
+    pub fn sir_sym_rule(lhs: Value, rhs: Value) -> Value {
+        sir_sym_apply(sir_sym_symbol(SIR_SYM_RULE), vec![lhs, rhs])
+    }
+    pub fn sir_sym_rule_delayed(lhs: Value, rhs: Value) -> Value {
+        sir_sym_apply(sir_sym_symbol(SIR_SYM_RULE_DELAYED), vec![lhs, rhs])
+    }
+
+    /// A pattern match's captured variable bindings: name → the term it
+    /// matched. Persistent / copy-on-write (mirrors `cas-pattern-
+    /// matching`'s `Bindings` class and the JS/Ruby ports' own Map/Hash
+    /// discipline) so a failed match attempt never mutates a binding set
+    /// an earlier attempt still holds a reference to — `sir_sym_bindings_
+    /// bind` always returns a NEW map, never mutates `bindings` in place.
+    type SirSymBindings = HashMap<String, Rc<SirSymTerm>>;
+
+    fn sir_sym_bindings_bind(
+        bindings: &SirSymBindings,
+        name: &str,
+        value: &Rc<SirSymTerm>,
+    ) -> SirSymBindings {
+        if let Some(existing) = bindings.get(name) {
+            if sir_sym_term_equals(existing, value, 0) {
+                return bindings.clone();
+            }
+        }
+        let mut next = bindings.clone();
+        next.insert(name.to_string(), value.clone());
+        next
+    }
+
+    fn sir_sym_blank_head_constraint(node: &SirSymTerm) -> Option<String> {
+        if let SirSymTerm::Apply { args, .. } = node {
+            if let Some(first) = args.first() {
+                if let SirSymTerm::Symbol { name } = first.as_ref() {
+                    return Some(name.clone());
+                }
+            }
+        }
+        None
+    }
+    fn sir_sym_pattern_name(node: &SirSymTerm) -> String {
+        if let SirSymTerm::Apply { args, .. } = node {
+            if let Some(first) = args.first() {
+                if let SirSymTerm::Symbol { name } = first.as_ref() {
+                    return name.clone();
+                }
+            }
+        }
+        sir_sym_raise("Symbolic: Pattern name must be a Symbol".to_string());
+    }
+    fn sir_sym_pattern_inner(node: &SirSymTerm) -> Rc<SirSymTerm> {
+        if let SirSymTerm::Apply { args, .. } = node {
+            if args.len() >= 2 {
+                return args[1].clone();
+            }
+        }
+        sir_sym_raise("Symbolic: Pattern requires an inner expression".to_string());
+    }
+    fn sir_sym_effective_head_name(node: &SirSymTerm) -> String {
+        match node {
+            SirSymTerm::Apply { head, .. } => {
+                let hn = sir_sym_head_name(head);
+                if hn.is_empty() { "Apply".to_string() } else { hn.to_string() }
+            }
+            SirSymTerm::Integer { .. } => "Integer".to_string(),
+            SirSymTerm::Rational { .. } => "Rational".to_string(),
+            SirSymTerm::Float { .. } => "Float".to_string(),
+            SirSymTerm::Str { .. } => "String".to_string(),
+            SirSymTerm::Symbol { .. } => "Symbol".to_string(),
+        }
+    }
+
+    /// Five-case structural matcher: `Blank()`, `Blank(T)`, `Pattern(name,
+    /// inner)`, compound-vs-compound (recurse head + every arg, same arity
+    /// required), and plain structural equality — a direct port of
+    /// `cas-pattern-matching::matchPattern`.
+    ///
+    /// Recurses only as deep as a single RULE's own (author-written, not
+    /// runtime-controlled) pattern shape — always shallow regardless of how
+    /// deep `target` is, since a compound-vs-compound match only ever
+    /// descends into `pattern`'s own `args` (bounded by the rule's literal
+    /// source text), never into `target`'s full depth independent of
+    /// `pattern`'s shape. No `SIR_SYM_MAX_TERM_DEPTH` guard is needed here
+    /// — see `sir_sym_walk_once`'s own doc note for why the tree-WALK
+    /// functions below need one and this one does not.
+    fn sir_sym_match_pattern(
+        pattern: &Rc<SirSymTerm>,
+        target: &Rc<SirSymTerm>,
+        bindings: &SirSymBindings,
+    ) -> Option<SirSymBindings> {
+        if sir_sym_is_blank(pattern) {
+            return match sir_sym_blank_head_constraint(pattern) {
+                None => Some(bindings.clone()),
+                Some(constraint) => {
+                    if sir_sym_effective_head_name(target) == constraint {
+                        Some(bindings.clone())
+                    } else {
+                        None
+                    }
+                }
+            };
+        }
+        if sir_sym_is_pattern(pattern) {
+            let name = sir_sym_pattern_name(pattern);
+            let inner = sir_sym_pattern_inner(pattern);
+            let matched = sir_sym_match_pattern(&inner, target, bindings)?;
+            return match matched.get(&name) {
+                Some(existing) => {
+                    if sir_sym_term_equals(existing, target, 0) {
+                        Some(matched)
+                    } else {
+                        None
+                    }
+                }
+                None => Some(sir_sym_bindings_bind(&matched, &name, target)),
+            };
+        }
+        if let SirSymTerm::Apply { head: p_head, args: p_args } = pattern.as_ref() {
+            let SirSymTerm::Apply { head: t_head, args: t_args } = target.as_ref() else {
+                return None;
+            };
+            let mut current = sir_sym_match_pattern(p_head, t_head, bindings)?;
+            if p_args.len() != t_args.len() {
+                return None;
+            }
+            for (p, t) in p_args.iter().zip(t_args.iter()) {
+                current = sir_sym_match_pattern(p, t, &current)?;
+            }
+            return Some(current);
+        }
+        if sir_sym_term_equals(pattern, target, 0) { Some(bindings.clone()) } else { None }
+    }
+
+    fn sir_sym_substitute(template: &Rc<SirSymTerm>, bindings: &SirSymBindings) -> Rc<SirSymTerm> {
+        if sir_sym_is_pattern(template) {
+            let name = sir_sym_pattern_name(template);
+            if let Some(captured) = bindings.get(&name) {
+                return captured.clone();
+            }
+            return template.clone();
+        }
+        if let SirSymTerm::Apply { head, args } = template.as_ref() {
+            let new_head = sir_sym_substitute(head, bindings);
+            let new_args: Vec<Rc<SirSymTerm>> =
+                args.iter().map(|a| sir_sym_substitute(a, bindings)).collect();
+            return Rc::new(SirSymTerm::Apply { head: new_head, args: new_args });
+        }
+        template.clone()
+    }
+
+    /// Match `rewrite_rule`'s `lhs` against `expr` and, on success,
+    /// substitute the captured bindings into `rhs` — `None` on a failed
+    /// match (the "no match, no rewrite" contract every caller relies on).
+    fn sir_sym_apply_rule(
+        rewrite_rule: &Rc<SirSymTerm>,
+        expr: &Rc<SirSymTerm>,
+    ) -> Option<Rc<SirSymTerm>> {
+        if !sir_sym_is_rule(rewrite_rule) {
+            sir_sym_raise("Symbolic.applyRule: expected Rule/RuleDelayed".to_string());
+        }
+        let SirSymTerm::Apply { args, .. } = rewrite_rule.as_ref() else {
+            unreachable!("sir_sym_is_rule guarantees an Apply shape");
+        };
+        let bindings = sir_sym_match_pattern(&args[0], expr, &SirSymBindings::new())?;
+        Some(sir_sym_substitute(&args[1], &bindings))
+    }
+
+    // ── replaceAll / replaceRepeated (`/.` / `//.`) + DoS guards ────────
+    //
+    // `sir_sym_match_pattern`/`sir_sym_substitute`/`sir_sym_apply_rule`
+    // recurse, but only as deep as a single RULE's own (author-written)
+    // pattern/RHS shape — always shallow regardless of how deep the TARGET
+    // expression is. `sir_sym_walk_once`/`sir_sym_replace_repeated_walk`,
+    // by contrast, walk the ENTIRE target expression tree, which ordinary
+    // compiled-program data can build up to unbounded depth (a `for` loop
+    // repeatedly firing `sir_sym_apply` — see `tests/sir23_symbolic.rs`'s
+    // depth-limit test) — so these two need an explicit cap (CWE-674
+    // stack-overflow DoS guard), mirroring the JS reference's
+    // `MAX_TERM_DEPTH = 512` exactly (cross-validated against the
+    // published TypeScript `sir-runtime-symbolic` package, which uses the
+    // identical constant, and against `semantic-ir-to-ruby`'s own port).
+    const SIR_SYM_MAX_TERM_DEPTH: usize = 512;
+
+    /// `expr /. rules` — one pass, bottom-up: a node's head/args are
+    /// walked (and possibly replaced) before the node itself is tried
+    /// against `rules`; the first matching rule wins and the freshly
+    /// substituted replacement is NOT re-walked or retried at that same
+    /// position (Wolfram's single-pass `/.` contract, distinct from
+    /// `sir_sym_replace_repeated`'s fixed point below).
+    fn sir_sym_walk_once(node: &Rc<SirSymTerm>, rules: &[Rc<SirSymTerm>], depth: usize) -> Rc<SirSymTerm> {
+        if depth > SIR_SYM_MAX_TERM_DEPTH {
+            sir_sym_raise_depth_limit();
+        }
+        let mut current = node.clone();
+        if let SirSymTerm::Apply { head, args } = node.as_ref() {
+            let new_head = sir_sym_walk_once(head, rules, depth + 1);
+            let new_args: Vec<Rc<SirSymTerm>> =
+                args.iter().map(|a| sir_sym_walk_once(a, rules, depth + 1)).collect();
+            current = Rc::new(SirSymTerm::Apply { head: new_head, args: new_args });
+        }
+        for rule in rules {
+            if let Some(replacement) = sir_sym_apply_rule(rule, &current) {
+                return replacement;
+            }
+        }
+        current
+    }
+
+    pub fn sir_sym_replace_all(expr: Value, rules: Vec<Value>) -> Value {
+        let expr_t = sir_sym_term_of(&expr);
+        let rule_ts: Vec<Rc<SirSymTerm>> = rules.iter().map(sir_sym_term_of).collect();
+        Value::SymTerm(sir_sym_walk_once(&expr_t, &rule_ts, 0))
+    }
+
+    /// A GLOBAL cap, shared across one whole `sir_sym_replace_repeated`
+    /// call, on the total number of rule FIRINGS (not tree-walk recursion
+    /// depth) — guards against a non-terminating rule set (SIR23 spec
+    /// "Matcher semantics" point 6: every backend implementing `repeated:
+    /// true` MUST enforce an iteration cap). Matches the JS/Ruby
+    /// references' own default of 100.
+    const SIR_SYM_MAX_REWRITE_ITERATIONS: usize = 100;
+
+    /// `expr //. rules` — a fixed point: at each subtree, keep retrying
+    /// `rules` until none fire (re-walking any fresh replacement so its own
+    /// sub-parts also converge) before moving up to the parent.
+    ///
+    /// SECURITY (CWE-674, the "must cost O(1) stack frames per firing"
+    /// requirement): a rule firing repeatedly at ONE tree position loops
+    /// LOCALLY in the `loop { … }` below — never via a recursive call on
+    /// the freshly-substituted replacement — so however many times a rule
+    /// fires at one position costs O(1) native stack frames, not
+    /// O(firings). `depth` (checked against `SIR_SYM_MAX_TERM_DEPTH`) only
+    /// increases on a genuine descent into `head`/`args`; `counter`
+    /// (checked against `SIR_SYM_MAX_REWRITE_ITERATIONS`, threaded through
+    /// every recursive call via `&mut usize` — the Rust analogue of the
+    /// JS/Ruby references' closure-captured counter variable, since Rust
+    /// has no ambient mutable-closure-capture for a plain recursive `fn`)
+    /// bounds iteration COUNT (CPU time) only, and is a GLOBAL budget
+    /// shared across the ENTIRE walk (every tree position draws from the
+    /// same counter) — never native recursion depth, which `depth` alone
+    /// governs.
+    fn sir_sym_replace_repeated_walk(
+        node: &Rc<SirSymTerm>,
+        rules: &[Rc<SirSymTerm>],
+        depth: usize,
+        counter: &mut usize,
+    ) -> Rc<SirSymTerm> {
+        if depth > SIR_SYM_MAX_TERM_DEPTH {
+            sir_sym_raise_depth_limit();
+        }
+        let mut current = node.clone();
+        loop {
+            if let SirSymTerm::Apply { head, args } = current.as_ref() {
+                let new_head = sir_sym_replace_repeated_walk(head, rules, depth + 1, counter);
+                let new_args: Vec<Rc<SirSymTerm>> = args
+                    .iter()
+                    .map(|a| sir_sym_replace_repeated_walk(a, rules, depth + 1, counter))
+                    .collect();
+                current = Rc::new(SirSymTerm::Apply { head: new_head, args: new_args });
+            }
+            let mut fired = false;
+            for rule in rules {
+                if let Some(replacement) = sir_sym_apply_rule(rule, &current) {
+                    if sir_sym_term_equals(&replacement, &current, 0) {
+                        // A rule that "fires" but reproduces an identical
+                        // term makes no progress — do not count it (and do
+                        // not loop on it again below), matching the JS/Ruby
+                        // references' identical short-circuit.
+                        continue;
+                    }
+                    *counter += 1;
+                    if *counter > SIR_SYM_MAX_REWRITE_ITERATIONS {
+                        sir_sym_raise_rewrite_cycle();
+                    }
+                    current = replacement;
+                    fired = true;
+                    break;
+                }
+            }
+            if !fired {
+                return current;
+            }
+        }
+    }
+
+    pub fn sir_sym_replace_repeated(expr: Value, rules: Vec<Value>) -> Value {
+        let expr_t = sir_sym_term_of(&expr);
+        let rule_ts: Vec<Rc<SirSymTerm>> = rules.iter().map(sir_sym_term_of).collect();
+        let mut counter: usize = 0;
+        Value::SymTerm(sir_sym_replace_repeated_walk(&expr_t, &rule_ts, 0, &mut counter))
+    }
+
+    fn sir_sym_raise_depth_limit() -> ! {
+        sir_sym_raise(format!(
+            "sir-runtime-symbolic: depth-limit (term nesting exceeded {SIR_SYM_MAX_TERM_DEPTH} levels)"
+        ))
+    }
+    fn sir_sym_raise_rewrite_cycle() -> ! {
+        sir_sym_raise(format!(
+            "sir-runtime-symbolic: rewrite-cycle (exceeded {SIR_SYM_MAX_REWRITE_ITERATIONS} rule firings at one position — the rule set is likely non-terminating)"
+        ))
     }
 }
 "##;
