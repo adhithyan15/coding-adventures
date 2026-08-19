@@ -1,0 +1,803 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 297,
+  "title": "More of the Kitchen --- Pan, Oven, Fork, Garlic, Soup",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e021d5bf4baec1af",
+  "lessons": [
+    {
+      "id": "ES-C297-sarten",
+      "sequence": 3970,
+      "title": "la sartén — the accent that is a receipt",
+      "headword": "la sartén",
+      "romanization": "la sartén",
+      "gloss": "the frying pan — Latin sartago; its written accent is a receipt for where the stress went, and the plural hands it back",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7315a54587c23640",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what does un gallina call somebody? (A coward.) And what did burrus mean? (Reddish.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la olla — the deep one you already have."
+            },
+            {
+              "kind": "speech",
+              "text": "el plato — where the food ends up."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "sar-TÉN, stress on the very end, which is what the written accent is telling you. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sartén — \"the frying pan,\" the shallow one you fry in."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin sartago was already exactly that, and the Romans already fried in it. The word came down through the sideways form sartaginem, which is where the -n on the end comes from."
+            },
+            {
+              "kind": "speech",
+              "text": "The accent is the part worth stopping on. Spanish only writes one when the stress falls somewhere the default rules would not put it, so an accent is never decoration — it is a receipt. A word ending in -n is expected to be stressed on the part before last. Sartén is not, so it must say so."
+            },
+            {
+              "kind": "speech",
+              "text": "Now make it plural and watch the receipt get handed back: sartenes ends in -s and is stressed on the part before last, which is exactly what the rules already predict. No accent needed, so no accent written. The mark did not move; the reason for it disappeared."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A pan, and a small piece of proof that the accents are not arbitrary."
+            },
+            {
+              "kind": "speech",
+              "text": "If you can say why sartén wears one and sartenes does not, you can predict the mark on most words you meet rather than memorising it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sartén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sartén*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sartén, then las sartenes — hear the stress stay put",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sartén*, then *las sartenes* — hear the stress stay put]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la olla, then la sartén",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la olla*, then *la sartén*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was sartago? (A frying pan.) Why does sartén wear an accent? (Because the stress is final and a word ending in -n would not be.) And why does sartenes not? (The rules already predict its stress.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C297-horno",
+      "sequence": 3980,
+      "title": "el horno — an f buried under an h",
+      "headword": "el horno",
+      "romanization": "el horno",
+      "gloss": "the oven — Latin furnus, wearing the silent h that marks where an f used to stand; furnace is the same fire",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:55f0d916e050e909",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what is a burrito, taken literally? (A little donkey.) And why does sartén carry an accent? (Its stress is final, against the rule.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "f becomes h — the change this word is a specimen of."
+            },
+            {
+              "kind": "speech",
+              "text": "la sartén — the shallow one, from just before."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "OR-no, stress on the first part. The h is written and not said, which is the whole point of it. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el horno — \"the oven.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin furnus, an oven or a bakehouse. You already know what happened to the f-: it thinned to a breathy sound, the breath faded, and Spanish went on writing the letter over the empty space. Furnus to forno to horno."
+            },
+            {
+              "kind": "speech",
+              "text": "So the h is a headstone. Say OR-no and you are saying the word correctly; the letter is there to tell you what used to be."
+            },
+            {
+              "kind": "speech",
+              "text": "English took the same Latin word later and by a different door, straight out of the books, so it never got worn down: a furnace still has its f, and so does the older sense of furnish — to supply, as a bakehouse supplies bread."
+            },
+            {
+              "kind": "speech",
+              "text": "One more thing you can now do. Meet an unfamiliar Spanish word beginning with a silent h, put an f back on the front, and see whether a Latin or English word falls out. It works often enough to be worth trying every time."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the kitchen, and a decoder you can run on strangers."
+            },
+            {
+              "kind": "speech",
+              "text": "La sartén explained a mark you can see. El horno explains a letter you cannot hear. Both are the same lesson: written Spanish keeps records, and the records are readable."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el horno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el horno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sartén, then el horno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sartén*, then *el horno*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pan del horno",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pan del horno*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was furnus? (An oven.) What is the h in horno marking? (An f that wore away.) And which English word kept the f? (Furnace.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C297-tenedor",
+      "sequence": 3990,
+      "title": "el tenedor — a word you can build yourself",
+      "headword": "el tenedor",
+      "romanization": "el tenedor",
+      "gloss": "the fork — built on tener, to hold: it is \"the holder\", the same shape as any Spanish word ending in -dor",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:27d57da9b4fffaa2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was sartago? (A frying pan.) And what letter is hiding under the h of horno? (An f.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tener — the word this one is built out of."
+            },
+            {
+              "kind": "speech",
+              "text": "la cuchara — the one you already ask for."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "te-ne-DOR, stress on the very end. No accent is written, because a word ending in -r is expected to be stressed there. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el tenedor — \"the fork.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one you can almost assemble from parts you own. Take tener, to hold. Add -dor, the ending that names whoever or whatever does the thing. A tenedor is \"a holder\" — which is a very level-headed description of the object, once you stop seeing a fork and start seeing four prongs gripping a piece of meat."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is everywhere once you look. A comedor is where the eating is done. A mirador is a place for looking out. English has the very same ending twice over — -or in inventor, conductor, and its plainer cousin -er in holder itself — because both descend from the same Latin."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice what that buys you. Tenedor is not a word to memorise; it is a word to work out, and so is the next one built the same way."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of the kitchen, and the first of them you could have predicted."
+            },
+            {
+              "kind": "speech",
+              "text": "A pan is a pan and an oven is an oven. A tenedor is a machine for holding, named by exactly that, and la cuchara lying next to it is now the one word of the pair that has to be remembered rather than deduced."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tenedor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tenedor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cuchara and el tenedor, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cuchara* and *el tenedor*, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el tenedor, por favor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el tenedor, por favor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does tener mean? (To hold, to have.) What does the ending -dor add? (The one who does it.) So what is a tenedor, literally? (A holder.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C297-ajo",
+      "sequence": 4000,
+      "title": "el ajo — two letters, a long history",
+      "headword": "el ajo",
+      "romanization": "el ajo",
+      "gloss": "the garlic — Latin allium, which English kept as the botanical name; aioli is this word and oil, run together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a490b65ca9aed5b2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three questions. Why does sartén wear an accent? (Final stress, against the rule.) What is under the h of horno? (An f.) And what is a tenedor, literally? (A holder.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cebolla — what it usually goes in the pan with."
+            },
+            {
+              "kind": "speech",
+              "text": "la sartén — the pan in question."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A-jo, two beats and no more. The j is the scrape at the back, the jota. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el ajo — \"the garlic.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin allium. Three syllables have been squeezed down to two letters and a scrape, and yet the road is short: allium to aljo to ajo, with the doubled l hardening into the jota on the way, exactly as it did in hijo from filium."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept allium whole and handed it to the botanists, so the family that holds garlic, onions and leeks is the allium family on any seed packet."
+            },
+            {
+              "kind": "speech",
+              "text": "The best cousin is on a menu. Aioli is Provençal ai plus oli: garlic and oil, which is the entire recipe stated in the name. Say ajo and you are saying the first half of a sauce you already know."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of the kitchen, and the shortest word of the run carrying the longest history."
+            },
+            {
+              "kind": "speech",
+              "text": "La cebolla and el ajo go into la sartén together in more Spanish cooking than any two other things. You can now name the pan, the fire, the tool and half the contents."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ajo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ajo y la cebolla",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ajo y la cebolla*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — la sartén, el horno, el tenedor, el ajo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — *la sartén*, *el horno*, *el tenedor*, *el ajo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was allium? (Garlic.) Where does English still use the whole word? (As the botanical family name.) And what two things is aioli named after? (Garlic and oil.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C297-sopa",
+      "sequence": 4010,
+      "title": "la sopa — the bread, not the liquid",
+      "headword": "la sopa",
+      "romanization": "la sopa",
+      "gloss": "the soup — Germanic suppa, a piece of bread soaked in broth; the bread came first and soup, sop and supper are all it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c533fe1804057362",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what does the ending -dor add? (The one who does it.) What letter hides under an h? (An f.) And what was allium? (Garlic.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pan — what this word originally meant."
+            },
+            {
+              "kind": "speech",
+              "text": "la cuchara — what you eat it with."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "SO-pa, stress on the first part. The s is clean and never buzzes. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la sopa — \"the soup.\""
+            },
+            {
+              "kind": "speech",
+              "text": "This one is not Latin. It came from the Germanic speakers who arrived as Rome went out, and their suppa did not mean the liquid at all. It meant the piece of bread you dropped into the liquid."
+            },
+            {
+              "kind": "speech",
+              "text": "That is the older meal, and the honest one: broth was cheap and bread was the food. The name travelled with the bread and only later slid across to what the bread was floating in."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the whole family, and the same slide. A sop is still a bit of bread dipped in something. To sup is to take it, and supper is the meal where you did. Soup itself came back into English through French — the same Germanic word, one lap later."
+            },
+            {
+              "kind": "speech",
+              "text": "So el pan is not merely something you eat with la sopa. It is what la sopa used to be."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: la sartén, el horno, el tenedor, el ajo, la sopa."
+            },
+            {
+              "kind": "speech",
+              "text": "A pan, a fire, a tool, a flavour and a dish — enough to describe most of what happens in a kitchen before anybody sits down. And when somebody puts it in front of you, mil gracias is the size of thanks it deserves."
+            },
+            {
+              "kind": "speech",
+              "text": "The five arrived by five different roads: a Latin pan, a Latin oven with its letter worn off, a word Spanish built for itself, a Latin plant, and a Germanic crust. That is the mix Spanish is actually made of, in one meal."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sopa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sopa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la sopa, mil gracias",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la sopa, mil gracias*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — la sartén, el horno, el tenedor, el ajo, la sopa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *la sartén*, *el horno*, *el tenedor*, *el ajo*, *la sopa*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did suppa mean first — the bread or the broth? (The bread.) Which English meal is named from it? (Supper.) And what is la sopa? (The soup.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
