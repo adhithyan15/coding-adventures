@@ -79,3 +79,27 @@ All notable changes to this package are documented here.
   narrower residual, since `target` is an operator-configured path via
   `storage add`, not content discovered by scanning an untrusted
   directory.
+- **Third review round: the "accepted residual" from the round-2 note
+  above was itself a real HIGH-severity gap, not a narrow one — fixed.**
+  `ensure_real_directory` (the top-level `target` check) still used
+  check-then-`create_dir_all`, and unlike a bucket directory, `target` is
+  the root every bucket and every object in the whole migration lives
+  under; a symlink raced into that exact path redirects the *entire*
+  migration, not one bucket. Fixed by extracting the atomic
+  `fs::create_dir` + `AlreadyExists`/`symlink_metadata` pattern into
+  `create_directory_component_atomically`, shared by both
+  `ensure_real_directory` (which now only uses ordinary
+  `fs::create_dir_all` for `target`'s *parents*, then creates `target`
+  itself atomically) and `ensure_real_bucket_directory`. Also fixed: a
+  bucket directory was validated once per bucket rather than once per
+  object, leaving a window for a concurrent writer to swap it for a
+  symlink between two writes to the same bucket — `copy_object_tree` now
+  re-validates the bucket directory immediately before every object
+  write. Also fixed: `read_bounded`'s `read_to_end` had no cap of its
+  own, so a file a concurrent writer kept appending to could grow the
+  in-memory buffer past `MAX_COPY_OBJECT_BYTES` before the post-read
+  length check fired; now capped during the read with `Read::take`. Two
+  new regression tests: a bucket directory replaced with a symlink
+  between two writes is caught, and nested missing parent directories
+  are still created correctly (a correctness check on the refactor, not
+  a new attack).

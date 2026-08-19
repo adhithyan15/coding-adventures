@@ -379,23 +379,28 @@ a trust boundary worth naming explicitly:
   for the whole command, so a second concurrent invocation against the
   same config root fails closed with `LocalHostError::AlreadyLocked`
   rather than racing past this check.
-- The migration-copy read/directory-creation checks (§5.2) close the
+- The migration-copy read/directory-creation checks (§5.2) close both the
   *static* symlink-planting case (a symlink already present when
-  `storage migrate` runs) completely, and additionally narrow — via
-  `O_NOFOLLOW` on Unix (`open_no_follow`) and an atomic non-recursive
-  `fs::create_dir` for bucket directories (`ensure_real_bucket_
-  directory`) — the *dynamic* case (a symlink planted in the instant
-  between a `symlink_metadata` check and the following read/create call)
-  to a true kernel-enforced atomic refusal on the read path and the
-  bucket-directory path. The top-level `target` directory's own creation
-  still uses a check-then-`create_dir_all` pattern (needed for its
-  recursive parent creation), so a symlink race remains theoretically
-  possible there against a truly adversarial concurrent write to that
-  exact path component during the single instant between the check and
-  the call — assessed as acceptable given `target` is a location the
-  operator explicitly configured via `storage add`, not one discovered
-  or influenced by scanning an untrusted directory the way object names
-  are.
+  `storage migrate` runs) and the *dynamic* one (a symlink planted in the
+  instant between a check and a following read/create call) with true
+  kernel-enforced atomic refusals throughout: `O_NOFOLLOW` on Unix
+  (`open_no_follow`) for every read, and `create_directory_component_
+  atomically` (`fs::create_dir`'s own atomic `AlreadyExists`-if-anything-
+  is-there behavior, symlink included) for every directory creation —
+  including the top-level `target` directory itself, not only bucket
+  directories one level below it. A third review round correctly
+  rejected an earlier version of this document's own claim that leaving
+  `target`'s creation on a check-then-`create_dir_all` pattern was an
+  acceptable residual: `target` is the root the *entire* migration lives
+  under, so a race there redirects everything, not one bucket, and
+  nothing about it being an operator-configured `storage add` path
+  changes that a third party with concurrent write access to `target`'s
+  parent directory can still plant a symlink at the exact `target` path
+  in the same race window. A bucket directory is now also re-validated
+  immediately before every object write, not only once when the bucket
+  is first created, closing the analogous narrower window where a
+  concurrent writer swaps an already-validated bucket directory for a
+  symlink between two writes to it.
 
 ## 8. Reuse map correction
 

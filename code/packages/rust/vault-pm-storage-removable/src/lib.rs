@@ -473,6 +473,13 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
             {
                 continue; // `.tmp` writes, symlinks, and anything else are skipped.
             }
+            // Re-verified before every object, not only once per bucket: a
+            // concurrent writer to `target` (VLT-PM50 §7's own threat model)
+            // could otherwise remove the bucket directory this loop already
+            // validated and replace it with a symlink between two writes in
+            // the same bucket, and `copy_one_object`'s own checks only ever
+            // cover the leaf object/staging path, never this parent.
+            ensure_real_bucket_directory(&target_bucket_dir)?;
             copy_one_object(
                 &object_entry.path(),
                 &target_bucket_dir.join(&object_name),
@@ -486,47 +493,52 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
 /// Ensure `path` is a real (non-symlink) directory, creating it (and any
 /// missing parents) if absent.
 ///
-/// Refuses rather than follows an existing symlink at `path`: `storage-fs`
-/// never creates one, so one being there already means something else
-/// wrote it, and blindly treating it as "the directory exists, proceed"
-/// (`fs::create_dir_all`'s own behavior, since its own re-check follows
-/// symlinks) would let a planted symlink redirect an entire object root's
-/// worth of writes to an attacker-chosen location. Used only for `target`
-/// itself, a caller-supplied path this function's own retry cannot avoid
-/// re-checking non-atomically; [`ensure_real_bucket_directory`] is the
-/// atomic, race-free version used one level below it, where a plain
-/// `create_dir` suffices.
+/// Parent directories are created with the ordinary recursive
+/// `fs::create_dir_all` — `path`'s parents are not this function's leaf
+/// concern and, for the one caller that has any (`target` itself), are a
+/// caller-supplied location that pre-existed the migration far more often
+/// than not. `path` itself — the exact directory every subsequent object
+/// write in this bucket (or, for `target`, the whole migration) depends
+/// on — is created through [`create_directory_component_atomically`], so a
+/// symlink planted at that exact path cannot be silently followed the way
+/// `fs::create_dir_all`'s own re-check (which follows symlinks when
+/// deciding "the directory is already there, proceed") would follow one.
 fn ensure_real_directory(path: &Path) -> Result<(), CopyError> {
-    match fs::symlink_metadata(path) {
-        Ok(metadata) => {
-            if metadata.file_type().is_symlink() {
-                return Err(CopyError::UnexpectedSymlink);
-            }
-            if metadata.is_dir() {
-                Ok(())
-            } else {
-                Err(CopyError::TargetUnavailable)
-            }
+    if let Some(parent) = path.parent() {
+        if !parent.as_os_str().is_empty() {
+            fs::create_dir_all(parent).map_err(|_| CopyError::TargetUnavailable)?;
         }
-        Err(_) => fs::create_dir_all(path).map_err(|_| CopyError::TargetUnavailable),
     }
+    create_directory_component_atomically(path)
 }
 
-/// Ensure `bucket_dir` (always exactly one path component below an already
-/// validated `target`) is a real directory, creating it if absent.
-///
-/// Unlike [`ensure_real_directory`], this never needs `create_dir_all`'s
-/// recursive parent creation, so it can use the atomic, race-free
-/// `fs::create_dir` instead of the check-then-`create_dir_all` pattern:
-/// `create_dir` fails with `AlreadyExists` if *anything* — a symlink
-/// included — is already at that path, without ever following it, closing
-/// the narrow window between a separate existence check and the creation
-/// call that `ensure_real_directory` cannot fully close on its own.
+/// Same contract as [`ensure_real_directory`], for a directory that is
+/// always exactly one path component below an already-validated parent
+/// (a bucket directory below `target`) and therefore never needs
+/// `create_dir_all`'s recursive parent creation at all.
 fn ensure_real_bucket_directory(bucket_dir: &Path) -> Result<(), CopyError> {
-    match fs::create_dir(bucket_dir) {
+    create_directory_component_atomically(bucket_dir)
+}
+
+/// Atomically ensure exactly one directory path component is real,
+/// creating it if absent, without ever following a symlink there.
+///
+/// `fs::create_dir` fails with `AlreadyExists` if *anything* — a symlink
+/// included — is already at `path`, without ever following it. That is
+/// the whole of what makes this atomic against a concurrent writer:
+/// unlike a separate `symlink_metadata` check followed by a later
+/// `fs::create_dir_all`/`File::open` call, there is no window between
+/// "check" and "act" for a planted symlink to land in, because the one
+/// syscall this function's success path makes *is* the check. The
+/// `AlreadyExists` branch below runs only to classify an already-real
+/// directory as success and an already-present symlink as refusal; by
+/// the time it runs, `create_dir` itself has already unconditionally
+/// refused to create through or replace whatever is there.
+fn create_directory_component_atomically(path: &Path) -> Result<(), CopyError> {
+    match fs::create_dir(path) {
         Ok(()) => Ok(()),
         Err(error) if error.kind() == io::ErrorKind::AlreadyExists => {
-            let metadata = fs::symlink_metadata(bucket_dir).map_err(|_| CopyError::IoFailed)?;
+            let metadata = fs::symlink_metadata(path).map_err(|_| CopyError::IoFailed)?;
             if metadata.file_type().is_symlink() {
                 Err(CopyError::UnexpectedSymlink)
             } else if metadata.is_dir() {
@@ -655,9 +667,19 @@ fn read_bounded(path: &Path) -> Result<Vec<u8>, CopyError> {
     if metadata.len() > MAX_COPY_OBJECT_BYTES {
         return Err(CopyError::ObjectTooLarge);
     }
-    let mut file = open_no_follow(path)?;
+    let file = open_no_follow(path)?;
     let mut bytes = Vec::with_capacity(metadata.len() as usize);
-    file.read_to_end(&mut bytes)
+    // Capped during the read itself, not only checked afterward: the
+    // `symlink_metadata` length above is a snapshot, and a file a
+    // concurrent writer keeps appending to for the duration of this read
+    // (again, `source`/`target` are directories such a writer can reach,
+    // VLT-PM50 §7) could otherwise grow the allocation well past
+    // `MAX_COPY_OBJECT_BYTES` before the length is ever checked again.
+    // Reading one byte past the cap, rather than exactly at it, is what
+    // lets the length check below still distinguish "exactly at the
+    // bound" from "over it".
+    file.take(MAX_COPY_OBJECT_BYTES + 1)
+        .read_to_end(&mut bytes)
         .map_err(|_| CopyError::IoFailed)?;
     if bytes.len() as u64 > MAX_COPY_OBJECT_BYTES {
         return Err(CopyError::ObjectTooLarge);
@@ -1060,6 +1082,51 @@ mod tests {
             copy_object_tree(source.path(), &target),
             Err(CopyError::UnexpectedSymlink)
         );
+        assert!(fs::read_dir(elsewhere.path()).unwrap().next().is_none());
+    }
+
+    #[test]
+    fn ensure_real_directory_creates_nested_missing_parents() {
+        let root = TempDir::new();
+        let source = TempDir::new();
+        write_object(source.path(), "2121", "aabbcc", b"object bytes");
+        let deeply_nested_target = root.path().join("a").join("b").join("c");
+
+        let report = copy_object_tree(source.path(), &deeply_nested_target).unwrap();
+        assert_eq!(report.copied_objects, 1);
+        assert!(deeply_nested_target.join("2121").join("aabbcc").exists());
+
+        // Idempotent: a second run against the now-real, multi-level-deep
+        // target neither errors nor recreates anything.
+        let second = copy_object_tree(source.path(), &deeply_nested_target).unwrap();
+        assert_eq!(second.already_present, 1);
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn a_bucket_directory_replaced_with_a_symlink_between_writes_is_caught() {
+        use std::os::unix::fs::symlink;
+
+        let source = TempDir::new();
+        let target = TempDir::new();
+        let elsewhere = TempDir::new();
+        write_object(source.path(), "2121", "aabbcc", b"first object");
+        copy_object_tree(source.path(), target.path()).unwrap();
+        assert!(target.path().join("2121").join("aabbcc").exists());
+
+        // Simulate a concurrent writer swapping the bucket directory for a
+        // symlink after this migration already wrote into it once -- the
+        // exact window a once-per-bucket (rather than once-per-object)
+        // directory check would miss.
+        fs::remove_dir_all(target.path().join("2121")).unwrap();
+        symlink(elsewhere.path(), target.path().join("2121")).unwrap();
+
+        write_object(source.path(), "2121", "ddeeff", b"second object");
+        assert_eq!(
+            copy_object_tree(source.path(), target.path()),
+            Err(CopyError::UnexpectedSymlink)
+        );
+        // Nothing was written through the planted symlink.
         assert!(fs::read_dir(elsewhere.path()).unwrap().next().is_none());
     }
 
