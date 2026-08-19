@@ -1013,6 +1013,32 @@ fn invalid_i8x16_replace_lane_given_a_v128_in_the_i32_slot() {
 }
 
 #[test]
+fn valid_f32x4_arith3_family() {
+    // SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min -- the FIRST
+    // genuine floating-point ARITHMETIC ops in this crate's type rules
+    // (PR17's float splats were pure bit-pattern broadcasts). `abs` is
+    // UNARY (pop one v128, push one); `mul`/`min` are BINARY (pop two,
+    // push one) -- same shapes as the existing integer arith families,
+    // just at f32x4's width. Their NaN/signed-zero runtime subtlety
+    // (see wasm-opcodes' `SimdOpKind::MinF32x4` doc comment) is entirely
+    // invisible to the type checker.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f32x4.abs (local.get 0)))
+             (func (param v128 v128) (result v128) (f32x4.mul (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (f32x4.min (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_mul_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (f32x4.mul (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

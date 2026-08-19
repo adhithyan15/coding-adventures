@@ -1869,7 +1869,10 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::SubI16x8
             | wasm_opcodes::SimdOpKind::MulI16x8
             | wasm_opcodes::SimdOpKind::NegI16x8
-            | wasm_opcodes::SimdOpKind::Swizzle => {
+            | wasm_opcodes::SimdOpKind::Swizzle
+            | wasm_opcodes::SimdOpKind::AbsF32x4
+            | wasm_opcodes::SimdOpKind::MulF32x4
+            | wasm_opcodes::SimdOpKind::MinF32x4 => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -1878,7 +1881,12 @@ fn encode_stream_instr(
                 // arm too: it's a plain BINARY v128,v128->v128 op just
                 // like `AddI8x16`, with no lane-index immediate of its
                 // own (unlike its `ExtractLane*`/`ReplaceLaneI8x16`
-                // siblings added in the same PR).
+                // siblings added in the same PR). `AbsF32x4`/`MulF32x4`/
+                // `MinF32x4` (SIMD widen PR19) join too: the UNARY `abs`
+                // and BINARY `mul`/`min` all have this same no-immediate
+                // shape at the ENCODING level -- the unary/binary
+                // distinction only matters at the type-checker/runtime
+                // level (see `wasm-validator`/`wasm-execution`), not here.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2589,11 +2597,17 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::SubI16x8
             | wasm_opcodes::SimdOpKind::MulI16x8
             | wasm_opcodes::SimdOpKind::NegI16x8
-            | wasm_opcodes::SimdOpKind::Swizzle => {
+            | wasm_opcodes::SimdOpKind::Swizzle
+            | wasm_opcodes::SimdOpKind::AbsF32x4
+            | wasm_opcodes::SimdOpKind::MulF32x4
+            | wasm_opcodes::SimdOpKind::MinF32x4 => {
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
                 // the matching comment in `encode_stream_instr` above.
+                // `AbsF32x4`/`MulF32x4`/`MinF32x4` (SIMD widen PR19) join
+                // too -- same no-immediate encoding shape, see the
+                // matching comment in `encode_stream_instr` above.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5536,6 +5550,34 @@ mod tests {
                 "missing local.get 1 (the i32 operand): {code:?}"
             );
             assert!(code.windows(3).any(|w| w == [0xFD, 0x17, 0x07]), "missing i8x16.replace_lane lane=7: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f32x4_arith3_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR19: f32x4.abs (0xE0), f32x4.mul (0xE6), f32x4.min
+        // (0xE8) -- unlike every prior SIMD op tested in this file, all
+        // three sub-opcode values are >= 128, so each encodes as a REAL
+        // 2-byte LEB128 sequence (`[byte, 0x01]`, since for any single
+        // byte b in 0x80-0xFF, `(b & 0x7F) | 0x80 == b`), not the
+        // single-byte happy path most of this table's opcodes take.
+        // `abs` is UNARY (one v128 operand); `mul`/`min` are BINARY (two)
+        // -- same "no immediate beyond the opcode bytes themselves" shape
+        // as `i8x16.swizzle` above either way.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (f32x4.min (f32x4.mul (f32x4.abs (local.get 0)) (local.get 1)) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 f32x4.abs local.get 1 f32x4.mul local.get 1 f32x4.min))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE0, 0x01]), "missing f32x4.abs: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE6, 0x01]), "missing f32x4.mul: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE8, 0x01]), "missing f32x4.min: {code:?}");
         }
     }
 

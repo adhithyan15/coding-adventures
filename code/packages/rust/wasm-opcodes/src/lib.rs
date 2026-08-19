@@ -1273,6 +1273,39 @@ pub enum SimdOpKind {
     /// result -- deliberately not force-fit into `ExtractLane`'s shape,
     /// since neither its pop count nor its result type match.
     ReplaceLaneI8x16,
+    /// `f32x4.abs` -- pop one `v128`, clear the sign bit of each of the 4
+    /// `f32` lanes (`f32::abs()` in Rust is a pure bit operation here, no
+    /// NaN/signed-zero subtlety -- unlike [`Self::MinF32x4`] below). Same
+    /// UNARY "pop v128, push v128" shape as [`Self::AbsI8x16`], just at
+    /// `f32x4`'s lane width -- the first FLOATING-POINT-typed unary
+    /// arithmetic op in this table, following on from PR17's
+    /// [`Self::SplatF32x4`]/[`Self::SplatF64x2`] (pure bit-pattern
+    /// broadcasts, no arithmetic) and PR18's integer-only unary/binary
+    /// arith widening.
+    AbsF32x4,
+    /// `f32x4.mul` -- pop two `v128`s, multiply each of the 4 `f32` lane
+    /// pairs with standard IEEE-754 float multiply (Rust's `*` on `f32`
+    /// is correct here -- ordinary multiplication has no WASM-specific
+    /// NaN/signed-zero deviation from IEEE-754, unlike `min`/`max`). Same
+    /// BINARY "pop two v128s, push one" shape as [`Self::MulI16x8`], just
+    /// at `f32x4`'s lane width.
+    MulF32x4,
+    /// `f32x4.min` -- pop two `v128`s, take the WASM-spec `fmin` of each
+    /// of the 4 `f32` lane pairs. Same BINARY shape as [`Self::MulF32x4`]
+    /// above, but NOT a plain `f32::min()`/`a.min(b)`: WASM's `fmin` is
+    /// NOT IEEE `minNum` -- if EITHER operand is NaN the result is NaN
+    /// (propagated, not silently dropped the way Rust's native
+    /// `f32::min()` drops one NaN operand and returns the other), and for
+    /// a `-0.0`/`+0.0` tie, `-0.0` wins (unlike some other `minNum`
+    /// variants that pick `+0.0` or are unspecified on the tie). This is
+    /// the exact per-lane transplant of this crate's own scalar
+    /// `f32.min`/`f64.min` opcode handlers (0x96/0xA4 in
+    /// `wasm-execution`), which already implement this correct
+    /// NaN-propagating, signed-zero-aware `fmin` for the non-SIMD MVP
+    /// opcodes -- see that handler's own comment for the bug this
+    /// discipline fixes (`min(NaN, -0.0)` silently returning `-0.0`
+    /// instead of `NaN` under Rust's native `.min()`).
+    MinF32x4,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1521,6 +1554,9 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i8x16.extract_lane_s", sub_opcode: 0x15, kind: SimdOpKind::ExtractLaneI8x16S },
     SimdOpInfo { name: "i8x16.extract_lane_u", sub_opcode: 0x16, kind: SimdOpKind::ExtractLaneI8x16U },
     SimdOpInfo { name: "i8x16.replace_lane", sub_opcode: 0x17, kind: SimdOpKind::ReplaceLaneI8x16 },
+    SimdOpInfo { name: "f32x4.abs", sub_opcode: 0xE0, kind: SimdOpKind::AbsF32x4 },
+    SimdOpInfo { name: "f32x4.mul", sub_opcode: 0xE6, kind: SimdOpKind::MulF32x4 },
+    SimdOpInfo { name: "f32x4.min", sub_opcode: 0xE8, kind: SimdOpKind::MinF32x4 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1939,8 +1975,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_124_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 124);
+    fn simd_ops_table_has_the_expected_127_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 127);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2443,6 +2479,29 @@ mod tests {
             ("i8x16.extract_lane_s", 0x15, SimdOpKind::ExtractLaneI8x16S),
             ("i8x16.extract_lane_u", 0x16, SimdOpKind::ExtractLaneI8x16U),
             ("i8x16.replace_lane", 0x17, SimdOpKind::ReplaceLaneI8x16),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_f32x4_arith3_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR19: `f32x4.abs` (0xE0), `f32x4.mul` (0xE6),
+        // `f32x4.min` (0xE8) -- fetched live from BinarySIMD.md, the
+        // FIRST genuine floating-point ARITHMETIC ops in this table
+        // (PR17's f32x4/f64x2 splats were pure bit-pattern broadcasts,
+        // no arithmetic). `f32x4.min` in particular is NOT the same
+        // as Rust's `f32::min()` -- see `SimdOpKind::MinF32x4`'s own
+        // doc comment for the NaN-propagation/signed-zero tie-break
+        // semantics this crate mirrors from its own scalar `f32.min`
+        // (0x96) handler.
+        for (name, sub_opcode, kind) in [
+            ("f32x4.abs", 0xE0, SimdOpKind::AbsF32x4),
+            ("f32x4.mul", 0xE6, SimdOpKind::MulF32x4),
+            ("f32x4.min", 0xE8, SimdOpKind::MinF32x4),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

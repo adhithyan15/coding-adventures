@@ -1481,7 +1481,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::AddI64x2
                     | wasm_opcodes::SimdOpKind::SubI64x2
                     | wasm_opcodes::SimdOpKind::MulI64x2
-                    | wasm_opcodes::SimdOpKind::Swizzle => {
+                    | wasm_opcodes::SimdOpKind::Swizzle
+                    | wasm_opcodes::SimdOpKind::MulF32x4
+                    | wasm_opcodes::SimdOpKind::MinF32x4 => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1495,7 +1497,12 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // the same pop-two-push-one `v128` shape as
                         // `Add`/`Sub`/`Mul` above -- the type-checker
                         // only sees `v128`, never the narrower lane
-                        // interpretation.
+                        // interpretation. `f32x4.mul`/`f32x4.min` (SIMD
+                        // widen PR19) join too: their NaN/signed-zero
+                        // runtime subtlety (see wasm-opcodes'
+                        // `SimdOpKind::MinF32x4` doc comment) is entirely
+                        // invisible here -- still just two V128 pops, one
+                        // V128 push.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
@@ -1558,7 +1565,8 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtaddPairwiseI8x16U
                     | wasm_opcodes::SimdOpKind::Not
                     | wasm_opcodes::SimdOpKind::AbsI64x2
-                    | wasm_opcodes::SimdOpKind::NegI64x2 => {
+                    | wasm_opcodes::SimdOpKind::NegI64x2
+                    | wasm_opcodes::SimdOpKind::AbsF32x4 => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
@@ -1567,7 +1575,9 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // for `not`, lane-width-agnostic bytes)
                         // internally, but are still just pop-one-`v128`-
                         // push-one-`v128` at the type level, same as
-                        // `Neg`/`Abs`.
+                        // `Neg`/`Abs`. `f32x4.abs` (SIMD widen PR19)
+                        // joins too -- a pure bit operation, no new
+                        // type-checker machinery needed.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
