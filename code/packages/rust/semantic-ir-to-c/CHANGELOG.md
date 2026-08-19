@@ -57,23 +57,38 @@ operands via a new `_sir_symterm_require` (mirrors `_sir_array_require`'s
 identical "must already be the right tag, no silent coercion" contract).
 
 **DoS guards (CWE-674)**: `SIR_SYMTERM_MAX_TERM_DEPTH = 512` bounds
-`_sir_symterm_walk_once`/`_repeated_walk`'s tree WALK only — NOT the
-matcher functions (`_match_pattern`/`_substitute`/`_apply_rule` recurse
-only as deep as a single rule's own author-written shape, always
-shallow, no cap needed there, matching the JS reference's own doc
-comments on this exact point). `_repeated_walk` also enforces a
-SEPARATE `max_iterations` (fixed at 100) cap on its fixed-point firing
-loop, implemented as a plain `for (;;)` at the SAME call frame (never a
+`_sir_symterm_walk_once`/`_repeated_walk`'s tree WALK (the TARGET
+expression side). `_repeated_walk` also enforces a SEPARATE
+`max_iterations` (fixed at 100) cap on its fixed-point firing loop,
+implemented as a plain `for (;;)` at the SAME call frame (never a
 recursive call per firing), so a rule firing repeatedly at one tree
 position costs O(1) native stack frames, not O(firings) — verified
 against a REAL compiled `Stmt::ForRange`-built 600-level-deep term in
-`tests/sir23_symbolic.rs`, not a hand-built static AST. **Simpler than
-the Ruby/JS references' sentinel-value-plus-`unwrap` approach**: both
-caps call `fprintf(stderr, …); exit(1);` DIRECTLY at the violation point
-— this file's own established SIR22 DoS-guard convention (see
-`_sir_array_checked_size`'s identical abort) — rather than threading a
-sentinel through every return value, since C's `exit(1)` needs no
+`tests/sir23_symbolic.rs`, not a hand-built static AST. Both caps call
+`fprintf(stderr, …); exit(1);` DIRECTLY at the violation point — this
+file's own established SIR22 DoS-guard convention (see `_sir_array_
+checked_size`'s identical abort) — simpler than the Ruby/JS references'
+sentinel-value-plus-`unwrap` approach, since C's `exit(1)` needs no
 unwinding and thus nothing to unwrap.
+
+**Security review finding, fixed before push**: the matcher functions
+(`_match_pattern`/`_substitute`/`_apply_rule`, the RULE-pattern side of
+this same hazard) initially shipped with NO depth cap, on the Ruby/JS
+references' own precedent that a rule's `lhs`/`rhs` is "author-written,
+not runtime-controlled" and therefore always shallow. Security review
+correctly flagged that premise as unverified here: nothing in this
+crate actually validates a `SymRule`'s `lhs`/`rhs` depth, and it is
+built through the exact same unbounded-at-construction `_sir_symterm_
+apply_raw` path as any other term — so a SIR-generating frontend could
+hand this backend a rule whose pattern/RHS is itself deeply nested,
+driving unbounded native recursion with no cap catching it. Fixed by
+threading a `depth` parameter through all three functions (a new
+`SIR_SYMTERM_CHECK_DEPTH` macro, same `SIR_SYMTERM_MAX_TERM_DEPTH`
+constant), reset to 0 at each fresh `_apply_rule` call so one rule's
+match/substitute gets its own independent depth budget rather than one
+shared with the caller's own tree-walk depth. This is a deliberate,
+documented divergence from the Ruby/JS references' own no-cap
+precedent, not an oversight ported forward.
 
 **Integer-overflow hazard fixed proactively during implementation**:
 `_sir_symterm_rational_raw`'s gcd-reduction never negates a possibly-

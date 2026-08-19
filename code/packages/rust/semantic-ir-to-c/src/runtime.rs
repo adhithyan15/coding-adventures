@@ -5443,14 +5443,28 @@ SirValue _sir_array_catenate(SirValue lhsv, SirValue rhsv) {
  *
  * ## DoS safety (CWE-674) — depth cap + iteration cap
  *
- * `_sir_symterm_match_pattern`/`_sir_symterm_substitute`/`_sir_symterm_
- * apply_rule` recurse, but ONLY as deep as a single RULE's own (author-
- * written, not runtime-controlled) pattern/RHS shape — always shallow
- * regardless of how deep the TARGET expression is. No depth cap exists
- * on these three, matching the Ruby/JS references exactly (neither
- * threads a depth parameter through their equivalents either) — this
- * reasoning is stated explicitly in the JS reference's own doc comments,
- * carried forward here rather than re-derived.
+ * `_sir_symterm_match_pattern`/`_sir_symterm_substitute` recurse over a
+ * RULE's own `lhs`/`rhs` shape, not the TARGET expression's — the JS/Ruby
+ * references thread NO depth parameter through their equivalents, on the
+ * reasoning (stated explicitly in the JS reference's own doc comments)
+ * that a rule's pattern/RHS is "author-written, not runtime-controlled"
+ * and therefore always shallow. **This port deliberately diverges from
+ * that precedent** (added during this PR's own security review, which
+ * flagged it as a genuine gap rather than a faithful-port nicety): C has
+ * no managed-language safety net for a native stack overflow, and
+ * nothing in this crate actually VALIDATES that a `SymRule`'s `lhs`/`rhs`
+ * stays shallow — it is built through the same `_sir_symterm_apply_raw`
+ * path as any other term (see `_sir_symterm_equals`'s own doc comment,
+ * below, on that exact "not depth-capped at construction time" gap), and
+ * this backend is one of several sharing a common SIR a hostile or just
+ * buggy upstream frontend could hand a rule with an arbitrarily deep
+ * `lhs`/`rhs` to. So `_sir_symterm_match_pattern`/`_substitute` DO carry
+ * a `depth` parameter, checked against `SIR_SYMTERM_MAX_TERM_DEPTH` via
+ * the `SIR_SYMTERM_CHECK_DEPTH` macro (see their own definitions,
+ * further down) — `_sir_symterm_apply_rule` resets `depth` to 0 at each
+ * fresh call, so one rule's match/substitute gets its own independent
+ * budget, not one shared with however deep the caller's OWN tree walk
+ * already is.
  *
  * `_sir_symterm_walk_once` (backs `replaceAll`/`/.`) and `_sir_symterm_
  * repeated_walk` (backs `replaceRepeated`/`//.`), by contrast, walk the
@@ -6009,22 +6023,57 @@ const char *_sir_symterm_effective_head_name(const SirSymTerm *t) {
     }
 }
 
-/* ---- the matcher itself: NO depth cap needed (see module doc) -------- */
+/* ---- the matcher itself: depth-capped defensively (see below) -------- */
 
 typedef struct SirSymMatchResult {
     int ok;
     SirSymBindings bindings;
 } SirSymMatchResult;
 
+/* SECURITY (CWE-674, added after security review — see this section's own
+ * module doc, which originally claimed "no depth cap needed" on the
+ * strength of the Ruby/JS references' reasoning that a rule's `lhs`/`rhs`
+ * is always "author-written, not runtime-controlled" and therefore
+ * shallow): that premise does NOT hold here. A `SymRule`'s `lhs`/`rhs`
+ * `Expr` tree is not depth-validated anywhere in this crate — it is built
+ * through the SAME `_sir_symterm_apply_raw`/`hoist_sym_operands` path as
+ * any other term, which this file's own `_sir_symterm_equals` doc comment
+ * (above) already acknowledges is NOT depth-capped at construction time.
+ * A SIR-generating frontend (this backend is one of several sharing a
+ * common narrow-waist IR) could hand this backend a `SymRule` whose `lhs`
+ * (or `rhs`) is a `SymApply` chain nested far past any reasonable
+ * "hand-authored rule" depth — driving `_sir_symterm_match_pattern`/
+ * `_sir_symterm_substitute`'s recursion, which tracks the RULE's shape
+ * (not the target expression's), to a native stack overflow with NO
+ * cap catching it first. `SIR_SYMTERM_MAX_TERM_DEPTH` — the SAME constant
+ * `_sir_symterm_walk_once`/`_sir_symterm_repeated_walk` use for the
+ * TARGET-expression side of this exact hazard — now bounds this side
+ * too, via a `depth` parameter threaded through all three matcher
+ * functions and reset to 0 at each fresh `_sir_symterm_apply_rule` call
+ * (a rule match starts a NEW bounded recursion over that rule's own
+ * shape, independent of how deep the caller's own tree walk already is —
+ * mirrring `_sir_symterm_equals`'s identical independent-depth-budget
+ * convention). */
+#define SIR_SYMTERM_CHECK_DEPTH(depth) \
+    do { \
+        if ((depth) > SIR_SYMTERM_MAX_TERM_DEPTH) { \
+            fprintf(stderr, "sir: sir-runtime-symbolic: depth-limit\n"); \
+            exit(1); \
+        } \
+    } while (0)
+
 /* Five-case structural matcher: `Blank()`, `Blank(T)`, `Pattern(name,
  * inner)`, compound-vs-compound (recurse head + every arg, same arity
  * required), and plain structural equality — a direct port of the
  * already-merged Ruby PR's `sir_sym_match_pattern` (itself a port of
- * `cas-pattern-matching::matchPattern`). */
-SirSymMatchResult _sir_symterm_match_pattern(const SirSymTerm *pattern, const SirSymTerm *target, SirSymBindings bindings) {
+ * `cas-pattern-matching::matchPattern`), with a depth cap the Ruby/JS
+ * references don't carry — see the module doc immediately above for why
+ * this port adds one anyway. */
+SirSymMatchResult _sir_symterm_match_pattern(const SirSymTerm *pattern, const SirSymTerm *target, SirSymBindings bindings, int64_t depth) {
     SirSymMatchResult fail;
     fail.ok = 0;
     fail.bindings = _sir_symterm_bindings_empty();
+    SIR_SYMTERM_CHECK_DEPTH(depth);
 
     if (_sir_symterm_is_blank(pattern)) {
         const char *constraint = _sir_symterm_blank_head_constraint(pattern);
@@ -6036,7 +6085,7 @@ SirSymMatchResult _sir_symterm_match_pattern(const SirSymTerm *pattern, const Si
     if (_sir_symterm_is_pattern(pattern)) {
         const char *name = _sir_symterm_pattern_name(pattern);
         const SirSymTerm *inner = _sir_symterm_pattern_inner(pattern);
-        SirSymMatchResult matched = _sir_symterm_match_pattern(inner, target, bindings);
+        SirSymMatchResult matched = _sir_symterm_match_pattern(inner, target, bindings, depth + 1);
         SirSymTerm *existing;
         if (!matched.ok) return fail;
         existing = _sir_symterm_bindings_get(matched.bindings, name);
@@ -6058,11 +6107,11 @@ SirSymMatchResult _sir_symterm_match_pattern(const SirSymTerm *pattern, const Si
         SirSymMatchResult current;
         int64_t i;
         if (target->kind != SIR_SYMTERM_APPLY) return fail;
-        current = _sir_symterm_match_pattern(pattern->as.apply.head, target->as.apply.head, bindings);
+        current = _sir_symterm_match_pattern(pattern->as.apply.head, target->as.apply.head, bindings, depth + 1);
         if (!current.ok) return fail;
         if (pattern->as.apply.nargs != target->as.apply.nargs) return fail;
         for (i = 0; i < pattern->as.apply.nargs; i++) {
-            current = _sir_symterm_match_pattern(pattern->as.apply.args[i], target->as.apply.args[i], current.bindings);
+            current = _sir_symterm_match_pattern(pattern->as.apply.args[i], target->as.apply.args[i], current.bindings, depth + 1);
             if (!current.ok) return fail;
         }
         return current;
@@ -6075,16 +6124,21 @@ SirSymMatchResult _sir_symterm_match_pattern(const SirSymTerm *pattern, const Si
     }
 }
 
-SirSymTerm *_sir_symterm_substitute(const SirSymTerm *template_term, SirSymBindings bindings) {
+/* Depth-capped for the identical reason `_sir_symterm_match_pattern` now
+ * is (see that function's own doc comment) — `template_term` is a rule's
+ * `rhs`, subject to the exact same "not actually depth-validated at
+ * construction" gap. */
+SirSymTerm *_sir_symterm_substitute(const SirSymTerm *template_term, SirSymBindings bindings, int64_t depth) {
+    SIR_SYMTERM_CHECK_DEPTH(depth);
     if (_sir_symterm_is_pattern(template_term)) {
         SirSymTerm *captured = _sir_symterm_bindings_get(bindings, _sir_symterm_pattern_name(template_term));
         return (captured != NULL) ? captured : (SirSymTerm *)template_term;
     }
     if (template_term->kind == SIR_SYMTERM_APPLY) {
         int64_t n = template_term->as.apply.nargs, i;
-        SirSymTerm *new_head = _sir_symterm_substitute(template_term->as.apply.head, bindings);
+        SirSymTerm *new_head = _sir_symterm_substitute(template_term->as.apply.head, bindings, depth + 1);
         SirSymTerm **new_args = (n > 0) ? (SirSymTerm **)_sir_alloc(sizeof(SirSymTerm *) * (size_t)n) : NULL;
-        for (i = 0; i < n; i++) new_args[i] = _sir_symterm_substitute(template_term->as.apply.args[i], bindings);
+        for (i = 0; i < n; i++) new_args[i] = _sir_symterm_substitute(template_term->as.apply.args[i], bindings, depth + 1);
         return _sir_symterm_apply_raw(new_head, new_args, n);
     }
     return (SirSymTerm *)template_term;
@@ -6092,7 +6146,11 @@ SirSymTerm *_sir_symterm_substitute(const SirSymTerm *template_term, SirSymBindi
 
 /* `*out_matched` reports match success/failure (the C stand-in for the
  * Ruby/JS references' `nil`-on-no-match return); the return value is only
- * meaningful when `*out_matched` is nonzero. */
+ * meaningful when `*out_matched` is nonzero. Starts BOTH `_sir_symterm_
+ * match_pattern`/`_substitute` at a fresh `depth` of 0 — this call is the
+ * entry point into one rule's own bounded recursion (see those two
+ * functions' shared doc comment), independent of how deep the CALLER's
+ * own tree walk (`_sir_symterm_walk_once`/`_repeated_walk`) already is. */
 SirSymTerm *_sir_symterm_apply_rule(const SirSymTerm *rewrite_rule, const SirSymTerm *expr, int *out_matched) {
     SirSymMatchResult m;
     const SirSymTerm *lhs, *rhs;
@@ -6102,9 +6160,9 @@ SirSymTerm *_sir_symterm_apply_rule(const SirSymTerm *rewrite_rule, const SirSym
     }
     lhs = rewrite_rule->as.apply.args[0];
     rhs = rewrite_rule->as.apply.args[1];
-    m = _sir_symterm_match_pattern(lhs, expr, _sir_symterm_bindings_empty());
+    m = _sir_symterm_match_pattern(lhs, expr, _sir_symterm_bindings_empty(), 0);
     *out_matched = m.ok;
-    return m.ok ? _sir_symterm_substitute(rhs, m.bindings) : NULL;
+    return m.ok ? _sir_symterm_substitute(rhs, m.bindings, 0) : NULL;
 }
 
 /* ---- replaceAll / replaceRepeated (`/.` / `//.`) + depth guard -------- */
