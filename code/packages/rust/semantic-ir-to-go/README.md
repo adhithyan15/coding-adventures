@@ -290,14 +290,17 @@ that used to implement them were removed once every frontend finished
 migrating to `__sys_write__` (SIR28 §7) — see
 [SIR28](../../../specs/SIR28-syscall-primitives.md).
 
-### SIR22 — array/matrix base cut (`NDArrays`, `MatrixOps`, `ArrayColumnMajor`)
+### SIR22 — array/matrix: base cut + APL addendum (`NDArrays`, `MatrixOps`, `ArrayColumnMajor`)
 
 `Expr::ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet` and
-`Stmt::IndexSet` (MATLAB/Octave-style dense numeric arrays and matrix ops)
-lower to calls into an inlined `_sir_ndarray_*` sub-runtime — a plain-Go
-port of `semantic-ir-to-javascript`'s own already-proven `ArrayRt`
-sub-runtime, following this backend's existing "paste the runtime helpers
-inline, no `go.mod` dependency" convention. See
+`Stmt::IndexSet` (MATLAB/Octave-style dense numeric arrays and matrix ops,
+the "base cut", Phase A Slice 2), plus the 9-node "APL addendum"
+(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+`IndexOf`/`Ravel`/`Catenate`, Phase A Slice 3), all lower to calls into an
+inlined `_sir_ndarray_*` sub-runtime — a plain-Go port of
+`semantic-ir-to-javascript`'s own already-proven `ArrayRt` sub-runtime,
+following this backend's existing "paste the runtime helpers inline, no
+`go.mod` dependency" convention. See
 [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md) for the full
 node-by-node spec. Every array element is a `float64` (MATLAB's own
 "everything is a double" numeric model — see `runtime.rs`'s module doc for
@@ -306,14 +309,23 @@ way the sibling Ruby backend's SIR22 port does). Shape/output sizes are
 validated (with explicit multiplication-overflow guards, since Go's `int`
 can wrap where JS's `Number` cannot) BEFORE any `[]float64` allocation, an
 `_sirNdarrayMaxElements = 1 << 26` cap mirroring the JS reference's
-`MAX_ELEMENTS` exactly.
+`MAX_ELEMENTS` exactly — every addendum function reuses this same cap
+(`outer`'s `[m, n]` output, `index_of`'s `haystack * needle` scan bound,
+`catenate`'s combined length, `index_generator`'s `n`, `reshape`'s target
+size).
 
-The 9-node SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) is **not yet
-supported** — it shares `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
-base cut above, so a plain feature-flag check can't reject it; `lib.rs`'s
-`check_exception_soundness` (extended for this PR) rejects it cleanly with
-a `BackendError` naming the offending node, before `emit` is ever reached.
+Two addendum-specific subtleties worth flagging for a future reader:
+`reduce`/`scan` on a rank-2 matrix fold **each row independently** (not
+the whole matrix into one value) — column-major indexing inside that row
+loop is, per the runtime's own doc comment, "the single easiest place to
+introduce a wrong-answer bug"; and `reshape` fills in APL's row-major
+order but must **transpose** the filled sequence into this domain's
+column-major storage before returning it — handing the row-major
+sequence straight to the constructor produces a wrong answer that still
+looks plausible (right values, wrong positions). `IndexGenerator`/
+`IndexOf` are deliberately **1-based** (unlike every 0-based index
+elsewhere in this domain), matching APL's own `⍳` surface semantics.
+`tests/sir22_array.rs` has an execution-proof test for each of these.
 
 ## Value model
 

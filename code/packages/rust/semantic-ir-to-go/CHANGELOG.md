@@ -1,5 +1,119 @@
 # Changelog
 
+## 0.41.0 — SIR22 "APL addendum" (second-wave backend rollout, Phase A Slice 3)
+
+Implements the 9-node SIR22 "APL addendum" this backend's own Slice 2
+entry (below) explicitly deferred: `Expr::Reduce`/`Scan`/`OuterProduct`/
+`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`. No new
+`Feature` flags — the addendum shares `NDArrays`/`MatrixOps`/
+`ArrayColumnMajor` with the base cut, per
+`code/specs/SIR22-array-matrix-semantic-ir.md`.
+
+**New `_sir_ndarray_*` runtime functions (`runtime.rs`)**: `reduce`/
+`scan`/`outer` (which reuse `_sir_ndarray_apply_op`, the same 13-op
+dispatch table `_sir_ndarray_elementwise` uses), `flatten_row_major`
+(an internal helper both `reshape` and `ravel` need — not itself one of
+the nine node-backing functions), `shape`, `reshape`,
+`index_generator`, `index_of`, `ravel`, `catenate`. Ported 1:1 from
+`semantic-ir-to-javascript`'s own already-proven addendum functions
+(`runtime.rs`'s FIRST "SIR22 addendum: APL primitive operators" section
+— that file has a second, unrelated occurrence of the same section
+header inside its `#[cfg(test)]` module), which are themselves 1:1
+ports of `array_runtime::ops::{reduce,scan,outer}` and
+`apl_runtime::builtins::{shape,reshape,index_generator,index_of,ravel,
+catenate}`.
+
+Three subtleties carried over faithfully from the reference:
+
+- **`reduce`/`scan` on a rank-2 matrix fold EACH ROW independently**,
+  not the whole matrix into one value — column-major storage means
+  `(row, col)` lives at `col*r+row`, so the row loop reads `d[row]` as
+  the seed (column 0) then walks `d[col*r+row]` for the rest; swapping
+  `row`/`col` here would silently TRANSPOSE the result instead of
+  crashing. `tests/sir22_array.rs`'s
+  `reduce_folds_each_row_of_a_matrix_independently` pins the correct
+  per-row result against a naive whole-matrix-fold regression.
+- **`reshape` fills row-major, but must TRANSPOSE into column-major
+  storage.** APL's reshape fills the last axis fastest (row-major,
+  same convention as ravel); this domain stores column-major. Handing
+  the row-major-filled sequence straight to the constructor would
+  silently reshape column-major instead — a wrong answer that still
+  LOOKS plausible (right multiset of values, wrong positions).
+  `tests/sir22_array.rs`'s
+  `reshape_fills_row_major_then_transposes_into_column_major_storage`
+  reshapes a non-square `2x3` to `3x2` and asserts on element positions
+  that differ between the correct and the un-transposed-bug answer.
+- **`IndexGenerator`/`IndexOf` are 1-based**, unlike every other index
+  in this domain (`IndexGet`/`IndexSet` are 0-based) — this is
+  deliberate: it is genuinely what APL's monadic/dyadic `⍳` mean at the
+  surface-syntax level, confirmed against `apl_runtime::builtins::
+  index_generator`'s own tests (`index_generator_produces_one_based_run`)
+  and `index_of`'s doc comment. `IndexOf`'s "not found" case returns
+  `len(haystack) + 1` — always a valid, in-range position, never `-1`.
+  **Note**: `semantic-ir`'s own `Expr::IndexGenerator` doc comment
+  (`nodes.rs`) currently claims 0-based, which is stale/incorrect —
+  `apl_runtime::builtins::index_generator`'s source and tests are the
+  ground truth this port follows; fixing that doc comment is flagged as
+  a small follow-up, out of scope for this PR.
+
+**DoS discipline preserved exactly**: every function validates its
+output size via `_sir_ndarray_checked_shape_size` (the Slice-2
+overflow-safe validator) BEFORE allocating — `outer`'s `[m, n]` output
+(two independent operand lengths, neither bounds their product alone),
+`index_of`'s `haystack.length * needle.length` product (an
+`O(len(haystack)*len(needle))` scan, capped before scanning, not after),
+`catenate`'s combined length (checked ONCE up front regardless of which
+of its five rank combinations follows — a script that repeatedly
+catenates a value with itself doubles the size every line with no other
+ceiling), `index_generator`'s `n`, `reshape`'s target size. `reshape`'s
+and `index_generator`'s scalar-argument validation additionally guards
+`+Inf`/`NaN` explicitly (`math.IsNaN`/`math.IsInf`), not just `x !=
+math.Trunc(x)` — `math.Trunc(+Inf) == +Inf` would otherwise slip an
+infinite dimension past a naive integer check.
+
+**`emit.rs`**: the nine addendum nodes previously shared ONE combined
+`panic!` match arm with SIR26's `Expr::Convert` (a landmine Slice 2's
+own entry flagged: "these 7 [base-cut] nodes previously shared ONE
+combined panic arm with the 9 SIR22-addendum nodes AND `Expr::Convert`").
+This PR splits that arm: the nine addendum nodes get real
+`_sir_ndarray_*` call-emission (mirroring `ElementwiseOp`/`Transpose`'s
+existing style — `Reduce`/`Scan`/`OuterProduct` reuse
+`elementwise_op_go_name` exactly like `ElementwiseOp` does), and
+`Expr::Convert` moves into its own untouched arm with its original panic
+message (now naming only SIR26, not "SIR22-addendum/SIR26"). `cargo
+test -p semantic-ir-to-go` stayed 100% green throughout, confirming no
+`Expr::Convert` regression.
+
+**`lib.rs`**: `check_exception_soundness`'s nine `unsupported_sir22_
+addendum(...)` rejection arms (and that now-dead helper function) are
+removed; `check_soundness_expr` instead recurses into each addendum
+node's sub-expression(s), the same treatment every other real/supported
+composite node already gets (mirrors the base-cut `ArrayLit`/`Range`/
+`MatMul`/etc. arms Slice 2 added). `ACCEPTED_FEATURES`'s doc comment and
+this function's own doc comment are updated to say the addendum is no
+longer deferred.
+
+**`tests/sir22_array.rs`** (12 new tests, all real `go run` execution):
+`reduce` on a vector AND a matrix (the row-independent-fold proof
+above), `scan` on a vector, `outer` product of two vectors, `shape` of a
+scalar (proven via a `shape(shape(5))` double-application trick — reading
+index 0 of the double-shape yields `0.0` only if the inner `shape(5)` is
+correctly a length-0 vector, not a scalar) and of a matrix, `reshape`
+(the transposition-correctness proof above), `index_generator` (1-based),
+`index_of` found AND not-found, `ravel` of a matrix, `catenate` of two
+vectors and of two equal-row-count matrices, and a DoS-guard test
+(`outer_product_output_shape_exceeding_the_element_cap_panics_cleanly`)
+mirroring Slice 2's own `matmul_output_shape_exceeding_the_element_cap_
+panics_cleanly` pattern. None of the addendum nodes have direct literal
+syntax available in a hand-built `Module`, so genuine rank-1 "vector"
+test fixtures (as opposed to a `[1, n]` row-vector-shaped MATRIX, which
+is what `array_lit` with one row and `Range` both produce) are built via
+nested scalar `Catenate` — itself one of the nodes under test. Verified
+with a real `go vet` + `go run` pass on a hand-assembled module
+exercising all nine nodes together (via a throwaway example, not
+committed) as an additional sanity check beyond the crate's own test
+harness.
+
 ## 0.40.0 — SIR22 array/matrix base cut (second-wave backend rollout, Phase A Slice 2)
 
 Opens this backend to `Feature::NDArrays`/`Feature::MatrixOps`/
