@@ -867,7 +867,13 @@ fn web_serving_modes_cpu_bound_comparison() {
 /// them. The Windows TCP provider has no `SO_REUSEPORT` (its `SO_REUSEADDR` only
 /// permits rebinding — it does not load-balance), so `transport-platform`'s
 /// Windows `configure_listener_socket` rejects `reuse_port` before any listener
-/// exists. `bind_windows_sharded` therefore fails at *bind* time, every time.
+/// exists. `bind_windows_sharded` therefore fails at *bind* time.
+///
+/// The bind is attempted with `worker_count = 4` deliberately. `tcp-runtime`
+/// sets `reuse_port` only when `worker_count > 1` (one worker needs no fan-out),
+/// so `worker_count = 1` would bind successfully — a one-shard "sharded" server,
+/// which is just a `WebServer` with extra indirection. Asserting on the
+/// degenerate case would prove nothing about sharding.
 ///
 /// This test exists so that (a) the `bind_windows_sharded` call site stays
 /// compiled and executed on Windows rather than silently rotting, and (b) if the

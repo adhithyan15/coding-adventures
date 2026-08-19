@@ -6,6 +6,41 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Added
 
+- **Orphan-crate gate: every directory with a `Cargo.toml` must have a `BUILD`
+  file or a reasoned exemption.** The build tool discovers work by scanning for
+  BUILD files, which means it is structurally blind to a crate that has none:
+  such a crate is never built, its test targets are never compiled, its
+  assertions never run, and `cargo clippy --all-targets -- -D warnings` is never
+  applied to it, on any platform. In a Cargo workspace the omission is silent —
+  every sibling that lists the crate as a path dependency keeps it *compiling*
+  while nothing tests or lints it. That is how 84 crates under
+  `code/packages/rust` (plus 5 under `code/programs/rust`) accumulated
+  unnoticed, two of them carrying live clippy errors.
+
+  Note this could not be folded into `ValidateBuildFiles`: that function
+  inspects `[]discovery.Package`, and a package only exists in that slice
+  because it *had* a BUILD file. The new `ValidateNoOrphanCrates` scans the
+  filesystem instead, so it is the only check able to see the gap. Both now run
+  before either can fail the process, so one CI round-trip shows the full punch
+  list rather than one problem at a time.
+
+  Exemptions live in `code/BUILD-EXEMPTIONS`, in the form
+  `<EXCLUDED|PENDING> <path>  # <reason>`. `EXCLUDED` means the crate genuinely
+  should never be built (a compile-only JNI bridge, a wasm-only cdylib);
+  `PENDING` is a tracked backlog entry. Keeping them distinct makes the debt
+  countable instead of filed away — the tool prints the remaining `PENDING`
+  count on every successful validation. A reason is mandatory, since an
+  exemption without one is indistinguishable from the oversight this exists to
+  prevent.
+
+  **Stale entries fail too.** If a listed crate gains a BUILD file, or its
+  directory disappears, validation fails until the line is deleted. So landing a
+  BUILD for a `PENDING` crate forces the same change to remove its exemption,
+  and the ledger cannot outlive the problem it describes. Verified with a
+  control, per the "a check that cannot fail proves nothing" rule: with the
+  ledger removed, the real binary reports all 75 remaining orphans; with it in
+  place, validation is clean.
+
 - **Reject BUILD commands that silently run less than they say.** A BUILD file
   is not a shell script: `discovery.readLines` splits it on newlines and the
   executor runs each line as its own shell invocation, so a line-continuation

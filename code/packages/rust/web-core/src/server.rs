@@ -237,18 +237,25 @@ impl ShardedWebServer<transport_platform::windows::WindowsTransportPlatform> {
     /// Bind a Windows IOCP-backed sharded server with `worker_count` reactor
     /// shards. The `app`'s `on_server_start` hooks fire before returning.
     ///
-    /// # This constructor always fails on Windows
+    /// # This constructor fails for every `worker_count` above 1 on Windows
     ///
-    /// It is kept for API symmetry with `bind_kqueue_sharded` /
-    /// `bind_epoll_sharded`, but it **cannot succeed**: the sharded model gets
-    /// its fan-out from `SO_REUSEPORT` (every shard binds the same address and
-    /// the kernel spreads accepts across them), and the Windows TCP provider has
-    /// no `SO_REUSEPORT`. `transport-platform`'s Windows
+    /// In other words, it fails for every case anyone would actually call it
+    /// for. It is kept for API symmetry with `bind_kqueue_sharded` /
+    /// `bind_epoll_sharded`, but it **cannot shard**: the sharded model gets its
+    /// fan-out from `SO_REUSEPORT` (every shard binds the same address and the
+    /// kernel spreads accepts across them), and the Windows TCP provider has no
+    /// `SO_REUSEPORT`. `transport-platform`'s Windows
     /// `configure_listener_socket` therefore rejects `reuse_port` outright, so
     /// this returns
     /// `Err(PlatformError::Unsupported("SO_REUSEPORT is not supported by the Windows TCP provider"))`
     /// before a listener is ever created. (Windows' `SO_REUSEADDR` is *not* an
     /// equivalent — it permits rebinding, not load-balanced fan-out.)
+    ///
+    /// The one case that *does* bind is `worker_count == 1`, because
+    /// `tcp-runtime` only sets `reuse_port` when `worker_count > 1` — a single
+    /// worker needs no fan-out. That is a one-shard "sharded" server, i.e. a
+    /// plain [`WebServer`] with extra indirection, so it is a degenerate success
+    /// rather than a useful one.
     ///
     /// Use [`MailboxWebServer`] for parallel serving on Windows: it parallelises
     /// *by request* over a single listener, so it needs no `SO_REUSEPORT` and is
