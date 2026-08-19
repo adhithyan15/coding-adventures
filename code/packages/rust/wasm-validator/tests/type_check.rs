@@ -913,6 +913,26 @@ fn valid_simd_shift_family() {
 }
 
 #[test]
+fn valid_v128_load_and_store() {
+    // SIMD widen PR15: v128.load/v128.store -- the first SIMD ops that
+    // need a declared memory. load pops an i32 address, pushes a v128;
+    // store pops a v128 value then an i32 address, pushes nothing --
+    // mirrors the existing scalar i32.load/i32.store type rules exactly,
+    // just with V128 instead of I32 on the value side.
+    assert_valid(
+        r#"(module (memory 1)
+             (func (param i32) (result v128) (v128.load (local.get 0)))
+             (func (param i32 v128) (v128.store (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_v128_load_and_store_with_no_memory_at_all() {
+    assert_invalid("(module (func (param i32) (result v128) (v128.load (local.get 0))))");
+    assert_invalid("(module (func (param i32 v128) (v128.store (local.get 0) (local.get 1))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

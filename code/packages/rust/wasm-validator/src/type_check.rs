@@ -1603,6 +1603,43 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
+                    wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
+                        // v128.load/v128.store (SIMD widen PR15): a
+                        // standard `memarg` immediate (align, offset[,
+                        // memidx]) -- decoded exactly like every scalar
+                        // `iNN.load`/`iNN.store` (mirrors the `0x28..=
+                        // 0x3E` arm's own `MULTI_MEMORY_FLAG` handling)
+                        // so a stray multi-memory encoding still
+                        // consumes the right number of bytes and doesn't
+                        // desync the rest of the function body, even
+                        // though this first slice always
+                        // validates/executes against memory 0 (see
+                        // wasm-execution's own scope note).
+                        if !ctx.has_memory {
+                            err!("v128.load/v128.store used, but module declares no memory");
+                        }
+                        const MULTI_MEMORY_FLAG: u32 = 0x40;
+                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
+                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let raw_align = raw_align as u32;
+                        let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        offset += sz1 + sz2;
+                        if has_memidx {
+                            let (_memidx, sz3) = decode_idx(code, offset)?;
+                            offset += sz3;
+                        }
+                        match simd_op.kind {
+                            wasm_opcodes::SimdOpKind::Load => {
+                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                push_val(&mut stack, ValueType::V128);
+                            }
+                            wasm_opcodes::SimdOpKind::Store => {
+                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                            }
+                            _ => unreachable!("only Load/Store reach this arm"),
+                        }
+                    }
                 }
             }
 

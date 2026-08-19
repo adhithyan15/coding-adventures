@@ -2,6 +2,43 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.27] - 2026-08-18 (task #162-164 — SIMD: v128.load/v128.store)
+
+### Added
+
+- `LinearMemory::load_v128(&self, offset: usize) -> Result<[u8; 16],
+  TrapError>` -- bounds-checks 16 bytes starting at `offset`, then
+  copies them out. Same shape as the existing `load_f64`/etc, just 16
+  bytes instead of 4/8.
+- Raw-bytecode decode gains a new `0xFD` branch for `sub_opcode == 0x00
+  || sub_opcode == 0x0B` (`v128.load`/`v128.store`) that decodes a full
+  `memarg` immediate (respecting the multi-memory `0x40` flag bit for
+  correct byte-consumption even if a producer combines SIMD with
+  multi-memory) but keeps only `offset`, packed into the existing
+  `DecodedOperand::Simd{sub_opcode, aux}` shape -- reused rather than
+  inventing a new packing scheme, since the top-level `0xFD` dispatch
+  has no way to tell which packing scheme an already-packed
+  `Operand::Index` used without inspecting the original
+  `DecodedOperand` before conversion. This scopes execution to memory
+  index 0 only for this first PR; multi-memory `v128.load`/`v128.store`
+  is deferred to a later PR, same as WASM92 later widened the scalar
+  load/store family.
+- `register_simd` gains two new dispatch arms: `SimdOpKind::Load` pops
+  an `i32` base address, adds the memarg offset, calls
+  `load_v128`/pushes a new `v128_heap` handle; `SimdOpKind::Store` pops
+  the `v128` value FIRST (it's pushed last, so on top of stack), then
+  the `i32` base address, and writes the 16 bytes via the existing
+  `write_bytes` -- same pop order as the scalar `i32.store` (`0x36`)
+  handler.
+- 3 new tests: a `v128.store`-then-`v128.load` round trip through real
+  memory; a cross-check proving `v128.load` reads the SAME bytes a
+  plain scalar `i32.store` wrote (not just an internal-only round trip
+  with its own sibling `v128.store`); and an adversarial bounds test
+  proving both ops trap cleanly (not panic) when `address + 16`
+  overruns the memory's actual byte length.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.26] - 2026-08-18 (task #159-161 — SIMD: shift family)
 
 ### Added
