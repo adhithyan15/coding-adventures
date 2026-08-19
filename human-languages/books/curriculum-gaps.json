@@ -20,9 +20,9 @@
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
-    "mixedSchemaTracks": 16,
-    "version2SchemaTracks": 6,
-    "lessonsWithoutLevel": 72,
+    "mixedSchemaTracks": 15,
+    "version2SchemaTracks": 7,
+    "lessonsWithoutLevel": 68,
     "rampOverBudgetLessons": 46,
     "scriptRampOverBudgetLessons": 62,
     "lessonsOpeningMultipleScripts": 5,
@@ -30,10 +30,10 @@
     "scriptExposureExemptedGlyphs": 2220,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 307,
-    "forwardReviews": 160,
-    "atomsNeverRevisited": 619,
-    "forwardReferences": 503,
+    "lessonsWithoutSequence": 277,
+    "forwardReviews": 149,
+    "atomsNeverRevisited": 624,
+    "forwardReferences": 502,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 10,
@@ -3218,11 +3218,10 @@
       },
       {
         "language": "bengali",
-        "status": "mixed",
+        "status": "version-2",
         "lessonCount": 80,
         "versions": {
-          "1": 30,
-          "2": 50
+          "2": 80
         }
       },
       {
@@ -4037,7 +4036,7 @@
   "levels": {
     "totalLessons": 3147,
     "byLevel": {
-      "pre-A1": 1868,
+      "pre-A1": 1872,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4045,7 +4044,7 @@
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 72,
+    "unmapped": 68,
     "mappedPercent": 98,
     "tracks": [
       {
@@ -4067,7 +4066,7 @@
         "language": "bengali",
         "lessonCount": 80,
         "byLevel": {
-          "pre-A1": 56,
+          "pre-A1": 60,
           "A1": 1,
           "A2": 19,
           "B1": 0,
@@ -4075,7 +4074,7 @@
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 4,
+        "unmapped": 0,
         "reach": "A2"
       },
       {
@@ -4891,8 +4890,8 @@
       {
         "language": "bengali",
         "lessonCount": 80,
-        "measurable": 50,
-        "unmeasurable": 30,
+        "measurable": 80,
+        "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 0
       },
@@ -5199,6 +5198,17 @@
           "budget": 3
         },
         {
+          "lessonId": "BN-C01-nomoshkar",
+          "language": "bengali",
+          "chapter": 1,
+          "glyphs": 7,
+          "sample": "কনমরসা্",
+          "systems": [
+            "Bengali"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "HI-C01-dhanyavad",
           "language": "hindi",
           "chapter": 1,
@@ -5409,28 +5419,6 @@
           "budget": 3
         },
         {
-          "lessonId": "BN-C01-achchha",
-          "language": "bengali",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "আচছা্",
-          "systems": [
-            "Bengali"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "BN-C01-dhonnobad",
-          "language": "bengali",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "দধনবয",
-          "systems": [
-            "Bengali"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "FA-C01-mamnoon",
           "language": "persian",
           "chapter": 1,
@@ -5537,6 +5525,17 @@
           "sample": "ًُّْ",
           "systems": [
             "Arabic"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "BN-C01-dhonnobad",
+          "language": "bengali",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "দধবয",
+          "systems": [
+            "Bengali"
           ],
           "budget": 3
         },
@@ -6045,8 +6044,8 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 24,
-      "unmeasurableLessons": 558,
-      "measurablePercent": 82,
+      "unmeasurableLessons": 528,
+      "measurablePercent": 83,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -6483,226 +6482,15 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "BN-C01-achchha",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C01-achchha",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "BN-C01-nomoshkar",
-        "detail": "reviews BN-C01-nomoshkar, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C01-achchha",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "BN-C01-hyan-na",
-        "detail": "requires BN-C01-hyan-na, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C01-ashi",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C01-ashi",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "BN-C01-hyan-na",
-        "detail": "reviews BN-C01-hyan-na, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C01-dhonnobad",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C01-dhonnobad",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "BN-C01-nomoshkar",
-        "detail": "reviews BN-C01-nomoshkar, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C01-dhonnobad",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "BN-C01-nomoshkar",
-        "detail": "requires BN-C01-nomoshkar, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C01-hyan-na",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C01-nomoshkar",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C01-practice",
-        "language": "bengali",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-alaap",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
         "lessonId": "BN-C02-alaap",
         "language": "bengali",
         "chapter": 2,
         "kind": "forward-review",
         "other": "BN-C02-tomar-naam-ki",
-        "detail": "reviews BN-C02-tomar-naam-ki, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-alaap",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "BN-C02-amar-naam",
-        "detail": "requires BN-C02-amar-naam, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C02-amar",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-amar",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-naam",
-        "detail": "reviews BN-C02-naam, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-amar",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "BN-C02-naam",
-        "detail": "requires BN-C02-naam, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C02-amar-naam",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-amar-naam",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-naam",
-        "detail": "reviews BN-C02-naam, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-amar-naam",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "BN-C02-naam",
-        "detail": "requires BN-C02-naam, which comes 2 lesson(s) later"
+        "detail": "reviews BN-C02-tomar-naam-ki, which the learner does not reach for another 3 lesson(s)"
       },
       {
         "lessonId": "BN-C02-ki",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-ki",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-tumi-apni",
-        "detail": "reviews BN-C02-tumi-apni, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-ki",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "BN-C02-naam",
-        "detail": "requires BN-C02-naam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C02-naam",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-practice",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-practice",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-tumi-apni",
-        "detail": "reviews BN-C02-tumi-apni, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-practice",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-tomar-naam-ki",
-        "detail": "reviews BN-C02-tomar-naam-ki, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-practice",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "BN-C02-tomar-naam-ki",
-        "detail": "requires BN-C02-tomar-naam-ki, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C02-tomar-naam-ki",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C02-tomar-naam-ki",
         "language": "bengali",
         "chapter": 2,
         "kind": "forward-review",
@@ -6710,203 +6498,12 @@
         "detail": "reviews BN-C02-tumi-apni, which the learner does not reach for another 1 lesson(s)"
       },
       {
-        "lessonId": "BN-C02-tomar-naam-ki",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "BN-C02-tumi-apni",
-        "detail": "requires BN-C02-tumi-apni, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C02-tumi-apni",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C03-ami",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C03-bhalo",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C03-bhalo",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "BN-C03-tumi-kemon-achho",
-        "detail": "requires BN-C03-tumi-kemon-achho, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C03-kemon",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C03-kono-bepar-na",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C03-practice",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C03-practice",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "BN-C03-tumi-kemon-achho",
-        "detail": "reviews BN-C03-tumi-kemon-achho, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C03-practice",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "BN-C03-tumi-kemon-achho",
-        "detail": "requires BN-C03-tumi-kemon-achho, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C03-tumi-kemon-achho",
-        "language": "bengali",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C04-abar",
-        "language": "bengali",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C04-abar-dekha-hobe",
-        "language": "bengali",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C04-abar-dekha-hobe",
-        "language": "bengali",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "BN-C04-dekha-hobe",
-        "detail": "requires BN-C04-dekha-hobe, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C04-dekha-hobe",
-        "language": "bengali",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C04-kal-dekha-hobe",
-        "language": "bengali",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C04-practice",
-        "language": "bengali",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C05-ami-bangla-boli",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C05-ami-bangla-boli",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "BN-C05-bola",
-        "detail": "reviews BN-C05-bola, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C05-ami-bangla-boli",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "BN-C05-bola",
-        "detail": "requires BN-C05-bola, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C05-bola",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
         "lessonId": "BN-C05-kaj-kora",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C05-kaj-kora",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "BN-C05-thaka",
-        "detail": "reviews BN-C05-thaka, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C05-practice",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "BN-C05-practice",
         "language": "bengali",
         "chapter": 5,
         "kind": "forward-review",
         "other": "BN-C05-thaka",
         "detail": "reviews BN-C05-thaka, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C05-practice",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "BN-C05-thaka",
-        "detail": "requires BN-C05-thaka, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "BN-C05-thaka",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "FR-C01-bien",
@@ -17208,6 +16805,78 @@
         "language": "arabic",
         "introducedBy": "AR-W12-maa-salama",
         "introducedAt": 37,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "BN-CONCEPT-C01-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-practice",
+        "introducedAt": 5,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "BN-CONCEPT-C02-ALAAP-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-alaap",
+        "introducedAt": 9,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C02-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-practice",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "BN-CONCEPT-C03-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-practice",
+        "introducedAt": 19,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "BN-CONCEPT-C04-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C04-practice",
+        "introducedAt": 24,
+        "missed": [
+          "R1",
+          "R2",
+          "R3"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "BN-CONCEPT-C05-PRACTICE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C05-practice",
+        "introducedAt": 29,
         "missed": [
           "R1",
           "R2",
@@ -32831,6 +32500,182 @@
           "R2"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C01-ACHCHHA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-achchha",
+        "introducedAt": 3,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C01-ASHI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-ashi",
+        "introducedAt": 4,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C01-DHONNOBAD-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-dhonnobad",
+        "introducedAt": 1,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "BN-CONCEPT-C01-HYANNA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-hyan-na",
+        "introducedAt": 2,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "BN-CONCEPT-C02-TOMARNAAMKI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-tomar-naam-ki",
+        "introducedAt": 12,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C03-BHALO-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-bhalo",
+        "introducedAt": 17,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C03-KEMON-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-kemon",
+        "introducedAt": 15,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C03-KONOBEPARNA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-kono-bepar-na",
+        "introducedAt": 18,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C04-ABAR-01",
+        "language": "bengali",
+        "introducedBy": "BN-C04-abar",
+        "introducedAt": 20,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C04-ABARDEKHAHOBE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C04-abar-dekha-hobe",
+        "introducedAt": 22,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C04-DEKHAHOBE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C04-dekha-hobe",
+        "introducedAt": 21,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C04-KALDEKHAHOBE-01",
+        "language": "bengali",
+        "introducedBy": "BN-C04-kal-dekha-hobe",
+        "introducedAt": 23,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C05-AMIBANGLABOLI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C05-ami-bangla-boli",
+        "introducedAt": 26,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C05-BOLA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C05-bola",
+        "introducedAt": 25,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "BN-CONCEPT-C05-KAJKORA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C05-kaj-kora",
+        "introducedAt": 27,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "BN-CONCEPT-C05-THAKA-01",
+        "language": "bengali",
+        "introducedBy": "BN-C05-thaka",
+        "introducedAt": 28,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
       },
       {
         "atom": "BN-GRAMMAR-C07-ASHA-02",
@@ -49162,6 +49007,86 @@
         "revisits": 2
       },
       {
+        "atom": "BN-CONCEPT-C01-NOMOSHKAR-01",
+        "language": "bengali",
+        "introducedBy": "BN-C01-nomoshkar",
+        "introducedAt": 0,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C02-AMAR-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-amar",
+        "introducedAt": 7,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C02-AMARNAAM-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-amar-naam",
+        "introducedAt": 8,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C02-KI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-ki",
+        "introducedAt": 10,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C02-NAAM-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-naam",
+        "introducedAt": 6,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 5
+      },
+      {
+        "atom": "BN-CONCEPT-C02-TUMIAPNI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C02-tumi-apni",
+        "introducedAt": 11,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "BN-CONCEPT-C03-AMI-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-ami",
+        "introducedAt": 14,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "BN-CONCEPT-C03-TUMIKEMONACHHO-01",
+        "language": "bengali",
+        "introducedBy": "BN-C03-tumi-kemon-achho",
+        "introducedAt": 16,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 3
+      },
+      {
         "atom": "BN-ETYMON-DUI-COMPARISON",
         "language": "bengali",
         "introducedBy": "BN-C06-numbers-1-5",
@@ -58448,6 +58373,14 @@
         "lessonsEarly": 11
       },
       {
+        "lessonId": "BN-C04-dekha-hobe",
+        "language": "bengali",
+        "position": 21,
+        "word": "হওয়া",
+        "taughtBy": "BN-C07-howa",
+        "lessonsEarly": 10
+      },
+      {
         "lessonId": "GE-C16-perfekt-sein-agreement",
         "language": "german",
         "position": 64,
@@ -58494,14 +58427,6 @@
         "word": "брат",
         "taughtBy": "RU-C07-brat",
         "lessonsEarly": 10
-      },
-      {
-        "lessonId": "BN-C04-dekha-hobe",
-        "language": "bengali",
-        "position": 22,
-        "word": "হওয়া",
-        "taughtBy": "BN-C07-howa",
-        "lessonsEarly": 9
       },
       {
         "lessonId": "GE-C01-abend",
@@ -59685,14 +59610,6 @@
         "position": 20,
         "word": "تشرفنا",
         "taughtBy": "AR-C02-tasharrafna",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "BN-C04-abar-dekha-hobe",
-        "language": "bengali",
-        "position": 21,
-        "word": "দেখা হবে",
-        "taughtBy": "BN-C04-dekha-hobe",
         "lessonsEarly": 1
       },
       {
@@ -60982,12 +60899,12 @@
       {
         "language": "bengali",
         "lessonCount": 80,
-        "lessonsWithoutSequence": 30,
-        "forwardPrerequisites": 13,
-        "forwardReviews": 14,
-        "atomsTaught": 74,
-        "atomsNeverRevisited": 2,
-        "forwardReferences": 7
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 3,
+        "atomsTaught": 104,
+        "atomsNeverRevisited": 7,
+        "forwardReferences": 6
       },
       {
         "language": "chinese",
@@ -61191,20 +61108,20 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 307,
-      "tracksWithUnorderedLessons": 11,
-      "forwardPrerequisites": 136,
-      "forwardReviews": 160,
-      "atomsTaught": 4365,
-      "atomsNeverRevisited": 619,
+      "lessonsWithoutSequence": 277,
+      "tracksWithUnorderedLessons": 10,
+      "forwardPrerequisites": 123,
+      "forwardReviews": 149,
+      "atomsTaught": 4395,
+      "atomsNeverRevisited": 624,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1175,
-        "R2": 3386,
-        "R3": 3232,
+        "R1": 1181,
+        "R2": 3408,
+        "R3": 3262,
         "R4": 1798
       },
-      "forwardReferences": 503
+      "forwardReferences": 502
     }
   },
   "scriptClosure": {
@@ -66766,8 +66683,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "3 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 3
+            "detail": "15 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 15
           }
         ],
         "vocabulary": 65
@@ -81722,7 +81639,7 @@
     "terms": 54,
     "termsUsed": 52,
     "lessonsUsingTerms": 3065,
-    "usesBeforeIntroduction": 11610,
+    "usesBeforeIntroduction": 11608,
     "technicalUsesBeforeIntroduction": 3148,
     "technicalLessons": 1626,
     "worstTerms": [
@@ -81760,7 +81677,7 @@
   "glyphCoverage": {
     "filesScanned": 1086,
     "mainCharacters": 126,
-    "scriptCharacters": 693,
+    "scriptCharacters": 692,
     "gaps": 0
   }
 }
