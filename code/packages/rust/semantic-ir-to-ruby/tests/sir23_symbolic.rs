@@ -256,3 +256,100 @@ fn depth_limit_guard_raises_a_ruby_error_instead_of_crashing() {
         "expected a depth-limit error, got:\n{stderr}"
     );
 }
+
+#[test]
+fn deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_target() {
+    // Regression test (/security-review finding, follow-up fix after
+    // PR #12128 shipped without this guard): `sir_sym_match_pattern`/
+    // `sir_sym_substitute` originally carried NO depth cap at all, on the
+    // (unverified) assumption inherited from the JS reference that a
+    // rule's `lhs`/`rhs` is always author-written and shallow. That does
+    // not hold here — `Expr::SymRule`'s operands are ordinary `Expr`s, so
+    // a rule's RHS can be a LOCAL VARIABLE holding a term a compiled
+    // `for`-loop built to unbounded depth at runtime, same as the
+    // already-tested target-tree case above.
+    //
+    // This test proves the gap couldn't be caught by `sir_sym_walk_once`/
+    // `replace_repeated`'s OWN target-tree depth tracking: the rule here
+    // is `Blank() -> <a 600-deep term>` matched against a single bare
+    // SHALLOW symbol target. The match itself is instant (`Blank()`
+    // matches anything, no recursion), but `sir_sym_substitute` must then
+    // rebuild the entire 600-deep RHS to produce the replacement —
+    // independent of how deep (or shallow) the target being rewritten
+    // was. Before the fix, this recursed uncapped and would eventually
+    // raise Ruby's own `SystemStackError` (an uncontrolled crash, not a
+    // clean, catchable error); after the fix, it raises the same clean
+    // "sir-runtime-symbolic: depth-limit" error the target-tree guard
+    // already produces.
+    let stmts = vec![
+        let_binding("deep_rhs", sym("leaf")),
+        Stmt::ForRange {
+            var: "i".into(),
+            start: ilit(0),
+            stop: ilit(600),
+            step: ilit(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "deep_rhs".into(),
+                    scope: Scope::Local,
+                    value: sym_apply(sym("Wrap"), vec![local("deep_rhs")]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        },
+        Stmt::ExprStmt {
+            expr: Expr::BuiltinCall {
+                name: "__sys_write__".into(),
+                args: vec![
+                    Expr::StrLit { value: "stdout".into(), span: s() },
+                    Expr::StrLit { value: "once".into(), span: s() },
+                    Expr::BoolLit { value: false, span: s() },
+                    replace_all(
+                        sym("shallow_target"),
+                        vec![rule(blank(), local("deep_rhs"), false)],
+                        false,
+                    ),
+                ],
+                effects: EffectSet::PURE.with(Effect::MayPrint),
+                span: s(),
+            },
+            span: s(),
+        },
+    ];
+    let mut m = symbolic_module(stmts);
+    let mut features: Vec<Feature> = SYMBOLIC_FEATURES.to_vec();
+    features.extend_from_slice(&[
+        Feature::ConsoleIO,
+        Feature::Strings,
+        Feature::Loops,
+        Feature::MutableBindings,
+    ]);
+    m.manifest = FeatureManifest::from_features(&features);
+
+    let source = semantic_ir_to_ruby::compile(&m).expect("ruby emit").source;
+    if std::process::Command::new("ruby").arg("--version").output().is_err() {
+        return; // skip: no ruby on PATH
+    }
+    let dir = std::env::temp_dir();
+    let path = dir.join(format!("sir_ruby_symbolic_rule_depth_{}.rb", std::process::id()));
+    std::fs::write(&path, &source).expect("write temp ruby");
+    let out = std::process::Command::new("ruby").arg(&path).output().expect("spawn ruby");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        !out.status.success(),
+        "expected a non-zero exit from the depth-limit raise, got success:\n{}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("sir-runtime-symbolic: depth-limit"),
+        "expected a depth-limit error, got:\n{stderr}"
+    );
+    assert!(
+        !stderr.contains("SystemStackError") && !stderr.contains("stack level too deep"),
+        "expected a clean raise, not a native stack overflow:\n{stderr}"
+    );
+}
