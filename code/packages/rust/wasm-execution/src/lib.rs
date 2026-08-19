@@ -5369,6 +5369,77 @@ fn register_simd(vm: &mut GenericVM) {
                 let handle = push_v128(ctx, result)?;
                 push_wasm(vm, WasmValue::V128(handle));
             }
+            SimdOpKind::ExtendLowI8x16S | SimdOpKind::ExtendHighI8x16S | SimdOpKind::ExtendLowI8x16U | SimdOpKind::ExtendHighI8x16U => {
+                // i16x8.extend_low/high_i8x16_s/u: reinterpret the ONE
+                // popped v128 as 16 i8 lanes; take only the LOW (indices
+                // 0-7) or HIGH (indices 8-15) 8 lanes, sign- or
+                // zero-extend each to i16, producing an i16x8 result.
+                // EXACTLY the lane-selection + extend half of
+                // `ExtmulLow/HighI8x16S/U` above, minus the multiply --
+                // UNARY where extmul is BINARY, same narrow-input
+                // (8-bit)/wide-output (16-bit) shape as
+                // `ExtaddPairwiseI8x16S/U`. Part of the "extend" family
+                // (SIMD widen PR26) needed alongside "narrow" and
+                // "promote/demote/convert_low" to unlock the upstream
+                // simd_conversions.wast corpus file.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let sext = |v: i8| v as i16;
+                let zext = |v: i8| (v as u8) as i16;
+
+                let mut result = [0u8; 16];
+                for i in 0..8 {
+                    let out = match op.kind {
+                        SimdOpKind::ExtendLowI8x16S => sext(bytes[i] as i8),
+                        SimdOpKind::ExtendHighI8x16S => sext(bytes[i + 8] as i8),
+                        SimdOpKind::ExtendLowI8x16U => zext(bytes[i] as i8),
+                        SimdOpKind::ExtendHighI8x16U => zext(bytes[i + 8] as i8),
+                        _ => unreachable!("only ExtendLow/HighI8x16S/U reach this arm"),
+                    };
+                    result[i * 2..i * 2 + 2].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
+            SimdOpKind::ExtendLowI16x8S | SimdOpKind::ExtendHighI16x8S | SimdOpKind::ExtendLowI16x8U | SimdOpKind::ExtendHighI16x8U => {
+                // i32x4.extend_low/high_i16x8_s/u: reinterpret the ONE
+                // popped v128 as 8 i16 lanes; take only the LOW (indices
+                // 0-3) or HIGH (indices 4-7) 4 lanes, sign- or
+                // zero-extend each to i32, producing an i32x4 result.
+                // Same pattern one lane width up from
+                // `ExtendLow/HighI8x16S/U` above -- EXACTLY the
+                // lane-selection + extend half of `ExtmulLow/
+                // HighI16x8S/U`, minus the multiply.
+                let handle = pop_wasm(vm)?.as_v128_handle().map_err(VMError::from)?;
+                let bytes = *ctx
+                    .v128_heap
+                    .get(handle as usize)
+                    .ok_or_else(|| VMError::GenericError("v128 operand: heap handle out of range".into()))?;
+
+                let lane16 = |b: &[u8; 16], i: usize| i16::from_le_bytes(b[i * 2..i * 2 + 2].try_into().unwrap());
+                let sext = |v: i16| v as i32;
+                let zext = |v: i16| (v as u16) as i32;
+
+                let mut result = [0u8; 16];
+                for i in 0..4 {
+                    let out = match op.kind {
+                        SimdOpKind::ExtendLowI16x8S => sext(lane16(&bytes, i)),
+                        SimdOpKind::ExtendHighI16x8S => sext(lane16(&bytes, i + 4)),
+                        SimdOpKind::ExtendLowI16x8U => zext(lane16(&bytes, i)),
+                        SimdOpKind::ExtendHighI16x8U => zext(lane16(&bytes, i + 4)),
+                        _ => unreachable!("only ExtendLow/HighI16x8S/U reach this arm"),
+                    };
+                    result[i * 4..i * 4 + 4].copy_from_slice(&out.to_le_bytes());
+                }
+
+                let handle = push_v128(ctx, result)?;
+                push_wasm(vm, WasmValue::V128(handle));
+            }
             SimdOpKind::ExtmulLowI64x2S | SimdOpKind::ExtmulHighI64x2S | SimdOpKind::ExtmulLowI64x2U | SimdOpKind::ExtmulHighI64x2U => {
                 // i64x2.extmul_low/high_i32x4_s/u: reinterpret BOTH popped
                 // v128s as 4 i32 lanes each; take only the LOW (indices
@@ -10096,6 +10167,151 @@ mod tests {
         let mut high_u_engine = simd_engine_returning_v128(code);
         let (_, high_u_bytes) = high_u_engine.call_function_with_v128(0, &[]).unwrap();
         assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes_i64x2([4294967295, 4294967295]).try_into().unwrap())), "extmul_high_u(0xFFFFFFFF, 1) must be 4294967295 (unsigned), not -1");
+    }
+
+    /// `i16x8.extend_low/high_i8x16_s`/`_u` (SIMD widen PR26): proves the
+    /// LOW 8 lanes (indices 0-7) and HIGH 8 lanes (indices 8-15) of the
+    /// operand `i8x16` are read independently, AND that lane ORDER is
+    /// preserved (not reversed) within each half -- a sequential
+    /// `0..16` operand makes each source lane's position visible in the
+    /// result. This is exactly the lane-selection + extend half of the
+    /// already-tested `i16x8_extmul_i8x16_reads_low_and_high_halves_*`
+    /// case above, minus the multiply.
+    #[test]
+    fn i16x8_extend_low_high_i8x16_preserves_lane_order_and_selects_the_correct_half() {
+        let operand: [i8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(operand));
+        code.extend([0xFD, 0x87, 0x01]); // i16x8.extend_low_i8x16_s
+        code.push(0x0B);
+        let mut low_engine = simd_engine_returning_v128(code);
+        let (_, low_bytes) = low_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            low_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([0, 1, 2, 3, 4, 5, 6, 7]).try_into().unwrap())),
+            "extend_low must read lanes 0-7 in order, not the high half or a reversed order"
+        );
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i8x16(operand));
+        code.extend([0xFD, 0x88, 0x01]); // i16x8.extend_high_i8x16_s
+        code.push(0x0B);
+        let mut high_engine = simd_engine_returning_v128(code);
+        let (_, high_bytes) = high_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            high_bytes[0],
+            Some(V128Bytes(v128_const_bytes_i16x8([8, 9, 10, 11, 12, 13, 14, 15]).try_into().unwrap())),
+            "extend_high must read lanes 8-15 in order, not the low half"
+        );
+    }
+
+    /// `i16x8.extend_low/high_i8x16_s`/`_u` (SIMD widen PR26): proves
+    /// `_s`/`_u` disagree at the `i8` sign boundary the same way every
+    /// other signed/unsigned pair in this interpreter does --
+    /// `i8::MIN` (`-128`, bit pattern `0x80`) sign-extends to `-128` but
+    /// zero-extends to `128`; `i8::MAX` (`127`) is positive, so both
+    /// interpretations agree.
+    #[test]
+    fn i16x8_extend_low_high_i8x16_distinguishes_signed_from_unsigned_at_the_i8_boundary() {
+        let mut operand = [i8::MIN; 16]; // low half = i8::MIN
+        for l in operand.iter_mut().skip(8) {
+            *l = i8::MAX; // high half = i8::MAX
+        }
+
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i8x16(operand));
+            code.extend([0xFD, sub_opcode, 0x01]);
+            code.push(0x0B);
+            code
+        };
+
+        let mut low_s = simd_engine_returning_v128(code_for(0x87)); // extend_low_i8x16_s
+        let (_, low_s_bytes) = low_s.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([-128; 8]).try_into().unwrap())), "extend_low_s(i8::MIN) must sign-extend to -128");
+
+        let mut low_u = simd_engine_returning_v128(code_for(0x89)); // extend_low_i8x16_u
+        let (_, low_u_bytes) = low_u.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([128; 8]).try_into().unwrap())), "extend_low_u(0x80) must zero-extend to 128, not sign-extend to -128");
+
+        let mut high_s = simd_engine_returning_v128(code_for(0x88)); // extend_high_i8x16_s
+        let (_, high_s_bytes) = high_s.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_s_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([127; 8]).try_into().unwrap())), "extend_high_s(i8::MAX) must be 127");
+
+        let mut high_u = simd_engine_returning_v128(code_for(0x8A)); // extend_high_i8x16_u
+        let (_, high_u_bytes) = high_u.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes_i16x8([127; 8]).try_into().unwrap())), "extend_high_u(i8::MAX) must agree with signed since 127 is positive");
+    }
+
+    /// `i32x4.extend_low/high_i16x8_s`/`_u` (SIMD widen PR26): same
+    /// lane-order/half-selection proof as
+    /// `i16x8_extend_low_high_i8x16_preserves_lane_order_and_selects_the_correct_half`
+    /// above, one lane width up -- `i16x8` operand, `i32x4` result.
+    #[test]
+    fn i32x4_extend_low_high_i16x8_preserves_lane_order_and_selects_the_correct_half() {
+        let operand: [i16; 8] = [0, 1, 2, 3, 4, 5, 6, 7];
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(operand));
+        code.extend([0xFD, 0xA7, 0x01]); // i32x4.extend_low_i16x8_s
+        code.push(0x0B);
+        let mut low_engine = simd_engine_returning_v128(code);
+        let (_, low_bytes) = low_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            low_bytes[0],
+            Some(V128Bytes(v128_const_bytes([0, 1, 2, 3]).try_into().unwrap())),
+            "extend_low must read lanes 0-3 in order, not the high half or a reversed order"
+        );
+
+        let mut code = vec![0xFD, 0x0C];
+        code.extend(v128_const_bytes_i16x8(operand));
+        code.extend([0xFD, 0xA8, 0x01]); // i32x4.extend_high_i16x8_s
+        code.push(0x0B);
+        let mut high_engine = simd_engine_returning_v128(code);
+        let (_, high_bytes) = high_engine.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(
+            high_bytes[0],
+            Some(V128Bytes(v128_const_bytes([4, 5, 6, 7]).try_into().unwrap())),
+            "extend_high must read lanes 4-7 in order, not the low half"
+        );
+    }
+
+    /// `i32x4.extend_low/high_i16x8_s`/`_u` (SIMD widen PR26): same
+    /// signed/unsigned boundary proof as
+    /// `i16x8_extend_low_high_i8x16_distinguishes_signed_from_unsigned_at_the_i8_boundary`
+    /// above, one lane width up -- `i16::MIN`/`i16::MAX` instead of
+    /// `i8::MIN`/`i8::MAX`.
+    #[test]
+    fn i32x4_extend_low_high_i16x8_distinguishes_signed_from_unsigned_at_the_i16_boundary() {
+        let mut operand = [i16::MIN; 8]; // low half = i16::MIN
+        for l in operand.iter_mut().skip(4) {
+            *l = i16::MAX; // high half = i16::MAX
+        }
+
+        let code_for = |sub_opcode: u8| {
+            let mut code = vec![0xFD, 0x0C];
+            code.extend(v128_const_bytes_i16x8(operand));
+            code.extend([0xFD, sub_opcode, 0x01]);
+            code.push(0x0B);
+            code
+        };
+
+        let mut low_s = simd_engine_returning_v128(code_for(0xA7)); // extend_low_i16x8_s
+        let (_, low_s_bytes) = low_s.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_s_bytes[0], Some(V128Bytes(v128_const_bytes([-32768; 4]).try_into().unwrap())), "extend_low_s(i16::MIN) must sign-extend to -32768");
+
+        let mut low_u = simd_engine_returning_v128(code_for(0xA9)); // extend_low_i16x8_u
+        let (_, low_u_bytes) = low_u.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(low_u_bytes[0], Some(V128Bytes(v128_const_bytes([32768; 4]).try_into().unwrap())), "extend_low_u(0x8000) must zero-extend to 32768, not sign-extend to -32768");
+
+        let mut high_s = simd_engine_returning_v128(code_for(0xA8)); // extend_high_i16x8_s
+        let (_, high_s_bytes) = high_s.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_s_bytes[0], Some(V128Bytes(v128_const_bytes([32767; 4]).try_into().unwrap())), "extend_high_s(i16::MAX) must be 32767");
+
+        let mut high_u = simd_engine_returning_v128(code_for(0xAA)); // extend_high_i16x8_u
+        let (_, high_u_bytes) = high_u.call_function_with_v128(0, &[]).unwrap();
+        assert_eq!(high_u_bytes[0], Some(V128Bytes(v128_const_bytes([32767; 4]).try_into().unwrap())), "extend_high_u(i16::MAX) must agree with signed since 32767 is positive");
     }
 
     /// `v128.not`: bitwise complement of all 128 bits, lane-width-

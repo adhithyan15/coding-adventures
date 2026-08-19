@@ -2,6 +2,48 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.29] - 2026-08-19 - SIMD widen PR26: extend_low/high family (task #193-195)
+
+### Added
+
+- 8 new `SIMD_OPS` entries: `i16x8.extend_low_i8x16_s` (`0x87`),
+  `i16x8.extend_high_i8x16_s` (`0x88`), `i16x8.extend_low_i8x16_u`
+  (`0x89`), `i16x8.extend_high_i8x16_u` (`0x8A`),
+  `i32x4.extend_low_i16x8_s` (`0xA7`), `i32x4.extend_high_i16x8_s`
+  (`0xA8`), `i32x4.extend_low_i16x8_u` (`0xA9`),
+  `i32x4.extend_high_i16x8_u` (`0xAA`) -- the "extend" family: EXACTLY
+  the lane-selection + sign/zero-extend half of the already-implemented
+  `ExtmulLowI8x16S`/`ExtmulHighI8x16S`/etc. handlers, minus the
+  multiply. 146 SIMD opcodes total, up from 138. Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against the already-implemented
+  `i16x8.extmul_low_i8x16_s` (`0x9C`)/`i16x8.shl` (`0x8B`)/
+  `i16x8.q15mulr_sat_s` (`0x82`)/`i32x4.extmul_low_i16x8_s` (`0xBC`)/
+  `i32x4.all_true` (`0xA3`)/`i32x4.shl` (`0xAB`) entries (all six
+  matched exactly, confirming `0x87`-`0x8A` and `0xA7`-`0xAA` are free
+  gaps in their respective runs).
+- `SimdOpKind::ExtendLowI8x16S`/`ExtendHighI8x16S`/`ExtendLowI8x16U`/
+  `ExtendHighI8x16U`/`ExtendLowI16x8S`/`ExtendHighI16x8S`/
+  `ExtendLowI16x8U`/`ExtendHighI16x8U`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): UNARY
+  (pop one `v128`, push one `v128`). `i16x8.extend_low/high_i8x16_s/u`
+  reinterpret the operand as 16 `i8` lanes, take only the LOW (0-7) or
+  HIGH (8-15) 8 lanes, sign- or zero-extend each to `i16`. Same pattern
+  one lane width up for `i32x4.extend_low/high_i16x8_s/u` (8 `i16`
+  lanes in, LOW 0-3 / HIGH 4-7 selected, extended to `i32`).
+- **Staged campaign, no corpus vendoring yet.** These 8 opcodes are
+  part of a 16-opcode set (`extend_low`/`high` here, `narrow` in a
+  future PR, `promote`/`demote`/`convert_low` in a future PR) needed to
+  unlock the upstream `simd_conversions.wast` corpus file -- its
+  modules bundle all 16 together, so it can't be vendored until every
+  PR in the set has landed. This PR is opcode-only, verified by unit
+  tests.
+- Table-size test bumped from 138 to 146 entries; new dedicated
+  sub-opcode-value test added alongside the existing per-family tests.
+
 ## [0.2.28] - 2026-08-19 - SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero (task #190-192)
 
 ### Added

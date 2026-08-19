@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.38] - 2026-08-19 (task #193-195 — SIMD widen PR26: extend_low/high family type rules)
+
+### Added
+
+- `SimdOpKind::ExtendLowI8x16S`/`ExtendHighI8x16S`/`ExtendLowI8x16U`/
+  `ExtendHighI8x16U`/`ExtendLowI16x8S`/`ExtendHighI16x8S`/
+  `ExtendLowI16x8U`/`ExtendHighI16x8U` join the existing UNARY `v128`
+  op type-check arm (pop one `V128`, push `V128`) alongside
+  `ExtaddPairwiseI8x16S`/`_U`/`ExtaddPairwiseI16x8S`/`_U` -- the LOW/
+  HIGH lane selection and sign/zero extension are entirely runtime
+  concerns, invisible to the type checker, which only ever sees the
+  opaque `V128` type in and out.
+- 6 new tests: one valid-module case covering all 8 new ops, four
+  invalid-module regressions confirming each family genuinely rejects
+  an `i32` operand instead of `v128`, and one confirming an empty stack
+  (no operand at all) is also rejected, not just a wrong-typed one.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** Part of the 16-opcode
+  set (`extend_low`/`high` here, `narrow` and `promote`/`demote`/
+  `convert_low` in future PRs) needed to unlock the upstream
+  `simd_conversions.wast` corpus file. This PR is opcode-only.
+
 ## [0.2.37] - 2026-08-19 (task #190-192 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero type rule)
 
 ### Added

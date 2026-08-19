@@ -1,5 +1,32 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.48 — 2026-08-19 — SIMD widen PR26: extend_low/high family text-form (task #193-195)
+
+### Added
+
+- `SimdOpKind::ExtendLowI8x16S`/`ExtendHighI8x16S`/`ExtendLowI8x16U`/
+  `ExtendHighI8x16U`/`ExtendLowI16x8S`/`ExtendHighI16x8S`/
+  `ExtendLowI16x8U`/`ExtendHighI16x8U` join the shared "no immediate
+  beyond the opcode byte itself" SIMD dispatch arm (already used for
+  `ExtaddPairwiseI8x16S`/`_U`/`ExtaddPairwiseI16x8S`/`_U`) in both the
+  folded (`encode_stream_instr`) and flat (`encode_flat_instr`)
+  instruction encoders -- verified byte-identical at both call sites
+  before editing, per this campaign's own documented past gotcha. All
+  eight sub-opcodes are looked up by name from
+  `wasm_opcodes::SIMD_OPS` (data-driven, via `get_simd_op_by_name`), so
+  no separate name-parsing change was needed beyond the two match-arm
+  additions.
+- 1 new test confirming all 8 `extend_low`/`high` opcodes encode their
+  real 2-byte LEB128 sub-opcodes (all `>= 128`) in both folded and
+  flat/stream syntax.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** Part of the 16-opcode
+  set (`extend_low`/`high` here, `narrow` and `promote`/`demote`/
+  `convert_low` in future PRs) needed to unlock the upstream
+  `simd_conversions.wast` corpus file. This PR is opcode-only.
+
 ## 0.1.47 — 2026-08-19 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero text-form (task #190-192)
 
 ### Added
