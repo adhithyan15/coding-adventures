@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Give your name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:d3efc74a56512410",
+  "sourceHash": "fnv1a64:d7e6c7d21186e200",
   "lessons": [
     {
       "id": "UR-C02-mera-naam",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9b79da0c62dcb0a",
+      "sourceHash": "fnv1a64:f7dd6fcae0bd7124",
       "notice": null,
       "blocks": [
         {
@@ -71,6 +71,10 @@
             {
               "kind": "speech",
               "text": "The word nām is an old Indo-Aryan relative of Sanskrit nāman and distant English name. merā and hai show Urdu's inherited grammatical core, shared closely with Hindi even though the two languages use different scripts."
+            },
+            {
+              "kind": "speech",
+              "text": "Nearly every shape here is one you have already met. میرا opens with م, the letter that begins salām, then reuses ی, ر and ا. نام is ن plus that same ا and م. Only the final ے in ہے is new — it is called baṛī ye, the \"big ye\", and here the whole word is said hai. Learn that vowel with this word and you will meet it again everywhere."
             }
           ]
         },

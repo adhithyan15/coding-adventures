@@ -2649,6 +2649,20 @@
     },
     {
       "language": "latin",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:fc742a0558a5aef5",
+      "lessonIds": [
+        "LA-C01-salve",
+        "LA-C01-ave",
+        "LA-C01-vale",
+        "LA-C01-gratias",
+        "LA-C01-ita-non",
+        "LA-C01-practice"
+      ],
+      "tex": "latin/book/chapters/ch01-greetings.tex"
+    },
+    {
+      "language": "latin",
       "chapter": 2,
       "sourceHash": "fnv1a64:e487ced01dcb7f2f",
       "lessonIds": [
@@ -3841,6 +3855,15 @@
         "MR-W01-namaskar-read"
       ],
       "tex": "marathi/book/chapters/ch14-script-first.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:497f80f61dd5767f",
+      "lessonIds": [
+        "FA-C02-esm-e-man"
+      ],
+      "tex": "persian/book/chapters/ch02-give-your-name.tex"
     },
     {
       "language": "persian",
@@ -9323,6 +9346,15 @@
         "TE-C66-harvest"
       ],
       "tex": "telugu/book/chapters/ch66-the-field.tex"
+    },
+    {
+      "language": "urdu",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:cfca1c3146b05ede",
+      "lessonIds": [
+        "UR-C02-mera-naam"
+      ],
+      "tex": "urdu/book/chapters/ch02-give-your-name.tex"
     },
     {
       "language": "urdu",

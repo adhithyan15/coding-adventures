@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:ecce86212d2bd4c0",
+  "sourceHash": "fnv1a64:c3922faa9a470bf4",
   "summary": {
     "totalLessons": 3147,
     "voice": 2221,
@@ -75465,7 +75465,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9b79da0c62dcb0a"
+      "sourceHash": "fnv1a64:f7dd6fcae0bd7124"
     },
     {
       "id": "UR-C03-aap-tum-tu",
