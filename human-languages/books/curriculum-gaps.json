@@ -20,9 +20,9 @@
     "tracksWithoutBooks": 0,
     "lessonChaptersWithoutBooks": 0,
     "legacySchemaTracks": 0,
-    "mixedSchemaTracks": 17,
-    "version2SchemaTracks": 5,
-    "lessonsWithoutLevel": 76,
+    "mixedSchemaTracks": 16,
+    "version2SchemaTracks": 6,
+    "lessonsWithoutLevel": 72,
     "rampOverBudgetLessons": 46,
     "scriptRampOverBudgetLessons": 62,
     "lessonsOpeningMultipleScripts": 5,
@@ -32,10 +32,10 @@
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 307,
     "forwardReviews": 160,
-    "atomsNeverRevisited": 616,
-    "forwardReferences": 504,
+    "atomsNeverRevisited": 619,
+    "forwardReferences": 503,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 76,
+    "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 10,
     "drivableLessons": 2662,
     "drivablePercent": 85,
@@ -3138,11 +3138,10 @@
       },
       {
         "language": "hindi",
-        "status": "mixed",
+        "status": "version-2",
         "lessonCount": 238,
         "versions": {
-          "1": 19,
-          "2": 219
+          "2": 238
         }
       },
       {
@@ -3324,6 +3323,27 @@
         "chapter": 2,
         "lessonId": "HI-W05-write-namaste",
         "message": "hindi chapter 2 payoff assesses 2/21 of the chapter's atoms (0.10), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "hindi",
+        "chapter": 3,
+        "lessonId": "HI-C03-practice",
+        "message": "hindi chapter 3 payoff assesses 0/7 of the chapter's atoms (0.00), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "hindi",
+        "chapter": 4,
+        "lessonId": "HI-C04-practice",
+        "message": "hindi chapter 4 payoff assesses 0/6 of the chapter's atoms (0.00), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "hindi",
+        "chapter": 5,
+        "lessonId": "HI-C05-practice",
+        "message": "hindi chapter 5 payoff assesses 0/6 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -3877,7 +3897,7 @@
         "bookChapters": 59,
         "declaredChapters": 59,
         "missingCapability": 0,
-        "findings": 10,
+        "findings": 13,
         "clean": false
       },
       {
@@ -4006,7 +4026,7 @@
       "declaredChapters": 954,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 76,
+      "payoffsNotRepresentative": 79,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
@@ -4017,15 +4037,15 @@
   "levels": {
     "totalLessons": 3147,
     "byLevel": {
-      "pre-A1": 1866,
+      "pre-A1": 1868,
       "A1": 573,
-      "A2": 547,
+      "A2": 549,
       "B1": 40,
       "B2": 17,
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 76,
+    "unmapped": 72,
     "mappedPercent": 98,
     "tracks": [
       {
@@ -4122,15 +4142,15 @@
         "language": "hindi",
         "lessonCount": 238,
         "byLevel": {
-          "pre-A1": 168,
+          "pre-A1": 170,
           "A1": 45,
-          "A2": 21,
+          "A2": 23,
           "B1": 0,
           "B2": 0,
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 4,
+        "unmapped": 0,
         "reach": "A2"
       },
       {
@@ -4911,8 +4931,8 @@
       {
         "language": "hindi",
         "lessonCount": 238,
-        "measurable": 219,
-        "unmeasurable": 19,
+        "measurable": 238,
+        "unmeasurable": 0,
         "lessonViolations": 1,
         "chapterViolations": 2
       },
@@ -6025,7 +6045,7 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 24,
-      "unmeasurableLessons": 577,
+      "unmeasurableLessons": 558,
       "measurablePercent": 82,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -9192,20 +9212,12 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "HI-C05-main-hindi-bolta-hun",
+        "lessonId": "HI-C05-rahna",
         "language": "hindi",
         "chapter": 5,
         "kind": "forward-review",
-        "other": "HI-C05-bolta-hun",
-        "detail": "reviews HI-C05-bolta-hun, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "HI-C05-main-hindi-bolta-hun",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "HI-C05-bolta-hun",
-        "detail": "requires HI-C05-bolta-hun, which comes 3 lesson(s) later"
+        "other": "HI-C05-main-hindi-bolta-hun",
+        "detail": "reviews HI-C05-main-hindi-bolta-hun, which the learner does not reach for another 3 lesson(s)"
       },
       {
         "lessonId": "IT-C01-buongiorno",
@@ -12683,6 +12695,58 @@
           "R4"
         ],
         "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C03-PRACTICE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-practice",
+        "introducedAt": 32,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C04-PRACTICE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C04-practice",
+        "introducedAt": 38,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C05-PRACTICE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-practice",
+        "introducedAt": 44,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C05-RAHNA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-rahna",
+        "introducedAt": 40,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-C06-NUMBERS-1-5-01",
@@ -22180,18 +22244,6 @@
         "revisits": 0
       },
       {
-        "atom": "HI-CONCEPT-C01-ALVIDA-01",
-        "language": "hindi",
-        "introducedBy": "HI-C01-alvida",
-        "introducedAt": 4,
-        "missed": [
-          "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01",
         "language": "hindi",
         "introducedBy": "HI-C02-aapka-naam-kya-hai",
@@ -22204,48 +22256,12 @@
         "revisits": 1
       },
       {
-        "atom": "HI-CONCEPT-C02-AAPTUM-01",
-        "language": "hindi",
-        "introducedBy": "HI-C02-aap-tum",
-        "introducedAt": 14,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "HI-CONCEPT-C02-HAI-01",
-        "language": "hindi",
-        "introducedBy": "HI-C02-hai",
-        "introducedAt": 12,
-        "missed": [
-          "R2",
-          "R3",
-          "R4"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "HI-CONCEPT-C02-KHUSHI-01",
         "language": "hindi",
         "introducedBy": "HI-C02-khushi",
         "introducedAt": 17,
         "missed": [
           "R1",
-          "R3",
-          "R4"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "HI-CONCEPT-C02-KYA-01",
-        "language": "hindi",
-        "introducedBy": "HI-C02-kya",
-        "introducedAt": 15,
-        "missed": [
-          "R2",
           "R3",
           "R4"
         ],
@@ -22261,7 +22277,7 @@
           "R3",
           "R4"
         ],
-        "revisits": 1
+        "revisits": 2
       },
       {
         "atom": "HI-CONCEPT-C02-MERANAAMHAI-01",
@@ -22286,6 +22302,150 @@
           "R4"
         ],
         "revisits": 4
+      },
+      {
+        "atom": "HI-CONCEPT-C03-AAPKAISEHAIN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-aap-kaise-hain",
+        "introducedAt": 27,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C03-AAPKASWAGATHAI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-aapka-swagat-hai",
+        "introducedAt": 31,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C03-KAISE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-kaise",
+        "introducedAt": 26,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C03-THIK-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-thik",
+        "introducedAt": 30,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C04-CHALTAHUN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C04-chalta-hun",
+        "introducedAt": 37,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C04-KALMILTEHAIN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C04-kal-milte-hain",
+        "introducedAt": 36,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C04-MILENGE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C04-milenge",
+        "introducedAt": 34,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C04-PHIR-01",
+        "language": "hindi",
+        "introducedBy": "HI-C04-phir",
+        "introducedAt": 33,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C04-PHIRMILENGE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C04-phir-milenge",
+        "introducedAt": 35,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C05-BOLTAHUN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-bolta-hun",
+        "introducedAt": 42,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C05-KARNA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-karna",
+        "introducedAt": 41,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C05-MAINHINDIBOLTAHUN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-main-hindi-bolta-hun",
+        "introducedAt": 43,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
       },
       {
         "atom": "HI-CONCEPT-C07-NAHIN-01",
@@ -37381,12 +37541,12 @@
         "revisits": 1
       },
       {
-        "atom": "HI-CONCEPT-C01-DHANYAVAD-01",
+        "atom": "HI-CONCEPT-C01-ALVIDA-01",
         "language": "hindi",
-        "introducedBy": "HI-C01-dhanyavad",
-        "introducedAt": 2,
+        "introducedBy": "HI-C01-alvida",
+        "introducedAt": 4,
         "missed": [
-          "R3",
+          "R1",
           "R4"
         ],
         "revisits": 2
@@ -37423,6 +37583,61 @@
           "R4"
         ],
         "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C02-AAPTUM-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-aap-tum",
+        "introducedAt": 14,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-C02-KYA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-kya",
+        "introducedAt": 15,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C03-HUN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-hun",
+        "introducedAt": 29,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 6
+      },
+      {
+        "atom": "HI-CONCEPT-C03-MAIN-01",
+        "language": "hindi",
+        "introducedBy": "HI-C03-main",
+        "introducedAt": 28,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
+      },
+      {
+        "atom": "HI-CONCEPT-C05-BOLNA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C05-bolna",
+        "introducedAt": 39,
+        "missed": [
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "HI-CONCEPT-C36-DARVAAZA-01",
@@ -51797,6 +52012,26 @@
         "revisits": 2
       },
       {
+        "atom": "HI-CONCEPT-C01-DHANYAVAD-01",
+        "language": "hindi",
+        "introducedBy": "HI-C01-dhanyavad",
+        "introducedAt": 2,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 3
+      },
+      {
+        "atom": "HI-CONCEPT-C02-HAI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-hai",
+        "introducedAt": 12,
+        "missed": [
+          "R4"
+        ],
+        "revisits": 6
+      },
+      {
         "atom": "HI-LEX-C57-GIFT-02",
         "language": "hindi",
         "introducedBy": "HI-C57-feast",
@@ -58981,14 +59216,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "HI-C05-main-hindi-bolta-hun",
-        "language": "hindi",
-        "position": 40,
-        "word": "बोलता हूँ",
-        "taughtBy": "HI-C05-bolta-hun",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "IT-C01-buongiorno",
         "language": "italian",
         "position": 0,
@@ -60806,11 +61033,11 @@
         "language": "hindi",
         "lessonCount": 238,
         "lessonsWithoutSequence": 0,
-        "forwardPrerequisites": 1,
+        "forwardPrerequisites": 0,
         "forwardReviews": 1,
-        "atomsTaught": 296,
-        "atomsNeverRevisited": 73,
-        "forwardReferences": 11
+        "atomsTaught": 315,
+        "atomsNeverRevisited": 76,
+        "forwardReferences": 10
       },
       {
         "language": "italian",
@@ -60966,18 +61193,18 @@
     "summary": {
       "lessonsWithoutSequence": 307,
       "tracksWithUnorderedLessons": 11,
-      "forwardPrerequisites": 137,
+      "forwardPrerequisites": 136,
       "forwardReviews": 160,
-      "atomsTaught": 4346,
-      "atomsNeverRevisited": 616,
+      "atomsTaught": 4365,
+      "atomsNeverRevisited": 619,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1170,
-        "R2": 3374,
-        "R3": 3216,
-        "R4": 1779
+        "R1": 1175,
+        "R2": 3386,
+        "R3": 3232,
+        "R4": 1798
       },
-      "forwardReferences": 504
+      "forwardReferences": 503
     }
   },
   "scriptClosure": {
@@ -66649,8 +66876,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "42 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 42
+            "detail": "49 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 49
           }
         ],
         "vocabulary": 177
@@ -69111,7 +69338,7 @@
         "pen": 45,
         "coreVoice": 191,
         "drivablePercent": 80,
-        "drivablePrefixTotal": 185,
+        "drivablePrefixTotal": 184,
         "chapters": [
           {
             "language": "hindi",
@@ -69187,7 +69414,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 1,
             "firstNonVoiceLesson": "HI-C05-rahna"
           },
           {
