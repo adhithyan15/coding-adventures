@@ -1,22 +1,29 @@
-use crate::{ApplicationError, ObjectKind};
+use crate::{
+    ApplicationError, ObjectKind, ATTACHMENT_CHUNK_BYTES, ATTACHMENT_DEK_BYTES,
+    MAX_ATTACHMENT_BYTES, MAX_ATTACHMENT_CHUNKS, MAX_ATTACHMENT_NAME_BYTES,
+};
 use coding_adventures_canonical_cbor::{decode, encode, try_encode, CborError, CborValue};
+use coding_adventures_vault_attachments::{BlobId, EncryptedChunk};
 use coding_adventures_vault_pm_audit::SignedAuditEventV1;
 use coding_adventures_vault_pm_domain::{
-    AttachmentId, CollectionId, ContentType, ItemCandidate, ItemDocument, ItemId, ItemState,
-    LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
+    AttachmentId, AttachmentManifestId, CollectionId, ContentType, ItemCandidate, ItemDocument,
+    ItemId, ItemState, LwwRegister, ObservedSet, OperationId, RevisionId, Tombstone,
+    MAX_OBSERVED_VALUES,
 };
-use coding_adventures_vault_pm_format::{CommitV1, DeviceCertificateV1, DeviceId, VaultId};
+use coding_adventures_vault_pm_format::{
+    CommitV1, DeviceCertificateV1, DeviceId, ObjectId, VaultId,
+};
 use coding_adventures_vault_records::{
     decode_record, encode_opaque, encode_record, AnyRecord, VaultRecordError,
 };
-use coding_adventures_zeroize::Zeroize;
+use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
 const VERSION: u64 = 1;
 const LIVE_STATE: u64 = 1;
 const TOMBSTONE_STATE: u64 = 2;
-const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
+pub(crate) const MAX_PLAINTEXT_BYTES: usize = 16 * 1024 * 1024;
 pub(crate) const MAX_CATALOG_ENTRIES: usize = 100_000;
 pub(crate) const MAX_CANDIDATES_PER_ITEM: usize = 16;
 
@@ -386,6 +393,466 @@ pub fn decode_signed_audit_event(encoded: &[u8]) -> Result<SignedAuditEventV1, A
     SignedAuditEventV1::decode(&exact).map_err(|_| ApplicationError::IntegrityFailure)
 }
 
+/// One attachment's metadata, key, and ordered chunk references.
+///
+/// VLT-PM47 §4.3. This is the object that lets an attachment of any permitted
+/// size cost the item revision a fixed forty-eight bytes.
+///
+/// The attachment id here is also the VLT14 blob id — one 128-bit value with
+/// both meanings, so the chunk AEAD's associated data binds each chunk to the
+/// attachment identity a person sees rather than to a private alias, and there
+/// is no state in which the two disagree.
+pub struct AttachmentManifestV1 {
+    attachment_id: AttachmentId,
+    dek: Zeroizing<[u8; ATTACHMENT_DEK_BYTES]>,
+    name: String,
+    total_plaintext_len: u64,
+    content_sha256: [u8; 32],
+    chunks: Vec<ObjectId>,
+    created_at_ms: u64,
+}
+
+impl AttachmentManifestV1 {
+    /// Validate and construct one complete manifest.
+    pub fn new(
+        attachment_id: AttachmentId,
+        dek: Zeroizing<[u8; ATTACHMENT_DEK_BYTES]>,
+        name: String,
+        total_plaintext_len: u64,
+        content_sha256: [u8; 32],
+        chunks: Vec<ObjectId>,
+        created_at_ms: u64,
+    ) -> Result<Self, ApplicationError> {
+        let manifest = Self {
+            attachment_id,
+            dek,
+            name,
+            total_plaintext_len,
+            content_sha256,
+            chunks,
+            created_at_ms,
+        };
+        manifest.validate()?;
+        Ok(manifest)
+    }
+
+    /// Return the attachment identity, which is also the VLT14 blob id.
+    pub const fn attachment_id(&self) -> AttachmentId {
+        self.attachment_id
+    }
+
+    /// Borrow the per-attachment VLT14 data-encryption key.
+    ///
+    /// The key is plaintext only inside this object's authenticated payload,
+    /// which the repository envelope seals under the vault's object-wrap key.
+    /// VLT-PM00 §8.1 places attachment DEKs exactly there.
+    pub const fn dek(&self) -> &Zeroizing<[u8; ATTACHMENT_DEK_BYTES]> {
+        &self.dek
+    }
+
+    /// Borrow the validated base name the file was attached under.
+    pub fn name(&self) -> &str {
+        &self.name
+    }
+
+    /// Return the declared plaintext length.
+    pub const fn total_plaintext_len(&self) -> u64 {
+        self.total_plaintext_len
+    }
+
+    /// Borrow the SHA-256 of the complete plaintext.
+    pub const fn content_sha256(&self) -> &[u8; 32] {
+        &self.content_sha256
+    }
+
+    /// Borrow the chunk object references in chunk-index order.
+    pub fn chunks(&self) -> &[ObjectId] {
+        &self.chunks
+    }
+
+    /// Return the advisory creation timestamp.
+    pub const fn created_at_ms(&self) -> u64 {
+        self.created_at_ms
+    }
+
+    /// Enforce every V1 bound the format itself can decide.
+    ///
+    /// The chunk count and the declared length are checked against each other
+    /// as well as against their ceilings, because a manifest whose length does
+    /// not fit its chunk count is a manifest one of whose two numbers is a
+    /// lie, and the reassembler should never have to decide which.
+    fn validate(&self) -> Result<(), ApplicationError> {
+        validate_attachment_name(&self.name)?;
+        if self.total_plaintext_len > MAX_ATTACHMENT_BYTES as u64
+            || self.chunks.len() > MAX_ATTACHMENT_CHUNKS
+        {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        if self.chunks.is_empty() {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        let expected = expected_chunk_count(self.total_plaintext_len);
+        if self.chunks.len() != expected {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        // Two identical chunk references cannot occur: every chunk carries a
+        // distinct VLT14 nonce and is sealed under a distinct random object
+        // DEK, so identical framed ciphertexts are not producible.
+        let unique = self.chunks.iter().collect::<BTreeSet<_>>();
+        if unique.len() != self.chunks.len() {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        Ok(())
+    }
+
+    /// Encode the exact closed canonical V1 application object.
+    ///
+    /// # Why this one returns a wiping buffer, and wipes its own scaffolding
+    ///
+    /// The output carries the per-attachment key, so it is the only encode in
+    /// this module whose *result* is a secret. It returns `Zeroizing` so a
+    /// caller cannot forget, and it wipes the intermediate CBOR tree before
+    /// dropping it: `bytes(...)` copies the key into a fresh heap `Vec` that
+    /// `try_encode` would otherwise free unwiped. VLT02 records that the CBOR
+    /// value types are not zeroize-aware and that making them so is a change
+    /// to a deliberately zero-dependency crate; this is the local half of that
+    /// gap that can be closed without it.
+    pub fn encode(&self) -> Result<Zeroizing<Vec<u8>>, ApplicationError> {
+        self.validate()?;
+        let mut value = CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(
+                2,
+                CborValue::Unsigned(ObjectKind::AttachmentManifest.code()),
+            ),
+            field(3, bytes(self.attachment_id.as_bytes())),
+            field(4, bytes(self.dek.as_slice())),
+            field(5, CborValue::text(&self.name)),
+            field(6, CborValue::Unsigned(self.total_plaintext_len)),
+            field(7, bytes(&self.content_sha256)),
+            field(
+                8,
+                CborValue::Array(
+                    self.chunks
+                        .iter()
+                        .map(|chunk| bytes(chunk.as_bytes()))
+                        .collect(),
+                ),
+            ),
+            field(9, CborValue::Unsigned(self.created_at_ms)),
+        ]);
+        let encoded = try_encode(&value).map(Zeroizing::new);
+        zeroize_cbor_secrets(&mut value);
+        drop(value);
+        let encoded = encoded.map_err(map_encode_error)?;
+        check_plaintext_bound(&encoded)?;
+        Ok(encoded)
+    }
+
+    /// Strictly decode one closed canonical V1 manifest.
+    ///
+    /// Every bound is applied before a buffer is sized from a declared value.
+    /// A peer is free to author this object, so its numbers are input.
+    ///
+    /// # Every exit wipes the decoded fields, not just the successful one
+    ///
+    /// The decoded field map holds the per-attachment key until
+    /// `take_secret_fixed` removes it, and *three* of the checks in front of
+    /// that point can fail — a wrong version, a wrong kind, a malformed
+    /// attachment id — each of them reachable from a manifest a synchronising
+    /// peer authored. An early return there drops the map, and with it the key,
+    /// unwiped.
+    ///
+    /// The body is therefore split out and its result funnelled through one
+    /// place that wipes. That is structural: a check added to `decode_fields`
+    /// tomorrow is covered without anyone remembering to cover it, which is
+    /// the property a scatter of `zeroize` calls at each `return` would not
+    /// have.
+    pub fn decode(encoded: &[u8]) -> Result<Self, ApplicationError> {
+        let mut fields = closed_fields(encoded, &[1, 2, 3, 4, 5, 6, 7, 8, 9])?;
+        let decoded = Self::decode_fields(&mut fields);
+        for value in fields.values_mut() {
+            zeroize_cbor_secrets(value);
+        }
+        decoded
+    }
+
+    fn decode_fields(fields: &mut BTreeMap<u64, CborValue>) -> Result<Self, ApplicationError> {
+        check_version(take_uint(fields, 1)?)?;
+        check_kind(take_uint(fields, 2)?, ObjectKind::AttachmentManifest)?;
+        let attachment_id = AttachmentId::new(take_fixed(fields, 3)?);
+        let dek = take_secret_fixed::<ATTACHMENT_DEK_BYTES>(fields, 4)?;
+        let name = take_text(fields, 5)?;
+        let total_plaintext_len = take_uint(fields, 6)?;
+        let content_sha256 = take_fixed(fields, 7)?;
+        let chunk_values = take_array(fields, 8)?;
+        if chunk_values.len() > MAX_ATTACHMENT_CHUNKS {
+            return Err(ApplicationError::BoundExceeded);
+        }
+        let mut chunks = Vec::with_capacity(chunk_values.len());
+        for chunk in chunk_values {
+            chunks.push(ObjectId::new(fixed_value(chunk)?));
+        }
+        let created_at_ms = take_uint(fields, 9)?;
+        Self::new(
+            attachment_id,
+            dek,
+            name,
+            total_plaintext_len,
+            content_sha256,
+            chunks,
+            created_at_ms,
+        )
+    }
+}
+
+impl Zeroize for AttachmentManifestV1 {
+    fn zeroize(&mut self) {
+        self.dek.zeroize();
+        self.name.zeroize();
+    }
+}
+
+impl Drop for AttachmentManifestV1 {
+    fn drop(&mut self) {
+        self.zeroize();
+    }
+}
+
+impl Debug for AttachmentManifestV1 {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("AttachmentManifestV1")
+            .field("attachment_id", &"<redacted>")
+            .field("dek", &"<redacted>")
+            .field("name", &"<redacted>")
+            .field("total_plaintext_len", &self.total_plaintext_len)
+            .field("chunk_count", &self.chunks.len())
+            .finish()
+    }
+}
+
+/// Return how many 64 KiB chunks a plaintext of `length` bytes occupies.
+///
+/// Zero-length attachments are refused at ingest, so every legal length is at
+/// least one chunk; the `max(1)` exists so the relation this function states
+/// is total rather than conditional.
+pub(crate) fn expected_chunk_count(length: u64) -> usize {
+    let chunks = length.div_ceil(ATTACHMENT_CHUNK_BYTES as u64).max(1);
+    usize::try_from(chunks).unwrap_or(usize::MAX)
+}
+
+/// Wipe every byte string in one CBOR value in place.
+///
+/// Used on a tree that was built around a secret and is about to be dropped.
+/// It wipes every byte string rather than only the one that is the key,
+/// because a function that had to be told *which* field to wipe would be a
+/// function somebody could forget to update when a field moved.
+fn zeroize_cbor_secrets(value: &mut CborValue) {
+    match value {
+        CborValue::Bytes(bytes) => bytes.zeroize(),
+        // Text as well as bytes. A record's password arrives here as a UTF-8
+        // string inside a byte-string payload, but the item revision's tags
+        // and content type are text at this layer, and a codec helper that
+        // wiped only one of the two heap-owning variants would be a helper
+        // whose guarantee depended on which variant a future field happened to
+        // use.
+        CborValue::Text(text) => text.zeroize(),
+        CborValue::Array(values) => values.iter_mut().for_each(zeroize_cbor_secrets),
+        CborValue::Map(entries) => entries.iter_mut().for_each(|(key, value)| {
+            zeroize_cbor_secrets(key);
+            zeroize_cbor_secrets(value);
+        }),
+        CborValue::Tag(_, inner) => zeroize_cbor_secrets(inner),
+        _ => {}
+    }
+}
+
+/// Take one fixed-width secret field, wiping the decoder's own copy of it.
+///
+/// `take_fixed` converts the decoded `Vec<u8>` into an array and drops the
+/// vector, leaving the bytes in freed heap. For a field that is a key, that
+/// residue is the thing the surrounding `Zeroizing`, `Drop` and redacted
+/// `Debug` exist to prevent, so the vector is wiped before it goes.
+fn take_secret_fixed<const N: usize>(
+    fields: &mut BTreeMap<u64, CborValue>,
+    key: u64,
+) -> Result<Zeroizing<[u8; N]>, ApplicationError> {
+    let mut value = fields
+        .remove(&key)
+        .ok_or(ApplicationError::IntegrityFailure)?;
+    let taken = match &value {
+        CborValue::Bytes(raw) => <[u8; N]>::try_from(raw.as_slice())
+            .map(Zeroizing::new)
+            .map_err(|_| ApplicationError::IntegrityFailure),
+        _ => Err(ApplicationError::IntegrityFailure),
+    };
+    zeroize_cbor_secrets(&mut value);
+    taken
+}
+
+/// Validate one attachment base name.
+///
+/// Rejected rather than repaired, for VLT-PM47 §4.5's reason: a sanitiser is a
+/// function whose output the author did not choose, and the interesting inputs
+/// to one are exactly the hostile ones. Nothing in this product turns a stored
+/// name into a filesystem path (§4.6), so this is a well-formedness check and
+/// not the traversal defence.
+///
+/// # This runs on decode too, and that is the case that matters
+///
+/// A name reaches this function twice: once from the operator's own filesystem
+/// at ingest, and once out of a manifest a **synchronising peer** may have
+/// authored. The second is the reason the character set below is wider than
+/// `char::is_control`.
+///
+/// `is_control` is Unicode category Cc only. It blocks ESC, so a terminal
+/// escape sequence cannot get through, and it blocks tab and newline, so the
+/// tab-separated listing cannot be forged. It does **not** block category Cf —
+/// U+202E RIGHT-TO-LEFT OVERRIDE, the directional isolates, the zero-width
+/// space, the byte-order mark — nor the Zl/Zp line and paragraph separators. A
+/// name carrying those renders as a *different* name, and the operator chooses
+/// which attachment to export by reading that rendering. So they are refused
+/// here as well.
+///
+/// The rendering layer escapes independently (`quoted` in the CLI). Two gates,
+/// because a validator is not allowed to be the only thing standing between
+/// peer-authored text and a terminal.
+pub(crate) fn validate_attachment_name(name: &str) -> Result<(), ApplicationError> {
+    if name.is_empty() || name.len() > MAX_ATTACHMENT_NAME_BYTES {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if name == "." || name == ".." {
+        return Err(ApplicationError::InvalidInput);
+    }
+    if name.chars().any(is_forbidden_in_attachment_name) {
+        return Err(ApplicationError::InvalidInput);
+    }
+    Ok(())
+}
+
+/// Whether one character may never appear in a stored attachment name.
+///
+/// # What this list is, and what it is not
+///
+/// It is an enumeration, so it is a *statement about the characters named in
+/// it* and not a categorical guarantee about Unicode `Cf`. Every code point
+/// below is one that hides, reorders, or invisibly splits the text around it,
+/// and each is refused at the boundary so such a name is never stored in the
+/// first place. But `Cf` gains members with each Unicode revision, and a
+/// hand-written range list cannot promise to have them all.
+///
+/// **The total gate is the escape at the render site**, not this function.
+/// `attachment list` renders every stored name through the CLI's `quoted`
+/// helper, which is `str::escape_debug`, which escapes on the `char` property
+/// rather than on a list somebody maintained — including the code points this
+/// enumeration has not heard of. Reject-at-ingest is defence in depth on top
+/// of that, and it is worth having because a stored name is also read by
+/// future surfaces that have not been written yet.
+///
+/// Stated plainly so nobody later reads this list as the thing keeping a
+/// terminal safe and deletes the escaping as redundant.
+const fn is_forbidden_in_attachment_name(character: char) -> bool {
+    character.is_control()
+        || character == '/'
+        || character == '\\'
+        || matches!(
+            character,
+            // Cf: the soft hyphen, which renders as nothing or as a hyphen
+            // depending entirely on the renderer.
+            '\u{00AD}'
+                // Arabic and Syriac formatting marks, including the Arabic
+                // letter mark and the number/letter shaping controls.
+                | '\u{0600}'..='\u{0605}'
+                | '\u{061C}'
+                | '\u{06DD}'
+                | '\u{070F}'
+                | '\u{0890}'..='\u{0891}'
+                | '\u{08E2}'
+                // The Mongolian vowel separator.
+                | '\u{180E}'
+                // Zero-width characters, the bidirectional marks, and the
+                // overrides and embeddings that reorder what follows.
+                | '\u{200B}'..='\u{200F}'
+                | '\u{202A}'..='\u{202E}'
+                | '\u{2060}'..='\u{2064}'
+                | '\u{2066}'..='\u{206F}'
+                // The byte-order mark and the interlinear annotation controls.
+                | '\u{FEFF}'
+                | '\u{FFF9}'..='\u{FFFB}'
+                // Egyptian hieroglyph and Kaithi formatting controls, and the
+                // Brahmi number joiner.
+                | '\u{110BD}'
+                | '\u{110CD}'
+                | '\u{13430}'..='\u{1343F}'
+                | '\u{1BCA0}'..='\u{1BCA3}'
+                | '\u{1D173}'..='\u{1D17A}'
+                // The deprecated tag block, which encodes an entire invisible
+                // ASCII string inside one apparent character run.
+                | '\u{E0001}'
+                | '\u{E0020}'..='\u{E007F}'
+                // Zl and Zp: a line and a paragraph separator, which some
+                // renderers honour as a break and which would let one stored
+                // name look like two listing rows.
+                | '\u{2028}'
+                | '\u{2029}'
+        )
+}
+
+/// Encode one VLT14 sealed chunk as a canonical application object.
+///
+/// The encoded value is about 65,600 bytes and cannot grow with the file,
+/// which is the entire reason attachments are chunked: canonical-CBOR refuses
+/// to emit any single value past 1 MiB (VLT-PM47 §3).
+pub fn encode_attachment_chunk(chunk: &EncryptedChunk) -> Result<Vec<u8>, ApplicationError> {
+    if chunk.ciphertext.len() > ATTACHMENT_CHUNK_BYTES
+        || chunk.index as usize >= MAX_ATTACHMENT_CHUNKS
+    {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let encoded = try_encode(&CborValue::Map(vec![
+        field(1, CborValue::Unsigned(VERSION)),
+        field(2, CborValue::Unsigned(ObjectKind::AttachmentChunk.code())),
+        field(3, bytes(chunk.blob_id.as_bytes())),
+        field(4, CborValue::Unsigned(u64::from(chunk.index))),
+        field(5, CborValue::Bool(chunk.is_final)),
+        field(6, bytes(&chunk.ciphertext)),
+        field(7, bytes(&chunk.tag)),
+    ]))
+    .map_err(map_encode_error)?;
+    check_plaintext_bound(&encoded)?;
+    Ok(encoded)
+}
+
+/// Strictly decode one canonical application object into a VLT14 chunk.
+///
+/// The bounds here mirror the encoder's rather than trusting it: this object
+/// can be authored by a synchronising peer, and VLT14's decryptor is the next
+/// gate rather than the first one.
+pub fn decode_attachment_chunk(encoded: &[u8]) -> Result<EncryptedChunk, ApplicationError> {
+    let mut fields = closed_fields(encoded, &[1, 2, 3, 4, 5, 6, 7])?;
+    check_version(take_uint(&mut fields, 1)?)?;
+    check_kind(take_uint(&mut fields, 2)?, ObjectKind::AttachmentChunk)?;
+    let blob_id = BlobId(take_fixed(&mut fields, 3)?);
+    let index = take_uint(&mut fields, 4)?;
+    if index >= MAX_ATTACHMENT_CHUNKS as u64 {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let is_final = take_bool(&mut fields, 5)?;
+    let ciphertext = take_bytes(&mut fields, 6)?;
+    if ciphertext.len() > ATTACHMENT_CHUNK_BYTES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let tag = take_fixed(&mut fields, 7)?;
+    Ok(EncryptedChunk {
+        blob_id,
+        index: u32::try_from(index).map_err(|_| ApplicationError::BoundExceeded)?,
+        is_final,
+        ciphertext,
+        tag,
+    })
+}
+
 fn encode_signed_object(kind: ObjectKind, exact: Vec<u8>) -> Result<Vec<u8>, ApplicationError> {
     // `exact` is a caller-supplied encoded object, so its length is not
     // statically bounded by anything tighter than the 16 MiB plaintext
@@ -411,9 +878,24 @@ fn decode_signed_object(
     take_bytes(&mut fields, 3)
 }
 
+/// Encode one live item document.
+///
+/// # The tenth field
+///
+/// Key `10` carries the manifest object reference for every retained
+/// attachment, and it is emitted **only** when there is at least one. That
+/// conditional is the whole compatibility story of VLT-PM47 §4.7: an item with
+/// no attachments encodes exactly the nine keys this function emitted before
+/// attachments existed, byte for byte, so every revision written by every
+/// earlier version of this product still decodes and every revision this
+/// product writes for an unattached item is unchanged.
+///
+/// The reference list is *derived* from `document.attachment_manifests()`,
+/// which VLT-PM03 already forces to have exactly the key set of
+/// `attachments.retained_values()`. There is no encoding of a disagreement.
 fn encode_live(document: &ItemDocument) -> Result<CborValue, ApplicationError> {
     let record = encode_any_record(document.payload())?;
-    Ok(CborValue::Map(vec![
+    let mut entries = vec![
         field(1, bytes(document.id().as_bytes())),
         field(2, CborValue::text(document.schema().as_str())),
         field(3, CborValue::Unsigned(document.created_at_ms())),
@@ -430,11 +912,36 @@ fn encode_live(document: &ItemDocument) -> Result<CborValue, ApplicationError> {
         field(7, encode_observed(document.tags())),
         field(8, CborValue::Bytes(record)),
         field(9, encode_observed(document.attachments())),
-    ]))
+    ];
+    if !document.attachment_manifests().is_empty() {
+        entries.push(field(
+            10,
+            CborValue::Array(
+                document
+                    .attachment_manifests()
+                    .iter()
+                    .map(|(attachment, manifest)| {
+                        CborValue::Map(vec![
+                            field(1, bytes(attachment.as_bytes())),
+                            field(2, bytes(manifest.as_bytes())),
+                        ])
+                    })
+                    .collect(),
+            ),
+        ));
+    }
+    Ok(CborValue::Map(entries))
 }
 
 fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
-    let mut fields = value_fields(value, &[1, 2, 3, 4, 5, 6, 7, 8, 9])?;
+    // Nine keys is the pre-attachment shape and ten is the attachment shape.
+    // Any other arity, an unknown key, or a duplicate is still refused: this
+    // is a closed decoder with two accepted key sets, not an open one.
+    let expected: &[u64] = match &value {
+        CborValue::Map(entries) if entries.len() == 10 => &[1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+        _ => &[1, 2, 3, 4, 5, 6, 7, 8, 9],
+    };
+    let mut fields = value_fields(value, expected)?;
     let id = ItemId::new(take_fixed(&mut fields, 1)?);
     let schema = ContentType::new(take_text(&mut fields, 2)?).map_err(map_domain)?;
     let created_at_ms = take_uint(&mut fields, 3)?;
@@ -467,6 +974,10 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
             .remove(&9)
             .ok_or(ApplicationError::IntegrityFailure)?,
     )?;
+    let attachment_manifests = match fields.remove(&10) {
+        None => BTreeMap::new(),
+        Some(value) => decode_attachment_manifest_references(value)?,
+    };
     ItemDocument::new(
         id,
         schema,
@@ -477,8 +988,46 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
         tags,
         payload,
         attachments,
+        attachment_manifests,
     )
     .map_err(map_domain)
+}
+
+/// Decode the tenth live-state field's attachment-to-manifest references.
+///
+/// Bounded before anything is built, ascending and unique on the wire, and
+/// checked for the key-set equality VLT-PM03 enforces — the domain
+/// constructor would catch the last of those anyway, but reaching it requires
+/// building the map first, and a peer-authored list is exactly the input that
+/// should be refused before it is materialised.
+fn decode_attachment_manifest_references(
+    value: CborValue,
+) -> Result<BTreeMap<AttachmentId, AttachmentManifestId>, ApplicationError> {
+    let entries = match value {
+        CborValue::Array(entries) => entries,
+        _ => return Err(ApplicationError::IntegrityFailure),
+    };
+    if entries.is_empty() {
+        // Absence is encoded by omitting the field, so an empty array is a
+        // second spelling of the same state and canonical encodings have one.
+        return Err(ApplicationError::IntegrityFailure);
+    }
+    if entries.len() > MAX_OBSERVED_VALUES {
+        return Err(ApplicationError::BoundExceeded);
+    }
+    let mut references = BTreeMap::new();
+    let mut previous: Option<AttachmentId> = None;
+    for entry in entries {
+        let mut fields = value_fields(entry, &[1, 2])?;
+        let attachment = AttachmentId::new(take_fixed(&mut fields, 1)?);
+        if previous.is_some_and(|prior| prior >= attachment) {
+            return Err(ApplicationError::IntegrityFailure);
+        }
+        previous = Some(attachment);
+        let manifest = AttachmentManifestId::new(take_fixed(&mut fields, 2)?);
+        references.insert(attachment, manifest);
+    }
+    Ok(references)
 }
 
 trait ObservedValue: Ord + Clone {
@@ -712,28 +1261,94 @@ fn closed_fields(
     value_fields(value, expected)
 }
 
+/// Split one closed canonical CBOR map into its exact expected fields.
+///
+/// # A rejected map is wiped before it is dropped
+///
+/// This function is the single gate every object in this crate decodes
+/// through, and several of those objects are made of key material: the
+/// attachment manifest's per-attachment key, and `LocalSecretV1`'s authority
+/// and device seeds. On the failure paths — not a map, wrong arity, an
+/// unexpected key, a duplicate key, every one of them reachable from a value a
+/// synchronising peer authored — the entries decoded so far were simply
+/// dropped, leaving those bytes in freed heap.
+///
+/// So every exit funnels through one place that wipes both halves of the
+/// work in progress: the entries not yet consumed and the fields already
+/// collected. It costs a `memset` on a path that is about to return an error
+/// anyway, and it means a caller cannot leak by forgetting, which is the same
+/// reason [`AttachmentManifestV1::decode`] is shaped the way it is.
 fn value_fields(
     value: CborValue,
     expected: &[u64],
 ) -> Result<BTreeMap<u64, CborValue>, ApplicationError> {
-    let entries = match value {
+    let mut entries = match value {
         CborValue::Map(entries) => entries,
-        _ => return Err(ApplicationError::IntegrityFailure),
+        mut other => {
+            zeroize_cbor_secrets(&mut other);
+            return Err(ApplicationError::IntegrityFailure);
+        }
     };
+    let mut fields = BTreeMap::new();
+    match collect_value_fields(&mut entries, expected, &mut fields) {
+        Ok(()) => Ok(fields),
+        Err(error) => {
+            for (key, value) in &mut entries {
+                zeroize_cbor_secrets(key);
+                zeroize_cbor_secrets(value);
+            }
+            for value in fields.values_mut() {
+                zeroize_cbor_secrets(value);
+            }
+            Err(error)
+        }
+    }
+}
+
+/// Move entries into `fields`, leaving whatever it did not reach in `entries`.
+///
+/// Draining rather than consuming by value is what lets the caller above wipe
+/// the remainder: a `for` loop over an owned `Vec` drops the tail on an early
+/// return with nothing holding it.
+fn collect_value_fields(
+    entries: &mut Vec<(CborValue, CborValue)>,
+    expected: &[u64],
+    fields: &mut BTreeMap<u64, CborValue>,
+) -> Result<(), ApplicationError> {
     if entries.len() != expected.len() {
         return Err(ApplicationError::IntegrityFailure);
     }
-    let mut fields = BTreeMap::new();
-    for (key, value) in entries {
-        let key = match key {
-            CborValue::Unsigned(key) if expected.contains(&key) => key,
-            _ => return Err(ApplicationError::IntegrityFailure),
-        };
-        if fields.insert(key, value).is_some() {
-            return Err(ApplicationError::IntegrityFailure);
+    // Order is irrelevant to the result — the output is keyed by integer, and
+    // canonical ordering was already enforced by the CBOR decoder — so popping
+    // from the back is free and keeps the untouched entries owned by `entries`.
+    while let Some((key, value)) = entries.pop() {
+        match resolve_expected_key(key, expected) {
+            Ok(key) => {
+                if fields.insert(key, value).is_some() {
+                    return Err(ApplicationError::IntegrityFailure);
+                }
+            }
+            // The rejected key goes back too, not a placeholder. A key is a
+            // `CborValue` like any other and a peer chooses what it is, so it
+            // can be a byte string; handing back only the value would leave
+            // that half to be dropped unwiped, which is the whole class of bug
+            // this shape exists to close.
+            Err(key) => {
+                entries.push((key, value));
+                return Err(ApplicationError::IntegrityFailure);
+            }
         }
     }
-    Ok(fields)
+    Ok(())
+}
+
+/// Resolve one map key against the closed expected set, returning it intact on
+/// rejection so the caller can wipe it.
+fn resolve_expected_key(key: CborValue, expected: &[u64]) -> Result<u64, CborValue> {
+    match key {
+        CborValue::Unsigned(value) if expected.contains(&value) => Ok(value),
+        other => Err(other),
+    }
 }
 
 fn field(key: u64, value: CborValue) -> (CborValue, CborValue) {
@@ -858,6 +1473,13 @@ mod tests {
         attachments
             .add(AttachmentId::new([0x41; 16]), op(4))
             .unwrap();
+        // This fixture carries an attachment, so the round trip through this
+        // module exercises the tenth live-state field rather than only the
+        // nine-key shape.
+        let manifests = BTreeMap::from([(
+            AttachmentId::new([0x41; 16]),
+            AttachmentManifestId::new([0x61; 32]),
+        )]);
 
         let document = ItemDocument::new(
             ItemId::new([0x21; 16]),
@@ -875,6 +1497,7 @@ mod tests {
                 notes: Some("private".to_string()),
             }),
             attachments,
+            manifests,
         )
         .unwrap();
         ItemCandidate::new(
@@ -959,6 +1582,7 @@ mod tests {
                 notes: None,
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         ItemCandidate::new(
@@ -1203,6 +1827,441 @@ mod tests {
         assert_eq!(document.tags().len(), 0);
         assert_eq!(document.tags().retained_value_count(), 1);
         assert_eq!(document.tags().tombstone_count(), 1);
+    }
+
+    /// VLT-PM47 §4.7 and §9.5. The compatibility claim, stated as bytes.
+    ///
+    /// An item with no attachments must encode the same nine keys it encoded
+    /// before attachments existed — so every revision written by every earlier
+    /// version of this product still decodes, and every revision this product
+    /// writes for an unattached item is unchanged. An item that *has* one
+    /// carries a tenth key and nothing else moves.
+    #[test]
+    fn the_tenth_live_state_field_appears_exactly_when_an_item_has_attachments() {
+        fn live_state_keys(encoded: &[u8]) -> Vec<u64> {
+            let CborValue::Map(revision) = decode(encoded).unwrap() else {
+                panic!("a revision is a map")
+            };
+            let state = revision
+                .into_iter()
+                .find_map(|(key, value)| (key == CborValue::Unsigned(5)).then_some(value))
+                .expect("field 5 is the state");
+            let CborValue::Map(entries) = state else {
+                panic!("live state is a map")
+            };
+            entries
+                .into_iter()
+                .map(|(key, _)| match key {
+                    CborValue::Unsigned(key) => key,
+                    _ => panic!("keys are unsigned"),
+                })
+                .collect()
+        }
+
+        let unattached = ItemDocument::new(
+            ItemId::new([0x21; 16]),
+            ContentType::new(LOGIN_V1).unwrap(),
+            10,
+            20,
+            LwwRegister::new(true, 15, op(5)),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(Login {
+                title: "Example".to_string(),
+                username: "alice".to_string(),
+                password: "correct horse".to_string(),
+                urls: Vec::new(),
+                notes: None,
+            }),
+            ObservedSet::new(),
+            BTreeMap::new(),
+        )
+        .unwrap();
+        let parents = BTreeSet::new();
+        let without =
+            encode_item_revision(&parents, &ItemState::Live(Box::new(unattached))).unwrap();
+        assert_eq!(live_state_keys(&without), vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        let with =
+            encode_item_revision(live_candidate().causal_parents(), live_candidate().state())
+                .unwrap();
+        assert_eq!(live_state_keys(&with), vec![1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+
+        // Both shapes decode, and neither admits an eleventh key, a duplicate,
+        // or an empty tenth field: this is still a closed decoder with two
+        // accepted key sets rather than an open one.
+        assert!(decode_item_revision(RevisionId::new([1; 32]), &without).is_ok());
+        assert!(decode_item_revision(RevisionId::new([1; 32]), &with).is_ok());
+    }
+
+    /// The decoder's own copies of key material are wiped on every exit, not
+    /// only the successful one.
+    ///
+    /// A test cannot look at freed heap, so it asserts the mechanism instead:
+    /// the field map handed back from a failed `value_fields`, and the one
+    /// `AttachmentManifestV1::decode` leaves behind on each of its three
+    /// pre-key checks, must contain no live copy of the key bytes.
+    #[test]
+    fn a_rejected_decode_wipes_the_key_material_it_had_already_taken() {
+        const KEY: [u8; ATTACHMENT_DEK_BYTES] = [0xA7; ATTACHMENT_DEK_BYTES];
+
+        fn holds_key(value: &CborValue) -> bool {
+            match value {
+                CborValue::Bytes(bytes) => bytes.as_slice() == KEY.as_slice(),
+                CborValue::Array(values) => values.iter().any(holds_key),
+                CborValue::Map(entries) => entries
+                    .iter()
+                    .any(|(key, value)| holds_key(key) || holds_key(value)),
+                CborValue::Tag(_, inner) => holds_key(inner),
+                _ => false,
+            }
+        }
+
+        let manifest = |version: u64, kind: u64, id: CborValue| {
+            encode(&CborValue::Map(vec![
+                field(1, CborValue::Unsigned(version)),
+                field(2, CborValue::Unsigned(kind)),
+                field(3, id),
+                field(4, bytes(&KEY)),
+                field(5, CborValue::text("notes.txt")),
+                field(6, CborValue::Unsigned(3)),
+                field(7, bytes(&[4; 32])),
+                field(8, CborValue::Array(vec![bytes(&[5; 32])])),
+                field(9, CborValue::Unsigned(6)),
+            ]))
+        };
+
+        // The three checks that run *before* the key is taken. Each one used
+        // to drop the map, and the key with it, unwiped.
+        let good_id = bytes(&[1; 16]);
+        for (label, encoded) in [
+            (
+                "wrong version",
+                manifest(2, ObjectKind::AttachmentManifest.code(), good_id.clone()),
+            ),
+            (
+                "wrong kind",
+                manifest(VERSION, ObjectKind::Catalog.code(), good_id.clone()),
+            ),
+            (
+                "malformed attachment id",
+                manifest(
+                    VERSION,
+                    ObjectKind::AttachmentManifest.code(),
+                    bytes(&[1; 15]),
+                ),
+            ),
+        ] {
+            assert!(
+                AttachmentManifestV1::decode(&encoded).is_err(),
+                "{label} must be refused"
+            );
+            // Re-run the same split the decoder performs, and confirm the
+            // wipe leaves nothing behind for the failing path to drop.
+            let mut fields = closed_fields(&encoded, &[1, 2, 3, 4, 5, 6, 7, 8, 9]).unwrap();
+            assert!(
+                fields.values().any(holds_key),
+                "{label}: the fixture must actually contain the key"
+            );
+            let outcome = AttachmentManifestV1::decode_fields(&mut fields);
+            assert!(outcome.is_err(), "{label}");
+            for value in fields.values_mut() {
+                zeroize_cbor_secrets(value);
+            }
+            assert!(
+                !fields.values().any(holds_key),
+                "{label}: a refused decode left the key in the field map"
+            );
+        }
+
+        // And `value_fields` itself, which fails before the decoder ever sees
+        // a map: a duplicate key, with the key material already collected.
+        let duplicate = CborValue::Map(vec![
+            field(1, bytes(&KEY)),
+            field(1, CborValue::Unsigned(2)),
+        ]);
+        assert_eq!(
+            value_fields(duplicate, &[1, 2]).unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
+
+        // The wiping helper reaches text as well as bytes, so a helper whose
+        // guarantee depends on which variant a future field uses is not what
+        // this crate has.
+        let mut mixed = CborValue::Map(vec![
+            field(1, bytes(&KEY)),
+            field(2, CborValue::text("secret-name")),
+            field(3, CborValue::Array(vec![bytes(&KEY)])),
+        ]);
+        zeroize_cbor_secrets(&mut mixed);
+        assert!(!holds_key(&mixed));
+        let CborValue::Map(entries) = &mixed else {
+            panic!("still a map")
+        };
+        assert_eq!(entries[1].1, CborValue::Text(String::new()));
+    }
+
+    /// Every shape a peer could give the tenth field that the encoder cannot
+    /// produce, refused — and none of them a panic.
+    #[test]
+    fn a_malformed_attachment_manifest_field_is_refused() {
+        let attachment = |byte: u8| bytes(&[byte; 16]);
+        let manifest = |byte: u8| bytes(&[byte; 32]);
+        let entry = |id: u8, target: u8| {
+            CborValue::Map(vec![field(1, attachment(id)), field(2, manifest(target))])
+        };
+
+        for (name, value) in [
+            ("not an array", CborValue::Unsigned(1)),
+            ("empty array", CborValue::Array(Vec::new())),
+            (
+                "descending ids",
+                CborValue::Array(vec![entry(2, 1), entry(1, 1)]),
+            ),
+            (
+                "duplicate ids",
+                CborValue::Array(vec![entry(1, 1), entry(1, 1)]),
+            ),
+            (
+                "short manifest id",
+                CborValue::Array(vec![CborValue::Map(vec![
+                    field(1, attachment(1)),
+                    field(2, bytes(&[0; 31])),
+                ])]),
+            ),
+            (
+                "extra entry key",
+                CborValue::Array(vec![CborValue::Map(vec![
+                    field(1, attachment(1)),
+                    field(2, manifest(1)),
+                    field(3, CborValue::Unsigned(0)),
+                ])]),
+            ),
+        ] {
+            let error = decode_attachment_manifest_references(value)
+                .expect_err(&format!("{name} must be refused"));
+            assert!(
+                matches!(
+                    error,
+                    ApplicationError::IntegrityFailure | ApplicationError::BoundExceeded
+                ),
+                "{name} produced {error:?}"
+            );
+        }
+
+        // A list longer than any observed set can hold is a bound, not a
+        // corruption, and it is refused before the map is built.
+        let oversized = CborValue::Array(
+            (0..=MAX_OBSERVED_VALUES)
+                .map(|index| {
+                    CborValue::Map(vec![
+                        field(1, bytes(&(index as u128).to_be_bytes())),
+                        field(2, manifest(1)),
+                    ])
+                })
+                .collect(),
+        );
+        assert_eq!(
+            decode_attachment_manifest_references(oversized).unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+    }
+
+    /// A manifest is an object a synchronising peer can author, so every one
+    /// of its numbers is input. None of these may abort.
+    #[test]
+    fn a_malformed_attachment_manifest_object_is_refused() {
+        let good = AttachmentManifestV1::new(
+            AttachmentId::new([1; 16]),
+            Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+            "notes.txt".to_string(),
+            3,
+            [4; 32],
+            vec![ObjectId::new([5; 32])],
+            6,
+        )
+        .unwrap();
+        let encoded = good.encode().unwrap();
+        let decoded = AttachmentManifestV1::decode(&encoded).unwrap();
+        assert_eq!(decoded.attachment_id(), AttachmentId::new([1; 16]));
+        assert_eq!(decoded.name(), "notes.txt");
+        assert_eq!(decoded.total_plaintext_len(), 3);
+        assert_eq!(decoded.content_sha256(), &[4; 32]);
+        assert_eq!(decoded.chunks(), &[ObjectId::new([5; 32])]);
+        assert_eq!(decoded.created_at_ms(), 6);
+        assert!(format!("{decoded:?}").contains("chunk_count: 1"));
+        assert!(!format!("{decoded:?}").contains("notes.txt"));
+
+        // A declared length that does not fit the chunk list, in both
+        // directions. One of the two numbers is a lie and the reassembler
+        // should never have to decide which.
+        assert_eq!(
+            AttachmentManifestV1::new(
+                AttachmentId::new([1; 16]),
+                Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+                "notes.txt".to_string(),
+                ATTACHMENT_CHUNK_BYTES as u64 + 1,
+                [4; 32],
+                vec![ObjectId::new([5; 32])],
+                6,
+            )
+            .unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
+        assert_eq!(
+            AttachmentManifestV1::new(
+                AttachmentId::new([1; 16]),
+                Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+                "notes.txt".to_string(),
+                3,
+                [4; 32],
+                Vec::new(),
+                6,
+            )
+            .unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
+        // Duplicate chunk references cannot occur: every chunk carries a
+        // distinct nonce and a distinct random object key.
+        assert_eq!(
+            AttachmentManifestV1::new(
+                AttachmentId::new([1; 16]),
+                Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+                "notes.txt".to_string(),
+                ATTACHMENT_CHUNK_BYTES as u64 + 1,
+                [4; 32],
+                vec![ObjectId::new([5; 32]), ObjectId::new([5; 32])],
+                6,
+            )
+            .unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
+        // Past the ceiling in either dimension is a bound.
+        assert_eq!(
+            AttachmentManifestV1::new(
+                AttachmentId::new([1; 16]),
+                Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+                "notes.txt".to_string(),
+                MAX_ATTACHMENT_BYTES as u64 + 1,
+                [4; 32],
+                vec![ObjectId::new([5; 32])],
+                6,
+            )
+            .unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+        assert_eq!(
+            AttachmentManifestV1::new(
+                AttachmentId::new([1; 16]),
+                Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+                "notes.txt".to_string(),
+                3,
+                [4; 32],
+                (0..=MAX_ATTACHMENT_CHUNKS)
+                    .map(|index| ObjectId::new([index as u8; 32]))
+                    .collect(),
+                6,
+            )
+            .unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+        // An invalid name never becomes a stored name.
+        assert_eq!(
+            AttachmentManifestV1::new(
+                AttachmentId::new([1; 16]),
+                Zeroizing::new([2; ATTACHMENT_DEK_BYTES]),
+                "../escape".to_string(),
+                3,
+                [4; 32],
+                vec![ObjectId::new([5; 32])],
+                6,
+            )
+            .unwrap_err(),
+            ApplicationError::InvalidInput
+        );
+
+        // A frame of another kind at the manifest's address does not decode
+        // into a manifest, because the kind is bound into the payload.
+        let mut wrong_kind = encoded.clone();
+        let catalog = encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(2, CborValue::Unsigned(ObjectKind::Catalog.code())),
+            field(3, CborValue::Array(Vec::new())),
+        ]));
+        wrong_kind.clone_from(&catalog);
+        assert_eq!(
+            AttachmentManifestV1::decode(&wrong_kind).unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
+    }
+
+    /// The chunk object is the value whose encoded size the whole design turns
+    /// on, and it is also peer-authored.
+    #[test]
+    fn an_attachment_chunk_object_round_trips_and_refuses_oversize() {
+        let chunk = EncryptedChunk {
+            blob_id: BlobId([7; 16]),
+            index: 3,
+            is_final: true,
+            ciphertext: vec![9; ATTACHMENT_CHUNK_BYTES],
+            tag: [1; 16],
+        };
+        let encoded = encode_attachment_chunk(&chunk).unwrap();
+        // The number the design turns on: a full chunk object sits far under
+        // canonical-CBOR's ceiling, and cannot grow with the attachment.
+        assert!(encoded.len() < ATTACHMENT_CHUNK_BYTES + 128);
+        assert!(encoded.len() * 15 <= coding_adventures_canonical_cbor::MAX_ENCODED_SIZE);
+        assert_eq!(decode_attachment_chunk(&encoded).unwrap(), chunk);
+
+        let oversized = EncryptedChunk {
+            ciphertext: vec![9; ATTACHMENT_CHUNK_BYTES + 1],
+            ..chunk.clone()
+        };
+        assert_eq!(
+            encode_attachment_chunk(&oversized).unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+        let far_index = EncryptedChunk {
+            index: MAX_ATTACHMENT_CHUNKS as u32,
+            ..chunk.clone()
+        };
+        assert_eq!(
+            encode_attachment_chunk(&far_index).unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+
+        // A peer is not bound by our encoder, so the decoder repeats both
+        // bounds rather than trusting it.
+        let peer_oversized = encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(2, CborValue::Unsigned(ObjectKind::AttachmentChunk.code())),
+            field(3, bytes(&[7; 16])),
+            field(4, CborValue::Unsigned(3)),
+            field(5, CborValue::Bool(true)),
+            field(6, bytes(&vec![9; ATTACHMENT_CHUNK_BYTES + 1])),
+            field(7, bytes(&[1; 16])),
+        ]));
+        assert_eq!(
+            decode_attachment_chunk(&peer_oversized).unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+        let peer_far_index = encode(&CborValue::Map(vec![
+            field(1, CborValue::Unsigned(VERSION)),
+            field(2, CborValue::Unsigned(ObjectKind::AttachmentChunk.code())),
+            field(3, bytes(&[7; 16])),
+            field(4, CborValue::Unsigned(u64::MAX)),
+            field(5, CborValue::Bool(true)),
+            field(6, bytes(&[9; 4])),
+            field(7, bytes(&[1; 16])),
+        ]));
+        assert_eq!(
+            decode_attachment_chunk(&peer_far_index).unwrap_err(),
+            ApplicationError::BoundExceeded
+        );
+        assert_eq!(
+            decode_attachment_chunk(&encode(&CborValue::Unsigned(1))).unwrap_err(),
+            ApplicationError::IntegrityFailure
+        );
     }
 
     #[test]

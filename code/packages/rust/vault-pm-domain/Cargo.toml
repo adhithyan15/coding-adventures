@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_vault_pm_domain"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "VLT-PM03 pure password-manager item, metadata merge, conflict, and redacted-view domain model"
 

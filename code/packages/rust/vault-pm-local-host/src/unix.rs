@@ -64,6 +64,71 @@ pub(super) fn ensure_private_directory(path: &Path) -> Result<(), LocalHostError
     verify_private_directory(&directory)
 }
 
+/// Verify or create one owner-private directory whose parent is *not* walked.
+///
+/// [`ensure_private_directory`] above is the right tool for a root this crate
+/// owns end to end — every ancestor from `/` is opened with `O_NOFOLLOW` so a
+/// symlink planted anywhere in the path is refused. That is too strict for
+/// [`super::LocalVaultPaths::runtime_root`], whose parent is the *system*
+/// temporary directory: on macOS both `/tmp` and `/var` are themselves
+/// platform-placed symlinks (`/tmp -> private/tmp`), and the recursive walk
+/// would reject them with [`LocalHostError::UnsafeObjectType`] before this
+/// crate's own directory is ever reached.
+///
+/// The trust boundary this function draws instead: the *parent* (the system
+/// temp directory) is accepted as the platform gives it, exactly as
+/// [`super::LocalVaultPaths::resolve`] already trusts `ProjectDirs` to hand
+/// back sane platform roots. Only the *leaf* — the directory this crate
+/// creates and every later `agent start` or client reuses — is defended: it
+/// is opened with `O_NOFOLLOW`, so a symlink swapped in at that exact path is
+/// refused rather than followed, and its owner and mode are verified exactly
+/// as [`verify_private_directory`] requires of every other private root.
+///
+/// A parent directory that is world-writable without a sticky bit (an
+/// unusual system temp directory) could let another local user pre-create
+/// this leaf first. That race is refused, not silently accepted: an
+/// existing directory owned by another user fails closed with
+/// [`LocalHostError::InsecureOwner`], the same outcome
+/// [`ensure_private_directory`] gives a foreign-owned root. The residual is a
+/// denial of the agent feature to whichever party loses the race, never a
+/// disclosure — no key, passphrase, or socket connection is granted merely
+/// because a directory exists.
+pub(super) fn ensure_private_runtime_directory(path: &Path) -> Result<(), LocalHostError> {
+    validate_absolute(path)?;
+    let parent_path = path.parent().ok_or(LocalHostError::InvalidPath)?;
+    let Some(leaf) = path.file_name() else {
+        return Err(LocalHostError::InvalidPath);
+    };
+    let parent_c = CString::new(parent_path.as_os_str().as_bytes())
+        .map_err(|_| LocalHostError::InvalidPath)?;
+    let leaf = c_string(leaf)?;
+    // The parent is opened following ordinary path resolution (no
+    // `O_NOFOLLOW`): see this function's doc comment for why its ancestry is
+    // trusted rather than walked.
+    let parent_raw = unsafe { libc::open(parent_c.as_ptr(), libc::O_RDONLY | libc::O_DIRECTORY) };
+    let parent = owned_fd(parent_raw).map_err(|_| LocalHostError::ParentUnavailable)?;
+    if unsafe { libc::mkdirat(parent.as_raw_fd(), leaf.as_ptr(), 0o700) } != 0
+        && std::io::Error::last_os_error().raw_os_error() != Some(libc::EEXIST)
+    {
+        return Err(LocalHostError::AccessFailed);
+    }
+    let leaf_raw = unsafe {
+        libc::openat(
+            parent.as_raw_fd(),
+            leaf.as_ptr(),
+            libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC,
+        )
+    };
+    if leaf_raw < 0 {
+        return Err(match std::io::Error::last_os_error().raw_os_error() {
+            Some(libc::ELOOP) | Some(libc::ENOTDIR) => LocalHostError::UnsafeObjectType,
+            _ => LocalHostError::AccessFailed,
+        });
+    }
+    let directory = owned_fd(leaf_raw).map_err(|_| LocalHostError::AccessFailed)?;
+    verify_private_directory(&directory)
+}
+
 pub(super) fn open_private_lock(path: &Path) -> Result<File, LocalHostError> {
     let (parent, name) = open_existing_parent(path)?;
     let raw = unsafe {

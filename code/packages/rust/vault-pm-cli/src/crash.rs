@@ -23,8 +23,8 @@
 //!   `code/programs/rust/vault-pm-cli-drill`, through its ordinary
 //!   `[dependencies]`. `LocalBackend` gains a decorator that brackets every
 //!   backend write, and the combinators bracket the two durable writes that do
-//!   *not* go through the backend: the client configuration file and the
-//!   portable-export artifact.
+//!   *not* go through the backend: the client configuration file, the
+//!   portable-export artifact, and the exported attachment file.
 //!
 //! Do not be tempted to reach the feature from the product crate's
 //! `dev-dependencies` instead of splitting the crate. Cargo resolves features
@@ -70,6 +70,12 @@ mod imp {
     pub fn around_export_artifact<T>(action: impl FnOnce() -> T) -> T {
         action()
     }
+
+    /// Run the durable creation of one exported attachment file.
+    #[inline]
+    pub fn around_attachment_artifact<T>(action: impl FnOnce() -> T) -> T {
+        action()
+    }
 }
 
 #[cfg(feature = "crash-injection")]
@@ -102,8 +108,14 @@ mod imp {
     pub fn around_export_artifact<T>(action: impl FnOnce() -> T) -> T {
         around(DurableStep::ExportArtifact, action)
     }
+
+    /// Run the durable creation of one exported attachment file.
+    pub fn around_attachment_artifact<T>(action: impl FnOnce() -> T) -> T {
+        around(DurableStep::AttachmentArtifact, action)
+    }
 }
 
 pub(crate) use imp::{
-    around_config_create, around_config_replace, around_export_artifact, backend, LocalBackend,
+    around_attachment_artifact, around_config_create, around_config_replace,
+    around_export_artifact, backend, LocalBackend,
 };

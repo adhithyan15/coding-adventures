@@ -2,6 +2,145 @@
 
 All notable changes to this package are documented here.
 
+## [0.66.0] - 2026-08-18
+
+### Added
+
+- **Chunked encrypted attachments**, the last of `VLT-PM00` §23 item 11.
+  Specified by `VLT-PM47-cli-attachments.md`.
+
+  - A new `attachment` module splits one plaintext into fixed 64 KiB pieces,
+    seals each with VLT14's chunk AEAD under a per-attachment key, and
+    reassembles them again. `ATTACHMENT_CHUNK_BYTES`, `MAX_ATTACHMENT_BYTES`,
+    `MAX_ATTACHMENT_CHUNKS`, and `MAX_ATTACHMENT_NAME_BYTES` are the bounds,
+    and three of the four are *derived* rather than written: the chunk size is
+    VLT14's, the attachment ceiling is `MAX_PLAINTEXT_BYTES` itself, and the
+    chunk cap is the quotient. A second literal is a second thing that can
+    drift, which is the failure this whole design is about.
+
+  - The chunk size is chosen against `canonical-cbor`'s 1 MiB
+    `MAX_ENCODED_SIZE`, not against the 16 MiB frame bound. §13.1 of
+    `VLT-PM05-application.md` records why that is the ceiling that binds: the
+    gap between the two is a range of values legal to hold, legal to decode,
+    and illegal to re-encode, and every encode in it used to abort the
+    process. One sealed chunk object encodes to about 65,600 bytes; two
+    compile-time assertions hold the sixteen-fold margin under
+    `MAX_ENCODED_SIZE` and hold the chunk cap plus four under
+    `MAX_PUBLICATION_OBJECTS`, so neither relation can drift silently.
+
+  - `MAX_ATTACHMENT_BYTES` equals `MAX_PLAINTEXT_BYTES` deliberately, and the
+    equality is the argument: an attachment can never be larger than a
+    plaintext this product already accepts in one sealed frame, so attachments
+    do not become a bigger door than records.
+
+  - `ObjectKind` gains `AttachmentManifest` (6) and `AttachmentChunk` (7).
+    `AttachmentManifestV1` carries one attachment's name, plaintext length,
+    content hash, VLT14 key, and ordered chunk object references; the item
+    revision's live-state map gains an optional tenth field mapping each
+    retained `AttachmentId` to its manifest object. That field is emitted only
+    when the attachment set is non-empty, so a revision without attachments
+    encodes exactly the nine keys it encoded before this change, byte for
+    byte, and every revision written earlier still decodes. Storing manifests
+    inline instead would have cost up to 570 KiB of revision and put the
+    revision encode back in the range §13.1 is about.
+
+  - The attachment identity *is* the VLT14 blob id — one 128-bit value with
+    both meanings — so the chunk AEAD's associated data binds each chunk to
+    the attachment identity a person sees rather than to a private alias, and
+    there is no state in which the two disagree.
+
+  - `UnlockedVaultV1::audited_attach_attachment`, `audited_list_attachments`,
+    and `audited_export_attachment`. Attaching publishes `ItemUpdate` inside
+    the mutation's own commit, with failed preconditions publishing a failed
+    `ItemUpdate` first; listing and exporting publish `ItemRead`. Export runs
+    `VLT-PM25`'s disclosure ceremony unchanged — the `InteractiveReveal`
+    intent, the same outcome table, and publish-before-release — with the
+    reassembled plaintext held in a local binding across publication so a
+    publication failure drops and wipes it without the caller ever seeing it.
+
+  - `AttachmentRandomnessV1` and `attachment_random_bytes`, the
+    variable-length entropy block one attach requires. Its size depends on the
+    chunk count, the same situation `PortableImportRandomnessV1` is in, and it
+    is validated at construction so a short or long block is an `InvalidInput`
+    before the vault is touched rather than a partition that reads the wrong
+    offsets.
+
+  - Every peer-authorable malformation is a closed error and none is a panic:
+    an oversized declared length is refused before it can size a buffer, and
+    reordered, cross-blob, promoted-final, tampered, and truncated chunks are
+    refused by VLT14's associated data and tag. The reassembled length and
+    SHA-256 are re-derived, because VLT14 v1 commits `0` rather than the real
+    total in chunk associated data and names verifying it as the caller's duty.
+
+### Security
+
+- **`validate_attachment_name` now rejects Unicode Cf and Zl/Zp**, not only
+  Cc. It runs on decode as well as ingest, so the name it is checking may have
+  been authored by a synchronising peer, and `char::is_control` covers only
+  category Cc: a name carrying U+202E RIGHT-TO-LEFT OVERRIDE passed, and
+  rendered as a *different* name in the listing an operator uses to choose
+  which attachment to export. The enumeration covers the soft hyphen, the
+  Arabic and Syriac formatting marks, the Mongolian vowel separator, the
+  zero-width and bidirectional controls, the interlinear annotation controls,
+  and the deprecated tag block. Ordinary non-ASCII names are unaffected, and
+  the doc says plainly that an enumeration is a statement about the code points
+  in it rather than a categorical guarantee — the total gate is the CLI's
+  escape at the render site, and this is defence in depth on top of it.
+
+- **`AttachmentManifestV1::encode` returns `Zeroizing<Vec<u8>>`** and wipes its
+  own intermediate CBOR tree, and the manifest's key is decoded through a new
+  helper that wipes the decoder's copy. The manifest is the one value in this
+  module whose *encoded output* is a secret; `bytes(...)` copied the key into a
+  heap buffer the encoder then freed unwiped, and `take_fixed` did the same on
+  the way back. VLT02 already records that the CBOR value types are not
+  zeroize-aware and that making them so is a change to a deliberately
+  zero-dependency crate; this closes the half that does not need it.
+
+- **`UnlockedVaultV1::attachment_bearing_item_count`** and
+  **`OpenedPortableSnapshotV1::attachment_bearing_item_count`**, the aggregates
+  the CLI uses to say that a portable export, import, or restore left
+  attachments behind. A backup an operator believes carries their recovery
+  codes and does not is worse than no backup, and before this the export
+  ceremony reported success and the restore ceremony reported *verified* — a
+  true statement about what it compared, which reads to a person as "everything
+  came back".
+
+- **`value_fields` wipes a rejected map before dropping it.** It is the gate
+  every object in this crate decodes through, and two of those objects are made
+  of key material — the attachment manifest's key, and `LocalSecretV1`'s
+  authority and device seeds. Its four failure paths, all reachable from a
+  peer-authored value, dropped the entries decoded so far and left them in
+  freed heap. Both halves of the work in progress are now wiped on every exit,
+  and `zeroize_cbor_secrets` reaches text as well as byte strings so the
+  guarantee does not depend on which variant a future field happens to use.
+
+- **`AttachmentManifestV1::decode` wipes on every exit, not just the
+  successful one.** Three checks run before the key is taken — wrong version,
+  wrong kind, malformed attachment id — and each dropped the field map, and the
+  key with it, unwiped. The body is split out and funnelled through one place
+  that wipes, so a check added tomorrow is covered without anyone remembering
+  to cover it.
+
+### Changed
+
+- **`prepare_item_publication` gained a content-object parameter** rather than
+  a third copy of the commit-and-announce sequence. Sealed chunk and manifest
+  frames are simply more objects in the same `PendingPublication` journal and
+  the same commit, which is what makes an attachment write inherit
+  `VLT-PM41`'s crash matrix and `VLT-PM42`'s recovery instead of needing a
+  resumable-upload protocol beside them. An interrupted attach leaves only the
+  unreachable immutable objects `VLT-PM00` §10.4 already describes.
+
+- **Portable import now drops attachments.** `VLT-PM17`'s snapshot carries
+  records and not blobs, so carrying an attachment *reference* across would
+  produce an item claiming attachments no export in the target could ever
+  find. `portable_semantic_root` normalises source and target through the same
+  function, so restore verification compares the same closure on both sides
+  and is unweakened.
+
+- Randomness partitioning now works on slices throughout; the fixed-array
+  helpers it duplicated were removed.
+
 ## [0.65.0] - 2026-08-18
 
 ### Changed

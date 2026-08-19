@@ -319,6 +319,17 @@ TESTSUITE_FILES = [
     # prior addition.
     "simd_i16x8_extadd_pairwise_i8x16.wast",
     "simd_i16x8_extmul_i8x16.wast",
+    # SIMD widen PR22 (task #183-185): simd_i16x8_q15mulr_sat_s.wast --
+    # i16x8.q15mulr_sat_s (0x82), a Q15 fixed-point ROUNDING SATURATING
+    # multiply -- the first genuinely new SIMD op family/semantic since
+    # the "extmul" widening-multiply arc completed in PR21 (not a plain
+    # wrapping/compare/min-max op like every other i16x8 binary entry).
+    # Sub-opcode fetched live from BinarySIMD.md and cross-checked
+    # against the already-implemented i16x8.neg (0x81)/i16x8.all_true
+    # (0x83) entries that straddle it (0x82 was the one gap between
+    # them). Same as PR21's file, this is a BRAND-NEW file this repo
+    # did not previously vendor at all.
+    "simd_i16x8_q15mulr_sat_s.wast",
     # SIMD widen PR11 (task #150-152): simd_bitwise.wast -- v128.not/
     # and/andnot/or/xor/bitselect, the lane-width-agnostic raw-byte
     # bitwise family. A strategic pivot from "widen the next narrow
@@ -399,6 +410,18 @@ TESTSUITE_FILES = [
     # file and the 3 new opcodes are correctly implemented and tested
     # via dedicated unit tests in the meantime.
     "simd_splat.wast",
+    # SIMD widen PR21 (task #180-182): simd_i64x2_extmul_i32x4.wast --
+    # i64x2.extmul_low/high_i32x4_s/_u, the third and final rung of this
+    # repo's "extmul" widening-multiply family (i8x16->i16x8, i16x8->
+    # i32x4, and now i32x4->i64x2). Mirrors the already-implemented
+    # simd_i32x4_extmul_i16x8.wast one lane width up. Each sub-opcode
+    # byte fetched live from BinarySIMD.md and cross-checked against the
+    # already-implemented i32x4.extmul_low_i16x8_s/i64x2.abs/i64x2.ge_s
+    # entries, same discipline as every prior addition. Unlike every
+    # other file added to this list so far, this is a BRAND-NEW file
+    # this repo did not previously vendor at all -- not a re-fetch of an
+    # already-vendored file whose baseline improves via a later PR.
+    "simd_i64x2_extmul_i32x4.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

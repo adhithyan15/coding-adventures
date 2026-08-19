@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 62,
+  "title": "Made by Hand",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:e6593c62fe206e4f",
+  "lessons": [
+    {
+      "id": "ML-C62-rope",
+      "sequence": 1990,
+      "title": "കയർ (kayaṟ) — coir rope",
+      "headword": "കയർ",
+      "romanization": "kayaṟ",
+      "gloss": "coir rope",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1eb72d3243c7904a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did śarkkara mean, and what did muḷakŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കയർ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കയർ (kayaṟ) — \"coir rope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, from a root about twisting, and it names both the fibre and the rope twisted out of it."
+            },
+            {
+              "kind": "speech",
+              "text": "The fibre comes off the husk of the coconut you met on the shelf, soaked in backwater until it softens and then beaten out by hand. Kerala has made rope this way for as long as anyone has written about it."
+            },
+            {
+              "kind": "speech",
+              "text": "English borrowed the word along with the trade: coir is this word, carried out of Malabar on Portuguese and Dutch ships."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things made by hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kayaṟ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kayaṟ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tēṅṅa, then kayaṟ, and say which one the other is made from",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tēṅṅa*, then *kayaṟ*, and say which one the other is made from]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കയർ (kayaṟ) mean? (\"coir rope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C62-thread",
+      "sequence": 2000,
+      "title": "നൂല് (nūlŭ) — thread",
+      "headword": "നൂല്",
+      "romanization": "nūlŭ",
+      "gloss": "thread",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9ecbf56f90687216",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kayaṟ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നൂല്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നൂല് (nūlŭ) — \"thread\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil nūl, and it stands behind tuṇi, the cloth-word: one is what the other is woven from."
+            },
+            {
+              "kind": "speech",
+              "text": "The older language put the same word to a second job. A treatise, a work of scholarship, was also a nūl — a thread of argument running from one end of a subject to the other, which is close to what English does with a train of thought."
+            },
+            {
+              "kind": "speech",
+              "text": "It closes on the bare l of cōṟu and vērŭ: the consonant with its vowel shaved off."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūlŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūlŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kayaṟ, then nūlŭ, and say which of the two is thicker",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kayaṟ*, then *nūlŭ*, and say which of the two is thicker]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നൂല് (nūlŭ) mean? (\"thread\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C62-needle",
+      "sequence": 2010,
+      "title": "സൂചി (sūci) — a needle",
+      "headword": "സൂചി",
+      "romanization": "sūci",
+      "gloss": "a needle",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5332ecff7671bb45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nūlŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: സൂചി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "സൂചി (sūci) — \"a needle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit sūcī, from a root about piercing and pointing, and the same root gives Sanskrit its word for an indication or a sign."
+            },
+            {
+              "kind": "speech",
+              "text": "So the needle and the pointer come from one idea: the thing that goes in, and the thing that points out. A Malayalam newsreader saying that a report indicates something is standing on this root."
+            },
+            {
+              "kind": "speech",
+              "text": "With nūlŭ through the eye of it, a സൂചി (sūci) is what turns cloth back into something a person can wear."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūci",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūci*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nūlŭ, then sūci, and say which one goes through the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nūlŭ*, then *sūci*, and say which one goes through the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does സൂചി (sūci) mean? (\"a needle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C62-broom",
+      "sequence": 2020,
+      "title": "ചൂല് (cūlŭ) — a broom",
+      "headword": "ചൂല്",
+      "romanization": "cūlŭ",
+      "gloss": "a broom",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0abcd5ced9bf3225",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did sūci mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചൂല്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചൂല് (cūlŭ) — \"a broom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, and a Kerala ചൂല് (cūlŭ) is a bundle of coconut-leaf ribs bound tight at one end — the coconut again, a third time on a third object."
+            },
+            {
+              "kind": "speech",
+              "text": "Sweeping the yard at first light is the opening work of a Kerala day, done before the kitchen is lit, and it leaves the ground marked in long strokes that stay until somebody walks on them."
+            },
+            {
+              "kind": "speech",
+              "text": "There is a second broom for indoors, softer, made of grass rather than leaf-rib, and the same word covers it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cūlŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cūlŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sūci, then cūlŭ, and say which of the two you hold in a fist",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sūci*, then *cūlŭ*, and say which of the two you hold in a fist]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചൂല് (cūlŭ) mean? (\"a broom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C62-winnowing-tray",
+      "sequence": 2030,
+      "title": "മുറം (muṟaṁ) — a winnowing tray",
+      "headword": "മുറം",
+      "romanization": "muṟaṁ",
+      "gloss": "a winnowing tray",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2eccd1de9d3b473a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cūlŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മുറം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മുറം (muṟaṁ) — \"a winnowing tray\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian: a flat plaited tray with a lip on three sides, woven from bamboo strip like the mat and the basket before it."
+            },
+            {
+              "kind": "speech",
+              "text": "Its work needs the wind. Grain is tossed up off the മുറം (muṟaṁ) and kāṟṟŭ carries the husk sideways while the heavy part drops back — a machine with no moving parts, run on weather."
+            },
+            {
+              "kind": "speech",
+              "text": "Ari, the raw rice on the kitchen shelf, has been through one of these on its way there."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and every one of them came off somebody's hands: rope, thread, a needle, a broom and a winnowing tray."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "muṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *muṟaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — kayaṟ, nūlŭ, sūci, cūlŭ, muṟaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *kayaṟ*, *nūlŭ*, *sūci*, *cūlŭ*, *muṟaṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മുറം (muṟaṁ) mean? (\"a winnowing tray\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

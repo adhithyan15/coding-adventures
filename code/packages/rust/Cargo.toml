@@ -787,6 +787,8 @@ members = [
     "vault-search",
     "vault-attachments",
     "vault-import-export",
+    "vault-import-bitwarden",
+    "vault-import-csv",
     "vault-pm-format",
     "vault-pm-domain",
     "vault-pm-audit",
@@ -1132,5 +1134,7 @@ members = [
   "vault-pm-crash-injection",
   "vault-pm-password-policy",
   "vault-pm-cli",
+  "vault-pm-agent-protocol",
+  "vault-pm-agent-host",
   "chief-of-staff-channel-epoch-activation",
 ]

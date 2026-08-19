@@ -103,6 +103,26 @@ or without `--unlock` — report a wedged vault and leave it wedged, however man
 times they are run, which is what keeps restoring a pre-mutation file-level
 backup a real option rather than a race.
 
+## The attachment drills
+
+Attaching a file is the ceremony that publishes the most objects in this
+product — a three-chunk attachment adds four content objects on top of the
+revision, catalog, and audit event — which makes it the one where "a crash
+leaves the vault either untouched or one command from healthy" is least
+obviously true. `an_interrupted_attachment_add_is_clean_or_resumable` kills a
+real process at its characteristic landing points and then proves the vault
+still attaches and still returns the bytes identically, which a torn write
+would have destroyed silently rather than loudly.
+
+`an_interrupted_attachment_export_never_leaves_a_partial_plaintext` covers the
+one durable write that leaves the storage backend. It locates the two
+`attachment.artifact` landing points **by name** in the ledger rather than by
+ordinal, because that ordinal depends on how many objects the preceding audit
+publication wrote, and pinning it as a number would make the test a statement
+about arithmetic. Afterwards the destination must be either absent or the
+complete plaintext; a file that exists and is neither is the torn class this
+matrix forbids.
+
 ## The asymmetric ceremony
 
 Passphrase rotation gets a stronger property than "clean or resumable", because

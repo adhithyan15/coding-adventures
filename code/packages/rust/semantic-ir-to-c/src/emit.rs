@@ -1339,6 +1339,131 @@ fn emit_assign(out: &mut String, dst: &str, e: &Expr, indent: usize) {
             );
             let _ = writeln!(out, "{pad}}}");
         }
+        // ── SIR23: symbolic expression + pattern/rewrite (Tier A, Phase A
+        // Slice 4) ──────────────────────────────────────────────────────
+        // Mirrors the already-merged `semantic-ir-to-ruby` SIR23 PR's own
+        // arms, but calls into the INLINED `_sir_symterm_*` runtime
+        // (runtime.rs) via this backend's existing hoist-into-temps
+        // convention (`hoist_sym_operands`, below) rather than Ruby's
+        // inline-expression-text style. Tier A (the pattern matcher) only
+        // — no `evalTerm`-equivalent arithmetic/calculus folding exists
+        // here. None of these seven nodes has a "simple" fast path
+        // (`is_simple`'s catch-all already returns `false` for all of
+        // them, exactly like the SIR22 array/matrix nodes above), so they
+        // only ever reach the emitter here.
+        Expr::SymSymbol { name, .. } => {
+            let _ = writeln!(out, "{pad}{dst} = _sir_symterm_symbol({});", quote_c_string(name));
+        }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = writeln!(
+                out,
+                "{pad}{dst} = _sir_symterm_rational({}, {});",
+                i64_c_literal(*numer),
+                i64_c_literal(*denom)
+            );
+        }
+        Expr::SymApply { head, args, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let mut ops: Vec<&Expr> = Vec::with_capacity(1 + args.len());
+            ops.push(head.as_ref());
+            ops.extend(args.iter());
+            let names = hoist_sym_operands(out, &ops, inner);
+            let _ = write!(
+                out,
+                "{ipad}{dst} = _sir_symterm_apply({}, {}",
+                names[0],
+                args.len()
+            );
+            for n in &names[1..] {
+                let _ = write!(out, ", {n}");
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            let _ = writeln!(out, "{pad}{dst} = _sir_symterm_blank();");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                let _ = writeln!(
+                    out,
+                    "{pad}{dst} = _sir_symterm_blank_typed({});",
+                    quote_c_string(name)
+                );
+            }
+            _ => panic!(
+                "C backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_sym_operands(out, &[pattern.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = _sir_symterm_named({}, {});",
+                quote_c_string(name),
+                names[0]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let names = hoist_sym_operands(out, &[lhs.as_ref(), rhs.as_ref()], inner);
+            let _ = writeln!(
+                out,
+                "{ipad}{dst} = {}({}, {});",
+                if *delayed {
+                    "_sir_symterm_rule_delayed"
+                } else {
+                    "_sir_symterm_rule"
+                },
+                names[0],
+                names[1]
+            );
+            let _ = writeln!(out, "{pad}}}");
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            let _ = writeln!(out, "{pad}{{");
+            let inner = indent + 1;
+            let ipad = indent_str(inner);
+            let mut ops: Vec<&Expr> = Vec::with_capacity(1 + rules.len());
+            ops.push(expr.as_ref());
+            ops.extend(rules.iter());
+            let names = hoist_sym_operands(out, &ops, inner);
+            let _ = write!(
+                out,
+                "{ipad}{dst} = {}({}, {}",
+                if *repeated {
+                    "_sir_symterm_replace_repeated"
+                } else {
+                    "_sir_symterm_replace_all"
+                },
+                names[0],
+                rules.len()
+            );
+            for n in &names[1..] {
+                let _ = write!(out, ", {n}");
+            }
+            out.push_str(");\n");
+            let _ = writeln!(out, "{pad}}}");
+        }
         // A call whose arguments contain control flow: hoist every argument
         // into a temp (left-to-right), then make the call.
         _ => emit_compound_call(out, dst, e, indent),
@@ -1411,6 +1536,65 @@ fn hoist_operands(out: &mut String, ops: &[&Expr], indent: usize) -> Vec<String>
         } else {
             let _ = writeln!(out, "{ipad}SirValue {t};");
             emit_assign(out, &t, a, indent);
+        }
+        names.push(t);
+    }
+    names
+}
+
+/// Hoist a `SymApply`/`SymPatternNamed`/`SymRule`/`SymReplaceAll` operand
+/// list into temps, wrapping a bare `IntLit`/`FloatLit`/`StrLit` operand
+/// through the matching `_sir_symterm_*` leaf constructor FIRST — a raw
+/// `SirValue` carrying `SIR_INT`/`SIR_FLOAT`/`SIR_STR` is never a valid
+/// symbolic term (see `_sir_symterm_require`'s doc comment in
+/// `runtime.rs`), so it must become one before it can sit inside a term
+/// tree. Any other operand (already a symbolic-term-producing expression,
+/// e.g. a nested `SymApply` or a `VarRef` holding a previously-built term)
+/// is hoisted exactly like [`hoist_operands`] above.
+///
+/// This is the C backend's version of the Ruby/JS backends' identically-
+/// purposed `emit_sym_operand` helper, adapted from their "return inline
+/// expression text" style to this backend's own "hoist into a `SirValue`
+/// temp" convention (`hoist_operands`) — the WRAPPING logic is the same,
+/// only the shape it is expressed in differs, matching how this backend's
+/// `SIR22` arms already reuse `hoist_operands` instead of the JS/Ruby
+/// backends' inline-text style for that domain.
+fn hoist_sym_operands(out: &mut String, ops: &[&Expr], indent: usize) -> Vec<String> {
+    let ipad = indent_str(indent);
+    let mut names = Vec::with_capacity(ops.len());
+    for a in ops {
+        let t = format!("_sir_a{}", fresh_id());
+        match a {
+            Expr::IntLit { value, .. } => {
+                let _ = writeln!(
+                    out,
+                    "{ipad}SirValue {t} = _sir_symterm_int({});",
+                    i64_c_literal(*value)
+                );
+            }
+            Expr::FloatLit { value, .. } => {
+                let _ = writeln!(
+                    out,
+                    "{ipad}SirValue {t} = _sir_symterm_float({});",
+                    f64_c_literal(*value)
+                );
+            }
+            Expr::StrLit { value, .. } => {
+                let _ = writeln!(
+                    out,
+                    "{ipad}SirValue {t} = _sir_symterm_string({});",
+                    quote_c_string(value)
+                );
+            }
+            _ if is_simple(a) => {
+                let _ = write!(out, "{ipad}SirValue {t} = ");
+                emit_expr(out, a, indent);
+                out.push_str(";\n");
+            }
+            _ => {
+                let _ = writeln!(out, "{ipad}SirValue {t};");
+                emit_assign(out, &t, a, indent);
+            }
         }
         names.push(t);
     }
@@ -2988,6 +3172,23 @@ fn scan_expr_for_builtin(e: &Expr) -> Option<(String, Span)> {
         Expr::Catenate { lhs, rhs, .. } => {
             scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
         }
+        // ── SIR23 Tier A pattern matcher (Phase A Slice 4) ───────────────
+        // Same "recurse into sub-expressions to catch a DEEPER deferred
+        // builtin" job as every composite arm above — none of these seven
+        // nodes is itself rejected here (real `emit_assign` codegen exists
+        // for all of them; see the arms above).
+        Expr::SymSymbol { .. } | Expr::SymRational { .. } => None,
+        Expr::SymApply { head, args, .. } => {
+            scan_expr_for_builtin(head).or_else(|| args.iter().find_map(scan_expr_for_builtin))
+        }
+        Expr::SymPatternBlank { head, .. } => head.as_deref().and_then(scan_expr_for_builtin),
+        Expr::SymPatternNamed { pattern, .. } => scan_expr_for_builtin(pattern),
+        Expr::SymRule { lhs, rhs, .. } => {
+            scan_expr_for_builtin(lhs).or_else(|| scan_expr_for_builtin(rhs))
+        }
+        Expr::SymReplaceAll { expr, rules, .. } => {
+            scan_expr_for_builtin(expr).or_else(|| rules.iter().find_map(scan_expr_for_builtin))
+        }
         _ => None,
     }
 }
@@ -3062,13 +3263,11 @@ fn fixed_helper(name: &str) -> Option<(&'static str, usize)> {
 // ---------------------------------------------------------------------------
 
 fn emit_int_literal(out: &mut String, value: i64) {
-    if value == i64::MIN {
-        // The literal -9223372036854775808 would be parsed as unary-minus of a
-        // value that overflows a signed 64-bit int, so build it safely.
-        out.push_str("_sir_int((-9223372036854775807LL - 1))");
-    } else {
-        let _ = write!(out, "_sir_int({value}LL)");
-    }
+    // The literal -9223372036854775808 would be parsed as unary-minus of a
+    // value that overflows a signed 64-bit int, so `i64_c_literal` builds it
+    // safely (also reused by `hoist_sym_operands`'s `IntLit` case and
+    // `Expr::SymRational`'s codegen for the identical hazard).
+    let _ = write!(out, "_sir_int({})", i64_c_literal(value));
 }
 
 /// Render a `FloatLit` as a `_sir_float(<C double>)` constructor call.
@@ -3087,16 +3286,43 @@ fn emit_int_literal(out: &mut String, value: i64) {
 ///   this context; `{:?}` is used for parity with the value model and to keep
 ///   the emitted text unambiguously floating-point.)
 fn emit_float_literal(out: &mut String, value: f64) {
-    if value.is_nan() {
-        out.push_str("_sir_float(NAN)");
-    } else if value.is_infinite() {
-        out.push_str(if value > 0.0 {
-            "_sir_float(INFINITY)"
-        } else {
-            "_sir_float(-INFINITY)"
-        });
+    let _ = write!(out, "_sir_float({})", f64_c_literal(value));
+}
+
+/// The bare C `int64_t` literal text for `value` (NOT wrapped in
+/// `_sir_int(...)`) — factored out of [`emit_int_literal`]'s identical
+/// `i64::MIN` special-casing (see that function's own comment: the literal
+/// `-9223372036854775808` would parse as unary-minus of a value that
+/// overflows a signed 64-bit int) so `Expr::SymRational`'s `numer`/`denom`
+/// fields — plain `i64`s, not full `Expr` nodes, so they never flow
+/// through `emit_expr`/`hoist_sym_operands` — can reuse the identical
+/// overflow-safe spelling for `_sir_symterm_rational(<numer>, <denom>)`'s
+/// two bare-integer arguments, whose safe range is the FULL `i64` domain
+/// (unlike `SymApply`'s operands, which arrive as real `Expr`s and go
+/// through `hoist_sym_operands`'s `IntLit` case instead).
+fn i64_c_literal(value: i64) -> String {
+    if value == i64::MIN {
+        "(-9223372036854775807LL - 1)".to_string()
     } else {
-        let _ = write!(out, "_sir_float({value:?})");
+        format!("{value}LL")
+    }
+}
+
+/// The bare C `double` literal text for `value` (NOT wrapped in
+/// `_sir_float(...)`) — factored out of [`emit_float_literal`]'s identical
+/// non-finite/finite handling, for [`hoist_sym_operands`]'s `FloatLit` case
+/// (which needs `_sir_symterm_float(<literal>)`, not `_sir_float(<literal>)`).
+fn f64_c_literal(value: f64) -> String {
+    if value.is_nan() {
+        "NAN".to_string()
+    } else if value.is_infinite() {
+        if value > 0.0 {
+            "INFINITY".to_string()
+        } else {
+            "-INFINITY".to_string()
+        }
+    } else {
+        format!("{value:?}")
     }
 }
 

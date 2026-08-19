@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "python/sir-runtime-symbolic",
+  "capabilities": [],
+  "justification": "Pure in-process symbolic-expression term type, structural pattern matcher, and depth/iteration-capped tree-rewrite operators (the SIR23 Tier A pattern matcher). No filesystem, network, process, or environment access."
+}

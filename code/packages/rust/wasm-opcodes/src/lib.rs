@@ -1225,6 +1225,189 @@ pub enum SimdOpKind {
     /// "pop scalar, push v128" shape as [`Self::Splat`], but the FIRST
     /// splat whose popped operand type differs from `i32`.
     SplatI64x2,
+    /// `f32x4.splat` -- pop one `f32`, broadcast its 4 little-endian
+    /// bytes into all 4 lanes. The FIRST floating-point-typed SIMD
+    /// instruction in this table: a pure bit-pattern broadcast, no
+    /// rounding/NaN-canonicalization/comparison semantics, so it needs
+    /// no new type-checker machinery beyond popping `F32` instead of
+    /// `I32`/`I64`.
+    SplatF32x4,
+    /// `f64x2.splat` -- pop one `f64`, broadcast its 8 little-endian
+    /// bytes into both lanes. Same shape as [`Self::SplatF32x4`], one
+    /// lane width wider.
+    SplatF64x2,
+    /// `i8x16.swizzle` -- for each of the 16 result lanes `i`, look up
+    /// `a[s[i]]` if `s[i] < 16`, else `0` -- a per-lane dynamic index
+    /// (table lookup) into the FIRST operand `a` (the data vector) using
+    /// byte indices read from the SECOND operand `s` (the index vector).
+    /// Same "pop two v128s, push one" BINARY shape as `i8x16.add`/etc.,
+    /// but the first SIMD op in this table whose per-lane computation
+    /// uses the OTHER operand's bytes as an INDEX rather than a value to
+    /// combine arithmetically/bitwise -- out-of-range indices (`>= 16`)
+    /// produce `0`, not a trap or panic (verified against the SIMD
+    /// proposal's own semantics, not an implementation guess -- see this
+    /// package's own CHANGELOG entry for the PR that added it).
+    Swizzle,
+    /// `i8x16.extract_lane_s` -- read one `i8` lane back out of a `v128`,
+    /// selected by a lane-index immediate (0-15, unlike
+    /// [`Self::ExtractLane`]'s 0-3 range), SIGN-extended to `i32`. Same
+    /// "pop v128 + lane immediate, push i32" shape as `ExtractLane`, just
+    /// at `i8x16`'s narrower width and wider lane count -- the first
+    /// `extract_lane` family member with a genuine signed/unsigned split
+    /// (`i32x4.extract_lane` has none, since a full 32-bit lane has no
+    /// narrower representation left to sign- or zero-extend from).
+    ExtractLaneI8x16S,
+    /// `i8x16.extract_lane_u` -- same shape as [`Self::ExtractLaneI8x16S`],
+    /// but ZERO-extended to `i32` instead of sign-extended.
+    ExtractLaneI8x16U,
+    /// `i8x16.replace_lane` -- pop an `i32` (only its low byte is used)
+    /// and a `v128`, overwrite the `v128`'s lane selected by a lane-index
+    /// immediate (0-15) with that low byte, push the resulting `v128`. A
+    /// GENUINELY NEW shape in this table, not a variant of any prior
+    /// kind: every existing lane-immediate op ([`Self::ExtractLane`] and
+    /// its `i8x16` siblings above) pops exactly ONE `v128` and produces a
+    /// SCALAR; every existing mixed-type binary op (the `ShlI8x16`-family
+    /// shifts) has no lane immediate at all. This is the first kind that
+    /// combines BOTH a lane-index immediate AND a binary pop of two
+    /// DIFFERENT operand types (`v128`, then `i32`), producing a `v128`
+    /// result -- deliberately not force-fit into `ExtractLane`'s shape,
+    /// since neither its pop count nor its result type match.
+    ReplaceLaneI8x16,
+    /// `f32x4.abs` -- pop one `v128`, clear the sign bit of each of the 4
+    /// `f32` lanes (`f32::abs()` in Rust is a pure bit operation here, no
+    /// NaN/signed-zero subtlety -- unlike [`Self::MinF32x4`] below). Same
+    /// UNARY "pop v128, push v128" shape as [`Self::AbsI8x16`], just at
+    /// `f32x4`'s lane width -- the first FLOATING-POINT-typed unary
+    /// arithmetic op in this table, following on from PR17's
+    /// [`Self::SplatF32x4`]/[`Self::SplatF64x2`] (pure bit-pattern
+    /// broadcasts, no arithmetic) and PR18's integer-only unary/binary
+    /// arith widening.
+    AbsF32x4,
+    /// `f32x4.mul` -- pop two `v128`s, multiply each of the 4 `f32` lane
+    /// pairs with standard IEEE-754 float multiply (Rust's `*` on `f32`
+    /// is correct here -- ordinary multiplication has no WASM-specific
+    /// NaN/signed-zero deviation from IEEE-754, unlike `min`/`max`). Same
+    /// BINARY "pop two v128s, push one" shape as [`Self::MulI16x8`], just
+    /// at `f32x4`'s lane width.
+    MulF32x4,
+    /// `f32x4.min` -- pop two `v128`s, take the WASM-spec `fmin` of each
+    /// of the 4 `f32` lane pairs. Same BINARY shape as [`Self::MulF32x4`]
+    /// above, but NOT a plain `f32::min()`/`a.min(b)`: WASM's `fmin` is
+    /// NOT IEEE `minNum` -- if EITHER operand is NaN the result is NaN
+    /// (propagated, not silently dropped the way Rust's native
+    /// `f32::min()` drops one NaN operand and returns the other), and for
+    /// a `-0.0`/`+0.0` tie, `-0.0` wins (unlike some other `minNum`
+    /// variants that pick `+0.0` or are unspecified on the tie). This is
+    /// the exact per-lane transplant of this crate's own scalar
+    /// `f32.min`/`f64.min` opcode handlers (0x96/0xA4 in
+    /// `wasm-execution`), which already implement this correct
+    /// NaN-propagating, signed-zero-aware `fmin` for the non-SIMD MVP
+    /// opcodes -- see that handler's own comment for the bug this
+    /// discipline fixes (`min(NaN, -0.0)` silently returning `-0.0`
+    /// instead of `NaN` under Rust's native `.min()`).
+    MinF32x4,
+    /// `i32x4.trunc_sat_f32x4_s` -- pop one `v128`, convert each of the 4
+    /// `f32` lanes to a SIGNED SATURATING `i32`, push one `v128`. This is
+    /// the SIMD counterpart of the `0xFC`-prefixed scalar
+    /// `i32.trunc_sat_f32_s` instruction (sub-opcode `0x00`, the
+    /// "non-trapping float-to-int conversions" proposal) -- crucially,
+    /// like that scalar op and UNLIKE this crate's TRAPPING
+    /// `i32.trunc_f32_s`/`_u` MVP opcodes (`0xA8`/`0xA9`), `trunc_sat`
+    /// NEVER TRAPS: a NaN lane saturates to `0`, a lane below
+    /// `i32::MIN` saturates to `i32::MIN`, a lane above `i32::MAX`
+    /// saturates to `i32::MAX`, and an ordinary in-range lane truncates
+    /// toward zero same as the trapping version. Rust's own `as` cast
+    /// from `f32` to `i32` has implemented exactly this saturating
+    /// semantic since Rust 1.45 (the "T-as-int" RFC), so `lane as i32`
+    /// is directly correct -- no hand-rolled NaN/range checks needed,
+    /// mirroring the discipline the `0xFC` scalar `trunc_sat` handlers
+    /// in `wasm-execution` already use. Same UNARY "pop v128, push
+    /// v128" shape as [`Self::AbsF32x4`], just with a lane-width-
+    /// preserving type change (f32 lane in, i32 lane out) instead of a
+    /// same-type transform.
+    TruncSatF32x4S,
+    /// `i32x4.trunc_sat_f32x4_u` -- same UNARY shape as
+    /// [`Self::TruncSatF32x4S`], but each `f32` lane saturates to an
+    /// UNSIGNED `i32` interpretation instead: a NaN lane saturates to
+    /// `0`, a lane below `0` saturates to `0` (NOT wrapped/reinterpreted
+    /// -- a negative float genuinely means "below the unsigned range's
+    /// minimum"), a lane above `u32::MAX` saturates to `u32::MAX`, and
+    /// an ordinary in-range lane truncates toward zero. Rust's `as` cast
+    /// from `f32` to `u32` has the same saturating semantics as the `_s`
+    /// case, so `lane as u32` is directly correct; the result is then
+    /// stored as a `u32` bit pattern into the same 4-byte lane slot
+    /// this table's other `i32x4`-lane ops use (the lane storage itself
+    /// doesn't distinguish signed/unsigned -- only the conversion that
+    /// produced it does).
+    TruncSatF32x4U,
+    /// `f32x4.convert_i32x4_s` -- pop one `v128`, convert each of the 4
+    /// `i32` lanes (interpreted as SIGNED) to `f32`, push one `v128`.
+    /// The inverse direction of [`Self::TruncSatF32x4S`]. Rust's `as`
+    /// cast from `i32` to `f32` already performs the correct
+    /// round-to-nearest, ties-to-even conversion WASM's spec requires,
+    /// so `lane as f32` (reading the lane's bytes as `i32` first) is
+    /// directly correct -- the simpler of this PR's two `convert`
+    /// directions, since no bit-pattern reinterpretation is needed
+    /// before the cast (contrast [`Self::ConvertI32x4U`] below, which
+    /// DOES need one). Same UNARY "pop v128, push v128" shape as
+    /// [`Self::TruncSatF32x4S`], just the reverse type change (i32 lane
+    /// in, f32 lane out).
+    ConvertI32x4S,
+    /// `f32x4.convert_i32x4_u` -- same UNARY shape as
+    /// [`Self::ConvertI32x4S`], but each `i32` lane's bit pattern is
+    /// reinterpreted as UNSIGNED (`u32`) BEFORE the conversion to
+    /// `f32`, not converted directly from the signed `i32`. This
+    /// matters: a lane with the high bit set (e.g. the bit pattern
+    /// `0xFFFFFFFF`, which as a signed `i32` is `-1`) must convert to
+    /// `4294967295.0f32` (`u32::MAX`), NOT `-1.0f32` -- so the runtime
+    /// handler must do `(lane_bytes_as_i32 as u32) as f32`, in that
+    /// order, never `lane_bytes_as_i32 as f32` directly (which would
+    /// sign-extend the bit pattern into the wrong float value for any
+    /// lane with the high bit set).
+    ConvertI32x4U,
+    /// `i64x2.extmul_low_i32x4_s` -- reinterpret both `v128` operands as 4
+    /// SIGNED `i32` lanes each; take only the LOW 2 lanes (indices 0-1) of
+    /// each, sign-extend every value to `i64`, and multiply the
+    /// corresponding pairs lane-wise, producing an `i64x2` result. The
+    /// third and final rung of this table's widening-multiply "extmul"
+    /// family, mirroring [`Self::ExtmulLowI16x8S`] (which itself mirrors
+    /// [`Self::ExtmulLowI8x16S`]) one lane width up: same narrow-input/
+    /// wide-output BINARY shape, just `i32x4` -> `i64x2` instead of
+    /// `i16x8` -> `i32x4`.
+    ExtmulLowI64x2S,
+    /// `i64x2.extmul_high_i32x4_s` -- same as [`Self::ExtmulLowI64x2S`],
+    /// but operates on the HIGH 2 lanes (indices 2-3) of each `i32x4`
+    /// operand instead of the low 2.
+    ExtmulHighI64x2S,
+    /// `i64x2.extmul_low_i32x4_u` -- same LOW-2-lanes widening multiply as
+    /// [`Self::ExtmulLowI64x2S`], but each `i32` lane is zero-extended
+    /// (read as `u32`) before the multiply, not sign-extended.
+    ExtmulLowI64x2U,
+    /// `i64x2.extmul_high_i32x4_u` -- same HIGH-2-lanes widening multiply
+    /// as [`Self::ExtmulHighI64x2S`], but zero-extended, not
+    /// sign-extended.
+    ExtmulHighI64x2U,
+    /// `i16x8.q15mulr_sat_s` -- pop two `v128`s, treat each of the 8 `i16`
+    /// lane pairs as SIGNED Q15 fixed-point values (the range
+    /// `[-32768, 32767]` represents `[-1.0, ~1.0)` in Q15), and compute a
+    /// ROUNDING SATURATING fixed-point multiply per lane, push one `v128`.
+    /// A GENUINELY NEW shape/semantic in this table -- every prior BINARY
+    /// "pop two v128s, push one" op ([`Self::MulI16x8`] and friends) is
+    /// either a plain wrapping arithmetic op or a min/max/compare; this is
+    /// the first FIXED-POINT rounding multiply. Per lane: sign-extend both
+    /// `i16`s to `i32` (`a as i32 * b as i32` cannot overflow `i32` --
+    /// max magnitude is `32768 * 32768 == 2^30`, well inside `i32::MAX ==
+    /// 2^31 - 1`), add the Q15 rounding constant `0x4000` (`2^14`, i.e.
+    /// "round to nearest" when rescaling from the Q30 product back to
+    /// Q15), then arithmetic-shift right by 15. That rescaled value can
+    /// exceed `i16::MAX` in exactly ONE case -- both lanes at
+    /// `i16::MIN` (`-32768`): `(-32768 * -32768 + 0x4000) >> 15 ==
+    /// 32768`, one past `i16::MAX` -- so the final step SATURATES
+    /// (clamps) the result to `i16::MIN..=i16::MAX` rather than truncating
+    /// or wrapping. This is the WASM "relaxed"-adjacent but actually
+    /// MVP-SIMD `q15mulr_sat_s` instruction, popular in DSP/audio code for
+    /// exactly this rounding fixed-point multiply.
+    Q15mulrSatI16x8S,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1332,6 +1515,51 @@ pub struct SimdOpInfo {
 /// live from `BinarySIMD.md` and cross-checked against the
 /// already-implemented `i8x16.add` (`0x6E`)/`i32x4.add` (`0xAE`)
 /// entries (both matched exactly).
+/// `i8x16.swizzle`/`extract_lane_s`/`extract_lane_u`/`replace_lane`
+/// (SIMD widen PR18) fill in the `0x0E`/`0x15`-`0x17` gap left inside
+/// the already-implemented `0x0C`-`0x22` const/splat/extract_lane
+/// encoding run -- `swizzle` reuses the plain BINARY `v128,v128->v128`
+/// shape (like `i8x16.add`); `extract_lane_s`/`_u` reuse
+/// `i32x4.extract_lane`'s "v128 + lane immediate -> i32" shape, just at
+/// `i8x16`'s 0-15 lane range with a genuine signed/unsigned split (the
+/// first `extract_lane` family member to need one); `replace_lane` is
+/// a brand-new shape, combining a lane immediate with a mixed-type
+/// (`v128`, `i32`) binary pop that produces a `v128` -- see
+/// `SimdOpKind::ReplaceLaneI8x16`'s own doc comment. Each sub-opcode
+/// byte fetched live from `BinarySIMD.md` and cross-checked against
+/// the already-implemented `i32x4.extract_lane` (`0x1B`)/`i8x16.eq`
+/// (`0x23`) entries, which sit exactly one past this run's own end
+/// (both matched exactly, confirming the whole `0x0C`-`0x23` run is
+/// contiguous and self-consistent).
+/// `i32x4.trunc_sat_f32x4_s`/`_u`/`f32x4.convert_i32x4_s`/`_u` (SIMD
+/// widen PR20) are this table's first `i32x4`<->`f32x4` CONVERSION
+/// ops -- unlike every prior `f32x4` addition (PR17's splats, PR19's
+/// abs/mul/min), which stayed within `f32x4` the whole way, these
+/// change lane TYPE, not just value, matching the scalar `0xFC`-
+/// prefixed `trunc_sat`/`convert` conversions this crate already
+/// implements for non-SIMD MVP opcodes (see `wasm-execution`'s `0xFC`
+/// handler). `trunc_sat_f32x4_s`/`_u` NEVER TRAP (NaN saturates to 0,
+/// out-of-range saturates to the target bound) -- deliberately NOT the
+/// same trapping behavior as this table's scalar `i32.trunc_f32_s`/
+/// `_u` MVP opcodes. Each sub-opcode byte fetched live from
+/// `BinarySIMD.md` and cross-checked against the already-implemented
+/// `f32x4.abs` (`0xE0`)/`f32x4.min` (`0xE8`) entries (both matched
+/// exactly). The 4 new sub-opcodes (`0xF8`-`0xFB`) are themselves a
+/// contiguous, self-consistent run, though not adjacent to
+/// `f32x4.min`'s `0xE8` -- the SIMD proposal's numbering leaves a gap
+/// (`extend_low`/`high`, `narrow`, etc.) for opcodes this crate
+/// doesn't implement yet.
+/// `i64x2.extmul_low`/`high_i32x4_s`/`_u` (SIMD widen PR21) complete the
+/// third and final rung of the "extmul" widening-multiply family this
+/// table already implements twice over: `i16x8.extmul_low`/
+/// `high_i8x16_s`/`_u` (`i8x16` -> `i16x8`) and `i32x4.extmul_low`/
+/// `high_i16x8_s`/`_u` (`i16x8` -> `i32x4`). This is the `i32x4` ->
+/// `i64x2` rung, same narrow-input/wide-output BINARY shape one lane
+/// width up. Each sub-opcode byte fetched live from `BinarySIMD.md` and
+/// cross-checked against the already-implemented `i32x4.extmul_low_i16x8_s`
+/// (`0xBC`)/`i64x2.abs` (`0xC0`)/`i64x2.ge_s` (`0xDB`) entries (all three
+/// matched exactly, confirming `0xDC`-`0xDF` sits immediately past
+/// `i64x2`'s own comparison family with no gap).
 pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "v128.const", sub_opcode: 0x0C, kind: SimdOpKind::Const },
     SimdOpInfo { name: "i32x4.extract_lane", sub_opcode: 0x1B, kind: SimdOpKind::ExtractLane },
@@ -1451,6 +1679,24 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i8x16.splat", sub_opcode: 0x0F, kind: SimdOpKind::SplatI8x16 },
     SimdOpInfo { name: "i16x8.splat", sub_opcode: 0x10, kind: SimdOpKind::SplatI16x8 },
     SimdOpInfo { name: "i64x2.splat", sub_opcode: 0x12, kind: SimdOpKind::SplatI64x2 },
+    SimdOpInfo { name: "f32x4.splat", sub_opcode: 0x13, kind: SimdOpKind::SplatF32x4 },
+    SimdOpInfo { name: "f64x2.splat", sub_opcode: 0x14, kind: SimdOpKind::SplatF64x2 },
+    SimdOpInfo { name: "i8x16.swizzle", sub_opcode: 0x0E, kind: SimdOpKind::Swizzle },
+    SimdOpInfo { name: "i8x16.extract_lane_s", sub_opcode: 0x15, kind: SimdOpKind::ExtractLaneI8x16S },
+    SimdOpInfo { name: "i8x16.extract_lane_u", sub_opcode: 0x16, kind: SimdOpKind::ExtractLaneI8x16U },
+    SimdOpInfo { name: "i8x16.replace_lane", sub_opcode: 0x17, kind: SimdOpKind::ReplaceLaneI8x16 },
+    SimdOpInfo { name: "f32x4.abs", sub_opcode: 0xE0, kind: SimdOpKind::AbsF32x4 },
+    SimdOpInfo { name: "f32x4.mul", sub_opcode: 0xE6, kind: SimdOpKind::MulF32x4 },
+    SimdOpInfo { name: "f32x4.min", sub_opcode: 0xE8, kind: SimdOpKind::MinF32x4 },
+    SimdOpInfo { name: "i32x4.trunc_sat_f32x4_s", sub_opcode: 0xF8, kind: SimdOpKind::TruncSatF32x4S },
+    SimdOpInfo { name: "i32x4.trunc_sat_f32x4_u", sub_opcode: 0xF9, kind: SimdOpKind::TruncSatF32x4U },
+    SimdOpInfo { name: "f32x4.convert_i32x4_s", sub_opcode: 0xFA, kind: SimdOpKind::ConvertI32x4S },
+    SimdOpInfo { name: "f32x4.convert_i32x4_u", sub_opcode: 0xFB, kind: SimdOpKind::ConvertI32x4U },
+    SimdOpInfo { name: "i64x2.extmul_low_i32x4_s", sub_opcode: 0xDC, kind: SimdOpKind::ExtmulLowI64x2S },
+    SimdOpInfo { name: "i64x2.extmul_high_i32x4_s", sub_opcode: 0xDD, kind: SimdOpKind::ExtmulHighI64x2S },
+    SimdOpInfo { name: "i64x2.extmul_low_i32x4_u", sub_opcode: 0xDE, kind: SimdOpKind::ExtmulLowI64x2U },
+    SimdOpInfo { name: "i64x2.extmul_high_i32x4_u", sub_opcode: 0xDF, kind: SimdOpKind::ExtmulHighI64x2U },
+    SimdOpInfo { name: "i16x8.q15mulr_sat_s", sub_opcode: 0x82, kind: SimdOpKind::Q15mulrSatI16x8S },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1869,8 +2115,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_118_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 118);
+    fn simd_ops_table_has_the_expected_136_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 136);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2320,13 +2566,11 @@ mod tests {
         // already-implemented `i32x4.splat` (0x11) entry, which sits
         // exactly in the middle of this contiguous run: `i8x16.splat`
         // (0x0F), `i16x8.splat` (0x10), `i32x4.splat` (0x11, already
-        // implemented), `i64x2.splat` (0x12) -- `f32x4.splat` (0x13) and
-        // `f64x2.splat` (0x14) immediately follow but are deliberately
-        // out of scope (this crate has zero float-lane SIMD support
-        // yet). All three new entries reuse the exact "pop one scalar,
-        // push one v128" shape `i32x4.splat` already established --
-        // `i64x2.splat` is the first splat whose popped operand type is
-        // `i64` rather than `i32`.
+        // implemented), `i64x2.splat` (0x12). All three new entries
+        // reuse the exact "pop one scalar, push one v128" shape
+        // `i32x4.splat` already established -- `i64x2.splat` is the
+        // first splat whose popped operand type is `i64` rather than
+        // `i32`.
         for (name, sub_opcode, kind) in [
             ("i8x16.splat", 0x0F, SimdOpKind::SplatI8x16),
             ("i16x8.splat", 0x10, SimdOpKind::SplatI16x8),
@@ -2337,5 +2581,141 @@ mod tests {
             assert_eq!(op.kind, kind);
             assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
         }
+    }
+
+    #[test]
+    fn simd_float_splat_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR17: `f32x4.splat` (0x13) and `f64x2.splat`
+        // (0x14) -- the immediate continuation of PR16's splat family
+        // run, and the FIRST floating-point-typed SIMD ops in this
+        // table. Fetched live from BinarySIMD.md and cross-checked
+        // against the already-implemented `i64x2.splat` (0x12) entry
+        // (both matched exactly, confirming the whole 0x0F-0x14 splat
+        // run is contiguous and self-consistent). Splat itself is a
+        // pure bit-pattern broadcast -- no rounding, no NaN
+        // canonicalization, no comparison semantics -- so it needs no
+        // new operand shape beyond popping `F32`/`F64` instead of
+        // `I32`/`I64`.
+        for (name, sub_opcode, kind) in [("f32x4.splat", 0x13, SimdOpKind::SplatF32x4), ("f64x2.splat", 0x14, SimdOpKind::SplatF64x2)] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i8x16_swizzle_and_lane_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR18: `i8x16.swizzle` (0x0E), `i8x16.extract_lane_s`
+        // (0x15), `i8x16.extract_lane_u` (0x16), `i8x16.replace_lane`
+        // (0x17) -- fetched live from BinarySIMD.md and cross-checked
+        // against the already-implemented `i32x4.extract_lane` (0x1B)
+        // and `i8x16.eq` (0x23) entries, which sit exactly one past this
+        // run's own end (both matched exactly, confirming the whole
+        // 0x0C-0x23 const/splat/extract_lane/eq encoding run is
+        // contiguous and self-consistent).
+        for (name, sub_opcode, kind) in [
+            ("i8x16.swizzle", 0x0E, SimdOpKind::Swizzle),
+            ("i8x16.extract_lane_s", 0x15, SimdOpKind::ExtractLaneI8x16S),
+            ("i8x16.extract_lane_u", 0x16, SimdOpKind::ExtractLaneI8x16U),
+            ("i8x16.replace_lane", 0x17, SimdOpKind::ReplaceLaneI8x16),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_f32x4_arith3_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR19: `f32x4.abs` (0xE0), `f32x4.mul` (0xE6),
+        // `f32x4.min` (0xE8) -- fetched live from BinarySIMD.md, the
+        // FIRST genuine floating-point ARITHMETIC ops in this table
+        // (PR17's f32x4/f64x2 splats were pure bit-pattern broadcasts,
+        // no arithmetic). `f32x4.min` in particular is NOT the same
+        // as Rust's `f32::min()` -- see `SimdOpKind::MinF32x4`'s own
+        // doc comment for the NaN-propagation/signed-zero tie-break
+        // semantics this crate mirrors from its own scalar `f32.min`
+        // (0x96) handler.
+        for (name, sub_opcode, kind) in [
+            ("f32x4.abs", 0xE0, SimdOpKind::AbsF32x4),
+            ("f32x4.mul", 0xE6, SimdOpKind::MulF32x4),
+            ("f32x4.min", 0xE8, SimdOpKind::MinF32x4),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i32x4_f32x4_conversion_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR20 (task #177-179): `i32x4.trunc_sat_f32x4_s`
+        // (0xF8), `i32x4.trunc_sat_f32x4_u` (0xF9), `f32x4.convert_i32x4_s`
+        // (0xFA), `f32x4.convert_i32x4_u` (0xFB) -- fetched live from
+        // BinarySIMD.md, this table's first `i32x4`<->`f32x4`
+        // CONVERSION ops (a lane TYPE change, not just a value change
+        // within one lane type, unlike every prior `f32x4` addition).
+        // `trunc_sat_f32x4_s`/`_u` NEVER trap (NaN saturates to 0,
+        // out-of-range saturates to the target bound) -- see
+        // `SimdOpKind::TruncSatF32x4S`'s own doc comment for why this is
+        // deliberately NOT the same trapping behavior as this crate's
+        // scalar `i32.trunc_f32_s`/`_u` MVP opcodes.
+        for (name, sub_opcode, kind) in [
+            ("i32x4.trunc_sat_f32x4_s", 0xF8, SimdOpKind::TruncSatF32x4S),
+            ("i32x4.trunc_sat_f32x4_u", 0xF9, SimdOpKind::TruncSatF32x4U),
+            ("f32x4.convert_i32x4_s", 0xFA, SimdOpKind::ConvertI32x4S),
+            ("f32x4.convert_i32x4_u", 0xFB, SimdOpKind::ConvertI32x4U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_i64x2_from_i32x4_widening_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR21 (task #180-182): `i64x2.extmul_low_i32x4_s`
+        // (0xDC), `i64x2.extmul_high_i32x4_s` (0xDD),
+        // `i64x2.extmul_low_i32x4_u` (0xDE), `i64x2.extmul_high_i32x4_u`
+        // (0xDF) -- fetched live from BinarySIMD.md, cross-checked against
+        // the already-implemented `i32x4.extmul_low_i16x8_s` (0xBC)/
+        // `i64x2.abs` (0xC0)/`i64x2.ge_s` (0xDB) entries (all three
+        // matched exactly). Completes the third and final rung of this
+        // table's "extmul" widening-multiply family (i8x16->i16x8,
+        // i16x8->i32x4, and now i32x4->i64x2). No `i64x2.dot_i32x4_s` --
+        // same as the i16x8->i8x16 rung, WASM SIMD does not define a
+        // dot-product for this lane-width pair.
+        for (name, sub_opcode, kind) in [
+            ("i64x2.extmul_low_i32x4_s", 0xDC, SimdOpKind::ExtmulLowI64x2S),
+            ("i64x2.extmul_high_i32x4_s", 0xDD, SimdOpKind::ExtmulHighI64x2S),
+            ("i64x2.extmul_low_i32x4_u", 0xDE, SimdOpKind::ExtmulLowI64x2U),
+            ("i64x2.extmul_high_i32x4_u", 0xDF, SimdOpKind::ExtmulHighI64x2U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+        assert!(get_simd_op_by_name("i64x2.dot_i32x4_s").is_none(), "WASM SIMD defines no i64x2.dot_i32x4_s");
+    }
+
+    #[test]
+    fn simd_i16x8_q15mulr_sat_s_has_the_real_verified_sub_opcode_value() {
+        // SIMD widen PR22 (task #183-185): `i16x8.q15mulr_sat_s` (0x82) --
+        // fetched live from BinarySIMD.md, cross-checked against the
+        // already-implemented `i16x8.neg` (0x81) and `i16x8.all_true`
+        // (0x83) entries, which straddle it on either side -- 0x82 was the
+        // one gap in that run and is not used by any other SIMD_OPS entry.
+        // A genuinely new op family: a Q15 fixed-point ROUNDING SATURATING
+        // multiply, not a plain wrapping/compare/min-max op like every
+        // other i16x8 binary entry in this table.
+        let op = get_simd_op(0x82).expect("0x82 should be i16x8.q15mulr_sat_s");
+        assert_eq!(op.name, "i16x8.q15mulr_sat_s");
+        assert_eq!(op.kind, SimdOpKind::Q15mulrSatI16x8S);
+        assert_eq!(get_simd_op_by_name("i16x8.q15mulr_sat_s").map(|o| o.sub_opcode), Some(0x82));
     }
 }

@@ -107,6 +107,19 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
+    // SIR23 Tier A: the symbolic-expression + pattern-matching domain --
+    // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+    // `SymPatternNamed`/`SymRule`/`SymReplaceAll` (an `Expr` each), all
+    // lower to calls into the imported `coding-adventures-sir-runtime-
+    // symbolic` package (following the SAME imported-package model as
+    // SIR22's array/matrix domain above, rather than this backend's usual
+    // inline-runtime convention -- see `runtime.rs`'s `RUNTIME_SYMBOLIC`
+    // doc comment and `emit`'s SIR23 arms). Tier B (a general expression
+    // evaluator) is explicitly out of scope for this slice and declares no
+    // feature of its own yet.
+    Feature::SymbolicExpr,
+    Feature::PatternMatching,
+    Feature::Rationals,
 ];
 
 impl Backend for PythonBackend {
