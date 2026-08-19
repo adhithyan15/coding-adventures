@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 60,
+  "title": "Animals Around a House",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:2ceb8a7f27805d9c",
+  "lessons": [
+    {
+      "id": "ML-C60-cow",
+      "sequence": 1890,
+      "title": "പശു (paśu) — a cow",
+      "headword": "പശു",
+      "romanization": "paśu",
+      "gloss": "a cow",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:57d6593df7c06c45",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did puka mean, and what did kanal mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പശു",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പശു (paśu) — \"a cow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited from Sanskrit paśu, which named any tethered beast a household kept, and which Malayalam has narrowed to the one animal a Kerala yard is arranged around."
+            },
+            {
+              "kind": "speech",
+              "text": "The Sanskrit word has relatives a long way west. Latin pecu meant a herd, and the English word fee began as the same idea — the wealth you could drive to market on its own legs."
+            },
+            {
+              "kind": "speech",
+              "text": "The milk-word pāl comes out of a പശു (paśu), and so does most of what a Kerala kitchen does next with it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five animals."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paśu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paśu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paśu, then pāl, and say which one gives the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paśu*, then *pāl*, and say which one gives the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പശു (paśu) mean? (\"a cow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C60-goat",
+      "sequence": 1900,
+      "title": "ആട് (āṭŭ) — a goat",
+      "headword": "ആട്",
+      "romanization": "āṭŭ",
+      "gloss": "a goat",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e1f346d81b1bd519",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did paśu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആട്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആട് (āṭŭ) — \"a goat\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, matching Tamil āṭu, and it covers the animal at any age or either sex — a second word goes in front when the difference matters."
+            },
+            {
+              "kind": "speech",
+              "text": "It sits one letter away from nāṭŭ, the home-country word. Take the n off the front of that one and you have this one, so the ear has to catch the very start of the word rather than the end of it."
+            },
+            {
+              "kind": "speech",
+              "text": "A goat is what a household keeps when it has no room for the larger animal: it eats what it finds and it climbs what it likes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āṭŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āṭŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nāṭŭ, then āṭŭ, and say which of the two is an animal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nāṭŭ*, then *āṭŭ*, and say which of the two is an animal]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആട് (āṭŭ) mean? (\"a goat\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C60-hen",
+      "sequence": 1910,
+      "title": "കോഴി (kōḻi) — a hen",
+      "headword": "കോഴി",
+      "romanization": "kōḻi",
+      "gloss": "a hen",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:92590b8023dfc72f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did āṭŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കോഴി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കോഴി (kōḻi) — \"a hen\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil kōḻi, and carrying the ഴ that Malayalam and Tamil kept where their sisters let it go — the same letter sitting inside puḻa, the river, and vaḻi, the way."
+            },
+            {
+              "kind": "speech",
+              "text": "One word does for hen and cock alike. Where a speaker needs to separate them, a second word goes in front."
+            },
+            {
+              "kind": "speech",
+              "text": "It is also the clock of a Kerala house: a കോഴി (kōḻi) wakes the yard well before anyone has thought about the hour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḻi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḻi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kōḻi, then puḻa, and say which sound the two have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kōḻi*, then *puḻa*, and say which sound the two have in common]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കോഴി (kōḻi) mean? (\"a hen\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C60-crow",
+      "sequence": 1920,
+      "title": "കാക്ക (kākka) — a crow",
+      "headword": "കാക്ക",
+      "romanization": "kākka",
+      "gloss": "a crow",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2aafc0debd45c539",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kōḻi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കാക്ക",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കാക്ക (kākka) — \"a crow\"."
+            },
+            {
+              "kind": "speech",
+              "text": "An imitation word: the bird is named for the noise it makes, and the same trick produced the crow-word in each of the sister languages. Once you have heard one you have the etymology."
+            },
+            {
+              "kind": "speech",
+              "text": "Of all the birds around a house this is the one a household deals with daily. Cooked rice — cōṟu — set out on a step at the back is put there for the കാക്ക (kākka), and it arrives within the minute."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala also gives the bird a job at a funeral rite, where a ball of rice is set out for the ancestors and the crow that takes it is the sign the offering landed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākka",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākka*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākka, then kōḻi, and say which of the two is kept and which turns up",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākka*, then *kōḻi*, and say which of the two is kept and which turns up]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കാക്ക (kākka) mean? (\"a crow\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C60-elephant",
+      "sequence": 1930,
+      "title": "ആന (āna) — an elephant",
+      "headword": "ആന",
+      "romanization": "āna",
+      "gloss": "an elephant",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:741c3e6535400da2",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kākka mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ആന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ആന (āna) — \"an elephant\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Inherited, and a worn-down cousin of Tamil yāṉai: the same Dravidian word, with the front of it rubbed away over the centuries until two letters were left."
+            },
+            {
+              "kind": "speech",
+              "text": "You met a piece of this animal before you met the animal. Kompŭ, the branch-word, already covered the tusk of an ആന (āna) — one picture for the branch, the horn and the tusk, and no separate word needed for the third."
+            },
+            {
+              "kind": "speech",
+              "text": "In Kerala the ആന (āna) belongs to a festival before it belongs to a forest. A caparisoned elephant standing in front of a temple is what most Malayalis picture on hearing the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the yard is full: the cow, the goat, the hen, the crow, and the one that walks in a festival."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "āna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *āna*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — paśu, āṭŭ, kōḻi, kākka, āna",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *paśu*, *āṭŭ*, *kōḻi*, *kākka*, *āna*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ആന (āna) mean? (\"an elephant\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 63,
+  "title": "Asking Well",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:88ddf0e5a98f00a7",
+  "lessons": [
+    {
+      "id": "TA-C63-request",
+      "sequence": 2360,
+      "title": "வேண்டுகோள் (vēṇḍukōḷ) — a request",
+      "headword": "வேண்டுகோள்",
+      "romanization": "vēṇḍukōḷ",
+      "gloss": "a request",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7d04850f5336b7b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did uṭaṉē mean, and what did mutalil mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வேண்டுகோள்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வேண்டுகோள் (vēṇḍukōḷ) — \"a request\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A request as a thing you make and hand over, rather than the asking itself. It stands beside வேண்டும், which you already have, and you can hear that word at the front of it."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ವಿನಂತಿ (vinanti) and Telugu మనవి (manavi) both went their own way. A வேண்டுகோள் (vēṇḍukōḷ) is what தயவுசெய்து is put in front of when the asking has to be formal."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇḍukōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇḍukōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēṇḍukōḷ, then tayavu seytu, and say which one dresses the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēṇḍukōḷ*, then *tayavu seytu*, and say which one dresses the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வேண்டுகோள் (vēṇḍukōḷ) mean? (\"a request\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C63-permission",
+      "sequence": 2370,
+      "title": "அனுமதி (aṉumati) — permission",
+      "headword": "அனுமதி",
+      "romanization": "aṉumati",
+      "gloss": "permission",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9a97a990743b936",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vēṇḍukōḷ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: அனுமதி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "அனுமதி (aṉumati) — \"permission\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Permission to do a thing — asked for, given, refused. Here all three sisters took the same Sanskrit word and did not even change its shape: Kannada ಅನುಮತಿ (anumati), Telugu అనుమతి (anumati), Tamil அனுமதி (aṉumati)."
+            },
+            {
+              "kind": "speech",
+              "text": "Hold it apart from விடை, which you already have. விடை is permission to go, taken formally at a door. அனுமதி (aṉumati) is the wider one and covers everything else you might be allowed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṉumati",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṉumati*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "aṉumati, then viḍai, and say which of the two is only about leaving",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *aṉumati*, then *viḍai*, and say which of the two is only about leaving]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does அனுமதி (aṉumati) mean? (\"permission\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C63-hesitancy",
+      "sequence": 2380,
+      "title": "தயக்கம் (tayakkam) — hesitancy",
+      "headword": "தயக்கம்",
+      "romanization": "tayakkam",
+      "gloss": "hesitancy",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d788a01a5be5bf3c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did aṉumati mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தயக்கம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தயக்கம் (tayakkam) — \"hesitancy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The holding back before you ask: the half-step not taken, the sentence begun and dropped. Kannada carries the same idea in ಸಂಕೋಚ (saṅkōca)."
+            },
+            {
+              "kind": "speech",
+              "text": "The தயவு inside தயவுசெய்து opens the same way and is a different word — that one is kindness given, this one is a foot kept back. Tamil puts them next to each other and expects you to hear the difference."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayakkam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayakkam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayakkam, then tayavu seytu, and say which one is a giving",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayakkam*, then *tayavu seytu*, and say which one is a giving]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தயக்கம் (tayakkam) mean? (\"hesitancy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C63-trust",
+      "sequence": 2390,
+      "title": "நம்பிக்கை (nambikkai) — trust",
+      "headword": "நம்பிக்கை",
+      "romanization": "nambikkai",
+      "gloss": "trust",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0bee5bfbb5594734",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tayakkam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நம்பிக்கை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நம்பிக்கை (nambikkai) — \"trust\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Trust, and the confidence that comes with it. All three are off the same old stem: Kannada ನಂಬಿಕೆ (nambike), Telugu నమ్మకం (nammakaṁ), Tamil நம்பிக்கை (nambikkai)."
+            },
+            {
+              "kind": "speech",
+              "text": "A விருந்தாளி is given this before anything else is given, which is the whole of what a Tamil house means by hospitality."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nambikkai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nambikkai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nambikkai, then viruntāḷi, and say who is given which",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nambikkai*, then *viruntāḷi*, and say who is given which]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நம்பிக்கை (nambikkai) mean? (\"trust\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C63-humility",
+      "sequence": 2400,
+      "title": "பணிவு (paṇivu) — humility",
+      "headword": "பணிவு",
+      "romanization": "paṇivu",
+      "gloss": "humility",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bfa453b989df34c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nambikkai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: பணிவு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "பணிவு (paṇivu) — \"humility\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The bending: humility, deference, a manner rather than an act. Set it against மரியாதை, which you already have — மரியாதை is respect paid outward to somebody, பணிவு (paṇivu) is the carriage you keep in yourself."
+            },
+            {
+              "kind": "speech",
+              "text": "Telugu's మర్యాద (maryāda) is the same word as your மரியாதை, which makes the pair easy to keep straight across the two."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: a request, permission, hesitancy, trust, and humility."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paṇivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paṇivu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — vēṇḍukōḷ, aṉumati, tayakkam, nambikkai, paṇivu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *vēṇḍukōḷ*, *aṉumati*, *tayakkam*, *nambikkai*, *paṇivu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does பணிவு (paṇivu) mean? (\"humility\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

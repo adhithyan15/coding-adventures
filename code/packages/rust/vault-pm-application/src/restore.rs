@@ -2,7 +2,7 @@ use crate::{encode_item_revision, ApplicationError};
 use coding_adventures_ct_compare::ct_eq_fixed;
 use coding_adventures_sha256::sha256;
 use coding_adventures_vault_pm_domain::{
-    ItemCandidate, ItemDocument, ItemId, ItemState, RevisionId, Tombstone,
+    ItemCandidate, ItemDocument, ItemId, ItemState, ObservedSet, RevisionId, Tombstone,
 };
 use coding_adventures_vault_pm_format::VaultId;
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
@@ -135,6 +135,24 @@ impl Debug for PortableRestoreVerificationV1 {
     }
 }
 
+/// Rewrite one item state for a cross-vault import, or for the normalization
+/// that makes source and target comparable.
+///
+/// # Attachments do not cross a portable boundary
+///
+/// The attachment membership and its manifest references are both dropped,
+/// because VLT-PM17's snapshot carries records and not blobs: the chunk and
+/// manifest objects an attachment id names exist only in the source vault's
+/// repository, so carrying the references across would produce an item that
+/// claims attachments no `attachment export` in the target could ever find.
+/// Dropping is the honest projection of what actually travelled, and it is
+/// consistent with the identities this function already replaces.
+///
+/// Because `portable_semantic_root` normalizes the source *and* the target
+/// through this same function, dropping here does not weaken VLT-PM19/VLT-PM20
+/// restore verification — it removes attachments from the compared closure on
+/// both sides, which is exactly the claim the comparison should be making.
+/// VLT-PM47 §8.3 records what carrying them would require.
 pub(crate) fn remap_imported_item_state(
     state: &ItemState,
     item_id: ItemId,
@@ -149,7 +167,8 @@ pub(crate) fn remap_imported_item_state(
             document.collection_ids().clone(),
             document.tags().clone(),
             document.payload().clone(),
-            document.attachments().clone(),
+            ObservedSet::new(),
+            BTreeMap::new(),
         )
         .map(|document| ItemState::Live(Box::new(document)))
         .map_err(|_| ApplicationError::IntegrityFailure),

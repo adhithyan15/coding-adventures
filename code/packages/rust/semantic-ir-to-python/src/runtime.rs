@@ -132,6 +132,43 @@ from coding_adventures_sir_runtime_array import (
 )
 "##;
 
+/// The SIR23 Tier A symbolic-expression/pattern-matching-runtime import
+/// header, appended **only** when a module declares `Feature::SymbolicExpr`/
+/// `Feature::PatternMatching`/`Feature::Rationals` (a `SymSymbol`/
+/// `SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/`SymRule`/
+/// `SymReplaceAll` expression). Like `RUNTIME_ARRAY` above, this follows the
+/// TypeScript backend's *imported-package* model rather than this backend's
+/// usual inline-runtime convention — see the SIR23 spec's "Backend impact"
+/// section and `code/packages/python/sir-runtime-symbolic`'s own
+/// README/CHANGELOG for the full API and DoS-guard design notes
+/// (`MAX_TERM_DEPTH = 512` bounding `replace_all`/`replace_repeated`'s tree
+/// walk, a separate `max_iterations` cap bounding `replace_repeated`'s
+/// fixed-point loop). Each helper is aliased to the emitter's own
+/// `_sir_sym_*` name, matching `RUNTIME_ARRAY`'s `_sir_array_*` convention.
+/// Only the functions `emit.rs`'s SIR23 arms actually call are imported here
+/// (the matcher primitives `match_pattern`/`substitute`/`apply_rule` are
+/// used internally by the imported package's own `replace_all`/
+/// `replace_repeated`, not called directly from emitted code — Tier B,
+/// which does not exist yet, would be the first caller of those).
+pub const RUNTIME_SYMBOLIC: &str = r##"# ── SIR symbolic-expression runtime (imported from coding-adventures-sir-runtime-symbolic) ──
+from coding_adventures_sir_runtime_symbolic import (
+    sym as _sir_sym_symbol,
+    int as _sir_sym_int,
+    rational as _sir_sym_rational,
+    number_node as _sir_sym_float,
+    string_node as _sir_sym_string,
+    apply as _sir_sym_apply,
+    blank as _sir_sym_blank,
+    blank_typed as _sir_sym_blank_typed,
+    named as _sir_sym_named,
+    rule as _sir_sym_rule,
+    rule_delayed as _sir_sym_rule_delayed,
+    replace_all as _sir_sym_replace_all,
+    replace_repeated as _sir_sym_replace_repeated,
+    unwrap as _sir_sym_unwrap,
+)
+"##;
+
 pub const RUNTIME: &str = r##"# ── SIR runtime (imported from coding-adventures-sir-runtime-core) ──
 from coding_adventures_sir_runtime_core import (
     truthy as _sir_truthy,
@@ -282,6 +319,37 @@ mod tests {
         ] {
             assert!(RUNTIME_ARRAY.contains(alias), "array runtime missing `{}`", alias);
         }
+    }
+
+    /// SIR23 Tier A — the symbolic-expression + pattern-matching domain.
+    /// Each alias here must exist for `emit.rs`'s `Expr::SymSymbol`/
+    /// `SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/
+    /// `SymRule`/`SymReplaceAll` arms (and `emit_sym_operand`) to compile
+    /// into a valid call.
+    #[test]
+    fn runtime_symbolic_imports_its_package() {
+        assert!(
+            RUNTIME_SYMBOLIC.contains("from coding_adventures_sir_runtime_symbolic import")
+        );
+        for alias in &[
+            "sym as _sir_sym_symbol",
+            "int as _sir_sym_int",
+            "rational as _sir_sym_rational",
+            "number_node as _sir_sym_float",
+            "string_node as _sir_sym_string",
+            "apply as _sir_sym_apply",
+            "blank as _sir_sym_blank",
+            "blank_typed as _sir_sym_blank_typed",
+            "named as _sir_sym_named",
+            "rule as _sir_sym_rule",
+            "rule_delayed as _sir_sym_rule_delayed",
+            "replace_all as _sir_sym_replace_all",
+            "replace_repeated as _sir_sym_replace_repeated",
+            "unwrap as _sir_sym_unwrap",
+        ] {
+            assert!(RUNTIME_SYMBOLIC.contains(alias), "symbolic runtime missing `{}`", alias);
+        }
+        assert!(RUNTIME_SYMBOLIC.ends_with('\n'));
     }
 
     #[test]

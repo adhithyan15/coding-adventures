@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0] - 2026-08-18
+
+### Added
+
+- **`DurableStep::AttachmentArtifact`** (`attachment.artifact`), for the
+  exported attachment file of `VLT-PM47-cli-attachments.md` §6.5. The
+  attachment *write* into the vault needs no step of its own, because it goes
+  through the ordinary storage backend this crate already brackets; only the
+  export leaves it, and it is a plaintext file, so a drill that kills either
+  side of it is checking that no partial one survives.
+
 All notable changes to this package are documented here.
 
 ## [0.1.0] - 2026-08-18

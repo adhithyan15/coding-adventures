@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: GU-C04-kaale
+spine_node: SPINE-TAKE-LEAVE
+sequence: 230
 chapter: 4
 type: phrase
 headword: કાલે મળીશું
@@ -8,23 +11,38 @@ concept_tag: FAREWELL-TOMORROW
 prerequisites: [GU-C04-malishun]
 sounds: [long-aa, e-sign]
 roots: [kaala-time-sanskrit]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-CONCEPT-C04-MALISHUN-01]
+introduces:
+  knowledge: [GU-CONCEPT-C04-KAALE-01]
+practises:
+  knowledge: [GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-MALISHUN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
 reviews_of: [GU-C04-pachha-malishun]
 ---
 
 # કાલે મળીશું (kāle maḷīshũ) — "see you tomorrow"
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C04-MALISHUN-01] -->
 
 [PAUSE 2s] A goodbye for tomorrow — built on a word that means both **tomorrow**
 and **yesterday**.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[GU-CONCEPT-C04-KAALE-01]; assesses=[GU-CONCEPT-C04-MALISHUN-01] -->
 
 **કા** (*kā*) + **લે** (*le*) → **કાલે** (*kāle*, "on [the] *kāl*"). The base is
 **કાલ** (*kāl*).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-MALISHUN-01] -->
 
 **કાલ** (*kāl*) means **both "tomorrow" and "yesterday"** — the day on either side
 of today — from Sanskrit **કાલ** (*kāla*, "time"). (It is the very same *kāla*
@@ -34,6 +52,7 @@ tense tells which: *kāle maḷīshũ* (future → "**tomorrow** we'll meet"), *
 you tomorrow."
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-MALISHUN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "kāle maḷīshũ"]
@@ -41,6 +60,7 @@ you tomorrow."
 - [YOU SAY: the root and its cousins (*kāla* "time"; Hindi *kal*, Punjabi *akāl*)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C04-KAALE-01, GU-CONCEPT-C04-MALISHUN-01] -->
 
 [PAUSE 3s] What two opposite days does *kāl* mean, and what tells them apart?
 (Both tomorrow and yesterday; the verb's tense.)

@@ -21,8 +21,32 @@ const STATE_DIRECTORY: &str = "application-state";
 const OBJECT_DIRECTORY: &str = "objects";
 const LOCK_FILE: &str = ".writer.lock";
 const CONFIG_FILE: &str = "vault-pm.toml";
+const AGENT_SOCKET_FILE: &str = "agent.sock";
 const MAX_PATH_BYTES: usize = 4096;
 const MAX_CONFIG_BYTES: usize = 64 * 1024;
+
+/// Fixed prefix on the runtime directory basename, so a stray directory in a
+/// shared system temporary root is at least self-describing.
+const RUNTIME_DIRECTORY_PREFIX: &str = "vault-pm-";
+
+/// How many hex characters of the data-root fingerprint name the runtime
+/// directory.
+///
+/// Eight bytes (sixteen hex characters) is not a security boundary — nothing
+/// about the agent's confidentiality depends on this name being unguessable,
+/// since [`PreparedLocalVault::ensure_runtime_root`] and every accepted
+/// connection are authorized by owner-only permissions and peer credentials,
+/// never by path secrecy. It exists only so two different data roots (two
+/// vault-pm installations, or two sandboxed test homes) resolve to two
+/// different runtime directories without coordinating, while keeping the
+/// whole path short enough for `sockaddr_un.sun_path`, which POSIX bounds to
+/// roughly 100 bytes on Linux and macOS alike — far less than the 4096-byte
+/// ceiling every other path in this crate accepts. `application-state`
+/// nested under a verbose platform data directory (for example macOS's
+/// `~/Library/Application Support/...`) can already approach that limit by
+/// itself, which is why the runtime root is resolved beside the system
+/// temporary directory instead of beneath [`LocalVaultPaths::data_root`].
+const RUNTIME_FINGERPRINT_HEX_CHARS: usize = 16;
 
 /// Stable, path-free local-host failure taxonomy.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -84,6 +108,8 @@ pub struct LocalVaultPaths {
     object_root: PathBuf,
     lock_file: PathBuf,
     config_file: PathBuf,
+    runtime_root: PathBuf,
+    agent_socket_path: PathBuf,
 }
 
 impl LocalVaultPaths {
@@ -121,11 +147,15 @@ impl LocalVaultPaths {
         let object_root = data_root.join(OBJECT_DIRECTORY);
         let lock_file = data_root.join(LOCK_FILE);
         let config_file = config_root.join(CONFIG_FILE);
+        let runtime_root = runtime_root_for(&data_root);
+        let agent_socket_path = runtime_root.join(AGENT_SOCKET_FILE);
         for path in [
             &application_state_root,
             &object_root,
             &lock_file,
             &config_file,
+            &runtime_root,
+            &agent_socket_path,
         ] {
             validate_path(path)?;
         }
@@ -137,6 +167,8 @@ impl LocalVaultPaths {
             object_root,
             lock_file,
             config_file,
+            runtime_root,
+            agent_socket_path,
         })
     }
 
@@ -165,6 +197,32 @@ impl LocalVaultPaths {
         &self.object_root
     }
 
+    /// Return the owner-private root for the local agent's runtime socket
+    /// (VLT-PM00 §14.2, VLT-PM48).
+    ///
+    /// This is *not* a subdirectory of [`Self::data_root`]. See
+    /// [`RUNTIME_FINGERPRINT_HEX_CHARS`] for why: a Unix domain socket path is
+    /// bound by `sockaddr_un.sun_path`, roughly 100 bytes on Linux and macOS,
+    /// and a verbose platform data directory can already consume most of that
+    /// budget on its own. The directory is deterministic per data root — a
+    /// short fingerprint of [`Self::data_root`], never a random or
+    /// process-specific value — so repeated calls against the same
+    /// installation (or the same sandboxed test home) always agree on where
+    /// the socket lives, without persisting anything beside the filesystem
+    /// path itself.
+    pub fn runtime_root(&self) -> &Path {
+        &self.runtime_root
+    }
+
+    /// Return the exact path the local agent binds its Unix domain socket at.
+    ///
+    /// Always `runtime_root().join("agent.sock")`. No Windows named-pipe path
+    /// exists yet; Phase 1B's agent (VLT-PM48) is Unix-only, and Windows
+    /// support is an explicitly deferred follow-up.
+    pub fn agent_socket_path(&self) -> &Path {
+        &self.agent_socket_path
+    }
+
     /// Create or verify the complete local layout without acquiring the writer lock.
     pub fn prepare(&self) -> Result<PreparedLocalVault, LocalHostError> {
         #[cfg(any(unix, windows))]
@@ -182,6 +240,17 @@ impl LocalVaultPaths {
         }
     }
 
+    /// The runtime root is deliberately *not* one of these.
+    ///
+    /// [`Self::prepare`] verifies or creates every directory an ordinary
+    /// one-shot command needs, and no ordinary command touches the agent.
+    /// Creating a runtime directory on every invocation would mean every
+    /// `vault-pm` process — including ones that will never run `agent start`
+    /// — reaches into the system temporary root, which is exactly the kind of
+    /// unconditional side effect this crate otherwise avoids. Instead
+    /// [`PreparedLocalVault::ensure_runtime_root`] verifies or creates it
+    /// lazily, the same way [`LocalWriterGuard`] is only reached by commands
+    /// that actually need durable configuration.
     fn unique_directories(&self) -> Vec<&Path> {
         let mut paths = vec![
             self.config_root(),
@@ -214,6 +283,28 @@ impl PreparedLocalVault {
     /// Borrow the verified filesystem layout for adapter construction.
     pub const fn paths(&self) -> &LocalVaultPaths {
         &self.paths
+    }
+
+    /// Verify or create the owner-private runtime directory, lazily.
+    ///
+    /// This is the local agent's own entry point into this crate: it is
+    /// called only by `agent start` and by a client that is about to dial the
+    /// socket, never by [`Self::try_acquire_writer`] or any ordinary
+    /// authenticated command. The directory is created with the same
+    /// owner-only permissions and the same refusal of symlinks and
+    /// foreign-owned existing objects as every other private root this crate
+    /// resolves — see [`LocalHostError::InsecureOwner`] and
+    /// [`LocalHostError::UnsafeObjectType`].
+    pub fn ensure_runtime_root(&self) -> Result<&Path, LocalHostError> {
+        #[cfg(any(unix, windows))]
+        {
+            platform::ensure_private_runtime_directory(&self.paths.runtime_root)?;
+            Ok(&self.paths.runtime_root)
+        }
+        #[cfg(not(any(unix, windows)))]
+        {
+            Err(LocalHostError::UnsupportedPlatform)
+        }
     }
 
     /// Try to acquire exclusive local-process access without waiting.
@@ -317,6 +408,31 @@ impl Debug for LocalWriterGuard {
             .debug_struct("LocalWriterGuard")
             .finish_non_exhaustive()
     }
+}
+
+/// Derive the short, deterministic runtime directory for one data root.
+///
+/// `std::env::temp_dir()` rather than [`ProjectDirs::runtime_dir`] on
+/// purpose: the latter resolves from `XDG_RUNTIME_DIR` alone, a single
+/// process-wide value that does not vary with the data root. Two
+/// [`LocalVaultPaths`] built from two different data roots — two real
+/// installations sharing a login session, or two sandboxed test homes run in
+/// the same process — would otherwise resolve to the exact same socket path
+/// and silently share one agent. Hashing the data root instead means every
+/// distinct installation gets its own runtime directory using nothing but
+/// the same roots this crate already receives, with no extra state to keep
+/// in sync.
+///
+/// The fingerprint is not a secret and is not a security boundary — see
+/// [`RUNTIME_FINGERPRINT_HEX_CHARS`]. It only has to avoid *accidental*
+/// collision between unrelated data roots, which a truncated SHA-256 digest
+/// does far past any realistic installation count.
+fn runtime_root_for(data_root: &Path) -> PathBuf {
+    let digest = coding_adventures_sha256::sha256_hex(data_root.as_os_str().as_encoded_bytes());
+    std::env::temp_dir().join(format!(
+        "{RUNTIME_DIRECTORY_PREFIX}{}",
+        &digest[..RUNTIME_FINGERPRINT_HEX_CHARS]
+    ))
 }
 
 fn validate_path(path: &Path) -> Result<(), LocalHostError> {
@@ -428,6 +544,64 @@ mod tests {
                 );
             }
         }
+    }
+
+    #[test]
+    fn runtime_root_is_short_deterministic_and_never_under_data_root() {
+        let first = TestDirectory::new("runtime-a").paths();
+        let again =
+            LocalVaultPaths::from_roots(first.config_root(), first.data_root(), first.cache_root())
+                .unwrap();
+        let second = TestDirectory::new("runtime-b").paths();
+
+        // Deterministic: the same data root always resolves to the same
+        // runtime root and socket path, across independently constructed
+        // instances.
+        assert_eq!(first.runtime_root(), again.runtime_root());
+        assert_eq!(first.agent_socket_path(), again.agent_socket_path());
+
+        // Distinct: two different data roots never collide, which is the
+        // whole reason this is not a fixed XDG-only path.
+        assert_ne!(first.runtime_root(), second.runtime_root());
+
+        // Never nested under the (potentially verbose) data root.
+        assert!(!first.runtime_root().starts_with(first.data_root()));
+        assert_eq!(
+            first.agent_socket_path(),
+            first.runtime_root().join("agent.sock")
+        );
+
+        // Short enough to fit `sockaddr_un.sun_path` (~100 bytes on Linux and
+        // macOS) even beside a realistically long system temp directory.
+        assert!(
+            first.agent_socket_path().as_os_str().len() < 100,
+            "socket path {:?} is too long for sockaddr_un.sun_path",
+            first.agent_socket_path()
+        );
+    }
+
+    #[test]
+    fn runtime_root_is_created_owner_only_and_reused() {
+        let directory = TestDirectory::new("runtime-ensure");
+        let prepared = directory.paths().prepare().unwrap();
+        assert!(!prepared.paths().runtime_root().exists());
+
+        let created = prepared.ensure_runtime_root().unwrap().to_path_buf();
+        assert_eq!(created, prepared.paths().runtime_root());
+        assert!(created.is_dir());
+
+        #[cfg(unix)]
+        {
+            use std::os::unix::fs::PermissionsExt;
+            assert_eq!(
+                fs::metadata(&created).unwrap().permissions().mode() & 0o777,
+                0o700
+            );
+        }
+
+        // Idempotent: an already-verified directory is accepted again rather
+        // than re-created or rejected.
+        assert_eq!(prepared.ensure_runtime_root().unwrap(), created);
     }
 
     #[test]

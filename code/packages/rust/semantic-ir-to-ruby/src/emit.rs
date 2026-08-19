@@ -1633,7 +1633,85 @@ fn emit_expr(e: &Expr) -> String {
                 emit_expr(rhs)
             )
         }
+        // ── SIR23: symbolic expression + pattern/rewrite (Tier A, Phase A
+        // Slice 4) ──────────────────────────────────────────────────────
+        // Mirrors the TypeScript/JavaScript backends' SIR23 arms, but calls
+        // into the INLINED `sir_sym_*` runtime (runtime.rs) rather than an
+        // imported package. Tier A (the pattern matcher) only — no
+        // `evalTerm`-equivalent arithmetic/calculus folding exists here.
+        Expr::SymSymbol { name, .. } => {
+            format!("sir_sym_symbol({})", quote_ruby_string(name))
+        }
+        Expr::SymRational { numer, denom, .. } => {
+            format!("sir_sym_rational({numer}, {denom})")
+        }
+        Expr::SymApply { head, args, .. } => {
+            format!(
+                "sir_sym_apply({}, [{}])",
+                emit_sym_operand(head),
+                args.iter().map(emit_sym_operand).collect::<Vec<_>>().join(", ")
+            )
+        }
+        Expr::SymPatternBlank { head: None, .. } => "sir_sym_blank()".to_string(),
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                format!("sir_sym_blank_typed({})", quote_ruby_string(name))
+            }
+            _ => panic!(
+                "ruby backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            format!(
+                "sir_sym_named({}, {})",
+                quote_ruby_string(name),
+                emit_sym_operand(pattern)
+            )
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            format!(
+                "{}({}, {})",
+                if *delayed { "sir_sym_rule_delayed" } else { "sir_sym_rule" },
+                emit_sym_operand(lhs),
+                emit_sym_operand(rhs)
+            )
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            format!(
+                "sir_sym_unwrap({}({}, [{}]))",
+                if *repeated { "sir_sym_replace_repeated" } else { "sir_sym_replace_all" },
+                emit_sym_operand(expr),
+                rules.iter().map(emit_sym_operand).collect::<Vec<_>>().join(", ")
+            )
+        }
         other => unreachable!("Ruby backend reached unsupported expr: {other:?}"),
+    }
+}
+
+/// Wrap a `SymApply`/`SymRule`/`SymReplaceAll` operand that is a bare
+/// literal (`IntLit`/`FloatLit`/`StrLit`) through the matching
+/// `sir_sym_*` leaf-term constructor — a raw Ruby Integer/Float/String is
+/// never a valid Symbolic term, so it must become one before it can sit
+/// inside a term tree. Any other operand (already a Symbolic-producing
+/// expression, e.g. a nested `SymApply` or a `VarRef`) emits unchanged.
+/// Mirrors the JavaScript/TypeScript backends' identically-named helper.
+fn emit_sym_operand(e: &Expr) -> String {
+    match e {
+        Expr::IntLit { .. } => format!("sir_sym_int({})", emit_expr(e)),
+        Expr::FloatLit { value, .. } => format!("sir_sym_float({})", float_to_ruby_literal(*value)),
+        Expr::StrLit { .. } => format!("sir_sym_string({})", emit_expr(e)),
+        _ => emit_expr(e),
     }
 }
 

@@ -2,6 +2,185 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.34] - 2026-08-19 (task #183-185 — SIMD widen PR22: i16x8.q15mulr_sat_s)
+
+### Added
+
+- `register_simd` gains a new dispatch arm: `SimdOpKind::Q15mulrSatI16x8S`
+  pops two `v128`s, reads each of the 8 `i16` lane pairs, and computes a
+  Q15 fixed-point ROUNDING SATURATING multiply per lane: sign-extend
+  both lanes to `i32` (`l as i32 * r as i32` -- never overflows `i32`,
+  max magnitude is `32768 * 32768 == 2^30`), add the rounding constant
+  `0x4000`, arithmetic-shift right by 15 (Rust's `>>` on `i32` is
+  already arithmetic), then `.clamp(i16::MIN as i32, i16::MAX as i32)`
+  -- a REAL saturating clamp, not a wrapping `as i16` cast. The clamp
+  only ever fires for the single `(i16::MIN, i16::MIN)` lane pair, where
+  the unsaturated formula computes `32768`, one past `i16::MAX`.
+- 1 new unit test covering all 4 hand-verified reference cases
+  (`q15mulr_sat_s(0, 0) == 0`, `q15mulr_sat_s(32767, 32767) == 32766`,
+  `q15mulr_sat_s(i16::MIN, i16::MIN) == i16::MAX` -- the saturating
+  edge case, the whole point of this op -- and
+  `q15mulr_sat_s(i16::MIN, i16::MAX) == -32767`), plus a full 8-lane
+  vector sanity check proving every lane computes independently.
+
+## [0.9.33] - 2026-08-19 (task #180-182 — SIMD widen PR21: i64x2.extmul_i32x4 widening-multiply family)
+
+### Added
+
+- `register_simd` gains a new dispatch arm:
+  `SimdOpKind::ExtmulLowI64x2S | ExtmulHighI64x2S | ExtmulLowI64x2U |
+  ExtmulHighI64x2U` pop two `v128`s, reinterpret both as 4 `i32` lanes
+  each, take only the LOW (indices 0-1) or HIGH (indices 2-3) 2 lanes
+  of each operand, sign- or zero-extend every value to `i64`, multiply
+  the corresponding pairs lane-wise, and push one `v128` holding the
+  2 `i64` results. Mirrors the already-implemented
+  `ExtmulLowI16x8S`/`ExtmulLowI8x16S`/etc. arms one and two lane
+  widths up respectively -- same narrow-input (32-bit)/wide-output
+  (64-bit) BINARY shape, no summation (unlike `DotI16x8S`). This is
+  the third and final rung of this crate's "extmul" widening-multiply
+  family.
+- 1 new unit test covering all 4 variants: proves the LOW 2 lanes and
+  HIGH 2 lanes of each `i32x4` operand are read independently (not
+  aliased), and that `_s`/`_u` disagree on `-1 * 1` the same way every
+  other signed/unsigned pair in this interpreter does, including the
+  unsigned-widening edge case (`0xFFFFFFFF` zero-extended to `i64` is
+  `4294967295`, not `-1`).
+
+## [0.9.32] - 2026-08-19 (task #177-179 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert conversion family)
+
+### Added
+
+- `register_simd` gains four new dispatch arms:
+  - `SimdOpKind::TruncSatF32x4S`/`TruncSatF32x4U` pop one `v128`,
+    convert each of the 4 `f32` lanes to a SATURATING `i32` (signed
+    for `_s`, unsigned bit pattern for `_u`), push one `v128`. NEVER
+    TRAPS -- unlike this crate's TRAPPING scalar `i32.trunc_f32_s`/
+    `_u` handlers (`0xA8`/`0xA9`) just above, deliberately not reused
+    here: a NaN lane saturates to `0`, an out-of-range lane saturates
+    to the target bound. Rust's `as` cast from `f32` to `i32`/`u32`
+    has implemented exactly this saturating semantic since Rust 1.45,
+    same discipline this crate's own `0xFC`-prefixed scalar
+    `trunc_sat` handlers already use -- no hand-rolled bounds
+    checking needed.
+  - `SimdOpKind::ConvertI32x4S`/`ConvertI32x4U` pop one `v128`,
+    convert each of the 4 `i32` lanes to `f32` (signed directly for
+    `_s`; for `_u`, the lane's bit pattern is reinterpreted as `u32`
+    BEFORE the cast -- `(v as u32) as f32`, never `v as f32` directly,
+    which would sign-extend a high-bit-set lane into the wrong float
+    value), push one `v128`.
+- 12 new tests: `trunc_sat_f32x4_s` (ordinary value, NaN saturates to
+  0, +/-infinity saturate to `i32::MIN`/`MAX`, a huge finite value
+  (`1e20`) saturates to `i32::MAX`), `trunc_sat_f32x4_u` (ordinary
+  value, NaN saturates to 0, a negative value saturates to 0 -- NOT
+  wrapped/reinterpreted, +infinity saturates to `u32::MAX`'s bit
+  pattern), `convert_i32x4_s` (positive/negative values),
+  `convert_i32x4_u` (an ordinary positive value, and -- the most
+  important test in this PR -- a lane with the high bit set
+  (`0xFFFFFFFF`/`-1i32`) converting to `4294967295.0f32`, NOT
+  `-1.0f32`, the exact bug class `ConvertI32x4U`'s own doc comment
+  warns about).
+
+## [0.9.31] - 2026-08-19 (task #174-176 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min)
+
+### Added
+
+- `register_simd` gains three new dispatch arms:
+  - `SimdOpKind::AbsF32x4` pops one `v128`, clears the sign bit of
+    each of the 4 `f32` lanes (`f32::abs()`), pushes one `v128`. A
+    pure bit operation -- unlike `MinF32x4` below, no NaN/signed-zero
+    subtlety.
+  - `SimdOpKind::MulF32x4` pops two `v128`s, multiplies each of the 4
+    `f32` lane pairs with ordinary IEEE-754 float multiply (`*`),
+    pushes one `v128`.
+  - `SimdOpKind::MinF32x4` pops two `v128`s, takes the WASM-spec
+    `fmin` of each of the 4 `f32` lane pairs, pushes one `v128`. NOT
+    `f32::min()`/IEEE `minNum`: if either lane is NaN the result lane
+    is NaN (propagated in either operand order); for a `-0.0`/`+0.0`
+    tie, `-0.0` wins. This is the exact per-lane transplant of this
+    crate's own scalar `f32.min` (sub-opcode `0x96`, registered in
+    `register_numeric_f32`) NaN-propagating, signed-zero-aware logic --
+    see that handler's own comment for the original scalar bug this
+    mirrors (`min(NaN, -0.0)` silently returning `-0.0` under Rust's
+    native `.min()`).
+- `v128_const_bytes_f32x4`/`f32x4_lanes` test helpers for building/
+  decoding 4-lane `f32` v128 literals.
+- 5 new tests: `f32x4.abs` (sign bit cleared, NaN lane stays NaN),
+  `f32x4.mul` (a normal lane-wise product), and three `f32x4.min`
+  cases -- NaN propagation in BOTH operand orders, the `-0.0`/`+0.0`
+  signed-zero tie (checked via `is_sign_negative()`, not `== 0.0`),
+  and a normal non-edge-case minimum.
+
+## [0.9.30] - 2026-08-19 (task #171-173 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane)
+
+### Added
+
+- `register_simd` gains four new dispatch arms:
+  - `SimdOpKind::Swizzle` pops two `v128`s in the usual binary order
+    (index vector `s` on top, popped first; data vector `a` popped
+    second); for each of the 16 result lanes, looks up `a[s[i]]` if
+    `s[i] < 16`, else `0`. The `< 16` bounds check runs BEFORE
+    indexing `a` -- the index byte `s[i]` is an unconstrained `u8`
+    (`0..=255`), so without the check an adversarial/malformed index
+    vector could index `a` out of bounds.
+  - `SimdOpKind::ExtractLaneI8x16S`/`ExtractLaneI8x16U` pop a `v128`,
+    read the `aux`-selected `i8` lane (sign- or zero-extended to
+    `i32`), same shape as the pre-existing `ExtractLane` arm but at
+    `i8x16`'s 0-15 lane range. Bounds-checked (`lane_idx >= 16`
+    rejected with a clean `Err`) BEFORE indexing the 16-byte lane
+    array, same discipline as `ExtractLane`'s own 0-3 check.
+  - `SimdOpKind::ReplaceLaneI8x16` pops an `i32` (the replacement
+    value, only its low byte used) then a `v128` (pop order matches
+    the shift family's own "scalar pushed last, popped first"
+    convention), overwrites the `aux`-selected lane, pushes the result.
+    Same bounds-check discipline as the extract-lane arms above.
+- 10 new tests in `mod tests`: `i8x16.swizzle` permutation (a real
+  lane-reversal, not just identity) and its out-of-range-index-produces-
+  zero case; `extract_lane_s` sign-extension and `extract_lane_u`
+  zero-extension of the SAME `0x80` byte (proving they genuinely
+  differ, not just each "doing something"); both extract variants'
+  out-of-range-lane clean-error case; `replace_lane`'s
+  only-target-lane-changes case, its only-low-byte-of-i32-used case,
+  and its own out-of-range-lane clean-error case.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.29] - 2026-08-19 (task #168-170 — SIMD: float splat family, first float-lane ops)
+
+### Added
+
+- `register_simd` gains two new dispatch arms: `SimdOpKind::SplatF32x4`
+  pops an `f32` and broadcasts its 4 little-endian bytes into all 4
+  lanes; `SplatF64x2` pops an `f64` and broadcasts its 8 little-endian
+  bytes into both lanes. A pure bit-pattern broadcast via
+  `to_le_bytes()` (not a numeric conversion), so no rounding or NaN
+  handling is needed -- the FIRST floating-point-typed SIMD ops in
+  this crate.
+- 2 new tests, each verifying the EXACT IEEE-754 bit pattern is
+  broadcast into every lane (using `3.5`, a value whose bit pattern
+  couldn't accidentally match a broken implementation the way `0.0`
+  could).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.28] - 2026-08-19 (task #165-167 — SIMD: splat family widening)
+
+### Added
+
+- `register_simd` gains three new dispatch arms: `SimdOpKind::SplatI8x16`
+  pops an `i32` and broadcasts its LOW byte into all 16 lanes;
+  `SplatI16x8` pops an `i32` and broadcasts its LOW 16 bits into all 8
+  lanes; `SplatI64x2` pops a real `i64` (not `i32`) and broadcasts all
+  8 bytes into both lanes. Same shape as the pre-existing `Splat`
+  (`i32x4.splat`) arm, just at narrower/wider lane widths.
+- 3 new tests, each proving the SPECIFIC bytes broadcast, not just
+  "returns some v128": `i8x16.splat`/`i16x8.splat` verify only the low
+  byte/16 bits of a deliberately-oversized `i32` operand end up in the
+  lanes (the high bits must be silently dropped, not carried through or
+  trapped on); `i64x2.splat` verifies the FULL 64-bit value is
+  broadcast, not just its low 32 bits.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.27] - 2026-08-18 (task #162-164 — SIMD: v128.load/v128.store)
 
 ### Added

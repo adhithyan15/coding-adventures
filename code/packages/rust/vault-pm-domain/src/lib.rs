@@ -54,6 +54,15 @@ pub enum DomainError {
     IdentityMismatch,
     /// Candidate relation or conflict resolution data was inconsistent.
     InvalidConflict,
+    /// Attachment membership and attachment manifest references disagreed.
+    ///
+    /// VLT-PM47 §4.7. The two are one fact stored in two places, so every
+    /// state in which they differ is a state with no meaning: a retained
+    /// `AttachmentId` with no manifest is an attachment whose bytes cannot be
+    /// found, and a manifest reference with no retained id is a pointer to
+    /// bytes nothing claims. Merging two documents that name different
+    /// manifests for one immutable attachment id is the same fault.
+    AttachmentManifestMismatch,
 }
 
 impl core::fmt::Display for DomainError {
@@ -68,6 +77,9 @@ impl core::fmt::Display for DomainError {
             Self::SchemaMismatch => "vault-pm-domain: record schema mismatch",
             Self::IdentityMismatch => "vault-pm-domain: immutable identity mismatch",
             Self::InvalidConflict => "vault-pm-domain: invalid conflict operation",
+            Self::AttachmentManifestMismatch => {
+                "vault-pm-domain: attachment manifest reference mismatch"
+            }
         };
         f.write_str(message)
     }
@@ -171,6 +183,11 @@ product_id!(
     AttachmentId,
     16,
     "Random 128-bit immutable attachment identifier."
+);
+product_id!(
+    AttachmentManifestId,
+    32,
+    "Opaque 256-bit identifier of one attachment's manifest object.\n\nVLT-PM47 §4.3. This is the manifest object's repository `ObjectId` — the\nSHA-256 of its sealed frame — carried at domain level so an item document\ncan say *where* each of its attachments is without the domain package\ndepending on the repository format."
 );
 product_id!(ConflictId, 16, "Random 128-bit stable conflict identifier.");
 product_id!(RevisionId, 32, "Opaque 256-bit item revision identifier.");
@@ -545,10 +562,17 @@ pub struct ItemDocument {
     tags: ObservedSet<String>,
     payload: AnyRecord,
     attachments: ObservedSet<AttachmentId>,
+    attachment_manifests: BTreeMap<AttachmentId, AttachmentManifestId>,
 }
 
 impl ItemDocument {
     /// Construct and validate a complete document.
+    ///
+    /// `attachment_manifests` must have exactly the key set of
+    /// `attachments.retained_values()` — including values currently hidden by
+    /// a removal tombstone, because a later merge can bring one back and a
+    /// resurrected attachment whose manifest reference was dropped would name
+    /// bytes nobody can find. See [`Self::validate`] and VLT-PM47 §4.7.
     #[allow(clippy::too_many_arguments)]
     pub fn new(
         id: ItemId,
@@ -560,6 +584,7 @@ impl ItemDocument {
         tags: ObservedSet<String>,
         payload: AnyRecord,
         attachments: ObservedSet<AttachmentId>,
+        attachment_manifests: BTreeMap<AttachmentId, AttachmentManifestId>,
     ) -> Result<Self, DomainError> {
         let document = Self {
             id,
@@ -571,6 +596,7 @@ impl ItemDocument {
             tags,
             payload,
             attachments,
+            attachment_manifests,
         };
         document.validate()?;
         Ok(document)
@@ -586,6 +612,18 @@ impl ItemDocument {
         }
         if self.collection_ids.len() > MAX_COLLECTIONS || self.attachments.len() > MAX_ATTACHMENTS {
             return Err(DomainError::BoundExceeded);
+        }
+        // Attachment membership and manifest references are one fact recorded
+        // twice, so the only legal relation between them is equality. A
+        // one-directional check would admit the half-existing attachment this
+        // pair exists to make impossible, in whichever direction it omitted.
+        if self.attachment_manifests.len() != self.attachments.retained_value_count()
+            || !self
+                .attachments
+                .retained_values()
+                .all(|id| self.attachment_manifests.contains_key(id))
+        {
+            return Err(DomainError::AttachmentManifestMismatch);
         }
         self.tags.validate_tags()?;
         if record_content_type(&self.payload) != self.schema.as_str() {
@@ -638,6 +676,34 @@ impl ItemDocument {
     pub const fn attachments(&self) -> &ObservedSet<AttachmentId> {
         &self.attachments
     }
+
+    /// Borrow the manifest object reference for every retained attachment.
+    pub const fn attachment_manifests(&self) -> &BTreeMap<AttachmentId, AttachmentManifestId> {
+        &self.attachment_manifests
+    }
+}
+
+/// Union two documents' attachment manifest references.
+///
+/// An `AttachmentId` is a random 128-bit value drawn once, and the manifest it
+/// names is an immutable content address, so two replicas that both know an id
+/// necessarily know the same manifest. Two that disagree have not produced a
+/// conflict a person could resolve — one of them is wrong — so this is a fault
+/// and not a merge outcome.
+fn merge_attachment_manifests(
+    left: &BTreeMap<AttachmentId, AttachmentManifestId>,
+    right: &BTreeMap<AttachmentId, AttachmentManifestId>,
+) -> Result<BTreeMap<AttachmentId, AttachmentManifestId>, DomainError> {
+    let mut merged = left.clone();
+    for (id, manifest) in right {
+        match merged.insert(*id, *manifest) {
+            Some(existing) if existing != *manifest => {
+                return Err(DomainError::AttachmentManifestMismatch)
+            }
+            _ => {}
+        }
+    }
+    Ok(merged)
 }
 
 impl core::fmt::Debug for ItemDocument {
@@ -994,6 +1060,7 @@ fn merge_concurrent(
                 a.tags().merge(b.tags())?,
                 a.payload().clone(),
                 a.attachments().merge(b.attachments())?,
+                merge_attachment_manifests(a.attachment_manifests(), b.attachment_manifests())?,
             )?;
             let candidate = ItemCandidate::new(
                 merge_revision,
@@ -1418,6 +1485,7 @@ mod tests {
             tags,
             login(password),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         ItemCandidate::new(
@@ -1458,6 +1526,7 @@ mod tests {
         }
         check!(CollectionId, 16, 1);
         check!(AttachmentId, 16, 2);
+        check!(AttachmentManifestId, 32, 6);
         check!(ConflictId, 16, 3);
         check!(RevisionId, 32, 4);
         check!(OperationId, 32, 5);
@@ -1685,6 +1754,7 @@ mod tests {
             ObservedSet::new(),
             login("secret"),
             ObservedSet::new(),
+            BTreeMap::new(),
         );
         assert_eq!(wrong_schema.unwrap_err(), DomainError::SchemaMismatch);
 
@@ -1698,6 +1768,7 @@ mod tests {
             ObservedSet::new(),
             login("secret"),
             ObservedSet::new(),
+            BTreeMap::new(),
         );
         assert_eq!(bad_timestamp.unwrap_err(), DomainError::InvalidTimestamp);
 
@@ -1713,6 +1784,7 @@ mod tests {
             tags,
             login("secret"),
             ObservedSet::new(),
+            BTreeMap::new(),
         );
         assert_eq!(bad_tag.unwrap_err(), DomainError::InvalidTag);
     }
@@ -1734,8 +1806,105 @@ mod tests {
             tags,
             login("secret"),
             ObservedSet::new(),
+            BTreeMap::new(),
         );
         assert_eq!(result.unwrap_err(), DomainError::BoundExceeded);
+    }
+
+    fn attachment_document(
+        attachments: ObservedSet<AttachmentId>,
+        manifests: BTreeMap<AttachmentId, AttachmentManifestId>,
+    ) -> Result<ItemDocument, DomainError> {
+        ItemDocument::new(
+            ItemId::new([1; 16]),
+            ContentType::new(LOGIN_V1).unwrap(),
+            1,
+            1,
+            LwwRegister::new(false, 1, operation(1)),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            login("secret"),
+            attachments,
+            manifests,
+        )
+    }
+
+    /// VLT-PM47 §4.7. Membership and manifest references are one fact stored
+    /// twice, so both directions of disagreement have to be refused, and the
+    /// key set has to be the *retained* one — a removed attachment that a
+    /// later merge resurrects must still know where its bytes are.
+    #[test]
+    fn document_requires_a_manifest_for_exactly_every_retained_attachment() {
+        let id = AttachmentId::new([9; 16]);
+        let manifest = AttachmentManifestId::new([3; 32]);
+        let mut attachments = ObservedSet::new();
+        attachments.add(id, operation(2)).unwrap();
+
+        let mut references = BTreeMap::new();
+        references.insert(id, manifest);
+        let document = attachment_document(attachments.clone(), references.clone()).unwrap();
+        assert_eq!(document.attachment_manifests().get(&id), Some(&manifest));
+
+        assert_eq!(
+            attachment_document(attachments.clone(), BTreeMap::new()).unwrap_err(),
+            DomainError::AttachmentManifestMismatch,
+            "membership with no manifest names bytes nobody can find"
+        );
+        assert_eq!(
+            attachment_document(ObservedSet::new(), references.clone()).unwrap_err(),
+            DomainError::AttachmentManifestMismatch,
+            "a manifest with no membership points at bytes nothing claims"
+        );
+
+        let mut wrong_key = BTreeMap::new();
+        wrong_key.insert(AttachmentId::new([10; 16]), manifest);
+        assert_eq!(
+            attachment_document(attachments.clone(), wrong_key).unwrap_err(),
+            DomainError::AttachmentManifestMismatch,
+            "an equal count is not an equal key set"
+        );
+
+        // Removal hides the value from `values()` but retains it on the wire,
+        // so the reference must survive the removal too.
+        let mut removed = attachments.clone();
+        removed.remove(&id);
+        assert!(removed.values().is_empty());
+        assert_eq!(
+            attachment_document(removed.clone(), BTreeMap::new()).unwrap_err(),
+            DomainError::AttachmentManifestMismatch
+        );
+        assert!(attachment_document(removed, references).is_ok());
+    }
+
+    /// Two replicas that both know an immutable attachment id necessarily know
+    /// the same immutable manifest address, so a disagreement is a fault and
+    /// not a conflict a person could be asked to resolve.
+    #[test]
+    fn merging_attachment_manifests_unions_and_refuses_divergence() {
+        let shared = AttachmentId::new([1; 16]);
+        let only_right = AttachmentId::new([2; 16]);
+        let manifest = AttachmentManifestId::new([7; 32]);
+
+        let mut left = BTreeMap::new();
+        left.insert(shared, manifest);
+        let mut right = BTreeMap::new();
+        right.insert(shared, manifest);
+        right.insert(only_right, AttachmentManifestId::new([8; 32]));
+
+        let merged = merge_attachment_manifests(&left, &right).unwrap();
+        assert_eq!(merged.len(), 2);
+        assert_eq!(merge_attachment_manifests(&right, &left).unwrap(), merged);
+
+        let mut divergent = BTreeMap::new();
+        divergent.insert(shared, AttachmentManifestId::new([9; 32]));
+        assert_eq!(
+            merge_attachment_manifests(&left, &divergent).unwrap_err(),
+            DomainError::AttachmentManifestMismatch
+        );
+        assert_eq!(
+            DomainError::AttachmentManifestMismatch.to_string(),
+            "vault-pm-domain: attachment manifest reference mismatch"
+        );
     }
 
     #[test]
@@ -2050,6 +2219,7 @@ mod tests {
         check_id!(ItemId, 16, 1);
         check_id!(CollectionId, 16, 2);
         check_id!(AttachmentId, 16, 3);
+        check_id!(AttachmentManifestId, 32, 7);
         check_id!(ConflictId, 16, 4);
         check_id!(RevisionId, 32, 5);
         check_id!(OperationId, 32, 6);
@@ -2150,6 +2320,7 @@ mod tests {
                 ObservedSet::new(),
                 record,
                 ObservedSet::new(),
+                BTreeMap::new(),
             )
             .unwrap();
             assert_eq!(document.schema().as_str(), schema);
@@ -2168,6 +2339,7 @@ mod tests {
             tags,
             login("needle"),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         let debug = format!("{document:?}");
@@ -2230,6 +2402,7 @@ mod tests {
                 body: "body".into(),
             }),
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .unwrap();
         let note = ItemCandidate::new(

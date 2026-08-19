@@ -169,6 +169,7 @@ def sir_fmt(v)
   when SirPair    then sir_fmt_pair(v)
   when Symbol     then v.to_s
   when Float      then sir_fmt_float(v)
+  when SirSymTerm then sir_sym_to_s(v)
   else v.to_s
   end
 end
@@ -1054,5 +1055,384 @@ def sir_array_catenate(a, b)
     return sir_array_ndarray([r, ca + cb], data)
   end
   raise "sir_array_catenate: catenate of rank #{ra} and rank #{rb} is not yet supported"
+end
+
+# ── SIR23 symbolic expressions + pattern/rewrite (Tier A, Phase A Slice 4) ──
+#
+# `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/
+# `SymRule`/`SymReplaceAll` lower to calls into `sir_sym_*` below — an
+# inlined port of `semantic-ir-to-javascript`'s own already-proven
+# `Symbolic` sub-runtime's Tier A (matcher) slice: term construction,
+# `matchPattern`/`substituteTerm`/`applyRuleTerm`, and `replaceAll`/
+# `replaceRepeated` with their `MAX_TERM_DEPTH` guard. Tier B (`evalTerm`,
+# the arithmetic/calculus/user-function evaluator) is explicitly OUT OF
+# SCOPE for this slice — matching the SIR23 spec's own Tier A/Tier B split
+# — so no `Add`/`Sin`/`D`/... folding exists here; a `SymApply` builds an
+# inert term tree, nothing more.
+#
+# ## Value model
+#
+# `SirSymTerm(kind, name, value, numer, denom, head, args)` — one Struct
+# type discriminated by `.kind` (a Ruby Symbol: `:symbol`/`:integer`/
+# `:rational`/`:float`/`:string`/`:apply`), mirroring the JS reference's
+# frozen `{kind, ...}` object shape field-for-field. Only the fields a
+# given `kind` uses are populated; the rest stay `nil`. Every constructor
+# below returns a `.freeze`d instance, so a term is immutable once built —
+# matching the JS reference's `Object.freeze` and this domain's own
+# persistent/copy-on-write bindings model (a failed match attempt never
+# mutates a binding set an earlier attempt still holds).
+#
+# Unlike the JS reference (which restricts `Symbolic.int`/`.rational` to
+# `Number.isSafeInteger` because JS's own `Expr::IntLit` codegen already
+# has that ceiling), Ruby Integers are arbitrary-precision, and this
+# backend's own `Expr::IntLit` arm already emits a bare unbounded Ruby
+# integer literal — so `sir_sym_int` accepts any Ruby Integer with no
+# extra range check.
+SirSymTerm = Struct.new(:kind, :name, :value, :numer, :denom, :head, :args)
+
+# Generic term -> String rendering (`head(args, ...)`), used by `sir_fmt`
+# (below, via a `when SirSymTerm` case arm) so `print`/`puts` on a term
+# behaves like every other displayable SIR value. A direct, minimal port
+# of the JS reference's `toDisplayString`'s generic (non-`SIR_DISPLAY_
+# DERIVE`) branch ONLY — the Derive-specific infix/precedence pretty-
+# printer (SIR23 addendum item 4) is separate follow-up work, not part of
+# this Tier A matcher port. Depth-capped with the same
+# `SIR_SYM_MAX_TERM_DEPTH` guard the matcher's own tree walks use, for the
+# identical reason: a term built via `sir_sym_apply` is not depth-capped
+# at construction time, so a runtime-built term can be arbitrarily deep.
+def sir_sym_to_s(node, depth = 0)
+  return "..." if depth > SIR_SYM_MAX_TERM_DEPTH
+  case node.kind
+  when :symbol then node.name
+  when :integer then node.value.to_s
+  when :rational then "#{node.numer}/#{node.denom}"
+  when :float then sir_fmt_float(node.value)
+  when :string then node.value.inspect
+  when :apply
+    "#{sir_sym_to_s(node.head, depth + 1)}(#{node.args.map { |a| sir_sym_to_s(a, depth + 1) }.join(', ')})"
+  else
+    node.to_s
+  end
+end
+
+def sir_sym_symbol(name) = SirSymTerm.new(:symbol, name).freeze
+
+def sir_sym_int(value)
+  raise "sir_sym_int: value must be an Integer" unless value.is_a?(Integer)
+  SirSymTerm.new(:integer, nil, value).freeze
+end
+
+def sir_sym_gcd_abs(a, b)
+  a = a.abs
+  b = b.abs
+  a, b = b, a % b while b != 0
+  a.zero? ? 1 : a
+end
+
+def sir_sym_rational(numer, denom)
+  raise "sir_sym_rational: denominator cannot be zero" if denom == 0
+  if denom < 0
+    numer = -numer
+    denom = -denom
+  end
+  g = sir_sym_gcd_abs(numer, denom)
+  SirSymTerm.new(:rational, nil, nil, numer / g, denom / g).freeze
+end
+
+def sir_sym_float(value)
+  raise "sir_sym_float: value must be finite" unless value.is_a?(Float) && value.finite?
+  SirSymTerm.new(:float, nil, value).freeze
+end
+
+def sir_sym_string(value) = SirSymTerm.new(:string, nil, value).freeze
+
+def sir_sym_apply(head, args) = SirSymTerm.new(:apply, nil, nil, nil, nil, head, args.dup.freeze).freeze
+
+# Structural equality — used by the matcher (a repeated pattern variable
+# must bind to the SAME term every occurrence), by `sir_sym_bindings_bind`'s
+# "already bound to this exact term" fast path, and by
+# `sir_sym_replace_repeated`'s "did this firing actually change anything"
+# fixed-point check.
+#
+# SECURITY (CWE-674): depth-capped with the same `SIR_SYM_MAX_TERM_DEPTH`
+# guard `sir_sym_walk_once`/`sir_sym_replace_repeated` use below — a term
+# built via `sir_sym_apply` is not depth-capped at CONSTRUCTION time (only
+# the tree WALK below enforces the cap), so an attacker-influenced runtime
+# value (e.g. a loop lowered to repeated `SymApply` nesting) could build
+# one arbitrarily deep directly. Past the cap, `false` ("not structurally
+# equal") is the safe, contained answer, mirroring `sir_sym_match_pattern`'s
+# own "give up cleanly" contract for a failed match.
+def sir_sym_term_equals(a, b, depth = 0)
+  return false if depth > SIR_SYM_MAX_TERM_DEPTH
+  return false if a.kind != b.kind
+  case a.kind
+  when :symbol then a.name == b.name
+  when :integer then a.value == b.value
+  when :rational then a.numer == b.numer && a.denom == b.denom
+  when :float then a.value == b.value
+  when :string then a.value == b.value
+  when :apply
+    sir_sym_term_equals(a.head, b.head, depth + 1) &&
+      a.args.length == b.args.length &&
+      a.args.each_with_index.all? { |arg, i| sir_sym_term_equals(arg, b.args[i], depth + 1) }
+  else
+    false
+  end
+end
+
+def sir_sym_head_name(node) = node.kind == :symbol ? node.name : ""
+
+# ── pattern/rule vocabulary (cas-pattern-matching) ──────────────────────
+SIR_SYM_BLANK = "Blank"
+SIR_SYM_PATTERN = "Pattern"
+SIR_SYM_RULE = "Rule"
+SIR_SYM_RULE_DELAYED = "RuleDelayed"
+
+def sir_sym_is_head?(node, name)
+  node.kind == :apply && node.head.kind == :symbol && node.head.name == name
+end
+def sir_sym_is_blank?(node) = sir_sym_is_head?(node, SIR_SYM_BLANK)
+def sir_sym_is_pattern?(node) = sir_sym_is_head?(node, SIR_SYM_PATTERN)
+def sir_sym_is_rule?(node)
+  node.kind == :apply && node.head.kind == :symbol &&
+    (node.head.name == SIR_SYM_RULE || node.head.name == SIR_SYM_RULE_DELAYED) &&
+    node.args.length == 2
+end
+
+def sir_sym_blank() = sir_sym_apply(sir_sym_symbol(SIR_SYM_BLANK), [])
+def sir_sym_blank_typed(head) = sir_sym_apply(sir_sym_symbol(SIR_SYM_BLANK), [sir_sym_symbol(head)])
+def sir_sym_named(name, inner) = sir_sym_apply(sir_sym_symbol(SIR_SYM_PATTERN), [sir_sym_symbol(name), inner])
+def sir_sym_rule(lhs, rhs) = sir_sym_apply(sir_sym_symbol(SIR_SYM_RULE), [lhs, rhs])
+def sir_sym_rule_delayed(lhs, rhs) = sir_sym_apply(sir_sym_symbol(SIR_SYM_RULE_DELAYED), [lhs, rhs])
+
+# Bindings: a name -> term Hash. Persistent / copy-on-write (mirrors
+# `cas-pattern-matching`'s `Bindings` class) so a failed match attempt
+# never mutates a binding set an earlier attempt still holds a reference
+# to — `sir_sym_bindings_bind` always returns a NEW Hash, never mutates
+# `bindings` in place.
+def sir_sym_bindings_empty() = {}
+def sir_sym_bindings_bind(bindings, name, value)
+  existing = bindings[name]
+  return bindings if !existing.nil? && sir_sym_term_equals(existing, value)
+  bindings.merge(name => value)
+end
+
+def sir_sym_blank_head_constraint(node)
+  return nil if node.args.empty?
+  first = node.args[0]
+  first.kind == :symbol ? first.name : nil
+end
+def sir_sym_pattern_name(node)
+  first = node.args[0]
+  raise "Symbolic: Pattern name must be a Symbol" if first.nil? || first.kind != :symbol
+  first.name
+end
+def sir_sym_pattern_inner(node)
+  raise "Symbolic: Pattern requires an inner expression" if node.args.length < 2
+  node.args[1]
+end
+def sir_sym_effective_head_name(node)
+  if node.kind == :apply
+    hn = sir_sym_head_name(node.head)
+    return hn.empty? ? "Apply" : hn
+  end
+  case node.kind
+  when :integer then "Integer"
+  when :rational then "Rational"
+  when :float then "Float"
+  when :string then "String"
+  else "Symbol"
+  end
+end
+
+# Five-case structural matcher: `Blank()`, `Blank(T)`, `Pattern(name,
+# inner)`, compound-vs-compound (recurse head + every arg, same arity
+# required), and plain structural equality — a direct port of
+# `cas-pattern-matching::matchPattern`.
+#
+# SECURITY (CWE-674, /security-review finding, applied as a follow-up fix
+# after this function shipped depth-uncapped): this function's own
+# original doc comment (and the JS reference it was ported from) argued no
+# cap was needed because a rule's `lhs`/`rhs` is always "author-written,
+# not runtime-controlled" and therefore shallow. That premise does not
+# actually hold in ANY of this arc's backends: `Expr::SymRule`'s `lhs`/
+# `rhs` are ordinary `Expr`s — `emit_sym_operand`'s catch-all passes a
+# `VarRef` through unchanged, so a rule's pattern/template can be a local
+# variable holding a term a compiled `for`-loop built to unbounded depth
+# at RUNTIME, identical in kind to the target-tree hazard `sir_sym_
+# replace_all`/`replace_repeated` already guard against. `depth` mirrors
+# the SAME `SIR_SYM_MAX_TERM_DEPTH` cap those two use, reset to 0 at each
+# fresh `sir_sym_apply_rule` call so one rule's match/substitute gets its
+# own independent depth budget. Past the cap, raises the SAME "sir-
+# runtime-symbolic: depth-limit" error `sir_sym_unwrap` already raises for
+# the target-tree walk guards — NOT a silent `nil`/truncated fallback: a
+# silently wrong-but-plausible match/substitution result would be worse
+# than a loud, catchable failure (this repo's own standing "never trade
+# loud for silent" discipline for a safety-relevant path).
+def sir_sym_match_pattern(pattern, target, bindings = sir_sym_bindings_empty, depth = 0)
+  raise "sir-runtime-symbolic: depth-limit" if depth > SIR_SYM_MAX_TERM_DEPTH
+  if sir_sym_is_blank?(pattern)
+    constraint = sir_sym_blank_head_constraint(pattern)
+    return bindings if constraint.nil?
+    return sir_sym_effective_head_name(target) == constraint ? bindings : nil
+  end
+  if sir_sym_is_pattern?(pattern)
+    name = sir_sym_pattern_name(pattern)
+    inner = sir_sym_pattern_inner(pattern)
+    matched = sir_sym_match_pattern(inner, target, bindings, depth + 1)
+    return nil if matched.nil?
+    existing = matched[name]
+    return sir_sym_term_equals(existing, target) ? matched : nil unless existing.nil?
+    return sir_sym_bindings_bind(matched, name, target)
+  end
+  if pattern.kind == :apply
+    return nil unless target.kind == :apply
+    current = sir_sym_match_pattern(pattern.head, target.head, bindings, depth + 1)
+    return nil if current.nil?
+    return nil if pattern.args.length != target.args.length
+    pattern.args.each_with_index do |p, i|
+      current = sir_sym_match_pattern(p, target.args[i], current, depth + 1)
+      return nil if current.nil?
+    end
+    return current
+  end
+  sir_sym_term_equals(pattern, target) ? bindings : nil
+end
+
+# SECURITY (CWE-674): depth-capped for the identical reason `sir_sym_
+# match_pattern` above now is — a rule's RHS (`template` here) is subject
+# to the exact same "runtime-built, not necessarily shallow" hazard, and
+# is reached EVEN WHEN the target being rewritten is itself shallow (e.g.
+# `Blank() -> <a 600-deep term>` matches a bare one-node target instantly,
+# then `substitute` still has to rebuild the WHOLE deep RHS) — so this
+# cannot be caught by `sir_sym_walk_once`/`replace_repeated`'s own
+# target-tree depth tracking alone. Raises loudly past the cap, same as
+# `sir_sym_match_pattern` above, not a silent truncated fallback.
+def sir_sym_substitute(template, bindings, depth = 0)
+  raise "sir-runtime-symbolic: depth-limit" if depth > SIR_SYM_MAX_TERM_DEPTH
+  if sir_sym_is_pattern?(template)
+    captured = bindings[sir_sym_pattern_name(template)]
+    return captured.nil? ? template : captured
+  end
+  if template.kind == :apply
+    return sir_sym_apply(
+      sir_sym_substitute(template.head, bindings, depth + 1),
+      template.args.map { |a| sir_sym_substitute(a, bindings, depth + 1) }
+    )
+  end
+  template
+end
+
+def sir_sym_apply_rule(rewrite_rule, expr)
+  raise "Symbolic.applyRule: expected Rule/RuleDelayed" unless sir_sym_is_rule?(rewrite_rule)
+  lhs = rewrite_rule.args[0]
+  rhs = rewrite_rule.args[1]
+  bindings = sir_sym_match_pattern(lhs, expr, sir_sym_bindings_empty, 0)
+  bindings.nil? ? nil : sir_sym_substitute(rhs, bindings, 0)
+end
+
+# ── replaceAll / replaceRepeated (`/.` / `//.`) + depth guard ────────────
+#
+# `sir_sym_match_pattern`/`sir_sym_substitute`/`sir_sym_apply_rule` recurse,
+# but only as deep as a single RULE's own (author-written, not
+# runtime-controlled) pattern/RHS shape — always shallow regardless of how
+# deep the TARGET expression is. `sir_sym_walk_once`/`sir_sym_replace_repeated`,
+# by contrast, walk the ENTIRE target expression tree, which ordinary
+# compiled-program data can build up to unbounded depth — so these two need
+# an explicit cap (CWE-674 stack-overflow DoS guard), mirroring the JS
+# reference's `MAX_TERM_DEPTH = 512` exactly (already cross-validated
+# against the published TypeScript `sir-runtime-symbolic` package, which
+# uses the identical constant).
+SIR_SYM_MAX_TERM_DEPTH = 512
+
+def sir_sym_depth_limit_error() = { kind: :depth_limit, max_depth: SIR_SYM_MAX_TERM_DEPTH }
+def sir_sym_is_depth_limit_error?(v) = v.is_a?(Hash) && v[:kind] == :depth_limit
+def sir_sym_rewrite_cycle_error(max_iterations) = { kind: :rewrite_cycle, max_iterations: max_iterations }
+def sir_sym_is_rewrite_cycle_error?(v) = v.is_a?(Hash) && v[:kind] == :rewrite_cycle
+
+# `expr /. rules` — one pass, bottom-up: a node's head/args are walked
+# (and possibly replaced) before the node itself is tried against `rules`;
+# the first matching rule wins and the freshly substituted replacement is
+# NOT re-walked or retried at that same position (Wolfram's single-pass
+# `/.` contract, distinct from `sir_sym_replace_repeated`'s fixed point
+# below).
+def sir_sym_walk_once(node, rules, depth)
+  return sir_sym_depth_limit_error if depth > SIR_SYM_MAX_TERM_DEPTH
+  current = node
+  if node.kind == :apply
+    new_head = sir_sym_walk_once(node.head, rules, depth + 1)
+    return new_head if sir_sym_is_depth_limit_error?(new_head)
+    new_args = node.args.map do |arg|
+      next_arg = sir_sym_walk_once(arg, rules, depth + 1)
+      return next_arg if sir_sym_is_depth_limit_error?(next_arg)
+      next_arg
+    end
+    current = sir_sym_apply(new_head, new_args)
+  end
+  rules.each do |rule|
+    replacement = sir_sym_apply_rule(rule, current)
+    return replacement unless replacement.nil?
+  end
+  current
+end
+
+def sir_sym_replace_all(expr, rules) = sir_sym_walk_once(expr, rules, 0)
+
+# `expr //. rules` — a fixed point: at each subtree, keep retrying `rules`
+# until none fire (re-walking any fresh replacement so its own sub-parts
+# also converge) before moving up to the parent. `max_iterations` (default
+# 100) is a GLOBAL cap shared across the whole walk, guarding against a
+# non-terminating rule set (SIR23 spec "Matcher semantics" point 6). A
+# firing loops LOCALLY at the current call frame (never a recursive call
+# on the replacement), so however many times a rule fires at one tree
+# position costs O(1) native stack frames, not O(firings) — `depth` only
+# increases on a genuine descent into `head`/`args`, so `max_iterations`
+# bounds iteration COUNT (CPU time) only, never native recursion depth.
+#
+# `walk` is a `lambda` (not a plain block) specifically so `return` inside
+# it exits only that recursive call, not the enclosing method — matching
+# the JS reference's nested `function walk` closure exactly.
+def sir_sym_replace_repeated(expr, rules, max_iterations = 100)
+  counter = 0
+  walk = lambda do |node, depth|
+    return sir_sym_depth_limit_error if depth > SIR_SYM_MAX_TERM_DEPTH
+    current = node
+    loop do
+      if current.kind == :apply
+        new_head = walk.call(current.head, depth + 1)
+        return new_head if sir_sym_is_depth_limit_error?(new_head) || sir_sym_is_rewrite_cycle_error?(new_head)
+        new_args = current.args.map do |arg|
+          next_arg = walk.call(arg, depth + 1)
+          return next_arg if sir_sym_is_depth_limit_error?(next_arg) || sir_sym_is_rewrite_cycle_error?(next_arg)
+          next_arg
+        end
+        current = sir_sym_apply(new_head, new_args)
+      end
+      fired = false
+      rules.each do |rule|
+        replacement = sir_sym_apply_rule(rule, current)
+        next if replacement.nil? || sir_sym_term_equals(replacement, current)
+        counter += 1
+        return sir_sym_rewrite_cycle_error(max_iterations) if counter > max_iterations
+        current = replacement
+        fired = true
+        break
+      end
+      return current unless fired
+    end
+  end
+  walk.call(expr, 0)
+end
+
+# Unwrap a `sir_sym_replace_all`/`sir_sym_replace_repeated` result, raising
+# if the walk hit its depth cap or (for `replace_repeated`) its iteration
+# cap instead of returning a real term. Every compiled `SymReplaceAll`
+# routes through this — it is an ordinary expression that must evaluate to
+# a term or fail loudly, never silently hand a sentinel Hash to code
+# expecting a `SirSymTerm`.
+def sir_sym_unwrap(result)
+  raise "sir-runtime-symbolic: depth-limit" if sir_sym_is_depth_limit_error?(result)
+  raise "sir-runtime-symbolic: rewrite-cycle" if sir_sym_is_rewrite_cycle_error?(result)
+  result
 end
 "####;

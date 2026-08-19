@@ -1,6 +1,6 @@
 [package]
 name = "coding_adventures_vault_pm_crash_injection"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "VLT-PM41 deterministic real-process crash injection for local vault-pm hosts"
 license = "MIT"

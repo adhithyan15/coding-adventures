@@ -1,5 +1,88 @@
 # Changelog
 
+## 0.44.0 — SIR23 Tier A pattern matcher (Phase A Slice 4)
+
+Part of the SIR22/SIR23 backend-expansion initiative — one of 5 parallel,
+independent backend PRs for this slice (C, Go, Python, Ruby, Rust). This
+backend now implements SIR23's Tier A pattern matcher:
+`SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/
+`SymRule`/`SymReplaceAll`, gated on three new feature flags —
+`Feature::SymbolicExpr`, `Feature::PatternMatching`, and `Feature::
+Rationals` (already existed in `semantic_ir::Feature`, shared with the
+SIR22 array/matrix domain rather than owned by SIR23). Tier B (the
+`evalTerm` arithmetic/calculus/user-function evaluator) is explicitly OUT
+OF SCOPE — a `SymApply` builds an inert term tree, nothing more; no
+`Add`/`Sin`/`D`/... folding exists here.
+
+**Value model** (`runtime.rs`, new "SIR23 symbolic expressions + pattern/
+rewrite" section, inserted at the end of `mod __sir`): a new
+`Value::SymTerm(Rc<SirSymTerm>)` variant, following the SAME shared-
+mutable-handle pattern SIR16's `Value::Seq`/`Value::Map` and SIR22's
+`Value::NDArray` already establish for this backend — except a term is
+*never* mutated in place once built (SIR23 adds no mutation statement at
+all), so plain `Rc` suffices with no `RefCell`. `SirSymTerm` is a genuine
+Rust `enum` (`Symbol`/`Integer`/`Rational`/`Float`/`Str`/`Apply`), not a
+transliteration of the JS/Ruby ports' `{kind, ...}` object / `Struct` with
+unused fields — this gets exhaustiveness checking for free from `rustc`.
+Adding the variant required new arms in this backend's two other
+exhaustive `Value` matches (`format_d`, `ruby_class_name`) — the same two
+sites the `Value::Instance` variant's own doc comment already flagged as
+"the" exhaustive sites to update, confirmed by compiling the runtime text
+standalone via `rustc --crate-type lib` before wiring it into the emitter
+(Slice 2's own Rust PR caught 2 missing exhaustive-match arms this way;
+repeated here).
+
+**New runtime functions**: term constructors `sir_sym_symbol`/
+`sir_sym_int`/`sir_sym_rational`/`sir_sym_float`/`sir_sym_string`/
+`sir_sym_apply`; pattern/rule vocabulary `sir_sym_blank`/
+`sir_sym_blank_typed`/`sir_sym_named`/`sir_sym_rule`/
+`sir_sym_rule_delayed`; the matcher itself `sir_sym_match_pattern`/
+`sir_sym_substitute`/`sir_sym_apply_rule`; and `sir_sym_replace_all`/
+`sir_sym_replace_repeated`. **DoS guards (CWE-674)**: `SIR_SYM_MAX_TERM_
+DEPTH = 512` guards `replace_all`'s single-pass and `replace_repeated`'s
+fixed-point tree WALK only — never the matcher functions themselves,
+which recurse only as deep as a single rule's own author-written shape.
+`replace_repeated` also enforces a separate `SIR_SYM_MAX_REWRITE_
+ITERATIONS = 100` cap on total rule firings across the whole call,
+implemented as an iterative Rust `loop {}` at the firing site (never a
+recursive call per firing), so a rule refiring repeatedly at ONE tree
+position costs O(1) native stack frames. Both caps signal failure by
+calling into THIS backend's existing SIR17 exception convention
+(`raise("RuntimeError", …)`, the same `std::panic::panic_any` +
+`catch_unwind` mechanism `array_raise` already uses) rather than the JS/
+Ruby ports' own sentinel-object-threaded-through-every-return-path
+plumbing — Rust's own unwinding panic already propagates a raised error
+through every intermediate stack frame automatically, so no
+`sir_sym_unwrap`-equivalent boundary function is needed here. A minimal
+`sir_sym_to_s` display helper (wired into `format_d`) lets `print`/`puts`
+render a term via the generic `head(args, ...)` form, independently
+depth-capped (a term is not capped at CONSTRUCTION time, only at WALK
+time) — the Derive-specific precedence-aware pretty-printer (SIR23
+addendum item 4) is separate follow-up work, not part of this port.
+
+**New `emit.rs` arms**: the seven node kinds each lower to a call into
+their matching `sir_sym_*` helper, plus a new `emit_sym_operand` helper
+(mirrors the JS/Ruby backends' identically-named function) that wraps a
+bare `IntLit`/`FloatLit`/`StrLit` operand through the matching leaf-term
+constructor before it can sit inside a term tree. Also fixes a
+`collect_expr_assigned` no-op-recursion gap for these seven nodes (the
+same shape of gap Slice 3 found and fixed for the nine SIR22 addendum
+nodes): `SymApply.args`, `SymPatternBlank.head`, `SymPatternNamed.
+pattern`, `SymRule.lhs`/`.rhs`, and `SymReplaceAll.expr`/`.rules` are all
+ordinary `Expr` operand slots that CAN legitimately nest an `Assign`, so
+they now recurse for real instead of silently doing nothing.
+
+**New tests**: `tests/sir23_symbolic.rs` — 5 real-`rustc`-compile-and-run
+tests (ported from `semantic-ir-to-javascript`'s own `tests/
+sir23_symbolic.rs`, Tier A cases only, cross-checked against `semantic-
+ir-to-ruby`'s own port) proving `//.`'s fixed-point behavior, `/.`'s
+single-pass behavior, typed-blank head-constraint matching, rational
+reduction at construction time, and the depth-limit guard — the last
+built via a REAL compiled `for`-loop (600 runtime firings of
+`Wrap(acc)`), not a hand-built static AST, asserting the emitted binary
+exits non-zero with a readable `RuntimeError: sir-runtime-symbolic:
+depth-limit` on stderr rather than overflowing the native stack.
+
 ## 0.43.0 — SIR22 "APL addendum" (Phase A Slice 3, second-wave backend rollout)
 
 Implements the 9-node SIR22 "APL addendum" this backend deferred in Slice 2:

@@ -401,6 +401,18 @@ A condensed quick-reference of mistakes made during development, grouped by cate
   2. **Strict-static `Int != Double` rejection** — only Swift/Kotlin (`mosaic-emit-swiftui`, `mosaic-emit-compose`). C#/Dart/QML coerce naturally.
   3. **No-coercion-needed languages** — Flutter (Dart), Qt (QML), XAML (C#), HTML (static markup). When a new emitter-coercion bug class is discovered, classify by host-language semantics first; the backend list to audit falls out automatically.
 
+## Mosaic emitters — the synthetic root wrapper must carry the host framework's sizing contract
+
+- **A generated component's root wrapper has to publish whatever "how big am I?" signal its host framework's layout system reads — and QML's `Item` is the one container that publishes nothing.** `mosaic-emit-qt` wrapped every component in `Item { id: mosaicRoot; … }` with no `implicitWidth`/`implicitHeight`. QML's `Item` has **no intrinsic size**: it reports `0 x 0` and does *not* grow to fit its children (they just paint outside it). Since `implicitWidth`/`implicitHeight` is exactly what `RowLayout`/`ColumnLayout`/`GridLayout` read to size a child, every generated component collapsed in any layout — four toolkit `Button`s in a `RowLayout` measured `48x0` total (the spacings alone), overlapping at the same coordinate with labels clipped to one character. **Fix**: `implicitWidth: childrenRect.x + childrenRect.width` (and `.y`/`.height`) on the root. **The pitfall to check before reaching for `childrenRect`**: it is a binding loop whenever a child anchors back to the parent (`parent.width` ← `implicitWidth` ← `childrenRect.width` ← `child.width` ← `parent.width`). So it is right for `Box` (children are independent) and wrong for `Stack` (children get `anchors.fill: parent`). Note QML does *not* always warn — a styled `Box` whose `Text` fills it silently **converges** to the margin size (`6x6`) instead of looping, which looks like a fix and isn't.
+
+- **Why this class of bug hides for a long time: the in-tree host anchored the component.** `VentureChrome { anchors.fill: parent }` sizes from the anchor and never consults `implicitWidth`, so every existing test and demo passed. The bug only appears the first time someone puts a generated component in a *layout*. **When auditing a code generator, exercise the generated artifact in the composition mode consumers will actually use, not just the one the in-tree demo uses.**
+
+- **Scope check by host framework — only backends that inject a *synthetic* root wrapper can have this bug.** Compose, Flutter, SwiftUI, and XAML all emit the layout root node directly (`Row`/`Column`/`Box`, `HStack`/`VStack`, `StackPanel`/`Border`), and every one of those is a real measuring container; Qt was the only backend adding a wrapper, and it picked the one QML type with no content-derived size. **Generalisation**: when a backend wraps generated output in a synthetic host-framework node, check that node against the framework's sizing contract specifically — the wrapper is exactly where the framework's defaults stop applying. XAML's analogous trap would be emitting `<Canvas>` (measures children with infinity, reports `0x0`) instead of `<Grid>`.
+
+## Mosaic Qt output — component names collide with `QtQuick.Controls`, and the module type wins
+
+- **`Button.mil` emits `Button.qml`, whose type name collides with `QtQuick.Controls.Button` — and with both in scope the imported module wins, not the same-directory file.** Verified on Qt 6.8.1: a consumer writing `import QtQuick.Controls; import "."` then a bare `Button { variant: "primary" }` gets the *platform* button and fails with `Cannot assign to non-existent property "variant"`. If it only sets properties the two types share, the wrong component renders with no error at all. Same collision for `CheckBox`, `RadioButton`, `TextField`, `Popup`. **Fix for consumers**: always use a namespaced directory import — `import "." as Mosaic; Mosaic.Button { … }`. **Do not "fix" it by renaming the emitted type** (`MosaicButton`): the MIL component name is the cross-backend contract that React/SwiftUI/Compose/Flutter/XAML all emit verbatim, so a Qt-only rename breaks that correspondence and every existing consumer. The structural fix is emitting a `qmldir` so the package becomes a real QML module. **Bonus consequence of the same precedence rule**: it is what keeps the emitter's own output working — `Button.qml` contains a `Button { … }` element intended as `QtQuick.Controls.Button`, and it resolves outward rather than recursing into itself.
+
 ## sql-execution-engine — grammar drift between a shared grammar and its hand-written tree-walker
 
 - **A hand-written AST tree-walker that switches on rule names will silently rot when the shared grammar grows new precedence layers — and the failure mode is `nil`, not a parse error.** `sql-execution-engine` (Go) walks the `sql-parser` AST with a `switch node.RuleName` in `evalExpr`. Over many PRs (#4055–#4164) `code/grammars/sql.grammar` adopted SQLite's full operator-precedence ladder, inserting two new rules — `collated` (`COLLATE` postfix) and `bitwise` (`& | << >>`) — *between* `comparison` and `additive`, and rewrote `comparison` to take `collated` operands. The evaluator had no `case "collated"`/`case "bitwise"`, so every expression fell through to `default: return nil` *before reaching* `column_ref`. Result: `SELECT id, name` returned `<nil>` for every cell, `WHERE` matched zero rows, and `TestWhereNumericComparison` panicked on an empty slice. `SELECT *` kept working because it reads the row map directly and never touches `evalExpr` — a misleading "half the package works" signal. Separately, `limit_clause` changed from bare `NUMBER` tokens to `signed_number` child nodes (plus negative-LIMIT-means-unbounded and MySQL `LIMIT m, n`), so `executeLimit` found no NUMBER tokens and ignored LIMIT/OFFSET entirely. **Why it lay hidden**: the Go build tool only rebuilds/tests packages whose diff touches them or a transitive dep, so the break stayed dormant until an unrelated `go/lexer` change re-triggered the engine's tests on a `main` CodeQL build. **Fix pattern**: when you add a precedence layer to a shared `.grammar`, grep every consumer that walks the parse tree by rule name (`grep -rl 'RuleName' code/packages/*/sql-*`) and add the passthrough/eval case in the same PR. A new wrapper rule needs at minimum a passthrough case (`evalCollated` just evaluates its inner node); operator layers need real evaluation (`evalBitwise`, `||` concat, unary `~`/`+`). **Prevention idea**: give the tree-walker a `default:` that returns a sentinel error instead of `nil`, so an unhandled rule surfaces as a loud `EvaluationError` rather than silent NULLs — file a follow-up to do this across the grammar-driven Go engines.
@@ -3536,3 +3548,64 @@ this exact trade down in advance as gaming the metric.
 that changes the partition rather than the total satisfies the gate without
 buying the thing the gate exists to protect. Ask what the gate is a proxy for —
 here, bytes before first paint — and move that number.
+
+## Local Unix-socket agent (vault-pm VLT-PM48): three non-obvious hazards
+
+Building a permission-checked local-agent IPC transport (Unix domain socket
+under a per-user runtime directory, `SO_PEERCRED`/`getpeereid` peer
+verification, a detached long-lived process spawned from a one-shot CLI)
+surfaced three bugs that were each surprising in isolation and easy to miss
+in review.
+
+1. **A generic "walk every ancestor with `O_NOFOLLOW`" private-directory
+   helper is the wrong tool for a path rooted at the *system* temp
+   directory.** On macOS both `/tmp` and `/var` are themselves
+   platform-placed symlinks (`/tmp -> private/tmp`). A helper that resolves
+   `/`, then `var`, then `folders`, ... with `O_NOFOLLOW` at every step
+   rejects the walk with "unsafe object type" before it ever reaches the
+   directory the code actually owns — even though nothing attacker-controlled
+   is involved. Fix: trust the *parent* (opened via ordinary path resolution,
+   no `O_NOFOLLOW`) and defend only the *leaf* directory this crate itself
+   creates, with `O_NOFOLLOW` + owner/mode verification on that one component.
+   General rule: a "walk-and-verify-every-ancestor" directory helper is
+   correct only for a root the crate owns end to end; a root anchored under a
+   platform-managed directory (system temp, `/var/run`, etc.) needs a
+   leaf-only variant, and the platform ancestry is trusted the same way
+   `ProjectDirs`' own resolved roots already are.
+
+2. **A bare `connect()` succeeding is not proof a Unix-domain-socket server
+   is actually serving requests.** A listener that has stopped calling
+   `accept()` (e.g. mid-shutdown, before its process has fully exited) can
+   still have a connection sit in its kernel backlog long enough for a
+   `connect()` from a *different* process to succeed. A "is another instance
+   already running" check built on bare `connect().is_ok()` intermittently
+   misreports a dying server as live — reproduced as a real, non-flaky-once
+   race between `agent stop` immediately followed by `agent start`, and
+   independently as CI-parallelism-sensitive flake in a test that bound,
+   dropped, and immediately rebound a raw `UnixListener` in the same
+   process (passed alone, ~20% failure rate under `cargo test`'s default
+   thread count). Fix: the liveness check must be a real bounded
+   request/response round trip (send `Ping`, wait for `Ok` with a timeout),
+   never a bare connect.
+
+3. **An "opportunistically reuse a cached credential" feature and a
+   "sensitive command should always re-collect its own credential fresh"
+   feature will silently interact if the second command's collection path
+   is not explicitly exempted from the first's reuse seam.** Wiring
+   `passphrase rotate`'s *current*-passphrase prompt through the same
+   opportunistic-agent-reuse helper every other authenticated command uses
+   made rotation silently skip its first prompt whenever a long-lived agent
+   already had that vault unlocked — an E2E test that scripted rotate's two
+   expected prompts then hung for the test suite's full 60-second read
+   timeout waiting for a prompt that opportunistic reuse had made not
+   happen. The fix was a deliberate carve-out, not a protocol change:
+   `passphrase_rotate` never consults the cache, matching this codebase's
+   pre-existing "the interactive shell refuses to delegate `passphrase
+   rotate` at all" rule for the same underlying reason (a rotation's whole
+   point is proving fresh knowledge of the current secret). General rule:
+   before wiring a new "skip re-collecting this value" seam through an
+   existing multi-prompt/multi-step command, check whether any step of that
+   command is a *deliberate* re-confirmation ceremony rather than an
+   ordinary unlock, and audit the E2E test itself when a PTY-based test
+   hangs at a `read_until` for a prompt — a hang there just as often means
+   "the prompt legitimately stopped happening" as "the process is stuck."

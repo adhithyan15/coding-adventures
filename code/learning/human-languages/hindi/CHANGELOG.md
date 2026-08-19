@@ -2,6 +2,50 @@
 
 ## [Unreleased]
 
+### Added — Chapters 60-66: Thirty-five more everyday words, round three
+
+The third HL-C198 tranche for Hindi. The track stood at **120** distinct pre-A1
+headwords against the 300 the vocabulary floor asks for — last of the seven
+Indic tracks; these seven chapters answer with thirty-five more, one new word
+per lesson, reusing everything already taught. The pre-A1 vocabulary shortfall
+falls **180 → 145** (120 → 155 headwords).
+
+  60 Animals in the Yard      बंदर साँप मुर्गी भैंस मोर
+  61 At the Cooking Fire      बर्तन चम्मच गिलास तवा चूल्हा
+  62 What Hands Work With     रस्सी सूई टोकरी मिट्टी लकड़ी
+  63 What the Body Tells You  भूख प्यास नींद बुख़ार दर्द
+  64 How Much and How Fast    अब जल्दी धीरे कम ज़्यादा
+  65 Asking Nicely            मेहरबानी विनती अनुमति भरोसा अदब
+  66 The Field and the Well   बीज फ़सल अनाज घास कुआँ
+
+All seven pre-A1 spine nodes are used, one per chapter, each for the third time:
+MEET-GREET, POLITE-REQUEST-REPAIR, EXCHANGE-NAMES, CHECK-WELLBEING,
+RESPOND-BASIC, COURTESY-THANK, TAKE-LEAVE.
+
+**Every headword is spelled from the 45 glyphs Hindi's own writing lessons
+teach**, and so is every Devanagari citation in every body. The tranche adds
+**zero** script-closure violations and **zero** exposure-exempted glyphs — the
+first Hindi vocabulary wave for which that is true, and it is what chapter 59
+bought. The chapter chains onto that chapter's last lesson, the retroflex ड.
+
+Words worth naming. **साँप** and Latin *serpēns* are the same ancient word for
+"the creeping one", neither borrowed from the other. **भैंस** is a feminine
+Sanskrit form that outlived its masculine, because the female is the animal a
+household talks about. **भूख** and **प्यास** were built in the same workshop:
+both are Sanskrit desideratives, the wanting rather than the lack, and प्यास
+shares its root with पानी. **कुआँ** is Sanskrit *kūpa*, a cousin of Latin *cūpa*
+and so of English *cup*. **अदब** means courtesy and literature with one word.
+
+Three near-collisions are taught rather than avoided: *ab* against *abhī*,
+*kam* against *kamrā*, and *mehrabānī* against *mehmān* — each pair close in a
+romanization, unrelated in fact, and separate on the page in Devanagari.
+
+Counts held where they must: R1 1181, forward references 502, rule statements
+30, script-closure violations 756, exposure-exempted glyphs 2220, hindi
+cross-chapter prose references 20. R2 moves +35 by construction — the new atoms
+sit at the end of the track with no successors yet.
+
+
 ### Added — Chapter 59, the vowel you write and do not say (HL-C223)
 
 Eleven lessons. `neverTaughtGlyphs` **16 → 12**; Hindi now teaches 45 of the 57

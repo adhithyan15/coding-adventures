@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "hindi",
+  "chapter": 63,
+  "title": "What the Body Tells You",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:7b4cf6d7f73efefd",
+  "lessons": [
+    {
+      "id": "HI-C63-hunger",
+      "sequence": 2360,
+      "title": "भूख (bhūkh) — hunger",
+      "headword": "भूख",
+      "romanization": "bhūkh",
+      "gloss": "hunger",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de99f5fa13bdce49",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did lakṛī mean, and what did miṭṭī mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: भूख",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भूख (bhūkh) — \"hunger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit बुभुक्षा (bubhukṣā), 'the wish to eat', built on भुज् (bhuj-), 'to eat, to enjoy'. The old form doubles its own first syllable, which is how Sanskrit marked wanting to do a thing rather than doing it."
+            },
+            {
+              "kind": "speech",
+              "text": "So भूख (bhūkh) was never the state of an empty stomach — it was the appetite, the wanting. A speaker says भूख (bhūkh) belongs to them rather than that they are it, and the wanting is the thing that is owned."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things a body reports."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bhūkh, then roṭī, and say which one settles the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bhūkh*, then *roṭī*, and say which one settles the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does भूख (bhūkh) mean? (\"hunger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C63-thirst",
+      "sequence": 2370,
+      "title": "प्यास (pyās) — thirst",
+      "headword": "प्यास",
+      "romanization": "pyās",
+      "gloss": "thirst",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5670f9db1000aa03",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did bhūkh mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: प्यास",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "प्यास (pyās) — \"thirst\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit पिपासा (pipāsā), 'the wish to drink', on पा (pā-), 'to drink' — and doubling its first syllable exactly the way बुभुक्षा does. The two words were made in the same workshop on the same day."
+            },
+            {
+              "kind": "speech",
+              "text": "पा is the root under पानी, the word you have had since the water lesson: 'the drinkable one'. So प्यास (pyās) and पानी are the wanting and the thing wanted, cut from a single syllable."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pyās",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pyās*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pyās, then pānī, and say which one ends the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pyās*, then *pānī*, and say which one ends the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does प्यास (pyās) mean? (\"thirst\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C63-sleep",
+      "sequence": 2380,
+      "title": "नींद (nīnd) — sleep",
+      "headword": "नींद",
+      "romanization": "nīnd",
+      "gloss": "sleep",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:d3e750bbd3c76905",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pyās mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: नींद",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "नींद (nīnd) — \"sleep\"."
+            },
+            {
+              "kind": "speech",
+              "text": "From Sanskrit निद्रा (nidrā), 'sleep'. The r went, the vowel picked up the nose-mark you learnt to write, and निद्रा turned into नींद (nīnd) without changing its meaning by a hair."
+            },
+            {
+              "kind": "speech",
+              "text": "It patterns with भूख (bhūkh) and प्यास (pyās): a speaker says नींद (nīnd) is coming to them, not that they are sleepy. Three states in a row that Hindi treats as visitors rather than as things you are."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīnd",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīnd*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nīnd, then rāt, and say which one brings the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nīnd*, then *rāt*, and say which one brings the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does नींद (nīnd) mean? (\"sleep\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C63-fever",
+      "sequence": 2390,
+      "title": "बुख़ार (bukhār) — a fever",
+      "headword": "बुख़ार",
+      "romanization": "bukhār",
+      "gloss": "a fever",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0ada208a561a56ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nīnd mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: बुख़ार",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "बुख़ार (bukhār) — \"a fever\"."
+            },
+            {
+              "kind": "speech",
+              "text": "An Arabic word, bukhār, that came in through Persian. Its plain sense is steam or vapour — the mist that comes off hot water."
+            },
+            {
+              "kind": "speech",
+              "text": "Older medicine pictured a fever as exactly that: a vapour rising inside a body. The picture was wrong and the word stayed, which happens more often than not. Note the dot under the ख़, the same dot you have already met inside ख़ुशी."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukhār",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukhār*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bukhār, then ṭhīk, and say which one you would rather report",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *bukhār*, then *ṭhīk*, and say which one you would rather report]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does बुख़ार (bukhār) mean? (\"a fever\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "HI-C63-pain",
+      "sequence": 2400,
+      "title": "दर्द (dard) — pain",
+      "headword": "दर्द",
+      "romanization": "dard",
+      "gloss": "pain",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2b7a4c6795a31169",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Name the 4 words of this chapter so far."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: दर्द",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "दर्द (dard) — \"pain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A Persian word, dard, and it is usually traced to a very old root meaning 'to split, to tear' — the same root that surfaces in English tear, in the sense of ripping cloth."
+            },
+            {
+              "kind": "speech",
+              "text": "दर्द (dard) covers the ache in a घुटना and the grief in a chest with one word, and Urdu poetry leans on that double reach so hard that the word now sounds a little literary even when it is plainly medical."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: भूख (bhūkh), प्यास (pyās), नींद (nīnd), बुख़ार (bukhār), दर्द (dard). Enough to answer honestly when someone asks how you are."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "dard",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *dard*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order, then ṭhīk, if you are",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order, then *ṭhīk*, if you are]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does दर्द (dard) mean? (\"pain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

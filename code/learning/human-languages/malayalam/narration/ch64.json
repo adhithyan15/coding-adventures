@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 64,
+  "title": "Five Words That Join",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c4ed631ecfa6984a",
+  "lessons": [
+    {
+      "id": "ML-C64-then",
+      "sequence": 2090,
+      "title": "പിന്നെ (pinne) — then, after that",
+      "headword": "പിന്നെ",
+      "romanization": "pinne",
+      "gloss": "then, after that",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:aaf632ea1dea77fa",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did cuma mean, and what did pani mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പിന്നെ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പിന്നെ (pinne) — \"then, after that\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, built on pin, the piece meaning behind or at the back. What sits behind you in space becomes what comes after you in time, and the same short word does both jobs."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala also leans on it as a filler, the so... a speaker puts in front of a sentence to buy a second before starting it."
+            },
+            {
+              "kind": "speech",
+              "text": "After śari, it turns an agreement into a continuation: right, and then."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five small words that join one thing to the next."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinne",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinne*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "śari, then pinne, as though agreeing and going on",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *śari*, then *pinne*, as though agreeing and going on]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പിന്നെ (pinne) mean? (\"then, after that\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C64-soon",
+      "sequence": 2100,
+      "title": "ഉടനെ (uṭane) — soon, right away",
+      "headword": "ഉടനെ",
+      "romanization": "uṭane",
+      "gloss": "soon, right away",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1edbf20ef4ecbb55",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pinne mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ഉടനെ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ഉടനെ (uṭane) — \"soon, right away\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, built on uṭan, meaning along with — what happens beside a thing rather than after it."
+            },
+            {
+              "kind": "speech",
+              "text": "So the two words you now have divide the near future between them. Pinne leaves a gap; ഉടനെ (uṭane) closes it."
+            },
+            {
+              "kind": "speech",
+              "text": "In Kerala speech it also softens a refusal: not now, but not far off either."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "uṭane",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *uṭane*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pinne, then uṭane, and say which of the two leaves a gap",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pinne*, then *uṭane*, and say which of the two leaves a gap]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ഉടനെ (uṭane) mean? (\"soon, right away\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C64-sometimes",
+      "sequence": 2110,
+      "title": "ചിലപ്പോൾ (cilappōḷ) — sometimes",
+      "headword": "ചിലപ്പോൾ",
+      "romanization": "cilappōḷ",
+      "gloss": "sometimes",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9581e87a46ea34c1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did uṭane mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചിലപ്പോൾ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചിലപ്പോൾ (cilappōḷ) — \"sometimes\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Two pieces, and you can take them apart by ear: cila, some or a few, and pōḷ, the when-piece."
+            },
+            {
+              "kind": "speech",
+              "text": "That tail is the same one closing ippōḷ, the now-word. One says at this time, the other says at some times, and the shared ending is the reason the two rhyme."
+            },
+            {
+              "kind": "speech",
+              "text": "It is the word a Malayali reaches for when hedging: not a denial, only a fence around a claim."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cilappōḷ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cilappōḷ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ippōḷ, then cilappōḷ, and say which of the two is certain",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ippōḷ*, then *cilappōḷ*, and say which of the two is certain]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചിലപ്പോൾ (cilappōḷ) mean? (\"sometimes\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C64-only",
+      "sequence": 2120,
+      "title": "മാത്രം (mātraṁ) — only, that much and no more",
+      "headword": "മാത്രം",
+      "romanization": "mātraṁ",
+      "gloss": "only, that much and no more",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a44aa23ea801ca16",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cilappōḷ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: മാത്രം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "മാത്രം (mātraṁ) — \"only, that much and no more\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit mātra, a measure, from the root mā, to measure. The Greek metron behind metre grows from the same seed, so this word and a poet's line-length are cousins."
+            },
+            {
+              "kind": "speech",
+              "text": "Set after a word it fences that word off: this much, and nothing beyond it."
+            },
+            {
+              "kind": "speech",
+              "text": "Beside kuṟaccŭ, which says a small amount, മാത്രം (mātraṁ) says an exact amount and shuts the door."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mātraṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mātraṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṟaccŭ, then mātraṁ, and say which one sets a limit",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṟaccŭ*, then *mātraṁ*, and say which one sets a limit]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does മാത്രം (mātraṁ) mean? (\"only, that much and no more\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C64-but",
+      "sequence": 2130,
+      "title": "എന്നാൽ (ennāl) — but, on the other hand",
+      "headword": "എന്നാൽ",
+      "romanization": "ennāl",
+      "gloss": "but, on the other hand",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:54ef12595b4ea47b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did mātraṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: എന്നാൽ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "എന്നാൽ (ennāl) — \"but, on the other hand\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Built out of the saying-piece enn-, the one behind reported speech, and a tail meaning by or through: roughly, by that having been said."
+            },
+            {
+              "kind": "speech",
+              "text": "English arrives at almost the same phrase from the other end with that said, which is a small comfort — the shape is already familiar even though the pieces are not."
+            },
+            {
+              "kind": "speech",
+              "text": "So the word grants the previous sentence before it turns on it, which is a gentler move than a flat contradiction."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and a sentence can now go on, hurry, hedge, stop short or turn."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ennāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ennāl*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — pinne, uṭane, cilappōḷ, mātraṁ, ennāl",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *pinne*, *uṭane*, *cilappōḷ*, *mātraṁ*, *ennāl*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does എന്നാൽ (ennāl) mean? (\"but, on the other hand\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
