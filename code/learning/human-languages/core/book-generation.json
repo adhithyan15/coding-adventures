@@ -1099,6 +1099,41 @@
     },
     {
       "language": "gujarati",
+      "chapter": 1,
+      "output": "gujarati/book/chapters/ch01-greetings.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 2,
+      "output": "gujarati/book/chapters/ch02-introductions.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 3,
+      "output": "gujarati/book/chapters/ch03-responding.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 4,
+      "output": "gujarati/book/chapters/ch04-farewells.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
+      "chapter": 5,
+      "output": "gujarati/book/chapters/ch05-first-verbs.tex",
+      "unicodeScript": "Gujarati",
+      "scriptCommand": "gu"
+    },
+    {
+      "language": "gujarati",
       "chapter": 6,
       "output": "gujarati/book/chapters/ch06-numbers-1-5.tex",
       "unicodeScript": "Gujarati",
@@ -5765,31 +5800,6 @@
       "language": "german",
       "chapter": 16,
       "output": "german/book/chapters/ch16-sein.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 1,
-      "output": "gujarati/book/chapters/ch01-greetings.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 2,
-      "output": "gujarati/book/chapters/ch02-introductions.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 3,
-      "output": "gujarati/book/chapters/ch03-responding.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 4,
-      "output": "gujarati/book/chapters/ch04-farewells.tex"
-    },
-    {
-      "language": "gujarati",
-      "chapter": 5,
-      "output": "gujarati/book/chapters/ch05-first-verbs.tex"
     },
     {
       "language": "italian",

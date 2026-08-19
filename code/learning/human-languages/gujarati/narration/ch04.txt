@@ -3,35 +3,6 @@ Gujarati, chapter 4: Farewells.
 
 
 Lesson 1 of 5.
-કાલે મળીશું (kāle maḷīshũ) — "see you tomorrow".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-A goodbye for tomorrow — built on a word that means both tomorrow and yesterday.
-
-The letters in this word.
-કા (kā) + લે (le) becomes કાલે (kāle, "on [the] kāl"). The base is કાલ (kāl).
-
-The word, taken apart.
-કાલ (kāl) means both "tomorrow" and "yesterday" — the day on either side of today — from Sanskrit કાલ (kāla, "time"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl "timeless.") The verb's tense tells which: kāle maḷīshũ (future becomes "tomorrow we'll meet"), kāle maḷyā (past becomes "we met yesterday"). So કાલે મળીશું = "tomorrow we'll meet" = "see you tomorrow."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "kāle maḷīshũ"]
-[pause 8 seconds for the answer]
-[your turn — say: the puzzle — kāl means both tomorrow and yesterday]
-[pause 8 seconds for the answer]
-[your turn — say: the root and its cousins (kāla "time"; Hindi kal, Punjabi akāl)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)
-
-
-Lesson 2 of 5.
 મળીશું (maḷīshũ) — "(we) will meet".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -61,6 +32,35 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What verb is maḷīshũ from, and what special letter does it use? (Maḷvũ "to meet"; the retroflex ળ ḷ, which Hindi lacks.)
+
+
+Lesson 2 of 5.
+કાલે મળીશું (kāle maḷīshũ) — "see you tomorrow".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+A goodbye for tomorrow — built on a word that means both tomorrow and yesterday.
+
+The letters in this word.
+કા (kā) + લે (le) becomes કાલે (kāle, "on [the] kāl"). The base is કાલ (kāl).
+
+The word, taken apart.
+કાલ (kāl) means both "tomorrow" and "yesterday" — the day on either side of today — from Sanskrit કાલ (kāla, "time"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl "timeless.") The verb's tense tells which: kāle maḷīshũ (future becomes "tomorrow we'll meet"), kāle maḷyā (past becomes "we met yesterday"). So કાલે મળીશું = "tomorrow we'll meet" = "see you tomorrow."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "kāle maḷīshũ"]
+[pause 8 seconds for the answer]
+[your turn — say: the puzzle — kāl means both tomorrow and yesterday]
+[pause 8 seconds for the answer]
+[your turn — say: the root and its cousins (kāla "time"; Hindi kal, Punjabi akāl)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)
 
 
 Lesson 3 of 5.
@@ -121,7 +121,7 @@ Warm-up.
 [pause 2 seconds]
 No new words. Three ways to part — none of them a blunt "goodbye."
 
-The farewells.
+Why it's said this way — the farewells.
 [pause 1 second after each]
 [your turn — say: the quick "come again" (Chapter 1) — āvjo]
 [pause 8 seconds for the answer]
@@ -130,7 +130,7 @@ The farewells.
 [your turn — say: "see you tomorrow" — kāle maḷīshũ]
 [pause 8 seconds for the answer]
 
-The atoms.
+The word, taken apart — the atoms.
 [pause 2 seconds]
 [your turn — say: "again" and "(we) will meet" (pāchhā, maḷīshũ)]
 [pause 8 seconds for the answer]
@@ -139,7 +139,7 @@ The atoms.
 [your turn — say: the retroflex letter in maḷīshũ (ળ, ḷ)]
 [pause 8 seconds for the answer]
 
-Roots you now carry.
+What you've built — roots you now carry.
 [pause 2 seconds]
 āvjo ("goodbye") = "come [again]," from āvvũ "to come".
 maḷīshũ from maḷvũ "to meet" (Sanskrit mil-); the retroflex ળ.

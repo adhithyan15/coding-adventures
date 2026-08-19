@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: GU-C05-bolvun
+spine_node: SPINE-SAY-WHAT-I-DO
+sequence: 270
 chapter: 5
 type: word
 headword: બોલવું
@@ -8,23 +11,38 @@ concept_tag: GU-VERB-BOLVU
 prerequisites: [GU-C03-hun]
 sounds: [o-sign, u-nasal]
 roots: [bol-speak]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [GU-CONCEPT-C03-HUN-01]
+introduces:
+  knowledge: [GU-CONCEPT-C05-BOLVUN-01]
+practises:
+  knowledge: [GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-gujarati
 reviews_of: []
 ---
 
 # બોલવું (bolvũ) — "to speak," your first full verb
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01] -->
 
 [PAUSE 2s] So far, "to be." Here is a verb that *does* something — in a shape
 you'll see on every Gujarati verb.
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[GU-CONCEPT-C05-BOLVUN-01]; assesses=[GU-CONCEPT-C03-HUN-01] -->
 
 **બો** (*bo*) + **લ** (*la*) + **વું** (*vũ*, with the nasal) → **બોલવું**
 (*bolvũ*).
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01] -->
 
 **બોલવું** (*bolvũ*, "to speak") is a native Indo-Aryan verb (the same *bol-* as
 Hindi *bolnā* and Punjabi *bolṇā*). Its ending **-વું** (*-vũ*) is Gujarati's
@@ -33,6 +51,7 @@ infinitive marker — the "to ___" form: *bol-vũ* "to speak," *maḷ-vũ* "to m
 the **stem** (*bol-*).
 
 ## Grammar Lens: stem + person + copula
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01] -->
 
 To say "I speak," Gujarati adds a person-ending to the stem and follows it with
 the copula:
@@ -46,6 +65,7 @@ The simple present is the same for a man or a woman — Gujarati saves its **thr
 genders** for adjectives and the past tense, not the plain present.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "bolvũ"]
@@ -53,6 +73,7 @@ genders** for adjectives and the past tense, not the plain present.
 - [YOU SAY: "I speak" — *hũ bolũ chhũ*]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C03-HUN-01, GU-CONCEPT-C05-BOLVUN-01] -->
 
 [PAUSE 3s] What ending marks a Gujarati infinitive, and how do you say "I speak"?
 (*-vũ*; *hũ bolũ chhũ*.)

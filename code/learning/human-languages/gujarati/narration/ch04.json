@@ -4,134 +4,11 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:a7cb2a54ee279339",
+  "sourceHash": "fnv1a64:0bf6cff43642d6f5",
   "lessons": [
     {
-      "id": "GU-C04-kaale",
-      "sequence": null,
-      "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
-      "headword": "કાલે મળીશું",
-      "romanization": "",
-      "gloss": "see you tomorrow (and the કાલ puzzle)",
-      "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:1d688df2a4389d1a",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A goodbye for tomorrow — built on a word that means both tomorrow and yesterday."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કા (kā) + લે (le) becomes કાલે (kāle, \"on [the] kāl\"). The base is કાલ (kāl)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "કાલ (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit કાલ (kāla, \"time\"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl \"timeless.\") The verb's tense tells which: kāle maḷīshũ (future becomes \"tomorrow we'll meet\"), kāle maḷyā (past becomes \"we met yesterday\"). So કાલે મળીશું = \"tomorrow we'll meet\" = \"see you tomorrow.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"kāle maḷīshũ\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"kāle maḷīshũ\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the puzzle — kāl means both tomorrow and yesterday",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the root and its cousins (kāla \"time\"; Hindi kal, Punjabi akāl)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the root and its cousins (*kāla* \"time\"; Hindi *kal*, Punjabi *akāl*)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GU-C04-malishun",
-      "sequence": null,
+      "sequence": 220,
       "title": "મળીશું (maḷīshũ) — \"(we) will meet\"",
       "headword": "મળીશું",
       "romanization": "",
@@ -142,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:00667abc9913b227",
+      "sourceHash": "fnv1a64:b7ae18860fe57ac0",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -264,8 +141,131 @@
       ]
     },
     {
+      "id": "GU-C04-kaale",
+      "sequence": 230,
+      "title": "કાલે મળીશું (kāle maḷīshũ) — \"see you tomorrow\"",
+      "headword": "કાલે મળીશું",
+      "romanization": "",
+      "gloss": "see you tomorrow (and the કાલ puzzle)",
+      "script": "gujarati",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:37839346a361286d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A goodbye for tomorrow — built on a word that means both tomorrow and yesterday."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કા (kā) + લે (le) becomes કાલે (kāle, \"on [the] kāl\"). The base is કાલ (kāl)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "કાલ (kāl) means both \"tomorrow\" and \"yesterday\" — the day on either side of today — from Sanskrit કાલ (kāla, \"time\"). (It is the very same kāla behind Hindi's kal, Bengali's kāl, and Punjabi's akāl \"timeless.\") The verb's tense tells which: kāle maḷīshũ (future becomes \"tomorrow we'll meet\"), kāle maḷyā (past becomes \"we met yesterday\"). So કાલે મળીશું = \"tomorrow we'll meet\" = \"see you tomorrow.\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"kāle maḷīshũ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"kāle maḷīshũ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the puzzle — kāl means both tomorrow and yesterday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the puzzle — *kāl* means both **tomorrow** and **yesterday**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the root and its cousins (kāla \"time\"; Hindi kal, Punjabi akāl)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the root and its cousins (*kāla* \"time\"; Hindi *kal*, Punjabi *akāl*)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two opposite days does kāl mean, and what tells them apart? (Both tomorrow and yesterday; the verb's tense.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-C04-pachha",
-      "sequence": null,
+      "sequence": 240,
       "title": "પાછા (pāchhā) — \"again, back\"",
       "headword": "પાછા",
       "romanization": "",
@@ -276,7 +276,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ed7b37cea503d5c3",
+      "sourceHash": "fnv1a64:26baec6556e78839",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -379,7 +379,7 @@
     },
     {
       "id": "GU-C04-pachha-malishun",
-      "sequence": null,
+      "sequence": 250,
       "title": "પાછા મળીશું (pāchhā maḷīshũ) — \"we'll meet again\"",
       "headword": "પાછા મળીશું",
       "romanization": "",
@@ -390,7 +390,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:722ed898b16425d4",
+      "sourceHash": "fnv1a64:2c91bb7837b60432",
       "notice": null,
       "blocks": [
         {
@@ -482,7 +482,7 @@
     },
     {
       "id": "GU-C04-practice",
-      "sequence": null,
+      "sequence": 260,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -493,7 +493,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5f7441aa51718c15",
+      "sourceHash": "fnv1a64:5d84795dc2a058b6",
       "notice": null,
       "blocks": [
         {
@@ -515,8 +515,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The farewells",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way — the farewells",
           "segments": [
             {
               "kind": "pause",
@@ -555,8 +555,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
+          "type": "etymology",
+          "title": "The word, taken apart — the atoms",
           "segments": [
             {
               "kind": "pause",
@@ -595,8 +595,8 @@
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
           "segments": [
             {
               "kind": "pause",
