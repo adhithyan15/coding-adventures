@@ -472,6 +472,29 @@ predicted unblock count); `module` pass count rose from 1152 to 1155
 (+3, one per fully-unblocked module) and its `NotYetSupported` count
 fell from 78 to 75.
 
+SIMD widen PR18 (task #171-173) implements `i8x16.swizzle`/
+`extract_lane_s`/`extract_lane_u`/`replace_lane`. No new file is
+vendored (no `fetch_testsuite.py` change); this is a baseline
+regeneration against the already-vendored `simd_load.wast` (task
+#162-164 above). That file has 17 `assert_return` directives across
+14 modules, of which 7 directives (one module each) were stuck
+`NotYetSupported`: 2 needed exactly the opcodes this PR adds
+(`as-i8x16_extract_lane_s-value/0`, needing `i8x16.extract_lane_s`;
+`as-i8x16.swizzle-operand`, needing `i8x16.swizzle`) and the other 5
+need float-lane arithmetic/conversion ops this PR does not touch
+(`f32x4.mul`/`f32x4.abs`/`f32x4.min`/`i32x4.trunc_sat_f32x4_s`/
+`f32x4.convert_i32x4_u`, none implemented yet). Both of this PR's
+target modules depend on nothing else unimplemented (each is just
+`v128.load` plus the one new op), so both fully unblock. Aggregate
+`assert_return` rose from 24155/24172 to 24157/24174 (+2 pass, +2
+gradeable, exactly matching the predicted unblock count); `module`
+pass count rose from 1155 to 1157 (+2, one per fully-unblocked
+module) and its `NotYetSupported` count fell from 75 to 73.
+`i8x16.replace_lane`/`extract_lane_u` are also new in this PR but
+don't unblock anything in `simd_load.wast` -- no directive there
+exercises either op; they're covered by dedicated unit tests in
+`wasm-execution`/`wasm-wast-parser`/`wasm-validator` instead.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.

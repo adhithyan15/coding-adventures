@@ -2,6 +2,40 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.30] - 2026-08-19 (task #171-173 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane)
+
+### Added
+
+- `register_simd` gains four new dispatch arms:
+  - `SimdOpKind::Swizzle` pops two `v128`s in the usual binary order
+    (index vector `s` on top, popped first; data vector `a` popped
+    second); for each of the 16 result lanes, looks up `a[s[i]]` if
+    `s[i] < 16`, else `0`. The `< 16` bounds check runs BEFORE
+    indexing `a` -- the index byte `s[i]` is an unconstrained `u8`
+    (`0..=255`), so without the check an adversarial/malformed index
+    vector could index `a` out of bounds.
+  - `SimdOpKind::ExtractLaneI8x16S`/`ExtractLaneI8x16U` pop a `v128`,
+    read the `aux`-selected `i8` lane (sign- or zero-extended to
+    `i32`), same shape as the pre-existing `ExtractLane` arm but at
+    `i8x16`'s 0-15 lane range. Bounds-checked (`lane_idx >= 16`
+    rejected with a clean `Err`) BEFORE indexing the 16-byte lane
+    array, same discipline as `ExtractLane`'s own 0-3 check.
+  - `SimdOpKind::ReplaceLaneI8x16` pops an `i32` (the replacement
+    value, only its low byte used) then a `v128` (pop order matches
+    the shift family's own "scalar pushed last, popped first"
+    convention), overwrites the `aux`-selected lane, pushes the result.
+    Same bounds-check discipline as the extract-lane arms above.
+- 10 new tests in `mod tests`: `i8x16.swizzle` permutation (a real
+  lane-reversal, not just identity) and its out-of-range-index-produces-
+  zero case; `extract_lane_s` sign-extension and `extract_lane_u`
+  zero-extension of the SAME `0x80` byte (proving they genuinely
+  differ, not just each "doing something"); both extract variants'
+  out-of-range-lane clean-error case; `replace_lane`'s
+  only-target-lane-changes case, its only-low-byte-of-i32-used case,
+  and its own out-of-range-lane clean-error case.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.29] - 2026-08-19 (task #168-170 — SIMD: float splat family, first float-lane ops)
 
 ### Added

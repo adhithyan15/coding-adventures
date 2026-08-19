@@ -2,6 +2,30 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.32] - 2026-08-19 (task #171-173 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane type rules)
+
+### Added
+
+- `SimdOpKind::Swizzle` joins the existing binary-`v128`-op type-check
+  arm (pop two `V128`, push `V128`) -- an index-vector-driven
+  permutation at the runtime level, but the same shape as
+  `Add`/`AddI8x16`/etc. to the type checker.
+- New `SimdOpKind::ExtractLaneI8x16S | ExtractLaneI8x16U` arm: same
+  shape as the pre-existing `ExtractLane` arm (skip the raw lane-index
+  immediate byte, pop `V128`, push `I32`) -- the 0-15 lane range and
+  the signed/unsigned split are runtime concerns, invisible here.
+- New `SimdOpKind::ReplaceLaneI8x16` arm: the GENUINELY NEW shape --
+  skip the lane-index immediate byte, then pop `I32` (the replacement
+  value, popped first, matching the shift family's own mixed-type
+  pop order) then `V128` (the base operand), push `V128`.
+- 4 new tests: valid-module cases for all 4 new ops (`swizzle`,
+  `extract_lane_s`/`_u` together, `replace_lane`), plus an
+  invalid-module regression confirming `replace_lane` genuinely
+  rejects a `v128` in the `i32` value slot, not just accepting
+  whatever's on the stack.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.31] - 2026-08-19 (task #168-170 — SIMD: float splat family type rules)
 
 ### Added

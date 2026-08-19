@@ -1480,14 +1480,17 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::Xor
                     | wasm_opcodes::SimdOpKind::AddI64x2
                     | wasm_opcodes::SimdOpKind::SubI64x2
-                    | wasm_opcodes::SimdOpKind::MulI64x2 => {
+                    | wasm_opcodes::SimdOpKind::MulI64x2
+                    | wasm_opcodes::SimdOpKind::Swizzle => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
                         // `i16x8.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
                         // `extmul_low`/`high_i8x16_s`/`_u`/`and`/`andnot`/
-                        // `or`/`xor` all read/write a narrower-than-`v128`
-                        // (or, for the bitwise ops, lane-width-agnostic)
+                        // `or`/`xor`/`i8x16.swizzle` (SIMD widen PR18) all
+                        // read/write a narrower-than-`v128` (or, for the
+                        // bitwise ops, lane-width-agnostic; or, for
+                        // `swizzle`, an index-vector-driven permutation)
                         // shape internally, but AT THE TYPE LEVEL they're
                         // the same pop-two-push-one `v128` shape as
                         // `Add`/`Sub`/`Mul` above -- the type-checker
@@ -1589,6 +1592,41 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         offset += 1;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::I32);
+                    }
+                    wasm_opcodes::SimdOpKind::ExtractLaneI8x16S | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U => {
+                        // i8x16.extract_lane_s/_u (SIMD widen PR18): same
+                        // shape as `ExtractLane` above -- a single raw
+                        // lane-index byte immediate, pop one V128, push
+                        // one I32. The valid 0-15 lane RANGE (vs
+                        // `ExtractLane`'s 0-3) and the sign-/zero-extend
+                        // split are runtime concerns, invisible here --
+                        // the type checker only needs to skip the
+                        // immediate byte and adjust the stack.
+                        if offset >= code.len() {
+                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated i8x16.extract_lane_s/u lane index")));
+                        }
+                        offset += 1;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::I32);
+                    }
+                    wasm_opcodes::SimdOpKind::ReplaceLaneI8x16 => {
+                        // i8x16.replace_lane (SIMD widen PR18): a
+                        // GENUINELY NEW shape (see its own `SimdOpKind`
+                        // doc comment in wasm-opcodes) -- combines
+                        // `ExtractLane*`'s lane-index immediate with the
+                        // shift family's mixed-type binary pop order
+                        // (`(ixNxM.shl (v128 $a) (i32 $amount))` pushes
+                        // the v128 first, the scalar second, so the
+                        // scalar is on TOP of stack and popped FIRST):
+                        // pop I32 (the replacement value), then pop V128
+                        // (the base operand), push V128.
+                        if offset >= code.len() {
+                            return Err(ValidationError::Other(format!("function #{func_idx}: truncated i8x16.replace_lane lane index")));
+                        }
+                        offset += 1;
+                        pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                        push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::AnyTrue
                     | wasm_opcodes::SimdOpKind::AllTrueI8x16
