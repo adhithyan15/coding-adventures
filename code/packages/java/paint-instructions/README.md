@@ -35,16 +35,23 @@ subtype and every `instanceof` chain that needs updating gets flagged.
 
 ### PaintInstruction (sealed)
 
-Two subtypes cover all current 2D barcode shapes:
+Seven subtypes cover both 2D barcode shapes and the full text-mode
+rendering contract (`P2D02-paint-vm-ascii.md`):
 
-- **PaintRect** — filled axis-aligned rectangle. Used by QR Code, Data Matrix,
-  Aztec Code, PDF417.
+- **PaintRect** — filled and/or stroked axis-aligned rectangle. Used by QR
+  Code, Data Matrix, Aztec Code, PDF417.
 - **PaintPath** — filled closed polygon built from `PathCommand`s. Used by
   MaxiCode (flat-top hexagons).
+- **PaintLine** — a stroked line segment between two points.
+- **PaintGlyphRun** — pre-positioned glyphs (`PaintGlyphPlacement`).
+- **PaintGroup** — a child list with an optional `Transform2D` and opacity.
+- **PaintClip** — a rectangular clip region wrapping a child list.
+- **PaintLayer** — a child list with a filter flag, blend mode, opacity, and transform.
 
 ```java
 PaintInstruction rect = new PaintInstruction.PaintRect(40, 40, 10, 10, "#000000");
 PaintInstruction hex  = new PaintInstruction.PaintPath(hexCommands, "#000000");
+PaintInstruction line = PaintInstructions.paintLine(0, 0, 10, 10, "#000000", 1.0);
 ```
 
 ### PaintScene

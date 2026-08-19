@@ -51,19 +51,22 @@
       "id": "haskell-cowsay",
       "title": "Haskell cowsay: add glyph_run to paint-vm-ascii, then cowsay",
       "depends_on": [],
-      "status": "pr-open-auto-merge",
+      "status": "merged",
       "pr_number": 12074,
+      "merge_commit": "89afea0efa",
       "priority": 4,
       "backend_work": "delivered the full P2D02 contract (rect w/ stroke, line, glyph_run, group, clip, layer) to haskell/paint-vm-ascii, not just glyph_run -- same scope as perl-cowsay",
-      "notes": "Found and fixed a real undefined-thunk bug in barcode-layout-1d (constructed PaintRect directly instead of via makeRect, missed by the initial grep-based consumer sweep -- only caught by actually running barcode-1d's test suite). Went through 5 rounds of /security-review; fixed unvalidated line/clip geometry, a product-only scene-size-cap bypass (zero-width/height scene), and an unsaturated Double->Int cell-coordinate conversion that could hit Int's minBound and defeat downstream clip clamping via integer wraparound (see lessons.md Haskell section, the \"finite is not safely convertible to Int\" lesson). Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
+      "notes": "Found and fixed a real undefined-thunk bug in barcode-layout-1d (constructed PaintRect directly instead of via makeRect, missed by the initial grep-based consumer sweep -- only caught by actually running barcode-1d's test suite). Went through 5 rounds of /security-review; fixed unvalidated line/clip geometry, a product-only scene-size-cap bypass (zero-width/height scene), and an unsaturated Double->Int cell-coordinate conversion that could hit Int's minBound and defeat downstream clip clamping via integer wraparound (see lessons.md Haskell section, the \"finite is not safely convertible to Int\" lesson). Verified byte-identical to merged Perl port. Merged clean -- verified merge commit 89afea0efa on origin/main contains all security fixes (no stale-HEAD race)."
     },
     {
       "id": "java-cowsay",
       "title": "Java cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "pending",
+      "status": "pr-open-auto-merge",
+      "pr_number": 12079,
       "priority": 5,
-      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer)"
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended java/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive constructor overloads)",
+      "notes": "Applied every hardening lesson learned from haskell-cowsay's 5 review rounds from the start (geometry validation incl. sum-to-infinity, per-axis+total scene caps, saturating coordinate conversion, glyph safety filter incl. Java-specific surrogate-pair rejection). One /security-review round still found and fixed an uncaught IOException in Main leaking a raw stack trace. Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
     },
     {
       "id": "kotlin-cowsay",
