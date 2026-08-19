@@ -1275,6 +1275,31 @@ precedent §13.3 and §13.2 already set for the oversized-opaque case:
   `Opaque` arm already makes. The record round-trips byte for byte: still
   unreadable, never silently repaired, never dropped.
 
+**A zeroization window, found and closed during security review.** Unlike
+`Opaque` — genuinely unknown content, not assumed sensitive — a
+`Quarantined` record's declared type names one of this crate's own
+secret-bearing schemas, so its `payload_bytes` usually *are* real plaintext
+(the vault-records doc comment on the variant states this explicitly).
+`AnyRecord` has no `Drop` impl of its own (typed variants each wipe
+themselves; `Opaque` and `Quarantined` do not, by design — see the
+`AnyRecord`/`Zeroize` NOTE in vault-records), so a `payload` value bound to
+a bare local variable is wiped only by something that explicitly zeroizes
+it. `ItemDocument` does that the moment `payload` is moved inside it, since
+its own `Drop` zeroizes on any later failure — but only from that point
+on. `decode_live`'s original field order (1–8, then 9, then 10) left a
+window: `payload` was bound by decoding field 8, and two more fallible
+decodes (fields 9 and 10) ran *after* it and *before* `ItemDocument::new`
+consumed it. A peer-authored revision fully controls all three fields in
+one sealed object, so a schema-mismatched record paired with a malformed
+attachments or manifest field would return early through `?` with
+`payload` still a bare local — dropped by ordinary (non-zeroizing) Rust
+drop semantics, leaking its plaintext into freed heap memory. `decode_live`
+now decodes fields 9 and 10 before field 8; `fields` is already a
+key-indexed map by that point; so nothing about the wire's byte order
+depends on which order the `remove` calls happen in, and reordering closes
+the window: the statement immediately after `payload` is bound is
+`ItemDocument::new`, with no fallible step between them.
+
 **One new gap this closes in passing.** Before this fix, an item's
 `schema()` field (the revision's own declared content type, checked for
 agreement with `record_content_type(&payload)` by `ItemDocument::validate`)

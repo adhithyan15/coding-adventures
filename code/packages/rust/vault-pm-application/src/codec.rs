@@ -1186,8 +1186,25 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
             .remove(&7)
             .ok_or(ApplicationError::IntegrityFailure)?,
     )?;
-    let record_bytes = take_bytes(&mut fields, 8)?;
-    let payload = decode_record(&record_bytes).map_err(|_| ApplicationError::IntegrityFailure)?;
+    // Fields 9 and 10 (attachments, attachment manifests) are decoded before
+    // field 8 (the record) on purpose, even though the wire order is 8, 9,
+    // 10 -- `fields` is already a key-indexed map at this point, so nothing
+    // about the wire's byte order depends on the order these two `remove`
+    // calls happen in. What *does* depend on it: `decode_record` can return
+    // `AnyRecord::Quarantined`, whose `payload_bytes` may carry a peer's
+    // genuine secret-bearing plaintext (VLT-PM05 §13.5 -- a schema-
+    // mismatched `Login` still has a real title/username sitting in its raw
+    // bytes). `AnyRecord` has no `Drop` of its own (typed variants each
+    // implement `Drop` themselves; `Quarantined` and `Opaque` do not, by
+    // design -- see the NOTE above `AnyRecord`'s `Zeroize` impl in
+    // vault-records), so a `payload` bound to a local variable is wiped only
+    // when something explicitly zeroizes it. `ItemDocument` does that for
+    // us the moment `payload` is moved inside it (its own `Drop` calls
+    // `self.zeroize()`), but only from that point on -- any fallible step
+    // between binding `payload` and constructing the `ItemDocument` is a
+    // window where an early `?` return would drop an unzeroized secret.
+    // Decoding fields 9 and 10 first, before field 8, empties that window:
+    // once `payload` exists, the very next statement is `ItemDocument::new`.
     let attachments = decode_observed(
         fields
             .remove(&9)
@@ -1197,6 +1214,8 @@ fn decode_live(value: CborValue) -> Result<ItemDocument, ApplicationError> {
         None => BTreeMap::new(),
         Some(value) => decode_attachment_manifest_references(value)?,
     };
+    let record_bytes = take_bytes(&mut fields, 8)?;
+    let payload = decode_record(&record_bytes).map_err(|_| ApplicationError::IntegrityFailure)?;
     ItemDocument::new(
         id,
         schema,
