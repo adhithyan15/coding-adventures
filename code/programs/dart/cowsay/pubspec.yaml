@@ -1,0 +1,20 @@
+name: cowsay
+description: >
+  A configurable ASCII cow that speaks or thinks, routed through the
+  paint-vm-ascii backend (see code/specs/cowsay-paintvm-pipeline.md).
+version: 0.1.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_cli_builder:
+    path: ../../../packages/dart/cli-builder
+  coding_adventures_paint_instructions:
+    path: ../../../packages/dart/paint-instructions
+  coding_adventures_paint_vm_ascii:
+    path: ../../../packages/dart/paint-vm-ascii
+
+dev_dependencies:
+  test: ^1.25.0

@@ -1,0 +1,19 @@
+name: coding_adventures_paint_vm_ascii
+version: 0.1.0
+description: >
+  A small, pure terminal backend for PaintScene values. Implements the full
+  P2D02-paint-vm-ascii.md contract: filled/stroked rectangles, lines, glyph
+  runs, and plain (untransformed, unfiltered, fully opaque) groups/clips/
+  layers.
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_paint_instructions:
+    path: ../paint-instructions
+
+dev_dependencies:
+  test: ^1.25.0

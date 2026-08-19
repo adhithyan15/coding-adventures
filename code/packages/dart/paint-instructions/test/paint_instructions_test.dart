@@ -505,24 +505,220 @@ void main() {
   // ==========================================================================
 
   group('PaintInstruction sealed switch', () {
+    // Deliberately exercises every permitted subtype with no wildcard/else
+    // branch: adding an eighth subtype to PaintInstruction should make this
+    // fail to compile (exhaustiveness check), not fail silently at runtime
+    // -- that's the whole point of a sealed class.
+    String kindOf(PaintInstruction instr) => switch (instr) {
+          PaintRect() => 'rect',
+          PaintPath() => 'path',
+          PaintLine() => 'line',
+          PaintGlyphRun() => 'glyph_run',
+          PaintGroup() => 'group',
+          PaintClip() => 'clip',
+          PaintLayer() => 'layer',
+        };
+
     test('switch on PaintRect produces "rect"', () {
-      final PaintInstruction instr =
-          paintRect(x: 0, y: 0, width: 1, height: 1);
-      final kind = switch (instr) {
-        PaintRect() => 'rect',
-        PaintPath() => 'path',
-      };
-      expect(kind, equals('rect'));
+      final instr = paintRect(x: 0, y: 0, width: 1, height: 1);
+      expect(kindOf(instr), equals('rect'));
     });
 
     test('switch on PaintPath produces "path"', () {
-      final PaintInstruction instr =
-          paintPath(commands: [PathCommand.close()]);
-      final kind = switch (instr) {
-        PaintRect() => 'rect',
-        PaintPath() => 'path',
-      };
-      expect(kind, equals('path'));
+      final instr = paintPath(commands: [PathCommand.close()]);
+      expect(kindOf(instr), equals('path'));
+    });
+
+    test('switch on PaintLine produces "line"', () {
+      final instr = paintLine(
+        x1: 0,
+        y1: 0,
+        x2: 1,
+        y2: 1,
+        stroke: '#000',
+        strokeWidth: 1,
+      );
+      expect(kindOf(instr), equals('line'));
+    });
+
+    test('switch on PaintGlyphRun produces "glyph_run"', () {
+      final instr = paintGlyphRun(
+        glyphs: const [],
+        fontRef: 'font',
+        fontSize: 1,
+        fill: '#000',
+      );
+      expect(kindOf(instr), equals('glyph_run'));
+    });
+
+    test('switch on PaintGroup produces "group"', () {
+      final instr = paintGroup(children: const []);
+      expect(kindOf(instr), equals('group'));
+    });
+
+    test('switch on PaintClip produces "clip"', () {
+      final instr =
+          paintClip(x: 0, y: 0, width: 1, height: 1, children: const []);
+      expect(kindOf(instr), equals('clip'));
+    });
+
+    test('switch on PaintLayer produces "layer"', () {
+      final instr = paintLayer(children: const []);
+      expect(kindOf(instr), equals('layer'));
+    });
+  });
+
+  // ==========================================================================
+  // PaintRect stroke (P2D02 extension)
+  // ==========================================================================
+
+  group('PaintRect stroke', () {
+    test('stroke and strokeWidth default to empty and zero', () {
+      const r = PaintRect(x: 0, y: 0, width: 10, height: 10, fill: '#000', metadata: {});
+      expect(r.stroke, equals(''));
+      expect(r.strokeWidth, equals(0.0));
+    });
+
+    test('stroke and strokeWidth are stored when provided', () {
+      const r = PaintRect(
+        x: 0,
+        y: 0,
+        width: 10,
+        height: 10,
+        fill: '',
+        metadata: {},
+        stroke: '#000000',
+        strokeWidth: 1.5,
+      );
+      expect(r.stroke, equals('#000000'));
+      expect(r.strokeWidth, equals(1.5));
+    });
+  });
+
+  // ==========================================================================
+  // Transform2D
+  // ==========================================================================
+
+  group('Transform2D', () {
+    test('identity reports isIdentity true', () {
+      expect(Transform2D.identity.isIdentity, isTrue);
+    });
+
+    test('non-identity reports isIdentity false', () {
+      const t = Transform2D(a: 2, b: 0, c: 0, d: 1, e: 0, f: 0);
+      expect(t.isIdentity, isFalse);
+    });
+  });
+
+  // ==========================================================================
+  // PaintGlyphPlacement
+  // ==========================================================================
+
+  test('PaintGlyphPlacement stores glyphId x y', () {
+    const p = PaintGlyphPlacement(glyphId: 104, x: 8, y: 16);
+    expect(p.glyphId, equals(104));
+    expect(p.x, equals(8.0));
+    expect(p.y, equals(16.0));
+  });
+
+  // ==========================================================================
+  // PaintLine
+  // ==========================================================================
+
+  test('paintLine stores endpoints stroke and strokeWidth', () {
+    final line = paintLine(x1: 0, y1: 0, x2: 10, y2: 20, stroke: '#000000', strokeWidth: 1);
+    expect(line.x1, equals(0.0));
+    expect(line.y1, equals(0.0));
+    expect(line.x2, equals(10.0));
+    expect(line.y2, equals(20.0));
+    expect(line.stroke, equals('#000000'));
+    expect(line.strokeWidth, equals(1.0));
+  });
+
+  // ==========================================================================
+  // PaintGlyphRun
+  // ==========================================================================
+
+  test('paintGlyphRun stores glyphs fontRef fontSize fill', () {
+    final run = paintGlyphRun(
+      glyphs: const [
+        PaintGlyphPlacement(glyphId: 104, x: 0, y: 0),
+        PaintGlyphPlacement(glyphId: 105, x: 8, y: 0),
+      ],
+      fontRef: 'terminal-mono',
+      fontSize: 16,
+      fill: '#000000',
+    );
+    expect(run.glyphs.length, equals(2));
+    expect(run.fontRef, equals('terminal-mono'));
+    expect(run.fontSize, equals(16.0));
+    expect(run.fill, equals('#000000'));
+  });
+
+  // ==========================================================================
+  // PaintGroup
+  // ==========================================================================
+
+  group('PaintGroup', () {
+    test('has no transform and no opacity by default', () {
+      final group = paintGroup(children: const []);
+      expect(group.transform, isNull);
+      expect(group.opacity, isNull);
+    });
+
+    test('preserves children in order', () {
+      final rect = paintRect(x: 0, y: 0, width: 1, height: 1);
+      final group = paintGroup(children: [rect]);
+      expect(group.children.length, equals(1));
+      expect(group.children[0], same(rect));
+    });
+
+    test('explicit transform and opacity are stored', () {
+      const group = PaintGroup(
+        children: [],
+        transform: Transform2D(a: 2, b: 0, c: 0, d: 2, e: 0, f: 0),
+        opacity: 0.5,
+      );
+      expect(group.transform!.a, equals(2.0));
+      expect(group.opacity, equals(0.5));
+    });
+  });
+
+  // ==========================================================================
+  // PaintClip
+  // ==========================================================================
+
+  test('paintClip stores clip bounds and children', () {
+    final glyph = paintGlyphRun(
+      glyphs: const [PaintGlyphPlacement(glyphId: 97, x: 0, y: 0)],
+      fontRef: 'font',
+      fontSize: 1,
+      fill: '#000',
+    );
+    final clip = paintClip(x: 0, y: 0, width: 8, height: 16, children: [glyph]);
+    expect(clip.x, equals(0.0));
+    expect(clip.y, equals(0.0));
+    expect(clip.width, equals(8.0));
+    expect(clip.height, equals(16.0));
+    expect(clip.children.length, equals(1));
+  });
+
+  // ==========================================================================
+  // PaintLayer
+  // ==========================================================================
+
+  group('PaintLayer', () {
+    test('has no filters and no transform opacity blendMode by default', () {
+      final layer = paintLayer(children: const []);
+      expect(layer.hasFilters, isFalse);
+      expect(layer.blendMode, isNull);
+      expect(layer.opacity, isNull);
+      expect(layer.transform, isNull);
+    });
+
+    test('hasFilters can be set explicitly', () {
+      const layer = PaintLayer(children: [], hasFilters: true);
+      expect(layer.hasFilters, isTrue);
     });
   });
 
