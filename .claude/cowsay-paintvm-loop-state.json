@@ -62,9 +62,11 @@
       "id": "java-cowsay",
       "title": "Java cowsay: build paint-vm-ascii backend from scratch, then cowsay",
       "depends_on": [],
-      "status": "in-progress",
+      "status": "pr-open-auto-merge",
+      "pr_number": 12079,
       "priority": 5,
-      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer)"
+      "backend_work": "new paint-vm-ascii package implementing full P2D02 contract (rect/line/glyph_run/group/clip/layer); also extended java/paint-instructions with the same 5 new instruction types + stroke on PaintRect (fully additive constructor overloads)",
+      "notes": "Applied every hardening lesson learned from haskell-cowsay's 5 review rounds from the start (geometry validation incl. sum-to-infinity, per-axis+total scene caps, saturating coordinate conversion, glyph safety filter incl. Java-specific surrogate-pair rejection). One /security-review round still found and fixed an uncaught IOException in Main leaking a raw stack trace. Verified byte-identical to merged Perl port. Auto-merge set; awaiting CI."
     },
     {
       "id": "kotlin-cowsay",
