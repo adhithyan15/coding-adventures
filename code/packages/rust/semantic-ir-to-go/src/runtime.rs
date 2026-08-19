@@ -1103,6 +1103,13 @@ func _sir_format_d(v Value, visited map[Value]bool) string {
 	if _, ok := v.(*Closure); ok {
 		return "<closure>"
 	}
+	// SIR23 Tier A: a symbolic term prints in generic `head(args, ...)`
+	// form. See `_sir_cas_to_s`'s own doc comment for why this backend
+	// gives terms a display path when SIR22's `*NDArray` deliberately has
+	// none.
+	if t, ok := v.(*SirCasTerm); ok {
+		return _sir_cas_to_s(t, 0)
+	}
 	// A SIR exception prints as its message (Ruby's `exception.message`):
 	// the raised message when present, else the class name.  This lets a
 	// `rescue => e` do `print(e)` and see something meaningful rather than
@@ -5788,6 +5795,716 @@ func _sir_ndarray_catenate(av Value, bv Value) *NDArray {
 		return _sir_ndarray_new([]int{r, ca + cb}, data)
 	default:
 		panic(fmt.Sprintf("catenate: catenate of rank %d and rank %d is not yet supported", ra, rb))
+	}
+}
+
+// ── SIR23 symbolic expressions + pattern/rewrite (Tier A, Phase A Slice 4)
+// ═══════════════════════════════════════════════════════════════════════
+//
+// `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/`SymPatternNamed`/
+// `SymRule`/`SymReplaceAll` lower to calls into `_sir_cas_*` below — an
+// inlined port of `semantic-ir-to-javascript`'s own already-proven
+// `Symbolic` sub-runtime's Tier A (matcher) slice: term construction,
+// `matchPattern`/`substituteTerm`/`applyRuleTerm`, and `replaceAll`/
+// `replaceRepeated` with their `MAX_TERM_DEPTH` guard. Tier B (`evalTerm`,
+// the arithmetic/calculus/user-function evaluator) is explicitly OUT OF
+// SCOPE for this slice — matching the SIR23 spec's own Tier A/Tier B
+// split — so no `Add`/`Sin`/`D`/... folding exists here; a `SymApply`
+// builds an inert term tree, nothing more.
+//
+// ## Naming: `_sir_cas_*`, not `_sir_sym_*`
+//
+// The obvious prefix for "symbolic expression" is `_sir_sym_*` — the
+// sibling Ruby backend's own port (`sir23-ruby-matcher`) uses exactly
+// that. THIS backend already owns that prefix for something entirely
+// unrelated: `_sir_sym_to_proc` (Ruby `Symbol#to_proc`, the `&:name`
+// block-pass sugar — see above) and the `_sir_symbol_*` family
+// (`_sir_symbol_method`/`_sir_symbol_responds`, Ruby's `Symbol` class
+// method dispatch). Reusing `_sir_sym_*` here would collide textually
+// with that pre-existing, unrelated domain — the SAME class of landmine
+// Slice 2 hit with `_sir_array_*` (already owned by the Ruby
+// `Array`-method dispatch catalog, which forced the rename to
+// `_sir_ndarray_*`). This slice avoids it up front: `_sir_cas_*`
+// ("Computer Algebra System" — matches the `cas-pattern-matching` crate
+// this domain's own matcher algorithm is named after in the SIR23 spec)
+// keeps the two `sym`-flavoured domains textually distinct. (Checked:
+// `_sir_case_eq` — Ruby `===` case-equality, SIR16 — happens to share
+// an eight-character PREFIX with `_sir_cas_`, but the two are otherwise
+// unrelated names with no shared suffix; not a real collision, just a
+// coincidence worth a comment so a future reader doesn't grep-confuse
+// the two domains.)
+//
+// ## Value model
+//
+// `*SirCasTerm`, a single Go struct discriminated by `.Kind`
+// (`sirCasSymbol`/`sirCasInteger`/`sirCasRational`/`sirCasFloat`/
+// `sirCasString`/`sirCasApply`) — the SAME established pattern this
+// backend already uses for SIR22's `*NDArray` (one struct type, a
+// shared, pointer-handle value that is never mutated in place once
+// built, fields populated per kind) rather than Go's more common "one
+// concrete type per interface implementer" idiom. Go has no `.freeze`
+// the way the Ruby port's `SirSymTerm` uses to enforce immutability at
+// runtime; here it is a DISCIPLINE the constructors below uphold (every
+// one fully populates its result and hands back a pointer nothing else
+// holds yet) rather than a runtime guarantee.
+//
+// `Head`/`Args` are typed `Value` (`interface{}`) / `[]Value`, NOT
+// `*SirCasTerm` / `[]*SirCasTerm` — matching how `*NDArray`'s own
+// sibling helpers (`_sir_ndarray_elementwise(op string, av Value, bv
+// Value)`, etc.) universally accept/return the boxed `Value` interface
+// rather than a concrete pointer type. A `SymApply`'s head/args operands
+// reach codegen as arbitrary `Expr`s (a `VarRef` to some earlier
+// `LetBinding`, a nested `SymApply`, ...), so the emitted Go expression
+// for one is statically typed `Value` at many call sites (e.g. a local
+// bound via `:=` to a param of declared type `Value`); keeping the CAS
+// API surface itself `Value`-typed throughout means every operand slots
+// in directly with no per-call-site type assertion in the EMITTED code
+// — the assertion instead lives once, inside each `_sir_cas_*` function,
+// via the shared `_sir_cas_as_term` helper below. Mirrors
+// `_sir_ndarray_as_ndarray`'s identical "assert once, inside the runtime
+// function, with a controlled panic message" discipline.
+//
+// ## Bindings: copy-on-write via manual copy
+//
+// A pattern match's bindings (`map[string]Value`, name -> bound term)
+// must be persistent: a failed match attempt must never mutate a
+// binding set an earlier, still-live match attempt holds a reference to
+// (mirrors the Ruby port's `Hash#merge` and the JS reference's own
+// `Bindings` class). Go has neither Ruby's cheap `Hash#merge` nor a
+// persistent-map library anywhere in this repo's dependency graph
+// (checked: no `im`-style crate/package, and no existing
+// copy-on-write-map helper elsewhere in this backend's own runtime —
+// the closest precedent, `*Map` for SIR16's `Feature::Maps`, is
+// DELIBERATELY the opposite: a shared, pointer-backed, MUTATE-in-place
+// value, since `Stmt::IndexSet` on a user `Map` must mutate the very
+// map a caller's binding already holds). So `_sir_cas_bindings_bind`
+// below does a manual full-copy-plus-insert (`make` a fresh map,
+// range-copy every existing entry, add the new one) rather than
+// mutating `bindings` in place. This is O(n) per bind (n = bindings so
+// far) rather than a persistent map's typical O(log n), but n is
+// bounded by the number of DISTINCT pattern-variable names in one
+// rule's own author-written `lhs` — always small, never
+// runtime-controlled — so the asymptotic cost is immaterial here.
+//
+// ## DoS guard (CWE-674): `panic` directly, not a sentinel value
+//
+// `_sir_cas_match_pattern`/`_sir_cas_substitute`/`_sir_cas_apply_rule`
+// recurse, but only as deep as a single RULE's own author-written
+// pattern/RHS shape — always shallow regardless of how deep the TARGET
+// expression is — so they carry NO depth cap of their own (this exact
+// reasoning is in the JS reference's own doc comments). `_sir_cas_walk_
+// once`/`_sir_cas_replace_repeated`, by contrast, walk the ENTIRE target
+// expression tree, which ordinary compiled-program data (e.g. a runtime
+// loop nesting `Wrap(Wrap(...))` `sirCasMaxTermDepth` levels deep) CAN
+// build to unbounded depth — so THOSE two need an explicit cap, mirroring
+// the JS reference's `MAX_TERM_DEPTH = 512` exactly.
+//
+// Unlike the Ruby/JS references (which return a sentinel "depth-limit"/
+// "rewrite-cycle" value threaded back up through every recursive return,
+// only raising once the walk fully unwinds to its outermost caller),
+// this Go port just `panic`s DIRECTLY at the point a cap is exceeded —
+// matching this runtime's OWN already-shipped convention for the
+// identical class of guard (`_sir_ndarray_checked_shape_size`, which
+// panics immediately with `fmt.Sprintf(...)` rather than returning a
+// sentinel the caller must check). Go's `panic`/`recover` already gives
+// a clean, catchable unwind through however many frames are on the
+// stack at that point — the compiled `TryCatch` rescue path recovers ANY
+// panic value via `recover()`, not just `*SirError` (see
+// `_sir_class_of_thrown`, which classifies an arbitrary recovered value)
+// — so there is no need to hand-roll the sentinel-propagation dance the
+// Ruby/JS ports use only because raising an exception THROUGH hundreds
+// of recursive stack frames is awkward or semantically fuzzy in their
+// own host languages. `replaceRepeated`'s iteration cap (default 100,
+// `sirCasMaxIterationsDefault`) is a SEPARATE, independent counter from
+// the depth cap: it bounds how many times a rule may fire cumulatively
+// across the ENTIRE walk (CPU time), while the depth cap bounds how far
+// a genuine descent into `head`/`args` may go (stack safety) — a rule
+// firing repeatedly at ONE tree position loops in a plain Go `for` LOOP
+// at that call frame (see `_sir_cas_replace_repeated` below), never a
+// recursive call per firing, so it costs O(1) native stack frames
+// regardless of how many times it fires before hitting the cap.
+
+// sirCasMaxTermDepth caps every SIR23 tree WALK (replaceAll's single
+// pass, replaceRepeated's fixed-point loop, term-equality, and display) —
+// NOT the matcher functions (`_sir_cas_match_pattern`/`_sir_cas_
+// substitute`/`_sir_cas_apply_rule`), which recurse only as deep as one
+// rule's own shape and need no cap. Matches the JS/Ruby references'
+// `MAX_TERM_DEPTH = 512` exactly.
+const sirCasMaxTermDepth = 512
+
+// sirCasMaxIterationsDefault is `_sir_cas_replace_repeated`'s default
+// fixed-point iteration cap (SIR23 spec "Matcher semantics" point 6) —
+// referenced directly by name from emitted `SymReplaceAll{repeated:
+// true}` call sites (see emit.rs), not just used internally here.
+const sirCasMaxIterationsDefault = 100
+
+type sirCasKind uint8
+
+const (
+	sirCasSymbol sirCasKind = iota
+	sirCasInteger
+	sirCasRational
+	sirCasFloat
+	sirCasString
+	sirCasApply
+)
+
+// SirCasTerm is one SIR23 Tier A symbolic-expression / pattern node.
+// Only the fields `.Kind` actually uses are populated; the rest stay at
+// their Go zero value. See the module-level doc above for why this is
+// one kind-discriminated struct (mirroring `*NDArray`) rather than one
+// Go type per kind.
+type SirCasTerm struct {
+	Kind   sirCasKind
+	Name   string  // sirCasSymbol
+	IntVal int64   // sirCasInteger
+	Numer  int64   // sirCasRational -- already reduced (see _sir_cas_rational)
+	Denom  int64   // sirCasRational -- already reduced, > 0
+	Float  float64 // sirCasFloat -- always finite (see _sir_cas_float)
+	Str    string  // sirCasString
+	Head   Value   // sirCasApply -- a *SirCasTerm, boxed
+	Args   []Value // sirCasApply -- each element a *SirCasTerm, boxed
+}
+
+// _sir_cas_as_term asserts `v` is already a `*SirCasTerm`, panicking
+// with a clean, controlled message otherwise. Matches `_sir_ndarray_as_
+// ndarray`'s "assert once, inside the runtime function" discipline
+// exactly, so every `_sir_cas_*` function below can accept the uniform
+// `Value` interface at its boundary and still work with a concrete
+// `*SirCasTerm` internally.
+func _sir_cas_as_term(v Value) *SirCasTerm {
+	t, ok := v.(*SirCasTerm)
+	if !ok {
+		panic(fmt.Sprintf("sir-runtime-symbolic: expected a symbolic term, got %T", v))
+	}
+	return t
+}
+
+// ── term construction ───────────────────────────────────────────────────
+
+func _sir_cas_symbol(name string) *SirCasTerm {
+	return &SirCasTerm{Kind: sirCasSymbol, Name: name}
+}
+
+// _sir_cas_int wraps an emitted `IntLit` operand (always a boxed
+// `Value(int64(...))`, see `emit_expr`'s `Expr::IntLit` arm) into a
+// symbolic Integer term. Unlike the JS reference (which restricts
+// `Symbolic.int` to `Number.isSafeInteger` because JS's own `Expr::
+// IntLit` codegen already has that ceiling) or the Ruby port (arbitrary-
+// precision native Integers), this backend's own `Expr::IntLit` arm
+// already emits a fixed-width Go `int64` — the SAME numeric tower every
+// other integer value in this runtime uses — so no extra range check is
+// needed here beyond the ordinary Go `int64` bounds already implied by
+// the type assertion.
+func _sir_cas_int(v Value) *SirCasTerm {
+	n, ok := v.(int64)
+	if !ok {
+		panic(fmt.Sprintf("sir-runtime-symbolic: _sir_cas_int expected an int64, got %T", v))
+	}
+	return &SirCasTerm{Kind: sirCasInteger, IntVal: n}
+}
+
+func _sir_cas_gcd_abs(a int64, b int64) int64 {
+	if a < 0 {
+		a = -a
+	}
+	if b < 0 {
+		b = -b
+	}
+	for b != 0 {
+		a, b = b, a%b
+	}
+	if a == 0 {
+		return 1
+	}
+	return a
+}
+
+// _sir_cas_rational reduces numer/denom by their GCD and normalizes the
+// sign onto the numerator (denominator always positive) at CONSTRUCTION
+// time, mirroring the Ruby/JS references exactly — a term's `Numer`/
+// `Denom` fields are always already in lowest terms; nothing downstream
+// (matching, equality, display) re-reduces.
+func _sir_cas_rational(numer int64, denom int64) *SirCasTerm {
+	if denom == 0 {
+		panic("sir-runtime-symbolic: rational denominator cannot be zero")
+	}
+	if denom < 0 {
+		numer = -numer
+		denom = -denom
+	}
+	g := _sir_cas_gcd_abs(numer, denom)
+	return &SirCasTerm{Kind: sirCasRational, Numer: numer / g, Denom: denom / g}
+}
+
+// _sir_cas_float wraps an emitted `FloatLit` operand into a symbolic
+// Float term, requiring finiteness (mirroring the Ruby port's `unless
+// value.is_a?(Float) && value.finite?` guard) — a NaN/Inf `FloatLit`
+// value is a malformed literal for this domain, not a valid symbolic
+// scalar, so it fails loudly here rather than silently producing a term
+// whose `Float` field can never compare or match itself.
+func _sir_cas_float(v Value) *SirCasTerm {
+	f, ok := v.(float64)
+	if !ok {
+		panic(fmt.Sprintf("sir-runtime-symbolic: _sir_cas_float expected a float64, got %T", v))
+	}
+	if math.IsNaN(f) || math.IsInf(f, 0) {
+		panic("sir-runtime-symbolic: a symbolic Float term must be finite")
+	}
+	return &SirCasTerm{Kind: sirCasFloat, Float: f}
+}
+
+func _sir_cas_string(v Value) *SirCasTerm {
+	s, ok := v.(string)
+	if !ok {
+		panic(fmt.Sprintf("sir-runtime-symbolic: _sir_cas_string expected a string, got %T", v))
+	}
+	return &SirCasTerm{Kind: sirCasString, Str: s}
+}
+
+// _sir_cas_apply builds `head(args...)` as data. `args` is defensively
+// copied (not aliased) so a caller's own backing array can't be mutated
+// out from under an already-built term — matches `_sir_ndarray_new`'s
+// "the returned handle owns its storage" discipline.
+func _sir_cas_apply(head Value, args []Value) *SirCasTerm {
+	argsCopy := make([]Value, len(args))
+	copy(argsCopy, args)
+	return &SirCasTerm{Kind: sirCasApply, Head: head, Args: argsCopy}
+}
+
+// ── structural equality ─────────────────────────────────────────────────
+
+// _sir_cas_term_equals is used by the matcher (a repeated pattern
+// variable must bind to the SAME term every occurrence), by
+// `_sir_cas_bindings_bind`'s "already bound to this exact term" fast
+// path, and by `_sir_cas_replace_repeated`'s "did this firing actually
+// change anything" fixed-point check.
+//
+// SECURITY (CWE-674): depth-capped with the same `sirCasMaxTermDepth`
+// guard the tree-walking functions use below — a term built via
+// `_sir_cas_apply` is not depth-capped at CONSTRUCTION time (only the
+// tree WALKS enforce the cap), so an attacker-influenced runtime value
+// (e.g. a compiled loop lowered to repeated `SymApply` nesting) could
+// build one arbitrarily deep directly. Past the cap, `false` ("not
+// structurally equal") is the safe, contained answer, mirroring `_sir_
+// cas_match_pattern`'s own "give up cleanly" contract for a failed
+// match.
+func _sir_cas_term_equals(av Value, bv Value, depth int) bool {
+	if depth > sirCasMaxTermDepth {
+		return false
+	}
+	a := _sir_cas_as_term(av)
+	b := _sir_cas_as_term(bv)
+	if a.Kind != b.Kind {
+		return false
+	}
+	switch a.Kind {
+	case sirCasSymbol:
+		return a.Name == b.Name
+	case sirCasInteger:
+		return a.IntVal == b.IntVal
+	case sirCasRational:
+		return a.Numer == b.Numer && a.Denom == b.Denom
+	case sirCasFloat:
+		return a.Float == b.Float
+	case sirCasString:
+		return a.Str == b.Str
+	case sirCasApply:
+		if !_sir_cas_term_equals(a.Head, b.Head, depth+1) {
+			return false
+		}
+		if len(a.Args) != len(b.Args) {
+			return false
+		}
+		for i := range a.Args {
+			if !_sir_cas_term_equals(a.Args[i], b.Args[i], depth+1) {
+				return false
+			}
+		}
+		return true
+	default:
+		return false
+	}
+}
+
+func _sir_cas_head_name(node *SirCasTerm) string {
+	if node.Kind == sirCasSymbol {
+		return node.Name
+	}
+	return ""
+}
+
+// ── pattern/rule vocabulary (cas-pattern-matching) ──────────────────────
+
+const (
+	sirCasBlankHead   = "Blank"
+	sirCasPatternHead = "Pattern"
+	sirCasRuleHead    = "Rule"
+	sirCasRuleDelayed = "RuleDelayed"
+)
+
+func _sir_cas_is_head(node *SirCasTerm, name string) bool {
+	if node.Kind != sirCasApply {
+		return false
+	}
+	h := _sir_cas_as_term(node.Head)
+	return h.Kind == sirCasSymbol && h.Name == name
+}
+
+func _sir_cas_is_blank(node *SirCasTerm) bool   { return _sir_cas_is_head(node, sirCasBlankHead) }
+func _sir_cas_is_pattern(node *SirCasTerm) bool { return _sir_cas_is_head(node, sirCasPatternHead) }
+
+func _sir_cas_is_rule(node *SirCasTerm) bool {
+	if node.Kind != sirCasApply {
+		return false
+	}
+	h := _sir_cas_as_term(node.Head)
+	if h.Kind != sirCasSymbol {
+		return false
+	}
+	return (h.Name == sirCasRuleHead || h.Name == sirCasRuleDelayed) && len(node.Args) == 2
+}
+
+func _sir_cas_blank() *SirCasTerm {
+	return _sir_cas_apply(_sir_cas_symbol(sirCasBlankHead), nil)
+}
+func _sir_cas_blank_typed(head string) *SirCasTerm {
+	return _sir_cas_apply(_sir_cas_symbol(sirCasBlankHead), []Value{_sir_cas_symbol(head)})
+}
+func _sir_cas_named(name string, inner Value) *SirCasTerm {
+	return _sir_cas_apply(_sir_cas_symbol(sirCasPatternHead), []Value{_sir_cas_symbol(name), inner})
+}
+func _sir_cas_rule(lhs Value, rhs Value) *SirCasTerm {
+	return _sir_cas_apply(_sir_cas_symbol(sirCasRuleHead), []Value{lhs, rhs})
+}
+func _sir_cas_rule_delayed(lhs Value, rhs Value) *SirCasTerm {
+	return _sir_cas_apply(_sir_cas_symbol(sirCasRuleDelayed), []Value{lhs, rhs})
+}
+
+// ── bindings: a name -> term map, copy-on-write ─────────────────────────
+
+// _sir_cas_bindings_bind never mutates `bindings` in place — see the
+// module-level "Bindings: copy-on-write via manual copy" doc above for
+// why a manual full-copy is this port's chosen strategy. The "already
+// bound to this exact term" fast path avoids the copy entirely when
+// `name` already maps to a term structurally equal to `value` (the
+// common case when the SAME pattern variable is matched again during
+// one match attempt).
+func _sir_cas_bindings_bind(bindings map[string]Value, name string, value Value) map[string]Value {
+	if existing, ok := bindings[name]; ok && _sir_cas_term_equals(existing, value, 0) {
+		return bindings
+	}
+	next := make(map[string]Value, len(bindings)+1)
+	for k, v := range bindings {
+		next[k] = v
+	}
+	next[name] = value
+	return next
+}
+
+// ── blank/pattern field accessors ───────────────────────────────────────
+
+// _sir_cas_blank_head_constraint returns `Blank(h)`'s head-constraint
+// symbol name, or `("", false)` for a bare `Blank()`.
+func _sir_cas_blank_head_constraint(node *SirCasTerm) (string, bool) {
+	if len(node.Args) == 0 {
+		return "", false
+	}
+	first := _sir_cas_as_term(node.Args[0])
+	if first.Kind == sirCasSymbol {
+		return first.Name, true
+	}
+	return "", false
+}
+
+func _sir_cas_pattern_name(node *SirCasTerm) string {
+	if len(node.Args) == 0 {
+		panic("sir-runtime-symbolic: Pattern name must be a Symbol")
+	}
+	first := _sir_cas_as_term(node.Args[0])
+	if first.Kind != sirCasSymbol {
+		panic("sir-runtime-symbolic: Pattern name must be a Symbol")
+	}
+	return first.Name
+}
+
+func _sir_cas_pattern_inner(node *SirCasTerm) Value {
+	if len(node.Args) < 2 {
+		panic("sir-runtime-symbolic: Pattern requires an inner expression")
+	}
+	return node.Args[1]
+}
+
+// _sir_cas_effective_head_name mirrors Wolfram's `Head[]`: an `Apply`
+// node's head name (or the literal string `"Apply"` for a non-Symbol,
+// e.g. computed, head), else a fixed per-kind name for a leaf term. Used
+// only by `_sir_cas_blank_head_constraint` matching (`x_Integer` etc.).
+func _sir_cas_effective_head_name(node *SirCasTerm) string {
+	if node.Kind == sirCasApply {
+		hn := _sir_cas_head_name(_sir_cas_as_term(node.Head))
+		if hn == "" {
+			return "Apply"
+		}
+		return hn
+	}
+	switch node.Kind {
+	case sirCasInteger:
+		return "Integer"
+	case sirCasRational:
+		return "Rational"
+	case sirCasFloat:
+		return "Float"
+	case sirCasString:
+		return "String"
+	default:
+		return "Symbol"
+	}
+}
+
+// ── matcher: five-case structural matcher ───────────────────────────────
+//
+// `Blank()`, `Blank(T)`, `Pattern(name, inner)`, compound-vs-compound
+// (recurse head + every arg, same arity required), and plain structural
+// equality — a direct port of `cas-pattern-matching::matchPattern`. NOT
+// depth-capped (see the module-level "DoS guard" doc above): recursion
+// here tracks the SHAPE of one rule's own author-written `lhs`, never the
+// target expression's own depth.
+func _sir_cas_match_pattern(patternV Value, targetV Value, bindings map[string]Value) (map[string]Value, bool) {
+	pattern := _sir_cas_as_term(patternV)
+	if _sir_cas_is_blank(pattern) {
+		constraint, has := _sir_cas_blank_head_constraint(pattern)
+		if !has {
+			return bindings, true
+		}
+		if _sir_cas_effective_head_name(_sir_cas_as_term(targetV)) == constraint {
+			return bindings, true
+		}
+		return nil, false
+	}
+	if _sir_cas_is_pattern(pattern) {
+		name := _sir_cas_pattern_name(pattern)
+		inner := _sir_cas_pattern_inner(pattern)
+		matched, ok := _sir_cas_match_pattern(inner, targetV, bindings)
+		if !ok {
+			return nil, false
+		}
+		if existing, has := matched[name]; has {
+			if _sir_cas_term_equals(existing, targetV, 0) {
+				return matched, true
+			}
+			return nil, false
+		}
+		return _sir_cas_bindings_bind(matched, name, targetV), true
+	}
+	if pattern.Kind == sirCasApply {
+		target := _sir_cas_as_term(targetV)
+		if target.Kind != sirCasApply {
+			return nil, false
+		}
+		current, ok := _sir_cas_match_pattern(pattern.Head, target.Head, bindings)
+		if !ok {
+			return nil, false
+		}
+		if len(pattern.Args) != len(target.Args) {
+			return nil, false
+		}
+		for i, p := range pattern.Args {
+			current, ok = _sir_cas_match_pattern(p, target.Args[i], current)
+			if !ok {
+				return nil, false
+			}
+		}
+		return current, true
+	}
+	if _sir_cas_term_equals(patternV, targetV, 0) {
+		return bindings, true
+	}
+	return nil, false
+}
+
+// _sir_cas_substitute replaces every `Pattern(name, ...)` in `template`
+// bound in `bindings` with its captured term, leaving an UNBOUND pattern
+// variable as-is (mirrors the Ruby/JS references — a `RuleDelayed` RHS
+// that mentions a name the LHS never bound is a rule-authoring bug, not
+// a runtime error here). NOT depth-capped, for the same reason `_sir_
+// cas_match_pattern` is not: recursion tracks one rule's own RHS shape.
+func _sir_cas_substitute(templateV Value, bindings map[string]Value) Value {
+	template := _sir_cas_as_term(templateV)
+	if _sir_cas_is_pattern(template) {
+		if captured, ok := bindings[_sir_cas_pattern_name(template)]; ok {
+			return captured
+		}
+		return template
+	}
+	if template.Kind == sirCasApply {
+		newArgs := make([]Value, len(template.Args))
+		for i, a := range template.Args {
+			newArgs[i] = _sir_cas_substitute(a, bindings)
+		}
+		return _sir_cas_apply(_sir_cas_substitute(template.Head, bindings), newArgs)
+	}
+	return template
+}
+
+// _sir_cas_apply_rule matches `rule`'s `lhs` against `expr`; on success,
+// substitutes the captured bindings into `rhs` and returns `(result,
+// true)`. Returns `(nil, false)` — never a panic — on a non-matching
+// `expr`, since "this rule doesn't apply here" is the ordinary, expected
+// outcome every `_sir_cas_walk_once`/`_sir_cas_replace_repeated` call
+// site handles by trying the next rule.
+func _sir_cas_apply_rule(ruleV Value, exprV Value) (Value, bool) {
+	rule := _sir_cas_as_term(ruleV)
+	if !_sir_cas_is_rule(rule) {
+		panic("sir-runtime-symbolic: applyRule expected a Rule/RuleDelayed term")
+	}
+	lhs := rule.Args[0]
+	rhs := rule.Args[1]
+	bindings, ok := _sir_cas_match_pattern(lhs, exprV, map[string]Value{})
+	if !ok {
+		return nil, false
+	}
+	return _sir_cas_substitute(rhs, bindings), true
+}
+
+// ── replaceAll / replaceRepeated (`/.` / `//.`) + depth guard ───────────
+
+// _sir_cas_walk_once implements `expr /. rules` — ONE pass, bottom-up: a
+// node's head/args are walked (and possibly replaced) before the node
+// itself is tried against `rules`; the first matching rule wins and the
+// freshly substituted replacement is NOT re-walked or retried at that
+// same position (Wolfram's single-pass `/.` contract, distinct from
+// `_sir_cas_replace_repeated`'s fixed point below). See the module-level
+// "DoS guard" doc above for why this panics directly on the depth cap
+// rather than returning a sentinel the way the Ruby/JS references do.
+func _sir_cas_walk_once(nodeV Value, rules []Value, depth int) Value {
+	if depth > sirCasMaxTermDepth {
+		panic(fmt.Sprintf("sir-runtime-symbolic: depth-limit (%d) exceeded during replaceAll", sirCasMaxTermDepth))
+	}
+	node := _sir_cas_as_term(nodeV)
+	current := Value(node)
+	if node.Kind == sirCasApply {
+		newHead := _sir_cas_walk_once(node.Head, rules, depth+1)
+		newArgs := make([]Value, len(node.Args))
+		for i, a := range node.Args {
+			newArgs[i] = _sir_cas_walk_once(a, rules, depth+1)
+		}
+		current = _sir_cas_apply(newHead, newArgs)
+	}
+	for _, r := range rules {
+		if replacement, ok := _sir_cas_apply_rule(r, current); ok {
+			return replacement
+		}
+	}
+	return current
+}
+
+func _sir_cas_replace_all(exprV Value, rules []Value) Value {
+	return _sir_cas_walk_once(exprV, rules, 0)
+}
+
+// _sir_cas_replace_repeated implements `expr //. rules` — a fixed
+// point: at each subtree, keep retrying `rules` until none fire
+// (re-walking any fresh replacement so its own sub-parts also converge)
+// before moving up to the parent. `maxIterations` is a GLOBAL cap shared
+// across the WHOLE walk (every firing anywhere in the tree increments
+// the SAME `counter`), guarding against a non-terminating rule set
+// (SIR23 spec "Matcher semantics" point 6).
+//
+// A rule firing loops in a plain Go `for` LOOP at the CURRENT call frame
+// (the `for { ... }` below), never a recursive call per firing — however
+// many times a rule fires at one tree position costs O(1) native stack
+// frames, not O(firings). `depth` only increases on a genuine descent
+// into `head`/`args` (the `walk(node.Head, depth+1)` / `walk(a,
+// depth+1)` calls), so `maxIterations` bounds iteration COUNT (CPU time)
+// only, never native recursion depth — the two caps are independent.
+//
+// `walk` is declared via the `var walk func(...)` forward-declaration
+// pattern (Go's idiom for a self-referential closure) specifically so it
+// can close over the shared `counter` — a top-level function would need
+// `counter` threaded through every call as an extra parameter (and
+// returned back out again), which is exactly the awkwardness a closure
+// avoids here.
+func _sir_cas_replace_repeated(exprV Value, rules []Value, maxIterations int) Value {
+	counter := 0
+	var walk func(nodeV Value, depth int) Value
+	walk = func(nodeV Value, depth int) Value {
+		if depth > sirCasMaxTermDepth {
+			panic(fmt.Sprintf("sir-runtime-symbolic: depth-limit (%d) exceeded during replaceRepeated", sirCasMaxTermDepth))
+		}
+		current := nodeV
+		for {
+			node := _sir_cas_as_term(current)
+			if node.Kind == sirCasApply {
+				newHead := walk(node.Head, depth+1)
+				newArgs := make([]Value, len(node.Args))
+				for i, a := range node.Args {
+					newArgs[i] = walk(a, depth+1)
+				}
+				current = _sir_cas_apply(newHead, newArgs)
+			}
+			fired := false
+			for _, r := range rules {
+				replacement, ok := _sir_cas_apply_rule(r, current)
+				if !ok || _sir_cas_term_equals(replacement, current, 0) {
+					continue
+				}
+				counter++
+				if counter > maxIterations {
+					panic(fmt.Sprintf("sir-runtime-symbolic: rewrite-cycle -- exceeded %d iterations", maxIterations))
+				}
+				current = replacement
+				fired = true
+				break
+			}
+			if !fired {
+				return current
+			}
+		}
+	}
+	return walk(exprV, 0)
+}
+
+// ── display ──────────────────────────────────────────────────────────
+
+// _sir_cas_to_s renders a term in generic `head(args, ...)` form — no
+// Wolfram infix/precedence pretty-printing (that is separate follow-up
+// work, out of this Tier A matcher port's scope, matching the Ruby
+// port's identical note). Depth-capped with the SAME `sirCasMaxTermDepth`
+// guard the tree-walking functions above use, for the identical reason:
+// a term built via `_sir_cas_apply` is not depth-capped at construction
+// time, so a runtime-built term can be arbitrarily deep — printing one
+// must degrade to `"..."` past the cap rather than overflow the Go
+// stack. Wired into `_sir_format_d` below so `print`/`puts`-equivalent
+// output can display a term directly — SIR22's own `*NDArray` has NO
+// display path (deliberately out of that slice's scope, per its own
+// tests reading scalar elements out via `IndexGet` instead), but this
+// slice's own reference tests (ported from the JS backend's already-
+// proven suite) print terms directly and assert on stdout, so a display
+// path is load-bearing here, not optional polish.
+func _sir_cas_to_s(v Value, depth int) string {
+	if depth > sirCasMaxTermDepth {
+		return "..."
+	}
+	node := _sir_cas_as_term(v)
+	switch node.Kind {
+	case sirCasSymbol:
+		return node.Name
+	case sirCasInteger:
+		return strconv.FormatInt(node.IntVal, 10)
+	case sirCasRational:
+		return strconv.FormatInt(node.Numer, 10) + "/" + strconv.FormatInt(node.Denom, 10)
+	case sirCasFloat:
+		return _sir_format_float(node.Float)
+	case sirCasString:
+		return strconv.Quote(node.Str)
+	case sirCasApply:
+		parts := make([]string, len(node.Args))
+		for i, a := range node.Args {
+			parts[i] = _sir_cas_to_s(a, depth+1)
+		}
+		return _sir_cas_to_s(node.Head, depth+1) + "(" + strings.Join(parts, ", ") + ")"
+	default:
+		return fmt.Sprintf("%v", node)
 	}
 }
 
