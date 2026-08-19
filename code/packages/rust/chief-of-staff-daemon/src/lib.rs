@@ -598,17 +598,25 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     .map_err(ChiefDaemonError::Process)?;
     let interval = config.host_defaults().health_check_interval();
     let interval_ns = u64::try_from(interval.as_nanos()).unwrap_or(u64::MAX);
-    let restart_window_ns =
-        u64::try_from(config.host_defaults().restart_window().as_nanos()).unwrap_or(u64::MAX);
-    let reconcile_config =
-        ReconcileConfig::new(interval_ns.saturating_mul(HEARTBEAT_GRACE_INTERVALS))
-            .and_then(|config_value| {
-                config_value.with_restart_intensity(
-                    restart_window_ns,
-                    config.host_defaults().max_restarts_per_window(),
-                )
-            })
-            .map_err(ChiefDaemonError::Reconciliation)?;
+    // The restart window is stored durably but stamped with a monotonic clock,
+    // which counts from daemon start and so means nothing to the next run. The
+    // boot id is what lets a later daemon tell "this run's window" apart from
+    // "some previous run's window"; wall-clock start time is unique per run,
+    // which is all that is asked of it. A clock that cannot be read yields
+    // zero, and a stale window that survives that coincidence is still caught
+    // by the reconciler's "started in the future" check.
+    let boot_id = SystemUnixTimeClock.now_ms().unwrap_or(0);
+    let reconcile_config = ReconcileConfig::new(
+        boot_id,
+        interval_ns.saturating_mul(HEARTBEAT_GRACE_INTERVALS),
+    )
+    .and_then(|config_value| {
+        config_value.with_restart_intensity(
+            config.host_defaults().restart_window_ns(),
+            config.host_defaults().max_restarts_per_window(),
+        )
+    })
+    .map_err(ChiefDaemonError::Reconciliation)?;
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
     let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
@@ -5466,11 +5474,11 @@ hardware_key_timeout = 60
     /// constants together, so this test does.
     #[test]
     fn restart_intensity_defaults_match_the_reconciler() {
-        let defaults = ReconcileConfig::new(100).expect("valid heartbeat age");
-        let window_ns =
-            u64::try_from(chief_of_staff_daemon_config::default_restart_window().as_nanos())
-                .expect("a sixty-second window fits in u64 nanoseconds");
-        assert_eq!(defaults.restart_window_ns(), window_ns);
+        let defaults = ReconcileConfig::new(0, 100).expect("valid heartbeat age");
+        assert_eq!(
+            defaults.restart_window_ns(),
+            chief_of_staff_daemon_config::default_restart_window_ns()
+        );
         assert_eq!(
             defaults.max_restarts_per_window(),
             chief_of_staff_daemon_config::default_max_restarts_per_window()

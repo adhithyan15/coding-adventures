@@ -1839,7 +1839,7 @@ mod tests {
             FakeSupervisor::default(),
             NoopWiring,
             Arc::new(TestClock::new()),
-            ReconcileConfig::new(50).expect("valid reconcile config"),
+            ReconcileConfig::new(0, 50).expect("valid reconcile config"),
         )
     }
 

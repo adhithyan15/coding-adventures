@@ -532,7 +532,7 @@ pub struct HostDefaultsConfig {
     executable: ConfigPath,
     bootstrap_timeout: Duration,
     graceful_stop_timeout: Duration,
-    restart_window: Duration,
+    restart_window_ns: u64,
     max_restarts_per_window: u32,
 }
 
@@ -562,15 +562,22 @@ impl HostDefaultsConfig {
         self.graceful_stop_timeout
     }
 
-    /// Return the restart-intensity window (D18R R2).
+    /// Return the restart-intensity window in nanoseconds (D18R R2).
     ///
     /// Together with [`Self::max_restarts_per_window`] this bounds how often a
     /// single host may be restarted before the reconciler quarantines it
     /// instead. Both keys are optional; omitting them keeps the reconciler's
     /// own defaults, which `restart_intensity_defaults_match_the_reconciler`
     /// in `chief-of-staff-daemon` pins against drift.
-    pub fn restart_window(&self) -> Duration {
-        self.restart_window
+    ///
+    /// Nanoseconds, not a `Duration`, because that is the unit the reconciler
+    /// works in and the conversion is the part that can go wrong. The parser
+    /// bounds the accepted value at [`MAX_RESTART_WINDOW_MILLIS`], so this
+    /// always fits -- an unbounded window would convert to a saturated
+    /// `u64::MAX`, which reads as "N restarts ever" and produces a quarantine
+    /// that never lifts, from nothing worse than a typo.
+    pub fn restart_window_ns(&self) -> u64 {
+        self.restart_window_ns
     }
 
     /// Return the restarts permitted inside one window (D18R R2).
@@ -580,16 +587,24 @@ impl HostDefaultsConfig {
 }
 
 /// Sixty seconds, mirroring the reconciler's own default window.
-const DEFAULT_RESTART_WINDOW: Duration = Duration::from_secs(60);
+const DEFAULT_RESTART_WINDOW_NS: u64 = 60_000_000_000;
 /// Five restarts, mirroring the reconciler's own default budget.
 const DEFAULT_MAX_RESTARTS_PER_WINDOW: u32 = 5;
 
-/// Return the restart window applied when `[host_defaults]` omits the key.
+/// One day, the largest restart window an operator may configure.
+///
+/// The ceiling exists so the millisecond-to-nanosecond conversion cannot
+/// overflow, not because a longer window is conceptually wrong. A day is
+/// already far past the point where "restarts per window" describes a rate
+/// anyone is watching.
+pub const MAX_RESTART_WINDOW_MILLIS: u64 = 24 * 60 * 60 * 1000;
+
+/// Return the restart window applied when `[hosts.defaults]` omits the key.
 ///
 /// Exported so that `chief-of-staff-daemon` -- the one crate that depends on
 /// both this one and the reconciler -- can pin the two defaults against drift.
-pub fn default_restart_window() -> Duration {
-    DEFAULT_RESTART_WINDOW
+pub fn default_restart_window_ns() -> u64 {
+    DEFAULT_RESTART_WINDOW_NS
 }
 
 /// Return the restart budget applied when `[host_defaults]` omits the key.
@@ -1032,9 +1047,9 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
     // read as "never restart": `restart_policy = "never"` says that outright,
     // and a bound that silently overrode a declared policy would be a
     // surprising way to find out.
-    let restart_window = match document.take_optional(HOST_DEFAULTS, "restart_window") {
-        Some(value) => positive_millis(value)?,
-        None => DEFAULT_RESTART_WINDOW,
+    let restart_window_ns = match document.take_optional(HOST_DEFAULTS, "restart_window") {
+        Some(value) => bounded_restart_window_ns(value)?,
+        None => DEFAULT_RESTART_WINDOW_NS,
     };
     let max_restarts_per_window =
         match document.take_optional(HOST_DEFAULTS, "max_restarts_per_window") {
@@ -1511,7 +1526,7 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             executable,
             bootstrap_timeout,
             graceful_stop_timeout,
-            restart_window,
+            restart_window_ns,
             max_restarts_per_window,
         },
         vault: VaultConfig {
@@ -1952,6 +1967,20 @@ fn bounded_process_millis(value: RawValue) -> Result<Duration, ConfigError> {
         return Err(ConfigError::InvalidValue);
     }
     Ok(Duration::from_millis(millis))
+}
+
+/// Parse a restart window in milliseconds and return it in nanoseconds.
+///
+/// Bounded so the conversion is total. Without the ceiling a large value
+/// saturates to `u64::MAX` nanoseconds, which the reconciler reads as a window
+/// that never elapses -- a quarantine that never lifts, and no error anywhere
+/// to say so.
+fn bounded_restart_window_ns(value: RawValue) -> Result<u64, ConfigError> {
+    let millis = positive_integer(value)?;
+    if millis > MAX_RESTART_WINDOW_MILLIS {
+        return Err(ConfigError::InvalidValue);
+    }
+    Ok(millis * 1_000_000)
 }
 
 fn positive_secs(value: RawValue) -> Result<Duration, ConfigError> {
@@ -3083,8 +3112,8 @@ ollama_models = [
     fn restart_intensity_keys_are_optional_and_override_the_defaults() {
         let config = parse_config(VALID).expect("the fixture omits both keys");
         assert_eq!(
-            config.host_defaults().restart_window(),
-            default_restart_window()
+            config.host_defaults().restart_window_ns(),
+            default_restart_window_ns()
         );
         assert_eq!(
             config.host_defaults().max_restarts_per_window(),
@@ -3096,14 +3125,12 @@ ollama_models = [
             "graceful_stop_timeout = 5_000\nrestart_window = 30_000\nmax_restarts_per_window = 2",
         );
         let config = parse_config(&overridden).expect("both keys are accepted");
-        assert_eq!(
-            config.host_defaults().restart_window(),
-            Duration::from_secs(30)
-        );
+        assert_eq!(config.host_defaults().restart_window_ns(), 30_000_000_000);
         assert_eq!(config.host_defaults().max_restarts_per_window(), 2);
     }
 
-    /// A zero for either key is refused rather than read as "never restart".
+    /// A zero for either key is refused rather than read as "never restart",
+    /// and an unbounded window is refused rather than silently saturating.
     #[test]
     fn a_zero_restart_intensity_is_refused_by_the_parser() {
         for line in ["restart_window = 0", "max_restarts_per_window = 0"] {

@@ -25,16 +25,37 @@ inside a rolling window, defaulting to five per sixty seconds. A host that
 exhausts its budget is quarantined with `restart intensity exceeded` instead of
 being restarted, and the quarantine lifts one window later.
 
-Two properties are worth stating plainly, because both are easy to get wrong:
+Three properties are worth stating plainly, because each was got wrong once.
 
-- **The window is durable**, living in the host's registry record beside the
-  lifetime restart count. A bound kept in memory would reset whenever the daemon
-  did -- and a daemon that itself restarts is exactly the situation the bound
-  exists for.
-- **Exceeding the bound quarantines one host, it does not raise an error.** The
-  reconciler walks every host per tick, so a per-host failure raised out of the
-  walk would take every other host down with it. An agent able to crash itself
-  on demand could then disable supervision for the whole deployment.
+**Restart state travels as one value.** `RestartLedger` holds the lifetime
+count, the last restart time, and the open window together, and
+`HostObservation::new` takes it whole. This is not tidiness. The reconciler
+rewrites a host's observation on many paths -- a phase change, a stop, a failed
+start -- and every one of them must carry that bookkeeping forward. While the
+window was a separate opt-in builder call, the restart path set it and every
+other path silently dropped it, so a host that stayed up for a single tick
+between crashes reset its own window and was never bounded at all. Passing the
+ledger as a unit does not make that mistake less likely; it makes it
+unspellable.
+
+**A window belongs to one daemon run.** `start_ns` is read from a monotonic
+clock that counts from daemon start, so a value written by one run is not on the
+same scale as the next run's readings -- a window opened after an hour of uptime
+looks an hour in the *future* to a daemon that has just started. Each window
+therefore records the `boot_id` of the run that opened it, and a window from
+another run is discarded rather than compared against. The honest consequence:
+the bound holds within a daemon run, and a daemon restart hands every host a
+fresh budget. Daemon restarts are not something a supervised host gets to
+trigger, so that is the right trade -- but it is a weaker claim than "durable",
+and the earlier version of this file made the stronger one.
+
+**Exceeding the bound quarantines one host; it does not raise an error.** The
+reconciler walks every host per tick, so a per-host failure raised out of the
+walk would take every other host down with it, and an agent able to crash itself
+on demand could disable supervision for the whole deployment. Note that this is
+true of the intensity bound specifically, not of the walk in general: a
+supervisor start or stop that *fails* still propagates out of `reconcile_all`.
+That is pre-existing and tracked separately.
 
 ## Validation
 

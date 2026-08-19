@@ -13,3 +13,8 @@
 - Add `ReconcileConfig::with_restart_intensity`, defaulting to five restarts per
   sixty seconds. A zero window or count is refused rather than silently meaning
   "never restart".
+- Require a `boot_id` in `ReconcileConfig::new`, identifying the daemon run. A
+  restart window recorded by a previous run is discarded rather than measured
+  against this run's monotonic clock.
+- Consult the bound when retrying a start claimed on an earlier tick, so a host
+  left durably in `Starting` or `Restarting` cannot start unbounded.

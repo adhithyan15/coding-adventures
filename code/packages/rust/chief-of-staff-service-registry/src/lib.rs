@@ -169,6 +169,160 @@ impl HostRegistration {
     }
 }
 
+/// One open restart-intensity window.
+///
+/// A window is a three-part fact -- which daemon run opened it, when, and how
+/// many restarts have happened inside it -- and the three are only meaningful
+/// together. Holding them in one type makes the half-open states unwritable
+/// rather than merely rejected: there is no way to spell "a window that started
+/// at time T with zero restarts in it", so nothing downstream has to interpret
+/// one.
+///
+/// `boot_id` is what keeps `start_ns` honest. It is a reading of a *monotonic*
+/// clock, which in this tree counts from daemon start, so a value persisted by
+/// one daemon run means nothing to the next -- a record written after an hour
+/// of uptime looks like an hour in the future to a daemon that has just
+/// started. Stamping the run that produced it lets a reader notice that and
+/// start over, instead of comparing two unrelated numbers.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct RestartWindow {
+    boot_id: u64,
+    start_ns: u64,
+    restarts: u32,
+}
+
+impl RestartWindow {
+    /// Open a window, or refuse one that records no restarts.
+    ///
+    /// A window exists *because* a restart happened inside it; one holding zero
+    /// restarts is a window that should simply have been closed.
+    pub fn new(boot_id: u64, start_ns: u64, restarts: u32) -> Result<Self, RegistryError> {
+        if restarts == 0 {
+            return Err(RegistryError::invalid(
+                "restarts",
+                "an open window must record at least one restart",
+            ));
+        }
+        Ok(Self {
+            boot_id,
+            start_ns,
+            restarts,
+        })
+    }
+
+    /// Open a window at `start_ns`, holding the one restart that opened it.
+    ///
+    /// Total, unlike [`Self::new`], because "one restart" cannot be the invalid
+    /// count. The reconciler opens windows on a hot path and should not have to
+    /// handle an error that cannot happen; `new` exists for the decoder, which
+    /// is reading a number it did not choose.
+    pub fn opened(boot_id: u64, start_ns: u64) -> Self {
+        Self {
+            boot_id,
+            start_ns,
+            restarts: 1,
+        }
+    }
+
+    /// Record one more restart inside this same window.
+    ///
+    /// Saturating, and safe to saturate: the caller refuses the restart long
+    /// before `u32::MAX` is in reach, so this only pins the count if a record
+    /// arrives already at the ceiling.
+    pub fn spending(self) -> Self {
+        Self {
+            restarts: self.restarts.saturating_add(1),
+            ..self
+        }
+    }
+
+    /// Return the daemon run that opened this window.
+    pub fn boot_id(self) -> u64 {
+        self.boot_id
+    }
+
+    /// Return the monotonic reading at which this window opened.
+    pub fn start_ns(self) -> u64 {
+        self.start_ns
+    }
+
+    /// Return the restarts recorded inside this window.
+    pub fn restarts(self) -> u32 {
+        self.restarts
+    }
+}
+
+/// Everything an observation remembers about restarts.
+///
+/// One value rather than four loose fields, because the four must travel
+/// together. The reconciler rewrites a host's observation on many paths -- a
+/// phase change, a stop, a failed start, a quarantine -- and every one of them
+/// has to carry this bookkeeping forward untouched. While the pieces were
+/// separate parameters, carrying three of them and silently resetting the
+/// fourth was a one-line omission that no type checked, and that is exactly
+/// what happened: the intensity window was preserved on the restart path and
+/// wiped on every other, so the bound could be evaded by any host that stayed
+/// up for a single tick between crashes.
+///
+/// Passing the ledger as a unit does not make that mistake less likely. It
+/// makes it unspellable.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub struct RestartLedger {
+    count: u32,
+    last_restart_ns: Option<u64>,
+    window: Option<RestartWindow>,
+}
+
+impl RestartLedger {
+    /// The ledger of a host that has never been restarted.
+    pub const NEVER: Self = Self {
+        count: 0,
+        last_restart_ns: None,
+        window: None,
+    };
+
+    /// Build a ledger, rejecting a lifetime count that disagrees with its
+    /// timestamp.
+    ///
+    /// `count` is a lifetime tally and `window` is a rate; both are kept
+    /// because they answer different questions. The tally alone cannot
+    /// distinguish a host crash-looping four times a second from one crashing
+    /// twice a day -- they reach any fixed limit identically, one in minutes
+    /// and one in centuries.
+    pub fn new(
+        count: u32,
+        last_restart_ns: Option<u64>,
+        window: Option<RestartWindow>,
+    ) -> Result<Self, RegistryError> {
+        if count == 0 && last_restart_ns.is_some() || count > 0 && last_restart_ns.is_none() {
+            return Err(RegistryError::invalid(
+                "last_restart_ns",
+                "must be present exactly when restart_count is non-zero",
+            ));
+        }
+        Ok(Self {
+            count,
+            last_restart_ns,
+            window,
+        })
+    }
+
+    /// Return the lifetime restart tally.
+    pub fn count(self) -> u32 {
+        self.count
+    }
+
+    /// Return when the most recent restart happened.
+    pub fn last_restart_ns(self) -> Option<u64> {
+        self.last_restart_ns
+    }
+
+    /// Return the open intensity window, if any.
+    pub fn window(self) -> Option<RestartWindow> {
+        self.window
+    }
+}
+
 /// Cached process observation. Every field is evidence to be reverified after restart.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct HostObservation {
@@ -177,34 +331,18 @@ pub struct HostObservation {
     started_at_ns: Option<u64>,
     last_heartbeat_ns: Option<u64>,
     control_channel_id: Option<ChannelId>,
-    restart_count: u32,
-    last_restart_ns: Option<u64>,
-    /// Start of the current restart-intensity window, if one is open.
-    ///
-    /// `restart_count` is a lifetime tally: it answers "how many times has this
-    /// host ever restarted", which quarantines only on integer exhaustion. That
-    /// is not an intensity bound — a host crash-looping four times a second and
-    /// one crashing twice a day reach it identically, one in minutes and one in
-    /// centuries. These two fields carry the rate.
-    restart_window_start_ns: Option<u64>,
-    /// Restarts inside the window that began at `restart_window_start_ns`.
-    restarts_in_window: u32,
+    restarts: RestartLedger,
 }
 
 impl HostObservation {
-    #[allow(clippy::too_many_arguments)]
     pub fn new(
         status: HostStatus,
         process_id: Option<u32>,
         started_at_ns: Option<u64>,
         last_heartbeat_ns: Option<u64>,
         control_channel_id: Option<ChannelId>,
-        restart_count: u32,
-        last_restart_ns: Option<u64>,
+        restarts: RestartLedger,
     ) -> Result<Self, RegistryError> {
-        // The intensity window defaults to closed. `with_restart_window` opens
-        // it; only the reconciler's restart path has the clock reading needed
-        // to do so meaningfully.
         if process_id == Some(0) {
             return Err(RegistryError::invalid("process_id", "must be non-zero"));
         }
@@ -221,14 +359,6 @@ impl HostObservation {
                     "must not precede started_at_ns",
                 ));
             }
-        }
-        if restart_count == 0 && last_restart_ns.is_some()
-            || restart_count > 0 && last_restart_ns.is_none()
-        {
-            return Err(RegistryError::invalid(
-                "last_restart_ns",
-                "must be present exactly when restart_count is non-zero",
-            ));
         }
         if let Some(channel_id) = control_channel_id {
             validate_uuid_v7(channel_id)?;
@@ -265,45 +395,27 @@ impl HostObservation {
             started_at_ns,
             last_heartbeat_ns,
             control_channel_id,
-            restart_count,
-            last_restart_ns,
-            restart_window_start_ns: None,
-            restarts_in_window: 0,
+            restarts,
         })
     }
 
-    /// Record the restart-intensity window this observation was taken under.
+    /// Return the whole restart ledger, for carrying forward unchanged.
     ///
-    /// Paired like `restart_count` and `last_restart_ns` are: a window with no
-    /// start is not a window, and a start with no restarts in it is a window
-    /// that should simply have been closed. Rejecting both mismatches keeps the
-    /// durable record from carrying a state the reconciler cannot interpret.
-    pub fn with_restart_window(
-        mut self,
-        window_start_ns: Option<u64>,
-        restarts_in_window: u32,
-    ) -> Result<Self, RegistryError> {
-        if window_start_ns.is_none() && restarts_in_window > 0
-            || window_start_ns.is_some() && restarts_in_window == 0
-        {
-            return Err(RegistryError::invalid(
-                "restart_window_start_ns",
-                "must be present exactly when restarts_in_window is non-zero",
-            ));
-        }
-        self.restart_window_start_ns = window_start_ns;
-        self.restarts_in_window = restarts_in_window;
-        Ok(self)
+    /// Every observation the reconciler writes for an already-known host should
+    /// pass this straight through. Only the restart path itself has cause to
+    /// build a different one.
+    pub fn restarts(&self) -> RestartLedger {
+        self.restarts
     }
 
     /// Start of the open restart-intensity window, if any.
     pub fn restart_window_start_ns(&self) -> Option<u64> {
-        self.restart_window_start_ns
+        self.restarts.window().map(RestartWindow::start_ns)
     }
 
     /// Restarts recorded inside the open window.
     pub fn restarts_in_window(&self) -> u32 {
-        self.restarts_in_window
+        self.restarts.window().map_or(0, RestartWindow::restarts)
     }
 
     pub fn stopped() -> Self {
@@ -313,10 +425,7 @@ impl HostObservation {
             started_at_ns: None,
             last_heartbeat_ns: None,
             control_channel_id: None,
-            restart_count: 0,
-            last_restart_ns: None,
-            restart_window_start_ns: None,
-            restarts_in_window: 0,
+            restarts: RestartLedger::NEVER,
         }
     }
 
@@ -341,11 +450,11 @@ impl HostObservation {
     }
 
     pub fn restart_count(&self) -> u32 {
-        self.restart_count
+        self.restarts.count()
     }
 
     pub fn last_restart_ns(&self) -> Option<u64> {
-        self.last_restart_ns
+        self.restarts.last_restart_ns()
     }
 }
 
@@ -656,13 +765,25 @@ pub fn encode_host_entry(entry: &HostEntry) -> Vec<u8> {
         }
         None => output.push(0),
     }
-    output.extend_from_slice(&entry.observation.restart_count.to_be_bytes());
-    push_option_u64(&mut output, entry.observation.last_restart_ns);
+    let restarts = entry.observation.restarts;
+    output.extend_from_slice(&restarts.count().to_be_bytes());
+    push_option_u64(&mut output, restarts.last_restart_ns());
     // Version 2 appends the restart-intensity window. Appending rather than
     // interleaving is what lets a version-1 reader's field offsets stay valid,
     // and what lets this decoder stop early on a version-1 record.
-    push_option_u64(&mut output, entry.observation.restart_window_start_ns);
-    output.extend_from_slice(&entry.observation.restarts_in_window.to_be_bytes());
+    //
+    // The window is written as one presence byte followed by all three of its
+    // parts, mirroring the type: a reader can no more reconstruct two thirds of
+    // a window than a caller can construct one.
+    match restarts.window() {
+        Some(window) => {
+            output.push(1);
+            output.extend_from_slice(&window.boot_id().to_be_bytes());
+            output.extend_from_slice(&window.start_ns().to_be_bytes());
+            output.extend_from_slice(&window.restarts().to_be_bytes());
+        }
+        None => output.push(0),
+    }
     output
 }
 
@@ -729,23 +850,37 @@ pub fn decode_host_entry(bytes: &[u8]) -> Result<HostEntry, RegistryError> {
     // Version 1 ends here. Its records predate the restart-intensity window, so
     // they decode with it closed -- a host never counted against a window has
     // used none of it.
-    let (restart_window_start_ns, restarts_in_window) = if version >= 2 {
-        (reader.option_u64()?, reader.u32()?)
+    let window = if version >= 2 {
+        match reader.u8()? {
+            0 => None,
+            1 => {
+                // Bound in order rather than passed inline: two of the three
+                // parts are `u64` and swapping them would still typecheck.
+                let boot_id = reader.u64()?;
+                let start_ns = reader.u64()?;
+                let restarts = reader.u32()?;
+                Some(RestartWindow::new(boot_id, start_ns, restarts).map_err(as_corrupt)?)
+            }
+            _ => {
+                return Err(RegistryError::CorruptRecord(
+                    "invalid restart window option".to_string(),
+                ))
+            }
+        }
     } else {
-        (None, 0)
+        None
     };
     reader.finish()?;
+    let restarts =
+        RestartLedger::new(restart_count, last_restart_ns, window).map_err(as_corrupt)?;
     let observation = HostObservation::new(
         status,
         process_id,
         started_at_ns,
         last_heartbeat_ns,
         control_channel_id,
-        restart_count,
-        last_restart_ns,
+        restarts,
     )
-    .map_err(as_corrupt)?
-    .with_restart_window(restart_window_start_ns, restarts_in_window)
     .map_err(as_corrupt)?;
     Ok(HostEntry::new(
         HostRegistration::new(host_name, package_path, package_hash, restart_policy),
@@ -1032,6 +1167,11 @@ mod tests {
         )
     }
 
+    /// Build a ledger for a test observation, panicking on a half-open pair.
+    fn ledger(count: u32, last_restart_ns: Option<u64>) -> RestartLedger {
+        RestartLedger::new(count, last_restart_ns, None).expect("a valid restart pair")
+    }
+
     fn running_entry(host: &str) -> HostEntry {
         let observation = HostObservation::new(
             HostStatus::Running,
@@ -1039,8 +1179,7 @@ mod tests {
             Some(100),
             Some(110),
             Some(channel_id()),
-            1,
-            Some(90),
+            ledger(1, Some(90)),
         )
         .unwrap();
         HostEntry::new(registration(host, 7), DesiredState::Running, observation)
@@ -1071,8 +1210,7 @@ mod tests {
             Some(1),
             Some(1),
             Some(channel_id()),
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
         assert!(HostObservation::new(
@@ -1081,13 +1219,18 @@ mod tests {
             Some(2),
             Some(1),
             Some(channel_id()),
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
-        assert!(
-            HostObservation::new(HostStatus::Stopped, Some(1), None, None, None, 0, None,).is_err()
-        );
+        assert!(HostObservation::new(
+            HostStatus::Stopped,
+            Some(1),
+            None,
+            None,
+            None,
+            ledger(0, None)
+        )
+        .is_err());
     }
 
     #[test]
@@ -1115,8 +1258,7 @@ mod tests {
                 active.then_some(100),
                 active.then_some(110),
                 active.then_some(channel_id()),
-                0,
-                None,
+                ledger(0, None),
             )
             .unwrap();
             let entry = HostEntry::new(
@@ -1420,29 +1562,31 @@ mod tests {
 
     #[test]
     fn observation_validation_covers_restart_uuid_running_and_quarantine_rules() {
-        assert!(
-            HostObservation::new(HostStatus::Starting, None, None, Some(1), None, 0, None,)
-                .is_err()
-        );
-        assert!(
-            HostObservation::new(HostStatus::Starting, None, None, None, None, 1, None,).is_err()
-        );
-        assert!(
-            HostObservation::new(HostStatus::Starting, None, None, None, None, 0, Some(1),)
-                .is_err()
-        );
+        assert!(HostObservation::new(
+            HostStatus::Starting,
+            None,
+            None,
+            Some(1),
+            None,
+            ledger(0, None)
+        )
+        .is_err());
+        // The half-open restart pair is refused by the ledger, which is now
+        // the only way to spell one.
+        assert!(RestartLedger::new(1, None, None).is_err());
+        assert!(RestartLedger::new(0, Some(1), None).is_err());
         assert!(HostObservation::new(
             HostStatus::Starting,
             None,
             None,
             None,
             Some(ChannelId([0; 16])),
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
         assert!(
-            HostObservation::new(HostStatus::Running, None, None, None, None, 0, None,).is_err()
+            HostObservation::new(HostStatus::Running, None, None, None, None, ledger(0, None))
+                .is_err()
         );
         assert!(HostObservation::new(
             HostStatus::Quarantined {
@@ -1453,8 +1597,7 @@ mod tests {
             None,
             None,
             None,
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
         assert!(HostObservation::new(
@@ -1466,8 +1609,7 @@ mod tests {
             None,
             None,
             None,
-            0,
-            None,
+            ledger(0, None)
         )
         .is_err());
     }
@@ -1525,8 +1667,7 @@ mod tests {
                 None,
                 None,
                 None,
-                0,
-                None,
+                ledger(0, None),
             )
             .unwrap(),
         );
@@ -1611,9 +1752,9 @@ mod tests {
         let entry = running_entry("legacy-host");
         let v2 = encode_host_entry(&entry);
 
-        // v1 is v2 minus the appended window: an option-u64 that is `None`
-        // (one tag byte) plus a u32.
-        let trailing = 1 + 4;
+        // v1 is v2 minus the appended window, which for a closed window is a
+        // single absent tag byte.
+        let trailing = 1;
         let mut v1 = v2[..v2.len() - trailing].to_vec();
         v1[4] = 1;
 
@@ -1627,16 +1768,26 @@ mod tests {
         );
     }
 
-    /// The window survives a round trip, so the bound is durable across a
-    /// daemon restart rather than resetting every time the process does.
+    /// The window survives a round trip with all three of its parts.
+    ///
+    /// The boot id matters as much as the timestamp: without it a reader cannot
+    /// tell a window opened four microseconds into *this* daemon run from one
+    /// opened four microseconds into the last.
     #[test]
     fn the_restart_window_round_trips() {
         let entry = running_entry("windowed-host");
-        let observation = entry
-            .observation()
-            .clone()
-            .with_restart_window(Some(4_000), 3)
-            .expect("an open window with restarts in it is valid");
+        let window = RestartWindow::new(0xFEED_BEEF, 4_000, 3).expect("a window with restarts");
+        let restarts =
+            RestartLedger::new(1, Some(90), Some(window)).expect("a valid restart ledger");
+        let observation = HostObservation::new(
+            HostStatus::Running,
+            Some(42),
+            Some(100),
+            Some(110),
+            Some(channel_id()),
+            restarts,
+        )
+        .unwrap();
         let entry = HostEntry::new(
             entry.registration().clone(),
             entry.desired_state(),
@@ -1644,16 +1795,45 @@ mod tests {
         );
 
         let decoded = decode_host_entry(&encode_host_entry(&entry)).expect("round trip");
-        assert_eq!(decoded.observation().restart_window_start_ns(), Some(4_000));
-        assert_eq!(decoded.observation().restarts_in_window(), 3);
+        let decoded_window = decoded
+            .observation()
+            .restarts()
+            .window()
+            .expect("the window must survive");
+        assert_eq!(decoded_window.boot_id(), 0xFEED_BEEF);
+        assert_eq!(decoded_window.start_ns(), 4_000);
+        assert_eq!(decoded_window.restarts(), 3);
     }
 
-    /// A window start with no restarts in it, or restarts with no window, is a
-    /// state the reconciler cannot interpret, so it is refused at construction.
+    /// A window recording no restarts is a window that should have been closed,
+    /// so it cannot be built -- and a record claiming one is corrupt.
     #[test]
-    fn a_half_open_restart_window_is_rejected() {
-        let observation = HostObservation::stopped();
-        assert!(observation.clone().with_restart_window(Some(1), 0).is_err());
-        assert!(observation.with_restart_window(None, 1).is_err());
+    fn an_empty_restart_window_is_rejected() {
+        assert!(RestartWindow::new(1, 4_000, 0).is_err());
+
+        // The same rule holds on the way in from disk. Hand-build a record
+        // whose window tag says "present" but whose count is zero.
+        let entry = running_entry("windowed-host");
+        let window = RestartWindow::new(7, 4_000, 1).expect("a window with restarts");
+        let restarts =
+            RestartLedger::new(1, Some(90), Some(window)).expect("a valid restart ledger");
+        let observation = HostObservation::new(
+            HostStatus::Running,
+            Some(42),
+            Some(100),
+            Some(110),
+            Some(channel_id()),
+            restarts,
+        )
+        .unwrap();
+        let entry = HostEntry::new(
+            entry.registration().clone(),
+            entry.desired_state(),
+            observation,
+        );
+        let mut bytes = encode_host_entry(&entry);
+        let count_at = bytes.len() - 4;
+        bytes[count_at..].copy_from_slice(&0u32.to_be_bytes());
+        assert!(decode_host_entry(&bytes).is_err());
     }
 }
