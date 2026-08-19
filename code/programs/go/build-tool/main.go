@@ -348,6 +348,39 @@ func run() int {
 					DeclaredDeps:  pe.DeclaredDeps,
 				}
 
+				// Re-read the platform-appropriate BUILD file for this package.
+				// The plan's BuildCommands were generated on the detect job's OS
+				// (typically Linux) and may contain shell syntax that doesn't
+				// work on Windows (e.g., 2>/dev/null, shell quoting). By re-reading
+				// the BUILD file for the current platform, we get the correct
+				// commands for this runner's OS.
+				//
+				// Skip this for Starlark packages: their commands come from
+				// Starlark evaluation, not from reading the BUILD file as shell.
+				// Reading a Starlark BUILD file as shell lines would produce
+				// load("...") as a command, which shells cannot execute.
+				if !packages[i].IsStarlark {
+					platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
+					if platformBuild != "" {
+						platformCmds := discovery.ReadLines(platformBuild)
+						if len(platformCmds) > 0 {
+							packages[i].BuildCommands = platformCmds
+						}
+
+						// The plan JSON schema never serializes raw BUILD file
+						// content (only parsed commands), so BuildContent is
+						// otherwise left at its zero value for every plan-loaded
+						// package — silently disabling any validator check that
+						// reads raw content (e.g. the "# build-tool: deps=..."
+						// declared-dependency comment, which readLines strips as
+						// a comment before commands are even extracted). Re-read
+						// the platform file's raw bytes here so plan-file mode
+						// behaves identically to the normal discovery walk.
+						if data, err := os.ReadFile(platformBuild); err == nil {
+							packages[i].BuildContent = string(data)
+						}
+					}
+				}
 			}
 			packages = packagesForPlatform(packages, runtime.GOOS)
 			platformState := bp.StateForPlatform(runtime.GOOS)
