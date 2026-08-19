@@ -903,10 +903,10 @@ vault-pm attachment remove ITEM ATTACHMENT
 vault-pm import portable|bitwarden|kdbx|csv PATH
 vault-pm export portable PATH
 
-vault-pm storage add filesystem|gdrive|webdav|s3 NAME
+vault-pm storage add filesystem|removable|gdrive|webdav|s3 NAME PATH
 vault-pm storage list
 vault-pm storage check NAME
-vault-pm storage migrate SOURCE TARGET [--mirror]
+vault-pm [--vault NAME] storage migrate SOURCE TARGET [--mirror]
 
 vault-pm sync status|pull|push|run
 vault-pm audit enable
@@ -921,8 +921,10 @@ existing vault. It is command-scoped and never rewrites `default_vault`.
 Phase 1A implements `init`, `status`, `shell`, item CRUD/list, search, history,
 portable export, audit verification, and `doctor`. `password generate`,
 `totp code`, and the attachment commands are Phase 1B daily-use conveniences
-(§23 item 11), as are the import adapters (§23 item 13).
-Cloud/storage migration commands activate in Phase 2.
+(§23 item 11), as are the import adapters (§23 item 13) and the local
+`storage add|list|check|migrate` surface for the `filesystem`/`removable`
+kinds (§23 item 14). `storage add|migrate` against `gdrive`/`webdav`/`s3`,
+and `sync status|pull|push|run`, activate in Phase 2.
 
 **Item 11 has since shipped in full.** All four of its conveniences —
 `password generate`, `totp code`, `--copy`, and the attachment commands — are
@@ -2005,7 +2007,46 @@ changelog, focused build, and downstream validation.
       and CSV ones this slice already reviews, judged too large to
       review well alongside them in one PR even though this workspace
       already has the Argon2d/AES/ChaCha20 primitives it would need.
-14. removable/synced-folder mode and mirror decorator.
+14. removable/synced-folder mode and mirror decorator. **Has shipped**, as
+      `VLT-PM50-cli-storage-migration.md` — the last item of Phase 1B.
+      `storage add filesystem|removable NAME PATH`, `storage list`,
+      `storage check NAME`, and `storage migrate SOURCE TARGET [--mirror]`
+      are all real: `removable` is a variant of `filesystem` sharing the
+      identical on-disk `storage-fs` object format, distinguished only by
+      `vault-pm-storage-removable`'s new structural detector for
+      third-party sync-tool conflict-copy naming (Dropbox/OneDrive-style
+      "conflicted copy", Syncthing's `.sync-conflict-` infix,
+      Explorer/rclone's `" (N)"` suffix), reported as bounded counts by
+      closed classification with no raw filename ever echoed anywhere.
+      `storage migrate` implements §19.1's filesystem-family slice in
+      full: `copy_object_tree` copies and read-back-verifies every
+      committed object, and the freshly collected passphrase is used to
+      independently unlock the copy over a repository factory pointed only
+      at its objects before configuration is ever touched — a wrong
+      passphrase or a corrupt copy both fail that exact step, which is
+      simultaneously step 6's independent verification and step 7's
+      "explicit confirmation," reusing the existing unlock ceremony rather
+      than inventing a second one. `--mirror` adds the target to
+      `remote_stores` instead of switching `local_store`, and every
+      repository this composition root opens now runs through the new
+      `vault-pm-storage::ReplicaSetObjectStore` decorator (§11.5) — a
+      verified no-op with zero configured mirrors, real best-effort
+      write-time propagation to one or more when a vault has them, so a
+      mirrored vault keeps replicating on every later mutation, not only
+      at migration time. Checked directly against the real code before
+      writing any of it (this campaign's now-standard practice, since the
+      reuse map's storage/crypto rows have been wrong before): none of
+      §11.5's other listed decorators (`RetryingObjectStore`,
+      `RateLimitedObjectStore`, `CachingObjectStore`,
+      `MetricsObjectStore`) exist anywhere in this workspace either, and
+      `storage migrate`/`add`/`list`/`check` had no prior partial
+      implementation to extend — the whole surface was built here. The
+      `sync --wait` ceremony with a configurable `one`/`all`/quorum
+      durability target, change-feed-based replica reconciliation
+      (`storage check`'s replica status is an explicitly-labeled
+      object-count heuristic instead), physical-delete propagation to
+      mirrors, and the cloud storage kinds are explicitly deferred to
+      Phase 2 rather than silently unimplemented.
 
 ### Phase 2 — cloud
 

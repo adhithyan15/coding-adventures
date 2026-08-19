@@ -5,12 +5,16 @@
 //! feature here. A Google Drive adapter must not need to know whether bytes are
 //! a login item, a commit, or random padding.
 //!
-//! The crate contains three things:
+//! The crate contains four things:
 //!
 //! 1. [`VaultObjectStore`], the provider-neutral contract;
-//! 2. [`InMemoryObjectStore`], the deterministic executable model; and
+//! 2. [`InMemoryObjectStore`], the deterministic executable model;
 //! 3. [`FaultInjectingObjectStore`], which makes hostile storage behavior
-//!    repeatable in repository tests.
+//!    repeatable in repository tests; and
+//! 4. [`ReplicaSetObjectStore`], VLT-PM00 §11.5's mirror decorator: it
+//!    publishes every immutable write to one primary and zero or more
+//!    best-effort mirror replicas without letting a slow or unreachable
+//!    mirror block the primary commit (§19.2).
 //!
 //! The implementation has no I/O authority. Filesystem and cloud adapters live
 //! in separate packages and run [`run_conformance_suite`] against the same
@@ -916,6 +920,222 @@ impl<S: VaultObjectStore> VaultObjectStore for FaultInjectingObjectStore<S> {
     }
 }
 
+/// Per-mirror outcome counters kept by [`ReplicaSetObjectStore`].
+///
+/// A mirror's own error type is retained rather than collapsed to a bool so a
+/// caller (`storage check`, VLT-PM00 §23 item 14) can distinguish "briefly
+/// rate-limited" from "storage was reconfigured out from under us" without
+/// the decorator inventing a second error taxonomy.
+#[derive(Clone, Debug, Default, PartialEq, Eq)]
+pub struct ReplicaHealth {
+    /// Total mirror operations attempted since construction.
+    pub attempted: u64,
+    /// Of those, the number that returned success.
+    pub succeeded: u64,
+    /// The most recent failure, or `None` if the last attempt succeeded or
+    /// none has been made yet.
+    pub last_error: Option<StoreError>,
+}
+
+impl ReplicaHealth {
+    /// Whether the most recent attempt against this mirror failed.
+    pub const fn is_degraded(&self) -> bool {
+        self.last_error.is_some()
+    }
+
+    fn record(&mut self, result: &Result<(), StoreError>) {
+        self.attempted = self.attempted.saturating_add(1);
+        match result {
+            Ok(()) => {
+                self.succeeded = self.succeeded.saturating_add(1);
+                self.last_error = None;
+            }
+            Err(error) => self.last_error = Some(error.clone()),
+        }
+    }
+}
+
+/// VLT-PM00 §11.5's `ReplicaSetObjectStore` decorator.
+///
+/// Wraps one authoritative primary store and zero or more mirror stores that
+/// receive the same immutable bytes. Two invariants this type exists to
+/// enforce, both straight from §19.2:
+///
+/// - **a local commit succeeds independently of remote availability** — every
+///   mutating call is answered from the primary alone; mirror writes happen
+///   *after* the primary call returns, and a mirror failure is recorded, not
+///   propagated; and
+/// - **replicas receive identical ciphertext objects** — mirrors are only
+///   ever given the exact bytes the primary just accepted, never a
+///   caller-chosen alternative, so a mirror cannot silently drift from the
+///   authoritative copy this decorator itself controls.
+///
+/// With zero configured mirrors this type is a transparent pass-through to
+/// the primary — `ReplicaSetObjectStore::single` is the ordinary
+/// no-replication construction used everywhere this crate's callers do not
+/// need §19.2 behavior.
+///
+/// **Deferred** (VLT-PM00 §23 item 14): the explicit `sync --wait` ceremony
+/// with a configurable `one`/`all`/quorum durability target, and treating a
+/// change feed rather than write-time propagation as the source of replica
+/// truth. What ships here is the write-time propagation and health
+/// accounting those richer features would be built on top of.
+pub struct ReplicaSetObjectStore<P, M = P> {
+    primary: P,
+    mirrors: Vec<M>,
+    health: Mutex<Vec<ReplicaHealth>>,
+}
+
+impl<P, M> ReplicaSetObjectStore<P, M> {
+    /// Wrap a primary with no mirrors — behaviorally identical to using `P`
+    /// directly.
+    pub fn single(primary: P) -> Self {
+        Self::new(primary, Vec::new())
+    }
+
+    /// Wrap a primary with an ordered, fixed set of mirrors.
+    pub fn new(primary: P, mirrors: Vec<M>) -> Self {
+        let health = mirrors.iter().map(|_| ReplicaHealth::default()).collect();
+        Self {
+            primary,
+            mirrors,
+            health: Mutex::new(health),
+        }
+    }
+
+    /// Borrow the authoritative primary store.
+    pub const fn primary(&self) -> &P {
+        &self.primary
+    }
+
+    /// Borrow the configured mirrors in publication order.
+    pub fn mirrors(&self) -> &[M] {
+        &self.mirrors
+    }
+
+    /// Return the number of configured mirrors.
+    pub fn mirror_count(&self) -> usize {
+        self.mirrors.len()
+    }
+
+    /// Snapshot each mirror's health in the same order as [`Self::mirrors`].
+    ///
+    /// `storage check` (VLT-PM00 §23 item 14) reports a replica as degraded
+    /// exactly when `is_degraded()` is true here — a real, observed failure,
+    /// never a guess based on elapsed time.
+    pub fn replica_health(&self) -> Vec<ReplicaHealth> {
+        self.health
+            .lock()
+            .map(|guard| guard.clone())
+            .unwrap_or_default()
+    }
+
+    fn record(&self, index: usize, result: &Result<(), StoreError>) {
+        if let Ok(mut health) = self.health.lock() {
+            if let Some(entry) = health.get_mut(index) {
+                entry.record(result);
+            }
+        }
+    }
+}
+
+impl<P, M> Debug for ReplicaSetObjectStore<P, M> {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
+        formatter
+            .debug_struct("ReplicaSetObjectStore")
+            .field("mirror_count", &self.mirrors.len())
+            .finish()
+    }
+}
+
+impl<P: VaultObjectStore, M: VaultObjectStore> VaultObjectStore for ReplicaSetObjectStore<P, M> {
+    fn initialize(&self, locator: &VaultLocator) -> Result<(), StoreError> {
+        self.primary.initialize(locator)?;
+        for (index, mirror) in self.mirrors.iter().enumerate() {
+            let result = mirror.initialize(locator);
+            self.record(index, &result);
+        }
+        Ok(())
+    }
+
+    fn capabilities(&self) -> BackendCapabilities {
+        self.primary.capabilities()
+    }
+
+    fn get(&self, bucket: &BucketId, object: &ObjectId) -> Result<Option<ObjectBytes>, StoreError> {
+        match self.primary.get(bucket, object) {
+            Ok(Some(bytes)) => Ok(Some(bytes)),
+            Ok(None) => Ok(self.read_fallback(bucket, object)),
+            Err(primary_error) => match self.read_fallback(bucket, object) {
+                Some(bytes) => Ok(Some(bytes)),
+                None => Err(primary_error),
+            },
+        }
+    }
+
+    fn stat(&self, bucket: &BucketId, object: &ObjectId) -> Result<Option<ObjectStat>, StoreError> {
+        self.primary.stat(bucket, object)
+    }
+
+    fn put_immutable(
+        &self,
+        bucket: &BucketId,
+        object: &ObjectId,
+        bytes: &ObjectBytes,
+    ) -> Result<PutImmutableOutcome, StoreError> {
+        let outcome = self.primary.put_immutable(bucket, object, bytes)?;
+        for (index, mirror) in self.mirrors.iter().enumerate() {
+            let result = mirror.put_immutable(bucket, object, bytes).map(|_| ());
+            self.record(index, &result);
+        }
+        Ok(outcome)
+    }
+
+    fn list(
+        &self,
+        bucket: &BucketId,
+        cursor: Option<&ListCursor>,
+        limit: usize,
+    ) -> Result<ObjectPage, StoreError> {
+        self.primary.list(bucket, cursor, limit)
+    }
+
+    fn delete_unreferenced(
+        &self,
+        bucket: &BucketId,
+        object: &ObjectId,
+    ) -> Result<DeleteOutcome, StoreError> {
+        // Deliberately primary-only. Propagating physical delete to mirrors
+        // is deferred alongside VLT-PM00 §19.4's replica-aware GC: a mirror
+        // that independently loses a still-referenced object before every
+        // device has observed the pruning checkpoint would violate that
+        // section's own retention rule, and getting that ordering right
+        // needs the GC planner, not this decorator, to own it.
+        self.primary.delete_unreferenced(bucket, object)
+    }
+
+    fn changes(&self, cursor: Option<&ChangeCursor>) -> Result<Option<ChangePage>, StoreError> {
+        self.primary.changes(cursor)
+    }
+}
+
+impl<P: VaultObjectStore, M: VaultObjectStore> ReplicaSetObjectStore<P, M> {
+    /// Try every mirror in order after the primary reported the object
+    /// missing or unavailable. VLT-PM00 §19.2: "read fallback verifies all
+    /// bytes" — the bytes returned here still pass through the same
+    /// content-addressed and AEAD verification every other object does one
+    /// layer up, so no extra verification duty belongs in a store that is
+    /// deliberately blind to what it stores.
+    fn read_fallback(&self, bucket: &BucketId, object: &ObjectId) -> Option<ObjectBytes> {
+        for mirror in &self.mirrors {
+            if let Ok(Some(bytes)) = mirror.get(bucket, object) {
+                return Some(bytes);
+            }
+        }
+        None
+    }
+}
+
 /// Summary returned by a successful adapter conformance run.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct ConformanceReport {
@@ -1537,6 +1757,200 @@ mod tests {
         let typed = failed_with("provider step", StoreError::Provider);
         assert_eq!(typed.error, Some(StoreError::Provider));
         assert!(!typed.to_string().contains("Provider"));
+    }
+
+    #[test]
+    fn single_mirror_free_replica_set_is_a_transparent_passthrough() {
+        let report = run_conformance_suite(|| {
+            ReplicaSetObjectStore::<InMemoryObjectStore>::single(InMemoryObjectStore::new())
+        })
+        .unwrap();
+        assert_eq!(report.checks, 24);
+        assert!(report.capabilities.change_feed);
+    }
+
+    #[test]
+    fn mirrored_replica_set_passes_shared_conformance_reading_through_primary() {
+        let report = run_conformance_suite(|| {
+            ReplicaSetObjectStore::new(
+                InMemoryObjectStore::new(),
+                vec![InMemoryObjectStore::new(), InMemoryObjectStore::new()],
+            )
+        })
+        .unwrap();
+        assert_eq!(report.checks, 24);
+    }
+
+    #[test]
+    fn put_propagates_identical_bytes_to_every_mirror() {
+        let replicas = ReplicaSetObjectStore::new(
+            InMemoryObjectStore::new(),
+            vec![InMemoryObjectStore::new(), InMemoryObjectStore::new()],
+        );
+        let locator = VaultLocator::new([1; 32]);
+        replicas.initialize(&locator).unwrap();
+        let bucket = BucketId::new([2; 32]);
+        let object = ObjectId::new([3; 32]);
+        let body = ObjectBytes::new(b"ciphertext".to_vec()).unwrap();
+        assert_eq!(
+            replicas.put_immutable(&bucket, &object, &body).unwrap(),
+            PutImmutableOutcome::Created
+        );
+        for mirror in replicas.mirrors() {
+            assert_eq!(mirror.get(&bucket, &object).unwrap(), Some(body.clone()));
+        }
+        for health in replicas.replica_health() {
+            assert_eq!(health.attempted, 2); // one initialize, one put
+            assert_eq!(health.succeeded, 2);
+            assert!(!health.is_degraded());
+        }
+    }
+
+    #[test]
+    fn primary_commit_succeeds_and_records_degraded_health_when_a_mirror_is_unreachable() {
+        let broken_mirror = FaultInjectingObjectStore::new(InMemoryObjectStore::new());
+        broken_mirror
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::Return(StoreError::Network),
+            })
+            .unwrap();
+        let replicas = ReplicaSetObjectStore::new(InMemoryObjectStore::new(), vec![broken_mirror]);
+        let locator = VaultLocator::new([1; 32]);
+        replicas.initialize(&locator).unwrap();
+        let bucket = BucketId::new([2; 32]);
+        let object = ObjectId::new([3; 32]);
+        let body = ObjectBytes::new(b"ciphertext".to_vec()).unwrap();
+
+        // The primary commit succeeds even though the mirror is about to
+        // fail -- VLT-PM00 §19.2's "a local commit succeeds independently of
+        // remote availability".
+        assert_eq!(
+            replicas.put_immutable(&bucket, &object, &body).unwrap(),
+            PutImmutableOutcome::Created
+        );
+        let health = replicas.replica_health();
+        assert_eq!(health.len(), 1);
+        assert!(health[0].is_degraded());
+        assert_eq!(health[0].last_error, Some(StoreError::Network));
+        assert_eq!(health[0].attempted, 2);
+        assert_eq!(health[0].succeeded, 1); // the earlier initialize
+
+        // A later successful mirror write clears the degraded flag.
+        let second_object = ObjectId::new([4; 32]);
+        replicas
+            .put_immutable(&bucket, &second_object, &body)
+            .unwrap();
+        let recovered = replicas.replica_health();
+        assert!(!recovered[0].is_degraded());
+        assert_eq!(recovered[0].attempted, 3);
+        assert_eq!(recovered[0].succeeded, 2);
+    }
+
+    #[test]
+    fn get_falls_back_to_a_mirror_when_the_primary_is_missing_or_unavailable() {
+        let primary = InMemoryObjectStore::new();
+        let mirror = InMemoryObjectStore::new();
+        let locator = VaultLocator::new([1; 32]);
+        primary.initialize(&locator).unwrap();
+        mirror.initialize(&locator).unwrap();
+        let bucket = BucketId::new([2; 32]);
+        let object = ObjectId::new([3; 32]);
+        let body = ObjectBytes::new(b"mirror-only".to_vec()).unwrap();
+        // The object exists only on the mirror -- e.g. a write that reached
+        // the mirror before a primary that later lost the object entirely.
+        mirror.put_immutable(&bucket, &object, &body).unwrap();
+
+        let faulting_primary = FaultInjectingObjectStore::new(primary);
+        faulting_primary.initialize(&locator).unwrap();
+        let replicas = ReplicaSetObjectStore::new(faulting_primary, vec![mirror]);
+
+        // Ordinary miss: primary answers `None`, fallback finds the mirror copy.
+        assert_eq!(replicas.get(&bucket, &object).unwrap(), Some(body.clone()));
+
+        // Primary itself errors (e.g. a removable drive briefly unplugged):
+        // fallback still serves the mirror copy rather than surfacing the
+        // primary's error when a good answer exists.
+        replicas
+            .primary()
+            .enqueue(FaultAction {
+                operation: StoreOperation::Get,
+                effect: FaultEffect::Return(StoreError::Network),
+            })
+            .unwrap();
+        assert_eq!(replicas.get(&bucket, &object).unwrap(), Some(body));
+
+        // Neither store has this one: the primary's real error surfaces.
+        let absent = ObjectId::new([9; 32]);
+        replicas
+            .primary()
+            .enqueue(FaultAction {
+                operation: StoreOperation::Get,
+                effect: FaultEffect::Return(StoreError::Network),
+            })
+            .unwrap();
+        assert_eq!(replicas.get(&bucket, &absent), Err(StoreError::Network));
+    }
+
+    #[test]
+    fn delete_and_changes_and_stat_and_capabilities_delegate_to_primary_only() {
+        let primary = InMemoryObjectStore::new();
+        let mirror = InMemoryObjectStore::new();
+        let locator = VaultLocator::new([1; 32]);
+        let replicas = ReplicaSetObjectStore::new(primary, vec![mirror]);
+        replicas.initialize(&locator).unwrap();
+        let bucket = BucketId::new([2; 32]);
+        let object = ObjectId::new([3; 32]);
+        let body = ObjectBytes::new(vec![9]).unwrap();
+        replicas.put_immutable(&bucket, &object, &body).unwrap();
+
+        assert_eq!(replicas.capabilities(), BackendCapabilities::in_memory());
+        assert!(replicas.stat(&bucket, &object).unwrap().is_some());
+        assert!(replicas.changes(None).unwrap().is_some());
+        assert_eq!(
+            replicas.delete_unreferenced(&bucket, &object).unwrap(),
+            DeleteOutcome::Deleted
+        );
+        // The delete never reached the mirror -- deliberately deferred to a
+        // future replica-aware GC planner (VLT-PM00 §19.4).
+        assert_eq!(
+            replicas.mirrors()[0].get(&bucket, &object).unwrap(),
+            Some(body)
+        );
+    }
+
+    #[test]
+    fn health_snapshot_is_empty_for_a_mirror_free_replica_set_and_debug_is_closed() {
+        let replicas =
+            ReplicaSetObjectStore::<InMemoryObjectStore>::single(InMemoryObjectStore::new());
+        assert!(replicas.replica_health().is_empty());
+        assert_eq!(replicas.mirror_count(), 0);
+        let debug = format!("{replicas:?}");
+        assert!(debug.contains("mirror_count: 0"));
+    }
+
+    #[test]
+    fn primary_failure_still_fails_the_call_even_with_healthy_mirrors() {
+        let faulting_primary = FaultInjectingObjectStore::new(InMemoryObjectStore::new());
+        let replicas =
+            ReplicaSetObjectStore::new(faulting_primary, vec![InMemoryObjectStore::new()]);
+        replicas.initialize(&VaultLocator::new([1; 32])).unwrap();
+        replicas
+            .primary()
+            .enqueue(FaultAction {
+                operation: StoreOperation::PutImmutable,
+                effect: FaultEffect::Return(StoreError::Quota),
+            })
+            .unwrap();
+        let bucket = BucketId::new([2; 32]);
+        let object = ObjectId::new([3; 32]);
+        let body = ObjectBytes::new(vec![1]).unwrap();
+        assert_eq!(
+            replicas.put_immutable(&bucket, &object, &body),
+            Err(StoreError::Quota)
+        );
+        // The primary's own rejection means the mirror is never attempted.
+        assert_eq!(replicas.replica_health()[0].attempted, 1); // only initialize
     }
 
     #[test]

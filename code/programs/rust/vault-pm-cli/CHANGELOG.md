@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+- Command surface gains `storage add|list|check|migrate`
+  (`VLT-PM50-cli-storage-migration.md`, `VLT-PM00` §23 item 14, the last item
+  of Phase 1B). Added `real_cli_storage_add_check_and_migrate_a_real_vault`
+  to `tests/local_cli_e2e.rs`: registers a new filesystem storage location
+  through the real binary, confirms `storage check` reports it unreachable
+  before it is ever materialized, migrates a real on-disk vault onto it
+  through a real pseudo-terminal passphrase prompt, confirms the item
+  created before the migration is still readable afterward, and drops a
+  real Syncthing-style `.sync-conflict-` filename into the migrated
+  location's object directory to prove `storage check` detects and reports
+  it — with the offending filename itself never appearing anywhere in the
+  report.
+
 - Command surface gains `import portable|bitwarden|csv|kdbx FILE`
   (`VLT-PM49-cli-external-import.md`), replacing the old bare
   `import FILE`. Added `real_cli_imports_bitwarden_json_and_leaks_no_secret_

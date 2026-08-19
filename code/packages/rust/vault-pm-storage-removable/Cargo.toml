@@ -1,0 +1,15 @@
+[package]
+name = "coding_adventures_vault_pm_storage_removable"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM00 §12/§23 item 14: removable/synced-folder conflict-copy detection and byte-for-byte object-root migration copy"
+
+[dependencies]
+
+# Unix-only: `read_bounded` opens with `O_NOFOLLOW` as defense in depth
+# against a symlink planted between the `fs::symlink_metadata` check and
+# the open (VLT-PM50 §7) -- the `symlink_metadata` check alone already
+# refuses any symlink present *at* the check, so this closes only the
+# narrower race window, not a new class of gap.
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

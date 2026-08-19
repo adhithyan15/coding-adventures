@@ -2,6 +2,78 @@
 
 ## Unreleased
 
+- **`storage add|list|check|migrate`**, `VLT-PM00` §23 item 14, the last item
+  of Phase 1B. Specified by `VLT-PM50-cli-storage-migration.md`.
+
+  `storage add filesystem|removable NAME PATH` registers a new named
+  filesystem-family storage location in configuration; it neither creates
+  the directory (the backend does that lazily on first use, exactly as
+  `init` already relies on) nor opens any vault.
+  `gdrive|webdav|s3` still parse and are refused with the `unsupported`
+  exit class, the same closed-grammar answer `VLT-PM49` §8 gave `import
+  kdbx` — Phase 2's job. `storage list` lists every configured location.
+  `storage check NAME` reports one location's reachability, runs
+  `vault-pm-storage-removable`'s third-party sync-interference scan for a
+  local-directory kind, and reports any configured mirror's coarse
+  object-count health.
+
+  `storage migrate SOURCE TARGET [--mirror]` implements the
+  filesystem-family slice of `VLT-PM00` §19.1's seven steps:
+  `vault-pm-storage-removable::copy_object_tree` copies and read-back
+  verifies every committed object (steps 2-4), then the freshly collected
+  passphrase is used to independently unlock `TARGET` over a repository
+  factory pointed only at its objects (step 6) — a wrong passphrase or a
+  corrupt copy both fail this exact step before configuration is ever
+  touched, which *is* the "explicit confirmation" step 7 asks for, rather
+  than a second invented ceremony. Only then does configuration switch:
+  without `--mirror`, `local_store` moves to `TARGET`; with it, `TARGET`
+  joins `remote_stores` and `local_store` is unchanged. `SOURCE` is never
+  modified or deleted (step 8's default; no `--delete-source` flag exists in
+  this slice).
+
+  `configured_vault`'s storage-location check, previously hardcoded to the
+  exact two paths this composition root itself creates, now accepts any
+  registered `filesystem`/`removable` location and any `remote_stores` that
+  resolve the same way — the restriction predates `storage add` existing at
+  all and would otherwise make the new command pointless.
+
+  Every repository this composition root opens now goes through
+  `vault-pm-storage::ReplicaSetObjectStore` (with zero configured mirrors by
+  default, a verified no-op pass-through) rather than the bare
+  `StorageCoreObjectStore` — so a vault mirrored via `storage migrate
+  --mirror` gets real, ongoing, best-effort mirror-write propagation on
+  every subsequent mutation, not just at migration time.
+
+  **Deferred**, per `VLT-PM00` §23 item 14's own scoping: the explicit `sync
+  --wait` ceremony with a configurable `one`/`all`/quorum durability target,
+  and treating a change feed rather than write-time propagation and
+  directory-scan counts as the source of replica truth. `storage check`'s
+  replica status line is a labeled structural heuristic (an object-file
+  count comparison), not a cryptographic guarantee, and says so in its own
+  documentation.
+
+  `configured_vault`'s cross-vault storage-collision check now falls back
+  to comparing canonicalized paths when two locations' raw strings differ
+  (`same_local_directory`), so a relative path or a symlink cannot make
+  two different-looking `storage add`ed locations silently alias one real
+  directory — found in this PR's own security review, since the previous
+  exact-string comparison predates any location but the two this
+  composition root itself created ever being possible.
+
+  Tests: closed-grammar coverage for all four verbs including `--mirror`
+  and the `--vault` selector split (`add`/`list`/`check` refuse one,
+  `migrate` accepts one); registering and listing a location, duplicate and
+  cloud-kind rejection; `storage check` across unreachable, healthy,
+  sync-interference, missing-name, and cloud-kind-injected states, with an
+  assertion that a conflict-copy filename never appears in the report;
+  `storage migrate` switching primary storage while leaving the source
+  directory untouched and the previously created item still readable;
+  `storage migrate --mirror` adding a replica and proving a *subsequent*
+  item creation actually propagates to it, then that `storage check` reports
+  it `in_sync`; a wrong passphrase leaving configuration unchanged even
+  though the (harmless, verified) copy already happened; and source/target
+  identity and reference-integrity rejections.
+
 - **`import portable|bitwarden|csv|kdbx FILE`**, `VLT-PM00` §23 item 13.
   Specified by `VLT-PM49-cli-external-import.md`. The bare `import FILE`
   grammar (VLT-PM18) is now `import portable FILE`; `import bitwarden FILE`
