@@ -6059,6 +6059,53 @@ pub const RUNTIME: &str = r##"mod __sir {
     // runtime's untagged-`number` value model) — so `sir_sym_int`/
     // `sir_sym_float` here need no extra range check beyond "is this
     // already the `Value` variant we expect" / "is this float finite".
+    //
+    // ## `Apply`'s cached `depth`/`size` fields (/security-review finding)
+    //
+    // An earlier revision of this port capped `SIR_SYM_MAX_TERM_DEPTH` only
+    // at tree-WALK time (`sir_sym_to_s`/`sir_sym_walk_once`/`sir_sym_
+    // replace_repeated_walk`), matching the JS/Ruby references. A security
+    // review found that insufficient for a Rust value model specifically,
+    // two independent ways:
+    //
+    //  1. **Recursive `Drop`, not just recursive walk.** Rust's compiler-
+    //     generated `Drop` glue for `Apply { head, args }` recurses into
+    //     `head`/every `args` element exactly like any other tree walk —
+    //     but it is NOT one of "the matcher/walk functions below," so a
+    //     walk-time-only cap does nothing to protect it. Dropping the LAST
+    //     `Rc` reference to a too-deep term (an ordinary scope exit,
+    //     reassignment, or `Vec` clear — no explicit "walk" call needed)
+    //     recurses just as deep, with no cap anywhere in that path,
+    //     producing an UNCATCHABLE native stack overflow.
+    //  2. **`Rc`-sharing collapses PATH depth without bounding LOGICAL
+    //     size.** `args` may legally hold the SAME `Rc<SirSymTerm>` more
+    //     than once (an ordinary, cheap `Rc::clone` — see the doc note
+    //     above on cloning a `Value::SymTerm`). Doubling a shared subterm
+    //     at each nesting level (`t_k = f(t_{k-1}, t_{k-1})`) grows the
+    //     REPRESENTED tree size exponentially (`2^k` leaf positions) while
+    //     PATH depth grows only linearly (`k`) — `k` in the low dozens
+    //     already represents more nodes than the observable universe has
+    //     atoms, yet sits nowhere near `SIR_SYM_MAX_TERM_DEPTH`. None of
+    //     the matcher/walk functions below memoize on `Rc` pointer
+    //     identity, so walking such a term costs `O(2^k)` — an
+    //     effectively-infinite hang a depth cap alone cannot prevent.
+    //
+    // Both are closed the same way: `Apply` caches its own `depth` (max
+    // over `head`/`args`, +1) and `size` (sum over `head`/`args` — the
+    // node count the term would expand to if fully unshared, i.e. exactly
+    // what a non-memoizing walk actually visits — +1), computed ONCE, in
+    // O(1)/O(`args.len()`) from the ALREADY-cached fields of `head`/`args`
+    // (never a re-walk), by `sir_sym_make_apply` — the ONE choke point
+    // every `Apply` node in this file is built through (`sir_sym_apply`,
+    // `sir_sym_substitute`, `sir_sym_walk_once`, and `sir_sym_replace_
+    // repeated_walk` all route their `Apply`-(re)building through it
+    // rather than constructing the variant directly). Enforcing both caps
+    // at that ONE place — rather than trying to re-derive "is this term
+    // too big" ad hoc at every possible future call/drop site — means NO
+    // `Apply` node deeper than `SIR_SYM_MAX_TERM_DEPTH` or logically larger
+    // than `SIR_SYM_MAX_TERM_SIZE` can exist ANYWHERE in this runtime, so
+    // every walker (recursive `Drop` included) is safe by construction,
+    // with no per-walker bookkeeping needed.
     #[derive(Debug)]
     pub enum SirSymTerm {
         /// A bare symbolic-expression symbol — Wolfram `x`, `Plus`, `f`
@@ -6076,11 +6123,137 @@ pub const RUNTIME: &str = r##"mod __sir {
         /// `head[args…]` / `head(args…)` as data. `head` is itself a full
         /// term (not a bare name) because a COMPUTED head is legal Wolfram
         /// (`f[x][y]` applies the result of `f[x]` to `y`) — usually a
-        /// `Symbol`, but this type does not narrow it.
+        /// `Symbol`, but this type does not narrow it. `depth`/`size` are
+        /// cached DoS-guard bookkeeping — see this enum's own doc note
+        /// above — always built by `sir_sym_make_apply`, never by hand.
         Apply {
             head: Rc<SirSymTerm>,
             args: Vec<Rc<SirSymTerm>>,
+            depth: usize,
+            size: usize,
         },
+    }
+
+    /// SECURITY (CWE-674): bounds `Apply`'s cached PATH depth — see this
+    /// section's "`Apply`'s cached `depth`/`size` fields" doc note (above,
+    /// on `SirSymTerm` itself) for the full rationale. Mirrors the JS
+    /// reference's `MAX_TERM_DEPTH = 512` exactly (cross-validated against
+    /// the published TypeScript `sir-runtime-symbolic` package, which uses
+    /// the identical constant, and against `semantic-ir-to-ruby`'s own
+    /// port) — enforced HERE at construction time (`sir_sym_make_apply`)
+    /// rather than only at walk time as the JS/Ruby references do, for
+    /// Rust-specific reasons (recursive `Drop`) those garbage-collected
+    /// runtimes don't share.
+    const SIR_SYM_MAX_TERM_DEPTH: usize = 512;
+
+    /// SECURITY (CWE-400): bounds `Apply`'s cached logical SIZE — the
+    /// count of node instances the term would expand to if fully unshared,
+    /// i.e. exactly what a non-memoizing walk (every walker below) visits
+    /// — INDEPENDENT of `SIR_SYM_MAX_TERM_DEPTH`, which bounds only PATH
+    /// depth and does nothing to stop the `Rc`-sharing doubling attack
+    /// this section's own doc note (above) describes. A doubling attack
+    /// hits this cap within about 20 iterations (`2^20` ≈ 1,048,576),
+    /// long before either the exponential blow-up or any real resource
+    /// exhaustion could occur. Same order of magnitude as this file's
+    /// SIR22 `ARRAY_MAX_ELEMENTS` (`1 << 26`) — smaller here because a
+    /// `SirSymTerm` node is a heap-allocated `String`/`Vec`-bearing enum,
+    /// not a flat `f64`, so a term of this size is already a much larger
+    /// real footprint than an equally-sized `f64` array.
+    const SIR_SYM_MAX_TERM_SIZE: usize = 1 << 20; // 1,048,576
+
+    /// A term's cached PATH depth (0 for every leaf; `Apply`'s own cached
+    /// `depth` otherwise) — read in O(1), never re-walked.
+    fn sir_sym_depth_of(node: &SirSymTerm) -> usize {
+        match node {
+            SirSymTerm::Apply { depth, .. } => *depth,
+            _ => 0,
+        }
+    }
+
+    /// A term's cached logical SIZE (1 for every leaf; `Apply`'s own
+    /// cached `size` otherwise — see `SIR_SYM_MAX_TERM_SIZE`'s doc for
+    /// what this counts and why). Read in O(1), never re-walked.
+    fn sir_sym_size_of(node: &SirSymTerm) -> usize {
+        match node {
+            SirSymTerm::Apply { size, .. } => *size,
+            _ => 1,
+        }
+    }
+
+    /// Raise a catchable `RuntimeError` from this domain — mirrors
+    /// `array_raise` (SIR22 section, above) exactly: every symbolic-domain
+    /// error is a `raise` (`std::panic::panic_any` with a `SirError`
+    /// payload, via `raise` in the exceptions section above), never a bare
+    /// Rust panic, so a malformed rational/non-finite float/depth-limit/
+    /// term-too-large/rewrite-cycle fails with a clean, `TryCatch`-
+    /// rescuable error instead of an uncatchable process abort. This is
+    /// ALSO why `sir_sym_walk_once`/`sir_sym_replace_repeated` below need
+    /// no JS/Ruby-style sentinel-value-threaded-through-every-return-path
+    /// plumbing (their `{kind: "depth_limit", …}` objects / `{kind:
+    /// :depth_limit, …}` Hashes, plus every caller checking for one and
+    /// propagating it up): Rust's own unwinding panic IS that propagation
+    /// mechanism, automatically, at every stack frame — `sir_sym_raise`
+    /// below simply never returns, and the existing `catch_unwind`/
+    /// `report_uncaught` machinery the exceptions section already provides
+    /// handles the rest, exactly as it does for `array_raise`.
+    fn sir_sym_raise(msg: String) -> ! {
+        raise("RuntimeError", Value::Str(Rc::from(msg.as_str())))
+    }
+
+    fn sir_sym_raise_depth_limit() -> ! {
+        sir_sym_raise(format!(
+            "sir-runtime-symbolic: depth-limit (term nesting exceeded {SIR_SYM_MAX_TERM_DEPTH} levels)"
+        ))
+    }
+    fn sir_sym_raise_term_too_large() -> ! {
+        sir_sym_raise(format!(
+            "sir-runtime-symbolic: term-too-large (logical size exceeded {SIR_SYM_MAX_TERM_SIZE} nodes — a shared or repeatedly-rewritten term is likely growing exponentially)"
+        ))
+    }
+    fn sir_sym_raise_rewrite_cycle() -> ! {
+        sir_sym_raise(format!(
+            "sir-runtime-symbolic: rewrite-cycle (exceeded {SIR_SYM_MAX_REWRITE_ITERATIONS} rule firings at one position — the rule set is likely non-terminating)"
+        ))
+    }
+
+    /// THE single choke point that constructs every `SirSymTerm::Apply`
+    /// node in this runtime. `sir_sym_apply` (the public constructor
+    /// `Expr::SymApply` lowers to), `sir_sym_substitute`, `sir_sym_walk_
+    /// once`, and `sir_sym_replace_repeated_walk` all route their
+    /// `Apply`-(re)building through this rather than writing `Rc::new(
+    /// SirSymTerm::Apply { .. })` directly — see `SirSymTerm`'s own doc
+    /// note ("`Apply`'s cached `depth`/`size` fields") for why a SINGLE
+    /// choke point, rather than scattered per-call-site checks, is the
+    /// right shape for this guard: it makes "no `Apply` node deeper/larger
+    /// than the cap exists ANYWHERE in this runtime" an invariant
+    /// established once, rather than something every future construction
+    /// site (including `sir_sym_substitute`'s rewrite of a rule's `rhs`,
+    /// which can itself duplicate a bound pattern variable's term into
+    /// multiple sibling positions — the SAME sharing hazard as a hand-
+    /// written `SymApply`) has to independently remember to re-derive.
+    ///
+    /// `depth`/`size` are computed from the ALREADY-cached fields of
+    /// `head`/`args` — O(1) and O(`args.len()`) respectively, never a
+    /// re-walk of either subtree — so this check is never the expensive
+    /// part of building a term. Saturating arithmetic throughout: neither
+    /// sum nor max can silently wrap past `usize::MAX`, and either cap
+    /// being exceeded is reported the same clean, catchable way.
+    fn sir_sym_make_apply(head: Rc<SirSymTerm>, args: Vec<Rc<SirSymTerm>>) -> Rc<SirSymTerm> {
+        let depth = args
+            .iter()
+            .fold(sir_sym_depth_of(&head), |acc, a| acc.max(sir_sym_depth_of(a)))
+            .saturating_add(1);
+        if depth > SIR_SYM_MAX_TERM_DEPTH {
+            sir_sym_raise_depth_limit();
+        }
+        let size = args
+            .iter()
+            .fold(sir_sym_size_of(&head), |acc, a| acc.saturating_add(sir_sym_size_of(a)))
+            .saturating_add(1);
+        if size > SIR_SYM_MAX_TERM_SIZE {
+            sir_sym_raise_term_too_large();
+        }
+        Rc::new(SirSymTerm::Apply { head, args, depth, size })
     }
 
     /// Generic term → `String` rendering (`head(args, …)`) — wired into
@@ -6091,18 +6264,17 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// pretty-printer (SIR23 addendum item 4) is separate follow-up work,
     /// not part of this Tier A matcher port.
     ///
-    /// SECURITY (CWE-674): depth-capped with the SAME `SIR_SYM_MAX_TERM_
-    /// DEPTH` guard the matcher's own tree walks use below, for the
-    /// identical reason: a term built via `sir_sym_apply` is not depth-
-    /// capped at CONSTRUCTION time (only the tree WALK below enforces the
-    /// cap), so a runtime-built term (e.g. a compiled loop lowered to
-    /// repeated `SymApply` nesting — see the `depth_limit_*` test in
-    /// `tests/sir23_symbolic.rs`) can be arbitrarily deep. Past the cap,
-    /// `"..."` is the safe, contained answer — this function DOES NOT
-    /// `raise` (unlike `sir_sym_walk_once`/`sir_sym_replace_repeated`
-    /// below): a `print` on a too-deep term should degrade to a truncated
-    /// string, not abort the whole program, matching the JS/Ruby
-    /// references' own choice for this specific function.
+    /// Depth-capped with the same `SIR_SYM_MAX_TERM_DEPTH` every `Apply`
+    /// is ALREADY capped to at construction time (via `sir_sym_make_
+    /// apply`) — this check can in practice never fire for a term this
+    /// runtime itself built, but stays as defense-in-depth (cheap, and
+    /// robust against a future construction path that might bypass the
+    /// choke point). Past the cap, `"..."` is the safe, contained answer —
+    /// this function DOES NOT `raise` (unlike `sir_sym_walk_once`/
+    /// `sir_sym_replace_repeated` below): a `print` on a too-deep term
+    /// should degrade to a truncated string, not abort the whole program,
+    /// matching the JS/Ruby references' own choice for this specific
+    /// function.
     ///
     /// ## Whether an `NDArray` display precedent applies here
     ///
@@ -6131,33 +6303,13 @@ pub const RUNTIME: &str = r##"mod __sir {
             // `Value::Str`'s bare (unquoted) `format_d` arm above, exactly
             // as the JS/Ruby references' generic term renderer does.
             SirSymTerm::Str { value } => format!("{:?}", value),
-            SirSymTerm::Apply { head, args } => {
+            SirSymTerm::Apply { head, args, .. } => {
                 let head_s = sir_sym_to_s(head, depth + 1);
                 let args_s: Vec<String> =
                     args.iter().map(|a| sir_sym_to_s(a, depth + 1)).collect();
                 format!("{head_s}({})", args_s.join(", "))
             }
         }
-    }
-
-    /// Raise a catchable `RuntimeError` from this domain — mirrors
-    /// `array_raise` (SIR22 section, above) exactly: every symbolic-domain
-    /// error is a `raise` (`std::panic::panic_any` with a `SirError`
-    /// payload, via `raise` in the exceptions section above), never a bare
-    /// Rust panic, so a malformed rational/non-finite float/depth-limit/
-    /// rewrite-cycle fails with a clean, `TryCatch`-rescuable error instead
-    /// of an uncatchable process abort. This is ALSO why `sir_sym_walk_once`/
-    /// `sir_sym_replace_repeated` below need no JS/Ruby-style sentinel-
-    /// value-threaded-through-every-return-path plumbing (their `{kind:
-    /// "depth_limit", …}` objects / `{kind: :depth_limit, …}` Hashes, plus
-    /// every caller checking for one and propagating it up): Rust's own
-    /// unwinding panic IS that propagation mechanism, automatically, at
-    /// every stack frame — `sir_sym_raise` below simply never returns, and
-    /// the existing `catch_unwind`/`report_uncaught` machinery the
-    /// exceptions section already provides handles the rest, exactly as it
-    /// does for `array_raise`.
-    fn sir_sym_raise(msg: String) -> ! {
-        raise("RuntimeError", Value::Str(Rc::from(msg.as_str())))
     }
 
     /// Unwrap a `Value` that must already be a symbolic term (every
@@ -6195,9 +6347,19 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
     }
 
+    /// SECURITY (CWE-190): `i64::MIN.abs()` overflows (panics under
+    /// overflow-checked builds; silently stays `i64::MIN`, still NEGATIVE,
+    /// under release builds where overflow checks are off — either way an
+    /// uncontrolled/incorrect result). `numer`/`denom` originate from the
+    /// SIR module being compiled (see `sir_sym_rational`'s own doc note),
+    /// not a fixed, trusted, hand-authored constant set, so — mirroring
+    /// this file's own `array_checked_shape_size` precedent (checked
+    /// arithmetic + a clean `raise` on overflow, never a silent wrap or an
+    /// uncontrolled panic) — this uses `checked_abs`, `raise`-ing the same
+    /// way a zero denominator already does.
     fn sir_sym_gcd_abs(a: i64, b: i64) -> i64 {
-        let mut a = a.abs();
-        let mut b = b.abs();
+        let mut a = sir_sym_checked_abs(a);
+        let mut b = sir_sym_checked_abs(b);
         while b != 0 {
             let t = b;
             b = a % b;
@@ -6206,18 +6368,34 @@ pub const RUNTIME: &str = r##"mod __sir {
         if a == 0 { 1 } else { a }
     }
 
+    fn sir_sym_checked_abs(n: i64) -> i64 {
+        n.checked_abs().unwrap_or_else(|| {
+            sir_sym_raise(format!(
+                "sir_sym_rational: {n} has no representable absolute value (i64::MIN)"
+            ))
+        })
+    }
+
     /// `numer`/`denom` are Rust `i64` CONSTANTS the emitter bakes directly
     /// from `Expr::SymRational`'s own fields — not routed through
     /// `emit_sym_operand`/`Value`, since `SymRational` carries its
     /// numerator/denominator as plain IR-level integers, not sub-`Expr`s.
+    /// Those integers still originate from whatever produced the SIR
+    /// `Module` being compiled, so they are treated as untrusted input
+    /// here (see `sir_sym_gcd_abs`'s own doc note on the `i64::MIN` edge
+    /// case this implies for the sign-flip below).
     pub fn sir_sym_rational(numer: i64, denom: i64) -> Value {
         if denom == 0 {
             sir_sym_raise("sir_sym_rational: denominator cannot be zero".to_string());
         }
         let (mut numer, mut denom) = (numer, denom);
         if denom < 0 {
-            numer = -numer;
-            denom = -denom;
+            numer = numer.checked_neg().unwrap_or_else(|| {
+                sir_sym_raise("sir_sym_rational: numerator overflow (i64::MIN cannot be negated)".to_string())
+            });
+            denom = denom.checked_neg().unwrap_or_else(|| {
+                sir_sym_raise("sir_sym_rational: denominator overflow (i64::MIN cannot be negated)".to_string())
+            });
         }
         let g = sir_sym_gcd_abs(numer, denom);
         Value::SymTerm(Rc::new(SirSymTerm::Rational { numer: numer / g, denom: denom / g }))
@@ -6246,7 +6424,7 @@ pub const RUNTIME: &str = r##"mod __sir {
     pub fn sir_sym_apply(head: Value, args: Vec<Value>) -> Value {
         let head_t = sir_sym_term_of(&head);
         let arg_ts: Vec<Rc<SirSymTerm>> = args.iter().map(sir_sym_term_of).collect();
-        Value::SymTerm(Rc::new(SirSymTerm::Apply { head: head_t, args: arg_ts }))
+        Value::SymTerm(sir_sym_make_apply(head_t, arg_ts))
     }
 
     /// Structural equality — used by the matcher (a repeated pattern
@@ -6256,12 +6434,10 @@ pub const RUNTIME: &str = r##"mod __sir {
     /// change anything" fixed-point check, and by `value_eq_d`'s
     /// `Value::SymTerm` arm (above).
     ///
-    /// SECURITY (CWE-674): depth-capped with the SAME `SIR_SYM_MAX_TERM_
-    /// DEPTH` guard `sir_sym_walk_once`/`sir_sym_replace_repeated` use
-    /// below — a term built via `sir_sym_apply` is not depth-capped at
-    /// CONSTRUCTION time (only the tree WALK below enforces the cap), so a
-    /// runtime-built term could be arbitrarily deep. Past the cap, `false`
-    /// ("not structurally equal") is the safe, contained answer, mirroring
+    /// Depth-capped with the same `SIR_SYM_MAX_TERM_DEPTH` every `Apply`
+    /// is already capped to at construction time — see `sir_sym_to_s`'s
+    /// identical defense-in-depth note. Past the cap, `false` ("not
+    /// structurally equal") is the safe, contained answer, mirroring
     /// `sir_sym_match_pattern`'s own "give up cleanly" contract for a
     /// failed match.
     fn sir_sym_term_equals(a: &SirSymTerm, b: &SirSymTerm, depth: usize) -> bool {
@@ -6278,8 +6454,8 @@ pub const RUNTIME: &str = r##"mod __sir {
             (SirSymTerm::Float { value: x }, SirSymTerm::Float { value: y }) => x == y,
             (SirSymTerm::Str { value: x }, SirSymTerm::Str { value: y }) => x == y,
             (
-                SirSymTerm::Apply { head: xh, args: xa },
-                SirSymTerm::Apply { head: yh, args: ya },
+                SirSymTerm::Apply { head: xh, args: xa, .. },
+                SirSymTerm::Apply { head: yh, args: ya, .. },
             ) => {
                 sir_sym_term_equals(xh, yh, depth + 1)
                     && xa.len() == ya.len()
@@ -6317,7 +6493,7 @@ pub const RUNTIME: &str = r##"mod __sir {
         sir_sym_is_head(node, SIR_SYM_PATTERN)
     }
     fn sir_sym_is_rule(node: &SirSymTerm) -> bool {
-        if let SirSymTerm::Apply { head, args } = node {
+        if let SirSymTerm::Apply { head, args, .. } = node {
             if let SirSymTerm::Symbol { name } = head.as_ref() {
                 return (name == SIR_SYM_RULE || name == SIR_SYM_RULE_DELAYED) && args.len() == 2;
             }
@@ -6451,8 +6627,8 @@ pub const RUNTIME: &str = r##"mod __sir {
                 None => Some(sir_sym_bindings_bind(&matched, &name, target)),
             };
         }
-        if let SirSymTerm::Apply { head: p_head, args: p_args } = pattern.as_ref() {
-            let SirSymTerm::Apply { head: t_head, args: t_args } = target.as_ref() else {
+        if let SirSymTerm::Apply { head: p_head, args: p_args, .. } = pattern.as_ref() {
+            let SirSymTerm::Apply { head: t_head, args: t_args, .. } = target.as_ref() else {
                 return None;
             };
             let mut current = sir_sym_match_pattern(p_head, t_head, bindings)?;
@@ -6467,6 +6643,12 @@ pub const RUNTIME: &str = r##"mod __sir {
         if sir_sym_term_equals(pattern, target, 0) { Some(bindings.clone()) } else { None }
     }
 
+    /// Rebuilds via `sir_sym_make_apply` (never `Rc::new(SirSymTerm::Apply
+    /// { .. })` directly) — see that function's own doc note on why: a
+    /// substitution can duplicate a single BOUND term into more than one
+    /// position in `rhs` (e.g. a rule `x_ -> f(x_, x_)`), the exact same
+    /// `Rc`-sharing shape `sir_sym_apply` itself must guard against, so
+    /// this rebuild needs the identical depth/size re-check.
     fn sir_sym_substitute(template: &Rc<SirSymTerm>, bindings: &SirSymBindings) -> Rc<SirSymTerm> {
         if sir_sym_is_pattern(template) {
             let name = sir_sym_pattern_name(template);
@@ -6475,11 +6657,11 @@ pub const RUNTIME: &str = r##"mod __sir {
             }
             return template.clone();
         }
-        if let SirSymTerm::Apply { head, args } = template.as_ref() {
+        if let SirSymTerm::Apply { head, args, .. } = template.as_ref() {
             let new_head = sir_sym_substitute(head, bindings);
             let new_args: Vec<Rc<SirSymTerm>> =
                 args.iter().map(|a| sir_sym_substitute(a, bindings)).collect();
-            return Rc::new(SirSymTerm::Apply { head: new_head, args: new_args });
+            return sir_sym_make_apply(new_head, new_args);
         }
         template.clone()
     }
@@ -6504,19 +6686,17 @@ pub const RUNTIME: &str = r##"mod __sir {
     // ── replaceAll / replaceRepeated (`/.` / `//.`) + DoS guards ────────
     //
     // `sir_sym_match_pattern`/`sir_sym_substitute`/`sir_sym_apply_rule`
-    // recurse, but only as deep as a single RULE's own (author-written)
-    // pattern/RHS shape — always shallow regardless of how deep the TARGET
-    // expression is. `sir_sym_walk_once`/`sir_sym_replace_repeated_walk`,
-    // by contrast, walk the ENTIRE target expression tree, which ordinary
-    // compiled-program data can build up to unbounded depth (a `for` loop
-    // repeatedly firing `sir_sym_apply` — see `tests/sir23_symbolic.rs`'s
-    // depth-limit test) — so these two need an explicit cap (CWE-674
-    // stack-overflow DoS guard), mirroring the JS reference's
-    // `MAX_TERM_DEPTH = 512` exactly (cross-validated against the
-    // published TypeScript `sir-runtime-symbolic` package, which uses the
-    // identical constant, and against `semantic-ir-to-ruby`'s own port).
-    const SIR_SYM_MAX_TERM_DEPTH: usize = 512;
-
+    // recurse, but only as deep as a single RULE's own pattern/RHS shape —
+    // always shallow regardless of how deep the TARGET expression is
+    // (and, as of the `sir_sym_make_apply` choke point above, that shape
+    // is ITSELF already depth/size-capped, since it was built the same
+    // way as any other term). `sir_sym_walk_once`/`sir_sym_replace_
+    // repeated_walk`, by contrast, walk the ENTIRE target expression tree
+    // — so these two keep their OWN `depth` check too (on top of the
+    // construction-time cap every `Apply` they touch already carries): a
+    // walk starts from an arbitrary already-built term and re-descends it,
+    // so re-checking here is cheap, exact, and needs no assumption about
+    // how that term was built.
     /// `expr /. rules` — one pass, bottom-up: a node's head/args are
     /// walked (and possibly replaced) before the node itself is tried
     /// against `rules`; the first matching rule wins and the freshly
@@ -6528,11 +6708,11 @@ pub const RUNTIME: &str = r##"mod __sir {
             sir_sym_raise_depth_limit();
         }
         let mut current = node.clone();
-        if let SirSymTerm::Apply { head, args } = node.as_ref() {
+        if let SirSymTerm::Apply { head, args, .. } = node.as_ref() {
             let new_head = sir_sym_walk_once(head, rules, depth + 1);
             let new_args: Vec<Rc<SirSymTerm>> =
                 args.iter().map(|a| sir_sym_walk_once(a, rules, depth + 1)).collect();
-            current = Rc::new(SirSymTerm::Apply { head: new_head, args: new_args });
+            current = sir_sym_make_apply(new_head, new_args);
         }
         for rule in rules {
             if let Some(replacement) = sir_sym_apply_rule(rule, &current) {
@@ -6586,13 +6766,13 @@ pub const RUNTIME: &str = r##"mod __sir {
         }
         let mut current = node.clone();
         loop {
-            if let SirSymTerm::Apply { head, args } = current.as_ref() {
+            if let SirSymTerm::Apply { head, args, .. } = current.as_ref() {
                 let new_head = sir_sym_replace_repeated_walk(head, rules, depth + 1, counter);
                 let new_args: Vec<Rc<SirSymTerm>> = args
                     .iter()
                     .map(|a| sir_sym_replace_repeated_walk(a, rules, depth + 1, counter))
                     .collect();
-                current = Rc::new(SirSymTerm::Apply { head: new_head, args: new_args });
+                current = sir_sym_make_apply(new_head, new_args);
             }
             let mut fired = false;
             for rule in rules {
@@ -6624,17 +6804,6 @@ pub const RUNTIME: &str = r##"mod __sir {
         let rule_ts: Vec<Rc<SirSymTerm>> = rules.iter().map(sir_sym_term_of).collect();
         let mut counter: usize = 0;
         Value::SymTerm(sir_sym_replace_repeated_walk(&expr_t, &rule_ts, 0, &mut counter))
-    }
-
-    fn sir_sym_raise_depth_limit() -> ! {
-        sir_sym_raise(format!(
-            "sir-runtime-symbolic: depth-limit (term nesting exceeded {SIR_SYM_MAX_TERM_DEPTH} levels)"
-        ))
-    }
-    fn sir_sym_raise_rewrite_cycle() -> ! {
-        sir_sym_raise(format!(
-            "sir-runtime-symbolic: rewrite-cycle (exceeded {SIR_SYM_MAX_REWRITE_ITERATIONS} rule firings at one position — the rule set is likely non-terminating)"
-        ))
     }
 }
 "##;
