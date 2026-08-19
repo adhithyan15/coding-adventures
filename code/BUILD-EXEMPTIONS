@@ -68,16 +68,9 @@ PENDING code/packages/rust/jit-loader-macos  # macOS-only mmap/mprotect JIT load
 PENDING code/packages/rust/twig-module-driver  # 2 dependents (twig-vm, twigc); 7 deep-recursion self-compile tests reserve 768 MiB / 3 GiB thread stacks and fail on a Windows host — needs Linux verification before it can be watched
 PENDING code/packages/rust/sir-conformance  # cross-backend conformance harness; test suite is red on a Windows host — needs Linux triage before it can be watched
 
-# Paint VM backends — each needs a native graphics library (cairo, skia, mesa,
-# OpenCL/GL, Vulkan, wgpu) present at build time, so their BUILDs need platform
-# guards and a host with those libraries installed to verify.
-PENDING code/packages/rust/paint-vm-cairo  # 5 dependents (barcode-1d, barcode-2d, html-to-paint, venture-browser-cairo, venture-browser-core); needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-runtime  # 11 dependents including paint-vm-direct2d and paint-vm-gdi; needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-skia  # 2 dependents (barcode-1d, barcode-2d); needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-gpu-core  # 5 dependents; needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-mesa  # no in-repo dependents; needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-opencl  # no in-repo dependents; needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-opengl  # no in-repo dependents; needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-vulkan  # no in-repo dependents; needs a native graphics toolchain to build
-PENDING code/packages/rust/paint-vm-wgpu  # no in-repo dependents; needs a native graphics toolchain to build
-
+# Paint VM backends that need a native library present at build time. Their
+# pure-Rust siblings (runtime, gpu-core, mesa, opencl, opengl, vulkan, wgpu) all
+# gained BUILDs once they were verified clean for BOTH the host and the
+# x86_64-unknown-linux-gnu target CI actually builds on.
+PENDING code/packages/rust/paint-vm-cairo  # 5 dependents; cairo-rs needs libcairo via pkg-config on Linux/macOS. Passes on Windows ONLY because the dep is target-gated off there, so that is not evidence — and the Linux cross-check cannot settle it either (pkg-config refuses to cross-compile). Needs a real Linux/macOS host with libcairo installed
+PENDING code/packages/rust/paint-vm-skia  # 2 dependents (barcode-1d, barcode-2d); skia-safe downloads or builds Skia binaries at build time, which needs a host with that toolchain to verify honestly
