@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C01-practice
+spine_node: SPINE-MEET-GREET
+sequence: 35
 chapter: 1
 type: practice-mix
 headword: (practice)
@@ -8,18 +11,32 @@ concept_tag: CH1-PRACTICE
 prerequisites: [RU-C01-privet, RU-C01-zdravstvuyte, RU-C01-spasibo, RU-C01-da, RU-C01-net, RU-C01-pozhaluysta]
 sounds: [cyrillic-false-friends]
 roots: []
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA]
+introduces:
+  knowledge: [RU-DIALOGUE-COURTESY-01]
+practises:
+  knowledge: [RU-DIALOGUE-COURTESY-01, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA, RU-LEX-PRIVET, RU-LEX-SPASIBO, RU-LEX-ZDRAVSTVUYTE]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C01-privet, RU-C01-zdravstvuyte, RU-C01-spasibo, RU-C01-da, RU-C01-net, RU-C01-pozhaluysta]
 ---
 
 # Chapter 1 — putting it together
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-PRIVET] -->
 
 [PAUSE 2s] Six words, and — more importantly — you can now **read Cyrillic**
 well enough to sound them all out. Let's prove it.
 
-## The four false friends, one more time
+## Script — the four false friends, one more time
+<!-- hl-knowledge: introduces=[RU-DIALOGUE-COURTESY-01]; assesses=[RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 These are the letters that look Latin and lie. Say each sound aloud:
 
@@ -30,7 +47,8 @@ These are the letters that look Latin and lie. Say each sound aloud:
 
 And the two easy vowel traps: **у** = "oo" (not y), **е** = "ye."
 
-## Read them cold
+## Script — read them cold
+<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 1s] Sound out each — no romanization:
 
@@ -41,7 +59,8 @@ And the two easy vowel traps: **у** = "oo" (not y), **е** = "ye."
 - **нет** → *nyet* (no)
 - **пожалуйста** → *pozhálusta* (please / you're welcome)
 
-## The little exchange
+## The exchange
+<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 1s] Run the whole ritual, formal then informal:
 
@@ -50,7 +69,8 @@ And the two easy vowel traps: **у** = "oo" (not y), **е** = "ye."
 - A friend waves: **«Привет!»**
 - Answer a question: **«Да!»** … or **«Нет!»**
 
-## The thread through the chapter
+## What you've built — the thread through the chapter
+<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 Every word carried a hidden story:
 
@@ -62,6 +82,7 @@ Every word carried a hidden story:
 - **пожалуйста** asks for a **favour** — and doubles as "you're welcome."
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-DIALOGUE-COURTESY-01, RU-LEX-PRIVET, RU-LEX-ZDRAVSTVUYTE, RU-LEX-SPASIBO, RU-LEX-DA, RU-LEX-NET, RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 3s] Without looking: which greeting is formal and which is informal?
 (*здравствуйте* / *привет*.) Which word answers *спасибо*? (*пожалуйста*.) Name

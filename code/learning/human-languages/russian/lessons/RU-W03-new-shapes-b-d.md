@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-W03-new-shapes-b-d
+spine_node: SPINE-MEET-GREET
+sequence: 50
 chapter: 1
 delivery: script
 type: writing
@@ -9,19 +12,33 @@ romanization: "b, d"
 prerequisites: [RU-W01-false-friends-v-r]
 sounds: [cyrillic-new-shapes]
 roots: [greek-beta, greek-delta]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-SCRIPT-V-01]
+introduces:
+  knowledge: [RU-SCRIPT-B-01, RU-SCRIPT-D-01]
+practises:
+  knowledge: [RU-SCRIPT-B-01, RU-SCRIPT-D-01, RU-SCRIPT-V-01]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-W01-false-friends-v-r, RU-C01-spasibo, RU-C01-da]
 ---
 
 # б and д — letters that hide nothing
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-V-01] -->
 
 [PAUSE 2s] A relief after the false friends: **б** ("b") and **д** ("d") look
 like **nothing in Latin**, so they can't trick you — you just have to learn to
 draw them. You've read both already: *б* sits in *спасибо*, *д* opens *да*.
 
-## б ("b") — and how it differs from в
+## Script — б ("b") — and how it differs from в
+<!-- hl-knowledge: introduces=[RU-SCRIPT-B-01, RU-SCRIPT-D-01]; assesses=[RU-SCRIPT-V-01] -->
 
 **б** and **в** are cousins (both from Greek **beta**, which split into a "b"
 letter and a "v" letter). They share a **vertical spine**, so keep them apart by
@@ -40,7 +57,8 @@ Break **б** apart — *a vertical, a lower belly, a top flag*:
 That top flag is the whole difference: **б** has a hat and one belly; **в** has
 no hat and two bellies.
 
-## д ("d") — the delta on little feet
+## Script — д ("d") — the delta on little feet
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-B-01, RU-SCRIPT-D-01] -->
 
 **д** comes from Greek **delta** (Δ), the triangle — and you can still feel the
 triangle in it. Break it apart — *a body, then two little feet*:
@@ -54,6 +72,7 @@ Those two descending feet are **д**'s signature — no Latin letter has them. S
 "delta" as you draw it and the shape sticks.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-B-01, RU-SCRIPT-D-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: trace б — "spine, lower belly, top flag" — sound "b" — then в for
@@ -62,6 +81,7 @@ Those two descending feet are **д**'s signature — no Latin letter has them. S
 - [YOU WRITE: *спасибо* (find the б) and *да* (the д)]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-SCRIPT-B-01, RU-SCRIPT-D-01] -->
 
 [PAUSE 3s] What one stroke separates **б** from **в**? (The **top flag/hat** — б
 has it, and one belly; в has two bellies, no hat.) Draw **д** — what sound, from

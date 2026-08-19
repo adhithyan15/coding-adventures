@@ -256,8 +256,8 @@ describe("corpus snapshot", () => {
     // Chapters 7-9 then map their terminal practices and Chapter 9's remaining
     // teaching lessons. Chapter 10 closes two more gaps; Chapter 11 closes its
     // possessive and terminal-practice gaps; Chapters 12-13 close their payoff gaps.
-    expect(summary.unmapped).toBe(84); // HL-C250: -2 -- IMPROVEMENT. Migrating RU-C02-practice-cases and RU-C02-practice-zero-copula to v2 gave them a spine_node, so they stop counting as unmapped. This number should keep falling as #12072 proceeds
-    expect(summary.mappedPercent).toBe(97); // +1: vocabulary wave 6 grows the mapped corpus faster than the unmapped 86 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52)
+    expect(summary.unmapped).toBe(78); // HL-C251: -6 -- IMPROVEMENT. Six of the twelve migrated russian ch1 lessons gained a spine_node and stop counting as unmapped // HL-C250: -2 -- IMPROVEMENT. Migrating RU-C02-practice-cases and RU-C02-practice-zero-copula to v2 gave them a spine_node, so they stop counting as unmapped. This number should keep falling as #12072 proceeds
+    expect(summary.mappedPercent).toBe(98); // HL-C251: +1 -- IMPROVEMENT, mapped percent rises as the russian ch1 lessons gain a spine_node // +1: vocabulary wave 6 grows the mapped corpus faster than the unmapped 86 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52)
   });
 
   it("shows twenty tracks have reached A2, and only two have not reached A1", () => {

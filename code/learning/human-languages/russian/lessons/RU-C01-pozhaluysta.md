@@ -1,5 +1,8 @@
 ---
+schema_version: 2
 id: RU-C01-pozhaluysta
+spine_node: SPINE-POLITE-REQUEST-REPAIR
+sequence: 30
 chapter: 1
 type: word
 headword: пожалуйста
@@ -10,24 +13,44 @@ prerequisites: [RU-C01-spasibo]
 sounds: [zh-sound, syllable-drop, o-reduction]
 roots: [zhalovat]
 etymology_hook: "пожалуйста ← пожалуй 'grant / do favour' + -ста; also the reply to spasibo ('you're welcome')"
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [RU-LEX-SPASIBO]
+introduces:
+  knowledge: [RU-LEX-POZHALUYSTA]
+practises:
+  knowledge: [RU-LEX-POZHALUYSTA, RU-LEX-SPASIBO]
+skills: [listening, speaking, reading]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, meaning-output, language-focus]
+register: neutral
+variety: standard-contemporary
 reviews_of: [RU-C01-spasibo, RU-C01-net]
 ---
 
 # пожалуйста (pozhálusta) — "please," and also "you're welcome"
 
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-SPASIBO] -->
+
+[PAUSE 2s] Say **спасибо**. The word that answers it, and asks for things, is
+the longest you have met — and shorter than it looks when spoken.
+
 ## You'll want to know first
+<!-- hl-knowledge: introduces=[RU-LEX-POZHALUYSTA]; assesses=[RU-LEX-SPASIBO] -->
 
 - **[спасибо](./RU-C01-spasibo.md)** — this is its natural partner: *спасибо*
   → *пожалуйста* is Russia's "thank you" → "you're welcome."
 
 ## The letters in this word
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 *(Skim if you read Cyrillic.)* Everything here is familiar except one new
 letter: **пожалуйста**.
 
-- **ж** = **"zh"** — the sound in *mea**s**ure* / *garage*. It looks like a
-  little beetle with wings; there is no Latin letter for this sound.
+- **ж** = **"zh"** — the sound in *mea**s**ure*. It looks like a little beetle
+  with wings; no Latin letter carries this sound.
 - The rest you know: **п**(p) **о**(o) **а**(a) **л**(l) **у**(oo) **й**(y)
   **с**(s) **т**(t).
 
@@ -38,23 +61,22 @@ the first *о* reduces to *a*.
 > **пожалуйста** = **pozhálusta**, said *"pa-ZHAL-sta"*
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 **пожалуйста** is **пожалуй** + a softening tag **-ста**. **пожалуй** is the
 command form of the old verb **жаловать** (*zhálovat'*), "to grant, to bestow a
 favour" — from the root **жал-**, the same root as **жаль** (*zhal'*, "a pity")
 and **жалеть** ("to feel for someone").
 
-So under the politeness sits **"grant [me this], do me the kindness."** It is a
-request for a *favour* — which is exactly what English **"please"** is too:
-*please* is short for *if it please you*, and French **s'il vous plaît** says it
-in full, "if it pleases you." Russian frames the same courtesy as *grant me a
-kindness*.
+So under the politeness sits **"grant [me this], do me the kindness."** English
+**please** is the same idea worn down — short for *if it please you*.
 
-And then it does a second job English splits off: the **reply to thanks**. Where
-English needs a separate "you're welcome," Russian just answers *спасибо* with
-*пожалуйста* — "[it was] a favour freely given."
+It also does a job English splits off: the **reply to thanks**. Where English
+needs a separate "you're welcome," Russian answers *спасибо* with *пожалуйста*
+— "[it was] a favour freely given."
 
-## Across the family — "please" is a favour, everywhere
+## The word, taken apart — across the family: "please" is a favour, everywhere
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 - Russian **пожалуйста** — "grant [me] a favour."
 - French **s'il vous plaît** — "if it pleases you."
@@ -62,17 +84,19 @@ English needs a separate "you're welcome," Russian just answers *спасибо*
 - English **please** — "[if it] please [you]."
 - German **bitte** — "I request," and also "you're welcome."
 
-German *bitte* pulls the exact same double shift as *пожалуйста* — one word for
-both "please" and "you're welcome."
+German *bitte* pulls the same double shift — one word for both "please" and
+"you're welcome."
 
 ## Why it's said this way
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
-Because it is really a small request for a kindness, *пожалуйста* also softens
-commands: add it to any instruction and a bark becomes a request — *«скажите,
-пожалуйста…»* ("tell me, please…"). And as the answer to *спасибо*, it closes
-the little ritual of thanks the way *"you're welcome"* does in English.
+Because it is really a request for a kindness, *пожалуйста* also softens
+commands: add it to an instruction and a bark becomes a request. And as the
+answer to *спасибо*, it closes the ritual of thanks the way *"you're welcome"*
+does.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 1s]
 - [YOU SAY: "pa-ZHAL-sta" — drop the middle *-уй-*]
@@ -80,6 +104,7 @@ the little ritual of thanks the way *"you're welcome"* does in English.
 - [YOU SAY: the exchange — "спасибо!" … "пожалуйста!"]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[RU-LEX-POZHALUYSTA] -->
 
 [PAUSE 3s] Read **пожалуйста**. What favour-root hides inside it? (*жаловать*,
 "to grant a favour" — cousin of *жаль*, "pity.") What two English phrases does
