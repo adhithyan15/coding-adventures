@@ -175,32 +175,43 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
     let JsonValue::Object(mut root_pairs) = root else {
         return Err(ImportError::Decode("root value must be a JSON object"));
     };
-    check_object_size(&root_pairs)?;
-    let items = match find(&root_pairs, "items") {
-        Some(JsonValue::Array(items)) => items,
-        Some(_) => return Err(ImportError::Decode("`items` must be an array")),
-        None => return Err(ImportError::Decode("missing `items` array")),
-    };
-    if items.len() > MAX_ITEMS {
-        return Err(ImportError::TooLarge("MAX_ITEMS"));
-    }
-    let mut records = Vec::with_capacity(items.len());
-    for item in items {
-        decode_item(item, &mut records)?;
-    }
     // Every secret-shaped value this adapter reads (password, TOTP seed,
     // card number/CVV, custom-field values) is copied out into a
-    // `Zeroizing`-held `PortableRecord` field above, but the *source*
+    // `Zeroizing`-held `PortableRecord` field below, but the *source*
     // copy inside this generic JSON parse tree is an ordinary `String`
     // that the general-purpose `json-value` crate has no reason to know
     // is sensitive. Left alone, that source copy would be freed with the
     // rest of `root_pairs` at the end of this function without ever
-    // being overwritten -- recoverable plaintext in freed heap. Scrub the
-    // whole tree in place before it drops, the same property
+    // being overwritten -- recoverable plaintext in freed heap. `outcome`
+    // captures every return path below (success *and* every early
+    // `Err`) precisely so the zeroize pass a few lines down is
+    // unconditional: a malformed/adversarial item that makes this
+    // function return early is the *normal* case this crate's threat
+    // model exists to survive, and it must not silently skip the wipe
+    // just because it was also the input that triggered an error.
+    let outcome: Result<Vec<PortableRecord>, ImportError> = (|| {
+        check_object_size(&root_pairs)?;
+        let items = match find(&root_pairs, "items") {
+            Some(JsonValue::Array(items)) => items,
+            Some(_) => return Err(ImportError::Decode("`items` must be an array")),
+            None => return Err(ImportError::Decode("missing `items` array")),
+        };
+        if items.len() > MAX_ITEMS {
+            return Err(ImportError::TooLarge("MAX_ITEMS"));
+        }
+        let mut records = Vec::with_capacity(items.len());
+        for item in items {
+            decode_item(item, &mut records)?;
+        }
+        Ok(records)
+    })();
+    // Scrub the whole tree in place before it drops, the same property
     // `read_external_import_source`'s `Zeroizing` buffer already gives
-    // the raw bytes this tree was parsed from.
+    // the raw bytes this tree was parsed from -- run unconditionally,
+    // before `outcome` is inspected, so no early return above can skip
+    // it.
     zeroize_object(&mut root_pairs);
-    Ok(records)
+    outcome
 }
 
 /// Recursively wipe every string in a parsed object's pair list, in place.

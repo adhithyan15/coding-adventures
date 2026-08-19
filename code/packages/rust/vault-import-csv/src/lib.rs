@@ -168,34 +168,44 @@ pub fn decode(input: &[u8]) -> Result<Vec<PortableRecord>, ImportError> {
     let mut rows = parse_csv(text).map_err(|error| match error {
         CsvError::UnclosedQuote => ImportError::Decode("unclosed quoted CSV field"),
     })?;
-    if rows.len() > MAX_ROWS {
-        return Err(ImportError::TooLarge("MAX_ROWS"));
-    }
-    let mut records = Vec::with_capacity(rows.len());
-    for (index, row) in rows.iter().enumerate() {
-        if row.len() > MAX_COLUMNS {
-            return Err(ImportError::TooLarge("MAX_COLUMNS"));
-        }
-        records.push(decode_row(row, index + 1)?);
-    }
     // Every secret-shaped *value* this adapter reads (password, TOTP
     // seed) is copied out into a `Zeroizing`-held `PortableRecord` field
-    // above, but the source copy inside `rows` is an ordinary `String` --
+    // below, but the source copy inside `rows` is an ordinary `String` --
     // `coding_adventures_csv_parser` has no reason to know any column is
-    // sensitive. Left alone, that source copy would be freed with `rows`
-    // at the end of this function without ever being overwritten. Scrub
-    // every cell value in place before `rows` drops, the same property
-    // `read_external_import_source`'s `Zeroizing` buffer already gives
-    // the raw bytes this table was parsed from. Keys are column *names*
-    // (`"password"`, `"url"`, ...), never secret-shaped, and `HashMap`
-    // only exposes them as `&String` through `values_mut`/`iter_mut`
-    // regardless, so they are left alone.
+    // sensitive. `outcome` captures every return path below (success
+    // *and* every early `Err`, e.g. an over-`MAX_COLUMNS` row or an
+    // over-`MAX_FIELD_LEN` cell reached partway through the file) so the
+    // zeroize pass a few lines down is unconditional: a malformed row is
+    // the normal case this crate's threat model exists to survive, and
+    // it must not silently skip the wipe of every row already decoded
+    // before that point just because it was also the input that
+    // triggered the error.
+    let outcome: Result<Vec<PortableRecord>, ImportError> = (|| {
+        if rows.len() > MAX_ROWS {
+            return Err(ImportError::TooLarge("MAX_ROWS"));
+        }
+        let mut records = Vec::with_capacity(rows.len());
+        for (index, row) in rows.iter().enumerate() {
+            if row.len() > MAX_COLUMNS {
+                return Err(ImportError::TooLarge("MAX_COLUMNS"));
+            }
+            records.push(decode_row(row, index + 1)?);
+        }
+        Ok(records)
+    })();
+    // Scrub every cell value in place before `rows` drops, the same
+    // property `read_external_import_source`'s `Zeroizing` buffer
+    // already gives the raw bytes this table was parsed from -- run
+    // unconditionally, before `outcome` is inspected. Keys are column
+    // *names* (`"password"`, `"url"`, ...), never secret-shaped, and
+    // `HashMap` only exposes them as `&String` through
+    // `values_mut`/`iter_mut` regardless, so they are left alone.
     for row in rows.iter_mut() {
         for value in row.values_mut() {
             value.zeroize();
         }
     }
-    Ok(records)
+    outcome
 }
 
 fn lookup<'a>(
