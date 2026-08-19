@@ -18,6 +18,11 @@ auditable adapters:
   bytes, and requests owner-only mode on Unix; and
 - `read_portable_export` reads one non-empty regular artifact under an exact
   metadata and streaming byte ceiling before application authentication; and
+- `read_attachment_source` and `read_external_import_source` read one
+  non-empty regular *plaintext* source (an attachment, or a Bitwarden/CSV
+  import file respectively) into a `Zeroizing` buffer under the same exact
+  ceiling discipline, so a failed read leaves no copy of the person's
+  plaintext in freed heap; and
 - `clipboard` delivers one already-authorized secret to the platform clipboard
   and schedules a **verified** clear of it (VLT-PM46).
 

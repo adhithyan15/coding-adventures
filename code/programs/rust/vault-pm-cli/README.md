@@ -22,7 +22,10 @@ vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase]
                            [--no-digits] [--no-symbols] [--exclude-ambiguous]
                            (--reveal|--copy)
 vault-pm [--vault NAME] export FILE
-vault-pm [--vault NAME] import FILE
+vault-pm [--vault NAME] import portable FILE
+vault-pm [--vault NAME] import bitwarden FILE
+vault-pm [--vault NAME] import csv FILE
+vault-pm [--vault NAME] import kdbx FILE
 vault-pm --vault NAME restore FILE
 vault-pm [--vault NAME] restore verify FILE
 vault-pm [--vault NAME] item add login

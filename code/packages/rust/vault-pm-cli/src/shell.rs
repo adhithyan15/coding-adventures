@@ -453,6 +453,10 @@ impl CliHost for SessionHost<'_> {
         self.inner.read_import_passphrase()
     }
 
+    fn read_external_import_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        self.inner.read_external_import_source(source)
+    }
+
     fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
         self.inner.read_attachment_source(source)
     }

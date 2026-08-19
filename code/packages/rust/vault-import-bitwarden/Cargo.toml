@@ -1,0 +1,11 @@
+[package]
+name = "coding_adventures_vault_import_bitwarden"
+version = "0.1.0"
+edition = "2021"
+description = "VLT-PM49 -- Bitwarden JSON export adapter. Implements vault-import-export's (VLT15) Importer trait, decoding an unencrypted Bitwarden `json` export into PortableRecords for vault-pm's `import bitwarden` ceremony."
+license = "MIT"
+
+[dependencies]
+coding_adventures_vault_import_export = { path = "../vault-import-export" }
+coding-adventures-json-value = { path = "../json-value" }
+coding_adventures_zeroize = { path = "../zeroize" }

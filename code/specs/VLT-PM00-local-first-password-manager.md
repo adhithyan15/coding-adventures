@@ -983,6 +983,15 @@ default was a peer-authored name resolved against the working directory; and
 `attachment remove` is deferred to `gc run`, because a removal that leaves every
 byte in the store would say something false.
 
+**Bitwarden and browser-CSV import have since shipped**, as
+`VLT-PM49-cli-external-import.md`, per §23 item 13. The bare `import FILE`
+this table originally showed is now `import portable FILE`; `import
+bitwarden FILE` and `import csv FILE` join it, each reusing the unmodified
+`item add` publication path once per decoded record rather than a new
+bulk-mutation primitive. `import kdbx FILE` remains in the grammar and
+fails closed with the `unsupported` exit class, because KDBX's own
+encrypted container format is explicitly deferred.
+
 ### 14.5 Unlock experience
 
 Phase 1A supports:
@@ -1963,7 +1972,39 @@ changelog, focused build, and downstream validation.
       it to expire on its own. Windows named-pipe support is explicitly
       deferred and documented rather than silently unimplemented; every agent
       verb reports the closed `unsupported` exit class there.
-13. Bitwarden/KDBX/browser CSV import adapters.
+13. Bitwarden/KDBX/browser CSV import adapters. **Bitwarden and browser
+      CSV have shipped**, as `VLT-PM49-cli-external-import.md`. `import
+      portable FILE` (VLT-PM18, formerly the bare `import FILE`),
+      `import bitwarden FILE`, and `import csv FILE` each read a
+      plaintext export, decode it with a dependency-light adapter crate
+      (`vault-import-bitwarden`, `vault-import-csv`) implementing
+      `vault-import-export`'s (VLT15) `Importer` trait — the first real
+      consumer of that trait in this workspace, since `import portable`
+      turned out to be vault-pm's own independent snapshot format rather
+      than `PortableBundle` JSON, matching this campaign's repeated
+      finding that vault-pm reimplements generic crypto/envelope layers
+      rather than depending on them directly. Every mapped record is
+      created through the unmodified, already-audited `item add`
+      publication path once per record, not a new bulk-mutation
+      primitive, because `add_item`'s session-consuming design already
+      makes "one authenticated session creates one item" structural
+      rather than a policy this slice could relax. Every created item
+      therefore carries the same `ItemCreate` audit event and
+      crash-resumable publication `item add` does, with no new audit
+      event kind introduced. Imports always create brand-new items with
+      fresh identities and never merge, the same answer VLT-PM18 §7
+      gives the portable-restore path, reached here for a simpler
+      reason: an external format's records have no vault-pm item ID to
+      collide with in the first place. KDBX is explicitly deferred —
+      `import kdbx` stays in the grammar and fails closed with the
+      `unsupported` exit class before opening its file, rather than
+      disappearing from the documented command surface — because KDBX4
+      is a real encrypted container (Argon2d/AES-KDF plus AES-256 or
+      ChaCha20) wrapping a KeePass-flavored inner XML document, a fourth
+      structurally different untrusted-input parser on top of the JSON
+      and CSV ones this slice already reviews, judged too large to
+      review well alongside them in one PR even though this workspace
+      already has the Argon2d/AES/ChaCha20 primitives it would need.
 14. removable/synced-folder mode and mirror decorator.
 
 ### Phase 2 — cloud

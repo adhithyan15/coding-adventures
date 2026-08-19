@@ -2,6 +2,47 @@
 
 ## Unreleased
 
+- **`import portable|bitwarden|csv|kdbx FILE`**, `VLT-PM00` §23 item 13.
+  Specified by `VLT-PM49-cli-external-import.md`. The bare `import FILE`
+  grammar (VLT-PM18) is now `import portable FILE`; `import bitwarden FILE`
+  and `import csv FILE` join it, each decoding an unencrypted external
+  export with a new dependency-light adapter crate
+  (`vault-import-bitwarden`, `vault-import-csv`) implementing
+  `vault-import-export`'s (VLT15) `Importer` trait — the first real
+  consumer of that trait in this workspace. `import kdbx FILE` still parses
+  but always fails closed with the `unsupported` exit class before opening
+  its file: KDBX's own encrypted-container format is explicitly deferred
+  (VLT-PM49 §8), not silently missing from the documented command surface.
+
+  Every mapped record is created through the exact same audited `item add`
+  publication path a person typing at the CLI uses, once per record —
+  `add_item`'s session-consuming design already makes "one authenticated
+  session creates one item" structural, so this reuses that path N times
+  rather than inventing a new bulk-mutation primitive. No new audit event
+  kind was introduced: each created item carries the same `ItemCreate`
+  event `item add` already produces. Imports always create brand-new items
+  with fresh identities and never merge or conflict-resolve against an
+  existing item, because an external format's records carry no vault-pm
+  item ID to collide with in the first place — the same "always new
+  identity" answer VLT-PM18 §7 gives portable restore, reached here for a
+  simpler reason.
+
+  A Bitwarden login carrying a TOTP seed becomes two vault-pm items (a
+  `LOGIN_V1` and a separate `TOTP_SEED_V1`), because vault-pm's own `Login`
+  record has no TOTP slot. TOTP fields are decoded from either raw
+  (possibly padded/lowercase) Base32 or an `otpauth://totp/...` URI,
+  through the same `decode_totp_base32` the interactive `item add totp`
+  form already uses. Output is aggregate-only —
+  `Import complete: created=C skipped=S failed=F` — with no source path,
+  title, username, URL, or secret ever printed.
+
+  Adds `read_external_import_source` to the `CliHost` trait, backed by a
+  new bounded, `Zeroizing`-returning reader in `vault-pm-cli-host`
+  (`read_external_import_source`), modeled on the existing attachment
+  reader rather than the portable-export one: unlike a vault-pm portable
+  artifact (already ciphertext), a Bitwarden/CSV export *is* the person's
+  plaintext secrets.
+
 - **`agent start|stop|status|unlock|lock`**, `VLT-PM00` §23 item 12.
   Specified by `VLT-PM48-local-agent-ipc.md`. `agent start` re-executes this
   same binary, detached, as the hidden `agent run-foreground` verb, which

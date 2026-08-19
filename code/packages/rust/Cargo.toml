@@ -787,6 +787,8 @@ members = [
     "vault-search",
     "vault-attachments",
     "vault-import-export",
+    "vault-import-bitwarden",
+    "vault-import-csv",
     "vault-pm-format",
     "vault-pm-domain",
     "vault-pm-audit",

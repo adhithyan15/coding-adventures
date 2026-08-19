@@ -736,6 +736,63 @@ pub fn read_portable_export(source: &Path, max_bytes: usize) -> Result<Vec<u8>, 
     Ok(artifact)
 }
 
+/// Read one explicit external-format import source (Bitwarden JSON, CSV,
+/// ...) under an exact host ceiling.
+///
+/// The same exact-length-read shape as [`read_attachment_source`], and for
+/// the same reason: unlike [`read_portable_export`]'s artifact (already
+/// vault-pm ciphertext), this file *is* the person's plaintext secrets —
+/// every password a Bitwarden or browser export names, in the clear — so
+/// the buffer is `Zeroizing` and never reallocates mid-read (see that
+/// function's doc comment for why reallocation would leak a copy of the
+/// plaintext into freed, unwiped heap). Decoding and format validation
+/// remain the caller's (adapter crate's) responsibility; this function only
+/// gets the bytes off disk safely.
+pub fn read_external_import_source(
+    source: &Path,
+    max_bytes: usize,
+) -> Result<Zeroizing<Vec<u8>>, CliHostError> {
+    if source.as_os_str().is_empty() || max_bytes == 0 {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    let mut options = OpenOptions::new();
+    options.read(true);
+    #[cfg(unix)]
+    options.custom_flags(libc::O_NONBLOCK | libc::O_NOCTTY);
+    let mut file = options
+        .open(source)
+        .map_err(|_| CliHostError::InvalidImportSource)?;
+    let metadata = file
+        .metadata()
+        .map_err(|_| CliHostError::ImportReadFailed)?;
+    if !metadata.is_file()
+        || metadata.len() == 0
+        || metadata.len() > u64::try_from(max_bytes).unwrap_or(u64::MAX)
+    {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    let declared =
+        usize::try_from(metadata.len()).map_err(|_| CliHostError::InvalidImportSource)?;
+    let mut contents = Zeroizing::new(vec![0_u8; declared]);
+    file.read_exact(&mut contents).map_err(|error| {
+        if error.kind() == io::ErrorKind::UnexpectedEof {
+            CliHostError::InvalidImportSource
+        } else {
+            CliHostError::ImportReadFailed
+        }
+    })?;
+    let mut beyond = [0_u8; 1];
+    match file.read(&mut beyond) {
+        Ok(0) => {}
+        Ok(_) => return Err(CliHostError::InvalidImportSource),
+        Err(_) => return Err(CliHostError::ImportReadFailed),
+    }
+    if contents.is_empty() || contents.len() > max_bytes {
+        return Err(CliHostError::InvalidImportSource);
+    }
+    Ok(contents)
+}
+
 /// Stateless cryptographic entropy adapter backed by the repository OS CSPRNG.
 #[derive(Clone, Copy, Debug, Default)]
 pub struct OsEntropy;
@@ -1309,6 +1366,72 @@ mod tests {
         assert_eq!(
             read_attachment_source(&file, 1_024).unwrap().as_slice(),
             b"first-more"
+        );
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    #[test]
+    fn an_external_import_source_round_trips_and_refuses_what_it_cannot_take() {
+        let root = attachment_scratch("external-import");
+        let file = root.join("export.json");
+        fs::write(&file, b"{\"items\":[]}").unwrap();
+        assert_eq!(
+            read_external_import_source(&file, 1_024)
+                .unwrap()
+                .as_slice(),
+            b"{\"items\":[]}"
+        );
+
+        // Exactly at the ceiling is accepted; one byte over is refused.
+        let exact = b"{\"items\":[]}".len();
+        assert!(read_external_import_source(&file, exact).is_ok());
+        assert_eq!(
+            source_err(read_external_import_source(&file, exact - 1)),
+            CliHostError::InvalidImportSource
+        );
+
+        let empty = root.join("empty.json");
+        fs::write(&empty, b"").unwrap();
+        for (path, bound) in [
+            (empty.as_path(), 1_024),
+            (root.as_path(), 1_024),
+            (root.join("absent.json").as_path(), 1_024),
+            (file.as_path(), 0),
+            (std::path::Path::new(""), 1_024),
+        ] {
+            assert_eq!(
+                source_err(read_external_import_source(path, bound)),
+                CliHostError::InvalidImportSource,
+                "{path:?} must be refused"
+            );
+        }
+        let _ = fs::remove_dir_all(&root);
+    }
+
+    /// Same growth-during-read protection `read_attachment_source` has, for
+    /// the same reason: this is the person's plaintext secrets, and a
+    /// reallocation on the way to reading it would leave an unwiped copy in
+    /// freed heap.
+    #[test]
+    fn an_external_import_source_longer_than_its_measured_length_is_refused() {
+        let root = attachment_scratch("external-import-grew");
+        let file = root.join("growing.csv");
+        fs::write(&file, b"name,url\n").unwrap();
+        fs::OpenOptions::new()
+            .append(true)
+            .open(&file)
+            .unwrap()
+            .write_all(b"Site,https://x.example\n")
+            .unwrap();
+        assert_eq!(
+            source_err(read_external_import_source(&file, 9)),
+            CliHostError::InvalidImportSource
+        );
+        assert_eq!(
+            read_external_import_source(&file, 1_024)
+                .unwrap()
+                .as_slice(),
+            b"name,url\nSite,https://x.example\n"
         );
         let _ = fs::remove_dir_all(&root);
     }

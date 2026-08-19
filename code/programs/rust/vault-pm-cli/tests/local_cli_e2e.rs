@@ -3109,3 +3109,68 @@ fn real_agent_cache_is_forgotten_immediately_after_a_passphrase_rotation() {
     );
     assert!(after_status.success(), "{after_transcript}");
 }
+
+/// VLT-PM49 §9 gate 6, through the real executable with a real pseudo-
+/// terminal: a Bitwarden JSON export on disk becomes a real, redacted,
+/// separately-reachable vault-pm item, and the plaintext password never
+/// reaches stdout, stderr, or a durable audit row.
+#[test]
+fn real_cli_imports_bitwarden_json_and_leaks_no_secret_anywhere() {
+    const BITWARDEN_PASSWORD: &[u8] = b"e2e-bitwarden-import-secret-4f21c9";
+
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+
+    let source = home.0.join("bitwarden-export.json");
+    let mut fixture = Vec::new();
+    fixture.extend_from_slice(br#"{"items":[{"type":1,"name":"Imported GitHub","notes":null,"login":{"username":"e2e-imported-user","password":""#);
+    fixture.extend_from_slice(BITWARDEN_PASSWORD);
+    fixture.extend_from_slice(br#"","uris":[{"uri":"https://github.com"}]}}]}"#);
+    fs::write(&source, &fixture).unwrap();
+
+    let (imported_status, imported_transcript) = run_unlock_in_pty(
+        &home,
+        &[
+            "import",
+            "bitwarden",
+            source.to_str().expect("UTF-8 test source path"),
+        ],
+        b"Import complete: created=1 skipped=0 failed=0",
+    );
+    assert!(imported_status.success(), "{imported_transcript}");
+    assert!(!imported_transcript
+        .as_bytes()
+        .windows(BITWARDEN_PASSWORD.len())
+        .any(|value| value == BITWARDEN_PASSWORD));
+    assert_transcript_excludes_secrets(&imported_transcript);
+
+    let (listed_status, listed_transcript) =
+        run_unlock_in_pty(&home, &["item", "list"], b"Imported GitHub");
+    assert!(listed_status.success(), "{listed_transcript}");
+    assert!(!listed_transcript
+        .as_bytes()
+        .windows(BITWARDEN_PASSWORD.len())
+        .any(|value| value == BITWARDEN_PASSWORD));
+
+    let (audit_status, audit_transcript) = run_unlock_in_pty(&home, &["audit", "list"], b"action=");
+    assert!(audit_status.success(), "{audit_transcript}");
+    assert!(!audit_transcript
+        .as_bytes()
+        .windows(BITWARDEN_PASSWORD.len())
+        .any(|value| value == BITWARDEN_PASSWORD));
+    assert!(!audit_transcript.contains("Imported GitHub"));
+    assert_audit_rows_have_only_closed_fields(&audit_transcript);
+
+    // KDBX always fails closed before opening its source (VLT-PM49 §8) --
+    // an absent path fails the identical way a real one would.
+    let kdbx_result = run_plain(
+        &home,
+        &[
+            "import",
+            "kdbx",
+            home.0.join("absent.kdbx").to_str().unwrap(),
+        ],
+    );
+    assert!(!kdbx_result.status.success());
+    assert!(stdout_string(&kdbx_result).is_empty());
+}
