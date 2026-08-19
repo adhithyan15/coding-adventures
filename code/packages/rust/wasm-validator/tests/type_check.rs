@@ -1114,6 +1114,37 @@ fn invalid_i16x8_q15mulr_sat_s_given_an_i32_operand_instead_of_v128() {
 }
 
 #[test]
+fn valid_i32x4_trunc_sat_f64x2_zero_family() {
+    // SIMD widen PR25 (task #190-192): i32x4.trunc_sat_f64x2_s_zero/
+    // _u_zero -- the f64x2-source rung of the "_zero" trunc_sat family,
+    // same UNARY (pop one v128, push one v128) shape as
+    // `valid_i32x4_f32x4_conversion_family` above. WASM's type system
+    // doesn't distinguish "f64-lane v128" from "i32-lane v128" (nor does
+    // it know only 2 of the 4 result lanes are real data and 2 are
+    // zero-filled) -- both are just the opaque `V128` type here.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i32x4.trunc_sat_f64x2_s_zero (local.get 0)))
+             (func (param v128) (result v128) (i32x4.trunc_sat_f64x2_u_zero (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_i32x4_trunc_sat_f64x2_s_zero_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in the operand
+    // slot, not just accepting whatever's on the stack -- the operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param i32) (result v128) (i32x4.trunc_sat_f64x2_s_zero (local.get 0))))");
+}
+
+#[test]
+fn invalid_i32x4_trunc_sat_f64x2_u_zero_given_an_i32_operand_instead_of_v128() {
+    // Same enforcement check as the `_s_zero` invalid test above, for
+    // the `_u_zero` variant.
+    assert_invalid("(module (func (param i32) (result v128) (i32x4.trunc_sat_f64x2_u_zero (local.get 0))))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

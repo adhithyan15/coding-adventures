@@ -1881,7 +1881,9 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
             | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
             | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
-            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U => {
+            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U
+            | wasm_opcodes::SimdOpKind::TruncSatF64x2SZero
+            | wasm_opcodes::SimdOpKind::TruncSatF64x2UZero => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
@@ -1900,6 +1902,10 @@ fn encode_stream_instr(
                 // PR20) join too -- same no-immediate shape, the fact
                 // that these change lane TYPE (not just value) is
                 // likewise invisible at this encoding level.
+                // `TruncSatF64x2SZero`/`_UZero` (SIMD widen PR25) join
+                // too, same reasoning -- the fact that the runtime reads
+                // 2 f64 lanes and writes 4 i32 lanes (2 zero-filled) is
+                // likewise invisible here.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2622,7 +2628,9 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::ExtmulLowI64x2S
             | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
             | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
-            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U => {
+            | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U
+            | wasm_opcodes::SimdOpKind::TruncSatF64x2SZero
+            | wasm_opcodes::SimdOpKind::TruncSatF64x2UZero => {
                 // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
                 // arm too: a plain BINARY v128,v128->v128 op with no
                 // lane-index immediate, same shape as `AddI8x16` -- see
@@ -2631,7 +2639,8 @@ fn encode_flat_instr(
                 // too -- same no-immediate encoding shape, see the
                 // matching comment in `encode_stream_instr` above.
                 // `TruncSatF32x4S`/`_U`/`ConvertI32x4S`/`_U` (SIMD widen
-                // PR20) join too, same reasoning.
+                // PR20) join too, same reasoning. `TruncSatF64x2SZero`/
+                // `_UZero` (SIMD widen PR25) join too, same reasoning.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5689,6 +5698,36 @@ mod tests {
         for code in [code_of(&folded, 0), code_of(&flat, 0)] {
             assert!(code.windows(3).any(|w| w == [0xFD, 0x82, 0x01]), "missing i16x8.q15mulr_sat_s: {code:?}");
         }
+    }
+
+    #[test]
+    fn i32x4_trunc_sat_f64x2_zero_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR25 (task #190-192): i32x4.trunc_sat_f64x2_s_zero
+        // (0xFC), i32x4.trunc_sat_f64x2_u_zero (0xFD) -- like PR20's
+        // i32x4<->f32x4 conversion family, both sub-opcode values are
+        // >= 128, so each encodes as a real 2-byte LEB128 sequence
+        // (`[byte, 0x01]`). Both are UNARY (one v128 operand) -- same
+        // "no immediate beyond the opcode bytes themselves" shape as
+        // `i32x4.trunc_sat_f32x4_s`/`_u` above.
+        let folded = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 (i32x4.trunc_sat_f64x2_u_zero
+                   (v128.const f64x2 0 0))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128) (result v128)
+                 local.get 0
+                 i32x4.trunc_sat_f64x2_s_zero
+                 drop
+                 local.get 0
+                 i32x4.trunc_sat_f64x2_u_zero))"#,
+        )
+        .unwrap();
+        assert!(code_of(&folded, 0).windows(3).any(|w| w == [0xFD, 0xFD, 0x01]), "missing i32x4.trunc_sat_f64x2_u_zero: {:?}", code_of(&folded, 0));
+        let flat_code = code_of(&flat, 0);
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xFC, 0x01]), "missing i32x4.trunc_sat_f64x2_s_zero: {flat_code:?}");
+        assert!(flat_code.windows(3).any(|w| w == [0xFD, 0xFD, 0x01]), "missing i32x4.trunc_sat_f64x2_u_zero: {flat_code:?}");
     }
 
     #[test]
