@@ -6,6 +6,10 @@ use coding_adventures_csprng::fill_random;
 use coding_adventures_ct_compare::ct_eq;
 use coding_adventures_zeroize::Zeroizing;
 use core::fmt::{self, Debug, Display, Formatter};
+// Trait-only import (no bound name) so `write!`'s `.write_fmt` resolves to
+// `String`'s `core::fmt::Write` impl without colliding with `std::io::Write`,
+// already imported below for file I/O.
+use core::fmt::Write as _;
 use std::fs::{self, File, OpenOptions};
 use std::io::{self, Read, Write};
 use std::path::Path;
@@ -507,8 +511,78 @@ impl ControllingTerminal {
     }
 }
 
+/// Debug-escape `value` (quote-wrapped, control/backslash/quote-escaped —
+/// exactly `format!("{value:?}")`'s output) into a buffer whose capacity is
+/// reserved once, before a single byte of `value` is read, so building the
+/// escaped text can never trigger a mid-build reallocation.
+///
+/// # Why the previous `Zeroizing::new(format!("{value:?}"))` leaked
+///
+/// `Zeroizing<String>` wipes only whatever allocation the `String` holds at
+/// drop time. `format!` starts its `String` empty and grows it, via a
+/// sequence of `push`/`push_str` calls as the `Debug` formatter escapes each
+/// character in turn, using `String`'s ordinary incremental-growth
+/// reallocation: once the next write would exceed capacity, `String`
+/// allocates a larger buffer, `memcpy`s the escaped plaintext already
+/// written into it, and frees the old allocation through the global
+/// allocator *without scrubbing it first*. Every character written before
+/// the point a reallocation happened is a secret that briefly lived in an
+/// allocation `Zeroizing` never got a handle to and therefore never wiped —
+/// stranded, unscrubbed, in freed heap. This is the same
+/// reallocation-leaves-a-stale-copy pattern already found and fixed in
+/// `AgentRequest::encode` (`vault-pm-agent-protocol`); the mechanism here is
+/// text escaping rather than binary wire framing, but the fix is the same
+/// shape: reserve the buffer's capacity up front so no reallocation can ever
+/// occur while a copy of the secret is resident in it.
+///
+/// # Why this reserves an upper bound rather than the exact final length
+///
+/// `AgentRequest::encode`'s `encoded_capacity` can compute the *exact* final
+/// size because binary framing is fixed-width fields plus a raw byte copy.
+/// Debug-escaping cannot be sized that precisely without duplicating the
+/// standard library's own (private) per-character escaping rules: `\\`,
+/// `\"`, and `\n`/`\r`/`\t` each expand to 2 output bytes, everything else
+/// either prints unchanged (1:1) or expands to a `\u{..}` escape whose width
+/// depends on the code point. Reproducing exactly which applies to which
+/// character would mean re-implementing (and keeping in sync with) `core`'s
+/// internal printable-character tables.
+///
+/// Instead this reserves a **provably sufficient** upper bound — `2 +
+/// 6 * value.len()` — and lets the real, unmodified `Debug` impl write into
+/// it. The 6-bytes-per-input-byte figure is not a guess: the widest any
+/// single input *byte* can expand to is a lone ASCII control byte in
+/// `0x10..=0x1F` or `0x7F`, which Debug-escapes to `\u{xx}` — 6 output bytes
+/// (`\`, `u`, `{`, two hex digits, `}`) — for that one input byte. Every
+/// other case expands by less per input byte: the named escapes above are 2
+/// output bytes for 1 input byte, an unescaped printable character is 1:1,
+/// and a multi-byte UTF-8 sequence's `\u{..}` escape spreads its (larger)
+/// output back out over more than one input byte, so its per-*byte* ratio is
+/// smaller still. `2` covers the surrounding quotes `Debug` always adds. Any
+/// slack this leaves unused was never written to — it never held a byte of
+/// `value` — and `Zeroizing<String>`'s drop wipes the whole capacity
+/// regardless (`coding_adventures_zeroize::Zeroize for String`), so
+/// over-reserving costs a few unused bytes, never a leak.
+///
+/// The `debug_assert_eq!` below is the same empirical check
+/// `encode_never_reallocates_a_buffer_already_holding_a_secret` makes for
+/// `AgentRequest::encode`, turned into a standing runtime invariant: if this
+/// bound is ever wrong (a future `std` Debug-escaping change, a mistaken
+/// edit here), it fails loudly in every debug/test build rather than
+/// silently reopening the leak.
 fn escaped_revealed_text(value: &str) -> Zeroizing<String> {
-    Zeroizing::new(format!("{value:?}"))
+    let capacity = 2 + value.len().saturating_mul(6);
+    let mut out = Zeroizing::new(String::with_capacity(capacity));
+    // `core::fmt::Write for String` never returns `Err` — the only error
+    // the trait can report is a formatter failure, and none of `Debug`'s
+    // machinery produces one — so this `expect` cannot fire.
+    write!(out, "{value:?}").expect("writing Debug-escaped text into a String cannot fail");
+    debug_assert_eq!(
+        out.capacity(),
+        capacity,
+        "escaped_revealed_text's upper bound was too tight and the buffer reallocated \
+         while holding secret plaintext"
+    );
+    out
 }
 
 /// Durably create one explicit portable-export destination without replacing it.
@@ -1107,6 +1181,66 @@ mod tests {
             &*escaped_revealed_text("line\n\"terminal\u{1b}"),
             "\"line\\n\\\"terminal\\u{1b}\""
         );
+    }
+
+    /// `escaped_revealed_text` never reallocates while a secret is already
+    /// resident in the buffer, across a sweep of realistic secret lengths and
+    /// character mixes.
+    ///
+    /// This is the direct, empirical form of the security-review finding
+    /// this test closes (item #21): a buffer built via `format!` starts
+    /// empty and grows via `push`/`push_str` as `Debug` escapes each
+    /// character, reallocating (and leaving the plaintext already written
+    /// behind, unscrubbed, in freed heap) for most real secret lengths.
+    /// `String::capacity()` staying exactly equal to the upfront-reserved
+    /// bound, for every case in this sweep, is what proves no such
+    /// reallocation happened — mirroring
+    /// `encode_never_reallocates_a_buffer_already_holding_a_secret` in
+    /// `vault-pm-agent-protocol`, which closed the same pattern for
+    /// `AgentRequest::encode`.
+    #[test]
+    fn escaped_revealed_text_never_reallocates_a_buffer_already_holding_a_secret() {
+        // Plain ASCII (1:1, no escaping at all) at a sweep of lengths,
+        // including the empty string.
+        for len in [0_usize, 1, 8, 32, 256, 4096] {
+            let value = "s".repeat(len);
+            let expected_capacity = 2 + value.len().saturating_mul(6);
+            let escaped = escaped_revealed_text(&value);
+            assert_eq!(
+                escaped.capacity(),
+                expected_capacity,
+                "plain ASCII, len={len}: buffer reallocated while holding secret plaintext"
+            );
+        }
+
+        // Every byte needs the widest escape form (`\u{xx}`, 6 output bytes
+        // per input byte) -- the exact case the reserved capacity is sized
+        // for, so this exercises the bound at its tightest.
+        for len in [0_usize, 1, 8, 64, 512] {
+            let value = "\u{7f}".repeat(len);
+            let expected_capacity = 2 + value.len().saturating_mul(6);
+            let escaped = escaped_revealed_text(&value);
+            assert_eq!(
+                escaped.capacity(),
+                expected_capacity,
+                "all-DEL, len={len}: buffer reallocated while holding secret plaintext"
+            );
+        }
+
+        // A realistic mixed secret: printable characters, a couple of the
+        // 2-byte named escapes, and one of the widest per-byte cases.
+        let value = format!("correct-horse-battery-staple-{}\n\"\u{1b}", "x".repeat(97));
+        let expected_capacity = 2 + value.len().saturating_mul(6);
+        let escaped = escaped_revealed_text(&value);
+        assert_eq!(
+            escaped.capacity(),
+            expected_capacity,
+            "mixed secret: buffer reallocated while holding secret plaintext"
+        );
+        // And the escaping itself still round-trips to what `format!` would
+        // have produced, so the reallocation-proof capacity discipline above
+        // didn't come at the cost of correctness.
+        assert_eq!(escaped.as_str(), format!("{value:?}"));
     }
 
     #[test]

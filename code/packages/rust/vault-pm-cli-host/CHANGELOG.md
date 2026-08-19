@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+- **Fixed: `escaped_revealed_text` no longer reallocates while holding a
+  secret.** `item reveal` and `conflict reveal` (via `write_revealed_text`)
+  used to build the quote/control-escaped terminal text with
+  `Zeroizing::new(format!("{value:?}"))`. `format!`'s `String` starts empty
+  and grows via `push`/`push_str` as `Debug` escapes each character, using
+  ordinary incremental-growth reallocation: once a write would exceed
+  capacity, the buffer `memcpy`s the plaintext already written into a larger
+  allocation and frees the old one through the global allocator *without
+  scrubbing it first*. `Zeroizing` only wipes the final allocation it ends up
+  holding, so every intermediate allocation the buffer reallocated out of
+  along the way left a stale, unwiped copy of the secret in freed heap — the
+  same reallocation-leaves-a-stale-copy pattern already found and fixed in
+  `vault-pm-agent-protocol`'s `AgentRequest::encode`.
+
+  `escaped_revealed_text` now reserves capacity once, before any byte of the
+  secret is read — `2 + 6 * value.len()`, a provably sufficient upper bound
+  on Debug-escaping's worst per-input-byte expansion (a lone ASCII control
+  byte escaping to `\u{xx}`) — and writes the real, unmodified `Debug`
+  formatter's output into that buffer via `write!`, so no reallocation can
+  occur while a copy of the secret is resident. A `debug_assert_eq!` on the
+  final capacity turns "the bound stayed sufficient" into a standing
+  invariant. See VLT-PM05 §13.6 for the full design account, and
+  `escaped_revealed_text_never_reallocates_a_buffer_already_holding_a_secret`
+  for the regression test (mirrors `vault-pm-agent-protocol`'s
+  `encode_never_reallocates_a_buffer_already_holding_a_secret`).
+
 - **Added `read_external_import_source`** (`VLT-PM49-cli-external-import.md`),
   the filesystem half of `vault-pm import bitwarden`/`import csv`. Same
   exact-length-read shape as `read_attachment_source` and for the same

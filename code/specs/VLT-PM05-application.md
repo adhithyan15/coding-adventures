@@ -1351,6 +1351,131 @@ edit_as_login`. `vault-pm-cli` pins the two rendering surfaces directly:
 `render_item_shows_a_redacted_placeholder_for_a_quarantined_record_
 instead_of_erroring`.
 
+### 13.6 CborValue trees and Debug-escaped reveals, wiped end to end
+
+§13.5 closed the zeroization gaps in `decode_live`'s own locals
+(`record_bytes`, the window around `payload`) once a decoded `AnyRecord` had
+already been produced. Two lower-severity, pre-existing gaps — logged
+separately, batched here because a round-1 security review flagged them as
+the same root pattern — sat one layer further down, in the codec plumbing
+every one of those decodes and encodes goes through, and in the CLI's own
+terminal-reveal path. Both are "build, use, then let an unwiped intermediate
+drop" defects; both are fixed by building the final, correctly-sized buffer
+up front instead.
+
+**Gap 1 — the caller-side `CborValue` tree (`vault-records`).**
+`encode_record` builds a `CborValue::Map` from `rec.encode_payload()`, which
+clones every field of a `Login`/`Card`/`TotpSeed`/`ApiKey`/
+`DatabaseCredential`/`SecureNote` into fresh `CborValue::Text`/`Bytes`
+leaves; `decode_record` and `decode_record_as` decode a `CborValue` tree that
+*is* somebody's plaintext and then clone fields back out of it into a typed
+struct. The typed structs already wipe themselves (`Login` and its five
+siblings implement `Zeroize` + `Drop`; see section 4 of `vault-records`), but
+the intermediate `CborValue` tree used to build or decode them did not —
+`envelope` in `encode_record`, `payload` in `decode_record`/
+`decode_record_as`, and the equivalent locals inside `split_envelope` and
+`encode_opaque` all dropped through ordinary, non-wiping `Vec`/`String`/
+`CborValue` destructors, once per record encode or decode, across all seven
+record kinds (six typed plus opaque pass-through).
+
+A round-1 security review's suggested quick fix — wipe only `try_encode`'s
+own output buffer on its error path — was correctly rejected as incomplete
+by construction: the plaintext clone the encoder's error path can reach was
+never the whole problem. The *caller's* tree is built and dropped
+regardless of whether the encode call inside it succeeds, and canonical-CBOR
+itself cannot be the one to fix this — see CBR01's "Non-goals": `CborValue`
+is defined in a deliberately zero-dependency crate that cannot take on a
+zeroization dependency, and no third crate can implement the sibling
+`coding_adventures_zeroize::Zeroize` trait on `CborValue` either, because
+Rust's orphan rule forbids a foreign trait on a foreign type from anywhere
+but the two crates that define them.
+
+The fix lives in `vault-records`, which already depends on
+`coding_adventures_zeroize` for the typed records' own `Drop` impls:
+
+```rust
+// coding_adventures_vault_records (vault-records/src/lib.rs)
+
+/// Recursively wipes every owned Text/Bytes buffer, through any nesting
+/// of Array, Map (keys and values), and Tag. No wildcard arm: a future
+/// CborValue variant fails this match at compile time instead of
+/// silently escaping the wipe.
+fn zeroize_cbor_value(value: &mut CborValue) { /* ... */ }
+
+/// `Zeroizing<CborValue>` in everything but name — a local wrapper
+/// (not a trait impl on CborValue) whose Drop calls zeroize_cbor_value.
+/// Derefs to &CborValue, so it drops straight into every call site that
+/// used to hold a bare CborValue.
+struct SecretCborValue(CborValue);
+```
+
+`encode_record`, `encode_opaque`, and `split_envelope` (the shared helper
+`decode_record` and `decode_record_as` both go through for the `"d"` field)
+now build their `CborValue` trees as `SecretCborValue` instead of bare
+`CborValue`. Because the wipe is a `Drop` impl rather than a call inserted at
+each known return point, it runs on every exit path — the success path, an
+early `?`-propagated error, and a panic unwind — which is the actual
+difference from the rejected quick fix: "wipe as you build" (a guard that
+cannot be forgotten because it doesn't require remembering) instead of
+"build, then hope every return path remembers to wipe." `split_envelope`
+wraps the `"d"` value the instant it is captured, before the loop that reads
+it can reach any later `BadEnvelope` return, so a malformed envelope's
+*other* entry cannot cause the already-captured secret half to leak on the
+way to reporting the error.
+
+**Gap 2 — `escaped_revealed_text` (`vault-pm-cli-host`).** `item reveal` and
+`conflict reveal` both write a secret to the controlling terminal through
+`write_revealed_text`, which quote- and control-escapes the value first via
+`escaped_revealed_text`. That function used to be
+`Zeroizing::new(format!("{value:?}"))`. `format!` builds its `String` from an
+empty start and grows it, via a sequence of `push`/`push_str` calls as
+`Debug` escapes each character, using `String`'s ordinary incremental-growth
+reallocation — which `memcpy`s whatever plaintext is already written into a
+larger allocation and frees the old one through the global allocator without
+scrubbing it first. `Zeroizing` wipes only the final allocation it ends up
+holding; every intermediate allocation the buffer grew out of along the way
+is a stale, unwiped copy of a secret sitting in freed heap. This is the same
+reallocation-leaves-a-stale-copy pattern already found and fixed in
+`AgentRequest::encode` (`vault-pm-agent-protocol`), applied to text escaping
+instead of binary wire framing.
+
+The fix is the same shape as that one: reserve the buffer's capacity once,
+before any byte of the secret is written, so no reallocation can occur while
+a copy is resident. The one difference is that Debug-escaping cannot be
+sized *exactly* the way fixed-width binary framing can, without duplicating
+`core`'s own private per-character escaping tables — so
+`escaped_revealed_text` reserves a **provably sufficient upper bound**
+instead of an exact size: `2 + 6 * value.len()`, where 6 is the most any
+single input *byte* can expand to (a lone ASCII control byte escaping to
+`\u{xx}`) and every other case — named escapes, unescaped printable
+characters, multi-byte UTF-8 sequences — expands by less per input byte, not
+more. The real, unmodified `Debug` formatter still writes the escaped text;
+this only changes where it writes into. A `debug_assert_eq!` on the buffer's
+capacity turns "did the bound stay sufficient" into a standing invariant
+rather than a one-time check.
+
+**Tests.** `vault-records`: `zeroize_cbor_value_wipes_every_variant` builds
+one tree exercising every `CborValue` variant, nested under `Array`/`Map`/
+`Tag`, and asserts every `Text`/`Bytes` leaf is empty afterward, via a
+checker with its own independent exhaustive match (no wildcard) —
+`zeroize_cbor_value_on_scalars_is_a_harmless_no_op` covers the four
+no-owned-buffer variants explicitly.
+`secret_cbor_value_drop_runs_even_on_panic_unwind` proves `SecretCborValue`'s
+`Drop` fires on ordinary scope exit and on a panic mid-operation, using a
+`#[cfg(test)]` counter rather than reading through a pointer into memory the
+real `Drop` has already deallocated — unsound, and this crate is
+`#![forbid(unsafe_code)]` besides.
+`encode_and_decode_record_each_wipe_their_own_cbor_tree` pins the same
+property at the actual call sites, not just the primitives in isolation.
+`vault-pm-cli-host`:
+`escaped_revealed_text_never_reallocates_a_buffer_already_holding_a_secret`
+mirrors `AgentRequest::encode`'s
+`encode_never_reallocates_a_buffer_already_holding_a_secret` — a sweep of
+plain-ASCII, all-widest-escape, and mixed-content secrets, each asserting
+`String::capacity()` stays exactly equal to the reserved upper bound (no
+reallocation occurred), plus one exact-output check confirming the
+capacity discipline did not change what gets written.
+
 ## 14. Required verification
 
 The Phase 1A package must include:

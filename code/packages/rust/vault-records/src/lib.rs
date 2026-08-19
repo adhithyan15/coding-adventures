@@ -227,6 +227,127 @@ impl From<CborError> for VaultRecordError {
 }
 
 // ─────────────────────────────────────────────────────────────────────
+// 2a. Zeroizing CborValue trees
+// ─────────────────────────────────────────────────────────────────────
+//
+// `encode_record` and `decode_record` both build an owned `CborValue`
+// tree that, for the six typed record kinds plus opaque pass-through,
+// *is* somebody's plaintext: `Login.password`, `Card.number`,
+// `TotpSeed.secret`, and friends all pass through a `CborValue::Map`
+// on the way to or from the wire. `Login` and its siblings already
+// implement `Zeroize` + `Drop` (see section 4 below) so the *typed*
+// struct wipes itself. The `CborValue` tree used to build or decode
+// it did not: `encode_payload` clones every field into a fresh
+// `CborValue::Text`/`CborValue::Bytes`, and `decode_payload` clones
+// fields back out of a `CborValue` the codec already fully
+// materialised — in both directions, an owned tree of plaintext sits
+// in a local variable that dropped through the ordinary, non-wiping
+// `Vec`/`String`/`CborValue` destructors.
+//
+// A round-trip security review once proposed patching this by wiping
+// only `try_encode`'s own output buffer on its error path. That fix
+// was correctly rejected as incomplete by construction: the same
+// plaintext also sits in the *caller's* `CborValue` tree (`envelope`
+// in `encode_record`, `payload` in `decode_record`), which the
+// encoder's error path cannot reach and which is still fully built
+// and dropped unwiped even when the encoder *succeeds*.
+//
+// The real fix has to live on the caller side, for a structural
+// reason: `CborValue` is defined in `canonical-cbor`, which is
+// deliberately zero-dependency (see CBR01 and that crate's own
+// module doc) so it stays usable from arbitrarily constrained
+// contexts, including the C/C++ reference oracles it ships alongside.
+// It cannot depend on `coding_adventures_zeroize` to provide
+// `impl Zeroize for CborValue` itself, and no third crate can supply
+// that impl either — neither the `Zeroize` trait nor the `CborValue`
+// type is local to this crate, so Rust's orphan rule forbids
+// `impl coding_adventures_zeroize::Zeroize for CborValue` from
+// showing up here. `zeroize_cbor_value` and `SecretCborValue` below
+// sidestep the rule the ordinary way: the *wrapper type* is local to
+// this crate, so its `Drop` impl needs no permission from either the
+// trait's or `CborValue`'s home crate.
+//
+// `zeroize_cbor_value`'s match has **no wildcard arm** on purpose: if
+// canonical-cbor ever grows a tenth `CborValue` variant (its own docs
+// name floats as future work), this function fails to compile until
+// the new arm is added here, rather than silently leaving a class of
+// plaintext unwiped. See the `zeroize_cbor_value_wipes_every_variant`
+// test below for the same exhaustiveness check applied at the call
+// site, and `secret_cbor_value_drop_runs_even_on_panic_unwind` for
+// proof `SecretCborValue`'s `Drop` fires on every exit path — the
+// gap the rejected error-path-only quick fix left open.
+
+/// Recursively wipe every owned `Text`/`Bytes` buffer reachable from a
+/// `CborValue` tree, through any nesting of `Array`, `Map` (both keys
+/// and values), and `Tag`.
+///
+/// `Unsigned`, `Negative`, `Bool`, and `Null` carry no owned heap
+/// buffer — a `u64`/`bool` lives inline in the enum, nothing to wipe —
+/// so those arms are no-ops kept only so the match stays exhaustive.
+fn zeroize_cbor_value(value: &mut CborValue) {
+    match value {
+        CborValue::Text(s) => s.zeroize(),
+        CborValue::Bytes(b) => b.zeroize(),
+        CborValue::Array(items) => {
+            for item in items.iter_mut() {
+                zeroize_cbor_value(item);
+            }
+        }
+        CborValue::Map(entries) => {
+            for (k, v) in entries.iter_mut() {
+                zeroize_cbor_value(k);
+                zeroize_cbor_value(v);
+            }
+        }
+        CborValue::Tag(_, inner) => zeroize_cbor_value(inner),
+        CborValue::Unsigned(_) | CborValue::Negative(_) | CborValue::Bool(_) | CborValue::Null => {}
+    }
+}
+
+/// Owns a `CborValue` tree that may hold plaintext secrets and wipes
+/// it, recursively, when the guard drops.
+///
+/// This is `Zeroizing<CborValue>` in everything but name — `CborValue`
+/// cannot itself implement the sibling crate's `Zeroize` trait (see
+/// the section comment above), so this crate provides the equivalent
+/// guarantee with a local newtype instead. `Deref` gives ordinary
+/// read access (`&secret_cbor_value` coerces to `&CborValue`) so
+/// callers pass it straight through to `expect_map`, `try_encode`,
+/// and every `VaultRecord::decode_payload` without change.
+struct SecretCborValue(CborValue);
+
+impl SecretCborValue {
+    fn new(value: CborValue) -> Self {
+        Self(value)
+    }
+}
+
+impl core::ops::Deref for SecretCborValue {
+    type Target = CborValue;
+
+    fn deref(&self) -> &CborValue {
+        &self.0
+    }
+}
+
+impl Drop for SecretCborValue {
+    fn drop(&mut self) {
+        #[cfg(test)]
+        SECRET_CBOR_VALUE_DROPS.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        zeroize_cbor_value(&mut self.0);
+    }
+}
+
+/// Test-only counter proving `SecretCborValue::drop` actually ran,
+/// without reading through a pointer into memory the real `Drop` has
+/// already deallocated (which would be undefined behaviour, and this
+/// crate is `#![forbid(unsafe_code)]` besides). See
+/// `secret_cbor_value_drop_runs_even_on_panic_unwind` below.
+#[cfg(test)]
+static SECRET_CBOR_VALUE_DROPS: core::sync::atomic::AtomicUsize =
+    core::sync::atomic::AtomicUsize::new(0);
+
+// ─────────────────────────────────────────────────────────────────────
 // 3. Top-level encode / decode
 // ─────────────────────────────────────────────────────────────────────
 
@@ -268,10 +389,16 @@ impl From<CborError> for VaultRecordError {
 /// and returns `Err` without bytes, so a refused record can never be
 /// mistaken for a truncated-but-whole one.
 pub fn encode_record<T: VaultRecord>(rec: &T) -> Result<Vec<u8>, VaultRecordError> {
-    let envelope = CborValue::Map(vec![
+    // `envelope` holds a full plaintext clone of `rec`'s fields (see the
+    // section 2a comment above) for exactly as long as it takes
+    // `try_encode` to read it. `SecretCborValue`'s `Drop` wipes that
+    // clone whether `try_encode` succeeds or the `?` below returns
+    // early on failure — both are "the relevant caller-side scope
+    // ends," and both used to leave the clone sitting in freed heap.
+    let envelope = SecretCborValue::new(CborValue::Map(vec![
         (CborValue::text("t"), CborValue::text(T::CONTENT_TYPE)),
         (CborValue::text("d"), rec.encode_payload()),
-    ]);
+    ]));
     Ok(try_encode(&envelope)?)
 }
 
@@ -410,7 +537,7 @@ pub fn decode_record_as<T: VaultRecord>(bytes: &[u8]) -> Result<T, VaultRecordEr
 /// different inputs.
 fn split_envelope(
     bytes: &[u8],
-) -> Result<(String, CborValue, core::ops::Range<usize>), VaultRecordError> {
+) -> Result<(String, SecretCborValue, core::ops::Range<usize>), VaultRecordError> {
     // Anything that is not a two-entry map is not a record envelope. A
     // shape mismatch is `Ok(None)` from the codec and a violation of the
     // canonical profile is `Err`, and the two stay distinct here.
@@ -421,15 +548,42 @@ fn split_envelope(
         return Err(VaultRecordError::NotARecord);
     }
     let mut t: Option<String> = None;
-    let mut d: Option<(CborValue, core::ops::Range<usize>)> = None;
-    for entry in entries {
+    // Wrapped the instant the plaintext value under `"d"` is captured,
+    // not after `split_envelope` returns successfully: `d` can also be
+    // dropped un-returned, from inside this loop, if the envelope's
+    // *other* entry turns out to be malformed (`BadEnvelope` below).
+    // `Option<SecretCborValue>`'s own drop glue wipes it on that path
+    // too, which a wipe placed only at the bottom of this function,
+    // after the final `match`, would have missed.
+    let mut d: Option<(SecretCborValue, core::ops::Range<usize>)> = None;
+    for mut entry in entries {
         match entry.key {
             CborValue::Text(s) if s == "t" => match entry.value {
                 CborValue::Text(s) => t = Some(s),
-                _ => return Err(VaultRecordError::BadEnvelope),
+                mut other => {
+                    // Malformed `"t"`: whatever this decoded to is
+                    // still somebody's decrypted plaintext, just filed
+                    // under the wrong key. Wipe it before the shape
+                    // mismatch is reported.
+                    zeroize_cbor_value(&mut other);
+                    return Err(VaultRecordError::BadEnvelope);
+                }
             },
-            CborValue::Text(s) if s == "d" => d = Some((entry.value, entry.value_span)),
-            _ => return Err(VaultRecordError::BadEnvelope),
+            CborValue::Text(s) if s == "d" => {
+                d = Some((SecretCborValue::new(entry.value), entry.value_span))
+            }
+            _ => {
+                // Unrecognised key. The value under it is still
+                // decrypted plaintext (this envelope's own siblings
+                // decoded through the same call), so it gets the same
+                // wipe as every other rejected shape here — including
+                // when this is the *second* of the two entries and `d`
+                // above is already `Some`, in which case `d`'s own
+                // wrap-on-capture (see above) covers it when this
+                // function returns.
+                zeroize_cbor_value(&mut entry.value);
+                return Err(VaultRecordError::BadEnvelope);
+            }
         }
     }
     match (t, d) {
@@ -828,14 +982,19 @@ pub fn encode_opaque(
     content_type: &str,
     payload_bytes: &[u8],
 ) -> Result<Vec<u8>, VaultRecordError> {
+    // `payload_bytes` here is frequently a `Quarantined`/`Opaque`
+    // record's own plaintext (see that variant's doc comment on
+    // `AnyRecord`), so `payload` and the `envelope` it moves into get
+    // the same `SecretCborValue` wipe-on-drop treatment as
+    // `encode_record`'s tree.
     let payload = decode(payload_bytes)?;
-    let envelope = CborValue::Map(vec![
+    let envelope = SecretCborValue::new(CborValue::Map(vec![
         (
             CborValue::text("t"),
             CborValue::text(content_type.to_string()),
         ),
         (CborValue::text("d"), payload),
-    ]);
+    ]));
     Ok(try_encode(&envelope)?)
 }
 
@@ -2545,5 +2704,166 @@ mod tests {
             assert_eq!(format!("{error:?}"), expected);
             assert_eq!(format!("{error:#?}"), expected);
         }
+    }
+
+    // --- CborValue zeroization (item #9) ---
+
+    /// Every leaf of a `CborValue` tree, no matter how deeply nested
+    /// under `Array`/`Map`/`Tag`, is empty after `zeroize_cbor_value`.
+    /// The checker below has its own exhaustive match (no wildcard),
+    /// so this test is a second, independent enforcement point beyond
+    /// `zeroize_cbor_value`'s own: if canonical-cbor ever grows a new
+    /// variant, *this* match fails to compile too, not just the one in
+    /// the production code it's checking.
+    #[test]
+    fn zeroize_cbor_value_wipes_every_variant() {
+        fn assert_no_plaintext_remains(v: &CborValue) {
+            match v {
+                CborValue::Text(s) => assert!(s.is_empty(), "unwiped Text leaf: {s:?}"),
+                CborValue::Bytes(b) => assert!(b.is_empty(), "unwiped Bytes leaf: {b:?}"),
+                CborValue::Array(items) => items.iter().for_each(assert_no_plaintext_remains),
+                CborValue::Map(entries) => entries.iter().for_each(|(k, v)| {
+                    assert_no_plaintext_remains(k);
+                    assert_no_plaintext_remains(v);
+                }),
+                CborValue::Tag(_, inner) => assert_no_plaintext_remains(inner),
+                CborValue::Unsigned(_)
+                | CborValue::Negative(_)
+                | CborValue::Bool(_)
+                | CborValue::Null => {}
+            }
+        }
+
+        let mut value = CborValue::Map(vec![
+            (
+                CborValue::text("password"),
+                CborValue::text("hunter2-super-secret"),
+            ),
+            (
+                CborValue::text("totp-seed"),
+                CborValue::bytes(vec![0xDE, 0xAD, 0xBE, 0xEF]),
+            ),
+            (
+                CborValue::text("nested"),
+                CborValue::Array(vec![
+                    CborValue::text("nested-secret-one"),
+                    CborValue::bytes(b"nested-secret-two".to_vec()),
+                    CborValue::Tag(
+                        61,
+                        Box::new(CborValue::Map(vec![(
+                            CborValue::text("k"),
+                            CborValue::text("tagged-and-mapped-secret"),
+                        )])),
+                    ),
+                ]),
+            ),
+            (CborValue::text("count"), CborValue::Unsigned(42)),
+            (CborValue::text("delta"), CborValue::Negative(7)),
+            (CborValue::text("flag"), CborValue::Bool(true)),
+            (CborValue::text("absent"), CborValue::Null),
+        ]);
+
+        zeroize_cbor_value(&mut value);
+
+        // The map's own keys are plaintext field names, not secrets —
+        // but they went through the same recursive walk as everything
+        // else, so confirming they're wiped too proves the walk really
+        // is unconditional rather than special-casing "looks secret."
+        assert_no_plaintext_remains(&value);
+    }
+
+    #[test]
+    fn zeroize_cbor_value_on_scalars_is_a_harmless_no_op() {
+        for mut v in [
+            CborValue::Unsigned(9),
+            CborValue::Negative(3),
+            CborValue::Bool(false),
+            CborValue::Null,
+        ] {
+            let before = v.clone();
+            zeroize_cbor_value(&mut v);
+            assert_eq!(v, before);
+        }
+    }
+
+    #[test]
+    fn secret_cbor_value_derefs_for_read_access_before_drop() {
+        let secret = SecretCborValue::new(CborValue::Map(vec![(
+            CborValue::text("password"),
+            CborValue::text("still-readable"),
+        )]));
+        // `expect_map`/`try_encode`/`VaultRecord::decode_payload` all
+        // take `&CborValue`; this is the coercion `encode_record`,
+        // `encode_opaque`, and every typed decode rely on.
+        let entries = expect_map(&secret).unwrap();
+        assert_eq!(get_text(entries, "password").unwrap(), "still-readable");
+    }
+
+    /// Proves `SecretCborValue::drop` actually runs the wipe — on the
+    /// ordinary success path, on early return, *and* on panic unwind —
+    /// without reading through a pointer into memory the real `Drop`
+    /// has already deallocated (unsound, and this crate forbids
+    /// `unsafe` outright). Instead this observes the one side effect
+    /// `Drop::drop` produces that's safe to check after the fact: the
+    /// `#[cfg(test)]` counter it increments. `SECRET_CBOR_VALUE_DROPS`
+    /// is a single process-wide counter shared with every other test
+    /// that (directly or via `encode_record`/`decode_record`) drops a
+    /// `SecretCborValue` concurrently, so this only ever asserts the
+    /// counter moved *forward*, never an exact value — the one
+    /// assertion that stays true no matter what else is running.
+    #[test]
+    fn secret_cbor_value_drop_runs_even_on_panic_unwind() {
+        use core::sync::atomic::Ordering;
+        use std::panic::{catch_unwind, AssertUnwindSafe};
+
+        // Ordinary scope exit.
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        {
+            let _secret = SecretCborValue::new(CborValue::text("wiped-on-scope-exit"));
+        }
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "SecretCborValue::drop did not run on ordinary scope exit"
+        );
+
+        // Panic unwind mid-operation, the case the rejected
+        // error-path-only quick fix (see the section 2a comment above
+        // `zeroize_cbor_value`) would not have covered.
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        let result = catch_unwind(AssertUnwindSafe(|| {
+            let _secret = SecretCborValue::new(CborValue::text("wiped-on-panic-unwind"));
+            panic!("simulated mid-operation failure");
+        }));
+        assert!(result.is_err(), "panic did not propagate");
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "SecretCborValue::drop did not run during unwind"
+        );
+    }
+
+    /// End-to-end: `encode_record` and `decode_record` each build
+    /// exactly one caller-side `SecretCborValue` around real record
+    /// plaintext, and each one drops (wiping it) by the time the
+    /// function returns.
+    #[test]
+    fn encode_and_decode_record_each_wipe_their_own_cbor_tree() {
+        use core::sync::atomic::Ordering;
+
+        let login = sample_login();
+
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        let bytes = encode_record(&login).unwrap();
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "encode_record did not wipe its envelope"
+        );
+
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        let decoded = decode_record(&bytes).unwrap();
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "decode_record did not wipe its payload"
+        );
+        assert!(matches!(decoded, AnyRecord::Login(_)));
     }
 }

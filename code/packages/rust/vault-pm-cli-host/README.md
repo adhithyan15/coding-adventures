@@ -147,6 +147,14 @@ string escaping prevents stored control characters from becoming terminal
 commands or counterfeit output; the escaped string and Windows UTF-16 buffer
 are wipe-on-drop.
 
+The escape itself is capacity-reserved, not grown incrementally:
+`escaped_revealed_text` allocates its `Zeroizing<String>` at a provably
+sufficient upper bound before writing a single byte of the secret, so the
+buffer can never trigger `String`'s ordinary reallocate-and-free-the-old-copy
+growth while it holds plaintext — the same discipline
+`vault-pm-agent-protocol`'s `AgentRequest::encode` uses for binary framing,
+applied here to Debug-escaped text. See VLT-PM05 §13.6.
+
 Fourteen Unix tests exercise stable diagnostics, text/secret bounds, constant-time
 confirmation behavior, real OS entropy, pseudo-terminal ordinary and hidden
 input, mode restoration, oversized-line draining, non-terminal refusal,
