@@ -1,0 +1,22 @@
+% ============================================================================
+% energy-conversion-example.query.adj — worked recall over the physics
+% energy-conversion-example library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what energy conversion
+% happens inside a solar cell?" (direct binding of `solar_photovoltaic_cell`'s
+% energy_in/energy_out) or "which processes turn chemical energy into
+% something else?" (reverse binding on the middle column) — it states no
+% fact of its own, it only `import`s the grounded table and asks binding
+% queries. The final query demonstrates honest abstention: `toaster` is a
+% real everyday energy-conversion device, but this table's own header names
+% only the FOUR processes citably stated across the two EIA pages it
+% grounds, so recalling `toaster` abstains rather than inventing a
+% conversion.
+% ============================================================================
+
+import "energy-conversion-example.adj"
+
+? energy_conversion_example(solar_photovoltaic_cell, $In, $Out)   % expect radiant, electrical (direct)
+? energy_conversion_example(bicycle_going_downhill, $In, $Out)    % expect gravitational, motion (direct)
+? energy_conversion_example($P, chemical, $Out)                   % expect wood_burning_in_fireplace/thermal ; car_engine_burning_gasoline/mechanical (reverse, one-to-many)
+? energy_conversion_example(toaster, $In, $Out)                   % expect abstain -- a real device, but outside this table's four citably-stated processes
