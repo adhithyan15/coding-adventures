@@ -1225,6 +1225,17 @@ pub enum SimdOpKind {
     /// "pop scalar, push v128" shape as [`Self::Splat`], but the FIRST
     /// splat whose popped operand type differs from `i32`.
     SplatI64x2,
+    /// `f32x4.splat` -- pop one `f32`, broadcast its 4 little-endian
+    /// bytes into all 4 lanes. The FIRST floating-point-typed SIMD
+    /// instruction in this table: a pure bit-pattern broadcast, no
+    /// rounding/NaN-canonicalization/comparison semantics, so it needs
+    /// no new type-checker machinery beyond popping `F32` instead of
+    /// `I32`/`I64`.
+    SplatF32x4,
+    /// `f64x2.splat` -- pop one `f64`, broadcast its 8 little-endian
+    /// bytes into both lanes. Same shape as [`Self::SplatF32x4`], one
+    /// lane width wider.
+    SplatF64x2,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1451,6 +1462,8 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     SimdOpInfo { name: "i8x16.splat", sub_opcode: 0x0F, kind: SimdOpKind::SplatI8x16 },
     SimdOpInfo { name: "i16x8.splat", sub_opcode: 0x10, kind: SimdOpKind::SplatI16x8 },
     SimdOpInfo { name: "i64x2.splat", sub_opcode: 0x12, kind: SimdOpKind::SplatI64x2 },
+    SimdOpInfo { name: "f32x4.splat", sub_opcode: 0x13, kind: SimdOpKind::SplatF32x4 },
+    SimdOpInfo { name: "f64x2.splat", sub_opcode: 0x14, kind: SimdOpKind::SplatF64x2 },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -1869,8 +1882,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_118_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 118);
+    fn simd_ops_table_has_the_expected_120_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 120);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2320,18 +2333,37 @@ mod tests {
         // already-implemented `i32x4.splat` (0x11) entry, which sits
         // exactly in the middle of this contiguous run: `i8x16.splat`
         // (0x0F), `i16x8.splat` (0x10), `i32x4.splat` (0x11, already
-        // implemented), `i64x2.splat` (0x12) -- `f32x4.splat` (0x13) and
-        // `f64x2.splat` (0x14) immediately follow but are deliberately
-        // out of scope (this crate has zero float-lane SIMD support
-        // yet). All three new entries reuse the exact "pop one scalar,
-        // push one v128" shape `i32x4.splat` already established --
-        // `i64x2.splat` is the first splat whose popped operand type is
-        // `i64` rather than `i32`.
+        // implemented), `i64x2.splat` (0x12). All three new entries
+        // reuse the exact "pop one scalar, push one v128" shape
+        // `i32x4.splat` already established -- `i64x2.splat` is the
+        // first splat whose popped operand type is `i64` rather than
+        // `i32`.
         for (name, sub_opcode, kind) in [
             ("i8x16.splat", 0x0F, SimdOpKind::SplatI8x16),
             ("i16x8.splat", 0x10, SimdOpKind::SplatI16x8),
             ("i64x2.splat", 0x12, SimdOpKind::SplatI64x2),
         ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_float_splat_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR17: `f32x4.splat` (0x13) and `f64x2.splat`
+        // (0x14) -- the immediate continuation of PR16's splat family
+        // run, and the FIRST floating-point-typed SIMD ops in this
+        // table. Fetched live from BinarySIMD.md and cross-checked
+        // against the already-implemented `i64x2.splat` (0x12) entry
+        // (both matched exactly, confirming the whole 0x0F-0x14 splat
+        // run is contiguous and self-consistent). Splat itself is a
+        // pure bit-pattern broadcast -- no rounding, no NaN
+        // canonicalization, no comparison semantics -- so it needs no
+        // new operand shape beyond popping `F32`/`F64` instead of
+        // `I32`/`I64`.
+        for (name, sub_opcode, kind) in [("f32x4.splat", 0x13, SimdOpKind::SplatF32x4), ("f64x2.splat", 0x14, SimdOpKind::SplatF64x2)] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);
             assert_eq!(op.kind, kind);
