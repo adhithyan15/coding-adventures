@@ -4,6 +4,24 @@ All notable changes to this package are documented here.
 
 ---
 
+## [Unreleased]
+
+### Added
+
+- `## Safety` sections on all 11 `pub unsafe extern "C"` exports
+  (`poly_alloc`, `poly_normalize`, `poly_degree`, `poly_add`, `poly_subtract`,
+  `poly_multiply`, `poly_divmod`, `poly_divide`, `poly_modulo`,
+  `poly_evaluate`, `poly_gcd`). Each states the provenance, length and
+  initialization requirements on its `(ptr, len)` pairs, and records that a
+  null pointer is *handled* (error flag) rather than undefined.
+  `poly_alloc`'s section documents the free-exactly-once obligation it creates
+  and the dangling zero-length sentinel.
+- No behaviour change: this is documentation. It became visible because the
+  build tool's clippy gate now covers this package — its BUILD's first line is
+  `rustup target add wasm32-unknown-unknown`, and the gate previously only
+  inspected the first line when deciding whether a package runs cargo, so this
+  package had never been linted.
+
 ## [0.1.0] — 2026-04-03
 
 ### Added
