@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 use std::fs::{self, File};
 use std::io::{self, Read, Write};
-use std::os::fd::FromRawFd;
+use std::os::fd::{AsRawFd, FromRawFd, RawFd};
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
@@ -2356,11 +2356,66 @@ fn open_pty() -> (File, File) {
     unsafe { (File::from_raw_fd(master), File::from_raw_fd(slave)) }
 }
 
+/// Per-`poll` idle bound for every blocking PTY read below.
+///
+/// Every helper here reads one byte (or one buffer) at a time from a real
+/// child process's terminal, and the original versions called the blocking
+/// `File::read` directly with no bound at all: if the child ever wrote
+/// something that didn't byte-for-byte contain the pattern being waited on —
+/// a race, a buffering difference between an interactive terminal and a
+/// CI-allocated PTY, a subtly different prompt, or a genuine deadlock in the
+/// CLI — the read blocked forever. That turned a single wrong byte into a
+/// 150-minute CI job timeout with zero diagnostic output (see PR #12042's
+/// "Build and test affected packages" hang).
+///
+/// 60 seconds is generous for a single real Argon2id unlock plus process
+/// spawn on a slow, oversubscribed CI runner, but still bounded: a timeout
+/// here fails the specific `read` that stalled, in seconds, with the pattern
+/// that never arrived and the transcript captured so far — not the whole job,
+/// two and a half hours later, with nothing to look at.
+const PTY_READ_TIMEOUT_MS: libc::c_int = 60_000;
+
+/// Block until `fd` has data (or EOF/hangup) ready, or `PTY_READ_TIMEOUT_MS`
+/// passes with nothing arriving. Returns `true` when a following `read` is
+/// safe to call without blocking, `false` on timeout.
+fn poll_pty_readable(fd: RawFd) -> bool {
+    let mut poller = libc::pollfd {
+        fd,
+        events: libc::POLLIN,
+        revents: 0,
+    };
+    loop {
+        // SAFETY: one initialized `pollfd` describing a file descriptor the
+        // caller owns for the duration of this call.
+        let ready = unsafe { libc::poll(&mut poller, 1, PTY_READ_TIMEOUT_MS) };
+        if ready == 0 {
+            return false;
+        }
+        if ready < 0 {
+            let error = io::Error::last_os_error();
+            if error.kind() == io::ErrorKind::Interrupted {
+                continue;
+            }
+            panic!("pseudo-terminal poll failed: {error}");
+        }
+        // Any of POLLIN/POLLHUP/POLLERR means the next `read` will return
+        // promptly (data, EOF, or an error) rather than block.
+        return true;
+    }
+}
+
 fn read_until(master: &mut File, transcript: &mut Vec<u8>, pattern: &[u8]) {
     while !transcript
         .windows(pattern.len())
         .any(|value| value == pattern)
     {
+        if !poll_pty_readable(master.as_raw_fd()) {
+            panic!(
+                "timed out after {PTY_READ_TIMEOUT_MS}ms waiting for {:?}; transcript so far: {:?}",
+                String::from_utf8_lossy(pattern),
+                String::from_utf8_lossy(transcript)
+            );
+        }
         let mut byte = [0_u8; 1];
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
@@ -2369,6 +2424,7 @@ fn read_until(master: &mut File, transcript: &mut Vec<u8>, pattern: &[u8]) {
                 String::from_utf8_lossy(pattern)
             ),
             Ok(_) => unreachable!(),
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
         }
     }
@@ -2379,6 +2435,13 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
         .windows(pattern.len())
         .any(|value| value == pattern)
     {
+        if !poll_pty_readable(master.as_raw_fd()) {
+            panic!(
+                "timed out after {PTY_READ_TIMEOUT_MS}ms waiting for {:?}; transcript so far: {:?}",
+                String::from_utf8_lossy(pattern),
+                String::from_utf8_lossy(transcript)
+            );
+        }
         let mut byte = [0_u8; 1];
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
@@ -2387,6 +2450,7 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
                 String::from_utf8_lossy(pattern)
             ),
             Ok(_) => unreachable!(),
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
         }
     }
@@ -2395,10 +2459,18 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
 fn drain_pty(master: &mut File, transcript: &mut Vec<u8>) {
     let mut bytes = [0_u8; 4096];
     loop {
+        if !poll_pty_readable(master.as_raw_fd()) {
+            panic!(
+                "pseudo-terminal drain timed out after {PTY_READ_TIMEOUT_MS}ms waiting for more \
+                 output or EOF; transcript so far: {:?}",
+                String::from_utf8_lossy(transcript)
+            );
+        }
         match master.read(&mut bytes) {
             Ok(0) => return,
             Ok(count) => transcript.extend_from_slice(&bytes[..count]),
             Err(error) if error.raw_os_error() == Some(libc::EIO) => return,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
             Err(error) => panic!("pseudo-terminal drain failed: {error}"),
         }
     }
@@ -2660,6 +2732,19 @@ fn run_attachment_command_in_pty(
         });
     }
     let mut child = command.spawn().unwrap();
+    // Every other `run_*_in_pty` helper in this file drops `command` right
+    // after `spawn` for exactly this reason: `Command` keeps its own copy of
+    // the `Stdio` it was given for `stderr` — here, the pty slave — alive for
+    // as long as the `Command` value lives, which without an explicit drop is
+    // the end of this function's scope, *after* `drain_pty` below. A pty
+    // master only sees EOF once every open reference to the slave is closed,
+    // so an un-dropped `command` is a second, silent holder of the slave that
+    // keeps `drain_pty`'s `read` waiting forever for a hang-up the real child
+    // already produced. This was exactly PR #12042's CI hang: the real
+    // `vault-pm attachment add` process runs to completion and exits, but the
+    // test's own leaked fd keeps the terminal looking "still open" to the
+    // read loop that is waiting to drain it.
+    drop(command);
     child
         .stdin
         .take()
