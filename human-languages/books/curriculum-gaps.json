@@ -22,7 +22,7 @@
     "legacySchemaTracks": 0,
     "mixedSchemaTracks": 17,
     "version2SchemaTracks": 5,
-    "lessonsWithoutLevel": 77,
+    "lessonsWithoutLevel": 76,
     "rampOverBudgetLessons": 46,
     "scriptRampOverBudgetLessons": 62,
     "lessonsOpeningMultipleScripts": 5,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 305,
     "lessonsWithoutSequence": 307,
     "forwardReviews": 160,
-    "atomsNeverRevisited": 615,
+    "atomsNeverRevisited": 616,
     "forwardReferences": 504,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 76,
@@ -3141,8 +3141,8 @@
         "status": "mixed",
         "lessonCount": 238,
         "versions": {
-          "1": 28,
-          "2": 210
+          "1": 19,
+          "2": 219
         }
       },
       {
@@ -3323,7 +3323,7 @@
         "language": "hindi",
         "chapter": 2,
         "lessonId": "HI-W05-write-namaste",
-        "message": "hindi chapter 2 payoff assesses 2/12 of the chapter's atoms (0.17), below the 0.5 floor."
+        "message": "hindi chapter 2 payoff assesses 2/21 of the chapter's atoms (0.10), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -4017,7 +4017,7 @@
   "levels": {
     "totalLessons": 3147,
     "byLevel": {
-      "pre-A1": 1865,
+      "pre-A1": 1866,
       "A1": 573,
       "A2": 547,
       "B1": 40,
@@ -4025,7 +4025,7 @@
       "C1": 10,
       "C2": 18
     },
-    "unmapped": 77,
+    "unmapped": 76,
     "mappedPercent": 98,
     "tracks": [
       {
@@ -4122,7 +4122,7 @@
         "language": "hindi",
         "lessonCount": 238,
         "byLevel": {
-          "pre-A1": 167,
+          "pre-A1": 168,
           "A1": 45,
           "A2": 21,
           "B1": 0,
@@ -4130,7 +4130,7 @@
           "C1": 0,
           "C2": 0
         },
-        "unmapped": 5,
+        "unmapped": 4,
         "reach": "A2"
       },
       {
@@ -4691,6 +4691,13 @@
     ],
     "chapters": [
       {
+        "language": "hindi",
+        "chapter": 2,
+        "atoms": 21,
+        "budget": 12,
+        "lessonCount": 16
+      },
+      {
         "language": "punjabi",
         "chapter": 7,
         "atoms": 20,
@@ -4904,10 +4911,10 @@
       {
         "language": "hindi",
         "lessonCount": 238,
-        "measurable": 210,
-        "unmeasurable": 28,
+        "measurable": 219,
+        "unmeasurable": 19,
         "lessonViolations": 1,
-        "chapterViolations": 1
+        "chapterViolations": 2
       },
       {
         "language": "italian",
@@ -6017,9 +6024,9 @@
     },
     "summary": {
       "lessonViolations": 46,
-      "chapterViolations": 23,
-      "unmeasurableLessons": 586,
-      "measurablePercent": 81,
+      "chapterViolations": 24,
+      "unmeasurableLessons": 577,
+      "measurablePercent": 82,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -12656,6 +12663,19 @@
         "language": "hindi",
         "introducedBy": "HI-C01-practice",
         "introducedAt": 9,
+        "missed": [
+          "R1",
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 0
+      },
+      {
+        "atom": "HI-CONCEPT-C02-PRACTICE-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-practice",
+        "introducedAt": 25,
         "missed": [
           "R1",
           "R2",
@@ -22170,6 +22190,102 @@
           "R4"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C02-AAPKANAAMKYAHAI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-aapka-naam-kya-hai",
+        "introducedAt": 16,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C02-AAPTUM-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-aap-tum",
+        "introducedAt": 14,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C02-HAI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-hai",
+        "introducedAt": 12,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C02-KHUSHI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-khushi",
+        "introducedAt": 17,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C02-KYA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-kya",
+        "introducedAt": 15,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C02-MERAA-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-meraa",
+        "introducedAt": 11,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "HI-CONCEPT-C02-MERANAAMHAI-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-mera-naam-hai",
+        "introducedAt": 13,
+        "missed": [
+          "R1",
+          "R3",
+          "R4"
+        ],
+        "revisits": 2
+      },
+      {
+        "atom": "HI-CONCEPT-C02-NAAM-01",
+        "language": "hindi",
+        "introducedBy": "HI-C02-naam",
+        "introducedAt": 10,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 4
       },
       {
         "atom": "HI-CONCEPT-C07-NAHIN-01",
@@ -60692,8 +60808,8 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 1,
         "forwardReviews": 1,
-        "atomsTaught": 287,
-        "atomsNeverRevisited": 72,
+        "atomsTaught": 296,
+        "atomsNeverRevisited": 73,
         "forwardReferences": 11
       },
       {
@@ -60852,14 +60968,14 @@
       "tracksWithUnorderedLessons": 11,
       "forwardPrerequisites": 137,
       "forwardReviews": 160,
-      "atomsTaught": 4337,
-      "atomsNeverRevisited": 615,
+      "atomsTaught": 4346,
+      "atomsNeverRevisited": 616,
       "neverRevisitedPercent": 14,
       "missedByWindow": {
-        "R1": 1166,
-        "R2": 3368,
-        "R3": 3207,
-        "R4": 1770
+        "R1": 1170,
+        "R2": 3374,
+        "R3": 3216,
+        "R4": 1779
       },
       "forwardReferences": 504
     }
@@ -66533,8 +66649,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "37 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 37
+            "detail": "42 atom(s) at or below pre-A1 are revisited fewer than twice",
+            "shortfall": 42
           }
         ],
         "vocabulary": 177
@@ -81379,7 +81495,7 @@
     "terms": 54,
     "termsUsed": 52,
     "lessonsUsingTerms": 3065,
-    "usesBeforeIntroduction": 11612,
+    "usesBeforeIntroduction": 11610,
     "technicalUsesBeforeIntroduction": 3148,
     "technicalLessons": 1626,
     "worstTerms": [
