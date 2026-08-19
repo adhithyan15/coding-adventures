@@ -5,6 +5,16 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ## [0.4.45] - Unreleased
 
+### Fixed
+
+- Two `clippy::approx_constant` errors in the test module. `3.14159` (printf
+  input) and `3.14` (a "some float" argument to a LENGTH rejection test) are
+  test *data*, not attempts at pi — substituting `std::f64::consts::PI` would
+  change every expected string. Resolved with scoped
+  `#[allow(clippy::approx_constant)]` on the two tests plus a justification,
+  per the repo's standing rule for this lint. Surfaced by the build tool's
+  clippy gate now covering packages whose BUILD opens with `set -e`.
+
 ### Added
 
 - **Date/time interpretation modifiers `unixepoch` / `julianday` / `auto`.** A

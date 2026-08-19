@@ -648,7 +648,13 @@ unsafe fn create_surface(width: u32, height: u32) -> Option<GdiSurface> {
             biHeight: -(height as i32),
             biPlanes: 1,
             biBitCount: 32,
-            biCompression: BI_RGB.0 as u32,
+            // `BI_RGB` is a `BI_COMPRESSION` newtype around a `u32`, and
+            // `biCompression` is itself a `u32` — so `.0` already has the
+            // right type and no cast is needed. (A `foo as u32` on a value
+            // that is already `u32` is what clippy's `unnecessary_cast`
+            // flags; it is also a small trap, because it would silently
+            // keep compiling if the underlying type ever changed width.)
+            biCompression: BI_RGB.0,
             biSizeImage: 0,
             biXPelsPerMeter: 0,
             biYPelsPerMeter: 0,
@@ -1022,7 +1028,32 @@ unsafe fn finalize_surface_alpha(color_surface: &mut GdiSurface, coverage_surfac
     }
 }
 
+/// Render `instructions` into an off-screen surface pair and alpha-blend the
+/// result onto `dest_hdc`.
+///
+/// ## Why eight parameters
+///
+/// Clippy's `too_many_arguments` (limit: 7) fires here, and the allow below is
+/// deliberate rather than lazy. The parameters split into three groups that do
+/// *not* travel together:
+///
+/// | Group                                      | Comes from                    |
+/// |--------------------------------------------|-------------------------------|
+/// | `dest_hdc`                                  | the caller's target surface   |
+/// | `instructions`, `transform`, `opacity`      | the group/layer being drawn   |
+/// | `scene_width`, `scene_height`, `gradients`, `mode` | the scene-wide render state |
+///
+/// Bundling the middle group into a struct would not work: the two call sites
+/// are `render_group` (which reads them off a `PaintGroup`) and `render_layer`
+/// (which reads them off a `PaintLayer`), and those are different types with
+/// different field names. Bundling only the scene-wide group into a context
+/// struct would ripple through `render_instructions` and every recursive
+/// renderer in this file — a large refactor of a Windows-only crate that CI
+/// cannot exercise, for no behavioural gain. So the argument list stays flat
+/// and the lint is silenced *here*, at the one function that needs it, with
+/// the reasoning recorded.
 #[cfg(target_os = "windows")]
+#[allow(clippy::too_many_arguments)]
 unsafe fn render_offscreen_composited(
     dest_hdc: HDC,
     instructions: &[PaintInstruction],
@@ -2018,7 +2049,9 @@ unsafe fn render_unsafe(scene: &PaintScene, width: u32, height: u32) -> PixelCon
             biHeight: -(height as i32), // Negative = top-down DIB
             biPlanes: 1,
             biBitCount: 32,
-            biCompression: BI_RGB.0 as u32,
+            // No cast: `BI_RGB.0` and `biCompression` are both `u32`.
+            // See the matching field in `create_surface` above.
+            biCompression: BI_RGB.0,
             biSizeImage: 0,
             biXPelsPerMeter: 0,
             biYPelsPerMeter: 0,

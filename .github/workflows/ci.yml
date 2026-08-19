@@ -1811,6 +1811,63 @@ jobs:
           if-no-files-found: warn
           retention-days: 3
 
+      # ── Clippy for crates only Windows can compile ────────────
+      #
+      # THE HOLE THIS PLUGS. The `-clippy` gate below runs `cargo clippy
+      # --all-targets -- -D warnings` per affected Rust package, but only where
+      # that package's BUILD actually invokes cargo. A Windows-only crate's
+      # default BUILD is a bare `echo SKIP` (it cannot compile on Linux/macOS:
+      # it `compile_error!`s off Windows), so the Linux and macOS legs correctly
+      # emit no clippy step for it. Its real commands live in BUILD_windows —
+      # and the build step below is skipped on Windows unless Swift changed. Net
+      # effect: `paint-vm-direct2d` and `paint-vm-gdi` were linted by NOBODY, on
+      # any leg, ever. `paint-vm-direct2d` quietly accumulated 8 `-D warnings`
+      # errors that way (PR #12119), which broke `cargo clippy` for every crate
+      # depending on it — clippy lints path dependencies — while its own gate
+      # step reported success.
+      #
+      # WHY THE LIST IS DERIVED. The crate set comes from the crates themselves:
+      # a `#[cfg(not(target_os = "windows"))] compile_error!` IS the declaration
+      # "this crate is Windows-only". Grepping for it means a new Windows-only
+      # crate joins this gate the moment it declares its platform gate — no
+      # hand-maintained list to forget to update. The step fails loudly if the
+      # set ever comes back empty, so a drifted pattern cannot degrade into a
+      # silently-passing no-op (which is the exact failure mode being fixed).
+      #
+      # This is clippy only — no tests. Driving GDI/Direct2D rendering tests on
+      # a headless runner is a separate question from linting the source.
+      - name: Clippy Windows-only Rust crates
+        if: needs.detect.outputs.needs_rust == 'true' && runner.os == 'Windows'
+        shell: bash
+        run: |
+          set -euo pipefail
+          crates=()
+          while read -r dir; do
+            name=$(sed -n 's/^name *= *"\([^"]*\)".*/\1/p' "$dir/Cargo.toml" | head -1)
+            if [ -z "$name" ]; then
+              echo "::error::no [package] name found in $dir/Cargo.toml"
+              exit 1
+            fi
+            crates+=(-p "$name")
+          done < <(
+            grep -rl --include='*.rs' 'cfg(not(target_os = "windows"))' code/packages/rust \
+            | while read -r file; do
+                grep -A2 'cfg(not(target_os = "windows"))' "$file" \
+                  | grep -q 'compile_error!' || continue
+                dir=$(dirname "$file")
+                while [ ! -f "$dir/Cargo.toml" ]; do dir=$(dirname "$dir"); done
+                echo "$dir"
+              done | sort -u
+          )
+          if [ ${#crates[@]} -eq 0 ]; then
+            echo "::error::Derived no Windows-only crates. Either the last one was"
+            echo "::error::removed (delete this step) or the detection pattern drifted."
+            exit 1
+          fi
+          echo "Linting Windows-only crates: ${crates[*]}"
+          cd code/packages/rust
+          cargo clippy "${crates[@]}" --all-targets -- -D warnings
+
       # ── Run the build ─────────────────────────────────────────
       - name: Build and test affected packages
         if: needs.detect.outputs.is_main != 'true' && (runner.os != 'Windows' || needs.detect.outputs.needs_swift == 'true')
