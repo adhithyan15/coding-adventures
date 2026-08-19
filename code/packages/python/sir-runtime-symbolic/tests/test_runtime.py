@@ -35,7 +35,11 @@ from coding_adventures_sir_runtime_symbolic import (
     sym,
     unwrap,
 )
-from coding_adventures_sir_runtime_symbolic.runtime import _is_walk_error
+from coding_adventures_sir_runtime_symbolic.runtime import (
+    _is_walk_error,
+    _rules_exceed_depth,
+    _term_exceeds_depth,
+)
 
 # Reusable "x_ + 0 -> x_" identity-elimination rule, the running example in
 # this package's own module docstring and the Rust/TS/Ruby sibling
@@ -210,6 +214,103 @@ class TestDepthGuard:
         assert _is_walk_error(DepthLimitError())
         assert _is_walk_error(RewriteCycleError())
         assert not _is_walk_error(int_(1))
+
+    # ── Regression: a rule's OWN lhs/rhs depth, independent of the target
+    # ── ────────────────────────────────────────────────────────────────
+    # Found by this package's own security review: `MAX_TERM_DEPTH` was
+    # only checked against the TARGET expression's structure. A rule's
+    # `lhs`/`rhs` is built through the exact same `apply`/`named`
+    # constructors, and a compiled program can make either arbitrarily deep
+    # via an ordinary loop with no dependency on the target's own depth at
+    # all -- `substitute`'s recursion into a deep `rhs`, and `match`'s
+    # `Pattern(name, inner)` recursion into a deep `lhs`, both drove an
+    # uncaught `RecursionError` instead of the documented `DepthLimitError`
+    # before `_rules_exceed_depth`'s pre-flight check was added.
+
+    def test_deep_rule_rhs_reports_depth_limit_error_not_a_crash(self) -> None:
+        f = sym("f")
+        huge_rhs = sym("leaf")
+        for _ in range(MAX_TERM_DEPTH * 4):
+            huge_rhs = apply(f, [huge_rhs])
+        r = rule(blank(), huge_rhs)
+        result = replace_all(sym("shallow"), [r])
+        assert isinstance(result, DepthLimitError)
+
+    def test_deep_rule_lhs_pattern_chain_reports_depth_limit_error_not_a_crash(self) -> None:
+        # A chain of nested `named(...)` wrappers around a single `blank()`
+        # -- every wrapper adds one level of `Pattern` nesting to `lhs`,
+        # driving `match`'s `Pattern(name, inner)` case deeper WITHOUT the
+        # target ever needing to be deep at all.
+        deep_lhs: object = blank()
+        for i in range(MAX_TERM_DEPTH * 4):
+            deep_lhs = named(f"x{i}", deep_lhs)  # type: ignore[arg-type]
+        r = rule(deep_lhs, sym("replacement"))  # type: ignore[arg-type]
+        result = replace_all(sym("shallow"), [r])
+        assert isinstance(result, DepthLimitError)
+
+    def test_deep_rule_depth_also_guarded_by_replace_repeated(self) -> None:
+        f = sym("f")
+        huge_rhs = sym("leaf")
+        for _ in range(MAX_TERM_DEPTH * 4):
+            huge_rhs = apply(f, [huge_rhs])
+        r = rule(blank(), huge_rhs)
+        result = replace_repeated(sym("shallow"), [r], 100)
+        assert isinstance(result, DepthLimitError)
+
+    def test_shallow_rule_is_unaffected_by_the_preflight_check(self) -> None:
+        # Sanity: the new pre-flight check must not false-positive on an
+        # ordinary, well-within-cap rule.
+        expr = apply(sym("Add"), [sym("z"), int_(0)])
+        assert replace_all(expr, [DROP_ADD_ZERO]) == sym("z")
+
+    def test_malformed_rule_entry_skipped_by_preflight_not_raised_here(self) -> None:
+        # A non-rule element in `rules` is not this check's concern --
+        # `apply_rule`'s own `is_rule` validation raises its normal
+        # `ValueError` when the walk actually tries to apply it, later.
+        # The pre-flight depth check must not itself raise or misfire on
+        # a malformed entry.
+        with pytest.raises(ValueError, match="Rule/RuleDelayed"):
+            replace_all(sym("shallow"), [sym("not-a-rule")])
+
+
+class TestRulesExceedDepthHelper:
+    """Direct unit coverage of the new iterative pre-flight depth check
+    (`_rules_exceed_depth`/`_term_exceeds_depth`), independent of going
+    through `replace_all`/`replace_repeated`."""
+
+    def test_term_exceeds_depth_false_for_a_shallow_term(self) -> None:
+        assert not _term_exceeds_depth(apply(sym("f"), [sym("x")]), MAX_TERM_DEPTH)
+
+    def test_term_exceeds_depth_true_past_the_cap(self) -> None:
+        f = sym("f")
+        node: object = sym("leaf")
+        for _ in range(MAX_TERM_DEPTH * 4):
+            node = apply(f, [node])  # type: ignore[arg-type]
+        assert _term_exceeds_depth(node, MAX_TERM_DEPTH)  # type: ignore[arg-type]
+
+    def test_term_exceeds_depth_checks_every_arg_not_just_the_first(self) -> None:
+        f = sym("f")
+        deep: object = sym("leaf")
+        for _ in range(MAX_TERM_DEPTH * 4):
+            deep = apply(f, [deep])  # type: ignore[arg-type]
+        wrapper = apply(sym("Pair"), [sym("shallow"), deep])  # type: ignore[arg-type]
+        assert _term_exceeds_depth(wrapper, MAX_TERM_DEPTH)
+
+    def test_rules_exceed_depth_false_for_shallow_rules(self) -> None:
+        assert not _rules_exceed_depth([DROP_ADD_ZERO], MAX_TERM_DEPTH)
+
+    def test_rules_exceed_depth_true_when_rhs_is_deep(self) -> None:
+        f = sym("f")
+        huge_rhs: object = sym("leaf")
+        for _ in range(MAX_TERM_DEPTH * 4):
+            huge_rhs = apply(f, [huge_rhs])  # type: ignore[arg-type]
+        r = rule(blank(), huge_rhs)  # type: ignore[arg-type]
+        assert _rules_exceed_depth([r], MAX_TERM_DEPTH)
+
+    def test_rules_exceed_depth_skips_malformed_entries(self) -> None:
+        # A bare symbol isn't a 2-arg IRApply at all -- must be skipped,
+        # not raise or false-positive.
+        assert not _rules_exceed_depth([sym("not-a-rule")], MAX_TERM_DEPTH)
 
 
 class TestRuleVsRuleDelayed:

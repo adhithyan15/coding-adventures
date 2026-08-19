@@ -54,30 +54,38 @@ imported package returns into a raised `ValueError` at the exact point a
 DoS guards (CWE-674) live entirely in the new Python package, not in this
 crate's codegen -- see `code/packages/python/sir-runtime-symbolic`'s own
 CHANGELOG for the full account. Summary: `MAX_TERM_DEPTH = 512` bounds
-`replace_all`'s/`replace_repeated`'s tree WALK (not the matcher functions,
-whose recursion is bounded by a single rule's own static pattern/RHS
-shape, never runtime data); `replace_repeated` additionally enforces an
-independent `max_iterations` (default 100) cap on its fixed-point loop,
-implemented as a local `while` loop rather than a recursive retry (so
-`max_iterations` bounds CPU time, never native stack depth, however large
-a value is passed). Verified end-to-end in this crate's own
-`tests/sir23_symbolic.rs::depth_limit_guard_raises_a_clean_error_instead_
-of_crashing` against a REAL runtime-built 600-level-deep term (600 firings
-of a compiled `Stmt::ForRange` loop, not a hand-built static AST) --
-asserts the emitted Python process exits non-zero with `sir-runtime-
-symbolic: depth-limit` on stderr.
+`replace_all`'s/`replace_repeated`'s tree WALK, checked against BOTH the
+target expression's structure AND, up front, every rule's `lhs`/`rhs` (a
+rule's own pattern/RHS depth can drive unbounded recursion inside the
+matcher independent of the target's depth -- found by this PR's own
+`/security-review`, see the Python package's CHANGELOG entry for the fix);
+`replace_repeated` additionally enforces an independent `max_iterations`
+(default 100) cap on its fixed-point loop, implemented as a local `while`
+loop rather than a recursive retry (so `max_iterations` bounds CPU time,
+never native stack depth, however large a value is passed). Verified
+end-to-end in this crate's own `tests/sir23_symbolic.rs`:
+`depth_limit_guard_raises_a_clean_error_instead_of_crashing` (a target
+tree nested past the cap) and
+`deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_
+target` (a RULE's `rhs` nested past the cap, target left trivially
+shallow) -- both against a REAL runtime-built 600-level-deep term (600
+firings of a compiled `Stmt::ForRange` loop, not a hand-built static AST),
+asserting the emitted Python process exits non-zero with `sir-runtime-
+symbolic: depth-limit` on stderr (never a raw, uncaught `RecursionError`).
 
 ### Tests
 
-`tests/sir23_symbolic.rs` (new, 6 tests, ported from
+`tests/sir23_symbolic.rs` (new, 7 tests, ported from
 `semantic-ir-to-javascript`'s own already-proven test file, Tier A cases
-only): `replace_repeated_reduces_nested_add_zero_to_bare_symbol`,
+only, plus one security regression found during this PR's own review):
+`replace_repeated_reduces_nested_add_zero_to_bare_symbol`,
 `replace_all_single_pass_does_not_retry_at_same_position`,
 `typed_blank_matches_only_constrained_head`,
 `a_rational_term_prints_reduced`,
-`depth_limit_guard_raises_a_clean_error_instead_of_crashing`, and
-`rule_delayed_and_rule_currently_produce_identical_rewrites`. Each runs
-emitted Python under a real `python3`/`python` interpreter with
+`depth_limit_guard_raises_a_clean_error_instead_of_crashing`,
+`deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_
+target`, and `rule_delayed_and_rule_currently_produce_identical_rewrites`.
+Each runs emitted Python under a real `python3`/`python` interpreter with
 `sir-runtime-symbolic/src` (plus its own two dependencies'
 `symbolic-ir/src`/`cas-pattern-matching/src`) added to `PYTHONPATH`
 alongside the existing core/pairs/oop/range/regex/exceptions set --

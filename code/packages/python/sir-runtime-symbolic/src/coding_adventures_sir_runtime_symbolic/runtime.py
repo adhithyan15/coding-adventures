@@ -57,29 +57,46 @@ Rust, TypeScript, or Python reference packages.
 Depth safety
 ------------
 
-``match_pattern``/``substitute``/``apply_rule`` (re-exported/wrapped below)
-recurse, but their recursion depth is bounded by the *static* structure of a
-single rule's pattern/RHS -- authored by a compiler frontend or written as a
-rule literal, not by runtime data -- so they are already safe regardless of
-how deep the *target* expression is: matching only continues past a node
-when the *pattern* itself also has more ``IRApply`` structure at that exact
-position, and real patterns bottom out within a handful of levels no matter
-how deep the value being matched against is.
+``replace_all``/``replace_repeated`` walk the *entire* target expression
+tree -- ordinary runtime data a compiled program can build up to unbounded
+depth (e.g. many rounds of nested computation) -- so both functions cap that
+walk's recursion at ``MAX_TERM_DEPTH`` (below). ``cas_pattern_matching.
+rewrite()`` has no such cap; carrying that gap forward into a runtime meant
+to execute compiled, potentially attacker-influenced programs would reopen
+the exact class of stack-overflow DoS (CWE-674) this repo's other SIR
+passes already guard against (``semantic-ir::limits::MAX_IR_DEPTH``, the
+``semantic-ir`` walker's depth-bounded ``Visitor`` default implementations,
+and the TypeScript/JavaScript/Ruby siblings' own ``MAX_TERM_DEPTH``
+guards). Fixed at **512** to match every other backend's cap exactly
+(cross-backend consistency is deliberate, not a coincidence: the same
+compiled program should hit the same depth ceiling no matter which backend
+emitted it).
 
-``replace_all``/``replace_repeated``, by contrast, walk the *entire* target
-expression tree -- ordinary runtime data a compiled program can build up to
-unbounded depth (e.g. many rounds of nested computation) -- so this is the
-recursion that needs an explicit cap. ``cas_pattern_matching.rewrite()`` has
-no such cap; carrying that gap forward into a runtime meant to execute
-compiled, potentially attacker-influenced programs would reopen the exact
-class of stack-overflow DoS (CWE-674) this repo's other SIR passes already
-guard against (``semantic-ir::limits::MAX_IR_DEPTH``, the ``semantic-ir``
-walker's depth-bounded ``Visitor`` default implementations, and the
-TypeScript/JavaScript/Ruby siblings' own ``MAX_TERM_DEPTH`` guards).
-``MAX_TERM_DEPTH`` below is that cap, enforced by both new functions --
-fixed at **512** to match every other backend's cap exactly (cross-backend
-consistency is deliberate, not a coincidence: the same compiled program
-should hit the same depth ceiling no matter which backend emitted it).
+**A rule's own ``lhs``/``rhs`` needs the SAME cap, independent of the
+target's depth -- found by this package's own ``/security-review``, not
+assumed safe by design.** An earlier version of this module claimed
+``match_pattern``/``substitute``/``apply_rule`` needed no cap because a
+rule's pattern/RHS is "authored by a compiler frontend... not by runtime
+data" -- but nothing in this runtime actually enforces that: a compiled
+SIR23 program can build an arbitrarily deep ``lhs``/``rhs`` via an ordinary
+loop calling ``apply``/``named`` (the exact same constructors used to build
+the *target*), with no dependency on the target's own depth at all.
+``replace_all(shallow_target, [rule(blank(), huge_rhs)])`` used to raise an
+uncaught Python ``RecursionError`` from inside ``substitute``/``match``'s
+own recursion -- neither of which the target-tree walk's cap ever reaches,
+since that recursion is driven by the *rule's* structure, not the target's.
+``replace_all``/``replace_repeated`` now validate every rule's ``lhs``/
+``rhs`` against ``MAX_TERM_DEPTH`` up front (via ``_rules_exceed_depth``,
+an ITERATIVE, non-recursive check -- so checking a maliciously deep rule
+cannot itself blow the stack) before ever starting the target-tree walk;
+see that function's own docstring and
+``test_deep_rule_rhs_reports_depth_limit_error_not_a_crash``/
+``test_deep_rule_lhs_pattern_chain_reports_depth_limit_error_not_a_crash``
+for the regression coverage. ``match_pattern``/``substitute``/``apply_rule``
+themselves remain uncapped as raw, lower-level primitives (matching
+``cas_pattern_matching``'s own uncapped design) -- SIR23 Tier A codegen
+never calls them directly, only through the now-guarded
+``replace_all``/``replace_repeated``.
 
 ``replace_repeated`` additionally needs a **separate**, independent
 ``max_iterations`` cap (default 100, matching every sibling backend's own
@@ -453,6 +470,72 @@ def _is_walk_error(value: IRNode | _WalkError) -> TypeGuard[_WalkError]:
 
 
 # ---------------------------------------------------------------------------
+# Rule pre-flight depth check -- SECURITY (CWE-674), see this section's own
+# docstrings for the vulnerability this closes
+# ---------------------------------------------------------------------------
+#
+# `_walk_once`/`replace_repeated`'s `walk` cap the recursion that descends
+# into the TARGET expression (`expr`). They do NOT, on their own, bound the
+# recursion `apply_rule` performs inside `cas_pattern_matching.match`/this
+# module's own `substitute` -- and that recursion's depth is driven by the
+# RULE's `lhs`/`rhs` structure, not by `expr`'s. This module's own earlier
+# docstrings claimed that recursion was safe because a rule's pattern/RHS is
+# "authored by a compiler frontend or written as a rule literal, not by
+# runtime data" -- but nothing in this runtime actually enforces that: a
+# compiled SIR23 program can build an arbitrarily deep `lhs`/`rhs` via an
+# ordinary loop calling `apply`/`named` (exactly the same constructors used
+# to build the target), completely independent of how deep the target
+# itself is. `replace_all(shallow_target, [rule(blank(), huge_rhs)])`
+# previously raised an uncaught Python `RecursionError` instead of the
+# documented `DepthLimitError` -- found by this package's own
+# `/security-review`; see `test_deep_rule_rhs_reports_depth_limit_error_
+# not_a_crash`/`test_deep_rule_lhs_pattern_chain_reports_depth_limit_error`
+# for the regression coverage.
+#
+# The fix: validate every rule's `lhs`/`rhs` depth ONCE, up front, before
+# `replace_all`/`replace_repeated` ever start walking `expr` -- using an
+# ITERATIVE (explicit-stack, non-recursive) walk, so checking a
+# maliciously-deep rule cannot itself overflow the stack (the exact class
+# of bug this check exists to prevent). Rules are immutable and fixed for
+# the whole call (never mutated mid-walk), so one up-front check is
+# sufficient for the ENTIRE `replace_all`/`replace_repeated` call -- there
+# is no need to re-check on every `apply_rule` attempt.
+
+
+def _term_exceeds_depth(node: IRNode, max_depth: int) -> bool:
+    """Iterative (non-recursive) check: does `node`'s `IRApply` nesting
+    exceed `max_depth` anywhere? Uses an explicit stack, not native Python
+    recursion -- checking an attacker-deep `node` must never itself risk a
+    `RecursionError`, which would defeat the entire point of this guard."""
+    stack: list[tuple[IRNode, int]] = [(node, 0)]
+    while stack:
+        current, depth = stack.pop()
+        if depth > max_depth:
+            return True
+        if isinstance(current, IRApply):
+            stack.append((current.head, depth + 1))
+            for arg in current.args:
+                stack.append((arg, depth + 1))
+    return False
+
+
+def _rules_exceed_depth(rules: Sequence[IRNode], max_depth: int) -> bool:
+    """True if any element of `rules` is a `Rule`/`RuleDelayed` apply whose
+    `lhs` or `rhs` exceeds `max_depth`. A malformed (non-rule) element is
+    silently skipped here -- `apply_rule`'s own `is_rule` check raises its
+    normal `ValueError` for that element later, when the walk actually
+    tries to apply it; this pre-flight check exists only to bound
+    recursion depth, never to duplicate rule-shape validation."""
+    for candidate in rules:
+        if not (isinstance(candidate, IRApply) and len(candidate.args) == 2):
+            continue
+        lhs, rhs = candidate.args
+        if _term_exceeds_depth(lhs, max_depth) or _term_exceeds_depth(rhs, max_depth):
+            return True
+    return False
+
+
+# ---------------------------------------------------------------------------
 # replace_all -- `expr /. rules`, one pass
 # ---------------------------------------------------------------------------
 
@@ -478,7 +561,10 @@ def replace_all(expr: IRNode, rules: Sequence[IRNode]) -> IRNode | DepthLimitErr
     count -- there is no fixed-point loop, so (unlike
     :func:`replace_repeated`) there is no `max_iterations` parameter and no
     :class:`RewriteCycleError` outcome. The only failure mode is
-    :data:`MAX_TERM_DEPTH`.
+    :data:`MAX_TERM_DEPTH` -- checked both against `expr`'s own structure
+    (by the walk below) AND, up front, against every rule's `lhs`/`rhs`
+    (see the "Rule pre-flight depth check" section above for why a rule
+    can drive unbounded recursion independent of `expr`'s depth).
 
     Example::
 
@@ -488,6 +574,8 @@ def replace_all(expr: IRNode, rules: Sequence[IRNode]) -> IRNode | DepthLimitErr
         expr = apply(sym("Add"), [apply(sym("Add"), [sym("z"), int_(0)]), int_(0)])
         replace_all(expr, [r])  # => sym("z")  (both `+ 0`s fire, one pass each)
     """
+    if _rules_exceed_depth(rules, MAX_TERM_DEPTH):
+        return DepthLimitError()
     return _walk_once(expr, rules, 0)
 
 
@@ -561,6 +649,12 @@ def replace_repeated(
     depth, however large a value a caller passes. This is the exact same
     fix the TypeScript/JavaScript/Ruby sibling backends already carry.
 
+    Like :func:`replace_all`, `MAX_TERM_DEPTH` is checked both against
+    `expr`'s own structure (by `walk` below) AND, up front, against every
+    rule's `lhs`/`rhs` (see the "Rule pre-flight depth check" section
+    above) -- a rule's own pattern/RHS depth can drive unbounded recursion
+    inside `apply_rule` independent of how deep `expr` is.
+
     Example::
 
         # x_ + 0  ->  x_   applied repeatedly, to a fixed point
@@ -569,6 +663,9 @@ def replace_repeated(
         expr = apply(sym("Add"), [apply(sym("Add"), [sym("z"), int_(0)]), int_(0)])
         replace_repeated(expr, [r], 100)  # => sym("z")
     """
+    if _rules_exceed_depth(rules, MAX_TERM_DEPTH):
+        return DepthLimitError()
+
     counter = 0
 
     def walk(node: IRNode, depth: int) -> IRNode | RewriteCycleError | DepthLimitError:

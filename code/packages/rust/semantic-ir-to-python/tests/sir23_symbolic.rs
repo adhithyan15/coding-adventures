@@ -319,6 +319,92 @@ fn depth_limit_guard_raises_a_clean_error_instead_of_crashing() {
 }
 
 #[test]
+fn deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_shallow_target() {
+    // SECURITY regression, found by this PR's own `/security-review`: the
+    // depth cap must bound a RULE's own `lhs`/`rhs` structure, not only
+    // the TARGET expression's. A compiled loop can build an arbitrarily
+    // deep `rhs` via ordinary `SymApply` nesting -- exactly the same
+    // `Wrap(acc)` firing pattern the test above uses to build a deep
+    // TARGET -- with zero dependency on how deep the actual replace_all
+    // target is. Before `coding-adventures-sir-runtime-symbolic`'s
+    // `_rules_exceed_depth` pre-flight check, `replace_all(shallow_target,
+    // [rule(blank(), huge_rhs)])` raised an uncaught Python
+    // `RecursionError` from inside `substitute`'s own recursion (which the
+    // target-tree walk's cap never reaches, since it is driven by the
+    // RULE's structure, not the target's) -- this test pins the FIXED
+    // behavior: a clean `sir-runtime-symbolic: depth-limit` error, proven
+    // against a REAL compiled `for`-loop-built `rhs` (600 runtime firings),
+    // not a hand-built static AST.
+    let stmts = vec![
+        let_binding("acc", sym("leaf")),
+        Stmt::ForRange {
+            var: "i".into(),
+            start: ilit(0),
+            stop: ilit(600),
+            step: ilit(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "acc".into(),
+                    scope: Scope::Local,
+                    value: sym_apply(sym("Wrap"), vec![local("acc")]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        },
+        // The rule's rhs is the DEEP, loop-built term; its lhs (`blank()`)
+        // and the replace_all TARGET (`sym("shallow")`) are both trivially
+        // shallow -- isolating that the depth guard fires on the RULE
+        // alone.
+        print_stmt(replace_all(sym("shallow"), vec![rule(blank(), local("acc"), false)], false)),
+    ];
+    let mut m = symbolic_module(stmts);
+    let mut features: Vec<Feature> = SYMBOLIC_FEATURES.to_vec();
+    features.extend_from_slice(&[
+        Feature::ConsoleIO,
+        Feature::Strings,
+        Feature::Loops,
+        Feature::MutableBindings,
+    ]);
+    m.manifest = FeatureManifest::from_features(&features);
+
+    let source = semantic_ir_to_python::compile(&m).expect("python emit").source;
+    let exe = match ["python3", "python"].into_iter().find(|e| python_is_runnable(e)) {
+        Some(exe) => exe,
+        None => {
+            eprintln!("skip: no python on PATH");
+            return;
+        }
+    };
+    let pythonpath = symbolic_pythonpath();
+    let file = std::env::temp_dir()
+        .join(format!("sir_py_symbolic_rule_depth_{}.py", std::process::id()));
+    std::fs::write(&file, &source).expect("write temp python");
+    let out = std::process::Command::new(exe)
+        .arg(&file)
+        .env("PYTHONPATH", &pythonpath)
+        .output()
+        .expect("spawn python");
+    let _ = std::fs::remove_file(&file);
+    assert!(
+        !out.status.success(),
+        "expected a non-zero exit from the rule-depth-limit raise, got success:\n{}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("sir-runtime-symbolic: depth-limit"),
+        "expected a depth-limit error (not e.g. a raw RecursionError), got:\n{stderr}"
+    );
+    assert!(
+        !stderr.contains("RecursionError"),
+        "must not surface a raw uncaught RecursionError:\n{stderr}"
+    );
+}
+
+#[test]
 fn rule_delayed_and_rule_currently_produce_identical_rewrites() {
     // Tier A has no evaluator yet, so `Rule`/`RuleDelayed` are matched and
     // substituted identically -- both sides of this call must produce the

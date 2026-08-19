@@ -62,14 +62,35 @@ tree, nothing more.
 
 ### Security
 
-- **CWE-674 (uncontrolled recursion) — the tree-WALK is capped, the
-  matcher is not, and that split is deliberate.** `match_pattern`/
-  `substitute`/`apply_rule` recurse only as deep as a single rule's own
-  author-written pattern/RHS shape (static, compiler- or literal-authored
-  structure), never runtime data, so they need no cap. `replace_all`/
-  `replace_repeated` walk the *entire* target expression tree — ordinary
-  runtime data a compiled program can build to unbounded depth — so those
-  two are the ones `MAX_TERM_DEPTH` guards.
+- **CWE-674 (uncontrolled recursion) — found by this release's own
+  `/security-review`: a rule's OWN `lhs`/`rhs` depth needed the SAME cap
+  as the target tree, and initially did not have it.** An earlier draft of
+  this package assumed `match_pattern`/`substitute`/`apply_rule` needed no
+  cap because a rule's pattern/RHS is "authored by a compiler frontend...
+  not by runtime data" — but nothing in this runtime enforces that: a
+  compiled SIR23 program can build an arbitrarily deep `lhs`/`rhs` via an
+  ordinary loop calling `apply`/`named` (the exact same constructors used
+  to build the *target*), with zero dependency on the target's own depth.
+  `replace_all(shallow_target, [rule(blank(), huge_rhs)])` raised an
+  uncaught Python `RecursionError` from inside `substitute`/`match`'s own
+  recursion (which the target-tree walk's cap never reaches, since that
+  recursion is driven by the *rule's* structure) instead of the documented
+  `DepthLimitError`. **Fixed** by validating every rule's `lhs`/`rhs`
+  against `MAX_TERM_DEPTH` up front, via a new `_rules_exceed_depth`
+  helper — critically, an ITERATIVE (explicit-stack, non-recursive) check,
+  so checking a maliciously deep rule cannot itself overflow the stack —
+  before `replace_all`/`replace_repeated` ever start walking the target.
+  Regression-tested by `test_deep_rule_rhs_reports_depth_limit_error_not_
+  a_crash`/`test_deep_rule_lhs_pattern_chain_reports_depth_limit_error_
+  not_a_crash` (package-level) and, in `semantic-ir-to-python`'s own
+  `tests/sir23_symbolic.rs`,
+  `deep_rule_rhs_reports_depth_limit_error_not_a_crash_even_with_a_
+  shallow_target` (a REAL compiled `for`-loop building the deep `rhs`, not
+  a hand-built static AST). `match_pattern`/`substitute`/`apply_rule`
+  themselves remain uncapped as raw, lower-level primitives (matching
+  `cas_pattern_matching`'s own uncapped design) — SIR23 Tier A codegen
+  never calls them directly, only through the now-guarded
+  `replace_all`/`replace_repeated`.
 - **`replace_repeated`'s retry-on-fire step is an iterative `while` loop at
   the SAME call frame, not a recursive call per firing** — the exact fix
   the published TypeScript sibling package's own `/security-review` found
