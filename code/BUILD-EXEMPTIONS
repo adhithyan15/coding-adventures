@@ -81,32 +81,3 @@ PENDING code/packages/rust/paint-vm-opengl  # no in-repo dependents; needs a nat
 PENDING code/packages/rust/paint-vm-vulkan  # no in-repo dependents; needs a native graphics toolchain to build
 PENDING code/packages/rust/paint-vm-wgpu  # no in-repo dependents; needs a native graphics toolchain to build
 
-# Mosaic packages — these ship .mil/.mll/.msl sources as their real deliverable;
-# the Cargo.toml exists only to host an integration smoke test against
-# mosaic-compile. Those smoke tests have never run, which is exactly the failure
-# this gate exists to catch, so they need BUILDs rather than exclusion.
-PENDING code/packages/mosaic/mosaic-pkg-calendar  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-card  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-dialog  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-grid  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-notes  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-project-nav  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-sheet  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-PENDING code/packages/mosaic/mosaic-pkg-toolkit  # .mil/.mll/.msl package whose Cargo.toml hosts an integration smoke test that has never run
-
-# ADJ spec fixtures — standalone cargo projects under code/specs/data holding
-# worked examples for the adjudication specs.
-PENDING code/specs/data/adj46  # standalone ADJ spec fixture crate; never built, tested or linted
-PENDING code/specs/data/adj48  # standalone ADJ spec fixture crate; never built, tested or linted
-PENDING code/specs/data/adj49  # standalone ADJ spec fixture crate; never built, tested or linted
-PENDING code/specs/data/adj50  # standalone ADJ spec fixture crate; never built, tested or linted
-PENDING code/specs/data/adj51  # standalone ADJ spec fixture crate; never built, tested or linted
-PENDING code/specs/data/adj52  # standalone ADJ spec fixture crate; never built, tested or linted
-
-# Rust programs — separate cargo projects, not members of the
-# code/packages/rust workspace.
-PENDING code/programs/rust/celsius-to-fahrenheit-predictor  # Rust port of a multi-language program family (Python/TypeScript siblings already build)
-PENDING code/programs/rust/cowsay  # Rust port of the cross-language cowsay family; every other language's port already builds
-PENDING code/programs/rust/house-price-predictor  # Rust port of a multi-language program family (Python/TypeScript siblings already build)
-PENDING code/programs/rust/mansion-classifier  # Rust port of a multi-language program family (Go/Python/TypeScript siblings already build)
-PENDING code/programs/rust/space-launch-predictor  # Rust port of a multi-language program family (Python/TypeScript siblings already build)

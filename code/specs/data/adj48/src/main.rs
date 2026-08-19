@@ -257,10 +257,12 @@ fn print_vignette_header(src: &str) {
             header.push_str(t.trim_start_matches('%').trim_start());
             header.push('\n');
         } else if t.is_empty() && header.is_empty() {
-            // skip leading blanks
-        } else if t.is_empty() && !header.is_empty() {
-            break;
+            // Skip leading blanks — the header has not started yet.
         } else {
+            // Anything else ends the header: the first non-comment line, or the
+            // blank line that terminates a header already in progress. Those two
+            // used to be separate arms, but both did the same `break`, so they
+            // are one.
             break;
         }
     }

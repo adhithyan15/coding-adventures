@@ -6,7 +6,7 @@
 //! documents side by side and the ground-truth diagnosis.
 
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use adj_lang::compile;
 use logic_engine::{search, DerivationOrigin, SearchMode, SearchResult};
@@ -75,7 +75,7 @@ fn main() {
     println!("to know what it weighted or to patch the failure mode.");
 }
 
-fn run_pass(manifest_dir: &PathBuf, label: &str, rulebook_name: &str, vignette_name: &str) {
+fn run_pass(manifest_dir: &Path, label: &str, rulebook_name: &str, vignette_name: &str) {
     let rulebook = fs::read_to_string(manifest_dir.join(rulebook_name)).expect("rulebook");
     let vignette = fs::read_to_string(manifest_dir.join(vignette_name)).expect("vignette");
     let combined = format!("{rulebook}\n{vignette}");
