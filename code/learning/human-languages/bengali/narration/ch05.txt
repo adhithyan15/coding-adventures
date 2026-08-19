@@ -3,38 +3,6 @@ Bengali, chapter 5: The First Verbs.
 
 
 Lesson 1 of 5.
-আমি বাংলা বলি (āmi bānglā bôli) — "I speak Bengali".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Your first complete, moving sentence — and the language's own name for itself.
-
-The letters in this word.
-বাংলা (bānglā): বা (bā) + ং (the anusvāra nasal) + লা (lā).
-
-The sentence, taken apart.
-আমি বাংলা বলি = আমি (āmi, "I") + বাংলা (bānglā, the object) + বলি (bôli, "speak") — "I Bengali speak," the verb last as always. The name বাংলা (bānglā) is the language's own word for itself (English "Bengali" comes from it, via Bangla becomes Bengal). It descends from বঙ্গ (bôngo), the ancient name of the region — so the language is named after its land, the great delta of the Ganges.
-
-Grammar Lens: no gender, so the sentence is the same for anyone.
-Because Bengali verbs carry no gender, আমি বাংলা বলি is exactly the same whether a man or a woman says it — unlike Hindi (maiṁ … boltā/boltī hūṁ). And because the -i ending already means "I," you could even drop āmi: bānglā bôli is a complete "I speak Bengali."
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "āmi bānglā bôli"]
-[pause 8 seconds for the answer]
-[your turn — say: what bānglā is named after (bôngo, the ancient region — the Ganges delta)]
-[pause 8 seconds for the answer]
-[your turn — say: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Say "I speak Bengali," and give the origin of the name bānglā. (Āmi bānglā bôli; from bôngo, the ancient name of the Bengal region.)
-
-
-Lesson 2 of 5.
 বলা (bôlā) — "to speak," your first full verb.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -64,6 +32,38 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does the Bengali verb change for, and what does it never change for? (For person — bôli/bôlo/bôle — but never for gender.)
+
+
+Lesson 2 of 5.
+আমি বাংলা বলি (āmi bānglā bôli) — "I speak Bengali".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Your first complete, moving sentence — and the language's own name for itself.
+
+The letters in this word.
+বাংলা (bānglā): বা (bā) + ং (the anusvāra nasal) + লা (lā).
+
+The sentence, taken apart.
+আমি বাংলা বলি = আমি (āmi, "I") + বাংলা (bānglā, the object) + বলি (bôli, "speak") — "I Bengali speak," the verb last as always. The name বাংলা (bānglā) is the language's own word for itself (English "Bengali" comes from it, via Bangla becomes Bengal). It descends from বঙ্গ (bôngo), the ancient name of the region — so the language is named after its land, the great delta of the Ganges.
+
+Grammar Lens: no gender, so the sentence is the same for anyone.
+Because Bengali verbs carry no gender, আমি বাংলা বলি is exactly the same whether a man or a woman says it — unlike Hindi (maiṁ … boltā/boltī hūṁ). And because the -i ending already means "I," you could even drop āmi: bānglā bôli is a complete "I speak Bengali."
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "āmi bānglā bôli"]
+[pause 8 seconds for the answer]
+[your turn — say: what bānglā is named after (bôngo, the ancient region — the Ganges delta)]
+[pause 8 seconds for the answer]
+[your turn — say: does the sentence change for a man vs. a woman? (No — Bengali has no gender)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Say "I speak Bengali," and give the origin of the name bānglā. (Āmi bānglā bôli; from bôngo, the ancient name of the Bengal region.)
 
 
 Lesson 3 of 5.
@@ -99,45 +99,6 @@ What Sanskrit root do both kôrā ("do") and kāj ("work") come from, and name a
 
 
 Lesson 4 of 5.
-Chapter 5 — The first verbs.
-
-Warm-up.
-[pause 2 seconds]
-No new words. Three verbs, one gender-free engine — build real sentences about yourself.
-
-Build the sentences.
-[pause 1 second after each]
-[your turn — say: "I speak Bengali" — āmi bānglā bôli]
-[pause 8 seconds for the answer]
-[your turn — say: "I live in Kolkata" — āmi Kolkātāy thāki]
-[pause 8 seconds for the answer]
-[your turn — say: "I work" — āmi kāj kôri]
-[pause 8 seconds for the answer]
-[your turn — say: "he speaks" and "she speaks" — se bôle (the same for both!)]
-[pause 8 seconds for the answer]
-
-The engine.
-[pause 2 seconds]
-[your turn — say: the "I" ending on every present verb (-i)]
-[pause 8 seconds for the answer]
-[your turn — say: the one thing Bengali verbs never mark (gender)]
-[pause 8 seconds for the answer]
-[your turn — say: where the verb sits, and where "in" sits (verb last; -y/-te after the noun)]
-[pause 8 seconds for the answer]
-
-Roots you now carry.
-[pause 2 seconds]
-bôlā "to speak" (native; bol-, like Hindi/Punjabi).
-thākā "to live" from Sanskrit sthā becomes English stand/stay/state.
-kôrā "to do" from √kṛ — root of nômoshkar; kāj "work" from kārya (also √kṛ).
-bānglā from bôngo, the ancient region — the Ganges delta.
-
-Wrap-up Recall.
-[pause 3 seconds]
-In one breath, say your language, your city, and your work in Bengali — and note what stays the same for anyone. (Āmi bānglā bôli. Āmi … thāki. Āmi kāj kôri — no gender, so it's the same for a man or a woman.)
-
-
-Lesson 5 of 5.
 থাকা (thākā) — "to live, to stay".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -167,3 +128,42 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What Sanskrit/PIE root is thākā from, and its English cousins? (Sanskrit sthā / PIE steh₂- "to stand"; English stand, stay, state.)
+
+
+Lesson 5 of 5.
+Chapter 5 — The first verbs.
+
+Warm-up.
+[pause 2 seconds]
+No new words. Three verbs, one gender-free engine — build real sentences about yourself.
+
+How to answer — build the sentences.
+[pause 1 second after each]
+[your turn — say: "I speak Bengali" — āmi bānglā bôli]
+[pause 8 seconds for the answer]
+[your turn — say: "I live in Kolkata" — āmi Kolkātāy thāki]
+[pause 8 seconds for the answer]
+[your turn — say: "I work" — āmi kāj kôri]
+[pause 8 seconds for the answer]
+[your turn — say: "he speaks" and "she speaks" — se bôle (the same for both!)]
+[pause 8 seconds for the answer]
+
+Grammar lens — the engine.
+[pause 2 seconds]
+[your turn — say: the "I" ending on every present verb (-i)]
+[pause 8 seconds for the answer]
+[your turn — say: the one thing Bengali verbs never mark (gender)]
+[pause 8 seconds for the answer]
+[your turn — say: where the verb sits, and where "in" sits (verb last; -y/-te after the noun)]
+[pause 8 seconds for the answer]
+
+What you've built — roots you now carry.
+[pause 2 seconds]
+bôlā "to speak" (native; bol-, like Hindi/Punjabi).
+thākā "to live" from Sanskrit sthā becomes English stand/stay/state.
+kôrā "to do" from √kṛ — root of nômoshkar; kāj "work" from kārya (also √kṛ).
+bānglā from bôngo, the ancient region — the Ganges delta.
+
+Wrap-up Recall.
+[pause 3 seconds]
+In one breath, say your language, your city, and your work in Bengali — and note what stays the same for anyone. (Āmi bānglā bôli. Āmi … thāki. Āmi kāj kôri — no gender, so it's the same for a man or a woman.)

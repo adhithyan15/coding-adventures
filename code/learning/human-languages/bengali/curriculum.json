@@ -133,6 +133,18 @@
       "after": []
     },
     {
+      "id": "BN-PATH-004B",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "BN-C04-practice"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-004-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "BN-PATH-017",
       "spine_node": "SPINE-SAY-WHAT-I-DO",
       "lessons": [
@@ -238,6 +250,18 @@
       "after": []
     },
     {
+      "id": "BN-PATH-002A",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "BN-C02-practice"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-002-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "BN-PATH-016",
       "spine_node": "SPINE-CHECK-WELLBEING",
       "lessons": [
@@ -308,6 +332,18 @@
         "BN-EXT-021-CLOTHING-AND-ACCESSORIES"
       ],
       "after": []
+    },
+    {
+      "id": "BN-PATH-003A",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "BN-C03-practice"
+      ],
+      "before": [],
+      "inline": [
+        "BN-EXT-003-CONSOLIDATION"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -346,7 +382,8 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "BN-PATH-005",
-        "BN-PATH-015"
+        "BN-PATH-015",
+        "BN-PATH-002A"
       ],
       "omits": [
         "PRONOUN-ME",
@@ -360,7 +397,8 @@
         "BN-PATH-008",
         "BN-PATH-016",
         "BN-PATH-020",
-        "BN-PATH-021"
+        "BN-PATH-021",
+        "BN-PATH-003A"
       ],
       "omits": [
         "WORD-GOOD",
@@ -379,7 +417,8 @@
     "SPINE-TAKE-LEAVE": {
       "segments": [
         "BN-PATH-004",
-        "BN-PATH-009"
+        "BN-PATH-009",
+        "BN-PATH-004B"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -885,6 +924,45 @@
       ],
       "lessons": [
         "BN-C01-practice"
+      ]
+    },
+    {
+      "id": "BN-EXT-002-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask someone's name in Bengali and give my own, choosing between the familiar and polite you.",
+      "prerequisites": [
+        "BN-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "BN-C02-practice"
+      ]
+    },
+    {
+      "id": "BN-EXT-003-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask how someone is in Bengali, say that I am well, and wave away a small trouble.",
+      "prerequisites": [
+        "BN-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "BN-C03-practice"
+      ]
+    },
+    {
+      "id": "BN-EXT-004-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can take my leave in Bengali and say when I expect to meet again.",
+      "prerequisites": [
+        "BN-EXT-009-LANGUAGE-SPECIFIC"
+      ],
+      "lessons": [
+        "BN-C04-practice"
       ]
     }
   ]

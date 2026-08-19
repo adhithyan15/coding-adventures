@@ -4,22 +4,22 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c7df8cff9c52ce8d",
+  "sourceHash": "fnv1a64:f1150a397c9e35fc",
   "lessons": [
     {
-      "id": "BN-C02-alaap",
-      "sequence": null,
-      "title": "আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) — \"pleased to meet you\"",
-      "headword": "আলাপ করে ভালো লাগলো",
+      "id": "BN-C02-naam",
+      "sequence": 70,
+      "title": "নাম (nām) — \"name,\" a word older than Europe",
+      "headword": "নাম",
       "romanization": "",
-      "gloss": "pleased to meet you (lit. \"having made acquaintance, [it] felt good\")",
+      "gloss": "name",
       "script": "bengali",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:4b0fda4f32ec3fd6",
+      "sourceHash": "fnv1a64:7b7ed7aa80c02555",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "The warm close of an introduction."
+              "text": "The first word of the introduction — and one of the clearest bridges between India and Europe."
             }
           ]
         },
@@ -55,7 +55,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The key word is আলাপ (ālāp): আ + লা (lā) + প (p)."
+              "text": "ন (nô) + া (the long-ā sign) + ম (mô) becomes নাম (nām). Here the long-ā sign overrides the inherent ô, so it is nām, not \"nôm.\""
             }
           ]
         },
@@ -66,7 +66,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "আলাপ করে ভালো লাগলো = আলাপ (ālāp, \"acquaintance, conversation\") + করে (kore, \"having done\") + ভালো লাগলো (bhālo lāglo, \"[it] felt good\") — literally \"having made your acquaintance, [it] felt good.\" The key word আলাপ (ālāp) is Sanskrit — ālāpa (\"conversing, addressing,\" from ā- \"toward\" + lap \"to speak\"), the same ālāp that names the slow opening section of a rāga in Indian classical music, where the musician \"converses\" with the notes. So even a hello leans on Sanskrit's word for the meeting of two voices."
+              "text": "নাম (nām, \"name\") from Sanskrit নামন্ (nāman), from Proto-Indo-European h₃nómn (its final n syllabic) — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. Bengali nām and English name are cousins from before either language existed — one of the clearest threads tying the Indian and European branches of one family."
             }
           ]
         },
@@ -84,20 +84,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ālāp kore bhālo lāglo\"",
+              "instruction": "\"nām\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ālāp kore bhālo lāglo\"]"
+              "source": "[YOU SAY: \"nām\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what ālāp means, and where else you've heard it (acquaintance/conversation; the ālāp of a rāga)",
+              "instruction": "the family — nām / English name / Latin nōmen / Greek onoma",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what *ālāp* means, and where else you've heard it (acquaintance/conversation; the *ālāp* of a rāga)]"
+              "source": "[YOU SAY: the family — *nām* / English *name* / Latin *nōmen* / Greek *onoma*]"
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does the phrase literally say, and what is ālāp? (\"Having made [your] acquaintance, it felt good\"; Sanskrit ālāpa, \"conversing\" — as in a rāga's opening.)"
+              "text": "What roots is nām from, and its English cousins? (Sanskrit nāman / PIE h₃nómn; name, noun, nominate.)"
             }
           ]
         }
@@ -122,7 +122,7 @@
     },
     {
       "id": "BN-C02-amar",
-      "sequence": null,
+      "sequence": 80,
       "title": "আমার (āmār) — \"my\"",
       "headword": "আমার",
       "romanization": "",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a2568d0190f56ea9",
+      "sourceHash": "fnv1a64:3b54acf2ae17b4b6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -256,7 +256,7 @@
     },
     {
       "id": "BN-C02-amar-naam",
-      "sequence": null,
+      "sequence": 90,
       "title": "আমার নাম … (āmār nām …) — \"my name is…,\" with no \"is\"",
       "headword": "আমার নাম …",
       "romanization": "",
@@ -267,7 +267,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:07277492546379d2",
+      "sourceHash": "fnv1a64:e858fa3fcf2976a1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -296,8 +296,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "input",
+          "title": "The two words — assembled",
           "segments": [
             {
               "kind": "speech",
@@ -367,8 +367,122 @@
       ]
     },
     {
+      "id": "BN-C02-alaap",
+      "sequence": 100,
+      "title": "আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) — \"pleased to meet you\"",
+      "headword": "আলাপ করে ভালো লাগলো",
+      "romanization": "",
+      "gloss": "pleased to meet you (lit. \"having made acquaintance, [it] felt good\")",
+      "script": "bengali",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e58c8a7e80a37473",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The warm close of an introduction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The key word is আলাপ (ālāp): আ + লা (lā) + প (p)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "আলাপ করে ভালো লাগলো = আলাপ (ālāp, \"acquaintance, conversation\") + করে (kore, \"having done\") + ভালো লাগলো (bhālo lāglo, \"[it] felt good\") — literally \"having made your acquaintance, [it] felt good.\" The key word আলাপ (ālāp) is Sanskrit — ālāpa (\"conversing, addressing,\" from ā- \"toward\" + lap \"to speak\"), the same ālāp that names the slow opening section of a rāga in Indian classical music, where the musician \"converses\" with the notes. So even a hello leans on Sanskrit's word for the meeting of two voices."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ālāp kore bhālo lāglo\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ālāp kore bhālo lāglo\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what ālāp means, and where else you've heard it (acquaintance/conversation; the ālāp of a rāga)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what *ālāp* means, and where else you've heard it (acquaintance/conversation; the *ālāp* of a rāga)]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the phrase literally say, and what is ālāp? (\"Having made [your] acquaintance, it felt good\"; Sanskrit ālāpa, \"conversing\" — as in a rāga's opening.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "BN-C02-ki",
-      "sequence": null,
+      "sequence": 110,
       "title": "কি (ki) — \"what\"",
       "headword": "কি",
       "romanization": "",
@@ -379,7 +493,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9742adfbc75528a3",
+      "sourceHash": "fnv1a64:710263335894332b",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -481,406 +595,8 @@
       ]
     },
     {
-      "id": "BN-C02-naam",
-      "sequence": null,
-      "title": "নাম (nām) — \"name,\" a word older than Europe",
-      "headword": "নাম",
-      "romanization": "",
-      "gloss": "name",
-      "script": "bengali",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ff4b24b412c6f334",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The first word of the introduction — and one of the clearest bridges between India and Europe."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ন (nô) + া (the long-ā sign) + ম (mô) becomes নাম (nām). Here the long-ā sign overrides the inherent ô, so it is nām, not \"nôm.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "নাম (nām, \"name\") from Sanskrit নামন্ (nāman), from Proto-Indo-European h₃nómn̥ — the same ancient root as English name, Latin nōmen (English noun, nominate), and Greek onoma. Bengali nām and English name are cousins from before either language existed — one of the clearest threads tying the Indian and European branches of one family."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"nām\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"nām\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the family — nām / English name / Latin nōmen / Greek onoma",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the family — *nām* / English *name* / Latin *nōmen* / Greek *onoma*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What roots is nām from, and its English cousins? (Sanskrit nāman / PIE h₃nómn̥; name, noun, nominate.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C02-practice",
-      "sequence": null,
-      "title": "Chapter 2 — The introduction exchange",
-      "headword": "(dialogue)",
-      "romanization": "",
-      "gloss": "Chapter 2 recap — the introduction exchange",
-      "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:30d98e47cec9efea",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "No new words. The whole introduction, assembled from atoms you now own."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "The exchange",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": true,
-              "source": "[PAUSE 1s each]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"My name is Mira.\" — āmār nām Mira.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"My name is Mira.\" — *āmār nām Mira.*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"What's your name?\" (respectful) — āpnār nām ki?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"What's your name?\" (respectful) — *āpnār nām ki?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"My name is Arun.\" — āmār nām Arun.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"My name is Arun.\" — *āmār nām Arun.*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Pleased to meet you.\" — ālāp kore bhālo lāglo.",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Pleased to meet you.\" — *ālāp kore bhālo lāglo.*]"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The atoms",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"name,\" \"my\" (nām, āmār)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"name,\" \"my\" (*nām*, *āmār*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three \"you\" levels (tui / tumi / āpni)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three \"you\" levels (*tui / tumi / āpni*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"what,\" and the word Bengali leaves out (ki; there is no \"is\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"what,\" and the word Bengali leaves out (*ki*; there is no \"is\")]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Roots you now carry",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "nām from Sanskrit nāman becomes English name."
-            },
-            {
-              "kind": "speech",
-              "text": "āmār from the first-person ām-; no gender (unlike Hindi merā/merī)."
-            },
-            {
-              "kind": "speech",
-              "text": "ki from ka- becomes English what; tumi from tū becomes thou."
-            },
-            {
-              "kind": "speech",
-              "text": "ālāp from Sanskrit ālāpa, \"conversing\"."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Introduce yourself and ask a stranger's name in Bengali — and note the one word you never say. (Āmār nām …. Āpnār nām ki? — no word for \"is.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "BN-C02-tomar-naam-ki",
-      "sequence": null,
-      "title": "তোমার নাম কি? (tomār nām ki?) — \"what's your name?\"",
-      "headword": "তোমার নাম কি?",
-      "romanization": "",
-      "gloss": "what's your name?",
-      "script": "bengali",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:49150302a08d596e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Turn the introduction around — ask, instead of tell."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "তোমার (tomār, \"your,\" from tumi) + নাম (name) + কি (what) becomes literally \"your name what?\" And note — still no \"is.\" The zero copula holds here too: Bengali simply lays \"your name\" beside \"what,\" and the question is complete."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: answering, and the respectful form",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for আপনার (āpnār, \"your,\" from āpni): āpnār nām ki? — the one to use with a stranger."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the familiar question — tomār nām ki?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar question — *tomār nām ki?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the respectful version — āpnār nām ki?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the respectful version — *āpnār nām ki?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "answer it — āmār nām …",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: answer it — *āmār nām …*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask \"what's your name?\" respectfully, and note what's still missing. (Āpnār nām ki?; there is no word for \"is\" — the zero copula.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "BN-C02-tumi-apni",
-      "sequence": null,
+      "sequence": 120,
       "title": "তুমি / আপনি (tumi / āpni) — \"you,\" three ways",
       "headword": "তুমি / আপনি",
       "romanization": "",
@@ -891,7 +607,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7ced4161be7a9daf",
+      "sourceHash": "fnv1a64:ecf9c947f3fe4048",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1016,6 +732,290 @@
             {
               "kind": "speech",
               "text": "Name Bengali's three \"you\"s, and which English pronoun tumi is cousin to. (Tui / tumi / āpni; archaic thou.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C02-tomar-naam-ki",
+      "sequence": 130,
+      "title": "তোমার নাম কি? (tomār nām ki?) — \"what's your name?\"",
+      "headword": "তোমার নাম কি?",
+      "romanization": "",
+      "gloss": "what's your name?",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6151514d9f54e202",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Turn the introduction around — ask, instead of tell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words — assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "তোমার (tomār, \"your,\" from tumi) + নাম (name) + কি (what) becomes literally \"your name what?\" And note — still no \"is.\" The zero copula holds here too: Bengali simply lays \"your name\" beside \"what,\" and the question is complete."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: answering, and the respectful form",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Answer with the sentence you built: Āmār nām Arun. The respectful version swaps tomār (from tumi) for আপনার (āpnār, \"your,\" from āpni): āpnār nām ki? — the one to use with a stranger."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the familiar question — tomār nām ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the familiar question — *tomār nām ki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the respectful version — āpnār nām ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the respectful version — *āpnār nām ki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "answer it — āmār nām …",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: answer it — *āmār nām …*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask \"what's your name?\" respectfully, and note what's still missing. (Āpnār nām ki?; there is no word for \"is\" — the zero copula.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "BN-C02-practice",
+      "sequence": 140,
+      "title": "Chapter 2 — The introduction exchange",
+      "headword": "(dialogue)",
+      "romanization": "",
+      "gloss": "Chapter 2 recap — the introduction exchange",
+      "script": "bengali",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:24b593302f0761ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "No new words. The whole introduction, assembled from atoms you now own."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": true,
+              "source": "[PAUSE 1s each]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My name is Mira.\" — āmār nām Mira.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My name is Mira.\" — *āmār nām Mira.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"What's your name?\" (respectful) — āpnār nām ki?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"What's your name?\" (respectful) — *āpnār nām ki?*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"My name is Arun.\" — āmār nām Arun.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"My name is Arun.\" — *āmār nām Arun.*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Pleased to meet you.\" — ālāp kore bhālo lāglo.",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Pleased to meet you.\" — *ālāp kore bhālo lāglo.*]"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — the atoms",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"name,\" \"my\" (nām, āmār)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"name,\" \"my\" (*nām*, *āmār*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three \"you\" levels (tui / tumi / āpni)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three \"you\" levels (*tui / tumi / āpni*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"what,\" and the word Bengali leaves out (ki; there is no \"is\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"what,\" and the word Bengali leaves out (*ki*; there is no \"is\")]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "notice",
+          "title": "What you've built — roots you now carry",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "nām from Sanskrit nāman becomes English name."
+            },
+            {
+              "kind": "speech",
+              "text": "āmār from the first-person ām-; no gender (unlike Hindi merā/merī)."
+            },
+            {
+              "kind": "speech",
+              "text": "ki from ka- becomes English what; tumi from tū becomes thou."
+            },
+            {
+              "kind": "speech",
+              "text": "ālāp from Sanskrit ālāpa, \"conversing\"."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Introduce yourself and ask a stranger's name in Bengali — and note the one word you never say. (Āmār nām …. Āpnār nām ki? — no word for \"is.\")"
             }
           ]
         }
