@@ -532,6 +532,8 @@ pub struct HostDefaultsConfig {
     executable: ConfigPath,
     bootstrap_timeout: Duration,
     graceful_stop_timeout: Duration,
+    restart_window: Duration,
+    max_restarts_per_window: u32,
 }
 
 impl HostDefaultsConfig {
@@ -559,6 +561,40 @@ impl HostDefaultsConfig {
     pub fn graceful_stop_timeout(&self) -> Duration {
         self.graceful_stop_timeout
     }
+
+    /// Return the restart-intensity window (D18R R2).
+    ///
+    /// Together with [`Self::max_restarts_per_window`] this bounds how often a
+    /// single host may be restarted before the reconciler quarantines it
+    /// instead. Both keys are optional; omitting them keeps the reconciler's
+    /// own defaults, which `restart_intensity_defaults_match_the_reconciler`
+    /// in `chief-of-staff-daemon` pins against drift.
+    pub fn restart_window(&self) -> Duration {
+        self.restart_window
+    }
+
+    /// Return the restarts permitted inside one window (D18R R2).
+    pub fn max_restarts_per_window(&self) -> u32 {
+        self.max_restarts_per_window
+    }
+}
+
+/// Sixty seconds, mirroring the reconciler's own default window.
+const DEFAULT_RESTART_WINDOW: Duration = Duration::from_secs(60);
+/// Five restarts, mirroring the reconciler's own default budget.
+const DEFAULT_MAX_RESTARTS_PER_WINDOW: u32 = 5;
+
+/// Return the restart window applied when `[host_defaults]` omits the key.
+///
+/// Exported so that `chief-of-staff-daemon` -- the one crate that depends on
+/// both this one and the reconciler -- can pin the two defaults against drift.
+pub fn default_restart_window() -> Duration {
+    DEFAULT_RESTART_WINDOW
+}
+
+/// Return the restart budget applied when `[host_defaults]` omits the key.
+pub fn default_max_restarts_per_window() -> u32 {
+    DEFAULT_MAX_RESTARTS_PER_WINDOW
 }
 
 /// Validated vault coordination settings.
@@ -991,6 +1027,22 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
         bounded_process_millis(document.take(HOST_DEFAULTS, "bootstrap_timeout")?)?;
     let graceful_stop_timeout =
         bounded_process_millis(document.take(HOST_DEFAULTS, "graceful_stop_timeout")?)?;
+    // Both restart-intensity keys are optional so that a config written before
+    // D18R R2 existed still loads. A zero for either is refused rather than
+    // read as "never restart": `restart_policy = "never"` says that outright,
+    // and a bound that silently overrode a declared policy would be a
+    // surprising way to find out.
+    let restart_window = match document.take_optional(HOST_DEFAULTS, "restart_window") {
+        Some(value) => positive_millis(value)?,
+        None => DEFAULT_RESTART_WINDOW,
+    };
+    let max_restarts_per_window =
+        match document.take_optional(HOST_DEFAULTS, "max_restarts_per_window") {
+            Some(value) => {
+                u32::try_from(positive_integer(value)?).map_err(|_| ConfigError::InvalidValue)?
+            }
+            None => DEFAULT_MAX_RESTARTS_PER_WINDOW,
+        };
     let storage_path = ConfigPath::parse(expect_string(document.take(VAULT, "storage_path")?)?)?;
     let default_lease_ttl = positive_secs(document.take(VAULT, "default_lease_ttl")?)?;
     let container = expect_bool(document.take(VAULT, "container")?)?;
@@ -1459,6 +1511,8 @@ pub fn parse_config(source: &str) -> Result<ChiefConfig, ConfigError> {
             executable,
             bootstrap_timeout,
             graceful_stop_timeout,
+            restart_window,
+            max_restarts_per_window,
         },
         vault: VaultConfig {
             storage_path,
@@ -3019,5 +3073,48 @@ ollama_models = [
     #[cfg(not(windows))]
     fn absolute_home() -> PathBuf {
         PathBuf::from("/Users/example")
+    }
+
+    /// Both restart-intensity keys are optional, and absent means the defaults.
+    ///
+    /// This is what lets a config file written before D18R R2 existed keep
+    /// loading unchanged -- the bound arrives without an operator edit.
+    #[test]
+    fn restart_intensity_keys_are_optional_and_override_the_defaults() {
+        let config = parse_config(VALID).expect("the fixture omits both keys");
+        assert_eq!(
+            config.host_defaults().restart_window(),
+            default_restart_window()
+        );
+        assert_eq!(
+            config.host_defaults().max_restarts_per_window(),
+            default_max_restarts_per_window()
+        );
+
+        let overridden = VALID.replace(
+            "graceful_stop_timeout = 5_000",
+            "graceful_stop_timeout = 5_000\nrestart_window = 30_000\nmax_restarts_per_window = 2",
+        );
+        let config = parse_config(&overridden).expect("both keys are accepted");
+        assert_eq!(
+            config.host_defaults().restart_window(),
+            Duration::from_secs(30)
+        );
+        assert_eq!(config.host_defaults().max_restarts_per_window(), 2);
+    }
+
+    /// A zero for either key is refused rather than read as "never restart".
+    #[test]
+    fn a_zero_restart_intensity_is_refused_by_the_parser() {
+        for line in ["restart_window = 0", "max_restarts_per_window = 0"] {
+            let source = VALID.replace(
+                "graceful_stop_timeout = 5_000",
+                &format!("graceful_stop_timeout = 5_000\n{line}"),
+            );
+            assert!(
+                parse_config(&source).is_err(),
+                "expected `{line}` to be refused"
+            );
+        }
     }
 }

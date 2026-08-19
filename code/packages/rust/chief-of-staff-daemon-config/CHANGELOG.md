@@ -42,3 +42,6 @@
 - Accept an all-or-none Reolink pairing tuple for one exact bridge and pinned
   canonical network target, owner-only KEK, and exact-length owner-only
   username/password files only with explicit in-process Vault custody.
+- Accept optional `restart_window` (milliseconds) and `max_restarts_per_window`
+  keys under `[hosts.defaults]`. Omitting them keeps the reconciler's defaults, so
+  configs written before D18R R2 load unchanged.

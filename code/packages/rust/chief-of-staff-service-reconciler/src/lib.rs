@@ -15,6 +15,7 @@ use chief_of_staff_service_registry::{
 use core::fmt::{self, Display, Formatter};
 
 const RESTART_COUNTER_EXHAUSTED: &str = "restart counter exhausted";
+const RESTART_INTENSITY_EXCEEDED: &str = "restart intensity exceeded";
 
 /// Validated lifecycle phase reported by the process authority.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -239,22 +240,101 @@ pub trait HostSupervisor {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct ReconcileConfig {
     max_heartbeat_age_ns: u64,
+    restart_window_ns: u64,
+    max_restarts_per_window: u32,
 }
 
 impl ReconcileConfig {
     /// Require a non-zero maximum heartbeat age.
+    ///
+    /// The restart-intensity bound defaults to five restarts in sixty seconds.
+    /// Override it with [`Self::with_restart_intensity`].
     pub fn new(max_heartbeat_age_ns: u64) -> Result<Self, ConfigError> {
         if max_heartbeat_age_ns == 0 {
             return Err(ConfigError::ZeroHeartbeatAge);
         }
         Ok(Self {
             max_heartbeat_age_ns,
+            restart_window_ns: DEFAULT_RESTART_WINDOW_NS,
+            max_restarts_per_window: DEFAULT_MAX_RESTARTS_PER_WINDOW,
         })
+    }
+
+    /// Bound how often one host may be restarted (D18R R2).
+    ///
+    /// A zero window or a zero count is refused rather than silently meaning
+    /// "never restart". `RestartPolicy::Never` says that explicitly, and a
+    /// bound that quietly overrides a host's declared policy would be a
+    /// surprising way to discover it.
+    pub fn with_restart_intensity(
+        mut self,
+        window_ns: u64,
+        max_restarts: u32,
+    ) -> Result<Self, ConfigError> {
+        if window_ns == 0 || max_restarts == 0 {
+            return Err(ConfigError::ZeroRestartIntensity);
+        }
+        self.restart_window_ns = window_ns;
+        self.max_restarts_per_window = max_restarts;
+        Ok(self)
     }
 
     /// Return the maximum accepted heartbeat age.
     pub fn max_heartbeat_age_ns(self) -> u64 {
         self.max_heartbeat_age_ns
+    }
+
+    /// Return the restart-intensity window.
+    pub fn restart_window_ns(self) -> u64 {
+        self.restart_window_ns
+    }
+
+    /// Return the restarts permitted inside one window.
+    pub fn max_restarts_per_window(self) -> u32 {
+        self.max_restarts_per_window
+    }
+}
+
+/// Five restarts in sixty seconds.
+///
+/// Enough to ride out a transient dependency coming up slowly, few enough that
+/// a crash-on-startup loop is caught in a minute rather than whenever someone
+/// next looks at the machine.
+const DEFAULT_RESTART_WINDOW_NS: u64 = 60_000_000_000;
+const DEFAULT_MAX_RESTARTS_PER_WINDOW: u32 = 5;
+
+/// Decide the next restart-intensity window state, or refuse the restart.
+///
+/// Returns `None` when the host has used its whole budget inside the current
+/// window; the caller quarantines rather than restarting. Otherwise returns the
+/// window to record.
+///
+/// The window is a fixed span that resets once it elapses, not a per-restart
+/// sliding window over individual timestamps. That choice is deliberate: a
+/// sliding window needs every restart's timestamp, which is unbounded state to
+/// persist per host, and the difference between the two only shows up in how
+/// generous the boundary is. This is the version that fits in two durable
+/// numbers.
+fn next_restart_window(
+    previous_start_ns: Option<u64>,
+    previous_count: u32,
+    now_ns: u64,
+    window_ns: u64,
+    max_restarts: u32,
+) -> Option<(u64, u32)> {
+    match previous_start_ns {
+        // An open window that has not elapsed: spend from it.
+        Some(start) if now_ns.saturating_sub(start) < window_ns => {
+            if previous_count >= max_restarts {
+                None
+            } else {
+                Some((start, previous_count.saturating_add(1)))
+            }
+        }
+        // No window, or one that has elapsed: open a fresh one. A host that
+        // crashed twice a day for a year arrives here every time, which is the
+        // whole point of measuring a rate rather than a lifetime total.
+        _ => Some((now_ns, 1)),
     }
 }
 
@@ -263,11 +343,17 @@ impl ReconcileConfig {
 pub enum ConfigError {
     /// A zero heartbeat age would make every non-future heartbeat ambiguous.
     ZeroHeartbeatAge,
+    /// A zero restart window or count would silently mean "never restart",
+    /// overriding every host's declared policy.
+    ZeroRestartIntensity,
 }
 
 impl Display for ConfigError {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> fmt::Result {
-        formatter.write_str("maximum heartbeat age must be non-zero")
+        formatter.write_str(match self {
+            Self::ZeroHeartbeatAge => "maximum heartbeat age must be non-zero",
+            Self::ZeroRestartIntensity => "restart window and count must both be non-zero",
+        })
     }
 }
 
@@ -621,11 +707,58 @@ impl<'a> ServiceReconciler<'a> {
         } else {
             observed_previous_attempt || has_previous_attempt(previous)
         };
-        let (restart_count, last_restart_ns) = if retrying_claim {
-            (previous.restart_count(), previous.last_restart_ns())
+        let (restart_count, last_restart_ns, window) = if retrying_claim {
+            (
+                previous.restart_count(),
+                previous.last_restart_ns(),
+                (
+                    previous.restart_window_start_ns(),
+                    previous.restarts_in_window(),
+                ),
+            )
         } else if restarting {
+            // The intensity bound goes here, beside the lifetime counter and
+            // before it is spent, because this is the single point every
+            // restart passes through -- exited hosts, stale-heartbeat hosts,
+            // and the absent-host backoff path all reach `start_instance`.
+            //
+            // Quarantine rather than an error: the reconciler walks every host
+            // per tick, so a per-host failure raised out of the walk would take
+            // every other host down with it, and an agent that can crash itself
+            // on demand could disable supervision for the whole deployment.
+            // Quarantine is per host, durable, and already understood by the
+            // rest of this file.
+            let Some((window_start_ns, restarts_in_window)) = next_restart_window(
+                previous.restart_window_start_ns(),
+                previous.restarts_in_window(),
+                now_ns,
+                self.config.restart_window_ns(),
+                self.config.max_restarts_per_window(),
+            ) else {
+                let quarantined = HostObservation::new(
+                    HostStatus::Quarantined {
+                        until_ns: now_ns.saturating_add(self.config.restart_window_ns()),
+                        reason: RESTART_INTENSITY_EXCEEDED.to_string(),
+                    },
+                    None,
+                    previous.started_at_ns(),
+                    previous.last_heartbeat_ns(),
+                    None,
+                    previous.restart_count(),
+                    previous.last_restart_ns(),
+                )?
+                .with_restart_window(
+                    previous.restart_window_start_ns(),
+                    previous.restarts_in_window(),
+                )?;
+                return self.persist_status(&loaded, quarantined, ReconcileAction::Deferred);
+            };
             match previous.restart_count().checked_add(1) {
-                Some(count) => (count, Some(now_ns)),
+                Some(count) => (
+                    count,
+                    Some(now_ns),
+                    (Some(window_start_ns), restarts_in_window),
+                ),
                 None => {
                     let quarantined = HostObservation::new(
                         HostStatus::Quarantined {
@@ -643,7 +776,14 @@ impl<'a> ServiceReconciler<'a> {
                 }
             }
         } else {
-            (previous.restart_count(), previous.last_restart_ns())
+            (
+                previous.restart_count(),
+                previous.last_restart_ns(),
+                (
+                    previous.restart_window_start_ns(),
+                    previous.restarts_in_window(),
+                ),
+            )
         };
         let transition = HostObservation::new(
             if restarting {
@@ -657,7 +797,8 @@ impl<'a> ServiceReconciler<'a> {
             None,
             restart_count,
             last_restart_ns,
-        )?;
+        )?
+        .with_restart_window(window.0, window.1)?;
         let claimed = self.replace_observation(&loaded, transition)?;
         let registration = claimed.entry().registration();
         let host_name = registration.host_name().clone();
@@ -1648,4 +1789,199 @@ mod tests {
             "supervisor start failed for mail-host: offline"
         );
     }
+
+    // =======================================================================
+    // Restart intensity (D18R R2)
+    // =======================================================================
+    //
+    // These drive `ServiceReconciler`, not a supervisor. An earlier attempt at
+    // this rule was built inside `ProcessHostSupervisor` and every one of its
+    // tests drove the supervisor directly -- which is exactly why none of them
+    // caught that it bypassed quarantine, aborted the per-host walk, and failed
+    // its own tick on a clock comparison. The bound belongs where restarts are
+    // counted, and so do its tests.
+
+    /// The window function is the whole decision, so it is tested directly.
+    #[test]
+    fn the_restart_window_opens_spends_and_resets() {
+        let window = 1_000;
+        let max = 3;
+
+        // No window yet: open one with the first restart in it.
+        assert_eq!(
+            next_restart_window(None, 0, 500, window, max),
+            Some((500, 1))
+        );
+
+        // Inside the window: spend from it.
+        assert_eq!(
+            next_restart_window(Some(500), 1, 900, window, max),
+            Some((500, 2))
+        );
+
+        // Budget exhausted inside the window: refuse.
+        assert_eq!(next_restart_window(Some(500), 3, 900, window, max), None);
+
+        // The window elapsed, so the budget is fresh even though the count was
+        // exhausted. A host that crashes twice a day arrives here every time --
+        // which is the difference between a rate and a lifetime tally. The
+        // boundary itself counts as elapsed: `now - start` is not *less* than
+        // the window.
+        assert_eq!(
+            next_restart_window(Some(500), 3, 1_500, window, max),
+            Some((1_500, 1))
+        );
+
+        // One tick before the boundary the window is still open, so an
+        // exhausted budget is still refused.
+        assert_eq!(next_restart_window(Some(500), 3, 1_499, window, max), None);
+    }
+
+    /// A host restarted up to the bound is quarantined rather than restarted
+    /// again — and the reconcile walk keeps going.
+    #[test]
+    fn exceeding_the_restart_intensity_quarantines_the_host() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::stopped(),
+        );
+
+        let config = ReconcileConfig::new(100)
+            .unwrap()
+            .with_restart_intensity(1_000_000, 2)
+            .unwrap();
+
+        // Two restarts are inside the budget.
+        for expected in 1..=2 {
+            let exited =
+                SupervisorObservation::exited([7; 32], Some(9), Some(800), Some(900)).unwrap();
+            let mut supervisor = FakeSupervisor::with("mail-host", exited);
+            ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+                .reconcile_all(&mut supervisor, NOW)
+                .unwrap();
+            let persisted = load(&backend, "mail-host");
+            assert_eq!(persisted.observation().restarts_in_window(), expected);
+            assert_eq!(persisted.observation().status(), &HostStatus::Restarting);
+        }
+
+        // The third is refused.
+        let exited = SupervisorObservation::exited([7; 32], Some(9), Some(800), Some(900)).unwrap();
+        let mut supervisor = FakeSupervisor::with("mail-host", exited);
+        let report = ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+            .reconcile_all(&mut supervisor, NOW)
+            .expect("a per-host bound must not abort the walk");
+
+        assert!(
+            supervisor.starts.is_empty(),
+            "the refused restart must not have started anything"
+        );
+        let persisted = load(&backend, "mail-host");
+        assert!(
+            matches!(
+                persisted.observation().status(),
+                HostStatus::Quarantined { reason, .. } if reason.as_str() == RESTART_INTENSITY_EXCEEDED
+            ),
+            "expected an intensity quarantine, got {:?}",
+            persisted.observation().status()
+        );
+        assert_eq!(report.outcomes().len(), 1);
+    }
+
+    /// The window is durable, so the bound survives a daemon restart.
+    ///
+    /// Without this the counter would reset whenever the process did, and a
+    /// crash-looping host would be restarted forever by a daemon that itself
+    /// restarts — which is the failure this rule exists to stop.
+    #[test]
+    fn the_restart_window_survives_a_reload() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::stopped(),
+        );
+        let config = ReconcileConfig::new(100)
+            .unwrap()
+            .with_restart_intensity(1_000_000, 2)
+            .unwrap();
+
+        let exited = SupervisorObservation::exited([7; 32], Some(9), Some(800), Some(900)).unwrap();
+        let mut supervisor = FakeSupervisor::with("mail-host", exited);
+        ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+            .reconcile_all(&mut supervisor, NOW)
+            .unwrap();
+
+        // Re-read through a fresh registry handle, as a restarted daemon would.
+        let reloaded = load(&backend, "mail-host");
+        assert_eq!(reloaded.observation().restarts_in_window(), 1);
+        assert_eq!(reloaded.observation().restart_window_start_ns(), Some(NOW));
+    }
+
+    /// A zero window or count is refused rather than silently meaning "never".
+    #[test]
+    fn a_zero_restart_intensity_is_refused() {
+        let config = ReconcileConfig::new(100).unwrap();
+        assert!(config.with_restart_intensity(0, 5).is_err());
+        assert!(ReconcileConfig::new(100)
+            .unwrap()
+            .with_restart_intensity(1_000, 0)
+            .is_err());
+    }
+
+    /// The quarantine lifts one window later, and the host gets a fresh budget.
+    ///
+    /// This is the half of the rule that keeps it a *bound* rather than a
+    /// death sentence: a host that crash-loops through a bad dependency is
+    /// paused, not permanently disabled, and recovers without an operator.
+    #[test]
+    fn the_intensity_quarantine_lifts_and_the_budget_resets() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::stopped(),
+        );
+        let window_ns = 1_000;
+        let config = ReconcileConfig::new(100)
+            .unwrap()
+            .with_restart_intensity(window_ns, 2)
+            .unwrap();
+
+        let tick = |now: u64| {
+            let exited =
+                SupervisorObservation::exited([7; 32], Some(9), Some(800), Some(900)).unwrap();
+            let mut supervisor = FakeSupervisor::with("mail-host", exited);
+            ServiceReconciler::new(ServiceRegistry::new(&backend), config)
+                .reconcile_all(&mut supervisor, now)
+                .unwrap();
+            !supervisor.starts.is_empty()
+        };
+
+        // Spend the budget, then trip the bound. The window opened at NOW.
+        assert!(tick(NOW));
+        assert!(tick(NOW));
+        assert!(!tick(NOW), "the third restart is refused");
+
+        // Still inside the quarantine: no restart.
+        assert!(!tick(NOW + window_ns - 1), "the quarantine has not lifted");
+
+        // Past it: restarted, on a window that opened fresh at the new tick.
+        let resumed_at = NOW + window_ns;
+        assert!(tick(resumed_at), "the quarantine must lift");
+        let persisted = load(&backend, "mail-host");
+        assert_eq!(
+            persisted.observation().restart_window_start_ns(),
+            Some(resumed_at)
+        );
+        assert_eq!(persisted.observation().restarts_in_window(), 1);
+    }
+
 }

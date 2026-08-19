@@ -74,3 +74,5 @@
   WebSocket serving, periodic reconciliation, and cooperative process shutdown.
 - Bound and race-check configuration-file loading without following a final
   symlink.
+- Apply the configured restart-intensity bound to the reconciler, and pin the
+  crate's default against the reconciler's own so the two cannot drift apart.
