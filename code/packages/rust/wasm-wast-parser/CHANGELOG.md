@@ -1,5 +1,19 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.44 — 2026-08-19 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert text-form (task #177-179)
+
+### Added
+
+- `SimdOpKind::TruncSatF32x4S`/`TruncSatF32x4U`/`ConvertI32x4S`/
+  `ConvertI32x4U` join the shared "no immediate beyond the opcode byte
+  itself" SIMD dispatch arm (already used for `f32x4.abs`/`mul`/`min`)
+  in both the folded and flat instruction encoders -- these change the
+  lane TYPE at the runtime/type-checker level, but that distinction is
+  invisible at this encoding shape, same as PR19's own additions.
+- 1 new test covering all 4 new ops (folded + flat), confirming each
+  encodes its real 2-byte LEB128 sub-opcode (`0xF8`/`0xF9`/`0xFA`/
+  `0xFB`, all `>= 128`).
+
 ## 0.1.43 — 2026-08-19 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min text-form (task #174-176)
 
 ### Added

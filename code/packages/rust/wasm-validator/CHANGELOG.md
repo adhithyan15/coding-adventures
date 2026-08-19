@@ -2,6 +2,21 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.34] - 2026-08-19 (task #177-179 — SIMD widen PR20: i32x4<->f32x4 trunc_sat/convert type rules)
+
+### Added
+
+- `SimdOpKind::TruncSatF32x4S | TruncSatF32x4U | ConvertI32x4S |
+  ConvertI32x4U` join the existing unary-`v128`-op type-check arm (pop
+  one `V128`, push `V128`) -- even though these change the LANE TYPE
+  (f32 lanes <-> i32 lanes) at runtime, WASM's type system doesn't
+  distinguish "i32-lane v128" from "f32-lane v128"; both are just the
+  opaque `V128` type here, so no new type-checker machinery is needed.
+- 2 new tests: a valid-module case covering all 4 new ops, plus an
+  invalid-module regression confirming `f32x4.convert_i32x4_u`
+  genuinely rejects an `i32` in the `v128` operand slot, not just
+  accepting whatever's on the stack.
+
 ## [0.2.33] - 2026-08-19 (task #174-176 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min type rules)
 
 ### Added

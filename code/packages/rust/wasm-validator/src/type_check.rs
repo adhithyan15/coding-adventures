@@ -1566,7 +1566,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::Not
                     | wasm_opcodes::SimdOpKind::AbsI64x2
                     | wasm_opcodes::SimdOpKind::NegI64x2
-                    | wasm_opcodes::SimdOpKind::AbsF32x4 => {
+                    | wasm_opcodes::SimdOpKind::AbsF32x4
+                    | wasm_opcodes::SimdOpKind::TruncSatF32x4S
+                    | wasm_opcodes::SimdOpKind::TruncSatF32x4U
+                    | wasm_opcodes::SimdOpKind::ConvertI32x4S
+                    | wasm_opcodes::SimdOpKind::ConvertI32x4U => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
@@ -1577,7 +1581,13 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // push-one-`v128` at the type level, same as
                         // `Neg`/`Abs`. `f32x4.abs` (SIMD widen PR19)
                         // joins too -- a pure bit operation, no new
-                        // type-checker machinery needed.
+                        // type-checker machinery needed. `TruncSatF32x4S`/
+                        // `_U`/`ConvertI32x4S`/`_U` (SIMD widen PR20) join
+                        // too: even though these change the LANE TYPE
+                        // (f32 lanes <-> i32 lanes), WASM's type system
+                        // doesn't distinguish "i32-lane v128" from
+                        // "f32-lane v128" -- both are just the opaque
+                        // `V128` type here, same pop-one-push-one shape.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
