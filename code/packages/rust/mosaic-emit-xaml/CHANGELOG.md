@@ -1,5 +1,23 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — width/height 100% become stretch alignments
+
+`width: 100%` is a *sizing* property in CSS but an *alignment* in XAML: WinUI's
+`Width` is an absolute `Double` with no percentage form, and the way an element
+fills its parent's cross axis is `HorizontalAlignment="Stretch"`.
+
+Value translation alone could not express that, so the property was dropped
+outright and the element fell back to sizing itself to its content.
+
+Deliberately narrow: only `100%` maps this cleanly. Other percentages need
+proportional (star) sizing, which is a `Grid` change of a different magnitude —
+those still drop rather than being approximated.
+
+In the generated TaskApp this turns 0 stretch alignments into 14. Visible
+effect is real but modest — the project rail rows now fill their column instead
+of collapsing to a sliver. It does **not** fix the app hugging the top-left of
+an empty window; that needs the flex→Grid lowering.
+
 ## [Unreleased] — HostButton labels from row expressions
 
 A `HostButton` whose `label` is a row expression emitted **no `Content`
