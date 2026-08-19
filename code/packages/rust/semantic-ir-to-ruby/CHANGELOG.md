@@ -1,5 +1,116 @@
 # Changelog
 
+## 0.26.0 — SIR22 "APL addendum" (Phase A Slice 3)
+
+Part of the SIR22/SIR23 backend-expansion initiative (see
+`code/specs/SIR22-array-matrix-semantic-ir.md`'s "Backend impact"
+section). This backend now implements the nine-node SIR22 "APL addendum"
+that Slice 2 (0.25.0, merged) deferred: `Reduce`/`Scan`/`OuterProduct`/
+`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`. These nine
+share `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}` with the base
+cut, so no new feature flags are added — only new node coverage.
+
+**New runtime functions** (`runtime.rs`'s "SIR22 addendum" section):
+`sir_array_reduce`/`sir_array_scan`/`sir_array_outer`/`sir_array_shape`/
+`sir_array_reshape`/`sir_array_index_generator`/`sir_array_index_of`/
+`sir_array_ravel`/`sir_array_catenate`, plus the internal
+`sir_array_flatten_row_major` helper `reshape`/`ravel` both need. All are
+1:1 ports of `semantic-ir-to-javascript`'s own already-proven addendum
+functions (themselves 1:1 ports of `apl_runtime::builtins`/
+`array_runtime::ops`), reusing this crate's existing `sir_array_apply_op`/
+`sir_array_checked_shape_size`/`sir_array_ndarray`/`sir_array_get`/
+`sir_array_nrows`/`sir_array_ncols`/`sir_array_to_array_value` helpers from
+Slice 2 rather than duplicating any of that logic.
+
+**New `emit.rs` arms**: the nine node kinds each lower to a call into their
+`sir_array_*` counterpart. `Reduce`/`Scan`/`OuterProduct` carry an
+`ElementwiseOpKind` and reuse `elementwise_op_ruby_name` exactly like
+`ElementwiseOp` does; the other six have no `op` field and just recurse
+into their operand(s). `Reshape`'s field order (`shape, target`) needs no
+reordering at the call site — `sir_array_reshape(shape_arg, target)` takes
+the same order.
+
+**Non-obvious ported behaviour, called out explicitly because a naive
+reading of this crate's own `Expr::IndexGenerator`/`Expr::IndexOf` doc
+comments (and the SIR22 spec prose) would get it backwards**:
+- `IndexGenerator`/`IndexOf` are **1-based** (`⍳5` = `[1, 2, 3, 4, 5]`;
+  "not found" reports `haystack.length + 1`, never `-1`/`nil`) — a
+  deliberate exception to this domain's otherwise-universal 0-based
+  indexing. `nodes.rs`'s own doc comment on `Expr::IndexGenerator` and the
+  SIR22 spec's prose both describe this as "0-based", but that is stale
+  relative to the actual, tested ground truth: `apl-runtime`'s own
+  `index_generator_produces_one_based_run`/`index_of_finds_and_reports_not_found`
+  tests, and `semantic-ir-to-javascript`'s own shipped `indexGenerator`/
+  `indexOf` (`out[i] = i + 1`, `idx === -1 ? haystack.length + 1 : idx + 1`).
+  This backend matches the shipped, tested behaviour for cross-backend
+  parity rather than the stale doc prose; the doc drift is a pre-existing
+  issue upstream of this crate, out of this slice's scope to fix.
+- `Reduce`/`Scan` on a rank-2 (matrix) `target` fold **each row
+  independently** across its columns — not the whole matrix into one
+  value. Column-major storage means `(row, col)` lives at `col * r + row`,
+  so the row loop must seed from `d[row]` (column 0) and then walk
+  `d[col * r + row]`; swapping `row`/`col` here silently transposes the
+  result instead of raising, which the port replicates the JS reference's
+  own warning about verbatim in a doc comment.
+- `Reshape` fills its target shape in **row-major** order (APL's own
+  convention: last axis varies fastest) but this domain's storage is
+  **column-major** — so the row-major-filled sequence must be
+  **transposed** into column-major storage before the result is
+  constructed. Handing the row-major sequence straight to the
+  `SirNDArray` constructor would silently reshape column-major instead,
+  producing a wrong answer that still looks plausible (right multiset of
+  values, wrong positions). `sir_array_flatten_row_major` (the shared
+  `reshape`/`ravel` helper) has the mirror-image concern: it must walk a
+  column-major matrix "row, then column" via `sir_array_get` to produce
+  true row-major order, never return the raw column-major buffer.
+- `Shape` of a scalar returns the **empty vector** (`shape=[0]`,
+  `data=[]`), never a scalar wrapping `0` — `⍴5` is a length-0 vector, not
+  a rank-0 value. The distinction only shows up structurally (a second
+  `Shape` call on the result behaves differently for the two), not in any
+  single displayed value — see the new test
+  `shape_of_a_scalar_is_the_empty_vector_not_a_scalar` for the executable
+  proof.
+
+**Security**: every function that computes an output size from operand
+data validates it via `sir_array_checked_shape_size` *before* allocating,
+matching the JS reference's DoS-safety discipline exactly — `outer`'s
+`[m, n]` output (two independent operand lengths whose PRODUCT isn't
+bounded by either alone), `index_of`'s `haystack.length * needle.length`
+scan-work product, `catenate`'s combined length (checked ONCE up front,
+regardless of which of the five rank combinations follows — a script that
+repeatedly self-catenates doubles its size every line with no other
+ceiling), `index_generator`'s `n`, and `reshape`'s target size. Reused
+`/security-review` before push; no CRITICAL/HIGH/MEDIUM findings against
+this diff.
+
+**Removed**: the Slice 2 pre-emit rejection check for these nine node
+kinds (`ScanHit::Sir22AddendumNode` in `emit.rs`, its `compile()` match arm
+in `lib.rs`) — now dead once real codegen exists, so the variant and its
+handling are deleted rather than left unreachable. `Scan::expr`'s
+addendum arms now recurse into their sub-expression(s) instead of
+rejecting, matching every other composite-expr arm (`MatMul`/
+`ElementwiseOp`, etc.) — a deferred builtin or injectable name nested
+inside one of these nine nodes is still caught by the shared pre-emit
+scan.
+
+**`tests/sir22_array.rs`**: 12 new execution tests (up from 8), each
+hand-building a `Module`, compiling it, and running the result through a
+real `ruby` interpreter (skips gracefully when absent) — `reduce` on both
+a vector and a matrix (the row-independent-fold/column-major-indexing
+case), `scan` on a vector, `outer` product of two vectors, `shape` of a
+scalar (the empty-vector proof above) and of a matrix, `reshape` (the
+row-major-fill-then-transpose-to-column-major proof above, picked at a
+non-square shape so a transposition bug would produce a wrong-but-
+plausible answer rather than crash), `index_generator` (1-based),
+`index_of` found and not-found, `ravel` of a matrix, and `catenate` of two
+vectors and of two matrices with equal row counts. Since `ArrayLit`
+always builds rank-2 (`1xn`) storage and this domain's addendum functions
+often require a genuine rank-1 vector operand, most tests route a `1xn`
+`ArrayLit` through `Ravel` (or `Shape`, for `Reshape`'s shape argument)
+first to obtain one — exactly as a compiled APL program would.
+
+`semantic-ir-to-ruby` 0.25.0 -> 0.26.0.
+
 ## 0.25.0 — SIR22 array/matrix base cut (second-wave backend rollout, Phase A Slice 2)
 
 Part of the SIR22/SIR23 backend-expansion initiative (opening

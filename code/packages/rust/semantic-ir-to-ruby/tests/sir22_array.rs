@@ -1,5 +1,7 @@
-//! SIR22 base-cut execution proof: `ArrayLit`/`Range`/
-//! `MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet` on the
+//! SIR22 execution proof, base cut + "APL addendum": `ArrayLit`/`Range`/
+//! `MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/`Stmt::IndexSet` (Phase A
+//! Slice 2) and `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+//! `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` (Phase A Slice 3) on the
 //! Ruby backend — hand-builds a module calling each node directly
 //! (bypassing the frontend, since no frontend targets this backend for
 //! SIR22 yet), emits Ruby, runs it with a real `ruby` interpreter, and
@@ -7,11 +9,11 @@
 //! not fail) when no `ruby` is on `PATH`.
 //!
 //! Ported from `semantic-ir-to-javascript`'s own already-proven
-//! `tests/sir22_array.rs` — same worked examples, adapted to this
-//! backend's own value-type conventions (Ruby preserves native
-//! Integer/Float type propagation rather than JS's uniform-double
-//! storage; see `runtime.rs`'s own module doc for why an all-integer
-//! computation here prints without a spurious `.0`).
+//! `tests/sir22_array.rs` and `runtime.rs` addendum doc comments — same
+//! worked examples, adapted to this backend's own value-type conventions
+//! (Ruby preserves native Integer/Float type propagation rather than JS's
+//! uniform-double storage; see `runtime.rs`'s own module doc for why an
+//! all-integer computation here prints without a spurious `.0`).
 //!
 //! Every test constructs `Module`s directly via `print_stmt`'s scalar
 //! `IndexGet` reads (top-left/bottom-right element, etc.) — sidesteps
@@ -256,24 +258,278 @@ fn index_set_mutates_in_place() {
     }
 }
 
-// ── SIR22 "APL addendum": deferred, rejected cleanly (compile-time) ────
+// ── SIR22 "APL addendum" (Phase A Slice 3): real execution proofs ──────
+//
+// `ArrayLit` always builds RANK-2 storage (even a single-row literal is a
+// `1xn` matrix, matching MATLAB's own row-vector convention -- see
+// `sir_array_from_rows`), and so does `Range`/`IndexGet`'s `Whole`
+// selector. But several addendum functions (`Reduce`/`OuterProduct`'s
+// operands, `Reshape`'s `shape` argument, `IndexOf`'s `haystack`) require
+// a genuine RANK-1 vector (`shape == [n]`, not `[1, n]`). `Ravel`/`Shape`
+// are themselves the addendum's own way to produce one (their outputs are
+// always rank <= 1) -- so most tests below route a `1xn` `ArrayLit`
+// through `Ravel` first to get a real vector operand, exactly as a
+// compiled APL program would.
 
 #[test]
-fn reduce_node_is_rejected_cleanly_not_a_compile_time_panic() {
-    // `Reduce` shares NDArrays/MatrixOps/ArrayColumnMajor with the base
-    // cut, so the ordinary feature-flag check alone can't reject it --
-    // proves the dedicated `ScanHit::Sir22AddendumNode` pre-emit scan
-    // does, with a clean `Err`, not an `emit_expr` `unreachable!` panic.
-    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)]]);
-    let m = array_module(vec![print_stmt(Expr::Reduce {
+fn reduce_folds_a_vector_left_to_right() {
+    // +/[1 2 3 4] = 10 (left fold: ((1+2)+3)+4). The vector operand comes
+    // from `Ravel` (a `1x4` `ArrayLit` is rank-2, not rank-1).
+    let row = array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4)]]);
+    let vector = Expr::Ravel { target: Box::new(row), span: s() };
+    let reduced = Expr::Reduce {
         op: ElementwiseOpKind::Add,
-        target: Box::new(target),
+        target: Box::new(vector),
         span: s(),
-    })]);
-    let err = semantic_ir_to_ruby::compile(&m).expect_err("Reduce must be rejected, not emitted");
-    assert!(
-        err.message.contains("Reduce"),
-        "error should name the rejected node: {}",
-        err.message
-    );
+    };
+    let m = array_module(vec![print_stmt(index_get(reduced, vec![scalar(0)]))]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "10\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn reduce_on_a_matrix_folds_each_row_independently() {
+    // +/ on [[1 2 3];[4 5 6]] folds EACH ROW across its columns
+    // independently -- [1+2+3, 4+5+6] = [6, 15]. This is the exact
+    // column-major-indexing case `runtime.rs`'s own doc comment warns is
+    // "the single easiest place to introduce a wrong-answer bug": getting
+    // `row`/`col` swapped here would silently transpose the result
+    // instead of raising.
+    let a = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let reduced = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(a), span: s() };
+    let m = array_module(vec![
+        let_binding("r", reduced),
+        print_stmt(index_get(local("r"), vec![scalar(0)])),
+        print_stmt(index_get(local("r"), vec![scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "6\n15\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn scan_on_a_vector_keeps_every_prefix_fold() {
+    // +\[1 2 3 4] = [1, 3, 6, 10] -- every prefix sum, not just the last
+    // (unlike `Reduce`, which only keeps the final fold).
+    let row = array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4)]]);
+    let vector = Expr::Ravel { target: Box::new(row), span: s() };
+    let scanned = Expr::Scan { op: ElementwiseOpKind::Add, target: Box::new(vector), span: s() };
+    let m = array_module(vec![
+        let_binding("sc", scanned),
+        print_stmt(index_get(local("sc"), vec![scalar(0)])),
+        print_stmt(index_get(local("sc"), vec![scalar(1)])),
+        print_stmt(index_get(local("sc"), vec![scalar(2)])),
+        print_stmt(index_get(local("sc"), vec![scalar(3)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n3\n6\n10\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn outer_product_applies_op_to_every_pair() {
+    // [1 2] outer+ [10 20 30] -> [[11 21 31];[12 22 32]] (shape [2,3]:
+    // out(i,j) = a[i] + b[j]).
+    let va = Expr::Ravel { target: Box::new(array_lit(vec![vec![ilit(1), ilit(2)]])), span: s() };
+    let vb = Expr::Ravel {
+        target: Box::new(array_lit(vec![vec![ilit(10), ilit(20), ilit(30)]])),
+        span: s(),
+    };
+    let outer = Expr::OuterProduct {
+        op: ElementwiseOpKind::Add,
+        lhs: Box::new(va),
+        rhs: Box::new(vb),
+        span: s(),
+    };
+    let m = array_module(vec![
+        let_binding("o", outer),
+        print_stmt(index_get(local("o"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("o"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "11\n32\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_scalar_is_the_empty_vector_not_a_scalar() {
+    // ⍴5 must be a length-0 VECTOR (shape=[0], data=[]), never a scalar
+    // wrapping the value 0. Applying `Shape` a SECOND time distinguishes
+    // the two: the correct result's OWN shape is [1] (one dimension,
+    // whose value is 0), directly readable -- whereas a wrong "scalar
+    // containing 0" implementation (shape=[], data=[0]) would make the
+    // SECOND `Shape` call produce an EMPTY vector instead (shape=[0],
+    // data=[]), which raises on this test's own `index_get` -- so a
+    // regression here fails LOUDLY (non-zero exit), not silently.
+    let inner = Expr::Shape { target: Box::new(ilit(5)), span: s() };
+    let outer = Expr::Shape { target: Box::new(inner), span: s() };
+    let m = array_module(vec![print_stmt(index_get(outer, vec![scalar(0)]))]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "0\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_matrix_returns_its_dimensions() {
+    let a = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let sh = Expr::Shape { target: Box::new(a), span: s() };
+    let m = array_module(vec![
+        let_binding("sh", sh),
+        print_stmt(index_get(local("sh"), vec![scalar(0)])),
+        print_stmt(index_get(local("sh"), vec![scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2\n3\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn reshape_fills_row_major_then_stores_column_major() {
+    // Reshape [1 2 3 4 5 6] (a row-major source) into a 2x3 matrix. APL's
+    // reshape fills the LAST axis fastest (row-major): row 0 gets
+    // [1 2 3], row 1 gets [4 5 6]. This domain's storage is column-major,
+    // so a regression that hands the row-major `filled` sequence straight
+    // to storage would silently TRANSPOSE the result -- `get(0,1)` would
+    // read 3 instead of 2, `get(1,0)` would read 2 instead of 4 -- a wrong
+    // answer that still looks plausible (right multiset of values, wrong
+    // positions).
+    let dims_source = array_lit(vec![
+        vec![ilit(0), ilit(0), ilit(0)],
+        vec![ilit(0), ilit(0), ilit(0)],
+    ]); // a throwaway 2x3 matrix, used only for its `Shape` ([2, 3]) --
+        // `Shape`'s own output is a genuine rank-1 vector, which is what
+        // `Reshape`'s `shape` argument requires (rank <= 1).
+    let shape_arg = Expr::Shape { target: Box::new(dims_source), span: s() };
+    let data_source =
+        array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5), ilit(6)]]);
+    let reshaped = Expr::Reshape {
+        shape: Box::new(shape_arg),
+        target: Box::new(data_source),
+        span: s(),
+    };
+    let m = array_module(vec![
+        let_binding("r", reshaped),
+        print_stmt(index_get(local("r"), vec![scalar(0), scalar(1)])),
+        print_stmt(index_get(local("r"), vec![scalar(1), scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2\n4\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn index_generator_is_one_based_not_zero_based() {
+    // ⍳5 = [1 2 3 4 5] -- a deliberate exception to this domain's
+    // otherwise-universal 0-based indexing (`apl-runtime`'s own
+    // `index_generator_produces_one_based_run` test is the ground truth
+    // this ports; the SIR22 spec's/`nodes.rs`'s own prose calling this
+    // "0-based" is stale relative to the shipped `apl-runtime`/JS-backend
+    // behaviour, which this backend matches for cross-backend parity).
+    let ig = Expr::IndexGenerator { count: Box::new(ilit(5)), span: s() };
+    let m = array_module(vec![
+        let_binding("g", ig),
+        print_stmt(index_get(local("g"), vec![scalar(0)])),
+        print_stmt(index_get(local("g"), vec![scalar(4)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n5\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn index_of_finds_and_reports_not_found_as_length_plus_one() {
+    // haystack [10 20 30] ⍳ needle [20 99]: 20 is at (1-based) position 2;
+    // 99 is not found, reported as haystack.length + 1 = 4 -- NEVER -1 or
+    // nil, always a valid in-range position.
+    let haystack = Expr::Ravel {
+        target: Box::new(array_lit(vec![vec![ilit(10), ilit(20), ilit(30)]])),
+        span: s(),
+    };
+    let needle = Expr::Ravel {
+        target: Box::new(array_lit(vec![vec![ilit(20), ilit(99)]])),
+        span: s(),
+    };
+    let found =
+        Expr::IndexOf { haystack: Box::new(haystack), needle: Box::new(needle), span: s() };
+    let m = array_module(vec![
+        let_binding("f", found),
+        print_stmt(index_get(local("f"), vec![scalar(0)])),
+        print_stmt(index_get(local("f"), vec![scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2\n4\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn ravel_flattens_a_matrix_in_row_major_order() {
+    // ,[[1 2];[3 4];[5 6]] = [1 2 3 4 5 6] -- row-major order (last axis
+    // fastest), even though the source is stored column-major.
+    let a = array_lit(vec![
+        vec![ilit(1), ilit(2)],
+        vec![ilit(3), ilit(4)],
+        vec![ilit(5), ilit(6)],
+    ]);
+    let raveled = Expr::Ravel { target: Box::new(a), span: s() };
+    let m = array_module(vec![
+        let_binding("v", raveled),
+        print_stmt(index_get(local("v"), vec![scalar(0)])),
+        print_stmt(index_get(local("v"), vec![scalar(1)])),
+        print_stmt(index_get(local("v"), vec![scalar(2)])),
+        print_stmt(index_get(local("v"), vec![scalar(3)])),
+        print_stmt(index_get(local("v"), vec![scalar(4)])),
+        print_stmt(index_get(local("v"), vec![scalar(5)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n2\n3\n4\n5\n6\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn catenate_of_two_vectors_concatenates_end_to_end() {
+    let a = Expr::Ravel { target: Box::new(array_lit(vec![vec![ilit(1), ilit(2)]])), span: s() };
+    let b = Expr::Ravel {
+        target: Box::new(array_lit(vec![vec![ilit(3), ilit(4), ilit(5)]])),
+        span: s(),
+    };
+    let cat = Expr::Catenate { lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("c", cat),
+        print_stmt(index_get(local("c"), vec![scalar(0)])),
+        print_stmt(index_get(local("c"), vec![scalar(4)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n5\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
+}
+
+#[test]
+fn catenate_of_two_matrices_with_equal_rows_appends_columns() {
+    // [[1 2];[3 4]] , [[5];[6]] -> [[1 2 5];[3 4 6]] (equal row counts;
+    // `rhs`'s columns are appended after `lhs`'s own).
+    let a = array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)]]);
+    let b = array_lit(vec![vec![ilit(5)], vec![ilit(6)]]);
+    let cat = Expr::Catenate { lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("c", cat),
+        print_stmt(index_get(local("c"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("c"), vec![scalar(0), scalar(2)])),
+        print_stmt(index_get(local("c"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n5\n6\n"),
+        None => eprintln!("skip: no ruby on PATH"),
+    }
 }
