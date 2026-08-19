@@ -1404,11 +1404,47 @@ fn discover_col_widths_slot(host_table: &LayoutNode) -> Option<String> {
 /// The same reasoning is what makes the existing `For`-delegate sizing
 /// (see [`emit_for_qml`]) safe; this helper generalises that fix.
 fn content_sizing_lines(depth: usize) -> String {
+    content_sizing_lines_avoiding(depth, &HashSet::new())
+}
+
+/// [`content_sizing_lines`], but skipping any dimension whose property
+/// name is already declared on the same QML object.
+///
+/// A MIL slot named `implicit-width` camel-cases to `implicitWidth` and
+/// is emitted as `property real implicitWidth: 0` on the root `Item`.
+/// QML tolerates that on its own — the declaration simply shadows the
+/// inherited property — but pairing it with our `implicitWidth: …`
+/// binding on the *same object* is a hard load failure:
+///
+/// ```text
+/// B.qml:8 Property value set multiple times
+/// ```
+///
+/// (Verified against Qt 6.8.1: the shadowing declaration alone loads
+/// `Ready`; adding the binding turns the whole component into an
+/// `Error`.) Emitting the binding unconditionally would therefore break
+/// a component that used to work, so the author's slot wins and we skip
+/// that dimension. Only the root can hit this — slots are declared
+/// nowhere else — but the filter is applied through one code path so the
+/// invariant can't drift.
+fn content_sizing_lines_avoiding(depth: usize, declared: &HashSet<String>) -> String {
     let pad = "    ".repeat(depth);
-    format!(
-        "{pad}implicitWidth: childrenRect.x + childrenRect.width\n\
-         {pad}implicitHeight: childrenRect.y + childrenRect.height\n"
-    )
+    let mut out = String::new();
+    if !declared.contains("implicitWidth") {
+        writeln!(
+            out,
+            "{pad}implicitWidth: childrenRect.x + childrenRect.width"
+        )
+        .unwrap();
+    }
+    if !declared.contains("implicitHeight") {
+        writeln!(
+            out,
+            "{pad}implicitHeight: childrenRect.y + childrenRect.height"
+        )
+        .unwrap();
+    }
+    out
 }
 
 /// Compile a three-file Mosaic pipeline triple to a QML source file.
@@ -1474,7 +1510,16 @@ fn from_pipeline_with_runtime_policy(
     writeln!(out, "Item {{").unwrap();
     writeln!(out, "    id: mosaicRoot").unwrap();
     writeln!(out, "    // Component: {name}").unwrap();
-    out.push_str(&content_sizing_lines(1));
+    // Slots become `property` declarations on this same root object, so a
+    // slot that camel-cases onto one of the sizing property names must
+    // suppress our binding for that dimension — see
+    // [`content_sizing_lines_avoiding`].
+    let root_declared: HashSet<String> = interface
+        .slots
+        .iter()
+        .map(|s| to_camel_case_first_lower(&s.name))
+        .collect();
+    out.push_str(&content_sizing_lines_avoiding(1, &root_declared));
     if require_runtime {
         writeln!(out, "    required property var mosaicHost").unwrap();
     } else {
@@ -10993,6 +11038,56 @@ mod tests {
         assert!(
             root_open < height_line && height_line < tree_open,
             "implicitHeight must be a property of the root Item:\n{out}"
+        );
+    }
+
+    /// A slot named `implicit-width` camel-cases to `implicitWidth` and
+    /// is emitted as a `property` declaration on the root. QML accepts
+    /// that shadowing declaration on its own, but pairing it with our
+    /// sizing binding on the same object is a hard load failure
+    /// (`Property value set multiple times`, verified on Qt 6.8.1). The
+    /// author's slot must therefore win for that dimension — emitting
+    /// both would break a component that previously worked.
+    #[test]
+    fn sizing_binding_yields_to_a_colliding_slot_name() {
+        let layout = LayoutDef {
+            component_name: "Odd".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(
+            &component(
+                "Odd",
+                vec![slot("implicit-width", SlotType::Number, false)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Odd"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            !out.contains("implicitWidth: childrenRect"),
+            "must not bind a dimension the slot already declares:\n{out}"
+        );
+        assert!(
+            out.contains("property real implicitWidth"),
+            "the slot declaration must survive:\n{out}"
+        );
+        // The uncontested dimension is still sized.
+        assert!(
+            out.contains("implicitHeight: childrenRect.y + childrenRect.height"),
+            "the other dimension must still be content-sized:\n{out}"
         );
     }
 
