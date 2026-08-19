@@ -16,8 +16,13 @@ final class PaintVmAsciiTests: XCTestCase {
     // -------------------------------------------------------------------
 
     func testVersionIsNonEmptySemver() {
-        XCTAssertFalse(version.isEmpty)
-        XCTAssertTrue(version.range(of: #"^\d+\.\d+\.\d+$"#, options: .regularExpression) != nil)
+        // Module-qualified: on Darwin, XCTestCase itself has a `version`
+        // class member, which shadows a bare reference to this module's
+        // top-level `version` constant inside an XCTestCase subclass (a
+        // Linux/Windows swift-corelibs-xctest build doesn't have that
+        // member, so this only surfaces on macOS).
+        XCTAssertFalse(PaintVmAscii.version.isEmpty)
+        XCTAssertTrue(PaintVmAscii.version.range(of: #"^\d+\.\d+\.\d+$"#, options: .regularExpression) != nil)
     }
 
     // -------------------------------------------------------------------
