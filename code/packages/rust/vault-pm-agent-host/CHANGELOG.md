@@ -57,4 +57,22 @@
   (`ConnectionSlotGuard`) so a panic inside a handler still frees its slot. A
   connection accepted past the cap is dropped immediately, the same
   no-response treatment an unauthorized peer or a malformed frame already
-  gets.
+  gets. Thread creation itself now goes through the fallible
+  `Builder::spawn_scoped` rather than the panicking `Scope::spawn`, so a
+  platform unable to create one more thread degrades to "drop this
+  connection" instead of crashing the whole agent process.
+- Security review, before first release: `state::AgentState::unlock` never
+  validated `vault_name` against a real configured vault list and retained
+  unconditionally, so a same-user peer could grow the retention map — and
+  this process's memory — without bound by naming a fresh, unique vault on
+  every connection; the per-connection concurrency cap above does not see
+  this, since each such request is its own short, sequential connection, not
+  a concurrency problem. `unlock` now refuses a *new* name once
+  `state::MAX_RETAINED_VAULTS` (64) is reached (replacing an already-retained
+  name is never refused by it) and returns `false` rather than silently
+  accepting; the server maps a refusal to the new
+  `AgentErrorCode::CapacityExceeded` response. `unlock` also now clamps
+  `idle_bound` to `state::MAX_IDLE_BOUND` (24 hours) regardless of what the
+  request asks for, so a caller cannot make a retained passphrase
+  effectively immortal by requesting a near-`u64::MAX` bound and defeating
+  the sweep thread that way.

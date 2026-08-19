@@ -23,6 +23,34 @@ use coding_adventures_zeroize::Zeroizing;
 use std::collections::BTreeMap;
 use std::time::{Duration, Instant};
 
+/// Most vaults this store will ever retain a passphrase for at once.
+///
+/// This store trusts every `unlock` it receives (§4.2) and never validates
+/// `vault_name` against any real configured vault list, so nothing else
+/// bounds how many distinct names a same-user peer could name. Without this
+/// cap, a peer looping `connect -> Unlock{vault_name: <unique>, ...} ->
+/// disconnect` grows this map — and this process's memory — without bound.
+/// [`MAX_CONCURRENT_CONNECTIONS`](crate::server) does not help here: each
+/// such request is its own short, sequential connection, not a concurrency
+/// problem. A real installation retains at most a handful of vaults
+/// (`VLT-PM07` bounds one configuration to a small fixed number); this is a
+/// generous multiple of that.
+const MAX_RETAINED_VAULTS: usize = 64;
+
+/// Longest idle bound this store will honor, regardless of what a caller's
+/// `Unlock` request asks for.
+///
+/// The wire value is caller-supplied (mirrored from `vaults.<name>.
+/// auto_lock_seconds` by a well-behaved caller, but nothing on this side of
+/// the socket enforces that) and untrusted the same way `vault_name` is. An
+/// unbounded or near-`u64::MAX` value would defeat the whole point of an
+/// idle bound: `sweep_expired` would never age the entry out, so it would sit
+/// in memory indefinitely. Matches `vault-pm-config`'s own
+/// `MAX_AUTO_LOCK_SECONDS` (24 hours) — this crate does not depend on that
+/// one to stay decoupled from vault-pm-application (§4.2), so the bound is
+/// restated rather than imported.
+const MAX_IDLE_BOUND: Duration = Duration::from_secs(24 * 60 * 60);
+
 /// One vault's retained passphrase and the policy that expires it.
 struct RetainedPassphrase {
     passphrase: Zeroizing<Vec<u8>>,
@@ -77,21 +105,34 @@ impl AgentState {
     /// any value already held for the same name, restarting its idle bound;
     /// this is the ordinary "type the passphrase again" case, not a
     /// distinguishable error.
+    ///
+    /// `idle_bound` is clamped to [`MAX_IDLE_BOUND`] regardless of what the
+    /// caller asked for. Returns `false`, retaining nothing, if `vault_name`
+    /// is not already held and [`MAX_RETAINED_VAULTS`] is already reached —
+    /// see that constant's own doc comment for why this store cannot simply
+    /// trust its caller not to name an unbounded number of distinct vaults.
+    /// Replacing an already-retained name never fails: it is not how this
+    /// bound could be exceeded, so it is never refused by it.
+    #[must_use = "a `false` return means the passphrase was not retained"]
     pub fn unlock(
         &mut self,
         vault_name: String,
         passphrase: Zeroizing<Vec<u8>>,
         idle_bound: Duration,
         now: Instant,
-    ) {
+    ) -> bool {
+        if !self.retained.contains_key(&vault_name) && self.retained.len() >= MAX_RETAINED_VAULTS {
+            return false;
+        }
         self.retained.insert(
             vault_name,
             RetainedPassphrase {
                 passphrase,
                 retained_at: now,
-                idle_bound,
+                idle_bound: idle_bound.min(MAX_IDLE_BOUND),
             },
         );
+        true
     }
 
     /// Return one vault's retained passphrase, or `None` if it was never
@@ -180,12 +221,12 @@ mod tests {
     fn unlock_then_get_returns_the_same_bytes() {
         let mut state = AgentState::new();
         let now = Instant::now();
-        state.unlock(
+        assert!(state.unlock(
             "personal".to_owned(),
             passphrase(b"correct horse"),
             Duration::from_secs(300),
             now,
-        );
+        ));
         assert_eq!(
             state
                 .get("personal", now)
@@ -203,12 +244,12 @@ mod tests {
     fn get_after_the_idle_bound_returns_none_and_forgets_it() {
         let mut state = AgentState::new();
         let start = Instant::now();
-        state.unlock(
+        assert!(state.unlock(
             "personal".to_owned(),
             passphrase(b"correct horse"),
             Duration::from_millis(10),
             start,
-        );
+        ));
         let later = start + Duration::from_millis(11);
         assert!(state.get("personal", later).is_none());
         // Forgotten, not merely reported as expired: a second read at the
@@ -221,19 +262,19 @@ mod tests {
     fn a_second_unlock_replaces_the_first_and_restarts_the_bound() {
         let mut state = AgentState::new();
         let start = Instant::now();
-        state.unlock(
+        assert!(state.unlock(
             "personal".to_owned(),
             passphrase(b"first"),
             Duration::from_millis(10),
             start,
-        );
+        ));
         let almost_expired = start + Duration::from_millis(9);
-        state.unlock(
+        assert!(state.unlock(
             "personal".to_owned(),
             passphrase(b"second"),
             Duration::from_millis(10),
             almost_expired,
-        );
+        ));
         // The bound restarted, so a moment that would have expired the first
         // value does not expire the second.
         let just_after_original_bound = start + Duration::from_millis(11);
@@ -250,18 +291,18 @@ mod tests {
     fn lock_forgets_one_vault_or_every_vault() {
         let mut state = AgentState::new();
         let now = Instant::now();
-        state.unlock(
+        assert!(state.unlock(
             "personal".to_owned(),
             passphrase(b"p"),
             Duration::from_secs(300),
             now,
-        );
-        state.unlock(
+        ));
+        assert!(state.unlock(
             "work".to_owned(),
             passphrase(b"w"),
             Duration::from_secs(300),
             now,
-        );
+        ));
 
         state.lock(Some("personal"));
         assert!(state.get("personal", now).is_none());
@@ -279,18 +320,18 @@ mod tests {
     fn sweep_expired_removes_only_what_has_actually_expired() {
         let mut state = AgentState::new();
         let start = Instant::now();
-        state.unlock(
+        assert!(state.unlock(
             "short".to_owned(),
             passphrase(b"s"),
             Duration::from_millis(10),
             start,
-        );
-        state.unlock(
+        ));
+        assert!(state.unlock(
             "long".to_owned(),
             passphrase(b"l"),
             Duration::from_secs(300),
             start,
-        );
+        ));
         let later = start + Duration::from_millis(11);
         assert_eq!(state.sweep_expired(later), 1);
         let remaining = state.status(later);
@@ -302,23 +343,114 @@ mod tests {
     fn status_reports_names_in_order_with_remaining_time() {
         let mut state = AgentState::new();
         let now = Instant::now();
-        state.unlock(
+        assert!(state.unlock(
             "work".to_owned(),
             passphrase(b"w"),
             Duration::from_secs(300),
             now,
-        );
-        state.unlock(
+        ));
+        assert!(state.unlock(
             "personal".to_owned(),
             passphrase(b"p"),
             Duration::from_secs(100),
             now,
-        );
+        ));
         let report = state.status(now + Duration::from_secs(10));
         assert_eq!(report.len(), 2);
         assert_eq!(report[0].vault_name, "personal");
         assert_eq!(report[0].remaining, Duration::from_secs(90));
         assert_eq!(report[1].vault_name, "work");
         assert_eq!(report[1].remaining, Duration::from_secs(290));
+    }
+
+    /// A same-user peer cannot grow this store without bound by naming an
+    /// unlimited number of distinct vaults.
+    ///
+    /// This is the fix for a real security-review finding: this store trusts
+    /// every `unlock` unconditionally and never validates `vault_name`
+    /// against any real configured vault list, so nothing else stopped a
+    /// peer looping `Unlock{vault_name: <unique>, ..}` from growing this
+    /// map — and this process's memory — without bound.
+    #[test]
+    fn unlock_refuses_a_new_name_once_the_retained_vault_cap_is_reached() {
+        let mut state = AgentState::new();
+        let now = Instant::now();
+        for index in 0..MAX_RETAINED_VAULTS {
+            assert!(
+                state.unlock(
+                    format!("vault-{index}"),
+                    passphrase(b"p"),
+                    Duration::from_secs(300),
+                    now,
+                ),
+                "vault-{index} must fit under the cap"
+            );
+        }
+        assert!(
+            !state.unlock(
+                "one-too-many".to_owned(),
+                passphrase(b"p"),
+                Duration::from_secs(300),
+                now,
+            ),
+            "a new name past the cap must be refused"
+        );
+        assert!(state.get("one-too-many", now).is_none());
+
+        // Replacing an already-retained name is never blocked by the cap,
+        // even while the store is completely full.
+        assert!(state.unlock(
+            "vault-0".to_owned(),
+            passphrase(b"replacement"),
+            Duration::from_secs(300),
+            now,
+        ));
+        assert_eq!(
+            state
+                .get("vault-0", now)
+                .as_ref()
+                .map(|value| value.as_slice()),
+            Some(b"replacement".as_slice())
+        );
+
+        // Freeing one slot lets exactly one new name back in.
+        state.lock(Some("vault-1"));
+        assert!(state.unlock(
+            "one-too-many".to_owned(),
+            passphrase(b"p"),
+            Duration::from_secs(300),
+            now,
+        ));
+    }
+
+    /// A caller cannot make a retained passphrase effectively immortal by
+    /// asking for an enormous idle bound.
+    #[test]
+    fn unlock_clamps_an_oversized_idle_bound() {
+        let mut state = AgentState::new();
+        let now = Instant::now();
+        assert!(state.unlock(
+            "personal".to_owned(),
+            passphrase(b"p"),
+            Duration::from_secs(u64::MAX / 1_000),
+            now,
+        ));
+        let status = state.status(now);
+        assert_eq!(status.len(), 1);
+        assert_eq!(status[0].remaining, MAX_IDLE_BOUND);
+
+        // A legitimate, well-under-the-ceiling bound is untouched.
+        assert!(state.unlock(
+            "work".to_owned(),
+            passphrase(b"p"),
+            Duration::from_secs(300),
+            now,
+        ));
+        let work_status = state.status(now);
+        let work = work_status
+            .iter()
+            .find(|entry| entry.vault_name == "work")
+            .unwrap();
+        assert_eq!(work.remaining, Duration::from_secs(300));
     }
 }

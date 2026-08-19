@@ -11,8 +11,8 @@
 use crate::state::AgentState;
 use crate::{peer, transport, AgentHostError};
 use coding_adventures_vault_pm_agent_protocol::{
-    AgentRequest, AgentResponse, VaultStatusEntry, MAX_FRAME_BYTES, MAX_STATUS_VAULTS,
-    MAX_VAULT_NAME_BYTES,
+    AgentErrorCode, AgentRequest, AgentResponse, VaultStatusEntry, MAX_FRAME_BYTES,
+    MAX_STATUS_VAULTS, MAX_VAULT_NAME_BYTES,
 };
 use std::fs;
 use std::os::unix::fs::{FileTypeExt, MetadataExt, PermissionsExt};
@@ -166,7 +166,8 @@ impl AgentServer {
     }
 
     /// Reserve a connection slot and spawn a handler thread, or drop the
-    /// connection immediately if already at [`MAX_CONCURRENT_CONNECTIONS`].
+    /// connection immediately if already at [`MAX_CONCURRENT_CONNECTIONS`]
+    /// or if a thread could not be created.
     ///
     /// The slot is reserved with a single `fetch_add` *before* the thread is
     /// spawned (never after), so two connections racing this check cannot
@@ -174,6 +175,13 @@ impl AgentServer {
     /// happens in every path out of the spawned closure, including a panic
     /// unwinding through `handle_connection`, via [`ConnectionSlotGuard`]'s
     /// `Drop`.
+    ///
+    /// Spawning uses the fallible `Builder::spawn_scoped` rather than
+    /// `Scope::spawn`, which panics if the OS cannot create a new thread.
+    /// `Scope::spawn`'s panic would unwind out of the accept loop and crash
+    /// the whole agent process over one connection this cap was designed to
+    /// gracefully drop instead — the same "no response" treatment an
+    /// unauthorized peer or an over-capacity connection already gets.
     fn accept_within_limit<'scope>(
         &'scope self,
         scope: &'scope std::thread::Scope<'scope, '_>,
@@ -185,12 +193,15 @@ impl AgentServer {
             self.active_connections.fetch_sub(1, Ordering::SeqCst);
             return;
         }
-        scope.spawn(move || {
+        let spawned = std::thread::Builder::new().spawn_scoped(scope, move || {
             let _slot = ConnectionSlotGuard {
                 active_connections: &self.active_connections,
             };
             self.handle_connection(stream, signal);
         });
+        if spawned.is_err() {
+            self.active_connections.fetch_sub(1, Ordering::SeqCst);
+        }
     }
 
     fn sweep_loop(&self, signal: &AtomicBool) {
@@ -242,13 +253,16 @@ impl AgentServer {
                 passphrase,
                 idle_bound_ms,
             } => {
-                state.unlock(
+                if state.unlock(
                     vault_name,
                     passphrase,
                     Duration::from_millis(idle_bound_ms),
                     now,
-                );
-                AgentResponse::Ok
+                ) {
+                    AgentResponse::Ok
+                } else {
+                    AgentResponse::Err(AgentErrorCode::CapacityExceeded)
+                }
             }
             AgentRequest::GetPassphrase { vault_name } => match state.get(&vault_name, now) {
                 Some(passphrase) => AgentResponse::Passphrase(passphrase),

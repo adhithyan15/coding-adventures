@@ -456,6 +456,15 @@ pub enum AgentErrorCode {
     NotRetained = 2,
     /// The agent could not complete the request for an internal reason.
     Internal = 3,
+    /// `Unlock` named a vault the agent does not already retain, and the
+    /// agent already retains as many distinct vaults as it will hold at
+    /// once.
+    ///
+    /// This is a capacity bound on the *retention store*
+    /// (`vault-pm-agent-host::state::MAX_RETAINED_VAULTS`), not on this
+    /// wire format. Retaining an already-known vault's passphrase again
+    /// (the ordinary "type the passphrase again" case) never returns this.
+    CapacityExceeded = 4,
 }
 
 impl AgentErrorCode {
@@ -464,6 +473,7 @@ impl AgentErrorCode {
             1 => Some(Self::Malformed),
             2 => Some(Self::NotRetained),
             3 => Some(Self::Internal),
+            4 => Some(Self::CapacityExceeded),
             _ => None,
         }
     }
@@ -823,6 +833,7 @@ mod tests {
             AgentErrorCode::Malformed,
             AgentErrorCode::NotRetained,
             AgentErrorCode::Internal,
+            AgentErrorCode::CapacityExceeded,
         ] {
             let response = AgentResponse::Err(code);
             match AgentResponse::decode(&response.encode().unwrap()).unwrap() {

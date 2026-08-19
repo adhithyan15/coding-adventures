@@ -63,6 +63,17 @@ This is the *pre-emptive* auto-lock timer `VLT-PM40-cli-interactive-shell.md`
 a terminal read has nowhere for that timer to run and a background process
 does.
 
+`AgentState` trusts every `Unlock` it receives unconditionally (see below)
+and never validates `vault_name` against a real configured vault list, so
+two bounds keep an untrusted same-user peer from using that trust to exhaust
+this process's memory: `MAX_RETAINED_VAULTS` (64) caps how many *distinct*
+vault names it will ever hold a passphrase for at once — a peer naming a
+fresh, unique vault on every connection is refused, not silently accepted,
+once the cap is reached — and `MAX_IDLE_BOUND` (24 hours, matching
+`vault-pm-config::MAX_AUTO_LOCK_SECONDS`) clamps whatever `idle_bound_ms` a
+caller asks for, so a request naming an effectively infinite bound cannot
+defeat the sweep above by simply never expiring.
+
 ## Socket path
 
 Resolved by `vault-pm-local-host::LocalVaultPaths::runtime_root`, not nested
@@ -84,32 +95,46 @@ dependencies.
 
 ## Verification
 
-Twenty-two tests cover the retention store's idle-bound policy (unlock,
+Twenty-four tests cover the retention store's idle-bound policy (unlock,
 expiry at point-of-use, replace-and-restart, forget-one/forget-all,
-background sweep), framing (round trip, oversized-frame refusal before
-allocation, truncated reads), the peer-authorization comparison against a
-fabricated mismatched UID, real bind/accept/dispatch round trips for every
-request over a real socket (including a second bind being refused, a stale
-socket being reclaimed only after an ownership check, a non-socket path
-never being deleted, and an oversized or garbage connection being dropped
-without a response while the server keeps serving), and a real detached
-process outliving its parent.
+background sweep, and the two capacity bounds below), framing (round trip,
+oversized-frame refusal before allocation, truncated reads), the
+peer-authorization comparison against a fabricated mismatched UID, real
+bind/accept/dispatch round trips for every request over a real socket
+(including a second bind being refused, a stale socket being reclaimed only
+after an ownership check, a non-socket path never being deleted, and an
+oversized or garbage connection being dropped without a response while the
+server keeps serving), and a real detached process outliving its parent.
 
-Two tests are worth calling out: this feature's security review found that
-serving every accepted connection synchronously in the accept loop let any
-same-user process starve every legitimate caller by opening a connection and
-sending nothing, forever — `a_silent_connection_never_blocks_a_concurrent_
-well_behaved_one` holds one silent connection open and proves a concurrent
-`Ping` still completes promptly now that every connection is served on its
-own thread. That fix then introduced its own finding — unbounded
-per-connection thread spawn is itself a denial of service — closed by
-`MAX_CONCURRENT_CONNECTIONS` and proven by
-`connections_past_the_concurrency_cap_are_dropped_and_capacity_recovers`,
-which fills every slot with silent connections, confirms the next one is
-closed without a response rather than served, and confirms capacity recovers
-once a slot frees up.
+Several tests are worth calling out — this feature went through three rounds
+of security review before its first release, and each of the following
+closes a real finding from it:
 
-Tarpaulin's LLVM engine measures 231 of 261 lines covered (88.5%); the
+- `a_silent_connection_never_blocks_a_concurrent_well_behaved_one`: serving
+  every accepted connection synchronously in the accept loop let any
+  same-user process starve every legitimate caller by opening a connection
+  and sending nothing, forever. Every connection is now served on its own
+  thread.
+- `connections_past_the_concurrency_cap_are_dropped_and_capacity_recovers`:
+  the fix above then introduced its own finding — unbounded per-connection
+  thread spawn is itself a denial of service. `MAX_CONCURRENT_CONNECTIONS`
+  bounds it; this test fills every slot with silent connections, confirms
+  the next one is closed without a response, and confirms capacity recovers
+  once a slot frees up.
+- `state::tests::unlock_refuses_a_new_name_once_the_retained_vault_cap_is_
+  reached`: this store trusts every `Unlock` unconditionally and never
+  validates `vault_name` against a real vault list, so nothing else stopped
+  a same-user peer from growing this map without bound by naming an
+  unlimited number of distinct vaults across many short, sequential
+  connections — a problem the connection cap above cannot see, since each
+  request is its own connection, not a concurrency issue.
+  `MAX_RETAINED_VAULTS` bounds it.
+- `state::tests::unlock_clamps_an_oversized_idle_bound`: a caller-supplied
+  `idle_bound_ms` of `u64::MAX` would have defeated the auto-lock sweep
+  entirely (the entry would simply never age out). `MAX_IDLE_BOUND` clamps
+  it server-side regardless of what the wire value asks for.
+
+Tarpaulin's LLVM engine measures 235 of 267 lines covered (88.0%); the
 remainder is mostly client-side I/O error branches that require a genuinely
 failing socket to reach, and the post-`fork` half of the detached-spawn
 closure runs in a child process coverage instrumentation does not attribute

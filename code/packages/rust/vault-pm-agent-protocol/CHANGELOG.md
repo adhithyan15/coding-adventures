@@ -33,6 +33,12 @@
   capacity computation in every debug build and test run, and
   `encode_never_reallocates_a_buffer_already_holding_a_secret` sweeps
   passphrase lengths 0..=200 to prove it empirically.
+- Added `AgentErrorCode::CapacityExceeded`, returned when `Unlock` names a
+  vault the agent does not already retain and the retention store has
+  already reached its cap on distinct vaults
+  (`vault-pm-agent-host::state::MAX_RETAINED_VAULTS`) — part of that crate's
+  security-review fix for unbounded memory growth via repeated `Unlock`
+  requests naming new vaults.
 - Security review, before first release: `decode_name` (and, symmetrically,
   `encode_name`) now enforce the exact character set `vault-pm-config::
   ConfigName` already enforces — ASCII alphanumeric, or `_`/`-` past the

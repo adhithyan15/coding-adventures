@@ -328,6 +328,10 @@ resource drain even held permanently). The slot is reserved with an
 guard tied to that thread's stack frame so a panic inside a handler still
 frees it. A connection accepted past the cap is dropped immediately — the
 same silent refusal an unauthorized peer or a malformed frame already gets.
+Thread creation itself uses the fallible `Builder::spawn_scoped` rather than
+the panicking `Scope::spawn`: the latter would have turned "the OS could not
+create one more thread" into a crash of the whole agent process, over
+exactly the one connection this cap exists to drop gracefully instead.
 
 Every buffer that can carry a passphrase in plaintext — an encoded `Unlock`
 request, an encoded `Passphrase` response, and every frame `transport::
@@ -400,6 +404,30 @@ Every `GetPassphrase` answer double-checks expiry at the point of use in
 addition to the background sweep, for the same reason `ShellSession
 ::authenticator` does: a request that lands in the gap between two sweep
 ticks must not be handed a passphrase that has, technically, already expired.
+
+### 5.1 Two more security-review bounds on the store itself
+
+`AgentState` trusts every `Unlock` unconditionally (§4.2) and never
+validates `vault_name` against any real configured vault list. Two further
+findings came from asking what a same-user peer could do with that trust
+alone, without ever forging a peer credential or a malformed frame:
+
+- **Unbounded distinct vaults.** Nothing stopped a peer from looping
+  `connect -> Unlock{vault_name: <fresh unique name>, ..} -> disconnect`,
+  growing the retained map — and this process's memory — without bound.
+  `MAX_CONCURRENT_CONNECTIONS` (§4.5) does not see this: each such request
+  is its own short, sequential connection, not a concurrency problem.
+  `state::MAX_RETAINED_VAULTS` (64) closes it: `unlock` refuses a *new* name
+  once reached, returning `false` rather than silently accepting, and the
+  server maps that refusal to `AgentErrorCode::CapacityExceeded`. Replacing
+  an already-retained name — the ordinary "type the passphrase again" case
+  — is never refused by this bound.
+- **Unbounded idle bound.** `idle_bound_ms` is caller-supplied and, per the
+  point above, untrusted the same way `vault_name` is. A request naming a
+  near-`u64::MAX` bound would defeat the sweep entirely: the entry would
+  simply never age out. `state::MAX_IDLE_BOUND` (24 hours, matching
+  `vault-pm-config::MAX_AUTO_LOCK_SECONDS`) clamps whatever the request asks
+  for, unconditionally.
 
 ## 6. Command surface
 
