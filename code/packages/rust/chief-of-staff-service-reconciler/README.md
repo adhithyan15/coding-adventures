@@ -57,7 +57,7 @@ supervisor reading, never the stored one. There is one comparison that mixes a
 durable reading with a live one -- `inactive_observation` may keep the previous
 record's heartbeat beside a live `started_at_ns`, and `HostObservation::new`
 checks that the heartbeat does not precede the start. It is benign, because a
-previous run'''s monotonic readings are larger rather than smaller and
+previous run's monotonic readings are larger rather than smaller and
 `start_instance` clears both fields, but it is the one place the rule is a
 convention rather than a type. The property that holds is about comparison, not
 storage, and an earlier version of this paragraph claimed the broader thing.
@@ -71,20 +71,31 @@ rather than a `u64::MAX` sentinel for the same reason: a sentinel is something
 arithmetic can saturate into by accident, and it did.
 
 The honest consequence: the bound holds within a daemon run, and a daemon
-restart hands every host a fresh budget. Daemon restarts are not something a
-supervised host gets to trigger, so that is the right trade -- but it is a
-weaker claim than "durable", and an earlier version of this file made the
-stronger one.
+restart hands every host a fresh budget. That is a weaker claim than "durable",
+and an earlier version of this file made the stronger one. It is an acceptable
+trade only for as long as a supervised host cannot force a daemon restart --
+which is a property of the *walk*, not of this code, and is why the paragraph
+below is part of this rule rather than a separate concern.
 
-**Exceeding the bound quarantines one host; it does not raise an error.** The
-reconciler walks every host per tick, so a per-host failure raised out of the
-walk would take every other host down with it, and an agent able to crash itself
-on demand could disable supervision for the whole deployment. Note that this is
-true of the intensity bound specifically, not of the walk in general. A failed
-supervisor `start`, `stop` or `inspect`, a `FutureObservation`, and any
-`RegistryError` -- including one raised while validating an observation -- all
-still propagate out of `reconcile_all` and abort the tick for every other host.
-That is pre-existing and tracked separately in #12122.
+**A host that fails is an outcome, not an error.** The reconciler walks every
+host per tick, so any per-host failure raised *out* of that walk takes every
+other host down with it. `reconcile_all` therefore reports failures:
+`ReconcileAction::Failed`, carrying the reason, with the walk continuing. Only a
+registry listing failure -- which is not attributable to any one host and would
+recur for all of them -- ends the tick.
+
+This is load-bearing for the bound above, not a nicety. The daemon's scheduler
+treats a reconcile error as terminal: it stops the server and returns. So while
+one broken host could error out of the walk, a semi-trusted agent that crashed
+its own bootstrap on purpose took down supervision for the whole machine -- and
+because the shipped service definitions restart the daemon on failure, it came
+back with a fresh `boot_id`, discarding every stored window and lifting every
+intensity quarantine. Crash the daemon, get a fresh budget, repeat.
+
+That made the restart bound bypassable by exactly the actor it exists to bound.
+The bound's per-run scoping is only defensible because a supervised host cannot
+force a daemon restart, and until this changed, it could. The claim and the code
+now agree.
 
 ## Validation
 

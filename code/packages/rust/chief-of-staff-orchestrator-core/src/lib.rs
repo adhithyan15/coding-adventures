@@ -913,7 +913,7 @@ mod tests {
     use chief_of_staff_process_supervisor::{
         DenyHostLaunchBindings, HostProgram, UuidV7SessionIdSource,
     };
-    use chief_of_staff_service_reconciler::{ReconcileAction, SupervisorOperation};
+    use chief_of_staff_service_reconciler::ReconcileAction;
     use chief_of_staff_service_registry::{PackagePath, RestartPolicy};
     use chief_of_staff_tool_api::ApprovalAssurance;
     use chief_of_staff_trust_checker::{ApprovalOutcome, ApprovalPrompt, TrustRequest};
@@ -1502,7 +1502,7 @@ mod tests {
     }
 
     #[test]
-    fn reconciliation_samples_time_once_and_tracks_only_success() {
+    fn reconciliation_samples_time_once_and_survives_a_broken_host() {
         let backend = Arc::new(InMemoryStorageBackend::new());
         let supervisor = FakeSupervisor::default();
         let supervisor_state = Arc::clone(&supervisor.0);
@@ -1533,15 +1533,21 @@ mod tests {
             .lock()
             .expect("supervisor mutex poisoned")
             .fail_inspect = true;
-        let error = core.reconcile_once().expect_err("inspection must fail");
-        assert!(matches!(
-            error,
-            OrchestratorCoreError::Reconciliation(ReconcileError::Supervisor {
-                operation: SupervisorOperation::Inspect,
-                ..
-            })
-        ));
-        assert_eq!(core.last_reconcile_ns(), Some(1_000));
+        // A host whose inspect fails is reported as a failed outcome, not
+        // raised as an error: the tick ran, it just found a broken host. It
+        // therefore counts as a reconcile, which is the point -- a tick that
+        // aborted here used to stop the daemon outright, and one host is not
+        // allowed to do that to the others.
+        let report = core
+            .reconcile_once()
+            .expect("a failed inspect must not end the tick");
+        assert_eq!(report.outcomes().len(), 1);
+        assert_eq!(report.outcomes()[0].action(), ReconcileAction::Failed);
+        assert!(report.outcomes()[0]
+            .failure()
+            .expect("a failed outcome carries its reason")
+            .contains("inspect failed"));
+        assert_eq!(core.last_reconcile_ns(), Some(1_001));
 
         supervisor_state
             .lock()

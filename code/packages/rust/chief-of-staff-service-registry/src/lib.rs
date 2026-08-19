@@ -841,8 +841,9 @@ pub fn encode_host_entry(entry: &HostEntry) -> Vec<u8> {
     output.extend_from_slice(&restarts.count().to_be_bytes());
     push_option_u64(&mut output, restarts.last_restart_ns());
     // Version 2 appends the restart-intensity window. Appending rather than
-    // interleaving is what lets a version-1 reader's field offsets stay valid,
-    // and what lets this decoder stop early on a version-1 record.
+    // interleaving is what lets *this* decoder stop early on a version-1
+    // record. It does nothing for a version-1 binary, which rejects a version-2
+    // record on the version byte before reaching any field at all.
     //
     // The window is written as one presence byte followed by all three of its
     // parts, mirroring the type: a reader can no more reconstruct two thirds of

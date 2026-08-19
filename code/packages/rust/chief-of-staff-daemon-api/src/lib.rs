@@ -1548,8 +1548,9 @@ fn status_json(status: &HostStatus) -> JsonValue {
             ("kind", JsonValue::String("crashed".to_string())),
             ("exit_code", optional_i32(*exit_code)),
         ]),
-        // `until_ns` is reported only when the quarantine actually lifts, and
-        // `permanent` says which case this is. The reading is monotonic and
+        // `until_ns` is reported only when the quarantine actually lifts.
+        // `permanent` and `expired` together say which of the three cases this
+        // is; neither alone does. The reading is monotonic and
         // scoped to the daemon run named by `boot_id`, so a client must not
         // compare it against anything of its own -- reporting it bare would
         // invite exactly that.
@@ -1595,6 +1596,14 @@ fn reconcile_report_json(report: &ReconcileReport) -> JsonValue {
                         JsonValue::String(reconcile_action_name(outcome.action()).to_string()),
                     ),
                     ("status", status_json(outcome.status())),
+                    // Present only for a failed outcome, where the status is
+                    // what stood *before* the tick -- nothing was written.
+                    (
+                        "failure",
+                        outcome.failure().map_or(JsonValue::Null, |failure| {
+                            JsonValue::String(failure.to_string())
+                        }),
+                    ),
                 ])
             })
             .collect(),
@@ -1707,6 +1716,7 @@ fn reconcile_action_name(action: ReconcileAction) -> &'static str {
         ReconcileAction::Started => "started",
         ReconcileAction::Stopped => "stopped",
         ReconcileAction::Deferred => "deferred",
+        ReconcileAction::Failed => "failed",
     }
 }
 
@@ -1728,7 +1738,9 @@ mod tests {
     }
 
     impl HostSupervisor for FakeSupervisor {
-        type Error = ();
+        // A per-host failure is reported rather than raised, so the error has
+        // to be describable. This fake never produces one.
+        type Error = String;
 
         fn inspect(
             &mut self,
@@ -2627,6 +2639,7 @@ mod tests {
         assert_eq!(restart_policy_name(RestartPolicy::OnFailure), "on_failure");
         assert_eq!(desired_state_name(DesiredState::Stopped), "stopped");
         assert_eq!(reconcile_action_name(ReconcileAction::Deferred), "deferred");
+        assert_eq!(reconcile_action_name(ReconcileAction::Failed), "failed");
         assert_eq!(
             DaemonApiError::Poisoned.to_string(),
             "chief daemon API control plane is unavailable"

@@ -223,7 +223,11 @@ impl std::error::Error for ObservationError {}
 /// Process authority injected by the runnable orchestrator.
 pub trait HostSupervisor {
     /// Concrete supervisor failure type.
-    type Error;
+    ///
+    /// `Display` is required because a failed host is reported as an outcome
+    /// rather than raised as an error, and an outcome nobody can read says
+    /// only that something went wrong.
+    type Error: Display;
 
     /// Inspect current authority for this exact registration.
     fn inspect(
@@ -341,7 +345,8 @@ const DEFAULT_MAX_RESTARTS_PER_WINDOW: u32 = 5;
 /// never elapses or quarantine a healthy one. A boot-id mismatch means "no
 /// usable window", which starts a fresh one. That does hand a crash-looping
 /// host a fresh budget whenever the daemon restarts; daemon restarts are not
-/// something a supervised host gets to trigger, so the trade is worth it.
+/// something a supervised host gets to trigger -- see `reconcile_all`, which is
+/// what makes that true -- so the trade is worth it.
 ///
 /// The window is a fixed span that resets once it elapses, not a sliding window
 /// over individual restart timestamps. A sliding window needs every restart's
@@ -418,6 +423,12 @@ pub enum ReconcileAction {
     Stopped,
     /// Restart policy or quarantine intentionally suppressed a mutation.
     Deferred,
+    /// This host could not be reconciled. The rest of the tick continued.
+    ///
+    /// A host is a thing that can fail. Reporting that as an outcome rather
+    /// than as an error is what keeps one host's failure from being every
+    /// host's -- see `reconcile_all`.
+    Failed,
 }
 
 /// Outcome for one host in a full reconciliation tick.
@@ -426,6 +437,7 @@ pub struct HostReconcileOutcome {
     host_name: HostName,
     action: ReconcileAction,
     status: HostStatus,
+    failure: Option<String>,
 }
 
 impl HostReconcileOutcome {
@@ -434,6 +446,16 @@ impl HostReconcileOutcome {
             host_name,
             action,
             status,
+            failure: None,
+        }
+    }
+
+    fn failed(host_name: HostName, status: HostStatus, failure: String) -> Self {
+        Self {
+            host_name,
+            action: ReconcileAction::Failed,
+            status,
+            failure: Some(failure),
         }
     }
 
@@ -448,8 +470,17 @@ impl HostReconcileOutcome {
     }
 
     /// Return the durable status after the tick.
+    ///
+    /// For a [`ReconcileAction::Failed`] outcome this is the status as it stood
+    /// *before* the tick: nothing was written, because the failure is what
+    /// stopped the write.
     pub fn status(&self) -> &HostStatus {
         &self.status
+    }
+
+    /// Return why this host could not be reconciled, if it could not be.
+    pub fn failure(&self) -> Option<&str> {
+        self.failure.as_deref()
     }
 }
 
@@ -566,7 +597,20 @@ impl<'a> ServiceReconciler<'a> {
         let loaded = self.registry.list()?;
         let mut outcomes = Vec::with_capacity(loaded.len());
         for host in loaded {
-            outcomes.push(self.reconcile_one(supervisor, host, now_ns)?);
+            // Capture the identity before the host is moved, so a failure can
+            // still be attributed.
+            let host_name = host.entry().registration().host_name().clone();
+            let status = host.entry().observation().status().clone();
+            match self.reconcile_one(supervisor, host, now_ns) {
+                Ok(outcome) => outcomes.push(outcome),
+                Err(error) => {
+                    outcomes.push(HostReconcileOutcome::failed(
+                        host_name,
+                        status,
+                        error.to_string(),
+                    ));
+                }
+            }
         }
         Ok(ReconcileReport { outcomes })
     }
@@ -1131,6 +1175,15 @@ mod tests {
     use storage_core::InMemoryStorageBackend;
 
     const NOW: u64 = 1_000;
+    /// Reconcile once and return the single host's outcome.
+    ///
+    /// A per-host failure is reported, not raised, so these tests read the
+    /// outcome rather than an error.
+    fn only_outcome(report: &ReconcileReport) -> &HostReconcileOutcome {
+        assert_eq!(report.outcomes().len(), 1);
+        &report.outcomes()[0]
+    }
+
     /// A fixed daemon-run identity for tests that never model a restart.
     const BOOT_ID: u64 = 0xD18;
 
@@ -1458,27 +1511,26 @@ mod tests {
         let observed =
             SupervisorObservation::running([7; 32], 42, NOW, NOW + 1, channel(1)).unwrap();
         let mut supervisor = FakeSupervisor::with("mail-host", observed);
-        let error = reconciler(&backend)
+        let report = reconciler(&backend)
             .reconcile_all(&mut supervisor, NOW)
-            .unwrap_err();
-        assert!(matches!(error, ReconcileError::FutureObservation { .. }));
-        assert!(error.to_string().contains("mail-host"));
+            .expect("a future observation is one host's problem");
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        assert!(outcome.failure().unwrap().contains("in the future"));
+        assert!(outcome.failure().unwrap().contains("mail-host"));
 
         let mut supervisor = FakeSupervisor {
             fail_inspect: true,
             ..FakeSupervisor::default()
         };
-        let error = reconciler(&backend)
+        let report = reconciler(&backend)
             .reconcile_all(&mut supervisor, NOW)
-            .unwrap_err();
-        assert!(matches!(
-            error,
-            ReconcileError::Supervisor {
-                operation: SupervisorOperation::Inspect,
-                ..
-            }
-        ));
-        assert!(error.to_string().contains("inspect failed"));
+            .expect("a failed inspect is one host's problem");
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        let failure = outcome.failure().unwrap();
+        assert!(failure.contains("supervisor inspect failed"));
+        assert!(failure.contains("mail-host"));
     }
 
     #[test]
@@ -1613,16 +1665,12 @@ mod tests {
             SupervisorObservation::running([7; 32], 42, 700, 950, channel(1)).unwrap(),
         );
         supervisor.fail_stop = true;
-        let error = reconciler(&backend)
+        let report = reconciler(&backend)
             .reconcile_all(&mut supervisor, NOW)
-            .unwrap_err();
-        assert!(matches!(
-            error,
-            ReconcileError::Supervisor {
-                operation: SupervisorOperation::Stop,
-                ..
-            }
-        ));
+            .expect("a failed stop is one host's problem");
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        assert!(outcome.failure().unwrap().contains("stop failed"));
         assert!(matches!(
             load(&backend, "mail-host").observation().status(),
             HostStatus::Quarantined { .. }
@@ -1776,16 +1824,12 @@ mod tests {
             fail_start: true,
             ..FakeSupervisor::default()
         };
-        let error = reconciler(&backend)
+        let report = reconciler(&backend)
             .reconcile_all(&mut supervisor, NOW)
-            .unwrap_err();
-        assert!(matches!(
-            error,
-            ReconcileError::Supervisor {
-                operation: SupervisorOperation::Start,
-                ..
-            }
-        ));
+            .expect("a failed start is one host's problem");
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        assert!(outcome.failure().unwrap().contains("start failed"));
         assert_eq!(
             load(&backend, "mail-host").observation().status(),
             &HostStatus::Crashed { exit_code: None }
@@ -1804,16 +1848,12 @@ mod tests {
             fail_stop: true,
             ..FakeSupervisor::with("mail-host", observed)
         };
-        let error = reconciler(&backend)
+        let report = reconciler(&backend)
             .reconcile_all(&mut supervisor, NOW)
-            .unwrap_err();
-        assert!(matches!(
-            error,
-            ReconcileError::Supervisor {
-                operation: SupervisorOperation::Stop,
-                ..
-            }
-        ));
+            .expect("a failed stop is one host's problem");
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        assert!(outcome.failure().unwrap().contains("stop failed"));
         assert_eq!(
             load(&backend, "mail-host").observation().status(),
             &HostStatus::Running
@@ -1866,13 +1906,12 @@ mod tests {
             backend: &backend,
             starts: 0,
         };
-        let error = reconciler(&backend)
+        let report = reconciler(&backend)
             .reconcile_all(&mut supervisor, NOW)
-            .unwrap_err();
-        assert!(matches!(
-            error,
-            ReconcileError::Registry(RegistryError::ConcurrentUpdate(_))
-        ));
+            .expect("a CAS conflict is one host's problem");
+        let outcome = only_outcome(&report);
+        assert_eq!(outcome.action(), ReconcileAction::Failed);
+        assert!(outcome.failure().unwrap().contains("changed concurrently"));
         assert_eq!(supervisor.starts, 0);
     }
 
@@ -2400,7 +2439,7 @@ mod tests {
     /// process id. While launch retries were exempt from the bound, that made
     /// it a fixed point: a supervisor reporting the host absent handed out a
     /// start every tick, forever, against a budget of three, with the lifetime
-    /// tally stuck at 1 and the window never opening at all.
+    /// tally stuck at 0 and the window never opening at all.
     #[test]
     fn a_first_launch_that_never_materialises_is_still_bounded() {
         let backend = InMemoryStorageBackend::new();
@@ -2470,5 +2509,109 @@ mod tests {
         assert_eq!(persisted.observation().restart_count(), 0);
         assert_eq!(persisted.observation().restarts_in_window(), 0);
         assert_eq!(persisted.observation().status(), &HostStatus::Starting);
+    }
+
+    /// One host's failure does not become every host's.
+    ///
+    /// This is the property the whole per-host-outcome contract exists for, and
+    /// it is worth being concrete about what it was worth. A host that breaks
+    /// its own bootstrap makes `supervisor.start` fail. That used to leave the
+    /// walk as an error, which the daemon's scheduler treats as terminal -- it
+    /// stops the server and returns. So one semi-trusted agent, crashing on
+    /// purpose, took down supervision for every host on the machine; and since
+    /// the shipped service definitions restart the daemon on failure, it came
+    /// back with a fresh `boot_id`, which discards every stored restart window
+    /// and lifts every intensity quarantine.
+    ///
+    /// That made the restart bound bypassable by exactly the actor it exists to
+    /// bound: crash the daemon, get a fresh budget, repeat. The bound's
+    /// per-run scoping is only defensible because a supervised host cannot
+    /// force a daemon restart, and until this changed, it could.
+    ///
+    /// The host is named to sort first, so a walk that stops at the failure
+    /// never reaches the healthy one.
+    #[test]
+    fn a_failing_host_does_not_stop_the_walk() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "aaa-broken",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::stopped(),
+        );
+        // Already where it should be, so its tick needs no supervisor mutation
+        // and cannot fail for reasons of its own.
+        register(
+            &backend,
+            "zzz-healthy",
+            RestartPolicy::Always,
+            DesiredState::Stopped,
+            HostObservation::stopped(),
+        );
+
+        let mut supervisor = FakeSupervisor {
+            fail_start: true,
+            ..FakeSupervisor::default()
+        };
+        let report = reconciler(&backend)
+            .reconcile_all(&mut supervisor, NOW)
+            .expect("a per-host failure must not end the tick");
+
+        assert_eq!(report.outcomes().len(), 2, "every host must be reported");
+        assert_eq!(report.outcomes()[0].action(), ReconcileAction::Failed);
+        assert_eq!(report.outcomes()[0].host_name().as_str(), "aaa-broken");
+        assert!(report.outcomes()[0]
+            .failure()
+            .unwrap()
+            .contains("start failed"));
+        assert_eq!(
+            report.outcomes()[1].host_name().as_str(),
+            "zzz-healthy",
+            "the host after the failure must still be reconciled"
+        );
+        assert!(
+            report.outcomes()[1].failure().is_none(),
+            "a healthy host must not inherit its neighbour's failure"
+        );
+    }
+
+    /// The persisted status is chosen independently of the charging decision.
+    ///
+    /// `restarting` decides whether the record says `Starting` or `Restarting`;
+    /// `restarting || retrying_claim` decides whether the restart is charged.
+    /// Those are two different questions about the same tick, and nothing else
+    /// in the suite fails if they are collapsed into one.
+    #[test]
+    fn a_charged_launch_retry_is_still_recorded_as_starting() {
+        let backend = InMemoryStorageBackend::new();
+        register(
+            &backend,
+            "mail-host",
+            RestartPolicy::Always,
+            DesiredState::Running,
+            HostObservation::new(
+                HostStatus::Starting,
+                None,
+                None,
+                None,
+                None,
+                RestartLedger::NEVER,
+            )
+            .unwrap(),
+        );
+
+        let mut supervisor = FakeSupervisor::default();
+        reconciler(&backend)
+            .reconcile_all(&mut supervisor, NOW)
+            .unwrap();
+
+        let persisted = load(&backend, "mail-host");
+        assert_eq!(
+            persisted.observation().status(),
+            &HostStatus::Starting,
+            "a launch retry is charged, but it is still a launch"
+        );
+        assert_eq!(persisted.observation().restart_count(), 1);
     }
 }
