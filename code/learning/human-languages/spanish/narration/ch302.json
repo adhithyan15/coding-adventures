@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 302,
+  "title": "Out and Away --- Street, Corner, Footprint, Harbour, Lighthouse",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c8eedd1561cf8b38",
+  "lessons": [
+    {
+      "id": "ES-C302-calle",
+      "sequence": 4220,
+      "title": "la calle — a cattle track that reached the town",
+      "headword": "la calle",
+      "romanization": "la calle",
+      "gloss": "the street — Latin callis, the narrow track worn through rough ground by driven animals; the town's word began in the hills",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:86a4500e9d8ab72b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: which English word is cista, worn down? (Chest.) And what plant is papel named after? (The papyrus reed.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el sendero — the way through the trees."
+            },
+            {
+              "kind": "speech",
+              "text": "el ganado — what wore this one flat in the first place."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CA-lle, stress on the first part. The c is hard and the ll is a y. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la calle — \"the street.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin callis was not urban at all. It was the narrow hard track that animals beat through rough country when they were driven from one grazing ground to another — a hoof-path, made by use rather than by anybody's decision."
+            },
+            {
+              "kind": "speech",
+              "text": "Then towns grew, and the word walked in with the herds. Spanish now uses calle for the most built thing there is: a paved street with houses down both sides. The stones are new; the word underneath them was made by el ganado."
+            },
+            {
+              "kind": "speech",
+              "text": "You have three words for a way through now, and they do not overlap. El sendero is the path through the trees, narrow and unpaved. El camino is the road anybody would take. La calle has walls on both sides."
+            },
+            {
+              "kind": "speech",
+              "text": "Ask ¿en qué calle vives? and you are asking which street somebody lives on."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first step of a leaving, and it starts at the door."
+            },
+            {
+              "kind": "speech",
+              "text": "Everything that follows in this run is further out than the last: a street, then its corner, then what you leave in the dirt beyond it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la calle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la calle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el sendero, then la calle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el sendero*, then *la calle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿en qué calle vives?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *¿en qué calle vives?*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a callis? (A track beaten by driven animals.) What is la calle now? (A street.) And which of your three ways through has walls on both sides? (La calle.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C302-esquina",
+      "sequence": 4230,
+      "title": "la esquina — named after a shinbone",
+      "headword": "la esquina",
+      "romanization": "la esquina",
+      "gloss": "the corner — from a Germanic word for a shinbone; English shin is the same bone, and a corner is an edge as sharp as one",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:563c4f27f0645782",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what does papel also mean, besides paper? (The part an actor plays.) And what was a callis? (A track beaten by animals.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la calle — what this is the end of."
+            },
+            {
+              "kind": "speech",
+              "text": "la escoba — another word wearing the same e- step."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "es-QUI-na, stress in the middle. The qui is a hard k with the u silent. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la esquina — \"the corner,\" the outside one, where two walls meet."
+            },
+            {
+              "kind": "speech",
+              "text": "This one is not Latin. It came from the Germanic speakers, whose skina meant a shinbone, or a thin splinter of bone or wood — a long hard edge. A corner is exactly that shape, and the language borrowed the bone to name it."
+            },
+            {
+              "kind": "speech",
+              "text": "English kept the bone and did not lend it to the corner: your shin is skina, the same word, and anybody who has met a table corner in the dark can confirm that the two ideas belong together."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the front of the Spanish word. Skina could not stand as it was, because Spanish does not begin a word with s and another consonant — so it put an e on the front, exactly as it did to make escoba and estar. The e- is not part of the word. It is a step Spanish takes to get onto it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two of the leaving, and a step you can now recognise on sight."
+            },
+            {
+              "kind": "speech",
+              "text": "Any Spanish word starting es- with a consonant after it is worth checking: strip the e, and a Latin or Germanic word is often standing underneath."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la esquina",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la esquina*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la esquina de la calle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la esquina de la calle*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la escoba, then la esquina — the same step twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la escoba*, then *la esquina* — the same step twice]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did skina mean? (A shinbone, or a splinter.) Which English word is it still? (Shin.) And why does esquina start with an e? (Spanish will not begin a word with s plus a consonant.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C302-huella",
+      "sequence": 4240,
+      "title": "la huella — what the treading leaves",
+      "headword": "la huella",
+      "romanization": "la huella",
+      "gloss": "the footprint — from hollar, to tread, and behind that fullare, to trample cloth; a fuller was the man who did it with his feet",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:195c953b719ad03f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was a callis? (A track beaten by driven animals.) And what did skina mean? (A shinbone.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el hilo — the last word this run gave you with a buried f."
+            },
+            {
+              "kind": "speech",
+              "text": "el sendero — a thing made entirely out of these."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "UE-lla, and the h is silent, so the word opens straight onto the ue slide. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la huella — \"the footprint,\" \"the track,\" the mark a thing leaves by pressing on something."
+            },
+            {
+              "kind": "speech",
+              "text": "Third time for the decoder, and it still works. Silent h, so put the f back: behind huella is hollar, to tread, and behind that Latin fullare."
+            },
+            {
+              "kind": "speech",
+              "text": "Fullare was a specific job. Newly woven wool had to be cleaned and thickened, and the way to do it was to put it in a vat with water and earth and tread on it, for hours. The man who did it was a fullo. English still carries him: to full cloth is a real word, a fulling mill did it with hammers once water power arrived, and the surname Fuller belonged to whoever did it by foot."
+            },
+            {
+              "kind": "speech",
+              "text": "So a footprint in Spanish is named after a day's work in a vat of wet wool. And the word has gone abstract in both languages the same way: la huella is also the mark somebody leaves behind them in general, exactly as English uses footprint for something that never had a foot."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three of the leaving, and three uses of one decoder in two runs."
+            },
+            {
+              "kind": "speech",
+              "text": "Horno, hilo, huella. Each of them was an f once, and each of them gave the letter up in the same century. A silent h is now a piece of evidence, not a spelling to memorise."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la huella",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la huella*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el hilo, then la huella — two buried f sounds",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el hilo*, then *la huella* — two buried *f* sounds]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la huella en el sendero",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la huella en el sendero*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What letter is under the h of huella? (An f.) What was fullare? (Treading cloth in a vat.) And what does la huella mean? (A footprint, or a mark left behind.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C302-puerto",
+      "sequence": 4250,
+      "title": "el puerto — the other half of a pair",
+      "headword": "el puerto",
+      "romanization": "el puerto",
+      "gloss": "the harbour — Latin portus, the twin of the porta you already have; import, export and opportunity are all ships coming in",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:76cea58a689f0e72",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three questions. What was a callis? (A beaten track.) Which English word is skina? (Shin.) And what was fullare? (Treading cloth in a vat.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la puerta — the twin of this word, met long ago."
+            },
+            {
+              "kind": "speech",
+              "text": "la orilla — the edge this is built on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "PUER-to, stress on the first part. The ue is one slide and the r is a single tap. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el puerto — \"the harbour,\" \"the port.\""
+            },
+            {
+              "kind": "speech",
+              "text": "When you took la puerta apart, the Latin behind it was porta, a city gate. Latin had a second word beside it, built on the same idea of a way through: portus, the place a ship gets in. Both broke their stressed o into ue, and Spanish ended up with a matched pair — puerta for the gate on land, puerto for the gate off the sea."
+            },
+            {
+              "kind": "speech",
+              "text": "English took portus and never stopped using it. A port is the harbour. To import is to carry in through one; to export, out. Portugal is Portus Cale, the harbour at Cale, which is where the whole country got its name."
+            },
+            {
+              "kind": "speech",
+              "text": "And the best of them: opportunity. Latin ob portum described a wind standing toward the harbour — the wind that lets you get in. An opportunity is not luck. It is the wind being in the right quarter, and somebody having a ship."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of the leaving, and a word you half owned already."
+            },
+            {
+              "kind": "speech",
+              "text": "Puerta and puerto differ by one letter and by which side of the water you are standing on. Pairs like that are cheap to hold and easy to hear, and Spanish has more of them than any list would suggest."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el puerto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el puerto*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la puerta, then el puerto — the gate and the harbour",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la puerta*, then *el puerto* — the gate and the harbour]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — la calle, la esquina, la huella, el puerto",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — *la calle*, *la esquina*, *la huella*, *el puerto*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was portus? (A harbour.) What is Portugal named after? (The harbour at Cale.) And what does ob portum describe? (A wind standing toward harbour — an opportunity.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C302-faro",
+      "sequence": 4260,
+      "title": "el faro — an island that became a word",
+      "headword": "el faro",
+      "romanization": "el faro",
+      "gloss": "the lighthouse — named after Pharos, the island at Alexandria that held the first one; a place name that became the word for the thing",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a9c3a05b2087d753",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what was a callis? (A beaten track.) What is under the h of huella? (An f.) And what does ob portum describe? (A wind standing toward harbour.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el puerto — what this stands at the mouth of."
+            },
+            {
+              "kind": "speech",
+              "text": "la isla — what the original one was built on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "FA-ro, stress on the first part. The r is one tap, not a roll. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el faro — \"the lighthouse.\""
+            },
+            {
+              "kind": "speech",
+              "text": "There is no root to take apart, because this word was a place. Pharos was a small island off Alexandria, and on it the Ptolemies built a tower with a fire at the top that stood for some sixteen hundred years. Sailors called any such tower a pharos after it, and the name swallowed the object: French phare, Italian faro, Spanish faro."
+            },
+            {
+              "kind": "speech",
+              "text": "The tower fell in an earthquake and the island is now joined to the mainland. Nothing of it is left except the word — which is also, in modern Spanish, what you call a car's headlights. The last of the great wonders is switched on every evening in every car park in Spain."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: la calle, la esquina, la huella, el puerto, el faro."
+            },
+            {
+              "kind": "speech",
+              "text": "Read in order they are a leaving that gets further out at every step — the street, its corner, the mark left in the dirt, the water's edge, and the light still visible when the town is not."
+            },
+            {
+              "kind": "speech",
+              "text": "The five came from five different quarries: a cattle track, a shinbone, a day spent treading wool, a Roman harbour, and an island with a fire on it. That is why taking words apart keeps paying — you never know which one will turn out to be a building you have heard of."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el faro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el faro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el puerto, then el faro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el puerto*, then *el faro*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — la calle, la esquina, la huella, el puerto, el faro",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *la calle*, *la esquina*, *la huella*, *el puerto*, *el faro*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What was Pharos? (An island off Alexandria with a great lighthouse on it.) How did it become the word? (Sailors called every such tower after it.) And what else is a faro today? (A car's headlight.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

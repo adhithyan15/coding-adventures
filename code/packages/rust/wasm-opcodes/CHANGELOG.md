@@ -2,6 +2,50 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.21] - 2026-08-19 - SIMD: splat family widening (task #165-167)
+
+### Added
+
+- 3 new `SIMD_OPS` entries widening lane-width coverage of the
+  already-implemented `i32x4.splat` (`0x11`): `i8x16.splat` (`0x0F`),
+  `i16x8.splat` (`0x10`), `i64x2.splat` (`0x12`) -- 118 SIMD opcodes
+  total, up from 115. Same "pop one scalar, push one v128" shape as
+  `i32x4.splat`; `i64x2.splat` is the first splat whose popped operand
+  type differs from `i32` (it pops a real `i64`). Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against the already-implemented `i32x4.splat` entry
+  (matched exactly, and confirms this crate's whole `0x0C`(const)/
+  `0x0E`(swizzle, not yet implemented)/`0x0F`-`0x14`(splat family)
+  encoding-space run is self-consistent).
+- `SimdOpKind::SplatI8x16`/`SplatI16x8`/`SplatI64x2`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.20] - 2026-08-18 - SIMD: v128.load/v128.store (task #162-164)
+
+### Added
+
+- 2 new `SIMD_OPS` entries -- the FIRST SIMD ops in this table that
+  need a `memarg` immediate (align + offset, plus an optional memidx
+  under the multi-memory proposal): `v128.load` (`0x00`) and
+  `v128.store` (`0x0B`), both single-byte sub-opcodes -- 115 SIMD
+  opcodes total, up from 113. These are the first SIMD ops touching
+  real linear memory; every one of the prior 113 only reads/writes the
+  per-instance `v128` heap. Chosen via a fresh prioritization survey:
+  `simd_bitwise.wast` (already vendored, task #150-152) has 13
+  `assert_return` directives stuck at `NotYetSupported` specifically
+  pending a real `v128.load` -- landing this unblocks those with zero
+  changes to already-merged code. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against the already-implemented `v128.const`(`0x0C`) entry (its
+  neighbor in the encoding space).
+- `SimdOpKind::Load`/`Store`. Doc comments record the memarg shape and
+  that execution is scoped to memory index 0 only for this first PR
+  (multi-memory `v128.load`/`v128.store` is deferred, same as WASM92
+  later widened the scalar load/store family).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.19] - 2026-08-18 - SIMD: shift family (task #159-161)
 
 ### Added

@@ -5441,7 +5441,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                      xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
                      xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n    \
                      xmlns:local=\"using:{ns}\"\n    \
-                     Title=\"{name} â€” Mosaic â†’ XAML demo\">\n    \
+                     Title=\"{name} — Mosaic → XAML demo\">\n    \
                      <Grid>\n        \
                          <Grid.RowDefinitions>\n            \
                              <RowDefinition Height=\"*\"/>\n            \
@@ -5450,7 +5450,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                          <TextBlock Grid.Row=\"0\" Margin=\"40\" FontSize=\"18\" TextWrapping=\"Wrap\"\n                   \
                                     Text=\"Mosaic-authored {name} dialog. Click the button to open it.\"/>\n        \
                          <TextBlock Grid.Row=\"1\" Margin=\"40,0,40,20\" x:Name=\"StatusText\" Foreground=\"#888\"\n                   \
-                                    Text=\"Status: waiting for dispatchâ€¦\"/>\n        \
+                                    Text=\"Status: waiting for dispatch…\"/>\n        \
                          <Button Grid.Row=\"1\" HorizontalAlignment=\"Right\" Margin=\"0,0,40,20\"\n                \
                                  x:Name=\"OpenButton\" Content=\"Open the dialog\" Click=\"OnOpenButtonClick\"/>\n    \
                      </Grid>\n\
@@ -5466,7 +5466,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                      xmlns=\"http://schemas.microsoft.com/winfx/2006/xaml/presentation\"\n    \
                      xmlns:x=\"http://schemas.microsoft.com/winfx/2006/xaml\"\n    \
                      xmlns:gen=\"using:{ns}\"\n    \
-                     Title=\"{name} â€” Mosaic â†’ XAML demo\">\n    \
+                     Title=\"{name} — Mosaic → XAML demo\">\n    \
                      <Grid>\n        \
                          <Grid.RowDefinitions>\n            \
                              <RowDefinition Height=\"*\"/>\n            \
@@ -5474,7 +5474,7 @@ fn emit_main_window_xaml(name: &str, options: &EmitOptions, shape: RootShape) ->
                          </Grid.RowDefinitions>\n        \
                          <gen:{name} Grid.Row=\"0\" x:Name=\"Component\"/>\n        \
                          <TextBlock Grid.Row=\"1\" Margin=\"20\" x:Name=\"StatusText\" Foreground=\"#888\"\n                   \
-                                    Text=\"Status: waiting for dispatchâ€¦\"/>\n    \
+                                    Text=\"Status: waiting for dispatch…\"/>\n    \
                      </Grid>\n\
                  </Window>\n"
             )
@@ -7645,6 +7645,23 @@ fn emit_host_checkbox(
         Some(LayoutPropValue::Keyword(k)) => {
             attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
         }
+        // An expression label — `label: ( row[1] )` is the common shape.
+        //
+        // Same missing arm, same silent catch-all, and the same blank-control
+        // symptom that #12045 fixed on HostButton: with no arm here the
+        // checkbox emitted no Content attribute at all. See emit_host_button
+        // for the full story.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
         _ => {}
     }
 
@@ -7790,6 +7807,20 @@ fn emit_host_radio(
         Some(LayoutPropValue::Keyword(k)) => {
             attrs.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
         }
+        // An expression label — see emit_host_button and emit_host_checkbox.
+        // A radio button with no Content renders as a bare dot with no text
+        // beside it, which is worse than useless in a mutex group.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                attrs.push_str(&format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
         _ => {}
     }
 
@@ -8122,6 +8153,23 @@ fn emit_host_link(
                 content_attr.push_str(&format!(" Content=\"{}\"", escape_xaml_attr(k)));
             }
         }
+        // An expression label — the third instance of the same gap (see
+        // emit_host_button, emit_host_checkbox, emit_host_radio). Here the
+        // catch-all below is not empty, it falls back to `href`, so the
+        // symptom varied: with a string href the link rendered the raw URL
+        // instead of its label, and with a slot/expression href it rendered
+        // blank. Both are wrong; an explicit label must win.
+        Some(LayoutPropValue::Expr(src)) => match lower_expr_for_xbind(src, ctx) {
+            ExprLowering::Bindable(path) => {
+                content_attr.push_str(&format!(" Content=\"{{x:Bind {path}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Helper(call) => {
+                content_attr.push_str(&format!(" Content=\"{{x:Bind {call}, Mode=OneWay}}\""));
+            }
+            ExprLowering::Unsupported(reason) => {
+                return Err(PipelineEmitError::UnsupportedExpression(reason));
+            }
+        },
         _ => {
             // No label â€” fall back to href as the visible text.
             if let Some(LayoutPropValue::String(s)) = find_prop_value(node, "href") {
@@ -12839,16 +12887,46 @@ mod tests {
         );
     }
 
-    /// A `HostButton` whose label is a row expression must emit `Content`.
+    /// A labelled control whose label is a row expression must emit `Content`.
     ///
     /// `label: ( row[1] )` lands on `LayoutPropValue::Expr`, and that arm was
     /// missing from the label match — the catch-all swallowed it, so the
-    /// button emitted no `Content` attribute at all and rendered blank. It
-    /// looked like a styling gap for weeks because an empty button is
+    /// control emitted no `Content` attribute at all and rendered blank. It
+    /// looked like a styling gap for weeks because an empty control is
     /// invisible rather than obviously broken; it affected every task row,
     /// project-rail row and notes row.
+    ///
+    /// The gap was first found and fixed on `HostButton`. The sibling label
+    /// matches in the `HostCheckbox`, `HostRadio` and `HostLink` lowerings
+    /// had the exact same shape and the exact same missing arm, so this
+    /// guard covers all four content controls rather than just the one that
+    /// was noticed first. The general assertion — that no emitted content
+    /// control lacks `Content` — is the half that matters: it is what
+    /// catches the next element to grow a label match without an `Expr` arm.
+    ///
+    /// `HostLink` differed only in its symptom: its catch-all is not empty,
+    /// it falls back to `href`, so an expression label rendered the raw URL
+    /// (string href) or nothing at all (slot/expression href) rather than
+    /// the label the author asked for.
     #[test]
-    fn host_button_with_row_expression_label_emits_content() {
+    fn labelled_hosts_with_row_expression_label_emit_content() {
+        /// The XAML tags whose visible text comes from `Content`. A control
+        /// of one of these types with no `Content` attribute renders blank.
+        const CONTENT_CONTROLS: [&str; 4] =
+            ["Button", "CheckBox", "RadioButton", "HyperlinkButton"];
+
+        fn labelled(tag: &str) -> LayoutNode {
+            LayoutNode {
+                tag: tag.to_string(),
+                part_name: None,
+                props: vec![LayoutProp {
+                    name: "label".to_string(),
+                    value: LayoutPropValue::Expr("row[1]".to_string()),
+                }],
+                children: Vec::new(),
+            }
+        }
+
         let c = component(
             "Foo",
             vec![slot(
@@ -12872,35 +12950,39 @@ mod tests {
                     LayoutPropValue::SlotRef("rows".to_string()),
                     "row",
                     None,
-                    vec![LayoutNode {
-                        tag: "HostButton".to_string(),
-                        part_name: None,
-                        props: vec![LayoutProp {
-                            name: "label".to_string(),
-                            value: LayoutPropValue::Expr("row[1]".to_string()),
-                        }],
-                        children: Vec::new(),
-                    }],
+                    vec![
+                        labelled("HostButton"),
+                        labelled("HostCheckbox"),
+                        labelled("HostRadio"),
+                        labelled("HostLink"),
+                    ],
                 )],
             },
         );
         let r = compile(&c, &l, &empty_style("Foo"));
 
-        // Every emitted Button must carry a Content attribute — a button that
-        // renders empty is the failure mode this guards against.
+        // Every emitted content control must carry a Content attribute — a
+        // control that renders empty is the failure mode this guards against.
         for line in r.xaml.lines() {
             let t = line.trim();
-            if t.starts_with("<Button ") {
-                assert!(
-                    t.contains("Content="),
-                    "emitted a Button with no Content, which renders blank:\n{t}\n\nfull XAML:\n{}",
-                    r.xaml
-                );
+            for tag in CONTENT_CONTROLS {
+                if t.starts_with(&format!("<{tag} ")) {
+                    assert!(
+                        t.contains("Content="),
+                        "emitted a <{tag}> with no Content, which renders blank:\n{t}\n\nfull XAML:\n{}",
+                        r.xaml
+                    );
+                }
             }
         }
-        assert!(
-            r.xaml.contains("Content=\"{x:Bind"),
-            "row-expression label should lower to a binding, got:\n{}",
+
+        // ...and each of the three must specifically have lowered the row
+        // expression to a binding, not to some empty placeholder.
+        let bindings = r.xaml.matches("Content=\"{x:Bind").count();
+        assert_eq!(
+            bindings,
+            CONTENT_CONTROLS.len(),
+            "expected every row-expression label to lower to a binding, got {bindings}:\n{}",
             r.xaml
         );
     }
@@ -13082,6 +13164,31 @@ mod tests {
         assert!(p.csproj.contains("FlattenNativeRuntimeDlls"));
         assert!(p.csproj.contains("CopyMosaicNativeHostLibraries"));
         assert!(p.csproj.contains("$(MSBuildProjectDirectory)\\*.dll"));
+        // The window title must be correctly encoded UTF-8.
+        //
+        // Every generated WinUI app displayed `TaskApp â€" Mosaic â†' XAML
+        // demo` in its title bar: the em dash and arrow were double-encoded
+        // in the emitter's own source literal, so the mojibake shipped to
+        // every consumer. It survived because nothing asserted on the
+        // title's bytes -- cosmetic, always visible, easy to stop noticing.
+        assert!(
+            p.main_window_xaml.contains('\u{2014}'),
+            "title should carry a real em dash (U+2014), got:\n{}",
+            p.main_window_xaml
+        );
+        assert!(
+            p.main_window_xaml.contains('\u{2192}'),
+            "title should carry a real rightwards arrow (U+2192), got:\n{}",
+            p.main_window_xaml
+        );
+        // `Ã¢` is the giveaway: a UTF-8 em dash reinterpreted as Latin-1 and
+        // re-encoded.
+        assert!(
+            !p.main_window_xaml.contains('\u{00e2}'),
+            "title contains a double-encoded character, got:\n{}",
+            p.main_window_xaml
+        );
+
         // App.xaml.cs references MainWindow.
         assert!(p.app_xaml_cs.contains("new MainWindow()"));
         // MainWindow.xaml.cs has the dispatch stub.

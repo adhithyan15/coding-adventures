@@ -3676,6 +3676,118 @@
         "ES-EXT-295-SENDERO"
       ],
       "after": []
+    },
+    {
+      "id": "ES-PATH-296-01",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ES-C296-caballo",
+        "ES-C296-vaca",
+        "ES-C296-oveja",
+        "ES-C296-gallina",
+        "ES-C296-burro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-296-ANIMALES"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-297-01",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ES-C297-sarten",
+        "ES-C297-horno",
+        "ES-C297-tenedor",
+        "ES-C297-ajo",
+        "ES-C297-sopa"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-297-COCINA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-298-01",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ES-C298-tal-vez",
+        "ES-C298-puede-ser",
+        "ES-C298-en-efecto",
+        "ES-C298-sin-duda",
+        "ES-C298-ni-hablar"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-298-RESPUESTAS"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-299-01",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ES-C299-campo",
+        "ES-C299-granja",
+        "ES-C299-ganado",
+        "ES-C299-cosecha",
+        "ES-C299-pastor"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-299-GRANJA"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-300-01",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ES-C300-sed",
+        "ES-C300-sueno",
+        "ES-C300-piel",
+        "ES-C300-sangre",
+        "ES-C300-remedio"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-300-CUERPO"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-301-01",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ES-C301-cuerda",
+        "ES-C301-aguja",
+        "ES-C301-hilo",
+        "ES-C301-cesta",
+        "ES-C301-papel"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-301-PEDIR"
+      ],
+      "after": []
+    },
+    {
+      "id": "ES-PATH-302-01",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ES-C302-calle",
+        "ES-C302-esquina",
+        "ES-C302-huella",
+        "ES-C302-puerto",
+        "ES-C302-faro"
+      ],
+      "before": [],
+      "inline": [
+        "ES-EXT-302-CALLE"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -3684,7 +3796,8 @@
         "ES-PATH-001",
         "ES-PATH-005",
         "ES-PATH-282-01",
-        "ES-PATH-289-01"
+        "ES-PATH-289-01",
+        "ES-PATH-296-01"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -3697,7 +3810,8 @@
       "segments": [
         "ES-PATH-010",
         "ES-PATH-283-01",
-        "ES-PATH-290-01"
+        "ES-PATH-290-01",
+        "ES-PATH-297-01"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -3708,7 +3822,8 @@
       "segments": [
         "ES-PATH-017",
         "ES-PATH-284-01",
-        "ES-PATH-291-01"
+        "ES-PATH-291-01",
+        "ES-PATH-298-01"
       ],
       "omits": [
         "RESPONSE-YESNO",
@@ -3724,7 +3839,8 @@
         "ES-PATH-007-ORIGIN",
         "ES-PATH-021",
         "ES-PATH-285-01",
-        "ES-PATH-292-01"
+        "ES-PATH-292-01",
+        "ES-PATH-299-01"
       ],
       "omits": [
         "PRONOUN-I",
@@ -3742,7 +3858,8 @@
         "ES-PATH-011-SER-ESTAR",
         "ES-PATH-022",
         "ES-PATH-286-01",
-        "ES-PATH-293-01"
+        "ES-PATH-293-01",
+        "ES-PATH-300-01"
       ],
       "omits": [
         "WORD-GOOD"
@@ -3756,7 +3873,8 @@
         "ES-PATH-024",
         "ES-PATH-024-PRONOUN-EVIDENCE",
         "ES-PATH-287-01",
-        "ES-PATH-294-01"
+        "ES-PATH-294-01",
+        "ES-PATH-301-01"
       ],
       "omits": [],
       "relocates": {}
@@ -3765,7 +3883,8 @@
       "segments": [
         "ES-PATH-012",
         "ES-PATH-288-01",
-        "ES-PATH-295-01"
+        "ES-PATH-295-01",
+        "ES-PATH-302-01"
       ],
       "omits": [
         "FAREWELL-CASUAL"
@@ -7476,6 +7595,111 @@
         "ES-C295-orilla",
         "ES-C295-isla",
         "ES-C295-niebla"
+      ]
+    },
+    {
+      "id": "ES-EXT-296-ANIMALES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the horse, the cow, the sheep, the hen and the donkey in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C296-caballo",
+        "ES-C296-vaca",
+        "ES-C296-oveja",
+        "ES-C296-gallina",
+        "ES-C296-burro"
+      ]
+    },
+    {
+      "id": "ES-EXT-297-COCINA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the pan, the oven, the fork, the garlic and the soup in Spanish, and thank somebody for the meal.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C297-sarten",
+        "ES-C297-horno",
+        "ES-C297-tenedor",
+        "ES-C297-ajo",
+        "ES-C297-sopa"
+      ]
+    },
+    {
+      "id": "ES-EXT-298-RESPUESTAS",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can answer someone in Spanish anywhere from maybe to out of the question, and say how strong each answer is.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C298-tal-vez",
+        "ES-C298-puede-ser",
+        "ES-C298-en-efecto",
+        "ES-C298-sin-duda",
+        "ES-C298-ni-hablar"
+      ]
+    },
+    {
+      "id": "ES-EXT-299-GRANJA",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the field, the farm, the livestock, the harvest and the shepherd in Spanish, and say I am from the country.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C299-campo",
+        "ES-C299-granja",
+        "ES-C299-ganado",
+        "ES-C299-cosecha",
+        "ES-C299-pastor"
+      ]
+    },
+    {
+      "id": "ES-EXT-300-CUERPO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say in Spanish that I am thirsty or sleepy, name the skin and the blood, and say there is no remedy.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C300-sed",
+        "ES-C300-sueno",
+        "ES-C300-piel",
+        "ES-C300-sangre",
+        "ES-C300-remedio"
+      ]
+    },
+    {
+      "id": "ES-EXT-301-PEDIR",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can ask for a rope, a needle, thread, a basket and paper in Spanish, politely.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C301-cuerda",
+        "ES-C301-aguja",
+        "ES-C301-hilo",
+        "ES-C301-cesta",
+        "ES-C301-papel"
+      ]
+    },
+    {
+      "id": "ES-EXT-302-CALLE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name the street, the corner, the footprint, the harbour and the lighthouse in Spanish.",
+      "prerequisites": [],
+      "lessons": [
+        "ES-C302-calle",
+        "ES-C302-esquina",
+        "ES-C302-huella",
+        "ES-C302-puerto",
+        "ES-C302-faro"
       ]
     }
   ],

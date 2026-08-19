@@ -1715,7 +1715,24 @@ fn encode_stream_instr(
                 out.push(lane);
                 return Ok(1);
             }
+            wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
+                // v128.load/v128.store (SIMD widen PR15): a standard
+                // `memarg` immediate (align, offset), same shape and
+                // parser every scalar `iNN.load`/`iNN.store` uses --
+                // this first slice doesn't support an explicit leading
+                // memidx token (memory 0 only, same scope note as the
+                // executor in wasm-execution).
+                let (memarg, consumed) = parse_memarg(following, 0);
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+                out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+                return Ok(consumed);
+            }
             wasm_opcodes::SimdOpKind::Splat
+            | wasm_opcodes::SimdOpKind::SplatI8x16
+            | wasm_opcodes::SimdOpKind::SplatI16x8
+            | wasm_opcodes::SimdOpKind::SplatI64x2
             | wasm_opcodes::SimdOpKind::Add
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
@@ -2385,7 +2402,24 @@ fn encode_flat_instr(
                 out.push(lane);
                 return Ok(());
             }
+            wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
+                // v128.load/v128.store (SIMD widen PR15): a standard
+                // `memarg` immediate (align, offset) -- this first slice
+                // doesn't support an explicit leading memidx token
+                // (memory 0 only, same scope note as the executor in
+                // wasm-execution).
+                let (memarg, operand_start) = parse_memarg(args, 0);
+                encode_instr_list(&args[operand_start..], icx, out)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.extend(wasm_leb128::encode_unsigned(memarg.0 as u64));
+                out.extend(wasm_leb128::encode_unsigned(memarg.1 as u64));
+                return Ok(());
+            }
             wasm_opcodes::SimdOpKind::Splat
+            | wasm_opcodes::SimdOpKind::SplatI8x16
+            | wasm_opcodes::SimdOpKind::SplatI16x8
+            | wasm_opcodes::SimdOpKind::SplatI64x2
             | wasm_opcodes::SimdOpKind::Add
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
@@ -5265,6 +5299,58 @@ mod tests {
         assert!(code_of(&m, 9).windows(3).any(|w| w == [0xFD, 0xCB, 0x01]), "i64x2.shl: {:?}", code_of(&m, 9));
         assert!(code_of(&m, 10).windows(3).any(|w| w == [0xFD, 0xCC, 0x01]), "i64x2.shr_s: {:?}", code_of(&m, 10));
         assert!(code_of(&m, 11).windows(3).any(|w| w == [0xFD, 0xCD, 0x01]), "i64x2.shr_u: {:?}", code_of(&m, 11));
+    }
+
+    #[test]
+    fn v128_load_and_store_encode_the_real_sub_opcodes_with_a_memarg() {
+        // SIMD widen PR15: v128.load/v128.store -- the FIRST SIMD ops
+        // needing a memarg immediate (align + offset), both single-byte
+        // sub-opcodes (0x00/0x0B). Covers both the folded form (with an
+        // explicit `offset=` attribute) and the flat/stream form, mirroring
+        // `memory_load_with_offset_attribute`'s scalar-op precedent above.
+        let m = parse_module(
+            r#"(module (memory 1)
+                 (func (param i32) (result v128) (v128.load offset=8 (local.get 0)))
+                 (func (param i32 v128) (v128.store (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        // local.get 0 ; v128.load align=0 offset=8 ; end
+        assert_eq!(code_of(&m, 0), &[0x20, 0x00, 0xFD, 0x00, 0x00, 0x08, 0x0B]);
+        // local.get 0 ; local.get 1 ; v128.store align=0 offset=0 ; end
+        assert_eq!(code_of(&m, 1), &[0x20, 0x00, 0x20, 0x01, 0xFD, 0x0B, 0x00, 0x00, 0x0B]);
+
+        let flat = parse_module(
+            "(module (memory 1) (func (param i32) (result v128) local.get 0 v128.load))",
+        )
+        .unwrap();
+        assert_eq!(code_of(&flat, 0), &[0x20, 0x00, 0xFD, 0x00, 0x00, 0x00, 0x0B]);
+    }
+
+    #[test]
+    fn splat_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR16: i8x16.splat/i16x8.splat/i64x2.splat -- same
+        // "no immediate beyond the opcode byte itself" encoder bucket as
+        // every prior no-memarg SIMD op (reuses the shared match arm
+        // `i32x4.splat` already lives in), just three new lane widths.
+        // All three sub-opcodes (0x0F/0x10/0x12) are < 128, so all
+        // single-byte LEB128 -- unlike `i32x4.splat` (0x11, also < 128,
+        // already implemented), this run has no 2-byte cases.
+        let m = parse_module(
+            r#"(module
+                 (func (param i32) (result v128) (i8x16.splat (local.get 0)))
+                 (func (param i32) (result v128) (i16x8.splat (local.get 0)))
+                 (func (param i64) (result v128) (i64x2.splat (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x0F]), "i8x16.splat: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x10]), "i16x8.splat: {:?}", code_of(&m, 1));
+        assert!(code_of(&m, 2).windows(2).any(|w| w == [0xFD, 0x12]), "i64x2.splat: {:?}", code_of(&m, 2));
+
+        let flat = parse_module(
+            "(module (func (param i32) (result v128) local.get 0 i8x16.splat))",
+        )
+        .unwrap();
+        assert!(code_of(&flat, 0).windows(2).any(|w| w == [0xFD, 0x0F]), "flat i8x16.splat: {:?}", code_of(&flat, 0));
     }
 
     #[test]

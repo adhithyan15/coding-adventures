@@ -8305,6 +8305,97 @@
       "tex": "spanish/book/chapters/ch295-el-sendero.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 296,
+      "sourceHash": "fnv1a64:0b82a9609bdf6ec5",
+      "lessonIds": [
+        "ES-C296-caballo",
+        "ES-C296-vaca",
+        "ES-C296-oveja",
+        "ES-C296-gallina",
+        "ES-C296-burro"
+      ],
+      "tex": "spanish/book/chapters/ch296-animales.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 297,
+      "sourceHash": "fnv1a64:0428a3312b94b865",
+      "lessonIds": [
+        "ES-C297-sarten",
+        "ES-C297-horno",
+        "ES-C297-tenedor",
+        "ES-C297-ajo",
+        "ES-C297-sopa"
+      ],
+      "tex": "spanish/book/chapters/ch297-la-cocina.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 298,
+      "sourceHash": "fnv1a64:2a8cf27eb25eb83f",
+      "lessonIds": [
+        "ES-C298-tal-vez",
+        "ES-C298-puede-ser",
+        "ES-C298-en-efecto",
+        "ES-C298-sin-duda",
+        "ES-C298-ni-hablar"
+      ],
+      "tex": "spanish/book/chapters/ch298-mas-respuestas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 299,
+      "sourceHash": "fnv1a64:ae43b77d1d396b1b",
+      "lessonIds": [
+        "ES-C299-campo",
+        "ES-C299-granja",
+        "ES-C299-ganado",
+        "ES-C299-cosecha",
+        "ES-C299-pastor"
+      ],
+      "tex": "spanish/book/chapters/ch299-la-granja.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 300,
+      "sourceHash": "fnv1a64:d5794e18cf2873ab",
+      "lessonIds": [
+        "ES-C300-sed",
+        "ES-C300-sueno",
+        "ES-C300-piel",
+        "ES-C300-sangre",
+        "ES-C300-remedio"
+      ],
+      "tex": "spanish/book/chapters/ch300-el-cuerpo-dice.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 301,
+      "sourceHash": "fnv1a64:f96cd8040d951949",
+      "lessonIds": [
+        "ES-C301-cuerda",
+        "ES-C301-aguja",
+        "ES-C301-hilo",
+        "ES-C301-cesta",
+        "ES-C301-papel"
+      ],
+      "tex": "spanish/book/chapters/ch301-mas-cosas-que-pedir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 302,
+      "sourceHash": "fnv1a64:af61b04e03153ec1",
+      "lessonIds": [
+        "ES-C302-calle",
+        "ES-C302-esquina",
+        "ES-C302-huella",
+        "ES-C302-puerto",
+        "ES-C302-faro"
+      ],
+      "tex": "spanish/book/chapters/ch302-calle-y-faro.tex"
+    },
+    {
       "language": "tamil",
       "chapter": 6,
       "sourceHash": "fnv1a64:2dfc8f46bd0b295e",

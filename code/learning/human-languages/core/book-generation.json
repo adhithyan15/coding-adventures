@@ -5512,6 +5512,41 @@
       "output": "spanish/book/chapters/ch295-el-sendero.tex"
     },
     {
+      "language": "spanish",
+      "chapter": 296,
+      "output": "spanish/book/chapters/ch296-animales.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 297,
+      "output": "spanish/book/chapters/ch297-la-cocina.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 298,
+      "output": "spanish/book/chapters/ch298-mas-respuestas.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 299,
+      "output": "spanish/book/chapters/ch299-la-granja.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 300,
+      "output": "spanish/book/chapters/ch300-el-cuerpo-dice.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 301,
+      "output": "spanish/book/chapters/ch301-mas-cosas-que-pedir.tex"
+    },
+    {
+      "language": "spanish",
+      "chapter": 302,
+      "output": "spanish/book/chapters/ch302-calle-y-faro.tex"
+    },
+    {
       "language": "hindi",
       "chapter": 52,
       "output": "hindi/book/chapters/ch52-in-the-kitchen.tex",

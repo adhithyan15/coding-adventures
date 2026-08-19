@@ -1414,8 +1414,20 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         offset += 16;
                         push_val(&mut stack, ValueType::V128);
                     }
-                    wasm_opcodes::SimdOpKind::Splat => {
+                    wasm_opcodes::SimdOpKind::Splat
+                    | wasm_opcodes::SimdOpKind::SplatI8x16
+                    | wasm_opcodes::SimdOpKind::SplatI16x8 => {
+                        // i8x16.splat/i16x8.splat (SIMD widen PR16): same
+                        // "pop I32, push V128" shape as i32x4.splat --
+                        // only the low bits of the popped i32 matter at
+                        // runtime, invisible to the type checker.
                         pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::SplatI64x2 => {
+                        // i64x2.splat (SIMD widen PR16): the FIRST splat
+                        // that pops I64 instead of I32.
+                        pop_expect(&mut stack, frame!(), ValueType::I64)?;
                         push_val(&mut stack, ValueType::V128);
                     }
                     wasm_opcodes::SimdOpKind::Add
@@ -1602,6 +1614,55 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::I32)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::Load | wasm_opcodes::SimdOpKind::Store => {
+                        // v128.load/v128.store (SIMD widen PR15): a
+                        // standard `memarg` immediate (align, offset[,
+                        // memidx]) -- decoded exactly like every scalar
+                        // `iNN.load`/`iNN.store` (mirrors the `0x28..=
+                        // 0x3E` arm's own `MULTI_MEMORY_FLAG` handling)
+                        // so a stray multi-memory encoding still
+                        // consumes the right number of bytes and doesn't
+                        // desync the rest of the function body. Unlike
+                        // the scalar arm, this first slice's EXECUTOR
+                        // unconditionally targets memory 0 (see
+                        // wasm-execution's own scope note) -- so an
+                        // explicit non-zero memidx must be REJECTED here,
+                        // not merely bounds-checked against
+                        // `ctx.memory_count`. Bounds-checking alone would
+                        // let a module targeting a real, in-bounds memory
+                        // 1 validate successfully and then silently read/
+                        // write memory 0 at execution time instead --
+                        // fail closed until multi-memory v128.load/store
+                        // is actually implemented (security review
+                        // finding, task #162-164).
+                        if !ctx.has_memory {
+                            err!("v128.load/v128.store used, but module declares no memory");
+                        }
+                        const MULTI_MEMORY_FLAG: u32 = 0x40;
+                        let (raw_align, sz1) = decode_unsigned(code, offset).map_err(|e| ValidationError::Other(format!("bad v128 memarg align: {e}")))?;
+                        let (_mem_offset, sz2) = decode_unsigned(code, offset + sz1).map_err(|e| ValidationError::Other(format!("bad v128 memarg offset: {e}")))?;
+                        let raw_align = raw_align as u32;
+                        let has_memidx = raw_align & MULTI_MEMORY_FLAG != 0;
+                        offset += sz1 + sz2;
+                        if has_memidx {
+                            let (memidx, sz3) = decode_idx(code, offset)?;
+                            offset += sz3;
+                            if memidx != 0 {
+                                err!("v128.load/v128.store: multi-memory (memory index {memidx}) is not yet supported -- only memory 0");
+                            }
+                        }
+                        match simd_op.kind {
+                            wasm_opcodes::SimdOpKind::Load => {
+                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                                push_val(&mut stack, ValueType::V128);
+                            }
+                            wasm_opcodes::SimdOpKind::Store => {
+                                pop_expect(&mut stack, frame!(), ValueType::V128)?;
+                                pop_expect(&mut stack, frame!(), ValueType::I32)?;
+                            }
+                            _ => unreachable!("only Load/Store reach this arm"),
+                        }
                     }
                 }
             }

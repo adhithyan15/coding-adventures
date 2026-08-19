@@ -1,5 +1,94 @@
 # Changelog
 
+## 0.16.0 — SIR22 "APL addendum" real codegen (Phase A Slice 3)
+
+Part of the SIR22/SIR23 backend-expansion initiative (`code/specs/
+SIR22-array-matrix-semantic-ir.md`'s "Backend impact" section) — this PR
+opens this backend to the nine-node SIR22 "APL addendum" that Slice 2 left
+deferred: `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`. Like Slice 2, this PR spans
+two packages — this crate, and `code/packages/python/sir-runtime-array`
+(0.1.0 -> 0.2.0), which gains the nine new functions the emitter now calls
+into.
+
+**`find_unimplemented_sir22_addendum_node` is REMOVED.** Slice 2's
+dedicated pre-emit `semantic_ir::Visitor` tree-walk (in `lib.rs`) existed
+solely to reject the nine addendum nodes cleanly, since they share
+`NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the base cut and so can't be
+told apart by a bare feature-flag check. Real codegen now exists for all
+nine, so the walk — and its call site in `PythonBackend::compile`, and the
+two tests that pinned the old rejecting behavior
+(`rejects_reduce_node_cleanly_instead_of_panicking_in_emit`,
+`rejects_catenate_node_nested_inside_a_let_binding`) — are gone. Their
+replacements (`emits_reduce_node_as_a_real_runtime_call`,
+`emits_catenate_node_nested_inside_a_let_binding`) assert the opposite: a
+real `_sir_array_reduce(...)`/`_sir_array_catenate(...)` call appears in
+the emitted source, not an `UnsupportedFeature` error.
+
+**Only a single call site per node was needed — the base cut's own
+dual-position (`Stmt::IndexSet`) situation does NOT apply here.** Slice 2
+had to wire `IndexSet` into both `emit_stmt_inner` (statement position)
+and `emit_block_as_expr`'s walrus-tuple path (expression position),
+because `Stmt` has no single shared emit function. All nine addendum nodes
+are `Expr`s, and this crate already has exactly one `emit_expr` function
+that every position (statement position, walrus-tuple position, a nested
+operand, ...) routes through — `emit_block_as_expr` itself calls back into
+`emit_expr` for every element it composes into a tuple — so one match arm
+per node, added to `emit_expr`, is the entire fix. Confirmed by this PR's
+own `emits_catenate_node_nested_inside_a_let_binding` test, which forces
+`Catenate` into a `LetBinding`'s value (a non-trivial nesting position)
+and gets real codegen with no second arm anywhere.
+
+**Reference source: JS's inlined `ArrayRt`, not TS's package.** Per the
+SIR22 spec's own note that TS's `sir-runtime-array` package lagged behind
+JS's inlined port, `@coding-adventures/sir-runtime-array` (TS) still had
+no addendum functions at the time of this port — `semantic-ir-to-
+javascript/src/runtime.rs`'s "SIR22 addendum: APL primitive operators"
+section (the proven, already-shipped implementation) was the port source
+instead, adapted from JS's `Float64Array`-backed rank model to this
+package's own `list`-backed, native-`int`/`float`-preserving one (see the
+sibling package's own CHANGELOG entry below for the full algorithm
+discussion — reduce/scan's column-major row-indexing, outer's rank <= 1
+scoping, reshape's row-major-fill-then-transpose-to-column-major
+gotcha, index_generator/index_of's 1-based convention, catenate's five
+rank combinations).
+
+**Security**: every one of the nine new functions was re-examined
+specifically for the SAME missing-dimension-validation bug class Slice
+2's own security review found and fixed in `matmul` (which originally
+validated only the *output* shape, letting an unbounded `m·n·ka`
+multiply-add loop through from two individually-legal inputs sharing a
+large, unchecked inner dimension). `outer`'s `(m, n)` output,
+`index_of`'s `len(haystack) * len(needle)` scan-cost product,
+`catenate`'s combined length, `index_generator`'s `n`, and `reshape`'s
+target element count are each validated via `checked_shape_size` *before*
+allocating or looping — not just the most obviously dangerous one. New
+`tests/sir22_array.rs::index_of_product_dos_guard_rejects_two_individually_legal_operands`
+mirrors the `matmul` regression directly: two length-10,000 vectors (each
+individually far under the `1 << 26` cap) whose product exceeds it, run
+under a real `python3` process and asserted to exit non-zero with a
+`checked_shape_size`-shaped error — not just a Rust-side unit assertion.
+
+New `tests/sir22_array.rs` coverage (12 new tests, all executed under a
+real `python3`/`python` interpreter): `reduce` on both a vector and a
+2x3 matrix (the matrix case specifically proves the column-major
+row-indexing is not accidentally transposed — a swapped row/col would sum
+columns instead of rows); `scan` on a vector; `outer` product of two
+vectors; `shape` of a scalar (asserted via the raw `NDArray`'s own
+`__repr__`, pinning `shape=(0,)` — not just an element count) and of a
+matrix; `reshape` to a non-square 3x2 target (the row-major-fill-then-
+transpose-to-column-major case); `index_generator` (1-based); `index_of`
+found and not-found (not-found asserted as `len(haystack) + 1`, never a
+sentinel like `-1`); `ravel` of a matrix; `catenate` of two vectors and of
+two matrices with equal row counts; plus the DoS-guard regression above.
+Since no base-cut node produces a genuine rank-1 vector directly (`ArrayLit`
+is always rank-2 via `from_rows`; `Range` is always the rank-2 `1 x n` row
+MATLAB's colon syntax implies), most tests obtain a rank-1 operand by
+`Ravel`-ing a 1-row `ArrayLit` first — the same thing a real APL frontend's
+own lowering would have to do.
+
+`semantic-ir-to-python` 0.15.0 -> 0.16.0.
+
 ## 0.15.0 — SIR22 array/matrix base cut (second-wave backend rollout, Phase A Slice 2)
 
 Part of the SIR22/SIR23 backend-expansion initiative (opening

@@ -1,5 +1,49 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.40 — 2026-08-19 — SIMD: splat family text-form; NaN payload underscore fix (task #165-167)
+
+### Added
+
+- `SimdOpKind::SplatI8x16`/`SplatI16x8`/`SplatI64x2` join the shared
+  "no immediate beyond the opcode byte itself" SIMD dispatch arm
+  (already used for `i32x4.splat` and every other no-operand SIMD op)
+  in both the folded and flat instruction encoders. Name-to-op
+  resolution is fully generic (`get_simd_op_by_name`), so no separate
+  name-matching logic was needed.
+- Dedicated encoding test proving the real single-byte LEB128 bytes
+  for all three (`[0xFD, 0x0F]`/`[0xFD, 0x10]`/`[0xFD, 0x12]`), in
+  both folded and flat form.
+
+### Fixed
+
+- Real corpus bug found while vendoring `simd_splat.wast` (see
+  `wasm-conformance`'s own CHANGELOG): `nan:0x7f_ffff` (a `_` digit
+  separator inside a NaN payload literal) made the WHOLE script fail
+  to parse, since `parse_f32_bits`/`parse_f64_bits`'s `nan:0x<payload>`
+  arm called `from_str_radix` directly on the raw payload text instead
+  of routing it through `strip_underscores` first, unlike every other
+  numeric literal path in `numeric.rs`. 2 new regression tests confirm
+  underscored payloads now parse correctly for both `f32` and `f64`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.39 — 2026-08-18 — SIMD: v128.load/v128.store text-form (task #162-164)
+
+### Added
+
+- Both the folded (`encode_flat_instr`) and flat (`encode_stream_instr`)
+  SIMD dispatch arms gain a new `SimdOpKind::Load | SimdOpKind::Store`
+  case -- the FIRST SIMD ops this crate encodes that carry a `memarg`
+  immediate (`offset=`/`align=` attributes). Reuses the existing
+  `parse_memarg` helper the scalar `i32.load`/etc. family already
+  uses, then emits `0xFD`, the sub-opcode LEB128, and the memarg's
+  align/offset LEB128s -- same encoding shape as the scalar ops, just
+  behind the `0xFD` SIMD prefix. Verified via a dedicated test covering
+  the folded form (with an explicit `offset=` attribute, for both
+  `v128.load` and `v128.store`) and the flat/stream form.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.38 — 2026-08-18 — SIMD: shift family text-form (task #159-161)
 
 ### Added

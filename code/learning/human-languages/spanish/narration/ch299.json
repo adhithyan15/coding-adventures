@@ -1,0 +1,795 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "chapter": 299,
+  "title": "The Field and the Farm --- Field, Farm, Livestock, Harvest, Shepherd",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:ee9da7a1685b5887",
+  "lessons": [
+    {
+      "id": "ES-C299-campo",
+      "sequence": 4070,
+      "title": "el campo — flat ground, and everything pitched on it",
+      "headword": "el campo",
+      "romanization": "el campo",
+      "gloss": "the field, the countryside — Latin campus, flat open ground; camp, campus, campaign and champion are all fought or pitched on it",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9825a5f697ba6d0c",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before a new run: what is inside dubitare? (Duo, two.) And what does ni hablar refuse? (The conversation, not just the request.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pueblo — what usually sits in the middle of it."
+            },
+            {
+              "kind": "speech",
+              "text": "el valle — the shape of the land it lies in."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "CAM-po, stress on the first part. The c before a is hard. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el campo — \"the field,\" and also \"the countryside,\" everything that is not the town."
+            },
+            {
+              "kind": "speech",
+              "text": "Latin campus meant flat open ground — not a farmer's field particularly, just level land with nothing on it. Which is precisely why so much got pitched there."
+            },
+            {
+              "kind": "speech",
+              "text": "An army stopped on flat ground, so a camp is one. A season of fighting was spent out on it, so a campaign is one. Whoever fought for a village in single combat was its campio, the man of the field, which is English champion. And when American colleges wanted a word for their grounds, they took campus back whole and unchanged."
+            },
+            {
+              "kind": "speech",
+              "text": "So the same flat ground gave English a tent, a war, a hero and a university. And it gave Spanish the word for everywhere that is not a town: vivo en el campo means you live out there, among the fields, whether or not you farm."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ground itself, before anything is put on it."
+            },
+            {
+              "kind": "speech",
+              "text": "El pueblo is where people are; el campo is what surrounds it. Between them you can already say roughly where somebody is from, which is most of what that question ever wants."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el campo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el campo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pueblo, then el campo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pueblo*, then *el campo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "soy del campo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *soy del campo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did campus mean? (Flat open ground.) What was a campio? (The man who fought on it — a champion.) And what does el campo mean besides a field? (The countryside.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C299-granja",
+      "sequence": 4080,
+      "title": "la granja — a building named after what is in it",
+      "headword": "la granja",
+      "romanization": "la granja",
+      "gloss": "the farm — from granum, the grain: a farm is named after the one thing it was built to store",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:159064368857c151",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Two back: what does ni hablar refuse? (The conversation.) And what did campus mean? (Flat open ground.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el trigo — what this building was built to hold."
+            },
+            {
+              "kind": "speech",
+              "text": "el campo — the ground it stands on."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "GRAN-ja, stress on the first part. The g is hard, and the j is the scrape. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la granja — \"the farm.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Behind it is Latin granum, the grain — the same grain you met being rubbed out of its husk in el trigo. A granja began as the building where that grain was kept, and then the name spread outwards over the yard, the animals and the whole holding."
+            },
+            {
+              "kind": "speech",
+              "text": "English has the identical building twice. A granary is where the grain goes. A grange is the farmhouse that grew up around one, which is why so many English villages have a Grange in them and nobody remembers why."
+            },
+            {
+              "kind": "speech",
+              "text": "This is a common way for names to work. The store gives its name to the farm, the way la sopa took its name from the bread rather than the broth. The thing you kept was more worth naming than the place you kept it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The ground and now the buildings on it."
+            },
+            {
+              "kind": "speech",
+              "text": "You have had el trigo for a while as something that grows. La granja is where it stops being a crop and starts being a store, and el campo is the flat land both of them sit on."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la granja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la granja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el campo, then la granja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el campo*, then *la granja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el trigo de la granja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el trigo de la granja*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What is granum? (The grain.) What was a granja before it was a farm? (The place the grain was stored.) And which English farmhouse is the same word? (A grange.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C299-ganado",
+      "sequence": 4090,
+      "title": "el ganado — the animals as a bank account",
+      "headword": "el ganado",
+      "romanization": "el ganado",
+      "gloss": "the livestock — from ganar, to gain: cattle are simply \"what has been gained\", the way English cattle and chattel are what you own",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:bd899dc04f0b19c3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did campus mean? (Flat open ground.) And what was a granja before it was a farm? (Where the grain was stored.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la vaca — one of these, counted singly."
+            },
+            {
+              "kind": "speech",
+              "text": "el dinero — what this word is really about."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ga-NA-do, stress in the middle. The g is hard and the d between vowels is soft, almost a th. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el ganado — \"the livestock,\" the animals of a farm taken together."
+            },
+            {
+              "kind": "speech",
+              "text": "It is built on ganar, to gain or to win, and it means, quite plainly, \"what has been gained.\" Not the beasts as creatures. The beasts as the thing you have got."
+            },
+            {
+              "kind": "speech",
+              "text": "English did exactly the same and hid it better. Cattle and chattel are one word split in two, both from Latin capitalis, \"of the head\" — property counted by the head. And capitalis also gave capital, the money sense. So in English, as in Spanish, the herd and the fortune are the same idea."
+            },
+            {
+              "kind": "speech",
+              "text": "That is why el ganado covers cows and sheep and pigs without distinction. It is not a word about animals at all. It is a word about wealth that happens to walk around."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Ground, buildings, and now the animals — and the animals turn out to be an account."
+            },
+            {
+              "kind": "speech",
+              "text": "La vaca is one cow. El ganado is the whole herd seen from the ledger, which is how a farmer in any century has actually seen it."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ganado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ganado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la granja, then el ganado",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la granja*, then *el ganado*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el ganado del campo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el ganado del campo*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ganar mean? (To gain, to win.) So what is el ganado literally? (What has been gained.) And which English word for money comes from counting animals by the head? (Capital.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C299-cosecha",
+      "sequence": 4100,
+      "title": "la cosecha — a root you have met before",
+      "headword": "la cosecha",
+      "romanization": "la cosecha",
+      "gloss": "the harvest — from collecta, the gathered-up, which is the colligere you already took apart once",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:cef9650a1be80eca",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three questions. What did campus mean? (Flat open ground.) What is granum? (Grain.) And what is el ganado, literally? (What has been gained.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tomar — where you first took colligere apart."
+            },
+            {
+              "kind": "speech",
+              "text": "la semilla — where this ends up starting again."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "co-SE-cha, stress in the middle. The ch is one sound, as in English church. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la cosecha — \"the harvest,\" both the gathering and the crop gathered."
+            },
+            {
+              "kind": "speech",
+              "text": "You have already done the hard part of this one. When tomar was taken apart, the word Latin actually left behind turned out to be coger, from colligere — com-, together, and legere, to pick. That is where collect comes from, and coil, and the leer you read with."
+            },
+            {
+              "kind": "speech",
+              "text": "Cosecha is the same word wearing its finished-and-done form: collecta, \"the gathered-in.\" So the harvest is not named for cutting or for work. It is named for the picking-up afterwards, which is the part that counts."
+            },
+            {
+              "kind": "speech",
+              "text": "One use worth knowing. On a wine label, una buena cosecha is a good vintage — English does the same thing, since a vintage is only a harvest with a year attached to it."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four of the farm, and one of them cost you almost nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "Colligere was already in your hands. All that was new here was which shape it takes when the picking is over, and now the same root is doing work in three places at once."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la cosecha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la cosecha*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "la granja and la cosecha, one after the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *la granja* and *la cosecha*, one after the other]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — el campo, la granja, el ganado, la cosecha",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — *el campo*, *la granja*, *el ganado*, *la cosecha*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two pieces are in colligere? (Com-, together, and legere, to pick.) Which English word is it most plainly? (Collect.) And what does una buena cosecha mean on a bottle? (A good vintage.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C299-pastor",
+      "sequence": 4110,
+      "title": "el pastor — the one who feeds",
+      "headword": "el pastor",
+      "romanization": "el pastor",
+      "gloss": "the shepherd — from pascere, to graze; the pasture, the pastor of a church and a repast are all feeding",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8b1e163acffa128d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the last of the five: what did campus mean? (Flat open ground.) What is el ganado literally? (What has been gained.) And which two pieces are in colligere? (Com- and legere.)"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "la oveja — what this person walks behind."
+            },
+            {
+              "kind": "speech",
+              "text": "el maestro — another person named for what they do."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "pas-TOR, stress on the end, and no accent needed because a word ending in -r is expected there. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "el pastor — \"the shepherd.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Latin pascere meant to put animals out to feed, and pastor was the one who did it. Note what is not in the word: nothing about sheep, nothing about walking, nothing about a crook. Only the feeding."
+            },
+            {
+              "kind": "speech",
+              "text": "That single idea fans out a long way in English. A pasture is the ground the animals are fed on. A repast is a meal — a feeding, taken again. And a pastor in a church is a shepherd of people, a metaphor so old it has stopped sounding like one."
+            },
+            {
+              "kind": "speech",
+              "text": "The ending is the -or you met on el tenedor: the one who does the thing. So pastor parses as neatly as tenedor did, once you know that the thing being done is feeding."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five: el campo, la granja, el ganado, la cosecha, el pastor."
+            },
+            {
+              "kind": "speech",
+              "text": "Read in order they are a whole holding: the ground, the buildings, the animals, what comes off the land, and the person who keeps it moving. Say soy del campo and every one of them is behind the sentence."
+            },
+            {
+              "kind": "speech",
+              "text": "And three of the five were named for something other than themselves — a farm for its grain, a herd for its value, a harvest for the gathering. Spanish names things by what they are for. Once you expect that, half the words explain themselves."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pastor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pastor*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "el pastor y la oveja",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *el pastor y la oveja*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five — el campo, la granja, el ganado, la cosecha, el pastor",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five — *el campo*, *la granja*, *el ganado*, *la cosecha*, *el pastor*]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did pascere mean? (To put out to feed.) What is a repast, at root? (A feeding again — a meal.) And why is a churchman called a pastor? (He is a shepherd of people.)"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

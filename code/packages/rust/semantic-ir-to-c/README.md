@@ -305,16 +305,15 @@ against — and every index position is bounds-checked before the
 `(double)`→`int64_t` cast that would otherwise be undefined behaviour on a
 NaN or out-of-range value. The 9-node SIR22 "APL addendum" (`Reduce`/
 `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
-`Ravel`/`Catenate`) shares these same three features but stays deferred to
-a later slice — rejected cleanly by the SAME structural pre-emit scan
-`first_unsupported_builtin` already uses for every other well-formed-but-
-unimplemented construct, not a new mechanism. See
+`Ravel`/`Catenate`) shares these same three features and is implemented
+too — real `_sir_array_*` functions ported 1:1 from the JS reference's own
+addendum section, adapted to this backend's rank-0-or-2-only `SirNDArray`
+(a "vector" is always a degenerate `1 x n` row, same convention the base
+cut already established for `Range`/`IndexGet`). See
 [SIR22](../../../specs/SIR22-array-matrix-semantic-ir.md).
 
 **Rejects** (cleanly, with a source-positioned error): `TailCalls`,
-`Intrinsics`, a `class << self` singleton, the SIR22 "APL addendum" nodes
-(`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
-`IndexOf`/`Ravel`/`Catenate`), and
+`Intrinsics`, a `class << self` singleton, and
 every other not-yet-wired feature until its batch lands.  `Bignum` stays rejected
 until a bignum runtime ships — a module needing arbitrary precision is refused,
 never silently truncated.

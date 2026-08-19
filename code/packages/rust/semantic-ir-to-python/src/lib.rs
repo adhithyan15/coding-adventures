@@ -15,8 +15,7 @@ mod emit;
 mod runtime;
 
 use semantic_ir::{
-    walk_expr_default, Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Expr,
-    Feature, Module, Span, Visitor,
+    Artifact, ArtifactMetadata, Backend, BackendError, BackendErrorKind, Feature, Module,
 };
 
 pub use emit::sanitize_ident;
@@ -24,53 +23,6 @@ pub use emit::sanitize_ident;
 /// Convenience entry point.
 pub fn compile(module: &Module) -> Result<Artifact, BackendError> {
     PythonBackend::new().compile(module)
-}
-
-/// Finds the first (if any) SIR22 "APL addendum" node anywhere in a
-/// module — `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
-/// `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`.
-///
-/// These nine variants share `Feature::NDArrays`/`MatrixOps`/
-/// `ArrayColumnMajor` with the SIR22 *base* cut this backend now accepts
-/// (`ArrayLit`/`Range`/`MatMul`/`ElementwiseOp`/`Transpose`/`IndexGet`/
-/// `IndexSet`) — the SIR22 addendum spec gives them no feature flag of
-/// their own — so the ordinary `accepts_features()` capability check
-/// cannot tell a module using only the base cut (real codegen, safe) from
-/// one that also uses these nine (still deferred in `emit`, would panic).
-/// This walk is the finer-grained check that closes that gap, mirroring
-/// `semantic-ir-to-javascript`'s original SIR22 base-cut PR's identically
-/// named `find_unimplemented_sir22_addendum_node` (since removed there
-/// once that backend's own later PR implemented real codegen for all
-/// nine — this backend has not done that yet, so the check stays here).
-/// A validated module never reaches `emit`'s corresponding panic arm.
-fn find_unimplemented_sir22_addendum_node(module: &Module) -> Option<(&'static str, Span)> {
-    struct Finder(Option<(&'static str, Span)>);
-    impl Visitor for Finder {
-        fn visit_expr(&mut self, e: &Expr, depth: usize) {
-            if self.0.is_none() {
-                let hit = match e {
-                    Expr::Reduce { span, .. } => Some(("Reduce", span.clone())),
-                    Expr::Scan { span, .. } => Some(("Scan", span.clone())),
-                    Expr::OuterProduct { span, .. } => Some(("OuterProduct", span.clone())),
-                    Expr::Shape { span, .. } => Some(("Shape", span.clone())),
-                    Expr::Reshape { span, .. } => Some(("Reshape", span.clone())),
-                    Expr::IndexGenerator { span, .. } => Some(("IndexGenerator", span.clone())),
-                    Expr::IndexOf { span, .. } => Some(("IndexOf", span.clone())),
-                    Expr::Ravel { span, .. } => Some(("Ravel", span.clone())),
-                    Expr::Catenate { span, .. } => Some(("Catenate", span.clone())),
-                    _ => None,
-                };
-                if hit.is_some() {
-                    self.0 = hit;
-                    return;
-                }
-            }
-            walk_expr_default(self, e, depth);
-        }
-    }
-    let mut finder = Finder(None);
-    finder.visit_module(module);
-    finder.0
 }
 
 /// The v0 Python backend.
@@ -142,19 +94,16 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // console-output primitive every frontend now emits in place of the
     // old bare `print`/`puts` (SIR28 §7 removed the dead bare-name path).
     Feature::ConsoleIO,
-    // SIR22: the array/matrix domain's *base cut* — `ArrayLit`, `Range`,
-    // `MatMul`, `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`) and
-    // `IndexSet` (a `Stmt`) lower to calls into the imported
+    // SIR22: the array/matrix domain — `ArrayLit`, `Range`, `MatMul`,
+    // `ElementwiseOp`, `Transpose`, `IndexGet` (an `Expr`) and `IndexSet`
+    // (a `Stmt`), plus the nine-node "APL addendum" that shares these SAME
+    // three features (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+    // `IndexGenerator`/`IndexOf`/`Ravel`/`Catenate` — the addendum gives
+    // them no flag of their own), all lower to calls into the imported
     // `coding-adventures-sir-runtime-array` package (following the
     // TypeScript backend's imported-package model rather than this
     // backend's usual inline-runtime convention — see `runtime.rs`'s
-    // `RUNTIME_ARRAY` doc comment and `emit`'s SIR22 arms). The SIR22
-    // "APL addendum" nodes (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
-    // `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) share these
-    // SAME three features (the addendum gives them no flag of their own)
-    // but remain deferred in `emit` — see `find_unimplemented_sir22_addendum_node`
-    // for the dedicated tree-walk that closes the resulting
-    // capability/emit gap.
+    // `RUNTIME_ARRAY` doc comment and `emit`'s SIR22 arms).
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,
@@ -193,24 +142,6 @@ impl Backend for PythonBackend {
                 kind: BackendErrorKind::UnsupportedFeature,
                 message: "python backend cannot satisfy `tail_calls` feature".into(),
                 span: module.span.clone(),
-            });
-        }
-
-        // The SIR22 "APL addendum" nodes (`Reduce`/`Scan`/`OuterProduct`/
-        // `Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`)
-        // share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the SIR22
-        // base cut this backend accepts (the addendum gives them no flag
-        // of their own), so the capability check above cannot reject a
-        // module using them — an explicit tree walk is the only way to
-        // catch this before `emit` panics on one. See
-        // `find_unimplemented_sir22_addendum_node`'s doc comment.
-        if let Some((kind, span)) = find_unimplemented_sir22_addendum_node(module) {
-            return Err(BackendError {
-                kind: BackendErrorKind::UnsupportedFeature,
-                message: format!(
-                    "python backend does not yet implement the SIR22 addendum node `{kind}`"
-                ),
-                span,
             });
         }
 
@@ -846,7 +777,7 @@ mod tests {
         assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
     }
 
-    // ── SIR22: array/matrix capability acceptance + addendum rejection ──
+    // ── SIR22: array/matrix capability acceptance ───────────────────────
 
     #[test]
     fn accepts_nd_arrays_feature() {
@@ -869,15 +800,19 @@ mod tests {
         compile(&m).expect("array-column-major accepted");
     }
 
-    /// Regression test for the gap `find_unimplemented_sir22_addendum_node`
-    /// closes: a module using `Expr::Reduce` (APL `+/A`) with exactly the
-    /// three base-cut features would — before this check existed — sail
-    /// past `accepts_features()` (since `NDArrays`/`MatrixOps` are now
-    /// accepted) and panic inside `emit`. Must instead fail cleanly with
-    /// `UnsupportedFeature`, the same error kind every other still-deferred
-    /// node produces, not a panic.
+    /// The SIR22 "APL addendum" (`Reduce`/`Scan`/`OuterProduct`/`Shape`/
+    /// `Reshape`/`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`) shares the
+    /// exact three base-cut features with no flag of its own — this
+    /// backend used to reject all nine with a dedicated pre-emit tree walk
+    /// (`find_unimplemented_sir22_addendum_node`, since removed: real
+    /// codegen now exists for every one of them). `Expr::Reduce` (APL
+    /// `+/A`) must now compile straight through to a real
+    /// `_sir_array_reduce(...)` call, not an `UnsupportedFeature` error.
+    /// See `tests/sir22_array.rs` for the full end-to-end execution proof
+    /// (all nine nodes, run under a real `python3`); this is just the
+    /// "compiles, and calls the right runtime function" smoke test.
     #[test]
-    fn rejects_reduce_node_cleanly_instead_of_panicking_in_emit() {
+    fn emits_reduce_node_as_a_real_runtime_call() {
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[
             Feature::NDArrays,
@@ -893,19 +828,18 @@ mod tests {
             }),
             span: s(),
         };
-        let err = compile(&m).expect_err("Reduce must be rejected, not emitted");
-        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
-        assert!(
-            err.message.contains("Reduce"),
-            "error should name the rejected node: {}",
-            err.message
-        );
+        let a = compile(&m).expect("Reduce must compile, not be rejected");
+        assert!(a.source.contains("_sir_array_reduce(\"Add\", _sir_array_from_rows([[1]]))"));
     }
 
-    /// Same gap, a different addendum node — proves the walk isn't
-    /// hardcoded to only catch `Reduce`.
+    /// Same proof, a different addendum node nested inside a `let` binding
+    /// — proves the base cut's own dual-position discipline (a
+    /// statement-position vs. walrus-tuple expression-position split)
+    /// simply doesn't apply here: `Catenate` is an `Expr`, not a `Stmt`,
+    /// so the single `emit_expr` arm added for it already covers every
+    /// position, including nested inside a `LetBinding`'s value.
     #[test]
-    fn rejects_catenate_node_nested_inside_a_let_binding() {
+    fn emits_catenate_node_nested_inside_a_let_binding() {
         let mut m = minimal_module();
         m.manifest = FeatureManifest::from_features(&[
             Feature::NDArrays,
@@ -928,9 +862,10 @@ mod tests {
             },
             span: s(),
         });
-        let err = compile(&m).expect_err("Catenate must be rejected, not emitted");
-        assert_eq!(err.kind, BackendErrorKind::UnsupportedFeature);
-        assert!(err.message.contains("Catenate"), "got: {}", err.message);
+        let a = compile(&m).expect("Catenate must compile, not be rejected");
+        assert!(a.source.contains(
+            "_sir_array_catenate(_sir_array_from_rows([[1]]), _sir_array_from_rows([[2]]))"
+        ));
     }
 
     #[test]

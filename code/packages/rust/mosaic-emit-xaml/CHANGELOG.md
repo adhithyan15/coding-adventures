@@ -1,5 +1,78 @@
 # Changelog — mosaic-emit-xaml
 
+## [Unreleased] — emit Content for Checkbox, Radio and Link expression labels
+
+#12045 fixed a missing `LayoutPropValue::Expr` arm in `emit_host_button`'s
+`label` match, where the trailing `_ => {}` silently swallowed an expression
+label and the button emitted no `Content` attribute at all. It noted, without
+fixing, that the sibling match in the `HostCheckbox` / `HostRadio` lowering had
+the same shape.
+
+It does, and it reproduces. A `HostCheckbox` and a `HostRadio` inside a `For`,
+labelled `label: ( row[1] )`, emitted:
+
+    <CheckBox x:Name="HostCheckbox_2"/>
+    <RadioButton x:Name="HostRadio_3"/>
+
+— no `Content`, so both render blank, while the already-fixed `Button` beside
+them emitted its binding correctly. Both now route through
+`lower_expr_for_xbind`, exactly as `emit_host_button` does.
+
+Auditing the rest of the file for the same shape turned up a third instance:
+`emit_host_link`'s `label`. Its symptom differed only because its catch-all is
+not empty — it falls back to `href`, so an expression label rendered the raw
+URL with a string `href` and rendered blank with a slot or expression `href`.
+An explicit label now wins. Fixed here because it is the same attribute, the
+same binding mode and the same helper; no judgement call was involved.
+
+`host_button_with_row_expression_label_emits_content` is generalised (and
+renamed `labelled_hosts_with_row_expression_label_emit_content`) rather than
+duplicated. Its useful half — that no emitted content control lacks `Content` —
+now covers `CheckBox`, `RadioButton` and `HyperlinkButton` alongside `Button`,
+so the next element to grow a label match without an `Expr` arm trips it.
+
+No golden churn: no current layout binds these labels to an expression, so
+emitted output for every existing fixture is byte-identical. This is a latent
+bug closed before it shipped, not a live one repaired.
+
+Left open deliberately (recorded on #12047): seven further `find_prop_value`
+matches in this file end in a bare `_ => {}` that swallows `Expr` the same way
+— `HostTooltip.text`, `HostInput.value` and `.placeholder`,
+`HostNumberInput.value`, `HostDialog.title`, `a11y-label` on `Text` and
+`HostSlider`, and `Image.src`. All were confirmed to drop the expression, but
+unlike the label sites they are not mechanically identical: they need per-site
+decisions about the target attribute, the binding mode (`value` wants TwoWay,
+not OneWay) and type conversion (`Image.src` needs a `string`→`ImageSource`
+step). They are not guessed at here.
+
+The structural cause is worth naming: the `Text` `content` match handles the
+same ten variants but ends `Some(LayoutPropValue::EmitRef(_)) | None => …`,
+which is exhaustive. Adding a variant to `LayoutPropValue` would be a compile
+error there and silence at every `_ => {}` site. That is why this class of bug
+keeps recurring in exactly these matches and never in that one.
+
+## [Unreleased] — fix double-encoded characters in the generated host
+
+Every generated WinUI app displayed a mojibake title bar:
+
+    TaskApp â€” Mosaic â†’ XAML demo
+
+The em dash and arrow were double-encoded **in the emitter's own source
+literal** — UTF-8 bytes reinterpreted as Latin-1 and re-encoded — so the
+corruption shipped to every consumer. The status text carried the same defect
+in its ellipsis (`waiting for dispatchâ€¦`).
+
+Four literals fixed across both `RootShape` variants. Guarded by an assertion
+on the generated `MainWindow.xaml` that it contains real U+2014/U+2192 and no
+U+00E2 — the tell-tale of a Latin-1 round trip.
+
+Verified on the running app: the live window title's non-ASCII code points are
+now exactly `U+2014` and `U+2192`.
+
+Worth noting for anyone re-checking this: `Get-Content` and many terminals
+default to ANSI and will *display* correct UTF-8 as mojibake. Both the earlier
+misdiagnosis and the verification here needed a byte-level or code-point-level
+check, not a visual one.
 ## [Unreleased] — reject CSS units XAML cannot parse
 
 The length path stripped `px` and rejected `%`, but every other CSS unit fell

@@ -332,24 +332,310 @@ fn index_set_in_expression_position_walrus_path_mutates_in_place() {
     }
 }
 
-// ── SIR22 "APL addendum": deferred, rejected cleanly (compile-time) ────
+// ── SIR22 "APL addendum": real codegen, executed under a real python3 ──
+//
+// Unlike the base cut above, the addendum has no `ArrayLit`/`Range`-style
+// node that produces a genuine RANK-1 vector directly (`ArrayLit` always
+// lowers through `from_rows`, which is rank-2; `Range` is a rank-2 `1 x n`
+// row per MATLAB's own colon convention) -- so these tests build rank-1
+// operands by chaining `Ravel` (or another addendum node that itself
+// returns rank-1, e.g. `Shape`/`IndexGenerator`/`Catenate`) over an
+// `ArrayLit`, exactly the way a real APL frontend's own lowering would
+// have to.
+
+/// Run emitted Python that is expected to FAIL (an uncaught, typed
+/// `ValueError` propagating out of `main()`), proving a malformed/DoS-
+/// shaped input is cleanly REJECTED -- inverting `run_array_program`'s
+/// usual "must succeed" assumption. A silent, zero-exit-code "success"
+/// here would mean the hazardous input was silently accepted instead of
+/// raising -- exactly the failure mode this helper exists to catch.
+fn run_array_program_expecting_failure(m: &Module, tag: &str, expected_stderr_substring: &str) {
+    let exe = match ["python3", "python"].into_iter().find(|e| python_is_runnable(e)) {
+        Some(exe) => exe,
+        None => {
+            eprintln!("skip: no python on PATH for `{tag}`");
+            return;
+        }
+    };
+    let source = semantic_ir_to_python::compile(m).expect("python emit").source;
+    let py_root = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../python");
+    let pythonpath = std::env::join_paths([
+        py_root.join("sir-runtime-core/src"),
+        py_root.join("sir-runtime-pairs/src"),
+        py_root.join("sir-runtime-oop/src"),
+        py_root.join("sir-runtime-range/src"),
+        py_root.join("sir-runtime-regex/src"),
+        py_root.join("sir-runtime-exceptions/src"),
+        py_root.join("sir-runtime-array/src"),
+    ])
+    .expect("join PYTHONPATH");
+    let file = std::env::temp_dir().join(format!("sir_py_array_fail_{}_{}.py", std::process::id(), tag));
+    std::fs::write(&file, &source).expect("write temp python");
+    let out = std::process::Command::new(exe)
+        .arg(&file)
+        .env("PYTHONPATH", &pythonpath)
+        .output()
+        .expect("spawn python");
+    let _ = std::fs::remove_file(&file);
+    assert!(
+        !out.status.success(),
+        "expected python to exit non-zero for `{tag}`, but it succeeded:\n{source}"
+    );
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains(expected_stderr_substring),
+        "got stderr:\n{stderr}\n--- source ---\n{source}"
+    );
+}
+
+fn ravel(target: Expr) -> Expr {
+    Expr::Ravel { target: Box::new(target), span: s() }
+}
 
 #[test]
-fn reduce_node_is_rejected_cleanly_not_a_compile_time_panic() {
-    // `Reduce` shares NDArrays/MatrixOps/ArrayColumnMajor with the base
-    // cut, so the ordinary feature-flag check alone can't reject it --
-    // proves the dedicated `find_unimplemented_sir22_addendum_node`
-    // pre-emit walk does, with a clean `Err`, not an `emit_expr` panic.
-    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)]]);
-    let m = array_module(vec![print_stmt(Expr::Reduce {
-        op: ElementwiseOpKind::Add,
-        target: Box::new(target),
+fn reduce_of_a_vector_left_folds_across_all_elements() {
+    // +/1 2 3 4 = 10. The vector comes from `Ravel`-ing a 1x4 `ArrayLit`
+    // (the addendum's own way to obtain a genuine rank-1 operand -- see
+    // this section's module doc comment).
+    let v = ravel(array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4)]]));
+    let r = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(v), span: s() };
+    let m = array_module(vec![
+        let_binding("r", r),
+        print_stmt(index_get(local("r"), vec![scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "10\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn reduce_of_a_matrix_folds_each_row_independently() {
+    // [[1,2,3],[4,5,6]] -- row 0 sums to 6, row 1 sums to 15. A
+    // column/row indexing mixup in the column-major fold would instead
+    // sum the COLUMNS (1+4=5, 2+5=7, 3+6=9) -- this pins the CORRECT,
+    // row-independent answer, matching the reference implementation's own
+    // "single easiest place to introduce a wrong-answer bug" warning.
+    let a = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let r = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(a), span: s() };
+    let m = array_module(vec![
+        let_binding("r", r),
+        print_stmt(index_get(local("r"), vec![scalar(0)])),
+        print_stmt(index_get(local("r"), vec![scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "6\n15\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn scan_of_a_vector_keeps_every_intermediate_result() {
+    // +\1 2 3 4 = 1 3 6 10.
+    let v = ravel(array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4)]]));
+    let sc = Expr::Scan { op: ElementwiseOpKind::Add, target: Box::new(v), span: s() };
+    let m = array_module(vec![
+        let_binding("sc", sc),
+        print_stmt(index_get(local("sc"), vec![scalar(0)])),
+        print_stmt(index_get(local("sc"), vec![scalar(3)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n10\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn outer_product_of_two_vectors() {
+    // [1, 2] outer-times [10, 20, 30] -> [[10, 20, 30], [20, 40, 60]].
+    let a = ravel(array_lit(vec![vec![ilit(1), ilit(2)]]));
+    let b = ravel(array_lit(vec![vec![ilit(10), ilit(20), ilit(30)]]));
+    let o = Expr::OuterProduct {
+        op: ElementwiseOpKind::Mul,
+        lhs: Box::new(a),
+        rhs: Box::new(b),
         span: s(),
-    })]);
-    let err = semantic_ir_to_python::compile(&m).expect_err("Reduce must be rejected, not emitted");
-    assert!(
-        err.message.contains("Reduce"),
-        "error should name the rejected node: {}",
-        err.message
+    };
+    let m = array_module(vec![
+        let_binding("o", o),
+        print_stmt(index_get(local("o"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("o"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "10\n60\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_scalar_is_the_empty_vector_not_a_scalar() {
+    // Critical APL semantics: `⍴5` is a length-0 vector, NOT a rank-0
+    // scalar. A genuine rank-0 NDArray doesn't exist as a base-cut
+    // literal (see this section's module doc comment), so it is obtained
+    // here via `Reduce` on a one-element vector. The raw `NDArray` is
+    // printed directly (via its `__repr__` fallback in `to_display`) so
+    // its `shape` field -- not just its element count -- is checked.
+    let one_elem_vec = ravel(array_lit(vec![vec![ilit(5)]]));
+    let scalar_expr = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(one_elem_vec), span: s() };
+    let sh = Expr::Shape { target: Box::new(scalar_expr), span: s() };
+    let m = array_module(vec![print_stmt(sh)]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "NDArray(shape=(0,), data=[])\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn shape_of_a_matrix_returns_its_dimensions() {
+    let a = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let sh = Expr::Shape { target: Box::new(a), span: s() };
+    let m = array_module(vec![
+        let_binding("sh", sh),
+        print_stmt(index_get(local("sh"), vec![scalar(0)])),
+        print_stmt(index_get(local("sh"), vec![scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2\n3\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn reshape_transposes_row_major_fill_into_column_major_storage() {
+    // 2x3 -> 3x2. Source raveled row-major is [1, 2, 3, 4, 5, 6]; APL
+    // fills the LAST axis fastest (row-major), so the 3x2 target's rows
+    // must be (1,2), (3,4), (5,6) -- NOT (1,4), (2,5), (3,6) (the silent
+    // transpose a naive column-major-order fill would produce instead).
+    let a = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let shape_vec = ravel(array_lit(vec![vec![ilit(3), ilit(2)]]));
+    let r = Expr::Reshape { shape: Box::new(shape_vec), target: Box::new(a), span: s() };
+    let m = array_module(vec![
+        let_binding("r", r),
+        print_stmt(index_get(local("r"), vec![scalar(0), scalar(0)])),
+        print_stmt(index_get(local("r"), vec![scalar(0), scalar(1)])),
+        print_stmt(index_get(local("r"), vec![scalar(2), scalar(1)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n2\n6\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn index_generator_is_one_based_unlike_index_get_index_set() {
+    // ⍳4 = [1, 2, 3, 4] -- 1-based, unlike every 0-based index elsewhere
+    // in this domain (`IndexGet`/`IndexSet`).
+    let g = Expr::IndexGenerator { count: Box::new(ilit(4)), span: s() };
+    let m = array_module(vec![
+        let_binding("g", g),
+        print_stmt(index_get(local("g"), vec![scalar(0)])),
+        print_stmt(index_get(local("g"), vec![scalar(3)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n4\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn index_of_found_and_not_found_cases() {
+    // 10 20 30 ⍳ 20 = 2 (1-based, found). 10 20 30 ⍳ 99 = 4
+    // (haystack.length + 1 -- "not found" is a valid, always-in-range
+    // position, never -1/undefined).
+    let haystack = ravel(array_lit(vec![vec![ilit(10), ilit(20), ilit(30)]]));
+    let found = Expr::IndexOf { haystack: Box::new(haystack.clone()), needle: Box::new(ilit(20)), span: s() };
+    let not_found = Expr::IndexOf { haystack: Box::new(haystack), needle: Box::new(ilit(99)), span: s() };
+    let m = array_module(vec![
+        print_stmt(index_get(found, vec![scalar(0)])),
+        print_stmt(index_get(not_found, vec![scalar(0)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2\n4\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn ravel_of_a_matrix_flattens_row_major() {
+    // [[1,2,3],[4,5,6]] raveled row-major is [1,2,3,4,5,6] -- NOT the raw
+    // column-major storage order ([1,4,2,5,3,6]). Reading position 1 (the
+    // second element) distinguishes the two: row-major gives 2,
+    // column-major would give 4.
+    let a = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)], vec![ilit(4), ilit(5), ilit(6)]]);
+    let r = ravel(a);
+    let m = array_module(vec![
+        let_binding("r", r),
+        print_stmt(index_get(local("r"), vec![scalar(1)])),
+        print_stmt(index_get(local("r"), vec![scalar(5)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "2\n6\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn catenate_of_two_vectors() {
+    let a = ravel(array_lit(vec![vec![ilit(1), ilit(2)]]));
+    let b = ravel(array_lit(vec![vec![ilit(3), ilit(4)]]));
+    let c = Expr::Catenate { lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("c", c),
+        print_stmt(index_get(local("c"), vec![scalar(0)])),
+        print_stmt(index_get(local("c"), vec![scalar(3)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "1\n4\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+#[test]
+fn catenate_of_two_matrices_with_equal_row_counts() {
+    // [[1,2],[3,4]] , [[5],[6]] -> [[1,2,5],[3,4,6]] (column/last-axis
+    // catenate).
+    let a = array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)]]);
+    let b = array_lit(vec![vec![ilit(5)], vec![ilit(6)]]);
+    let c = Expr::Catenate { lhs: Box::new(a), rhs: Box::new(b), span: s() };
+    let m = array_module(vec![
+        let_binding("c", c),
+        print_stmt(index_get(local("c"), vec![scalar(0), scalar(2)])),
+        print_stmt(index_get(local("c"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run_array_program(&m) {
+        Some(out) => assert_eq!(out, "5\n6\n"),
+        None => eprintln!("skip: no python on PATH"),
+    }
+}
+
+/// SECURITY regression, mirroring the exact bug class Slice 2's own
+/// security review found in `matmul` (validating only the OUTPUT shape,
+/// not a shared dimension fed by two INDEPENDENT operands): `index_of`'s
+/// work is O(len(haystack) * len(needle)) -- each operand is individually
+/// tiny relative to `MAX_ELEMENTS` (1 << 26 ~= 67,108,864), but their
+/// PRODUCT (100,000,000 for two length-10,000 vectors) exceeds it. Must
+/// raise a clean `ValueError` from `checked_shape_size` *before* the O(n²)
+/// scan ever runs -- proven here by an actual non-zero exit from a real
+/// `python3` process, not just a Rust-side assertion. Each vector is built
+/// via `Range` + `Ravel` (not a 10,000-element `ArrayLit`) so the emitted
+/// program -- not this test's own Rust source -- does the materializing.
+#[test]
+fn index_of_product_dos_guard_rejects_two_individually_legal_operands() {
+    let long_vec = || {
+        ravel(Expr::Range {
+            start: Box::new(ilit(1)),
+            step: None,
+            stop: Box::new(ilit(10_000)),
+            span: s(),
+        })
+    };
+    let m = array_module(vec![let_binding(
+        "r",
+        Expr::IndexOf { haystack: Box::new(long_vec()), needle: Box::new(long_vec()), span: s() },
+    )]);
+    run_array_program_expecting_failure(
+        &m,
+        "index_of_product_dos",
+        "exceeds the",
     );
 }

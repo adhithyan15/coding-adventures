@@ -90,12 +90,35 @@ in `chief-of-staff-host-runtime`, which already models this and has no consumers
 
 ## Restart: the property OTP actually gives you
 
-`chief-of-staff-process-supervisor` has no restart policy. Searching it for
-`restart` or `respawn` finds nothing. An agent host that dies stays dead.
+**Correction, 2026-08-18.** An earlier version of this section claimed restart
+was unimplemented at every level. That was wrong, and it was wrong in a way
+worth recording, because it briefly drove an implementation: I searched
+`chief-of-staff-process-supervisor` for `restart`, found nothing, and concluded
+restart existed nowhere. It exists one layer up.
 
-So the crash-survival this architecture is named for **is not implemented at any
-level**, and leadership failover is a roof over an unbuilt wall. Restart comes
-first.
+`chief-of-staff-service-reconciler` implements the policy in full —
+`restart_after_exit` is exactly the `Always` / `OnFailure` / `Never` decision,
+and it drives `start_instance` for exited hosts, stale-heartbeat hosts, and the
+absent-host backoff gate. It also keeps a durable `restart_count` and
+`last_restart_ns` per host, and quarantines a host whose counter is exhausted.
+
+So R1 and R3 below **already hold**, at the reconciler:
+
+- **R1** is `restart_after_exit`, per registration, from the signed manifest.
+- **R3** holds because every restart goes through `start_instance` →
+  `ProcessHostSupervisor::start` → `spawn_verified`, which re-checks the
+  signature and the digest against the registration.
+
+What is genuinely missing is **R2**: a *rate* bound. The existing counter is a
+lifetime tally that quarantines on integer exhaustion, which is not an intensity
+bound — a host crash-looping four times a second and a host crashing twice a day
+reach it identically, one in minutes and one in centuries.
+
+The rule that follows for anyone building here: **the restart authority is the
+reconciler.** A second one in the supervisor is not a gap being filled, it is a
+competing decision below the layer that owns quarantine, backoff, and the
+durable counter — and it silently bypasses all three. R2 belongs where R1 already
+is.
 
 ### Restart rules
 
@@ -104,10 +127,21 @@ first.
 (never restart). Default is `transient`: a supervisor that restarts a process
 which exited deliberately will restart it forever.
 
-**R2 — restart intensity is bounded.** A supervisor that performs more than
-`max_restarts` within `max_seconds` gives up and terminates itself, escalating
-to its own supervisor. Without this a crash-looping agent consumes the machine
-while looking healthy — the supervisor is, after all, doing its job.
+**R2 — restart intensity is bounded.** More than `max_restarts` within
+`max_seconds` and the reconciler stops restarting the host and quarantines it.
+Without this a crash-looping agent consumes the machine while looking healthy —
+the supervisor is, after all, doing its job.
+
+This is the one rule here that is not yet implemented, and it belongs in
+`chief-of-staff-service-reconciler` beside `restart_after_exit`, where it
+composes with the quarantine and backoff already there. Implementing it in the
+supervisor instead creates a second restart authority that bypasses both.
+
+Giving up must not be a hard error out of an observation method. The reconciler
+walks every host per tick; a per-host failure that aborts the walk takes every
+*other* host down with it, and an agent that can crash itself on demand can then
+disable supervision for the whole deployment. Quarantine is per host and
+recorded; that is the shape to follow.
 
 **R3 — restarting an agent host re-verifies the package.** `spawn_verified`
 already checks the signature and re-checks `package.digest()` against
@@ -119,6 +153,11 @@ replace a file on disk wait for a crash.
 answer to root death, and it is strictly simpler than election: no votes, no
 split brain, no fencing. It is also the OTP answer. What it does not survive is
 the machine.
+
+Note the asymmetry R1–R3 create: agent hosts are supervised by a reconciler that
+tracks them durably, while the root supervisor is supervised by the daemon and
+tracked nowhere. R4 needs its own intensity bound, or a root that crash-loops
+takes the machine with it just as surely as an agent would.
 
 ---
 
@@ -304,7 +343,9 @@ Each step is independently useful, and each is a prerequisite for the next.
 
 1. **Generic profile-backed supervisor dispatch**, smart home demoted to an
    agent. Unblocks everything; removes the hardcoded coupling.
-2. **Restart policy** (R1–R3). The crash-survival the design is named for.
+2. **Restart intensity bound** (R2 only — R1 and R3 already hold in the
+   reconciler). A rate bound beside `restart_after_exit`, quarantining rather
+   than erroring out of the per-host walk.
 3. **Daemon restarts the root supervisor** (R4). Single-machine root recovery.
 4. **Capacity reporting and placement** (P1–P3). Needed before more than one
    branch supervisor is useful.
