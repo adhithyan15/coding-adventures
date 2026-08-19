@@ -236,6 +236,24 @@ impl ShardedWebServer<transport_platform::linux::EpollTransportPlatform> {
 impl ShardedWebServer<transport_platform::windows::WindowsTransportPlatform> {
     /// Bind a Windows IOCP-backed sharded server with `worker_count` reactor
     /// shards. The `app`'s `on_server_start` hooks fire before returning.
+    ///
+    /// # This constructor always fails on Windows
+    ///
+    /// It is kept for API symmetry with `bind_kqueue_sharded` /
+    /// `bind_epoll_sharded`, but it **cannot succeed**: the sharded model gets
+    /// its fan-out from `SO_REUSEPORT` (every shard binds the same address and
+    /// the kernel spreads accepts across them), and the Windows TCP provider has
+    /// no `SO_REUSEPORT`. `transport-platform`'s Windows
+    /// `configure_listener_socket` therefore rejects `reuse_port` outright, so
+    /// this returns
+    /// `Err(PlatformError::Unsupported("SO_REUSEPORT is not supported by the Windows TCP provider"))`
+    /// before a listener is ever created. (Windows' `SO_REUSEADDR` is *not* an
+    /// equivalent — it permits rebinding, not load-balanced fan-out.)
+    ///
+    /// Use [`MailboxWebServer`] for parallel serving on Windows: it parallelises
+    /// *by request* over a single listener, so it needs no `SO_REUSEPORT` and is
+    /// genuinely cross-platform. `sharded_bind_is_unsupported_on_windows` in
+    /// `tests/web_core_test.rs` pins this behaviour.
     pub fn bind_windows_sharded<A: ToSocketAddrs>(
         addr: A,
         options: HttpServerOptions,

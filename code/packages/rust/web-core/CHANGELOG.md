@@ -1,5 +1,56 @@
 # Changelog — web-core
 
+## Unreleased — 2026-08-18
+
+Brought under CI, and fixed the two things that were red because it never was.
+
+### Added
+
+- **`BUILD` file — web-core is now built, tested and linted in CI.** The crate is
+  a workspace member, so it compiled whenever `conduit` / `conduit-capi` /
+  `chief-of-staff-daemon` / `smart-home-platform-http` pulled it in as a path
+  dependency. But the build tool discovers work by scanning for `BUILD` files, so
+  with none of its own its **test targets were never compiled and its 30
+  assertions never ran**, and `cargo clippy --all-targets -- -D warnings` never
+  linted it. That is exactly how the dead-code errors below sat on main.
+
+- **`sharded_bind_is_unsupported_on_windows`** (`tests/web_core_test.rs`) — pins
+  the platform contract documented below. It asserts `bind_windows_sharded`
+  fails with the `SO_REUSEPORT` reason, and its failure message tells the next
+  person what to do if Windows ever gains listener fan-out (un-gate the sharded
+  suite and delete the test). This also keeps the `bind_windows_sharded` call
+  site compiled *and executed* on Windows instead of rotting.
+
+- **`mailbox_web_server_serves_on_windows`** — proves the claim the test above
+  points at: `MailboxWebServer` really does serve a 200 over a real socket on
+  Windows. It parallelises by *request* over a single listener, so it needs no
+  `SO_REUSEPORT` and is the parallel mode to reach for there.
+
+### Fixed
+
+- **Two `-D warnings` dead-code errors on Windows.** `start_sharded_server` and
+  `start_mailbox_server` were ungated while every caller was
+  `cfg(not(target_os = "windows"))`, so on Windows they compiled with zero use
+  sites. Fixed by gating the helper to the platforms that USE it rather than the
+  platforms where it merely compiles — the rule in `lessons.md` §CI(4a). The
+  now-unreachable `#[cfg(target_os = "windows")]` bind branch inside
+  `start_sharded_server` was removed rather than left as permanently dead code;
+  the new Windows test above is where that call site now lives.
+  `start_mailbox_server` stayed ungated because the new Windows test gives it a
+  caller on that platform too.
+
+### Documented
+
+- **`ShardedWebServer::bind_windows_sharded` can never succeed, and now says so.**
+  Its doc comment previously read as a working constructor. In fact sharded
+  serving gets its fan-out from `SO_REUSEPORT`, the Windows TCP provider has
+  none, and `transport-platform`'s Windows `configure_listener_socket` rejects
+  `reuse_port` outright — so the call returns
+  `Err(PlatformError::Unsupported("SO_REUSEPORT is not supported by the Windows TCP provider"))`
+  before a listener exists. Verified by running it. The docs now state this,
+  explain why `SO_REUSEADDR` is not a substitute, and point callers at
+  `MailboxWebServer`.
+
 ## 0.3.1 (2026-06-16)
 
 ### Added

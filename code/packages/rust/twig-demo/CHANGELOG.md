@@ -1,5 +1,33 @@
 # Changelog — `twig-demo`
 
+## Unreleased — 2026-08-18
+
+Brought under CI, and fixed the `-D warnings` error that was red because it
+never was.
+
+### Added
+
+- **`BUILD` file — twig-demo is now built, tested and linted in CI.** Nothing
+  depends on this crate (it is a demo binary), so with no `BUILD` file the build
+  tool never discovered it and `cargo clippy --all-targets -- -D warnings` never
+  ran on it. The workspace still *compiled* it, which is why the error below
+  could sit on main: compiling is not linting.
+
+### Fixed
+
+- **`-D warnings` dead-code error: `constant ABS_PROGRAM is never used`**
+  (`src/main.rs`). `ABS_PROGRAM` was declared unconditionally, but its one and
+  only use site is `aot_type_correctness_demo`, which — like every function in
+  the AOT deep-dive section — is
+  `#[cfg(all(target_os = "macos", target_arch = "aarch64"))]`, because the demo
+  shells out to `ld` for a Mach-O. On Linux and Windows the constant therefore
+  had no use sites at all. Fixed by gating the constant on the platforms that
+  USE it, matching the surrounding section's existing convention, per the rule
+  in `lessons.md` §CI(4a) — not with an `#[allow]`, which would hide exactly the
+  kind of rot the gate exists to catch. Note this one was CI-visible: unlike a
+  Windows-only lint, `macos + aarch64` is false on the Linux leg that actually
+  builds Rust.
+
 ## [0.1.4] — 2026-05-13
 
 **All typing states produce correct results; demo and commentary updated.**
