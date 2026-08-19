@@ -1,30 +1,32 @@
 use cli_builder::types::ParserOutput;
 use cli_builder::{load_spec_from_file, Parser};
+// `layout_ir` is a pure-data crate that builds on every target, so the pieces
+// used to *describe* the PNG scene stay un-gated on purpose — see the note on
+// `cowsay_text_content` below for why that matters. Only the imports that pull
+// in Apple-only machinery (Metal, CoreText) are gated.
+use layout_ir::{color_black, font_spec, FontSpec, TextAlign, TextContent};
 // These layout/text imports are only used by the Apple-only PNG rendering path
 // below (`#[cfg(target_vendor = "apple")]`). Gate them the same way so non-Apple
 // targets (e.g. Linux CI) don't flag them as unused.
 #[cfg(target_vendor = "apple")]
-use layout_ir::{
-    color_black, color_white, font_spec, Content, PositionedNode, TextAlign, TextContent,
-    TextMeasurer,
-};
+use layout_ir::{color_white, Content, PositionedNode, TextMeasurer};
 #[cfg(target_vendor = "apple")]
 use layout_text_measure_native::NativeMeasurer;
 #[cfg(target_vendor = "apple")]
 use layout_to_paint::{layout_to_paint, LayoutToPaintOptions};
-#[cfg(target_vendor = "apple")]
-use std::collections::HashMap;
-#[cfg(target_vendor = "apple")]
-use text_native::text_interfaces::{FontMetrics, FontResolver, TextShaper};
-#[cfg(target_vendor = "apple")]
-use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 use regex::Regex;
 use serde_json::Value;
+#[cfg(target_vendor = "apple")]
+use std::collections::HashMap;
 use std::env;
 use std::fs;
 use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::time::{SystemTime, UNIX_EPOCH};
+#[cfg(target_vendor = "apple")]
+use text_native::text_interfaces::{FontMetrics, FontResolver, TextShaper};
+#[cfg(target_vendor = "apple")]
+use text_native::{NativeMetrics, NativeResolver, NativeShaper};
 
 #[derive(Debug, Default)]
 struct PaintRenderOptions {
@@ -421,12 +423,63 @@ fn random_message() -> String {
     RANDOM_MESSAGES[idx].to_string()
 }
 
+// ═══════════════════════════════════════════════════════════════════════════
+// PNG scene description — deliberately NOT platform-gated
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// Only the *rendering* of the PNG needs Metal and CoreText, and that part is
+// gated to Apple below. Describing the scene is plain data, so the two helpers
+// here stay un-gated even though the binary only calls them on macOS.
+//
+// That is not an accident, it is the fix for a real outage. `layout_ir` gained
+// a new `TextContent` field (`wrap`); every construction site in the repo was
+// updated except this one, because it sat inside `#[cfg(target_vendor =
+// "apple")]` and therefore did not exist for the Linux and Windows compilers.
+// The Ubuntu and Windows CI legs went green on a program that could not
+// compile at all, and the breakage only surfaced much later on a macOS runner.
+//
+// Keeping the struct literal out here means all three CI legs type-check it.
+// `dead_code` is allowed on non-Apple targets (the binary genuinely never calls
+// it there) but a lint allowance does not stop type checking: the next time a
+// field is added to `TextContent`, Ubuntu fails in minutes instead of macOS
+// failing in months.
+
+/// Monospace font for the PNG path. Menlo is chosen because cowsay's art only
+/// aligns in a fixed-width face; `line_height` is tightened from layout-ir's
+/// 1.2 default so consecutive rows of the cow touch the way a terminal's do.
+#[cfg_attr(not(target_vendor = "apple"), allow(dead_code))]
+fn png_font() -> FontSpec {
+    let mut font = font_spec("Menlo", 18.0);
+    font.line_height = 1.1;
+    font
+}
+
+/// Wrap cowsay's finished ASCII art in a `TextContent` for the layout pipeline.
+#[cfg_attr(not(target_vendor = "apple"), allow(dead_code))]
+fn cowsay_text_content(output: &str, font: FontSpec) -> TextContent {
+    TextContent {
+        value: output.to_string(),
+        font,
+        color: color_black(),
+        max_lines: None,
+        // Cowsay output is fixed-format monospace ASCII art: the speech
+        // bubble's `/ \ | _ -` borders and the cow's legs only line up
+        // because every line keeps exactly the spaces it was built with.
+        // Soft wrapping is a paragraph feature — layout-to-paint's greedy
+        // wrapper re-splits on `split_whitespace()`, which collapses runs
+        // of spaces — so enabling it here could silently re-flow the art
+        // into gibberish. Hard `\n` breaks (the only ones cowsay emits)
+        // are preserved either way, so `false` is the faithful choice.
+        wrap: false,
+        text_align: TextAlign::Start,
+    }
+}
+
 #[cfg(target_vendor = "apple")]
 fn render_cowsay_png_metal(output: &str, path: &Path) -> Result<(), String> {
-    let font_size = 18.0;
     let padding = 24.0;
-    let mut font = font_spec("Menlo", font_size);
-    font.line_height = 1.1;
+    let font = png_font();
+    let font_size = font.size;
 
     let measurer = NativeMeasurer::new();
     let lines: Vec<&str> = output.lines().collect();
@@ -448,13 +501,7 @@ fn render_cowsay_png_metal(output: &str, path: &Path) -> Result<(), String> {
         width: text_width,
         height: text_height,
         id: Some("cowsay-text".to_string()),
-        content: Some(Content::Text(TextContent {
-            value: output.to_string(),
-            font,
-            color: color_black(),
-            max_lines: None,
-            text_align: TextAlign::Start,
-        })),
+        content: Some(Content::Text(cowsay_text_content(output, font))),
         children: Vec::new(),
         ext: HashMap::new(),
     };
@@ -493,4 +540,102 @@ fn render_cowsay_png_metal(output: &str, path: &Path) -> Result<(), String> {
 #[cfg(not(target_vendor = "apple"))]
 fn render_cowsay_png_metal(_output: &str, _path: &Path) -> Result<(), String> {
     Err("paint-metal PNG rendering requires an Apple target".to_string())
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Tests
+// ═══════════════════════════════════════════════════════════════════════════
+//
+// These run on Linux, Windows and macOS alike. That is the point: the bug they
+// guard against was a `TextContent` field that only the macOS compiler ever
+// saw. Anything asserted here is asserted by all three CI legs.
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// The cow, rendered. Note the deliberate runs of interior spaces — this
+    /// is the exact shape that soft wrapping would destroy.
+    const SAMPLE_ART: &str = concat!(
+        " _____\n",
+        "< moo >\n",
+        " -----\n",
+        "        \\   ^__^\n",
+        "         \\  (oo)\\_______\n",
+        "            (__)\\       )\\/\\\n",
+        "                ||----w |\n",
+        "                ||     ||\n",
+    );
+
+    #[test]
+    fn png_font_is_monospace_and_tightly_leaded() {
+        let font = png_font();
+        // Menlo is fixed-width; a proportional face would break every column
+        // of the art regardless of what the wrapper does.
+        assert_eq!(font.family, "Menlo");
+        assert_eq!(font.size, 18.0);
+        // Tighter than layout-ir's 1.2 default, so rows of the cow meet.
+        assert_eq!(font.line_height, 1.1);
+    }
+
+    /// Regression test for the macOS-only build break.
+    ///
+    /// `layout_ir::TextContent` grew a `wrap` field. Every construction site
+    /// in the repo was updated except cowsay's, which lived behind
+    /// `#[cfg(target_vendor = "apple")]` and so was invisible to the Linux and
+    /// Windows compilers — the failure surfaced only on a macOS runner, long
+    /// after the change that caused it.
+    ///
+    /// Beyond re-asserting the value, the mere existence of this test forces
+    /// the struct literal to be compiled on every platform.
+    #[test]
+    fn ascii_art_never_soft_wraps() {
+        let content = cowsay_text_content(SAMPLE_ART, png_font());
+        // Soft wrapping re-splits on `split_whitespace()`, collapsing the runs
+        // of spaces that hold the cow together. Cowsay has already decided
+        // where its line breaks go; the layout engine must not second-guess.
+        assert!(!content.wrap, "cowsay ASCII art must never soft-wrap");
+        // `max_lines` truncates once wrapping is on; unlimited is the only
+        // correct answer for art whose height is fixed by its own newlines.
+        assert_eq!(content.max_lines, None);
+    }
+
+    #[test]
+    fn text_content_preserves_the_art_byte_for_byte() {
+        let content = cowsay_text_content(SAMPLE_ART, png_font());
+        // Nothing between cowsay and the layout engine may trim, re-indent or
+        // re-flow the art: the value handed over is the value produced.
+        assert_eq!(content.value, SAMPLE_ART);
+        assert!(content.value.contains("        \\   ^__^"));
+        assert_eq!(content.value.lines().count(), 8);
+    }
+
+    #[test]
+    fn text_is_left_aligned_and_black() {
+        let content = cowsay_text_content(SAMPLE_ART, png_font());
+        // Centring or justifying pre-formatted art would shift whole rows
+        // relative to each other.
+        assert_eq!(content.text_align, TextAlign::Start);
+        assert_eq!(content.color, color_black());
+        assert_eq!(content.font, png_font());
+    }
+
+    #[test]
+    fn empty_output_still_produces_valid_content() {
+        let content = cowsay_text_content("", png_font());
+        assert_eq!(content.value, "");
+        assert!(!content.wrap);
+    }
+
+    #[test]
+    fn non_apple_targets_report_png_rendering_as_unsupported() {
+        // The stub and the real implementation must agree on their signature;
+        // this pins the non-Apple contract so the two cannot drift apart.
+        #[cfg(not(target_vendor = "apple"))]
+        {
+            let err = render_cowsay_png_metal("moo", Path::new("out.png"))
+                .expect_err("PNG rendering cannot work without Metal");
+            assert!(err.contains("Apple target"), "unexpected message: {err}");
+        }
+    }
 }
