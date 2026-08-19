@@ -1430,6 +1430,19 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         pop_expect(&mut stack, frame!(), ValueType::I64)?;
                         push_val(&mut stack, ValueType::V128);
                     }
+                    wasm_opcodes::SimdOpKind::SplatF32x4 => {
+                        // f32x4.splat (SIMD widen PR17): the FIRST
+                        // floating-point-typed SIMD op in this crate's
+                        // type rules -- pop F32, push V128.
+                        pop_expect(&mut stack, frame!(), ValueType::F32)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
+                    wasm_opcodes::SimdOpKind::SplatF64x2 => {
+                        // f64x2.splat (SIMD widen PR17): pop F64, push
+                        // V128. Same shape as SplatF32x4.
+                        pop_expect(&mut stack, frame!(), ValueType::F64)?;
+                        push_val(&mut stack, ValueType::V128);
+                    }
                     wasm_opcodes::SimdOpKind::Add
                     | wasm_opcodes::SimdOpKind::Sub
                     | wasm_opcodes::SimdOpKind::Mul

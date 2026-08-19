@@ -455,6 +455,23 @@ support exists. Aggregate `assert_return` stays 24040/24057
 `assert_malformed` from 274/274 to 275/275 (+1), both still 100.0% of
 gradeable directives.
 
+SIMD widen PR17 (task #168-170) implements `f32x4.splat`/`f64x2.splat`
+-- the FIRST floating-point-typed SIMD ops in this crate. No new file
+is vendored (no `fetch_testsuite.py` change); this is a baseline
+regeneration against the already-vendored `simd_splat.wast` (task
+#165-167 above). As predicted when that file was vendored, 3 of its 4
+modules (module 1's 102 pure-splat directives, module 2's 5 splat-into-
+store/load directives, and module 4's 8 splat-into-control-construct
+directives -- 115 total) needed ONLY `f32x4.splat`/`f64x2.splat` to
+build successfully; module 3's remaining 43 directives stay
+`NotYetSupported`, since they additionally need `extract_lane`/
+`replace_lane` for multiple lane widths and `i8x16.swizzle`, none
+implemented yet. Aggregate `assert_return` rose from 24040/24057 to
+24155/24172 (+115 pass, +115 gradeable, exactly matching the
+predicted unblock count); `module` pass count rose from 1152 to 1155
+(+3, one per fully-unblocked module) and its `NotYetSupported` count
+fell from 78 to 75.
+
 The vendored files are licensed under the Apache License, Version 2.0 --
 see the accompanying LICENSE file, itself vendored verbatim from the same
 pinned commit.
