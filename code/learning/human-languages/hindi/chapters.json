@@ -1208,6 +1208,153 @@
           "HI-SCRIPT-CHANDRABINDU-01"
         ]
       }
+    },
+    {
+      "chapter": 60,
+      "title": "Animals in the Yard",
+      "label": "ch:hi-animals-in-the-yard",
+      "canDo": "I can name five more animals when I greet the house that keeps them.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "HI-C60-peacock",
+        "kind": "production",
+        "summary": "Complete HI-C60-peacock and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C60-YARD-01",
+          "HI-LEX-C60-YARD-02",
+          "HI-LEX-C60-YARD-03",
+          "HI-LEX-C60-YARD-04",
+          "HI-LEX-C60-YARD-05"
+        ]
+      }
+    },
+    {
+      "chapter": 61,
+      "title": "At the Cooking Fire",
+      "label": "ch:hi-at-the-cooking-fire",
+      "canDo": "I can name five things at a Hindi cooking fire and ask for them politely.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "HI-C61-stove",
+        "kind": "production",
+        "summary": "Complete HI-C61-stove and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C61-FIRE-01",
+          "HI-LEX-C61-FIRE-02",
+          "HI-LEX-C61-FIRE-03",
+          "HI-LEX-C61-FIRE-04",
+          "HI-LEX-C61-FIRE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 62,
+      "title": "What Hands Work With",
+      "label": "ch:hi-what-hands-work-with",
+      "canDo": "I can name five things a pair of hands works with when I say what something is called.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "HI-C62-wood",
+        "kind": "production",
+        "summary": "Complete HI-C62-wood and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C62-HANDS-01",
+          "HI-LEX-C62-HANDS-02",
+          "HI-LEX-C62-HANDS-03",
+          "HI-LEX-C62-HANDS-04",
+          "HI-LEX-C62-HANDS-05"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "What the Body Tells You",
+      "label": "ch:hi-what-the-body-tells-you",
+      "canDo": "I can say what my body is telling me when someone asks how I am.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "HI-C63-pain",
+        "kind": "production",
+        "summary": "Complete HI-C63-pain and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C63-STATE-01",
+          "HI-LEX-C63-STATE-02",
+          "HI-LEX-C63-STATE-03",
+          "HI-LEX-C63-STATE-04",
+          "HI-LEX-C63-STATE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
+      "title": "How Much and How Fast",
+      "label": "ch:hi-how-much-and-how-fast",
+      "canDo": "I can say how much and how fast in Hindi when I answer someone.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "HI-C64-more",
+        "kind": "production",
+        "summary": "Complete HI-C64-more and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C64-MEASURE-01",
+          "HI-LEX-C64-MEASURE-02",
+          "HI-LEX-C64-MEASURE-03",
+          "HI-LEX-C64-MEASURE-04",
+          "HI-LEX-C64-MEASURE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 65,
+      "title": "Asking Nicely",
+      "label": "ch:hi-asking-nicely",
+      "canDo": "I can ask for something in Hindi with the courtesy word the occasion asks for.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "HI-C65-manners",
+        "kind": "production",
+        "summary": "Complete HI-C65-manners and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C65-GRACE-01",
+          "HI-LEX-C65-GRACE-02",
+          "HI-LEX-C65-GRACE-03",
+          "HI-LEX-C65-GRACE-04",
+          "HI-LEX-C65-GRACE-05"
+        ]
+      }
+    },
+    {
+      "chapter": 66,
+      "title": "The Field and the Well",
+      "label": "ch:hi-the-field-and-the-well",
+      "canDo": "I can name five things in a Hindi field before I take my leave.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "HI-C66-well",
+        "kind": "production",
+        "summary": "Complete HI-C66-well and say all five words in order.",
+        "assesses": [
+          "HI-LEX-C66-FIELD-01",
+          "HI-LEX-C66-FIELD-02",
+          "HI-LEX-C66-FIELD-03",
+          "HI-LEX-C66-FIELD-04",
+          "HI-LEX-C66-FIELD-05"
+        ]
+      }
     }
   ]
 }

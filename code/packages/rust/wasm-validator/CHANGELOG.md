@@ -2,6 +2,60 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.33] - 2026-08-19 (task #174-176 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min type rules)
+
+### Added
+
+- `SimdOpKind::MulF32x4 | MinF32x4` join the existing binary-`v128`-op
+  type-check arm (pop two `V128`, push `V128`) -- their NaN/signed-zero
+  runtime subtlety (see `wasm-opcodes`'s own `SimdOpKind::MinF32x4` doc
+  comment) is entirely invisible to the type checker.
+- `SimdOpKind::AbsF32x4` joins the existing unary-`v128`-op type-check
+  arm (pop one `V128`, push `V128`) -- a pure bit operation, no new
+  type-checker machinery needed.
+- 2 new tests: a valid-module case covering all 3 new ops, plus an
+  invalid-module regression confirming `f32x4.mul` genuinely rejects
+  an `i32` in a `v128` operand slot, not just accepting whatever's on
+  the stack.
+
+## [0.2.32] - 2026-08-19 (task #171-173 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane type rules)
+
+### Added
+
+- `SimdOpKind::Swizzle` joins the existing binary-`v128`-op type-check
+  arm (pop two `V128`, push `V128`) -- an index-vector-driven
+  permutation at the runtime level, but the same shape as
+  `Add`/`AddI8x16`/etc. to the type checker.
+- New `SimdOpKind::ExtractLaneI8x16S | ExtractLaneI8x16U` arm: same
+  shape as the pre-existing `ExtractLane` arm (skip the raw lane-index
+  immediate byte, pop `V128`, push `I32`) -- the 0-15 lane range and
+  the signed/unsigned split are runtime concerns, invisible here.
+- New `SimdOpKind::ReplaceLaneI8x16` arm: the GENUINELY NEW shape --
+  skip the lane-index immediate byte, then pop `I32` (the replacement
+  value, popped first, matching the shift family's own mixed-type
+  pop order) then `V128` (the base operand), push `V128`.
+- 4 new tests: valid-module cases for all 4 new ops (`swizzle`,
+  `extract_lane_s`/`_u` together, `replace_lane`), plus an
+  invalid-module regression confirming `replace_lane` genuinely
+  rejects a `v128` in the `i32` value slot, not just accepting
+  whatever's on the stack.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.31] - 2026-08-19 (task #168-170 — SIMD: float splat family type rules)
+
+### Added
+
+- New `SimdOpKind::SplatF32x4` arm (pop `F32`, push `V128`) and
+  `SplatF64x2` arm (pop `F64`, push `V128`) -- the FIRST
+  floating-point-typed SIMD ops in this crate's type rules.
+- 2 new tests: a valid module exercising both new splat ops, and an
+  invalid-module case confirming `f32x4.splat` genuinely rejects an
+  `i32` operand (not just accepting whatever scalar type is on the
+  stack).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.30] - 2026-08-19 (task #165-167 — SIMD: splat family widening type rules)
 
 ### Added

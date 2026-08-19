@@ -1132,5 +1132,7 @@ members = [
   "vault-pm-crash-injection",
   "vault-pm-password-policy",
   "vault-pm-cli",
+  "vault-pm-agent-protocol",
+  "vault-pm-agent-host",
   "chief-of-staff-channel-epoch-activation",
 ]

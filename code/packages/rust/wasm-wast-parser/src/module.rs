@@ -1707,7 +1707,31 @@ fn encode_stream_instr(
                 out.extend(bytes);
                 return Ok(consumed);
             }
-            wasm_opcodes::SimdOpKind::ExtractLane => {
+            wasm_opcodes::SimdOpKind::ExtractLane
+            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16S
+            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U => {
+                // i32x4.extract_lane / i8x16.extract_lane_s / _u (the
+                // latter two SIMD widen PR18): same "immediate trails in
+                // flat/stream form" shape -- the trailing lane-index
+                // literal is the only thing to read here, since the one
+                // v128 operand was already emitted by whatever preceding
+                // stream instruction produced it.
+                let (text, lpos) = literal_text(following.first(), pos)?;
+                let lane = parse_lane_index(&text, lpos)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.push(lane);
+                return Ok(1);
+            }
+            wasm_opcodes::SimdOpKind::ReplaceLaneI8x16 => {
+                // i8x16.replace_lane (SIMD widen PR18): a NEW shape (see
+                // its own `SimdOpKind` doc comment) at the runtime/type
+                // level -- it pops an i32 in addition to the v128 -- but
+                // in FLAT/stream form the ENCODING mechanics are
+                // identical to `ExtractLane*` just above: both operands
+                // (v128, then i32) are already emitted onto `out` by
+                // whatever preceding instructions produced them, so only
+                // the trailing lane-index literal needs reading here.
                 let (text, lpos) = literal_text(following.first(), pos)?;
                 let lane = parse_lane_index(&text, lpos)?;
                 out.push(0xFD);
@@ -1733,6 +1757,8 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::SplatI8x16
             | wasm_opcodes::SimdOpKind::SplatI16x8
             | wasm_opcodes::SimdOpKind::SplatI64x2
+            | wasm_opcodes::SimdOpKind::SplatF32x4
+            | wasm_opcodes::SimdOpKind::SplatF64x2
             | wasm_opcodes::SimdOpKind::Add
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
@@ -1842,11 +1868,25 @@ fn encode_stream_instr(
             | wasm_opcodes::SimdOpKind::AddI16x8
             | wasm_opcodes::SimdOpKind::SubI16x8
             | wasm_opcodes::SimdOpKind::MulI16x8
-            | wasm_opcodes::SimdOpKind::NegI16x8 => {
+            | wasm_opcodes::SimdOpKind::NegI16x8
+            | wasm_opcodes::SimdOpKind::Swizzle
+            | wasm_opcodes::SimdOpKind::AbsF32x4
+            | wasm_opcodes::SimdOpKind::MulF32x4
+            | wasm_opcodes::SimdOpKind::MinF32x4 => {
                 // All of these take NO immediate beyond the opcode byte
                 // itself -- their operands are ordinary stack values,
                 // pushed by whatever preceding instruction(s) already ran
                 // (folded or flat), same as `Splat`/`Add`/`Eq` above.
+                // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
+                // arm too: it's a plain BINARY v128,v128->v128 op just
+                // like `AddI8x16`, with no lane-index immediate of its
+                // own (unlike its `ExtractLane*`/`ReplaceLaneI8x16`
+                // siblings added in the same PR). `AbsF32x4`/`MulF32x4`/
+                // `MinF32x4` (SIMD widen PR19) join too: the UNARY `abs`
+                // and BINARY `mul`/`min` all have this same no-immediate
+                // shape at the ENCODING level -- the unary/binary
+                // distinction only matters at the type-checker/runtime
+                // level (see `wasm-validator`/`wasm-execution`), not here.
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
                 return Ok(0);
@@ -2392,7 +2432,32 @@ fn encode_flat_instr(
                 out.extend(bytes);
                 return Ok(());
             }
-            wasm_opcodes::SimdOpKind::ExtractLane => {
+            wasm_opcodes::SimdOpKind::ExtractLane
+            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16S
+            | wasm_opcodes::SimdOpKind::ExtractLaneI8x16U => {
+                // i32x4.extract_lane / i8x16.extract_lane_s / _u (the
+                // latter two SIMD widen PR18): lane index leads (`args[0]`),
+                // the one v128 operand trails (`args[1..]`).
+                let lane_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
+                encode_instr_list(&args[1..], icx, out)?;
+                let (text, lpos) = literal_text(Some(lane_expr), pos)?;
+                let lane = parse_lane_index(&text, lpos)?;
+                out.push(0xFD);
+                out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
+                out.push(lane);
+                return Ok(());
+            }
+            wasm_opcodes::SimdOpKind::ReplaceLaneI8x16 => {
+                // i8x16.replace_lane (SIMD widen PR18): a NEW shape at
+                // the runtime/type level (see its own `SimdOpKind` doc
+                // comment), but its ENCODING here is mechanically the
+                // SAME call `ExtractLane*` makes just above -- lane index
+                // leads (`args[0]`), operands trail (`args[1..]`) --
+                // `encode_instr_list` already handles an arbitrary number
+                // of trailing operand expressions in source order, and
+                // this op has TWO (`(i8x16.replace_lane <lane> <v128-expr>
+                // <i32-expr>)`, the v128 base then the i32 replacement
+                // value) where `ExtractLane*` has only one.
                 let lane_expr = args.first().ok_or(WastParseError::UnexpectedEof)?;
                 encode_instr_list(&args[1..], icx, out)?;
                 let (text, lpos) = literal_text(Some(lane_expr), pos)?;
@@ -2420,6 +2485,8 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::SplatI8x16
             | wasm_opcodes::SimdOpKind::SplatI16x8
             | wasm_opcodes::SimdOpKind::SplatI64x2
+            | wasm_opcodes::SimdOpKind::SplatF32x4
+            | wasm_opcodes::SimdOpKind::SplatF64x2
             | wasm_opcodes::SimdOpKind::Add
             | wasm_opcodes::SimdOpKind::Sub
             | wasm_opcodes::SimdOpKind::Mul
@@ -2529,7 +2596,18 @@ fn encode_flat_instr(
             | wasm_opcodes::SimdOpKind::AddI16x8
             | wasm_opcodes::SimdOpKind::SubI16x8
             | wasm_opcodes::SimdOpKind::MulI16x8
-            | wasm_opcodes::SimdOpKind::NegI16x8 => {
+            | wasm_opcodes::SimdOpKind::NegI16x8
+            | wasm_opcodes::SimdOpKind::Swizzle
+            | wasm_opcodes::SimdOpKind::AbsF32x4
+            | wasm_opcodes::SimdOpKind::MulF32x4
+            | wasm_opcodes::SimdOpKind::MinF32x4 => {
+                // `Swizzle` (i8x16.swizzle, SIMD widen PR18) joins this
+                // arm too: a plain BINARY v128,v128->v128 op with no
+                // lane-index immediate, same shape as `AddI8x16` -- see
+                // the matching comment in `encode_stream_instr` above.
+                // `AbsF32x4`/`MulF32x4`/`MinF32x4` (SIMD widen PR19) join
+                // too -- same no-immediate encoding shape, see the
+                // matching comment in `encode_stream_instr` above.
                 encode_instr_list(args, icx, out)?;
                 out.push(0xFD);
                 out.extend(wasm_leb128::encode_unsigned(simd_op.sub_opcode as u64));
@@ -5354,6 +5432,32 @@ mod tests {
     }
 
     #[test]
+    fn float_splat_family_encodes_the_real_sub_opcodes() {
+        // SIMD widen PR17: f32x4.splat/f64x2.splat -- the immediate
+        // continuation of PR16's splat run, joining the same shared
+        // "no immediate beyond the opcode byte itself" encoder arm.
+        // Both sub-opcodes (0x13/0x14) are single-byte LEB128. The
+        // mixed f32/f64 operand TYPES are invisible to this encoder (a
+        // type-checker concern -- see wasm-validator), since operand
+        // count/values are driven entirely by the S-expression
+        // recursion that already ran.
+        let m = parse_module(
+            r#"(module
+                 (func (param f32) (result v128) (f32x4.splat (local.get 0)))
+                 (func (param f64) (result v128) (f64x2.splat (local.get 0))))"#,
+        )
+        .unwrap();
+        assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x13]), "f32x4.splat: {:?}", code_of(&m, 0));
+        assert!(code_of(&m, 1).windows(2).any(|w| w == [0xFD, 0x14]), "f64x2.splat: {:?}", code_of(&m, 1));
+
+        let flat = parse_module(
+            "(module (func (param f32) (result v128) local.get 0 f32x4.splat))",
+        )
+        .unwrap();
+        assert!(code_of(&flat, 0).windows(2).any(|w| w == [0xFD, 0x13]), "flat f32x4.splat: {:?}", code_of(&flat, 0));
+    }
+
+    #[test]
     fn i32x4_splat_emits_the_prefix_and_no_immediate() {
         let m = parse_module(r#"(module (func (param i32) (result v128) (i32x4.splat (local.get 0))))"#).unwrap();
         assert!(code_of(&m, 0).windows(2).any(|w| w == [0xFD, 0x11]), "{:?}", code_of(&m, 0));
@@ -5372,6 +5476,108 @@ mod tests {
         // sub-opcode 0x1B (27, single-byte LEB128) then the raw lane index.
         for code in [code_of(&folded, 0), code_of(&flat, 0)] {
             assert!(code.windows(3).any(|w| w == [0xFD, 0x1B, 0x02]), "missing extract_lane lane=2: {code:?}");
+        }
+    }
+
+    #[test]
+    fn i8x16_swizzle_emits_the_prefix_and_no_immediate() {
+        // SIMD widen PR18: i8x16.swizzle (sub-opcode 0x0E) -- a plain
+        // BINARY v128,v128->v128 op, same "no immediate beyond the
+        // opcode byte itself" shape as i8x16.add, just a different
+        // sub-opcode.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128) (i8x16.swizzle (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128) local.get 0 local.get 1 i8x16.swizzle))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(2).any(|w| w == [0xFD, 0x0E]), "missing i8x16.swizzle: {code:?}");
+        }
+    }
+
+    #[test]
+    fn i8x16_extract_lane_s_and_u_folded_and_flat_lane_index_leads_and_covers_0_and_15() {
+        // SIMD widen PR18: i8x16.extract_lane_s (0x15) / _u (0x16) --
+        // same "lane index leads in folded form, trails in flat/stream
+        // form" shape as i32x4.extract_lane, just at i8x16's 0-15 lane
+        // range instead of i32x4's 0-3. Covers both ends of the valid
+        // range (0 and 15), not just an arbitrary middle value.
+        for (name, sub_opcode) in [("i8x16.extract_lane_s", 0x15u8), ("i8x16.extract_lane_u", 0x16u8)] {
+            for lane in [0u8, 15u8] {
+                let folded = parse_module(&format!(
+                    r#"(module (func (param v128) (result i32) ({name} {lane} (local.get 0))))"#
+                ))
+                .unwrap();
+                let flat = parse_module(&format!(r#"(module (func (param v128) (result i32) local.get 0 {name} {lane}))"#)).unwrap();
+                for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+                    assert!(
+                        code.windows(3).any(|w| w == [0xFD, sub_opcode, lane]),
+                        "{name} lane={lane}: missing [0xFD, {sub_opcode:#04x}, {lane:#04x}] in {code:?}"
+                    );
+                }
+            }
+        }
+    }
+
+    #[test]
+    fn i8x16_replace_lane_folded_and_flat_lane_index_leads_and_two_operands_encode_in_order() {
+        // SIMD widen PR18: i8x16.replace_lane (0x17) -- the lane index
+        // leads (folded)/trails (flat), same convention as extract_lane*,
+        // but TWO operands (v128, then i32) must both encode, in order,
+        // around it -- the genuinely new shape this op introduces.
+        let folded = parse_module(
+            r#"(module (func (param v128 i32) (result v128) (i8x16.replace_lane 7 (local.get 0) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 i32) (result v128) local.get 0 local.get 1 i8x16.replace_lane 7))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            // local.get 0 (0x20 0x00), local.get 1 (0x20 0x01), then
+            // [0xFD, 0x17, 0x07] -- both operands precede the SIMD op,
+            // in source order, with the lane-index byte trailing the
+            // sub-opcode.
+            assert!(
+                code.windows(2).any(|w| w == [0x20, 0x00]),
+                "missing local.get 0 (the v128 operand): {code:?}"
+            );
+            assert!(
+                code.windows(2).any(|w| w == [0x20, 0x01]),
+                "missing local.get 1 (the i32 operand): {code:?}"
+            );
+            assert!(code.windows(3).any(|w| w == [0xFD, 0x17, 0x07]), "missing i8x16.replace_lane lane=7: {code:?}");
+        }
+    }
+
+    #[test]
+    fn f32x4_arith3_family_encodes_the_real_two_byte_leb128_sub_opcodes() {
+        // SIMD widen PR19: f32x4.abs (0xE0), f32x4.mul (0xE6), f32x4.min
+        // (0xE8) -- unlike every prior SIMD op tested in this file, all
+        // three sub-opcode values are >= 128, so each encodes as a REAL
+        // 2-byte LEB128 sequence (`[byte, 0x01]`, since for any single
+        // byte b in 0x80-0xFF, `(b & 0x7F) | 0x80 == b`), not the
+        // single-byte happy path most of this table's opcodes take.
+        // `abs` is UNARY (one v128 operand); `mul`/`min` are BINARY (two)
+        // -- same "no immediate beyond the opcode bytes themselves" shape
+        // as `i8x16.swizzle` above either way.
+        let folded = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 (f32x4.min (f32x4.mul (f32x4.abs (local.get 0)) (local.get 1)) (local.get 1))))"#,
+        )
+        .unwrap();
+        let flat = parse_module(
+            r#"(module (func (param v128 v128) (result v128)
+                 local.get 0 f32x4.abs local.get 1 f32x4.mul local.get 1 f32x4.min))"#,
+        )
+        .unwrap();
+        for code in [code_of(&folded, 0), code_of(&flat, 0)] {
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE0, 0x01]), "missing f32x4.abs: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE6, 0x01]), "missing f32x4.mul: {code:?}");
+            assert!(code.windows(3).any(|w| w == [0xFD, 0xE8, 0x01]), "missing f32x4.min: {code:?}");
         }
     }
 

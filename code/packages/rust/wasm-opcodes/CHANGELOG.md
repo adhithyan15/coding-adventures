@@ -2,6 +2,75 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.24] - 2026-08-19 - SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min (task #174-176)
+
+### Added
+
+- 3 new `SIMD_OPS` entries: `f32x4.abs` (`0xE0`), `f32x4.mul` (`0xE6`),
+  `f32x4.min` (`0xE8`) -- the FIRST genuine floating-point ARITHMETIC
+  ops in this table (PR17's `f32x4.splat`/`f64x2.splat` were pure
+  bit-pattern broadcasts, no arithmetic). 127 SIMD opcodes total, up
+  from 124. `abs` reuses the plain UNARY `v128->v128` shape (same as
+  `i8x16.abs`); `mul` reuses the plain BINARY `v128,v128->v128` shape
+  (same as `i16x8.mul`). `min` is the same BINARY shape too, but its
+  runtime semantics are NOT a plain `f32::min()`/IEEE `minNum` --
+  WASM's `fmin` propagates NaN unconditionally (if either operand is
+  NaN the result is NaN) and treats `-0.0` as winning a `-0.0`/`+0.0`
+  tie, the exact per-lane transplant of this crate's own scalar
+  `f32.min` (sub-opcode `0x96`) semantics -- see that opcode's own
+  handler in `wasm-execution` for the original scalar bug this
+  mirrors. Each sub-opcode byte fetched live from the SIMD proposal's
+  own `BinarySIMD.md`.
+- `SimdOpKind::AbsF32x4`/`MulF32x4`/`MinF32x4`.
+
+## [0.2.23] - 2026-08-19 - SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane (task #171-173)
+
+### Added
+
+- 4 new `SIMD_OPS` entries filling the `0x0E`/`0x15`-`0x17` gap inside
+  the already-implemented `0x0C`-`0x22` const/splat/extract_lane
+  encoding run: `i8x16.swizzle` (`0x0E`), `i8x16.extract_lane_s`
+  (`0x15`), `i8x16.extract_lane_u` (`0x16`), `i8x16.replace_lane`
+  (`0x17`). 124 SIMD opcodes total, up from 120. `swizzle` reuses the
+  plain BINARY `v128,v128->v128` shape (same as `i8x16.add`);
+  `extract_lane_s`/`_u` reuse `i32x4.extract_lane`'s "v128 + lane
+  immediate -> i32" shape, just at `i8x16`'s 0-15 lane range with a
+  genuine signed/unsigned split (the first `extract_lane` family
+  member to need one). `replace_lane` is a GENUINELY NEW shape: the
+  first kind to combine a lane-index immediate with a mixed-type
+  (`v128`, `i32`) binary pop that produces a `v128` -- deliberately
+  not force-fit into `ExtractLane`'s shape, since neither its pop
+  count nor its result type match. Each sub-opcode byte fetched live
+  from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against the already-implemented `i32x4.extract_lane` (`0x1B`)/
+  `i8x16.eq` (`0x23`) entries, which sit exactly one past this run's
+  own end (both matched exactly, confirming the whole `0x0C`-`0x23`
+  run is contiguous and self-consistent).
+- `SimdOpKind::Swizzle`/`ExtractLaneI8x16S`/`ExtractLaneI8x16U`/
+  `ReplaceLaneI8x16`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.2.22] - 2026-08-19 - SIMD: float splat family, first float-lane ops (task #168-170)
+
+### Added
+
+- 2 new `SIMD_OPS` entries: `f32x4.splat` (`0x13`), `f64x2.splat`
+  (`0x14`) -- the FIRST floating-point-typed SIMD opcodes in this
+  table, and the immediate continuation of the `0x0F`-`0x12`
+  integer-splat run PR16 landed. 120 SIMD opcodes total, up from 118.
+  Splat itself is a pure bit-pattern broadcast -- no rounding, NaN
+  canonicalization, or comparison semantics -- so it reuses the exact
+  "pop one scalar, push one v128" shape every prior splat already
+  established, just popping `F32`/`F64` instead of `I32`/`I64`. Each
+  sub-opcode byte fetched live from the SIMD proposal's own
+  `BinarySIMD.md` and cross-checked against the already-implemented
+  `i64x2.splat` (`0x12`) entry (matched exactly, confirming the whole
+  `0x0F`-`0x14` splat run is contiguous and self-consistent).
+- `SimdOpKind::SplatF32x4`/`SplatF64x2`.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.2.21] - 2026-08-19 - SIMD: splat family widening (task #165-167)
 
 ### Added

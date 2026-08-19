@@ -2,6 +2,88 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.9.31] - 2026-08-19 (task #174-176 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min)
+
+### Added
+
+- `register_simd` gains three new dispatch arms:
+  - `SimdOpKind::AbsF32x4` pops one `v128`, clears the sign bit of
+    each of the 4 `f32` lanes (`f32::abs()`), pushes one `v128`. A
+    pure bit operation -- unlike `MinF32x4` below, no NaN/signed-zero
+    subtlety.
+  - `SimdOpKind::MulF32x4` pops two `v128`s, multiplies each of the 4
+    `f32` lane pairs with ordinary IEEE-754 float multiply (`*`),
+    pushes one `v128`.
+  - `SimdOpKind::MinF32x4` pops two `v128`s, takes the WASM-spec
+    `fmin` of each of the 4 `f32` lane pairs, pushes one `v128`. NOT
+    `f32::min()`/IEEE `minNum`: if either lane is NaN the result lane
+    is NaN (propagated in either operand order); for a `-0.0`/`+0.0`
+    tie, `-0.0` wins. This is the exact per-lane transplant of this
+    crate's own scalar `f32.min` (sub-opcode `0x96`, registered in
+    `register_numeric_f32`) NaN-propagating, signed-zero-aware logic --
+    see that handler's own comment for the original scalar bug this
+    mirrors (`min(NaN, -0.0)` silently returning `-0.0` under Rust's
+    native `.min()`).
+- `v128_const_bytes_f32x4`/`f32x4_lanes` test helpers for building/
+  decoding 4-lane `f32` v128 literals.
+- 5 new tests: `f32x4.abs` (sign bit cleared, NaN lane stays NaN),
+  `f32x4.mul` (a normal lane-wise product), and three `f32x4.min`
+  cases -- NaN propagation in BOTH operand orders, the `-0.0`/`+0.0`
+  signed-zero tie (checked via `is_sign_negative()`, not `== 0.0`),
+  and a normal non-edge-case minimum.
+
+## [0.9.30] - 2026-08-19 (task #171-173 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane)
+
+### Added
+
+- `register_simd` gains four new dispatch arms:
+  - `SimdOpKind::Swizzle` pops two `v128`s in the usual binary order
+    (index vector `s` on top, popped first; data vector `a` popped
+    second); for each of the 16 result lanes, looks up `a[s[i]]` if
+    `s[i] < 16`, else `0`. The `< 16` bounds check runs BEFORE
+    indexing `a` -- the index byte `s[i]` is an unconstrained `u8`
+    (`0..=255`), so without the check an adversarial/malformed index
+    vector could index `a` out of bounds.
+  - `SimdOpKind::ExtractLaneI8x16S`/`ExtractLaneI8x16U` pop a `v128`,
+    read the `aux`-selected `i8` lane (sign- or zero-extended to
+    `i32`), same shape as the pre-existing `ExtractLane` arm but at
+    `i8x16`'s 0-15 lane range. Bounds-checked (`lane_idx >= 16`
+    rejected with a clean `Err`) BEFORE indexing the 16-byte lane
+    array, same discipline as `ExtractLane`'s own 0-3 check.
+  - `SimdOpKind::ReplaceLaneI8x16` pops an `i32` (the replacement
+    value, only its low byte used) then a `v128` (pop order matches
+    the shift family's own "scalar pushed last, popped first"
+    convention), overwrites the `aux`-selected lane, pushes the result.
+    Same bounds-check discipline as the extract-lane arms above.
+- 10 new tests in `mod tests`: `i8x16.swizzle` permutation (a real
+  lane-reversal, not just identity) and its out-of-range-index-produces-
+  zero case; `extract_lane_s` sign-extension and `extract_lane_u`
+  zero-extension of the SAME `0x80` byte (proving they genuinely
+  differ, not just each "doing something"); both extract variants'
+  out-of-range-lane clean-error case; `replace_lane`'s
+  only-target-lane-changes case, its only-low-byte-of-i32-used case,
+  and its own out-of-range-lane clean-error case.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## [0.9.29] - 2026-08-19 (task #168-170 — SIMD: float splat family, first float-lane ops)
+
+### Added
+
+- `register_simd` gains two new dispatch arms: `SimdOpKind::SplatF32x4`
+  pops an `f32` and broadcasts its 4 little-endian bytes into all 4
+  lanes; `SplatF64x2` pops an `f64` and broadcasts its 8 little-endian
+  bytes into both lanes. A pure bit-pattern broadcast via
+  `to_le_bytes()` (not a numeric conversion), so no rounding or NaN
+  handling is needed -- the FIRST floating-point-typed SIMD ops in
+  this crate.
+- 2 new tests, each verifying the EXACT IEEE-754 bit pattern is
+  broadcast into every lane (using `3.5`, a value whose bit pattern
+  couldn't accidentally match a broken implementation the way `0.0`
+  could).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## [0.9.28] - 2026-08-19 (task #165-167 — SIMD: splat family widening)
 
 ### Added

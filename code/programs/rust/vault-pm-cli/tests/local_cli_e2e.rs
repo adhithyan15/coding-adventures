@@ -3,7 +3,7 @@
 use std::collections::BTreeMap;
 use std::fs::{self, File};
 use std::io::{self, Read, Write};
-use std::os::fd::FromRawFd;
+use std::os::fd::{AsRawFd, FromRawFd, RawFd};
 use std::os::unix::process::CommandExt;
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
@@ -2356,11 +2356,66 @@ fn open_pty() -> (File, File) {
     unsafe { (File::from_raw_fd(master), File::from_raw_fd(slave)) }
 }
 
+/// Per-`poll` idle bound for every blocking PTY read below.
+///
+/// Every helper here reads one byte (or one buffer) at a time from a real
+/// child process's terminal, and the original versions called the blocking
+/// `File::read` directly with no bound at all: if the child ever wrote
+/// something that didn't byte-for-byte contain the pattern being waited on —
+/// a race, a buffering difference between an interactive terminal and a
+/// CI-allocated PTY, a subtly different prompt, or a genuine deadlock in the
+/// CLI — the read blocked forever. That turned a single wrong byte into a
+/// 150-minute CI job timeout with zero diagnostic output (see PR #12042's
+/// "Build and test affected packages" hang).
+///
+/// 60 seconds is generous for a single real Argon2id unlock plus process
+/// spawn on a slow, oversubscribed CI runner, but still bounded: a timeout
+/// here fails the specific `read` that stalled, in seconds, with the pattern
+/// that never arrived and the transcript captured so far — not the whole job,
+/// two and a half hours later, with nothing to look at.
+const PTY_READ_TIMEOUT_MS: libc::c_int = 60_000;
+
+/// Block until `fd` has data (or EOF/hangup) ready, or `PTY_READ_TIMEOUT_MS`
+/// passes with nothing arriving. Returns `true` when a following `read` is
+/// safe to call without blocking, `false` on timeout.
+fn poll_pty_readable(fd: RawFd) -> bool {
+    let mut poller = libc::pollfd {
+        fd,
+        events: libc::POLLIN,
+        revents: 0,
+    };
+    loop {
+        // SAFETY: one initialized `pollfd` describing a file descriptor the
+        // caller owns for the duration of this call.
+        let ready = unsafe { libc::poll(&mut poller, 1, PTY_READ_TIMEOUT_MS) };
+        if ready == 0 {
+            return false;
+        }
+        if ready < 0 {
+            let error = io::Error::last_os_error();
+            if error.kind() == io::ErrorKind::Interrupted {
+                continue;
+            }
+            panic!("pseudo-terminal poll failed: {error}");
+        }
+        // Any of POLLIN/POLLHUP/POLLERR means the next `read` will return
+        // promptly (data, EOF, or an error) rather than block.
+        return true;
+    }
+}
+
 fn read_until(master: &mut File, transcript: &mut Vec<u8>, pattern: &[u8]) {
     while !transcript
         .windows(pattern.len())
         .any(|value| value == pattern)
     {
+        if !poll_pty_readable(master.as_raw_fd()) {
+            panic!(
+                "timed out after {PTY_READ_TIMEOUT_MS}ms waiting for {:?}; transcript so far: {:?}",
+                String::from_utf8_lossy(pattern),
+                String::from_utf8_lossy(transcript)
+            );
+        }
         let mut byte = [0_u8; 1];
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
@@ -2369,6 +2424,7 @@ fn read_until(master: &mut File, transcript: &mut Vec<u8>, pattern: &[u8]) {
                 String::from_utf8_lossy(pattern)
             ),
             Ok(_) => unreachable!(),
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
         }
     }
@@ -2379,6 +2435,13 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
         .windows(pattern.len())
         .any(|value| value == pattern)
     {
+        if !poll_pty_readable(master.as_raw_fd()) {
+            panic!(
+                "timed out after {PTY_READ_TIMEOUT_MS}ms waiting for {:?}; transcript so far: {:?}",
+                String::from_utf8_lossy(pattern),
+                String::from_utf8_lossy(transcript)
+            );
+        }
         let mut byte = [0_u8; 1];
         match master.read(&mut byte) {
             Ok(1) => transcript.push(byte[0]),
@@ -2387,6 +2450,7 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
                 String::from_utf8_lossy(pattern)
             ),
             Ok(_) => unreachable!(),
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
             Err(error) => panic!("pseudo-terminal read failed: {error}"),
         }
     }
@@ -2395,10 +2459,18 @@ fn read_until_from(master: &mut File, transcript: &mut Vec<u8>, start: usize, pa
 fn drain_pty(master: &mut File, transcript: &mut Vec<u8>) {
     let mut bytes = [0_u8; 4096];
     loop {
+        if !poll_pty_readable(master.as_raw_fd()) {
+            panic!(
+                "pseudo-terminal drain timed out after {PTY_READ_TIMEOUT_MS}ms waiting for more \
+                 output or EOF; transcript so far: {:?}",
+                String::from_utf8_lossy(transcript)
+            );
+        }
         match master.read(&mut bytes) {
             Ok(0) => return,
             Ok(count) => transcript.extend_from_slice(&bytes[..count]),
             Err(error) if error.raw_os_error() == Some(libc::EIO) => return,
+            Err(error) if error.kind() == io::ErrorKind::Interrupted => continue,
             Err(error) => panic!("pseudo-terminal drain failed: {error}"),
         }
     }
@@ -2578,4 +2650,462 @@ fn assert_tree_excludes(root: &Path, forbidden: &[u8]) {
                 .any(|value| value == forbidden));
         }
     }
+}
+
+/// One deterministic attachment payload larger than a single 64 KiB chunk.
+///
+/// The length is deliberately not a chunk multiple, so the short final chunk
+/// is exercised. A payload that happened to be an exact multiple would leave
+/// the tail path untested and make "it round-tripped" a weaker statement than
+/// it looks (VLT-PM47 §9.1).
+fn attachment_payload() -> Vec<u8> {
+    (0..(2 * 65_536 + 1_234))
+        .map(|index| (index % 251) as u8)
+        .collect()
+}
+
+fn run_attachment_add_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    source: &Path,
+) -> (ExitStatus, String, Vec<u8>) {
+    run_attachment_command_in_pty(
+        home,
+        &[
+            "attachment",
+            "add",
+            item_id,
+            source.to_str().expect("UTF-8 attachment source"),
+        ],
+        None,
+    )
+}
+
+fn run_attachment_list_in_pty(home: &TestHome, item_id: &str) -> (ExitStatus, String, Vec<u8>) {
+    run_attachment_command_in_pty(home, &["attachment", "list", item_id], None)
+}
+
+fn run_attachment_export_in_pty(
+    home: &TestHome,
+    item_id: &str,
+    attachment_id: &str,
+    destination: &Path,
+    answer: &[u8],
+) -> (ExitStatus, String, Vec<u8>) {
+    run_attachment_command_in_pty(
+        home,
+        &[
+            "attachment",
+            "export",
+            item_id,
+            attachment_id,
+            destination.to_str().expect("UTF-8 attachment destination"),
+        ],
+        Some(answer),
+    )
+}
+
+/// Drive one attachment command through the real executable.
+///
+/// Standard output stays a clean pipe and the controlling terminal is on
+/// standard error, the same split `run_totp_code_in_pty` uses, so the test can
+/// assert on what a shell would capture separately from what the person sees.
+fn run_attachment_command_in_pty(
+    home: &TestHome,
+    arguments: &[&str],
+    confirmation: Option<&[u8]>,
+) -> (ExitStatus, String, Vec<u8>) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDERR_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    // Every other `run_*_in_pty` helper in this file drops `command` right
+    // after `spawn` for exactly this reason: `Command` keeps its own copy of
+    // the `Stdio` it was given for `stderr` — here, the pty slave — alive for
+    // as long as the `Command` value lives, which without an explicit drop is
+    // the end of this function's scope, *after* `drain_pty` below. A pty
+    // master only sees EOF once every open reference to the slave is closed,
+    // so an un-dropped `command` is a second, silent holder of the slave that
+    // keeps `drain_pty`'s `read` waiting forever for a hang-up the real child
+    // already produced. This was exactly PR #12042's CI hang: the real
+    // `vault-pm attachment add` process runs to completion and exits, but the
+    // test's own leaked fd keeps the terminal looking "still open" to the
+    // read loop that is waiting to drain it.
+    drop(command);
+    child
+        .stdin
+        .take()
+        .unwrap()
+        .write_all(STDIN_INJECTION)
+        .unwrap();
+    let mut stdout = child.stdout.take().unwrap();
+    let mut transcript = Vec::new();
+    read_until(&mut master, &mut transcript, b"Vault passphrase: ");
+    master.write_all(PASSPHRASE).unwrap();
+    master.write_all(b"\n").unwrap();
+    if let Some(answer) = confirmation {
+        read_until(
+            &mut master,
+            &mut transcript,
+            b"Write this attachment's contents to a plaintext file? Type yes to continue: ",
+        );
+        master.write_all(answer).unwrap();
+        master.write_all(b"\n").unwrap();
+    }
+    let mut captured = Vec::new();
+    stdout.read_to_end(&mut captured).unwrap();
+    drain_pty(&mut master, &mut transcript);
+    let status = child.wait().unwrap();
+    (
+        status,
+        String::from_utf8_lossy(&transcript).into_owned(),
+        captured,
+    )
+}
+
+/// VLT-PM47 §9. The whole attachment ceremony through the real executable: a
+/// multi-chunk file goes in, its metadata comes back, and the bytes come out
+/// identical — with nothing of the file or its name on disk in clear, and the
+/// refusal path releasing nothing.
+#[test]
+fn the_real_cli_round_trips_a_multi_chunk_attachment_byte_identically() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+    let (add_status, add_transcript) = run_add_login_in_pty(&home);
+    assert!(add_status.success(), "login add failed: {add_transcript}");
+    let item_id = extract_item_id(&add_transcript);
+
+    let payload = attachment_payload();
+    let source = home.0.join("recovery-codes.bin");
+    fs::write(&source, &payload).unwrap();
+
+    let (status, transcript, stdout) = run_attachment_add_in_pty(&home, &item_id, &source);
+    assert!(status.success(), "{transcript}");
+    let announced = String::from_utf8(stdout).unwrap();
+    let attachment_id = announced
+        .strip_prefix("Attachment added: ")
+        .and_then(|rest| rest.strip_suffix('\n'))
+        .unwrap_or_else(|| panic!("unexpected standard output: {announced:?}"))
+        .to_owned();
+
+    // The listing is metadata, so it belongs on ordinary standard output.
+    let (list_status, list_transcript, list_stdout) = run_attachment_list_in_pty(&home, &item_id);
+    assert!(list_status.success(), "{list_transcript}");
+    let listed = String::from_utf8(list_stdout).unwrap();
+    assert!(listed.contains(&attachment_id), "{listed:?}");
+    assert!(listed.contains("name=\"recovery-codes.bin\""), "{listed:?}");
+    assert!(
+        listed.contains(&format!("bytes={}", payload.len())),
+        "{listed:?}"
+    );
+
+    // A refusal at the prompt writes no file at all.
+    let refused_destination = home.0.join("refused.bin");
+    let (refused_status, refused_transcript, refused_stdout) =
+        run_attachment_export_in_pty(&home, &item_id, &attachment_id, &refused_destination, b"no");
+    assert_eq!(refused_status.code(), Some(2), "{refused_transcript}");
+    assert!(refused_stdout.is_empty());
+    assert!(
+        !refused_destination.exists(),
+        "a refused export wrote a file"
+    );
+
+    let destination = home.0.join("exported.bin");
+    let (export_status, export_transcript, export_stdout) =
+        run_attachment_export_in_pty(&home, &item_id, &attachment_id, &destination, b"yes");
+    assert!(export_status.success(), "{export_transcript}");
+    assert_eq!(
+        String::from_utf8(export_stdout).unwrap(),
+        "Attachment written.\n"
+    );
+    assert_eq!(
+        fs::read(&destination).unwrap(),
+        payload,
+        "the exported file must be byte-identical to the source"
+    );
+
+    // The store holds ciphertext: a distinctive interior run of the payload,
+    // and the file name, appear nowhere under the platform roots. The exported
+    // copy is deliberately outside those roots.
+    for child in ["config", "data", "cache"] {
+        assert_tree_excludes(&home.0.join(child), &payload[65_536..65_536 + 64]);
+        assert_tree_excludes(&home.0.join(child), b"recovery-codes.bin");
+    }
+
+    // Every access is recorded, and the chain carries neither the name nor any
+    // byte of the file.
+    let (audit_status, audit) = run_unlock_in_pty(
+        &home,
+        &["audit", "list"],
+        b"action=item_read\toutcome=denied",
+    );
+    assert!(audit_status.success(), "{audit}");
+    assert!(
+        audit.contains("action=item_update\toutcome=succeeded"),
+        "{audit}"
+    );
+    assert!(
+        audit.contains("action=item_read\toutcome=denied"),
+        "the refused export must leave a row: {audit}"
+    );
+    assert_eq!(
+        audit
+            .lines()
+            .filter(|row| row.contains("action=item_read\toutcome=succeeded"))
+            .count(),
+        2,
+        "{audit}"
+    );
+    assert!(!audit.contains("recovery-codes.bin"), "{audit}");
+    assert_audit_rows_have_only_closed_fields(&audit);
+
+    let (verify_status, verify) =
+        run_unlock_in_pty(&home, &["audit", "verify"], b"Audit: verified");
+    assert!(verify_status.success(), "{verify}");
+}
+
+// ---------------------------------------------------------------------------
+// VLT-PM48: local agent, IPC, and auto-lock.
+// ---------------------------------------------------------------------------
+
+/// Stops whatever agent is running for `home` when the test ends, including
+/// on panic.
+///
+/// Every agent test spawns a real detached background process. Without this,
+/// a failing assertion would leave that process running for the lifetime of
+/// the CI runner (or a developer's machine), holding a socket open under a
+/// temporary directory this test is about to delete out from under it.
+struct AgentGuard<'a> {
+    home: &'a TestHome,
+}
+
+impl Drop for AgentGuard<'_> {
+    fn drop(&mut self) {
+        let _ = run_plain(self.home, &["agent", "stop"]);
+    }
+}
+
+/// Run one command over a real pseudo-terminal, feeding it nothing.
+///
+/// Used to prove a command does *not* prompt: if it needed a passphrase, the
+/// prompt text would already be sitting in the transcript, and the child
+/// would then block reading `/dev/tty` — which nothing here ever writes to —
+/// so `drain_pty`'s bounded read fails loudly after
+/// [`PTY_READ_TIMEOUT_MS`] rather than either hanging this test suite forever
+/// or, worse, silently passing. Standard input is `Stdio::null()` rather than
+/// piped and closed, because VLT-PM08 §2 already establishes that secret
+/// collection never reads process stdin at all — the prompt this test is
+/// checking for lives on the controlling terminal, not on this stream.
+fn run_without_prompting_in_pty(home: &TestHome, arguments: &[&str]) -> (ExitStatus, String) {
+    let (mut master, slave) = open_pty();
+    let mut command = Command::new(env!("CARGO_BIN_EXE_vault-pm"));
+    command.args(arguments);
+    home.configure(&mut command);
+    command
+        .stdin(Stdio::null())
+        .stdout(Stdio::from(slave.try_clone().unwrap()))
+        .stderr(Stdio::from(slave));
+    unsafe {
+        command.pre_exec(|| {
+            if libc::setsid() < 0 || libc::ioctl(libc::STDOUT_FILENO, tiocsctty_request(), 0) < 0 {
+                return Err(io::Error::last_os_error());
+            }
+            Ok(())
+        });
+    }
+    let mut child = command.spawn().unwrap();
+    drop(command);
+    let mut transcript = Vec::new();
+    drain_pty(&mut master, &mut transcript);
+    drop(master);
+    let status = child.wait().unwrap();
+    (status, String::from_utf8_lossy(&transcript).into_owned())
+}
+
+fn stdout_string(output: &std::process::Output) -> String {
+    String::from_utf8_lossy(&output.stdout).into_owned()
+}
+
+/// The complete agent lifecycle through the real executable, end to end.
+///
+/// This is the one test that proves the whole point of VLT-PM48: a person
+/// who runs `agent unlock` once answers no further passphrase prompts for
+/// ordinary authenticated commands until they explicitly lock, stop the
+/// agent, or the configured idle bound elapses — while every step in between
+/// remains the same real `vault-pm` binary, the same real filesystem vault,
+/// and the same real Unix domain socket a second local process would have to
+/// reach.
+#[test]
+fn real_agent_unlock_removes_the_prompt_until_locked_or_stopped() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+
+    // Nothing is running yet, and asking is not an error.
+    let not_running = run_plain(&home, &["agent", "status"]);
+    assert!(not_running.status.success());
+    assert_eq!(stdout_string(&not_running), "Agent: not running.\n");
+
+    // A command that needs unlocking still falls back to the ordinary prompt
+    // when no agent exists — VLT-PM48 §2 requirement 4, checked before the
+    // agent is even started so a regression here cannot hide behind "the
+    // agent happened to be running already."
+    let (status, transcript) = run_unlock_in_pty(&home, &["item", "list"], b"No items.");
+    assert!(status.success(), "{transcript}");
+
+    let started = run_plain(&home, &["agent", "start"]);
+    assert!(started.status.success(), "{:?}", started);
+    assert_eq!(stdout_string(&started), "Agent: started.\n");
+    let _guard = AgentGuard { home: &home };
+
+    // Starting an already-running agent is idempotent, not an error.
+    let started_again = run_plain(&home, &["agent", "start"]);
+    assert!(started_again.status.success());
+    assert_eq!(stdout_string(&started_again), "Agent: already running.\n");
+
+    let running_empty = run_plain(&home, &["agent", "status"]);
+    assert!(running_empty.status.success());
+    assert_eq!(
+        stdout_string(&running_empty),
+        "Agent: running. No vaults retained.\n"
+    );
+
+    // One real passphrase prompt, on a real pseudo-terminal, handed to a real
+    // running agent process over its real socket.
+    let (unlock_status, unlock_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["agent", "unlock"],
+        b"Agent: unlocked.",
+        PASSPHRASE,
+    );
+    assert!(unlock_status.success(), "{unlock_transcript}");
+    assert_transcript_excludes_secrets(&unlock_transcript);
+
+    let running_with_vault = run_plain(&home, &["agent", "status"]);
+    assert!(running_with_vault.status.success());
+    let status_text = stdout_string(&running_with_vault);
+    assert!(
+        status_text.starts_with("Agent: running.\n"),
+        "{status_text}"
+    );
+    assert!(
+        status_text.contains("personal: unlocked ("),
+        "{status_text}"
+    );
+    assert!(status_text.contains("s remaining)\n"), "{status_text}");
+
+    // `--vault` filtered status reports the same thing about one named vault.
+    let filtered = run_plain(&home, &["--vault", "personal", "agent", "status", "--json"]);
+    assert!(filtered.status.success());
+    let filtered_text = stdout_string(&filtered);
+    assert!(
+        filtered_text.contains("\"vault\":\"personal\""),
+        "{filtered_text}"
+    );
+    assert!(
+        filtered_text.contains("\"unlocked\":true"),
+        "{filtered_text}"
+    );
+
+    // The heart of the feature: a one-shot authenticated command run with
+    // nothing at all on its controlling terminal still succeeds, because it
+    // opportunistically reused the agent's retained passphrase instead of
+    // prompting for one.
+    let (reused_status, reused_transcript) = run_without_prompting_in_pty(&home, &["item", "list"]);
+    assert!(reused_status.success(), "{reused_transcript}");
+    assert!(
+        !reused_transcript.contains("Vault passphrase"),
+        "an unlocked agent must remove the prompt entirely: {reused_transcript}"
+    );
+    assert!(
+        reused_transcript.contains("No items."),
+        "{reused_transcript}"
+    );
+
+    // `agent lock` forgets it, and the very next command prompts again.
+    let locked = run_plain(&home, &["agent", "lock"]);
+    assert!(locked.status.success());
+    assert_eq!(stdout_string(&locked), "Agent: locked.\n");
+
+    let after_lock_status = run_plain(&home, &["agent", "status"]);
+    assert!(after_lock_status.status.success());
+    assert_eq!(
+        stdout_string(&after_lock_status),
+        "Agent: running. No vaults retained.\n"
+    );
+
+    let (reprompted_status, reprompted_transcript) =
+        run_unlock_in_pty(&home, &["item", "list"], b"No items.");
+    assert!(reprompted_status.success(), "{reprompted_transcript}");
+
+    // `agent stop` tears the socket down; the next status call reports the
+    // agent absent rather than erroring, and stopping an already-stopped
+    // agent is equally harmless.
+    let stopped = run_plain(&home, &["agent", "stop"]);
+    assert!(stopped.status.success());
+    assert_eq!(stdout_string(&stopped), "Agent: stopped.\n");
+
+    let stopped_again = run_plain(&home, &["agent", "stop"]);
+    assert!(stopped_again.status.success());
+    assert_eq!(stdout_string(&stopped_again), "Agent: not running.\n");
+
+    let finally_not_running = run_plain(&home, &["agent", "status"]);
+    assert!(finally_not_running.status.success());
+    assert_eq!(stdout_string(&finally_not_running), "Agent: not running.\n");
+}
+
+/// A successful `passphrase rotate` invalidates whatever the agent had
+/// cached for that vault immediately, not only after the idle bound elapses.
+#[test]
+fn real_agent_cache_is_forgotten_immediately_after_a_passphrase_rotation() {
+    let home = TestHome::new();
+    assert!(run_init_in_pty(&home).0.success());
+
+    let started = run_plain(&home, &["agent", "start"]);
+    assert!(started.status.success());
+    let _guard = AgentGuard { home: &home };
+
+    let (unlock_status, unlock_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["agent", "unlock"],
+        b"Agent: unlocked.",
+        PASSPHRASE,
+    );
+    assert!(unlock_status.success(), "{unlock_transcript}");
+
+    // Confirm the opportunistic path is live before rotating, so the assertion
+    // after rotation is about the rotation and not about the agent never
+    // having been reached at all.
+    let (before_status, before_transcript) = run_without_prompting_in_pty(&home, &["item", "list"]);
+    assert!(before_status.success(), "{before_transcript}");
+
+    // The rotation itself still needs the (still-cached, still-correct) old
+    // passphrase and a fresh one on a real terminal.
+    let (rotate_status, rotate_transcript) =
+        run_passphrase_rotate_in_pty(&home, PASSPHRASE, ROTATED_PASSPHRASE);
+    assert!(rotate_status.success(), "{rotate_transcript}");
+
+    // The agent's cached value is now the old, wrong passphrase. Because
+    // `passphrase_rotate` forgets it immediately on success, the very next
+    // command falls back to a prompt — for the *new* passphrase — rather than
+    // silently trying the stale one and failing with `Locked`.
+    let (after_status, after_transcript) = run_unlock_with_passphrase_in_pty(
+        &home,
+        &["item", "list"],
+        b"No items.",
+        ROTATED_PASSPHRASE,
+    );
+    assert!(after_status.success(), "{after_transcript}");
 }

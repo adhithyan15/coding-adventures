@@ -30,7 +30,7 @@
 //!
 //! | moslayout tag | QML element                                                                  |
 //! |---|---|
-//! | `Box`         | `Item { ... }`                                                              |
+//! | `Box`         | `Item { ... }` — content-sized when it has children (see `content_sizing_lines`) |
 //! | `Row`         | `RowLayout { ... }`                                                         |
 //! | `Column`      | `ColumnLayout { ... }` — UI28 §2.2 introduces a *data* `Column`; this is the **layout** Column. Tracked. |
 //! | `Text`        | `Text { text: "..." }` or `Text { text: slotName }` for slot-ref content    |
@@ -38,7 +38,7 @@
 //! | `Image`       | `Image { source: "..." }`                                                   |
 //! | `Icon`        | `BusyIndicator` for `spinner`; accessible semantic `Label` otherwise         |
 //! | `Divider`     | `Rectangle { height: 1; color: "#888"; Layout.fillWidth: true }`            |
-//! | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay   |
+//! | `Stack`       | `Item { ... }` with `anchors.fill: parent` on each child — Z-axis overlay; NOT content-sized (would be a binding loop) |
 //! | `HostInput`   | `TextInput { ... }` or `TextField { ...; placeholderText: ... }`            |
 //! | `HostButton`  | `Button { text: ...; enabled: ...; onClicked: ... }` (Controls 2.15)        |
 //! | `HostScroll`  | `ScrollView { ... children ... }`                                           |
@@ -68,6 +68,31 @@
 //!    public interface; the inner element is purely structural.
 //! 2. **`Item` is the lightest QML element**: zero painting, no layout
 //!    behaviour. It costs nothing at runtime and disappears visually.
+//!
+//! ### …but a bare `Item` must be told its size
+//!
+//! "No layout behaviour" cuts both ways, and this was a real bug. `Item`
+//! is the one QtQuick container with **no intrinsic size**: it publishes
+//! `implicitWidth`/`implicitHeight` of `0` and does *not* grow to fit its
+//! children — they are simply allowed to paint outside it. Every other
+//! lowering in the table above (`Rectangle`, `Text`, `Image`, the
+//! `Controls` widgets, `RowLayout`/`ColumnLayout`) computes an implicit
+//! size from its content.
+//!
+//! That matters because `implicitWidth`/`implicitHeight` is precisely the
+//! channel a QML layout reads to decide how much room to give a child. A
+//! sizeless root therefore collapses inside any `RowLayout` /
+//! `ColumnLayout` / `GridLayout`: every sibling is handed zero width, so
+//! they all land at the same coordinate and paint on top of each other.
+//! The root — and every other `Item` this emitter produces that is meant
+//! to be transparent to layout — must publish a content-derived implicit
+//! size. See [`content_sizing_lines`] for the mechanism, the choice of
+//! `childrenRect`, and the binding-loop pitfall that rules `Stack` out.
+//!
+//! Note that a component anchored by its consumer
+//! (`Mosaic.Foo { anchors.fill: parent }`) sizes from the anchor and
+//! never consults `implicitWidth` — which is why this went unnoticed for
+//! so long: the in-tree Qt host does exactly that.
 
 use std::cell::Cell;
 use std::fmt::Write as _;
@@ -1314,6 +1339,114 @@ fn discover_col_widths_slot(host_table: &LayoutNode) -> Option<String> {
     None
 }
 
+/// Emit the two property lines that give a childless-by-default QML
+/// `Item` an intrinsic size derived from whatever it contains.
+///
+/// Why this is needed at all
+/// -------------------------
+/// QML's `Item` is the one container in QtQuick that has **no intrinsic
+/// size**. `Rectangle`, `Text`, `Image`, every `QtQuick.Controls` widget,
+/// and both positioners (`Row`/`Column`) and layouts (`RowLayout`/
+/// `ColumnLayout`) all publish an `implicitWidth`/`implicitHeight`
+/// computed from their content. A bare `Item` publishes `0 x 0` and does
+/// **not** grow to fit its children — children are simply allowed to
+/// paint outside it.
+///
+/// That matters because `implicitWidth`/`implicitHeight` is exactly the
+/// channel a QML layout reads to decide how much room to give a child:
+///
+/// ```text
+///   RowLayout                                 RowLayout
+///   ├─ Item (0x0)   ← collapses               ├─ Item (implicit 88x40)
+///   │  └─ Button (88x40, paints outside)      │  └─ Button (88x40)
+///   └─ Item (0x0)   ← same x as the first     └─ Item (implicit 72x40)
+/// ```
+///
+/// With no implicit size, every sibling is handed zero width, so they
+/// all land at the same x and paint on top of each other. That is the
+/// "collapsed and overlapping buttons" symptom.
+///
+/// Why `childrenRect` and not `<child>.implicitWidth`
+/// --------------------------------------------------
+/// `childrenRect` is the union of the children's *actual* geometry, so
+/// it works uniformly no matter what the child turns out to be — a
+/// `Controls.Button` (implicit-sized), a styled `Rectangle` (which this
+/// emitter already gives a `childrenRect`-derived implicit size), a
+/// `Loader` (which forwards the loaded item's implicit size), or several
+/// siblings at once. Binding to one named child's `implicitWidth` would
+/// need an `id` on a child whose element type we don't know, and would
+/// report `0` for the very cases (`Item`-shaped containers) this is
+/// meant to rescue.
+///
+/// The `x +` / `y +` terms make the box contain a child that sits at a
+/// non-zero offset (the padding-inset shape this emitter produces for
+/// styled boxes); for a child at the origin they are `0` and the
+/// expression reduces to plain `childrenRect.width`/`.height`.
+///
+/// The binding-loop pitfall, and why we are clear of it
+/// ----------------------------------------------------
+/// `implicitWidth: childrenRect.width` is a genuine binding loop **when
+/// a child anchors back to this item** — `parent.width` ← `implicitWidth`
+/// ← `childrenRect.width` ← `child.width` ← `parent.width`. QML detects
+/// it and prints a `QML Item: Binding loop detected` warning, and the
+/// size is left indeterminate.
+///
+/// This emitter only ever anchors a child to its parent in these places,
+/// none of which is a call site of this helper:
+///
+/// - children of a `Stack`, via [`inject_anchors_fill_parent`] — which
+///   is why the `Stack` lowering deliberately does **not** call this;
+/// - a styled cell's inner `Text`/`TextInput`, whose parent is a
+///   `Rectangle` with its own explicit sizing;
+/// - the dedicated host-primitive emitters (`HostSurface`, `Loader`
+///   cell-fill, drag proxies), which size their wrappers explicitly.
+///
+/// The same reasoning is what makes the existing `For`-delegate sizing
+/// (see [`emit_for_qml`]) safe; this helper generalises that fix.
+fn content_sizing_lines(depth: usize) -> String {
+    content_sizing_lines_avoiding(depth, &HashSet::new())
+}
+
+/// [`content_sizing_lines`], but skipping any dimension whose property
+/// name is already declared on the same QML object.
+///
+/// A MIL slot named `implicit-width` camel-cases to `implicitWidth` and
+/// is emitted as `property real implicitWidth: 0` on the root `Item`.
+/// QML tolerates that on its own — the declaration simply shadows the
+/// inherited property — but pairing it with our `implicitWidth: …`
+/// binding on the *same object* is a hard load failure:
+///
+/// ```text
+/// B.qml:8 Property value set multiple times
+/// ```
+///
+/// (Verified against Qt 6.8.1: the shadowing declaration alone loads
+/// `Ready`; adding the binding turns the whole component into an
+/// `Error`.) Emitting the binding unconditionally would therefore break
+/// a component that used to work, so the author's slot wins and we skip
+/// that dimension. Only the root can hit this — slots are declared
+/// nowhere else — but the filter is applied through one code path so the
+/// invariant can't drift.
+fn content_sizing_lines_avoiding(depth: usize, declared: &HashSet<String>) -> String {
+    let pad = "    ".repeat(depth);
+    let mut out = String::new();
+    if !declared.contains("implicitWidth") {
+        writeln!(
+            out,
+            "{pad}implicitWidth: childrenRect.x + childrenRect.width"
+        )
+        .unwrap();
+    }
+    if !declared.contains("implicitHeight") {
+        writeln!(
+            out,
+            "{pad}implicitHeight: childrenRect.y + childrenRect.height"
+        )
+        .unwrap();
+    }
+    out
+}
+
 /// Compile a three-file Mosaic pipeline triple to a QML source file.
 ///
 /// The `style` argument is inlined: styled `Box [part]` containers lower
@@ -1377,6 +1510,16 @@ fn from_pipeline_with_runtime_policy(
     writeln!(out, "Item {{").unwrap();
     writeln!(out, "    id: mosaicRoot").unwrap();
     writeln!(out, "    // Component: {name}").unwrap();
+    // Slots become `property` declarations on this same root object, so a
+    // slot that camel-cases onto one of the sizing property names must
+    // suppress our binding for that dimension — see
+    // [`content_sizing_lines_avoiding`].
+    let root_declared: HashSet<String> = interface
+        .slots
+        .iter()
+        .map(|s| to_camel_case_first_lower(&s.name))
+        .collect();
+    out.push_str(&content_sizing_lines_avoiding(1, &root_declared));
     if require_runtime {
         writeln!(out, "    required property var mosaicHost").unwrap();
     } else {
@@ -1778,6 +1921,32 @@ fn emit_qml_tree(
     // The branch exists for safety / future use.
 
     writeln!(out, "{pad}{element_name} {{").unwrap();
+
+    // An unstyled `Box` lowers to a bare `Item`, which has no intrinsic
+    // size — the same gap the component root had (see
+    // [`content_sizing_lines`]). Without this, a `Box`-rooted component
+    // still reports `0 x 0` to its parent layout even though the root
+    // `Item` now sizes to its children: the root faithfully measures a
+    // child that itself measures nothing.
+    //
+    // The guards keep this to exactly the container case:
+    //
+    // - `element_name == "Item"` — every other lowering (`Rectangle`,
+    //   `Text`, `RowLayout`, `ScrollView`, the Controls widgets) already
+    //   publishes a content-derived implicit size of its own.
+    // - `!is_stack` — a `Stack`'s children get `anchors.fill: parent`
+    //   injected, so `childrenRect` here *would* be a binding loop.
+    //   A Z-stack sizing itself to its overlay children is a separate
+    //   problem that needs the children's *implicit* sizes, not their
+    //   actual ones.
+    // - non-empty `children` — a childless `Item` is `Spacer`, whose
+    //   whole job is to be a zero-implicit-size flex filler
+    //   (`Layout.fillWidth`/`fillHeight`). Sizing it to content would be
+    //   a no-op at best and is semantically wrong at worst.
+    let is_sizeless_container = element_name == "Item" && !is_stack && !node.children.is_empty();
+    if is_sizeless_container {
+        out.push_str(&content_sizing_lines(depth + 1));
+    }
 
     // Built-in property lines (e.g. Spacer's `Layout.fillWidth: true`).
     for line in &builtin_lines {
@@ -3832,6 +4001,14 @@ fn emit_host_tooltip_qml(
     let escaped = escape_qml_string(text);
 
     writeln!(out, "{pad}Item {{").unwrap();
+    // `HostTooltip` is a pure decorator: it contributes no visuals of its
+    // own, only the attached `ToolTip` properties and a hover handler.
+    // The wrapper must therefore be transparent to layout and report the
+    // wrapped child's size, or the tooltip silently collapses whatever it
+    // decorates (see [`content_sizing_lines`]). Children here are walked
+    // with `is_stack: false`, so none of them anchors back to this item
+    // and `childrenRect` is loop-free.
+    out.push_str(&content_sizing_lines(depth + 1));
     writeln!(out, "{inner}ToolTip.text: \"{escaped}\"").unwrap();
     writeln!(out, "{inner}ToolTip.visible: hoverHandler.hovered").unwrap();
     writeln!(out, "{inner}HoverHandler {{ id: hoverHandler }}").unwrap();
@@ -10810,6 +10987,231 @@ mod tests {
         )
     }
 
+    /// Regression: the component root `Item` must publish a
+    /// content-derived implicit size.
+    ///
+    /// Without it, QML's `Item` reports `0 x 0` to whatever parent the
+    /// consumer puts the component in, so every generated component
+    /// collapses inside a `RowLayout`/`ColumnLayout`/`GridLayout` —
+    /// siblings all land at the same coordinate and paint over each
+    /// other. Verified on-screen with `qml.exe`: before the fix a row of
+    /// four toolkit `Button`s measured `48x0` with each button `0x0`;
+    /// after, `279x32` with four distinct, correctly-sized buttons.
+    #[test]
+    fn component_root_is_sized_to_its_content() {
+        let layout = LayoutDef {
+            component_name: "Card".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(
+            &component("Card", vec![], vec![]),
+            &layout,
+            &empty_style("Card"),
+        )
+        .unwrap()
+        .output;
+
+        // The sizing lines must sit on the root, i.e. before the layout
+        // tree opens — at one indent level inside `Item {`.
+        let root_open = out.find("Item {").expect("root Item");
+        let tree_open = out.find("    ColumnLayout {").expect("layout root");
+        let width_line = out
+            .find("    implicitWidth: childrenRect.x + childrenRect.width")
+            .expect("root implicitWidth");
+        let height_line = out
+            .find("    implicitHeight: childrenRect.y + childrenRect.height")
+            .expect("root implicitHeight");
+        assert!(
+            root_open < width_line && width_line < tree_open,
+            "implicitWidth must be a property of the root Item:\n{out}"
+        );
+        assert!(
+            root_open < height_line && height_line < tree_open,
+            "implicitHeight must be a property of the root Item:\n{out}"
+        );
+    }
+
+    /// A slot named `implicit-width` camel-cases to `implicitWidth` and
+    /// is emitted as a `property` declaration on the root. QML accepts
+    /// that shadowing declaration on its own, but pairing it with our
+    /// sizing binding on the same object is a hard load failure
+    /// (`Property value set multiple times`, verified on Qt 6.8.1). The
+    /// author's slot must therefore win for that dimension — emitting
+    /// both would break a component that previously worked.
+    #[test]
+    fn sizing_binding_yields_to_a_colliding_slot_name() {
+        let layout = LayoutDef {
+            component_name: "Odd".to_string(),
+            root: LayoutNode {
+                tag: "Column".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(
+            &component(
+                "Odd",
+                vec![slot("implicit-width", SlotType::Number, false)],
+                vec![],
+            ),
+            &layout,
+            &empty_style("Odd"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            !out.contains("implicitWidth: childrenRect"),
+            "must not bind a dimension the slot already declares:\n{out}"
+        );
+        assert!(
+            out.contains("property real implicitWidth"),
+            "the slot declaration must survive:\n{out}"
+        );
+        // The uncontested dimension is still sized.
+        assert!(
+            out.contains("implicitHeight: childrenRect.y + childrenRect.height"),
+            "the other dimension must still be content-sized:\n{out}"
+        );
+    }
+
+    /// Regression: an unstyled `Box` lowers to a bare `Item`, which has
+    /// no intrinsic size of its own. A `Box`-rooted component would
+    /// therefore still collapse even with the root fix — the root would
+    /// faithfully measure a child that measures nothing. Verified
+    /// on-screen: `0x0` before, `112.7x16` after.
+    #[test]
+    fn unstyled_box_container_is_sized_to_its_content() {
+        let layout = LayoutDef {
+            component_name: "BoxCard".to_string(),
+            root: LayoutNode {
+                tag: "Box".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(
+            &component("BoxCard", vec![], vec![]),
+            &layout,
+            &empty_style("BoxCard"),
+        )
+        .unwrap()
+        .output;
+
+        // Root plus the Box container = two content-sized items.
+        assert_eq!(
+            out.matches("implicitWidth: childrenRect.x + childrenRect.width")
+                .count(),
+            2,
+            "root and unstyled Box must both be content-sized:\n{out}"
+        );
+    }
+
+    /// A `Spacer` is a zero-implicit-size flex filler: its whole job is
+    /// to absorb leftover space via `Layout.fillWidth`/`fillHeight`.
+    /// Content-sizing it would be meaningless, so the childless-`Item`
+    /// guard must exclude it.
+    #[test]
+    fn spacer_is_not_content_sized() {
+        let layout = LayoutDef {
+            component_name: "Bar".to_string(),
+            root: LayoutNode {
+                tag: "Row".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Spacer".to_string(),
+                    part_name: None,
+                    props: vec![],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(
+            &component("Bar", vec![], vec![]),
+            &layout,
+            &empty_style("Bar"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            out.contains("Layout.fillWidth: true"),
+            "Spacer should still fill:\n{out}"
+        );
+        // Only the root is content-sized.
+        assert_eq!(
+            out.matches("implicitWidth: childrenRect.x + childrenRect.width")
+                .count(),
+            1,
+            "Spacer must not be content-sized:\n{out}"
+        );
+    }
+
+    /// A `Stack` overlays its children by giving each of them
+    /// `anchors.fill: parent`. Content-sizing the `Stack` itself with
+    /// `childrenRect` would therefore be a binding loop
+    /// (`parent.width` ← `implicitWidth` ← `childrenRect.width` ←
+    /// `child.width` ← `parent.width`), so the guard must exclude it.
+    #[test]
+    fn stack_is_not_content_sized_because_children_anchor_to_it() {
+        let layout = LayoutDef {
+            component_name: "Overlay".to_string(),
+            root: LayoutNode {
+                tag: "Stack".to_string(),
+                part_name: None,
+                props: vec![],
+                children: vec![LayoutNode {
+                    tag: "Text".to_string(),
+                    part_name: None,
+                    props: vec![lp("content", LayoutPropValue::String("Hi".to_string()))],
+                    children: vec![],
+                }],
+            },
+        };
+        let out = from_pipeline(
+            &component("Overlay", vec![], vec![]),
+            &layout,
+            &empty_style("Overlay"),
+        )
+        .unwrap()
+        .output;
+
+        assert!(
+            out.contains("anchors.fill: parent"),
+            "Stack children must still fill the overlay:\n{out}"
+        );
+        // Only the root is content-sized; the Stack itself is not.
+        assert_eq!(
+            out.matches("implicitWidth: childrenRect.x + childrenRect.width")
+                .count(),
+            1,
+            "Stack must not be content-sized (binding loop):\n{out}"
+        );
+    }
+
     /// A styled `Box [cell]` lowers to a `Rectangle` carrying border,
     /// background and a `Layout.preferredWidth` driven by the discovered
     /// column-widths slot — not the old bare, sizeless `Item`.
@@ -11122,15 +11524,35 @@ mod tests {
             .unwrap()
             .output;
 
+        // The component root always carries one content-derived
+        // `implicitWidth`/`implicitHeight` pair (see
+        // `content_sizing_lines`). This test is about the *styled
+        // wrapper* below it, which must contribute exactly one more —
+        // the fixed dimension from the part — and must NOT additionally
+        // emit a `childrenRect`-derived one on top of it. So: two
+        // `implicitWidth:` lines in total, of which exactly one is the
+        // root's `childrenRect` form.
         assert_eq!(
             out.matches("implicitWidth:").count(),
-            1,
-            "fixed width and content-derived width must not both be emitted:\n{out}"
+            2,
+            "fixed width and content-derived width must not both be emitted \
+             on the styled wrapper (root contributes one):\n{out}"
         );
         assert_eq!(
             out.matches("implicitHeight:").count(),
+            2,
+            "fixed height and content-derived height must not both be emitted \
+             on the styled wrapper (root contributes one):\n{out}"
+        );
+        assert_eq!(
+            out.matches("implicitWidth: childrenRect").count(),
             1,
-            "fixed height and content-derived height must not both be emitted:\n{out}"
+            "only the root should be content-sized here:\n{out}"
+        );
+        assert_eq!(
+            out.matches("implicitHeight: childrenRect").count(),
+            1,
+            "only the root should be content-sized here:\n{out}"
         );
         assert!(out.contains("implicitWidth: 236"));
         assert!(out.contains("Layout.preferredWidth: 236"));

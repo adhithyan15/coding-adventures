@@ -2,6 +2,89 @@
 
 ## Unreleased
 
+- **`agent start|stop|status|unlock|lock`**, `VLT-PM00` §23 item 12.
+  Specified by `VLT-PM48-local-agent-ipc.md`. `agent start` re-executes this
+  same binary, detached, as the hidden `agent run-foreground` verb, which
+  binds a permission-checked Unix domain socket
+  (`coding_adventures_vault_pm_agent_host`) and retains one passphrase per
+  vault name in memory until an explicit `agent lock`, `agent stop`, or its
+  own `auto_lock_seconds` idle bound elapses — enforced by a real background
+  sweep thread, the pre-emptive auto-lock timer `VLT-PM40-cli-interactive-
+  shell.md` §3.5 named as this slice's own deferred work.
+
+  `agent unlock` authenticates exactly once, through the same
+  `open_authenticated_access` unlock step every other command uses, and hands
+  the agent a passphrase only after that open already succeeded against the
+  real vault — the agent itself verifies nothing and cannot, since
+  `vault-pm-agent-host` has no dependency on `vault-pm-application` at all.
+
+  Every authenticated command now funnels its passphrase collection through
+  one new seam, `agent::passphrase_for`: a running, unlocked agent removes
+  the terminal prompt; anything else — no agent, an expired bound, a
+  different vault — falls back to the unmodified one-shot prompt
+  unconditionally. `passphrase rotate` is the one exception and always
+  prompts fresh, for the same reason `vault-pm shell` refuses to delegate
+  `passphrase` at all (`VLT-PM43-cli-passphrase-rotation.md` §3.1); a
+  successful rotation also forgets that vault's cached passphrase
+  immediately, and any command that comes back `Locked` triggers the same
+  best-effort forget, mirroring `ShellSession`'s in-process self-heal.
+
+  The interactive shell refuses the whole `agent` noun, not verb by verb:
+  `agent run-foreground` inline would block the session's own prompt forever,
+  the same mistake a nested `shell` already is.
+
+  Windows named-pipe support is explicitly deferred (`VLT-PM48` §9); every
+  agent command reports the closed `unsupported` exit class there rather than
+  silently doing nothing.
+
+- **`attachment add`, `attachment list`, and `attachment export`**, the last
+  piece of `VLT-PM00` §23 item 11. Specified by
+  `VLT-PM47-cli-attachments.md`. The verbs are spelled as §14.4 already
+  published them.
+
+  One deviation from that table, recorded there: the export destination is
+  required rather than bracketed. The only available default was the stored
+  attachment name resolved against the working directory, and in a synced
+  vault that name is authored by whoever attached the file. Nothing in this
+  product turns a stored name into a filesystem path.
+
+  `add` validates the base name and reads the source *before* the passphrase
+  prompt, so a missing file, a directory, or one over the ceiling costs no
+  terminal interaction — the position `VLT-PM44` §2.3, `VLT-PM45` §2.3, and
+  `VLT-PM46` §3.2 all put a pre-flight check in, for the same reason. The
+  entropy block is sized from the file's length and reserved before
+  authentication, like every other mutation's.
+
+  `export` runs `VLT-PM25`'s ceremony with a third confirmation sentence, for
+  `VLT-PM46` §3.1's reason: neither existing prompt describes writing vault
+  content into an ordinary unencrypted file this product will not track,
+  clear, or know about again. The intent stays `InteractiveReveal`
+  (`VLT-PM46` §3.0). Refusal, or a host failure collecting the answer,
+  publishes `Denied` and writes nothing.
+
+  `attachment remove` is deferred to `gc run` by that document's §2.2:
+  removing a reference while every byte stays in the store is not the removal
+  the word promises.
+
+- `DurableStep::AttachmentArtifact` is bracketed around the exported file, the
+  one durable write this ceremony makes outside the storage backend.
+
+- **`attachment list` renders the stored name through `quoted`**, like every
+  other stored string this CLI prints. The name is the most peer-authorable
+  string in the product — in a synced vault it was typed on another device —
+  and it is what an operator reads to choose which attachment to export, so it
+  gets the escape as well as the application layer's validation.
+
+- **`export`, `import`, and `restore` now write a fixed notice to standard
+  error when attachments were left behind**:
+  `vault-pm: portable export does not carry attachments`. Same shape as the
+  VLT-PM42 recovery notice — payload-free, standard output unchanged, exit
+  class unchanged. A snapshot carries records and not blobs, so without this an
+  operator was told an export succeeded and later told a restore was
+  *verified*, with nothing anywhere saying their attachments had not travelled.
+  `restore` matters most of the three, because *verified* is the word a person
+  reads as "everything came back".
+
 - **`--copy` now works** on `password generate` and `totp code`, the third
   piece of `VLT-PM00` §23 item 11. Specified by `VLT-PM46-cli-clipboard.md`.
   Both commands have parsed `--copy` and then refused it with the unsupported

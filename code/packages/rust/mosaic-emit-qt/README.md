@@ -47,6 +47,8 @@ import QtQuick.Layouts
 Item {
     id: mosaicRoot
     // Component: ProfileCard
+    implicitWidth: childrenRect.x + childrenRect.width
+    implicitHeight: childrenRect.y + childrenRect.height
     property var mosaicHost: null
 
     function applyMosaicProps(props) {
@@ -83,6 +85,12 @@ Three things to notice:
 2. The **root element is always `Item`**. QML requires exactly one
    top-level element per file; `Item` is the lightest container that
    can host properties, signals, and the moslayout tree underneath.
+   Because a bare `Item` is the one QtQuick container with **no
+   intrinsic size**, the root explicitly publishes a content-derived
+   `implicitWidth`/`implicitHeight`. That is the channel `RowLayout`,
+   `ColumnLayout`, and `GridLayout` read to decide how much room to give
+   a child; without it every generated component reports `0 x 0` and
+   siblings collapse on top of each other.
 3. **Slots become `property` declarations**, **emits become `signal`
    declarations**. This is the QML analogue of React's `props` and
    event dispatch — the host application binds the properties and
@@ -214,6 +222,51 @@ lowerCamelCase. The emitter converts:
   `on` prefix, per UI24 §5)
 - `start-row` (emit param) → `startRow` (QML signal parameter)
 
+## Consuming generated components: always alias the directory import
+
+A generated file is named after its MIL component — `Button.mil` produces
+`Button.qml`, which QML exposes as the type `Button`. Several of those names
+collide with `QtQuick.Controls` (`Button`, `CheckBox`, `RadioButton`,
+`TextField`, `Popup`, …), and **the module type wins**:
+
+```qml
+import QtQuick.Controls
+import "."
+
+Button { variant: "primary" }   // ← QtQuick.Controls.Button.
+                                //   Error: Cannot assign to non-existent
+                                //   property "variant"
+```
+
+Verified on Qt 6.8.1: with both in scope, a bare `Button` resolves to
+`QtQuick.Controls.Button`, not to the same-directory `Button.qml`. When the
+consumer only sets properties the two types share, the wrong component renders
+with no error at all.
+
+Use a namespaced directory import — QML's first-class mechanism for exactly
+this, and the supported way to consume Mosaic Qt output:
+
+```qml
+import QtQuick.Controls
+import "." as Mosaic
+
+Mosaic.Button { variant: "primary" }   // ← unambiguous
+```
+
+The emitter deliberately does **not** rename components to something like
+`MosaicButton`. The MIL component name is the cross-backend contract — React,
+SwiftUI, Compose, Flutter, and XAML all emit it verbatim — and a Qt-only rename
+would break that correspondence as well as every existing consumer. The
+principled long-term fix is for `--emit-project` to generate a `qmldir` so the
+emitted package becomes a real QML module (`import Mosaic.Toolkit`), which
+removes the ambiguity without touching component names; that is tracked as a
+follow-up below.
+
+Note that this precedence rule is also what makes the emitter's own output
+work: `Button.qml` contains a `Button { … }` element that is *intended* to be
+`QtQuick.Controls.Button`, and it resolves that way rather than recursing into
+itself.
+
 ## What is NOT in this PR (deferred follow-ups)
 
 Several Mosaic features remain intentionally conservative:
@@ -237,6 +290,20 @@ Several Mosaic features remain intentionally conservative:
   signature so downstream callers can build against the stable
   shape, but its properties are not yet inlined into element
   attributes.
+- **No `qmldir` emission.** Generated components are consumed through a
+  namespaced directory import (see the section above). Emitting a `qmldir`
+  would turn an emitted package into a proper QML module and remove the
+  `QtQuick.Controls` name collision structurally.
+- **A styled `Box` whose only child is a filling `Text` has no intrinsic
+  size.** The styled-cell lowering gives the inner `Text`
+  `anchors.fill: parent`, which is right for a table cell with a
+  column-driven fixed width but leaves a standalone styled box
+  (`mosaic-pkg-toolkit`'s `Badge`, `Alert`, `Accordion`) measuring only its
+  padding. `childrenRect` cannot recover it — the anchored child has no
+  size of its own to measure — so the fix is to let the `Text` drive
+  `implicitWidth`/`implicitHeight` when the part declares no fixed
+  dimension. Deferred because that path is shared with the Grid/table
+  lowering it was built for.
 Each deferred item is intentionally a focused, additive PR.
 
 ## Tests

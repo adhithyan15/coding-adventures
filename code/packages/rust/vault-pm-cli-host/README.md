@@ -151,6 +151,57 @@ Windows adds three target-specific tests for console names and strict bounded
 UTF-16 conversion; cross-target Clippy validates the native Windows API
 surface from Unix.
 
+## The attachment file pair
+
+`read_attachment_source` returns `Zeroizing` bytes and
+`write_attachment_export` writes plaintext. The asymmetry is deliberate and it
+is the whole security shape of the pair.
+
+What the read holds is the *person's file*, not an already-encrypted artifact
+like a portable export, so a refused or failed attach must not leave a copy of
+it in freed heap. It bounds the metadata length before allocating and caps the
+reader at one byte past the ceiling, so a file that grows between those two
+observations cannot force an unbounded allocation. A path that will not open is
+`InvalidAttachmentSource` — exit 2 — rather than a provider failure, because
+exit 7 tells a person to retry later and retrying will not conjure the file.
+
+On Unix the read also passes `O_NONBLOCK | O_NOCTTY`. The check that rejects a
+FIFO cannot run until the open returns, and opening a FIFO for reading blocks
+until a writer appears — so without the flag, naming a named pipe hung the
+command instead of being refused.
+
+The read itself is **exact**: one allocation of exactly the declared length,
+`read_exact`, then a one-byte probe that must see end-of-file. `Zeroizing`
+wipes the allocation it owns and only that one, so a vector holding plaintext
+that reallocates leaves what it had already read in freed heap — and reserving
+spare capacity does not help, because the reservation comes from a measurement
+a concurrently-appended file has already invalidated. A file longer than it
+measured is refused by the probe, a shorter one by `UnexpectedEof`. The point
+is that reallocation is unreachable rather than unlikely.
+
+What the write produces *is* plaintext: that is what an export is. So the care
+is everywhere else. Create-new semantics, so an existing file, directory, or
+symbolic link is never followed or replaced; owner-only mode at creation on
+Unix; write, `fsync`; and removal of the incomplete file if either step fails,
+because a half-written plaintext left behind by a failed export is a leak with
+no owner.
+
+Three residuals are written down rather than assumed away, because each is
+true and none was obvious. `create_new` refusing a symbolic link, and
+owner-only mode from the instant the file exists, are both Unix statements —
+Windows resolves reparse points and `OpenOptions` exposes no mode there, which
+matters more for this plaintext than for the encrypted portable artifact next
+to it. The cleanup re-resolves the path rather than acting on the descriptor.
+And a kill delivered *inside* the write leaves a partial file: the drill
+brackets the whole call, so it proves both of its landing points clean and says
+nothing about that one.
+
+`AttachmentExportConfirmation` is a third confirmation sentence rather than a
+reuse of the reveal or copy one. An export puts vault content into an ordinary
+file this product will not track, clear, or know about again; neither existing
+sentence says that, and a consent ceremony that misdescribes what it is
+consenting to manufactures a record of an agreement nobody made.
+
 ## Verification
 
 ```bash

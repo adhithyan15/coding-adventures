@@ -67,6 +67,20 @@ pub(super) fn ensure_private_directory(path: &Path) -> Result<(), LocalHostError
     Ok(())
 }
 
+/// Windows equivalent of the Unix leaf-only runtime directory check.
+///
+/// VLT-PM48 ships a Unix-domain-socket agent only; Windows named-pipe support
+/// is an explicitly deferred follow-up (see that spec's §9). Nothing in this
+/// crate binds a socket on Windows, so this simply reuses the existing
+/// recursive walk rather than adding an untested second code path for a
+/// directory nothing yet uses. A future named-pipe implementation should
+/// revisit this the same way the Unix build's leaf-only runtime-directory
+/// check diverged from [`ensure_private_directory`]: `%TEMP%` can also
+/// involve reparse points this walk has not been proven against.
+pub(super) fn ensure_private_runtime_directory(path: &Path) -> Result<(), LocalHostError> {
+    ensure_private_directory(path)
+}
+
 pub(super) fn open_private_lock(path: &Path) -> Result<File, LocalHostError> {
     validate_absolute(path)?;
     let parent = path.parent().ok_or(LocalHostError::InvalidPath)?;

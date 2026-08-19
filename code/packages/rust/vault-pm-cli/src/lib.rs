@@ -5,6 +5,7 @@
 
 pub mod shell;
 
+mod agent;
 mod crash;
 
 /// Whether VLT-PM41 crash injection is compiled into this build.
@@ -23,21 +24,22 @@ mod crash;
 pub const CRASH_INJECTION_COMPILED: bool = cfg!(feature = "crash-injection");
 
 use coding_adventures_vault_pm_application::{
-    complete_generation_zero, open_portable_with_passphrase, portable_import_random_bytes,
-    prepare_audited_generation_zero, rehydrate_prepared_init, AddItemRandomnessV1,
-    ApiKeyConflictMergeInputV1, ApplicationError, AuditEventViewV1, AuditVerificationV1,
-    AuditedAccessRandomnessV1, AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore,
-    BootstrapStoreError, CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1,
-    DeleteItemRandomnessV1, GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore,
-    LocalStateStoreError, LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1,
-    PassphraseRotationPolicyV1, PassphraseRotationRandomnessV1, PortableExportPolicyV1,
-    PortableExportRandomnessV1, PortableImportRandomnessV1, PortableOpenPolicyV1,
-    ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1,
-    RevealedSecretEncodingV1, RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1,
-    SecureNoteConflictMergeInputV1, TotpConflictMergeInputV1, V1ApplicationRepositoryFactory,
-    VaultAccessV1, VaultDoctorStateV1, VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES,
-    AUDITED_ACCESS_RANDOM_BYTES, AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT,
-    DEFAULT_ITEM_HISTORY_LIMIT, DELETE_ITEM_RANDOM_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
+    attachment_name_from_path, attachment_random_bytes, complete_generation_zero,
+    open_portable_with_passphrase, portable_import_random_bytes, prepare_audited_generation_zero,
+    rehydrate_prepared_init, AddItemRandomnessV1, ApiKeyConflictMergeInputV1, ApplicationError,
+    AttachmentRandomnessV1, AuditEventViewV1, AuditVerificationV1, AuditedAccessRandomnessV1,
+    AuditedGenerationZeroRandomness, BootstrapLocator, BootstrapStore, BootstrapStoreError,
+    CardConflictMergeInputV1, DatabaseCredentialConflictMergeInputV1, DeleteItemRandomnessV1,
+    GenerationZeroPolicyV1, ItemHistoryViewV1, LocalStateStore, LocalStateStoreError,
+    LocalVaultStateV1, LoginEditInputV1, OpaqueConflictMergeInputV1, PassphraseRotationPolicyV1,
+    PassphraseRotationRandomnessV1, PortableExportPolicyV1, PortableExportRandomnessV1,
+    PortableImportRandomnessV1, PortableOpenPolicyV1, ReplaceItemRandomnessV1,
+    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, RevealedSecretEncodingV1,
+    RevealedSecretV1, SecretDisclosureIntentV1, SecretFieldV1, SecureNoteConflictMergeInputV1,
+    TotpConflictMergeInputV1, V1ApplicationRepositoryFactory, VaultAccessV1, VaultDoctorStateV1,
+    VaultStatusStateV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
+    AUDITED_GENERATION_ZERO_RANDOM_BYTES, DEFAULT_AUDIT_HISTORY_LIMIT, DEFAULT_ITEM_HISTORY_LIMIT,
+    DELETE_ITEM_RANDOM_BYTES, MAX_ATTACHMENT_BYTES, MAX_PORTABLE_EXPORT_ARTIFACT_BYTES,
     PASSPHRASE_ROTATION_RANDOM_BYTES, PORTABLE_EXPORT_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
     RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
 };
@@ -46,8 +48,8 @@ use coding_adventures_vault_pm_cli_host::clipboard::{
     copy_and_schedule_clear, read_clear_request_from_stdin, run_scheduled_clear, PlatformClipboard,
 };
 use coding_adventures_vault_pm_cli_host::{
-    read_portable_export, write_portable_export, CliHostError, ControllingTerminal, OsEntropy,
-    SecretPrompt, TextPrompt,
+    read_attachment_source, read_portable_export, write_attachment_export, write_portable_export,
+    CliHostError, ControllingTerminal, OsEntropy, SecretPrompt, TextPrompt,
 };
 use coding_adventures_vault_pm_config::{
     parse_config, render_config, ConfigName, CredentialRef, StorageConfigV1, StorageKind,
@@ -55,8 +57,8 @@ use coding_adventures_vault_pm_config::{
     DEFAULT_AUTO_LOCK_SECONDS, DEFAULT_CLIPBOARD_CLEAR_SECONDS,
 };
 use coding_adventures_vault_pm_domain::{
-    ContentType, ItemDocument, ItemId, LwwRegister, ObservedSet, OperationId, RedactedItemView,
-    RedactedRecordView, RevisionId,
+    AttachmentId, ContentType, ItemDocument, ItemId, LwwRegister, ObservedSet, OperationId,
+    RedactedItemView, RedactedRecordView, RevisionId,
 };
 use coding_adventures_vault_pm_local_host::{LocalHostError, LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_vault_pm_password_policy::{
@@ -93,7 +95,7 @@ const DEFAULT_SEARCH_RESULT_LIMIT: usize = 100;
 /// everything sensitive travels on the child's standard input, because argv is
 /// readable by every account on the machine through `ps` (VLT-PM46 §2.2).
 const CLIPBOARD_CLEAR_ARGUMENTS: &[&str] = &["clipboard", "clear"];
-const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
+const USAGE: &str = "Usage:\n  vault-pm init [--vault NAME] [--storage NAME]\n  vault-pm vault create NAME\n  vault-pm [--vault NAME] status [--json]\n  vault-pm [--vault NAME] shell\n  vault-pm agent start\n  vault-pm agent stop\n  vault-pm agent status [--json]\n  vault-pm [--vault NAME] agent unlock\n  vault-pm [--vault NAME] agent lock\n  vault-pm agent run-foreground\n  vault-pm [--vault NAME] audit enable\n  vault-pm [--vault NAME] audit verify\n  vault-pm [--vault NAME] audit list\n  vault-pm [--vault NAME] audit show TRACE\n  vault-pm [--vault NAME] doctor [--unlock]\n  vault-pm [--vault NAME] passphrase rotate\n  vault-pm password generate [--length N] [--no-lowercase] [--no-uppercase] [--no-digits] [--no-symbols] [--exclude-ambiguous] (--reveal|--copy)\n  vault-pm [--vault NAME] export FILE\n  vault-pm [--vault NAME] import FILE\n  vault-pm --vault NAME restore FILE\n  vault-pm [--vault NAME] restore verify FILE\n  vault-pm [--vault NAME] item add login\n  vault-pm [--vault NAME] item add secure-note\n  vault-pm [--vault NAME] item add card\n  vault-pm [--vault NAME] item add api-key\n  vault-pm [--vault NAME] item add database-credential\n  vault-pm [--vault NAME] item add totp\n  vault-pm [--vault NAME] item edit ITEM\n  vault-pm [--vault NAME] item delete ITEM\n  vault-pm [--vault NAME] item list\n  vault-pm [--vault NAME] item show ITEM\n  vault-pm [--vault NAME] item reveal ITEM FIELD\n  vault-pm [--vault NAME] totp code ITEM (--reveal|--copy)\n  vault-pm clipboard clear\n  vault-pm [--vault NAME] attachment add ITEM FILE\n  vault-pm [--vault NAME] attachment list ITEM\n  vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE\n  vault-pm [--vault NAME] search QUERY\n  vault-pm [--vault NAME] history list ITEM\n  vault-pm [--vault NAME] history restore ITEM REVISION\n  vault-pm [--vault NAME] conflict list ITEM\n  vault-pm [--vault NAME] conflict reveal ITEM REVISION FIELD\n  vault-pm [--vault NAME] conflict choose ITEM REVISION\n  vault-pm [--vault NAME] conflict merge login ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge secure-note ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge card ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge api-key ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge database-credential ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge totp ITEM BASE_REVISION\n  vault-pm [--vault NAME] conflict merge opaque ITEM BASE_REVISION\n";
 
 /// Stable process exit classes defined by VLT-PM00.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -169,7 +171,24 @@ impl CliOutput {
         self.stderr.insert_str(0, RECOVERY_NOTICE);
         self
     }
+
+    /// Prepend the fixed VLT-PM47 attachments-not-carried notice.
+    ///
+    /// Standard output is untouched for the same reason
+    /// [`Self::with_recovery_notice`] leaves it alone: the exit class and the
+    /// parseable output of a command that also had something to mention are
+    /// the exit class and output of the command.
+    fn with_attachment_notice(mut self) -> Self {
+        self.stderr.insert_str(0, ATTACHMENT_EXPORT_NOTICE);
+        self
+    }
 }
+
+/// The one sentence an export that left attachments behind is announced with.
+///
+/// Fixed at compile time and payload-free: it names no vault, item, count, or
+/// path. VLT-PM47 §8.3.
+const ATTACHMENT_EXPORT_NOTICE: &str = "vault-pm: portable export does not carry attachments\n";
 
 /// The one sentence a repaired vault is announced with.
 ///
@@ -328,6 +347,20 @@ pub trait CliHost {
 
     /// Read one explicit encrypted portable artifact under the V1 size ceiling.
     fn read_portable_export(&self, source: &Path) -> Result<Vec<u8>, HostError>;
+
+    /// Read one attachment source file under the V1 attachment ceiling.
+    ///
+    /// The buffer is `Zeroizing` because what it holds is the person's file,
+    /// not an already-encrypted artifact: a refused or failed attach must not
+    /// leave a copy of it in freed heap.
+    fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError>;
+
+    /// Durably create one explicit attachment destination without replacing it.
+    fn write_attachment_export(&self, destination: &Path, contents: &[u8])
+        -> Result<(), HostError>;
+
+    /// Require an exact echoed `yes` before writing an attachment to a file.
+    fn confirm_attachment_export(&self) -> Result<bool, HostError>;
 
     /// Collect the passphrase for an existing portable artifact without echo.
     fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError>;
@@ -625,6 +658,24 @@ impl CliHost for NativeCliHost {
             .map_err(map_native_cli_host)
     }
 
+    fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        read_attachment_source(source, MAX_ATTACHMENT_BYTES).map_err(map_native_cli_host)
+    }
+
+    fn write_attachment_export(
+        &self,
+        destination: &Path,
+        contents: &[u8],
+    ) -> Result<(), HostError> {
+        write_attachment_export(destination, contents).map_err(map_native_cli_host)
+    }
+
+    fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+        ControllingTerminal
+            .confirm_attachment_export()
+            .map_err(map_native_cli_host)
+    }
+
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
         OsEntropy.fill(output).map_err(map_native_cli_host)
     }
@@ -714,6 +765,28 @@ where
             Err(error) => CliOutput::failure(map_host(error)),
         };
     }
+    // VLT-PM48. Five of the six agent verbs are dispatched here, before the
+    // cross-process writer lock is ever considered, because none of them
+    // resolves configuration or touches one vault's durable state: they only
+    // reach the agent's own socket. `agent unlock` is the exception — it must
+    // authenticate against a real vault before it hands the agent anything —
+    // and falls through to `execute` like every other authenticated command.
+    match &invocation.command {
+        Command::AgentStart => return agent_result(agent::agent_start(host)),
+        Command::AgentStop => return agent_result(agent::agent_stop(host)),
+        Command::AgentStatus { json } => {
+            return agent_result(agent::agent_status(
+                host,
+                invocation.selected_vault.as_ref(),
+                *json,
+            ))
+        }
+        Command::AgentLock => {
+            return agent_result(agent::agent_lock(host, invocation.selected_vault.as_ref()))
+        }
+        Command::AgentRunForeground => return agent_result(agent::agent_run_foreground(host)),
+        _ => {}
+    }
     // The shell is dispatched before `execute` because `execute` acquires the
     // cross-process writer lock for the whole command. A shell must not hold
     // that lock while it waits at a prompt, and its own per-command
@@ -725,6 +798,13 @@ where
         };
     }
     match execute(invocation, host) {
+        Ok(output) => output,
+        Err(error) => CliOutput::failure(error),
+    }
+}
+
+fn agent_result(result: Result<CliOutput, CliFailure>) -> CliOutput {
+    match result {
         Ok(output) => output,
         Err(error) => CliOutput::failure(error),
     }
@@ -750,6 +830,29 @@ enum Command {
     },
     /// Begin one foreground interactive session over this same grammar.
     Shell,
+    /// Start the local agent as a detached background process (VLT-PM48).
+    AgentStart,
+    /// Ask a running agent to forget everything and stop listening.
+    AgentStop,
+    /// Report whether the agent is running and which vaults it retains.
+    AgentStatus {
+        /// Render as one machine-readable JSON line instead of text.
+        json: bool,
+    },
+    /// Authenticate once and hand the agent this vault's passphrase to
+    /// retain.
+    AgentUnlock,
+    /// Ask the agent to forget one vault's retained passphrase, or every
+    /// vault's.
+    AgentLock,
+    /// The detached process `agent start` re-executes this binary as.
+    ///
+    /// Not a command for people, listed in [`USAGE`] anyway for the same
+    /// reason `ClipboardClear` is: a closed grammar with a hidden verb in it
+    /// is not a closed grammar. It opens no vault, takes no writer lock, and
+    /// authenticates nothing — it only binds the agent socket and serves
+    /// requests until `agent stop` or `Shutdown` ends it.
+    AgentRunForeground,
     AuditEnable,
     AuditVerify,
     AuditList,
@@ -808,6 +911,26 @@ enum Command {
     ItemList,
     ItemShow {
         item_id: ItemId,
+    },
+    /// Store one file against one live item (VLT-PM47 §6.1).
+    AttachmentAdd {
+        item_id: ItemId,
+        source: PathBuf,
+    },
+    /// List one item's attachment metadata (VLT-PM47 §6.2).
+    AttachmentList {
+        item_id: ItemId,
+    },
+    /// Write one stored attachment back out as a plaintext file (§6.3).
+    ///
+    /// The destination is a required argument and never defaulted from the
+    /// stored name. VLT-PM47 §4.6: the name is authored by whoever attached
+    /// the file, which in a synced vault need not be this person, and no code
+    /// path in this product turns a stored name into a filesystem path.
+    AttachmentExport {
+        item_id: ItemId,
+        attachment_id: AttachmentId,
+        destination: PathBuf,
     },
     ItemReveal {
         item_id: ItemId,
@@ -974,6 +1097,7 @@ where
         "vault" => parse_vault(tail),
         "status" => parse_status(tail),
         "shell" if tail.is_empty() => Ok(Command::Shell),
+        "agent" => parse_agent(tail),
         "audit" => parse_audit(tail),
         "doctor" => parse_doctor(tail),
         "passphrase" => parse_passphrase(tail),
@@ -984,16 +1108,20 @@ where
         "import" => parse_import(tail),
         "restore" => parse_restore(tail),
         "item" => parse_item(tail),
+        "attachment" => parse_attachment(tail),
         "history" => parse_history(tail),
         "conflict" => parse_conflict(tail),
         _ => Err(CliFailure::InvalidCommand),
     }?;
     // A `--vault` selector names a target for the command to operate on.
     // `init` and `vault create` build a vault rather than opening one, `help`
-    // reads nothing, and `password generate` (VLT-PM44 §2.2) touches no vault
-    // at all — so for these four the selector would be a statement with no
-    // referent, and accepting it silently would let a person believe they had
-    // aimed a command that was never aimable.
+    // reads nothing, `password generate` (VLT-PM44 §2.2) touches no vault at
+    // all, and the three agent *lifecycle* verbs act on the agent process
+    // itself rather than one vault (VLT-PM48 §6) — `agent unlock` and `agent
+    // lock` are the ones that do take a selector, matching every other
+    // authenticated command. For the six listed here the selector would be a
+    // statement with no referent, and accepting it silently would let a
+    // person believe they had aimed a command that was never aimable.
     if selected_vault.is_some()
         && matches!(
             &command,
@@ -1002,6 +1130,9 @@ where
                 | Command::Help
                 | Command::PasswordGenerate { .. }
                 | Command::ClipboardClear
+                | Command::AgentStart
+                | Command::AgentStop
+                | Command::AgentRunForeground
         )
     {
         return Err(CliFailure::InvalidCommand);
@@ -1027,6 +1158,38 @@ fn parse_search(values: &mut [String], command_index: usize) -> Result<Command, 
     Ok(Command::Search {
         query: SearchQuery::new(query),
     })
+}
+
+/// Parse the `attachment` verb (VLT-PM00 §14.4).
+///
+/// Three shapes, and the third's destination is required rather than
+/// bracketed. §14.4 originally wrote it `[PATH]`, and VLT-PM47 §2.1 removed
+/// the bracket: the only available default was the stored attachment name
+/// resolved against the process working directory, and that name can be
+/// authored by a synchronising peer.
+fn parse_attachment(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action, item, source] if action == "add" && !source.is_empty() => {
+            Ok(Command::AttachmentAdd {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                source: PathBuf::from(source),
+            })
+        }
+        [action, item] if action == "list" => Ok(Command::AttachmentList {
+            item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+        }),
+        [action, item, attachment, destination]
+            if action == "export" && !destination.is_empty() =>
+        {
+            Ok(Command::AttachmentExport {
+                item_id: ItemId::from_user_string(item).map_err(|_| CliFailure::InvalidCommand)?,
+                attachment_id: AttachmentId::from_user_string(attachment)
+                    .map_err(|_| CliFailure::InvalidCommand)?,
+                destination: PathBuf::from(destination),
+            })
+        }
+        _ => Err(CliFailure::InvalidCommand),
+    }
 }
 
 fn parse_vault(arguments: &[String]) -> Result<Command, CliFailure> {
@@ -1244,6 +1407,26 @@ fn parse_doctor(arguments: &[String]) -> Result<Command, CliFailure> {
     match arguments {
         [] => Ok(Command::Doctor { unlock: false }),
         [argument] if argument == "--unlock" => Ok(Command::Doctor { unlock: true }),
+        _ => Err(CliFailure::InvalidCommand),
+    }
+}
+
+/// Parse the `agent` noun (VLT-PM48).
+///
+/// `status` is the only verb with a flag; every other verb takes no
+/// arguments at all, for the same reason `passphrase rotate` does not: none
+/// of them ever needs to accept a secret, a path, or a policy on argv.
+fn parse_agent(arguments: &[String]) -> Result<Command, CliFailure> {
+    match arguments {
+        [action] if action == "start" => Ok(Command::AgentStart),
+        [action] if action == "stop" => Ok(Command::AgentStop),
+        [action] if action == "status" => Ok(Command::AgentStatus { json: false }),
+        [action, flag] if action == "status" && flag == "--json" => {
+            Ok(Command::AgentStatus { json: true })
+        }
+        [action] if action == "unlock" => Ok(Command::AgentUnlock),
+        [action] if action == "lock" => Ok(Command::AgentLock),
+        [action] if action == "run-foreground" => Ok(Command::AgentRunForeground),
         _ => Err(CliFailure::InvalidCommand),
     }
 }
@@ -1524,6 +1707,19 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
     // must stay quiet.
     let before = observed_vault_state(prepared.paths(), &writer, selected_vault);
     let result = dispatch(command, host, prepared.paths(), &writer, selected_vault);
+    // VLT-PM48. A `Locked` result means whatever passphrase this command used
+    // was rejected — including, possibly, one an unlocked agent supplied
+    // opportunistically (`agent::passphrase_for`). Forgetting it now is the
+    // same self-heal `ShellSession`'s own dispatch performs in-process
+    // (VLT-PM40 §3.4 rule 2): without it, a stale cached value (for example
+    // after an out-of-band passphrase rotation on another device) would keep
+    // being tried, and keep failing, until its idle bound expired on its own.
+    // Best effort and unconditional: this runs whether or not the agent was
+    // actually the source of the passphrase, and whether or not one is even
+    // running — both are harmless no-ops.
+    if matches!(&result, Ok(output) if output.exit_code() == ExitCode::Locked) {
+        best_effort_forget_agent_cache(prepared.paths(), &writer, selected_vault);
+    }
     // The second reading is taken only when the first one found something that
     // could be repaired, and that condition is load-bearing rather than an
     // optimization. `LocalStateStore::load` initializes its backend, and a
@@ -1548,6 +1744,27 @@ fn execute(invocation: Invocation, host: &dyn CliHost) -> Result<CliOutput, CliF
         Ok(output) => output.with_recovery_notice(),
         Err(error) => CliOutput::failure(error).with_recovery_notice(),
     })
+}
+
+/// Resolve the vault a `Locked` command was aimed at, and tell the agent to
+/// forget its cached passphrase. Every failure is swallowed: reading
+/// configuration again to name a vault for a cleanup step must never turn a
+/// command's own (already-rendered) `Locked` result into a different failure.
+fn best_effort_forget_agent_cache(
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+) {
+    let Ok(Some(exact_config)) = writer.load_config() else {
+        return;
+    };
+    let Ok(config) = decode_config(&exact_config) else {
+        return;
+    };
+    let vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    agent::forget_cached_passphrase_on_rejection(paths, &vault_name);
 }
 
 /// Whether two observations prove *this* command finished an interrupted
@@ -1647,6 +1864,7 @@ fn dispatch(
         }
         Command::Doctor { unlock } => doctor(host, paths, writer, selected_vault, unlock),
         Command::PassphraseRotate => passphrase_rotate(host, paths, writer, selected_vault),
+        Command::AgentUnlock => agent::agent_unlock(host, paths, writer, selected_vault),
         Command::PortableExport { destination } => {
             portable_export(host, paths, writer, selected_vault, &destination)
         }
@@ -1675,6 +1893,25 @@ fn dispatch(
         }
         Command::ItemList => item_list(host, paths, writer, selected_vault),
         Command::ItemShow { item_id } => item_show(host, paths, writer, selected_vault, item_id),
+        Command::AttachmentAdd { item_id, source } => {
+            attachment_add(host, paths, writer, selected_vault, item_id, &source)
+        }
+        Command::AttachmentList { item_id } => {
+            attachment_list(host, paths, writer, selected_vault, item_id)
+        }
+        Command::AttachmentExport {
+            item_id,
+            attachment_id,
+            destination,
+        } => attachment_export(
+            host,
+            paths,
+            writer,
+            selected_vault,
+            item_id,
+            attachment_id,
+            &destination,
+        ),
         Command::ItemReveal { item_id, field } => {
             item_reveal(host, paths, writer, selected_vault, item_id, field)
         }
@@ -1749,9 +1986,15 @@ fn dispatch(
         Command::Help
         | Command::Shell
         | Command::PasswordGenerate { .. }
-        | Command::ClipboardClear => {
+        | Command::ClipboardClear
+        | Command::AgentStart
+        | Command::AgentStop
+        | Command::AgentStatus { .. }
+        | Command::AgentLock
+        | Command::AgentRunForeground => {
             unreachable!(
-                "help, shell, password generate, and clipboard clear return before writer acquisition"
+                "help, shell, password generate, clipboard clear, and every agent verb but \
+                 `agent unlock` return before writer acquisition"
             )
         }
     }
@@ -1801,7 +2044,15 @@ fn open_authenticated_access(
     let application_store = application_store(paths);
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
-    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    // VLT-PM48. Every authenticated command funnels its passphrase collection
+    // through this one function, so this is the single place that makes the
+    // running agent's cached passphrase reach the whole grammar: a running,
+    // unlocked agent skips the prompt below; anything else falls back to it
+    // unchanged.
+    let vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let passphrase = agent::passphrase_for(host, paths, &vault_name).map_err(map_host)?;
     // VLT-PM42. A process killed inside a mutation publication leaves an exact
     // journal that this open finishes with the passphrase it just collected.
     // Before that, every command on this path answered a crash with exit 2
@@ -1887,7 +2138,11 @@ fn portable_export(
 
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
-    let vault_passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let export_vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let vault_passphrase =
+        agent::passphrase_for(host, paths, &export_vault_name).map_err(map_host)?;
     // VLT-PM42. An export must describe a settled vault, so an interrupted
     // publication is finished before the artifact is computed.
     access
@@ -1898,10 +2153,13 @@ fn portable_export(
             &repository_factory,
         )
         .map_err(map_application)?;
-    let audit_enabled = access
-        .as_unlocked()
-        .map_err(map_application)?
-        .audit_enabled();
+    let unlocked = access.as_unlocked().map_err(map_application)?;
+    let audit_enabled = unlocked.audit_enabled();
+    // VLT-PM47 §8.3. A portable snapshot carries records and not blobs, so
+    // every attachment in this vault stays behind. Sampled here, while the
+    // session is still borrowed, because the next thing this ceremony does is
+    // consume it.
+    let attachments_left_behind = unlocked.attachment_bearing_item_count() > 0;
     let export_passphrase = match host.read_export_passphrase() {
         Ok(passphrase) => passphrase,
         Err(error) => {
@@ -1951,7 +2209,19 @@ fn portable_export(
     };
     crash::around_export_artifact(|| host.write_portable_export(destination, artifact.as_bytes()))
         .map_err(map_host)?;
-    Ok(CliOutput::success("Portable export written.\n"))
+    let output = CliOutput::success("Portable export written.\n");
+    // Told, rather than discovered later. An operator who believes an export
+    // is a backup and finds out at restore time that their recovery codes did
+    // not travel has been misled by silence, and this product's whole posture
+    // is that it does not do that. The notice is a fixed compile-time sentence
+    // on standard error and names no item, count, or path — the same shape as
+    // the VLT-PM42 recovery notice, and for the same reason: nothing that
+    // parses this command's standard output has to learn a new line.
+    Ok(if attachments_left_behind {
+        output.with_attachment_notice()
+    } else {
+        output
+    })
 }
 
 struct PortableImportContext {
@@ -1981,6 +2251,7 @@ impl PortableImportContext {
         randomness: PortableImportRandomnessV1,
         item_count: usize,
         candidate_count: usize,
+        attachments_left_behind: bool,
     ) -> Result<CliOutput, CliFailure> {
         self.access
             .into_unlocked()
@@ -1993,9 +2264,21 @@ impl PortableImportContext {
                 &self.application_store,
             )
             .map_err(map_application)?;
-        Ok(CliOutput::success(format!(
+        let output = CliOutput::success(format!(
             "Portable import complete: items={item_count} candidates={candidate_count}.\n"
-        )))
+        ));
+        // The other half of the export notice. The snapshot's items may name
+        // attachments, but the chunk and manifest objects those names refer to
+        // are repository objects that no record snapshot carries, so import
+        // drops the membership rather than creating an item that claims
+        // attachments this vault has no bytes for. Saying so here is what
+        // makes the loss a fact the operator was told rather than one they
+        // find at the moment they need the file.
+        Ok(if attachments_left_behind {
+            output.with_attachment_notice()
+        } else {
+            output
+        })
     }
 }
 
@@ -2040,6 +2323,7 @@ fn portable_import(
     };
     let item_count = snapshot.item_count();
     let candidate_count = snapshot.candidate_count();
+    let attachments_left_behind = snapshot.attachment_bearing_item_count() > 0;
     let random_bytes = match portable_import_random_bytes(&snapshot) {
         Ok(count) => count,
         Err(error) => return context.fail(map_application(error)),
@@ -2052,7 +2336,13 @@ fn portable_import(
         Ok(randomness) => randomness,
         Err(error) => return context.fail(map_application(error)),
     };
-    context.complete(snapshot, randomness, item_count, candidate_count)
+    context.complete(
+        snapshot,
+        randomness,
+        item_count,
+        candidate_count,
+        attachments_left_behind,
+    )
 }
 
 struct PortableRestoreVerifyContext {
@@ -2154,6 +2444,7 @@ fn portable_restore(
     };
     let item_count = snapshot.item_count();
     let candidate_count = snapshot.candidate_count();
+    let attachments_left_behind = snapshot.attachment_bearing_item_count() > 0;
     let random_bytes = match portable_import_random_bytes(&snapshot) {
         Ok(count) => count,
         Err(error) => return import_context.fail(map_application(error)),
@@ -2166,7 +2457,13 @@ fn portable_restore(
         Ok(randomness) => randomness,
         Err(error) => return import_context.fail(map_application(error)),
     };
-    import_context.complete(snapshot, randomness, item_count, candidate_count)?;
+    import_context.complete(
+        snapshot,
+        randomness,
+        item_count,
+        candidate_count,
+        attachments_left_behind,
+    )?;
 
     let (mut access, application_store) =
         authenticated_access(host, paths, writer, Some(selected_vault))?;
@@ -2185,12 +2482,23 @@ fn portable_restore(
         randomness: verify_randomness,
     }
     .complete(expectation)?;
-    Ok(CliOutput::success(format!(
+    let output = CliOutput::success(format!(
         "Portable restore completed and verified: items={} candidates={} conflicts={}.\n",
         report.item_count(),
         report.candidate_count(),
         report.conflicted_item_count(),
-    )))
+    ));
+    // The word *verified* is doing real work in that sentence, and it is true:
+    // the comparison normalises attachments out of both sides, so it is
+    // sound. But an operator restoring a vault reads "verified" as "everything
+    // came back", and the attachments did not. The same fixed sentence the
+    // export and import ceremonies use is the honest amendment, and it is on
+    // standard error so the verified line stays exactly what it was.
+    Ok(if attachments_left_behind {
+        output.with_attachment_notice()
+    } else {
+        output
+    })
 }
 
 fn portable_restore_verify(
@@ -2272,6 +2580,7 @@ impl ItemCreateContext {
             ObservedSet::new(),
             record,
             ObservedSet::new(),
+            BTreeMap::new(),
         )
         .map_err(|_| CliFailure::InvalidCommand)
     }
@@ -3009,6 +3318,179 @@ fn item_show(
             .ok_or(CliFailure::NotFound)?
     };
     render_item(item)
+}
+
+/// Store one file against one live item.
+///
+/// Ordering, and every step of it is load-bearing (VLT-PM47 §6.1). The source
+/// is read and its name validated **before** the passphrase prompt, so a
+/// person who named a missing file, a directory, or something over the ceiling
+/// learns it immediately rather than after typing their master passphrase —
+/// the position VLT-PM44 §2.3, VLT-PM45 §2.3, and VLT-PM46 §3.2 all put a
+/// pre-flight check in, for the same reason.
+///
+/// The entropy block is sized from the file's length and reserved before
+/// authentication like every other mutation's, and the plaintext is dropped at
+/// the end of this function whether or not the attach succeeded.
+fn attachment_add(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    source: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let name = source
+        .to_str()
+        .ok_or(CliFailure::InvalidCommand)
+        .and_then(|path| attachment_name_from_path(path).map_err(map_application))?;
+    let contents = host.read_attachment_source(source).map_err(map_host)?;
+    let random_bytes = attachment_random_bytes(contents.len() as u64).map_err(map_application)?;
+    let mut random = Zeroizing::new(vec![0_u8; random_bytes]);
+    host.fill_entropy(&mut random).map_err(map_host)?;
+    let mutation_randomness = AttachmentRandomnessV1::new(random.to_vec(), contents.len() as u64)
+        .map_err(map_application)?;
+    let (wall_time_ms, failure_randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let attachment_id = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_attach_attachment(
+            item_id,
+            name,
+            &contents,
+            wall_time_ms,
+            mutation_randomness,
+            failure_randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    Ok(CliOutput::success(format!(
+        "Attachment added: {}\n",
+        attachment_id.to_user_string()
+    )))
+}
+
+/// List one item's attachment metadata.
+///
+/// Non-secret output on ordinary standard output: identity, name, plaintext
+/// byte length, and content hash. No confirmation ceremony, for the reason
+/// `item show` needs none (VLT-PM47 §6.2).
+fn attachment_list(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let summaries = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_list_attachments(item_id, wall_time_ms, randomness, &application_store)
+        .map_err(map_application)?
+        .into_operation()
+        .map_err(map_application)?;
+    if summaries.is_empty() {
+        return Ok(CliOutput::success("No attachments.\n"));
+    }
+    let mut rendered = String::new();
+    for summary in &summaries {
+        rendered.push_str(&format!(
+            "{}\tbytes={}\tsha256={}\tname={}\n",
+            summary.attachment_id().to_user_string(),
+            summary.total_plaintext_len(),
+            hex_lower(summary.content_sha256()),
+            // Every stored, peer-authorable string this CLI renders goes
+            // through `quoted`, and the attachment name is the most
+            // peer-authorable of them: in a synced vault it was typed on
+            // another device. `validate_attachment_name` already refuses
+            // Unicode category Cc, so an ANSI escape cannot get here — but it
+            // admits Cf and Zl/Zp, so a right-to-left override or a line
+            // separator can still make a name render as a different name, and
+            // the operator picks which attachment to export by reading this
+            // list. `escape_debug`, which `quoted` uses, escapes exactly that
+            // set. Validation at the boundary is not allowed to be the only
+            // gate for something printed to a terminal.
+            quoted(summary.name()),
+        ));
+    }
+    Ok(CliOutput::success(rendered))
+}
+
+/// Write one stored attachment back out as a plaintext file.
+///
+/// This is VLT-PM25's disclosure ceremony with a different final channel, and
+/// the ordering below is that ceremony's (VLT-PM47 §6.3). Two things happen
+/// before the passphrase prompt: the audit clock and randomness are reserved,
+/// and — deliberately — nothing else, because the destination cannot be
+/// meaningfully pre-checked without racing the write.
+///
+/// A refusal at the prompt, or a host failure collecting the answer, publishes
+/// `Denied` and writes nothing. The plaintext is dropped and wiped at the end
+/// of this function on every path.
+fn attachment_export(
+    host: &dyn CliHost,
+    paths: &LocalVaultPaths,
+    writer: &LocalWriterGuard,
+    selected_vault: Option<&ConfigName>,
+    item_id: ItemId,
+    attachment_id: AttachmentId,
+    destination: &Path,
+) -> Result<CliOutput, CliFailure> {
+    let (wall_time_ms, randomness) = audited_access_inputs(host)?;
+    let (access, application_store) = authenticated_access(host, paths, writer, selected_vault)?;
+    let (confirmed, host_error) = match host.confirm_attachment_export() {
+        Ok(confirmed) => (confirmed, None),
+        Err(error) => (false, Some(error)),
+    };
+    let exported = access
+        .into_unlocked()
+        .map_err(map_application)?
+        .audited_export_attachment(
+            item_id,
+            attachment_id,
+            SecretDisclosureIntentV1::InteractiveReveal { confirmed },
+            wall_time_ms,
+            randomness,
+            &application_store,
+        )
+        .map_err(map_application)?
+        .into_operation();
+    if let Some(error) = host_error {
+        // The same shape `totp code` uses: an unauthorized intent must have
+        // been refused by the application, and anything else means the two
+        // layers disagree about what just happened.
+        if !matches!(exported, Err(ApplicationError::InvalidInput)) {
+            return Err(CliFailure::Internal);
+        }
+        return Err(map_host(error));
+    }
+    let content = exported.map_err(map_application)?;
+    crash::around_attachment_artifact(|| {
+        host.write_attachment_export(destination, content.as_bytes())
+    })
+    .map_err(map_host)?;
+    drop(content);
+    Ok(CliOutput::success("Attachment written.\n"))
+}
+
+/// Render one hash as lowercase hexadecimal.
+///
+/// A content hash of plaintext the operator can already obtain, so this is not
+/// a disclosure — but it is the value that makes the byte-identical round trip
+/// checkable by hand, which is why it is rendered at all.
+fn hex_lower(value: &[u8; 32]) -> String {
+    const DIGITS: &[u8; 16] = b"0123456789abcdef";
+    let mut rendered = String::with_capacity(64);
+    for byte in value {
+        rendered.push(DIGITS[usize::from(byte >> 4)] as char);
+        rendered.push(DIGITS[usize::from(byte & 0x0f)] as char);
+    }
+    rendered
 }
 
 fn item_reveal(
@@ -4365,6 +4847,19 @@ fn status(
 /// Nothing durable happens until both are in hand and the next bootstrap is
 /// built and signed. Every failure up to that point leaves a vault the current
 /// passphrase still opens.
+///
+/// VLT-PM48 §6. Unlike every other authenticated command, this one never
+/// asks a running agent for the current passphrase — it always prompts, the
+/// same way it always has. `vault-pm shell` refuses `passphrase rotate`
+/// outright for a closely related reason (VLT-PM43 §3.1): a retained
+/// authenticator's whole premise is that it still opens the vault, and a
+/// rotation is precisely the event that can make that false. The agent
+/// cannot be refused the same way — it is a legitimate way to *reach* this
+/// command, not a session it runs inside — so instead this is the one place
+/// that always collects its own current passphrase fresh, rather than reuse
+/// a cached one, however current that cache happens to be. A rotation is a
+/// deliberate enough act that proving knowledge of the current passphrase
+/// again is a feature, not friction.
 fn passphrase_rotate(
     host: &dyn CliHost,
     paths: &LocalVaultPaths,
@@ -4391,6 +4886,9 @@ fn passphrase_rotate(
     let policy =
         PassphraseRotationPolicyV1::new(memory_kib, iterations, lanes).map_err(map_application)?;
 
+    let rotate_vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
     let current_passphrase = host.read_existing_passphrase().map_err(map_host)?;
     let mut access = VaultAccessV1::locked(locator);
     // VLT-PM42. A rotation must describe a settled vault: the bootstrap it
@@ -4462,6 +4960,14 @@ fn passphrase_rotate(
             )
             .map_err(map_application)?;
     }
+    // VLT-PM48. A successful rotation makes the agent's cached passphrase for
+    // this vault wrong, immediately and for certain — unlike the general
+    // `Locked`-triggered self-heal in `execute`, there is no ambiguity to
+    // wait out here. Forgetting it now means the very next opportunistic
+    // lookup falls back to a prompt instead of trying (and failing with) the
+    // password that no longer opens this vault. Best effort: an agent that
+    // is not running has nothing to forget.
+    agent::forget_cached_passphrase_on_rejection(paths, &rotate_vault_name);
     Ok(CliOutput::success("Vault passphrase rotated.\n"))
 }
 
@@ -4506,7 +5012,10 @@ fn audit_verify(
     let application_store = application_store(paths);
     let repository_factory = configured_repository_factory(&config, vault)?;
     let mut access = VaultAccessV1::locked(locator);
-    let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+    let audit_vault_name = selected_vault
+        .cloned()
+        .unwrap_or_else(|| config.default_vault().clone());
+    let passphrase = agent::passphrase_for(host, paths, &audit_vault_name).map_err(map_host)?;
     // VLT-PM42. `audit verify` publishes an audit-only commit of its own
     // through the very path a crash interrupts, so it finishes an outstanding
     // publication before starting another.
@@ -4620,7 +5129,11 @@ fn doctor(
         );
     if unlock {
         let repository_factory = configured_repository_factory(&config, vault)?;
-        let passphrase = host.read_existing_passphrase().map_err(map_host)?;
+        let doctor_vault_name = selected_vault
+            .cloned()
+            .unwrap_or_else(|| config.default_vault().clone());
+        let passphrase =
+            agent::passphrase_for(host, paths, &doctor_vault_name).map_err(map_host)?;
         access
             .unlock(
                 passphrase,
@@ -4878,6 +5391,13 @@ enum CliFailure {
     Provider,
     Unsupported,
     Internal,
+    /// The local agent (VLT-PM48) could not be reached or refused a request.
+    ///
+    /// Carries the same `Provider` exit class as every other "a local
+    /// dependency was unavailable" failure, but its own message: "storage
+    /// unavailable" would misdescribe a socket problem that has nothing to do
+    /// with the object store.
+    AgentUnavailable,
 }
 
 impl CliFailure {
@@ -4893,6 +5413,7 @@ impl CliFailure {
             Self::Provider => ExitCode::Provider,
             Self::Unsupported => ExitCode::Unsupported,
             Self::Internal => ExitCode::Internal,
+            Self::AgentUnavailable => ExitCode::Provider,
         }
     }
 
@@ -4908,6 +5429,7 @@ impl CliFailure {
             Self::Provider => "vault-pm: storage unavailable",
             Self::Unsupported => "vault-pm: unsupported capability",
             Self::Internal => "vault-pm: internal invariant failed",
+            Self::AgentUnavailable => "vault-pm: agent unavailable",
         }
     }
 }
@@ -5001,6 +5523,14 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::InvalidExportDestination
         | CliHostError::ExportDestinationExists
         | CliHostError::InvalidImportSource
+        // A missing source, a directory, an empty file, or one over the
+        // attachment ceiling are all "you named something this command cannot
+        // take", which is exit 2 and not a provider failure. The destination
+        // already existing is the same class: this product refuses to replace
+        // a file it did not create.
+        | CliHostError::InvalidAttachmentSource
+        | CliHostError::InvalidAttachmentDestination
+        | CliHostError::AttachmentDestinationExists
         | CliHostError::InvalidEntropyRequest => HostError::Invalid,
         CliHostError::InvalidClipboardClearRequest => HostError::Invalid,
         // A host with no clipboard session, and a value this adapter cannot
@@ -5021,6 +5551,8 @@ fn map_native_cli_host(error: CliHostError) -> HostError {
         | CliHostError::TextInputFailed
         | CliHostError::ExportWriteFailed
         | CliHostError::ImportReadFailed
+        | CliHostError::AttachmentReadFailed
+        | CliHostError::AttachmentWriteFailed
         | CliHostError::EntropyUnavailable => HostError::Unavailable,
     }
 }
@@ -5105,6 +5637,31 @@ mod tests {
             }
         }
         None
+    }
+
+    /// Whether any file under `root` contains `needle` anywhere in its bytes.
+    ///
+    /// Used to state the negative that matters about attachments: the store
+    /// holds ciphertext, so neither a distinctive run of the plaintext nor the
+    /// file's name appears anywhere beneath the data root.
+    fn tree_contains(root: &std::path::Path, needle: &[u8]) -> bool {
+        let Ok(entries) = fs::read_dir(root) else {
+            return false;
+        };
+        for entry in entries.flatten() {
+            let path = entry.path();
+            let found = if path.is_dir() {
+                tree_contains(&path, needle)
+            } else {
+                fs::read(&path)
+                    .map(|bytes| bytes.windows(needle.len()).any(|window| window == needle))
+                    .unwrap_or(false)
+            };
+            if found {
+                return true;
+            }
+        }
+        false
     }
 
     /// Advisory wall time reported by a [`TestHost`] whose clock never moves.
@@ -5562,6 +6119,26 @@ mod tests {
 
         fn read_import_passphrase(&self) -> Result<Zeroizing<Vec<u8>>, HostError> {
             self.secret()
+        }
+
+        // Real filesystem, like the portable-export pair above: the point of
+        // these tests is the ceremony around the write, and a fake that never
+        // touched a disk could not show that a failed export leaves nothing
+        // behind.
+        fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            read_attachment_source(source, MAX_ATTACHMENT_BYTES).map_err(map_native_cli_host)
+        }
+
+        fn write_attachment_export(
+            &self,
+            destination: &Path,
+            contents: &[u8],
+        ) -> Result<(), HostError> {
+            write_attachment_export(destination, contents).map_err(map_native_cli_host)
+        }
+
+        fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+            Ok(self.text()?.as_str() == "yes")
         }
 
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -9541,6 +10118,98 @@ mod tests {
         assert!(USAGE.contains("passphrase rotate"));
     }
 
+    #[test]
+    fn agent_grammar_parses_every_documented_verb() {
+        assert_eq!(
+            parse(["agent", "start"]),
+            default_invocation(Command::AgentStart)
+        );
+        assert_eq!(
+            parse(["agent", "stop"]),
+            default_invocation(Command::AgentStop)
+        );
+        assert_eq!(
+            parse(["agent", "status"]),
+            default_invocation(Command::AgentStatus { json: false })
+        );
+        assert_eq!(
+            parse(["agent", "status", "--json"]),
+            default_invocation(Command::AgentStatus { json: true })
+        );
+        assert_eq!(
+            parse(["agent", "unlock"]),
+            default_invocation(Command::AgentUnlock)
+        );
+        assert_eq!(
+            parse(["agent", "lock"]),
+            default_invocation(Command::AgentLock)
+        );
+        assert_eq!(
+            parse(["agent", "run-foreground"]),
+            default_invocation(Command::AgentRunForeground)
+        );
+        assert_eq!(
+            parse(["--vault", "personal", "agent", "unlock"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("personal").unwrap()),
+                command: Command::AgentUnlock,
+            })
+        );
+        assert_eq!(
+            parse(["--vault", "personal", "agent", "lock"]),
+            Ok(Invocation {
+                selected_vault: Some(ConfigName::new("personal").unwrap()),
+                command: Command::AgentLock,
+            })
+        );
+        for arguments in [
+            vec!["agent"],
+            vec!["agent", "unknown-verb"],
+            vec!["agent", "start", "extra"],
+            vec!["agent", "status", "--bogus"],
+            vec!["agent", "unlock", "extra"],
+        ] {
+            assert_eq!(
+                parse(arguments.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{arguments:?}"
+            );
+        }
+        assert!(USAGE.contains("agent start"));
+        assert!(USAGE.contains("agent stop"));
+        assert!(USAGE.contains("agent status"));
+        assert!(USAGE.contains("agent unlock"));
+        assert!(USAGE.contains("agent lock"));
+        assert!(USAGE.contains("agent run-foreground"));
+    }
+
+    /// `agent start`, `agent stop`, and `agent run-foreground` act on the
+    /// agent process itself, not one vault, so a `--vault` selector is a
+    /// statement with no referent — the same rule VLT-PM44 §2.2 and
+    /// VLT-PM46 §2.1 apply to `password generate` and `clipboard clear`.
+    /// `agent unlock` and `agent lock` are vault-scoped and must accept one.
+    #[test]
+    fn agent_lifecycle_verbs_refuse_a_vault_selector_but_unlock_and_lock_accept_one() {
+        for refused in [
+            vec!["--vault", "personal", "agent", "start"],
+            vec!["--vault", "personal", "agent", "stop"],
+            vec!["--vault", "personal", "agent", "run-foreground"],
+        ] {
+            assert_eq!(
+                parse(refused.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{refused:?}"
+            );
+        }
+        for accepted in [
+            vec!["--vault", "personal", "agent", "unlock"],
+            vec!["--vault", "personal", "agent", "lock"],
+            vec!["--vault", "personal", "agent", "status"],
+        ] {
+            assert!(parse(accepted.clone()).is_ok(), "{accepted:?}");
+        }
+    }
+
     /// The measurement §14.8 actually asks for, at the composition root.
     ///
     /// Every CLI vault is audit-first from generation zero (VLT-PM21), so there
@@ -9863,7 +10532,7 @@ mod tests {
         assert!(USAGE.contains("vault-pm [--vault NAME] shell\n"));
         // Dispatch repeats this refusal rather than trusting classification,
         // because a delegated `shell` would recurse over the real terminal.
-        for refused in ["init", "vault", "shell", "--vault"] {
+        for refused in ["init", "vault", "shell", "agent", "--vault"] {
             assert!(shell::is_refused(refused), "{refused}");
         }
         for delegated in ["item", "status", "search", "conflict", "audit"] {
@@ -10011,6 +10680,12 @@ mod tests {
             // collected once still opens the vault, and a rotation is exactly
             // the event that makes that false.
             "passphrase rotate",
+            // VLT-PM48 §6. `agent` is refused wholesale, including its
+            // vault-scoped verbs: `agent run-foreground` inline would block
+            // this very prompt forever, the same mistake a nested `shell`
+            // would be, and one rule for the whole noun is simpler than one
+            // that allows some of its verbs and not others.
+            "agent unlock",
             "--vault work item list",
             "\"unterminated",
             "a b c d e f g h i",
@@ -10019,10 +10694,10 @@ mod tests {
         let output = run_with_terminal(["shell"], &host, &terminal);
 
         assert_eq!(output.exit_code(), ExitCode::Success);
-        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 7]);
+        assert_eq!(terminal.exit_codes(), [ExitCode::InvalidInput; 8]);
         assert_eq!(
             terminal.transcript(),
-            "vault-pm: invalid command\n".repeat(7)
+            "vault-pm: invalid command\n".repeat(8)
         );
         // No passphrase was ever collected, so nothing was retained to wipe.
         assert_eq!(host.remaining_secrets(), 0);
@@ -10298,6 +10973,28 @@ mod tests {
             assert_eq!(source, Path::new("source"));
             self.record("read_portable_export");
             Ok(b"read_portable_export".to_vec())
+        }
+
+        fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+            assert_eq!(source, Path::new("source"));
+            self.record("read_attachment_source");
+            Ok(Zeroizing::new(b"read_attachment_source".to_vec()))
+        }
+
+        fn write_attachment_export(
+            &self,
+            destination: &Path,
+            contents: &[u8],
+        ) -> Result<(), HostError> {
+            assert_eq!(destination, Path::new("destination"));
+            assert_eq!(contents, b"attachment");
+            self.record("write_attachment_export");
+            Ok(())
+        }
+
+        fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+            self.record("confirm_attachment_export");
+            Ok(true)
         }
 
         fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
@@ -11435,5 +12132,459 @@ mod tests {
         let generated = core::str::from_utf8(&generated).expect("generated passwords are ASCII");
         assert!(!terminal.transcript().contains(generated));
         assert_eq!(terminal.exit_codes(), vec![ExitCode::Success]);
+    }
+
+    /// One login item, added with a deterministic host, and its identity.
+    fn attachment_fixture(paths: &LocalVaultPaths, passphrase: &[u8]) -> String {
+        let init_host = TestHost::new(paths.clone(), [passphrase.to_vec()]);
+        assert_eq!(run(["init"], &init_host).exit_code(), ExitCode::Success);
+        let add_host = TestHost::with_texts(
+            paths.clone(),
+            [
+                passphrase.to_vec(),
+                b"attachment secret".to_vec(),
+                Vec::new(),
+            ],
+            [
+                "Attachment holder".to_owned(),
+                "user@example.test".to_owned(),
+                "0".to_owned(),
+            ],
+        );
+        assert_eq!(
+            run(["item", "add", "login"], &add_host).exit_code(),
+            ExitCode::Success
+        );
+        activate_test_audit_epoch(paths, passphrase.to_vec());
+        ItemId::new([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]).to_user_string()
+    }
+
+    /// A deterministic multi-chunk payload.
+    ///
+    /// The length is a deliberate non-multiple of the chunk size so the short
+    /// final chunk is exercised: an attachment that happened to be an exact
+    /// multiple would leave the tail path untested, and "it round-tripped"
+    /// would then be a weaker statement than it looks.
+    fn multi_chunk_payload() -> Vec<u8> {
+        (0..(2 * coding_adventures_vault_pm_application::ATTACHMENT_CHUNK_BYTES + 1234))
+            .map(|index| (index % 251) as u8)
+            .collect()
+    }
+
+    /// VLT-PM47 §9.1. The acceptance gate: a file bigger than one chunk comes
+    /// back byte for byte, and nothing of it or its name is on disk in clear.
+    #[test]
+    fn an_attachment_round_trips_byte_identically_through_the_command_surface() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"attachment round trip passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let payload = multi_chunk_payload();
+        let source = root.0.join("recovery-codes.bin");
+        fs::write(&source, &payload).unwrap();
+
+        let add_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let added = run(
+            [
+                "attachment",
+                "add",
+                item_id.as_str(),
+                source.to_str().unwrap(),
+            ],
+            &add_host,
+        );
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let attachment_id = added
+            .stdout()
+            .strip_prefix("Attachment added: ")
+            .and_then(|rest| rest.strip_suffix('\n'))
+            .expect("the ceremony announces the new attachment identity")
+            .to_owned();
+
+        let list_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["attachment", "list", item_id.as_str()], &list_host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert!(
+            listed.stdout().contains(&attachment_id),
+            "the listing names the attachment: {listed:?}"
+        );
+        assert!(listed.stdout().contains("name=\"recovery-codes.bin\""));
+        assert!(listed
+            .stdout()
+            .contains(&format!("bytes={}", payload.len())));
+        assert!(listed.stdout().contains(&format!(
+            "sha256={}",
+            hex_lower(&coding_adventures_sha256::sha256(&payload))
+        )));
+
+        let destination = root.0.join("exported.bin");
+        let export_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["yes".to_owned()]);
+        let exported = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                attachment_id.as_str(),
+                destination.to_str().unwrap(),
+            ],
+            &export_host,
+        );
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        assert_eq!(exported.stdout(), "Attachment written.\n");
+        assert_eq!(fs::read(&destination).unwrap(), payload);
+
+        // The store holds ciphertext. A distinctive run of the payload and the
+        // file name must appear nowhere under the data root.
+        let needle = &payload[coding_adventures_vault_pm_application::ATTACHMENT_CHUNK_BYTES
+            ..coding_adventures_vault_pm_application::ATTACHMENT_CHUNK_BYTES + 64];
+        assert!(
+            !tree_contains(&root.0.join("data"), needle),
+            "attachment plaintext reached the store"
+        );
+        assert!(
+            !tree_contains(&root.0.join("data"), b"recovery-codes.bin"),
+            "the attachment name reached the store in clear"
+        );
+
+        // Both reads and the attach are recorded, and none of them carries the
+        // name or the bytes.
+        let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let audit = run(["audit", "list"], &audit_host);
+        assert_eq!(audit.exit_code(), ExitCode::Success, "{audit:?}");
+        assert!(audit
+            .stdout()
+            .contains("action=item_update\toutcome=succeeded"));
+        assert_eq!(
+            audit
+                .stdout()
+                .lines()
+                .filter(|row| row.contains("action=item_read\toutcome=succeeded"))
+                .count(),
+            2,
+            "{audit:?}"
+        );
+        assert!(!audit.stdout().contains("recovery-codes.bin"));
+
+        let verify_host = TestHost::new(paths, [passphrase]);
+        let verified = run(["audit", "verify"], &verify_host);
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
+    /// VLT-PM47 §9.3 and §3.5. Fail closed, before the vault is touched, and
+    /// never by aborting.
+    #[test]
+    fn an_oversized_attachment_is_refused_and_the_vault_is_untouched() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"oversized attachment passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let source = root.0.join("too-large.bin");
+        fs::write(&source, vec![0_u8; MAX_ATTACHMENT_BYTES + 1]).unwrap();
+        // No passphrase is queued: reaching the unlock at all would panic the
+        // host, which is how this test proves the refusal happens first.
+        let host = TestHost::new(paths.clone(), []);
+        let refused = run(
+            [
+                "attachment",
+                "add",
+                item_id.as_str(),
+                source.to_str().unwrap(),
+            ],
+            &host,
+        );
+        assert_eq!(refused.exit_code(), ExitCode::InvalidInput, "{refused:?}");
+
+        // The item still has no attachments, so the refusal published nothing
+        // -- and the vault is still openable, which is the half of "fail
+        // closed" that a panic would have taken away.
+        let listed = run(
+            ["attachment", "list", item_id.as_str()],
+            &TestHost::new(paths.clone(), [passphrase.clone()]),
+        );
+        assert_eq!(listed.stdout(), "No attachments.\n", "{listed:?}");
+        let verified = run(["audit", "verify"], &TestHost::new(paths, [passphrase]));
+        assert_eq!(verified.exit_code(), ExitCode::Success, "{verified:?}");
+    }
+
+    /// A missing source and a source that is a directory are the same class of
+    /// answer, and both arrive before the passphrase prompt.
+    #[test]
+    fn an_unreadable_attachment_source_is_refused_before_any_prompt() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"unreadable source passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        for source in [root.0.join("absent.bin"), root.0.join("data")] {
+            let host = TestHost::new(paths.clone(), []);
+            let refused = run(
+                [
+                    "attachment",
+                    "add",
+                    item_id.as_str(),
+                    source.to_str().unwrap(),
+                ],
+                &host,
+            );
+            assert_eq!(
+                refused.exit_code(),
+                ExitCode::InvalidInput,
+                "{source:?}: {refused:?}"
+            );
+        }
+    }
+
+    /// VLT-PM47 §9.6. Refusal at the prompt releases nothing and still leaves a
+    /// row: an access that happened and left no trace is the outcome the whole
+    /// ceremony exists to prevent.
+    #[test]
+    fn a_refused_export_writes_no_file_and_records_a_denied_read() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"refused export passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let payload = multi_chunk_payload();
+        let source = root.0.join("secret.bin");
+        fs::write(&source, &payload).unwrap();
+        let add_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let added = run(
+            [
+                "attachment",
+                "add",
+                item_id.as_str(),
+                source.to_str().unwrap(),
+            ],
+            &add_host,
+        );
+        assert_eq!(added.exit_code(), ExitCode::Success, "{added:?}");
+        let attachment_id = added
+            .stdout()
+            .strip_prefix("Attachment added: ")
+            .and_then(|rest| rest.strip_suffix('\n'))
+            .unwrap()
+            .to_owned();
+
+        let destination = root.0.join("never-written.bin");
+        let refuse_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["no".to_owned()]);
+        let refused = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                attachment_id.as_str(),
+                destination.to_str().unwrap(),
+            ],
+            &refuse_host,
+        );
+        assert_eq!(refused.exit_code(), ExitCode::InvalidInput, "{refused:?}");
+        assert!(!destination.exists(), "a refused export wrote a file");
+
+        let audit_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let audit = run(["audit", "list"], &audit_host);
+        assert!(
+            audit.stdout().contains("action=item_read\toutcome=denied"),
+            "{audit:?}"
+        );
+
+        // The destination is refused rather than replaced when it exists, and
+        // the pre-existing bytes survive.
+        fs::write(&destination, b"pre-existing").unwrap();
+        let clash_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["yes".to_owned()]);
+        let clashed = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                attachment_id.as_str(),
+                destination.to_str().unwrap(),
+            ],
+            &clash_host,
+        );
+        assert_eq!(clashed.exit_code(), ExitCode::InvalidInput, "{clashed:?}");
+        assert_eq!(fs::read(&destination).unwrap(), b"pre-existing");
+
+        // An attachment identity this item does not have is not found, and the
+        // failed read is still recorded.
+        let missing = AttachmentId::new([0xfe; 16]).to_user_string();
+        let missing_host =
+            TestHost::with_texts(paths.clone(), [passphrase.clone()], ["yes".to_owned()]);
+        let not_found = run(
+            [
+                "attachment",
+                "export",
+                item_id.as_str(),
+                missing.as_str(),
+                root.0.join("absent-export.bin").to_str().unwrap(),
+            ],
+            &missing_host,
+        );
+        assert_eq!(not_found.exit_code(), ExitCode::NotFound, "{not_found:?}");
+
+        let verify_host = TestHost::new(paths, [passphrase]);
+        assert_eq!(
+            run(["audit", "verify"], &verify_host).exit_code(),
+            ExitCode::Success
+        );
+    }
+
+    /// An item with no attachments says so rather than printing nothing, and a
+    /// missing item is not found.
+    #[test]
+    fn listing_reports_an_empty_attachment_set_and_a_missing_item() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"empty attachment list passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        let host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        let listed = run(["attachment", "list", item_id.as_str()], &host);
+        assert_eq!(listed.exit_code(), ExitCode::Success, "{listed:?}");
+        assert_eq!(listed.stdout(), "No attachments.\n");
+
+        let missing = ItemId::new([0xaa; 16]).to_user_string();
+        let absent_host = TestHost::new(paths, [passphrase]);
+        let absent = run(["attachment", "list", missing.as_str()], &absent_host);
+        assert_eq!(absent.exit_code(), ExitCode::NotFound, "{absent:?}");
+    }
+
+    /// VLT-PM47 §8.3. An export of a vault that holds attachments says so.
+    /// A backup an operator believes carries their recovery codes and does
+    /// not is the failure silence would produce here.
+    #[test]
+    fn a_portable_export_says_when_it_left_attachments_behind() {
+        let root = TestRoot::new();
+        let paths = root.paths();
+        let passphrase = b"export attachment notice passphrase".to_vec();
+        let item_id = attachment_fixture(&paths, &passphrase);
+
+        // Before anything is attached the notice must not appear, or it would
+        // mean nothing when it did.
+        let quiet_destination = root.0.join("quiet.vpmx");
+        let quiet_host = TestHost::new(
+            paths.clone(),
+            [passphrase.clone(), b"export artifact passphrase".to_vec()],
+        );
+        let quiet = run(["export", quiet_destination.to_str().unwrap()], &quiet_host);
+        assert_eq!(quiet.exit_code(), ExitCode::Success, "{quiet:?}");
+        assert_eq!(quiet.stdout(), "Portable export written.\n");
+        assert_eq!(quiet.stderr(), "");
+
+        let source = root.0.join("attached.bin");
+        fs::write(&source, multi_chunk_payload()).unwrap();
+        let add_host = TestHost::new(paths.clone(), [passphrase.clone()]);
+        assert_eq!(
+            run(
+                [
+                    "attachment",
+                    "add",
+                    item_id.as_str(),
+                    source.to_str().unwrap(),
+                ],
+                &add_host,
+            )
+            .exit_code(),
+            ExitCode::Success
+        );
+
+        let destination = root.0.join("loud.vpmx");
+        let export_host = TestHost::new(
+            paths.clone(),
+            [passphrase.clone(), b"export artifact passphrase".to_vec()],
+        );
+        let exported = run(["export", destination.to_str().unwrap()], &export_host);
+        assert_eq!(exported.exit_code(), ExitCode::Success, "{exported:?}");
+        // Standard output is unchanged, so nothing that parses it has to learn
+        // a new line; the notice is on standard error and names nothing.
+        assert_eq!(exported.stdout(), "Portable export written.\n");
+        assert_eq!(
+            exported.stderr(),
+            "vault-pm: portable export does not carry attachments\n"
+        );
+        assert!(!exported.stderr().contains("attached.bin"));
+        assert!(!exported.stderr().contains(&item_id));
+    }
+
+    #[test]
+    fn the_attachment_grammar_is_closed() {
+        let item = ItemId::new([7; 16]);
+        let attachment = AttachmentId::new([8; 16]);
+        assert_eq!(
+            parse(["attachment", "add", &item.to_user_string(), "/tmp/f.bin"]),
+            default_invocation(Command::AttachmentAdd {
+                item_id: item,
+                source: PathBuf::from("/tmp/f.bin"),
+            })
+        );
+        assert_eq!(
+            parse(["attachment", "list", &item.to_user_string()]),
+            default_invocation(Command::AttachmentList { item_id: item })
+        );
+        assert_eq!(
+            parse([
+                "attachment",
+                "export",
+                &item.to_user_string(),
+                &attachment.to_user_string(),
+                "/tmp/out.bin",
+            ]),
+            default_invocation(Command::AttachmentExport {
+                item_id: item,
+                attachment_id: attachment,
+                destination: PathBuf::from("/tmp/out.bin"),
+            })
+        );
+        for rejected in [
+            vec!["attachment"],
+            vec!["attachment", "add"],
+            vec!["attachment", "add", &item.to_user_string()],
+            vec!["attachment", "add", "not-an-id", "/tmp/f.bin"],
+            vec!["attachment", "add", &item.to_user_string(), ""],
+            vec!["attachment", "list"],
+            vec!["attachment", "list", &item.to_user_string(), "extra"],
+            // The destination is required. VLT-PM47 §2.1 removed §14.4's
+            // optional bracket rather than defaulting it from a stored name.
+            vec![
+                "attachment",
+                "export",
+                &item.to_user_string(),
+                &attachment.to_user_string(),
+            ],
+            vec![
+                "attachment",
+                "export",
+                &item.to_user_string(),
+                "not-an-id",
+                "/tmp/out.bin",
+            ],
+            vec!["attachment", "remove", &item.to_user_string(), "x"],
+        ] {
+            assert_eq!(
+                parse(rejected.clone()),
+                Err(CliFailure::InvalidCommand),
+                "{rejected:?} must be refused"
+            );
+        }
+        assert!(USAGE.contains("attachment add ITEM FILE"));
+        assert!(USAGE.contains("attachment list ITEM"));
+        assert!(USAGE.contains("attachment export ITEM ATTACHMENT FILE"));
+    }
+
+    #[test]
+    fn hexadecimal_rendering_is_lowercase_and_fixed_width() {
+        assert_eq!(hex_lower(&[0; 32]), "0".repeat(64));
+        assert_eq!(hex_lower(&[0xff; 32]), "f".repeat(64));
+        let mut mixed = [0_u8; 32];
+        mixed[0] = 0x0a;
+        mixed[31] = 0xb0;
+        let rendered = hex_lower(&mixed);
+        assert_eq!(rendered.len(), 64);
+        assert!(rendered.starts_with("0a"));
+        assert!(rendered.ends_with("b0"));
     }
 }

@@ -1,5 +1,61 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.43 — 2026-08-19 — SIMD widen PR19: f32x4.abs/f32x4.mul/f32x4.min text-form (task #174-176)
+
+### Added
+
+- `SimdOpKind::AbsF32x4`/`MulF32x4`/`MinF32x4` join the shared "no
+  immediate beyond the opcode byte itself" SIMD dispatch arm (already
+  used for `i8x16.add`/`Swizzle`/etc.) in both the folded and flat
+  instruction encoders -- the unary/binary distinction only matters at
+  the type-checker/runtime level, not at this encoding shape.
+- 1 new test covering all 3 new ops (folded + flat), confirming each
+  encodes its real 2-byte LEB128 sub-opcode (`0xE0`/`0xE6`/`0xE8`, all
+  `>= 128`) -- the first SIMD widen PR whose new opcodes all need the
+  genuine multi-byte LEB128 path rather than the single-byte
+  happy-path most of this table's opcodes take.
+
+## 0.1.42 — 2026-08-19 — SIMD widen PR18: i8x16 swizzle/extract_lane_s/extract_lane_u/replace_lane text-form (task #171-173)
+
+### Added
+
+- `SimdOpKind::Swizzle` joins the shared "no immediate beyond the
+  opcode byte itself" SIMD dispatch arm (already used for
+  `i8x16.add`/etc.) in both the folded and flat instruction encoders.
+- `SimdOpKind::ExtractLaneI8x16S`/`ExtractLaneI8x16U` join the
+  existing `ExtractLane` arm in both encoders -- same "lane index
+  leads in folded form (`(i8x16.extract_lane_s <lane> <v128-expr>)`),
+  trails in flat/stream form" shape as `i32x4.extract_lane`, just at
+  `i8x16`'s 0-15 lane range instead of `i32x4`'s 0-3.
+- New `SimdOpKind::ReplaceLaneI8x16` arm in both encoders: the
+  genuinely new shape at the runtime/type level (see `wasm-opcodes`'s
+  own CHANGELOG entry), but mechanically the SAME encoding call
+  `ExtractLane*` makes -- lane index leads/trails, `encode_instr_list`
+  handles the (now two, not one) trailing operand expressions in
+  source order regardless of count.
+- 3 new encoding tests: `i8x16.swizzle` (folded + flat, no immediate);
+  `i8x16.extract_lane_s`/`_u` (folded + flat, lane index leading/
+  trailing, covering both ends of the 0-15 range); `i8x16.replace_lane`
+  (folded + flat, confirming both operands encode in source order
+  around the trailing lane-index byte).
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
+## 0.1.41 — 2026-08-19 — SIMD: float splat family text-form (task #168-170)
+
+### Added
+
+- `SimdOpKind::SplatF32x4`/`SplatF64x2` join the shared "no immediate
+  beyond the opcode byte itself" SIMD dispatch arm in both the folded
+  and flat instruction encoders -- the mixed `f32`/`f64` operand
+  TYPES are invisible to this encoder (a type-checker concern -- see
+  `wasm-validator`), same as every prior SIMD op.
+- Dedicated encoding test proving the real single-byte LEB128 bytes
+  for both (`[0xFD, 0x13]`/`[0xFD, 0x14]`), in both folded and flat
+  form.
+
+See `code/specs/W13-wasm-simd-v128-first-slice.md`.
+
 ## 0.1.40 — 2026-08-19 — SIMD: splat family text-form; NaN payload underscore fix (task #165-167)
 
 ### Added

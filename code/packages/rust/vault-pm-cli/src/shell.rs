@@ -453,6 +453,22 @@ impl CliHost for SessionHost<'_> {
         self.inner.read_import_passphrase()
     }
 
+    fn read_attachment_source(&self, source: &Path) -> Result<Zeroizing<Vec<u8>>, HostError> {
+        self.inner.read_attachment_source(source)
+    }
+
+    fn write_attachment_export(
+        &self,
+        destination: &Path,
+        contents: &[u8],
+    ) -> Result<(), HostError> {
+        self.inner.write_attachment_export(destination, contents)
+    }
+
+    fn confirm_attachment_export(&self) -> Result<bool, HostError> {
+        self.inner.confirm_attachment_export()
+    }
+
     fn fill_entropy(&self, output: &mut [u8]) -> Result<(), HostError> {
         self.inner.fill_entropy(output)
     }
@@ -647,10 +663,20 @@ fn classify(line: &str) -> ShellCommand {
 /// terminal, or a redirect — so the verb could only ever read the wrong thing
 /// and then fail. `--copy` inside a session works exactly as it does outside
 /// one; it spawns its own clearer.
+///
+/// `agent` (VLT-PM48) is refused wholesale rather than verb by verb. Most of
+/// its subcommands would be harmless here — `agent unlock`, for one, would
+/// simply reuse the session's already-retained authenticator instead of
+/// prompting again — but `agent run-foreground` is the long-lived accept loop
+/// `agent start` re-executes this binary as, and running it inline would
+/// block the session's own command prompt forever, the same category of
+/// mistake a nested `shell` would be. One rule covering the whole noun is
+/// easier to state and to keep correct than a rule that allows some of its
+/// verbs and not others.
 pub(crate) fn is_refused(verb: &str) -> bool {
     matches!(
         verb,
-        "init" | "vault" | "shell" | "passphrase" | "clipboard" | "--vault"
+        "init" | "vault" | "shell" | "passphrase" | "clipboard" | "agent" | "--vault"
     )
 }
 

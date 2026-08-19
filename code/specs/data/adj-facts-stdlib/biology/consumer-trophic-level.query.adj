@@ -1,0 +1,21 @@
+% ============================================================================
+% consumer-trophic-level.query.adj — worked recall over the biology
+% consumer-trophic-level library.
+% ============================================================================
+% The shape a learner (or an LLM) produces to ANSWER "what does a secondary
+% consumer eat?" (direct binding) or "which trophic level eats primary
+% consumers?" (reverse binding) — it states no biology fact of its own, it
+% only `import`s the grounded table and asks binding queries. The final query
+% demonstrates honest abstention: `decomposer` is a real ecosystem role this
+% table's own cited article discusses, but the article's own structure keeps
+% decomposers outside the three consumer trophic levels this table grounds,
+% so recalling it abstains rather than inventing a fourth level.
+% ============================================================================
+
+import "consumer-trophic-level.adj"
+
+? consumer_trophic_level(primary_consumer, $Eats)     % expect primary_producers (direct)
+? consumer_trophic_level(secondary_consumer, $Eats)   % expect primary_consumers (direct)
+? consumer_trophic_level(tertiary_consumer, $Eats)    % expect other_carnivores (direct)
+? consumer_trophic_level($L, primary_consumers)       % expect secondary_consumer (reverse)
+? consumer_trophic_level(decomposer, $Eats)           % expect abstain -- not one of the three consumer trophic levels

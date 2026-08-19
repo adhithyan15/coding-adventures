@@ -785,6 +785,118 @@
         "ML-EXT-59-AIR"
       ],
       "after": []
+    },
+    {
+      "id": "ML-PATH-60-ANIMAL",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "ML-C60-cow",
+        "ML-C60-goat",
+        "ML-C60-hen",
+        "ML-C60-crow",
+        "ML-C60-elephant"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-60-ANIMAL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-61-SHELF",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "ML-C61-coconut",
+        "ML-C61-oil",
+        "ML-C61-curd",
+        "ML-C61-jaggery",
+        "ML-C61-chilli"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-61-SHELF"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-62-HAND",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "ML-C62-rope",
+        "ML-C62-thread",
+        "ML-C62-needle",
+        "ML-C62-broom",
+        "ML-C62-winnowing-tray"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-62-HAND"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-63-FEEL",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "ML-C63-hunger",
+        "ML-C63-tiredness",
+        "ML-C63-pain",
+        "ML-C63-cough",
+        "ML-C63-fever"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-63-FEEL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-64-SMALL",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "ML-C64-then",
+        "ML-C64-soon",
+        "ML-C64-sometimes",
+        "ML-C64-only",
+        "ML-C64-but"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-64-SMALL"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-65-ASK",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "ML-C65-request",
+        "ML-C65-permission",
+        "ML-C65-consent",
+        "ML-C65-manners",
+        "ML-C65-trust"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-65-ASK"
+      ],
+      "after": []
+    },
+    {
+      "id": "ML-PATH-66-PADDY",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "ML-C66-paddy",
+        "ML-C66-grass",
+        "ML-C66-ear-of-grain",
+        "ML-C66-plough",
+        "ML-C66-harvest"
+      ],
+      "before": [],
+      "inline": [
+        "ML-EXT-66-PADDY"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -793,7 +905,8 @@
         "ML-PATH-001",
         "ML-PATH-100",
         "ML-PATH-52-WELCOME",
-        "ML-PATH-53-SKY"
+        "ML-PATH-53-SKY",
+        "ML-PATH-60-ANIMAL"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -807,7 +920,8 @@
         "ML-PATH-003",
         "ML-PATH-008",
         "ML-PATH-51-COURTESY",
-        "ML-PATH-56-HOUSE"
+        "ML-PATH-56-HOUSE",
+        "ML-PATH-62-HAND"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -819,7 +933,8 @@
         "ML-PATH-002",
         "ML-PATH-004",
         "ML-PATH-49-REPLY",
-        "ML-PATH-58-ANSWER"
+        "ML-PATH-58-ANSWER",
+        "ML-PATH-64-SMALL"
       ],
       "omits": [
         "RESPONSE-YESNO"
@@ -836,7 +951,8 @@
         "ML-PATH-029",
         "ML-PATH-030",
         "ML-PATH-48-ROLE",
-        "ML-PATH-54-TREE"
+        "ML-PATH-54-TREE",
+        "ML-PATH-61-SHELF"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -851,7 +967,8 @@
         "ML-PATH-031",
         "ML-PATH-032",
         "ML-PATH-47-BODY",
-        "ML-PATH-57-FRAME"
+        "ML-PATH-57-FRAME",
+        "ML-PATH-63-FEEL"
       ],
       "omits": [
         "WORD-GOOD",
@@ -866,7 +983,8 @@
         "ML-PATH-033",
         "ML-PATH-034",
         "ML-PATH-46-ASK",
-        "ML-PATH-55-GROUND"
+        "ML-PATH-55-GROUND",
+        "ML-PATH-65-ASK"
       ],
       "omits": [],
       "relocates": {}
@@ -875,7 +993,8 @@
       "segments": [
         "ML-PATH-010",
         "ML-PATH-50-LEAVE",
-        "ML-PATH-59-AIR"
+        "ML-PATH-59-AIR",
+        "ML-PATH-66-PADDY"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1799,6 +1918,111 @@
         "ML-C59-mud",
         "ML-C59-smoke",
         "ML-C59-ember"
+      ]
+    },
+    {
+      "id": "ML-EXT-60-ANIMAL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a cow, a goat, a hen, a crow and an elephant in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C60-cow",
+        "ML-C60-goat",
+        "ML-C60-hen",
+        "ML-C60-crow",
+        "ML-C60-elephant"
+      ]
+    },
+    {
+      "id": "ML-EXT-61-SHELF",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a coconut, oil, curd, jaggery and a chilli in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C61-coconut",
+        "ML-C61-oil",
+        "ML-C61-curd",
+        "ML-C61-jaggery",
+        "ML-C61-chilli"
+      ]
+    },
+    {
+      "id": "ML-EXT-62-HAND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name rope, thread, a needle, a broom and a winnowing tray in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C62-rope",
+        "ML-C62-thread",
+        "ML-C62-needle",
+        "ML-C62-broom",
+        "ML-C62-winnowing-tray"
+      ]
+    },
+    {
+      "id": "ML-EXT-63-FEEL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name hunger, tiredness, pain, a cough and a fever in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C63-hunger",
+        "ML-C63-tiredness",
+        "ML-C63-pain",
+        "ML-C63-cough",
+        "ML-C63-fever"
+      ]
+    },
+    {
+      "id": "ML-EXT-64-SMALL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can say then, soon, sometimes, only and but in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C64-then",
+        "ML-C64-soon",
+        "ML-C64-sometimes",
+        "ML-C64-only",
+        "ML-C64-but"
+      ]
+    },
+    {
+      "id": "ML-EXT-65-ASK",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name a request, permission, consent, good manners and trust in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C65-request",
+        "ML-C65-permission",
+        "ML-C65-consent",
+        "ML-C65-manners",
+        "ML-C65-trust"
+      ]
+    },
+    {
+      "id": "ML-EXT-66-PADDY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name paddy, grass, an ear of grain, a plough and the harvest in Malayalam.",
+      "prerequisites": [],
+      "lessons": [
+        "ML-C66-paddy",
+        "ML-C66-grass",
+        "ML-C66-ear-of-grain",
+        "ML-C66-plough",
+        "ML-C66-harvest"
       ]
     }
   ]
