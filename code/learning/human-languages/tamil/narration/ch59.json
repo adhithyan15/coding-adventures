@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 59,
+  "title": "In the Kitchen",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:8b952cf43bccb15b",
+  "lessons": [
+    {
+      "id": "TA-C59-curd",
+      "sequence": 2160,
+      "title": "தயிர் (tayir) — curd",
+      "headword": "தயிர்",
+      "romanization": "tayir",
+      "gloss": "curd",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:32ff839f5042e02f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kākkai mean, and what did paṟavai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: தயிர்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "தயிர் (tayir) — \"curd\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Set பால், soured overnight in a covered pot. It is what a Tamil meal finishes on, turned through the last of the சாதம், and it is the thing a hot afternoon is survived with."
+            },
+            {
+              "kind": "speech",
+              "text": "The sisters do not agree here at all: Kannada ಮೊಸರು (mosaru), Telugu పెరుగు (perugu), Tamil தயிர் (tayir). Three households, three words, one pot."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five kitchen words."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayir",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayir*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayir, then sādam, and say which one goes on top of the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayir*, then *sādam*, and say which one goes on top of the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does தயிர் (tayir) mean? (\"curd\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C59-ghee",
+      "sequence": 2170,
+      "title": "நெய் (ney) — ghee",
+      "headword": "நெய்",
+      "romanization": "ney",
+      "gloss": "ghee",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:36ffd81192107d1d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tayir mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: நெய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "நெய் (ney) — \"ghee\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Butter cooked down until the water has gone and only the fat and the smell are left. Short, old, and Tamil's own. Telugu keeps it as నెయ్యి (neyyi); Kannada walked off to ತುಪ್ಪ (tuppa)."
+            },
+            {
+              "kind": "speech",
+              "text": "A spoon of it goes over hot சாதம் at the start of a meal on a day that matters, which is most of what it does."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ney",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ney*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tayir, then ney, and say which one ends a meal and which one opens it",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tayir*, then *ney*, and say which one ends a meal and which one opens it]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does நெய் (ney) mean? (\"ghee\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C59-oil",
+      "sequence": 2180,
+      "title": "எண்ணெய் (eṇṇey) — oil",
+      "headword": "எண்ணெய்",
+      "romanization": "eṇṇey",
+      "gloss": "oil",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97c5697ce1896d19",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ney mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: எண்ணெய்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "எண்ணெய் (eṇṇey) — \"oil\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The end of it is நெய் (ney), standing there unchanged. The front piece is an old name for the sesame seed, so the whole thing began as sesame-fat — and then it widened until it covered every oil a kitchen has, sesame or not."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada kept the same word as ಎಣ್ಣೆ (eṇṇe); Telugu went to నూనె (nūne). The doubled ண் in the middle is the one made with the tongue curled back, held twice as long."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three, and the third is built out of the second."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "eṇṇey",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *eṇṇey*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ney, then eṇṇey, and hear the first one still sitting inside the second",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ney*, then *eṇṇey*, and hear the first one still sitting inside the second]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does எண்ணெய் (eṇṇey) mean? (\"oil\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C59-jaggery",
+      "sequence": 2190,
+      "title": "வெல்லம் (vellam) — jaggery",
+      "headword": "வெல்லம்",
+      "romanization": "vellam",
+      "gloss": "jaggery",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9e52f7500837f908",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did eṇṇey mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: வெல்லம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "வெல்லம் (vellam) — \"jaggery\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Cane juice boiled down and left alone — no bleaching, no crystals — and sold as a dark heavy lump you break a piece off. Kannada has the same word as ಬೆಲ್ಲ (bella), with v softened to b."
+            },
+            {
+              "kind": "speech",
+              "text": "In an older Tamil kitchen sweetness meant this before it meant anything white, and வெல்லம் (vellam) still goes into the food that has to taste the way it used to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vellam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vellam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vellam, then ney, and say which of the two a sweet needs",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vellam*, then *ney*, and say which of the two a sweet needs]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does வெல்லம் (vellam) mean? (\"jaggery\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C59-sugar",
+      "sequence": 2200,
+      "title": "சர்க்கரை (sarkkarai) — sugar",
+      "headword": "சர்க்கரை",
+      "romanization": "sarkkarai",
+      "gloss": "sugar",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:69d4e6af54605240",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vellam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சர்க்கரை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சர்க்கரை (sarkkarai) — \"sugar\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The refined white kind, beside வெல்லம் (vellam) rather than in place of it. Kannada ಸಕ್ಕರೆ (sakkare), Telugu చక్కెర (cakkera): one word, lightly redressed three times."
+            },
+            {
+              "kind": "speech",
+              "text": "It has travelled further than any other word in this run. Sanskrit śarkarā went out through Arabic, Greek and Latin and came back into English as sugar, so சர்க்கரை (sarkkarai) and the English word are one word wearing different clothes."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: curd, ghee, oil, jaggery, and sugar."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sarkkarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sarkkarai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — tayir, ney, eṇṇey, vellam, sarkkarai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *tayir*, *ney*, *eṇṇey*, *vellam*, *sarkkarai*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சர்க்கரை (sarkkarai) mean? (\"sugar\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

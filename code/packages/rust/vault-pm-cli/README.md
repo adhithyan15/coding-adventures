@@ -21,10 +21,17 @@ complete user-authored login/secure-note merges.
 `item reveal ITEM FIELD` adds explicitly confirmed, publish-before-release
 interactive access to one schema-specific current secret without returning the
 revision capability or complete document to CLI orchestration.
-`export FILE`, `import FILE`, `restore verify FILE`, and the
+`export FILE`, `import portable FILE`, `restore verify FILE`, and the
 composed `--vault TARGET restore FILE` add the encrypted recovery-artifact
 round trip, retryable independent verification, and a completed-and-verified
-ceremony. The executable is a thin caller of this package.
+ceremony. `import bitwarden FILE` and `import csv FILE`
+(`VLT-PM49-cli-external-import.md`) add two more, unencrypted, format
+adapters: each decodes a competing product's plaintext export and creates new
+items through the unmodified `item add` publication path, once per record,
+rather than the disaster-recovery ceremony `import portable` uses.
+`import kdbx FILE` parses but always fails closed with the `unsupported`
+class before opening its file — KDBX's own encrypted container format is
+explicitly deferred. The executable is a thin caller of this package.
 
 The driver composes the existing storage-neutral application over separately
 permission-checked application-state and encrypted-object filesystem roots.
@@ -285,16 +292,37 @@ writes and synchronizes the complete artifact, and returns only a path-free
 success line. A destination write failure occurs after artifact release and
 therefore does not rewrite the truthful successful access event.
 
-`import FILE` requires the configured target to be independently initialized,
-logically empty, and audit-enabled. After target unlock it reads one bounded
-regular artifact, collects its passphrase through the fixed hidden
-`Import passphrase:` prompt, authenticates and validates the complete snapshot
-without writes, and obtains the exact count-derived CSPRNG block. Host,
-artifact, and target failures publish a failed itemless `PortableImport`
-before their error; success re-identifies every item/candidate and publishes
-its event atomically with the new catalog. Output contains aggregate item and
-candidate counts only. A later list/show reopens the target through the
-ordinary audited redacted-read boundary.
+`import portable FILE` requires the configured target to be independently
+initialized, logically empty, and audit-enabled. After target unlock it reads
+one bounded regular artifact, collects its passphrase through the fixed
+hidden `Import passphrase:` prompt, authenticates and validates the complete
+snapshot without writes, and obtains the exact count-derived CSPRNG block.
+Host, artifact, and target failures publish a failed itemless
+`PortableImport` before their error; success re-identifies every
+item/candidate and publishes its event atomically with the new catalog.
+Output contains aggregate item and candidate counts only. A later list/show
+reopens the target through the ordinary audited redacted-read boundary.
+
+`import bitwarden FILE` and `import csv FILE`
+(`VLT-PM49-cli-external-import.md`) take a different shape entirely, because
+the source is a plaintext export from a different product rather than
+another vault-pm vault: no source passphrase, no empty-target requirement,
+and no shared item-identity space to merge or restore against. Each reads
+one bounded plaintext source through a new `Zeroizing`-returning host method
+(`read_external_import_source`), decodes it with a small adapter crate
+(`vault-import-bitwarden`, `vault-import-csv`) that has no vault-pm
+dependency at all, and maps each decoded record onto vault-pm's own typed
+records. Every mapped record is then created through the unmodified `item
+add` publication path, once per record — no new mutation or audit primitive
+was introduced — so it carries the exact same `ItemCreate` audit event and
+crash-resumable publication a manually typed item does. A record whose kind
+has no vault-pm equivalent (an SSH key, a Bitwarden identity) is *skipped*,
+counted, and never silently dropped. Output is
+`Import complete: created=C skipped=S failed=F` — aggregate counts only,
+never a title, username, URL, or secret. `import kdbx FILE` parses the same
+shape but always answers the closed `unsupported` exit class before opening
+its file: KDBX's own Argon2d/AES-or-ChaCha20 encrypted container is
+explicitly deferred (VLT-PM49 §8), not silently missing from the grammar.
 
 `restore verify FILE` is a separately retryable, no-mutation ceremony against
 the currently configured target. It reserves its trace/time/randomness before
@@ -358,6 +386,63 @@ command one-shot.
 
 The pre-emptive idle timer that locks a session while nobody is typing remains
 Phase 1B work; this slice ships only the command-boundary bound.
+
+## Local agent, IPC, and auto-lock
+
+`vault-pm agent start` answers the pre-emptive-timer gap the shell above
+leaves open, by moving passphrase retention into its own long-lived,
+background process instead of one foreground session. `agent start`
+re-executes this same binary, detached, as the hidden `agent run-foreground`
+verb, which binds a permission-checked Unix domain socket
+(`coding_adventures_vault_pm_agent_host`) at a short, deterministic,
+owner-private path and retains one passphrase per vault name in memory.
+
+`agent unlock` is the only way that store is populated. It authenticates
+through the exact same `open_authenticated_access` unlock step every other
+command uses — locking the session again immediately afterward — and hands
+the agent a passphrase only once that open has already succeeded against the
+real vault; the agent crate itself has no dependency on
+`vault-pm-application` and cannot verify a passphrase even in principle.
+Every other authenticated command then opportunistically asks a running
+agent for its vault's passphrase before ever reaching the terminal prompt,
+through one seam (`agent::passphrase_for`) every one of them shares. Every
+branch that is not "a running agent already holds an unexpired passphrase for
+exactly this vault" falls back to the unmodified one-shot prompt
+unconditionally — one-shot operation remains correct with no agent running
+at all.
+
+`passphrase rotate` is the one exception: it always prompts for the current
+passphrase fresh, never consulting the agent, for the same reason the
+interactive shell above refuses to delegate `passphrase` at all. A successful
+rotation also forgets that vault's cached passphrase immediately, and any
+command that comes back with the `locked` exit class tells the agent to
+forget that vault too — a best-effort self-heal against a cache made stale by
+an out-of-band rotation on another device, mirroring the shell's own
+in-process `lock`-on-rejection.
+
+Two permission layers gate every connection: the socket's parent directory
+and the socket file are owner-only (`0700`/`0600`), and — the requirement
+that actually matters — every accepted connection's peer is verified against
+the kernel's own record of who opened it (`SO_PEERCRED` on Linux,
+`getpeereid` on macOS and the BSD family) *before* a single request byte is
+read. A mismatched peer gets no response at all.
+
+Auto-lock is real and pre-emptive here, unlike the shell's command-boundary
+bound: a background sweep thread wipes each vault's retained passphrase once
+its own `auto_lock_seconds` elapses, whether or not any command asks about it
+in the meantime, because a background process — unlike a shell blocked on a
+terminal read — has somewhere for that timer to run.
+
+`vault-pm agent stop`, `agent lock [--vault NAME]`, and `agent status
+[--json] [--vault NAME]` round out the surface; all three are idempotent, and
+`agent start` on an already-running agent reports success rather than
+failing. The interactive shell refuses the whole `agent` noun, because
+`agent run-foreground` run inline would block the session's own prompt
+forever — the same mistake a nested `shell` already is.
+
+Windows named-pipe support is an explicit, documented deferral
+(`VLT-PM48-local-agent-ipc.md` §9); every agent verb reports the closed
+`unsupported` exit class there instead.
 
 ## Finishing what a crash interrupted
 
@@ -651,6 +736,71 @@ generator's refusal, so both stop refusing on the day a clipboard adapter
 lands. A live refreshing display is deferred by `VLT-PM45` §8, which records
 what it would first have to decide about the idle-lock bound, per-redraw audit
 events, and terminal raw-mode handling.
+
+## Attaching a file
+
+```text
+vault-pm [--vault NAME] attachment add ITEM FILE
+vault-pm [--vault NAME] attachment list ITEM
+vault-pm [--vault NAME] attachment export ITEM ATTACHMENT FILE
+```
+
+`add` reads the source and validates its base name **before** the passphrase
+prompt, so a missing file, a directory, or one over `MAX_ATTACHMENT_BYTES`
+costs no terminal interaction — the same position the clipboard-availability
+and policy checks sit in, for the same reason. The directory the file came from
+is never stored: only the base name is, and a name that is empty, over 255
+bytes, `.`, `..`, or contains a control character or a path separator is
+rejected rather than repaired.
+
+`list` prints identity, byte length, content hash, and name on ordinary
+standard output. The hash is what makes the byte-identical round trip checkable
+by hand, and it is a hash of plaintext the operator can already obtain.
+
+`export` is a disclosure, and it runs the same ceremony as `item reveal`: audit
+clock and randomness reserved before unlock, an interactive confirmation, a
+durable `ItemRead` published *before* the plaintext is released, and `Denied`
+recorded on refusal. Only the last step differs, and so does the sentence:
+
+```text
+Write this attachment's contents to a plaintext file? Type yes to continue:
+```
+
+A third prompt rather than a reused one, because neither existing sentence
+describes writing vault content into an ordinary unencrypted file this product
+will not track, clear, or know about again.
+
+**The destination is required and never defaulted from the stored name.** In a
+synced vault that name is authored by whoever attached the file, which need not
+be this person, so no code path here turns a stored name into a filesystem
+path. The write refuses to replace an existing destination, creates owner-only,
+`fsync`s, and removes the incomplete file if anything fails.
+
+The name is printed **quoted and escaped**, through the same helper every other
+stored string here passes through. The application layer already rejects the
+characters that make a name render as a different name — Unicode Cc, Cf, and
+the line and paragraph separators — on decode as well as on ingest, so this is
+the second of two gates. It is here because a validator is a statement about
+what was stored and an escape is a statement about what reaches a terminal, and
+the operator is reading the terminal when they choose which attachment to
+export.
+
+`attachment remove` is not implemented. Removing the reference while every byte
+stays in the store until a garbage collection this product has not built would
+say something false; it lands with `gc run`.
+
+**Export, import, and restore announce what did not travel.** A snapshot
+carries records and not blobs, so an attachment stays in the source vault. All
+three ceremonies that can observe that write a fixed sentence to standard
+error — `vault-pm: portable export does not carry attachments` — leaving
+standard output and the exit class untouched, the same shape as the recovery
+notice above.
+
+`restore` is the one that matters most, because its own success line says
+*verified*. That word is true about what the ceremony compared — attachments
+are normalised out of both sides, so the comparison is sound — but a person
+restoring a vault reads it as "everything came back". A backup somebody
+believes carries their recovery codes and does not is worse than no backup.
 
 ## The durable-write seam
 

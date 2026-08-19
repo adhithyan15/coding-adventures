@@ -26,7 +26,13 @@
       "action": "read",
       "target": "system wall clock",
       "justification": "Supplies advisory generation-zero and item mutation timestamps."
+    },
+    {
+      "category": "fs",
+      "action": "read",
+      "target": "this process's own executable path",
+      "justification": "VLT-PM48. Resolves the running vault-pm binary's path so `agent start` can re-execute it as the detached `agent run-foreground` process; the fork and exec themselves are performed by rust/vault-pm-agent-host."
     }
   ],
-  "justification": "Product composition package; terminal and entropy capabilities remain delegated to rust/vault-pm-cli-host."
+  "justification": "Product composition package; terminal, entropy, and local-agent socket/process capabilities remain delegated to rust/vault-pm-cli-host and rust/vault-pm-agent-host respectively."
 }

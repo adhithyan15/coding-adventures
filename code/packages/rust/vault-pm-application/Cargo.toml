@@ -12,6 +12,10 @@ coding_adventures_ct_compare = { path = "../ct-compare" }
 coding_adventures_ed25519 = { path = "../ed25519" }
 coding_adventures_hkdf = { path = "../hkdf" }
 coding_adventures_sha256 = { path = "../sha256" }
+# VLT-PM47 §2.3. The chunk AEAD is reused from VLT14 rather than rewritten
+# here; VLT-PM00 §6's reuse map assigns attachments to that package and §8.1
+# says attachment DEKs live beneath this product's repository envelope.
+coding_adventures_vault_attachments = { path = "../vault-attachments" }
 # VLT-PM45 §7. The RFC 6238 engine is reused from VLT05 rather than rewritten
 # here; VLT-PM00 §6's reuse map already assigns TOTP factors to that package.
 coding_adventures_vault_auth = { path = "../vault-auth" }

@@ -1941,6 +1941,97 @@
       "tex": "hindi/book/chapters/ch59-script-second-wave.tex"
     },
     {
+      "language": "hindi",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:362d39681c5b8a62",
+      "lessonIds": [
+        "HI-C60-monkey",
+        "HI-C60-snake",
+        "HI-C60-hen",
+        "HI-C60-buffalo",
+        "HI-C60-peacock"
+      ],
+      "tex": "hindi/book/chapters/ch60-animals-in-the-yard.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:fb87ffcfd3419b08",
+      "lessonIds": [
+        "HI-C61-vessel",
+        "HI-C61-spoon",
+        "HI-C61-tumbler",
+        "HI-C61-griddle",
+        "HI-C61-stove"
+      ],
+      "tex": "hindi/book/chapters/ch61-at-the-cooking-fire.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:63ff8f05655588b6",
+      "lessonIds": [
+        "HI-C62-rope",
+        "HI-C62-needle",
+        "HI-C62-basket",
+        "HI-C62-clay",
+        "HI-C62-wood"
+      ],
+      "tex": "hindi/book/chapters/ch62-what-hands-work-with.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:e85accb25c929c1f",
+      "lessonIds": [
+        "HI-C63-hunger",
+        "HI-C63-thirst",
+        "HI-C63-sleep",
+        "HI-C63-fever",
+        "HI-C63-pain"
+      ],
+      "tex": "hindi/book/chapters/ch63-what-the-body-tells-you.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:1db2e332e520cde1",
+      "lessonIds": [
+        "HI-C64-now",
+        "HI-C64-quickly",
+        "HI-C64-slowly",
+        "HI-C64-little",
+        "HI-C64-more"
+      ],
+      "tex": "hindi/book/chapters/ch64-how-much-and-how-fast.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:1c30a200e9dbbff3",
+      "lessonIds": [
+        "HI-C65-kindness",
+        "HI-C65-entreaty",
+        "HI-C65-permission",
+        "HI-C65-trust",
+        "HI-C65-manners"
+      ],
+      "tex": "hindi/book/chapters/ch65-asking-nicely.tex"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:9ca2c03773a116a7",
+      "lessonIds": [
+        "HI-C66-seed",
+        "HI-C66-crop",
+        "HI-C66-grain",
+        "HI-C66-grass",
+        "HI-C66-well"
+      ],
+      "tex": "hindi/book/chapters/ch66-the-field-and-the-well.tex"
+    },
+    {
       "language": "italian",
       "chapter": 2,
       "sourceHash": "fnv1a64:16f4c96995eed5af",
@@ -4062,6 +4153,97 @@
       "tex": "malayalam/book/chapters/ch59-what-the-air-carries.tex"
     },
     {
+      "language": "malayalam",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:dd1d6c896ddd02b4",
+      "lessonIds": [
+        "ML-C60-cow",
+        "ML-C60-goat",
+        "ML-C60-hen",
+        "ML-C60-crow",
+        "ML-C60-elephant"
+      ],
+      "tex": "malayalam/book/chapters/ch60-animals-around-a-house.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:b2a87db045213eb8",
+      "lessonIds": [
+        "ML-C61-coconut",
+        "ML-C61-oil",
+        "ML-C61-curd",
+        "ML-C61-jaggery",
+        "ML-C61-chilli"
+      ],
+      "tex": "malayalam/book/chapters/ch61-on-the-kitchen-shelf.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:c873ee0828d10d9b",
+      "lessonIds": [
+        "ML-C62-rope",
+        "ML-C62-thread",
+        "ML-C62-needle",
+        "ML-C62-broom",
+        "ML-C62-winnowing-tray"
+      ],
+      "tex": "malayalam/book/chapters/ch62-made-by-hand.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:6f9666b39c97a91f",
+      "lessonIds": [
+        "ML-C63-hunger",
+        "ML-C63-tiredness",
+        "ML-C63-pain",
+        "ML-C63-cough",
+        "ML-C63-fever"
+      ],
+      "tex": "malayalam/book/chapters/ch63-how-the-body-reports.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:d3377b6f9b153394",
+      "lessonIds": [
+        "ML-C64-then",
+        "ML-C64-soon",
+        "ML-C64-sometimes",
+        "ML-C64-only",
+        "ML-C64-but"
+      ],
+      "tex": "malayalam/book/chapters/ch64-five-words-that-join.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:cb0e67c932a36e31",
+      "lessonIds": [
+        "ML-C65-request",
+        "ML-C65-permission",
+        "ML-C65-consent",
+        "ML-C65-manners",
+        "ML-C65-trust"
+      ],
+      "tex": "malayalam/book/chapters/ch65-asking-well.tex"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:287208dc84f9d747",
+      "lessonIds": [
+        "ML-C66-paddy",
+        "ML-C66-grass",
+        "ML-C66-ear-of-grain",
+        "ML-C66-plough",
+        "ML-C66-harvest"
+      ],
+      "tex": "malayalam/book/chapters/ch66-out-in-the-paddy.tex"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "sourceHash": "fnv1a64:c4cd9fddda234365",
@@ -5465,6 +5647,97 @@
         "SA-C44-blue"
       ],
       "tex": "sanskrit/book/chapters/ch44-colours.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:5b002f857395ec73",
+      "lessonIds": [
+        "SA-C45-morning",
+        "SA-C45-noon",
+        "SA-C45-evening",
+        "SA-C45-month",
+        "SA-C45-year"
+      ],
+      "tex": "sanskrit/book/chapters/ch45-times-of-the-day.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:371b4f0c9246afa1",
+      "lessonIds": [
+        "SA-C46-sun",
+        "SA-C46-ray",
+        "SA-C46-light",
+        "SA-C46-shade",
+        "SA-C46-heat"
+      ],
+      "tex": "sanskrit/book/chapters/ch46-sun-and-shade.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:5fb8da0835bb261a",
+      "lessonIds": [
+        "SA-C47-wall",
+        "SA-C47-window",
+        "SA-C47-stair",
+        "SA-C47-pillar",
+        "SA-C47-floor"
+      ],
+      "tex": "sanskrit/book/chapters/ch47-parts-of-a-house.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:62ba82e2036ac6c9",
+      "lessonIds": [
+        "SA-C48-lion",
+        "SA-C48-wolf",
+        "SA-C48-goat",
+        "SA-C48-monkey",
+        "SA-C48-goose"
+      ],
+      "tex": "sanskrit/book/chapters/ch48-more-animals.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:deb71435519270b6",
+      "lessonIds": [
+        "SA-C49-then",
+        "SA-C49-as",
+        "SA-C49-only",
+        "SA-C49-again-and-again",
+        "SA-C49-oh"
+      ],
+      "tex": "sanskrit/book/chapters/ch49-small-answers.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:5ec977fec28d742e",
+      "lessonIds": [
+        "SA-C50-sound",
+        "SA-C50-question",
+        "SA-C50-voice",
+        "SA-C50-song",
+        "SA-C50-verse"
+      ],
+      "tex": "sanskrit/book/chapters/ch50-sound-and-song.tex"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:279958570c130560",
+      "lessonIds": [
+        "SA-C51-husband",
+        "SA-C51-wife",
+        "SA-C51-grandfather",
+        "SA-C51-grandmother",
+        "SA-C51-uncle"
+      ],
+      "tex": "sanskrit/book/chapters/ch51-more-of-the-family.tex"
     },
     {
       "language": "spanish",
@@ -9093,6 +9366,97 @@
         "TA-C57-ember"
       ],
       "tex": "tamil/book/chapters/ch57-wind-and-fire.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:ff2adae6f9fba049",
+      "lessonIds": [
+        "TA-C58-cow",
+        "TA-C58-goat",
+        "TA-C58-hen",
+        "TA-C58-crow",
+        "TA-C58-bird"
+      ],
+      "tex": "tamil/book/chapters/ch58-around-the-yard.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:a7531a3abf07a8fe",
+      "lessonIds": [
+        "TA-C59-curd",
+        "TA-C59-ghee",
+        "TA-C59-oil",
+        "TA-C59-jaggery",
+        "TA-C59-sugar"
+      ],
+      "tex": "tamil/book/chapters/ch59-in-the-kitchen.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:a511ec75651d639c",
+      "lessonIds": [
+        "TA-C60-needle",
+        "TA-C60-rope",
+        "TA-C60-umbrella",
+        "TA-C60-broom",
+        "TA-C60-comb"
+      ],
+      "tex": "tamil/book/chapters/ch60-things-people-make.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:56cc2b28fd1d3b56",
+      "lessonIds": [
+        "TA-C61-hunger",
+        "TA-C61-thirst",
+        "TA-C61-sleep",
+        "TA-C61-fever",
+        "TA-C61-pain"
+      ],
+      "tex": "tamil/book/chapters/ch61-how-the-body-feels.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:9b4362b0fd9acb29",
+      "lessonIds": [
+        "TA-C62-only",
+        "TA-C62-still",
+        "TA-C62-soon",
+        "TA-C62-at-once",
+        "TA-C62-first-of-all"
+      ],
+      "tex": "tamil/book/chapters/ch62-only-and-still.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:0f3d2553ce431c43",
+      "lessonIds": [
+        "TA-C63-request",
+        "TA-C63-permission",
+        "TA-C63-hesitancy",
+        "TA-C63-trust",
+        "TA-C63-humility"
+      ],
+      "tex": "tamil/book/chapters/ch63-asking-well.tex"
+    },
+    {
+      "language": "tamil",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:b2f3d2b92641dc8b",
+      "lessonIds": [
+        "TA-C64-paddy",
+        "TA-C64-grass",
+        "TA-C64-crop",
+        "TA-C64-threshing-floor",
+        "TA-C64-harvest"
+      ],
+      "tex": "tamil/book/chapters/ch64-the-harvest.tex"
     },
     {
       "language": "telugu",

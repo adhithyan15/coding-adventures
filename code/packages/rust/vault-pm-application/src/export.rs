@@ -7,7 +7,7 @@ use coding_adventures_chacha20_poly1305::{
     xchacha20_poly1305_aead_decrypt, xchacha20_poly1305_aead_encrypt,
 };
 use coding_adventures_sha256::sha256;
-use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, RevisionId};
+use coding_adventures_vault_pm_domain::{ItemCandidate, ItemId, ItemState, RevisionId};
 use coding_adventures_vault_pm_format::{Argon2idParametersV1, VaultId, CRYPTO_SUITE_V1};
 use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
@@ -223,6 +223,31 @@ impl OpenedPortableSnapshotV1 {
     /// Return the number of retained current source candidates.
     pub fn candidate_count(&self) -> usize {
         self.candidates.values().map(Vec::len).sum()
+    }
+
+    /// Return how many of this snapshot's items carry at least one attachment.
+    ///
+    /// The artifact encodes item state unmodified, so an attachment's *set
+    /// membership* does travel — the chunk and manifest objects it names do
+    /// not, because they are repository objects and this is a record snapshot.
+    /// Import therefore drops the set (`remap_imported_item_state`) rather
+    /// than producing an item that claims attachments no `attachment export`
+    /// in the target could ever satisfy.
+    ///
+    /// This count exists so the import ceremony can *say* that, the way the
+    /// export ceremony already does. It is an aggregate and nothing else — no
+    /// identity, name, or size — which is what VLT-PM00 §20 permits a host to
+    /// observe. VLT-PM47 §8.3.
+    pub fn attachment_bearing_item_count(&self) -> usize {
+        self.candidates
+            .values()
+            .filter(|candidates| {
+                candidates.iter().any(|candidate| {
+                    matches!(candidate.state(), ItemState::Live(document)
+                        if !document.attachments().is_empty())
+                })
+            })
+            .count()
     }
 
     /// Bind the complete authenticated source semantics for later restore verification.

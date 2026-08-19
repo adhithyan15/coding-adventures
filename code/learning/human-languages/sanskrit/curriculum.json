@@ -751,6 +751,118 @@
         "SA-EXT-44-COLOUR"
       ],
       "after": []
+    },
+    {
+      "id": "SA-PATH-45-DAYTIME",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "SA-C45-morning",
+        "SA-C45-noon",
+        "SA-C45-evening",
+        "SA-C45-month",
+        "SA-C45-year"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-45-DAYTIME"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-46-LIGHT",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": [
+        "SA-C46-sun",
+        "SA-C46-ray",
+        "SA-C46-light",
+        "SA-C46-shade",
+        "SA-C46-heat"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-46-LIGHT"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-47-DWELL",
+      "spine_node": "SPINE-POLITE-REQUEST-REPAIR",
+      "lessons": [
+        "SA-C47-wall",
+        "SA-C47-window",
+        "SA-C47-stair",
+        "SA-C47-pillar",
+        "SA-C47-floor"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-47-DWELL"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-48-BEAST",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "SA-C48-lion",
+        "SA-C48-wolf",
+        "SA-C48-goat",
+        "SA-C48-monkey",
+        "SA-C48-goose"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-48-BEAST"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-49-REPLY",
+      "spine_node": "SPINE-RESPOND-BASIC",
+      "lessons": [
+        "SA-C49-then",
+        "SA-C49-as",
+        "SA-C49-only",
+        "SA-C49-again-and-again",
+        "SA-C49-oh"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-49-REPLY"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-50-SOUND",
+      "spine_node": "SPINE-COURTESY-THANK",
+      "lessons": [
+        "SA-C50-sound",
+        "SA-C50-question",
+        "SA-C50-voice",
+        "SA-C50-song",
+        "SA-C50-verse"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-50-SOUND"
+      ],
+      "after": []
+    },
+    {
+      "id": "SA-PATH-51-KIN",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "SA-C51-husband",
+        "SA-C51-wife",
+        "SA-C51-grandfather",
+        "SA-C51-grandmother",
+        "SA-C51-uncle"
+      ],
+      "before": [],
+      "inline": [
+        "SA-EXT-51-KIN"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -761,7 +873,8 @@
         "SA-PATH-100",
         "SA-PATH-30-WELCOME",
         "SA-PATH-31-SKY",
-        "SA-PATH-38-EARTH"
+        "SA-PATH-38-EARTH",
+        "SA-PATH-45-DAYTIME"
       ],
       "omits": [
         "GREETING-PEACE"
@@ -774,7 +887,8 @@
         "SA-PATH-007",
         "SA-PATH-29-COURTESY",
         "SA-PATH-37-COURTESY",
-        "SA-PATH-43-COURTESY"
+        "SA-PATH-43-COURTESY",
+        "SA-PATH-50-SOUND"
       ],
       "omits": [
         "COURTESY-THANKS-CASUAL"
@@ -786,7 +900,8 @@
         "SA-PATH-004",
         "SA-PATH-27-REPLY",
         "SA-PATH-36-REPLY",
-        "SA-PATH-42-REPLY"
+        "SA-PATH-42-REPLY",
+        "SA-PATH-49-REPLY"
       ],
       "omits": [
         "RESPONSE-YES",
@@ -801,7 +916,8 @@
         "SA-PATH-014",
         "SA-PATH-26-ROLE",
         "SA-PATH-32-TREE",
-        "SA-PATH-41-CRAFT"
+        "SA-PATH-41-CRAFT",
+        "SA-PATH-48-BEAST"
       ],
       "omits": [
         "PRONOUN-ME"
@@ -815,7 +931,8 @@
         "SA-PATH-016",
         "SA-PATH-25-BODY",
         "SA-PATH-34-LIMB",
-        "SA-PATH-39-ANIMAL"
+        "SA-PATH-39-ANIMAL",
+        "SA-PATH-46-LIGHT"
       ],
       "omits": [
         "WORD-GOOD",
@@ -828,7 +945,8 @@
         "SA-PATH-013",
         "SA-PATH-24-ASK",
         "SA-PATH-35-HOUSE",
-        "SA-PATH-40-FOOD"
+        "SA-PATH-40-FOOD",
+        "SA-PATH-47-DWELL"
       ],
       "omits": [
         "COURTESY-PLEASE",
@@ -841,7 +959,8 @@
         "SA-PATH-008",
         "SA-PATH-28-LEAVE",
         "SA-PATH-33-LAND",
-        "SA-PATH-44-COLOUR"
+        "SA-PATH-44-COLOUR",
+        "SA-PATH-51-KIN"
       ],
       "omits": [
         "FAREWELL-CASUAL",
@@ -1742,6 +1861,111 @@
         "SA-C44-yellow",
         "SA-C44-green",
         "SA-C44-blue"
+      ]
+    },
+    {
+      "id": "SA-EXT-45-DAYTIME",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five stretches of time in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C45-morning",
+        "SA-C45-noon",
+        "SA-C45-evening",
+        "SA-C45-month",
+        "SA-C45-year"
+      ]
+    },
+    {
+      "id": "SA-EXT-46-LIGHT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five things about light and heat in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C46-sun",
+        "SA-C46-ray",
+        "SA-C46-light",
+        "SA-C46-shade",
+        "SA-C46-heat"
+      ]
+    },
+    {
+      "id": "SA-EXT-47-DWELL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five parts of a building in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C47-wall",
+        "SA-C47-window",
+        "SA-C47-stair",
+        "SA-C47-pillar",
+        "SA-C47-floor"
+      ]
+    },
+    {
+      "id": "SA-EXT-48-BEAST",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more animals in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C48-lion",
+        "SA-C48-wolf",
+        "SA-C48-goat",
+        "SA-C48-monkey",
+        "SA-C48-goose"
+      ]
+    },
+    {
+      "id": "SA-EXT-49-REPLY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can give five more short replies in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C49-then",
+        "SA-C49-as",
+        "SA-C49-only",
+        "SA-C49-again-and-again",
+        "SA-C49-oh"
+      ]
+    },
+    {
+      "id": "SA-EXT-50-SOUND",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five kinds of sound in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C50-sound",
+        "SA-C50-question",
+        "SA-C50-voice",
+        "SA-C50-song",
+        "SA-C50-verse"
+      ]
+    },
+    {
+      "id": "SA-EXT-51-KIN",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can name five more members of a household in Sanskrit.",
+      "prerequisites": [],
+      "lessons": [
+        "SA-C51-husband",
+        "SA-C51-wife",
+        "SA-C51-grandfather",
+        "SA-C51-grandmother",
+        "SA-C51-uncle"
       ]
     }
   ]

@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 66,
+  "title": "Out in the Paddy",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:c52087d6dd0d54dd",
+  "lessons": [
+    {
+      "id": "ML-C66-paddy",
+      "sequence": 2190,
+      "title": "നെല്ല് (nellŭ) — unhusked rice, rice still in the husk",
+      "headword": "നെല്ല്",
+      "romanization": "nellŭ",
+      "gloss": "unhusked rice, rice still in the husk",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9798967a115815a5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did maryāda mean, and what did viśvāsaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: നെല്ല്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "നെല്ല് (nellŭ) — \"unhusked rice, rice still in the husk\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil nel, and it completes a set you have been collecting a piece at a time. നെല്ല് (nellŭ) is the grain in the husk and in the field; ari is the same grain husked; cōṟu is it cooked."
+            },
+            {
+              "kind": "speech",
+              "text": "Three words for one plant is what a language does when the plant is the year's whole work. The flooded field you already know by name, vayal, is where the first of the three lives."
+            },
+            {
+              "kind": "speech",
+              "text": "It sounds like ellŭ, the bone-word, with an n set in front. The two have nothing to do with one another, and the front of the word is again where the ear earns its keep."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five words from the paddy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "nellŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *nellŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ellŭ, then nellŭ, and say which of the two you can eat",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ellŭ*, then *nellŭ*, and say which of the two you can eat]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does നെല്ല് (nellŭ) mean? (\"unhusked rice, rice still in the husk\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C66-grass",
+      "sequence": 2200,
+      "title": "പുല്ല് (pullŭ) — grass",
+      "headword": "പുല്ല്",
+      "romanization": "pullŭ",
+      "gloss": "grass",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6c6c469c54ef4cff",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did nellŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പുല്ല്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പുല്ല് (pullŭ) — \"grass\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil pul, and it ends the way നെല്ല് (nellŭ) ends — a doubled l with the vowel shaved off, so the two words rhyme on the tail."
+            },
+            {
+              "kind": "speech",
+              "text": "They are the field's two crops seen from opposite sides. One is planted and counted; the other turns up on its own and is cut for the animals."
+            },
+            {
+              "kind": "speech",
+              "text": "Which makes this the paśu's word rather than the farmer's: grass is what the cow is walked out to."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pullŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pullŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "paśu, then pullŭ, and say which one eats the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *paśu*, then *pullŭ*, and say which one eats the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പുല്ല് (pullŭ) mean? (\"grass\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C66-ear-of-grain",
+      "sequence": 2210,
+      "title": "കതിര് (katirŭ) — an ear of ripe paddy",
+      "headword": "കതിര്",
+      "romanization": "katirŭ",
+      "gloss": "an ear of ripe paddy",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a0eba34e130871ee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did pullŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കതിര്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കതിര് (katirŭ) — \"an ear of ripe paddy\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil katir, and the same word names a ray of light. The ear of grain and the sunbeam are one shape to this language: a narrow bright thing thrown out from a stem."
+            },
+            {
+              "kind": "speech",
+              "text": "Veyil, the sunshine-word, is the other half of that picture, and a Malayalam poet can put the two side by side and let the reader do the joining."
+            },
+            {
+              "kind": "speech",
+              "text": "A field of കതിര് (katirŭ) is a field ready. Everything in this chapter after this point is what happens next."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "katirŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *katirŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "veyil, then katirŭ, and say what the two have in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *veyil*, then *katirŭ*, and say what the two have in common]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കതിര് (katirŭ) mean? (\"an ear of ripe paddy\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C66-plough",
+      "sequence": 2220,
+      "title": "കലപ്പ (kalappa) — a plough",
+      "headword": "കലപ്പ",
+      "romanization": "kalappa",
+      "gloss": "a plough",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9152bce5b8a73152",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did katirŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കലപ്പ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കലപ്പ (kalappa) — \"a plough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, and it names the tool behind a word you already carry. Karṣakan, the farmer, was named for the furrow rather than for the crop; കലപ്പ (kalappa) is what cuts the furrow."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala's is a light wooden one, made for ground already under water, with a single iron-shod point and a beam for a pair of cattle."
+            },
+            {
+              "kind": "speech",
+              "text": "Which puts the paśu back to work: the animal of the first chapter in this run and the tool of the last one are yoked together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kalappa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kalappa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "karṣakan, then kalappa, and say which one holds the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *karṣakan*, then *kalappa*, and say which one holds the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കലപ്പ (kalappa) mean? (\"a plough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C66-harvest",
+      "sequence": 2230,
+      "title": "കൊയ്ത്ത് (koyttŭ) — the harvest, the reaping",
+      "headword": "കൊയ്ത്ത്",
+      "romanization": "koyttŭ",
+      "gloss": "the harvest, the reaping",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2a77f6745297efb1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kalappa mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: കൊയ്ത്ത്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "കൊയ്ത്ത് (koyttŭ) — \"the harvest, the reaping\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, made from koyyuka, to cut or to reap — the harvest named for the cutting rather than for the gathering that follows it."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala's largest festival is the harvest festival, and the flower pattern laid at the doorway for it, pūkkaḷaṁ, is the one the flower-lesson already named."
+            },
+            {
+              "kind": "speech",
+              "text": "So the run closes where the year does: the grain, the grass, the ripe ear, the plough that opened the ground, and the cutting that ends it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the paddy year is whole: nellŭ, pullŭ, katirŭ, kalappa, koyttŭ."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "koyttŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *koyttŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — nellŭ, pullŭ, katirŭ, kalappa, koyttŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *nellŭ*, *pullŭ*, *katirŭ*, *kalappa*, *koyttŭ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does കൊയ്ത്ത് (koyttŭ) mean? (\"the harvest, the reaping\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

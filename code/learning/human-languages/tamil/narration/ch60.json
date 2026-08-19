@@ -1,0 +1,621 @@
+{
+  "version": 1,
+  "language": "tamil",
+  "chapter": 60,
+  "title": "Things People Make",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:5a1a98622172715e",
+  "lessons": [
+    {
+      "id": "TA-C60-needle",
+      "sequence": 2210,
+      "title": "ஊசி (ūsi) — a needle",
+      "headword": "ஊசி",
+      "romanization": "ūsi",
+      "gloss": "a needle",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:c7f36b58a7006fef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vellam mean, and what did sarkkarai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ஊசி",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ஊசி (ūsi) — \"a needle\"."
+            },
+            {
+              "kind": "speech",
+              "text": "The sewing needle, and whatever else is that shape. It is the tool துணி is repaired with, which is most of what துணி asks for."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ಸೂಜಿ (sūji) and Telugu సూది (sūdi) hold on to a sound at the front that Tamil let go of, so Tamil's is the shortest of the three. Open it on a long ஊ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five made things."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūsi",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūsi*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ūsi, then tuṇi, and say which one repairs the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ūsi*, then *tuṇi*, and say which one repairs the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ஊசி (ūsi) mean? (\"a needle\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C60-rope",
+      "sequence": 2220,
+      "title": "கயிறு (kayiṟu) — a rope",
+      "headword": "கயிறு",
+      "romanization": "kayiṟu",
+      "gloss": "a rope",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1ea4deb7242fcdd",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did ūsi mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: கயிறு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "கயிறு (kayiṟu) — \"a rope\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Twisted up out of coconut fibre, which is what a coast with that many palms was going to make rope out of. Thin ones tie a bundle; thick ones draw water."
+            },
+            {
+              "kind": "speech",
+              "text": "The ற at the end is the hard one — the same ற standing in ஆறு and in பறவை. A பசு in a yard is at the end of a கயிறு (kayiṟu), which is the commonest place to meet the word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kayiṟu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kayiṟu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kayiṟu, then pasu, and say which one holds the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kayiṟu*, then *pasu*, and say which one holds the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does கயிறு (kayiṟu) mean? (\"a rope\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C60-umbrella",
+      "sequence": 2230,
+      "title": "குடை (kuṭai) — an umbrella",
+      "headword": "குடை",
+      "romanization": "kuṭai",
+      "gloss": "an umbrella",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:315f7ce5fcb90fef",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kayiṟu mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: குடை",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "குடை (kuṭai) — \"an umbrella\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Against மழை and against the சூரியன் equally, and in Tamil country the second job is the larger one. It is carried in a month with no rain in it without anybody thinking that odd."
+            },
+            {
+              "kind": "speech",
+              "text": "Kannada ಕೊಡೆ (koḍe) is the same word. It ends on the ை you already put on கூடை and on விதை."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭai*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kuṭai, then maḻai, and say which one you take out for the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kuṭai*, then *maḻai*, and say which one you take out for the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does குடை (kuṭai) mean? (\"an umbrella\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C60-broom",
+      "sequence": 2240,
+      "title": "துடைப்பம் (tuṭaippam) — a broom",
+      "headword": "துடைப்பம்",
+      "romanization": "tuṭaippam",
+      "gloss": "a broom",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a3b8d4c9c804c9c9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kuṭai mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: துடைப்பம்",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "துடைப்பம் (tuṭaippam) — \"a broom\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Coconut ribs bound at one end, held short, swung low. It is the first thing that touches a வாசல் in the morning: the ground is swept, then wetted, and only then does the கோலம் go down on it."
+            },
+            {
+              "kind": "speech",
+              "text": "Three houses, three words again — Kannada ಪೊರಕೆ (porake), Telugu చీపురు (cīpuru), Tamil துடைப்பம் (tuṭaippam). The doubled ப்ப in the middle is the one you have been holding since பெட்டி taught you to hold a letter twice."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭaippam",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭaippam*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tuṭaippam, then kōlam, and say which one comes first",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *tuṭaippam*, then *kōlam*, and say which one comes first]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does துடைப்பம் (tuṭaippam) mean? (\"a broom\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-C60-comb",
+      "sequence": 2250,
+      "title": "சீப்பு (sīppu) — a comb",
+      "headword": "சீப்பு",
+      "romanization": "sīppu",
+      "gloss": "a comb",
+      "script": "tamil",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97bed831db5aaa4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did tuṭaippam mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: சீப்பு",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "சீப்பு (sīppu) — \"a comb\"."
+            },
+            {
+              "kind": "speech",
+              "text": "A comb, and nothing borrowed about it. The ீ at the front is held long, and then the doubled ப்ப comes again, so it lands in the same shape as துடைப்பம் (tuṭaippam) and பெட்டி."
+            },
+            {
+              "kind": "speech",
+              "text": "A சீப்பு (sīppu) and a மலர் are what go into hair on a morning that is being made something of, and the two turn up in the same sentence often enough to be worth learning together."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the run is closed: a needle, a rope, an umbrella, a broom, and a comb."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sīppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *sīppu*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — ūsi, kayiṟu, kuṭai, tuṭaippam, sīppu",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *ūsi*, *kayiṟu*, *kuṭai*, *tuṭaippam*, *sīppu*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does சீப்பு (sīppu) mean? (\"a comb\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

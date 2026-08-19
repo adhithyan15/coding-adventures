@@ -8,6 +8,7 @@
 #![deny(missing_docs)]
 
 mod access;
+mod attachment;
 mod audit;
 mod codec;
 mod crypto;
@@ -28,13 +29,18 @@ mod totp;
 mod verifier;
 
 pub use access::AuditedAccessResultV1;
+pub use attachment::{
+    attachment_name_from_path, AttachmentContentV1, AttachmentSummaryV1, ATTACHMENT_CHUNK_BYTES,
+    ATTACHMENT_DEK_BYTES, MAX_ATTACHMENT_BYTES, MAX_ATTACHMENT_CHUNKS, MAX_ATTACHMENT_NAME_BYTES,
+};
 pub use audit::{
     AuditEventViewV1, AuditVerificationV1, DEFAULT_AUDIT_HISTORY_LIMIT, MAX_AUDIT_HISTORY_LIMIT,
 };
 pub use codec::{
-    decode_device_certificate, decode_item_revision, decode_signed_audit_event,
-    decode_signed_commit, encode_device_certificate, encode_item_revision,
-    encode_signed_audit_event, encode_signed_commit, CatalogV1, LocalSecretV1,
+    decode_attachment_chunk, decode_device_certificate, decode_item_revision,
+    decode_signed_audit_event, decode_signed_commit, encode_attachment_chunk,
+    encode_device_certificate, encode_item_revision, encode_signed_audit_event,
+    encode_signed_commit, AttachmentManifestV1, CatalogV1, LocalSecretV1,
 };
 pub use crypto::{
     open_local_secret, open_object, seal_local_secret, seal_object, LocalSecretRandomness,
@@ -58,11 +64,12 @@ pub use initialize::{
 };
 pub use lifecycle::{LockedVaultV1, UnlockRecoveryV1, VaultAccessV1};
 pub use mutation::{
-    portable_import_random_bytes, AddItemRandomnessV1, AuditedAccessRandomnessV1,
-    DeleteItemRandomnessV1, PortableImportRandomnessV1, ReplaceItemRandomnessV1,
-    ResolveItemConflictRandomnessV1, RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES,
-    AUDITED_ACCESS_RANDOM_BYTES, DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES,
-    RESOLVE_ITEM_CONFLICT_RANDOM_BYTES, RESTORE_ITEM_RANDOM_BYTES,
+    attachment_random_bytes, portable_import_random_bytes, AddItemRandomnessV1,
+    AttachmentRandomnessV1, AuditedAccessRandomnessV1, DeleteItemRandomnessV1,
+    PortableImportRandomnessV1, ReplaceItemRandomnessV1, ResolveItemConflictRandomnessV1,
+    RestoreItemRandomnessV1, ADD_ITEM_RANDOM_BYTES, AUDITED_ACCESS_RANDOM_BYTES,
+    DELETE_ITEM_RANDOM_BYTES, REPLACE_ITEM_RANDOM_BYTES, RESOLVE_ITEM_CONFLICT_RANDOM_BYTES,
+    RESTORE_ITEM_RANDOM_BYTES,
 };
 pub use open::{
     open_active_vault, recover_pending_publication, ApiKeyConflictMergeInputV1,

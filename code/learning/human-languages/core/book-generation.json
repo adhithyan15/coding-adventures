@@ -2474,6 +2474,48 @@
       "scriptSet": "malayalam-comparisons"
     },
     {
+      "language": "malayalam",
+      "chapter": 60,
+      "output": "malayalam/book/chapters/ch60-animals-around-a-house.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 61,
+      "output": "malayalam/book/chapters/ch61-on-the-kitchen-shelf.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 62,
+      "output": "malayalam/book/chapters/ch62-made-by-hand.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 63,
+      "output": "malayalam/book/chapters/ch63-how-the-body-reports.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 64,
+      "output": "malayalam/book/chapters/ch64-five-words-that-join.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 65,
+      "output": "malayalam/book/chapters/ch65-asking-well.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
+      "language": "malayalam",
+      "chapter": 66,
+      "output": "malayalam/book/chapters/ch66-out-in-the-paddy.tex",
+      "scriptSet": "malayalam-comparisons"
+    },
+    {
       "language": "marathi",
       "chapter": 6,
       "output": "marathi/book/chapters/ch06-numbers-1-5.tex",
@@ -3199,6 +3241,55 @@
       "language": "sanskrit",
       "chapter": 44,
       "output": "sanskrit/book/chapters/ch44-colours.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 45,
+      "output": "sanskrit/book/chapters/ch45-times-of-the-day.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 46,
+      "output": "sanskrit/book/chapters/ch46-sun-and-shade.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 47,
+      "output": "sanskrit/book/chapters/ch47-parts-of-a-house.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 48,
+      "output": "sanskrit/book/chapters/ch48-more-animals.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 49,
+      "output": "sanskrit/book/chapters/ch49-small-answers.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 50,
+      "output": "sanskrit/book/chapters/ch50-sound-and-song.tex",
+      "unicodeScript": "Devanagari",
+      "scriptCommand": "sk"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 51,
+      "output": "sanskrit/book/chapters/ch51-more-of-the-family.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "sk"
     },
@@ -4957,6 +5048,48 @@
       "scriptSet": "tamil-comparisons"
     },
     {
+      "language": "tamil",
+      "chapter": 58,
+      "output": "tamil/book/chapters/ch58-around-the-yard.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 59,
+      "output": "tamil/book/chapters/ch59-in-the-kitchen.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 60,
+      "output": "tamil/book/chapters/ch60-things-people-make.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 61,
+      "output": "tamil/book/chapters/ch61-how-the-body-feels.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 62,
+      "output": "tamil/book/chapters/ch62-only-and-still.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 63,
+      "output": "tamil/book/chapters/ch63-asking-well.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
+      "language": "tamil",
+      "chapter": 64,
+      "output": "tamil/book/chapters/ch64-the-harvest.tex",
+      "scriptSet": "tamil-comparisons"
+    },
+    {
       "language": "telugu",
       "chapter": 6,
       "output": "telugu/book/chapters/ch06-dative-case.tex",
@@ -5627,6 +5760,48 @@
       "language": "hindi",
       "chapter": 59,
       "output": "hindi/book/chapters/ch59-script-second-wave.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 60,
+      "output": "hindi/book/chapters/ch60-animals-in-the-yard.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 61,
+      "output": "hindi/book/chapters/ch61-at-the-cooking-fire.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 62,
+      "output": "hindi/book/chapters/ch62-what-hands-work-with.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 63,
+      "output": "hindi/book/chapters/ch63-what-the-body-tells-you.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 64,
+      "output": "hindi/book/chapters/ch64-how-much-and-how-fast.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 65,
+      "output": "hindi/book/chapters/ch65-asking-nicely.tex",
+      "scriptSet": "hindi-main"
+    },
+    {
+      "language": "hindi",
+      "chapter": 66,
+      "output": "hindi/book/chapters/ch66-the-field-and-the-well.tex",
       "scriptSet": "hindi-main"
     }
   ],

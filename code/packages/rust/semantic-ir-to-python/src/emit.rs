@@ -269,6 +269,20 @@ fn uses_array(m: &Module) -> bool {
         || m.manifest.contains(Feature::ArrayColumnMajor)
 }
 
+/// True if the module uses the SIR23 Tier A symbolic-expression + pattern-
+/// matching domain, in which case the emitted artifact imports
+/// `coding-adventures-sir-runtime-symbolic` (following the TypeScript
+/// backend's imported-package model — see `runtime.rs`'s `RUNTIME_SYMBOLIC`
+/// doc comment, and `uses_array`'s identical rationale above). Any of the
+/// three SIR23 features gates the same single import — a module using only
+/// a bare `SymSymbol` (no pattern/rule node at all) still needs `sym` from
+/// this package.
+fn uses_symbolic(m: &Module) -> bool {
+    m.manifest.contains(Feature::SymbolicExpr)
+        || m.manifest.contains(Feature::PatternMatching)
+        || m.manifest.contains(Feature::Rationals)
+}
+
 /// Walk every function body looking for a `BuiltinCall` named `name`.  Used to
 /// gate per-concern runtime imports for builtins that carry no `Feature` flag
 /// (e.g. `regex`).  Exhaustive over `Stmt`/`Expr` so a new node can't silently
@@ -550,6 +564,11 @@ pub fn emit_module(m: &Module) -> String {
     // Only array/matrix-using modules import the SIR22 array runtime.
     if uses_array(m) {
         out.push_str(crate::runtime::RUNTIME_ARRAY);
+    }
+    // Only symbolic-expression/pattern-matching-using modules import the
+    // SIR23 Tier A symbolic runtime.
+    if uses_symbolic(m) {
+        out.push_str(crate::runtime::RUNTIME_SYMBOLIC);
     }
     // E2: thread user `class Child < Parent` ancestry into the exception
     // matcher at program init, *before* any function or main body runs, so a
@@ -1541,24 +1560,125 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
                 e.span()
             );
         }
-        // SIR23 symbolic-expression/pattern nodes. This backend does not
-        // declare `Feature::SymbolicExpr`/`Feature::PatternMatching` in
-        // `ACCEPTED_FEATURES` (see `lib.rs`), so `Backend::check_module`
-        // rejects any module using these nodes before emission is ever
-        // reached — matching the SIR22/SIR26 guard above.
-        Expr::SymSymbol { .. }
-        | Expr::SymRational { .. }
-        | Expr::SymApply { .. }
-        | Expr::SymPatternBlank { .. }
-        | Expr::SymPatternNamed { .. }
-        | Expr::SymRule { .. }
-        | Expr::SymReplaceAll { .. } => {
-            panic!(
-                "python backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
-                e.kind_name(),
-                e.span()
-            );
+        // ── SIR23 Tier A: symbolic expression + pattern/rewrite nodes ──
+        // Each lowers to a call into the imported `coding-adventures-
+        // sir-runtime-symbolic` package (gated by `Feature::SymbolicExpr`/
+        // `Feature::PatternMatching`/`Feature::Rationals` — see
+        // `uses_symbolic` above and `RUNTIME_SYMBOLIC` in `runtime.rs`).
+        // Mirrors the JavaScript/TypeScript/Ruby backends' own SIR23 arms
+        // exactly, aliased to this crate's own `_sir_sym_*` convention
+        // (matching `_sir_array_*` above).
+        Expr::SymSymbol { name, .. } => {
+            out.push_str("_sir_sym_symbol(");
+            out.push_str(&quote_py_string(name));
+            out.push(')');
         }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "_sir_sym_rational({numer}, {denom})");
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("_sir_sym_apply(");
+            emit_sym_operand(out, head, indent, env);
+            out.push_str(", [");
+            for (i, a) in args.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, a, indent, env);
+            }
+            out.push_str("])");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("_sir_sym_blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                out.push_str("_sir_sym_blank_typed(");
+                out.push_str(&quote_py_string(name));
+                out.push(')');
+            }
+            _ => panic!(
+                "python backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            out.push_str("_sir_sym_named(");
+            out.push_str(&quote_py_string(name));
+            out.push_str(", ");
+            emit_sym_operand(out, pattern, indent, env);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "_sir_sym_rule_delayed("
+            } else {
+                "_sir_sym_rule("
+            });
+            emit_sym_operand(out, lhs, indent, env);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent, env);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str("_sir_sym_unwrap(");
+            out.push_str(if *repeated {
+                "_sir_sym_replace_repeated("
+            } else {
+                "_sir_sym_replace_all("
+            });
+            emit_sym_operand(out, expr, indent, env);
+            out.push_str(", [");
+            for (i, r) in rules.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, r, indent, env);
+            }
+            out.push_str("]))");
+        }
+    }
+}
+
+/// Wrap a `SymApply`/`SymRule`/`SymReplaceAll` operand that is a bare
+/// literal (`IntLit`/`FloatLit`/`StrLit`) through the matching
+/// `_sir_sym_*` leaf-term constructor — a raw Python `int`/`float`/`str`
+/// is never a valid symbolic term, so it must become one before it can sit
+/// inside a term tree. Any other operand (already a symbolic-producing
+/// expression, e.g. a nested `SymApply` or a `VarRef`) emits unchanged.
+/// Mirrors the JavaScript/TypeScript/Ruby backends' identically-purposed
+/// `emit_sym_operand` helper.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize, env: &mut TypeEnv) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("_sir_sym_int(");
+            emit_expr(out, e, indent, env);
+            out.push(')');
+        }
+        Expr::FloatLit { value, .. } => {
+            // The Symbolic constructors want a RAW number to wrap into a
+            // term, not a tagged-float box — so emit the bare literal here
+            // (`{:?}` keeps a decimal point, e.g. `3.0`, matching
+            // `Expr::FloatLit`'s own emit arm above) rather than routing
+            // through `emit_expr`.
+            let _ = write!(out, "_sir_sym_float({:?})", value);
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("_sir_sym_string(");
+            emit_expr(out, e, indent, env);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent, env),
     }
 }
 

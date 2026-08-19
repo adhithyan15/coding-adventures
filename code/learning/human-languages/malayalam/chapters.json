@@ -1187,6 +1187,153 @@
           "ML-LEX-C59-AIR-05"
         ]
       }
+    },
+    {
+      "chapter": 60,
+      "title": "Animals Around a House",
+      "label": "ch:ml-animals-around-a-house",
+      "canDo": "I can name a cow, a goat, a hen, a crow and an elephant in Malayalam.",
+      "spineNodes": [
+        "SPINE-MEET-GREET"
+      ],
+      "payoff": {
+        "lesson": "ML-C60-elephant",
+        "kind": "production",
+        "summary": "Complete ML-C60-elephant and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C60-ANIMAL-01",
+          "ML-LEX-C60-ANIMAL-02",
+          "ML-LEX-C60-ANIMAL-03",
+          "ML-LEX-C60-ANIMAL-04",
+          "ML-LEX-C60-ANIMAL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 61,
+      "title": "On the Kitchen Shelf",
+      "label": "ch:ml-on-the-kitchen-shelf",
+      "canDo": "I can name a coconut, oil, curd, jaggery and a chilli in Malayalam.",
+      "spineNodes": [
+        "SPINE-EXCHANGE-NAMES"
+      ],
+      "payoff": {
+        "lesson": "ML-C61-chilli",
+        "kind": "production",
+        "summary": "Complete ML-C61-chilli and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C61-SHELF-01",
+          "ML-LEX-C61-SHELF-02",
+          "ML-LEX-C61-SHELF-03",
+          "ML-LEX-C61-SHELF-04",
+          "ML-LEX-C61-SHELF-05"
+        ]
+      }
+    },
+    {
+      "chapter": 62,
+      "title": "Made by Hand",
+      "label": "ch:ml-made-by-hand",
+      "canDo": "I can name rope, thread, a needle, a broom and a winnowing tray in Malayalam.",
+      "spineNodes": [
+        "SPINE-COURTESY-THANK"
+      ],
+      "payoff": {
+        "lesson": "ML-C62-winnowing-tray",
+        "kind": "production",
+        "summary": "Complete ML-C62-winnowing-tray and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C62-HAND-01",
+          "ML-LEX-C62-HAND-02",
+          "ML-LEX-C62-HAND-03",
+          "ML-LEX-C62-HAND-04",
+          "ML-LEX-C62-HAND-05"
+        ]
+      }
+    },
+    {
+      "chapter": 63,
+      "title": "How the Body Reports",
+      "label": "ch:ml-how-the-body-reports",
+      "canDo": "I can name hunger, tiredness, pain, a cough and a fever in Malayalam.",
+      "spineNodes": [
+        "SPINE-CHECK-WELLBEING"
+      ],
+      "payoff": {
+        "lesson": "ML-C63-fever",
+        "kind": "production",
+        "summary": "Complete ML-C63-fever and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C63-FEEL-01",
+          "ML-LEX-C63-FEEL-02",
+          "ML-LEX-C63-FEEL-03",
+          "ML-LEX-C63-FEEL-04",
+          "ML-LEX-C63-FEEL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 64,
+      "title": "Five Words That Join",
+      "label": "ch:ml-five-words-that-join",
+      "canDo": "I can say then, soon, sometimes, only and but in Malayalam.",
+      "spineNodes": [
+        "SPINE-RESPOND-BASIC"
+      ],
+      "payoff": {
+        "lesson": "ML-C64-but",
+        "kind": "production",
+        "summary": "Complete ML-C64-but and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C64-SMALL-01",
+          "ML-LEX-C64-SMALL-02",
+          "ML-LEX-C64-SMALL-03",
+          "ML-LEX-C64-SMALL-04",
+          "ML-LEX-C64-SMALL-05"
+        ]
+      }
+    },
+    {
+      "chapter": 65,
+      "title": "Asking Well",
+      "label": "ch:ml-asking-well",
+      "canDo": "I can name a request, permission, consent, good manners and trust in Malayalam.",
+      "spineNodes": [
+        "SPINE-POLITE-REQUEST-REPAIR"
+      ],
+      "payoff": {
+        "lesson": "ML-C65-trust",
+        "kind": "production",
+        "summary": "Complete ML-C65-trust and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C65-ASK-01",
+          "ML-LEX-C65-ASK-02",
+          "ML-LEX-C65-ASK-03",
+          "ML-LEX-C65-ASK-04",
+          "ML-LEX-C65-ASK-05"
+        ]
+      }
+    },
+    {
+      "chapter": 66,
+      "title": "Out in the Paddy",
+      "label": "ch:ml-out-in-the-paddy",
+      "canDo": "I can name paddy, grass, an ear of grain, a plough and the harvest in Malayalam.",
+      "spineNodes": [
+        "SPINE-TAKE-LEAVE"
+      ],
+      "payoff": {
+        "lesson": "ML-C66-harvest",
+        "kind": "production",
+        "summary": "Complete ML-C66-harvest and say all five words in order.",
+        "assesses": [
+          "ML-LEX-C66-PADDY-01",
+          "ML-LEX-C66-PADDY-02",
+          "ML-LEX-C66-PADDY-03",
+          "ML-LEX-C66-PADDY-04",
+          "ML-LEX-C66-PADDY-05"
+        ]
+      }
     }
   ]
 }

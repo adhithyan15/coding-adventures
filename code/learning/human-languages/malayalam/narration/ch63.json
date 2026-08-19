@@ -1,0 +1,641 @@
+{
+  "version": 1,
+  "language": "malayalam",
+  "chapter": 63,
+  "title": "How the Body Reports",
+  "drivablePrefix": 5,
+  "sourceHash": "fnv1a64:97fdcb6836b22a31",
+  "lessons": [
+    {
+      "id": "ML-C63-hunger",
+      "sequence": 2040,
+      "title": "വിശപ്പ് (viśappŭ) — hunger",
+      "headword": "വിശപ്പ്",
+      "romanization": "viśappŭ",
+      "gloss": "hunger",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:fb260fe0789ec858",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new run of words: what did cūlŭ mean, and what did muṟaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വിശപ്പ്",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വിശപ്പ് (viśappŭ) — \"hunger\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, built off viśakkuka, the word for going hungry — the state named from the process rather than the other way round."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil reaches for a different root here, paci, so this is one of the places where the two closest sisters part company on an everyday word."
+            },
+            {
+              "kind": "speech",
+              "text": "You already have the part of the body it reports from: vayaṟŭ, the stomach. One is the place, this is the message."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The first of five things the body reports."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "viśappŭ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *viśappŭ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vayaṟŭ, then viśappŭ, and say which of the two is a feeling",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vayaṟŭ*, then *viśappŭ*, and say which of the two is a feeling]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വിശപ്പ് (viśappŭ) mean? (\"hunger\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C63-tiredness",
+      "sequence": 2050,
+      "title": "ക്ഷീണം (kṣīṇaṁ) — tiredness",
+      "headword": "ക്ഷീണം",
+      "romanization": "kṣīṇaṁ",
+      "gloss": "tiredness",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:97b8cfdfa619d0d6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did viśappŭ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ക്ഷീണം",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ക്ഷീണം (kṣīṇaṁ) — \"tiredness\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit kṣīṇa, meaning worn away or diminished, from a root about wasting down to nothing."
+            },
+            {
+              "kind": "speech",
+              "text": "In Malayalam the heavier sense has itself worn away, and the word has settled into ordinary speech for the plain tiredness of a long day."
+            },
+            {
+              "kind": "speech",
+              "text": "It opens on the ക്ഷ pair that opens kṣamikkaṇaṁ, the sorry-word — one letter riding on another, and the second one you have met wearing it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Two."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣīṇaṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣīṇaṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kṣamikkaṇaṁ, then kṣīṇaṁ, and hear the same opening twice",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kṣamikkaṇaṁ*, then *kṣīṇaṁ*, and hear the same opening twice]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ക്ഷീണം (kṣīṇaṁ) mean? (\"tiredness\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C63-pain",
+      "sequence": 2060,
+      "title": "വേദന (vēdana) — pain",
+      "headword": "വേദന",
+      "romanization": "vēdana",
+      "gloss": "pain",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0e3f8cffbb4dc7dc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did kṣīṇaṁ mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: വേദന",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "വേദന (vēdana) — \"pain\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Sanskrit vedanā, from the root vid, to know or to feel — pain named as the thing a body knows without being told."
+            },
+            {
+              "kind": "speech",
+              "text": "That root has been busy in this book. Vaidyan, the doctor, and vidyārtthi, the student, both grow from it: knowing, learning, healing and hurting all off one seed."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam keeps it for bodily pain first and lets the wider sense follow, so a speaker saying വേദന (vēdana) is usually pointing somewhere."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vēdana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vēdana*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "vaidyan, then vēdana, and say which of the two is the reason for the other",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *vaidyan*, then *vēdana*, and say which of the two is the reason for the other]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does വേദന (vēdana) mean? (\"pain\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C63-cough",
+      "sequence": 2070,
+      "title": "ചുമ (cuma) — a cough",
+      "headword": "ചുമ",
+      "romanization": "cuma",
+      "gloss": "a cough",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:de2a193272609910",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did vēdana mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: ചുമ",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ചുമ (cuma) — \"a cough\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native, and built the way the crow's name was built: the sound comes first and the word is shaped to match it."
+            },
+            {
+              "kind": "speech",
+              "text": "Tamil went elsewhere for this one, to irumal, from a root of its own — a second parting between the two sisters inside one short chapter."
+            },
+            {
+              "kind": "speech",
+              "text": "It covers the single cough and the standing complaint alike, so a speaker adds a word about how long it has gone on when that matters."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Four."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cuma",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *cuma*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "kākka, then cuma, and say what the making of the two words has in common",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *kākka*, then *cuma*, and say what the making of the two words has in common]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ചുമ (cuma) mean? (\"a cough\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-C63-fever",
+      "sequence": 2080,
+      "title": "പനി (pani) — a fever",
+      "headword": "പനി",
+      "romanization": "pani",
+      "gloss": "a fever",
+      "script": "malayalam",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a1277a74f66e6f73",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new one: what did cuma mean?"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: പനി",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "പനി (pani) — \"a fever\"."
+            },
+            {
+              "kind": "speech",
+              "text": "Native Dravidian, matching Tamil paṉi — where the same word means cold, dew and frost."
+            },
+            {
+              "kind": "speech",
+              "text": "Malayalam took the shivering and let the weather go. What the two senses share is a body that cannot get warm, which is the first hour of a fever and the whole of a cold morning."
+            },
+            {
+              "kind": "speech",
+              "text": "Kerala hangs the word on the season: the weeks after the monsoon breaks are fever weeks, and പനി (pani) is the word on everybody's tongue."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Five, and the body has said its piece: hunger, tiredness, pain, a cough and a fever."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pani",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *pani*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "it once more, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: it once more, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all five in order — viśappŭ, kṣīṇaṁ, vēdana, cuma, pani",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all five in order — *viśappŭ*, *kṣīṇaṁ*, *vēdana*, *cuma*, *pani*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does പനി (pani) mean? (\"a fever\".) Say it once more."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

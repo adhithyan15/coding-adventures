@@ -1,0 +1,130 @@
+% ============================================================================
+% consumer-trophic-level — for each of the three consumer trophic levels an
+% ecosystem's food chain names, WHAT that level actually eats, a fresh
+% WebFetch-sourced National Geographic Education table (adj-facts-stdlib,
+% BIOLOGY). Grounds the "ecosystems" Major Gap ADJ-STDLIB-COVERAGE.md
+% §5.1/§5.2 names for K-8 science — the SECOND instance of that gap (after
+% `animal-habitat-definition.adj`), and the first to ground it with a fresh
+% source rather than composing two already-shipped tables.
+% ============================================================================
+% The already-shipped `biology/food-chain-roles.adj` (NOAA-sourced) names
+% THREE coarse roles every ecosystem needs — producer, consumer, decomposer —
+% but its own `consumer` row is a single flat label with no room for the
+% "who eats whom" CHAIN a real food web actually runs on. National Geographic
+% Education's own "Consumers" article (a DIFFERENT source, never before cited
+% in this stdlib) names that chain directly, splitting "consumer" into three
+% named trophic levels and stating, in clean back-to-back sentences, exactly
+% what each one eats:
+%
+%   "Primary consumers make up the second trophic level. They are also
+%    called herbivores. They eat primary producers—plants or algae—and
+%    nothing else."
+%
+%   "Next are the secondary consumers, which eat primary consumers.
+%    Secondary consumers are mostly carnivores, from the Latin words meaning
+%    'meat eater.'"
+%
+%   "Ecosystems can also have tertiary consumers, carnivores that eat other
+%    carnivores."
+%
+% Recall is a binding query:
+%
+%     ? consumer_trophic_level(primary_consumer, $Eats)    % primary_producers
+%     ? consumer_trophic_level(secondary_consumer, $Eats)  % primary_consumers
+%     ? consumer_trophic_level(tertiary_consumer, $Eats)   % other_carnivores
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `consumer_trophic_level(level, eats)` carrying the citation, so the
+% lookups above are ordinary SLD binding queries — the engine returns each
+% level's diet WITH its source, on the CPU, with zero model calls, and
+% abstains on a level not one of these three. The query also runs BACKWARD —
+% bind an eaten group and recall which level eats it:
+%
+%     ? consumer_trophic_level($L, primary_consumers)   % secondary_consumer
+%
+% The three levels and what each one eats, as a little truth table, chained
+% end to end (a primary consumer eats producers; a secondary consumer eats
+% primary consumers; a tertiary consumer eats the carnivores below it):
+%
+%     level                eats                 the cited quote
+%     -------------------  -------------------  --------------------------------------------------------
+%     primary_consumer     primary_producers     "They eat primary producers—plants or algae—and nothing
+%                                                  else."
+%     secondary_consumer   primary_consumers     "Next are the secondary consumers, which eat primary
+%                                                  consumers."
+%     tertiary_consumer    other_carnivores      "Ecosystems can also have tertiary consumers, carnivores
+%                                                  that eat other carnivores."
+%
+% WHY this is a genuine "ecosystems" fact, not a coincidental relabeling of
+% `food-chain-roles.adj`'s own `consumer` row: NGSS MS-LS2-3/5-LS2-1 both name
+% "matter and energy... among living... parts of an ecosystem" as the actual
+% K-8 competency — that requires knowing the CHAIN energy moves along, not
+% just that "consumers eat things." `food-chain-roles.adj`'s own `consumer`
+% row has no room for that chain (one flat label, `eats_others`); this table
+% closes exactly that gap with the finer-grained trophic-level axis its own
+% cited NOAA source never breaks out.
+%
+% HONEST ABSTENTION — the crux of why this table is narrow rather than
+% overreaching:
+%
+% 1. `producer` and `decomposer` are deliberately NOT rows here, even though
+%    both are real ecosystem roles this same NatGeo article also discusses.
+%    The article's own structure treats them as OUTSIDE the three consumer
+%    trophic levels — producers are what primary consumers eat, not
+%    themselves a consumer level, and its own decomposer paragraph opens "In
+%    addition to consumers... ecosystems have decomposers," explicitly
+%    setting decomposers apart from the consumer chain rather than naming
+%    them a fourth trophic level. This table is scoped to consumer trophic
+%    levels only, matching its own title's scope ("Consumers").
+% 2. `quaternary_consumer` is deliberately NOT a row: WebFetch-confirmed
+%    (two passes) that the cited article names no fourth consumer trophic
+%    level — primary, secondary, and tertiary are presented as the complete
+%    set.
+% 3. This table deliberately does NOT assert a numbered trophic-LEVEL rank
+%    (e.g. "primary consumer is the second trophic level") even though the
+%    cited article's body text states this once for `primary_consumer`
+%    ("the second trophic level"): the SAME article's own embedded vocabulary
+%    glossary entry for "trophic level" instead describes only THREE total
+%    positions ("autotrophs (first), herbivores (second), and carnivores and
+%    omnivores (third)"), collapsing secondary and tertiary consumers into
+%    one shared "third" position — an internal inconsistency in the source
+%    itself about whether there are three or four numbered levels. Rather
+%    than pick a side or invent a resolution, this table encodes only the
+%    unambiguous, consistently-stated part of the source (what each level
+%    EATS), and abstains on the level-NUMBER question entirely.
+% 4. `herbivore`, `carnivore`, and `omnivore` are deliberately NOT rows in
+%    this table's `level` column: the source uses them as DESCRIPTIVE
+%    synonyms/qualifiers for the three named levels (primary consumers "are
+%    also called herbivores"; secondary consumers "are mostly carnivores";
+%    "some secondary consumers... are called omnivores"), never as a fourth
+%    kind of level alongside primary/secondary/tertiary. Forcing them into
+%    this table's `level` column would double-count the same three levels
+%    under a second vocabulary, not add new content.
+%
+% Provenance: WebFetch- and curl-verified directly against the raw page HTML
+% (not just an AI-summarized fetch) before writing this file, confirming
+% every quoted span byte-for-byte, including the full paragraph context
+% around each sentence and the absence of any fourth consumer level.
+% `education.nationalgeographic.org/resource/consumers/` ("Consumers",
+% National Geographic Society, tagged for grades 5-8) — the same National
+% Geographic Education domain `animal-habitat-definition.adj`'s own
+% `biome-type.adj` dependency already cites at `trust consensus` (a curated
+% educational resource, not a primary standards body). Nothing here is
+% asserted from memory. (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table consumer_trophic_level {
+    columns level, eats
+
+    row (primary_consumer, primary_producers)
+    row (secondary_consumer, primary_consumers)
+    row (tertiary_consumer, other_carnivores)
+
+    source "Primary consumers make up the second trophic level. They are also called herbivores. They eat primary producers—plants or algae—and nothing else."
+    locator "https://education.nationalgeographic.org/resource/consumers/"
+    trust consensus
+
+    cites "Next are the secondary consumers, which eat primary consumers. Secondary consumers are mostly carnivores, from the Latin words meaning \"meat eater.\"" locator "https://education.nationalgeographic.org/resource/consumers/"
+    cites "Ecosystems can also have tertiary consumers, carnivores that eat other carnivores." locator "https://education.nationalgeographic.org/resource/consumers/"
+}
