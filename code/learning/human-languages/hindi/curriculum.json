@@ -126,6 +126,18 @@
       "after": []
     },
     {
+      "id": "HI-PATH-004A",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": [
+        "HI-C02-practice"
+      ],
+      "before": [],
+      "inline": [
+        "HI-EXT-002-CONSOLIDATION"
+      ],
+      "after": []
+    },
+    {
       "id": "HI-PATH-005",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
@@ -855,6 +867,7 @@
     "SPINE-EXCHANGE-NAMES": {
       "segments": [
         "HI-PATH-004",
+        "HI-PATH-004A",
         "HI-PATH-007",
         "HI-PATH-015",
         "HI-PATH-020",
@@ -1861,6 +1874,19 @@
       ],
       "lessons": [
         "HI-C01-practice"
+      ]
+    },
+    {
+      "id": "HI-EXT-002-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask someone's name and give my own in Hindi, holding the verb to the end of the sentence, and I can read every word of the exchange in Devanagari.",
+      "prerequisites": [
+        "HI-EXT-100-SCRIPT-RECOGNITION"
+      ],
+      "lessons": [
+        "HI-C02-practice"
       ]
     }
   ]
