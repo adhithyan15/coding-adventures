@@ -1,5 +1,131 @@
 # Changelog
 
+## 0.41.0 — SIR22 "APL addendum" (Phase A Slice 3, second-wave backend rollout)
+
+Implements the 9-node SIR22 "APL addendum" this backend's own Slice 2 left
+cleanly rejected: `Expr::Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/
+`IndexGenerator`/`IndexOf`/`Ravel`/`Catenate`. No `ACCEPTED_FEATURES` change
+was needed — all nine already shared `Feature::{NDArrays, MatrixOps,
+ArrayColumnMajor}` with the base cut. One of five parallel, independent
+backend PRs for this slice.
+
+**Nine new `_sir_array_*` runtime functions** (`runtime.rs`, appended to the
+existing "SIR22 array/matrix domain" section as a new "SIR22 addendum: APL
+primitive operators" subsection): ported 1:1 from `semantic-ir-to-javascript`'s
+own already-proven addendum functions (`reduce`/`scan`/`outer`/`shape`/
+`reshape`/`indexGenerator`/`indexOf`/`ravel`/`catenate`), which are themselves
+1:1 ports of `apl-runtime::builtins`. Two small shared helpers were added
+alongside them: `_sir_array_flatten_row_major` (re-walks a `SirNDArray`'s
+column-major storage into row-major element order — needed by both `ravel`
+and `reshape`) and `_sir_array_require_nonneg_int` (a finite-non-negative-
+integer validator shared by `reshape`'s shape-vector elements and
+`indexGenerator`'s scalar argument, itself built on the existing
+`_sir_array_assert_valid_position`'s NaN/overflow-safe cast).
+
+**One naming collision, fixed by renaming the NEW function**: `reduce` would
+have collided with a pre-existing `static SirValue _sir_array_reduce(SirSeq
+*s, ...)` — Ruby's `Array#reduce`/`#inject` Sequence method, which already
+claimed the `_sir_array_` prefix for "Ruby Array collection method" well
+before SIR22 NDArrays existed and reused the same prefix for itself. The new
+APL reduce is named `_sir_array_apl_reduce` instead; the pre-existing,
+unrelated Sequence method is untouched.
+
+**The core representational problem this port had to solve**: the JS/Ruby
+references have a genuine RANK-1 "vector" shape (`shape.length === 1`) that
+several addendum functions branch on or produce. This backend's `SirNDArray`
+has never had one — Slice 2 documented that a base-cut "vector" is always
+represented as a degenerate `1 x n` RANK-2 row, since no base-cut constructor
+here ever needs true rank-1. This slice extends that same convention to every
+addendum function: any "vector" a `Reduce`/`Scan`/`Shape`/`Reshape`/
+`IndexGenerator`/`Ravel`/`Catenate` result would be in JS is built here as a
+`1 x n` row (`_sir_array_new_matrix(1, n, …)`), and a new `_sir_array_
+logical_rank` classifier maps an INPUT `SirNDArray` onto this domain's three
+logical ranks (0 = true scalar, 1 = `rows == 1`, 2 = everything else) for
+`outer`/`shape`/`reshape`/`indexOf`/`catenate` to dispatch on. This
+classification is DELIBERATELY ASYMMETRIC between rows and cols — `rows == 1`
+alone, not `rows == 1 || cols == 1` — because a `cols == 1, rows > 1` shape
+(e.g. `ArrayLit([[5],[6]])`, or an `IndexGet` whole-row/scalar-column
+selection) is a construct the JS/Ruby references themselves treat as a
+genuine rank-2 matrix, not a vector (their own `ArrayLit` never produces a
+true rank-1 result either); an earlier, symmetric version of this rule was
+caught by this slice's OWN new test suite, which found it silently broke
+`catenate`'s matrix-matrix branch for a `2 x 1` right operand (a real matrix
+being misclassified as a vector, changing which code path — and which
+"equal row counts" validation — it went through). `reduce`/`scan` need no
+such classification at all: their "fold/scan each row across its columns"
+loop already generalizes correctly to a 1-row or 1-column input without a
+special case.
+
+**Ground-truthed the 1-based `IndexGenerator`/`IndexOf` claim against the
+actual `apl-runtime` crate, not the SIR node's own doc comment**: `semantic-
+ir`'s `nodes.rs` doc comment on `Expr::IndexGenerator` currently (incorrectly)
+describes `⍳N` as producing the 0-based vector `0, 1, ..., N-1`. The real
+`apl-runtime::builtins::index_generator` — and its own test,
+`index_generator_produces_one_based_run` — is 1-based (`[1, 2, …, n]`), and
+the JS backend's own addendum port already settled on 1-based to match it.
+This port follows the ACTUAL implementation, not the stale doc comment (which
+is out of scope to fix in this PR — flagged separately). Likewise `IndexOf`
+(dyadic `⍳`) is 1-based, and "not found" returns `haystack.length + 1` (an
+always-in-range position), never `-1`.
+
+**Reused this backend's existing overflow-safe allocation discipline
+throughout, extending it rather than reinventing it**: every new allocation
+whose size depends on more than one runtime-computed operand routes through
+the existing `_sir_array_checked_size` (the same overflow-safe-before-
+multiplying check Slice 2 built for `matmul`/`indexGet`) — `outer`'s `[m, n]`
+vector-x-vector output, `indexOf`'s `O(haystack * needle)` work-product cap
+(reusing `checked_size` purely for its product check, exactly as the JS
+reference reuses `checkedShapeSize` for the same reason), `reshape`'s target
+element count, `indexGenerator`'s `n`, and `catenate`'s combined length (a
+single up-front check regardless of which of the five rank combinations
+follows, since `a = [a, a]` can double an array's size every line with no
+other ceiling). `catenate`'s `na + nb` addition itself needs no overflow
+guard (each operand is already `<= SIR_ARRAY_MAX_ELEMENTS`, so their sum
+can't approach `int64_t`'s range) — only the cap COMPARISON does, which is
+what `checked_size` still provides via a `1 x (na + nb)` framing.
+
+**Reshape's "fill row-major, then transpose into column-major storage"
+gotcha, ported verbatim from the JS reference's own CRITICAL warning**: APL's
+reshape fills a target shape in ROW-major order, but this domain's storage is
+COLUMN-major — handing the row-major-filled sequence straight to the matrix
+constructor would silently reshape column-major instead, a wrong answer that
+still looks plausible (right multiset of values, wrong positions). The new
+`reshape_fills_row_major_then_transposes_into_column_major_storage` test
+picks a NON-SQUARE reshape specifically because a square one can hide this
+exact bug class (right multiset, wrong positions, but often the same values
+happen to line up on the diagonal).
+
+**Removed the now-obsolete addendum-rejection mechanism**: the dedicated
+`scan_expr_for_builtin` arms Slice 2 added for these nine node kinds (each
+returning a clean `Some((message, span))` "SIR22 addendum node X" rejection)
+are gone, replaced by ordinary recursive scan arms (matching the base cut's
+own `ArrayLit`/`Range`/`MatMul`/etc. treatment just above them) that only
+recurse into sub-expressions now — nine real `emit_assign` arms handle actual
+codegen instead. `lib.rs`'s `ACCEPTED_FEATURES` doc comment was updated to
+match (no feature-list change, just the comment describing what's deferred).
+
+**Extended `tests/sir22_array.rs`** with 11 new execution tests (23 total,
+up from 13 — 2 of the original 13 were the now-obsolete `Reduce`/`Catenate`
+rejection tests, replaced): `reduce` on both a row vector (full fold) and a
+2x3 matrix (proving the row-independent fold and the column-major `col *
+rows + row` indexing the doc comment calls "the single easiest place to
+introduce a wrong-answer bug"), `scan` on a row vector, `outer` product of
+two vectors (all four corners of the resulting 2x2 checked), `shape` of a
+scalar (asserted INDIRECTLY via `Shape(Shape(5))`, since an empty result
+can't be read back through `IndexGet` directly — the trickiest addendum case
+to get right) and of a matrix, `reshape` with the row-major-fill-then-
+transpose correctness check described above, `indexGenerator` (confirms
+1-based), `indexOf` both found and not-found (confirms `length + 1`, never
+`-1`), `ravel` of a matrix (confirms row-major output despite column-major
+storage), and `catenate` of two differently-sized vectors plus two matrices
+with equal row counts. Every test runs against a real `cc`/`clang`/`gcc`
+toolchain via the existing `find_cc`/`compile_and_link`/`run` helpers (no
+duplication), skipping gracefully when none is present.
+
+Verified via the full `semantic-ir-to-c` test suite (all pre-existing
+integration tests still green) and `cargo clippy --all-targets -- -D
+warnings` (clean).
+
 ## 0.40.0 — SIR22 array/matrix base cut (Phase A Slice 2, second-wave backend rollout)
 
 Opens this backend to `Feature::{NDArrays, MatrixOps, ArrayColumnMajor}` and

@@ -211,11 +211,13 @@ const ACCEPTED_FEATURES: &[Feature] = &[
     // convention (this backend always inlines, unlike the TS/Python
     // imported-package model). The SIR22 "APL addendum" nodes (`Reduce`/
     // `Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/`IndexOf`/
-    // `Ravel`/`Catenate`) share these same three features but stay
-    // deferred to a later slice — rejected cleanly by `emit.rs`'s
-    // `scan_expr_for_builtin` (folded into this crate's existing
-    // structural pre-emit scan, not a new mechanism), since the
-    // feature-flag gate alone can't distinguish them from the base cut.
+    // `Ravel`/`Catenate`, Phase A Slice 3) share these same three features
+    // and are now implemented too — real `emit.rs` arms calling into the
+    // `_sir_array_*` addendum functions `runtime.rs` adds alongside the
+    // base cut. (Through Slice 2 these were deferred and rejected cleanly
+    // by `emit.rs`'s `scan_expr_for_builtin`, since the feature-flag gate
+    // alone couldn't distinguish them from the base cut; that dedicated
+    // rejection arm is gone now that real codegen exists.)
     Feature::NDArrays,
     Feature::MatrixOps,
     Feature::ArrayColumnMajor,

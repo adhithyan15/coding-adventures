@@ -352,46 +352,268 @@ fn index_set_with_a_range_selector_overwrites_a_sub_range_linearly() {
     }
 }
 
-// ── SIR22 "APL addendum": deferred, rejected cleanly (compile-time) ──────
+// ── SIR22 "APL addendum": real compile-and-run proof (Phase A Slice 3) ───
+//
+// The nine addendum node kinds now have real `_sir_array_*` runtime
+// backing (see `runtime.rs`'s "SIR22 addendum" section) instead of the
+// clean-rejection stubs Slice 2 left here — every test below hand-builds
+// a module calling one of the nine directly, compiles+runs it, and reads
+// results back through `IndexGet` (matching every base-cut test above),
+// same "no frontend targets this backend for SIR22 yet" caveat.
 
 #[test]
-fn reduce_node_is_rejected_cleanly_not_a_compile_time_panic() {
-    // `Reduce` shares NDArrays/MatrixOps/ArrayColumnMajor with the base
-    // cut, so the ordinary feature-flag check alone can't reject it --
-    // proves the dedicated pre-emit scan arm in `scan_expr_for_builtin`
-    // does, with a clean `Err`, not an `emit_expr`/`emit_assign`
-    // `unreachable!` panic.
-    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3)]]);
-    let m = array_module(vec![puts(Expr::Reduce {
-        op: ElementwiseOpKind::Add,
-        target: Box::new(target),
-        span: s(),
-    })]);
-    let err = semantic_ir_to_c::compile(&m).expect_err("Reduce must be rejected, not emitted");
-    assert!(
-        err.message.contains("Reduce"),
-        "error should name the rejected node: {}",
-        err.message
-    );
+fn reduce_of_a_row_vector_folds_across_all_elements() {
+    // [1 2 3 4], Reduce(Add) -> a single folded value (10), read back
+    // through a 1-element linear IndexGet.
+    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4)]]);
+    let reduced = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("r", reduced),
+        puts(index_get(local("r"), vec![scalar(0)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "10.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
 }
 
 #[test]
-fn catenate_node_is_rejected_cleanly_not_a_compile_time_panic() {
-    // A second addendum node, to prove the rejection is a real per-variant
-    // scan arm (all nine), not a fluke that only happens to catch `Reduce`.
-    let a = array_lit(vec![vec![ilit(1)]]);
-    let b = array_lit(vec![vec![ilit(2)]]);
-    let m = array_module(vec![puts(Expr::Catenate {
-        lhs: Box::new(a),
-        rhs: Box::new(b),
+fn reduce_of_a_matrix_folds_each_row_independently() {
+    // [1 2 3; 4 5 6], Reduce(Add) -> [6, 15] (row 0 sums to 6, row 1 to
+    // 15) -- proves the row-independent fold AND the column-major
+    // `col * rows + row` indexing the doc comment calls out as "the
+    // single easiest place to introduce a wrong-answer bug": a
+    // row/col swap here would silently transpose the input before
+    // folding and produce a completely different pair of sums.
+    let target = array_lit(vec![
+        vec![ilit(1), ilit(2), ilit(3)],
+        vec![ilit(4), ilit(5), ilit(6)],
+    ]);
+    let reduced = Expr::Reduce { op: ElementwiseOpKind::Add, target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("r", reduced),
+        puts(index_get(local("r"), vec![scalar(0)])),
+        puts(index_get(local("r"), vec![scalar(1)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "6.0\n15.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn scan_of_a_row_vector_keeps_every_running_fold() {
+    // [1 2 3 4], Scan(Add) -> [1, 3, 6, 10] (running sums, same shape as
+    // input) -- unlike Reduce, every intermediate is kept.
+    let target = array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4)]]);
+    let scanned = Expr::Scan { op: ElementwiseOpKind::Add, target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("s", scanned),
+        puts(index_get(local("s"), vec![scalar(0)])),
+        puts(index_get(local("s"), vec![scalar(3)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1.0\n10.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn outer_product_of_two_vectors_computes_every_pairwise_product() {
+    // [1 2] outer* [10 20] -> [[10 20]; [20 40]] (2x2): out[i][j] =
+    // a[i] * b[j]. Read all four corners via 2-arg IndexGet.
+    let lhs = array_lit(vec![vec![ilit(1), ilit(2)]]);
+    let rhs = array_lit(vec![vec![ilit(10), ilit(20)]]);
+    let outer = Expr::OuterProduct {
+        op: ElementwiseOpKind::Mul,
+        lhs: Box::new(lhs),
+        rhs: Box::new(rhs),
         span: s(),
-    })]);
-    let err = semantic_ir_to_c::compile(&m).expect_err("Catenate must be rejected, not emitted");
-    assert!(
-        err.message.contains("Catenate"),
-        "error should name the rejected node: {}",
-        err.message
-    );
+    };
+    let m = array_module(vec![
+        let_binding("o", outer),
+        puts(index_get(local("o"), vec![scalar(0), scalar(0)])),
+        puts(index_get(local("o"), vec![scalar(0), scalar(1)])),
+        puts(index_get(local("o"), vec![scalar(1), scalar(0)])),
+        puts(index_get(local("o"), vec![scalar(1), scalar(1)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "10.0\n20.0\n20.0\n40.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn shape_of_a_scalar_is_the_empty_vector_not_a_scalar() {
+    // `Shape(5)` must be a length-0 VECTOR ("⍴5" is "⍳0"-shaped), not a
+    // scalar itself -- the trickiest addendum case to get right. Since
+    // every test in this file reads results back via IndexGet (which
+    // errors on an out-of-bounds read, so an empty result can't be
+    // IndexGet'd directly), assert emptiness INDIRECTLY: take Shape of
+    // the Shape -- `Shape(Shape(5))` reads back the ELEMENT COUNT of
+    // `Shape(5)` itself (a length-1 vector containing that count, since
+    // a 1x0 array has logical rank 1 here), which must be 0.0. A buggy
+    // implementation that returned a genuine SCALAR for `Shape(5)`
+    // instead of an empty vector would make the outer `Shape` call see
+    // rank 0 and (per `_sir_array_shape`'s own `lr == 0` branch) return
+    // ANOTHER empty vector -- so this also exercises the "scalar in,
+    // empty vector out" path a second, independent way.
+    let inner = Expr::Shape { target: Box::new(ilit(5)), span: s() };
+    let outer = Expr::Shape { target: Box::new(inner), span: s() };
+    let m = array_module(vec![
+        let_binding("sh", outer),
+        puts(index_get(local("sh"), vec![scalar(0)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "0.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn shape_of_a_matrix_is_its_dimensions() {
+    // A 2x3 matrix's shape is the 2-element vector [2, 3].
+    let target = array_lit(vec![
+        vec![ilit(1), ilit(2), ilit(3)],
+        vec![ilit(4), ilit(5), ilit(6)],
+    ]);
+    let sh = Expr::Shape { target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("sh", sh),
+        puts(index_get(local("sh"), vec![scalar(0)])),
+        puts(index_get(local("sh"), vec![scalar(1)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "2.0\n3.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn reshape_fills_row_major_then_transposes_into_column_major_storage() {
+    // Source [1 2 3 4 5 6] (row-major) reshaped to a NON-SQUARE 2x3
+    // target must read back as [[1 2 3]; [4 5 6]] (APL fills the target
+    // in ROW-major order). This domain stores COLUMN-major, so a naive
+    // port that handed the row-major fill straight to the matrix
+    // constructor without transposing would silently produce
+    // [[1 3 5]; [2 4 6]] instead -- same multiset of values, WRONG
+    // positions, which a square reshape could hide but this non-square
+    // one cannot (the two layouts disagree at (0, 1): 2 if correct, 3 if
+    // the transpose step were skipped).
+    let source = array_lit(vec![vec![ilit(1), ilit(2), ilit(3), ilit(4), ilit(5), ilit(6)]]);
+    let target_shape = array_lit(vec![vec![ilit(2), ilit(3)]]);
+    let reshaped = Expr::Reshape {
+        shape: Box::new(target_shape),
+        target: Box::new(source),
+        span: s(),
+    };
+    let m = array_module(vec![
+        let_binding("m", reshaped),
+        puts(index_get(local("m"), vec![scalar(0), scalar(0)])),
+        puts(index_get(local("m"), vec![scalar(0), scalar(1)])),
+        puts(index_get(local("m"), vec![scalar(1), scalar(0)])),
+        puts(index_get(local("m"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1.0\n2.0\n4.0\n6.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn index_generator_produces_a_one_based_run() {
+    // `⍳3` is `[1, 2, 3]` -- 1-based, the one deliberate exception to
+    // this domain's otherwise-uniform 0-based indexing (ground-truthed
+    // directly against `apl-runtime::builtins::index_generator_produces_
+    // one_based_run`, not the stale 0-based claim in `semantic-ir`'s own
+    // `Expr::IndexGenerator` doc comment).
+    let gen = Expr::IndexGenerator { count: Box::new(ilit(3)), span: s() };
+    let m = array_module(vec![
+        let_binding("g", gen),
+        puts(index_get(local("g"), vec![scalar(0)])),
+        puts(index_get(local("g"), vec![scalar(2)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1.0\n3.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn index_of_reports_a_one_based_position_or_length_plus_one_when_absent() {
+    // haystack [10 20 30], needle [20 99]: 20 is at (0-based) position 1
+    // -> 1-based 2; 99 is absent -> haystack.length + 1 = 4, NEVER -1.
+    let haystack = array_lit(vec![vec![ilit(10), ilit(20), ilit(30)]]);
+    let needle = array_lit(vec![vec![ilit(20), ilit(99)]]);
+    let idx = Expr::IndexOf { haystack: Box::new(haystack), needle: Box::new(needle), span: s() };
+    let m = array_module(vec![
+        let_binding("ix", idx),
+        puts(index_get(local("ix"), vec![scalar(0)])),
+        puts(index_get(local("ix"), vec![scalar(1)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "2.0\n4.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn ravel_of_a_matrix_flattens_to_row_major_order() {
+    // [1 2; 3 4] stores column-major internally (data = [1, 3, 2, 4]);
+    // Ravel must read back ROW-major ([1, 2, 3, 4]), proving
+    // `_sir_array_flatten_row_major` re-walks "row, then column" rather
+    // than handing back the raw column-major buffer (which would give
+    // [1, 3, 2, 4] instead).
+    let target = array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)]]);
+    let raveled = Expr::Ravel { target: Box::new(target), span: s() };
+    let m = array_module(vec![
+        let_binding("r", raveled),
+        puts(index_get(local("r"), vec![scalar(0)])),
+        puts(index_get(local("r"), vec![scalar(1)])),
+        puts(index_get(local("r"), vec![scalar(2)])),
+        puts(index_get(local("r"), vec![scalar(3)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1.0\n2.0\n3.0\n4.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn catenate_of_two_vectors_concatenates_regardless_of_matching_length() {
+    // [1 2] , [3 4 5] -> [1 2 3 4 5] -- vector catenate has no
+    // equal-length requirement (unlike the matrix case below).
+    let lhs = array_lit(vec![vec![ilit(1), ilit(2)]]);
+    let rhs = array_lit(vec![vec![ilit(3), ilit(4), ilit(5)]]);
+    let cat = Expr::Catenate { lhs: Box::new(lhs), rhs: Box::new(rhs), span: s() };
+    let m = array_module(vec![
+        let_binding("c", cat),
+        puts(index_get(local("c"), vec![scalar(0)])),
+        puts(index_get(local("c"), vec![scalar(4)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1.0\n5.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
+}
+
+#[test]
+fn catenate_of_two_matrices_with_equal_rows_concatenates_columns() {
+    // [1 2; 3 4] , [5; 6] (2x2 , 2x1, equal row counts) -> [1 2 5; 3 4 6]
+    // (2x3): column/last-axis catenate.
+    let lhs = array_lit(vec![vec![ilit(1), ilit(2)], vec![ilit(3), ilit(4)]]);
+    let rhs = array_lit(vec![vec![ilit(5)], vec![ilit(6)]]);
+    let cat = Expr::Catenate { lhs: Box::new(lhs), rhs: Box::new(rhs), span: s() };
+    let m = array_module(vec![
+        let_binding("c", cat),
+        puts(index_get(local("c"), vec![scalar(0), scalar(0)])),
+        puts(index_get(local("c"), vec![scalar(0), scalar(2)])),
+        puts(index_get(local("c"), vec![scalar(1), scalar(2)])),
+    ]);
+    match run(&m) {
+        Some(out) => assert_eq!(out, "1.0\n5.0\n6.0\n"),
+        None => eprintln!("skip: no cc"),
+    }
 }
 
 // ── malformed hand-built shapes: rejected cleanly, not a runtime panic ───

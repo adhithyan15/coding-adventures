@@ -3981,11 +3981,69 @@ SirValue _sir_unknown_builtin(const char *name) {
  * inlined-runtime convention (this backend always inlines, unlike the
  * TS/Python imported-package model). The 9-node SIR22 "APL addendum"
  * (`Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
- * `IndexOf`/`Ravel`/`Catenate`) is a SEPARATE, later rollout slice — see
- * `emit.rs`'s `scan_expr_for_builtin`, which rejects those nine cleanly
- * (a compile-time error, not a reachable `unreachable!` panic) even
- * though they share `NDArrays`/`MatrixOps`/`ArrayColumnMajor` with the
- * base cut this file implements.
+ * `IndexOf`/`Ravel`/`Catenate`, Phase A Slice 3) is implemented further
+ * below, in its own "SIR22 addendum: APL primitive operators" section —
+ * ported 1:1 from the SAME `semantic-ir-to-javascript` reference's own
+ * addendum section (`runtime.rs`'s `reduce`/`scan`/`outer`/`shape`/
+ * `reshape`/`indexGenerator`/`indexOf`/`ravel`/`catenate`), adapted to
+ * this file's rank-0-or-2-only value model (see "Vector representation
+ * in the addendum" below for exactly how).
+ *
+ * ## Vector representation in the addendum
+ *
+ * The JS/Ruby references have a genuine RANK-1 shape (`shape.length ===
+ * 1`) that several addendum functions produce (`shape`/`ravel`/
+ * `indexGenerator`/`catenate`'s vector cases/`reduce`'s matrix-branch
+ * output) and others dispatch on (`outer`/`indexOf`/`catenate` all branch
+ * on true rank 0 vs 1 vs 2). This file has no rank-1 at all (see "Value
+ * model" above) — by design, since the base cut's own constructors never
+ * needed one. Extending that design forward: every addendum function
+ * that would produce a JS/Ruby rank-1 "vector" here constructs a `1 x n`
+ * RANK-2 row instead (`_sir_array_new_matrix(1, n, …)`), exactly
+ * mirroring `_sir_array_range`'s and `_sir_array_index_get`'s own
+ * existing "vector = row" convention — so a caller who then does a
+ * single-scalar-argument `IndexGet` (linear indexing) on an addendum
+ * result sees the identical layout a base-cut vector would give.
+ *
+ * For the INPUT side, `_sir_array_logical_rank` below classifies a
+ * `SirNDArray` into this domain's three logical ranks: 0 (a true `rank ==
+ * 0` scalar), 1 (`rank == 2` with `rows == 1` — this file's stand-in for
+ * the references' genuine rank-1), or 2 (`rank == 2` with `rows != 1` —
+ * an unambiguous "real" matrix, INCLUDING a `cols == 1` column shape).
+ * Every addendum function that branches on rank in the references
+ * (`outer`/`shape`/`reshape`/`indexOf`/`catenate`) uses this classifier.
+ *
+ * This is DELIBERATELY ASYMMETRIC between rows and cols, not "rows == 1
+ * OR cols == 1": every vector this backend ever actually constructs —
+ * `_sir_array_range`, `_sir_array_index_get`'s non-scalar 1-argument
+ * result, and every addendum function below that produces a "vector"
+ * result — is a `1 x n` ROW, never a column (see the paragraph above).
+ * A `cols == 1, rows > 1` shape, by contrast, only ever arises from a
+ * genuine 2-D construct this backend's OWN base cut already treats as a
+ * real matrix (a literal column via `ArrayLit`, e.g. `[[5],[6]]`, or an
+ * `IndexGet` whole-row/scalar-column selection) — and the JS/Ruby
+ * references treat that SAME construct as a genuine rank-2 matrix too
+ * (their own `ArrayLit`/`fromRows` never produce a rank-1 result either;
+ * see the base cut's own module doc above), so classifying it as
+ * logical rank 2, not 1, keeps this port's dispatch faithful to the
+ * references for every shape this backend can actually produce — not
+ * merely a "most useful" judgment call, but the reading that actually
+ * matches JS/Ruby behaviour for every reachable input. (`_sir_array_
+ * logical_rank`'s own doc comment notes the earlier, symmetric version
+ * of this rule this replaced, and the `catenate` matrix-matrix case it
+ * silently broke.)
+ *
+ * `reduce`/`scan` need no such classification at all: their "fold/scan
+ * each row across its columns" loop already generalizes correctly to a
+ * 1-row or 1-column input without a special case (folding a single row
+ * of `n` columns IS folding the whole vector; folding `n` rows of a
+ * single column each is a correct no-op, matching the references' own
+ * rank-2 branch exactly).
+ *
+ * `emit.rs`'s pre-emit scan (`scan_expr_for_builtin`) no longer rejects
+ * these nine node kinds — that dedicated rejection arm, present only
+ * through Slice 2, is removed now that real `emit_expr` arms exist for
+ * all nine (mirroring the base cut's own treatment).
  *
  * ## Value model
  *
@@ -4710,5 +4768,513 @@ void _sir_array_index_set(SirValue targetv, SirValue value, int n, ...) {
             }
         }
     }
+}
+
+/* ── SIR22 addendum: APL primitive operators ─────────────────────────
+ * `Reduce`/`Scan`/`OuterProduct`/`Shape`/`Reshape`/`IndexGenerator`/
+ * `IndexOf`/`Ravel`/`Catenate` (Phase A Slice 3) — see the module doc
+ * comment above ("Vector representation in the addendum") for how this
+ * file's rank-0-or-2-only value model stands in for the JS/Ruby
+ * references' genuine rank-1 vector shape. Every function below is
+ * ported 1:1 from `semantic-ir-to-javascript`'s own already-proven
+ * addendum section (same function names, same doc-comment subtleties),
+ * adapted to that representation and to this file's OWN overflow-safe
+ * allocation discipline (`_sir_array_checked_size`, reused throughout —
+ * see the module doc's "C-specific overflow hazard" section). */
+
+/* Classify `a` into this domain's three logical ranks for addendum
+ * dispatch — see the module doc's "Vector representation in the
+ * addendum" section for the full rationale: 0 (a true `rank == 0`
+ * scalar), 1 (`rank == 2` with `rows == 1` — this file's stand-in for
+ * the JS/Ruby references' genuine rank-1 "vector" shape), or 2 (`rank ==
+ * 2` with `rows != 1` — including a `cols == 1` COLUMN shape, e.g. from
+ * `ArrayLit([[5],[6]])` or `IndexGet`'s whole-row/scalar-col selector).
+ *
+ * DELIBERATELY asymmetric between rows and cols: every vector this
+ * backend ever actually constructs (`_sir_array_range`, `_sir_array_
+ * index_get`'s non-scalar 1-argument result, and every one of THIS
+ * file's own addendum functions below) is a `1 x n` ROW — never a
+ * column — so `rows == 1` alone exactly captures "this is this
+ * backend's vector representation". A `cols == 1, rows > 1` shape, by
+ * contrast, only ever arises from a genuine 2-D construct (a literal
+ * column via `ArrayLit`, or an `IndexGet` column selection) that the
+ * JS/Ruby references ALSO treat as a true rank-2 matrix (their own
+ * `ArrayLit`/`IndexGet` never produce a genuine rank-1 result either —
+ * see the base cut's own module doc above) — so classifying it as
+ * logical rank 2 here, not 1, keeps this port's addendum dispatch
+ * faithful to the references for every shape this backend can actually
+ * produce. (An earlier version of this function treated `cols == 1` as
+ * a vector too, symmetrically with `rows == 1`; that broke `_sir_array_
+ * catenate`'s matrix-matrix branch for a `2 x 1` right operand, which
+ * this asymmetric rule fixes — a `2 x 1` `ArrayLit` is a real matrix,
+ * not a vector.) */
+int _sir_array_logical_rank(const SirNDArray *a) {
+    if (a->rank == 0) return 0;
+    if (a->rows == 1) return 1;
+    return 2;
+}
+
+/* Flatten (rank <= 2, this domain's ceiling) `a` to ROW-major order —
+ * last axis varies fastest. `a` itself stores COLUMN-major
+ * (`_sir_array_get`'s own doc comment above), so a matrix must be walked
+ * "row, then column" via `_sir_array_get` to produce true row-major
+ * order; returning the raw column-major buffer would silently ravel in
+ * the WRONG order. Writes the element count to `*out_len` and ALWAYS
+ * returns a FRESH buffer (never `a->data` itself, even in the rank-0
+ * no-op case) — mirrors `apl_runtime::builtins::flatten` returning an
+ * owned `Vec`, not a borrow, so the result never accidentally aliases
+ * `a`'s own buffer (relevant because `_sir_array_index_set` mutates an
+ * `SirNDArray`'s data IN PLACE — a shared buffer here could let a later
+ * mutation of `a` silently corrupt an already-returned ravel/reshape
+ * result). */
+double *_sir_array_flatten_row_major(const SirNDArray *a, int64_t *out_len) {
+    if (a->rank == 0) {
+        double *out = (double *)_sir_alloc(sizeof(double));
+        out[0] = a->data[0];
+        *out_len = 1;
+        return out;
+    }
+    {
+        int64_t r = a->rows, c = a->cols, row, col, k = 0;
+        int64_t n = a->data_len;
+        double *out = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (row = 0; row < r; row++) {
+            for (col = 0; col < c; col++) {
+                double v;
+                _sir_array_get(a, row, col, &v); /* always in-bounds by construction */
+                out[k++] = v;
+            }
+        }
+        *out_len = n;
+        return out;
+    }
+}
+
+/* Validate `x` is a finite non-negative integer and return it as
+ * `int64_t` — shared by `_sir_array_reshape`'s shape-vector elements and
+ * `_sir_array_index_generator`'s scalar argument (both APL/MATLAB "give
+ * me a non-negative integer count/dimension" contexts). Reuses
+ * `_sir_array_assert_valid_position`'s NaN-safe, magnitude-checked
+ * finite-integer cast (see that function's own SECURITY doc above), then
+ * additionally rejects negative — that function alone permits negative
+ * integers (valid for e.g. a `Range` step), which neither caller here
+ * accepts. */
+int64_t _sir_array_require_nonneg_int(double x, const char *ctx) {
+    int64_t n = _sir_array_assert_valid_position(_sir_float(x), ctx);
+    if (n < 0) {
+        fprintf(stderr, "sir: %s: value must be a non-negative integer, got %lld\n", ctx, (long long)n);
+        exit(1);
+    }
+    return n;
+}
+
+/* `+/A` (APL reduce, dyadic-op monadic-adverb) — fold `target` with `op`
+ * along its one axis. Ported 1:1 from `array_runtime::ops::reduce`:
+ * - a true scalar (`rank == 0`): nothing to fold, returns `target`
+ *   itself (the SAME `SirNDArray`, not a copy — matching the JS/Ruby
+ *   references' own `return a;`).
+ * - everything else (`rank == 2`, `rows` x `cols`): folds EACH ROW
+ *   independently across its `cols` columns, producing a `1 x rows` row
+ *   (one folded value per row of `target`) — no special "is this really
+ *   a vector" branch is needed here (unlike `_sir_array_outer`/`_sir_
+ *   array_shape`/etc. below): folding a single row of `cols` columns IS
+ *   folding the whole vector, and folding `rows` rows of a single column
+ *   each is a correct no-op, so this loop already generalizes correctly
+ *   to every logical rank (see the module doc's "Vector representation
+ *   in the addendum" section). An empty row (`cols == 0`) is a clean
+ *   error — unlike `sum`/`mean` (which have a built-in identity, 0),
+ *   `reduce` is generic over any `op`, and guessing an identity (`0` for
+ *   `Add`? `1` for `Mul`? `-Infinity` for `Max`?) for an arbitrary,
+ *   possibly-future op would be silently wrong for most of them.
+ *
+ * COLUMN-MAJOR storage means element `(row, col)` lives at `col * rows +
+ * row` — the row loop reads `data[row]` as the seed (column 0) then
+ * walks `data[col * rows + row]` for `col = 1..cols`; getting `row` and
+ * `col` swapped here silently TRANSPOSES the result instead of throwing,
+ * so this indexing is the single easiest place to introduce a
+ * wrong-answer bug when reading this function (mirrors the JS
+ * reference's own warning, verbatim).
+ *
+ * Named `_sir_array_apl_reduce`, not the shorter `_sir_array_reduce` every
+ * sibling addendum function's naming would suggest — that plainer name is
+ * already taken by the PRE-EXISTING `SirSeq` `Array#reduce`/`#inject`
+ * helper a few thousand lines up (`_sir_array_` was this file's generic
+ * "Ruby Array collection method" prefix well before SIR22 NDArrays
+ * existed and claimed the same prefix for itself). `_sir_array_apl_reduce`
+ * disambiguates without renaming that unrelated, already-shipped
+ * function. */
+SirValue _sir_array_apl_reduce(SirElementwiseOp op, SirValue targetv) {
+    SirNDArray *a = _sir_array_coerce(targetv, "reduce");
+    if (a->rank == 0) {
+        SirValue v; v.tag = SIR_ARRAY; v.as.arr = a; return v;
+    }
+    {
+        int64_t r = a->rows, c = a->cols, row;
+        double *out;
+        if (c == 0) {
+            fprintf(stderr, "sir: reduce: cannot fold an empty vector or row (no identity element for an arbitrary op)\n");
+            exit(1);
+        }
+        out = (r > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)r) : NULL;
+        for (row = 0; row < r; row++) {
+            double acc = a->data[row]; /* column-major: (row, 0) lives at plain `row` */
+            int64_t col;
+            for (col = 1; col < c; col++) {
+                acc = _sir_array_apply_op(op, acc, a->data[col * r + row]);
+            }
+            out[row] = acc;
+        }
+        return _sir_array_new_matrix(1, r, out, "reduce");
+    }
+}
+
+/* `+\A` (APL scan) — the same fold as `_sir_array_apl_reduce`, but keeping
+ * EVERY intermediate result instead of only the last; output has the
+ * SAME shape as `target`. Ported 1:1 from `array_runtime::ops::scan`.
+ * Unlike `_sir_array_apl_reduce`, an empty row/vector (`cols == 0`) is NOT an
+ * error here: there is simply nothing to scan, and the (empty) output
+ * shape already says so. Same column-major `col * rows + row` indexing,
+ * and same "no special vector branch needed" reasoning, as `_sir_array_
+ * reduce` above. */
+SirValue _sir_array_scan(SirElementwiseOp op, SirValue targetv) {
+    SirNDArray *a = _sir_array_coerce(targetv, "scan");
+    if (a->rank == 0) {
+        SirValue v; v.tag = SIR_ARRAY; v.as.arr = a; return v;
+    }
+    {
+        int64_t r = a->rows, c = a->cols, row;
+        int64_t n = a->data_len; /* == r * c, already validated when `a` was built */
+        double *out = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (row = 0; row < r; row++) {
+            double acc = 0.0;
+            int started = 0;
+            int64_t col;
+            for (col = 0; col < c; col++) {
+                double x = a->data[col * r + row]; /* column-major */
+                acc = started ? _sir_array_apply_op(op, acc, x) : x;
+                started = 1;
+                out[col * r + row] = acc;
+            }
+        }
+        return _sir_array_new_matrix(r, c, out, "scan");
+    }
+}
+
+/* `A∘.×B` (APL outer product) — apply `op` to every pair `(aᵢ, bⱼ)`,
+ * producing a result of combined logical rank. Ported 1:1 from
+ * `array_runtime::ops::outer`, scoped identically to `rank(a) <= 1` and
+ * `rank(b) <= 1` (`_sir_array_logical_rank` — see the module doc's
+ * "Vector representation in the addendum" section for exactly what
+ * counts as rank <= 1 here); any operand of logical rank 2 is a clean
+ * "not yet supported" error, matching the Rust/JS references' own scope
+ * limit. `_sir_array_checked_size` validates the `[m, n]` output shape
+ * BEFORE allocating in the vector x vector case — `m`/`n` are two
+ * INDEPENDENT operand lengths, each individually under `SIR_ARRAY_
+ * MAX_ELEMENTS`, but nothing bounds their PRODUCT alone (the same
+ * outer-product-shaped allocation `_sir_array_matmul`/`_sir_array_
+ * index_get` above guard). */
+SirValue _sir_array_outer(SirElementwiseOp op, SirValue lhsv, SirValue rhsv) {
+    SirNDArray *a = _sir_array_coerce(lhsv, "outer");
+    SirNDArray *b = _sir_array_coerce(rhsv, "outer");
+    int ra = _sir_array_logical_rank(a);
+    int rb = _sir_array_logical_rank(b);
+    if (ra == 0 && rb == 0) {
+        return _sir_array_scalar(_sir_array_apply_op(op, a->data[0], b->data[0]));
+    }
+    if (ra == 0 && rb == 1) {
+        double x = a->data[0];
+        int64_t n = b->data_len, i;
+        double *out = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) out[i] = _sir_array_apply_op(op, x, b->data[i]);
+        return _sir_array_new_matrix(1, n, out, "outer");
+    }
+    if (ra == 1 && rb == 0) {
+        double y = b->data[0];
+        int64_t n = a->data_len, i;
+        double *out = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+        for (i = 0; i < n; i++) out[i] = _sir_array_apply_op(op, a->data[i], y);
+        return _sir_array_new_matrix(1, n, out, "outer");
+    }
+    if (ra == 1 && rb == 1) {
+        int64_t m = a->data_len, n = b->data_len;
+        int64_t out_len = _sir_array_checked_size(m, n, "outer");
+        double *out = (out_len > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)out_len) : NULL;
+        int64_t i, j;
+        for (j = 0; j < n; j++) {
+            for (i = 0; i < m; i++) {
+                out[j * m + i] = _sir_array_apply_op(op, a->data[i], b->data[j]); /* column-major */
+            }
+        }
+        return _sir_array_new_matrix(m, n, out, "outer");
+    }
+    fprintf(stderr, "sir: outer: operands of rank > 1 not yet supported\n");
+    exit(1);
+    return _sir_nil(); /* unreachable */
+}
+
+/* Monadic `⍴` (shape-of) — `target`'s dimensions as a vector. Ported 1:1
+ * from `apl_runtime::builtins::shape`: a SCALAR has zero dimensions, so
+ * its shape is the EMPTY vector (not a scalar!) — `⍴5` is a length-0
+ * vector (a `1 x 0` row here — see the module doc's "Vector
+ * representation in the addendum" section). A logical-rank-1 operand
+ * (this file's vector stand-in — always `rows == 1`, see `_sir_array_
+ * logical_rank`'s own doc comment) has shape `[n]` where `n` is its
+ * element count (a `1 x 1` row result); a logical-rank-2 operand (`rows
+ * != 1`, including a `cols == 1` column shape) has shape `[rows, cols]`
+ * (a `1 x 2` row result) built from `target`'s REAL `rows`/`cols`
+ * fields. */
+SirValue _sir_array_shape(SirValue targetv) {
+    SirNDArray *a = _sir_array_coerce(targetv, "shape");
+    int lr = _sir_array_logical_rank(a);
+    if (lr == 0) {
+        return _sir_array_new_matrix(1, 0, NULL, "shape");
+    }
+    if (lr == 1) {
+        double *out = (double *)_sir_alloc(sizeof(double));
+        out[0] = (double)a->data_len;
+        return _sir_array_new_matrix(1, 1, out, "shape");
+    }
+    {
+        double *out = (double *)_sir_alloc(sizeof(double) * 2);
+        out[0] = (double)a->rows;
+        out[1] = (double)a->cols;
+        return _sir_array_new_matrix(1, 2, out, "shape");
+    }
+}
+
+/* Dyadic `⍴` (reshape) — reinterpret `target`'s data under the new
+ * dimensions `shapev`. Ported 1:1 from `apl_runtime::builtins::reshape`.
+ * `shapev` must itself have logical rank <= 1 (a scalar or vector — see
+ * `_sir_array_logical_rank`) of non-negative integers; its ELEMENT COUNT
+ * becomes the target's dimensionality (0 elements -> a scalar result, 1
+ * element -> a `1 x n` row, 2 elements -> a genuine `r x c` matrix) and
+ * is itself capped at <= 2 (this domain's ceiling — more elements is a
+ * clean error, not a silent truncation). `target`'s elements are
+ * ravelled (`_sir_array_flatten_row_major`) then cyclically repeated or
+ * truncated to fill the target shape's element count.
+ *
+ * CRITICAL: the cyclic fill happens in ROW-major order (APL's reshape
+ * fills the LAST axis fastest, same convention as ravel), but this
+ * domain's storage is COLUMN-major — so for a 2-element target shape the
+ * row-major `filled` sequence must be TRANSPOSED into column-major
+ * storage (`data[col * r + row] = filled[row * c + col]`) before
+ * constructing the result. Handing `filled` straight to `_sir_array_
+ * new_matrix` would silently reshape column-major instead of APL's
+ * row-major convention — a wrong answer that still LOOKS plausible
+ * (right multiset of values, wrong positions). A 1-element target shape
+ * needs NO such transpose: a `1 x n` row IS its own row-major order
+ * (column-major storage of a single row is identical to linear order),
+ * so `filled` is used as-is. */
+SirValue _sir_array_reshape(SirValue shapev, SirValue targetv) {
+    SirNDArray *shape_arr = _sir_array_coerce(shapev, "reshape");
+    SirNDArray *target = _sir_array_coerce(targetv, "reshape");
+    int64_t dims[2];
+    int64_t ndims;
+    int64_t total;
+    int64_t source_len;
+    double *source;
+    double *filled;
+    int64_t k;
+
+    if (_sir_array_logical_rank(shape_arr) == 2) {
+        fprintf(stderr, "sir: reshape: shape argument must be a scalar or vector (got a matrix)\n");
+        exit(1);
+    }
+    ndims = shape_arr->data_len;
+    if (ndims > 2) {
+        fprintf(stderr, "sir: reshape: reshape to rank > 2 is not yet supported (%lld shape elements)\n",
+                (long long)ndims);
+        exit(1);
+    }
+    { int64_t i; for (i = 0; i < ndims; i++) dims[i] = _sir_array_require_nonneg_int(shape_arr->data[i], "reshape"); }
+
+    if (ndims == 0) {
+        total = 1;
+    } else if (ndims == 1) {
+        total = _sir_array_checked_size(1, dims[0], "reshape");
+    } else {
+        total = _sir_array_checked_size(dims[0], dims[1], "reshape");
+    }
+
+    source = _sir_array_flatten_row_major(target, &source_len);
+    if (total > 0 && source_len == 0) {
+        fprintf(stderr, "sir: reshape: cannot reshape an empty source into a non-empty shape\n");
+        exit(1);
+    }
+    filled = (total > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)total) : NULL;
+    for (k = 0; k < total; k++) {
+        filled[k] = source[k % source_len];
+    }
+
+    if (ndims == 0) {
+        return _sir_array_scalar(filled[0]);
+    }
+    if (ndims == 1) {
+        return _sir_array_new_matrix(1, dims[0], filled, "reshape");
+    }
+    {
+        int64_t r = dims[0], c = dims[1], row, col;
+        double *data = (total > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)total) : NULL;
+        for (row = 0; row < r; row++) {
+            for (col = 0; col < c; col++) {
+                data[col * r + row] = filled[row * c + col];
+            }
+        }
+        return _sir_array_new_matrix(r, c, data, "reshape");
+    }
+}
+
+/* Monadic `⍳` (index generator / iota) — `⍳n` is the 1-BASED vector `[1,
+ * 2, …, n]`. Ported 1:1 from `apl_runtime::builtins::index_generator` —
+ * note this is 1-based, unlike every 0-based index elsewhere in this
+ * domain (`IndexGet`/`IndexSet`), because that is genuinely what APL's
+ * `⍳` means at the SURFACE-SYNTAX level, confirmed directly against
+ * `apl-runtime`'s own `index_generator_produces_one_based_run` test (NOT
+ * the stale claim in `semantic-ir`'s own `Expr::IndexGenerator` doc
+ * comment, which currently — incorrectly — describes this as 0-based;
+ * the JS/Ruby backends' own addendum ports already settled on 1-based to
+ * match the real `apl-runtime` behaviour, and this port matches them).
+ * `_sir_array_is_scalar` (element count 1, NOT `rank == 0` — matching the
+ * JS reference's own `isScalar`, which also checks element count rather
+ * than true rank) accepts a bare number, a `rank == 0` scalar, or a
+ * degenerate `1 x 1` NDArray alike. `_sir_array_checked_size([1, n])`
+ * caps `n` at `SIR_ARRAY_MAX_ELEMENTS` before allocating — `n` is a
+ * runtime value a compiled program computes, not a fixed constant, so
+ * `⍳` of an absurd size must fail cleanly. */
+SirValue _sir_array_index_generator(SirValue countv) {
+    SirNDArray *a = _sir_array_coerce(countv, "indexGenerator");
+    int64_t x, n, i;
+    double *out;
+    if (!_sir_array_is_scalar(a)) {
+        fprintf(stderr, "sir: indexGenerator: monadic argument must be a scalar\n");
+        exit(1);
+    }
+    x = _sir_array_require_nonneg_int(a->data[0], "indexGenerator");
+    n = _sir_array_checked_size(1, x, "indexGenerator");
+    out = (n > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)n) : NULL;
+    for (i = 0; i < n; i++) out[i] = (double)(i + 1);
+    return _sir_array_new_matrix(1, n, out, "indexGenerator");
+}
+
+/* Dyadic `⍳` (index-of / search) — for every element of `needle`, the
+ * 1-based index of its first occurrence in the vector `haystack` (or
+ * `haystack`'s element count + 1 if not found — "not found" is a valid,
+ * always-in-range position, not `-1`). Ported 1:1 from `apl_runtime::
+ * builtins::index_of`: plain EXACT `==` equality (no floating-point
+ * tolerance — a NaN haystack element correctly never matches, same as
+ * the Rust/JS references' own `==`/`indexOf`). `haystack` must have
+ * logical rank <= 1 (`_sir_array_logical_rank`; a genuine matrix
+ * haystack is a clean error). The result takes `needle`'s OWN ACTUAL
+ * `rank`/`rows`/`cols` (NOT `_sir_array_logical_rank`) — mirrors the
+ * references' `ndarray(b.shape, out)`, so a genuine-matrix needle
+ * round-trips through with its shape unchanged.
+ *
+ * The work done is O(len(haystack) * len(needle)) (a full linear scan per
+ * needle element) — `_sir_array_checked_size` is reused here PURELY for
+ * its "product <= SIR_ARRAY_MAX_ELEMENTS" overflow-safe check (both
+ * lengths are already valid non-negative `int64_t`s, so its own
+ * dimension-validity half is a no-op) to cap the PRODUCT before
+ * scanning, since each operand individually staying under the cap does
+ * not bound their product (up to ~4.5 * 10^15 comparisons otherwise). */
+SirValue _sir_array_index_of(SirValue haystackv, SirValue needlev) {
+    SirNDArray *a = _sir_array_coerce(haystackv, "indexOf");
+    SirNDArray *b = _sir_array_coerce(needlev, "indexOf");
+    int64_t hn = a->data_len, nn = b->data_len, i;
+    double *out;
+    if (_sir_array_logical_rank(a) == 2) {
+        fprintf(stderr, "sir: indexOf: left argument must be a scalar or vector (got a matrix)\n");
+        exit(1);
+    }
+    (void)_sir_array_checked_size(hn, nn, "indexOf");
+    out = (nn > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)nn) : NULL;
+    for (i = 0; i < nn; i++) {
+        double needle = b->data[i];
+        int64_t pos = -1, k;
+        for (k = 0; k < hn; k++) {
+            if (a->data[k] == needle) { pos = k; break; }
+        }
+        out[i] = (pos >= 0) ? (double)(pos + 1) : (double)(hn + 1);
+    }
+    if (b->rank == 0) {
+        return _sir_array_scalar(out[0]);
+    }
+    return _sir_array_new_matrix(b->rows, b->cols, out, "indexOf");
+}
+
+/* Monadic `,` (ravel) — flatten `target` to a `1 x n` row (see
+ * `_sir_array_flatten_row_major`'s own doc comment for the
+ * column-major-storage-vs-row-major-order subtlety this must respect).
+ * Ported 1:1 from `apl_runtime::builtins::ravel`. */
+SirValue _sir_array_ravel(SirValue targetv) {
+    SirNDArray *a = _sir_array_coerce(targetv, "ravel");
+    int64_t n;
+    double *flat = _sir_array_flatten_row_major(a, &n);
+    return _sir_array_new_matrix(1, n, flat, "ravel");
+}
+
+/* Dyadic `,` (catenate) — supports scalar/vector operands in any
+ * combination (logical rank 0 or 1 on EITHER side, per `_sir_array_
+ * logical_rank` — a "vector" here is specifically `rows == 1`; see the
+ * module doc's "Vector representation in the addendum" section for why
+ * that's asymmetric with `cols == 1`, and why a vector of either length
+ * combines with a scalar or a differently-sized vector with no
+ * equal-length requirement), all producing a `1 x n` row; and
+ * matrix-matrix (BOTH operands logical rank 2 — including a `cols == 1`
+ * column shape) WITH EQUAL ROW COUNTS (column/last-axis catenate,
+ * producing `rows x (cols_a + cols_b)`). Any other combination (a vector
+ * catenated with a genuine matrix, or mismatched-row matrices) is a
+ * clean error. Ported 1:1 from `apl_runtime::builtins::catenate`.
+ *
+ * The combined-length cap check happens ONCE, up front, regardless of
+ * which combination follows (mirroring the Rust/JS references' own
+ * structure, and reusing `_sir_array_checked_size`'s overflow-safe
+ * product check via a `1 x (na + nb)` framing) — neither operand alone
+ * need be oversized for the RESULT to be, since code that repeatedly
+ * catenates a value with itself (`a = [a, a]`) doubles the size every
+ * line with no other ceiling. `na + nb` itself cannot overflow `int64_t`
+ * (each of `na`/`nb` is already <= `SIR_ARRAY_MAX_ELEMENTS`, ~6.7e7, by
+ * construction — their sum stays far below `int64_t`'s range), so only
+ * the CAP comparison, not the addition, needs guarding here; the
+ * `outer`/`indexOf` product checks above are the ones that need
+ * `_sir_array_checked_size`'s multiplication-overflow guard
+ * specifically. */
+SirValue _sir_array_catenate(SirValue lhsv, SirValue rhsv) {
+    SirNDArray *a = _sir_array_coerce(lhsv, "catenate");
+    SirNDArray *b = _sir_array_coerce(rhsv, "catenate");
+    int64_t na = a->data_len, nb = b->data_len;
+    int ra = _sir_array_logical_rank(a);
+    int rb = _sir_array_logical_rank(b);
+    (void)_sir_array_checked_size(1, na + nb, "catenate");
+
+    if (ra != 2 && rb != 2) {
+        double *out = (na + nb > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)(na + nb)) : NULL;
+        if (na > 0) memcpy(out, a->data, sizeof(double) * (size_t)na);
+        if (nb > 0) memcpy(out + na, b->data, sizeof(double) * (size_t)nb);
+        return _sir_array_new_matrix(1, na + nb, out, "catenate");
+    }
+    if (ra == 2 && rb == 2) {
+        int64_t r = a->rows, ca = a->cols, cb = b->cols, row, col;
+        int64_t out_len;
+        double *data;
+        if (r != b->rows) {
+            fprintf(stderr, "sir: catenate: matrix catenate needs equal row counts (%lld vs %lld)\n",
+                    (long long)r, (long long)b->rows);
+            exit(1);
+        }
+        out_len = _sir_array_checked_size(r, ca + cb, "catenate");
+        data = (out_len > 0) ? (double *)_sir_alloc(sizeof(double) * (size_t)out_len) : NULL;
+        for (row = 0; row < r; row++) {
+            for (col = 0; col < ca; col++) {
+                data[col * r + row] = a->data[col * r + row];
+            }
+            for (col = 0; col < cb; col++) {
+                data[(ca + col) * r + row] = b->data[col * r + row];
+            }
+        }
+        return _sir_array_new_matrix(r, ca + cb, data, "catenate");
+    }
+    fprintf(stderr, "sir: catenate: catenate of a vector with a matrix is not yet supported\n");
+    exit(1);
+    return _sir_nil(); /* unreachable */
 }
 "####;
