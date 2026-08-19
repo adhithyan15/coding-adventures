@@ -2,6 +2,96 @@
 
 All notable changes to this package are documented here.
 
+## [0.67.0] - 2026-08-19
+
+### Fixed
+
+- **`MAX_CATALOG_ENTRIES` is now derived from `MAX_ENCODED_SIZE`, not an
+  eyeballed `100,000`** (VLT-PM05 §13.4), closing a MEDIUM pre-existing bug
+  where an ordinary vault — no hostile peer needed — froze every mutation
+  including `item delete` once its catalog crossed roughly nineteen thousand
+  items, well inside the old, fictional 100,000-entry admission ceiling.
+
+  - The old bound described what `validate_catalog` admitted, not what
+    `CatalogV1::encode` could carry: canonical-CBOR's 1 MiB `MAX_ENCODED_SIZE`
+    refused to re-emit a catalog long before entry count reached 100,000, so
+    the number the catalog advertised was never the number it could hold.
+    Because catalog entries are never removed — a deleted item becomes a
+    tombstone *entry*, the same size on the wire, not a smaller one — a vault
+    that crossed the real ceiling had no recourse from inside the product at
+    all: every later mutation that had to re-encode the full catalog failed
+    the same way, forever.
+
+  - `CATALOG_ENTRY_BYTES` (55, the exact cost of one item id plus one
+    candidate revision id in canonical CBOR) and `CATALOG_FRAME_OVERHEAD_BYTES`
+    are now `const`s pinned against the real encoder, and
+    `MAX_ENCODABLE_CATALOG_ENTRIES = (MAX_ENCODED_SIZE - overhead) /
+    CATALOG_ENTRY_BYTES = 19,064` is a *proven* ceiling: no encode of a
+    `CatalogV1`, on this device or any other honouring the wire format, can
+    ever exceed it.
+
+  - Admission and decode now use two different bounds, deliberately.
+    `validate_catalog` (and therefore every local mutation that builds a new
+    catalog) applies the tight, margined `MAX_CATALOG_ENTRIES = 19,064 -
+    1,000 = 18,064`, refusing the item that would make the catalog
+    unencodable *before* that catalog is ever built. `CatalogV1::decode` and
+    `materialize_current_catalog`'s cross-head merge instead apply the
+    looser, unmargined `MAX_ENCODABLE_CATALOG_ENTRIES`, so a catalog this
+    device's past self (or any honest peer) could have legitimately produced
+    under the old admission check stays openable, while a catalog no honest
+    encoder could ever have produced — a peer hand-crafting bytes past its
+    own claimed framing budget — is still refused. Applying the tight bound
+    uniformly would have repeated, at the catalog level, the open-denies-the-
+    whole-vault mistake VLT-PM05 §13.3 already corrected once for individual
+    records.
+
+  - `CatalogV1::decode` no longer routes through `CatalogV1::new` for its
+    final construction, because that would silently re-apply the tight
+    admission bound after the intentionally looser decode-time check. The
+    per-record encode is factored into `encode_catalog_entries`, reused by
+    both `CatalogV1::encode` and the tests that construct catalog bytes past
+    the admission ceiling to model an honest-but-looser peer.
+
+  - Tests: `codec.rs` pins the byte-cost derivation and both bounds directly
+    against the real encoder — cheap, exact, no crypto needed. `open.rs`
+    reproduces the bug end to end against a real, unlocked vault:
+    `a_synced_catalog_at_the_proven_ceiling_opens` and
+    `a_synced_catalog_past_the_proven_ceiling_denies_open` bracket 19,064
+    exactly through `open_active_vault` against a peer-authored catalog
+    delivered the way a real sync would (many small publications, since one
+    commit cannot itself carry more than `MAX_ADDED_OBJECTS` new objects);
+    `a_catalog_at_the_admission_ceiling_can_still_be_deleted_from` reproduces
+    the named symptom directly — a real `delete_current_item` call succeeds
+    on a catalog sitting at this device's own admission ceiling.
+
+  - `MAX_CATALOG_ENTRIES` dropped from a nominal 100,000 to 18,064. No
+    honestly-produced catalog could ever have exceeded roughly 19,064 entries
+    regardless of that nominal figure, so this is not a new restriction on
+    anything that could actually have existed — it is the admission ceiling
+    catching up to the encode ceiling that was always the real one.
+
+  - **Caught in security review before merge:** applying the tight
+    `MAX_CATALOG_ENTRIES` unconditionally to *every* catalog rebuild —
+    including a delete, edit, or restore that does not add an entry —
+    reopened this exact bug at a narrower band: a catalog synced from a
+    peer, or grown under this device's own pre-fix admission policy, with an
+    entry count anywhere in `(MAX_CATALOG_ENTRIES,
+    MAX_ENCODABLE_CATALOG_ENTRIES]` would decode and open fine, then fail
+    *every* subsequent mutation — delete included — because rebuilding that
+    same, unchanged entry count still ran into the tight admission ceiling.
+    `CatalogV1::new_for_mutation` fixes this: it only applies the tight
+    ceiling when a mutation's entry count actually grows past what it
+    already was, and the looser, proven `MAX_ENCODABLE_CATALOG_ENTRIES`
+    otherwise. `CatalogV1::encode` no longer re-runs `validate_catalog`
+    either, for the same reason — that re-check does not know whether the
+    catalog was built as new growth or as a non-growing mutation, and
+    applying the tight bound there unconditionally would undo
+    `new_for_mutation`'s fix at the encode step. Regression tests:
+    `mutation_of_an_above_admission_catalog_succeeds_when_it_does_not_grow`
+    (`codec.rs`) and `a_catalog_above_the_admission_ceiling_can_still_be_
+    deleted_from` (`open.rs`, a real `delete_current_item` call against a
+    real synced vault whose catalog already exceeds the admission ceiling).
+
 ## [0.66.0] - 2026-08-18
 
 ### Added
