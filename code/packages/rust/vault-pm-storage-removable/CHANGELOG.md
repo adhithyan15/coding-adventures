@@ -103,3 +103,42 @@ All notable changes to this package are documented here.
   between two writes is caught, and nested missing parent directories
   are still created correctly (a correctness check on the refactor, not
   a new attack).
+- **Fourth review round.** Two more real gaps fixed:
+  - `MAX_SCANNED_ENTRIES` was enforced only *after* `read_dir_sorted`
+    fully collected and sorted an entire directory's raw entries into a
+    `Vec`, defeating its own stated purpose against "a huge or
+    adversarially padded directory" — a directory with millions of
+    cheaply-creatable, zero-byte-named entries would be fully
+    materialized and sorted in memory before the bound was ever
+    consulted. `read_dir_sorted` now takes the running (whole-scan,
+    cross-directory) entry counter and bounds it per entry as each is
+    pulled from the OS iterator, before collecting, so no directory scan
+    ever holds more than the bound at once.
+  - `target` itself was validated once before the bucket loop began, but
+    a concurrent writer capable of removing and replacing `target`
+    mid-migration (already this crate's own threat model) could redirect
+    every subsequent bucket/object write the same way a swapped bucket
+    directory could — `target` is now re-validated (cheap and idempotent
+    once real) alongside the bucket directory, both before creating a
+    bucket and before every object write within it.
+
+  A third finding — that `ensure_real_directory`'s parent creation
+  (`fs::create_dir_all`) transparently resolves through a symlink at any
+  *ancestor* of `target`, not only its final component — was
+  investigated and the natural-looking fix (validate every path
+  component atomically, root to leaf) was **implemented, tested, and
+  reverted**: it broke on real macOS hosts, where `/tmp`/`/var` are
+  themselves symlinks to `/private/tmp`/`/private/var` and are
+  transparently, legitimately, and universally present in the ancestry
+  of essentially any caller-supplied absolute path — the fix could not
+  distinguish that from an attacker-planted one and refused both
+  identically. `ensure_real_directory`'s doc comment now records this as
+  a deliberate, narrower scope limit rather than an oversight: the
+  residual (an attacker who can plant a symlink at a not-yet-created
+  *ancestor* of `target`, before the operator ever configures it) can
+  only relocate this migration's own freshly written ciphertext to a
+  different physical directory the same configured `target` path would
+  still consistently resolve through — never read a file that already
+  exists elsewhere or overwrite one, which is what the leaf-level checks
+  (`target` itself, every bucket directory, every object read/write)
+  already prevent.

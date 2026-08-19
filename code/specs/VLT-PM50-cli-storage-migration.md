@@ -401,6 +401,34 @@ a trust boundary worth naming explicitly:
   is first created, closing the analogous narrower window where a
   concurrent writer swaps an already-validated bucket directory for a
   symlink between two writes to it.
+- A fourth review round found `MAX_SCANNED_ENTRIES` (§5.1) was enforced
+  only after `scan_object_root` had already fully collected and sorted an
+  entire directory's raw entries into memory, defeating its own DoS
+  purpose against an adversarially padded directory; the bound is now
+  checked per entry as it is pulled from the OS, before collection. The
+  same round found `target` was re-validated alongside each bucket
+  directory (the fix two paragraphs above) but not before *every* object
+  write within a bucket the way the bucket directory itself already was
+  — closed the same way, by re-checking both together before each write.
+- The same round also proposed, implemented, tested, and **reverted** a
+  stricter fix: validating every path component of `target` atomically,
+  from the filesystem root down, to close the narrower case where an
+  attacker plants a symlink at an *ancestor* of `target` that does not
+  exist yet (rather than at `target`'s own final component, which was
+  already closed). That fix broke on real macOS hosts — `/tmp` and
+  `/var` are themselves symlinks to `/private/tmp`/`/private/var` and
+  are transparently, legitimately present in the ancestry of essentially
+  any absolute path a person could configure, and the stricter check
+  could not tell that apart from an attacker-planted one. `ensure_real_
+  directory` therefore keeps `fs::create_dir_all` for `target`'s
+  parents, recorded as a deliberate scope limit rather than an
+  oversight: the residual this leaves can only relocate this
+  migration's own freshly written ciphertext to a different physical
+  directory the same configured `target` path would still consistently
+  resolve through — it cannot read a file that already exists elsewhere
+  or overwrite one, which is what every leaf-level check in this section
+  exists to prevent for the exact paths this crate reads from and
+  writes into.
 
 ## 8. Reuse map correction
 

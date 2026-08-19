@@ -264,8 +264,7 @@ pub fn scan_object_root(root: &Path) -> Result<ScanReport, ScanError> {
 
     let mut report = ScanReport::default();
     let mut scanned = 0_usize;
-    for top_entry in read_dir_sorted(root)? {
-        bump(&mut scanned)?;
+    for top_entry in read_dir_sorted(root, &mut scanned)? {
         let name = entry_name(&top_entry)?;
         let is_dir = top_entry
             .file_type()
@@ -273,8 +272,7 @@ pub fn scan_object_root(root: &Path) -> Result<ScanReport, ScanError> {
             .is_dir();
         if is_dir && is_hex_name(&name) {
             report.bucket_directories += 1;
-            for inner_entry in read_dir_sorted(&top_entry.path())? {
-                bump(&mut scanned)?;
+            for inner_entry in read_dir_sorted(&top_entry.path(), &mut scanned)? {
                 let inner_name = entry_name(&inner_entry)?;
                 // A positive `is_file()` check, not a negative `!is_dir()`
                 // one: `DirEntry::file_type()` does not follow symlinks, so
@@ -316,11 +314,25 @@ fn bump(scanned: &mut usize) -> Result<(), ScanError> {
     Ok(())
 }
 
-fn read_dir_sorted(dir: &Path) -> Result<Vec<fs::DirEntry>, ScanError> {
-    let mut entries = fs::read_dir(dir)
-        .map_err(|_| ScanError::ReadFailed)?
-        .collect::<Result<Vec<_>, io::Error>>()
-        .map_err(|_| ScanError::ReadFailed)?;
+/// List and sort one directory's entries, bounding `scanned` — the running
+/// count across the *whole* scan, not just this one directory — against
+/// [`MAX_SCANNED_ENTRIES`] as each raw entry is pulled from the OS, not
+/// after they have all already been collected.
+///
+/// The distinction matters: collecting the full `fs::ReadDir` iterator into
+/// a `Vec` *before* ever consulting the bound (the previous shape of this
+/// function) would fully materialize and sort an adversarially huge
+/// directory listing in memory first and only then discover it was too
+/// large — defeating the bound's own stated purpose against exactly the
+/// "adversarially padded directory" a removable drive makes plausible
+/// (VLT-PM50 §7). `bump` now runs per entry as it is pulled, so this
+/// function never holds more than [`MAX_SCANNED_ENTRIES`] entries at once.
+fn read_dir_sorted(dir: &Path, scanned: &mut usize) -> Result<Vec<fs::DirEntry>, ScanError> {
+    let mut entries = Vec::new();
+    for entry in fs::read_dir(dir).map_err(|_| ScanError::ReadFailed)? {
+        bump(scanned)?;
+        entries.push(entry.map_err(|_| ScanError::ReadFailed)?);
+    }
     entries.sort_by_key(fs::DirEntry::file_name);
     Ok(entries)
 }
@@ -447,6 +459,12 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
             continue;
         }
         let target_bucket_dir = target.join(&bucket_name);
+        // Re-validates `target` itself, not only the bucket directory one
+        // level below it: a concurrent writer capable of removing and
+        // replacing `target` after its own one-time validation above could
+        // otherwise have every bucket from this point on transparently
+        // created inside whatever `target` now resolves to.
+        ensure_real_directory(target)?;
         ensure_real_bucket_directory(&target_bucket_dir)?;
 
         for object_entry in fs::read_dir(bucket_entry.path()).map_err(|_| CopyError::IoFailed)? {
@@ -473,12 +491,15 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
             {
                 continue; // `.tmp` writes, symlinks, and anything else are skipped.
             }
-            // Re-verified before every object, not only once per bucket: a
-            // concurrent writer to `target` (VLT-PM50 §7's own threat model)
-            // could otherwise remove the bucket directory this loop already
-            // validated and replace it with a symlink between two writes in
-            // the same bucket, and `copy_one_object`'s own checks only ever
-            // cover the leaf object/staging path, never this parent.
+            // Re-verified before every object, not only once per bucket --
+            // and `target` along with it, for the same reason -- a
+            // concurrent writer to `target` (VLT-PM50 §7's own threat
+            // model) could otherwise remove either directory this loop
+            // already validated and replace it with a symlink between two
+            // writes in the same bucket, and `copy_one_object`'s own
+            // checks only ever cover the leaf object/staging path, never
+            // these parents.
+            ensure_real_directory(target)?;
             ensure_real_bucket_directory(&target_bucket_dir)?;
             copy_one_object(
                 &object_entry.path(),
@@ -493,16 +514,30 @@ pub fn copy_object_tree(source: &Path, target: &Path) -> Result<CopyReport, Copy
 /// Ensure `path` is a real (non-symlink) directory, creating it (and any
 /// missing parents) if absent.
 ///
-/// Parent directories are created with the ordinary recursive
-/// `fs::create_dir_all` — `path`'s parents are not this function's leaf
-/// concern and, for the one caller that has any (`target` itself), are a
-/// caller-supplied location that pre-existed the migration far more often
-/// than not. `path` itself — the exact directory every subsequent object
-/// write in this bucket (or, for `target`, the whole migration) depends
-/// on — is created through [`create_directory_component_atomically`], so a
-/// symlink planted at that exact path cannot be silently followed the way
-/// `fs::create_dir_all`'s own re-check (which follows symlinks when
-/// deciding "the directory is already there, proceed") would follow one.
+/// `path`'s own, final path component is created — or, if already present,
+/// validated — through [`create_directory_component_atomically`], so a
+/// symlink at that exact path is refused rather than followed. Everything
+/// above it is created with the ordinary recursive `fs::create_dir_all`.
+///
+/// That split is a deliberate, documented scope limit, not an oversight:
+/// `create_dir_all` transparently resolves through *any* existing symlink
+/// while walking to a missing descendant, including a legitimate one —
+/// `/tmp` and `/var` are themselves symlinks on macOS, and are exactly the
+/// kind of ancestor a caller-supplied absolute path routinely passes
+/// through. Extending the atomic, no-symlink-anywhere check to every
+/// ancestor component was tried and reverted: it correctly refuses a
+/// symlink an attacker plants as an *interior* component of `target`'s
+/// own not-yet-created path, but it identically refuses `/var` on every
+/// macOS host, which is not an attack. The residual this leaves — a
+/// symlink planted at an ancestor of `target` that does not exist yet —
+/// is narrower and lower-impact than the leaf-level attacks this module
+/// does close: it can only relocate *this migration's own* newly written
+/// ciphertext to a different physical directory the same configured
+/// `target` path would still consistently resolve through, never read an
+/// unrelated file that already exists elsewhere or overwrite one, which
+/// is what [`create_directory_component_atomically`] and [`read_bounded`]
+/// exist to prevent for the paths this function and its callers actually
+/// write into and read from.
 fn ensure_real_directory(path: &Path) -> Result<(), CopyError> {
     if let Some(parent) = path.parent() {
         if !parent.as_os_str().is_empty() {
