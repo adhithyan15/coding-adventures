@@ -18,7 +18,7 @@ use std::fs;
 use std::os::unix::fs::{FileTypeExt, MetadataExt, PermissionsExt};
 use std::os::unix::net::{UnixListener, UnixStream};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 use std::sync::Mutex;
 use std::time::{Duration, Instant};
 
@@ -42,11 +42,31 @@ const POLL_INTERVAL: Duration = Duration::from_millis(200);
 /// each, tying up one thread per connection for the whole timeout.
 const CONNECTION_TIMEOUT: Duration = Duration::from_secs(2);
 
+/// Ceiling on connections handled at once.
+///
+/// Serving each connection on its own thread (see [`AgentServer::run`])
+/// removes the head-of-line DoS a serial accept loop would have, but
+/// unbounded thread spawn is its own denial of service: any process running
+/// as this same local user could otherwise open connections in a tight loop
+/// and send nothing on each, growing this process's thread count roughly
+/// linearly with time until the platform's thread or memory limit is
+/// reached. A real caller of this transport (`vault-pm-agent-host::client`)
+/// never has more than one request in flight at a time, so a small constant
+/// is generous headroom for legitimate concurrent one-shot commands and
+/// nowhere near enough to matter as a resource drain even if an attacker
+/// fills it permanently.
+const MAX_CONCURRENT_CONNECTIONS: usize = 16;
+
 /// A bound, listening agent socket, ready to run.
 pub struct AgentServer {
     listener: UnixListener,
     socket_path: PathBuf,
     state: Mutex<AgentState>,
+    /// Connections currently being served, each on its own thread. Checked
+    /// and reserved *before* a thread is spawned, and released when that
+    /// thread's [`AgentServer::handle_connection`] call returns — see
+    /// [`MAX_CONCURRENT_CONNECTIONS`].
+    active_connections: AtomicUsize,
 }
 
 impl AgentServer {
@@ -90,6 +110,7 @@ impl AgentServer {
             listener,
             socket_path: socket_path.to_path_buf(),
             state: Mutex::new(AgentState::new()),
+            active_connections: AtomicUsize::new(0),
         })
     }
 
@@ -114,14 +135,19 @@ impl AgentServer {
     /// entirely; `thread::scope` guarantees every one of them has finished
     /// (including the one that observed a `Shutdown`) before this function
     /// returns.
+    ///
+    /// A thread is spawned only while fewer than
+    /// [`MAX_CONCURRENT_CONNECTIONS`] are already active — see that
+    /// constant's own doc comment for why unbounded per-connection spawning
+    /// is itself a denial of service. A connection accepted past the cap is
+    /// dropped immediately, the same "no response at all" treatment an
+    /// unauthorized peer or a malformed frame already gets.
     pub fn run(self, signal: &AtomicBool) {
         std::thread::scope(|scope| {
             scope.spawn(|| self.sweep_loop(signal));
             loop {
                 match self.listener.accept() {
-                    Ok((stream, _address)) => {
-                        scope.spawn(|| self.handle_connection(stream, signal));
-                    }
+                    Ok((stream, _address)) => self.accept_within_limit(scope, stream, signal),
                     Err(error) if error.kind() == std::io::ErrorKind::WouldBlock => {
                         std::thread::sleep(POLL_INTERVAL);
                     }
@@ -137,6 +163,34 @@ impl AgentServer {
             }
         });
         let _ = fs::remove_file(&self.socket_path);
+    }
+
+    /// Reserve a connection slot and spawn a handler thread, or drop the
+    /// connection immediately if already at [`MAX_CONCURRENT_CONNECTIONS`].
+    ///
+    /// The slot is reserved with a single `fetch_add` *before* the thread is
+    /// spawned (never after), so two connections racing this check cannot
+    /// both observe room for the last slot. The corresponding release
+    /// happens in every path out of the spawned closure, including a panic
+    /// unwinding through `handle_connection`, via [`ConnectionSlotGuard`]'s
+    /// `Drop`.
+    fn accept_within_limit<'scope>(
+        &'scope self,
+        scope: &'scope std::thread::Scope<'scope, '_>,
+        stream: UnixStream,
+        signal: &'scope AtomicBool,
+    ) {
+        let reserved = self.active_connections.fetch_add(1, Ordering::SeqCst);
+        if reserved >= MAX_CONCURRENT_CONNECTIONS {
+            self.active_connections.fetch_sub(1, Ordering::SeqCst);
+            return;
+        }
+        scope.spawn(move || {
+            let _slot = ConnectionSlotGuard {
+                active_connections: &self.active_connections,
+            };
+            self.handle_connection(stream, signal);
+        });
     }
 
     fn sweep_loop(&self, signal: &AtomicBool) {
@@ -221,6 +275,24 @@ impl AgentServer {
                 AgentResponse::Ok
             }
         }
+    }
+}
+
+/// Releases one reserved connection slot on drop, including on an unwinding
+/// panic through the connection handler it guards.
+///
+/// `AgentServer::accept_within_limit` reserves a slot with `fetch_add`
+/// before ever spawning a thread; this is the corresponding release, tied to
+/// the handler thread's stack frame rather than to a specific return point
+/// in `handle_connection`, so every exit path (including a bug that panics)
+/// still frees the slot for the next connection.
+struct ConnectionSlotGuard<'a> {
+    active_connections: &'a AtomicUsize,
+}
+
+impl Drop for ConnectionSlotGuard<'_> {
+    fn drop(&mut self) {
+        self.active_connections.fetch_sub(1, Ordering::SeqCst);
     }
 }
 
@@ -403,6 +475,60 @@ mod tests {
             "a concurrent silent connection must not slow down an unrelated request"
         );
 
+        client::shutdown(&path).unwrap();
+        handle.join().unwrap();
+    }
+
+    /// Connections past [`MAX_CONCURRENT_CONNECTIONS`] are dropped
+    /// immediately, and the server keeps serving everyone else once room
+    /// frees up.
+    ///
+    /// This is the fix for the DoS the previous fix (one thread per
+    /// connection) introduced: without a cap, a same-user peer opening
+    /// connections in a tight loop and sending nothing on each would grow
+    /// this process's thread count without bound. Proven directly: fill
+    /// every slot with silent connections, confirm the next connection is
+    /// closed without a response rather than served, then free one slot and
+    /// confirm a real request succeeds again.
+    #[test]
+    fn connections_past_the_concurrency_cap_are_dropped_and_capacity_recovers() {
+        let path = scratch_socket_path();
+        let (handle, path) = run_in_background(path);
+        assert!(client::wait_until_ready(&path, Duration::from_secs(2)));
+
+        let mut silent = Vec::with_capacity(MAX_CONCURRENT_CONNECTIONS);
+        for _ in 0..MAX_CONCURRENT_CONNECTIONS {
+            silent.push(UnixStream::connect(&path).unwrap());
+        }
+
+        // Every slot is now held open and silent. One more connection must
+        // be refused: the server closes it without ever answering, so a
+        // bounded read observes end-of-file (0 bytes) almost immediately
+        // rather than blocking for anything like `CONNECTION_TIMEOUT`.
+        {
+            let mut overflow = UnixStream::connect(&path).unwrap();
+            overflow
+                .set_read_timeout(Some(CONNECTION_TIMEOUT / 2))
+                .unwrap();
+            let mut buffer = [0_u8; 1];
+            use std::io::Read;
+            let started = Instant::now();
+            let read = overflow.read(&mut buffer).unwrap();
+            assert_eq!(
+                read, 0,
+                "a connection past the cap must be closed, not served"
+            );
+            assert!(
+                started.elapsed() < CONNECTION_TIMEOUT / 2,
+                "an over-capacity connection must be dropped promptly, not merely eventually"
+            );
+        }
+
+        // Freeing exactly one slot lets exactly one more connection through.
+        silent.pop();
+        assert!(client::ping(&path).unwrap());
+
+        drop(silent);
         client::shutdown(&path).unwrap();
         handle.join().unwrap();
     }

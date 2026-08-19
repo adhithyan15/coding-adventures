@@ -47,3 +47,14 @@
   verifies `getsockopt`'s returned length still equals `sizeof(ucred)`
   before trusting the credentials it wrote, failing closed rather than
   reading a partially uninitialized structure.
+- Security review, before first release (caught on re-review of the
+  thread-per-connection fix above): unbounded per-connection thread spawn is
+  itself a denial of service — a same-user process opening connections in a
+  tight loop and sending nothing on each would grow this process's thread
+  count without bound. `AgentServer` now caps concurrent connections at
+  `MAX_CONCURRENT_CONNECTIONS` (16), reserved with an `AtomicUsize` before a
+  handler thread is spawned and released by a `Drop` guard
+  (`ConnectionSlotGuard`) so a panic inside a handler still frees its slot. A
+  connection accepted past the cap is dropped immediately, the same
+  no-response treatment an unauthorized peer or a malformed frame already
+  gets.

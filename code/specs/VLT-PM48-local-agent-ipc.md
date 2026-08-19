@@ -317,13 +317,36 @@ connection queued behind it for the same span, indefinitely. One thread per
 connection removes that head-of-line dependency; `AgentState`'s `Mutex`
 already serializes the only state the threads actually share.
 
+That fix was itself re-reviewed and found to trade one denial of service for
+another: unbounded per-connection thread spawn lets the same same-user
+attacker grow this process's thread count without bound instead. `AgentServer`
+now caps concurrent connections at `server::MAX_CONCURRENT_CONNECTIONS` (16—
+a real caller never has more than one request in flight, so this is generous
+headroom for legitimate concurrency and nowhere near enough to matter as a
+resource drain even held permanently). The slot is reserved with an
+`AtomicUsize` *before* a handler thread is spawned, and released by a `Drop`
+guard tied to that thread's stack frame so a panic inside a handler still
+frees it. A connection accepted past the cap is dropped immediately — the
+same silent refusal an unauthorized peer or a malformed frame already gets.
+
 Every buffer that can carry a passphrase in plaintext — an encoded `Unlock`
 request, an encoded `Passphrase` response, and every frame `transport::
 read_frame` reads, since the transport layer cannot know in advance which
 frames are secret-bearing — is `Zeroizing`, wiped on drop, the same
 discipline every other passphrase buffer in this product already follows.
-This closes the third security-review finding: `AgentState`'s own retained
-copies were always wipe-on-drop, but the plaintext copies that necessarily
+`Zeroizing` alone was not sufficient, and this was caught only on re-review:
+both `encode` functions originally built their buffer incrementally from a
+length-1 start, so `Vec`'s ordinary growth reallocation copied
+already-written plaintext into a new allocation and freed the old one,
+unscrubbed, through the global allocator — reproducible for roughly
+three-quarters of realistic passphrase lengths. Both now compute the exact
+byte length of the specific message being encoded and reserve it once,
+before writing anything, so the buffer that ends up holding a passphrase is
+the only allocation that ever holds it; a `debug_assert_eq!` inside `encode`
+itself catches a future field added without updating the matching capacity
+computation. This closes the third security-review finding: `AgentState`'s
+own retained copies were always wipe-on-drop, but the plaintext copies that
+necessarily
 exist for the few milliseconds a passphrase is actually in transit were, in
 the first draft, ordinary un-scrubbed heap buffers.
 

@@ -294,7 +294,22 @@ impl AgentRequest {
     /// buffer in this product is, rather than left for the allocator to hand
     /// back unscrubbed.
     pub fn encode(&self) -> Result<Zeroizing<Vec<u8>>, ProtocolError> {
-        let mut out = Zeroizing::new(vec![PROTOCOL_VERSION]);
+        // Capacity is reserved for the *exact* worst-case size of this
+        // specific message before a single byte is written, and never
+        // grown after. This is load-bearing, not an optimization: wrapping
+        // the buffer in `Zeroizing` only wipes whatever allocation it holds
+        // at drop time — it does nothing about `Vec`'s ordinary
+        // incremental-growth reallocation, which `memcpy`s the *old*
+        // allocation (already containing the passphrase, for `Unlock`) into
+        // a new one and frees the old one through the global allocator
+        // without scrubbing it first. A buffer built with `push`/
+        // `extend_from_slice` from a length-1 start reallocates for
+        // essentially any real passphrase, leaving plaintext behind in freed
+        // heap `Zeroizing` never sees. Exact upfront capacity is what
+        // actually closes that.
+        let capacity = self.encoded_capacity();
+        let mut out = Zeroizing::new(Vec::with_capacity(capacity));
+        out.push(PROTOCOL_VERSION);
         match self {
             Self::Ping => out.push(TAG_PING),
             Self::Unlock {
@@ -326,7 +341,53 @@ impl AgentRequest {
         if out.len() > MAX_FRAME_BYTES {
             return Err(ProtocolError);
         }
+        // If capacity was computed correctly, nothing after the first push
+        // ever grew the allocation. This is the property the whole function
+        // exists to guarantee, so it is asserted rather than only hoped for:
+        // a future field added to a variant without updating
+        // `encoded_capacity` would otherwise silently reopen exactly the bug
+        // this rewrite closes.
+        debug_assert_eq!(
+            out.capacity(),
+            capacity,
+            "encode reallocated: a secret-bearing buffer may have left unscrubbed plaintext behind"
+        );
         Ok(out)
+    }
+
+    /// The exact byte length [`Self::encode`] will write for this message,
+    /// computed from unvalidated field lengths so it can be reserved
+    /// *before* any field is validated or written. An over-estimate here
+    /// would be safe (merely wasteful); an under-estimate would silently
+    /// reopen the vulnerability [`Self::encode`]'s own comment describes, so
+    /// this mirrors that function's field order exactly.
+    fn encoded_capacity(&self) -> usize {
+        const HEADER: usize = 1 + 1; // version + tag
+        const NAME_PREFIX: usize = 1; // one length byte, per `encode_name`
+        match self {
+            Self::Ping | Self::Status | Self::Shutdown => HEADER,
+            Self::Unlock {
+                vault_name,
+                passphrase,
+                ..
+            } => {
+                HEADER
+                    + NAME_PREFIX
+                    + vault_name.len()
+                    + 4 // passphrase length prefix
+                    + passphrase.len()
+                    + 8 // idle_bound_ms
+            }
+            Self::GetPassphrase { vault_name } => HEADER + NAME_PREFIX + vault_name.len(),
+            Self::Lock { vault_name } => {
+                let presence = 1;
+                HEADER
+                    + presence
+                    + vault_name
+                        .as_ref()
+                        .map_or(0, |name| NAME_PREFIX + name.len())
+            }
+        }
     }
 
     /// Decode one payload previously produced by [`Self::encode`].
@@ -463,7 +524,12 @@ impl AgentResponse {
     /// [`AgentRequest::encode`]'s is: a `Passphrase` response's encoding
     /// contains the retained passphrase in plaintext.
     pub fn encode(&self) -> Result<Zeroizing<Vec<u8>>, ProtocolError> {
-        let mut out = Zeroizing::new(vec![PROTOCOL_VERSION]);
+        // See `AgentRequest::encode`'s comment: capacity is reserved exactly,
+        // up front, so the allocation backing `out` never grows once a
+        // `Passphrase` response's plaintext bytes are written to it.
+        let capacity = self.encoded_capacity();
+        let mut out = Zeroizing::new(Vec::with_capacity(capacity));
+        out.push(PROTOCOL_VERSION);
         match self {
             Self::Ok => out.push(TAG_OK),
             Self::Passphrase(passphrase) => {
@@ -493,7 +559,33 @@ impl AgentResponse {
                 out.push(*code as u8);
             }
         }
+        // See `AgentRequest::encode`'s identical assertion.
+        debug_assert_eq!(
+            out.capacity(),
+            capacity,
+            "encode reallocated: a secret-bearing buffer may have left unscrubbed plaintext behind"
+        );
         Ok(out)
+    }
+
+    /// The exact byte length [`Self::encode`] will write, mirroring
+    /// [`AgentRequest::encoded_capacity`]'s contract and reasoning exactly.
+    fn encoded_capacity(&self) -> usize {
+        const HEADER: usize = 1 + 1; // version + tag
+        const NAME_PREFIX: usize = 1;
+        match self {
+            Self::Ok | Self::NotRetained => HEADER,
+            Self::Passphrase(passphrase) => HEADER + 4 + passphrase.len(),
+            Self::Status(entries) => {
+                let count_byte = 1;
+                let entries_len: usize = entries
+                    .iter()
+                    .map(|entry| NAME_PREFIX + entry.vault_name.len() + 8)
+                    .sum();
+                HEADER + count_byte + entries_len
+            }
+            Self::Err(_) => HEADER + 1,
+        }
     }
 
     /// Decode one payload previously produced by [`Self::encode`].
@@ -860,5 +952,62 @@ mod tests {
         let encoded = request.encode().unwrap();
         assert!(encoded.len() <= MAX_FRAME_BYTES);
         assert!(AgentRequest::decode(&encoded).is_ok());
+    }
+
+    /// `encode` never reallocates while a secret is already resident in the
+    /// buffer, across a sweep of realistic passphrase and vault-name
+    /// lengths.
+    ///
+    /// This is the direct, empirical form of the security-review finding
+    /// this test closes: a buffer that starts at length 1 and grows via
+    /// `push`/`extend_from_slice` reallocates for the overwhelming majority
+    /// of real passphrase lengths, and `Zeroizing` only wipes the
+    /// allocation it *currently* holds at drop — never an allocation the
+    /// buffer already grew out of and the global allocator already freed
+    /// unscrubbed. `Vec::capacity()` staying exactly equal to the reserved
+    /// upfront capacity, for every length in this sweep, is what proves no
+    /// such reallocation happened.
+    #[test]
+    fn encode_never_reallocates_a_buffer_already_holding_a_secret() {
+        for vault_name_len in [1_usize, 8, 32, MAX_VAULT_NAME_BYTES] {
+            for passphrase_len in 0..=200_usize {
+                let request = AgentRequest::Unlock {
+                    vault_name: "a".repeat(vault_name_len),
+                    passphrase: Zeroizing::new(vec![b'p'; passphrase_len]),
+                    idle_bound_ms: 300_000,
+                };
+                let capacity_before = request.encoded_capacity();
+                let encoded = request.encode().unwrap();
+                assert_eq!(
+                    encoded.len(),
+                    capacity_before,
+                    "vault_name_len={vault_name_len} passphrase_len={passphrase_len}"
+                );
+                assert_eq!(
+                    encoded.capacity(),
+                    capacity_before,
+                    "encode reallocated for vault_name_len={vault_name_len} \
+                     passphrase_len={passphrase_len}: a secret-bearing buffer left \
+                     unscrubbed plaintext behind"
+                );
+            }
+        }
+
+        // Same property for the response side's `Passphrase` arm.
+        for passphrase_len in 0..=200_usize {
+            let response = AgentResponse::Passphrase(Zeroizing::new(vec![b'p'; passphrase_len]));
+            let capacity_before = response.encoded_capacity();
+            let encoded = response.encode().unwrap();
+            assert_eq!(
+                encoded.len(),
+                capacity_before,
+                "passphrase_len={passphrase_len}"
+            );
+            assert_eq!(
+                encoded.capacity(),
+                capacity_before,
+                "encode reallocated for passphrase_len={passphrase_len}"
+            );
+        }
     }
 }

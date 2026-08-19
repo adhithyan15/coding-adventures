@@ -53,7 +53,7 @@ inheriting the CLI's transport, and vice versa.
 
 ## Verification
 
-Twelve tests cover every request and response round-tripping through
+Thirteen tests cover every request and response round-tripping through
 `encode`/`decode`, redacted `Debug` formatting for every variant, malformed
 and truncated input being refused rather than guessed at, every oversized
 field or frame being rejected at encode time, and a hand-crafted frame naming
@@ -62,8 +62,26 @@ the fix for a real finding from this feature's security review: the socket's
 peer check authenticates only "the same local user," never "the genuine
 `vault-pm` binary," so any same-user process can write raw bytes to this
 wire, and an unvalidated name would otherwise have reached `agent status`'s
-JSON and terminal output unescaped. Tarpaulin's LLVM engine measures 169 of
-183 lines covered (92.35%).
+JSON and terminal output unescaped.
+
+One test is worth calling out on its own:
+`encode_never_reallocates_a_buffer_already_holding_a_secret` sweeps
+passphrase lengths 0 through 200 and asserts `Vec::capacity()` never exceeds
+the upfront reservation — the direct, empirical form of a second real
+security-review finding. `Zeroizing` only wipes the allocation a buffer
+currently holds at drop; it does nothing about ordinary incremental-growth
+reallocation, which copies already-written plaintext into a new allocation
+and frees the old one, unscrubbed, through the global allocator. `encode`
+now computes each message's exact byte length before writing anything and
+reserves it once, so the buffer that ends up holding a passphrase in
+plaintext is also the only allocation that ever holds it — verified for
+`AgentRequest::Unlock` and `AgentResponse::Passphrase`, the only two variants
+that carry one. A `debug_assert_eq!` inside `encode` itself makes a future
+field added after `passphrase` without updating the matching capacity
+computation fail loudly in every debug build and test run, not only in this
+sweep.
+
+Tarpaulin's LLVM engine measures 206 of 220 lines covered (93.6%).
 
 ```bash
 bash BUILD

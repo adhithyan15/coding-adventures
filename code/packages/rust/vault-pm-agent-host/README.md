@@ -84,24 +84,36 @@ dependencies.
 
 ## Verification
 
-Twenty-one tests cover the retention store's idle-bound policy (unlock,
+Twenty-two tests cover the retention store's idle-bound policy (unlock,
 expiry at point-of-use, replace-and-restart, forget-one/forget-all,
 background sweep), framing (round trip, oversized-frame refusal before
 allocation, truncated reads), the peer-authorization comparison against a
 fabricated mismatched UID, real bind/accept/dispatch round trips for every
 request over a real socket (including a second bind being refused, a stale
 socket being reclaimed only after an ownership check, a non-socket path
-never being deleted, an oversized or garbage connection being dropped
-without a response while the server keeps serving, and — the fix for a real
-finding from this feature's security review — a silent connection held open
-by one peer provably never delaying a concurrent well-behaved one, now that
-every connection is handled on its own thread rather than serially), and a
-real detached process outliving its parent. Tarpaulin's LLVM engine measures
-222 of 250 lines covered (88.80%); the remainder is mostly client-side I/O
-error branches that require a genuinely failing socket to reach, and the
-post-`fork` half of the detached-spawn closure runs in a child process
-coverage instrumentation does not attribute back to this crate's own
-measurement.
+never being deleted, and an oversized or garbage connection being dropped
+without a response while the server keeps serving), and a real detached
+process outliving its parent.
+
+Two tests are worth calling out: this feature's security review found that
+serving every accepted connection synchronously in the accept loop let any
+same-user process starve every legitimate caller by opening a connection and
+sending nothing, forever — `a_silent_connection_never_blocks_a_concurrent_
+well_behaved_one` holds one silent connection open and proves a concurrent
+`Ping` still completes promptly now that every connection is served on its
+own thread. That fix then introduced its own finding — unbounded
+per-connection thread spawn is itself a denial of service — closed by
+`MAX_CONCURRENT_CONNECTIONS` and proven by
+`connections_past_the_concurrency_cap_are_dropped_and_capacity_recovers`,
+which fills every slot with silent connections, confirms the next one is
+closed without a response rather than served, and confirms capacity recovers
+once a slot frees up.
+
+Tarpaulin's LLVM engine measures 231 of 261 lines covered (88.5%); the
+remainder is mostly client-side I/O error branches that require a genuinely
+failing socket to reach, and the post-`fork` half of the detached-spawn
+closure runs in a child process coverage instrumentation does not attribute
+back to this crate's own measurement.
 
 ```bash
 bash BUILD
