@@ -1,0 +1,161 @@
+% ============================================================================
+% energy-conversion-example — for a named everyday process, which form of
+% energy goes IN and which form comes OUT, grounding the U.S. EIA's own "Law
+% of Conservation of Energy" statement that energy is never created or
+% destroyed, only changed from one form into another (adj-facts-stdlib,
+% PHYSICS). Grounds the "matter/energy systems" Major Gap ADJ-STDLIB-
+% COVERAGE.md §5.1 names for K-8 science — the FIRST slice of this loop to
+% close it with a genuine instance (a prior cycle's only prior touch was a
+% TANGENTIAL near-miss, `energy-forms.adj`/`energy-sources.adj` naming forms
+% and sources but never a conversion, so this item had zero real instances
+% until now, unlike matter/energy-systems' three sibling gaps which each
+% already had one).
+% ============================================================================
+% `physics/energy-forms.adj` and `physics/energy-form-family.adj` already
+% table WHICH named forms energy comes in (chemical, thermal, radiant, …) and
+% which of two families each belongs to (potential/kinetic) — but neither
+% states that energy MOVES BETWEEN those forms, the actual "systems" idea
+% NGSS 4-PS3-4 names ("Apply scientific ideas to design, test, and refine a
+% device that converts energy from one form to another"). The U.S. Energy
+% Information Administration's OWN sibling page to the one `energy-forms.adj`
+% already cites — its "Laws of energy" page — states this directly, under the
+% heading "Energy is neither created nor destroyed":
+%
+%   "To scientists, energy conservation does not mean saving energy. Instead,
+%    the law of conservation of energy says that energy is neither created
+%    nor destroyed. When people use energy, it doesn't disappear, but
+%    instead, it changes from one form of energy into another form. A car
+%    engine burns gasoline, converting the chemical energy in gasoline into
+%    mechanical energy. Solar photovoltaic cells change radiant energy from
+%    the sun into electrical energy. Energy changes form, but the total
+%    amount of energy in the universe stays the same."
+%
+% — two concrete process → (energy_in, energy_out) facts (car engine,
+% solar photovoltaic cell) sit right inside that one paragraph. The SAME
+% "Forms of energy" page `energy-forms.adj` already cites states two MORE, in
+% its own already-fetched (but never-decoded) body text:
+%
+%   "For example, chemical energy is converted to thermal energy when people
+%    burn wood in a fireplace or burn gasoline in a car's engine."
+%
+%   "When a person rides a bicycle down a steep hill and picks up speed, the
+%    gravitational energy is converting to motion energy."
+%
+% Recall is a binding query:
+%
+%     ? energy_conversion_example(solar_photovoltaic_cell, $In, $Out)  % radiant, electrical
+%     ? energy_conversion_example($P, chemical, $Out)                  % wood_burning_in_fireplace (thermal) ; car_engine_burning_gasoline (mechanical)
+%
+% This is a native `table` (ADJ-TABLES RS-5): each `row` lowers to a ground
+% relation `energy_conversion_example(process, energy_in, energy_out)`
+% carrying the table's citation, so the lookups above are ordinary SLD
+% binding queries — the engine returns the answer WITH its source, on the
+% CPU, with zero model calls, and abstains on a process that is not one of
+% the four enumerated here (it never invents a conversion).
+%
+% The four processes and their energy-form conversion, as a little truth
+% table:
+%
+%     process                        energy_in       energy_out   source page
+%     -----------------------------  --------------  -----------  -----------------
+%     wood_burning_in_fireplace      chemical        thermal      Forms of energy
+%     car_engine_burning_gasoline    chemical        mechanical   Laws of energy
+%     solar_photovoltaic_cell        radiant         electrical   Laws of energy
+%     bicycle_going_downhill         gravitational   motion       Forms of energy
+%
+% WHY this is a genuine "matter/energy systems" fact, not a coincidental
+% word match: the entire point of the conservation law is that energy is
+% NEVER created or destroyed inside a system — it only changes form — so
+% naming a process's energy_in and energy_out IS the systems claim, not a
+% restatement of `energy-forms.adj`'s form→token facts. `energy-
+% forms.adj`/`energy-form-family.adj` name what each form IS; this table
+% names what a form BECOMES, closing the loop those two siblings' own
+% headers left open (see `energy-forms.adj`: "the family split is not part
+% of this table" — the CONVERSION direction is not part of either sibling
+% either, until now).
+%
+% HONEST ABSTENTION / a note on a near-collision deliberately avoided: the
+% "Forms of energy" page's own fireplace sentence ALSO mentions "burn
+% gasoline in a car's engine" as a second example of chemical→thermal — but
+% the "Laws of energy" page gives car engines their OWN dedicated, more
+% specific sentence naming chemical→MECHANICAL instead (the useful output of
+% an engine, not its heat byproduct — both are physically true of a real
+% engine, which produces both motion and waste heat, but a single `process`
+% key can only carry one row without contradicting itself). This table
+% deliberately keeps `car_engine_burning_gasoline` mapped to the "Laws of
+% energy" page's own dedicated, purpose-built sentence about what an engine
+% is FOR, and keeps the "Forms of energy" page's fireplace clause scoped to
+% `wood_burning_in_fireplace` only — not a dropped fact, a deliberate choice
+% to avoid asserting two different outputs for what reads as the same
+% process, the same honest-narrowness discipline `heat-causes-phase-
+% change.adj` and siblings already established. A process NOT one of these
+% four — a toaster, a battery, a wind turbine — has no row, so a recall on
+% it ABSTAINS rather than inventing a conversion.
+%
+% Every `energy_in`/`energy_out` atom is one of the SAME eight lowercase
+% form names `energy-forms.adj`/`energy-form-family.adj` already use
+% (chemical, thermal, radiant, electrical, gravitational, motion) — chosen
+% to compose cleanly with those siblings on the shared form vocabulary,
+% never a new or invented form name.
+%
+% ---------------------------------------------------------------------------
+% Provenance (nothing here is asserted from memory — every process →
+% (energy_in, energy_out) triple was read verbatim out of one of two fetched
+% U.S. EIA "Energy Explained" pages, and any process whose conversion could
+% not be found stated outright in one of those two pages would have been
+% dropped). The two spans that fix these four rows:
+%
+%   wood_burning_in_fireplace → (chemical, thermal)
+%   bicycle_going_downhill → (gravitational, motion)
+%     https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php
+%     (U.S. Energy Information Administration — Energy Explained, "Forms of
+%      energy" — the SAME page `energy-forms.adj`/`energy-form-family.adj`
+%      already cite)
+%     "For example, chemical energy is converted to thermal energy when
+%      people burn wood in a fireplace or burn gasoline in a car's engine."
+%     "When a person rides a bicycle down a steep hill and picks up speed,
+%      the gravitational energy is converting to motion energy."
+%
+%   car_engine_burning_gasoline → (chemical, mechanical)
+%   solar_photovoltaic_cell → (radiant, electrical)
+%     https://www.eia.gov/energyexplained/what-is-energy/laws-of-energy.php
+%     (U.S. Energy Information Administration — Energy Explained, "Laws of
+%      energy" — a NEW fetch this cycle, a sibling page on the same site,
+%      not previously cited anywhere in this stdlib)
+%     "A car engine burns gasoline, converting the chemical energy in
+%      gasoline into mechanical energy. Solar photovoltaic cells change
+%      radiant energy from the sun into electrical energy."
+%
+% (The "Laws of energy" page itself credits its content, at the foot of the
+% page, to "Data source: National Energy Education Development Project
+% (public domain)" — a transparency note reproduced here rather than hidden;
+% it does not change the trust tier, since the citable, re-fetchable
+% artifact is the EIA .gov page itself, the same primary-government-source
+% reasoning `energy-forms.adj`/`energy-sources.adj`/`energy-form-
+% family.adj` already use for pages hosted at the same domain.)
+%
+% An ADJ `table` carries ONE provenance envelope, so the `source`/`locator`/
+% `trust` below hold the "Laws of energy" conservation-law span (the general
+% principle these four examples all illustrate); the `cites` block adds the
+% "Forms of energy" page as a second independently-checkable source, since
+% two of the four rows come from it. Both are primary U.S. government EIA
+% education pages (eia.gov), the same tier `energy-forms.adj` already uses,
+% so `trust authoritative`.
+% (See ../README.md; feedback_nothing_human_authored,
+% feedback_adj_only_shipped_artifacts, feedback_no_byte_arithmetic_for_llm.)
+% ============================================================================
+
+table energy_conversion_example {
+    columns process, energy_in, energy_out
+
+    row (wood_burning_in_fireplace, chemical, thermal)
+    row (car_engine_burning_gasoline, chemical, mechanical)
+    row (solar_photovoltaic_cell, radiant, electrical)
+    row (bicycle_going_downhill, gravitational, motion)
+
+    source "A car engine burns gasoline, converting the chemical energy in gasoline into mechanical energy. Solar photovoltaic cells change radiant energy from the sun into electrical energy."
+    locator "https://www.eia.gov/energyexplained/what-is-energy/laws-of-energy.php"
+    trust authoritative
+
+    cites "For example, chemical energy is converted to thermal energy when people burn wood in a fireplace or burn gasoline in a car's engine. When a person rides a bicycle down a steep hill and picks up speed, the gravitational energy is converting to motion energy." locator "https://www.eia.gov/energyexplained/what-is-energy/forms-of-energy.php"
+}
