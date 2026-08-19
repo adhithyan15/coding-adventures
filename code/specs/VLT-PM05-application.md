@@ -1450,9 +1450,13 @@ single input *byte* can expand to (a lone ASCII control byte escaping to
 `\u{xx}`) and every other case — named escapes, unescaped printable
 characters, multi-byte UTF-8 sequences — expands by less per input byte, not
 more. The real, unmodified `Debug` formatter still writes the escaped text;
-this only changes where it writes into. A `debug_assert_eq!` on the buffer's
-capacity turns "did the bound stay sufficient" into a standing invariant
-rather than a one-time check.
+this only changes where it writes into. A full `assert_eq!` on the buffer's
+capacity — not `debug_assert_eq!`; this runs only on an already-slow,
+human-attended reveal, so the cost is immaterial, and compiling the check
+out of release builds would let a future `std` Debug-escaping change widen
+past the reserved bound and reopen this exact leak with no signal in the
+build that ships — turns "did the bound stay sufficient" into a standing
+invariant enforced everywhere, not just in debug and test builds.
 
 **Tests.** `vault-records`: `zeroize_cbor_value_wipes_every_variant` builds
 one tree exercising every `CborValue` variant, nested under `Array`/`Map`/

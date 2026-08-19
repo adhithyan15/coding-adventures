@@ -550,15 +550,44 @@ fn split_envelope(
     let mut t: Option<String> = None;
     // Wrapped the instant the plaintext value under `"d"` is captured,
     // not after `split_envelope` returns successfully: `d` can also be
-    // dropped un-returned, from inside this loop, if the envelope's
-    // *other* entry turns out to be malformed (`BadEnvelope` below).
-    // `Option<SecretCborValue>`'s own drop glue wipes it on that path
-    // too, which a wipe placed only at the bottom of this function,
-    // after the final `match`, would have missed.
+    // dropped un-returned if the envelope's *other* entry turns out to
+    // be malformed (`BadEnvelope` below). `Option<SecretCborValue>`'s
+    // own drop glue wipes it on that path too, which a wipe placed only
+    // at the bottom of this function, after the final `match`, would
+    // have missed.
     let mut d: Option<(SecretCborValue, core::ops::Range<usize>)> = None;
+    let mut malformed = false;
+    // This loop deliberately never `return`s early, even on a shape it
+    // is about to reject. A security review of an earlier version of
+    // this function (which *did* `return Err(...)` from inside the
+    // loop body) found that doing so leaks: `for entry in entries`
+    // desugars to `IntoIterator::into_iter(entries)`, and an early
+    // `return` abandons that iterator mid-walk. Any entry the loop
+    // hadn't reached yet is still owned by the iterator and drops
+    // through ordinary, non-wiping `Drop` when the function unwinds —
+    // bypassing every explicit `zeroize_cbor_value` call in the body
+    // entirely, for both that entry's key *and* its value. With exactly
+    // two entries this is reachable: an envelope whose first
+    // (canonically-ordered) entry has an unrecognised key bails before
+    // the second entry — which could legitimately be `"d"` — is ever
+    // inspected. So instead this loop always visits every entry,
+    // wiping or capturing each one before moving to the next, and only
+    // decides what to return *after* the loop has fully drained
+    // `entries`. `malformed` records "reject at the end" without ever
+    // walking away from an entry mid-iteration.
     for mut entry in entries {
-        match entry.key {
-            CborValue::Text(s) if s == "t" => match entry.value {
+        // Every key is read only to classify the entry, never returned
+        // to the caller (the two legal ones are the literal `"t"`/`"d"`
+        // constants), so it is always wiped immediately after — even
+        // though `"t"`/`"d"` are not secrets, this keeps the "everything
+        // this loop touches gets wiped, no exceptions" invariant simple
+        // to audit rather than special-casing "looks secret."
+        let is_t = matches!(&entry.key, CborValue::Text(s) if s == "t");
+        let is_d = matches!(&entry.key, CborValue::Text(s) if s == "d");
+        zeroize_cbor_value(&mut entry.key);
+
+        if is_t {
+            match entry.value {
                 CborValue::Text(s) => t = Some(s),
                 mut other => {
                     // Malformed `"t"`: whatever this decoded to is
@@ -566,25 +595,22 @@ fn split_envelope(
                     // under the wrong key. Wipe it before the shape
                     // mismatch is reported.
                     zeroize_cbor_value(&mut other);
-                    return Err(VaultRecordError::BadEnvelope);
+                    malformed = true;
                 }
-            },
-            CborValue::Text(s) if s == "d" => {
-                d = Some((SecretCborValue::new(entry.value), entry.value_span))
             }
-            _ => {
-                // Unrecognised key. The value under it is still
-                // decrypted plaintext (this envelope's own siblings
-                // decoded through the same call), so it gets the same
-                // wipe as every other rejected shape here — including
-                // when this is the *second* of the two entries and `d`
-                // above is already `Some`, in which case `d`'s own
-                // wrap-on-capture (see above) covers it when this
-                // function returns.
-                zeroize_cbor_value(&mut entry.value);
-                return Err(VaultRecordError::BadEnvelope);
-            }
+        } else if is_d {
+            d = Some((SecretCborValue::new(entry.value), entry.value_span));
+        } else {
+            // Unrecognised key. The value under it is still decrypted
+            // plaintext (this envelope's own siblings decoded through
+            // the same call), so it gets the same wipe as every other
+            // rejected shape here.
+            zeroize_cbor_value(&mut entry.value);
+            malformed = true;
         }
+    }
+    if malformed {
+        return Err(VaultRecordError::BadEnvelope);
     }
     match (t, d) {
         (Some(t), Some((d, span))) => Ok((t, d, span)),
@@ -2865,5 +2891,43 @@ mod tests {
             "decode_record did not wipe its payload"
         );
         assert!(matches!(decoded, AnyRecord::Login(_)));
+    }
+
+    /// Pins a security-review finding against an earlier version of
+    /// `split_envelope`: its loop used to `return Err(...)` the moment it
+    /// saw a rejected entry, which abandoned `entries`' iterator mid-walk.
+    /// Canonical key order sorts `"a"` before `"d"` (equal encoded length,
+    /// `"a"` < `"d"` bytewise), so a malformed envelope shaped `{"a": …,
+    /// "d": <secret>}` reached the unrecognised `"a"` key first and
+    /// returned before the loop ever visited the legitimate `"d"` entry —
+    /// which still held real secret plaintext. That entry was never
+    /// wrapped in `SecretCborValue` at all, so it dropped through
+    /// ordinary, non-wiping `Drop` on the way out, unwiped. The loop no
+    /// longer returns early (see its doc comment); this proves the `"d"`
+    /// entry gets wrapped and wiped regardless of what its sibling looked
+    /// like or which one the loop reached first.
+    #[test]
+    fn a_malformed_envelopes_second_entry_is_still_wiped_even_when_the_first_is_rejected() {
+        use core::sync::atomic::Ordering;
+
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("a"), CborValue::Null),
+            (
+                CborValue::text("d"),
+                CborValue::text("a-secret-that-must-still-be-wiped"),
+            ),
+        ]);
+        let bytes = encode(&envelope);
+
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        assert!(matches!(
+            decode_record(&bytes).unwrap_err(),
+            VaultRecordError::BadEnvelope
+        ));
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "the legitimate \"d\" entry, arriving after a rejected sibling, was never \
+             wrapped in SecretCborValue and so was never wiped"
+        );
     }
 }

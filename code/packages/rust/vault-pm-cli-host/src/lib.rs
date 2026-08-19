@@ -563,12 +563,18 @@ impl ControllingTerminal {
 /// regardless (`coding_adventures_zeroize::Zeroize for String`), so
 /// over-reserving costs a few unused bytes, never a leak.
 ///
-/// The `debug_assert_eq!` below is the same empirical check
+/// The `assert_eq!` below is the same empirical check
 /// `encode_never_reallocates_a_buffer_already_holding_a_secret` makes for
-/// `AgentRequest::encode`, turned into a standing runtime invariant: if this
-/// bound is ever wrong (a future `std` Debug-escaping change, a mistaken
-/// edit here), it fails loudly in every debug/test build rather than
-/// silently reopening the leak.
+/// `AgentRequest::encode`, turned into a standing runtime invariant. It is
+/// deliberately a full `assert_eq!`, not `debug_assert_eq!`: this function
+/// runs only on the already-slow, human-attended terminal-reveal path, so
+/// the cost of one integer comparison is immaterial, while compiling the
+/// check out of release builds would mean a future `std` Debug-escaping
+/// change that ever widened past 6 bytes per input byte reopens this exact
+/// leak silently, with no signal in the build that actually ships. Failing
+/// loud here — refusing the reveal rather than serving a value that may
+/// have left an unwiped copy behind — is the correct trade for a security
+/// invariant like this one.
 fn escaped_revealed_text(value: &str) -> Zeroizing<String> {
     let capacity = 2 + value.len().saturating_mul(6);
     let mut out = Zeroizing::new(String::with_capacity(capacity));
@@ -576,7 +582,7 @@ fn escaped_revealed_text(value: &str) -> Zeroizing<String> {
     // the trait can report is a formatter failure, and none of `Debug`'s
     // machinery produces one — so this `expect` cannot fire.
     write!(out, "{value:?}").expect("writing Debug-escaped text into a String cannot fail");
-    debug_assert_eq!(
+    assert_eq!(
         out.capacity(),
         capacity,
         "escaped_revealed_text's upper bound was too tight and the buffer reallocated \

@@ -21,9 +21,12 @@
   on Debug-escaping's worst per-input-byte expansion (a lone ASCII control
   byte escaping to `\u{xx}`) — and writes the real, unmodified `Debug`
   formatter's output into that buffer via `write!`, so no reallocation can
-  occur while a copy of the secret is resident. A `debug_assert_eq!` on the
-  final capacity turns "the bound stayed sufficient" into a standing
-  invariant. See VLT-PM05 §13.6 for the full design account, and
+  occur while a copy of the secret is resident. A full `assert_eq!` (not
+  `debug_assert_eq!` — this is a cheap check on an already-slow,
+  human-attended path, and compiling it out of release builds would mean a
+  future regression reopens the leak with no signal) on the final capacity
+  turns "the bound stayed sufficient" into a standing invariant. See
+  VLT-PM05 §13.6 for the full design account, and
   `escaped_revealed_text_never_reallocates_a_buffer_already_holding_a_secret`
   for the regression test (mirrors `vault-pm-agent-protocol`'s
   `encode_never_reallocates_a_buffer_already_holding_a_secret`).
