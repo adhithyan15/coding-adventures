@@ -1,0 +1,278 @@
+//! SIR23 execution proof, Tier A pattern matcher (Phase A Slice 4):
+//! `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
+//! `SymPatternNamed`/`SymRule`/`SymReplaceAll` on the Go backend —
+//! hand-builds a module calling each node directly (bypassing the
+//! frontend, since no frontend targets this backend for SIR23 yet), emits
+//! Go, runs it with a real `go run`, and asserts stdout. Mirrors
+//! `sir22_array.rs`'s pattern; skips (does not fail) when no `go` is on
+//! `PATH`.
+//!
+//! Ported from `semantic-ir-to-javascript`'s own already-proven
+//! `tests/sir23_symbolic.rs` (cross-checked against the sibling Ruby
+//! backend's own port on `sir23-ruby-matcher`) — Tier A cases only
+//! (`replace_repeated`, `replace_all`, typed-blank matching, the
+//! depth-limit and rewrite-cycle DoS guards). The JS reference's
+//! remaining tests (`assign`/`define`/`if`/elementary-function/
+//! differentiation cases) all exercise `evalTerm` — Tier B, explicitly
+//! out of scope for this slice — so they have no analogue here.
+
+use semantic_ir::{
+    Block, Effect, EffectSet, Expr, Feature, FeatureManifest, Function, Metadata, Module, Scope,
+    Span, Stmt,
+};
+use semantic_ir_to_go::compile;
+
+fn s() -> Span {
+    Span::synthetic()
+}
+fn ilit(v: i64) -> Expr {
+    Expr::IntLit { value: v, span: s() }
+}
+fn sym(name: &str) -> Expr {
+    Expr::SymSymbol { name: name.into(), span: s() }
+}
+fn local(name: &str) -> Expr {
+    Expr::VarRef { name: name.into(), scope: Scope::Local, span: s() }
+}
+fn sym_apply(head: Expr, args: Vec<Expr>) -> Expr {
+    Expr::SymApply { head: Box::new(head), args, span: s() }
+}
+fn blank() -> Expr {
+    Expr::SymPatternBlank { head: None, span: s() }
+}
+fn blank_typed(head: &str) -> Expr {
+    Expr::SymPatternBlank { head: Some(Box::new(sym(head))), span: s() }
+}
+fn named(name: &str, pattern: Expr) -> Expr {
+    Expr::SymPatternNamed { name: name.into(), pattern: Box::new(pattern), span: s() }
+}
+fn rule(lhs: Expr, rhs: Expr, delayed: bool) -> Expr {
+    Expr::SymRule { lhs: Box::new(lhs), rhs: Box::new(rhs), delayed, span: s() }
+}
+fn replace_all(expr: Expr, rules: Vec<Expr>, repeated: bool) -> Expr {
+    Expr::SymReplaceAll { expr: Box::new(expr), rules, repeated, span: s() }
+}
+fn print_stmt(expr: Expr) -> Stmt {
+    Stmt::ExprStmt {
+        expr: Expr::BuiltinCall {
+            name: "__sys_write__".into(),
+            args: vec![
+                Expr::StrLit { value: "stdout".into(), span: s() },
+                Expr::StrLit { value: "once".into(), span: s() },
+                Expr::BoolLit { value: false, span: s() },
+                expr,
+            ],
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            span: s(),
+        },
+        span: s(),
+    }
+}
+fn let_binding(name: &str, value: Expr) -> Stmt {
+    Stmt::LetBinding { name: name.into(), sir_type: None, value, span: s() }
+}
+
+const SYMBOLIC_FEATURES: &[Feature] =
+    &[Feature::SymbolicExpr, Feature::PatternMatching, Feature::Rationals];
+
+fn symbolic_module(stmts: Vec<Stmt>) -> Module {
+    let mut features = vec![Feature::ConsoleIO, Feature::Strings];
+    features.extend_from_slice(SYMBOLIC_FEATURES);
+    Module {
+        name: "sir23symbolic".into(),
+        manifest: FeatureManifest::from_features(&features),
+        imports: vec![],
+        exports: vec![],
+        functions: vec![Function {
+            name: "main".into(),
+            params: vec![],
+            return_type: None,
+            captures: vec![],
+            body: Block { stmts, value: Expr::NilLit { span: s() }, span: s() },
+            effects: EffectSet::PURE.with(Effect::MayPrint),
+            metadata: Metadata::new(),
+            span: s(),
+        }],
+        globals: vec![],
+        metadata: Metadata::new()
+            .with_source_language("test")
+            .with_sir_version(semantic_ir::CURRENT_SIR_VERSION),
+        span: s(),
+    }
+}
+
+fn go_available() -> bool {
+    std::process::Command::new("go")
+        .arg("version")
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+}
+
+/// Compile, write to a unique temp file, `go run` it, return stdout, or
+/// `None` to skip when no `go` is on `PATH`. Unique temp-file names per
+/// call (PID + a monotonic counter) — see `sir22_array.rs::run`'s
+/// identical rationale (avoids a same-path race between concurrently
+/// running `cargo test` threads).
+fn run_symbolic_program(m: &Module) -> Option<String> {
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    static SEQ: AtomicUsize = AtomicUsize::new(0);
+
+    if !go_available() {
+        return None;
+    }
+    let source = compile(m).expect("go emit").source;
+    let dir = std::env::temp_dir();
+    let path = dir.join(format!(
+        "sir_go_symbolic_{}_{}.go",
+        std::process::id(),
+        SEQ.fetch_add(1, Ordering::Relaxed)
+    ));
+    std::fs::write(&path, &source).expect("write temp source");
+    let out = std::process::Command::new("go")
+        .arg("run")
+        .arg(&path)
+        .output()
+        .expect("invoke go run");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        out.status.success(),
+        "emitted go exited non-zero:\n{}\n--- source ---\n{source}",
+        String::from_utf8_lossy(&out.stderr)
+    );
+    Some(String::from_utf8_lossy(&out.stdout).replace("\r\n", "\n"))
+}
+
+#[test]
+fn replace_repeated_reduces_nested_add_zero_to_bare_symbol() {
+    // Rule: x_ + 0 -> x_ (Wolfram `x_ + 0 :> x_`, held as `RuleDelayed`
+    // here so the RHS is exactly the same pattern-bound `x_` node).
+    let x_pat = named("x", blank());
+    let r = rule(sym_apply(sym("Add"), vec![x_pat.clone(), ilit(0)]), x_pat, true);
+
+    // expr: Add(Add(z, 0), 0) — both `+ 0`s should fire, to a fixed point.
+    let inner = sym_apply(sym("Add"), vec![sym("z"), ilit(0)]);
+    let expr = sym_apply(sym("Add"), vec![inner, ilit(0)]);
+
+    let m = symbolic_module(vec![print_stmt(replace_all(expr, vec![r], true))]);
+    if let Some(stdout) = run_symbolic_program(&m) {
+        assert_eq!(stdout.trim_end(), "z");
+    } else {
+        eprintln!("skip: no go on PATH");
+    }
+}
+
+#[test]
+fn replace_all_single_pass_does_not_retry_at_same_position() {
+    // `/.` (single pass): a -> b applied to Pair(a, a) fires once at EACH
+    // occurrence of `a` (bottom-up, one visit per node), not repeatedly.
+    let r = rule(sym("a"), sym("b"), false);
+    let expr = sym_apply(sym("Pair"), vec![sym("a"), sym("a")]);
+    let m = symbolic_module(vec![print_stmt(replace_all(expr, vec![r], false))]);
+    if let Some(stdout) = run_symbolic_program(&m) {
+        assert_eq!(stdout.trim_end(), "Pair(b, b)");
+    } else {
+        eprintln!("skip: no go on PATH");
+    }
+}
+
+#[test]
+fn typed_blank_matches_only_constrained_head() {
+    // f(x_Integer) -> x_ matched against f(5) and f(z): only the
+    // Integer-headed argument matches; the Symbol one is left unchanged
+    // by replaceAll's "no match, no rewrite" fallthrough.
+    let x_pat = named("x", blank_typed("Integer"));
+    let r = rule(sym_apply(sym("f"), vec![x_pat.clone()]), x_pat, false);
+    let e_int_term = sym_apply(sym("f"), vec![ilit(5)]);
+    let e_sym_term = sym_apply(sym("f"), vec![sym("z")]);
+    let m = symbolic_module(vec![
+        print_stmt(replace_all(e_int_term, vec![r.clone()], false)),
+        print_stmt(replace_all(e_sym_term, vec![r], false)),
+    ]);
+    if let Some(stdout) = run_symbolic_program(&m) {
+        let lines: Vec<&str> = stdout.trim_end().lines().collect();
+        assert_eq!(lines, vec!["5", "f(z)"]);
+    } else {
+        eprintln!("skip: no go on PATH");
+    }
+}
+
+#[test]
+fn a_rational_term_prints_reduced() {
+    // _sir_cas_rational reduces numer/denom by their gcd at construction
+    // time, mirroring the JS/Ruby references — 6/8 must print as "3/4".
+    let r = Expr::SymRational { numer: 6, denom: 8, span: s() };
+    let m = symbolic_module(vec![print_stmt(r)]);
+    if let Some(stdout) = run_symbolic_program(&m) {
+        assert_eq!(stdout.trim_end(), "3/4");
+    } else {
+        eprintln!("skip: no go on PATH");
+    }
+}
+
+#[test]
+fn depth_limit_guard_panics_instead_of_crashing_the_go_stack() {
+    // A runtime-built term nested past sirCasMaxTermDepth (512) must
+    // cause a clean, catchable `panic` from `_sir_cas_walk_once`, not
+    // overflow the native Go stack. Built via a REAL compiled `for`-loop
+    // in the emitted program (600 runtime firings of `Wrap(acc)`, not a
+    // hand-built 600-node static AST — mirrors the JS reference's own
+    // deep-term test and the Ruby port's identical construction), then
+    // run through `replaceAll` with an empty rule set (no rule ever
+    // fires, so every level of the walk is exercised).
+    let stmts = vec![
+        let_binding("acc", sym("leaf")),
+        Stmt::ForRange {
+            var: "i".into(),
+            start: ilit(0),
+            stop: ilit(600),
+            step: ilit(1),
+            body: Block {
+                stmts: vec![Stmt::Assign {
+                    name: "acc".into(),
+                    scope: Scope::Local,
+                    value: sym_apply(sym("Wrap"), vec![local("acc")]),
+                    span: s(),
+                }],
+                value: Expr::NilLit { span: s() },
+                span: s(),
+            },
+            span: s(),
+        },
+        print_stmt(replace_all(local("acc"), vec![], false)),
+    ];
+    let mut m = symbolic_module(stmts);
+    let mut features: Vec<Feature> = SYMBOLIC_FEATURES.to_vec();
+    features.extend_from_slice(&[
+        Feature::ConsoleIO,
+        Feature::Strings,
+        Feature::Loops,
+        Feature::MutableBindings,
+    ]);
+    m.manifest = FeatureManifest::from_features(&features);
+
+    if !go_available() {
+        eprintln!("skip: no go on PATH");
+        return;
+    }
+    let source = compile(&m).expect("go emit").source;
+    let dir = std::env::temp_dir();
+    let path = dir.join(format!("sir_go_symbolic_depth_{}.go", std::process::id()));
+    std::fs::write(&path, &source).expect("write temp source");
+    let out = std::process::Command::new("go")
+        .arg("run")
+        .arg(&path)
+        .output()
+        .expect("invoke go run");
+    let _ = std::fs::remove_file(&path);
+    assert!(
+        !out.status.success(),
+        "expected a non-zero exit from the depth-limit panic, got success:\n{}",
+        String::from_utf8_lossy(&out.stdout)
+    );
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("sir-runtime-symbolic: depth-limit"),
+        "expected a depth-limit panic message, got:\n{stderr}"
+    );
+}

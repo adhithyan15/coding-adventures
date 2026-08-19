@@ -1092,26 +1092,125 @@ fn emit_expr(out: &mut String, e: &Expr, indent: usize) {
                 span
             );
         }
-        // ── SIR23 (symbolic expression + pattern/rewrite IR) ──────────
+        // ── SIR23 (symbolic expression + pattern/rewrite IR, Tier A only)
+        // ────────────────────────────────────────────────────────────
         // `SymSymbol`/`SymRational`/`SymApply`/`SymPatternBlank`/
-        // `SymPatternNamed`/`SymRule`/`SymReplaceAll` observe
-        // `Feature::SymbolicExpr` and/or `Feature::PatternMatching`, neither
-        // of which `ACCEPTED_FEATURES` declares, so the SIR10 capability
-        // gate rejects any module using one of these nodes before it ever
-        // reaches emit — mirrors the SIR22/SIR26 deferred-node panic above.
-        Expr::SymSymbol { .. }
-        | Expr::SymRational { .. }
-        | Expr::SymApply { .. }
-        | Expr::SymPatternBlank { .. }
-        | Expr::SymPatternNamed { .. }
-        | Expr::SymRule { .. }
-        | Expr::SymReplaceAll { .. } => {
-            panic!(
-                "go backend reached a deferred SIR23 expression ({}) at {} — not accepted yet",
-                e.kind_name(),
-                e.span()
-            );
+        // `SymPatternNamed`/`SymRule`/`SymReplaceAll` now observe
+        // `Feature::SymbolicExpr`/`Feature::Rationals`/`Feature::
+        // PatternMatching`, all three accepted in `lib.rs`'s
+        // `ACCEPTED_FEATURES` (Phase A Slice 4). Mirrors the Ruby/
+        // JavaScript backends' SIR23 arms, but calls into the INLINED
+        // `_sir_cas_*` runtime (runtime.rs — see its own "SIR23 symbolic
+        // expressions" doc comment for the naming rationale and Tier A/B
+        // split) rather than an imported package. Tier A (the pattern
+        // matcher) only — no `evalTerm`-equivalent arithmetic/calculus
+        // folding exists here; `SymApply` builds an inert term tree,
+        // nothing more.
+        Expr::SymSymbol { name, .. } => {
+            let _ = write!(out, "_sir_cas_symbol({})", quote_go_string(name));
         }
+        Expr::SymRational { numer, denom, .. } => {
+            let _ = write!(out, "_sir_cas_rational({numer}, {denom})");
+        }
+        Expr::SymApply { head, args, .. } => {
+            out.push_str("_sir_cas_apply(");
+            emit_sym_operand(out, head, indent);
+            out.push_str(", []Value{");
+            for (i, a) in args.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, a, indent);
+            }
+            out.push_str("})");
+        }
+        Expr::SymPatternBlank { head: None, .. } => {
+            out.push_str("_sir_cas_blank()");
+        }
+        Expr::SymPatternBlank {
+            head: Some(head), ..
+        } => match head.as_ref() {
+            Expr::SymSymbol { name, .. } => {
+                let _ = write!(out, "_sir_cas_blank_typed({})", quote_go_string(name));
+            }
+            _ => panic!(
+                "go backend: SymPatternBlank's head-constraint must be a SymSymbol, got {} at {}",
+                head.kind_name(),
+                head.span()
+            ),
+        },
+        Expr::SymPatternNamed { name, pattern, .. } => {
+            let _ = write!(out, "_sir_cas_named({}, ", quote_go_string(name));
+            emit_sym_operand(out, pattern, indent);
+            out.push(')');
+        }
+        Expr::SymRule {
+            lhs, rhs, delayed, ..
+        } => {
+            out.push_str(if *delayed {
+                "_sir_cas_rule_delayed("
+            } else {
+                "_sir_cas_rule("
+            });
+            emit_sym_operand(out, lhs, indent);
+            out.push_str(", ");
+            emit_sym_operand(out, rhs, indent);
+            out.push(')');
+        }
+        Expr::SymReplaceAll {
+            expr,
+            rules,
+            repeated,
+            ..
+        } => {
+            out.push_str(if *repeated {
+                "_sir_cas_replace_repeated("
+            } else {
+                "_sir_cas_replace_all("
+            });
+            emit_sym_operand(out, expr, indent);
+            out.push_str(", []Value{");
+            for (i, r) in rules.iter().enumerate() {
+                if i > 0 {
+                    out.push_str(", ");
+                }
+                emit_sym_operand(out, r, indent);
+            }
+            out.push('}');
+            if *repeated {
+                out.push_str(", sirCasMaxIterationsDefault");
+            }
+            out.push(')');
+        }
+    }
+}
+
+/// Wrap a `SymApply`/`SymPatternNamed`/`SymRule`/`SymReplaceAll` operand
+/// that is a bare literal (`IntLit`/`FloatLit`/`StrLit`) through the
+/// matching `_sir_cas_*` leaf-term constructor — a raw Go `int64`/
+/// `float64`/`string` is never a valid Symbolic term, so it must become
+/// one before it can sit inside a term tree. Any other operand (already a
+/// Symbolic-producing expression, e.g. a nested `SymApply` or a `VarRef`)
+/// emits unchanged. Mirrors the Ruby/JavaScript/TypeScript backends'
+/// identically-named helper.
+fn emit_sym_operand(out: &mut String, e: &Expr, indent: usize) {
+    match e {
+        Expr::IntLit { .. } => {
+            out.push_str("_sir_cas_int(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::FloatLit { .. } => {
+            out.push_str("_sir_cas_float(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        Expr::StrLit { .. } => {
+            out.push_str("_sir_cas_string(");
+            emit_expr(out, e, indent);
+            out.push(')');
+        }
+        _ => emit_expr(out, e, indent),
     }
 }
 
