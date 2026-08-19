@@ -6,15 +6,15 @@ Human Languages curriculum gap report
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 18 mixed, 4 version-2 schema tracks
 2662 drivable lessons (85% of the corpus)
-levels: 1856 pre-A1, 573 A1, 547 A2, 40 B1, 17 B2, 10 C1, 18 C2; 86 unmapped (97% placed)
-ramp: 46 lessons above 3 new atoms (607 unmeasurable, 81% measurable); 21 chapters above 12
+levels: 1858 pre-A1, 573 A1, 547 A2, 40 B1, 17 B2, 10 C1, 18 C2; 84 unmapped (97% placed)
+ramp: 46 lessons above 3 new atoms (604 unmeasurable, 81% measurable); 21 chapters above 12
 script ramp: 62 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest MR-C01-dhanyavad at 12
 cousin layer: 213 lessons show another script (max 27 glyphs) — context, never charged to the budget
 script closure: 756 lessons ask the reader to decode a glyph nobody taught them, across 16 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 305 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2220 glyphs and makes 176 lessons clean on its own
-order: 322 lessons with no declared sequence across 12 tracks; 143 prerequisites and 168 reviews pointing forward
-reinforcement: 601 of 4309 atoms never revisited (14%); missed windows R1 1150, R2 3350, R3 3179, R4 1759
-forward references: 511 uses of material a later lesson teaches
+order: 319 lessons with no declared sequence across 12 tracks; 142 prerequisites and 167 reviews pointing forward
+reinforcement: 604 of 4313 atoms never revisited (14%); missed windows R1 1154, R2 3351, R3 3183, R4 1759
+forward references: 510 uses of material a later lesson teaches
 VOCABULARY vs HL09 §3.1 targets: spanish 118/300 at-or-below pre-A1 (297 total), sanskrit 139/300 at-or-below pre-A1 (205 total), telugu 151/300 at-or-below pre-A1 (204 total), hindi 120/300 at-or-below pre-A1 (177 total), malayalam 119/300 at-or-below pre-A1 (177 total); 22 of 22 tracks short of the level they are working on
 levels ATTAINED (HL09 §3.1): none; 22 track(s) touch a level they have not attained
 0 of 954 book chapters without an HL05 capability; 75 payoffs below the 0.5 representativeness floor; 10 tracks already clean
@@ -89,7 +89,7 @@ grammar cells (spanish): 18 of 231 regular cells taught (8%), against 231 univer
   ES-C07-vivir: teaches ES-CELL-IND-PRES-3SG-CONJ3 before ES-CELL-IND-PRES-2SG-CONJ3
   ES-C07-hablan: teaches ES-CELL-IND-PRES-3PL-CONJ1 before ES-CELL-IND-PRES-2PL-CONJ1
 
-root ledger: 3076 roots, 2962 spent fewer than 3 times (96%), 2037 never spent at all
+root ledger: 3077 roots, 2963 spent fewer than 3 times (96%), 2038 never spent at all
   taught once and never returned to: a-dios-latin (ES-C05-adios), a-k-l (AR-C30-akala), a-kh-dh (AR-C32-akhadha)
   best-spent root: ES-ETYMON-STARE with 10 payoffs
 
@@ -99,4 +99,4 @@ info dump (report-only): 121 of 3147 lessons -- 30 rule statements, 95 paradigm 
 metalanguage: 52 of 54 grammar terms appear in 3065 lessons; 11612 uses come before introduction, of which 3148 are technical terms across 1626 lessons
   most-used-before-introduction: verb (1010 lessons), noun (528 lessons), tense (157 lessons), regular (151 lessons), adjective (145 lessons), pronoun (144 lessons)
 literal markup: none in 3147 lessons or any generated book
-glyph coverage: every character renders -- 126 main-font and 692 script characters across 1086 generated files
+glyph coverage: every character renders -- 126 main-font and 693 script characters across 1086 generated files
