@@ -338,6 +338,7 @@ export {
   buildCompletionPlan,
   renderCompletionPlan,
   CERTIFIABLE_LEVELS,
+  TASK_SHAPE_LEVELS,
   KIND_PRIORITY,
   TRANCHE_SIZE,
   type CompletionPlan,

@@ -85,6 +85,12 @@ contract contains every level and, at each level:
 project-defined path. The equivalent must be published and reviewable; it may
 not be an unnamed editorial feeling hidden in code.
 
+Every contract reference to `task-shapes/<level>.json` is loadable and measured,
+including pre-A1. Pre-A1 is not an external certificate and therefore does not
+create an `exam-inventory` item, but its project-defined task shape must still
+score reading, listening, writing, and speaking independently. A referenced but
+absent file remains backlog; an unreadable or one-skill-only file fails closed.
+
 ### 4.1 External target
 
 Use an external target only when the awarding body publishes enough information

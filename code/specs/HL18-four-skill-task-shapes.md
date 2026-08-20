@@ -17,9 +17,18 @@ is decomposed; it is not itself a lesson and does not relax the five-minute cap.
 
 ## 2. Location and coverage
 
-Each track may contain `<track>/task-shapes/<level>.json` for A1 through C2.
-There is no external pre-A1 certificate in this model. The project's pre-A1
-floor exists to make the first approach to A1 gentle.
+Each track may contain `<track>/task-shapes/<level>.json` for all seven
+curriculum rungs, pre-A1 through C2. There is no external pre-A1 certificate in
+this model, so that rung uses a clearly labelled project-defined equivalent.
+It has the same strict four-skill schema as later rungs: a smaller or
+one-skill-only file would hide exactly the productive gap pre-A1 is meant to
+prevent.
+
+Scored pre-A1 writing is not tracing or visible copying. Those remain gentle
+instructional supports under HL16. The performance inventory must include
+delayed recall, dictation or transcription, and bounded independent production;
+later levels lengthen and combine these shapes rather than introducing retrieval
+only at the exam door.
 
 Every inventory must name exactly one external exam or clearly labelled
 project-defined equivalent, cite official or project-owned sources, and contain
@@ -91,8 +100,10 @@ the final exam combines them.
 
 ## 6. Computed backlog
 
-`buildTaskShapeBacklog()` enumerates every missing `(track, certifiable level)`
-pair in level-first, round-robin order. This keeps the finite research work
+`buildTaskShapeBacklog()` enumerates every missing `(track, curriculum level)`
+pair in level-first, round-robin order. Exam inventories remain A1–C2 because
+pre-A1 is not externally certifiable; task shapes cover all seven rungs because
+the project's own floor still has to score four-skill performance. This keeps the finite research work
 visible across all languages instead of letting one favored track consume the
 queue. Adding a valid inventory removes exactly one stable
 `task-shape/<language>/<level>` item.
