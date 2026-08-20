@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:e2bee7bd476c07d6",
+  "sourceHash": "fnv1a64:3036f130271b6988",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -1492,7 +1492,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:29b8a7672a93879e",
+      "sourceHash": "fnv1a64:1dc5ffadbb54cf22",
       "notice": null,
       "blocks": [
         {

@@ -19,8 +19,12 @@
         "lesson": "FR-C01-practice",
         "kind": "task",
         "summary": "Complete FR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in French, recognize the reply, and choose an appropriate response.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "FR-PHONO-SALUT-01",
+          "FR-ETYMON-SALUT-02",
+          "FR-PRAGMATIC-SALUT-03"
+        ],
+        "note": "The canonical closing checkpoint revisits the sound, etymology, and register atoms introduced by salut, so the first typed chapter remains representative as writing begins."
       }
     },
     {

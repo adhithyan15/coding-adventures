@@ -70,6 +70,18 @@
       "after": []
     },
     {
+      "id": "FR-PATH-006A",
+      "spine_node": "SPINE-MEET-GREET",
+      "lessons": [
+        "FR-C01-practice"
+      ],
+      "before": [],
+      "inline": [],
+      "after": [
+        "FR-EXT-006-CHAPTER-CHECKPOINT"
+      ]
+    },
+    {
       "id": "FR-PATH-007",
       "spine_node": "SPINE-EXCHANGE-NAMES",
       "lessons": [
@@ -421,7 +433,8 @@
   "spine": {
     "SPINE-MEET-GREET": {
       "segments": [
-        "FR-PATH-001"
+        "FR-PATH-001",
+        "FR-PATH-006A"
       ],
       "omits": [
         "GREETING-FORMAL",
@@ -766,6 +779,21 @@
     }
   },
   "extensions": [
+    {
+      "id": "FR-EXT-006-CHAPTER-CHECKPOINT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "assessment",
+      "canDo": "I can choose and say a French greeting that fits the person and time, then explain the sound and register of salut.",
+      "prerequisites": [
+        "SPINE-MEET-GREET",
+        "SPINE-TIME-OF-DAY",
+        "SPINE-TAKE-LEAVE"
+      ],
+      "lessons": [
+        "FR-C01-practice"
+      ]
+    },
     {
       "id": "FR-EXT-001-WRITING-START",
       "stage": "pre-A1",

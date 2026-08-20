@@ -862,7 +862,7 @@
     {
       "language": "chinese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:6e5b00565489fe34",
+      "sourceHash": "fnv1a64:52ce5478da7f7681",
       "lessonIds": [
         "ZH-C01-tones",
         "ZH-C01-ni",
@@ -872,12 +872,12 @@
         "ZH-C01-hao-fond",
         "ZH-C01-practice"
       ],
-      "voiceLessons": 5,
-      "drivablePrefix": 1,
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
       "text": "chinese/narration/ch01.txt",
       "json": "chinese/narration/ch01.json",
-      "textHash": "fnv1a64:71196eb3e4754fd4",
-      "jsonHash": "fnv1a64:029cf1efe539783a"
+      "textHash": "fnv1a64:5323bcdf35abbc86",
+      "jsonHash": "fnv1a64:0afb39a607d43c36"
     },
     {
       "language": "chinese",
@@ -1068,7 +1068,7 @@
     {
       "language": "french",
       "chapter": 1,
-      "sourceHash": "fnv1a64:e2bee7bd476c07d6",
+      "sourceHash": "fnv1a64:3036f130271b6988",
       "lessonIds": [
         "FR-C01-salut",
         "FR-W00-salut-guided-copy",
@@ -1088,7 +1088,7 @@
       "text": "french/narration/ch01.txt",
       "json": "french/narration/ch01.json",
       "textHash": "fnv1a64:03deb8a186969cb6",
-      "jsonHash": "fnv1a64:c97e70fd4047d3e7"
+      "jsonHash": "fnv1a64:f68f54df0e61eccd"
     },
     {
       "language": "french",
@@ -1616,9 +1616,10 @@
     {
       "language": "german",
       "chapter": 1,
-      "sourceHash": "fnv1a64:05733273242c39f1",
+      "sourceHash": "fnv1a64:ca5f3cc4bc7edc73",
       "lessonIds": [
         "GE-C01-hallo",
+        "GE-W01-hallo-guided-copy",
         "GE-C01-gut",
         "GE-C01-der-die-das",
         "GE-C01-tag",
@@ -1631,12 +1632,12 @@
         "GE-C01-gute-nacht",
         "GE-C01-practice"
       ],
-      "voiceLessons": 11,
-      "drivablePrefix": 4,
+      "voiceLessons": 10,
+      "drivablePrefix": 0,
       "text": "german/narration/ch01.txt",
       "json": "german/narration/ch01.json",
-      "textHash": "fnv1a64:fd32dd76d71491b3",
-      "jsonHash": "fnv1a64:d17c3f2b2cf43c83"
+      "textHash": "fnv1a64:7712e130236f9460",
+      "jsonHash": "fnv1a64:be027de48acae907"
     },
     {
       "language": "german",
