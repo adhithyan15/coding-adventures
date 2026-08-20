@@ -1,5 +1,6 @@
 ---
 id: MR-C01-namaskar
+sequence: 5
 chapter: 1
 type: word
 headword: नमस्कार

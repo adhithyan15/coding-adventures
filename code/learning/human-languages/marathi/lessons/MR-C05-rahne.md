@@ -1,5 +1,6 @@
 ---
 id: MR-C05-rahne
+sequence: 155
 chapter: 5
 type: word
 headword: राहणे

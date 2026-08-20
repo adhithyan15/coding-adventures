@@ -1,5 +1,6 @@
 ---
 id: MR-C01-practice
+sequence: 35
 chapter: 1
 type: practice
 headword: (recap)

@@ -46,7 +46,9 @@ The dual-header design supports two workflows:
 
 ```java
 import com.codingadventures.zip.Zip;
+import com.codingadventures.zip.RawRfc1951;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 // ── Write ──────────────────────────────────────────────────────────────────
@@ -71,6 +73,29 @@ byte[] zipped = Zip.zip(List.of(
 List<Zip.ZipEntry> entries = Zip.unzip(zipped);
 ```
 
+### Raw RFC 1951 and CRC-32
+
+ZIP owns the raw DEFLATE stream carried by method-8 entries. The public raw
+surface is also the canonical codec for sibling zlib, gzip, and PNG wrappers:
+
+```java
+byte[] encoded = RawRfc1951.rawDeflate(data);
+RawRfc1951.InflateResult decoded =
+    RawRfc1951.rawInflateCounted(encoded, 8 * 1024 * 1024);
+assert decoded.bytesConsumed() == encoded.length;
+assert Arrays.equals(data, decoded.output());
+
+long checksum = RawRfc1951.crc32(firstChunk);
+checksum = RawRfc1951.crc32(secondChunk, checksum);
+```
+
+`rawInflate` and `rawInflateCounted` accept stored, fixed-Huffman, and
+dynamic-Huffman blocks, multi-block streams, overlapping copies, and the full
+32 KiB distance window. The caller may lower the output ceiling; 256 MiB is
+both the default and hard maximum. Failures use the closed 14-code
+`RawInflateException` taxonomy from CMP09, and messages never include payload
+bytes, offsets, paths, counts, or partial output.
+
 ## Design decisions
 
 ### DEFLATE via LZSS
@@ -91,6 +116,10 @@ callers to pre-analyse their data.
 
 - **CRC-32 verification** on every read — corrupt data raises `IOException`.
 - **256 MB decompression limit** — guards against decompression bombs.
+- **Exact method-8 boundaries** — counted inflate must consume the complete
+  compressed payload and produce exactly the Central Directory size.
+- **256 MB aggregate unzip limit** — one-shot extraction also caps the sum of
+  all entry outputs; callers may lower it with `Zip.unzip(data, maxTotalBytes)`.
 - **LEN/NLEN validation** on stored DEFLATE blocks.
 - **Encryption rejection** — encrypted entries (GP flag bit 0) raise
   `IOException` rather than producing garbage.
@@ -108,6 +137,9 @@ gradle test
 Requires Java 21 and Gradle (or the Gradle wrapper from the parent repo).
 The `lzss` package is resolved via a Gradle composite build (`includeBuild`),
 so no separate install step is needed.
+
+The Gradle `check` task enforces JaCoCo line coverage above 80%. CRC-32 is an
+accidental-corruption checksum, not authentication or cryptographic integrity.
 
 ## Dependencies
 

@@ -1,5 +1,6 @@
 ---
 id: MR-C03-mi-bara-aahe
+sequence: 100
 chapter: 3
 type: phrase
 headword: मी बरा आहे

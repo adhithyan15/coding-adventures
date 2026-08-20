@@ -60,8 +60,8 @@ class ZipTest {
     // =========================================================================
 
     private fun deflateRt(data: ByteArray) {
-        val compressed = deflateCompress(data)
-        val decompressed = deflateDecompress(compressed)
+        val compressed = rawDeflate(data)
+        val decompressed = rawInflate(compressed)
         assertArrayEquals(data, decompressed, "DEFLATE round-trip mismatch")
     }
 
@@ -83,8 +83,8 @@ class ZipTest {
                 for (i in out.indices) out[i] = base[i % base.size]
             }
         }}
-        val compressed = deflateCompress(data)
-        val decompressed = deflateDecompress(compressed)
+        val compressed = rawDeflate(data)
+        val decompressed = rawInflate(compressed)
         assertArrayEquals(data, decompressed)
         assertTrue(compressed.size < data.size, "DEFLATE must compress repetitive data")
     }

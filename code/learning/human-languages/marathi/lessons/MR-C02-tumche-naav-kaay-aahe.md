@@ -1,5 +1,6 @@
 ---
 id: MR-C02-tumche-naav-kaay-aahe
+sequence: 70
 chapter: 2
 type: phrase
 headword: तुमचं नाव काय आहे?

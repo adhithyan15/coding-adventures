@@ -6303,6 +6303,31 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ડ"),
   },
+  // t30apps writes Gujarati ઢ as one continuous path: the upper shoulder flows
+  // through the middle into the outer lower bowl, then turns directly around
+  // the small inner loop. The median keeps that no-lift order inside Noto.
+  [ductusKey("gujarati", "ઢ")]: {
+    script: "gujarati",
+    glyph: "ઢ",
+    strokes: [
+      { segments: [{ label: "sweep the upper shoulder, round the outer bowl, and circle the inner loop", path: [
+        { x: 125, y: 560 }, { x: 175, y: 575 }, { x: 230, y: 580 },
+        { x: 285, y: 575 }, { x: 335, y: 555 }, { x: 375, y: 525 },
+        { x: 390, y: 490 }, { x: 380, y: 455 }, { x: 350, y: 420 },
+        { x: 305, y: 390 }, { x: 255, y: 360 }, { x: 205, y: 330 },
+        { x: 155, y: 300 }, { x: 115, y: 265 }, { x: 85, y: 225 },
+        { x: 70, y: 180 }, { x: 75, y: 130 }, { x: 95, y: 85 },
+        { x: 130, y: 50 }, { x: 175, y: 25 }, { x: 225, y: 20 },
+        { x: 275, y: 30 }, { x: 320, y: 50 }, { x: 360, y: 40 },
+        { x: 400, y: 60 }, { x: 430, y: 90 }, { x: 450, y: 125 },
+        { x: 450, y: 165 }, { x: 430, y: 195 }, { x: 400, y: 225 },
+        { x: 360, y: 240 }, { x: 320, y: 225 }, { x: 290, y: 195 },
+        { x: 275, y: 160 }, { x: 275, y: 120 }, { x: 285, y: 85 },
+        { x: 300, y: 60 }, { x: 325, y: 45 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ઢ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
