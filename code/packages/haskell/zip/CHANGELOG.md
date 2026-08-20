@@ -2,6 +2,35 @@
 
 ## [Unreleased] — 2026-08-03
 
+### Added
+
+- Added ZIP-owned `rawDeflate`, `rawInflate`, and `rawInflateCounted` APIs,
+  exact final-byte consumption, a closed 14-identifier `RawInflateError`
+  taxonomy, and the shared 256 MiB hard ceiling.
+- Added full RFC 1951 decoder coverage for stored, fixed-Huffman,
+  dynamic-Huffman, and multi-block streams, including length symbol 285,
+  overlapping copies, the 32 KiB history window, strict canonical-tree
+  validation, and reserved-symbol handling.
+- Added direct coverage of all 34 language-neutral raw RFC 1951/CRC-32 fixture
+  cases plus independent Python `zlib` encoder checks, ZIP suffix-cavity and
+  declared-size regressions, and real full-window foreign-stream evidence.
+- Declared the package's empty production capability profile.
+
+### Changed
+
+- ZIP method 8 now requires exact compressed-byte consumption and an exact
+  declared uncompressed size. Stored entries likewise require equal compressed
+  and uncompressed sizes; decoded data is never silently truncated.
+- Both Unix and Windows build front doors now execute Cabal tests with coverage
+  and compile the library/test suite with `-Wall -Werror`.
+
+### Security
+
+- Output limits are rejected when negative or above the hard ceiling and are
+  checked before every stored, literal, or back-reference append. Raw-inflate
+  errors reveal only stable identifiers, never attacker-controlled payloads,
+  offsets, paths, lengths, counts, or partial output.
+
 ### Fixed
 
 - Rescued this package from a stale, never-PR'd branch

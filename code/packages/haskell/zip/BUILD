@@ -1,1 +1,1 @@
-if command -v cabal >/dev/null 2>&1; then cabal test all; else echo 'cabal not found -- skipping'; fi
+cabal test --enable-coverage && cabal build zip:lib:zip zip:test:spec --ghc-options=-Wall --ghc-options=-Werror

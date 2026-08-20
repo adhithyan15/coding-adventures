@@ -11,18 +11,18 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 11553,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "09877072d243dcadc76f1ea6b7afeaff7124768e",
+    "revision": "9873bf0170673631ea338541d235b76aaba78ff6",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1321,
-    "implementation_package_slots": 4477,
-    "high_consensus_packages": 173,
-    "high_consensus_missing_slots": 269,
-    "singleton_packages": 871,
-    "singleton_missing_slots": 12194,
-    "rust_singletons": 672,
+    "implementation_identities": 1366,
+    "implementation_package_slots": 4550,
+    "high_consensus_packages": 174,
+    "high_consensus_missing_slots": 271,
+    "singleton_packages": 904,
+    "singleton_missing_slots": 12656,
+    "rust_singletons": 714,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3334,6 +3334,276 @@
       "notes": "Excluded from autonomous portable selection. Review the shared mDNS socket, bind, send, receive, peer/origin policy, timeout, datagram, and 64-response bounds; authorization before transport; redacted diagnostics; truthful nonempty runtime/test capability profiles; argv/stdout/stderr; and sequential discovery-upsert partial-mutation risk. Preserve discovery-only behavior and do not add Cast TCP sessions, credentials, launches, queues, or media commands."
     },
     {
+      "id": "historical-architecture-aot-target-family-portable-conformance",
+      "title": "Fixture historical target backends, encoders, and simulators",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean afa7975 inventory after 19 new Rust identities landed: arm1, Intel 8051/8080/8086, M68K, MIPS R2000, MOS 6502, SPARC V8, and Z80 backend/encoder families, with M68K also adding a simulator. The same tranche added Rust implementations to the existing Intel 8051/8080/8086, MIPS R2000, MOS 6502, SPARC V8, and Z80 simulator identities. Define target-neutral fixtures for instruction selection, exact machine-byte encoding, relocation and diagnostics, and deterministic simulator execution before decomposing ports by architecture and toolchain; native debugger, file, and process hosts remain outside the portable cores."
+    },
+    {
+      "id": "symbolic-cas-iir-vm-family-portable-conformance",
+      "title": "Fixture symbolic-CAS IIR compiler and VM families",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean afa7975 inventory after Rust added 13 symbolic-CAS identities: axiom, derive, macsyma, maple, reduce, and wolfram IIR compiler/VM pairs plus maxima-iir-compiler. Define one language-neutral expression/IIR/execution corpus, stable bounded errors, and explicit authority-free package boundaries, then decompose implementation work by shared compiler and VM dependency shape rather than treating each frontend as an unrelated singleton."
+    },
+    {
+      "id": "chief-channel-epoch-activation-portable-conformance",
+      "title": "Fixture Chief channel epoch activation",
+      "status": "pending",
+      "depends_on": ["chief-channel-store-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered in the collision-clean afa7975 inventory as a six-lane D18T package. Define fixtures for bounded activation records, monotonic epoch transitions, compare-and-swap conflict handling, idempotent recovery, stable redacted errors, and injected storage/clock inputs across the remaining established lanes. Keep key custody, durable storage, clocks, and actor routing outside the portable core."
+    },
+    {
+      "id": "paint-vm-ascii-swift-lane-parity",
+      "title": "Complete paint-vm-ascii parity in Swift",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The afa7975 inventory records new Dart, Java, and Kotlin paint-vm-ascii implementations, leaving Swift as the sole missing established slot. Port the deterministic ASCII renderer against the shared paint VM behavior and add explicit empty capability metadata without introducing terminal I/O into the library."
+    },
+    {
+      "id": "ct-compare-remaining-lane-parity",
+      "title": "Complete constant-time comparison parity in the remaining lanes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The afa7975 inventory adds Ruby to ct-compare and leaves Dart, Haskell, Lua, Perl, and Swift missing. Define one timing-structure and correctness corpus, preserve length-independent comparison work, keep production authority empty, and decompose the five toolchain ports into reviewable children before selection."
+    },
+    {
+      "id": "sir-runtime-array-symbolic-portable-conformance",
+      "title": "Fixture and port SIR array and symbolic runtimes",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "The afa7975 inventory adds Python implementations to the TypeScript sir-runtime-array and sir-runtime-symbolic identities. Define shared fixtures for array operations, symbolic values, bounds, stable errors, and dependency composition before expanding these pure runtimes across the remaining established lanes; the older TypeScript Windows BUILD repair does not own behavior parity."
+    },
+    {
+      "id": "nut-protocol-portable-conformance",
+      "title": "Fixture and port the bounded NUT protocol core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as the Rust nut-protocol singleton in the afa7975 inventory. Define closed fixtures for bounded command and response framing, quoted values, status variables, list boundaries, truncation, and stable payload-blind failures. Preserve a pure byte/text transform with explicit empty capabilities; TCP, timeouts, credentials, and CLI I/O belong to native hosts."
+    },
+    {
+      "id": "snmp-protocol-portable-conformance",
+      "title": "Fixture and port the bounded SNMP protocol core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as the Rust snmp-protocol singleton in the afa7975 inventory. Define closed BER/message fixtures for supported versions, request and response identifiers, OIDs, scalar values, length and nesting bounds, and stable payload-blind failures. Keep UDP, retries, peer trust, credentials, clocks, and CLI I/O outside the pure protocol owner."
+    },
+    {
+      "id": "ssdp-protocol-portable-conformance",
+      "title": "Fixture and port the bounded SSDP protocol core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as the Rust ssdp-protocol singleton in the afa7975 inventory. Define closed fixtures for M-SEARCH and response parsing, header normalization, target and location validation, bounded cache metadata, deduplication keys, truncation, and stable errors. Multicast sockets, clocks, HTTP follow-up, and CLI output remain native-host concerns."
+    },
+    {
+      "id": "smart-home-homekit-discovery-portable-core-conformance",
+      "title": "Extract and port the injected HomeKit discovery core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-homekit-discovery-integration. Fixture injected mDNS result validation, HomeKit TXT decoding, stable identity, deterministic deduplication, authorization ordering, bounded partial failures, and D23 projection. Do not extend discovery parity into pairing, credentials, encrypted sessions, writes, or native sockets."
+    },
+    {
+      "id": "smart-home-homekit-discovery-native-authority-review",
+      "title": "Review HomeKit mDNS and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-homekit-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review mDNS bind/send/receive, timeouts, peer and origin policy, response bounds, authorization before transport, truthful runtime/test capabilities, redacted diagnostics, CLI I/O, and sequential mutation risk."
+    },
+    {
+      "id": "smart-home-ipp-printer-discovery-portable-core-conformance",
+      "title": "Extract and port the injected IPP printer discovery core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-ipp-printer-discovery-integration. Fixture injected discovery-result validation, service and TXT normalization, bounded printer identity and endpoint planning, deterministic deduplication, authorization ordering, stable failures, and D23 projection. Native DNS-SD, HTTP/IPP transport, printing, credentials, and CLI effects stay out of scope."
+    },
+    {
+      "id": "smart-home-ipp-printer-discovery-native-authority-review",
+      "title": "Review IPP discovery, HTTP, and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-ipp-printer-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review DNS-SD sockets, HTTP/IPP origin and credential policy, timeouts and body bounds, authorization ordering, truthful capability profiles, redacted errors, CLI I/O, and mutation rollback."
+    },
+    {
+      "id": "smart-home-ipp-scanner-discovery-portable-core-conformance",
+      "title": "Extract and port the injected IPP scanner discovery core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after 9873bf0 added smart-home-ipp-scanner-discovery-integration while the selected Haskell ZIP branch was being prepared. Fixture injected DNS-SD result validation, eSCL and IPP Scan endpoint planning, bounded scanner identity and TXT normalization, deterministic deduplication, authorization ordering, stable redacted failures, and D23 projection. Native DNS-SD, HTTP/eSCL or IPP Scan transport, credentials, scanning effects, filesystem output, and CLI I/O stay out of scope."
+    },
+    {
+      "id": "smart-home-ipp-scanner-discovery-native-authority-review",
+      "title": "Review IPP scanner discovery, HTTP, filesystem, and CLI authority",
+      "status": "pending",
+      "depends_on": ["smart-home-ipp-scanner-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review DNS-SD sockets, HTTP/eSCL and IPP Scan origin and credential policy, response and document bounds, authorization before transport, truthful capability profiles, redacted errors, filesystem destinations, CLI I/O, and transactional runtime mutation."
+    },
+    {
+      "id": "smart-home-nut-ups-portable-core-conformance",
+      "title": "Extract and port the injected NUT UPS telemetry core",
+      "status": "pending",
+      "depends_on": ["nut-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-nut-ups-integration. Fixture bounded configuration, injected NUT responses, scalar/status normalization, complete-snapshot validation, authorization-before-transport planning, deterministic D23 projection, and stable partial-failure behavior."
+    },
+    {
+      "id": "smart-home-nut-ups-native-authority-review",
+      "title": "Review NUT TCP, credentials, and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-nut-ups-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review TCP origin and credential handling, timeouts and response bounds, authorization before network work, truthful capabilities, redaction, CLI I/O, and transactional runtime updates."
+    },
+    {
+      "id": "smart-home-snmp-portable-core-conformance",
+      "title": "Extract and port the injected SNMP telemetry core",
+      "status": "pending",
+      "depends_on": ["snmp-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-snmp-integration. Fixture bounded profiles and OID maps, injected response correlation, scalar decoding, complete-snapshot validation, authorization ordering, deterministic D23 projection, and stable partial failures without manufacturing cross-language UDP hosts."
+    },
+    {
+      "id": "smart-home-snmp-native-authority-review",
+      "title": "Review SNMP UDP, community, and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-snmp-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review UDP peer policy, plaintext community handling, request correlation, retries and timeouts, datagram bounds, truthful capabilities, redacted diagnostics, CLI I/O, and runtime mutation rollback."
+    },
+    {
+      "id": "smart-home-ssdp-discovery-portable-core-conformance",
+      "title": "Extract and port the injected SSDP discovery core",
+      "status": "pending",
+      "depends_on": ["ssdp-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added smart-home-ssdp-discovery-integration. Fixture injected response validation, target and location normalization, stable identity, deterministic deduplication, bounded partial failures, authorization ordering, and D23 projection. HTTP description fetches and device control remain outside discovery parity."
+    },
+    {
+      "id": "smart-home-ssdp-discovery-native-authority-review",
+      "title": "Review SSDP multicast, HTTP, and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-ssdp-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review multicast bind/send/receive, peer and LOCATION origin policy, optional HTTP fetch bounds, timeouts, authorization before transport, truthful capabilities, redaction, CLI I/O, and sequential mutation risk."
+    },
+    {
+      "id": "chief-vault-dispatch-portable-conformance",
+      "title": "Fixture the Chief Vault tool-dispatch boundary",
+      "status": "pending",
+      "depends_on": ["chief-trust-checker-portable-conformance", "vault-leases-portable-core-extraction-and-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as chief-of-staff-vault-dispatch in the afa7975 inventory. Define fixtures for exact Tier-2 tool definitions, bounded and redacted argument validation, lease versus direct-delivery outputs, no secret return channel, stable errors, and injected trusted delivery. Vault secret custody, durable lease storage, clocks, and host authorization remain native or injected."
+    },
+    {
+      "id": "vault-external-import-portable-conformance",
+      "title": "Fixture Bitwarden JSON and browser CSV Vault imports",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after afa7975 added vault-import-bitwarden and vault-import-csv. Define a closed VLT15 corpus for bounded hostile JSON/CSV, exact portable-record mapping, duplicate and ragged input behavior, secret zeroization boundaries, stable redacted errors, and deterministic skipped counts. Filesystem reads, terminal ceremony, vault writes, entropy, and audit publication remain host responsibilities."
+    },
+    {
+      "id": "vault-pm-agent-protocol-portable-conformance",
+      "title": "Fixture the Vault local-agent wire protocol",
+      "status": "pending",
+      "depends_on": ["vault-pm-config-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as the empty-capability vault-pm-agent-protocol singleton in the afa7975 inventory. Define closed VLT-PM48 fixtures for every request and response, exact framing, field and frame bounds, name validation, trailing-byte rejection, stable redacted errors, and zeroization-safe encoding. Keep sockets, peers, threads, clocks, and process lifecycle outside the pure protocol."
+    },
+    {
+      "id": "vault-pm-agent-host-native-authority-review",
+      "title": "Review the Vault local-agent native host",
+      "status": "pending",
+      "depends_on": ["vault-pm-agent-protocol-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review Unix socket and filesystem containment, kernel peer credentials, connection/thread bounds, monotonic idle expiry, retained passphrase custody, fork/exec lifecycle, signals, FFI, clocks, truthful nonempty capabilities, and the explicit Windows exception."
+    },
+    {
+      "id": "vault-pm-crash-injection-native-authority-review",
+      "title": "Review Vault crash-injection native authority",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Discovered as vault-pm-crash-injection in the afa7975 inventory and excluded from autonomous portable selection. Review environment parsing, filesystem markers, process termination, FFI boundaries, test-only containment, payload-free diagnostics, and truthful nonempty capability metadata; do not manufacture crash/kill adapters across all languages."
+    },
+    {
+      "id": "vault-pm-password-policy-portable-conformance",
+      "title": "Fixture and port the Vault password policy core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as the empty-capability vault-pm-password-policy singleton in the afa7975 inventory. Define fixtures for policy validation, the integer 80-bit entropy floor, exact entropy reservation, rejection sampling, deterministic generation, ambiguous-character sets, exhaustion, stable redacted errors, and secret-buffer zeroization. Entropy sourcing and terminal delivery remain native and injected."
+    },
+    {
+      "id": "vault-pm-storage-removable-portable-conformance",
+      "title": "Fixture removable and synced-folder Vault storage semantics",
+      "status": "pending",
+      "depends_on": ["vault-pm-storage-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered as vault-pm-storage-removable in the afa7975 inventory. Define a language-neutral model for redacted sync-interference classification, immutable object-tree migration, idempotent replay, conflict refusal, partial migration recovery, and stable bounded reports over an injected storage facade. Concrete directory walking and copying remain native authority."
+    },
+    {
+      "id": "vault-pm-storage-removable-native-authority-review",
+      "title": "Review removable Vault filesystem authority",
+      "status": "pending",
+      "depends_on": ["vault-pm-storage-removable-portable-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review source and target containment, symlink and reparse-point refusal, no-follow reads, create-new staging, atomic publication, read-back verification, concurrent sync interference, truthful filesystem capabilities, and redacted diagnostics."
+    },
+    {
       "id": "path-raster-language-neutral-conformance",
       "title": "Define language-neutral deterministic path-raster conformance",
       "status": "pending",
@@ -3456,10 +3726,12 @@
     {
       "id": "zip-raw-rfc1951-haskell-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Haskell",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
+      "branch": "codex/haskell-zip-raw-rfc1951",
       "pr_number": null,
+      "selection_revision": "afa7975ba76037907138e9208481a360cfe4f14a",
+      "selection_notes": "Selected only after external auto-merge completed Swift PR #11553, the refreshed schema-3 inventory classified all 49 added and five retired identities plus 13 established-identity lane expansions, and the state recorded every newly discovered portable/native owner before reprioritization. Haskell is one isolated dependency-ready lane and advances the three-child ZIP blocker (.NET, Haskell, JVM) that gates the portable ZIP umbrella and fourteen PNG slots. GHC 9.4.8 and Cabal 3.16.1 are installed, the package depends only on local LZSS, no downstream Haskell package imports ZIP, and its pure in-memory codec already handles stored/fixed multi-block streams but rejects dynamic blocks, lacks counted/stable-error raw APIs, trims declared-size mismatches, and skips its Windows front door. No live PR overlaps the state, roadmap, fixture, or target package; the ancient no-PR cross-lane ZIP branch remains unowned residue and will not be reused or cherry-picked.",
       "notes": "Portable Haskell child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
@@ -3569,7 +3841,7 @@
     {
       "id": "zip-raw-rfc1951-swift-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in Swift",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/swift-zip-raw-rfc1951",
       "pr_number": 11553,
@@ -3578,8 +3850,11 @@
       "selection_revision": "97094db1b26beb22b506bdf8432919bea1dca873",
       "selection_notes": "Selected only after PR #11525 merged externally, the collision-clean live inventory classified the new Chief hardware-key approval and CoAP protocol/integration roots with five portable/native ownership records, and no live PR or remote branch claimed Swift ZIP or the shared RFC 1951 fixture. Swift is the only remaining ZIP child with no historical branch overlap; the ancient unmerged catch-up residue touches the full .NET, Haskell, and JVM ZIP trees and must not be reused or cherry-picked. Swift 6.3.3 is installed, the standalone pure in-memory package depends only on the local LZSS library, no downstream Swift package imports ZIP, and its existing codec already implements stored/fixed and multi-block framing with a 256 MiB guard but rejects dynamic blocks, exposes only generic errors, and trims declared-size mismatches. This coherent tranche adds strict dynamic Huffman, exact counted consumption, caller caps, stable payload-blind errors, all 34 neutral fixtures, strict ZIP suffix and size boundaries, coverage-aware build gates, and explicit empty capability metadata without duplicating DEFLATE or adding production authority.",
       "implementation_revision": "fe70be964c8864f428f8b53b1c8b71617735e89a",
+      "final_review_revision": "cd14d81f5618878a4aee18f5b735a6819baf291e",
+      "merged_at": "2026-08-20T09:36:56Z",
+      "merge_revision": "10e9e80610f639b13b5d6123aa70a822f5194e9d",
       "validation_notes": "Swift 6.3.3 passes both exact BUILD front doors, 36 debug tests with coverage, the warnings-as-errors release build, and package-manifest resolution against the local LZSS dependency. LLVM coverage reports 93.76% of production lines and 92.31% of functions. The portable suite consumes all 34 neutral RFC 1951/CRC-32 cases, independently decodes rawDeflate output with test-only Python/zlib, validates a foreign dynamic 32 KiB-window stream, preserves the historical wrapper, and exercises strict ZIP suffix-cavity and declared-size rejection. Repository fixture, capability, and parity tests pass 26 tests plus 678 subtests; the refreshed report has zero collisions and zero unknown buckets. State JSON, dependency DAG, BUILD-file dry-run, credential scan, dependency scan, authority scan, package dump, and diff checks pass. Production imports only local LZSS and the explicit empty capability profile is truthful; Foundation, fixture I/O, Process, and zlib remain test-only. The branch is now rebased cleanly onto origin/main 2415655a27. Post-rebase validation reran the 36 Swift tests plus release warnings-as-errors build, the complete Go build-tool test/vet/build suite, 25 Direct2D and 39 GDI Rust tests plus strict Clippy, and direct Perl Nib add/shift precedence regressions. The repository-wide BUILD validator, Go build-tool suite, plan schema tests, both Swift ZIP front doors, the two CRLF-sensitive Prolog front doors, and a direct Perl Nib precedence regression pass. Plan v1 now carries Linux, Darwin, and Windows dependency graphs and prerequisite-closed affected sets: shared shards are assigned from their union, then each runner selects its own state. The Direct2D Rust bridge is absent from Unix affected closure, present and prerequisite-ordered in Windows state, and still contributes the Rust toolchain to the union. Executable-safe Windows `REM # build-tool` declarations remain authoritative without duplicating those dependencies into Unix BUILD files.",
-      "publication_notes": "Ready-for-review PR #11553 was cleanly rebased onto origin/main 2415655a27. Initial Ubuntu and macOS jobs exposed the repository build tool's line-oriented BUILD contract, and the focused Swift repair restores one atomic BUILD command. The first Windows job exposed 17 repository-wide BUILD_windows dependency-metadata errors; subsequent runs built swift/zip successfully and isolated two legacy bridges whose dependencies existed only in Windows files and therefore were absent from the Linux-generated shared plan. With explicit user authorization, this PR removes stale Perl dependency comments, restores exact Python editable dependency sets, keeps executable-safe Windows dependency markers, corrects one Windows virtual-environment path, and makes three byte-size fixtures use explicit LF newlines. The first metadata workaround duplicated Windows dependencies into Unix BUILD files and over-scheduled unrelated native chains. The durable repair adds optional per-platform dependency and affected state to build plan v1, unions platform toolchains, assigns shards from the platform union, and selects only the runner's graph for execution. It also fixes the exact latent Perl Nib shift-expression cascade exposed by the repaired dependency closure. The next Windows run built Swift ZIP and the native Direct2D bridge, then exposed six inherited affected-package gaps: three Python front-door dependency/quoting errors, Windows reset-vs-EOF test semantics, unsupported IRC SO_REUSEPORT sharding, and Windows-only paint Clippy debt. The smallest fixes now pass the three exact Python BUILD_windows front doors, full embeddable and IRC tests plus strict Clippy, Direct2D/GDI tests and strict Clippy, and a release C bridge build on Windows. Focused Go, schema, Perl, emitted-plan/plan-file, repository BUILD, parity, and diff validation pass locally; the loop will publish only through an exact force-with-lease, never merge manually, and enable auto-merge only after every required check is acceptable and GitHub reports no conflict.",
+      "publication_notes": "Ready-for-review PR #11553 was cleanly rebased onto origin/main 2415655a27. Initial Ubuntu and macOS jobs exposed the repository build tool's line-oriented BUILD contract, and the focused Swift repair restores one atomic BUILD command. The first Windows job exposed 17 repository-wide BUILD_windows dependency-metadata errors; subsequent runs built swift/zip successfully and isolated two legacy bridges whose dependencies existed only in Windows files and therefore were absent from the Linux-generated shared plan. With explicit user authorization, this PR removes stale Perl dependency comments, restores exact Python editable dependency sets, keeps executable-safe Windows dependency markers, corrects one Windows virtual-environment path, and makes three byte-size fixtures use explicit LF newlines. The first metadata workaround duplicated Windows dependencies into Unix BUILD files and over-scheduled unrelated native chains. The durable repair adds optional per-platform dependency and affected state to build plan v1, unions platform toolchains, assigns shards from the platform union, and selects only the runner's graph for execution. It also fixes the exact latent Perl Nib shift-expression cascade exposed by the repaired dependency closure. The next Windows run built Swift ZIP and the native Direct2D bridge, then exposed six inherited affected-package gaps: three Python front-door dependency/quoting errors, Windows reset-vs-EOF test semantics, unsupported IRC SO_REUSEPORT sharding, and Windows-only paint Clippy debt. The final focused retry makes the smart-home platform HTTP test client use keep-alive and exact Content-Length reads so Windows cannot reset the connection before the body is complete. External auto-merge merged final reviewed head cd14d81f5618878a4aee18f5b735a6819baf291e as 10e9e80610f639b13b5d6123aa70a822f5194e9d at 2026-08-20T09:36:56Z after 28 successes, three expected skips, and one neutral conclusion; the loop did not exercise merge authority.",
       "notes": "Portable Swift child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
