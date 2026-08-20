@@ -6,15 +6,15 @@
   "durationViolations": 0,
   "atomLessonSpikes": 3,
   "atomChapterSpikes": 3,
-  "glyphLessonSpikes": 2,
+  "glyphLessonSpikes": 3,
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 47,
   "neverTaughtGlyphs": 30,
-  "orderDefects": 5,
+  "orderDefects": 0,
   "unknownPrerequisites": 0,
-  "forwardPrerequisites": 1,
+  "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 7,
+  "forwardReferences": 6,
   "atomsTaught": 151,
   "atomsNeverRevisited": 8,
   "reinforcementWindowMisses": 214,
@@ -25,15 +25,8 @@
   "findings": [
     {
       "language": "urdu",
-      "kind": "order-integrity",
-      "count": 5,
-      "unit": "order/dependency defect(s)",
-      "detail": "declare a unique reading order and close every prerequisite and review before use"
-    },
-    {
-      "language": "urdu",
       "kind": "forward-language",
-      "count": 7,
+      "count": 6,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -61,7 +54,7 @@
     {
       "language": "urdu",
       "kind": "glyph-step",
-      "count": 2,
+      "count": 3,
       "unit": "lesson/system spike(s)",
       "detail": "split new glyphs and writing systems across gentler steps"
     },
@@ -89,9 +82,9 @@
   ],
   "next": {
     "language": "urdu",
-    "kind": "order-integrity",
-    "count": 5,
-    "unit": "order/dependency defect(s)",
-    "detail": "declare a unique reading order and close every prerequisite and review before use"
+    "kind": "forward-language",
+    "count": 6,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }
