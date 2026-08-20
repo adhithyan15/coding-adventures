@@ -4033,6 +4033,49 @@ CRC boundaries, package documentation and metadata, and real local package,
 coverage, BUILD, parity, diff, and security evidence. Production remains a
 pure in-memory byte transform with explicitly empty capability profiles.
 
+## Post-#12283 Refresh and ZIP Portable-Closure Selection
+
+Ready-for-review JVM ZIP PR #12283 completed all 29 reported checks with 23
+successes, six expected skips, and no failure or pending job. After GitHub
+reported the branch clean, the loop enabled squash auto-merge; GitHub merged
+final reviewed head `4c5edae41dccabd2ac77828779659e76e6d6d7f2` as
+`d3699381f3df7a4b6cd86f6ccc97fe1817f70684` at
+2026-08-20T15:41:22Z without manual merge authority and deleted the source
+branch. Live main then advanced to `f65567daa53a484eac081a750e554096b4241210`
+through an unrelated Gujarati-ductus change.
+
+The canonical schema-3 collision inventory at that exact live main remains 15
+established lanes, 1,367 normalized implementation identities, 4,551
+established slots, 174 high-consensus identities with 271 gaps, 905 singletons
+with 12,670 missing slots, 715 Rust singletons, zero canonical collisions, and
+zero unknown buckets. The exact root comparison found no added or retired
+identity, no new root, and no lane expansion, so no topology-driven owner was
+needed. A paginated audit of every open PR found no direct overlap with the
+parity state, roadmap, CMP09, neutral fixture, ZIP packages, or dependent PNG
+packages. The sole overlapping no-PR remote is the ancient
+`worktree-feat+zstd-and-catchups` residue; it remains quarantined and will not
+be reused or cherry-picked.
+
+With all twelve toolchain-shaped children merged, the dependency/leverage pass
+selected the newly ready `zip-raw-rfc1951-portable-conformance` umbrella on
+fresh branch `codex/zip-raw-rfc1951-portable-closure`. The closure is a bounded
+aggregate proof rather than a codec rewrite: a closed registry binds exactly
+the parity reporter's 15 established lanes to their production raw/count/cap/
+error surfaces, the same 34-case neutral corpus, real BUILD entrypoints, and
+truthful empty capability profiles. C, C++, and OCaml remain outside this
+denominator until their promotion gates pass. Direct PNG work remains blocked
+until this closure follows the full pending-to-merged lifecycle.
+
+The same audit decomposed the broad PNG owner before selection: a neutral
+TypeScript-reference foundation, twelve toolchain-shaped lane children, and a
+final completion umbrella now represent the fourteen missing slots. The
+foundation must first tighten TypeScript's caller pixel ceiling and zlib CINFO
+validation. Existing Go paint-codec-png delegates to the standard library and
+legacy Rust png duplicates CRC/DEFLATE while mixing filesystem authority with
+an empty capability declaration; explicit portable reconciliation owners and
+a blocked Rust authority review now prevent either package from becoming
+silent parity evidence.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

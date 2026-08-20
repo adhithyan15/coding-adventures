@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12283,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "d6baf53b3ef32353fc8e4fcd9b8087349aad788e",
+    "revision": "f65567daa53a484eac081a750e554096b4241210",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1367,
@@ -3774,7 +3774,7 @@
     {
       "id": "zip-raw-rfc1951-jvm-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in the JVM lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/jvm-zip-raw-rfc1951",
       "pr_number": 12283,
@@ -3783,8 +3783,11 @@
       "selection_revision": "993c78f1d65304f696cce4aeb765de40ac2f34cf",
       "selection_notes": "Selected only after .NET ZIP PR #12271 completed all 29 checks and auto-merged cleanly, the collision-checked schema-3 inventory was regenerated at exact main with unchanged topology and counts, and a fresh ownership audit found no active PR for any remaining ZIP parity surface. This Java/Kotlin pair is the sole remaining child of the ZIP raw-codec umbrella; completing it unlocks umbrella closure and fourteen dependent PNG parity slots. Both packages are pure in-memory codecs with local LZSS composite-build dependencies and explicit empty capabilities. The ancient no-PR cross-lane ZIP branch remains stale residue and will not be reused or cherry-picked; implementation is isolated on this fresh branch from merge main.",
       "implementation_revision": "d66707e8e3dd94e9ece5b22461b58f9cc84b6056",
+      "final_review_revision": "4c5edae41dccabd2ac77828779659e76e6d6d7f2",
+      "merged_at": "2026-08-20T15:41:22Z",
+      "merge_revision": "d3699381f3df7a4b6cd86f6ccc97fe1817f70684",
       "validation_notes": "Java and Kotlin each consume all 34 neutral RFC 1951/CRC-32 cases and expose ZIP-owned raw deflate, counted caller-capped inflate, CRC-32, and the closed 14-code payload-blind failure taxonomy. Both decoders accept stored, fixed, dynamic, multi-block, foreign full-window, and historical-wrapper streams; enforce exact compressed-byte and declared-output consumption; reject suffix cavities, malformed canonical tables, invalid back-references, and ZIP size mismatches; map raw failures into IOException; and preflight Central Directory sizes against the caller's aggregate budget before decoding. The obsolete fixed-only decoder paths are removed. Under JDK 21.0.12 and Gradle 8.11.1, clean warning-failing package builds pass 17 Java tests at 93.12% line coverage and 31 Kotlin tests at 94.10% line coverage, both 80% JaCoCo gates, and both literal Windows BUILD front doors. The neutral fixture and capability suites pass 16 tests plus 719 subtests. Go build-tool tests, vet, and binary build pass; fresh diff-aware plans validate each lane and build only LZSS plus ZIP. The exact-main schema-3 parity gate reports 15 lanes, 1,367 identities, 4,551 slots, zero collisions, and zero unknown buckets; the 393-item state is unique, dependency-complete, acyclic, and has exactly this item active. Production authority and credential scans are clean, Jackson remains test-only, explicit empty capabilities remain accurate, final security review found no blocker, and git diff --check passes.",
-      "publication_notes": "Ready-for-review PR #12283 opened from fully validated implementation revision d66707e8e3 after clean rebases onto exact main d6baf53b3e. GitHub reports the branch mergeable with no conflict. CI and CodeQL checks are queued, so the loop is monitor-only and auto-merge remains disabled until every required check reaches an acceptable terminal conclusion.",
+      "publication_notes": "Ready-for-review PR #12283 opened from fully validated implementation revision d66707e8e3 after clean rebases onto exact main d6baf53b3e. The final reviewed head 4c5edae41dccabd2ac77828779659e76e6d6d7f2 completed all 29 reported checks with 23 successes and six expected skips. After every job was terminal and acceptable and GitHub still reported a clean merge, the loop enabled squash auto-merge. GitHub merged the PR without manual merge authority as d3699381f3df7a4b6cd86f6ccc97fe1817f70684 at 2026-08-20T15:41:22Z and deleted the source branch.",
       "notes": "Portable Java and Kotlin child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
@@ -3904,21 +3907,167 @@
     {
       "id": "zip-raw-rfc1951-portable-conformance",
       "title": "Fixture and expose ZIP-owned raw RFC 1951 primitives across established lanes",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-dotnet-lane-parity", "zip-raw-rfc1951-dart-lane-parity", "zip-raw-rfc1951-elixir-lane-parity", "zip-raw-rfc1951-go-lane-parity", "zip-raw-rfc1951-haskell-lane-parity", "zip-raw-rfc1951-jvm-lane-parity", "zip-raw-rfc1951-lua-lane-parity", "zip-raw-rfc1951-perl-lane-parity", "zip-raw-rfc1951-python-lane-parity", "zip-raw-rfc1951-ruby-lane-parity", "zip-raw-rfc1951-rust-lane-parity", "zip-raw-rfc1951-swift-lane-parity"],
-      "branch": null,
+      "branch": "codex/zip-raw-rfc1951-portable-closure",
       "pr_number": null,
-      "selection_blocked": true,
-      "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added the TypeScript image-codec-png singleton. After the neutral profile merges, decompose the twelve remaining toolchain-shaped deliveries (.NET pair, Dart, Elixir, Go, Haskell, JVM pair, Lua, Perl, Python, Ruby, Rust, and Swift) before selection. Expose each lane's existing ZIP-owned codec without duplicating DEFLATE; direct PNG work remains blocked on completion of this umbrella."
+      "selection_revision": "f65567daa53a484eac081a750e554096b4241210",
+      "selection_notes": "Selected only after JVM ZIP PR #12283 completed all 29 checks and auto-merged cleanly, the collision-checked schema-3 inventory remained exactly 15 established lanes, 1,367 identities, 4,551 slots, zero collisions, and zero unknown buckets through live main f65567daa5, and a full ownership audit found no active PR on the ZIP closure surface. All twelve toolchain-shaped children are now merged, making this the sole newly dependency-ready item. This bounded closure tranche adds a durable 15-lane adoption registry and gate over the shared 34-case corpus, public raw/count/cap/error surface, BUILD front doors, and truthful empty capabilities; it does not modify production codecs or start dependent PNG work.",
+      "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added the TypeScript image-codec-png singleton. The neutral profile and all twelve toolchain-shaped children (.NET pair, Dart, Elixir, Go, Haskell, JVM pair, Lua, Perl, Python, Ruby, Rust, and Swift) are merged. Close the established denominator with one checked consumer registry and aggregate validation before direct PNG work becomes dependency-ready."
     },
     {
-      "id": "image-codec-png-established-lane-parity",
-      "title": "Port the IC18 PNG codec across established implementation lanes",
+      "id": "image-codec-png-language-neutral-conformance",
+      "title": "Define language-neutral IC18 PNG conformance with TypeScript reference consumption",
       "status": "pending",
       "depends_on": ["zip-raw-rfc1951-portable-conformance"],
       "branch": null,
       "pr_number": null,
-      "notes": "Discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added TypeScript image-codec-png. Use the TypeScript oracle and a closed language-neutral PNG corpus to cover exact chunks, CRC, zlib Adler-32 framing, all five filters, foreign interoperability, structural and covert-cavity rejection, dimension, pixel, and inflation bounds, stable errors, and explicit empty capability metadata. Reuse the all-lane pixel-container and ZIP owners, never duplicate DEFLATE or CRC, and close the fourteen missing established slots."
+      "notes": "Decomposed from the broad image-codec-png owner during the ZIP closure security and leverage audit. Close exact chunk ordering and CRC, zlib CM/CINFO/FCHECK and Adler-32 framing, split IDAT, every supported colour type, bit depth, and filter, foreign interoperability, exact consumption and covert-cavity rejection, stable payload-blind errors, dimension/pixel/inflation ceilings, and an explicit empty capability profile. The TypeScript reference must reject CINFO above 7 and require maxPixels to be an integer no larger than the 32 Mi-pixel default before it becomes the oracle."
+    },
+    {
+      "id": "image-codec-png-dotnet-lane-parity",
+      "title": "Port IC18 image-codec-png to C# and F#",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Toolchain-shaped .NET child. Consume the neutral PNG corpus and the established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
+    },
+    {
+      "id": "image-codec-png-dart-lane-parity",
+      "title": "Port IC18 image-codec-png to Dart",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Dart child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-elixir-lane-parity",
+      "title": "Port IC18 image-codec-png to Elixir",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-go-lane-parity",
+      "title": "Port IC18 image-codec-png to Go",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Go child consuming the neutral PNG corpus and repo ZIP raw/CRC surface. Existing go/paint-codec-png delegates to the standard-library image/png codec and is not parity evidence for this portable package."
+    },
+    {
+      "id": "image-codec-png-haskell-lane-parity",
+      "title": "Port IC18 image-codec-png to Haskell",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Haskell child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-jvm-lane-parity",
+      "title": "Port IC18 image-codec-png to Java and Kotlin",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Toolchain-shaped JVM child. Consume the neutral PNG corpus and established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
+    },
+    {
+      "id": "image-codec-png-lua-lane-parity",
+      "title": "Port IC18 image-codec-png to Lua",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Lua child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-perl-lane-parity",
+      "title": "Port IC18 image-codec-png to Perl",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Perl child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-python-lane-parity",
+      "title": "Port IC18 image-codec-png to Python",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Python child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-ruby-lane-parity",
+      "title": "Port IC18 image-codec-png to Ruby",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Ruby child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-rust-lane-parity",
+      "title": "Port IC18 image-codec-png to Rust",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Rust child consuming the neutral PNG corpus and established ZIP raw/CRC surface. The legacy rust/png crate duplicates CRC/DEFLATE and exposes filesystem writes while declaring empty capabilities, so it is migration input rather than parity evidence."
+    },
+    {
+      "id": "image-codec-png-swift-lane-parity",
+      "title": "Port IC18 image-codec-png to Swift",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Standalone Swift child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
+    },
+    {
+      "id": "image-codec-png-established-lane-parity",
+      "title": "Close IC18 image-codec-png parity across established implementation lanes",
+      "status": "pending",
+      "depends_on": ["image-codec-png-dotnet-lane-parity", "image-codec-png-dart-lane-parity", "image-codec-png-elixir-lane-parity", "image-codec-png-go-lane-parity", "image-codec-png-haskell-lane-parity", "image-codec-png-jvm-lane-parity", "image-codec-png-lua-lane-parity", "image-codec-png-perl-lane-parity", "image-codec-png-python-lane-parity", "image-codec-png-ruby-lane-parity", "image-codec-png-rust-lane-parity", "image-codec-png-swift-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added TypeScript image-codec-png. Close only after the neutral TypeScript-reference foundation and all twelve toolchain-shaped children merge. The final aggregate gate must prove fourteen added established slots reuse the all-lane pixel-container and ZIP owners without duplicated DEFLATE or CRC."
+    },
+    {
+      "id": "go-paint-codec-png-portable-reconciliation",
+      "title": "Migrate Go paint-codec-png from the standard-library PNG codec",
+      "status": "pending",
+      "depends_on": ["image-codec-png-go-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during ZIP-closure security review. The existing Go paint-codec-png package delegates to image/png, so after the repository image-codec-png port exists, migrate the paint adapter to it and add direct portable conformance evidence."
+    },
+    {
+      "id": "rust-png-portable-core-reconciliation",
+      "title": "Reconcile the legacy Rust png codec with portable image-codec-png",
+      "status": "pending",
+      "depends_on": ["image-codec-png-rust-lane-parity"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during ZIP-closure security review. Retire duplicate CRC/DEFLATE from rust/png, migrate pure byte behavior and downstream ICO/paint consumers onto the portable image-codec-png core, and separate filesystem convenience APIs from the empty-capability boundary."
+    },
+    {
+      "id": "rust-png-filesystem-authority-review",
+      "title": "Review legacy Rust png filesystem authority and capability truthfulness",
+      "status": "pending",
+      "depends_on": ["rust-png-portable-core-reconciliation"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Native-authority review discovered during ZIP closure. The legacy rust/png crate exposes File::create while declaring an empty capability profile. Review or relocate that filesystem surface after the portable core migration; this parity loop must not select the authority-bearing work."
     },
     {
       "id": "wasm-wast-parser-language-neutral-conformance",
