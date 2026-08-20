@@ -7500,10 +7500,13 @@ impl HtmlParser {
                 || (self.current_namespace() == Some("math") && name == "p"))
         {
             if is_table_context_element(name) {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-table-end-tag-in-foreign-content",
-                    format!("end tag `</{name}>` forced table recovery from foreign content"),
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-table-end-tag-in-foreign-content",
+                        format!("end tag `</{name}>` forced table recovery from foreign content"),
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
             } else if self.current_namespace() == Some("math") && name == "p" {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "unexpected-p-end-tag-in-foreign-content",
@@ -26942,6 +26945,14 @@ mod tests {
         .at_emission(Some(end_tag_position(source, name)))
     }
 
+    fn table_foreign_end_tag_recovery(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-table-end-tag-in-foreign-content",
+            format!("end tag `</{name}>` forced table recovery from foreign content"),
+        )
+        .at_emission(Some(end_tag_position(source, name)))
+    }
+
     #[test]
     fn parser_preserves_processing_instruction_target_and_data() {
         let mut parser = HtmlParser::with_options(HtmlParseOptions::default());
@@ -41650,11 +41661,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-table-end-tag-in-foreign-content",
-                            "end tag `</table>` forced table recovery from foreign content",
-                        )
+                    diagnostic == &table_foreign_end_tag_recovery(source, "table")
                 }),
                 "source {source:?}"
             );
@@ -41667,6 +41674,147 @@ mod tests {
         assert!(closed_foreign.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
         }));
+    }
+
+    #[test]
+    fn positions_table_foreign_end_tag_recovery_at_token_emission() {
+        for (name, source) in [
+            (
+                "table",
+                "<!doctype html><!--é-->\r\n<table><caption><svg><g></table>",
+            ),
+            (
+                "caption",
+                "<!doctype html><table><caption><math><mrow></caption></table>",
+            ),
+            (
+                "colgroup",
+                "<!doctype html><table><colgroup><template><svg><g></colgroup></template></colgroup></table>",
+            ),
+            (
+                "tbody",
+                "<!doctype html><table><tbody><tr><td><svg><g></tbody></table>",
+            ),
+            (
+                "thead",
+                "<!doctype html><table><thead><tr><td><math><mrow></thead></table>",
+            ),
+            (
+                "tfoot",
+                "<!doctype html><table><tfoot><tr><td><svg><g></tfoot></table>",
+            ),
+            (
+                "tr",
+                "<!doctype html><table><tbody><tr><td><math><mrow></tr></tbody></table>",
+            ),
+            (
+                "td",
+                "<!doctype html><table><tbody><tr><td><svg><g></td></tr></tbody></table>",
+            ),
+            (
+                "th",
+                "<!doctype html><table><tbody><tr><th><math><mrow></th></tr></tbody></table>",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-table-end-tag-in-foreign-content"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&table_foreign_end_tag_recovery(source, name)],
+                "source {source:?}"
+            );
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
+                    })
+                    .all(|diagnostic| diagnostic.position.is_none()),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><caption><svg><foreignObject></table>",
+            "<!doctype html><table><caption><math><annotation-xml encoding=text/html></table>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &table_foreign_end_tag_recovery(source, "table")
+            }));
+        }
+
+        let nearer_source =
+            "<!doctype html><table><caption><svg><tbody><g></tbody></caption></table>";
+        let nearer_foreign_name = parse_html_with_diagnostics(nearer_source).unwrap();
+        assert!(nearer_foreign_name.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &table_foreign_end_tag_recovery(nearer_source, "tbody")
+        }));
+
+        for source in [
+            "<!doctype html><svg><tbody></tbody></svg>",
+            "<!doctype html><table><caption></table>",
+            "<!doctype html><table><svg></svg></table>",
+        ] {
+            let control = parse_html_with_diagnostics(source).unwrap();
+            assert!(control.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
+            }));
+        }
+
+        let fragment_source = "<table><caption><svg><g></table>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "html body")
+                .unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &table_foreign_end_tag_recovery(fragment_source, "table")
+        }));
+
+        let eof_source = "<!doctype html><table><caption><svg><g></table";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-table-end-tag-in-foreign-content"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "table".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::StartTag {
+                name: "caption".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::StartTag {
+                name: "svg".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::StartTag {
+                name: "g".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::EndTag { name: "table".to_string() },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+
+        let adjacent =
+            parse_html_with_diagnostics("<!doctype html><p><math></p>a").unwrap();
+        let paragraph = adjacent
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-p-end-tag-in-foreign-content")
+            .unwrap();
+        assert_eq!(paragraph.position, None);
     }
 
     #[test]
