@@ -1,5 +1,6 @@
 ---
 id: PA-C02-hai
+sequence: 90
 chapter: 2
 type: word
 headword: ਹੈ

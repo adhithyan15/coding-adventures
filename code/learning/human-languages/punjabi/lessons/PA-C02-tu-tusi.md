@@ -1,5 +1,6 @@
 ---
 id: PA-C02-tu-tusi
+sequence: 110
 chapter: 2
 type: word
 headword: ਤੂੰ / ਤੁਸੀਂ

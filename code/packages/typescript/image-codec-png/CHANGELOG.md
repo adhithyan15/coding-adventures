@@ -1,5 +1,36 @@
 # Changelog — @coding-adventures/image-codec-png
 
+## 0.2.0 — 2026-08-20
+
+### Added
+
+- `PngError`, `PngErrorCode`, `PNG_ERROR_CODES`, `PNG_MAX_DIMENSION`, and
+  `PNG_MAX_PIXELS` as the stable public IC18 failure and resource surface.
+- Full consumption of the 82-case language-neutral `image-codec-png-v1`
+  corpus, including exact portable errors and foreign `pngjs` decoding of
+  encoder output.
+- Explicit empty production capability metadata.
+
+### Changed
+
+- `maxPixels` is now a positive safe integer no larger than 32 mebipixels, so a
+  caller can only lower the allocation ceiling.
+- Zlib headers now reject `CINFO > 7`, invalid chunk-type bytes and a lowercase
+  reserved third type letter are refused, and ZIP-owned inflater failures are
+  mapped to the PNG error taxonomy.
+- Suggested `PLTE` acceptance for truecolour images and exact `tRNS`
+  transparency for greyscale/truecolour inputs, with closed malformed ordering,
+  length, duplication, and sample-range failures.
+- Normative encoder filter-choice pins plus explicit Paeth predictor branch and
+  tie vectors.
+
+### Security
+
+- Stable error identifiers no longer require consumers to parse messages.
+- The independent corpus closes exact chunk/IDAT boundaries, CRC and Adler,
+  stored/fixed/dynamic DEFLATE, filter types, unsupported features, pixel and
+  dimension limits, malformed inflation, and covert IDAT cavities.
+
 ## 0.1.0 — 2026-08-12
 
 Initial release. Implements [`IC18`](../../../specs/IC18-image-codec-png.md).

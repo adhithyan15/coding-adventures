@@ -1,5 +1,6 @@
 ---
 id: PA-C01-namaste
+sequence: 20
 chapter: 1
 type: word
 headword: ਨਮਸਤੇ

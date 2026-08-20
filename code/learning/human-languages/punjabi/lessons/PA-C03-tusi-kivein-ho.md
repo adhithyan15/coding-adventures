@@ -1,5 +1,6 @@
 ---
 id: PA-C03-tusi-kivein-ho
+sequence: 170
 chapter: 3
 type: phrase
 headword: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?
