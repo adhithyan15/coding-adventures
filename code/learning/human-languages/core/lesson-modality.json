@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5ccee552c67319aa",
+  "sourceHash": "fnv1a64:7c0cefd7db9673d6",
   "summary": {
-    "totalLessons": 3400,
+    "totalLessons": 3402,
     "voice": 2464,
     "sight": 590,
-    "pen": 346,
+    "pen": 348,
     "drivableLessons": 2464,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2199,
-    "fullyDrivableChapters": 668,
-    "unstartableChapters": 211,
+    "drivablePrefixTotal": 2195,
+    "fullyDrivableChapters": 667,
+    "unstartableChapters": 212,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7645,12 +7645,12 @@
     },
     {
       "language": "persian",
-      "lessonCount": 69,
+      "lessonCount": 71,
       "voice": 57,
       "sight": 3,
-      "pen": 9,
-      "drivablePercent": 83,
-      "drivablePrefixTotal": 52,
+      "pen": 11,
+      "drivablePercent": 80,
+      "drivablePrefixTotal": 48,
       "modalities": [
         "voice",
         "sight",
@@ -7659,22 +7659,19 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 4,
+          "lessonCount": 6,
           "voice": 4,
           "sight": 0,
-          "pen": 0,
+          "pen": 2,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 4,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "FA-C01-bale",
-            "FA-C01-mamnoon",
-            "FA-C01-na",
-            "FA-C01-salam"
-          ]
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "FA-C01-salam",
+          "drivable": false,
+          "drivableLessonIds": []
         },
         {
           "chapter": 2,
@@ -48584,28 +48581,56 @@
       "sourceHash": "fnv1a64:21fe9ce5062a315d"
     },
     {
-      "id": "FA-C01-bale",
+      "id": "FA-C01-salam",
       "language": "persian",
       "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "sequence": 10,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8cab01c60aea34a5"
+      "sourceHash": "fnv1a64:ad23c2ed65999d3f",
+      "detachableSegments": [
+        "Writing — follow one visible stroke"
+      ]
+    },
+    {
+      "id": "FA-W00-alef-guided-copy",
+      "language": "persian",
+      "chapter": 1,
+      "sequence": 15,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2252145bd97b2d8a",
+      "detachableSegments": [
+        "Script — meet alef",
+        "Writing — one guided copy"
+      ],
+      "delivery": "script"
     },
     {
       "id": "FA-C01-mamnoon",
       "language": "persian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -48617,13 +48642,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:831ed1da893de263"
+      "sourceHash": "fnv1a64:e31a8de76d621fee"
+    },
+    {
+      "id": "FA-C01-bale",
+      "language": "persian",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b9354e71cefaaf4b"
     },
     {
       "id": "FA-C01-na",
       "language": "persian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 40,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -48635,13 +48678,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c0df8ec253b9b50b"
+      "sourceHash": "fnv1a64:2eb22855c75322ae"
     },
     {
-      "id": "FA-C01-salam",
+      "id": "FA-C01-practice",
       "language": "persian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 45,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -48653,7 +48696,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a0e9314f433cb6ab"
+      "sourceHash": "fnv1a64:5041765073cb33e5"
     },
     {
       "id": "FA-C02-esm-e-man",
@@ -49665,7 +49708,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6eb5695e68168b06",
+      "sourceHash": "fnv1a64:8e5eafc35a772d1a",
       "detachableSegments": [
         "Script — first, which way the page runs",
         "Script — the letter itself"

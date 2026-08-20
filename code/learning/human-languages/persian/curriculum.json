@@ -6,7 +6,8 @@
       "id": "FA-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "FA-C01-salam"
+        "FA-C01-salam",
+        "FA-W00-alef-guided-copy"
       ],
       "before": [],
       "inline": [
@@ -29,10 +30,13 @@
       "spine_node": "SPINE-RESPOND-BASIC",
       "lessons": [
         "FA-C01-bale",
-        "FA-C01-na"
+        "FA-C01-na",
+        "FA-C01-practice"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "FA-EXT-001-GREETING-PAYOFF"
+      ],
       "after": []
     },
     {
@@ -615,10 +619,24 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can recognize the first Persian script pattern inside a greeting I already understand.",
+      "canDo": "I can recognize right-to-left direction and copy one alef beside a visible model inside a greeting I already understand.",
       "prerequisites": [],
       "lessons": [
-        "FA-C01-salam"
+        "FA-C01-salam",
+        "FA-W00-alef-guided-copy"
+      ]
+    },
+    {
+      "id": "FA-EXT-001-GREETING-PAYOFF",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can close a tiny greeting exchange and copy one alef beside a visible model.",
+      "prerequisites": [
+        "FA-EXT-001-INLINE-SCRIPT"
+      ],
+      "lessons": [
+        "FA-C01-practice"
       ]
     },
     {
@@ -628,7 +646,7 @@
       "category": "register",
       "canDo": "I can choose shomâ for a respectful first meeting and distinguish it from familiar to.",
       "prerequisites": [
-        "FA-EXT-001-INLINE-SCRIPT"
+        "FA-EXT-001-GREETING-PAYOFF"
       ],
       "lessons": [
         "FA-C03-shoma-to"

@@ -3,71 +3,224 @@
   "language": "persian",
   "chapter": 1,
   "title": "Greetings and responses",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:71ff8595e75605b5",
   "lessons": [
     {
-      "id": "FA-C01-bale",
-      "sequence": null,
-      "title": "بله (bale) — yes",
-      "headword": "بله",
-      "romanization": "bale",
-      "gloss": "yes",
+      "id": "FA-C01-salam",
+      "sequence": 10,
+      "title": "سلام (salâm) — hello, one joined word at a time",
+      "headword": "سلام",
+      "romanization": "salâm",
+      "gloss": "hello / peace",
       "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:8cab01c60aea34a5",
-      "notice": null,
+      "sourceHash": "fnv1a64:ad23c2ed65999d3f",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "Three letters, two hidden vowels",
+          "type": "warmup",
+          "title": "Warm-up",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Read بله (bale) from right to left: ب b, ل l, ه h. Persian does not normally print the short vowels, but speakers supply them:"
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
             },
             {
               "kind": "speech",
-              "text": "ب, ل, ه becomes bale becomes yes."
-            },
-            {
-              "kind": "speech",
-              "text": "The last ه is written even though careful speech ends with a light vowel sound rather than a strong English h. Listen for the whole word; do not force every letter to sound identical in every position."
+              "text": "One greeting is enough for this lesson. Listen once: salâm."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Use it",
+          "type": "input",
+          "title": "You'll want to know: سلام",
           "segments": [
             {
               "kind": "speech",
-              "text": "bale is a standard, polite “yes.” A more casual âre exists, but one clear affirmative is enough for this lesson."
+              "text": "Persian runs right to left. Start at the right edge of سلام and let your eyes travel towards the left while you say salâm:"
             },
             {
               "kind": "speech",
-              "text": "“Is this Persian?” — Bale."
+              "text": "سلام — salâm — hello."
             },
             {
               "kind": "speech",
-              "text": "“Are you ready?” — Bale, mamnun. — Yes, thank you."
+              "text": "Treat the joined word as one familiar greeting today. You do not need its four letter names, its joining rules, or the rest of the alphabet yet."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Quick recall",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Cover the romanization. Read بله. Which sounds are not written as separate letters? The short a and e. Answer once: bale."
+              "text": "salâm means “hello” and literally evokes peace. Persian borrowed it from Arabic, where the consonants s-l-m organize a family concerned with peace, safety, and wholeness. That same old Semitic family also includes Hebrew shalom. The word is now thoroughly everyday Persian."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say salâm to one person or a group. It is neutral, friendly, and safe in most situations."
+            },
+            {
+              "kind": "speech",
+              "text": "See a neighbor: Salâm!"
+            },
+            {
+              "kind": "speech",
+              "text": "Answer a greeting: Salâm!"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — follow one visible stroke",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep this model visible: ا (alef). With your finger, trace its one upright stroke from top to bottom. Do not copy it yet and do not hunt for it inside the joined word. The next two-minute lesson will name and copy this one shape."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "to the right edge, where Persian reading begins",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: to the right edge, where Persian reading begins]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "salâm once to greet, and once to answer",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **salâm** once to greet, and once to answer]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which direction does Persian run? (Right to left.) What old idea lives inside salâm? (Peace, safety, or wholeness.) Say the greeting once."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian Online: the writing system."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-W00-alef-guided-copy",
+      "sequence": 15,
+      "title": "ا (alef) — one stroke with the model present",
+      "headword": "ا",
+      "romanization": "alef",
+      "gloss": "copy one visible alef with the model present",
+      "script": "perso-arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:2252145bd97b2d8a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — meet alef"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — meet alef until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the right edge of سلام and say salâm. Keep this separate one-stroke model visible: ا (alef)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — meet alef",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The shape is ا, named alef. Draw its one straight stroke from top to bottom, then lift. In salâm, alef carries the long â sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — one guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ا (alef) once beside the model. Look back whenever you need. Say the long â as your pen reaches the bottom, then stop."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not hide the model, copy the whole greeting, or add a second letter today. One visible stroke is enough for a first Persian writing lesson."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare your copy with ا (alef). How many strokes? (One.) Which way did that stroke travel? (Top to bottom.)"
             }
           ]
         }
@@ -75,7 +228,7 @@
     },
     {
       "id": "FA-C01-mamnoon",
-      "sequence": null,
+      "sequence": 20,
       "title": "ممنون (mamnun) — thank you",
       "headword": "ممنون",
       "romanization": "mamnun",
@@ -86,7 +239,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:831ed1da893de263",
+      "sourceHash": "fnv1a64:e31a8de76d621fee",
       "notice": null,
       "blocks": [
         {
@@ -156,8 +309,75 @@
       ]
     },
     {
+      "id": "FA-C01-bale",
+      "sequence": 30,
+      "title": "بله (bale) — yes",
+      "headword": "بله",
+      "romanization": "bale",
+      "gloss": "yes",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9354e71cefaaf4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "Three letters, two hidden vowels",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read بله (bale) from right to left: ب b, ل l, ه h. Persian does not normally print the short vowels, but speakers supply them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ب, ل, ه becomes bale becomes yes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last ه is written even though careful speech ends with a light vowel sound rather than a strong English h. Listen for the whole word; do not force every letter to sound identical in every position."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Use it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bale is a standard, polite “yes.” A more casual âre exists, but one clear affirmative is enough for this lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "“Is this Persian?” — Bale."
+            },
+            {
+              "kind": "speech",
+              "text": "“Are you ready?” — Bale, mamnun. — Yes, thank you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Quick recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the romanization. Read بله. Which sounds are not written as separate letters? The short a and e. Answer once: bale."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "FA-C01-na",
-      "sequence": null,
+      "sequence": 40,
       "title": "نه (na) — no",
       "headword": "نه",
       "romanization": "na",
@@ -168,7 +388,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c0df8ec253b9b50b",
+      "sourceHash": "fnv1a64:2eb22855c75322ae",
       "notice": null,
       "blocks": [
         {
@@ -234,89 +454,114 @@
       ]
     },
     {
-      "id": "FA-C01-salam",
-      "sequence": null,
-      "title": "سلام (salâm) — hello, one joined word at a time",
-      "headword": "سلام",
-      "romanization": "salâm",
-      "gloss": "hello / peace",
+      "id": "FA-C01-practice",
+      "sequence": 45,
+      "title": "Chapter 1 — one tiny exchange, one tiny mark",
+      "headword": "سلام · ممنون · بله · نه",
+      "romanization": "salâm · mamnun · bale · na",
+      "gloss": "greet, thank, answer, and revisit one alef with help",
       "script": "perso-arabic",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e9314f433cb6ab",
+      "sourceHash": "fnv1a64:5041765073cb33e5",
       "notice": null,
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "Notice",
+          "type": "warmup",
+          "title": "Warm-up",
           "segments": [
             {
               "kind": "speech",
-              "text": "Persian runs right to left. Start at the right edge of سلام (salâm). Its four letters are س s, ل l, ا long â, and م m:"
-            },
-            {
-              "kind": "speech",
-              "text": "س, ل, ا, م becomes salâm."
-            },
-            {
-              "kind": "speech",
-              "text": "The shapes touch because Persian letters usually join inside a word. The tall ا does not join to the letter after it, so the final م begins a new stroke group. You do not need the rest of the alphabet yet."
+              "text": "Keep every model visible. Say سلام (salâm) once to greet and once to answer."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Meaning and history",
+          "type": "input",
+          "title": "The exchange",
           "segments": [
             {
               "kind": "speech",
-              "text": "salâm means “hello” and literally evokes peace. Persian borrowed it from Arabic, where the consonants s-l-m organize a family concerned with peace, safety, and wholeness. That same old Semitic family also includes Hebrew shalom. The word is now thoroughly everyday Persian."
+              "text": "Read each Persian line from right to left:"
+            },
+            {
+              "kind": "speech",
+              "text": "A: سلام — salâm."
+            },
+            {
+              "kind": "speech",
+              "text": "B: سلام — salâm."
+            },
+            {
+              "kind": "speech",
+              "text": "A: ممنون — mamnun."
+            },
+            {
+              "kind": "speech",
+              "text": "B: بله or نه — bale or na."
+            },
+            {
+              "kind": "speech",
+              "text": "The later three words remain visible whole-word supports. Today you are proving the greeting and the page direction, not decoding every letter."
             }
           ]
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Use it",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
-              "kind": "speech",
-              "text": "Say salâm to one person or a group. It is neutral, friendly, and safe in most situations."
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the four-line exchange, choosing bale or na",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the four-line exchange, choosing **bale** or **na**]"
             },
             {
-              "kind": "speech",
-              "text": "See a neighbor: Salâm!"
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "to the right edge where each Persian line begins",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: to the right edge where each Persian line begins]"
             },
             {
-              "kind": "speech",
-              "text": "Answer a greeting: Salâm!"
+              "kind": "prompt",
+              "action": "COPY",
+              "instruction": "ا (alef) once beside the visible model, top to bottom",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **ا** once beside the visible model, top to bottom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the old idea behind salâm — \"peace\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the old idea behind **salâm** — \"peace\"]"
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Quick recall",
+          "type": "recall",
+          "title": "Wrap-up Recall",
           "segments": [
             {
               "kind": "speech",
-              "text": "Read سلام from right to left. Which letter makes the long â? ا. Now say the word once without looking: salâm."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "unknown",
-          "title": "Source",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Persian Online: the writing system."
+              "text": "Greet once without help. Then compare your ا (alef) with the model. No hidden-word spelling and no second letter: the chapter closes with one usable exchange and one supported stroke."
             }
           ]
         }

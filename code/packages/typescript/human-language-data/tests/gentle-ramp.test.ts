@@ -106,9 +106,9 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracks: 23,
       tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 2, // Latin now starts with observe-trace and guided copy.
-      tracksWhereWritingStartsLate: 6, // Chinese writing now starts in lesson one.
-      atomMeasurementBlindLessons: 498, // +1: Latin's atom-free guided-copy bridge.
-      findings: 142, // Chinese's late-writing finding is closed on top of Latin's merged ramp.
+      tracksWhereWritingStartsLate: 5, // Persian joins Chinese with writing in lesson one.
+      atomMeasurementBlindLessons: 499, // Persian's atom-free chapter-1 payoff is measured honestly.
+      findings: 140, // Persian closes both its late-writing and order-integrity findings.
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "punjabi", kind: "order-integrity", count: 62 },
