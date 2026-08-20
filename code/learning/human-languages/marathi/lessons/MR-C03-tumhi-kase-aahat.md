@@ -1,5 +1,6 @@
 ---
 id: MR-C03-tumhi-kase-aahat
+sequence: 90
 chapter: 3
 type: phrase
 headword: तुम्ही कसे आहात?

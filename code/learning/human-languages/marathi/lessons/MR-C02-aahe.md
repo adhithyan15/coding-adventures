@@ -1,5 +1,6 @@
 ---
 id: MR-C02-aahe
+sequence: 50
 chapter: 2
 type: word
 headword: आहे

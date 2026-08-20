@@ -1,5 +1,6 @@
 ---
 id: MR-C03-mi
+sequence: 95
 chapter: 3
 type: word
 headword: मी

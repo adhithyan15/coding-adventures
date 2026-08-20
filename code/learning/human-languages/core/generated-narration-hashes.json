@@ -6898,100 +6898,100 @@
     {
       "language": "marathi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:07798362d454a9f2",
+      "sourceHash": "fnv1a64:9a9585e9c49bbb0c",
       "lessonIds": [
-        "MR-C01-baram",
+        "MR-C01-namaskar",
         "MR-C01-dhanyavad",
         "MR-C01-ho",
         "MR-C01-nahi",
-        "MR-C01-namaskar",
-        "MR-C01-practice",
-        "MR-C01-yeto"
+        "MR-C01-baram",
+        "MR-C01-yeto",
+        "MR-C01-practice"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "marathi/narration/ch01.txt",
       "json": "marathi/narration/ch01.json",
-      "textHash": "fnv1a64:9476e91360aac283",
-      "jsonHash": "fnv1a64:da1cf780ed95e451"
+      "textHash": "fnv1a64:14a2a7d868662721",
+      "jsonHash": "fnv1a64:3d275476a49ecf38"
     },
     {
       "language": "marathi",
       "chapter": 2,
-      "sourceHash": "fnv1a64:76482a70a494ffaa",
+      "sourceHash": "fnv1a64:ae19d5b77ccc9d3b",
       "lessonIds": [
-        "MR-C02-aahe",
-        "MR-C02-anand",
-        "MR-C02-kaay",
-        "MR-C02-majhe",
-        "MR-C02-majhe-naav-aahe",
         "MR-C02-naav",
-        "MR-C02-practice",
+        "MR-C02-majhe",
+        "MR-C02-aahe",
+        "MR-C02-majhe-naav-aahe",
         "MR-C02-tu-tumhi",
-        "MR-C02-tumche-naav-kaay-aahe"
+        "MR-C02-kaay",
+        "MR-C02-tumche-naav-kaay-aahe",
+        "MR-C02-anand",
+        "MR-C02-practice"
       ],
       "voiceLessons": 4,
       "drivablePrefix": 0,
       "text": "marathi/narration/ch02.txt",
       "json": "marathi/narration/ch02.json",
-      "textHash": "fnv1a64:a0339c7c4d56d9f6",
-      "jsonHash": "fnv1a64:63340b4ca91c581c"
+      "textHash": "fnv1a64:7410085bd5911328",
+      "jsonHash": "fnv1a64:bc6c03fcdb1195b2"
     },
     {
       "language": "marathi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:b3107d9fc5cfb536",
+      "sourceHash": "fnv1a64:6da0c00d4748ac86",
       "lessonIds": [
-        "MR-C03-kaahi-harkat-nahi",
         "MR-C03-kasa",
+        "MR-C03-tumhi-kase-aahat",
         "MR-C03-mi",
         "MR-C03-mi-bara-aahe",
-        "MR-C03-practice",
-        "MR-C03-tumhi-kase-aahat"
+        "MR-C03-kaahi-harkat-nahi",
+        "MR-C03-practice"
       ],
       "voiceLessons": 4,
-      "drivablePrefix": 1,
+      "drivablePrefix": 0,
       "text": "marathi/narration/ch03.txt",
       "json": "marathi/narration/ch03.json",
-      "textHash": "fnv1a64:ae5f953a10a89eb0",
-      "jsonHash": "fnv1a64:f254ce5e8b59bbeb"
+      "textHash": "fnv1a64:2ec652bde66f59cf",
+      "jsonHash": "fnv1a64:642c2cbbda89a6ac"
     },
     {
       "language": "marathi",
       "chapter": 4,
-      "sourceHash": "fnv1a64:58a4518fd27913b8",
+      "sourceHash": "fnv1a64:541a7189fcb23297",
       "lessonIds": [
-        "MR-C04-bhetu",
-        "MR-C04-kalji-ghya",
-        "MR-C04-practice",
         "MR-C04-punha",
+        "MR-C04-bhetu",
         "MR-C04-punha-bhetu",
-        "MR-C04-udya-bhetu"
+        "MR-C04-udya-bhetu",
+        "MR-C04-kalji-ghya",
+        "MR-C04-practice"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "marathi/narration/ch04.txt",
       "json": "marathi/narration/ch04.json",
-      "textHash": "fnv1a64:c7b5fd7feb54ca0b",
-      "jsonHash": "fnv1a64:bc7f83c92bc78707"
+      "textHash": "fnv1a64:cf72a56d16d67b43",
+      "jsonHash": "fnv1a64:34946c6420893aea"
     },
     {
       "language": "marathi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:2c216f7d781a9d9b",
+      "sourceHash": "fnv1a64:61aba9778f8d7578",
       "lessonIds": [
         "MR-C05-bolne",
-        "MR-C05-kaam-karne",
         "MR-C05-mi-marathi-bolto",
-        "MR-C05-practice",
-        "MR-C05-rahne"
+        "MR-C05-rahne",
+        "MR-C05-kaam-karne",
+        "MR-C05-practice"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "marathi/narration/ch05.txt",
       "json": "marathi/narration/ch05.json",
-      "textHash": "fnv1a64:72942e4430489a65",
-      "jsonHash": "fnv1a64:0d409ccd3e6d66b0"
+      "textHash": "fnv1a64:5059d625a977d4d9",
+      "jsonHash": "fnv1a64:8c41e457a6afbab0"
     },
     {
       "language": "marathi",

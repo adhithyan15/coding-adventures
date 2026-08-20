@@ -1,39 +1,8 @@
 Marathi, chapter 3: How Are You?.
-6 lessons. You can do the first 1 of them in the car; after that you will want to have stopped.
+6 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 6.
-काही हरकत नाही (kāhī harkat nāhī) — "no problem / you're welcome".
-
-Warm-up.
-[pause 2 seconds]
-When someone thanks you, Marathi's easy reply is not "you're welcome" but "there's no objection at all."
-
-The phrase, assembled.
-काही (kāhī, "any") + हरकत (harkat, "objection, trouble") + नाही (nāhī, "not/none") becomes "any objection there-is-not" ≈ "no problem at all."
-
-The word, taken apart.
-Two threads meet here:
-नाही (nāhī, "not") is Chapter 1's "no," on the ancient negative na- — PIE ne, the root of English no, not, none and Latin nōn.
-हरकत (harkat, "objection, hindrance") is a Perso-Arabic loan (from Arabic ḥarakah), one of the many words Marathi absorbed over centuries of contact with Persian-speaking rulers and traders — the same trade-and-court layer that colours all the languages of the Deccan.
-So the reply blends an Indo-European negative with an Arabic noun — a small map of Marathi's history in three words.
-
-Why it's said this way.
-Where English "thank you / you're welcome" trades politeness tokens, Marathi waves the thanks away: don't mention it, there was no trouble. The same gesture, a different picture.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "dhanyavād" becomes "kāhī harkat nāhī" — thanks becomes no problem]
-[pause 8 seconds for the answer]
-[your turn — say: the two histories inside it (nāhī from PIE ne; harkat from Arabic)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What two language families meet in kāhī harkat nāhī? (Indo-European nāhī from ne; Arabic harkat.)
-
-
-Lesson 2 of 6.
 कसा / कशी / कसं (kasā / kaśī / kasaṁ) — "how".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
@@ -65,6 +34,35 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Which "how" do you use asking a woman? (kaśī — feminine.)
+
+
+Lesson 2 of 6.
+तुम्ही कसे आहात? (tumhī kase āhāt?) — "how are you?"
+
+Warm-up.
+[pause 2 seconds]
+The full courteous "how are you?" — assembled from words you already hold.
+
+The phrase, assembled.
+तुम्ही (tumhī, respectful "you") + कसे (kase, "how," plural-agreeing).
+आहात (āhāt, "are," respectful) becomes तुम्ही कसे आहात? — "you how are?", verb last.
+Two agreements are at work:
+Because तुम्ही is grammatically plural, "how" appears as कसे (kase, the plural form of kasā), and the copula as आहात (āhāt).
+To a single male friend: तू कसा आहेस? (tū kasā āhes?); to a female friend: तू कशी आहेस? (tū kaśī āhes?).
+
+Why it's said this way.
+The respectful tumhī … āhāt is the safe default with anyone new. The gendered kasā/kaśī only appears in the familiar tū form — one more place Marathi's three genders surface in ordinary speech.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tumhī kase āhāt?" — how are you? (respectful)]
+[pause 8 seconds for the answer]
+[your turn — say: it to a female friend (tū kaśī āhes?)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Why kase and āhāt (not kasā, āhes) with tumhī? (tumhī is grammatically plural, so "how" and "are" take plural forms.)
 
 
 Lesson 3 of 6.
@@ -127,6 +125,37 @@ Why does the Chapter-1 baraṁ become barā here? (It now describes a person, so
 
 
 Lesson 5 of 6.
+काही हरकत नाही (kāhī harkat nāhī) — "no problem / you're welcome".
+
+Warm-up.
+[pause 2 seconds]
+When someone thanks you, Marathi's easy reply is not "you're welcome" but "there's no objection at all."
+
+The phrase, assembled.
+काही (kāhī, "any") + हरकत (harkat, "objection, trouble") + नाही (nāhī, "not/none") becomes "any objection there-is-not" ≈ "no problem at all."
+
+The word, taken apart.
+Two threads meet here:
+नाही (nāhī, "not") is Chapter 1's "no," on the ancient negative na- — PIE ne, the root of English no, not, none and Latin nōn.
+हरकत (harkat, "objection, hindrance") is a Perso-Arabic loan (from Arabic ḥarakah), one of the many words Marathi absorbed over centuries of contact with Persian-speaking rulers and traders — the same trade-and-court layer that colours all the languages of the Deccan.
+So the reply blends an Indo-European negative with an Arabic noun — a small map of Marathi's history in three words.
+
+Why it's said this way.
+Where English "thank you / you're welcome" trades politeness tokens, Marathi waves the thanks away: don't mention it, there was no trouble. The same gesture, a different picture.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "dhanyavād" becomes "kāhī harkat nāhī" — thanks becomes no problem]
+[pause 8 seconds for the answer]
+[your turn — say: the two histories inside it (nāhī from PIE ne; harkat from Arabic)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two language families meet in kāhī harkat nāhī? (Indo-European nāhī from ne; Arabic harkat.)
+
+
+Lesson 6 of 6.
 Chapter 3 recap — how are you.
 
 Warm-up.
@@ -156,32 +185,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give the respectful "how are you?" and a full answer. (tumhī kase āhāt? — mī barā/barī āhe, dhanyavād.) Next chapter: the farewells — punhā bheṭū.
-
-
-Lesson 6 of 6.
-तुम्ही कसे आहात? (tumhī kase āhāt?) — "how are you?"
-
-Warm-up.
-[pause 2 seconds]
-The full courteous "how are you?" — assembled from words you already hold.
-
-The phrase, assembled.
-तुम्ही (tumhī, respectful "you") + कसे (kase, "how," plural-agreeing).
-आहात (āhāt, "are," respectful) becomes तुम्ही कसे आहात? — "you how are?", verb last.
-Two agreements are at work:
-Because तुम्ही is grammatically plural, "how" appears as कसे (kase, the plural form of kasā), and the copula as आहात (āhāt).
-To a single male friend: तू कसा आहेस? (tū kasā āhes?); to a female friend: तू कशी आहेस? (tū kaśī āhes?).
-
-Why it's said this way.
-The respectful tumhī … āhāt is the safe default with anyone new. The gendered kasā/kaśī only appears in the familiar tū form — one more place Marathi's three genders surface in ordinary speech.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tumhī kase āhāt?" — how are you? (respectful)]
-[pause 8 seconds for the answer]
-[your turn — say: it to a female friend (tū kaśī āhes?)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Why kase and āhāt (not kasā, āhes) with tumhī? (tumhī is grammatically plural, so "how" and "are" take plural forms.)
