@@ -108,12 +108,12 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracksWithNoWritingPractice: 3,
       tracksWhereWritingStartsLate: 7,
       atomMeasurementBlindLessons: 497,
-      findings: 147,
+      findings: 146,
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
-      { language: "kannada", kind: "duration", count: 1 },
       { language: "telugu", kind: "duration", count: 1 },
       { language: "french", kind: "order-integrity", count: 113 },
+      { language: "marathi", kind: "order-integrity", count: 67 },
     ]);
     expect(report.tracks.find((track) => track.language === "german")).toMatchObject({
       orderDefects: 0,
