@@ -6328,6 +6328,36 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઢ"),
   },
+  // t30apps writes Gujarati ણ in three runs: the left spine and hooked tail,
+  // the separate middle bowl, then the tall right spine and foot. These Noto
+  // medians retain the observed body-before-bowl-before-spine order.
+  [ductusKey("gujarati", "ણ")]: {
+    script: "gujarati",
+    glyph: "ણ",
+    strokes: [
+      { segments: [{ label: "descend the left spine and sweep through the hooked lower tail", path: [
+        { x: 115, y: 590 }, { x: 115, y: 520 }, { x: 115, y: 440 },
+        { x: 115, y: 360 }, { x: 115, y: 285 }, { x: 120, y: 220 },
+        { x: 140, y: 170 }, { x: 180, y: 130 }, { x: 230, y: 100 },
+        { x: 285, y: 75 }, { x: 340, y: 45 }, { x: 385, y: 10 },
+        { x: 415, y: -30 }, { x: 425, y: -70 }, { x: 410, y: -105 },
+      ] }] },
+      { segments: [{ label: "lift, then circle the separate middle bowl", path: [
+        { x: 280, y: 555 }, { x: 330, y: 575 }, { x: 385, y: 575 },
+        { x: 435, y: 555 }, { x: 475, y: 520 }, { x: 500, y: 470 },
+        { x: 510, y: 410 }, { x: 505, y: 350 }, { x: 485, y: 305 },
+        { x: 450, y: 270 }, { x: 410, y: 250 }, { x: 365, y: 245 },
+        { x: 320, y: 260 }, { x: 285, y: 290 }, { x: 260, y: 325 },
+      ] }] },
+      { segments: [{ label: "lift again, descend the tall right spine, and turn through its foot", path: [
+        { x: 690, y: 590 }, { x: 690, y: 520 }, { x: 690, y: 440 },
+        { x: 690, y: 360 }, { x: 690, y: 280 }, { x: 690, y: 200 },
+        { x: 690, y: 145 }, { x: 700, y: 105 }, { x: 725, y: 75 },
+        { x: 760, y: 55 }, { x: 795, y: 45 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ણ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
