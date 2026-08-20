@@ -113,6 +113,7 @@ const GUJARATI_A = DUCTUS[ductusKey("gujarati", "અ")];
 const GUJARATI_AA = DUCTUS[ductusKey("gujarati", "આ")];
 const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
 const GUJARATI_II = DUCTUS[ductusKey("gujarati", "ઈ")];
+const GUJARATI_U = DUCTUS[ductusKey("gujarati", "ઉ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1814,6 +1815,21 @@ describe("handwriting ductus", () => {
     expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
     expect(Math.max(...curl.map((point) => point.y))).toBeGreaterThan(upper[0].y);
     expect(curl.at(-1)!.x).toBeGreaterThan(curl[0].x);
+  });
+
+  it("Gujarati ઉ joins both bowls to its tall returning outer curve", () => {
+    expect(GUJARATI_U.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_U)).toBe(0);
+    expect(GUJARATI_U.strokes).toHaveLength(1);
+    expect(GUJARATI_U.strokes[0].segments).toHaveLength(3);
+    const [upper, lower, outer] = GUJARATI_U.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(outer[0]);
+    expect(Math.max(...lower.map((point) => point.x))).toBeGreaterThan(upper.at(-1)!.x);
+    expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(lower.at(-1)!.x);
+    expect(outer.at(-1)!.y).toBeGreaterThan(upper[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4039,6 +4055,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper loop.*narrow middle crossing.*broad lower body.*right side.*clockwise.*extended top hook.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-loop-to-lower-loop-to-extended-curl order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઉ traces its unbroken bowls and returning curve to the next animation", () => {
+    const src = GUJARATI_U.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઉ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left curve.*upper right.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-bowl-to-lower-bowl-to-outer-curve order.*zero-lift evidence/i,
     );
   });
 
