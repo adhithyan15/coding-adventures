@@ -2634,6 +2634,37 @@ claiming ownership of credentials, print data, queues, or printer sessions:
 This broadens common local equipment discovery using the same reusable DNS-SD
 and D23 boundaries as the existing ESPHome, Cast, and HomeKit slices.
 
+## Current IPP Scan Service mDNS Discovery Breadth Slice
+
+The next breadth slice adds standards-based local scanner discovery without
+claiming ownership of credentials, scan jobs, documents, destinations, or
+scanner sessions:
+
+- `smart-home-ipp-scanner-discovery-integration` browses the PWG-required
+  `_scan._sub._ipp._tcp.local` service through the shared production mDNS
+  scanner and validates the scan resource path, TXT version, optional canonical
+  scanner UUID, model, location, authentication requirement, maximum TLS
+  version, document formats, automatic document feeder, transparency adaptor,
+  push-destination schemes, and endpoint.
+- Canonical scanner UUIDs provide stable identity when advertised; otherwise
+  the resolved host, port, and scan resource form a deterministic endpoint
+  identity. The PWG defaults for `rs`, `ADF`, `TMA`, and `Scan2` are explicit;
+  optional printer `rp` resources are validated and preserved for multifunction
+  devices; and conflicting duplicate identities remain isolated partial
+  failures.
+- D23 discovery authorization runs before socket I/O. One browse accepts at
+  most 64 replies, uses a bounded timeout and record TTL, preserves parser
+  failures, and maps advertised authentication to an explicit pairing
+  requirement without accepting or materializing a secret.
+- The runtime opens no IPP TCP connection and performs no scanner-status read,
+  credential input, scan submission, document retrieval, push-destination
+  access, public-endpoint access, or long-lived browse. Those require separately
+  supervised transport, secret-custody, data-governance, destination-policy,
+  and operation-policy owners.
+
+This broadens common local multifunction and standalone scanner discovery while
+reusing the same DNS-SD and D23 boundaries as the printer discovery slice.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
