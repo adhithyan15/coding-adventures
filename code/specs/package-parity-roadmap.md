@@ -3906,6 +3906,8 @@ collisions, and zero unknown buckets are unchanged. Before publication the
 new scanner root received an injected portable-core owner plus a blocked
 native DNS-SD/HTTP/filesystem/CLI authority review. This late discovery does
 not displace the already selected dependency-ready Haskell ZIP tranche.
+Ready-for-review PR #12234 publishes that tranche from validated implementation
+head `b1bbe5ec1a`; GitHub reports it mergeable while required CI is pending.
 
 ## Autonomous Loop Protocol
 
