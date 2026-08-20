@@ -111,6 +111,7 @@ const CYRILLIC_YU = DUCTUS[ductusKey("cyrillic", "ю")];
 const CYRILLIC_YA = DUCTUS[ductusKey("cyrillic", "я")];
 const GUJARATI_A = DUCTUS[ductusKey("gujarati", "અ")];
 const GUJARATI_AA = DUCTUS[ductusKey("gujarati", "આ")];
+const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1780,6 +1781,22 @@ describe("handwriting ductus", () => {
     expect(firstStem[0].y).toBeGreaterThan(firstStem.at(-1)!.y);
     expect(trailingStem[0].y).toBeGreaterThan(trailingStem.at(-1)!.y);
     expect(trailingStem[0].x).toBeGreaterThan(firstStem[0].x);
+  });
+
+  it("Gujarati ઇ keeps both loops and the rising hook in one pen-down run", () => {
+    expect(GUJARATI_I.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_I)).toBe(0);
+    expect(GUJARATI_I.strokes).toHaveLength(1);
+    expect(GUJARATI_I.strokes[0].segments).toHaveLength(4);
+    const [upper, crossing, lower, hook] = GUJARATI_I.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(upper.at(-1)).toEqual(crossing[0]);
+    expect(crossing.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(hook[0]);
+    expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(lower[0].y);
+    expect(hook.at(-1)!.y).toBeGreaterThan(hook[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3983,6 +4000,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /three ordered pen-down runs.*first SVG path.*joined અ body.*open curve.*clockwise.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*separate right stem.*lifts again.*third SVG path.*trailing ā stem.*matching foot.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem order.*two-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઇ traces its unbroken loop-and-hook order to the next animation", () => {
+    const src = GUJARATI_I.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઇ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper loop.*narrow middle crossing.*broad lower body.*right side.*upper-right hook.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-loop-to-lower-loop-to-hook order.*zero-lift evidence/i,
     );
   });
 

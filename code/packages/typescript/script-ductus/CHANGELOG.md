@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added — cited Gujarati ઇ ductus (HL-C09FI)
+
+- Render **ઇ** as one continuous upper loop, middle crossing, broad lower loop, and rising upper-right hook.
+- Preserve t30apps.com's version-1.0 first-path order and zero-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,238 tests.
+
 ### Added — cited Chinese numeral ductus 一 二 三 四 五 (HL-C230)
 
 - Render the five numerals from Hanzi Writer Data's ordered medians at pinned commit `68d10a4`: 一 as one unbroken héng; 二 and 三 as top-before-bottom héng runs with the widening base; 四 as the box built left wall, then top-and-right in one turning héngzhé, two inner pieces, bottom closed last; 五 as top bar, leaning shù, héngzhé, and the widest closing stroke.
