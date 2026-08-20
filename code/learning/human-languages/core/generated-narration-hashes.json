@@ -6,18 +6,18 @@
     {
       "language": "arabic",
       "chapter": 1,
-      "sourceHash": "fnv1a64:644087df44cb504a",
+      "sourceHash": "fnv1a64:fe0cca28b9aa0782",
       "lessonIds": [
+        "AR-C01-salam",
+        "AR-C01-marhaba",
         "AR-C01-al",
         "AR-C01-as-salamu-alaykum",
-        "AR-C01-marhaba",
-        "AR-C01-masa-al-khayr",
-        "AR-C01-practice",
         "AR-C01-sabah-al-khayr",
-        "AR-C01-salam",
+        "AR-C01-masa-al-khayr",
         "AR-C01-shukran",
-        "AR-W01-abjad-short-vowels",
+        "AR-C01-practice",
         "AR-W01-direction-and-alif",
+        "AR-W01-abjad-short-vowels",
         "AR-W02-joining-sin-lam",
         "AR-W02-lam-alif-joins",
         "AR-W03-dots-mim-ba-salam",
@@ -27,33 +27,33 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch01.txt",
       "json": "arabic/narration/ch01.json",
-      "textHash": "fnv1a64:1229c7fcf26749db",
-      "jsonHash": "fnv1a64:3d151ecd6de5dccf"
+      "textHash": "fnv1a64:389df15bb69d443d",
+      "jsonHash": "fnv1a64:3747da915f84866d"
     },
     {
       "language": "arabic",
       "chapter": 2,
-      "sourceHash": "fnv1a64:1078ff046e54595b",
+      "sourceHash": "fnv1a64:2f9e8dc860cdbf23",
       "lessonIds": [
-        "AR-C02-anta-anti",
-        "AR-C02-ii-my",
         "AR-C02-ism",
+        "AR-C02-ii-my",
         "AR-C02-ismii",
+        "AR-C02-anta-anti",
         "AR-C02-maa",
         "AR-C02-maa-ismuka",
-        "AR-C02-practice",
         "AR-C02-tasharrafna",
+        "AR-C02-practice",
         "AR-W04-dots-family-nun-ta",
         "AR-W05-ya-and-my-name",
-        "AR-W06-hamza",
-        "AR-W06-harakat-and-hamza"
+        "AR-W06-harakat-and-hamza",
+        "AR-W06-hamza"
       ],
       "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "arabic/narration/ch02.txt",
       "json": "arabic/narration/ch02.json",
-      "textHash": "fnv1a64:bc53263f2913748e",
-      "jsonHash": "fnv1a64:e20d10d131cd4921"
+      "textHash": "fnv1a64:8ebda8f907a83742",
+      "jsonHash": "fnv1a64:d18bc40468588e07"
     },
     {
       "language": "arabic",

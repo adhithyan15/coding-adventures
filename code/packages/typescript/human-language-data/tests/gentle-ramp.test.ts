@@ -106,14 +106,14 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracks: 23,
       tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 2, // Latin now starts with observe-trace and guided copy.
-      tracksWhereWritingStartsLate: 4, // Persian joins German and Chinese with writing in lesson one.
-      atomMeasurementBlindLessons: 499, // Persian's atom-free chapter-1 payoff is measured honestly.
-      findings: 139, // Persian closes both its late-writing and order-integrity findings.
+      tracksWhereWritingStartsLate: 4, // Persian now joins German and Chinese with writing in lesson one.
+      atomMeasurementBlindLessons: 499, // Persian's atom-free observe-and-copy bridge is now measured honestly.
+      findings: 138, // Persian closes both late-writing and order-integrity findings after Arabic's order repair.
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "punjabi", kind: "order-integrity", count: 62 },
-      { language: "arabic", kind: "order-integrity", count: 53 },
       { language: "italian", kind: "order-integrity", count: 22 },
+      { language: "portuguese", kind: "order-integrity", count: 21 },
     ]);
     expect(report.tracks.find((track) => track.language === "german")).toMatchObject({
       orderDefects: 0,

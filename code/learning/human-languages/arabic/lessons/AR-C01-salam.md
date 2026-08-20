@@ -1,5 +1,6 @@
 ---
 id: AR-C01-salam
+sequence: 10
 chapter: 1
 type: word
 headword: سلام

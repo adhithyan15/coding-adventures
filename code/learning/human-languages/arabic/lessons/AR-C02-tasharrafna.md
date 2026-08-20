@@ -1,5 +1,6 @@
 ---
 id: AR-C02-tasharrafna
+sequence: 210
 chapter: 2
 type: phrase
 headword: تشرفنا

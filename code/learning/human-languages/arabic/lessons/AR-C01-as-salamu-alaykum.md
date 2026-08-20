@@ -1,5 +1,6 @@
 ---
 id: AR-C01-as-salamu-alaykum
+sequence: 40
 chapter: 1
 type: word
 headword: السلام عليكم
