@@ -16,6 +16,8 @@
     "check:narration": "node dist/narration-cli.js --check",
     "generate:progress": "node dist/track-progress-cli.js --write",
     "check:progress": "node dist/track-progress-cli.js --check",
+    "generate:gentle-snapshots": "node dist/gentle-ramp-snapshot-cli.js --write",
+    "check:gentle-snapshots": "node dist/gentle-ramp-snapshot-cli.js --check",
     "report": "node dist/report-cli.js",
     "report:gentle-ramp": "node dist/gentle-ramp-cli.js",
     "plan": "node dist/plan-cli.js",
