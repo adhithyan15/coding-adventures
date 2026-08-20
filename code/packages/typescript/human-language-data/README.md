@@ -106,6 +106,7 @@ import {
 
 const frenchA1 = loadTaskShapeInventory("french", "A1");
 const germanA1 = loadTaskShapeInventory("german", "A1");
+const arabicA1 = loadTaskShapeInventory("arabic", "A1");
 const present = listTaskShapeInventories();
 const missing = buildTaskShapeBacklog(
   loadLanguageRegistry().languages.map((track) => track.id),
@@ -113,11 +114,12 @@ const missing = buildTaskShapeBacklog(
 );
 ```
 
-The first two inventories are official DELF French A1 and Goethe German A1.
-They are targets for later five-minute lesson decomposition and mocks, not claims
-that either current book is pass-ready. Alternate published DELF receptive forms,
-open-ended minimum lengths, and duration ranges remain distinct rather than being
-collapsed into invented single values.
+The inventories include official DELF French A1 and Goethe German A1 formats,
+plus Avant STAMP 4S Arabic with a clearly labelled project mapping from A1 to a
+Level 3 / Novice-High floor in every skill. They are targets for later five-minute
+lesson decomposition and mocks, not claims that any current book is pass-ready.
+Alternate published forms, adaptive counts, open-ended lengths, and duration
+ranges remain distinct rather than being collapsed into invented single values.
 
 ### Source-bounded exam inventories (HL20)
 
