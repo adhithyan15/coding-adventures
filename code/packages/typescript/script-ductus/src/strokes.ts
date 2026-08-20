@@ -6282,6 +6282,27 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઠ"),
   },
+  // t30apps writes Gujarati ડ as one unbroken descending sweep: the high
+  // shoulder runs right-to-left, turns through the middle, and continues
+  // around the lower bowl to its lower-left terminal. The Noto fit follows it.
+  [ductusKey("gujarati", "ડ")]: {
+    script: "gujarati",
+    glyph: "ડ",
+    strokes: [
+      { segments: [{ label: "sweep left across the shoulder, descend through the middle, and round the lower bowl", path: [
+        { x: 390, y: 565 }, { x: 340, y: 575 }, { x: 285, y: 575 },
+        { x: 235, y: 565 }, { x: 195, y: 545 }, { x: 165, y: 515 },
+        { x: 150, y: 480 }, { x: 160, y: 445 }, { x: 190, y: 415 },
+        { x: 235, y: 385 }, { x: 285, y: 355 }, { x: 335, y: 325 },
+        { x: 380, y: 290 }, { x: 415, y: 250 }, { x: 430, y: 205 },
+        { x: 430, y: 155 }, { x: 420, y: 110 }, { x: 395, y: 70 },
+        { x: 360, y: 40 }, { x: 315, y: 20 }, { x: 265, y: 20 },
+        { x: 215, y: 30 }, { x: 170, y: 50 }, { x: 130, y: 80 },
+        { x: 95, y: 115 }, { x: 65, y: 155 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ડ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
