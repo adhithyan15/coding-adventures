@@ -7348,10 +7348,13 @@ impl HtmlParser {
                 || self.has_authored_open_html_element("dt"))
             && self.open_html_element_in_scope_index(name).is_none()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                format!("end tag `</{name}>` did not match the current foreign element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-description-item-end-tag",
                 format!("end tag `</{name}>` did not match a description item in scope"),
@@ -34153,12 +34156,7 @@ mod tests {
                 assert_eq!(
                     output.parser_diagnostics,
                     vec![
-                        ParserDiagnostic::new(
-                            "unexpected-end-tag-in-foreign-content",
-                            format!(
-                                "end tag `</{item_name}>` did not match the current foreign element"
-                            )
-                        ),
+                        generic_foreign_end_tag_mismatch(&source, item_name),
                         ParserDiagnostic::new(
                             "unexpected-description-item-end-tag",
                             format!(
@@ -34186,12 +34184,7 @@ mod tests {
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
-                    ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        format!(
-                            "end tag `</{end_name}>` did not match the current foreign element"
-                        )
-                    ),
+                    generic_foreign_end_tag_mismatch(&source, end_name),
                     ParserDiagnostic::new(
                         "unexpected-description-item-end-tag",
                         format!(
@@ -34274,6 +34267,87 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-description-item-end-tag"));
+    }
+
+    #[test]
+    fn positions_description_item_foreign_end_tag_mismatches_at_token_emission() {
+        for (item_name, end_name) in [("dd", "dt"), ("dt", "dd")] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<dl><{item_name}><math><mi></{end_name}>X</mi></math></{item_name}></dl>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics,
+                vec![
+                    generic_foreign_end_tag_mismatch(&source, end_name),
+                    ParserDiagnostic::new(
+                        "unexpected-description-item-end-tag",
+                        format!(
+                            "end tag `</{end_name}>` did not match a description item in scope"
+                        )
+                    ),
+                ],
+                "source {source:?}"
+            );
+            assert!(source.len() > source.chars().count());
+
+            let eof_source = format!(
+                "<!doctype html><dl><{item_name}><svg><foreignObject></{end_name}"
+            );
+            let eof_output = parse_html_with_diagnostics(&eof_source).unwrap();
+            assert!(eof_output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-end-tag-in-foreign-content"
+            }));
+            assert_eq!(
+                eof_output.parser_diagnostics.last(),
+                Some(&eof_with_unclosed_elements(&eof_source))
+            );
+        }
+
+        let nearer_foreign_match = parse_html_with_diagnostics(
+            "<!doctype html><dl><dd><svg><dd></dd>X</svg></dd></dl>",
+        )
+        .unwrap();
+        assert!(nearer_foreign_match
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "dd".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "dt".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned.diagnostics();
+        let foreign = diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+            .unwrap();
+        let companion = diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-description-item-end-tag")
+            .unwrap();
+        assert_eq!(foreign.position, None);
+        assert_eq!(companion.position, None);
     }
 
     #[test]
