@@ -5427,6 +5427,80 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઉ"),
   },
+  // t30apps repeats the complete zero-lift Gujarati ઉ run for ઊ, then carries
+  // the same pen across the high shoulder and down the long right-side tail.
+  // The fitted median keeps that extension inside the wider Noto outline.
+  [ductusKey("gujarati", "ઊ")]: {
+    script: "gujarati",
+    glyph: "ઊ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "write ઉ through its upper bowl, middle cusp, and lower bowl",
+            path: [
+              { x: 270, y: 550 },
+              { x: 330, y: 565 },
+              { x: 400, y: 565 },
+              { x: 470, y: 540 },
+              { x: 520, y: 500 },
+              { x: 535, y: 450 },
+              { x: 520, y: 400 },
+              { x: 475, y: 365 },
+              { x: 425, y: 335 },
+              { x: 370, y: 315 },
+              { x: 330, y: 305 },
+              { x: 390, y: 310 },
+              { x: 445, y: 290 },
+              { x: 495, y: 250 },
+              { x: 525, y: 200 },
+              { x: 525, y: 145 },
+              { x: 490, y: 90 },
+              { x: 435, y: 50 },
+              { x: 365, y: 30 },
+            ],
+          },
+          {
+            label: "continue around the tall outer-left curve",
+            path: [
+              { x: 365, y: 30 },
+              { x: 285, y: 35 },
+              { x: 215, y: 75 },
+              { x: 160, y: 140 },
+              { x: 120, y: 225 },
+              { x: 95, y: 325 },
+              { x: 95, y: 430 },
+              { x: 115, y: 535 },
+              { x: 155, y: 635 },
+              { x: 220, y: 720 },
+              { x: 300, y: 775 },
+              { x: 390, y: 795 },
+              { x: 470, y: 785 },
+              { x: 525, y: 755 },
+            ],
+          },
+          {
+            label: "cross the high shoulder and descend the long right tail into its foot",
+            path: [
+              { x: 525, y: 755 },
+              { x: 600, y: 725 },
+              { x: 660, y: 670 },
+              { x: 710, y: 600 },
+              { x: 750, y: 520 },
+              { x: 754, y: 400 },
+              { x: 754, y: 280 },
+              { x: 754, y: 160 },
+              { x: 760, y: 90 },
+              { x: 790, y: 45 },
+              { x: 835, y: 35 },
+              { x: 875, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઊ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
