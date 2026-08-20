@@ -1,5 +1,6 @@
 ---
 id: IT-C01-ciao
+sequence: 10
 chapter: 1
 type: word
 headword: ciao

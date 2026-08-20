@@ -1,5 +1,6 @@
 ---
 id: IT-C01-buongiorno
+sequence: 50
 chapter: 1
 type: phrase
 headword: buongiorno
