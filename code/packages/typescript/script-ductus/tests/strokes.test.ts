@@ -122,6 +122,7 @@ const GUJARATI_O = DUCTUS[ductusKey("gujarati", "ઓ")];
 const GUJARATI_AU = DUCTUS[ductusKey("gujarati", "ઔ")];
 const GUJARATI_KA = DUCTUS[ductusKey("gujarati", "ક")];
 const GUJARATI_KHA = DUCTUS[ductusKey("gujarati", "ખ")];
+const GUJARATI_GA = DUCTUS[ductusKey("gujarati", "ગ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1952,6 +1953,19 @@ describe("handwriting ductus", () => {
     const body = GUJARATI_KHA.strokes[0].segments[0].path;
     const spine = GUJARATI_KHA.strokes[1].segments[0].path;
     expect(body.at(-1)!.x).toBeGreaterThan(body[0].x);
+    expect(body.at(-1)!.y).toBeLessThan(body[0].y);
+    expect(spine.at(-1)!.x).toBeGreaterThan(spine[0].x);
+    expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
+  });
+
+  it("Gujarati ગ writes its rounded body before the separate right spine", () => {
+    expect(GUJARATI_GA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_GA)).toBe(1);
+    expect(GUJARATI_GA.strokes).toHaveLength(2);
+    expect(GUJARATI_GA.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const body = GUJARATI_GA.strokes[0].segments[0].path;
+    const spine = GUJARATI_GA.strokes[1].segments[0].path;
+    expect(body.at(-1)!.x).toBeLessThan(body[0].x);
     expect(body.at(-1)!.y).toBeLessThan(body[0].y);
     expect(spine.at(-1)!.x).toBeGreaterThan(spine[0].x);
     expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
@@ -4279,6 +4293,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /two ordered pen-down runs.*first SVG path.*upper left.*left lobe.*curls through the middle.*beside the right spine.*lifts once.*second SVG path.*full right spine.*lower foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*joined-body-before-right-spine order.*one-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ગ traces its rounded body and right spine to two paths", () => {
+    const src = GUJARATI_GA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ગ animation.*first and second SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /two ordered pen-down runs.*first SVG path.*upper left.*clockwise.*rounded body.*lower left.*lifts once.*second SVG path.*full right spine.*lower foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*rounded-body-before-right-spine order.*one-lift evidence/i,
     );
   });
 

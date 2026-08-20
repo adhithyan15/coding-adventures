@@ -432,7 +432,7 @@ describe("the script-system map", () => {
     const report = measureRamp(lessons, loadChapterPolicy()).script;
     const nonLatin = report.tracks.filter((t) => !t.latinScript);
 
-    expect(nonLatin.length).toBe(16);
+    expect(nonLatin.length).toBe(17);
     for (const track of nonLatin) {
       // A track whose matcher resolved to the wrong script would silently measure zero
       // glyphs across its whole corpus — the failure that hid Gujarati for a release.

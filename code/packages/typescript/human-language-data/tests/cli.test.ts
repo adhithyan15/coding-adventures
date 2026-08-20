@@ -44,9 +44,8 @@ describe("runCurriculumGapReport", () => {
     try {
       expect(runCurriculumGapReport(["--format", "json"])).toBe(0);
       const json = out.mock.calls.map((call) => String(call[0])).join("");
-      // 22 since HL-C40 registered Japanese, following HL-C39's Mandarin Chinese —
-      // the first two tracks outside the Indo-European and Dravidian families.
-      expect(JSON.parse(json).summary.registeredTracks).toBe(22);
+      // Marwadi joins Mandarin and Japanese as a complete registry/book track.
+      expect(JSON.parse(json).summary.registeredTracks).toBe(23);
       out.mockClear();
       expect(runCurriculumGapReport(["--format", "text"])).toBe(0);
       expect(out.mock.calls.map((call) => String(call[0])).join("")).toContain(

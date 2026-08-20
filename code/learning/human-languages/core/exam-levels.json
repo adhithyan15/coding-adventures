@@ -61,6 +61,12 @@
     "kannada": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
     "malayalam": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
     "marathi": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
+    "marwadi": {
+      "exam": "Coding Adventures Marwadi Assessment — project-defined equivalent",
+      "basis": "editorial",
+      "mapping": "cefr",
+      "caveat": "No suitable complete external pre-A1-to-C2 ladder has been identified. The project-defined equivalent must test listening, speaking, reading, and writing with published task shapes, rubrics, pass thresholds, and timed mocks; this mapping names the destination but does not claim that the current starter chapter reaches it."
+    },
     "punjabi": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
     "bengali": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
     "gujarati": { "exam": "no widely-sat ladder", "basis": "editorial", "mapping": "cefr" },
