@@ -11,7 +11,8 @@
 // Meanwhile every number needed to order the work is computed on every run.
 // `level-gate.ts` says which of four criteria each track fails and by how much.
 // `script-closure.ts` says exactly how many glyphs a track shows its reader and
-// never taught. `exam-inventory.ts` measures against an external published list.
+// never taught. `exam-inventory.ts` measures against the named external exam or
+// clearly labelled project-defined equivalent.
 //
 // So the queue is derived rather than typed:
 //
@@ -36,8 +37,9 @@ import { CEFR_LEVELS, levelRank } from "./levels.js";
 import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
 
-/** The seven families of work. Every item belongs to exactly one. */
+/** The eight families of work. Every item belongs to exactly one. */
 export type WorkKind =
+  | "assessment-contract"
   | "exam-inventory"
   | "script-closure"
   | "vocabulary"
@@ -51,7 +53,7 @@ export type WorkKind =
  *
  * The two entries worth defending:
  *
- * `exam-inventory` is 1 because until the external list exists, every other
+ * `exam-inventory` follows because until the target list exists, every other
  * number for that level is a proxy for something nobody is graded on. It is also
  * the cheapest family in the file: research and JSON, no content authoring.
  *
@@ -78,13 +80,14 @@ export type WorkKind =
  * headword count is the only measurement that exists.
  */
 export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
-  "exam-inventory": 1,
-  "script-closure": 2,
-  "exam-point": 3,
-  vocabulary: 4,
-  reinforcement: 5,
-  "atom-budget": 6,
-  "spine-nodes": 7,
+  "assessment-contract": 1,
+  "exam-inventory": 2,
+  "script-closure": 3,
+  "exam-point": 4,
+  vocabulary: 5,
+  reinforcement: 6,
+  "atom-budget": 7,
+  "spine-nodes": 8,
 });
 
 /**
@@ -97,6 +100,7 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
  * list of work items, which is the entire point of computing the queue.
  */
 export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
+  "assessment-contract": 1,
   "exam-inventory": 1,
   "script-closure": 10,
   vocabulary: 35,
@@ -160,7 +164,7 @@ export interface CompletionPlan {
   };
 }
 
-/** A (track, level) pair that already has an external inventory on disk. */
+/** A (track, level) pair that already has a target assessment inventory on disk. */
 export interface InventoryPresence {
   language: string;
   level: CefrLevel;
@@ -177,7 +181,9 @@ export interface ExamCoverageSummary {
 export interface CompletionPlanInput {
   levelGate: LevelGateReport;
   scriptClosure: ScriptClosureReport;
-  /** Which external inventories exist. Absent ones become `exam-inventory` items. */
+  /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
+  assessmentContracts?: readonly string[];
+  /** Which target inventories exist. Absent ones become `exam-inventory` items. */
   inventories: readonly InventoryPresence[];
   /**
    * Measured coverage for every inventory that exists.
@@ -212,7 +218,8 @@ function tranchesFor(outstanding: number, kind: WorkKind): number {
  * The lowest certifiable level at or above `from` that has no inventory yet.
  *
  * Called with the level a track is IN PROGRESS at, so a track working pre-A1 is
- * asked for its A1 inventory. That is deliberate: the target for the next rung
+ * asked for its A1 inventory. That is deliberate: the external exam or
+ * project-defined target for the next rung
  * has to be written down before the climb reaches it, or the climb is once again
  * aimed at a number this repository invented. HL-C184's Phase 0 made exactly
  * this point and it is the reason the item is ordered at the IN-PROGRESS level
@@ -243,6 +250,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const headSize = input.headSize ?? 25;
   const have = new Set(input.inventories.map((entry) => `${entry.language}/${entry.level}`));
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
+  const contracted = new Set(input.assessmentContracts ?? []);
 
   // Items are collected PER TRACK and interleaved at the end, never pooled and
   // sorted flat. The first version of this function pooled them, and the queue it
@@ -264,6 +272,27 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     }
     const mine: WorkItem[] = [];
 
+    // The assessment contract is the outer target. An exam inventory says which
+    // language points occur; it does NOT prove that reading, listening, writing
+    // and speaking are each taught, scored independently, and exercised in a
+    // timed full mock. HL16 makes that distinction explicit. Until this file
+    // exists, a track cannot honestly claim that finishing its book prepares the
+    // reader to pass, however complete its vocabulary and grammar may look.
+    if (!contracted.has(track.language)) {
+      mine.push({
+        id: `assessment-contract/${track.language}`,
+        kind: "assessment-contract",
+        language: track.language,
+        level,
+        goal:
+          `write ${track.language}/assessment.json: name an external exam or project-defined equivalent ` +
+          `at every level, then require independent reading, listening, writing and speaking passes, ` +
+          `the gentle writing stages, scored tasks, rubrics, answer keys and timed full mocks`,
+        outstanding: 1,
+        tranches: 1,
+      });
+    }
+
     // 1. The external target for the next certifiable rung, if it is not written.
     const missing = nextMissingInventory(track.language, level, ceiling, have);
     if (missing !== null) {
@@ -273,7 +302,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
         language: track.language,
         level,
         goal:
-          `write the external ${missing} exam inventory for ${track.language}; ` +
+          `write the external or project-defined ${missing} assessment inventory for ${track.language}; ` +
           `until it exists, every ${track.language} number at ${missing} is a proxy`,
         outstanding: 1,
         tranches: 1,
@@ -452,12 +481,13 @@ function interleave(byTrack: ReadonlyMap<string, readonly WorkItem[]>, gate: Lev
 /**
  * The tail, counted per family.
  *
- * Only two families can honestly be projected to the ceiling. Vocabulary can,
- * because `LEVEL_VOCABULARY` states the cumulative target at every level and the
- * corpus states what a track holds today. Inventories can, because there are
- * exactly 22 tracks times six certifiable levels and that product does not move.
+ * Five families can honestly be projected to the ceiling. Assessment contracts
+ * are exactly one per track. Vocabulary can be counted because `LEVEL_VOCABULARY`
+ * states the cumulative target at every level. Exam inventories are exactly one
+ * per track and certifiable level. Script closure counts a finite observed glyph
+ * set, and exam points are projectable over the inventories that already exist.
  *
- * The other five cannot, and are reported as `null` rather than as a number.
+ * The other three cannot, and are reported as `null` rather than as a number.
  * Reinforcement debt at B1 is a function of lessons nobody has written yet;
  * quoting a figure for it would be inventing one. `null` here means NOT
  * PROJECTABLE, which is a different fact from zero — the same distinction
@@ -476,6 +506,11 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
 
   const wanted = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter((level) => levelRank(level) <= levelRank(ceiling)).length;
   const inventoryItems = Math.max(0, wanted - input.inventories.length);
+  const trackNames = new Set(input.levelGate.tracks.map((track) => track.language));
+  const validAssessmentContracts = new Set(
+    (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
+  );
+  const assessmentItems = Math.max(0, input.levelGate.tracks.length - validAssessmentContracts.size);
 
   const glyphs = input.scriptClosure.tracks.reduce((sum, track) => sum + track.neverTaughtGlyphs, 0);
 
@@ -497,6 +532,13 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
   const examPointItems = written.length === 0 ? null : Math.ceil(examUncovered / TRANCHE_SIZE["exam-point"]);
 
   return [
+    {
+      kind: "assessment-contract",
+      items: assessmentItems,
+      detail:
+        `${validAssessmentContracts.size} of ${input.levelGate.tracks.length} track(s) have a validated ` +
+        `four-skill, writing-ramp and timed-mock contract`,
+    },
     {
       kind: "vocabulary",
       items: vocabularyItems,

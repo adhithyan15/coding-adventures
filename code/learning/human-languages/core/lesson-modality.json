@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c2bc40b8d987c66b",
+  "sourceHash": "fnv1a64:70ce2ebb8797e671",
   "summary": {
     "totalLessons": 3399,
     "voice": 2466,
@@ -48555,7 +48555,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e7ac74c98ee88b17"
+      "sourceHash": "fnv1a64:5fd7a2ec7e405405"
     },
     {
       "id": "MW-C01-practice",
@@ -48573,7 +48573,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d52e5541eadffe66"
+      "sourceHash": "fnv1a64:783d01e78084f62c"
     },
     {
       "id": "FA-C01-bale",

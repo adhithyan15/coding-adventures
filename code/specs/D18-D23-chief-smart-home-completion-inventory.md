@@ -2608,6 +2608,32 @@ This broadens local locks, lights, switches, sensors, bridges, cameras, and
 other HomeKit accessory families while preserving the authenticated pairing
 and control boundary.
 
+## Current IPP Everywhere mDNS Discovery Breadth Slice
+
+The next breadth slice adds standards-based local printer discovery without
+claiming ownership of credentials, print data, queues, or printer sessions:
+
+- `smart-home-ipp-printer-discovery-integration` targets the PWG-required
+  `_ipp._tcp.local` service through the shared production mDNS scanner and
+  validates the required resource path, TXT version, optional canonical
+  printer UUID, model, location, authentication requirement, maximum TLS
+  version, document formats, color and duplex capabilities, and endpoint.
+- Canonical printer UUIDs provide stable identity when advertised; otherwise
+  the resolved host, port, and resource path form a deterministic endpoint
+  identity. First observations win while duplicate identities with conflicting
+  endpoints remain isolated partial failures.
+- D23 discovery authorization runs before socket I/O. One scan accepts at most
+  64 replies, uses a bounded timeout and record TTL, preserves scanner failures,
+  and maps advertised authentication to an explicit pairing requirement
+  without accepting or materializing a secret.
+- The runtime opens no IPP TCP connection and performs no printer-status read,
+  credential input, print submission, queue mutation, public-endpoint access,
+  or long-lived browse. Those require separately supervised transport,
+  secret-custody, data-governance, and operation-policy owners.
+
+This broadens common local equipment discovery using the same reusable DNS-SD
+and D23 boundaries as the existing ESPHome, Cast, and HomeKit slices.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

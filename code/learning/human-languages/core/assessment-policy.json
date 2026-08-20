@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "maxLessonMinutes": 5,
+  "levels": ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"],
+  "skills": ["reading", "listening", "writing", "speaking"],
+  "writingStages": [
+    {
+      "id": "observe-trace",
+      "firstRequiredAt": "pre-A1",
+      "description": "Notice the shape and direction, then trace it with a model still visible."
+    },
+    {
+      "id": "guided-copy",
+      "firstRequiredAt": "pre-A1",
+      "description": "Copy a glyph, word, or short phrase with stroke or formation cues."
+    },
+    {
+      "id": "delayed-copy",
+      "firstRequiredAt": "pre-A1",
+      "description": "Look, hide the model briefly, write, then compare and repair."
+    },
+    {
+      "id": "dictation-transcription",
+      "firstRequiredAt": "pre-A1",
+      "description": "Turn a heard or romanized item into the target writing system."
+    },
+    {
+      "id": "controlled-composition",
+      "firstRequiredAt": "A1",
+      "description": "Choose and order known language to write an original word, phrase, or sentence."
+    },
+    {
+      "id": "connected-composition",
+      "firstRequiredAt": "A2",
+      "description": "Write connected sentences for a real purpose and a named reader."
+    },
+    {
+      "id": "timed-assessment-production",
+      "firstRequiredAt": "A1",
+      "description": "Complete a level-appropriate writing task under the target assessment's timing and rubric."
+    }
+  ],
+  "passEvidence": {
+    "skillsPassIndependently": true,
+    "minimumFullMocksPerLevel": 2,
+    "requiresTimedMocks": true,
+    "requiresRubric": true,
+    "requiresAnswerKey": true,
+    "requiresHumanValidation": true
+  }
+}

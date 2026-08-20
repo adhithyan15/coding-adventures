@@ -58,8 +58,11 @@ fifth requirement and the ordering over all five.
 | 4 | every atom revisited at least twice | `continuity.ts` | HL09 §3.1 |
 | 5 | **every exam point covered** | `exam-inventory.ts` | the awarding body |
 | 6 | **script closure: no untaught glyph is load-bearing** | `script-closure.ts` | HL11 |
+| 7 | **a four-skill, writing-ramp and full-mock assessment contract exists** | `assessment.ts` | HL16 |
 
-Criteria 5 and 6 are the two this spec adds to the definition of done. Criterion 5
+Criteria 5 and 6 are the two this spec originally added to the definition of done.
+HL16 adds criterion 7 after the owner made the pass claim and productive writing
+requirements explicit. Criterion 5
 is the only one that comes from outside this repository, which is why it is the
 one that settles the owner's question. Criterion 6 is the one the second goal
 names.
@@ -70,13 +73,14 @@ test needs a human sitting a past paper, and that item is on the queue (§6).
 
 ## 3. The item families
 
-Seven, and every one of them is enumerable from a report the package already
+Eight, and every one of them is enumerable from a report the package already
 produces. No work item is ever authored by hand; a *finding* is, and findings go
 in `BACKLOG.md`.
 
 | kind | one item is | outstanding is counted in | tranche |
 |---|---|---|---|
-| `exam-inventory` | write the external point list for one (track, level) | inventories | 1 |
+| `assessment-contract` | write one track's external/project target, four-skill pass rule, writing ramp and full-mock contract | tracks | 1 |
+| `exam-inventory` | write the external or project-defined point list for one (track, level) | inventories | 1 |
 | `script-closure` | teach the glyphs one track shows but never taught | glyphs | 10 |
 | `vocabulary` | raise one track's headword count at one level | headwords | 35 |
 | `exam-point` | cover one named point from the inventory | points | 5 |
@@ -109,13 +113,14 @@ one track clears the floor.
 ### 4.2 Kind priority second
 
 ```
-1. exam-inventory   you cannot aim at a target you have not written down
-2. script-closure   decoding is a precondition for reading, and it ENDS
-3. exam-point       named gaps against the external list  [was 4 — see below]
-4. vocabulary       the dominant remaining mass           [was 3]
-5. reinforcement    retention — what separates a corpus claim from a learner one
-6. atom-budget      a ramp that got steeper is a regression, not a backlog item
-7. spine-nodes      functional coverage, the coarsest of the six
+1. assessment-contract the whole pass target, including productive writing
+2. exam-inventory      you cannot aim at a content target not written down
+3. script-closure      decoding is a precondition for reading, and it ENDS
+4. exam-point          named gaps against the external list
+5. vocabulary          the dominant remaining mass
+6. reinforcement       retention — what separates a corpus claim from a learner one
+7. atom-budget         a ramp that got steeper is a regression, not a backlog item
+8. spine-nodes         functional coverage, the coarsest corpus criterion
 ```
 
 **Why `exam-point` moved above `vocabulary`, and it is the one ordering here
@@ -185,6 +190,12 @@ HL-C184 already accepted that.
 **The enumeration rule is the artifact. The queue head is what you act on.**
 
 ## 6. What this plan does not measure, recorded so it is not discovered late
+
+**Update, 2026-08-20:** HL16 now owns these gaps and defines the writing ramp,
+four-skill pass contract, timed mocks, rubrics, and human-validation layers. Only
+the first generated family (`assessment-contract`) is implemented in this tranche;
+the remaining HL16 families must report as unimplemented/not measurable, never
+as zero.
 
 Carried forward from HL-C182 and HL-C184 Phase 3, unchanged:
 
