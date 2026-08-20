@@ -13845,9 +13845,10 @@
     {
       "language": "tamil",
       "chapter": 1,
-      "sourceHash": "fnv1a64:6df1383fd4404bac",
+      "sourceHash": "fnv1a64:984b5063db16fad9",
       "lessonIds": [
         "TA-C01-vanakkam",
+        "TA-W00-va-guided-copy",
         "TA-C01-vanakkam-family-register",
         "TA-C01-aam",
         "TA-C01-illai",
@@ -13857,12 +13858,12 @@
         "TA-C01-answering",
         "TA-C01-practice"
       ],
-      "voiceLessons": 9,
-      "drivablePrefix": 9,
+      "voiceLessons": 8,
+      "drivablePrefix": 0,
       "text": "tamil/narration/ch01.txt",
       "json": "tamil/narration/ch01.json",
-      "textHash": "fnv1a64:8941254955baeac4",
-      "jsonHash": "fnv1a64:4295d44b1752ba54"
+      "textHash": "fnv1a64:63fbb6a15d006328",
+      "jsonHash": "fnv1a64:d1dd987a2829be3c"
     },
     {
       "language": "tamil",
