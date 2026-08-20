@@ -50,6 +50,13 @@ one exact positive minute count or an exact `{ minimum, maximum }` range. A
 published 5–7 minute speaking paper stays 5–7; it must not become an invented 5,
 6, or 7. Section ranges must add up to the administration range exactly.
 
+Alternate official forms are represented as named variant sets over the
+section's union of parts. Each variant cites its source and lists exactly the
+parts administered together. Every union part must occur in at least one form.
+This preserves a four-exercise and a five-exercise paper as two alternatives;
+it never flattens them into a fictional nine-exercise paper. With no explicit
+variants, all parts form one backward-compatible implicit administration.
+
 ## 4. Awarding-body pass rules versus project evidence
 
 The inventory transcribes the awarding body's real rule. It does not improve

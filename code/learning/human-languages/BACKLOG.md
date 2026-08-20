@@ -5,6 +5,38 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09GB — Gujarati ટ keeps its upper turn and lower bowl continuous
+
+The t30apps.com animation gives **ટ** one populated SVG path: the pen begins at
+the upper left, sweeps across the upper turn, bends diagonally down-left through
+the middle, then circles the broad lower bowl and finishes on its right side
+without lifting. The fitted Noto Sans Gujarati median preserves that zero-lift
+order.
+
+Gujarati is now **22/40 verified, 18 remaining**. Continue in source order with
+**ઠ** next; it is present in the source and font but absent from the inventory.
+A correctness defect still outranks coverage if one appears during fitting or
+validation.
+
+The Gujarati-bearing `script-data` batch is now **244.12 kB** against its
+250 kB authored-batch target. Recheck the production bundle before publishing
+the next source note; split that batch rather than weakening or deleting
+learner-facing provenance if the next entry crosses the target.
+
+## HL-C09GA — Gujarati ઞ restores its body, shoulder, and tall spine
+
+The canonical-order audit found **ઞ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses
+three populated SVG paths: the rounded left body, a short separate rightward
+shoulder, and a final tall descending spine that curls into its lower terminal.
+The restored entry and fitted medians preserve that order and the two observed
+lifts.
+
+Gujarati is now **21/40 verified, 19 remaining**. Continue in source order with
+**ટ** next; it already has a conventional inventory entry but still needs cited
+ductus verification. A correctness defect still outranks coverage if one
+appears during fitting or validation.
+
 ## HL-C09FZ — Gujarati ઝ repairs the next consonant inventory gap
 
 The canonical-order audit found **ઝ** in both the t30apps.com source and bundled
