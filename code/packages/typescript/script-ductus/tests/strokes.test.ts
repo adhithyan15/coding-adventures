@@ -112,6 +112,7 @@ const CYRILLIC_YA = DUCTUS[ductusKey("cyrillic", "я")];
 const GUJARATI_A = DUCTUS[ductusKey("gujarati", "અ")];
 const GUJARATI_AA = DUCTUS[ductusKey("gujarati", "આ")];
 const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
+const GUJARATI_II = DUCTUS[ductusKey("gujarati", "ઈ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1797,6 +1798,22 @@ describe("handwriting ductus", () => {
     expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
     expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(lower[0].y);
     expect(hook.at(-1)!.y).toBeGreaterThan(hook[0].y);
+  });
+
+  it("Gujarati ઈ extends the zero-lift ઇ run into a high clockwise curl", () => {
+    expect(GUJARATI_II.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_II)).toBe(0);
+    expect(GUJARATI_II.strokes).toHaveLength(1);
+    expect(GUJARATI_II.strokes[0].segments).toHaveLength(4);
+    const [upper, crossing, lower, curl] = GUJARATI_II.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(upper.at(-1)).toEqual(crossing[0]);
+    expect(crossing.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(curl[0]);
+    expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
+    expect(Math.max(...curl.map((point) => point.y))).toBeGreaterThan(upper[0].y);
+    expect(curl.at(-1)!.x).toBeGreaterThan(curl[0].x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4011,6 +4028,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper loop.*narrow middle crossing.*broad lower body.*right side.*upper-right hook.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-loop-to-lower-loop-to-hook order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઈ traces its unbroken extended curl to the adjacent animation", () => {
+    const src = GUJARATI_II.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઈ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper loop.*narrow middle crossing.*broad lower body.*right side.*clockwise.*extended top hook.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-loop-to-lower-loop-to-extended-curl order.*zero-lift evidence/i,
     );
   });
 

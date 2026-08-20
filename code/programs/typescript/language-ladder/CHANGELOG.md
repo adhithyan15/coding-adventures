@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ઈ ductus (HL-C09FJ)
+
+- Render **ઈ** in four joined movements across its upper loop, middle crossing, lower loop, and extended top curl with zero lifts.
+- Preserve t30apps.com's version-1.0 one-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **ઉ** next.
+
 ### Added — cited Gujarati ઇ ductus (HL-C09FI)
 
 - Render **ઇ** in four joined movements across its small upper loop, middle crossing, broad lower loop, and rising hook with zero lifts.

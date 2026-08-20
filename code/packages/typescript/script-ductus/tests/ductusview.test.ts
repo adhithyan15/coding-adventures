@@ -275,6 +275,8 @@ const GUJARATI_AA = ductusFor("આ", "gujarati")!;
 const gujaratiAaOutline = gujaratiOutline("આ");
 const GUJARATI_I = ductusFor("ઇ", "gujarati")!;
 const gujaratiIOutline = gujaratiOutline("ઇ");
+const GUJARATI_II = ductusFor("ઈ", "gujarati")!;
+const gujaratiIiOutline = gujaratiOutline("ઈ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3525,6 +3527,36 @@ describe("Gujarati ઇ — two loops flow into the rising hook without a lift", 
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_I.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઈ — the ઇ run rises into a taller clockwise curl", () => {
+  const steps = ductusSteps(GUJARATI_II);
+  const strip = ductusFilmstrip(GUJARATI_II, gujaratiIiOutline);
+
+  it("shows both loops before the extended top curl in one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the small upper-left loop down to the middle crossing",
+      "continue through the narrow crossing",
+      "sweep clockwise around the broad lower loop",
+      "rise and curl clockwise around the extended top hook",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiIiOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_II.strokes[0], 1),
     );
   });
 });
