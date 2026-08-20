@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:95cc5d1743356f99",
+  "sourceHash": "fnv1a64:1028595decc68d23",
   "summary": {
-    "totalLessons": 3399,
-    "voice": 2466,
+    "totalLessons": 3400,
+    "voice": 2465,
     "sight": 590,
-    "pen": 343,
-    "drivableLessons": 2466,
+    "pen": 345,
+    "drivableLessons": 2465,
     "drivablePercent": 73,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2206,
+    "drivablePrefixTotal": 2203,
     "fullyDrivableChapters": 669,
-    "unstartableChapters": 209,
+    "unstartableChapters": 210,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7944,35 +7944,33 @@
     },
     {
       "language": "portuguese",
-      "lessonCount": 96,
-      "voice": 87,
+      "lessonCount": 97,
+      "voice": 86,
       "sight": 9,
-      "pen": 0,
-      "drivablePercent": 91,
-      "drivablePrefixTotal": 81,
+      "pen": 2,
+      "drivablePercent": 89,
+      "drivablePrefixTotal": 78,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 9,
-          "voice": 8,
+          "lessonCount": 10,
+          "voice": 7,
           "sight": 1,
-          "pen": 0,
+          "pen": 2,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 3,
-          "firstNonVoiceLesson": "PT-C01-noite",
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "PT-C01-ola",
           "drivable": false,
-          "drivableLessonIds": [
-            "PT-C01-bom",
-            "PT-C01-bom-dia",
-            "PT-C01-dia"
-          ]
+          "drivableLessonIds": []
         },
         {
           "chapter": 2,
@@ -49859,6 +49857,49 @@
       ]
     },
     {
+      "id": "PT-C01-ola",
+      "language": "portuguese",
+      "chapter": 1,
+      "sequence": 10,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:12e372d0a813a012",
+      "detachableSegments": [
+        "Writing — follow the greeting you can see"
+      ]
+    },
+    {
+      "id": "PT-W01-ola-guided-copy",
+      "language": "portuguese",
+      "chapter": 1,
+      "sequence": 15,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5c31fb61ea5c27d4",
+      "detachableSegments": [
+        "Writing — one guided copy"
+      ]
+    },
+    {
       "id": "PT-C01-bom",
       "language": "portuguese",
       "chapter": 1,
@@ -49965,24 +50006,6 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:5b6c01fccdfd47e7"
-    },
-    {
-      "id": "PT-C01-ola",
-      "language": "portuguese",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b869cae6648659d"
     },
     {
       "id": "PT-C01-practice",

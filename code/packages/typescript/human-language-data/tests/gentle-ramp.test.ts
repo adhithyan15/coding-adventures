@@ -105,7 +105,7 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(report.summary).toEqual({
       tracks: 23,
       tracksWithDetectedCliffs: 23,
-      tracksWithNoWritingPractice: 3,
+      tracksWithNoWritingPractice: 2, // Portuguese now starts with observe-trace and guided copy.
       tracksWhereWritingStartsLate: 7,
       atomMeasurementBlindLessons: 497,
       findings: 143, // Telugu duration and French/Marathi order recovery remove three independent findings.
