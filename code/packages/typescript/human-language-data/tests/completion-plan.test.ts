@@ -72,6 +72,9 @@ const vocabularyBlocker = (short: number) =>
   [{ criterion: "vocabulary" as const, detail: `teaches ${300 - short} against 300`, shortfall: short }];
 
 function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "levelGate">) {
+  const taskShapes = input.levelGate.tracks.flatMap((track) =>
+    CERTIFIABLE_LEVELS.map((level) => ({ language: track.language, level })),
+  );
   return buildCompletionPlan({
     scriptClosure: closure([]),
     inventories: [],
@@ -79,6 +82,7 @@ function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "l
     // "assessment is not the variable under test", not that the real corpus has
     // paid this debt.
     assessmentContracts: input.levelGate.tracks.map((track) => track.language),
+    taskShapes,
     ...input,
   });
 }
@@ -151,6 +155,22 @@ describe("completion plan", () => {
     expect(built.projection.find((entry) => entry.kind === "writing-stage")).toMatchObject({
       items: 1,
     });
+  });
+
+  it("queues a sourced four-skill task shape and removes exactly one completed pair", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "A1" }]);
+    const missing = plan({ levelGate, taskShapes: [] });
+    expect(missing.head[0]).toMatchObject({
+      id: "task-shape/alpha/A1",
+      kind: "task-shape",
+      language: "alpha",
+    });
+    expect(missing.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
+
+    const withA1 = plan({ levelGate, taskShapes: [{ language: "alpha", level: "A1" }] });
+    expect(withA1.head.some((item) => item.id === "task-shape/alpha/A1")).toBe(false);
+    expect(withA1.head.some((item) => item.id === "task-shape/alpha/A2")).toBe(true);
+    expect(withA1.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(5);
   });
 
   it("moves every track once before any track moves twice", () => {

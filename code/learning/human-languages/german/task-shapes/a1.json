@@ -1,0 +1,245 @@
+{
+  "version": 1,
+  "language": "german",
+  "level": "A1",
+  "target": {
+    "name": "Goethe-Zertifikat A1: Start Deutsch 1",
+    "basis": "external"
+  },
+  "sources": [
+    {
+      "id": "goethe-a1-terms-2025",
+      "title": "Goethe-Zertifikat A1: Start Deutsch 1 - Terms and Conditions for Exam Administration",
+      "url": "https://www.goethe.de/resources/files/pdf347/dfb-v1.pdf",
+      "published": "2025-01-01",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "goethe-a1-model-2024",
+      "title": "Goethe-Zertifikat A1: Start Deutsch 1 - Modellsatz",
+      "url": "https://www.goethe.de/pro/relaunch/prf/materialien/A1_sd1/sd_1_modellsatz.pdf",
+      "published": "2024-02",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "goethe-a1-info",
+      "title": "Goethe-Zertifikat A1: Start Deutsch 1 - exam information",
+      "url": "https://www.goethe.de/ins/be/de/spr/prf/gzsd1/inf.html",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 65,
+    "speakingMinutes": 15,
+    "speakingGroupMaximum": 4,
+    "speakingPreparationMinutes": 0,
+    "deliveryModes": ["paper at an exam centre", "digital at an exam centre"]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 60,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": null,
+      "listening": null,
+      "writing": null,
+      "speaking": null
+    },
+    "note": "Goethe awards the certificate for at least 60/100 overall after all sections are taken; it does not publish an independent pass threshold for each of the four skills. The project assessment contract must add independent internal thresholds rather than misattribute them to Goethe."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 25,
+      "parts": [
+        {
+          "id": "reading-personal-texts",
+          "promptModes": ["written text"],
+          "promptGenres": ["short personal note", "short personal email"],
+          "responseModes": ["true or false selection"],
+          "items": 5,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 5, "criteria": ["answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary"], "notPublished": ["other aids"] },
+          "notPublished": ["source text word count", "reading speed", "response length is not applicable to a selection task"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        },
+        {
+          "id": "reading-information-sources",
+          "promptModes": ["written text"],
+          "promptGenres": ["website extract", "classified advertisement", "everyday information source"],
+          "responseModes": ["choose source a or b"],
+          "items": 5,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 5, "criteria": ["answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary"], "notPublished": ["other aids"] },
+          "notPublished": ["source text word count", "reading speed", "response length is not applicable to a selection task"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        },
+        {
+          "id": "reading-signs-and-notices",
+          "promptModes": ["written text"],
+          "promptGenres": ["sign", "notice", "public information"],
+          "responseModes": ["true or false selection"],
+          "items": 5,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 5, "criteria": ["answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary"], "notPublished": ["other aids"] },
+          "notPublished": ["source text word count", "reading speed", "response length is not applicable to a selection task"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        }
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 20,
+      "parts": [
+        {
+          "id": "listening-short-conversations",
+          "promptModes": ["recorded audio"],
+          "promptGenres": ["short everyday conversation"],
+          "responseModes": ["three-option multiple choice"],
+          "items": 6,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 6, "criteria": ["answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["whether any non-exam aid is permitted"] },
+          "notPublished": ["clip duration", "speech rate", "response length is not applicable to a selection task"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        },
+        {
+          "id": "listening-public-announcements",
+          "promptModes": ["recorded audio"],
+          "promptGenres": ["public announcement"],
+          "responseModes": ["true or false selection"],
+          "items": 4,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 4, "criteria": ["answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["whether any non-exam aid is permitted"] },
+          "notPublished": ["clip duration", "speech rate", "response length is not applicable to a selection task"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        },
+        {
+          "id": "listening-messages",
+          "promptModes": ["recorded audio"],
+          "promptGenres": ["telephone message", "short everyday conversation"],
+          "responseModes": ["three-option multiple choice"],
+          "items": 5,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 5, "criteria": ["answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["whether any non-exam aid is permitted"] },
+          "notPublished": ["clip duration", "speech rate", "response length is not applicable to a selection task"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        }
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 20,
+      "parts": [
+        {
+          "id": "writing-form",
+          "promptModes": ["written scenario", "partly completed form"],
+          "promptGenres": ["everyday personal-information form"],
+          "responseModes": ["write missing form details"],
+          "items": 5,
+          "stimulusLength": null,
+          "responseLength": { "unit": "items", "minimum": 5, "maximum": 5, "approximate": false },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 5, "criteria": ["correctly transfer the requested details"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary"], "notPublished": ["other aids"] },
+          "notPublished": ["scenario word count", "replay is not applicable to written input"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        },
+        {
+          "id": "writing-short-personal-text",
+          "promptModes": ["written situation", "three content prompts"],
+          "promptGenres": ["short functional personal message"],
+          "responseModes": ["continuous written text with greeting and closing"],
+          "items": 3,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": 30, "maximum": 30, "approximate": true },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": 10,
+            "criteria": ["fulfil each of three content points intelligibly", "use a genre-appropriate communicative form"]
+          },
+          "aids": { "allowed": [], "forbidden": ["dictionary"], "notPublished": ["other aids"] },
+          "notPublished": ["prompt word count", "replay is not applicable to written input"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-info"]
+        }
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": 15,
+      "parts": [
+        {
+          "id": "speaking-self-introduction",
+          "promptModes": ["visible keyword sheet", "live examiner prompt"],
+          "promptGenres": ["self-introduction keywords", "spelling prompt", "number prompt"],
+          "responseModes": ["live spoken self-introduction", "spell a requested word", "say a requested number"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "group",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["task fulfilment and intelligibility", "language realization"] },
+          "aids": { "allowed": ["exam-provided keyword sheet"], "forbidden": [], "notPublished": ["whether any other aid is permitted"] },
+          "notPublished": ["number of follow-up prompts", "prompt length", "response word count", "repetition policy", "part-level raw point ceiling"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-terms-2025", "goethe-a1-info"]
+        },
+        {
+          "id": "speaking-ask-and-answer",
+          "promptModes": ["exam-provided action card", "live partner speech"],
+          "promptGenres": ["familiar everyday theme card"],
+          "responseModes": ["ask one live question", "answer one live question"],
+          "items": 2,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["task fulfilment and intelligibility", "language realization"] },
+          "aids": { "allowed": ["exam-provided action cards"], "forbidden": [], "notPublished": ["whether any other aid is permitted"] },
+          "notPublished": ["card word count", "response word count", "repetition policy", "part-level raw point ceiling"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-terms-2025", "goethe-a1-info"]
+        },
+        {
+          "id": "speaking-request-and-respond",
+          "promptModes": ["exam-provided action card", "live partner speech"],
+          "promptGenres": ["everyday request action card"],
+          "responseModes": ["make a live request or question", "respond to a live request"],
+          "items": 2,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["task fulfilment and intelligibility", "language realization"] },
+          "aids": { "allowed": ["exam-provided action cards"], "forbidden": [], "notPublished": ["whether any other aid is permitted"] },
+          "notPublished": ["card word count", "response word count", "repetition policy", "part-level raw point ceiling"],
+          "sourceIds": ["goethe-a1-model-2024", "goethe-a1-terms-2025", "goethe-a1-info"]
+        }
+      ]
+    }
+  ]
+}

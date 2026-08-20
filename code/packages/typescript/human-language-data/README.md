@@ -89,6 +89,33 @@ has valid evidence first. Missing stages block level attainment. The initial
 23-track baseline is intentionally migration-shaped: Marwadi proves the four
 pre-A1 stages; 1,007 cumulative track/level/stage pairs remain open.
 
+### Exam task shapes (HL18)
+
+`<track>/task-shapes/<level>.json` records the sourced performance target behind
+an exam-ready claim: what the learner reads or hears, what they must write or
+say, timing, interaction, replay, scoring and aids for all four skills. Unknown
+source measurements remain explicit rather than being guessed.
+
+```ts
+import {
+  buildTaskShapeBacklog,
+  listTaskShapeInventories,
+  loadLanguageRegistry,
+  loadTaskShapeInventory,
+} from "@coding-adventures/human-language-data";
+
+const germanA1 = loadTaskShapeInventory("german", "A1");
+const present = listTaskShapeInventories();
+const missing = buildTaskShapeBacklog(
+  loadLanguageRegistry().languages.map((track) => track.id),
+  present,
+);
+```
+
+The first inventory is official Goethe German A1. It is a target for later
+five-minute lesson decomposition and mocks, not a claim that the current German
+book is pass-ready.
+
 ### Chapter capabilities (HL05)
 
 A chapter used to be nothing but an integer on each lesson, so nothing could check
@@ -186,7 +213,7 @@ The gate above says what is *wrong*. This says what to *do* about it, and it is 
 pure function of the same measurements rather than a list somebody maintains:
 
 ```text
-23 tracks, 0 done; 123 enumerable item(s) today, ~10,654 projected to C2
+23 tracks, 0 done; 146 enumerable item(s) today, ~10,791 projected to C2
 
     1. [pre-A1] assessment-contract — marwadi
        require independent four-skill passes, a writing ramp, and timed full mocks
@@ -200,8 +227,8 @@ Three ordering rules, all mechanical. **The floor is universal** — every pre-A
 outranks every A1 item in any track, because a track that climbs while its floor is
 missing has built a cliff with upper-level lessons on top. **Family priority** then
 decides what a track's next action is: the complete pass-ready assessment contract
-first, then its external/project content inventory, script closure, exam points, and
-vocabulary. And the
+first, then its sourced four-skill task shape, external/project content inventory,
+script closure, exam points, and vocabulary. And the
 queue **rotates across tracks**, furthest-behind first, so every language moves once
 before any language moves twice.
 

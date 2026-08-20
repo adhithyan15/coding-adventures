@@ -18,6 +18,7 @@ import {
   loadChapterPolicy,
   loadEverything,
   loadExamInventory,
+  listTaskShapeInventories,
   loadTrackChapters,
 } from "./loader.js";
 import { policyTableWidth } from "./narration-cli.js";
@@ -173,6 +174,10 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     writingStages: report.writingStages,
     assessmentContracts: listAssessmentContracts(options.root),
     inventories: readable,
+    taskShapes: listTaskShapeInventories(options.root).flatMap<InventoryPresence>((entry) => {
+      const level = CEFR_LEVELS.find((candidate) => candidate === entry.level);
+      return level ? [{ language: entry.language, level }] : [];
+    }),
     examCoverage,
     unreadableInventories: unreadable.length,
     ceiling: options.ceiling,

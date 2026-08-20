@@ -299,6 +299,8 @@ const GUJARATI_GA = ductusFor("ગ", "gujarati")!;
 const gujaratiGaOutline = gujaratiOutline("ગ");
 const GUJARATI_GHA = ductusFor("ઘ", "gujarati")!;
 const gujaratiGhaOutline = gujaratiOutline("ઘ");
+const GUJARATI_NGA = ductusFor("ઙ", "gujarati")!;
+const gujaratiNgaOutline = gujaratiOutline("ઙ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3879,6 +3881,32 @@ describe("Gujarati ઘ — joined double body before the separate right spine", 
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(1);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_GHA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Gujarati ઙ — S-like body before the separate upper-right dot", () => {
+  const steps = ductusSteps(GUJARATI_NGA);
+  const strip = ductusFilmstrip(GUJARATI_NGA, gujaratiNgaOutline);
+
+  it("shows two movements across two ordered pen-down runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep from the upper right through the S-like body to the lower left",
+      "lift, then circle the separate upper-right dot",
+    ]);
+    expect(strip.frames).toHaveLength(2);
+    expect(strip.penLifts).toBe(1);
+    expect(strip.summary).toBe("2 strokes · 1 pen lift · 2 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind both runs", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiNgaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(1);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_NGA.strokes[1], 1),
     );
   });
 });
