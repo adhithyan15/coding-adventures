@@ -104,6 +104,7 @@ jobs:
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-inventory
           cargo build --manifest-path code/packages/rust/adj-lang-cli/Cargo.toml --bin adj-formula-audit
           python3 -m unittest discover -s code/scripts/tests -p 'test_package_parity_report.py'
+          python3 -m unittest discover -s code/scripts/tests -p 'test_zip_raw_rfc1951_portable_coverage.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_typescript_tsconfig_portability.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_haskell_required_capabilities.py'
           python3 -m unittest discover -s code/scripts/tests -p 'test_ocaml_toolchain_lock.py'

@@ -427,9 +427,15 @@ foreign decoding with the original input rather than pinning one encoding.
 CRC-32 detects accidental corruption; it is not authentication and MUST NOT be
 described or used as a cryptographic integrity check.
 
-**Reference consumer today:** TypeScript (`rawDeflate`, `rawInflate`,
-`rawInflateCounted`, and `crc32`). Remaining lanes are tracked as separate
-dependency-shaped deliveries.
+The portable profile is closed across all 15 established implementation lanes.
+`code/specs/fixtures/zip-raw-rfc1951-v1/consumers.json` is the normative
+adoption registry: every entry binds one established ZIP root to its production
+API source, neutral-corpus test, real BUILD front doors, and explicit empty
+capability manifest. The companion repository test rejects a missing or extra
+lane, a changed path or surface spelling, a non-empty capability profile, or a
+consumer test that stops loading the shared 34-case corpus. C, C++, and OCaml
+remain outside this established-lane denominator until their respective
+promotion gates pass.
 
 ## Package Naming
 
