@@ -7,18 +7,23 @@
       "chapter": 1,
       "title": "Greetings",
       "label": "ch:greetings",
-      "canDo": "I can greet someone, say yes, no and thank you, agree with sari, and hold a short exchange out loud — entirely by ear.",
+      "canDo": "I can greet someone, say yes, no and thank you, agree with sari, hold a short exchange out loud, and copy my first Tamil shape with a visible model.",
       "spineNodes": [
         "SPINE-MEET-GREET",
         "SPINE-RESPOND-BASIC",
         "SPINE-COURTESY-THANK"
       ],
       "payoff": {
-        "lesson": "TA-C01-answering",
+        "lesson": "TA-C01-practice",
         "kind": "task",
-        "summary": "Hold the whole exchange out loud — greet, answer ஆம் or இல்லை, thank, and close with சரி — using only the ear.",
-        "assesses": [],
-        "note": "Chapter 1 holds no writing lesson and introduces no knowledge atoms at all, because its nine lessons are schema v1 and declare none. `assesses` is therefore empty as a matter of fact, and `payoffsNotClosed` is unaffected by it. Be clear about what that costs: chapters.ts guards the representativeness check with `introduced.size > 0`, so this payoff is not measured rather than passing — the gate that used to report tamil:1 at 5/24 now says nothing about it, and the corpus total holds at 25 only because tamil:13 took its place when TA-W04-i-sign-write-nandri moved there. Modelling spoken atoms is HL-C25 work. The writing strand starts in chapter 4."
+        "summary": "Hold the whole exchange out loud, then copy வ once beside the visible model and compare only that shape.",
+        "assesses": [
+          "TA-PHONO-VANAKKAM-01",
+          "TA-ETYMON-VANAKKAM-02",
+          "TA-PRAGMATIC-VANAKKAM-03",
+          "TA-SCRIPT-FIRST-VISIBLE-SHAPE-00"
+        ],
+        "note": "The schema-v2 opener and its two-minute writing bridge introduce four measurable atoms. TA-C01-practice remains the terminal chapter payoff: it revisits the spoken greeting and its cultural meaning, then requires one supported copy of வ with the model visible. The other eight legacy lessons remain untyped debt; the payoff does not pretend to assess atoms they do not yet declare."
       }
     },
     {
