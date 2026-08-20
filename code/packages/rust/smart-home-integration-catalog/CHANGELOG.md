@@ -60,6 +60,9 @@
 
 ## Unreleased
 
+- Add a first-party bounded Matter `_matter._tcp` operational discovery entry
+  while keeping commissionable discovery, fabric credentials, secure sessions,
+  Interaction Model traffic, and control out of scope.
 - Record AirGradient's exact-consent, readback-verified credential-free MQTT
   broker and coupled custom HTTPS-domain controls.
 - Add the reusable data-governance primitive family and require it for

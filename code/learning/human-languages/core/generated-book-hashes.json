@@ -3058,9 +3058,10 @@
     {
       "language": "latin",
       "chapter": 1,
-      "sourceHash": "fnv1a64:fc742a0558a5aef5",
+      "sourceHash": "fnv1a64:9067ced7825e1851",
       "lessonIds": [
         "LA-C01-salve",
+        "LA-W01-salve-guided-copy",
         "LA-C01-ave",
         "LA-C01-vale",
         "LA-C01-gratias",
