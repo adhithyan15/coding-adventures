@@ -4211,6 +4211,12 @@ four-node Go dependency closure on Linux, Darwin, and Windows, and executes the
 real front door successfully. The branch inventory remains collision-clean at
 1,368 identities and advances only the intended established Go slot to 4,553.
 
+The validated branch was published as ready-for-review PR #12324 from exact
+head `1b5e34acf32d31feac5acdabf460b0f870dc1606`. The state now records the Go
+child as `pr-open`, with that PR as the loop's sole active parity publication;
+all remaining PNG children and the newly classified APNG neutral correction
+remain pending while its required checks run.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
