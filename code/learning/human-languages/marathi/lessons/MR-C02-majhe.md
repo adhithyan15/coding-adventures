@@ -1,5 +1,6 @@
 ---
 id: MR-C02-majhe
+sequence: 45
 chapter: 2
 type: word
 headword: माझं

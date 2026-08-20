@@ -1,5 +1,6 @@
 ---
 id: MR-C01-ho
+sequence: 15
 chapter: 1
 type: word
 headword: हो

@@ -1,5 +1,6 @@
 ---
 id: MR-C05-bolne
+sequence: 145
 chapter: 5
 type: word
 headword: बोलणे
