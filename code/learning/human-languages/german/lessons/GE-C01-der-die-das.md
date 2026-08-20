@@ -1,5 +1,6 @@
 ---
 id: GE-C01-der-die-das
+sequence: 15
 chapter: 1
 type: word
 headword: der / die / das

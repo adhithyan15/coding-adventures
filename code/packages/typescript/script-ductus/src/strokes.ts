@@ -6137,6 +6137,81 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("છ"),
   },
+  // t30apps writes Gujarati જ as one continuous left-loop-to-crossing-to-right-
+  // loop-to-exit run. These connected medians preserve that zero-lift order
+  // while fitting the bundled Noto outline.
+  [ductusKey("gujarati", "જ")]: {
+    script: "gujarati",
+    glyph: "જ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the upper-left loop",
+            path: [
+              { x: 300, y: 550 }, { x: 315, y: 510 }, { x: 315, y: 470 },
+              { x: 315, y: 430 }, { x: 300, y: 390 }, { x: 275, y: 350 },
+              { x: 230, y: 315 }, { x: 180, y: 300 }, { x: 130, y: 320 },
+              { x: 90, y: 360 }, { x: 75, y: 400 }, { x: 75, y: 450 },
+              { x: 90, y: 500 }, { x: 130, y: 535 }, { x: 190, y: 560 },
+              { x: 250, y: 560 }, { x: 300, y: 550 },
+            ],
+          },
+          {
+            label: "continue diagonally through the crossing body",
+            path: [
+              { x: 300, y: 550 }, { x: 320, y: 530 }, { x: 350, y: 520 },
+              { x: 385, y: 510 }, { x: 415, y: 500 }, { x: 435, y: 490 },
+              { x: 450, y: 480 }, { x: 470, y: 470 }, { x: 490, y: 460 },
+              { x: 500, y: 450 }, { x: 520, y: 430 }, { x: 540, y: 410 },
+              { x: 560, y: 390 }, { x: 580, y: 370 }, { x: 630, y: 310 },
+              { x: 670, y: 240 },
+              { x: 680, y: 170 }, { x: 675, y: 110 }, { x: 650, y: 75 },
+            ],
+          },
+          {
+            label: "circle the lower-right loop and sweep into the upper-right exit",
+            path: [
+              { x: 650, y: 75 }, { x: 600, y: 45 }, { x: 545, y: 35 },
+              { x: 490, y: 50 }, { x: 450, y: 85 }, { x: 420, y: 130 },
+              { x: 415, y: 180 }, { x: 430, y: 230 }, { x: 460, y: 275 },
+              { x: 500, y: 320 }, { x: 550, y: 365 }, { x: 610, y: 410 },
+              { x: 680, y: 460 }, { x: 750, y: 510 },
+              { x: 790, y: 545 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("જ"),
+  },
+  // t30apps writes Gujarati ઝ as a rounded left body, then lifts for the right
+  // loop and tail, then lifts again for the short upper stem. These medians
+  // preserve the three-path order while fitting the bundled Noto outline.
+  [ductusKey("gujarati", "ઝ")]: {
+    script: "gujarati",
+    glyph: "ઝ",
+    strokes: [
+      { segments: [{ label: "circle the rounded left body from upper left to lower left", path: [
+        { x: 80, y: 430 }, { x: 140, y: 455 }, { x: 210, y: 455 },
+        { x: 270, y: 430 }, { x: 320, y: 380 }, { x: 350, y: 320 },
+        { x: 355, y: 250 }, { x: 345, y: 180 }, { x: 320, y: 120 },
+        { x: 280, y: 75 }, { x: 230, y: 45 }, { x: 180, y: 50 },
+        { x: 130, y: 75 }, { x: 90, y: 110 }, { x: 55, y: 150 },
+      ] }] },
+      { segments: [{ label: "lift, then circle the right loop and finish through its lower tail", path: [
+        { x: 370, y: 320 }, { x: 420, y: 360 }, { x: 470, y: 375 },
+        { x: 520, y: 360 }, { x: 570, y: 330 }, { x: 610, y: 285 },
+        { x: 620, y: 230 }, { x: 615, y: 170 }, { x: 590, y: 110 },
+        { x: 550, y: 65 }, { x: 500, y: 35 },
+      ] }] },
+      { segments: [{ label: "lift again, then descend the short upper stem", path: [
+        { x: 496, y: 560 }, { x: 496, y: 500 }, { x: 496, y: 440 },
+        { x: 496, y: 380 }, { x: 496, y: 345 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ઝ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

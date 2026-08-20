@@ -43,6 +43,23 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(() => parseTaskShapeInventory(value, "german")).toThrow(/null measurements but no notPublished explanation/);
   });
 
+  it("preserves a published duration range without inventing one exact minute", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
+    const range = { minimum: 5, maximum: 7 };
+    value.administration.speakingMinutes = range;
+    value.sections.find((section: { skill: string }) => section.skill === "speaking").minutes = range;
+    expect(parseTaskShapeInventory(value, "german").administration.speakingMinutes).toEqual(range);
+  });
+
+  it("rejects a reversed or mismatched duration range", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
+    value.administration.speakingMinutes = { minimum: 7, maximum: 5 };
+    expect(() => parseTaskShapeInventory(value, "german")).toThrow(/minimum cannot exceed maximum/);
+
+    value.administration.speakingMinutes = { minimum: 5, maximum: 7 };
+    expect(() => parseTaskShapeInventory(value, "german")).toThrow(/speaking minutes do not match/);
+  });
+
   it("rejects path traversal at the loader boundary", () => {
     expect(() => loadTaskShapeInventory("../german", "A1")).toThrow(/unsafe/);
     expect(() => loadTaskShapeInventory("german", "A1\/../A2")).toThrow(/unsafe/);

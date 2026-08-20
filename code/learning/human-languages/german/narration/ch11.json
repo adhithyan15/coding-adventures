@@ -4,11 +4,11 @@
   "chapter": 11,
   "title": "Bread, Water, Wine",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:c73ea28012642ca1",
+  "sourceHash": "fnv1a64:8cccc1dc0356d9b4",
   "lessons": [
     {
       "id": "GE-C11-brot",
-      "sequence": null,
+      "sequence": 265,
       "title": "das Brot — bread, and the third gender",
       "headword": "das Brot",
       "romanization": "das Brot",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0a795378f02bdfcc",
+      "sourceHash": "fnv1a64:a79240811759a0ba",
       "notice": null,
       "blocks": [
         {
@@ -122,7 +122,7 @@
     },
     {
       "id": "GE-C11-wasser-wein",
-      "sequence": null,
+      "sequence": 270,
       "title": "das Wasser, der Wein — one word Germans always had, one Rome brought",
       "headword": "das Wasser, der Wein",
       "romanization": "das Wasser, der Wein",
@@ -133,7 +133,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7e9bbbd5638590ba",
+      "sourceHash": "fnv1a64:8f604d8ae70fdd44",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,6 @@
 ---
 id: GE-C01-gute-nacht
+sequence: 55
 chapter: 1
 type: word
 headword: Gute Nacht

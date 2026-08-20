@@ -1,5 +1,6 @@
 ---
 id: GE-C04-bis-morgen
+sequence: 160
 chapter: 4
 type: phrase
 headword: bis morgen

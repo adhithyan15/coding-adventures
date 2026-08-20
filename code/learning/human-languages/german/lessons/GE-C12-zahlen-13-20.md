@@ -1,5 +1,6 @@
 ---
 id: GE-C12-zahlen-13-20
+sequence: 280
 chapter: 12
 type: word
 headword: dreizehn — zwanzig

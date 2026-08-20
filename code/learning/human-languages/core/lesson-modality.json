@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:dd3299aa235a8aff",
+  "sourceHash": "fnv1a64:368c9cd8ac2200fc",
   "summary": {
     "totalLessons": 3399,
     "voice": 2466,
@@ -17,9 +17,9 @@
     "drivablePercent": 73,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2216,
+    "drivablePrefixTotal": 2211,
     "fullyDrivableChapters": 669,
-    "unstartableChapters": 204,
+    "unstartableChapters": 206,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -1666,7 +1666,7 @@
       "sight": 8,
       "pen": 3,
       "drivablePercent": 90,
-      "drivablePrefixTotal": 90,
+      "drivablePrefixTotal": 85,
       "modalities": [
         "voice",
         "sight",
@@ -1683,16 +1683,14 @@
             "voice",
             "sight"
           ],
-          "drivablePrefix": 6,
+          "drivablePrefix": 4,
           "firstNonVoiceLesson": "GE-C01-guten-tag",
           "drivable": false,
           "drivableLessonIds": [
-            "GE-C01-abend",
-            "GE-C01-der-die-das",
+            "GE-C01-hallo",
             "GE-C01-gut",
-            "GE-C01-gute-nacht",
-            "GE-C01-guten-abend",
-            "GE-C01-guten-morgen"
+            "GE-C01-der-die-das",
+            "GE-C01-tag"
           ]
         },
         {
@@ -1708,14 +1706,14 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "GE-C02-du-sie",
-            "GE-C02-freut-mich",
-            "GE-C02-heissen",
             "GE-C02-ich",
+            "GE-C02-heissen",
             "GE-C02-ich-heisse",
-            "GE-C02-practice",
+            "GE-C02-du-sie",
             "GE-C02-wie",
-            "GE-C02-wie-heissen-sie"
+            "GE-C02-wie-heissen-sie",
+            "GE-C02-freut-mich",
+            "GE-C02-practice"
           ]
         },
         {
@@ -1731,14 +1729,14 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "GE-C03-bitte",
             "GE-C03-danke",
-            "GE-C03-es-geht",
-            "GE-C03-formal-practice",
+            "GE-C03-bitte",
             "GE-C03-gehen",
-            "GE-C03-practice",
             "GE-C03-wie-geht-es",
-            "GE-C03-wie-geht-register"
+            "GE-C03-wie-geht-register",
+            "GE-C03-es-geht",
+            "GE-C03-practice",
+            "GE-C03-formal-practice"
           ]
         },
         {
@@ -1757,11 +1755,11 @@
           "drivable": false,
           "drivableLessonIds": [
             "GE-C04-auf-wiedersehen",
+            "GE-C04-tschuss",
             "GE-C04-bis-bald",
             "GE-C04-bis-morgen",
             "GE-C04-bis-spater",
-            "GE-C04-practice",
-            "GE-C04-tschuss"
+            "GE-C04-practice"
           ]
         },
         {
@@ -1777,11 +1775,11 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "GE-C05-ich-lerne-deutsch",
-            "GE-C05-lernen",
+            "GE-C05-wohnen",
             "GE-C05-machen",
-            "GE-C05-practice",
-            "GE-C05-wohnen"
+            "GE-C05-lernen",
+            "GE-C05-ich-lerne-deutsch",
+            "GE-C05-practice"
           ]
         },
         {
@@ -1825,8 +1823,8 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "GE-C08-mittag-mitternacht",
-            "GE-C08-uhr"
+            "GE-C08-uhr",
+            "GE-C08-mittag-mitternacht"
           ]
         },
         {
@@ -1842,8 +1840,8 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "GE-C09-jahreszeiten",
-            "GE-C09-monate"
+            "GE-C09-monate",
+            "GE-C09-jahreszeiten"
           ]
         },
         {
@@ -1910,8 +1908,8 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "GE-C13-rot-blau",
-            "GE-C13-schwarz-weiss"
+            "GE-C13-schwarz-weiss",
+            "GE-C13-rot-blau"
           ]
         },
         {
@@ -1924,12 +1922,10 @@
             "voice",
             "sight"
           ],
-          "drivablePrefix": 1,
+          "drivablePrefix": 0,
           "firstNonVoiceLesson": "GE-C14-haben",
           "drivable": false,
-          "drivableLessonIds": [
-            "GE-C14-alter"
-          ]
+          "drivableLessonIds": []
         },
         {
           "chapter": 15,
@@ -1959,13 +1955,10 @@
             "voice",
             "sight"
           ],
-          "drivablePrefix": 2,
+          "drivablePrefix": 0,
           "firstNonVoiceLesson": "GE-C16-sein",
           "drivable": false,
-          "drivableLessonIds": [
-            "GE-C16-perfekt-sein",
-            "GE-C16-perfekt-sein-agreement"
-          ]
+          "drivableLessonIds": []
         },
         {
           "chapter": 17,
@@ -24836,10 +24829,10 @@
       "sourceHash": "fnv1a64:3c0416eaf66b97ca"
     },
     {
-      "id": "GE-C01-abend",
+      "id": "GE-C01-hallo",
       "language": "german",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 5,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -24851,31 +24844,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fbd99324fd67ea41"
-    },
-    {
-      "id": "GE-C01-der-die-das",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:513754e8b498f1ac"
+      "sourceHash": "fnv1a64:9efcd7690091a743"
     },
     {
       "id": "GE-C01-gut",
       "language": "german",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 10,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -24887,13 +24862,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:712e97cbb7e062da"
+      "sourceHash": "fnv1a64:1b7781e82f855dca"
     },
     {
-      "id": "GE-C01-gute-nacht",
+      "id": "GE-C01-der-die-das",
       "language": "german",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 15,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -24905,139 +24880,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:89208bbe2b536b32"
-    },
-    {
-      "id": "GE-C01-guten-abend",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e27f83b4cbae57e"
-    },
-    {
-      "id": "GE-C01-guten-morgen",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:9c2a570d56028e9c"
-    },
-    {
-      "id": "GE-C01-guten-tag",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "sight-cue"
-      ],
-      "coreModality": "sight",
-      "coreReasons": [
-        "sight-cue"
-      ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:7212a1c5b8e5d18d"
-    },
-    {
-      "id": "GE-C01-hallo",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:79105bbc22c09803"
-    },
-    {
-      "id": "GE-C01-morgen",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:64875806604e97aa"
-    },
-    {
-      "id": "GE-C01-nacht",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:7cf6769d247e4e45"
-    },
-    {
-      "id": "GE-C01-practice",
-      "language": "german",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:aebbb094a3522a39"
+      "sourceHash": "fnv1a64:6442b9425c44ff75"
     },
     {
       "id": "GE-C01-tag",
       "language": "german",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25049,31 +24898,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:75645fd51c847743"
+      "sourceHash": "fnv1a64:dbcac780e0277f22"
     },
     {
-      "id": "GE-C02-du-sie",
+      "id": "GE-C01-guten-tag",
       "language": "german",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "chapter": 1,
+      "sequence": 25,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "coreModality": "voice",
+      "coreModality": "sight",
       "coreReasons": [
-        "no-visual-dependency"
+        "sight-cue"
       ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:3dd3c611a81e6cb4"
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5c29417226d35125"
     },
     {
-      "id": "GE-C02-freut-mich",
+      "id": "GE-C01-morgen",
       "language": "german",
-      "chapter": 2,
-      "sequence": null,
+      "chapter": 1,
+      "sequence": 30,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25085,13 +24934,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cc06db614ab8a56b"
+      "sourceHash": "fnv1a64:dd3aadddd2d82dbc"
     },
     {
-      "id": "GE-C02-heissen",
+      "id": "GE-C01-guten-morgen",
       "language": "german",
-      "chapter": 2,
-      "sequence": null,
+      "chapter": 1,
+      "sequence": 35,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25103,13 +24952,103 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:cc38318948ace522"
+      "sourceHash": "fnv1a64:6670390c03e20b0f"
+    },
+    {
+      "id": "GE-C01-abend",
+      "language": "german",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8e8a86c2d8f81402"
+    },
+    {
+      "id": "GE-C01-guten-abend",
+      "language": "german",
+      "chapter": 1,
+      "sequence": 45,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2873d705d4660a78"
+    },
+    {
+      "id": "GE-C01-nacht",
+      "language": "german",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:25dc252d3716b3d9"
+    },
+    {
+      "id": "GE-C01-gute-nacht",
+      "language": "german",
+      "chapter": 1,
+      "sequence": 55,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0c7e010108582b09"
+    },
+    {
+      "id": "GE-C01-practice",
+      "language": "german",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a70d2ffe19ee7038"
     },
     {
       "id": "GE-C02-ich",
       "language": "german",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 65,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25121,13 +25060,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e73eeedf80a17a79"
+      "sourceHash": "fnv1a64:7fcf9c447a684ec1"
+    },
+    {
+      "id": "GE-C02-heissen",
+      "language": "german",
+      "chapter": 2,
+      "sequence": 70,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9f6015d810726f28"
     },
     {
       "id": "GE-C02-ich-heisse",
       "language": "german",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 75,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25139,13 +25096,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6061fcf1c4ce8830"
+      "sourceHash": "fnv1a64:8c9792382585a965"
     },
     {
-      "id": "GE-C02-practice",
+      "id": "GE-C02-du-sie",
       "language": "german",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 80,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25157,13 +25114,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c071790ad9287d04"
+      "sourceHash": "fnv1a64:e740c0e4c476fe4d"
     },
     {
       "id": "GE-C02-wie",
       "language": "german",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 85,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25175,13 +25132,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:78ef6723de639e03"
+      "sourceHash": "fnv1a64:b3ce29558f031a2d"
     },
     {
       "id": "GE-C02-wie-heissen-sie",
       "language": "german",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 90,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25193,13 +25150,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a47d3f6219fcb248"
+      "sourceHash": "fnv1a64:e24fbfa882144a60"
     },
     {
-      "id": "GE-C03-bitte",
+      "id": "GE-C02-freut-mich",
       "language": "german",
-      "chapter": 3,
-      "sequence": null,
+      "chapter": 2,
+      "sequence": 95,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25211,13 +25168,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:48aad6df3ed4ede2"
+      "sourceHash": "fnv1a64:7c05232d91c953d0"
+    },
+    {
+      "id": "GE-C02-practice",
+      "language": "german",
+      "chapter": 2,
+      "sequence": 100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e2b91fe073b8f820"
     },
     {
       "id": "GE-C03-danke",
       "language": "german",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 105,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25229,13 +25204,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:bbb7f015dc775493"
+      "sourceHash": "fnv1a64:7bb22827ed3f023a"
     },
     {
-      "id": "GE-C03-es-geht",
+      "id": "GE-C03-bitte",
       "language": "german",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 110,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25247,31 +25222,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9c622b2ea1c89fc0"
-    },
-    {
-      "id": "GE-C03-formal-practice",
-      "language": "german",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0ec4a4a2adff25f5"
+      "sourceHash": "fnv1a64:0b6aedffb7a6d409"
     },
     {
       "id": "GE-C03-gehen",
       "language": "german",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 115,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25283,31 +25240,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2a5f813dc0845297"
-    },
-    {
-      "id": "GE-C03-practice",
-      "language": "german",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:9737b1fcb573ffad"
+      "sourceHash": "fnv1a64:58b1addca54a1127"
     },
     {
       "id": "GE-C03-wie-geht-es",
       "language": "german",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 120,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25319,13 +25258,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:24ef390ee824208c"
+      "sourceHash": "fnv1a64:909da91a2d33162e"
     },
     {
       "id": "GE-C03-wie-geht-register",
       "language": "german",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 125,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25337,13 +25276,67 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8dc5e2521c199718"
+      "sourceHash": "fnv1a64:45d6c5767b70b9eb"
+    },
+    {
+      "id": "GE-C03-es-geht",
+      "language": "german",
+      "chapter": 3,
+      "sequence": 130,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dbfde709aebc02a3"
+    },
+    {
+      "id": "GE-C03-practice",
+      "language": "german",
+      "chapter": 3,
+      "sequence": 135,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:aed52fa8c957a179"
+    },
+    {
+      "id": "GE-C03-formal-practice",
+      "language": "german",
+      "chapter": 3,
+      "sequence": 140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3930dec72203ef3f"
     },
     {
       "id": "GE-C04-auf-wiedersehen",
       "language": "german",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 145,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25355,85 +25348,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:603d5de9c422f34b"
-    },
-    {
-      "id": "GE-C04-bis-bald",
-      "language": "german",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:e2e43a680f43b24a"
-    },
-    {
-      "id": "GE-C04-bis-morgen",
-      "language": "german",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2e55d77a4ab3c56b"
-    },
-    {
-      "id": "GE-C04-bis-spater",
-      "language": "german",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:53c74c7dc2bc27f0"
-    },
-    {
-      "id": "GE-C04-practice",
-      "language": "german",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:13fb8570c59d5d1c"
+      "sourceHash": "fnv1a64:fca729a124df09d6"
     },
     {
       "id": "GE-C04-tschuss",
       "language": "german",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 150,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25445,13 +25366,85 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8db665fdc2105356"
+      "sourceHash": "fnv1a64:f7b3dd7cb55a59f7"
+    },
+    {
+      "id": "GE-C04-bis-bald",
+      "language": "german",
+      "chapter": 4,
+      "sequence": 155,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:584e5cda57f07c8e"
+    },
+    {
+      "id": "GE-C04-bis-morgen",
+      "language": "german",
+      "chapter": 4,
+      "sequence": 160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:123b4019e0d69ee7"
+    },
+    {
+      "id": "GE-C04-bis-spater",
+      "language": "german",
+      "chapter": 4,
+      "sequence": 165,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6eb967cfba8dcf4f"
+    },
+    {
+      "id": "GE-C04-practice",
+      "language": "german",
+      "chapter": 4,
+      "sequence": 170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a89a1c3fffa3de57"
     },
     {
       "id": "GE-W01-eszett",
       "language": "german",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 175,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
@@ -25463,13 +25456,13 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a130c926f83687f6"
+      "sourceHash": "fnv1a64:eb6d5b012494ff66"
     },
     {
       "id": "GE-W02-umlauts",
       "language": "german",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 180,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
@@ -25481,13 +25474,13 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:57e4243f4d53946f"
+      "sourceHash": "fnv1a64:cff48016d9149243"
     },
     {
       "id": "GE-W03-capitalization",
       "language": "german",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 185,
       "modality": "pen",
       "derived": "pen",
       "drivable": false,
@@ -25499,85 +25492,13 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:02d89a8bc07422d9"
-    },
-    {
-      "id": "GE-C05-ich-lerne-deutsch",
-      "language": "german",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a4809a490e2159ca"
-    },
-    {
-      "id": "GE-C05-lernen",
-      "language": "german",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b692dc8bfe1e4b40"
-    },
-    {
-      "id": "GE-C05-machen",
-      "language": "german",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:92a8f484ee09fb92"
-    },
-    {
-      "id": "GE-C05-practice",
-      "language": "german",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:d41d4ab2725c99dc"
+      "sourceHash": "fnv1a64:e6b30785e5e895b4"
     },
     {
       "id": "GE-C05-wohnen",
       "language": "german",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 190,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25589,13 +25510,85 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:03068b42d443b4fe"
+      "sourceHash": "fnv1a64:5eb106904897d203"
+    },
+    {
+      "id": "GE-C05-machen",
+      "language": "german",
+      "chapter": 5,
+      "sequence": 195,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:679454c07c866f88"
+    },
+    {
+      "id": "GE-C05-lernen",
+      "language": "german",
+      "chapter": 5,
+      "sequence": 200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2eb04de13b8748c5"
+    },
+    {
+      "id": "GE-C05-ich-lerne-deutsch",
+      "language": "german",
+      "chapter": 5,
+      "sequence": 205,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d408a3835435c956"
+    },
+    {
+      "id": "GE-C05-practice",
+      "language": "german",
+      "chapter": 5,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:86c622123d9389aa"
     },
     {
       "id": "GE-C06-zahlen-1-5",
       "language": "german",
       "chapter": 6,
-      "sequence": null,
+      "sequence": 215,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -25607,13 +25600,13 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:195cf21d12ee7be8"
+      "sourceHash": "fnv1a64:709327fa212ffb51"
     },
     {
       "id": "GE-C06-zahlen-6-10",
       "language": "german",
       "chapter": 6,
-      "sequence": null,
+      "sequence": 220,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -25625,13 +25618,13 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0b668449ae50e38f"
+      "sourceHash": "fnv1a64:79b90ac4f55c4080"
     },
     {
       "id": "GE-C07-wochentage-1",
       "language": "german",
       "chapter": 7,
-      "sequence": null,
+      "sequence": 225,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -25643,13 +25636,13 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a531e91aa4bf08b4"
+      "sourceHash": "fnv1a64:b343e18a7a666572"
     },
     {
       "id": "GE-C07-wochentage-2",
       "language": "german",
       "chapter": 7,
-      "sequence": null,
+      "sequence": 230,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -25661,31 +25654,13 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:dec34d31bc1fdb7a"
-    },
-    {
-      "id": "GE-C08-mittag-mitternacht",
-      "language": "german",
-      "chapter": 8,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0c248766c31bc500"
+      "sourceHash": "fnv1a64:0cfaf7f430f0d8c2"
     },
     {
       "id": "GE-C08-uhr",
       "language": "german",
       "chapter": 8,
-      "sequence": null,
+      "sequence": 235,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25697,13 +25672,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a5e68a19ad335ee0"
+      "sourceHash": "fnv1a64:e5cc9aeede24f93f"
     },
     {
-      "id": "GE-C09-jahreszeiten",
+      "id": "GE-C08-mittag-mitternacht",
       "language": "german",
-      "chapter": 9,
-      "sequence": null,
+      "chapter": 8,
+      "sequence": 240,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25715,13 +25690,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ef3f0c9ef91d388b"
+      "sourceHash": "fnv1a64:9f3b70fa1b579e8b"
     },
     {
       "id": "GE-C09-monate",
       "language": "german",
       "chapter": 9,
-      "sequence": null,
+      "sequence": 245,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25733,13 +25708,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1f24a05df676c375"
+      "sourceHash": "fnv1a64:8fae8f2163d11c55"
+    },
+    {
+      "id": "GE-C09-jahreszeiten",
+      "language": "german",
+      "chapter": 9,
+      "sequence": 250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:acf340278a29f587"
     },
     {
       "id": "GE-C10-eltern",
       "language": "german",
       "chapter": 10,
-      "sequence": null,
+      "sequence": 255,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25751,13 +25744,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f9fd37834d482cbd"
+      "sourceHash": "fnv1a64:e330b79dee37ec8a"
     },
     {
       "id": "GE-C10-geschwister",
       "language": "german",
       "chapter": 10,
-      "sequence": null,
+      "sequence": 260,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25769,13 +25762,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8a57a69688ac4944"
+      "sourceHash": "fnv1a64:e80036c2a5807815"
     },
     {
       "id": "GE-C11-brot",
       "language": "german",
       "chapter": 11,
-      "sequence": null,
+      "sequence": 265,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25787,13 +25780,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0a795378f02bdfcc"
+      "sourceHash": "fnv1a64:a79240811759a0ba"
     },
     {
       "id": "GE-C11-wasser-wein",
       "language": "german",
       "chapter": 11,
-      "sequence": null,
+      "sequence": 270,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25805,13 +25798,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7e9bbbd5638590ba"
+      "sourceHash": "fnv1a64:8f604d8ae70fdd44"
     },
     {
       "id": "GE-C12-elf-zwoelf",
       "language": "german",
       "chapter": 12,
-      "sequence": null,
+      "sequence": 275,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25823,13 +25816,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d65805c696c22eea"
+      "sourceHash": "fnv1a64:8d1c66b0b25a26d9"
     },
     {
       "id": "GE-C12-zahlen-13-20",
       "language": "german",
       "chapter": 12,
-      "sequence": null,
+      "sequence": 280,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -25843,31 +25836,13 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:83effc86b2ea8b52"
-    },
-    {
-      "id": "GE-C13-rot-blau",
-      "language": "german",
-      "chapter": 13,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:c066fb5de47769ca"
+      "sourceHash": "fnv1a64:632c4bc9ece29d05"
     },
     {
       "id": "GE-C13-schwarz-weiss",
       "language": "german",
       "chapter": 13,
-      "sequence": null,
+      "sequence": 285,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25879,13 +25854,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:85b588745f1df6fc"
+      "sourceHash": "fnv1a64:91824c7953fa0f52"
     },
     {
-      "id": "GE-C14-alter",
+      "id": "GE-C13-rot-blau",
       "language": "german",
-      "chapter": 14,
-      "sequence": null,
+      "chapter": 13,
+      "sequence": 290,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25897,13 +25872,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:16cc9ad380a40484"
+      "sourceHash": "fnv1a64:9ab18db470249d00"
     },
     {
       "id": "GE-C14-haben",
       "language": "german",
       "chapter": 14,
-      "sequence": null,
+      "sequence": 295,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -25915,13 +25890,31 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6c18654a3bb04712"
+      "sourceHash": "fnv1a64:aa5e2c02abcc7d51"
+    },
+    {
+      "id": "GE-C14-alter",
+      "language": "german",
+      "chapter": 14,
+      "sequence": 300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fabfb3f6cccf435e"
     },
     {
       "id": "GE-C15-perfekt",
       "language": "german",
       "chapter": 15,
-      "sequence": null,
+      "sequence": 305,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25933,13 +25926,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2c67e6ffe91b42a5"
+      "sourceHash": "fnv1a64:e21fe68f12b72912"
     },
     {
       "id": "GE-C15-praeteritum",
       "language": "german",
       "chapter": 15,
-      "sequence": null,
+      "sequence": 310,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25951,13 +25944,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9037176b3ac1042a"
+      "sourceHash": "fnv1a64:aa4863ff03f5cd37"
     },
     {
       "id": "GE-C15-praeteritum-map",
       "language": "german",
       "chapter": 15,
-      "sequence": null,
+      "sequence": 315,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -25969,49 +25962,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4c7b746e14c133e8"
-    },
-    {
-      "id": "GE-C16-perfekt-sein",
-      "language": "german",
-      "chapter": 16,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:30c73f516de1fde3"
-    },
-    {
-      "id": "GE-C16-perfekt-sein-agreement",
-      "language": "german",
-      "chapter": 16,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:f363f912fec06714"
+      "sourceHash": "fnv1a64:226ed9995097c81a"
     },
     {
       "id": "GE-C16-sein",
       "language": "german",
       "chapter": 16,
-      "sequence": null,
+      "sequence": 320,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -26023,7 +25980,43 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:290823f98679e2c6"
+      "sourceHash": "fnv1a64:10dee65ff2b7c83c"
+    },
+    {
+      "id": "GE-C16-perfekt-sein",
+      "language": "german",
+      "chapter": 16,
+      "sequence": 325,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:68c72208a52919a6"
+    },
+    {
+      "id": "GE-C16-perfekt-sein-agreement",
+      "language": "german",
+      "chapter": 16,
+      "sequence": 330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7e64984baa6e6707"
     },
     {
       "id": "GE-C17-kopf",
@@ -75768,7 +75761,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7c3bf19b7a099589",
+      "sourceHash": "fnv1a64:b99ff55344bd5f7f",
       "detachableSegments": [
         "The letters in this word"
       ]

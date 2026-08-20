@@ -1,5 +1,6 @@
 ---
 id: GE-C03-wie-geht-es
+sequence: 120
 chapter: 3
 type: phrase
 headword: Wie geht es dir?

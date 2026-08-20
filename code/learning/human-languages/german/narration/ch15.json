@@ -4,11 +4,11 @@
   "chapter": 15,
   "title": "The Two Past Tenses",
   "drivablePrefix": 3,
-  "sourceHash": "fnv1a64:c9f90e9658f9d3f2",
+  "sourceHash": "fnv1a64:c8a2b075c0bd847f",
   "lessons": [
     {
       "id": "GE-C15-perfekt",
-      "sequence": null,
+      "sequence": 305,
       "title": "ich habe gesagt — the past built from \"have\"",
       "headword": "ich habe gesagt",
       "romanization": "ich habe gesagt",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2c67e6ffe91b42a5",
+      "sourceHash": "fnv1a64:e21fe68f12b72912",
       "notice": null,
       "blocks": [
         {
@@ -208,7 +208,7 @@
     },
     {
       "id": "GE-C15-praeteritum",
-      "sequence": null,
+      "sequence": 310,
       "title": "Ich sagte — the simple past",
       "headword": "ich sagte",
       "romanization": "ich sagte",
@@ -219,7 +219,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9037176b3ac1042a",
+      "sourceHash": "fnv1a64:aa4863ff03f5cd37",
       "notice": null,
       "blocks": [
         {
@@ -358,7 +358,7 @@
     },
     {
       "id": "GE-C15-praeteritum-map",
-      "sequence": null,
+      "sequence": 315,
       "title": "The simple past’s regional retreat",
       "headword": "Präteritum north and south",
       "romanization": "Präteritum north and south",
@@ -369,7 +369,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4c7b746e14c133e8",
+      "sourceHash": "fnv1a64:226ed9995097c81a",
       "notice": null,
       "blocks": [
         {

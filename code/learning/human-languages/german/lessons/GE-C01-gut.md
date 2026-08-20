@@ -1,5 +1,6 @@
 ---
 id: GE-C01-gut
+sequence: 10
 chapter: 1
 type: word
 headword: gut
