@@ -3994,6 +3994,45 @@ fixture and capability suites, state-DAG validation, authority and credential
 scans, collision reporting, and diff checks all pass. Production remains pure
 in-memory; fixture reads and the independent Python zlib oracle are test-only.
 
+## Post-#12271 Refresh and JVM ZIP Raw-Conformance Selection
+
+After all required checks became terminal and acceptable, the loop enabled
+squash auto-merge for ready-for-review .NET ZIP PR #12271. GitHub merged final
+reviewed head `b3c4eac6b8020717fd8be985b933a5f2815efc27` as
+`993c78f1d65304f696cce4aeb765de40ac2f34cf` at
+2026-08-20T14:10:41Z. Its final 29 reported checks ended with 23 successes,
+six expected skips, and no failure or pending job. The parity loop did not
+exercise manual merge authority, and GitHub deleted the source remote branch.
+
+The collision-checked schema-3 inventory at exact merge main remains unchanged
+from `6694384516b8bd2d2b7696daf2604fa5d0118d8f`: 15 established lanes,
+1,367 normalized implementation identities, 4,551 established slots, 174
+high-consensus identities with 271 gaps, 905 singletons with 12,670 singleton
+gaps, 715 Rust singletons, zero canonical collisions, and zero unknown buckets.
+The exact root comparison found no added or retired identity, no lane expansion,
+and no newly discovered work requiring classification before selection.
+Before publication, the branch rebased cleanly over unrelated Gujarati,
+Telugu, and French human-language merges through
+`d6baf53b3ef32353fc8e4fcd9b8087349aad788e`; the exact collision gate at that
+current main retained every count above with zero collisions or unknown buckets.
+
+The dependency/leverage pass therefore selected the sole remaining ZIP child,
+`zip-raw-rfc1951-jvm-lane-parity`, on fresh branch
+`codex/jvm-zip-raw-rfc1951` from `993c78f1d6`. Completing Java and Kotlin closes
+the last two established-lane gaps in the strict raw RFC 1951 profile, unlocks
+the ZIP portable-conformance umbrella, and in turn releases fourteen dependent
+PNG parity slots. A fresh ownership audit found no open ZIP/parity PR. The only
+overlapping remote remains the ancient no-PR
+`worktree-feat+zstd-and-catchups` residue; it will not be reused or
+cherry-picked.
+
+This coherent tranche consumes CMP09 and every neutral fixture case in both JVM
+lanes, adds dynamic canonical Huffman decoding, caller output limits, exact
+input consumption, the closed payload-blind error taxonomy, strict ZIP size and
+CRC boundaries, package documentation and metadata, and real local package,
+coverage, BUILD, parity, diff, and security evidence. Production remains a
+pure in-memory byte transform with explicitly empty capability profiles.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
