@@ -1,7 +1,7 @@
 Human Languages curriculum gap report
 ====================================
 23 tracks, 3399 lessons, 23 books
-2 lessons over 300 effective seconds
+1 lessons over 300 effective seconds
 0 unknown prerequisites; 74 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 14 mixed, 9 version-2 schema tracks
@@ -9,14 +9,14 @@ Human Languages curriculum gap report
 levels: 2128 pre-A1, 573 A1, 549 A2, 40 B1, 17 B2, 10 C1, 18 C2; 64 unmapped (98% placed)
 ramp: 46 lessons above 3 new atoms (497 unmeasurable, 85% measurable); 24 chapters above 12
 script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
-cousin layer: 218 lessons show another script (max 27 glyphs) — context, never charged to the budget
+cousin layer: 219 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 756 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 305 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2220 glyphs and makes 176 lessons clean on its own
 order: 180 lessons with no declared sequence across 8 tracks; 78 prerequisites and 99 reviews pointing forward
 reinforcement: 630 of 4680 atoms never revisited (13%); missed windows R1 1189, R2 3677, R3 3536, R4 2053
 forward references: 495 uses of material a later lesson teaches
 writing stages: 1/23 tracks prove the cumulative pre-A1 ladder; 4 evidence blocks, 0 invalid; 1007 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 147 named track/debt items
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 146 named track/debt items
 writing ramp: 3 track(s) never practise writing; 7 start after lesson one
 gentleness measurement: 497 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 153/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on
@@ -24,7 +24,6 @@ levels ATTAINED (HL09 §3.1): none; 23 track(s) touch a level they have not atta
 0 of 1004 book chapters without an HL05 capability; 79 payoffs below the 0.5 representativeness floor; 11 tracks already clean
 
 Longest effective lessons:
-  KA-C01-namaskara: 333s (declared 240s, computed 333s; computed)
   TE-C01-namaskaram: 314s (declared 240s, computed 314s; computed)
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
@@ -101,7 +100,7 @@ root ledger: 3078 roots, 2964 spent fewer than 3 times (96%), 2038 never spent a
 info dump (report-only): 121 of 3399 lessons -- 30 rule statements, 95 paradigm tables (22 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), FR-C16-passe-compose-etre (5-row table with 5 person rows), GE-C05-wohnen (7-row table with 6 person rows)
 
-metalanguage: 53 of 54 grammar terms appear in 3288 lessons; 12003 uses come before introduction, of which 3168 are technical terms across 1646 lessons
+metalanguage: 53 of 54 grammar terms appear in 3288 lessons; 12000 uses come before introduction, of which 3168 are technical terms across 1646 lessons
   most-used-before-introduction: verb (1010 lessons), noun (528 lessons), tense (157 lessons), regular (151 lessons), adjective (145 lessons), pronoun (144 lessons)
 literal markup: none in 3399 lessons or any generated book
 glyph coverage: every character renders -- 126 main-font and 693 script characters across 1142 generated files

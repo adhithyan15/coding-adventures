@@ -14,7 +14,7 @@
     "registeredTracks": 23,
     "totalLessons": 3399,
     "authoredBooks": 23,
-    "durationViolations": 2,
+    "durationViolations": 1,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 74,
     "tracksWithoutBooks": 0,
@@ -47,23 +47,6 @@
   },
   "duration": {
     "violations": [
-      {
-        "lessonId": "KA-C01-namaskara",
-        "language": "kannada",
-        "chapter": 1,
-        "declaredSeconds": 240,
-        "computedSeconds": 333,
-        "effectiveSeconds": 333,
-        "wordCount": 533,
-        "promptCount": 2,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "activityResponseSeconds": 0,
-        "reasons": [
-          "computed"
-        ]
-      },
       {
         "lessonId": "TE-C01-namaskaram",
         "language": "telugu",
@@ -6046,7 +6029,7 @@
           "totalGlyphs": 69,
           "lessonViolations": 7,
           "systemViolations": 0,
-          "lessonsWithForeignScript": 38
+          "lessonsWithForeignScript": 39
         },
         {
           "language": "latin",
@@ -6182,8 +6165,8 @@
       "summary": {
         "lessonViolations": 61,
         "systemViolations": 5,
-        "lessonsWithForeignScript": 218,
-        "maxForeignGlyphsInALesson": 27,
+        "lessonsWithForeignScript": 219,
+        "maxForeignGlyphsInALesson": 26,
         "steepestLesson": {
           "lessonId": "RU-C01-privet",
           "language": "russian",
@@ -73219,7 +73202,7 @@
         "lessonCount": 242,
         "atomMeasurableLessons": 212,
         "atomMeasurementBlindLessons": 30,
-        "durationViolations": 1,
+        "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 0,
         "glyphLessonSpikes": 7,
@@ -73239,13 +73222,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "kannada",
-            "kind": "duration",
-            "count": 1,
-            "unit": "lesson(s)",
-            "detail": "split lessons whose effective duration exceeds the five-minute maximum"
-          },
           {
             "language": "kannada",
             "kind": "forward-language",
@@ -73298,10 +73274,10 @@
         ],
         "next": {
           "language": "kannada",
-          "kind": "duration",
-          "count": 1,
-          "unit": "lesson(s)",
-          "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+          "kind": "forward-language",
+          "count": 17,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -74358,13 +74334,6 @@
     ],
     "workQueue": [
       {
-        "language": "kannada",
-        "kind": "duration",
-        "count": 1,
-        "unit": "lesson(s)",
-        "detail": "split lessons whose effective duration exceeds the five-minute maximum"
-      },
-      {
         "language": "telugu",
         "kind": "duration",
         "count": 1,
@@ -75393,7 +75362,7 @@
       "tracksWithNoWritingPractice": 3,
       "tracksWhereWritingStartsLate": 7,
       "atomMeasurementBlindLessons": 497,
-      "findings": 147
+      "findings": 146
     }
   },
   "levelGate": {
@@ -91242,7 +91211,7 @@
     "terms": 54,
     "termsUsed": 53,
     "lessonsUsingTerms": 3288,
-    "usesBeforeIntroduction": 12003,
+    "usesBeforeIntroduction": 12000,
     "technicalUsesBeforeIntroduction": 3168,
     "technicalLessons": 1646,
     "worstTerms": [
