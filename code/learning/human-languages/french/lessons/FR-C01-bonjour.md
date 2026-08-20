@@ -1,5 +1,6 @@
 ---
 id: FR-C01-bonjour
+sequence: 30
 chapter: 1
 type: word
 headword: bonjour

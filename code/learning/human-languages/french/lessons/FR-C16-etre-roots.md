@@ -1,5 +1,6 @@
 ---
 id: FR-C16-etre-roots
+sequence: 310
 chapter: 16
 type: etymology
 headword: suis / fus / étais

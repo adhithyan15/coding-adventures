@@ -1,5 +1,6 @@
 ---
 id: FR-C05-je-parle-francais
+sequence: 195
 chapter: 5
 type: phrase
 headword: Je parle français

@@ -1,5 +1,6 @@
 ---
 id: FR-C06-nombres-1-5
+sequence: 205
 chapter: 6
 type: word
 headword: un, deux, trois, quatre, cinq

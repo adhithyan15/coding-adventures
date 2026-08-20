@@ -1,5 +1,6 @@
 ---
 id: FR-C04-a-bientot
+sequence: 150
 chapter: 4
 type: phrase
 headword: à bientôt

@@ -1,5 +1,6 @@
 ---
 id: FR-C10-parents
+sequence: 245
 chapter: 10
 type: word
 headword: le père, la mère

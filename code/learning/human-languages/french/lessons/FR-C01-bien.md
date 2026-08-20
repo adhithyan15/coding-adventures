@@ -1,5 +1,6 @@
 ---
 id: FR-C01-bien
+sequence: 10
 chapter: 1
 type: word
 headword: bien

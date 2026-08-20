@@ -3,12 +3,148 @@
   "language": "french",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 7,
-  "sourceHash": "fnv1a64:b9a7455b1f549b7d",
+  "drivablePrefix": 8,
+  "sourceHash": "fnv1a64:75a7d74a39e7efd4",
   "lessons": [
     {
+      "id": "FR-C01-salut",
+      "sequence": 5,
+      "title": "salut — \"hi,\" and a wish for your health",
+      "headword": "salut",
+      "romanization": "salut",
+      "gloss": "hi / bye (informal)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:799e25399a6adbf5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first French word, and a warmer one than it looks. Salut is the casual \"hi\" — but taken apart, it literally wishes you good health."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "silent-final — the final t is silent: salut is sa-LU, not sa-LUT. Most French final consonants go silent. see reference."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-u — the u is the French front-rounded ee (say ee with pursed lips), not oo."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "salut — informal \"hi\" (and \"bye\"). Root: Latin salus, salutem (\"health, safety, well-being\"). So salut is, at root, a wish of health — the same instinct as English \"cheers\" or old \"hail\" (be healthy). The family you already own in English:"
+            },
+            {
+              "kind": "speech",
+              "text": "salute, salutation — a greeting (a wishing-of-health)."
+            },
+            {
+              "kind": "speech",
+              "text": "salutary, salubrious — health-giving."
+            },
+            {
+              "kind": "speech",
+              "text": "and, from the close cousin salvus (\"safe\"), save, salvation, safe."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish note: its casual \"hi\" is hola — an uncertain, rootless interjection. French salut is the opposite: a transparent Latin word meaning \"health.\" Two Romance languages, two totally different casual \"hi\"s."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Salut is strictly informal — friends, family, peers — and it doubles as \"bye.\" For anyone you'd show respect to, or a first meeting, you reach past it for bonjour (coming in a few lessons), exactly as Spanish reaches past hola for buenos días."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"salut\" — sa-LU, silent t",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"salut\" — *sa-LU*, silent *t*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"salut\" then English \"salute\", \"salutary\" — the health root",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"salut\" then English \"salute\", \"salutary\" — the health root]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does salut literally wish someone? (Health — from Latin salus.) What happens to its final t? (Silent.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "FR-C01-bien",
-      "sequence": null,
+      "sequence": 10,
       "title": "bien — \"well,\" a whole answer",
       "headword": "bien",
       "romanization": "bien",
@@ -19,7 +155,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d4daafe747413b56",
+      "sourceHash": "fnv1a64:cb9237ecb5665816",
       "notice": null,
       "blocks": [
         {
@@ -145,7 +281,7 @@
     },
     {
       "id": "FR-C01-bon",
-      "sequence": null,
+      "sequence": 15,
       "title": "bon / bonne — \"good,\" the block you build greetings from",
       "headword": "bon / bonne",
       "romanization": "bon / bonne",
@@ -156,7 +292,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8fbba17e97a94ac5",
+      "sourceHash": "fnv1a64:b7fa21a690b1bf78",
       "notice": null,
       "blocks": [
         {
@@ -272,19 +408,19 @@
       ]
     },
     {
-      "id": "FR-C01-bonjour",
-      "sequence": null,
-      "title": "bonjour — assembled, and not plural (unlike Spanish)",
-      "headword": "bonjour",
-      "romanization": "bonjour",
-      "gloss": "hello / good day",
+      "id": "FR-C01-le-la",
+      "sequence": 20,
+      "title": "le, la, les — \"the,\" and the gender it carries",
+      "headword": "le / la / les",
+      "romanization": "le / la / les",
+      "gloss": "the (masculine / feminine / plural)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:69d03dc70ba43271",
+      "sourceHash": "fnv1a64:9fbd04b2f72e6a25",
       "notice": null,
       "blocks": [
         {
@@ -300,44 +436,48 @@
             },
             {
               "kind": "speech",
-              "text": "Snap two words together — bon + jour — and you have the single most important word in French politeness. And there's a sharp contrast with Spanish hiding in it."
+              "text": "Before your first noun: the words for \"the.\" French splits \"the\" by gender — masculine le, feminine la — a habit it inherited from Latin (its sibling Spanish did the same, from the same source)."
             }
           ]
         },
         {
           "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "bon / bonne, jour."
+              "text": "le = luh, la = lah, les = lay (the s is silent — silent-final). see reference."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "bonjour = bon (\"good\") + jour (\"day\") = \"good day.\" One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work."
+              "text": "le — \"the\" (masculine). la — \"the\" (feminine). les — \"the\" (plural, both genders). Roots: Latin demonstratives ille / illa / illos (\"that one / those\"):"
+            },
+            {
+              "kind": "speech",
+              "text": "le from ille, la from illa, les from illos — the pointing force (\"that\") faded into a plain \"the,\" and the initial il- wore off."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish cousin, exactly: from the same ille / illa / illos, Spanish made el / la / los. French kept le where Spanish kept el — same parent. And those same Latin demonstratives also gave French il (\"he\") and elle (\"she\") (Spanish él / ella): article and pronoun, one Latin root. (English \"the\" is Germanic — unrelated.)"
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens: French gender, also from Latin",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the contrast worth banking. Spanish says buenos días — plural, \"good days,\" the fossil of a blessing (\"may God give you good days\"). French says bonjour — singular, just \"good day.\" French didn't fossilize the plural; it kept the plain, single wish. Same two building blocks (good + day), same Latin roots, but Spanish pluralized the blessing and French didn't. Two neighbours, two instincts."
-            },
-            {
-              "kind": "speech",
-              "text": "Culturally, bonjour carries weight far beyond \"hello\": in France, opening almost any interaction — a shop, a bus, a desk — without a bonjour reads as rude. It's the formal, all-purpose daytime greeting (switch to bonsoir in the evening), and the polite default where salut would be too casual."
+              "text": "Every French noun is masculine or feminine — a grammatical gender baked into the noun, inherited from Latin: its three genders (masculine, feminine, neuter) collapsed to two, the neuters folding into the masculine. (Spanish, the other Latin daughter, did the very same.) You learn each noun with its article (le or la), because the gender can't be guessed. French has one convenience here: in the plural, both genders share a single article, les."
             }
           ]
         },
@@ -355,29 +495,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "build it — \"bon\" … \"jour\" … \"bonjour\"",
+              "instruction": "\"le\", \"la\", \"les\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: build it — \"bon\" … \"jour\" … \"bonjour\"]"
+              "source": "[YOU SAY: \"le\", \"la\", \"les\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"salut\" (casual) then \"bonjour\" (polite) — feel the register gap",
+              "instruction": "\"le jour\" (masc.), \"la nuit\" (fem.) — the nouns are coming",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"salut\" (casual) then \"bonjour\" (polite) — feel the register gap]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "bonjour vs Spanish buenos días — one singular, one plural",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: bonjour vs Spanish buenos días — one singular, one plural]"
+              "source": "[YOU SAY: \"le jour\" (masc.), \"la nuit\" (fem.) — the nouns are coming]"
             }
           ]
         },
@@ -394,255 +525,7 @@
             },
             {
               "kind": "speech",
-              "text": "bonjour is singular; the Spanish equivalent is plural — what is it, and why plural? (Buenos días, fossil of \"may God give you good days.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C01-bonne-nuit",
-      "sequence": null,
-      "title": "bonne nuit — good night, and the feminine side of bon",
-      "headword": "bonne nuit",
-      "romanization": "bonne nuit",
-      "gloss": "good night (going to bed)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d3dacca4d2795c17",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The last greeting of the day — and the one that finally shows bon in its feminine coat."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bon / bonne, nuit."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bonne nuit = bonne (\"good,\" feminine) + nuit (\"night,\" feminine) = \"good night.\" Here it is at last: because nuit is feminine, bon becomes bonne — and, from the bon lesson, remember they even sound different: bon is nasal bõ, but bonne nuit is bun nwee, with a real n."
-            },
-            {
-              "kind": "speech",
-              "text": "So the three evening-ish greetings line up and show the whole agreement rule in one breath:"
-            },
-            {
-              "kind": "speech",
-              "text": "bonjour — jour masculine becomes bon."
-            },
-            {
-              "kind": "speech",
-              "text": "bonsoir — soir masculine becomes bon."
-            },
-            {
-              "kind": "speech",
-              "text": "bonne nuit — nuit feminine becomes bonne."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Unlike bonsoir (an evening greeting), bonne nuit is a farewell for bed — \"goodnight,\" said when parting for sleep. It maps onto the Spanish split you may feel forming: Spanish overloads buenas noches for both, while French keeps bonsoir (evening hello/bye) separate from bonne nuit (off-to-sleep)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bonne nuit\" — bun nwee",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bonne nuit\" — *bun nwee*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the trio — bonjour, bonsoir, bonne nuit — and for each, is bon masculine or feminine, and why?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the trio — bonjour, bonsoir, bonne nuit — and for each, is *bon* masculine or feminine, and why?]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why is it bonne nuit but bon jour? (nuit is feminine, jour masculine — agreement.) bonsoir vs bonne nuit — which is \"off to bed\"? (Bonne nuit.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C01-bonsoir",
-      "sequence": null,
-      "title": "bonsoir — good evening",
-      "headword": "bonsoir",
-      "romanization": "bonsoir",
-      "gloss": "good evening",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e34422e75a8e6a66",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Same assembly as bonjour, one word swapped. If you have that one, this is nearly free."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bon / bonne, soir, bonjour."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bonsoir = bon (\"good\") + soir (\"evening\") = \"good evening.\" bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bonsoir is the evening swap for bonjour: as the day turns to evening (roughly late afternoon on), French speakers switch from bonjour to bonsoir. Both are the polite, all-purpose greeting for their time of day. And like Spanish buenas noches, bonsoir works both arriving and leaving in the evening — \"good evening\" on the way in, \"goodnight-ish\" on the way out. (For actually sending someone to bed, French has a separate phrase — the next two lessons.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bonsoir\" — bõ- swahr",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bonsoir\" — *bõ- swahr*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"bonjour\" (daytime) then \"bonsoir\" (evening) — the pair",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"bonjour\" (daytime) then \"bonsoir\" (evening) — the pair]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two words build bonsoir, and why does bon stay masculine? (bon + soir; soir is masculine.)"
+              "text": "le and la come from which Latin words? (ille / illa, \"that one\" — same as Spanish el/la.) What's the single plural \"the\"? (les.)"
             }
           ]
         }
@@ -650,7 +533,7 @@
     },
     {
       "id": "FR-C01-jour",
-      "sequence": null,
+      "sequence": 25,
       "title": "jour — \"day,\" and a detour through Latin that explains English journey",
       "headword": "jour",
       "romanization": "jour",
@@ -661,7 +544,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8039220a178a1b2e",
+      "sourceHash": "fnv1a64:f169231b342d147a",
       "notice": null,
       "blocks": [
         {
@@ -817,19 +700,19 @@
       ]
     },
     {
-      "id": "FR-C01-le-la",
-      "sequence": null,
-      "title": "le, la, les — \"the,\" and the gender it carries",
-      "headword": "le / la / les",
-      "romanization": "le / la / les",
-      "gloss": "the (masculine / feminine / plural)",
+      "id": "FR-C01-bonjour",
+      "sequence": 30,
+      "title": "bonjour — assembled, and not plural (unlike Spanish)",
+      "headword": "bonjour",
+      "romanization": "bonjour",
+      "gloss": "hello / good day",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8a858a28682f1fbe",
+      "sourceHash": "fnv1a64:12ffe997226fd49b",
       "notice": null,
       "blocks": [
         {
@@ -845,48 +728,44 @@
             },
             {
               "kind": "speech",
-              "text": "Before your first noun: the words for \"the.\" French splits \"the\" by gender — masculine le, feminine la — a habit it inherited from Latin (its sibling Spanish did the same, from the same source)."
+              "text": "Snap two words together — bon + jour — and you have the single most important word in French politeness. And there's a sharp contrast with Spanish hiding in it."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "input",
+          "title": "You'll want to know first",
           "segments": [
             {
               "kind": "speech",
-              "text": "le = luh, la = lah, les = lay (the s is silent — silent-final). see reference."
+              "text": "bon / bonne, jour."
             }
           ]
         },
         {
           "index": 2,
           "type": "etymology",
-          "title": "The word, taken apart",
+          "title": "The word, taken apart — by assembling it",
           "segments": [
             {
               "kind": "speech",
-              "text": "le — \"the\" (masculine). la — \"the\" (feminine). les — \"the\" (plural, both genders). Roots: Latin demonstratives ille / illa / illos (\"that one / those\"):"
-            },
-            {
-              "kind": "speech",
-              "text": "le from ille, la from illa, les from illos — the pointing force (\"that\") faded into a plain \"the,\" and the initial il- wore off."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish cousin, exactly: from the same ille / illa / illos, Spanish made el / la / los. French kept le where Spanish kept el — same parent. And those same Latin demonstratives also gave French il (\"he\") and elle (\"she\") (Spanish él / ella): article and pronoun, one Latin root. (English \"the\" is Germanic — unrelated.)"
+              "text": "bonjour = bon (\"good\") + jour (\"day\") = \"good day.\" One written word, said bõ- zhoor. bon is masculine because jour is masculine — the agreement from the bon lesson, quietly at work."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: French gender, also from Latin",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every French noun is masculine or feminine — a grammatical gender baked into the noun, inherited from Latin: its three genders (masculine, feminine, neuter) collapsed to two, the neuters folding into the masculine. (Spanish, the other Latin daughter, did the very same.) You learn each noun with its article (le or la), because the gender can't be guessed. French has one convenience here: in the plural, both genders share a single article, les."
+              "text": "Here's the contrast worth banking. Spanish says buenos días — plural, \"good days,\" the fossil of a blessing (\"may God give you good days\"). French says bonjour — singular, just \"good day.\" French didn't fossilize the plural; it kept the plain, single wish. Same two building blocks (good + day), same Latin roots, but Spanish pluralized the blessing and French didn't. Two neighbours, two instincts."
+            },
+            {
+              "kind": "speech",
+              "text": "Culturally, bonjour carries weight far beyond \"hello\": in France, opening almost any interaction — a shop, a bus, a desk — without a bonjour reads as rude. It's the formal, all-purpose daytime greeting (switch to bonsoir in the evening), and the polite default where salut would be too casual."
             }
           ]
         },
@@ -904,20 +783,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le\", \"la\", \"les\"",
+              "instruction": "build it — \"bon\" … \"jour\" … \"bonjour\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le\", \"la\", \"les\"]"
+              "source": "[YOU SAY: build it — \"bon\" … \"jour\" … \"bonjour\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"le jour\" (masc.), \"la nuit\" (fem.) — the nouns are coming",
+              "instruction": "\"salut\" (casual) then \"bonjour\" (polite) — feel the register gap",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"le jour\" (masc.), \"la nuit\" (fem.) — the nouns are coming]"
+              "source": "[YOU SAY: \"salut\" (casual) then \"bonjour\" (polite) — feel the register gap]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "bonjour vs Spanish buenos días — one singular, one plural",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: bonjour vs Spanish buenos días — one singular, one plural]"
             }
           ]
         },
@@ -934,7 +822,263 @@
             },
             {
               "kind": "speech",
-              "text": "le and la come from which Latin words? (ille / illa, \"that one\" — same as Spanish el/la.) What's the single plural \"the\"? (les.)"
+              "text": "bonjour is singular; the Spanish equivalent is plural — what is it, and why plural? (Buenos días, fossil of \"may God give you good days.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C01-soir",
+      "sequence": 35,
+      "title": "soir — \"evening,\" and the same \"late\" idea Spanish used",
+      "headword": "soir",
+      "romanization": "soir",
+      "gloss": "evening (le soir — masculine)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1f7907718b69140e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The evening counterpart of jour. And there's a lovely parallel with Spanish waiting: both languages built their \"later in the day\" word out of the Latin word for late."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "jour — the day word; soir is its evening partner."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "vowel-oi — oi = wa: soir is swahr. see reference."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le soir — \"the evening\" (masculine). Root: Latin sērum (tempus), \"the late [hour],\" from sērus (\"late\"). English cousins are few but real: soirée (an evening party — borrowed straight from French soir), and the rare serotine (a bat that flies in the late evening)."
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish parallel — this is the good part. Spanish tarde (\"afternoon\") comes from Latin tardus, \"late.\" French soir (\"evening\") comes from sērus, \"late.\" Two different Latin \"late\" words, two languages, the same idea: name the later part of the day after its lateness."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "soir is masculine — le soir — so, like jour, it will take bon (not bonne) in the greeting. Plural les soirs, the s silent."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"le soir\" — luh swahr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"le soir\" — *luh swahr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"soir\" then English \"soirée\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"soir\" then English \"soirée\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "Spanish tarde from \"late\", French soir from \"late\" — same idea",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: Spanish *tarde* ← \"late\", French *soir* ← \"late\" — same idea]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What did soir's Latin root sērus mean? (\"Late.\") What Spanish time-word did the exact same thing from a different \"late\" word? (Tarde, from tardus.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C01-bonsoir",
+      "sequence": 40,
+      "title": "bonsoir — good evening",
+      "headword": "bonsoir",
+      "romanization": "bonsoir",
+      "gloss": "good evening",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:37e8904ed64cc0ab",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same assembly as bonjour, one word swapped. If you have that one, this is nearly free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bon / bonne, soir, bonjour."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — by assembling it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bonsoir = bon (\"good\") + soir (\"evening\") = \"good evening.\" bon stays masculine because soir is masculine — same as bonjour, no new agreement to learn. Said bõ- swahr."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bonsoir is the evening swap for bonjour: as the day turns to evening (roughly late afternoon on), French speakers switch from bonjour to bonsoir. Both are the polite, all-purpose greeting for their time of day. And like Spanish buenas noches, bonsoir works both arriving and leaving in the evening — \"good evening\" on the way in, \"goodnight-ish\" on the way out. (For actually sending someone to bed, French has a separate phrase — the next two lessons.)"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bonsoir\" — bõ- swahr",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bonsoir\" — *bõ- swahr*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bonjour\" (daytime) then \"bonsoir\" (evening) — the pair",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bonjour\" (daytime) then \"bonsoir\" (evening) — the pair]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two words build bonsoir, and why does bon stay masculine? (bon + soir; soir is masculine.)"
             }
           ]
         }
@@ -942,7 +1086,7 @@
     },
     {
       "id": "FR-C01-nuit",
-      "sequence": null,
+      "sequence": 45,
       "title": "nuit — \"night,\" and a sound-change that mirrors Spanish",
       "headword": "nuit",
       "romanization": "nuit",
@@ -954,7 +1098,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:e28a45e6e90399d6",
+      "sourceHash": "fnv1a64:da7981a40d5b3788",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1121,8 +1265,140 @@
       ]
     },
     {
+      "id": "FR-C01-bonne-nuit",
+      "sequence": 50,
+      "title": "bonne nuit — good night, and the feminine side of bon",
+      "headword": "bonne nuit",
+      "romanization": "bonne nuit",
+      "gloss": "good night (going to bed)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:ad062ec2432f323b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The last greeting of the day — and the one that finally shows bon in its feminine coat."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bon / bonne, nuit."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — by assembling it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bonne nuit = bonne (\"good,\" feminine) + nuit (\"night,\" feminine) = \"good night.\" Here it is at last: because nuit is feminine, bon becomes bonne — and, from the bon lesson, remember they even sound different: bon is nasal bõ, but bonne nuit is bun nwee, with a real n."
+            },
+            {
+              "kind": "speech",
+              "text": "So the three evening-ish greetings line up and show the whole agreement rule in one breath:"
+            },
+            {
+              "kind": "speech",
+              "text": "bonjour — jour masculine becomes bon."
+            },
+            {
+              "kind": "speech",
+              "text": "bonsoir — soir masculine becomes bon."
+            },
+            {
+              "kind": "speech",
+              "text": "bonne nuit — nuit feminine becomes bonne."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Unlike bonsoir (an evening greeting), bonne nuit is a farewell for bed — \"goodnight,\" said when parting for sleep. It maps onto the Spanish split you may feel forming: Spanish overloads buenas noches for both, while French keeps bonsoir (evening hello/bye) separate from bonne nuit (off-to-sleep)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"bonne nuit\" — bun nwee",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"bonne nuit\" — *bun nwee*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the trio — bonjour, bonsoir, bonne nuit — and for each, is bon masculine or feminine, and why?",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the trio — bonjour, bonsoir, bonne nuit — and for each, is *bon* masculine or feminine, and why?]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is it bonne nuit but bon jour? (nuit is feminine, jour masculine — agreement.) bonsoir vs bonne nuit — which is \"off to bed\"? (Bonne nuit.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "FR-C01-practice",
-      "sequence": null,
+      "sequence": 55,
       "title": "Practice — the French greetings",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -1133,7 +1409,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5e3bf39b1acbf123",
+      "sourceHash": "fnv1a64:29b8a7672a93879e",
       "notice": null,
       "blocks": [
         {
@@ -1264,282 +1540,6 @@
             {
               "kind": "speech",
               "text": "French bonjour is singular; the Spanish morning greeting is plural — name it. (Buenos días.) Next chapter: introducing yourself — je m'appelle… — and French's own formal/informal \"you,\" tu vs vous."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C01-salut",
-      "sequence": null,
-      "title": "salut — \"hi,\" and a wish for your health",
-      "headword": "salut",
-      "romanization": "salut",
-      "gloss": "hi / bye (informal)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:3b4217aedd4a0b2f",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your first French word, and a warmer one than it looks. Salut is the casual \"hi\" — but taken apart, it literally wishes you good health."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "silent-final — the final t is silent: salut is sa-LU, not sa-LUT. Most French final consonants go silent. see reference."
-            },
-            {
-              "kind": "speech",
-              "text": "vowel-u — the u is the French front-rounded ee (say ee with pursed lips), not oo."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "salut — informal \"hi\" (and \"bye\"). Root: Latin salus, salutem (\"health, safety, well-being\"). So salut is, at root, a wish of health — the same instinct as English \"cheers\" or old \"hail\" (be healthy). The family you already own in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "salute, salutation — a greeting (a wishing-of-health)."
-            },
-            {
-              "kind": "speech",
-              "text": "salutary, salubrious — health-giving."
-            },
-            {
-              "kind": "speech",
-              "text": "and, from the close cousin salvus (\"safe\"), save, salvation, safe."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish note: its casual \"hi\" is hola — an uncertain, rootless interjection. French salut is the opposite: a transparent Latin word meaning \"health.\" Two Romance languages, two totally different casual \"hi\"s."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Salut is strictly informal — friends, family, peers — and it doubles as \"bye.\" For anyone you'd show respect to, or a first meeting, you reach past it for bonjour (coming in a few lessons), exactly as Spanish reaches past hola for buenos días."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salut\" — sa-LU, silent t",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salut\" — *sa-LU*, silent *t*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salut\" then English \"salute\", \"salutary\" — the health root",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salut\" then English \"salute\", \"salutary\" — the health root]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does salut literally wish someone? (Health — from Latin salus.) What happens to its final t? (Silent.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C01-soir",
-      "sequence": null,
-      "title": "soir — \"evening,\" and the same \"late\" idea Spanish used",
-      "headword": "soir",
-      "romanization": "soir",
-      "gloss": "evening (le soir — masculine)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e600f732ded9a997",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The evening counterpart of jour. And there's a lovely parallel with Spanish waiting: both languages built their \"later in the day\" word out of the Latin word for late."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "jour — the day word; soir is its evening partner."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "vowel-oi — oi = wa: soir is swahr. see reference."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le soir — \"the evening\" (masculine). Root: Latin sērum (tempus), \"the late [hour],\" from sērus (\"late\"). English cousins are few but real: soirée (an evening party — borrowed straight from French soir), and the rare serotine (a bat that flies in the late evening)."
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish parallel — this is the good part. Spanish tarde (\"afternoon\") comes from Latin tardus, \"late.\" French soir (\"evening\") comes from sērus, \"late.\" Two different Latin \"late\" words, two languages, the same idea: name the later part of the day after its lateness."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "soir is masculine — le soir — so, like jour, it will take bon (not bonne) in the greeting. Plural les soirs, the s silent."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"le soir\" — luh swahr",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"le soir\" — *luh swahr*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"soir\" then English \"soirée\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"soir\" then English \"soirée\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "Spanish tarde from \"late\", French soir from \"late\" — same idea",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: Spanish *tarde* ← \"late\", French *soir* ← \"late\" — same idea]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What did soir's Latin root sērus mean? (\"Late.\") What Spanish time-word did the exact same thing from a different \"late\" word? (Tarde, from tardus.)"
             }
           ]
         }

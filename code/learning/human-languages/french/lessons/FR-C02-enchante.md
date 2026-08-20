@@ -1,5 +1,6 @@
 ---
 id: FR-C02-enchante
+sequence: 95
 chapter: 2
 type: word
 headword: enchanté(e)

@@ -4,11 +4,11 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:4a24fc14ce11546c",
+  "sourceHash": "fnv1a64:065584545ac3079c",
   "lessons": [
     {
       "id": "FR-C13-noir-blanc",
-      "sequence": null,
+      "sequence": 275,
       "title": "noir, blanc — one inherited, one borrowed",
       "headword": "noir, blanc",
       "romanization": "noir, blanc",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:af7b0b056c6e72bc",
+      "sourceHash": "fnv1a64:48154d37f1bceac1",
       "notice": null,
       "blocks": [
         {
@@ -166,7 +166,7 @@
     },
     {
       "id": "FR-C13-rouge-bleu",
-      "sequence": null,
+      "sequence": 280,
       "title": "rouge, bleu — an ancient word and a borrowed one",
       "headword": "rouge, bleu",
       "romanization": "rouge, bleu",
@@ -177,7 +177,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47b88d9a216fdef7",
+      "sourceHash": "fnv1a64:98c15c36506b7ed0",
       "notice": null,
       "blocks": [
         {

@@ -1,5 +1,6 @@
 ---
 id: FR-C01-bonsoir
+sequence: 40
 chapter: 1
 type: word
 headword: bonsoir

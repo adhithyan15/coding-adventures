@@ -3,36 +3,6 @@ French, chapter 10: Family.
 
 
 Lesson 1 of 2.
-le frère, la sœur — brother and sister.
-
-Warm-up.
-[pause 2 seconds]
-With parents in hand, the next pair: frère ("brother") and sœur ("sister"). Both are straight from Latin, and both hand English a whole family of words.
-
-Taken apart.
-le frère ("brother") from Latin frāter from PIE bʰréh₂tēr (the same PIE root that, through Grimm's law bʰ becomes b, gave English brother).
-la sœur ("sister") from Latin soror. The odd-looking œ (an o and e fused into one letter) spells the vowel that soror wore down to — soror becomes seror becomes sœur.
-
-The English cousins.
-frère becomes fraternal, fraternity, fraternize, and — softened in old French — friar (a "brother" in a religious order).
-sœur becomes sorority, sororal; and a sister in a convent is still called a sœur. (English sister comes from the same PIE root swésōr, by the Germanic road — Latin soror and English sister are cousins.)
-So the four family words now form a set: père, mère, frère, sœur — each one a key to a Latin-through-English word (paternal, maternal, fraternal, sorority).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: all four — "le père, la mère, le frère, la sœur"]
-[pause 8 seconds for the answer]
-[your turn — say: "frère becomes fraternal, friar; sœur becomes sorority"]
-[pause 8 seconds for the answer]
-[your turn — say: spell it — "s-œ-u-r, the œ is one letter"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Give "brother" and "sister" with articles. (le frère, la sœur.) What Latin words are they from? (frāter, soror.) An English cousin of each? (frère becomes fraternal/friar; sœur becomes sorority.) What is unusual about spelling sœur? (The œ ligature — o and e fused into one letter.) Next chapter: building sentences about your family.
-
-
-Lesson 2 of 2.
 le père, la mère — the oldest words in the family.
 
 Warm-up.
@@ -63,3 +33,33 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give "father" and "mother" with their articles. (le père, la mère.) What one sound-change makes père into English father? (Grimm's law: p becomes f — and t becomes th.) Name an English cousin of each. (père becomes paternal/patron; mère becomes maternal/matron.) Next: le frère, la sœur — brother and sister.
+
+
+Lesson 2 of 2.
+le frère, la sœur — brother and sister.
+
+Warm-up.
+[pause 2 seconds]
+With parents in hand, the next pair: frère ("brother") and sœur ("sister"). Both are straight from Latin, and both hand English a whole family of words.
+
+Taken apart.
+le frère ("brother") from Latin frāter from PIE bʰréh₂tēr (the same PIE root that, through Grimm's law bʰ becomes b, gave English brother).
+la sœur ("sister") from Latin soror. The odd-looking œ (an o and e fused into one letter) spells the vowel that soror wore down to — soror becomes seror becomes sœur.
+
+The English cousins.
+frère becomes fraternal, fraternity, fraternize, and — softened in old French — friar (a "brother" in a religious order).
+sœur becomes sorority, sororal; and a sister in a convent is still called a sœur. (English sister comes from the same PIE root swésōr, by the Germanic road — Latin soror and English sister are cousins.)
+So the four family words now form a set: père, mère, frère, sœur — each one a key to a Latin-through-English word (paternal, maternal, fraternal, sorority).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: all four — "le père, la mère, le frère, la sœur"]
+[pause 8 seconds for the answer]
+[your turn — say: "frère becomes fraternal, friar; sœur becomes sorority"]
+[pause 8 seconds for the answer]
+[your turn — say: spell it — "s-œ-u-r, the œ is one letter"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Give "brother" and "sister" with articles. (le frère, la sœur.) What Latin words are they from? (frāter, soror.) An English cousin of each? (frère becomes fraternal/friar; sœur becomes sorority.) What is unusual about spelling sœur? (The œ ligature — o and e fused into one letter.) Next chapter: building sentences about your family.

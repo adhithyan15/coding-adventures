@@ -1,5 +1,6 @@
 ---
 id: FR-C05-parler
+sequence: 180
 chapter: 5
 type: word
 headword: parler

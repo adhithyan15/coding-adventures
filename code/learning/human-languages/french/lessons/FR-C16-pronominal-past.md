@@ -1,5 +1,6 @@
 ---
 id: FR-C16-pronominal-past
+sequence: 320
 chapter: 16
 type: grammar
 headword: elle s'est lavée / lavé les mains

@@ -1,5 +1,6 @@
 ---
 id: FR-C15-passe-compose
+sequence: 295
 chapter: 15
 type: word
 headword: j'ai parlé

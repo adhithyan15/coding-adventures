@@ -1,5 +1,6 @@
 ---
 id: FR-C13-noir-blanc
+sequence: 275
 chapter: 13
 type: word
 headword: noir, blanc

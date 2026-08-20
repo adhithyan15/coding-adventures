@@ -1,5 +1,6 @@
 ---
 id: FR-C02-me
+sequence: 65
 chapter: 2
 type: word
 headword: me

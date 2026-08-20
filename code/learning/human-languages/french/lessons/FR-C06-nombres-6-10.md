@@ -1,5 +1,6 @@
 ---
 id: FR-C06-nombres-6-10
+sequence: 210
 chapter: 6
 type: word
 headword: six, sept, huit, neuf, dix
