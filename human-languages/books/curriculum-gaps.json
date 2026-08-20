@@ -37,6 +37,9 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 11,
+    "tracksWithoutWritingStageEvidence": 22,
+    "missingWritingStagePairs": 1007,
+    "invalidWritingStageEvidence": 0,
     "drivableLessons": 2909,
     "drivablePercent": 86,
     "chaptersWithoutDrivablePrefix": 99,
@@ -69736,6 +69739,3864 @@
     },
     "unknownScriptTracks": []
   },
+  "writingStages": {
+    "stages": [
+      {
+        "id": "observe-trace",
+        "firstRequiredAt": "pre-A1",
+        "prerequisites": []
+      },
+      {
+        "id": "guided-copy",
+        "firstRequiredAt": "pre-A1",
+        "prerequisites": [
+          "observe-trace"
+        ]
+      },
+      {
+        "id": "delayed-copy",
+        "firstRequiredAt": "pre-A1",
+        "prerequisites": [
+          "observe-trace",
+          "guided-copy"
+        ]
+      },
+      {
+        "id": "dictation-transcription",
+        "firstRequiredAt": "pre-A1",
+        "prerequisites": [
+          "observe-trace",
+          "guided-copy",
+          "delayed-copy"
+        ]
+      },
+      {
+        "id": "controlled-composition",
+        "firstRequiredAt": "A1",
+        "prerequisites": [
+          "observe-trace",
+          "guided-copy",
+          "delayed-copy",
+          "dictation-transcription"
+        ]
+      },
+      {
+        "id": "connected-composition",
+        "firstRequiredAt": "A2",
+        "prerequisites": [
+          "observe-trace",
+          "guided-copy",
+          "delayed-copy",
+          "dictation-transcription",
+          "controlled-composition"
+        ]
+      },
+      {
+        "id": "timed-assessment-production",
+        "firstRequiredAt": "A1",
+        "prerequisites": [
+          "observe-trace",
+          "guided-copy",
+          "delayed-copy",
+          "dictation-transcription",
+          "controlled-composition"
+        ]
+      }
+    ],
+    "tracks": [
+      {
+        "language": "arabic",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "bengali",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "chinese",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "french",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "german",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "gujarati",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "hindi",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "italian",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "japanese",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "kannada",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "latin",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "malayalam",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "marathi",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "marwadi",
+        "evidence": [
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W01-ra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — guided copy",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W01-aa-matra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 20
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W01-raam",
+            "blockIndex": 2,
+            "blockTitle": "Writing — from copy to memory",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 30
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C01-practice",
+            "blockIndex": 3,
+            "blockTitle": "Wrap-up recall",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 70
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W01-ra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — guided copy",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W01-aa-matra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 20
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W01-raam",
+            "blockIndex": 2,
+            "blockTitle": "Writing — from copy to memory",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 30
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C01-practice",
+            "blockIndex": 3,
+            "blockTitle": "Wrap-up recall",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 70
+          }
+        ],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [],
+            "complete": true
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "missingStages": [
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "persian",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "portuguese",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "punjabi",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "russian",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "sanskrit",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "spanish",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "tamil",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "telugu",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      },
+      {
+        "language": "urdu",
+        "evidence": [],
+        "validEvidence": [],
+        "defects": [],
+        "levels": [
+          {
+            "level": "pre-A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "A2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "B2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C1",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          },
+          {
+            "level": "C2",
+            "requiredStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "evidencedStages": [],
+            "missingStages": [
+              "observe-trace",
+              "guided-copy",
+              "delayed-copy",
+              "dictation-transcription",
+              "controlled-composition",
+              "connected-composition",
+              "timed-assessment-production"
+            ],
+            "complete": false
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "tracks": 23,
+      "tracksWithAnyEvidence": 1,
+      "tracksCompleteAtPreA1": 1,
+      "evidenceBlocks": 4,
+      "invalidEvidenceBlocks": 0,
+      "missingTrackLevelStages": 1007
+    }
+  },
   "gentleRamp": {
     "schemaVersion": 1,
     "rule": {
@@ -72629,6 +76490,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 48 distinct headwords at or below pre-A1, against 300",
             "shortfall": 252
@@ -72648,6 +76514,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 46 distinct headwords at or below pre-A1, against 300",
             "shortfall": 254
@@ -72666,6 +76537,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "spine-nodes",
             "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-CHECK-WELLBEING",
@@ -72691,6 +76567,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 42 distinct headwords at or below pre-A1, against 300",
             "shortfall": 258
@@ -72714,6 +76595,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 45 distinct headwords at or below pre-A1, against 300",
@@ -72739,6 +76625,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 34 distinct headwords at or below pre-A1, against 300",
             "shortfall": 266
@@ -72758,6 +76649,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 155 distinct headwords at or below pre-A1, against 300",
             "shortfall": 145
@@ -72776,6 +76672,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "spine-nodes",
             "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-RESPOND-BASIC",
@@ -72806,6 +76707,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "spine-nodes",
             "detail": "4 of 7 pre-A1 spine node(s) unrealized: SPINE-EXCHANGE-NAMES, SPINE-CHECK-WELLBEING, SPINE-POLITE-REQUEST-REPAIR, SPINE-TAKE-LEAVE",
             "shortfall": 4
@@ -72829,6 +76735,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 152 distinct headwords at or below pre-A1, against 300",
@@ -72854,6 +76765,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 43 distinct headwords at or below pre-A1, against 300",
             "shortfall": 257
@@ -72872,6 +76788,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 154 distinct headwords at or below pre-A1, against 300",
@@ -72896,6 +76817,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 36 distinct headwords at or below pre-A1, against 300",
@@ -72940,6 +76866,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 43 distinct headwords at or below pre-A1, against 300",
             "shortfall": 257
@@ -72963,6 +76894,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "spine-nodes",
             "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-RESPOND-BASIC",
@@ -72988,6 +76924,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 36 distinct headwords at or below pre-A1, against 300",
             "shortfall": 264
@@ -73006,6 +76947,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 39 distinct headwords at or below pre-A1, against 300",
@@ -73026,6 +76972,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 174 distinct headwords at or below pre-A1, against 300",
             "shortfall": 126
@@ -73045,6 +76996,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 153 distinct headwords at or below pre-A1, against 300",
             "shortfall": 147
@@ -73063,6 +77019,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 154 distinct headwords at or below pre-A1, against 300",
@@ -73088,6 +77049,11 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
+          {
             "criterion": "vocabulary",
             "detail": "teaches 186 distinct headwords at or below pre-A1, against 300",
             "shortfall": 114
@@ -73111,6 +77077,11 @@
         "attained": null,
         "inProgressAt": "pre-A1",
         "blockers": [
+          {
+            "criterion": "writing-stage",
+            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 4
+          },
           {
             "criterion": "vocabulary",
             "detail": "teaches 43 distinct headwords at or below pre-A1, against 300",
