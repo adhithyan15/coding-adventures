@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:95cc5d1743356f99",
+  "sourceHash": "fnv1a64:417e7222ade563d5",
   "summary": {
-    "totalLessons": 3399,
-    "voice": 2466,
+    "totalLessons": 3400,
+    "voice": 2465,
     "sight": 590,
-    "pen": 343,
-    "drivableLessons": 2466,
+    "pen": 345,
+    "drivableLessons": 2465,
     "drivablePercent": 73,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2206,
-    "fullyDrivableChapters": 669,
-    "unstartableChapters": 209,
+    "drivablePrefixTotal": 2200,
+    "fullyDrivableChapters": 668,
+    "unstartableChapters": 210,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -5366,37 +5366,33 @@
     },
     {
       "language": "latin",
-      "lessonCount": 108,
-      "voice": 103,
+      "lessonCount": 109,
+      "voice": 102,
       "sight": 5,
-      "pen": 0,
-      "drivablePercent": 95,
-      "drivablePrefixTotal": 100,
+      "pen": 2,
+      "drivablePercent": 94,
+      "drivablePrefixTotal": 94,
       "modalities": [
         "voice",
-        "sight"
+        "sight",
+        "pen"
       ],
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 6,
-          "voice": 6,
+          "lessonCount": 7,
+          "voice": 5,
           "sight": 0,
-          "pen": 0,
+          "pen": 2,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 6,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "LA-C01-salve",
-            "LA-C01-ave",
-            "LA-C01-vale",
-            "LA-C01-gratias",
-            "LA-C01-ita-non",
-            "LA-C01-practice"
-          ]
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "LA-C01-salve",
+          "drivable": false,
+          "drivableLessonIds": []
         },
         {
           "chapter": 2,
@@ -40253,18 +40249,43 @@
       "language": "latin",
       "chapter": 1,
       "sequence": 100,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dc3a533dd64d2208"
+      "sourceHash": "fnv1a64:9dda29aae05f0453",
+      "detachableSegments": [
+        "Writing — follow one greeting you can see"
+      ]
+    },
+    {
+      "id": "LA-W01-salve-guided-copy",
+      "language": "latin",
+      "chapter": 1,
+      "sequence": 105,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:10dd2485d465e053",
+      "detachableSegments": [
+        "Writing — one guided copy"
+      ]
     },
     {
       "id": "LA-C01-ave",
