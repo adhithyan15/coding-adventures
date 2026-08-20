@@ -1,5 +1,6 @@
 ---
 id: PA-C04-phir
+sequence: 220
 chapter: 4
 type: word
 headword: ਫਿਰ

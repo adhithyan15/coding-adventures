@@ -1,5 +1,6 @@
 ---
 id: PA-C05-bolna
+sequence: 270
 chapter: 5
 type: word
 headword: ਬੋਲਣਾ

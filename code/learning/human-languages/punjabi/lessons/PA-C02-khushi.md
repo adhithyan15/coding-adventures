@@ -1,5 +1,6 @@
 ---
 id: PA-C02-khushi
+sequence: 140
 chapter: 2
 type: phrase
 headword: ਖ਼ੁਸ਼ੀ ਹੋਈ

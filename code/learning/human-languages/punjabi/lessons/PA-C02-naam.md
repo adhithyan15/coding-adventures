@@ -1,5 +1,6 @@
 ---
 id: PA-C02-naam
+sequence: 70
 chapter: 2
 type: word
 headword: ਨਾਂ
