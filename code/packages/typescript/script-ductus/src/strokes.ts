@@ -6239,6 +6239,26 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઞ"),
   },
+  // t30apps writes Gujarati ટ as one unbroken run across the upper turn,
+  // diagonally through the middle, and clockwise around the lower bowl. This
+  // median preserves that order while fitting the bundled Noto outline.
+  [ductusKey("gujarati", "ટ")]: {
+    script: "gujarati",
+    glyph: "ટ",
+    strokes: [
+      { segments: [{ label: "sweep the upper turn, bend down-left, and circle the lower bowl", path: [
+        { x: 105, y: 520 }, { x: 155, y: 555 }, { x: 215, y: 565 },
+        { x: 275, y: 555 }, { x: 325, y: 530 }, { x: 355, y: 495 },
+        { x: 360, y: 455 }, { x: 345, y: 420 }, { x: 315, y: 390 },
+        { x: 270, y: 355 }, { x: 220, y: 325 }, { x: 165, y: 290 },
+        { x: 115, y: 250 }, { x: 85, y: 210 }, { x: 80, y: 165 },
+        { x: 95, y: 120 }, { x: 130, y: 80 }, { x: 180, y: 50 },
+        { x: 235, y: 35 }, { x: 295, y: 40 }, { x: 345, y: 55 },
+        { x: 390, y: 80 }, { x: 420, y: 110 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ટ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
