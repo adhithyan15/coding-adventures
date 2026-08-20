@@ -5,6 +5,18 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09FT — Gujarati ગ separates its rounded body from the right spine
+
+The t30apps.com animation gives **ગ** two populated SVG paths: one continuous
+run circles the rounded left body from its upper-left start to its lower-left
+finish; after one lift, a separate run descends the full right spine and turns
+through its lower foot. The fitted Noto Sans Gujarati medians preserve that
+body-before-spine order.
+
+Gujarati is now **14/36 verified, 22 remaining**. Continue in source and
+inventory order with **ઘ** next. A correctness defect still outranks coverage
+if one appears during fitting or validation.
+
 ## HL-C09FS — Gujarati ખ separates its joined body from the right spine
 
 The t30apps.com animation gives **ખ** two populated SVG paths: one continuous
