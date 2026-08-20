@@ -47,7 +47,8 @@ describe("the plan CLI", () => {
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);
-    // Spanish is at 100%, so it must NOT get one.
+    // Spanish teaches 100% of the points currently enumerated, so it must not
+    // get an exam-point item. Its partial scope still gets an inventory item.
     expect(out).not.toMatch(/exam-point — spanish/);
     expect(out).toMatch(/0 complete and 3 partial of 138/);
   }, 120_000);
