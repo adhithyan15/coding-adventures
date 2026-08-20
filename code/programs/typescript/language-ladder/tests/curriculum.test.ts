@@ -57,11 +57,15 @@ describe("per-language shared-spine maps", () => {
   });
 
   it("makes Persian and Urdu script introduction an inline local extension", () => {
+    const expectedLessons = new Map([
+      ["persian", 2], // hear salam, then copy one visible alef in the new bridge
+      ["urdu", 1],
+    ]);
     for (const language of ["persian", "urdu"]) {
       const curriculum = curriculumForLanguage(language)!;
       const script = curriculum.extensions.find((extension) => extension.category === "script");
       expect(script?.kind).toBe("required");
-      expect(script?.lessons).toHaveLength(1);
+      expect(script?.lessons).toHaveLength(expectedLessons.get(language)!);
       const segment = curriculum.path.find((item) => item.inline.includes(script!.id));
       expect(segment?.spine_node).toBe("SPINE-MEET-GREET");
     }
@@ -71,9 +75,11 @@ describe("per-language shared-spine maps", () => {
     const ids = mappedLessonIds(["persian", "urdu"]);
     expect(ids).toEqual(new Set([
       "FA-C01-salam",
+      "FA-W00-alef-guided-copy",
       "FA-C01-mamnoon",
       "FA-C01-bale",
       "FA-C01-na",
+      "FA-C01-practice",
       "FA-C02-esm-e-man",
       "FA-C03-shoma-to",
       "FA-C03-chist",
@@ -231,12 +237,11 @@ describe("per-language shared-spine maps", () => {
     ]);
     const frontier = mixedCurriculumFrontier(["persian", "urdu"], progress);
     expect(frontier.steps.map((step) => [step.language, step.lessonId])).toEqual([
-      ["persian", "FA-C01-mamnoon"],
+      ["persian", "FA-W00-alef-guided-copy"],
       ["urdu", "UR-C01-salam"],
     ]);
-    expect(frontier.bySpineNode.get("SPINE-COURTESY-THANK")?.map((step) => step.language))
-      .toEqual(["persian"]);
+    expect(frontier.bySpineNode.get("SPINE-COURTESY-THANK")).toBeUndefined();
     expect(frontier.bySpineNode.get("SPINE-MEET-GREET")?.map((step) => step.language))
-      .toEqual(["urdu"]);
+      .toEqual(["persian", "urdu"]);
   });
 });
