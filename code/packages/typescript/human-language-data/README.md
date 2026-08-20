@@ -116,6 +116,32 @@ The first inventory is official Goethe German A1. It is a target for later
 five-minute lesson decomposition and mocks, not a claim that the current German
 book is pass-ready.
 
+### Source-bounded exam inventories (HL20)
+
+An exam inventory is complete only when it accounts for all four content
+dimensions: communicative functions, grammar, phonology/orthography, and
+lexicon. Each dimension carries its own `complete` or `partial` status, source,
+and a plain-language boundary note. Completeness is derived; it is never inferred
+from a file merely existing.
+
+```ts
+import {
+  isExamInventoryComplete,
+  loadExamInventory,
+  measureExamCoverage,
+} from "@coding-adventures/human-language-data";
+
+const inventory = loadExamInventory("german", "A1");
+isExamInventoryComplete(inventory); // false until every dimension is source-closed
+measureExamCoverage(inventory, lessons); // its enumerated points still count
+```
+
+A partial inventory remains useful evidence and still generates named exam-point
+gaps. It also remains an `exam-inventory` backlog item. Thus 100% coverage means
+"all currently enumerated points are taught," never "the whole exam construct is
+known." The initial baseline is deliberately honest: zero complete and three
+partial inventories across 138 track/level targets.
+
 ### Chapter capabilities (HL05)
 
 A chapter used to be nothing but an integer on each lesson, so nothing could check

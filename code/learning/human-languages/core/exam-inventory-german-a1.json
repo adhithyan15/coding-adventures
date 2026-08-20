@@ -4,6 +4,28 @@
   "level": "A1",
   "about": "An enumeration of the grammar, phonology and core lexis a Goethe-Zertifikat A1 (Start Deutsch 1) candidate is expected to hold, restated in our own words from the CECRL A1 descriptors and the structure the Goethe-Institut publishes for the level. A working restatement for measuring this corpus, not a reproduction of any awarding body's document.",
   "source": "https://www.goethe.de/en/spr/kup/prf/prf/gzsd1.html",
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "https://www.goethe.de/en/spr/prf/gzsd1.html",
+      "note": "Some A1 functions appear among the points, but the complete official communicative construct is not yet enumerated."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "https://www.goethe.de/en/spr/prf/gzsd1.html",
+      "note": "This working restatement is measurable but is not source-closed against a complete published Goethe A1 grammar list."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "https://www.goethe.de/en/spr/prf/gzsd1.html",
+      "note": "The file contains sound and spelling points, but its source does not publish a complete finite dimension list."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "https://www.goethe.de/en/spr/prf/gzsd1.html",
+      "note": "Core themes are represented, but the full official A1 word list has not yet been restated into probes."
+    }
+  },
   "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is a finding rather than a gap in the data -- so a null probe counts as UNCOVERED and is reported by name.",
   "points": [
     {
