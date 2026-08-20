@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3402,
+    "totalLessons": 3403,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -30,18 +30,18 @@
     "scriptExposureExemptedGlyphs": 2190,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 306,
-    "lessonsWithoutSequence": 26,
-    "forwardReviews": 21,
+    "lessonsWithoutSequence": 17,
+    "forwardReviews": 14,
     "atomsNeverRevisited": 632,
-    "forwardReferences": 470,
+    "forwardReferences": 466,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 80,
-    "chapterGateCleanTracks": 11,
-    "tracksWithoutWritingStageEvidence": 18,
-    "missingWritingStagePairs": 958,
+    "chapterPayoffsNotRepresentative": 81,
+    "chapterGateCleanTracks": 10,
+    "tracksWithoutWritingStageEvidence": 17,
+    "missingWritingStagePairs": 944,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2909,
-    "drivablePercent": 86,
+    "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 103,
     "unexplainedModalityOverrides": 0
   },
@@ -3267,10 +3267,10 @@
       {
         "language": "italian",
         "status": "mixed",
-        "lessonCount": 88,
+        "lessonCount": 89,
         "versions": {
-          "1": 9,
-          "2": 79
+          "1": 8,
+          "2": 81
         }
       },
       {
@@ -3497,6 +3497,13 @@
         "chapter": 32,
         "lessonId": "HI-C32-evening-register",
         "message": "hindi chapter 32 payoff assesses 1/3 of the chapter's atoms (0.33), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "italian",
+        "chapter": 1,
+        "lessonId": "IT-C01-practice",
+        "message": "italian chapter 1 payoff assesses 0/3 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -4002,8 +4009,8 @@
         "bookChapters": 25,
         "declaredChapters": 25,
         "missingCapability": 0,
-        "findings": 0,
-        "clean": true
+        "findings": 1,
+        "clean": false
       },
       {
         "language": "japanese",
@@ -4131,18 +4138,18 @@
       "declaredChapters": 1004,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 80,
+      "payoffsNotRepresentative": 81,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
-      "cleanTracks": 11,
+      "cleanTracks": 10,
       "payoffRepresentativeness": 0.5
     }
   },
   "levels": {
-    "totalLessons": 3402,
+    "totalLessons": 3403,
     "byLevel": {
-      "pre-A1": 2131,
+      "pre-A1": 2132,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4260,9 +4267,9 @@
       },
       {
         "language": "italian",
-        "lessonCount": 88,
+        "lessonCount": 89,
         "byLevel": {
-          "pre-A1": 49,
+          "pre-A1": 50,
           "A1": 20,
           "A2": 18,
           "B1": 0,
@@ -5058,8 +5065,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 88,
-        "measurable": 79,
+        "lessonCount": 89,
+        "measurable": 80,
         "unmeasurable": 9,
         "lessonViolations": 3,
         "chapterViolations": 2
@@ -5972,7 +5979,7 @@
           "language": "italian",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 88,
+          "lessonCount": 89,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6244,173 +6251,6 @@
         "kind": "forward-review",
         "other": "HI-C05-main-hindi-bolta-hun",
         "detail": "reviews HI-C05-main-hindi-bolta-hun, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "IT-C01-buono",
-        "detail": "reviews IT-C01-buono, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "IT-C01-giorno",
-        "detail": "reviews IT-C01-giorno, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "IT-C01-buono",
-        "detail": "requires IT-C01-buono, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "IT-C01-giorno",
-        "detail": "requires IT-C01-giorno, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "IT-C01-ciao",
-        "detail": "reviews IT-C01-ciao, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "IT-C01-ciao",
-        "detail": "requires IT-C01-ciao, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "IT-C01-ciao",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-giorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-giorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "IT-C01-il-la-lo",
-        "detail": "reviews IT-C01-il-la-lo, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-giorno",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "IT-C01-il-la-lo",
-        "detail": "requires IT-C01-il-la-lo, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "IT-C01-grazie",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-il-la-lo",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-notte",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-notte",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "IT-C01-sera",
-        "detail": "reviews IT-C01-sera, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-notte",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "IT-C01-sera",
-        "detail": "requires IT-C01-sera, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "IT-C01-sera",
-        "detail": "reviews IT-C01-sera, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "IT-C01-sera",
-        "detail": "requires IT-C01-sera, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "IT-C01-sera",
-        "language": "italian",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "IT-C03-io",
-        "language": "italian",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "IT-C04-arrivederci",
-        "detail": "reviews IT-C04-arrivederci, which the learner does not reach for another 5 lesson(s)"
       },
       {
         "lessonId": "FA-C01-bale",
@@ -20935,10 +20775,22 @@
         "revisits": 1
       },
       {
+        "atom": "IT-ETYMON-CIAO-02",
+        "language": "italian",
+        "introducedBy": "IT-C01-ciao",
+        "introducedAt": 0,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "IT-ETYMON-GIORNI-2-02",
         "language": "italian",
         "introducedBy": "IT-C07-giorni-2",
-        "introducedAt": 35,
+        "introducedAt": 36,
         "missed": [
           "R1",
           "R2",
@@ -20950,7 +20802,7 @@
         "atom": "IT-ETYMON-MEZZOGIORNO-MEZZANOTTE-03",
         "language": "italian",
         "introducedBy": "IT-C08-mezzogiorno-mezzanotte",
-        "introducedAt": 37,
+        "introducedAt": 38,
         "missed": [
           "R1",
           "R2",
@@ -20962,7 +20814,7 @@
         "atom": "IT-ETYMON-PASSATO-REMOTO-03",
         "language": "italian",
         "introducedBy": "IT-C15-passato-remoto",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2",
@@ -20974,7 +20826,7 @@
         "atom": "IT-GRAMMAR-PRACTICE-03",
         "language": "italian",
         "introducedBy": "IT-C05-practice",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R1",
           "R2",
@@ -20986,7 +20838,7 @@
         "atom": "IT-LEX-C03-PRACTICE-02",
         "language": "italian",
         "introducedBy": "IT-C03-practice",
-        "introducedAt": 21,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2",
@@ -20998,7 +20850,7 @@
         "atom": "IT-LEX-C04-PRACTICE-02",
         "language": "italian",
         "introducedBy": "IT-C04-practice",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R1",
           "R2",
@@ -21010,7 +20862,7 @@
         "atom": "IT-LEX-PRACTICE-02",
         "language": "italian",
         "introducedBy": "IT-C02-practice",
-        "introducedAt": 16,
+        "introducedAt": 17,
         "missed": [
           "R1",
           "R2",
@@ -21022,7 +20874,7 @@
         "atom": "IT-NOTICE-C03-PRACTICE-03",
         "language": "italian",
         "introducedBy": "IT-C03-practice",
-        "introducedAt": 21,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2",
@@ -21034,7 +20886,7 @@
         "atom": "IT-NOTICE-C04-PRACTICE-03",
         "language": "italian",
         "introducedBy": "IT-C04-practice",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R1",
           "R2",
@@ -21046,7 +20898,7 @@
         "atom": "IT-NOTICE-PRACTICE-03",
         "language": "italian",
         "introducedBy": "IT-C02-practice",
-        "introducedAt": 16,
+        "introducedAt": 17,
         "missed": [
           "R1",
           "R2",
@@ -21055,10 +20907,34 @@
         "revisits": 0
       },
       {
+        "atom": "IT-PHONO-CIAO-01",
+        "language": "italian",
+        "introducedBy": "IT-C01-ciao",
+        "introducedAt": 0,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "IT-PRAGMATIC-CIAO-03",
+        "language": "italian",
+        "introducedBy": "IT-C01-ciao",
+        "introducedAt": 0,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "IT-SOUND-MEZZOGIORNO-MEZZANOTTE-02",
         "language": "italian",
         "introducedBy": "IT-C08-mezzogiorno-mezzanotte",
-        "introducedAt": 37,
+        "introducedAt": 38,
         "missed": [
           "R1",
           "R2",
@@ -37906,7 +37782,7 @@
         "atom": "IT-ETYMON-A-DOMANI-03",
         "language": "italian",
         "introducedBy": "IT-C04-a-domani",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R2",
           "R3"
@@ -37917,7 +37793,7 @@
         "atom": "IT-ETYMON-A-PIU-TARDI-03",
         "language": "italian",
         "introducedBy": "IT-C04-a-piu-tardi",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R3"
@@ -37928,7 +37804,7 @@
         "atom": "IT-ETYMON-A-PRESTO-03",
         "language": "italian",
         "introducedBy": "IT-C04-a-presto",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -37939,7 +37815,7 @@
         "atom": "IT-ETYMON-ABITARE-03",
         "language": "italian",
         "introducedBy": "IT-C05-abitare",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3"
@@ -37950,7 +37826,7 @@
         "atom": "IT-ETYMON-AIUTARE-02",
         "language": "italian",
         "introducedBy": "IT-C19-aiutare",
-        "introducedAt": 64,
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3"
@@ -37961,7 +37837,7 @@
         "atom": "IT-ETYMON-ARRIVEDERCI-03",
         "language": "italian",
         "introducedBy": "IT-C04-arrivederci",
-        "introducedAt": 22,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3"
@@ -37972,7 +37848,7 @@
         "atom": "IT-ETYMON-AVERE-04",
         "language": "italian",
         "introducedBy": "IT-C14-avere",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -37983,7 +37859,7 @@
         "atom": "IT-ETYMON-COME-STAI-02",
         "language": "italian",
         "introducedBy": "IT-C02-come-stai",
-        "introducedAt": 12,
+        "introducedAt": 13,
         "missed": [
           "R2",
           "R3"
@@ -37994,7 +37870,7 @@
         "atom": "IT-ETYMON-COME-TI-CHIAMI-02",
         "language": "italian",
         "introducedBy": "IT-C03-come-ti-chiami",
-        "introducedAt": 19,
+        "introducedAt": 20,
         "missed": [
           "R2",
           "R3"
@@ -38005,7 +37881,7 @@
         "atom": "IT-ETYMON-COMPRARE-03",
         "language": "italian",
         "introducedBy": "IT-C20-comprare",
-        "introducedAt": 67,
+        "introducedAt": 68,
         "missed": [
           "R2",
           "R3"
@@ -38016,7 +37892,7 @@
         "atom": "IT-ETYMON-COMPRARE-04",
         "language": "italian",
         "introducedBy": "IT-C20-comprare",
-        "introducedAt": 67,
+        "introducedAt": 68,
         "missed": [
           "R2",
           "R3"
@@ -38027,7 +37903,7 @@
         "atom": "IT-ETYMON-COSI-COSI-03",
         "language": "italian",
         "introducedBy": "IT-C02-cosi-cosi",
-        "introducedAt": 15,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3"
@@ -38038,7 +37914,7 @@
         "atom": "IT-ETYMON-ESSERE-04",
         "language": "italian",
         "introducedBy": "IT-C16-essere",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -38049,7 +37925,7 @@
         "atom": "IT-ETYMON-ETA-03",
         "language": "italian",
         "introducedBy": "IT-C14-eta",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -38060,7 +37936,7 @@
         "atom": "IT-ETYMON-GENITORI-03",
         "language": "italian",
         "introducedBy": "IT-C10-genitori",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -38071,7 +37947,7 @@
         "atom": "IT-ETYMON-LAVORARE-03",
         "language": "italian",
         "introducedBy": "IT-C05-lavorare",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3"
@@ -38082,7 +37958,7 @@
         "atom": "IT-ETYMON-MANO-04",
         "language": "italian",
         "introducedBy": "IT-C17-mano",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R1",
           "R3"
@@ -38093,7 +37969,7 @@
         "atom": "IT-ETYMON-MESI-02",
         "language": "italian",
         "introducedBy": "IT-C09-mesi",
-        "introducedAt": 38,
+        "introducedAt": 39,
         "missed": [
           "R2",
           "R3"
@@ -38104,7 +37980,7 @@
         "atom": "IT-ETYMON-MI-CHIAMO-03",
         "language": "italian",
         "introducedBy": "IT-C03-mi-chiamo",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3"
@@ -38115,7 +37991,7 @@
         "atom": "IT-ETYMON-NERO-BIANCO-03",
         "language": "italian",
         "introducedBy": "IT-C13-nero-bianco",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -38126,7 +38002,7 @@
         "atom": "IT-ETYMON-NERO-BIANCO-04",
         "language": "italian",
         "introducedBy": "IT-C13-nero-bianco",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -38137,7 +38013,7 @@
         "atom": "IT-ETYMON-NUMERI-1-5-03",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-1-5",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -38148,7 +38024,7 @@
         "atom": "IT-ETYMON-PANE-03",
         "language": "italian",
         "introducedBy": "IT-C11-pane",
-        "introducedAt": 42,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -38159,7 +38035,7 @@
         "atom": "IT-ETYMON-PERSONA-03",
         "language": "italian",
         "introducedBy": "IT-C23-persona",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R1",
           "R2"
@@ -38170,7 +38046,7 @@
         "atom": "IT-ETYMON-PREGO-03",
         "language": "italian",
         "introducedBy": "IT-C02-prego",
-        "introducedAt": 9,
+        "introducedAt": 10,
         "missed": [
           "R1",
           "R3"
@@ -38181,7 +38057,7 @@
         "atom": "IT-ETYMON-RISPONDERE-03",
         "language": "italian",
         "introducedBy": "IT-C21-rispondere",
-        "introducedAt": 72,
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R2"
@@ -38192,7 +38068,7 @@
         "atom": "IT-ETYMON-ROSSO-BLU-02",
         "language": "italian",
         "introducedBy": "IT-C13-rosso-blu",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -38203,7 +38079,7 @@
         "atom": "IT-ETYMON-ROSSO-BLU-03",
         "language": "italian",
         "introducedBy": "IT-C13-rosso-blu",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -38214,7 +38090,7 @@
         "atom": "IT-ETYMON-ROSSO-BLU-04",
         "language": "italian",
         "introducedBy": "IT-C13-rosso-blu",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -38225,7 +38101,7 @@
         "atom": "IT-ETYMON-SCRIVERE-02",
         "language": "italian",
         "introducedBy": "IT-C18-scrivere",
-        "introducedAt": 61,
+        "introducedAt": 62,
         "missed": [
           "R2",
           "R3"
@@ -38236,7 +38112,7 @@
         "atom": "IT-ETYMON-TESTA-03",
         "language": "italian",
         "introducedBy": "IT-C17-testa",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2",
           "R3"
@@ -38247,7 +38123,7 @@
         "atom": "IT-ETYMON-TESTA-04",
         "language": "italian",
         "introducedBy": "IT-C17-testa",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2",
           "R3"
@@ -38258,7 +38134,7 @@
         "atom": "IT-ETYMON-ZUCCHERO-03",
         "language": "italian",
         "introducedBy": "IT-C22-zucchero",
-        "introducedAt": 76,
+        "introducedAt": 77,
         "missed": [
           "R1",
           "R2"
@@ -38269,7 +38145,7 @@
         "atom": "IT-GRAMMAR-ABITARE-04",
         "language": "italian",
         "introducedBy": "IT-C05-abitare",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3"
@@ -38280,7 +38156,7 @@
         "atom": "IT-GRAMMAR-AIUTARE-03",
         "language": "italian",
         "introducedBy": "IT-C19-aiutare",
-        "introducedAt": 64,
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3"
@@ -38291,7 +38167,7 @@
         "atom": "IT-GRAMMAR-AVERE-03",
         "language": "italian",
         "introducedBy": "IT-C14-avere",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -38302,7 +38178,7 @@
         "atom": "IT-GRAMMAR-COME-STA-02",
         "language": "italian",
         "introducedBy": "IT-C02-come-sta",
-        "introducedAt": 13,
+        "introducedAt": 14,
         "missed": [
           "R2",
           "R3"
@@ -38313,7 +38189,7 @@
         "atom": "IT-GRAMMAR-COSI-COSI-04",
         "language": "italian",
         "introducedBy": "IT-C02-cosi-cosi",
-        "introducedAt": 15,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3"
@@ -38324,7 +38200,7 @@
         "atom": "IT-GRAMMAR-ESSERE-03",
         "language": "italian",
         "introducedBy": "IT-C16-essere",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -38335,7 +38211,7 @@
         "atom": "IT-GRAMMAR-ESSERE-STATO-02",
         "language": "italian",
         "introducedBy": "IT-C16-essere-stato",
-        "introducedAt": 53,
+        "introducedAt": 54,
         "missed": [
           "R2",
           "R3"
@@ -38346,7 +38222,7 @@
         "atom": "IT-GRAMMAR-ETA-04",
         "language": "italian",
         "introducedBy": "IT-C14-eta",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -38357,7 +38233,7 @@
         "atom": "IT-GRAMMAR-ETA-05",
         "language": "italian",
         "introducedBy": "IT-C14-eta",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -38368,7 +38244,7 @@
         "atom": "IT-GRAMMAR-GIORNI-1-03",
         "language": "italian",
         "introducedBy": "IT-C07-giorni-1",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -38379,7 +38255,7 @@
         "atom": "IT-GRAMMAR-NUMERI-1-5-04",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-1-5",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -38390,7 +38266,7 @@
         "atom": "IT-GRAMMAR-NUMERI-11-16-02",
         "language": "italian",
         "introducedBy": "IT-C12-numeri-11-16",
-        "introducedAt": 44,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -38401,7 +38277,7 @@
         "atom": "IT-GRAMMAR-NUMERI-17-20-02",
         "language": "italian",
         "introducedBy": "IT-C12-numeri-17-20",
-        "introducedAt": 45,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -38412,7 +38288,7 @@
         "atom": "IT-GRAMMAR-ORA-04",
         "language": "italian",
         "introducedBy": "IT-C08-ora",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -38423,7 +38299,7 @@
         "atom": "IT-GRAMMAR-PASSATO-PROSSIMO-ESSERE-03",
         "language": "italian",
         "introducedBy": "IT-C16-passato-prossimo-essere",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R1",
           "R3"
@@ -38434,7 +38310,7 @@
         "atom": "IT-GRAMMAR-PRACTICE-02",
         "language": "italian",
         "introducedBy": "IT-C05-practice",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R1",
           "R2"
@@ -38445,7 +38321,7 @@
         "atom": "IT-LEX-AVERE-02",
         "language": "italian",
         "introducedBy": "IT-C14-avere",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -38456,7 +38332,7 @@
         "atom": "IT-LEX-COMPRARE-02",
         "language": "italian",
         "introducedBy": "IT-C20-comprare",
-        "introducedAt": 67,
+        "introducedAt": 68,
         "missed": [
           "R2",
           "R3"
@@ -38467,7 +38343,7 @@
         "atom": "IT-LEX-ESSERE-02",
         "language": "italian",
         "introducedBy": "IT-C16-essere",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -38478,7 +38354,7 @@
         "atom": "IT-LEX-ETA-02",
         "language": "italian",
         "introducedBy": "IT-C14-eta",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -38489,7 +38365,7 @@
         "atom": "IT-LEX-PASSATO-PROSSIMO-ESSERE-02",
         "language": "italian",
         "introducedBy": "IT-C16-passato-prossimo-essere",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R1",
           "R3"
@@ -38500,7 +38376,7 @@
         "atom": "IT-LEX-PASSATO-REMOTO-02",
         "language": "italian",
         "introducedBy": "IT-C15-passato-remoto",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -38511,7 +38387,7 @@
         "atom": "IT-LEX-RISPONDERE-02",
         "language": "italian",
         "introducedBy": "IT-C21-rispondere",
-        "introducedAt": 72,
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R2"
@@ -38522,7 +38398,7 @@
         "atom": "IT-NOTICE-ESSERE-STATO-03",
         "language": "italian",
         "introducedBy": "IT-C16-essere-stato",
-        "introducedAt": 53,
+        "introducedAt": 54,
         "missed": [
           "R2",
           "R3"
@@ -38533,7 +38409,7 @@
         "atom": "IT-NOTICE-MI-PIACE-04",
         "language": "italian",
         "introducedBy": "IT-C19-mi-piace",
-        "introducedAt": 65,
+        "introducedAt": 66,
         "missed": [
           "R1",
           "R3"
@@ -38544,7 +38420,7 @@
         "atom": "IT-NOTICE-NUMERI-17-20-03",
         "language": "italian",
         "introducedBy": "IT-C12-numeri-17-20",
-        "introducedAt": 45,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -38555,7 +38431,7 @@
         "atom": "IT-NOTICE-PASSATO-REMOTO-05",
         "language": "italian",
         "introducedBy": "IT-C15-passato-remoto",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -38566,7 +38442,7 @@
         "atom": "IT-NOTICE-PRACTICE-04",
         "language": "italian",
         "introducedBy": "IT-C05-practice",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R1",
           "R2"
@@ -38577,7 +38453,7 @@
         "atom": "IT-NOTICE-RISPONDERE-04",
         "language": "italian",
         "introducedBy": "IT-C21-rispondere",
-        "introducedAt": 72,
+        "introducedAt": 73,
         "missed": [
           "R1",
           "R2"
@@ -38588,7 +38464,7 @@
         "atom": "IT-NOTICE-ROSSO-BLU-05",
         "language": "italian",
         "introducedBy": "IT-C13-rosso-blu",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -38599,7 +38475,7 @@
         "atom": "IT-NOTICE-SCRIVERE-04",
         "language": "italian",
         "introducedBy": "IT-C18-scrivere",
-        "introducedAt": 61,
+        "introducedAt": 62,
         "missed": [
           "R2",
           "R3"
@@ -38610,7 +38486,7 @@
         "atom": "IT-PRAGMATICS-PASSATO-PROSSIMO-ESSERE-04",
         "language": "italian",
         "introducedBy": "IT-C16-passato-prossimo-essere",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R1",
           "R3"
@@ -38621,7 +38497,7 @@
         "atom": "IT-PRAGMATICS-PASSATO-REMOTO-04",
         "language": "italian",
         "introducedBy": "IT-C15-passato-remoto",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -38632,7 +38508,7 @@
         "atom": "IT-SOUND-A-DOMANI-02",
         "language": "italian",
         "introducedBy": "IT-C04-a-domani",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R2",
           "R3"
@@ -38643,7 +38519,7 @@
         "atom": "IT-SOUND-A-PIU-TARDI-02",
         "language": "italian",
         "introducedBy": "IT-C04-a-piu-tardi",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R3"
@@ -38654,7 +38530,7 @@
         "atom": "IT-SOUND-A-PRESTO-02",
         "language": "italian",
         "introducedBy": "IT-C04-a-presto",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -38665,7 +38541,7 @@
         "atom": "IT-SOUND-ABITARE-02",
         "language": "italian",
         "introducedBy": "IT-C05-abitare",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3"
@@ -38676,7 +38552,7 @@
         "atom": "IT-SOUND-ARRIVEDERCI-02",
         "language": "italian",
         "introducedBy": "IT-C04-arrivederci",
-        "introducedAt": 22,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3"
@@ -38687,7 +38563,7 @@
         "atom": "IT-SOUND-COSI-COSI-02",
         "language": "italian",
         "introducedBy": "IT-C02-cosi-cosi",
-        "introducedAt": 15,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3"
@@ -38698,7 +38574,7 @@
         "atom": "IT-SOUND-GIORNI-1-02",
         "language": "italian",
         "introducedBy": "IT-C07-giorni-1",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -38709,7 +38585,7 @@
         "atom": "IT-SOUND-LAVORARE-02",
         "language": "italian",
         "introducedBy": "IT-C05-lavorare",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3"
@@ -38720,7 +38596,7 @@
         "atom": "IT-SOUND-NUMERI-1-5-02",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-1-5",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -38731,7 +38607,7 @@
         "atom": "IT-SOUND-PREGO-02",
         "language": "italian",
         "introducedBy": "IT-C02-prego",
-        "introducedAt": 9,
+        "introducedAt": 10,
         "missed": [
           "R1",
           "R3"
@@ -51930,7 +51806,7 @@
         "atom": "IT-ETYMON-ACQUA-VINO-02",
         "language": "italian",
         "introducedBy": "IT-C11-acqua-vino",
-        "introducedAt": 43,
+        "introducedAt": 44,
         "missed": [
           "R2"
         ],
@@ -51940,7 +51816,7 @@
         "atom": "IT-ETYMON-ACQUA-VINO-03",
         "language": "italian",
         "introducedBy": "IT-C11-acqua-vino",
-        "introducedAt": 43,
+        "introducedAt": 44,
         "missed": [
           "R2"
         ],
@@ -51950,7 +51826,7 @@
         "atom": "IT-ETYMON-AMICO-AMICA-03",
         "language": "italian",
         "introducedBy": "IT-C23-amico-amica",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R2"
         ],
@@ -51960,7 +51836,7 @@
         "atom": "IT-ETYMON-ASPETTARE-03",
         "language": "italian",
         "introducedBy": "IT-C20-aspettare",
-        "introducedAt": 68,
+        "introducedAt": 69,
         "missed": [
           "R2"
         ],
@@ -51970,7 +51846,7 @@
         "atom": "IT-ETYMON-CAFFE-03",
         "language": "italian",
         "introducedBy": "IT-C22-caffe",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R2"
         ],
@@ -51980,7 +51856,7 @@
         "atom": "IT-ETYMON-CAPIRE-03",
         "language": "italian",
         "introducedBy": "IT-C18-capire",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R3"
         ],
@@ -51990,7 +51866,7 @@
         "atom": "IT-ETYMON-CHIEDERE-03",
         "language": "italian",
         "introducedBy": "IT-C19-chiedere",
-        "introducedAt": 63,
+        "introducedAt": 64,
         "missed": [
           "R3"
         ],
@@ -52000,7 +51876,7 @@
         "atom": "IT-ETYMON-COME-03",
         "language": "italian",
         "introducedBy": "IT-C02-come",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R3"
         ],
@@ -52010,7 +51886,7 @@
         "atom": "IT-ETYMON-CUORE-03",
         "language": "italian",
         "introducedBy": "IT-C24-cuore",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R2"
         ],
@@ -52020,7 +51896,7 @@
         "atom": "IT-ETYMON-FAMIGLIA-03",
         "language": "italian",
         "introducedBy": "IT-C23-famiglia",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2"
         ],
@@ -52030,7 +51906,7 @@
         "atom": "IT-ETYMON-FRATELLO-SORELLA-02",
         "language": "italian",
         "introducedBy": "IT-C10-fratello-sorella",
-        "introducedAt": 41,
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
@@ -52040,7 +51916,7 @@
         "atom": "IT-ETYMON-GENITORI-02",
         "language": "italian",
         "introducedBy": "IT-C10-genitori",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2"
         ],
@@ -52050,7 +51926,7 @@
         "atom": "IT-ETYMON-GIOCARE-03",
         "language": "italian",
         "introducedBy": "IT-C21-giocare",
-        "introducedAt": 70,
+        "introducedAt": 71,
         "missed": [
           "R2"
         ],
@@ -52060,7 +51936,7 @@
         "atom": "IT-ETYMON-INCONTRARE-03",
         "language": "italian",
         "introducedBy": "IT-C20-incontrare",
-        "introducedAt": 69,
+        "introducedAt": 70,
         "missed": [
           "R2"
         ],
@@ -52070,7 +51946,7 @@
         "atom": "IT-ETYMON-IO-03",
         "language": "italian",
         "introducedBy": "IT-C03-io",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -52080,7 +51956,7 @@
         "atom": "IT-ETYMON-LATTE-03",
         "language": "italian",
         "introducedBy": "IT-C22-latte",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R2"
         ],
@@ -52090,7 +51966,7 @@
         "atom": "IT-ETYMON-LEGGERE-03",
         "language": "italian",
         "introducedBy": "IT-C18-leggere",
-        "introducedAt": 60,
+        "introducedAt": 61,
         "missed": [
           "R3"
         ],
@@ -52100,7 +51976,7 @@
         "atom": "IT-ETYMON-NERO-BIANCO-02",
         "language": "italian",
         "introducedBy": "IT-C13-nero-bianco",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2"
         ],
@@ -52110,7 +51986,7 @@
         "atom": "IT-ETYMON-NOME-03",
         "language": "italian",
         "introducedBy": "IT-C23-nome",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R2"
         ],
@@ -52120,7 +51996,7 @@
         "atom": "IT-ETYMON-OCCHIO-03",
         "language": "italian",
         "introducedBy": "IT-C24-occhio",
-        "introducedAt": 82,
+        "introducedAt": 83,
         "missed": [
           "R2"
         ],
@@ -52130,7 +52006,7 @@
         "atom": "IT-ETYMON-ORA-03",
         "language": "italian",
         "introducedBy": "IT-C08-ora",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2"
         ],
@@ -52140,7 +52016,7 @@
         "atom": "IT-ETYMON-OTTENERE-03",
         "language": "italian",
         "introducedBy": "IT-C21-ottenere",
-        "introducedAt": 71,
+        "introducedAt": 72,
         "missed": [
           "R2"
         ],
@@ -52150,7 +52026,7 @@
         "atom": "IT-ETYMON-PANE-02",
         "language": "italian",
         "introducedBy": "IT-C11-pane",
-        "introducedAt": 42,
+        "introducedAt": 43,
         "missed": [
           "R2"
         ],
@@ -52160,7 +52036,7 @@
         "atom": "IT-ETYMON-PARLARE-03",
         "language": "italian",
         "introducedBy": "IT-C05-parlare",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
@@ -52170,7 +52046,7 @@
         "atom": "IT-ETYMON-PASSATO-PROSSIMO-03",
         "language": "italian",
         "introducedBy": "IT-C15-passato-prossimo",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R3"
         ],
@@ -52180,7 +52056,7 @@
         "atom": "IT-ETYMON-PENSARE-03",
         "language": "italian",
         "introducedBy": "IT-C18-pensare",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R3"
         ],
@@ -52190,7 +52066,7 @@
         "atom": "IT-ETYMON-PIACERE-03",
         "language": "italian",
         "introducedBy": "IT-C03-piacere",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R2"
         ],
@@ -52200,7 +52076,7 @@
         "atom": "IT-ETYMON-PORTARE-03",
         "language": "italian",
         "introducedBy": "IT-C20-portare",
-        "introducedAt": 66,
+        "introducedAt": 67,
         "missed": [
           "R3"
         ],
@@ -52210,7 +52086,7 @@
         "atom": "IT-ETYMON-PRENDERE-03",
         "language": "italian",
         "introducedBy": "IT-C19-prendere",
-        "introducedAt": 62,
+        "introducedAt": 63,
         "missed": [
           "R3"
         ],
@@ -52220,7 +52096,7 @@
         "atom": "IT-ETYMON-STAGIONI-02",
         "language": "italian",
         "introducedBy": "IT-C09-stagioni",
-        "introducedAt": 39,
+        "introducedAt": 40,
         "missed": [
           "R2"
         ],
@@ -52230,7 +52106,7 @@
         "atom": "IT-ETYMON-TE-03",
         "language": "italian",
         "introducedBy": "IT-C22-te",
-        "introducedAt": 74,
+        "introducedAt": 75,
         "missed": [
           "R2"
         ],
@@ -52240,7 +52116,7 @@
         "atom": "IT-GRAMMAR-AMICO-AMICA-04",
         "language": "italian",
         "introducedBy": "IT-C23-amico-amica",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R2"
         ],
@@ -52250,7 +52126,7 @@
         "atom": "IT-GRAMMAR-ASPETTARE-04",
         "language": "italian",
         "introducedBy": "IT-C20-aspettare",
-        "introducedAt": 68,
+        "introducedAt": 69,
         "missed": [
           "R2"
         ],
@@ -52260,7 +52136,7 @@
         "atom": "IT-GRAMMAR-CAPIRE-04",
         "language": "italian",
         "introducedBy": "IT-C18-capire",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R3"
         ],
@@ -52270,7 +52146,7 @@
         "atom": "IT-GRAMMAR-CHIEDERE-04",
         "language": "italian",
         "introducedBy": "IT-C19-chiedere",
-        "introducedAt": 63,
+        "introducedAt": 64,
         "missed": [
           "R3"
         ],
@@ -52280,7 +52156,7 @@
         "atom": "IT-GRAMMAR-COME-VA-02",
         "language": "italian",
         "introducedBy": "IT-C02-come-va",
-        "introducedAt": 14,
+        "introducedAt": 15,
         "missed": [
           "R2"
         ],
@@ -52290,7 +52166,7 @@
         "atom": "IT-GRAMMAR-GIOCARE-04",
         "language": "italian",
         "introducedBy": "IT-C21-giocare",
-        "introducedAt": 70,
+        "introducedAt": 71,
         "missed": [
           "R2"
         ],
@@ -52300,7 +52176,7 @@
         "atom": "IT-GRAMMAR-IO-04",
         "language": "italian",
         "introducedBy": "IT-C03-io",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -52310,7 +52186,7 @@
         "atom": "IT-GRAMMAR-LAVORARE-04",
         "language": "italian",
         "introducedBy": "IT-C05-lavorare",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2"
         ],
@@ -52320,7 +52196,7 @@
         "atom": "IT-GRAMMAR-LEGGERE-04",
         "language": "italian",
         "introducedBy": "IT-C18-leggere",
-        "introducedAt": 60,
+        "introducedAt": 61,
         "missed": [
           "R3"
         ],
@@ -52330,7 +52206,7 @@
         "atom": "IT-GRAMMAR-MANO-03",
         "language": "italian",
         "introducedBy": "IT-C17-mano",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R1"
         ],
@@ -52340,7 +52216,7 @@
         "atom": "IT-GRAMMAR-MI-CHIAMO-04",
         "language": "italian",
         "introducedBy": "IT-C03-mi-chiamo",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2"
         ],
@@ -52350,7 +52226,7 @@
         "atom": "IT-GRAMMAR-MI-PIACE-03",
         "language": "italian",
         "introducedBy": "IT-C19-mi-piace",
-        "introducedAt": 65,
+        "introducedAt": 66,
         "missed": [
           "R3"
         ],
@@ -52360,7 +52236,7 @@
         "atom": "IT-GRAMMAR-NUMERI-6-10-04",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-6-10",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R3"
         ],
@@ -52370,7 +52246,7 @@
         "atom": "IT-GRAMMAR-OTTENERE-04",
         "language": "italian",
         "introducedBy": "IT-C21-ottenere",
-        "introducedAt": 71,
+        "introducedAt": 72,
         "missed": [
           "R2"
         ],
@@ -52380,7 +52256,7 @@
         "atom": "IT-GRAMMAR-PARLARE-04",
         "language": "italian",
         "introducedBy": "IT-C05-parlare",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
@@ -52390,7 +52266,7 @@
         "atom": "IT-GRAMMAR-PENSARE-04",
         "language": "italian",
         "introducedBy": "IT-C18-pensare",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R3"
         ],
@@ -52400,7 +52276,7 @@
         "atom": "IT-GRAMMAR-PERSONA-04",
         "language": "italian",
         "introducedBy": "IT-C23-persona",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R2"
         ],
@@ -52410,7 +52286,7 @@
         "atom": "IT-GRAMMAR-PIACERE-04",
         "language": "italian",
         "introducedBy": "IT-C03-piacere",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R2"
         ],
@@ -52420,7 +52296,7 @@
         "atom": "IT-GRAMMAR-PORTARE-04",
         "language": "italian",
         "introducedBy": "IT-C20-portare",
-        "introducedAt": 66,
+        "introducedAt": 67,
         "missed": [
           "R3"
         ],
@@ -52430,7 +52306,7 @@
         "atom": "IT-GRAMMAR-PRENDERE-04",
         "language": "italian",
         "introducedBy": "IT-C19-prendere",
-        "introducedAt": 62,
+        "introducedAt": 63,
         "missed": [
           "R3"
         ],
@@ -52440,7 +52316,7 @@
         "atom": "IT-GRAMMAR-SCRIVERE-03",
         "language": "italian",
         "introducedBy": "IT-C18-scrivere",
-        "introducedAt": 61,
+        "introducedAt": 62,
         "missed": [
           "R3"
         ],
@@ -52450,7 +52326,7 @@
         "atom": "IT-LEX-AMICO-AMICA-02",
         "language": "italian",
         "introducedBy": "IT-C23-amico-amica",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R2"
         ],
@@ -52460,7 +52336,7 @@
         "atom": "IT-LEX-ANDARE-02",
         "language": "italian",
         "introducedBy": "IT-C16-andare",
-        "introducedAt": 54,
+        "introducedAt": 55,
         "missed": [
           "R3"
         ],
@@ -52470,7 +52346,7 @@
         "atom": "IT-LEX-ASPETTARE-02",
         "language": "italian",
         "introducedBy": "IT-C20-aspettare",
-        "introducedAt": 68,
+        "introducedAt": 69,
         "missed": [
           "R2"
         ],
@@ -52480,7 +52356,7 @@
         "atom": "IT-LEX-CAFFE-02",
         "language": "italian",
         "introducedBy": "IT-C22-caffe",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R2"
         ],
@@ -52490,7 +52366,7 @@
         "atom": "IT-LEX-CAPIRE-02",
         "language": "italian",
         "introducedBy": "IT-C18-capire",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R3"
         ],
@@ -52500,7 +52376,7 @@
         "atom": "IT-LEX-FAMIGLIA-02",
         "language": "italian",
         "introducedBy": "IT-C23-famiglia",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2"
         ],
@@ -52510,7 +52386,7 @@
         "atom": "IT-LEX-GIOCARE-02",
         "language": "italian",
         "introducedBy": "IT-C21-giocare",
-        "introducedAt": 70,
+        "introducedAt": 71,
         "missed": [
           "R2"
         ],
@@ -52520,7 +52396,7 @@
         "atom": "IT-LEX-INCONTRARE-02",
         "language": "italian",
         "introducedBy": "IT-C20-incontrare",
-        "introducedAt": 69,
+        "introducedAt": 70,
         "missed": [
           "R2"
         ],
@@ -52530,7 +52406,7 @@
         "atom": "IT-LEX-LATTE-02",
         "language": "italian",
         "introducedBy": "IT-C22-latte",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R2"
         ],
@@ -52540,7 +52416,7 @@
         "atom": "IT-LEX-MANO-02",
         "language": "italian",
         "introducedBy": "IT-C17-mano",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R1"
         ],
@@ -52550,7 +52426,7 @@
         "atom": "IT-LEX-MI-PIACE-02",
         "language": "italian",
         "introducedBy": "IT-C19-mi-piace",
-        "introducedAt": 65,
+        "introducedAt": 66,
         "missed": [
           "R3"
         ],
@@ -52560,7 +52436,7 @@
         "atom": "IT-LEX-NOME-02",
         "language": "italian",
         "introducedBy": "IT-C23-nome",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R2"
         ],
@@ -52570,7 +52446,7 @@
         "atom": "IT-LEX-OCCHIO-02",
         "language": "italian",
         "introducedBy": "IT-C24-occhio",
-        "introducedAt": 82,
+        "introducedAt": 83,
         "missed": [
           "R2"
         ],
@@ -52580,7 +52456,7 @@
         "atom": "IT-LEX-OTTENERE-02",
         "language": "italian",
         "introducedBy": "IT-C21-ottenere",
-        "introducedAt": 71,
+        "introducedAt": 72,
         "missed": [
           "R2"
         ],
@@ -52590,7 +52466,7 @@
         "atom": "IT-LEX-PARLO-ITALIANO-02",
         "language": "italian",
         "introducedBy": "IT-C05-parlo-italiano",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R2"
         ],
@@ -52600,7 +52476,7 @@
         "atom": "IT-LEX-PARLO-ITALIANO-03",
         "language": "italian",
         "introducedBy": "IT-C05-parlo-italiano",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R2"
         ],
@@ -52610,7 +52486,7 @@
         "atom": "IT-LEX-PERSONA-02",
         "language": "italian",
         "introducedBy": "IT-C23-persona",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R2"
         ],
@@ -52620,7 +52496,7 @@
         "atom": "IT-LEX-PORTARE-02",
         "language": "italian",
         "introducedBy": "IT-C20-portare",
-        "introducedAt": 66,
+        "introducedAt": 67,
         "missed": [
           "R3"
         ],
@@ -52630,7 +52506,7 @@
         "atom": "IT-LEX-PRENDERE-02",
         "language": "italian",
         "introducedBy": "IT-C19-prendere",
-        "introducedAt": 62,
+        "introducedAt": 63,
         "missed": [
           "R3"
         ],
@@ -52640,7 +52516,7 @@
         "atom": "IT-LEX-TE-02",
         "language": "italian",
         "introducedBy": "IT-C22-te",
-        "introducedAt": 74,
+        "introducedAt": 75,
         "missed": [
           "R2"
         ],
@@ -52650,7 +52526,7 @@
         "atom": "IT-LEX-TESTA-02",
         "language": "italian",
         "introducedBy": "IT-C17-testa",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2"
         ],
@@ -52660,7 +52536,7 @@
         "atom": "IT-NOTICE-CAFFE-04",
         "language": "italian",
         "introducedBy": "IT-C22-caffe",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R2"
         ],
@@ -52670,7 +52546,7 @@
         "atom": "IT-NOTICE-CUORE-04",
         "language": "italian",
         "introducedBy": "IT-C24-cuore",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R2"
         ],
@@ -52680,7 +52556,7 @@
         "atom": "IT-NOTICE-INCONTRARE-04",
         "language": "italian",
         "introducedBy": "IT-C20-incontrare",
-        "introducedAt": 69,
+        "introducedAt": 70,
         "missed": [
           "R2"
         ],
@@ -52690,7 +52566,7 @@
         "atom": "IT-NOTICE-NOME-04",
         "language": "italian",
         "introducedBy": "IT-C23-nome",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R2"
         ],
@@ -52700,7 +52576,7 @@
         "atom": "IT-NOTICE-TE-04",
         "language": "italian",
         "introducedBy": "IT-C22-te",
-        "introducedAt": 74,
+        "introducedAt": 75,
         "missed": [
           "R2"
         ],
@@ -52710,7 +52586,7 @@
         "atom": "IT-SOUND-CHIEDERE-02",
         "language": "italian",
         "introducedBy": "IT-C19-chiedere",
-        "introducedAt": 63,
+        "introducedAt": 64,
         "missed": [
           "R3"
         ],
@@ -52720,7 +52596,7 @@
         "atom": "IT-SOUND-COME-02",
         "language": "italian",
         "introducedBy": "IT-C02-come",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R3"
         ],
@@ -52730,7 +52606,7 @@
         "atom": "IT-SOUND-IO-02",
         "language": "italian",
         "introducedBy": "IT-C03-io",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -52740,7 +52616,7 @@
         "atom": "IT-SOUND-LEGGERE-02",
         "language": "italian",
         "introducedBy": "IT-C18-leggere",
-        "introducedAt": 60,
+        "introducedAt": 61,
         "missed": [
           "R3"
         ],
@@ -52750,7 +52626,7 @@
         "atom": "IT-SOUND-MI-CHIAMO-02",
         "language": "italian",
         "introducedBy": "IT-C03-mi-chiamo",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2"
         ],
@@ -52760,7 +52636,7 @@
         "atom": "IT-SOUND-NUMERI-6-10-02",
         "language": "italian",
         "introducedBy": "IT-C06-numeri-6-10",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R3"
         ],
@@ -52770,7 +52646,7 @@
         "atom": "IT-SOUND-ORA-02",
         "language": "italian",
         "introducedBy": "IT-C08-ora",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2"
         ],
@@ -52780,7 +52656,7 @@
         "atom": "IT-SOUND-PARLARE-02",
         "language": "italian",
         "introducedBy": "IT-C05-parlare",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
@@ -52790,7 +52666,7 @@
         "atom": "IT-SOUND-PENSARE-02",
         "language": "italian",
         "introducedBy": "IT-C18-pensare",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R3"
         ],
@@ -52800,7 +52676,7 @@
         "atom": "IT-SOUND-PIACERE-02",
         "language": "italian",
         "introducedBy": "IT-C03-piacere",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R2"
         ],
@@ -57195,7 +57071,7 @@
       {
         "lessonId": "IT-C01-notte",
         "language": "italian",
-        "position": 6,
+        "position": 7,
         "word": "latte",
         "taughtBy": "IT-C22-latte",
         "lessonsEarly": 69
@@ -57459,7 +57335,7 @@
       {
         "lessonId": "IT-C02-stare",
         "language": "italian",
-        "position": 11,
+        "position": 12,
         "word": "essere",
         "taughtBy": "IT-C16-essere",
         "lessonsEarly": 41
@@ -57467,7 +57343,7 @@
       {
         "lessonId": "IT-C06-numeri-1-5",
         "language": "italian",
-        "position": 32,
+        "position": 33,
         "word": "caffè",
         "taughtBy": "IT-C22-caffe",
         "lessonsEarly": 41
@@ -57483,7 +57359,7 @@
       {
         "lessonId": "IT-C02-come-va",
         "language": "italian",
-        "position": 14,
+        "position": 15,
         "word": "andare",
         "taughtBy": "IT-C16-andare",
         "lessonsEarly": 40
@@ -57515,7 +57391,7 @@
       {
         "lessonId": "IT-C02-practice",
         "language": "italian",
-        "position": 16,
+        "position": 17,
         "word": "andare",
         "taughtBy": "IT-C16-andare",
         "lessonsEarly": 38
@@ -57547,7 +57423,7 @@
       {
         "lessonId": "IT-C02-come",
         "language": "italian",
-        "position": 10,
+        "position": 11,
         "word": "bianco",
         "taughtBy": "IT-C13-nero-bianco",
         "lessonsEarly": 36
@@ -57555,7 +57431,7 @@
       {
         "lessonId": "IT-C02-practice",
         "language": "italian",
-        "position": 16,
+        "position": 17,
         "word": "essere",
         "taughtBy": "IT-C16-essere",
         "lessonsEarly": 36
@@ -58217,14 +58093,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "position": 7,
-        "word": "mi chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 11
-      },
-      {
         "lessonId": "LA-C37-habeo",
         "language": "latin",
         "position": 59,
@@ -58254,6 +58122,14 @@
         "position": 21,
         "word": "হওয়া",
         "taughtBy": "BN-C07-howa",
+        "lessonsEarly": 10
+      },
+      {
+        "lessonId": "IT-C01-practice",
+        "language": "italian",
+        "position": 9,
+        "word": "mi chiamo",
+        "taughtBy": "IT-C03-mi-chiamo",
         "lessonsEarly": 10
       },
       {
@@ -58361,17 +58237,9 @@
         "lessonsEarly": 8
       },
       {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "position": 0,
-        "word": "buonasera",
-        "taughtBy": "IT-C01-sera",
-        "lessonsEarly": 8
-      },
-      {
         "lessonId": "IT-C02-prego",
         "language": "italian",
-        "position": 9,
+        "position": 10,
         "word": "io",
         "taughtBy": "IT-C03-io",
         "lessonsEarly": 8
@@ -58478,14 +58346,6 @@
         "position": 8,
         "word": "હું",
         "taughtBy": "GU-C03-hun",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "position": 1,
-        "word": "buonasera",
-        "taughtBy": "IT-C01-sera",
         "lessonsEarly": 7
       },
       {
@@ -58691,17 +58551,17 @@
       {
         "lessonId": "IT-C01-buono",
         "language": "italian",
-        "position": 1,
+        "position": 2,
         "word": "buonanotte",
         "taughtBy": "IT-C01-notte",
         "lessonsEarly": 5
       },
       {
-        "lessonId": "IT-C01-grazie",
+        "lessonId": "IT-C01-ciao",
         "language": "italian",
-        "position": 4,
-        "word": "prego",
-        "taughtBy": "IT-C02-prego",
+        "position": 0,
+        "word": "buongiorno",
+        "taughtBy": "IT-C01-buongiorno",
         "lessonsEarly": 5
       },
       {
@@ -58814,6 +58674,14 @@
         "position": 12,
         "word": "કેમ",
         "taughtBy": "GU-C03-kem",
+        "lessonsEarly": 4
+      },
+      {
+        "lessonId": "IT-C01-buono",
+        "language": "italian",
+        "position": 2,
+        "word": "buonasera",
+        "taughtBy": "IT-C01-sera",
         "lessonsEarly": 4
       },
       {
@@ -58977,17 +58845,17 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "IT-C01-buongiorno",
+        "lessonId": "IT-C01-buono",
         "language": "italian",
-        "position": 0,
-        "word": "giorno",
-        "taughtBy": "IT-C01-giorno",
+        "position": 2,
+        "word": "buongiorno",
+        "taughtBy": "IT-C01-buongiorno",
         "lessonsEarly": 3
       },
       {
         "lessonId": "IT-C14-eta",
         "language": "italian",
-        "position": 49,
+        "position": 50,
         "word": "essere",
         "taughtBy": "IT-C16-essere",
         "lessonsEarly": 3
@@ -59201,41 +59069,25 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "position": 0,
-        "word": "ciao",
-        "taughtBy": "IT-C01-ciao",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "IT-C01-buono",
         "language": "italian",
-        "position": 1,
+        "position": 2,
         "word": "giorno",
         "taughtBy": "IT-C01-giorno",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "IT-C01-giorno",
+        "lessonId": "IT-C01-grazie",
         "language": "italian",
-        "position": 3,
-        "word": "il",
-        "taughtBy": "IT-C01-il-la-lo",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "IT-C01-notte",
-        "language": "italian",
-        "position": 6,
-        "word": "buonasera",
-        "taughtBy": "IT-C01-sera",
+        "position": 8,
+        "word": "prego",
+        "taughtBy": "IT-C02-prego",
         "lessonsEarly": 2
       },
       {
         "lessonId": "IT-C02-practice",
         "language": "italian",
-        "position": 16,
+        "position": 17,
         "word": "mi chiamo",
         "taughtBy": "IT-C03-mi-chiamo",
         "lessonsEarly": 2
@@ -59243,7 +59095,7 @@
       {
         "lessonId": "IT-C03-practice",
         "language": "italian",
-        "position": 21,
+        "position": 22,
         "word": "a domani",
         "taughtBy": "IT-C04-a-domani",
         "lessonsEarly": 2
@@ -59907,31 +59759,23 @@
       {
         "lessonId": "IT-C01-buongiorno",
         "language": "italian",
-        "position": 0,
-        "word": "buon",
-        "taughtBy": "IT-C01-buono",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "position": 7,
-        "word": "sera",
-        "taughtBy": "IT-C01-sera",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "position": 7,
+        "position": 5,
         "word": "buonasera",
         "taughtBy": "IT-C01-sera",
         "lessonsEarly": 1
       },
       {
+        "lessonId": "IT-C01-il-la-lo",
+        "language": "italian",
+        "position": 3,
+        "word": "giorno",
+        "taughtBy": "IT-C01-giorno",
+        "lessonsEarly": 1
+      },
+      {
         "lessonId": "IT-C02-come",
         "language": "italian",
-        "position": 10,
+        "position": 11,
         "word": "stare",
         "taughtBy": "IT-C02-stare",
         "lessonsEarly": 1
@@ -59939,7 +59783,7 @@
       {
         "lessonId": "IT-C02-prego",
         "language": "italian",
-        "position": 9,
+        "position": 10,
         "word": "come",
         "taughtBy": "IT-C02-come",
         "lessonsEarly": 1
@@ -59947,7 +59791,7 @@
       {
         "lessonId": "IT-C03-come-ti-chiami",
         "language": "italian",
-        "position": 19,
+        "position": 20,
         "word": "piacere",
         "taughtBy": "IT-C03-piacere",
         "lessonsEarly": 1
@@ -59955,7 +59799,7 @@
       {
         "lessonId": "IT-C03-io",
         "language": "italian",
-        "position": 17,
+        "position": 18,
         "word": "mi chiamo",
         "taughtBy": "IT-C03-mi-chiamo",
         "lessonsEarly": 1
@@ -59963,7 +59807,7 @@
       {
         "lessonId": "IT-C04-a-domani",
         "language": "italian",
-        "position": 23,
+        "position": 24,
         "word": "a presto",
         "taughtBy": "IT-C04-a-presto",
         "lessonsEarly": 1
@@ -59971,7 +59815,7 @@
       {
         "lessonId": "IT-C04-a-presto",
         "language": "italian",
-        "position": 24,
+        "position": 25,
         "word": "a più tardi",
         "taughtBy": "IT-C04-a-piu-tardi",
         "lessonsEarly": 1
@@ -59979,7 +59823,7 @@
       {
         "lessonId": "IT-C04-arrivederci",
         "language": "italian",
-        "position": 22,
+        "position": 23,
         "word": "a domani",
         "taughtBy": "IT-C04-a-domani",
         "lessonsEarly": 1
@@ -59987,7 +59831,7 @@
       {
         "lessonId": "IT-C05-abitare",
         "language": "italian",
-        "position": 28,
+        "position": 29,
         "word": "lavorare",
         "taughtBy": "IT-C05-lavorare",
         "lessonsEarly": 1
@@ -59995,7 +59839,7 @@
       {
         "lessonId": "IT-C05-lavorare",
         "language": "italian",
-        "position": 29,
+        "position": 30,
         "word": "parlo italiano",
         "taughtBy": "IT-C05-parlo-italiano",
         "lessonsEarly": 1
@@ -60003,7 +59847,7 @@
       {
         "lessonId": "IT-C05-parlare",
         "language": "italian",
-        "position": 27,
+        "position": 28,
         "word": "abitare",
         "taughtBy": "IT-C05-abitare",
         "lessonsEarly": 1
@@ -60011,7 +59855,7 @@
       {
         "lessonId": "IT-C07-giorni-1",
         "language": "italian",
-        "position": 34,
+        "position": 35,
         "word": "sabato",
         "taughtBy": "IT-C07-giorni-2",
         "lessonsEarly": 1
@@ -60019,7 +59863,7 @@
       {
         "lessonId": "IT-C07-giorni-1",
         "language": "italian",
-        "position": 34,
+        "position": 35,
         "word": "domenica",
         "taughtBy": "IT-C07-giorni-2",
         "lessonsEarly": 1
@@ -60027,7 +59871,7 @@
       {
         "lessonId": "IT-C08-ora",
         "language": "italian",
-        "position": 36,
+        "position": 37,
         "word": "mezzogiorno",
         "taughtBy": "IT-C08-mezzogiorno-mezzanotte",
         "lessonsEarly": 1
@@ -60035,7 +59879,7 @@
       {
         "lessonId": "IT-C08-ora",
         "language": "italian",
-        "position": 36,
+        "position": 37,
         "word": "mezzanotte",
         "taughtBy": "IT-C08-mezzogiorno-mezzanotte",
         "lessonsEarly": 1
@@ -60043,7 +59887,7 @@
       {
         "lessonId": "IT-C09-mesi",
         "language": "italian",
-        "position": 38,
+        "position": 39,
         "word": "stagioni",
         "taughtBy": "IT-C09-stagioni",
         "lessonsEarly": 1
@@ -60051,7 +59895,7 @@
       {
         "lessonId": "IT-C10-genitori",
         "language": "italian",
-        "position": 40,
+        "position": 41,
         "word": "fratello",
         "taughtBy": "IT-C10-fratello-sorella",
         "lessonsEarly": 1
@@ -60059,7 +59903,7 @@
       {
         "lessonId": "IT-C10-genitori",
         "language": "italian",
-        "position": 40,
+        "position": 41,
         "word": "sorella",
         "taughtBy": "IT-C10-fratello-sorella",
         "lessonsEarly": 1
@@ -60067,7 +59911,7 @@
       {
         "lessonId": "IT-C11-pane",
         "language": "italian",
-        "position": 42,
+        "position": 43,
         "word": "l'acqua",
         "taughtBy": "IT-C11-acqua-vino",
         "lessonsEarly": 1
@@ -60075,7 +59919,7 @@
       {
         "lessonId": "IT-C11-pane",
         "language": "italian",
-        "position": 42,
+        "position": 43,
         "word": "il vino",
         "taughtBy": "IT-C11-acqua-vino",
         "lessonsEarly": 1
@@ -60083,7 +59927,7 @@
       {
         "lessonId": "IT-C11-pane",
         "language": "italian",
-        "position": 42,
+        "position": 43,
         "word": "vino",
         "taughtBy": "IT-C11-acqua-vino",
         "lessonsEarly": 1
@@ -60091,7 +59935,7 @@
       {
         "lessonId": "IT-C13-nero-bianco",
         "language": "italian",
-        "position": 46,
+        "position": 47,
         "word": "rosso",
         "taughtBy": "IT-C13-rosso-blu",
         "lessonsEarly": 1
@@ -60099,7 +59943,7 @@
       {
         "lessonId": "IT-C13-nero-bianco",
         "language": "italian",
-        "position": 46,
+        "position": 47,
         "word": "blu",
         "taughtBy": "IT-C13-rosso-blu",
         "lessonsEarly": 1
@@ -60107,7 +59951,7 @@
       {
         "lessonId": "IT-C15-passato-remoto",
         "language": "italian",
-        "position": 51,
+        "position": 52,
         "word": "essere",
         "taughtBy": "IT-C16-essere",
         "lessonsEarly": 1
@@ -60115,7 +59959,7 @@
       {
         "lessonId": "IT-C16-essere-stato",
         "language": "italian",
-        "position": 53,
+        "position": 54,
         "word": "andare",
         "taughtBy": "IT-C16-andare",
         "lessonsEarly": 1
@@ -60602,13 +60446,13 @@
       },
       {
         "language": "italian",
-        "lessonCount": 88,
-        "lessonsWithoutSequence": 9,
-        "forwardPrerequisites": 6,
-        "forwardReviews": 7,
-        "atomsTaught": 197,
+        "lessonCount": 89,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "atomsTaught": 200,
         "atomsNeverRevisited": 19,
-        "forwardReferences": 48
+        "forwardReferences": 44
       },
       {
         "language": "japanese",
@@ -60762,20 +60606,20 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 26,
-      "tracksWithUnorderedLessons": 4,
-      "forwardPrerequisites": 15,
-      "forwardReviews": 21,
-      "atomsTaught": 4687,
+      "lessonsWithoutSequence": 17,
+      "tracksWithUnorderedLessons": 3,
+      "forwardPrerequisites": 9,
+      "forwardReviews": 14,
+      "atomsTaught": 4690,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
         "R1": 1191,
-        "R2": 3684,
-        "R3": 3543,
-        "R4": 2060
+        "R2": 3687,
+        "R3": 3546,
+        "R4": 2063
       },
-      "forwardReferences": 470
+      "forwardReferences": 466
     }
   },
   "scriptClosure": {
@@ -67573,8 +67417,46 @@
       },
       {
         "language": "italian",
-        "evidence": [],
-        "validEvidence": [],
+        "evidence": [
+          {
+            "language": "italian",
+            "lessonId": "IT-C01-ciao",
+            "blockIndex": 4,
+            "blockTitle": "Writing — follow the greeting you can see",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W01-ciao-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — one guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 15
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "italian",
+            "lessonId": "IT-C01-ciao",
+            "blockIndex": 4,
+            "blockTitle": "Writing — follow the greeting you can see",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "italian",
+            "lessonId": "IT-W01-ciao-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — one guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 15
+          }
+        ],
         "defects": [],
         "levels": [
           {
@@ -67585,10 +67467,11 @@
               "delayed-copy",
               "dictation-transcription"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription"
             ],
@@ -67604,10 +67487,11 @@
               "controlled-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -67626,10 +67510,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -67649,10 +67534,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -67672,10 +67558,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -67695,10 +67582,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -67718,10 +67606,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -70320,11 +70209,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithAnyEvidence": 5,
+      "tracksWithAnyEvidence": 6,
       "tracksCompleteAtPreA1": 1,
-      "evidenceBlocks": 11,
+      "evidenceBlocks": 13,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 958
+      "missingTrackLevelStages": 944
     }
   },
   "gentleRamp": {
@@ -70842,8 +70731,8 @@
       },
       {
         "language": "italian",
-        "lessonCount": 88,
-        "atomMeasurableLessons": 79,
+        "lessonCount": 89,
+        "atomMeasurableLessons": 80,
         "atomMeasurementBlindLessons": 9,
         "durationViolations": 0,
         "atomLessonSpikes": 3,
@@ -70852,39 +70741,25 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
-        "orderDefects": 22,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 6,
-        "forwardReviews": 7,
-        "forwardReferences": 48,
-        "atomsTaught": 197,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 44,
+        "atomsTaught": 200,
         "atomsNeverRevisited": 19,
-        "reinforcementWindowMisses": 273,
-        "payoffSurprises": 0,
-        "writingPracticeLessons": 0,
-        "firstWritingPracticeAt": null,
-        "lessonsBeforeWritingPractice": 88,
+        "reinforcementWindowMisses": 282,
+        "payoffSurprises": 1,
+        "writingPracticeLessons": 2,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "italian",
-            "kind": "order-integrity",
-            "count": 22,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
-          {
-            "language": "italian",
             "kind": "forward-language",
-            "count": 48,
+            "count": 44,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "italian",
-            "kind": "writing-ramp",
-            "count": 88,
-            "unit": "opening lesson(s)",
-            "detail": "add observable, guided writing practice from the opening lesson"
           },
           {
             "language": "italian",
@@ -70896,9 +70771,16 @@
           {
             "language": "italian",
             "kind": "reinforcement",
-            "count": 273,
+            "count": 282,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "italian",
+            "kind": "payoff-surprise",
+            "count": 1,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
           },
           {
             "language": "italian",
@@ -70910,10 +70792,10 @@
         ],
         "next": {
           "language": "italian",
-          "kind": "order-integrity",
-          "count": 22,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 44,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -72087,13 +71969,6 @@
     ],
     "workQueue": [
       {
-        "language": "italian",
-        "kind": "order-integrity",
-        "count": 22,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
         "language": "portuguese",
         "kind": "order-integrity",
         "count": 21,
@@ -72173,7 +72048,7 @@
       {
         "language": "italian",
         "kind": "forward-language",
-        "count": 48,
+        "count": 44,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -72391,13 +72266,6 @@
         "language": "portuguese",
         "kind": "writing-ramp",
         "count": 96,
-        "unit": "opening lesson(s)",
-        "detail": "add observable, guided writing practice from the opening lesson"
-      },
-      {
-        "language": "italian",
-        "kind": "writing-ramp",
-        "count": 88,
         "unit": "opening lesson(s)",
         "detail": "add observable, guided writing practice from the opening lesson"
       },
@@ -72761,7 +72629,7 @@
       {
         "language": "italian",
         "kind": "reinforcement",
-        "count": 273,
+        "count": 282,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -72934,6 +72802,13 @@
         "detail": "make each chapter payoff assess only taught, representative material"
       },
       {
+        "language": "italian",
+        "kind": "payoff-surprise",
+        "count": 1,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
         "language": "spanish",
         "kind": "measurement-blind",
         "count": 96,
@@ -73056,10 +72931,10 @@
     "summary": {
       "tracks": 23,
       "tracksWithDetectedCliffs": 23,
-      "tracksWithNoWritingPractice": 2,
+      "tracksWithNoWritingPractice": 1,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 497,
-      "findings": 138
+      "findings": 137
     }
   },
   "levelGate": {
@@ -73264,8 +73139,8 @@
         "blockers": [
           {
             "criterion": "writing-stage",
-            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
-            "shortfall": 4
+            "detail": "2 cumulative writing stage(s) unproved at pre-A1: delayed-copy, dictation-transcription",
+            "shortfall": 2
           },
           {
             "criterion": "spine-nodes",
@@ -73284,8 +73159,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "13 atom(s) at or below pre-A1 are revisited fewer than twice (36 etymology hook(s) waived)",
-            "shortfall": 13
+            "detail": "15 atom(s) at or below pre-A1 are revisited fewer than twice (37 etymology hook(s) waived)",
+            "shortfall": 15
           }
         ],
         "vocabulary": 82
@@ -73707,13 +73582,13 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3402,
-    "voice": 2462,
+    "totalLessons": 3403,
+    "voice": 2461,
     "sight": 590,
-    "pen": 350,
+    "pen": 352,
     "coreVoice": 2909,
-    "lessonsWithWritingSegments": 147,
-    "drivablePercent": 86,
+    "lessonsWithWritingSegments": 149,
+    "drivablePercent": 85,
     "tracks": [
       {
         "language": "arabic",
@@ -76785,28 +76660,29 @@
       },
       {
         "language": "italian",
-        "lessonCount": 88,
-        "voice": 72,
+        "lessonCount": 89,
+        "voice": 71,
         "sight": 16,
-        "pen": 0,
+        "pen": 2,
         "coreVoice": 72,
-        "drivablePercent": 82,
-        "drivablePrefixTotal": 60,
+        "drivablePercent": 81,
+        "drivablePrefixTotal": 55,
         "chapters": [
           {
             "language": "italian",
             "chapter": 1,
-            "lessonCount": 9,
-            "voice": 8,
+            "lessonCount": 10,
+            "voice": 7,
             "sight": 1,
-            "pen": 0,
+            "pen": 2,
             "coreVoice": 8,
             "modalities": [
               "voice",
-              "sight"
+              "sight",
+              "pen"
             ],
-            "drivablePrefix": 6,
-            "firstNonVoiceLesson": "IT-C01-notte"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "IT-W01-ciao-guided-copy"
           },
           {
             "language": "italian",
@@ -88884,12 +88760,12 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3080,
-    "underspent": 2965,
+    "roots": 3081,
+    "underspent": 2966,
     "neverSpent": 2037,
     "payoffDistribution": {
       "0": 2037,
-      "1": 651,
+      "1": 652,
       "2": 277,
       "3": 66,
       "4": 19,
@@ -88903,7 +88779,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3402,
+    "lessons": 3403,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -88913,8 +88789,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3291,
-    "usesBeforeIntroduction": 12008,
+    "lessonsUsingTerms": 3292,
+    "usesBeforeIntroduction": 12012,
     "technicalUsesBeforeIntroduction": 3169,
     "technicalLessons": 1646,
     "worstTerms": [
@@ -88945,7 +88821,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3402,
+    "lessonsScanned": 3403,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
