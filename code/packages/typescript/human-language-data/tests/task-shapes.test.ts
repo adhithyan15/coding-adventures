@@ -16,6 +16,7 @@ describe("four-skill task-shape inventories (HL18)", () => {
       "speaking",
     ]);
     expect(inventory.sections.flatMap((section) => section.parts)).toHaveLength(11);
+    expect(inventory.sections.every((section) => section.variants.length === 0)).toBe(true);
     expect(inventory.passRule).toMatchObject({ maximumPoints: 100, passPoints: 60 });
     expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([null, null, null, null]);
   });
@@ -58,6 +59,30 @@ describe("four-skill task-shape inventories (HL18)", () => {
 
     value.administration.speakingMinutes = { minimum: 5, maximum: 7 };
     expect(() => parseTaskShapeInventory(value, "german")).toThrow(/speaking minutes do not match/);
+  });
+
+  it("preserves alternate official part sets without administering their union", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
+    const listening = value.sections.find((section: { skill: string }) => section.skill === "listening");
+    const [first, second, third] = listening.parts.map((part: { id: string }) => part.id);
+    listening.variants = [
+      { id: "short-form", partIds: [first, second], note: "published short form", sourceIds: ["goethe-a1-model-2024"] },
+      { id: "long-form", partIds: [first, second, third], note: "published long form", sourceIds: ["goethe-a1-model-2024"] },
+    ];
+    const parsed = parseTaskShapeInventory(value, "german");
+    expect(parsed.sections.find((section) => section.skill === "listening")?.variants).toHaveLength(2);
+  });
+
+  it("rejects variant sets that cite unknown parts or strand a union part", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
+    const listening = value.sections.find((section: { skill: string }) => section.skill === "listening");
+    listening.variants = [
+      { id: "bad-form", partIds: ["not-a-part"], note: "fixture", sourceIds: ["goethe-a1-model-2024"] },
+    ];
+    expect(() => parseTaskShapeInventory(value, "german")).toThrow(/cites unknown part/);
+
+    listening.variants[0].partIds = [listening.parts[0].id];
+    expect(() => parseTaskShapeInventory(value, "german")).toThrow(/variant sets omit part/);
   });
 
   it("rejects path traversal at the loader boundary", () => {
