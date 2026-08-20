@@ -99,7 +99,7 @@ export interface TaskShapePresence {
 export interface TaskShapeBacklogItem {
   id: string;
   language: string;
-  level: Exclude<CefrLevel, "pre-A1">;
+  level: CefrLevel;
   goal: string;
 }
 
@@ -113,8 +113,7 @@ export function buildTaskShapeBacklog(
   present: readonly TaskShapePresence[],
 ): TaskShapeBacklogItem[] {
   const have = new Set(present.map((entry) => `${entry.language}/${entry.level}`));
-  const levels = CEFR_LEVELS.filter((entry): entry is Exclude<CefrLevel, "pre-A1"> => entry !== "pre-A1");
-  return levels.flatMap((level) => languages.flatMap((language) => {
+  return CEFR_LEVELS.flatMap((level) => languages.flatMap((language) => {
     if (have.has(`${language}/${level}`)) return [];
     return [{
       id: `task-shape/${language}/${level}`,
@@ -223,7 +222,7 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
     throw new Error(`task shapes: ${expectedLanguage} inventory declares language '${String(raw.language)}'`);
   }
   const level = CEFR_LEVELS.find((candidate) => candidate === raw.level);
-  if (!level || level === "pre-A1") throw new Error(`task shapes: ${expectedLanguage}.level must be A1 through C2`);
+  if (!level) throw new Error(`task shapes: ${expectedLanguage}.level must be pre-A1 through C2`);
 
   const target = object(raw.target, `${expectedLanguage}.target`);
   if (target.basis !== "external" && target.basis !== "project-defined") {
