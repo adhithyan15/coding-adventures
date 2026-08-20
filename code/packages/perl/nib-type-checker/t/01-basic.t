@@ -68,6 +68,7 @@ subtest 'infers the type of a plain two-operand add_expr (shift_expr wrapper)' =
         qr/type 'u4'/,
         'arithmetic operand inferred as u4, not undef',
     );
+};
 
 subtest 'infers shift expressions as numeric values' => sub {
     my $invalid = check_source('fn main() { let x: bool = 1 << 2; }');
