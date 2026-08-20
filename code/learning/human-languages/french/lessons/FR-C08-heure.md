@@ -1,5 +1,6 @@
 ---
 id: FR-C08-heure
+sequence: 225
 chapter: 8
 type: word
 headword: heure

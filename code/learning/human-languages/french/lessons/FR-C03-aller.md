@@ -1,5 +1,6 @@
 ---
 id: FR-C03-aller
+sequence: 115
 chapter: 3
 type: word
 headword: aller

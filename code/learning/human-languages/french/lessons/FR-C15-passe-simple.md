@@ -1,5 +1,6 @@
 ---
 id: FR-C15-passe-simple
+sequence: 300
 chapter: 15
 type: word
 headword: il parla

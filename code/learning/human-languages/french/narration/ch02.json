@@ -3,573 +3,12 @@
   "language": "french",
   "chapter": 2,
   "title": "Introducing Yourself",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:e3cb86d5fd9a61c0",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ab8ecf4dad6f9ede",
   "lessons": [
     {
-      "id": "FR-C02-appeler",
-      "sequence": null,
-      "title": "(s')appeler — \"to call,\" and \"to call oneself\"",
-      "headword": "(s')appeler",
-      "romanization": "(s')appeler",
-      "gloss": "to call / to call oneself",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a84b2cf34d70d5d4",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "French says \"my name is\" by saying \"I call myself.\" Here's the verb that does it — and a fat English family riding on it."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "appeler = a-play — the -er infinitive ending is a plain \"ay.\""
-            },
-            {
-              "kind": "speech",
-              "text": "In m'appelle the doubled ll keeps a crisp \"l\": ma-PELL."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "appeler — \"to call.\" Root: Latin appellāre (\"to address, call by name\"). The English cousins are everywhere in formal language:"
-            },
-            {
-              "kind": "speech",
-              "text": "appeal — to call to a higher authority."
-            },
-            {
-              "kind": "speech",
-              "text": "appellation — a name or title (an appellation of wine is its official name)."
-            },
-            {
-              "kind": "speech",
-              "text": "appellate, appellant — the court that hears appeals, and the one who brings it."
-            },
-            {
-              "kind": "speech",
-              "text": "To name someone is, at root, to call them."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: reflexive verbs — doing something to yourself",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "French builds \"to be called\" from \"to call\" plus a little word that bounces the action back onto the doer: s'appeler, \"to call oneself.\" That bounce-back word changes for each person:"
-            },
-            {
-              "kind": "speech",
-              "text": "me = myself, te = yourself, se = himself/herself."
-            },
-            {
-              "kind": "speech",
-              "text": "So \"I call myself\" needs me: je me appelle becomes (elided) je m'appelle. English hides the same move in \"I call myself\" — French just uses it as the normal way to give a name."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"appeler\" (a-play)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"appeler\" (*a-play*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English cousins — appeal, appellation",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousins — *appeal*, *appellation*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"call oneself\" with me — je me appelle",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"call oneself\" with *me* — *je me appelle*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin verb is appeler from, and two English cousins? (appellāre — appeal, appellation.) What does a reflexive verb do, and which little word means \"myself\"? (Bounces the action back on the doer; me.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C02-comment",
-      "sequence": null,
-      "title": "comment — \"how,\" from the same quomodo as Spanish cómo",
-      "headword": "comment",
-      "romanization": "comment",
-      "gloss": "how",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c9ff24acde19d23c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "French asks \"what's your name?\" as \"how are you called?\" — so first, the word for \"how.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "comment = ko-MAHN — the final -ent is a nasal vowel; the t is silent."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "comment — \"how.\" Root: Latin quo modo, \"in what manner\" — two words fused and worn into one."
-            },
-            {
-              "kind": "speech",
-              "text": "That same quomodo also became Spanish cómo — two Romance languages, one Latin \"in-what-way,\" reshaped differently."
-            },
-            {
-              "kind": "speech",
-              "text": "The piece modo (\"manner, measure\") is alive in English mode, model, moderate, modify — all about the way a thing is done."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: French counts names as a matter of \"how\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Where English asks \"what is your name?\", French asks \"how are you called?\" — comment (how), not what. The question is about the manner of your calling, not a thing to be named. Don't translate word for word; learn the French logic: the name-question runs on comment."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comment\" (ko-MAHN, nasal ending)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"comment\" (*ko-MAHN*, nasal ending)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the Latin quo modo becomes French comment, Spanish cómo",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the Latin *quo modo* → French *comment*, Spanish *cómo*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "English mode/model share the modo piece",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: English *mode/model* share the *modo* piece]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What two Latin words fused into comment, and what Spanish word shares them? (quo modo — Spanish cómo.) English asks \"what is your name?\" — what does French literally ask? (\"How are you called?\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C02-comment-vous-appelez-vous",
-      "sequence": null,
-      "title": "comment vous appelez-vous? — \"what's your name?\"",
-      "headword": "comment vous appelez-vous?",
-      "romanization": "comment vous appelez-vous?",
-      "gloss": "what's your name? (literally \"how do you call yourself?\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c3c423e93b7fd8d7",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble it: \"how\" + \"do you call yourself\" = the polite question that gets the introduction going."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "comment (how) + vous appelez-vous (\"do you call yourself\")."
-            },
-            {
-              "kind": "speech",
-              "text": "comment vous appelez-vous? = literally \"how do you call yourself?\" = the polite \"what's your name?\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: asking by inversion",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A statement — vous vous appelez (\"you call yourself\") — becomes a question by flipping the verb and the pronoun, joined with a hyphen:"
-            },
-            {
-              "kind": "speech",
-              "text": "vous appelez-vous?"
-            },
-            {
-              "kind": "speech",
-              "text": "That flip is French's formal way to ask anything. The informal version simply swaps in tu:"
-            },
-            {
-              "kind": "speech",
-              "text": "comment tu t'appelles? — note te elides to t', exactly as me became m' in je m'appelle."
-            },
-            {
-              "kind": "speech",
-              "text": "So the same verb, s'appeler, runs the whole exchange: je m'appelle to give your name, comment vous appelez-vous? to ask for theirs."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"comment vous appelez-vous?\" (formal)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"comment vous appelez-vous?\" (formal)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the informal — \"comment tu t'appelles?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the informal — \"comment tu t'appelles?\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — ask, then answer: \"…vous appelez-vous?\" / \"je m'appelle…\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — ask, then answer: \"…vous appelez-vous?\" / \"je m'appelle…\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does comment vous appelez-vous? literally say? (\"How do you call yourself?\") How do you turn the statement into a question, and what's the tu version? (Invert verb + pronoun with a hyphen; comment tu t'appelles?)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C02-enchante",
-      "sequence": null,
-      "title": "enchanté(e) — \"delighted,\" i.e. \"pleased to meet you\"",
-      "headword": "enchanté(e)",
-      "romanization": "enchanté(e)",
-      "gloss": "pleased to meet you (literally \"enchanted\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:768ed915cd4bff65",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The graceful close to an introduction — and it literally says you've been put under a spell."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "enchanté = ahn-shahn-TAY — two nasal vowels (en, an), then a clean \"tay.\" ch = English sh."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "enchanté — \"delighted.\" Root: Latin in- (\"upon\") + cantāre (\"to sing, chant\"). To enchant was literally to sing a spell upon someone. The magic survives in the English family:"
-            },
-            {
-              "kind": "speech",
-              "text": "enchant, incantation, and the plain chant."
-            },
-            {
-              "kind": "speech",
-              "text": "So saying enchanté on meeting someone means, gallantly, \"I'm enchanted [to meet you].\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: it agrees with you",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "enchanté follows the gender-agreement rule of bon/bonne from Chapter 1: it reports the speaker's own gender."
-            },
-            {
-              "kind": "speech",
-              "text": "A man says enchanté."
-            },
-            {
-              "kind": "speech",
-              "text": "A woman says enchantée — an extra -e (same sound, silent)."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"enchanté\" (ahn-shahn-TAY)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"enchanté\" (*ahn-shahn-TAY*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English cousins — enchant, incantation, chant",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousins — *enchant*, *incantation*, *chant*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "both forms — enchanté (m.) / enchantée (f.)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: both forms — *enchanté* (m.) / *enchantée* (f.)]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does enchanté literally mean, and from what Latin pieces? (\"Enchanted\" — in- + cantāre, \"to sing upon.\") How does a woman say it, and why? (enchantée — it agrees with the speaker's gender.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "FR-C02-je",
-      "sequence": null,
+      "sequence": 60,
       "title": "je — \"I,\" the smallest word you own",
       "headword": "je",
       "romanization": "je",
@@ -580,7 +19,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:221602da2f8434f4",
+      "sourceHash": "fnv1a64:ff50c0c7a0372bad",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -701,146 +140,8 @@
       ]
     },
     {
-      "id": "FR-C02-je-mappelle",
-      "sequence": null,
-      "title": "je m'appelle… — \"my name is…,\" literally \"I call myself\"",
-      "headword": "je m'appelle…",
-      "romanization": "je m'appelle…",
-      "gloss": "my name is… (literally \"I call myself…\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:730fd10466a51177",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble the two pieces you just met — je and (s')appeler — into the single most useful sentence for meeting anyone."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three atoms, each already taken apart on its own — je (I, from ego), me (myself, from mē), appelle (call, from appellāre):"
-            },
-            {
-              "kind": "speech",
-              "text": "je (I) + me (myself) + appelle (call)."
-            },
-            {
-              "kind": "speech",
-              "text": "me elides before the vowel of appelle becomes m'."
-            },
-            {
-              "kind": "speech",
-              "text": "je m'appelle… = word for word \"I call myself…\" = \"my name is…\""
-            },
-            {
-              "kind": "speech",
-              "text": "Je m'appelle Arun. becomes \"My name is Arun.\" Je m'appelle Mira. becomes \"My name is Mira.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "French prefers this verb-based \"I call myself\" to a literal \"my name is.\" The literal form does exist:"
-            },
-            {
-              "kind": "speech",
-              "text": "mon nom est… (\"my name is…\"), with nom (\"name\") from Latin nōmen becomes English noun, nominate, nominal, nomenclature."
-            },
-            {
-              "kind": "speech",
-              "text": "But mon nom est sounds stiff and official — a passport-desk phrase. For a real introduction, reach for je m'appelle. (You now also see why \"noun\" is literally \"a naming word.\")"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"je m'appelle…\" then your own name",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"je m'appelle…\" then your own name]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it literally says (\"I call myself\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it *literally* says (\"I call myself\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the stiff literal alternative — \"mon nom est…\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the stiff literal alternative — \"mon nom est…\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does je m'appelle literally mean, and why does me become m'? (\"I call myself\"; elision before the vowel of appelle.) What's the more literal but stiffer \"my name is,\" and what English word is nom cousin to? (mon nom est; noun.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "FR-C02-me",
-      "sequence": null,
+      "sequence": 65,
       "title": "me — \"myself,\" the same word as English me",
       "headword": "me",
       "romanization": "me",
@@ -851,7 +152,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:be599cea3506cf06",
+      "sourceHash": "fnv1a64:e39268d8a3eb3f22",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -1006,8 +307,848 @@
       ]
     },
     {
+      "id": "FR-C02-appeler",
+      "sequence": 70,
+      "title": "(s')appeler — \"to call,\" and \"to call oneself\"",
+      "headword": "(s')appeler",
+      "romanization": "(s')appeler",
+      "gloss": "to call / to call oneself",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8f9ff30215a2498a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French says \"my name is\" by saying \"I call myself.\" Here's the verb that does it — and a fat English family riding on it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appeler = a-play — the -er infinitive ending is a plain \"ay.\""
+            },
+            {
+              "kind": "speech",
+              "text": "In m'appelle the doubled ll keeps a crisp \"l\": ma-PELL."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "appeler — \"to call.\" Root: Latin appellāre (\"to address, call by name\"). The English cousins are everywhere in formal language:"
+            },
+            {
+              "kind": "speech",
+              "text": "appeal — to call to a higher authority."
+            },
+            {
+              "kind": "speech",
+              "text": "appellation — a name or title (an appellation of wine is its official name)."
+            },
+            {
+              "kind": "speech",
+              "text": "appellate, appellant — the court that hears appeals, and the one who brings it."
+            },
+            {
+              "kind": "speech",
+              "text": "To name someone is, at root, to call them."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: reflexive verbs — doing something to yourself",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French builds \"to be called\" from \"to call\" plus a little word that bounces the action back onto the doer: s'appeler, \"to call oneself.\" That bounce-back word changes for each person:"
+            },
+            {
+              "kind": "speech",
+              "text": "me = myself, te = yourself, se = himself/herself."
+            },
+            {
+              "kind": "speech",
+              "text": "So \"I call myself\" needs me: je me appelle becomes (elided) je m'appelle. English hides the same move in \"I call myself\" — French just uses it as the normal way to give a name."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"appeler\" (a-play)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"appeler\" (*a-play*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousins — appeal, appellation",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousins — *appeal*, *appellation*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"call oneself\" with me — je me appelle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"call oneself\" with *me* — *je me appelle*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin verb is appeler from, and two English cousins? (appellāre — appeal, appellation.) What does a reflexive verb do, and which little word means \"myself\"? (Bounces the action back on the doer; me.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C02-je-mappelle",
+      "sequence": 75,
+      "title": "je m'appelle… — \"my name is…,\" literally \"I call myself\"",
+      "headword": "je m'appelle…",
+      "romanization": "je m'appelle…",
+      "gloss": "my name is… (literally \"I call myself…\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2086246b35177dc4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the two pieces you just met — je and (s')appeler — into the single most useful sentence for meeting anyone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three atoms, each already taken apart on its own — je (I, from ego), me (myself, from mē), appelle (call, from appellāre):"
+            },
+            {
+              "kind": "speech",
+              "text": "je (I) + me (myself) + appelle (call)."
+            },
+            {
+              "kind": "speech",
+              "text": "me elides before the vowel of appelle becomes m'."
+            },
+            {
+              "kind": "speech",
+              "text": "je m'appelle… = word for word \"I call myself…\" = \"my name is…\""
+            },
+            {
+              "kind": "speech",
+              "text": "Je m'appelle Arun. becomes \"My name is Arun.\" Je m'appelle Mira. becomes \"My name is Mira.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French prefers this verb-based \"I call myself\" to a literal \"my name is.\" The literal form does exist:"
+            },
+            {
+              "kind": "speech",
+              "text": "mon nom est… (\"my name is…\"), with nom (\"name\") from Latin nōmen becomes English noun, nominate, nominal, nomenclature."
+            },
+            {
+              "kind": "speech",
+              "text": "But mon nom est sounds stiff and official — a passport-desk phrase. For a real introduction, reach for je m'appelle. (You now also see why \"noun\" is literally \"a naming word.\")"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"je m'appelle…\" then your own name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"je m'appelle…\" then your own name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it literally says (\"I call myself\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it *literally* says (\"I call myself\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the stiff literal alternative — \"mon nom est…\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the stiff literal alternative — \"mon nom est…\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does je m'appelle literally mean, and why does me become m'? (\"I call myself\"; elision before the vowel of appelle.) What's the more literal but stiffer \"my name is,\" and what English word is nom cousin to? (mon nom est; noun.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C02-tu-vous",
+      "sequence": 80,
+      "title": "tu / vous — \"you,\" familiar and formal",
+      "headword": "tu / vous",
+      "romanization": "tu / vous",
+      "gloss": "you (familiar / formal)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3dce6e2a0e409adc",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To ask someone their name, you need \"you.\" French has two, and choosing between them is a small act of social judgment."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tu = too, but with the front-rounded French u (lips rounded, tongue forward). vous = voo (silent s)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tu (familiar \"you\") from Latin tū."
+            },
+            {
+              "kind": "speech",
+              "text": "vous (formal / plural \"you\") from Latin vōs, \"you all.\""
+            },
+            {
+              "kind": "speech",
+              "text": "English once had the same split — old thou was the tu — but thou died out, leaving one flat you for everyone."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: two \"you\"s, chosen by register",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tu — for friends, family, children, peers. Intimate, equal."
+            },
+            {
+              "kind": "speech",
+              "text": "vous — for strangers, elders, anyone you'd show respect — and it's the plural \"you all.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The trick: French makes politeness by using the plural on a single person. Addressing one respected person as \"you all\" is the polite move (French even has a verb for it, vouvoyer). This is the same politeness Spanish builds with usted, but by a different route: Spanish coined a whole new pronoun (from \"your grace\"); French just borrows its plural. Using tu too early can feel over-familiar — when in doubt, vous."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tu\" (front-rounded u), \"vous\" (voo)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tu\" (front-rounded *u*), \"vous\" (*voo*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "who gets tu (friends), who gets vous (strangers, elders)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: who gets *tu* (friends), who gets *vous* (strangers, elders)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the rule of thumb — \"when in doubt, vous\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the rule of thumb — \"when in doubt, *vous*\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What decides tu vs vous — and what does French do to be polite to one person? (Register — familiar vs respect; it uses the plural (vous) on one person.) What old English word was the lost tu? (thou.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C02-comment",
+      "sequence": 85,
+      "title": "comment — \"how,\" from the same quomodo as Spanish cómo",
+      "headword": "comment",
+      "romanization": "comment",
+      "gloss": "how",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a6b068e356a88846",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "French asks \"what's your name?\" as \"how are you called?\" — so first, the word for \"how.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comment = ko-MAHN — the final -ent is a nasal vowel; the t is silent."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comment — \"how.\" Root: Latin quo modo, \"in what manner\" — two words fused and worn into one."
+            },
+            {
+              "kind": "speech",
+              "text": "That same quomodo also became Spanish cómo — two Romance languages, one Latin \"in-what-way,\" reshaped differently."
+            },
+            {
+              "kind": "speech",
+              "text": "The piece modo (\"manner, measure\") is alive in English mode, model, moderate, modify — all about the way a thing is done."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: French counts names as a matter of \"how\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Where English asks \"what is your name?\", French asks \"how are you called?\" — comment (how), not what. The question is about the manner of your calling, not a thing to be named. Don't translate word for word; learn the French logic: the name-question runs on comment."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"comment\" (ko-MAHN, nasal ending)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"comment\" (*ko-MAHN*, nasal ending)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the Latin quo modo becomes French comment, Spanish cómo",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the Latin *quo modo* → French *comment*, Spanish *cómo*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "English mode/model share the modo piece",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: English *mode/model* share the *modo* piece]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What two Latin words fused into comment, and what Spanish word shares them? (quo modo — Spanish cómo.) English asks \"what is your name?\" — what does French literally ask? (\"How are you called?\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C02-comment-vous-appelez-vous",
+      "sequence": 90,
+      "title": "comment vous appelez-vous? — \"what's your name?\"",
+      "headword": "comment vous appelez-vous?",
+      "romanization": "comment vous appelez-vous?",
+      "gloss": "what's your name? (literally \"how do you call yourself?\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1a2dc2b867679377",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble it: \"how\" + \"do you call yourself\" = the polite question that gets the introduction going."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "comment (how) + vous appelez-vous (\"do you call yourself\")."
+            },
+            {
+              "kind": "speech",
+              "text": "comment vous appelez-vous? = literally \"how do you call yourself?\" = the polite \"what's your name?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: asking by inversion",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A statement — vous vous appelez (\"you call yourself\") — becomes a question by flipping the verb and the pronoun, joined with a hyphen:"
+            },
+            {
+              "kind": "speech",
+              "text": "vous appelez-vous?"
+            },
+            {
+              "kind": "speech",
+              "text": "That flip is French's formal way to ask anything. The informal version simply swaps in tu:"
+            },
+            {
+              "kind": "speech",
+              "text": "comment tu t'appelles? — note te elides to t', exactly as me became m' in je m'appelle."
+            },
+            {
+              "kind": "speech",
+              "text": "So the same verb, s'appeler, runs the whole exchange: je m'appelle to give your name, comment vous appelez-vous? to ask for theirs."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"comment vous appelez-vous?\" (formal)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"comment vous appelez-vous?\" (formal)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the informal — \"comment tu t'appelles?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the informal — \"comment tu t'appelles?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — ask, then answer: \"…vous appelez-vous?\" / \"je m'appelle…\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — ask, then answer: \"…vous appelez-vous?\" / \"je m'appelle…\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does comment vous appelez-vous? literally say? (\"How do you call yourself?\") How do you turn the statement into a question, and what's the tu version? (Invert verb + pronoun with a hyphen; comment tu t'appelles?)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C02-enchante",
+      "sequence": 95,
+      "title": "enchanté(e) — \"delighted,\" i.e. \"pleased to meet you\"",
+      "headword": "enchanté(e)",
+      "romanization": "enchanté(e)",
+      "gloss": "pleased to meet you (literally \"enchanted\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5f8051de82f78d74",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The graceful close to an introduction — and it literally says you've been put under a spell."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enchanté = ahn-shahn-TAY — two nasal vowels (en, an), then a clean \"tay.\" ch = English sh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enchanté — \"delighted.\" Root: Latin in- (\"upon\") + cantāre (\"to sing, chant\"). To enchant was literally to sing a spell upon someone. The magic survives in the English family:"
+            },
+            {
+              "kind": "speech",
+              "text": "enchant, incantation, and the plain chant."
+            },
+            {
+              "kind": "speech",
+              "text": "So saying enchanté on meeting someone means, gallantly, \"I'm enchanted [to meet you].\""
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: it agrees with you",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "enchanté follows the gender-agreement rule of bon/bonne from Chapter 1: it reports the speaker's own gender."
+            },
+            {
+              "kind": "speech",
+              "text": "A man says enchanté."
+            },
+            {
+              "kind": "speech",
+              "text": "A woman says enchantée — an extra -e (same sound, silent)."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"enchanté\" (ahn-shahn-TAY)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"enchanté\" (*ahn-shahn-TAY*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousins — enchant, incantation, chant",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousins — *enchant*, *incantation*, *chant*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "both forms — enchanté (m.) / enchantée (f.)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: both forms — *enchanté* (m.) / *enchantée* (f.)]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does enchanté literally mean, and from what Latin pieces? (\"Enchanted\" — in- + cantāre, \"to sing upon.\") How does a woman say it, and why? (enchantée — it agrees with the speaker's gender.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "FR-C02-practice",
-      "sequence": null,
+      "sequence": 100,
       "title": "Chapter 2 — the introduction, whole",
       "headword": "(dialogue)",
       "romanization": "(dialogue)",
@@ -1018,7 +1159,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:df4f16f57d7f4668",
+      "sourceHash": "fnv1a64:00876dc977f4b7e4",
       "notice": null,
       "blocks": [
         {
@@ -1146,147 +1287,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: Comment ça va? (\"how's it going?\") and answering with bien again — the responding cycle."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C02-tu-vous",
-      "sequence": null,
-      "title": "tu / vous — \"you,\" familiar and formal",
-      "headword": "tu / vous",
-      "romanization": "tu / vous",
-      "gloss": "you (familiar / formal)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:b847e8c1880ecc27",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "To ask someone their name, you need \"you.\" French has two, and choosing between them is a small act of social judgment."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tu = too, but with the front-rounded French u (lips rounded, tongue forward). vous = voo (silent s)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tu (familiar \"you\") from Latin tū."
-            },
-            {
-              "kind": "speech",
-              "text": "vous (formal / plural \"you\") from Latin vōs, \"you all.\""
-            },
-            {
-              "kind": "speech",
-              "text": "English once had the same split — old thou was the tu — but thou died out, leaving one flat you for everyone."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: two \"you\"s, chosen by register",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tu — for friends, family, children, peers. Intimate, equal."
-            },
-            {
-              "kind": "speech",
-              "text": "vous — for strangers, elders, anyone you'd show respect — and it's the plural \"you all.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The trick: French makes politeness by using the plural on a single person. Addressing one respected person as \"you all\" is the polite move (French even has a verb for it, vouvoyer). This is the same politeness Spanish builds with usted, but by a different route: Spanish coined a whole new pronoun (from \"your grace\"); French just borrows its plural. Using tu too early can feel over-familiar — when in doubt, vous."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tu\" (front-rounded u), \"vous\" (voo)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tu\" (front-rounded *u*), \"vous\" (*voo*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "who gets tu (friends), who gets vous (strangers, elders)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: who gets *tu* (friends), who gets *vous* (strangers, elders)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the rule of thumb — \"when in doubt, vous\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the rule of thumb — \"when in doubt, *vous*\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What decides tu vs vous — and what does French do to be polite to one person? (Register — familiar vs respect; it uses the plural (vous) on one person.) What old English word was the lost tu? (thou.)"
             }
           ]
         }

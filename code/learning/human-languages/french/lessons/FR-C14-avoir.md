@@ -1,5 +1,6 @@
 ---
 id: FR-C14-avoir
+sequence: 285
 chapter: 14
 type: word
 headword: avoir

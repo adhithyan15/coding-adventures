@@ -1,5 +1,6 @@
 ---
 id: FR-C03-comment-ca-va
+sequence: 120
 chapter: 3
 type: phrase
 headword: comment ça va ?

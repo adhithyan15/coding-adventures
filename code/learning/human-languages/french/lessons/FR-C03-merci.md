@@ -1,5 +1,6 @@
 ---
 id: FR-C03-merci
+sequence: 105
 chapter: 3
 type: word
 headword: merci

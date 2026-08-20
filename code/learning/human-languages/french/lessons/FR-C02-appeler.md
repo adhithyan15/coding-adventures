@@ -1,5 +1,6 @@
 ---
 id: FR-C02-appeler
+sequence: 70
 chapter: 2
 type: word
 headword: (s')appeler

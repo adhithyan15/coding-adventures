@@ -1,5 +1,6 @@
 ---
 id: FR-C01-bonne-nuit
+sequence: 50
 chapter: 1
 type: word
 headword: bonne nuit

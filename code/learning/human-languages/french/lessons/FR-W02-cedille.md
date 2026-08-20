@@ -1,5 +1,6 @@
 ---
 id: FR-W02-cedille
+sequence: 170
 chapter: 4
 type: writing
 headword: "ç"

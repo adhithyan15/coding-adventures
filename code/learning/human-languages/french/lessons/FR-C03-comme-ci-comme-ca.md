@@ -1,5 +1,6 @@
 ---
 id: FR-C03-comme-ci-comme-ca
+sequence: 130
 chapter: 3
 type: word
 headword: comme ci, comme ça

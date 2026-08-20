@@ -4,11 +4,11 @@
   "chapter": 9,
   "title": "Months and Seasons",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:8841e970ee25edfd",
+  "sourceHash": "fnv1a64:06cc4bc5b102db61",
   "lessons": [
     {
       "id": "FR-C09-mois",
-      "sequence": null,
+      "sequence": 235,
       "title": "les mois — the calendar's gods and Caesars",
       "headword": "les mois",
       "romanization": "les mois",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2974781db5823913",
+      "sourceHash": "fnv1a64:1fa596e076338a9c",
       "notice": null,
       "blocks": [
         {
@@ -143,7 +143,7 @@
     },
     {
       "id": "FR-C09-saisons",
-      "sequence": null,
+      "sequence": 240,
       "title": "les saisons — the four seasons",
       "headword": "les saisons",
       "romanization": "les saisons",
@@ -154,7 +154,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:27f997cadda7b0cf",
+      "sourceHash": "fnv1a64:052f69c01f3548fc",
       "notice": null,
       "blocks": [
         {

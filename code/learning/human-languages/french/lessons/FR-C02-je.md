@@ -1,5 +1,6 @@
 ---
 id: FR-C02-je
+sequence: 60
 chapter: 2
 type: word
 headword: je

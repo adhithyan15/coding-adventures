@@ -1,5 +1,6 @@
 ---
 id: FR-C11-pain
+sequence: 255
 chapter: 11
 type: word
 headword: le pain
