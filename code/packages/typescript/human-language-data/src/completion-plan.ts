@@ -134,6 +134,9 @@ export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
  */
 export const CERTIFIABLE_LEVELS: readonly CefrLevel[] = CEFR_LEVELS.filter((level) => level !== "pre-A1");
 
+/** Curriculum rungs that require a four-skill performance target. */
+export const TASK_SHAPE_LEVELS: readonly CefrLevel[] = CEFR_LEVELS;
+
 /** One unit of pickup-able work. */
 export interface WorkItem {
   /** Stable and derivable — the same corpus produces the same id on every run. */
@@ -233,23 +236,22 @@ function tranchesFor(outstanding: number, kind: WorkKind): number {
 }
 
 /**
- * The lowest certifiable level at or above `from` that has no inventory yet.
+ * The lowest requested level at or above `from` that has no inventory yet.
  *
  * Called with the level a track is IN PROGRESS at, so a track working pre-A1 is
- * asked for its A1 inventory. That is deliberate: the external exam or
- * project-defined target for the next rung
- * has to be written down before the climb reaches it, or the climb is once again
- * aimed at a number this repository invented. HL-C184's Phase 0 made exactly
- * this point and it is the reason the item is ordered at the IN-PROGRESS level
- * rather than at the level it describes.
+ * Task shapes pass all seven curriculum rungs, so a track working at pre-A1 is
+ * first asked for pre-A1. Exam inventories pass only certifiable levels and
+ * therefore still look ahead from pre-A1 to A1. In both cases the target has to
+ * be written before the climb reaches or leaves that rung.
  */
 function nextMissingInventory(
   language: string,
   from: CefrLevel,
   ceiling: CefrLevel,
   have: ReadonlySet<string>,
+  levels: readonly CefrLevel[],
 ): CefrLevel | null {
-  for (const level of CERTIFIABLE_LEVELS) {
+  for (const level of levels) {
     if (levelRank(level) < levelRank(from)) continue;
     if (levelRank(level) > levelRank(ceiling)) break;
     if (!have.has(`${language}/${level}`)) return level;
@@ -318,7 +320,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     // terminal exercise rather than a sourced chain of response lengths,
     // interaction modes, timings and scoring shapes that five-minute lessons
     // can approach one dimension at a time.
-    const missingTaskShape = nextMissingInventory(track.language, level, ceiling, haveTaskShapes);
+    const missingTaskShape = nextMissingInventory(track.language, level, ceiling, haveTaskShapes, TASK_SHAPE_LEVELS);
     if (missingTaskShape !== null) {
       mine.push({
         id: `task-shape/${track.language}/${missingTaskShape}`,
@@ -334,7 +336,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     }
 
     // The external language-point target for the next certifiable rung, if it is not written.
-    const missing = nextMissingInventory(track.language, level, ceiling, have);
+    const missing = nextMissingInventory(track.language, level, ceiling, have, CERTIFIABLE_LEVELS);
     if (missing !== null) {
       const partialKey = `${track.language}/${missing}`;
       const action = partial.has(partialKey)
@@ -461,8 +463,11 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
  * a precondition for the climb; it stops being a precondition for the floor.
  */
 function effectivePriority(item: WorkItem): number {
-  if ((item.kind === "task-shape" || item.kind === "exam-inventory") && !CERTIFIABLE_LEVELS.includes(item.level)) {
-    return KIND_PRIORITY["spine-nodes"] + 1;
+  if (item.kind === "task-shape" || item.kind === "exam-inventory") {
+    const target = item.id.split("/").at(-1) as CefrLevel | undefined;
+    if (target !== undefined && levelRank(target) > levelRank(item.level)) {
+      return KIND_PRIORITY["spine-nodes"] + 1;
+    }
   }
   return KIND_PRIORITY[item.kind];
 }
@@ -549,13 +554,23 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
   }
   const vocabularyItems = Math.ceil(words / TRANCHE_SIZE.vocabulary);
 
-  const wanted = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter((level) => levelRank(level) <= levelRank(ceiling)).length;
-  const inventoryItems = Math.max(0, wanted - input.inventories.length);
+  const trackNames = new Set(input.levelGate.tracks.map((track) => track.language));
+  const wantedInventories = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter(
+    (level) => levelRank(level) <= levelRank(ceiling),
+  ).length;
+  const wantedTaskShapes = input.levelGate.tracks.length * TASK_SHAPE_LEVELS.filter(
+    (level) => levelRank(level) <= levelRank(ceiling),
+  ).length;
+  const inventoryItems = Math.max(0, wantedInventories - input.inventories.length);
   const partialInventoryItems = (input.partialInventories ?? []).filter(
     (entry) => levelRank(entry.level) <= levelRank(ceiling),
   ).length;
-  const taskShapeItems = Math.max(0, wanted - (input.taskShapes ?? []).length);
-  const trackNames = new Set(input.levelGate.tracks.map((track) => track.language));
+  const validTaskShapePairs = new Set(
+    (input.taskShapes ?? [])
+      .filter((entry) => trackNames.has(entry.language) && levelRank(entry.level) <= levelRank(ceiling))
+      .map((entry) => `${entry.language}/${entry.level}`),
+  );
+  const taskShapeItems = Math.max(0, wantedTaskShapes - validTaskShapePairs.size);
   const validAssessmentContracts = new Set(
     (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
   );
@@ -599,7 +614,7 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     {
       kind: "task-shape",
       items: taskShapeItems,
-      detail: `${(input.taskShapes ?? []).length} of ${wanted} (track x certifiable level) four-skill task shapes written`,
+      detail: `${validTaskShapePairs.size} of ${wantedTaskShapes} (track x curriculum level) four-skill task shapes written`,
     },
     {
       kind: "writing-stage",
@@ -622,7 +637,7 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
       kind: "exam-inventory",
       items: inventoryItems,
       detail:
-        `${input.inventories.length} complete and ${partialInventoryItems} partial of ${wanted} ` +
+        `${input.inventories.length} complete and ${partialInventoryItems} partial of ${wantedInventories} ` +
         `(track x certifiable level) inventories written; partial never counts as complete`,
     },
     {
