@@ -1011,6 +1011,7 @@ members = [
     "smart-home-knxnet-ip-integration",
     "smart-home-esphome-discovery-integration",
     "smart-home-google-cast-discovery-integration",
+    "smart-home-homekit-discovery-integration",
     "smart-home-enphase-envoy-integration",
     "smart-home-airgradient-local-integration",
     "smart-home-govee-lan-integration",
