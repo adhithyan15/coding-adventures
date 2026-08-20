@@ -85,6 +85,30 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(() => parseTaskShapeInventory(value, "german")).toThrow(/variant sets omit part/);
   });
 
+  it("preserves a published minimum when no maximum is published", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
+    const writing = value.sections.find((section: { skill: string }) => section.skill === "writing");
+    writing.parts[1].responseLength = { unit: "words", minimum: 40, maximum: null, approximate: false };
+    const parsed = parseTaskShapeInventory(value, "german");
+    expect(parsed.sections.find((section) => section.skill === "writing")?.parts[1]?.responseLength).toEqual({
+      unit: "words",
+      minimum: 40,
+      maximum: null,
+      approximate: false,
+    });
+  });
+
+  it("rejects a length with neither bound", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
+    value.sections[0].parts[0].stimulusLength = {
+      unit: "words",
+      minimum: null,
+      maximum: null,
+      approximate: false,
+    };
+    expect(() => parseTaskShapeInventory(value, "german")).toThrow(/must publish at least one finite bound/);
+  });
+
   it("rejects path traversal at the loader boundary", () => {
     expect(() => loadTaskShapeInventory("../german", "A1")).toThrow(/unsafe/);
     expect(() => loadTaskShapeInventory("german", "A1\/../A2")).toThrow(/unsafe/);
