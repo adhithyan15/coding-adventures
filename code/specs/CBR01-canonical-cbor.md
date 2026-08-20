@@ -12,6 +12,17 @@ and audit entries. The contract is language-neutral. Rust is the first
 established implementation; C and C++ are independent emerging-lane reference
 oracles. No implementation is normative by itself.
 
+Every implementation is zero-dependency by design (the Rust crate's
+`[dependencies]` is empty; the C and C++ oracles link nothing beyond their own
+platform's libc). This is deliberate, not incidental: canonical-CBOR sits
+underneath everything else in the Vault stack — records, authentication
+material, audit entries — so any dependency it took on would become a
+transitive dependency of every one of those, and it is meant to stay usable
+from arbitrarily constrained contexts, including the from-scratch C/C++
+reference oracles it ships next to. See "Non-goals" for the one consequence
+of that rule worth naming explicitly: this crate cannot itself provide secure
+zeroization of a `CborValue` tree's owned buffers.
+
 ## Why this primitive exists
 
 Vault layers require one logical value to have exactly one byte sequence. Plain
@@ -206,7 +217,23 @@ The corpus covers:
 - streaming encode/decode;
 - CBOR diagnostic notation;
 - tag semantics;
-- cryptographic framing, schema evolution, signatures, storage, or I/O.
+- cryptographic framing, schema evolution, signatures, storage, or I/O;
+- in-memory zeroization of a decoded or caller-built `CborValue` tree. Rust's
+  `CborValue` is a plain owned-data enum — `Text(String)` and `Bytes(Vec<u8>)`
+  leaves, nested through `Array`, `Map`, and `Tag` — with ordinary,
+  non-wiping `Drop`. Providing secure wiping would mean depending on a
+  zeroization primitive, which this crate's zero-dependency design (see
+  "Overview") rules out. Callers that decode or build a `CborValue` tree from
+  secret plaintext — every typed Vault record does, since a record's
+  plaintext bytes are canonical CBOR — are responsible for wiping the tree
+  themselves once they are done reading from or writing to it. VLT-PM05
+  §13.6 documents the pattern this codebase uses (`vault-records`'
+  `zeroize_cbor_value` and `SecretCborValue`): a local wrapper type, not a
+  trait implemented on `CborValue` itself, because neither the wrapper's
+  trait nor `CborValue` is local to the same crate — Rust's orphan rule
+  forbids a third crate from implementing a foreign trait on a foreign type,
+  so no caller crate can hand `CborValue` a real `Zeroize` impl even if it
+  wanted to.
 
 ## Citations
 

@@ -488,14 +488,30 @@ encode" as a reachable outcome and reports `BoundExceeded`, never a panic — a
 process abort would discard in-flight state and, because the offending value
 persists, would repeat on every later command against the same vault.
 
-Three of these need no hostile input at all:
+Two of these need no hostile input at all:
 
-- the **catalog** is re-encoded by every mutation, and its own validation admits
-  100,000 entries — far past the codec ceiling;
 - a **portable export** of a vault holding a couple of large entries produces a
   snapshot over 1 MiB;
 - **local state** carries the publication journal, which admits thousands of
   prepared objects.
+
+The **catalog** used to be a third: it is re-encoded by every mutation, and its
+own admission check used to allow 100,000 entries — a number the codec
+ceiling could never actually carry, since an ordinary vault crossed it
+somewhere around nineteen thousand items. Because catalog entries are never
+removed (a deleted item becomes a tombstone *entry*, not a smaller one), a
+vault that reached the real ceiling could never shrink back under it from
+inside the product — every later mutation that had to re-encode the full
+catalog failed the same way, permanently, delete included. `MAX_CATALOG_ENTRIES`
+is now *derived* from `MAX_ENCODED_SIZE` — the exact per-entry byte cost (55
+bytes) plus a safety margin — so admission refuses the item that would make
+the catalog unencodable before that catalog is ever built, rather than
+discovering the failure on the next re-encode. Only genuine growth is held to
+that tighter bound, though: `CatalogV1::new_for_mutation` checks a non-growing
+mutation (an edit, a delete, a restore) against the looser, proven
+`MAX_ENCODABLE_CATALOG_ENTRIES` instead, so a catalog already sitting above
+the admission ceiling — synced from a peer, say — stays editable and
+deletable-from, not merely openable. See VLT-PM05 section 13.4.
 
 The remaining ones — a first-party record, the revision framing around it, and
 the re-encode of entries imported from someone else's artifact — are reachable
@@ -522,9 +538,11 @@ a *size* violated this was `decode_record`'s opaque arm, which re-encoded the
 payload it had just decoded; it no longer does.
 
 The invariant is about size, and about materialisation. Open still fails closed
-on corrupt frames, broken pins, failed signatures, and a catalog past
-`MAX_CATALOG_ENTRIES` — and a revision that does not decode at all still denies
-it, which a peer-authored first-party record with a schema-invalid payload can
+on corrupt frames, broken pins, failed signatures, and a catalog past the
+proven, decode-time `MAX_ENCODABLE_CATALOG_ENTRIES` ceiling (deliberately
+looser than the admission-time `MAX_CATALOG_ENTRIES` above — see VLT-PM05
+section 13.4) — and a revision that does not decode at all still denies it,
+which a peer-authored first-party record with a schema-invalid payload can
 still cause. That residual is pre-existing and tracked; it needs a decision
 about what a partly-unreadable item looks like to every ceremony, not a local
 fix. See VLT-PM05 section 13.3 and VLT02 *Decoding never re-encodes*.

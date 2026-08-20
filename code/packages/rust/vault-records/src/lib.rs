@@ -227,6 +227,127 @@ impl From<CborError> for VaultRecordError {
 }
 
 // ─────────────────────────────────────────────────────────────────────
+// 2a. Zeroizing CborValue trees
+// ─────────────────────────────────────────────────────────────────────
+//
+// `encode_record` and `decode_record` both build an owned `CborValue`
+// tree that, for the six typed record kinds plus opaque pass-through,
+// *is* somebody's plaintext: `Login.password`, `Card.number`,
+// `TotpSeed.secret`, and friends all pass through a `CborValue::Map`
+// on the way to or from the wire. `Login` and its siblings already
+// implement `Zeroize` + `Drop` (see section 4 below) so the *typed*
+// struct wipes itself. The `CborValue` tree used to build or decode
+// it did not: `encode_payload` clones every field into a fresh
+// `CborValue::Text`/`CborValue::Bytes`, and `decode_payload` clones
+// fields back out of a `CborValue` the codec already fully
+// materialised — in both directions, an owned tree of plaintext sits
+// in a local variable that dropped through the ordinary, non-wiping
+// `Vec`/`String`/`CborValue` destructors.
+//
+// A round-trip security review once proposed patching this by wiping
+// only `try_encode`'s own output buffer on its error path. That fix
+// was correctly rejected as incomplete by construction: the same
+// plaintext also sits in the *caller's* `CborValue` tree (`envelope`
+// in `encode_record`, `payload` in `decode_record`), which the
+// encoder's error path cannot reach and which is still fully built
+// and dropped unwiped even when the encoder *succeeds*.
+//
+// The real fix has to live on the caller side, for a structural
+// reason: `CborValue` is defined in `canonical-cbor`, which is
+// deliberately zero-dependency (see CBR01 and that crate's own
+// module doc) so it stays usable from arbitrarily constrained
+// contexts, including the C/C++ reference oracles it ships alongside.
+// It cannot depend on `coding_adventures_zeroize` to provide
+// `impl Zeroize for CborValue` itself, and no third crate can supply
+// that impl either — neither the `Zeroize` trait nor the `CborValue`
+// type is local to this crate, so Rust's orphan rule forbids
+// `impl coding_adventures_zeroize::Zeroize for CborValue` from
+// showing up here. `zeroize_cbor_value` and `SecretCborValue` below
+// sidestep the rule the ordinary way: the *wrapper type* is local to
+// this crate, so its `Drop` impl needs no permission from either the
+// trait's or `CborValue`'s home crate.
+//
+// `zeroize_cbor_value`'s match has **no wildcard arm** on purpose: if
+// canonical-cbor ever grows a tenth `CborValue` variant (its own docs
+// name floats as future work), this function fails to compile until
+// the new arm is added here, rather than silently leaving a class of
+// plaintext unwiped. See the `zeroize_cbor_value_wipes_every_variant`
+// test below for the same exhaustiveness check applied at the call
+// site, and `secret_cbor_value_drop_runs_even_on_panic_unwind` for
+// proof `SecretCborValue`'s `Drop` fires on every exit path — the
+// gap the rejected error-path-only quick fix left open.
+
+/// Recursively wipe every owned `Text`/`Bytes` buffer reachable from a
+/// `CborValue` tree, through any nesting of `Array`, `Map` (both keys
+/// and values), and `Tag`.
+///
+/// `Unsigned`, `Negative`, `Bool`, and `Null` carry no owned heap
+/// buffer — a `u64`/`bool` lives inline in the enum, nothing to wipe —
+/// so those arms are no-ops kept only so the match stays exhaustive.
+fn zeroize_cbor_value(value: &mut CborValue) {
+    match value {
+        CborValue::Text(s) => s.zeroize(),
+        CborValue::Bytes(b) => b.zeroize(),
+        CborValue::Array(items) => {
+            for item in items.iter_mut() {
+                zeroize_cbor_value(item);
+            }
+        }
+        CborValue::Map(entries) => {
+            for (k, v) in entries.iter_mut() {
+                zeroize_cbor_value(k);
+                zeroize_cbor_value(v);
+            }
+        }
+        CborValue::Tag(_, inner) => zeroize_cbor_value(inner),
+        CborValue::Unsigned(_) | CborValue::Negative(_) | CborValue::Bool(_) | CborValue::Null => {}
+    }
+}
+
+/// Owns a `CborValue` tree that may hold plaintext secrets and wipes
+/// it, recursively, when the guard drops.
+///
+/// This is `Zeroizing<CborValue>` in everything but name — `CborValue`
+/// cannot itself implement the sibling crate's `Zeroize` trait (see
+/// the section comment above), so this crate provides the equivalent
+/// guarantee with a local newtype instead. `Deref` gives ordinary
+/// read access (`&secret_cbor_value` coerces to `&CborValue`) so
+/// callers pass it straight through to `expect_map`, `try_encode`,
+/// and every `VaultRecord::decode_payload` without change.
+struct SecretCborValue(CborValue);
+
+impl SecretCborValue {
+    fn new(value: CborValue) -> Self {
+        Self(value)
+    }
+}
+
+impl core::ops::Deref for SecretCborValue {
+    type Target = CborValue;
+
+    fn deref(&self) -> &CborValue {
+        &self.0
+    }
+}
+
+impl Drop for SecretCborValue {
+    fn drop(&mut self) {
+        #[cfg(test)]
+        SECRET_CBOR_VALUE_DROPS.fetch_add(1, core::sync::atomic::Ordering::Relaxed);
+        zeroize_cbor_value(&mut self.0);
+    }
+}
+
+/// Test-only counter proving `SecretCborValue::drop` actually ran,
+/// without reading through a pointer into memory the real `Drop` has
+/// already deallocated (which would be undefined behaviour, and this
+/// crate is `#![forbid(unsafe_code)]` besides). See
+/// `secret_cbor_value_drop_runs_even_on_panic_unwind` below.
+#[cfg(test)]
+static SECRET_CBOR_VALUE_DROPS: core::sync::atomic::AtomicUsize =
+    core::sync::atomic::AtomicUsize::new(0);
+
+// ─────────────────────────────────────────────────────────────────────
 // 3. Top-level encode / decode
 // ─────────────────────────────────────────────────────────────────────
 
@@ -268,10 +389,16 @@ impl From<CborError> for VaultRecordError {
 /// and returns `Err` without bytes, so a refused record can never be
 /// mistaken for a truncated-but-whole one.
 pub fn encode_record<T: VaultRecord>(rec: &T) -> Result<Vec<u8>, VaultRecordError> {
-    let envelope = CborValue::Map(vec![
+    // `envelope` holds a full plaintext clone of `rec`'s fields (see the
+    // section 2a comment above) for exactly as long as it takes
+    // `try_encode` to read it. `SecretCborValue`'s `Drop` wipes that
+    // clone whether `try_encode` succeeds or the `?` below returns
+    // early on failure — both are "the relevant caller-side scope
+    // ends," and both used to leave the clone sitting in freed heap.
+    let envelope = SecretCborValue::new(CborValue::Map(vec![
         (CborValue::text("t"), CborValue::text(T::CONTENT_TYPE)),
         (CborValue::text("d"), rec.encode_payload()),
-    ]);
+    ]));
     Ok(try_encode(&envelope)?)
 }
 
@@ -279,16 +406,69 @@ pub fn encode_record<T: VaultRecord>(rec: &T) -> Result<Vec<u8>, VaultRecordErro
 /// pattern-matches on the content type. Unknown types are returned
 /// as `AnyRecord::Opaque` so old clients do not crash on records
 /// produced by newer ones.
+///
+/// # Why a schema mismatch on a *known* content type does not fail
+///
+/// A payload tagged with a first-party content type (e.g.
+/// `vault/login/v1`) but missing a required field, or carrying a
+/// field of the wrong shape, used to make this function return
+/// `Err(SchemaMismatch)`. That looks like the correct behaviour in
+/// isolation — the bytes genuinely are not a `Login` — but one layer
+/// up it repeats the exact defect this function's opaque arm was
+/// fixed for (see the comment below): `decode_record` runs during
+/// vault *open*, and the caller (`decode_live` in the application
+/// layer) mapped every decode error, `SchemaMismatch` included, to
+/// `IntegrityFailure`. One peer authoring a `Login` with a missing
+/// `password` field denied the whole vault, not just that one item —
+/// the identical blast radius as the oversized-opaque bug, reached
+/// through a different door.
+///
+/// Unlike the oversized-opaque case, there is no "return the original
+/// bytes as the same type" escape hatch here: the payload cannot be
+/// materialised as a `Login` at all, by definition. What *is* available
+/// is the same technique the opaque arm already uses — the payload's
+/// own already-validated CBOR bytes, sliced rather than re-encoded —
+/// just attached to a new [`AnyRecord::Quarantined`] variant instead of
+/// a typed struct. The record is still identifiable (its declared
+/// content type is retained) and still round-trips losslessly (its
+/// bytes are retained verbatim); it just cannot be interpreted as the
+/// schema it claims. That is enough for the vault to open, for the item
+/// to be listed, and for it to be deleted — the same floor `Opaque`
+/// already stands on.
+///
+/// Only [`VaultRecordError::SchemaMismatch`] is treated this way. Any
+/// other error from a typed decoder still fails `decode_record` outright,
+/// because `VaultRecord::decode_payload` is documented to return
+/// `SchemaMismatch` and nothing else — this is a defensive branch, not a
+/// currently-reachable one, kept so a future decoder that starts
+/// returning some other error is not silently swallowed into quarantine.
 pub fn decode_record(bytes: &[u8]) -> Result<AnyRecord, VaultRecordError> {
     let (content_type, payload, payload_span) = split_envelope(bytes)?;
+    // Decode a known first-party type, quarantining a schema mismatch
+    // instead of propagating it. See the function doc comment above.
+    macro_rules! typed_or_quarantine {
+        ($ctor:expr) => {
+            match $ctor(&payload) {
+                Ok(record) => record,
+                Err(VaultRecordError::SchemaMismatch { what }) => {
+                    return Ok(AnyRecord::Quarantined {
+                        content_type,
+                        payload_bytes: bytes[payload_span].to_vec(),
+                        reason: what,
+                    })
+                }
+                Err(other) => return Err(other),
+            }
+        };
+    }
     Ok(match content_type.as_str() {
-        LOGIN_V1 => AnyRecord::Login(Login::decode_payload(&payload)?),
-        SECURE_NOTE_V1 => AnyRecord::SecureNote(SecureNote::decode_payload(&payload)?),
-        CARD_V1 => AnyRecord::Card(Card::decode_payload(&payload)?),
-        TOTP_SEED_V1 => AnyRecord::TotpSeed(TotpSeed::decode_payload(&payload)?),
-        API_KEY_V1 => AnyRecord::ApiKey(ApiKey::decode_payload(&payload)?),
+        LOGIN_V1 => AnyRecord::Login(typed_or_quarantine!(Login::decode_payload)),
+        SECURE_NOTE_V1 => AnyRecord::SecureNote(typed_or_quarantine!(SecureNote::decode_payload)),
+        CARD_V1 => AnyRecord::Card(typed_or_quarantine!(Card::decode_payload)),
+        TOTP_SEED_V1 => AnyRecord::TotpSeed(typed_or_quarantine!(TotpSeed::decode_payload)),
+        API_KEY_V1 => AnyRecord::ApiKey(typed_or_quarantine!(ApiKey::decode_payload)),
         DATABASE_CREDENTIAL_V1 => {
-            AnyRecord::DatabaseCredential(DatabaseCredential::decode_payload(&payload)?)
+            AnyRecord::DatabaseCredential(typed_or_quarantine!(DatabaseCredential::decode_payload))
         }
         // Unknown / app-specific / future-version: hand back the
         // payload's own bytes and return as opaque.
@@ -357,7 +537,7 @@ pub fn decode_record_as<T: VaultRecord>(bytes: &[u8]) -> Result<T, VaultRecordEr
 /// different inputs.
 fn split_envelope(
     bytes: &[u8],
-) -> Result<(String, CborValue, core::ops::Range<usize>), VaultRecordError> {
+) -> Result<(String, SecretCborValue, core::ops::Range<usize>), VaultRecordError> {
     // Anything that is not a two-entry map is not a record envelope. A
     // shape mismatch is `Ok(None)` from the codec and a violation of the
     // canonical profile is `Err`, and the two stay distinct here.
@@ -368,16 +548,69 @@ fn split_envelope(
         return Err(VaultRecordError::NotARecord);
     }
     let mut t: Option<String> = None;
-    let mut d: Option<(CborValue, core::ops::Range<usize>)> = None;
-    for entry in entries {
-        match entry.key {
-            CborValue::Text(s) if s == "t" => match entry.value {
+    // Wrapped the instant the plaintext value under `"d"` is captured,
+    // not after `split_envelope` returns successfully: `d` can also be
+    // dropped un-returned if the envelope's *other* entry turns out to
+    // be malformed (`BadEnvelope` below). `Option<SecretCborValue>`'s
+    // own drop glue wipes it on that path too, which a wipe placed only
+    // at the bottom of this function, after the final `match`, would
+    // have missed.
+    let mut d: Option<(SecretCborValue, core::ops::Range<usize>)> = None;
+    let mut malformed = false;
+    // This loop deliberately never `return`s early, even on a shape it
+    // is about to reject. A security review of an earlier version of
+    // this function (which *did* `return Err(...)` from inside the
+    // loop body) found that doing so leaks: `for entry in entries`
+    // desugars to `IntoIterator::into_iter(entries)`, and an early
+    // `return` abandons that iterator mid-walk. Any entry the loop
+    // hadn't reached yet is still owned by the iterator and drops
+    // through ordinary, non-wiping `Drop` when the function unwinds —
+    // bypassing every explicit `zeroize_cbor_value` call in the body
+    // entirely, for both that entry's key *and* its value. With exactly
+    // two entries this is reachable: an envelope whose first
+    // (canonically-ordered) entry has an unrecognised key bails before
+    // the second entry — which could legitimately be `"d"` — is ever
+    // inspected. So instead this loop always visits every entry,
+    // wiping or capturing each one before moving to the next, and only
+    // decides what to return *after* the loop has fully drained
+    // `entries`. `malformed` records "reject at the end" without ever
+    // walking away from an entry mid-iteration.
+    for mut entry in entries {
+        // Every key is read only to classify the entry, never returned
+        // to the caller (the two legal ones are the literal `"t"`/`"d"`
+        // constants), so it is always wiped immediately after — even
+        // though `"t"`/`"d"` are not secrets, this keeps the "everything
+        // this loop touches gets wiped, no exceptions" invariant simple
+        // to audit rather than special-casing "looks secret."
+        let is_t = matches!(&entry.key, CborValue::Text(s) if s == "t");
+        let is_d = matches!(&entry.key, CborValue::Text(s) if s == "d");
+        zeroize_cbor_value(&mut entry.key);
+
+        if is_t {
+            match entry.value {
                 CborValue::Text(s) => t = Some(s),
-                _ => return Err(VaultRecordError::BadEnvelope),
-            },
-            CborValue::Text(s) if s == "d" => d = Some((entry.value, entry.value_span)),
-            _ => return Err(VaultRecordError::BadEnvelope),
+                mut other => {
+                    // Malformed `"t"`: whatever this decoded to is
+                    // still somebody's decrypted plaintext, just filed
+                    // under the wrong key. Wipe it before the shape
+                    // mismatch is reported.
+                    zeroize_cbor_value(&mut other);
+                    malformed = true;
+                }
+            }
+        } else if is_d {
+            d = Some((SecretCborValue::new(entry.value), entry.value_span));
+        } else {
+            // Unrecognised key. The value under it is still decrypted
+            // plaintext (this envelope's own siblings decoded through
+            // the same call), so it gets the same wipe as every other
+            // rejected shape here.
+            zeroize_cbor_value(&mut entry.value);
+            malformed = true;
         }
+    }
+    if malformed {
+        return Err(VaultRecordError::BadEnvelope);
     }
     match (t, d) {
         (Some(t), Some((d, span))) => Ok((t, d, span)),
@@ -385,8 +618,10 @@ fn split_envelope(
     }
 }
 
-/// One of the known record types, or an opaque pass-through for
-/// content types this crate doesn't recognise.
+/// One of the known record types, an opaque pass-through for content
+/// types this crate doesn't recognise, or a quarantined record whose
+/// declared type it recognises but whose payload doesn't parse as
+/// that type's schema.
 #[derive(Clone, PartialEq, Eq)]
 pub enum AnyRecord {
     /// `vault/login/v1`
@@ -411,6 +646,42 @@ pub enum AnyRecord {
         /// The canonical-CBOR-encoded payload bytes.
         payload_bytes: Vec<u8>,
     },
+    /// A first-party content type (`vault/login/v1` and friends) whose
+    /// payload does not decode as that type's schema — a required field
+    /// missing, or present with the wrong shape.
+    ///
+    /// This differs from `Opaque` in *why* the type could not be
+    /// materialised: `Opaque` means "this crate doesn't recognise the
+    /// content type at all," which is an ordinary forward-compatibility
+    /// case (an older client seeing a newer peer's record). `Quarantined`
+    /// means "this crate recognises the content type and the payload is
+    /// still wrong," which only happens if a peer authored a malformed
+    /// record — by bug or by malice. The two get the same downstream
+    /// treatment (visible in `item list`, redacted in `item show`,
+    /// deletable, inert in search) because a caller's remedy is the same
+    /// either way — it cannot repair the record, only remove it — but
+    /// they are kept as distinct variants because *why* a record is
+    /// unreadable is worth preserving for diagnostics, and conflating
+    /// the two would make "how many records has this vault received
+    /// that this client cannot even parse against its own claimed type"
+    /// unanswerable.
+    Quarantined {
+        /// The content_type string from the wire (one of this crate's
+        /// own `*_V1` constants — otherwise decoding would have taken
+        /// the `Opaque` arm instead).
+        content_type: String,
+        /// The payload's own canonical-CBOR bytes, sliced rather than
+        /// re-encoded for the same reason `Opaque`'s are: the bytes came
+        /// from the strict canonical decoder, so they already are the
+        /// one legal spelling of that value, and slicing a
+        /// parser-measured range cannot fail on input that decoded.
+        payload_bytes: Vec<u8>,
+        /// Static description of what went wrong, e.g.
+        /// `"Login.password missing"`. Never attacker-controlled text —
+        /// it is always one of a fixed set of literals defined by this
+        /// crate's own typed decoders.
+        reason: &'static str,
+    },
 }
 
 impl core::fmt::Debug for AnyRecord {
@@ -423,6 +694,7 @@ impl core::fmt::Debug for AnyRecord {
             Self::ApiKey(_) => "AnyRecord::ApiKey(<redacted>)",
             Self::DatabaseCredential(_) => "AnyRecord::DatabaseCredential(<redacted>)",
             Self::Opaque { .. } => "AnyRecord::Opaque(<redacted>)",
+            Self::Quarantined { .. } => "AnyRecord::Quarantined(<redacted>)",
         };
         f.write_str(variant)
     }
@@ -445,10 +717,19 @@ pub enum VaultRecordKind {
     DatabaseCredential,
     /// Unknown, app-specific, or future-version content type.
     Opaque,
+    /// A first-party content type whose payload failed schema decode.
+    Quarantined,
 }
 
 impl VaultRecordKind {
     /// Static content type for first-party records.
+    ///
+    /// Returns `None` for `Quarantined` even though the record's *wire*
+    /// content type is one of this crate's own `*_V1` constants — this
+    /// method returns a `&'static str` and a quarantined record's content
+    /// type is only known at runtime (it is read straight off `AnyRecord`,
+    /// same as `Opaque`'s). Use `AnyRecord`'s own content-type accessor
+    /// (in the application layer) when the dynamic string is needed.
     pub fn content_type(self) -> Option<&'static str> {
         match self {
             Self::Login => Some(LOGIN_V1),
@@ -457,11 +738,16 @@ impl VaultRecordKind {
             Self::TotpSeed => Some(TOTP_SEED_V1),
             Self::ApiKey => Some(API_KEY_V1),
             Self::DatabaseCredential => Some(DATABASE_CREDENTIAL_V1),
-            Self::Opaque => None,
+            Self::Opaque | Self::Quarantined => None,
         }
     }
 
     /// True for first-party records understood by this crate.
+    ///
+    /// `Quarantined` is `false` here even though its wire content type
+    /// names a first-party schema: this predicate means "successfully
+    /// decoded as one of the six typed schemas," and a quarantined
+    /// record by definition did not.
     pub fn is_first_party(self) -> bool {
         self.content_type().is_some()
     }
@@ -495,9 +781,11 @@ pub struct VaultRecordSummary {
     pub has_expiry: bool,
     /// Whether the record carries a lease reference.
     pub has_lease: bool,
-    /// Length of an opaque record's content type. Zero for first-party records.
+    /// Length of an opaque or quarantined record's content type. Zero for
+    /// records decoded as one of the six typed schemas.
     pub opaque_content_type_len: usize,
-    /// Canonical-CBOR payload byte length for opaque records. Zero for first-party records.
+    /// Canonical-CBOR payload byte length for opaque or quarantined
+    /// records. Zero for records decoded as one of the six typed schemas.
     pub opaque_payload_bytes: usize,
 }
 
@@ -526,6 +814,12 @@ impl VaultRecordSummary {
     pub fn is_opaque(&self) -> bool {
         self.kind == VaultRecordKind::Opaque
     }
+
+    /// True when the record's declared type is known but its payload
+    /// failed schema decode.
+    pub fn is_quarantined(&self) -> bool {
+        self.kind == VaultRecordKind::Quarantined
+    }
 }
 
 impl AnyRecord {
@@ -539,6 +833,7 @@ impl AnyRecord {
             Self::ApiKey(_) => VaultRecordKind::ApiKey,
             Self::DatabaseCredential(_) => VaultRecordKind::DatabaseCredential,
             Self::Opaque { .. } => VaultRecordKind::Opaque,
+            Self::Quarantined { .. } => VaultRecordKind::Quarantined,
         }
     }
 
@@ -620,6 +915,20 @@ impl AnyRecord {
                 opaque_content_type_len: content_type.len(),
                 opaque_payload_bytes: payload_bytes.len(),
             },
+            Self::Quarantined {
+                content_type,
+                payload_bytes,
+                reason: _,
+            } => VaultRecordSummary {
+                kind: VaultRecordKind::Quarantined,
+                secret_field_count: 0,
+                optional_field_count: 0,
+                list_item_count: 0,
+                has_expiry: false,
+                has_lease: false,
+                opaque_content_type_len: content_type.len(),
+                opaque_payload_bytes: payload_bytes.len(),
+            },
         }
     }
 }
@@ -637,6 +946,19 @@ impl Zeroize for AnyRecord {
                 content_type,
                 payload_bytes,
             } => {
+                content_type.zeroize();
+                payload_bytes.zeroize();
+            }
+            AnyRecord::Quarantined {
+                content_type,
+                payload_bytes,
+                reason: _,
+            } => {
+                // `reason` is a `&'static str` literal owned by this
+                // crate's own source, never attacker-controlled, so
+                // there is nothing to wipe there. `content_type` and
+                // `payload_bytes` came off the wire and get the same
+                // treatment as `Opaque`'s.
                 content_type.zeroize();
                 payload_bytes.zeroize();
             }
@@ -658,6 +980,19 @@ impl Zeroize for AnyRecord {
 // future-version content type), the caller should call
 // `.zeroize()` explicitly via the `Zeroize` trait impl above
 // before letting the value drop.
+//
+// `AnyRecord::Quarantined { content_type, payload_bytes, reason }`
+// gets the same non-`Drop` treatment for the same structural reason
+// (no typed struct to hold a per-type `Drop`), but unlike `Opaque` its
+// bytes usually ARE known to be sensitive: the declared content type
+// names one of this crate's own secret-bearing schemas (a `Login`
+// missing its `password` field, say, still has a *username* sitting in
+// `payload_bytes`). Callers that materialise a `Quarantined` record —
+// today, only `decode_record`'s typed-dispatch arms — should treat its
+// `payload_bytes` as sensitive by default and hold it the same way they
+// would hold the typed record it failed to become (e.g. wrapped in
+// `Zeroizing<_>`), rather than assuming safety the way `Opaque`'s
+// genuinely-unknown-type bytes get to.
 
 /// Re-encode an [`AnyRecord::Opaque`] back to its full
 /// envelope-wrapped canonical CBOR bytes. Useful for forwarding a
@@ -673,14 +1008,19 @@ pub fn encode_opaque(
     content_type: &str,
     payload_bytes: &[u8],
 ) -> Result<Vec<u8>, VaultRecordError> {
+    // `payload_bytes` here is frequently a `Quarantined`/`Opaque`
+    // record's own plaintext (see that variant's doc comment on
+    // `AnyRecord`), so `payload` and the `envelope` it moves into get
+    // the same `SecretCborValue` wipe-on-drop treatment as
+    // `encode_record`'s tree.
     let payload = decode(payload_bytes)?;
-    let envelope = CborValue::Map(vec![
+    let envelope = SecretCborValue::new(CborValue::Map(vec![
         (
             CborValue::text("t"),
             CborValue::text(content_type.to_string()),
         ),
         (CborValue::text("d"), payload),
-    ]);
+    ]));
     Ok(try_encode(&envelope)?)
 }
 
@@ -2119,6 +2459,133 @@ mod tests {
         assert!(matches!(err, VaultRecordError::SchemaMismatch { .. }));
     }
 
+    // --- Schema mismatch through `decode_record` is quarantined, not denied ---
+    //
+    // The three tests above prove `decode_record_as::<T>` — a caller asking
+    // for one specific type — still fails closed on schema mismatch. These
+    // prove `decode_record` — the general decoder `decode_live` in the
+    // application layer calls at vault-open time — does not: it must
+    // materialise something rather than propagate the error, because
+    // propagating it here is exactly the bug this quarantine variant
+    // exists to close (see the `decode_record` doc comment).
+
+    #[test]
+    fn login_missing_password_via_decode_record_is_quarantined_not_denied() {
+        // Same malformed bytes as `login_missing_password_is_schema_mismatch`,
+        // but through the general decoder instead of the type-specific one.
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("t"), CborValue::text(LOGIN_V1.to_string())),
+            (
+                CborValue::text("d"),
+                CborValue::Map(vec![
+                    (CborValue::text("title"), CborValue::text("x".to_string())),
+                    (
+                        CborValue::text("username"),
+                        CborValue::text("y".to_string()),
+                    ),
+                    (CborValue::text("urls"), CborValue::Array(vec![])),
+                ]),
+            ),
+        ]);
+        let bytes = encode(&envelope);
+
+        let any = decode_record(&bytes).expect(
+            "a schema-mismatched but well-formed-envelope record must still decode \
+             (as Quarantined), never deny the whole decode",
+        );
+        match any {
+            AnyRecord::Quarantined {
+                content_type,
+                payload_bytes,
+                reason,
+            } => {
+                assert_eq!(content_type, LOGIN_V1);
+                assert!(reason.contains("password"));
+                // The quarantined bytes are exactly the inner "d" payload's
+                // own canonical CBOR — the same slice-not-re-encode contract
+                // the Opaque arm already gives.
+                let payload = decode(&payload_bytes).unwrap();
+                if let CborValue::Map(entries) = payload {
+                    assert_eq!(entries.len(), 3);
+                } else {
+                    panic!("expected map");
+                }
+            }
+            other => panic!("expected Quarantined, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn card_with_invalid_month_via_decode_record_is_quarantined() {
+        let mut c = sample_card();
+        c.expiry_month = 13;
+        let bytes = encode_record(&c).unwrap();
+        let any = decode_record(&bytes).unwrap();
+        match any {
+            AnyRecord::Quarantined {
+                content_type,
+                reason,
+                ..
+            } => {
+                assert_eq!(content_type, CARD_V1);
+                assert!(reason.contains("month"));
+            }
+            other => panic!("expected Quarantined, got {:?}", other),
+        }
+    }
+
+    #[test]
+    fn quarantined_record_kind_and_summary_are_distinct_from_opaque() {
+        let mut t = sample_totp();
+        t.digits = 100;
+        let bytes = encode_record(&t).unwrap();
+        let any = decode_record(&bytes).unwrap();
+
+        assert_eq!(any.kind(), VaultRecordKind::Quarantined);
+        assert_ne!(any.kind(), VaultRecordKind::Opaque);
+        assert!(!any.kind().is_first_party());
+
+        let summary = any.summary();
+        assert_eq!(summary.kind, VaultRecordKind::Quarantined);
+        assert!(summary.is_quarantined());
+        assert!(!summary.is_opaque());
+        assert!(!summary.is_first_party());
+        assert_eq!(summary.opaque_content_type_len, TOTP_SEED_V1.len());
+        assert!(summary.opaque_payload_bytes > 0);
+    }
+
+    #[test]
+    fn quarantined_record_debug_is_value_redacted() {
+        let mut c = sample_card();
+        c.expiry_month = 13;
+        let bytes = encode_record(&c).unwrap();
+        let any = decode_record(&bytes).unwrap();
+        assert_eq!(format!("{any:?}"), "AnyRecord::Quarantined(<redacted>)");
+    }
+
+    #[test]
+    fn a_malformed_envelope_still_denies_decode_record_entirely() {
+        // Quarantine only widens the *schema-mismatch* case. A record whose
+        // envelope itself is broken (not a {t,d} map, "t" the wrong type,
+        // etc.) is not something any content type can be attributed to, and
+        // must still fail outright rather than being silently accepted as
+        // some fabricated quarantine record.
+        let not_a_record = encode(&CborValue::Array(vec![CborValue::Unsigned(1)]));
+        assert!(matches!(
+            decode_record(&not_a_record),
+            Err(VaultRecordError::NotARecord)
+        ));
+
+        let bad_envelope = CborValue::Map(vec![
+            (CborValue::text("t"), CborValue::Unsigned(1)),
+            (CborValue::text("d"), CborValue::Map(vec![])),
+        ]);
+        assert!(matches!(
+            decode_record(&encode(&bad_envelope)),
+            Err(VaultRecordError::BadEnvelope)
+        ));
+    }
+
     // --- Envelope rejection ---
 
     #[test]
@@ -2263,5 +2730,204 @@ mod tests {
             assert_eq!(format!("{error:?}"), expected);
             assert_eq!(format!("{error:#?}"), expected);
         }
+    }
+
+    // --- CborValue zeroization (item #9) ---
+
+    /// Every leaf of a `CborValue` tree, no matter how deeply nested
+    /// under `Array`/`Map`/`Tag`, is empty after `zeroize_cbor_value`.
+    /// The checker below has its own exhaustive match (no wildcard),
+    /// so this test is a second, independent enforcement point beyond
+    /// `zeroize_cbor_value`'s own: if canonical-cbor ever grows a new
+    /// variant, *this* match fails to compile too, not just the one in
+    /// the production code it's checking.
+    #[test]
+    fn zeroize_cbor_value_wipes_every_variant() {
+        fn assert_no_plaintext_remains(v: &CborValue) {
+            match v {
+                CborValue::Text(s) => assert!(s.is_empty(), "unwiped Text leaf: {s:?}"),
+                CborValue::Bytes(b) => assert!(b.is_empty(), "unwiped Bytes leaf: {b:?}"),
+                CborValue::Array(items) => items.iter().for_each(assert_no_plaintext_remains),
+                CborValue::Map(entries) => entries.iter().for_each(|(k, v)| {
+                    assert_no_plaintext_remains(k);
+                    assert_no_plaintext_remains(v);
+                }),
+                CborValue::Tag(_, inner) => assert_no_plaintext_remains(inner),
+                CborValue::Unsigned(_)
+                | CborValue::Negative(_)
+                | CborValue::Bool(_)
+                | CborValue::Null => {}
+            }
+        }
+
+        let mut value = CborValue::Map(vec![
+            (
+                CborValue::text("password"),
+                CborValue::text("hunter2-super-secret"),
+            ),
+            (
+                CborValue::text("totp-seed"),
+                CborValue::bytes(vec![0xDE, 0xAD, 0xBE, 0xEF]),
+            ),
+            (
+                CborValue::text("nested"),
+                CborValue::Array(vec![
+                    CborValue::text("nested-secret-one"),
+                    CborValue::bytes(b"nested-secret-two".to_vec()),
+                    CborValue::Tag(
+                        61,
+                        Box::new(CborValue::Map(vec![(
+                            CborValue::text("k"),
+                            CborValue::text("tagged-and-mapped-secret"),
+                        )])),
+                    ),
+                ]),
+            ),
+            (CborValue::text("count"), CborValue::Unsigned(42)),
+            (CborValue::text("delta"), CborValue::Negative(7)),
+            (CborValue::text("flag"), CborValue::Bool(true)),
+            (CborValue::text("absent"), CborValue::Null),
+        ]);
+
+        zeroize_cbor_value(&mut value);
+
+        // The map's own keys are plaintext field names, not secrets —
+        // but they went through the same recursive walk as everything
+        // else, so confirming they're wiped too proves the walk really
+        // is unconditional rather than special-casing "looks secret."
+        assert_no_plaintext_remains(&value);
+    }
+
+    #[test]
+    fn zeroize_cbor_value_on_scalars_is_a_harmless_no_op() {
+        for mut v in [
+            CborValue::Unsigned(9),
+            CborValue::Negative(3),
+            CborValue::Bool(false),
+            CborValue::Null,
+        ] {
+            let before = v.clone();
+            zeroize_cbor_value(&mut v);
+            assert_eq!(v, before);
+        }
+    }
+
+    #[test]
+    fn secret_cbor_value_derefs_for_read_access_before_drop() {
+        let secret = SecretCborValue::new(CborValue::Map(vec![(
+            CborValue::text("password"),
+            CborValue::text("still-readable"),
+        )]));
+        // `expect_map`/`try_encode`/`VaultRecord::decode_payload` all
+        // take `&CborValue`; this is the coercion `encode_record`,
+        // `encode_opaque`, and every typed decode rely on.
+        let entries = expect_map(&secret).unwrap();
+        assert_eq!(get_text(entries, "password").unwrap(), "still-readable");
+    }
+
+    /// Proves `SecretCborValue::drop` actually runs the wipe — on the
+    /// ordinary success path, on early return, *and* on panic unwind —
+    /// without reading through a pointer into memory the real `Drop`
+    /// has already deallocated (unsound, and this crate forbids
+    /// `unsafe` outright). Instead this observes the one side effect
+    /// `Drop::drop` produces that's safe to check after the fact: the
+    /// `#[cfg(test)]` counter it increments. `SECRET_CBOR_VALUE_DROPS`
+    /// is a single process-wide counter shared with every other test
+    /// that (directly or via `encode_record`/`decode_record`) drops a
+    /// `SecretCborValue` concurrently, so this only ever asserts the
+    /// counter moved *forward*, never an exact value — the one
+    /// assertion that stays true no matter what else is running.
+    #[test]
+    fn secret_cbor_value_drop_runs_even_on_panic_unwind() {
+        use core::sync::atomic::Ordering;
+        use std::panic::{catch_unwind, AssertUnwindSafe};
+
+        // Ordinary scope exit.
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        {
+            let _secret = SecretCborValue::new(CborValue::text("wiped-on-scope-exit"));
+        }
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "SecretCborValue::drop did not run on ordinary scope exit"
+        );
+
+        // Panic unwind mid-operation, the case the rejected
+        // error-path-only quick fix (see the section 2a comment above
+        // `zeroize_cbor_value`) would not have covered.
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        let result = catch_unwind(AssertUnwindSafe(|| {
+            let _secret = SecretCborValue::new(CborValue::text("wiped-on-panic-unwind"));
+            panic!("simulated mid-operation failure");
+        }));
+        assert!(result.is_err(), "panic did not propagate");
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "SecretCborValue::drop did not run during unwind"
+        );
+    }
+
+    /// End-to-end: `encode_record` and `decode_record` each build
+    /// exactly one caller-side `SecretCborValue` around real record
+    /// plaintext, and each one drops (wiping it) by the time the
+    /// function returns.
+    #[test]
+    fn encode_and_decode_record_each_wipe_their_own_cbor_tree() {
+        use core::sync::atomic::Ordering;
+
+        let login = sample_login();
+
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        let bytes = encode_record(&login).unwrap();
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "encode_record did not wipe its envelope"
+        );
+
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        let decoded = decode_record(&bytes).unwrap();
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "decode_record did not wipe its payload"
+        );
+        assert!(matches!(decoded, AnyRecord::Login(_)));
+    }
+
+    /// Pins a security-review finding against an earlier version of
+    /// `split_envelope`: its loop used to `return Err(...)` the moment it
+    /// saw a rejected entry, which abandoned `entries`' iterator mid-walk.
+    /// Canonical key order sorts `"a"` before `"d"` (equal encoded length,
+    /// `"a"` < `"d"` bytewise), so a malformed envelope shaped `{"a": …,
+    /// "d": <secret>}` reached the unrecognised `"a"` key first and
+    /// returned before the loop ever visited the legitimate `"d"` entry —
+    /// which still held real secret plaintext. That entry was never
+    /// wrapped in `SecretCborValue` at all, so it dropped through
+    /// ordinary, non-wiping `Drop` on the way out, unwiped. The loop no
+    /// longer returns early (see its doc comment); this proves the `"d"`
+    /// entry gets wrapped and wiped regardless of what its sibling looked
+    /// like or which one the loop reached first.
+    #[test]
+    fn a_malformed_envelopes_second_entry_is_still_wiped_even_when_the_first_is_rejected() {
+        use core::sync::atomic::Ordering;
+
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("a"), CborValue::Null),
+            (
+                CborValue::text("d"),
+                CborValue::text("a-secret-that-must-still-be-wiped"),
+            ),
+        ]);
+        let bytes = encode(&envelope);
+
+        let before = SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed);
+        assert!(matches!(
+            decode_record(&bytes).unwrap_err(),
+            VaultRecordError::BadEnvelope
+        ));
+        assert!(
+            SECRET_CBOR_VALUE_DROPS.load(Ordering::Relaxed) > before,
+            "the legitimate \"d\" entry, arriving after a rejected sibling, was never \
+             wrapped in SecretCborValue and so was never wiped"
+        );
     }
 }

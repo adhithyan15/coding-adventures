@@ -5561,6 +5561,48 @@
       "scriptSet": "telugu-comparisons"
     },
     {
+      "language": "telugu",
+      "chapter": 67,
+      "output": "telugu/book/chapters/ch67-the-house-itself.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 68,
+      "output": "telugu/book/chapters/ch68-sound-and-voice.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 69,
+      "output": "telugu/book/chapters/ch69-tools.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 70,
+      "output": "telugu/book/chapters/ch70-small-creatures.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 71,
+      "output": "telugu/book/chapters/ch71-the-wider-family.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 72,
+      "output": "telugu/book/chapters/ch72-the-market.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
+      "language": "telugu",
+      "chapter": 73,
+      "output": "telugu/book/chapters/ch73-tastes.tex",
+      "scriptSet": "telugu-comparisons"
+    },
+    {
       "language": "kannada",
       "chapter": 53,
       "output": "kannada/book/chapters/ch53-the-sky.tex",

@@ -20,3 +20,9 @@
 - Add a typed blocking WebSocket client with strict response-ID and envelope validation.
 - Accept the owned lifetime-free orchestrator core at the threaded daemon boundary.
 - Add a local serialized reconciliation boundary for the fail-closed daemon scheduler.
+- Report a quarantine's `permanent` and `expired` flags, and its `boot_id`
+  alongside `until_ns` when it lifts, so a client cannot mistake *that* reading
+  for its own clock. The observation's `started_at_ns`, `last_heartbeat_ns` and
+  `last_restart_ns` are still reported bare.
+- Report `failed` as a reconcile action, with a `failure` string naming why that
+  host could not be reconciled.

@@ -9,6 +9,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- **Caller-side `CborValue` trees are now wiped end to end.** `encode_record`
+  and `decode_record`/`decode_record_as` (via the shared `split_envelope`
+  helper) and `encode_opaque` each build an owned `CborValue` tree that, for
+  all seven record kinds, *is* somebody's plaintext — `encode_payload` clones
+  every field into fresh `CborValue::Text`/`Bytes` leaves, and the typed
+  `decode_payload`s clone fields back out of a tree the codec already fully
+  materialised. The typed records themselves already wipe on drop (`Login`
+  and its five siblings implement `Zeroize` + `Drop`), but this intermediate
+  tree did not: it dropped through ordinary, non-wiping `Vec`/`String`/
+  `CborValue` destructors, once per encode or decode.
+
+  A prior security review's proposed quick fix — wipe only `try_encode`'s
+  output buffer on its error path — was correctly rejected as incomplete:
+  the caller's own tree is built and dropped regardless of whether that
+  encode call succeeds, and `canonical-cbor` itself cannot own the fix
+  (it is deliberately zero-dependency; see CBR01's "Non-goals"). The real
+  fix is here instead: a new `zeroize_cbor_value` recursively wipes every
+  `Text`/`Bytes` leaf through any nesting of `Array`/`Map`/`Tag` (its match
+  has no wildcard arm, so a future `CborValue` variant fails to compile here
+  until the new arm is added), and a new local `SecretCborValue` wrapper —
+  `Zeroizing<CborValue>` in everything but name, since `CborValue` cannot
+  itself implement the sibling crate's `Zeroize` trait without violating
+  Rust's orphan rule — calls it from `Drop`, so the wipe runs on every exit
+  path (success, an early `?`-propagated error, or a panic unwind), not only
+  the ones a hand-placed wipe call would remember to cover. See VLT-PM05
+  §13.6 for the full design account and CBR01's "Non-goals" for why this
+  could not live inside canonical-cbor.
+
 - `decode_record`'s opaque arm no longer re-encodes the payload it has just
   decoded, which closes the most severe defect this codec had: an opaque record
   that could be **read but not read back**.

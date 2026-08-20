@@ -1435,6 +1435,140 @@ pub enum SimdOpKind {
     /// stored as a `u32` bit pattern in the same 4-byte lane slot every
     /// other `i32x4`-lane op in this table uses.
     TruncSatF64x2UZero,
+    /// `i16x8.extend_low_i8x16_s` -- reinterpret the ONE popped `v128` as
+    /// 16 `i8` lanes, take only the LOW 8 lanes (indices 0-7),
+    /// sign-extend each to `i16`, producing an `i16x8` result. This is
+    /// EXACTLY the lane-selection + sign-extend half of
+    /// [`Self::ExtmulLowI8x16S`], minus the multiply -- UNARY where
+    /// `extmul` is BINARY, same narrow-input (8-bit)/wide-output (16-bit)
+    /// shape as [`Self::ExtaddPairwiseI8x16S`]. Part of the 16-opcode set
+    /// (`extend_low`/`high`, `narrow`, `promote`/`demote`/`convert_low`)
+    /// needed to unlock the upstream `simd_conversions.wast` corpus file
+    /// -- see this crate's `SIMD_OPS` doc comment.
+    ExtendLowI8x16S,
+    /// `i16x8.extend_high_i8x16_s` -- same as [`Self::ExtendLowI8x16S`],
+    /// but takes the HIGH 8 lanes (indices 8-15) of the operand `v128`
+    /// instead of the low 8. Mirrors [`Self::ExtmulHighI8x16S`]'s lane
+    /// selection, minus the multiply.
+    ExtendHighI8x16S,
+    /// `i16x8.extend_low_i8x16_u` -- same LOW-8-lanes shape as
+    /// [`Self::ExtendLowI8x16S`], but each `i8` lane is zero-extended
+    /// (read as `u8`) instead of sign-extended.
+    ExtendLowI8x16U,
+    /// `i16x8.extend_high_i8x16_u` -- same HIGH-8-lanes shape as
+    /// [`Self::ExtendHighI8x16S`], but zero-extended, not sign-extended.
+    ExtendHighI8x16U,
+    /// `i32x4.extend_low_i16x8_s` -- reinterpret the ONE popped `v128` as
+    /// 8 `i16` lanes, take only the LOW 4 lanes (indices 0-3),
+    /// sign-extend each to `i32`, producing an `i32x4` result. Same
+    /// pattern one lane width up from [`Self::ExtendLowI8x16S`] --
+    /// EXACTLY the lane-selection + sign-extend half of
+    /// [`Self::ExtmulLowI16x8S`], minus the multiply.
+    ExtendLowI16x8S,
+    /// `i32x4.extend_high_i16x8_s` -- same as [`Self::ExtendLowI16x8S`],
+    /// but takes the HIGH 4 lanes (indices 4-7) of the operand `v128`
+    /// instead of the low 4. Mirrors [`Self::ExtmulHighI16x8S`]'s lane
+    /// selection, minus the multiply.
+    ExtendHighI16x8S,
+    /// `i32x4.extend_low_i16x8_u` -- same LOW-4-lanes shape as
+    /// [`Self::ExtendLowI16x8S`], but each `i16` lane is zero-extended
+    /// (read as `u16`) instead of sign-extended.
+    ExtendLowI16x8U,
+    /// `i32x4.extend_high_i16x8_u` -- same HIGH-4-lanes shape as
+    /// [`Self::ExtendHighI16x8S`], but zero-extended, not sign-extended.
+    ExtendHighI16x8U,
+    /// `i8x16.narrow_i16x8_s` -- BINARY (the opposite shape from
+    /// [`Self::ExtendLowI8x16S`]'s UNARY): pop TWO `v128`s, each read as
+    /// 8 `i16` lanes. Each `i16` lane of BOTH operands is SIGNED-
+    /// saturated to the `i8` range (`i8::MIN..=i8::MAX`) and cast down
+    /// to `i8`, producing one `i8x16` result -- the FIRST (bottom of
+    /// stack) operand's 8 saturated lanes become the LOW half (indices
+    /// 0-7) of the result, the SECOND (top of stack) operand's 8
+    /// saturated lanes become the HIGH half (indices 8-15). This
+    /// operand-to-half ordering is the classic bug spot for this
+    /// opcode family -- verified against the WASM SIMD spec's own
+    /// `narrow` pseudocode (`result[i] = Saturate(a[i])` for `i` in
+    /// `0..N`, `result[N+i] = Saturate(b[i])` for `i` in `0..N`) before
+    /// implementing. Part of the 16-opcode set (`extend_low`/`high`,
+    /// `narrow`, `promote`/`demote`/`convert_low`) needed to unlock the
+    /// upstream `simd_conversions.wast` corpus file -- see this crate's
+    /// `SIMD_OPS` doc comment.
+    NarrowI16x8S,
+    /// `i8x16.narrow_i16x8_u` -- same BINARY/lane-ordering shape as
+    /// [`Self::NarrowI16x8S`], but UNSIGNED-saturates each `i16` lane
+    /// to `0..=u8::MAX` (255) instead of the signed `i8` range. The
+    /// classic gotcha here: a negative `i16` lane (e.g. `-1`) saturates
+    /// to `0`, NOT to a large unsigned value via bit-reinterpretation
+    /// -- this is a genuine clamp on the lane's SIGNED value, not a
+    /// wrapping cast.
+    NarrowI16x8U,
+    /// `i16x8.narrow_i32x4_s` -- same pattern one lane width up from
+    /// [`Self::NarrowI16x8S`]: pop TWO `v128`s, each read as 4 `i32`
+    /// lanes, SIGNED-saturate each to the `i16` range
+    /// (`i16::MIN..=i16::MAX`), cast down to `i16`. First operand's 4
+    /// saturated lanes -> LOW half (indices 0-3) of the `i16x8` result,
+    /// second operand's 4 saturated lanes -> HIGH half (indices 4-7).
+    NarrowI32x4S,
+    /// `i16x8.narrow_i32x4_u` -- same shape as [`Self::NarrowI32x4S`],
+    /// but UNSIGNED-saturates each `i32` lane to `0..=u16::MAX` (65535)
+    /// instead of the signed `i16` range -- same "negative saturates to
+    /// zero, not wraps" discipline as [`Self::NarrowI16x8U`].
+    NarrowI32x4U,
+    /// `f32x4.demote_f64x2_zero` -- pop one `v128`, read it as 2 `f64`
+    /// lanes, demote (narrow) each to `f32` via the same plain `as f32`
+    /// cast the scalar `f32.demote_f64` handler (0xB6) uses -- IEEE-754
+    /// narrowing that CAN lose precision or overflow to `f32::INFINITY`/
+    /// `f32::NEG_INFINITY` for out-of-range magnitudes (expected
+    /// behavior, not an error), inheriting that scalar handler's NaN
+    /// convention: no hand-rolled payload preservation, since Rust's `as`
+    /// cast (LLVM's `fptrunc`) canonicalizes the NaN payload, exactly as
+    /// this crate's `to_typed`/`from_typed` doc comment already documents
+    /// for the SAME f64->f32 narrowing direction elsewhere in this
+    /// codebase. Push one `v128` with 4 `f32` lanes: lanes 0-1 hold the
+    /// two demoted results (SAME order as the source `f64` lanes), lanes
+    /// 2-3 are always `0.0`. Mirrors [`Self::TruncSatF64x2SZero`]'s exact
+    /// zero-fill shape -- "_zero" means the same thing here: `f64x2` only
+    /// has 2 lanes to widen `f32x4`'s 4. Last of the 16-opcode
+    /// `extend_low`/`high` (PR26) + `narrow` (PR27) + `promote`/`demote`/
+    /// `convert_low` (this PR) set needed to unlock the upstream
+    /// `simd_conversions.wast` corpus file -- see this crate's `SIMD_OPS`
+    /// doc comment.
+    DemoteF64x2Zero,
+    /// `f64x2.promote_low_f32x4` -- pop one `v128`, read it as 4 `f32`
+    /// lanes, take only the LOW 2 lanes (indices 0-1) -- lanes 2-3 are
+    /// DROPPED, never read into the result (the opposite discipline from
+    /// [`Self::DemoteF64x2Zero`]'s zero-FILL: this is lane-DROPPING,
+    /// since promoting from 4 lanes to 2 can't invent extra output lanes
+    /// to zero) -- and promote (widen) each to `f64` via the same plain
+    /// `as f64` cast the scalar `f64.promote_f32` handler (0xBB) uses
+    /// (exact, lossless IEEE-754 widening for every finite value; same
+    /// NaN-payload-canonicalization caveat as [`Self::DemoteF64x2Zero`]
+    /// documents). Push one `v128` with 2 `f64` lanes holding the two
+    /// promoted results, in the same order as the source low-half `f32`
+    /// lanes.
+    PromoteLowF32x4,
+    /// `f64x2.convert_low_i32x4_s` -- pop one `v128`, read it as 4 `i32`
+    /// lanes, take only the LOW 2 lanes (indices 0-1, same lane-DROPPING
+    /// discipline as [`Self::PromoteLowF32x4`] -- lanes 2-3 are never
+    /// read), convert each SIGNED `i32` to `f64` via `v as f64` (exact
+    /// and lossless -- every `i32` value fits precisely in `f64`'s
+    /// 52-bit mantissa, so there's no rounding or NaN case to consider
+    /// at all, unlike the float-source conversions above). Push one
+    /// `v128` with 2 `f64` lanes holding the two converted results, in
+    /// the same order as the source low-half `i32` lanes. The reverse
+    /// direction of [`Self::TruncSatF64x2SZero`] (that went `f64x2` ->
+    /// `i32x4` with zero-PADDING; this goes `i32x4` -> `f64x2` with
+    /// lane-DROPPING).
+    ConvertLowI32x4S,
+    /// `f64x2.convert_low_i32x4_u` -- same LOW-2-lanes-dropping shape as
+    /// [`Self::ConvertLowI32x4S`], but each `i32` lane's bit pattern is
+    /// reinterpreted as `u32` BEFORE the `f64` conversion (`(v as u32)
+    /// as f64`), same signed/unsigned split as
+    /// [`Self::ConvertI32x4U`]/[`Self::ConvertI32x4S`] -- a lane with the
+    /// high bit set (e.g. bit pattern `0xFFFFFFFF`, i.e. `-1` as a
+    /// signed `i32`) must convert to `4294967295.0f64` (`u32::MAX`), NOT
+    /// `-1.0f64`.
+    ConvertLowI32x4U,
 }
 
 /// One entry in the SIMD opcode table: everything a consumer needs to
@@ -1734,6 +1868,79 @@ pub static SIMD_OPS: &[SimdOpInfo] = &[
     // conversion family with no gap).
     SimdOpInfo { name: "i32x4.trunc_sat_f64x2_s_zero", sub_opcode: 0xFC, kind: SimdOpKind::TruncSatF64x2SZero },
     SimdOpInfo { name: "i32x4.trunc_sat_f64x2_u_zero", sub_opcode: 0xFD, kind: SimdOpKind::TruncSatF64x2UZero },
+    // SIMD widen PR26 (task #193-195): i16x8.extend_low/high_i8x16_s/_u
+    // (0x87/0x88/0x89/0x8A) and i32x4.extend_low/high_i16x8_s/_u
+    // (0xA7/0xA8/0xA9/0xAA) -- the "extend" family, EXACTLY the
+    // lane-selection + sign/zero-extend half of the already-implemented
+    // ExtmulLowI8x16S/ExtmulHighI8x16S/etc. handlers, minus the multiply.
+    // Each sub-opcode byte fetched live from BinarySIMD.md and
+    // cross-checked against the already-implemented i16x8.extmul_low_i8x16_s
+    // (0x9C)/i16x8.shl (0x8B)/i16x8.q15mulr_sat_s (0x82)/
+    // i32x4.extmul_low_i16x8_s (0xBC)/i32x4.all_true (0xA3)/i32x4.shl
+    // (0xAB) entries (all six matched exactly, confirming 0x87-0x8A and
+    // 0xA7-0xAA are free gaps in their respective runs). This is one of
+    // three PRs (this one, a future "narrow" PR, and a future
+    // "promote/demote/convert_low" PR) needed to land all 16 opcodes the
+    // upstream simd_conversions.wast corpus file bundles together in its
+    // modules -- NO corpus vendoring happens until all 16 are in, since
+    // that file can't be partially satisfied. This PR is opcode-only,
+    // verified by unit tests.
+    SimdOpInfo { name: "i16x8.extend_low_i8x16_s", sub_opcode: 0x87, kind: SimdOpKind::ExtendLowI8x16S },
+    SimdOpInfo { name: "i16x8.extend_high_i8x16_s", sub_opcode: 0x88, kind: SimdOpKind::ExtendHighI8x16S },
+    SimdOpInfo { name: "i16x8.extend_low_i8x16_u", sub_opcode: 0x89, kind: SimdOpKind::ExtendLowI8x16U },
+    SimdOpInfo { name: "i16x8.extend_high_i8x16_u", sub_opcode: 0x8A, kind: SimdOpKind::ExtendHighI8x16U },
+    SimdOpInfo { name: "i32x4.extend_low_i16x8_s", sub_opcode: 0xA7, kind: SimdOpKind::ExtendLowI16x8S },
+    SimdOpInfo { name: "i32x4.extend_high_i16x8_s", sub_opcode: 0xA8, kind: SimdOpKind::ExtendHighI16x8S },
+    SimdOpInfo { name: "i32x4.extend_low_i16x8_u", sub_opcode: 0xA9, kind: SimdOpKind::ExtendLowI16x8U },
+    SimdOpInfo { name: "i32x4.extend_high_i16x8_u", sub_opcode: 0xAA, kind: SimdOpKind::ExtendHighI16x8U },
+    // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u
+    // (0x65/0x66) and i16x8.narrow_i32x4_s/_u (0x85/0x86) -- the
+    // "narrow" family, the saturating-demote OPPOSITE of PR26's
+    // "extend" family: BINARY (two v128 operands, not one), each
+    // lane SATURATED (not wrapped) down to the narrower width and
+    // concatenated (first operand -> low half, second operand -> high
+    // half of the result). Each sub-opcode byte fetched live from
+    // BinarySIMD.md (this is the SIMD sub-opcode space behind the
+    // `0xFD` prefix -- an entirely separate byte space from the
+    // single-byte `OPCODES` table above, so no collision is possible
+    // with e.g. `f64x2.le`'s unrelated `0x65` there) and cross-checked
+    // against the already-implemented `i8x16.bitmask` (0x64)/
+    // `i16x8.all_true` (0x83)/`i16x8.bitmask` (0x84) `SIMD_OPS`
+    // entries: 0x65/0x66 sit immediately past `i8x16.bitmask`'s 0x64
+    // with no gap, and 0x85/0x86 sit immediately past
+    // `i16x8.bitmask`'s 0x84 with no gap -- both confirmed free of
+    // collision with every existing `SIMD_OPS` entry (PR26's 0x87-0x8A
+    // and 0xA7-0xAA run don't overlap either). Second of three PRs
+    // (extend done in PR26, narrow here, promote/demote/convert_low to
+    // follow) needed to land all 16 opcodes the upstream
+    // simd_conversions.wast corpus file bundles together -- still NO
+    // corpus vendoring in this PR, opcode-only, verified by unit
+    // tests.
+    SimdOpInfo { name: "i8x16.narrow_i16x8_s", sub_opcode: 0x65, kind: SimdOpKind::NarrowI16x8S },
+    SimdOpInfo { name: "i8x16.narrow_i16x8_u", sub_opcode: 0x66, kind: SimdOpKind::NarrowI16x8U },
+    SimdOpInfo { name: "i16x8.narrow_i32x4_s", sub_opcode: 0x85, kind: SimdOpKind::NarrowI32x4S },
+    SimdOpInfo { name: "i16x8.narrow_i32x4_u", sub_opcode: 0x86, kind: SimdOpKind::NarrowI32x4U },
+    // SIMD widen PR28 (task #199-201): f32x4.demote_f64x2_zero (0x5E),
+    // f64x2.promote_low_f32x4 (0x5F), f64x2.convert_low_i32x4_s (0xFE),
+    // f64x2.convert_low_i32x4_u (0xFF) -- the "promote/demote/
+    // convert_low" family, THIRD and FINAL of three PRs (extend done in
+    // PR26, narrow done in PR27, this one) needed to land all 16
+    // opcodes the upstream simd_conversions.wast corpus file bundles
+    // together in its modules. Each sub-opcode byte fetched live from
+    // BinarySIMD.md and cross-checked against this table's own already-
+    // implemented neighbors: 0x5E/0x5F sit immediately past v128.xor's
+    // (0x51) and v128.bitselect's (0x52) run and well clear of
+    // i8x16.narrow_i16x8_s/_u's 0x65/0x66 just above, no collision;
+    // 0xFE/0xFF sit immediately past i32x4.trunc_sat_f64x2_u_zero's
+    // 0xFD (PR25) with no gap, no collision with any entry in this
+    // table. With this PR landed, all 16 opcodes now exist, so
+    // simd_conversions.wast is vendored for the first time -- see
+    // `code/packages/rust/wasm-conformance/tests/fixtures/
+    // fetch_testsuite.py`.
+    SimdOpInfo { name: "f32x4.demote_f64x2_zero", sub_opcode: 0x5E, kind: SimdOpKind::DemoteF64x2Zero },
+    SimdOpInfo { name: "f64x2.promote_low_f32x4", sub_opcode: 0x5F, kind: SimdOpKind::PromoteLowF32x4 },
+    SimdOpInfo { name: "f64x2.convert_low_i32x4_s", sub_opcode: 0xFE, kind: SimdOpKind::ConvertLowI32x4S },
+    SimdOpInfo { name: "f64x2.convert_low_i32x4_u", sub_opcode: 0xFF, kind: SimdOpKind::ConvertLowI32x4U },
 ];
 
 /// Look up a SIMD opcode by its LEB128-decoded sub-opcode value (the
@@ -2152,8 +2359,8 @@ mod tests {
     // ── SIMD (0xFD prefix, v128 first slice) ─────────────────────────────────
 
     #[test]
-    fn simd_ops_table_has_the_expected_138_entries_and_no_duplicates() {
-        assert_eq!(SIMD_OPS.len(), 138);
+    fn simd_ops_table_has_the_expected_154_entries_and_no_duplicates() {
+        assert_eq!(SIMD_OPS.len(), 154);
 
         let mut seen_sub_opcodes = std::collections::HashSet::new();
         let mut seen_names = std::collections::HashSet::new();
@@ -2768,6 +2975,81 @@ mod tests {
         for (name, sub_opcode, kind) in [
             ("i32x4.trunc_sat_f64x2_s_zero", 0xFC, SimdOpKind::TruncSatF64x2SZero),
             ("i32x4.trunc_sat_f64x2_u_zero", 0xFD, SimdOpKind::TruncSatF64x2UZero),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_extend_low_high_widening_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR26 (task #193-195): i16x8.extend_low/high_i8x16_s/_u
+        // (0x87/0x88/0x89/0x8A) and i32x4.extend_low/high_i16x8_s/_u
+        // (0xA7/0xA8/0xA9/0xAA) -- fetched live from BinarySIMD.md,
+        // cross-checked against the already-implemented
+        // i16x8.extmul_low_i8x16_s (0x9C)/i32x4.extmul_low_i16x8_s (0xBC)
+        // entries (both matched exactly). First of three PRs needed to
+        // unlock simd_conversions.wast (narrow, then promote/demote/
+        // convert_low follow); no corpus vendoring happens until all 16
+        // opcodes across those PRs are in.
+        for (name, sub_opcode, kind) in [
+            ("i16x8.extend_low_i8x16_s", 0x87, SimdOpKind::ExtendLowI8x16S),
+            ("i16x8.extend_high_i8x16_s", 0x88, SimdOpKind::ExtendHighI8x16S),
+            ("i16x8.extend_low_i8x16_u", 0x89, SimdOpKind::ExtendLowI8x16U),
+            ("i16x8.extend_high_i8x16_u", 0x8A, SimdOpKind::ExtendHighI8x16U),
+            ("i32x4.extend_low_i16x8_s", 0xA7, SimdOpKind::ExtendLowI16x8S),
+            ("i32x4.extend_high_i16x8_s", 0xA8, SimdOpKind::ExtendHighI16x8S),
+            ("i32x4.extend_low_i16x8_u", 0xA9, SimdOpKind::ExtendLowI16x8U),
+            ("i32x4.extend_high_i16x8_u", 0xAA, SimdOpKind::ExtendHighI16x8U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_narrow_saturating_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u
+        // (0x65/0x66) and i16x8.narrow_i32x4_s/_u (0x85/0x86) -- fetched
+        // live from BinarySIMD.md, cross-checked against the already-
+        // implemented i8x16.bitmask (0x64)/i16x8.all_true (0x83)/
+        // i16x8.bitmask (0x84) entries: 0x65/0x66 sit immediately past
+        // i8x16.bitmask's 0x64 with no gap, 0x85/0x86 sit immediately
+        // past i16x8.bitmask's 0x84 with no gap. Second of three PRs
+        // needed to unlock simd_conversions.wast (extend done in PR26,
+        // promote/demote/convert_low to follow); no corpus vendoring
+        // happens until all 16 opcodes across those PRs are in.
+        for (name, sub_opcode, kind) in [
+            ("i8x16.narrow_i16x8_s", 0x65, SimdOpKind::NarrowI16x8S),
+            ("i8x16.narrow_i16x8_u", 0x66, SimdOpKind::NarrowI16x8U),
+            ("i16x8.narrow_i32x4_s", 0x85, SimdOpKind::NarrowI32x4S),
+            ("i16x8.narrow_i32x4_u", 0x86, SimdOpKind::NarrowI32x4U),
+        ] {
+            let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
+            assert_eq!(op.name, name);
+            assert_eq!(op.kind, kind);
+            assert_eq!(get_simd_op_by_name(name).map(|o| o.sub_opcode), Some(sub_opcode));
+        }
+    }
+
+    #[test]
+    fn simd_promote_demote_convert_low_family_has_the_real_verified_sub_opcode_values() {
+        // SIMD widen PR28 (task #199-201): f32x4.demote_f64x2_zero
+        // (0x5E), f64x2.promote_low_f32x4 (0x5F), f64x2.convert_low_i32x4_s
+        // (0xFE), f64x2.convert_low_i32x4_u (0xFF) -- fetched live from
+        // BinarySIMD.md. Third and FINAL of three PRs needed to unlock
+        // simd_conversions.wast (extend done in PR26, narrow done in
+        // PR27, promote/demote/convert_low here) -- all 16 opcodes now
+        // exist.
+        for (name, sub_opcode, kind) in [
+            ("f32x4.demote_f64x2_zero", 0x5E, SimdOpKind::DemoteF64x2Zero),
+            ("f64x2.promote_low_f32x4", 0x5F, SimdOpKind::PromoteLowF32x4),
+            ("f64x2.convert_low_i32x4_s", 0xFE, SimdOpKind::ConvertLowI32x4S),
+            ("f64x2.convert_low_i32x4_u", 0xFF, SimdOpKind::ConvertLowI32x4U),
         ] {
             let op = get_simd_op(sub_opcode).unwrap_or_else(|| panic!("{sub_opcode:#04x} should be {name}"));
             assert_eq!(op.name, name);

@@ -283,9 +283,24 @@ pub enum HostStatus {
     Stopping,
     Stopped,
     Crashed { exit_code: Option<i32> },
-    Quarantined { until_ns: u64, reason: String },
+    Quarantined { until: QuarantineDeadline, reason: String },
+}
+
+pub enum QuarantineDeadline {
+    /// Never lifts. Reserved for conditions that cannot resolve by waiting.
+    Permanent,
+    /// Lifts at `ns`, as read by the daemon run identified by `boot_id`.
+    Until { boot_id: u64, ns: u64 },
+    /// Already over. What a version-1 deadline decodes to: a bare monotonic
+    /// reading cannot be placed on a later run's clock.
+    Lapsed,
 }
 ```
+
+A deadline names the run that set it because it holds a *monotonic* reading,
+which counts from daemon start. A deadline from another run counts as elapsed --
+otherwise a sixty-second quarantine written by a daemon that had been up for a
+month keeps the host down for a month.
 
 Each host is stored as one bounded, versioned record behind the repository-owned
 `StorageBackend` interface. Registration is create-if-absent, observation and

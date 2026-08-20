@@ -1,5 +1,5 @@
 {
-  "case_count": 655,
+  "case_count": 656,
   "cases": [
     {
       "axis": "interactive-formatting-boundary",
@@ -3930,10 +3930,16 @@
       "id": "processing-instructions-dat-92",
       "reason": "standalone active formatting element reconstruction and stack cleanup",
       "source": "processing-instructions.dat:92"
+    },
+    {
+      "axis": "adoption-agency-formatting",
+      "id": "scripted-foster01-dat-1",
+      "reason": "active formatting reconstruction across paragraph, block, and table boundaries",
+      "source": "scripted_foster01.dat:1"
     }
   ],
   "counts_by_axis": {
-    "adoption-agency-formatting": 114,
+    "adoption-agency-formatting": 115,
     "formatting-reconstruction": 34,
     "heading-boundary": 28,
     "interactive-formatting-boundary": 151,

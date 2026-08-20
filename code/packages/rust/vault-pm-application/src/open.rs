@@ -30,7 +30,10 @@ use coding_adventures_zeroize::{Zeroize, Zeroizing};
 use core::fmt::{self, Debug, Formatter};
 use std::collections::{BTreeMap, BTreeSet};
 
-use crate::codec::{MAX_CANDIDATES_PER_ITEM, MAX_CATALOG_ENTRIES};
+use crate::codec::MAX_CANDIDATES_PER_ITEM;
+#[cfg(test)]
+use crate::codec::MAX_CATALOG_ENTRIES;
+use crate::codec::MAX_ENCODABLE_CATALOG_ENTRIES;
 
 /// Default maximum number of historical revisions returned for one item.
 pub const DEFAULT_ITEM_HISTORY_LIMIT: usize = 100;
@@ -4181,6 +4184,25 @@ pub fn open_active_vault(
     })
 }
 
+/// Merge every reachable head's catalog into the one current view.
+///
+/// # Why the merge cap is `MAX_ENCODABLE_CATALOG_ENTRIES`, not `MAX_CATALOG_ENTRIES`
+///
+/// Each catalog object decoded here already passed `CatalogV1::decode`'s own
+/// bound at the same value (VLT-PM05 §13.2's derivation), so a single head
+/// can never contribute more than that many distinct items. This loop's own
+/// check exists for the case of *several* unreconciled concurrent heads
+/// whose entries only partly overlap: the union across heads can in
+/// principle exceed what any one of them could encode alone. Using the
+/// proven, unmargined ceiling here (rather than the tighter admission bound)
+/// keeps that union check from denying `open_active_vault` over a size any
+/// honest set of heads could legitimately reach — VLT-PM05 §13.3 already
+/// established that open must not fail closed over size where a narrower,
+/// correctly-calibrated bound suffices. A merged view that does exceed even
+/// this proven ceiling cannot have come from any device honouring this wire
+/// format, so denying open here is deliberate: VLT-PM05 §13.3 names exactly
+/// this case — "a catalog with more entries than `MAX_CATALOG_ENTRIES`" —
+/// as one of the things open should still fail closed on.
 fn materialize_current_catalog(
     keys: &V1Keys,
     repository: &dyn ApplicationRepository,
@@ -4207,7 +4229,9 @@ fn materialize_current_catalog(
         let catalog = CatalogV1::decode(&catalog_plaintext)?;
 
         for (item_id, revision_ids) in catalog.entries() {
-            if !materialized.contains_key(item_id) && materialized.len() == MAX_CATALOG_ENTRIES {
+            if !materialized.contains_key(item_id)
+                && materialized.len() == MAX_ENCODABLE_CATALOG_ENTRIES
+            {
                 return Err(ApplicationError::IntegrityFailure);
             }
             let candidates = materialized.entry(*item_id).or_default();
@@ -4637,7 +4661,8 @@ mod tests {
         VaultObjectStore,
     };
     use coding_adventures_vault_records::{
-        AnyRecord, Login, SecureNote, TotpSeed, LOGIN_V1, SECURE_NOTE_V1, TOTP_SEED_V1,
+        encode_record, AnyRecord, Login, SecureNote, TotpSeed, LOGIN_V1, SECURE_NOTE_V1,
+        TOTP_SEED_V1,
     };
     use coding_adventures_zeroize::Zeroize;
     use std::sync::{
@@ -16371,6 +16396,563 @@ mod tests {
         let candidates = &session.current_catalog.items[&item_id];
         assert_eq!(candidates.len(), 1);
         assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // A synced peer's *schema-mismatched* record -- not oversized, just
+    // malformed relative to its declared content type (VLT-PM05 §13.3's
+    // adjacent, previously-unrepaired residual)
+    //
+    // The bug this closes is the same shape as the oversized-opaque one
+    // above but reached through a different door and with no "return the
+    // original bytes" escape hatch available: the payload here decoded
+    // through the strict canonical CBOR decoder (so the bytes are legal
+    // CBOR and could be returned verbatim) but does not satisfy the
+    // schema its declared content type names -- a `Login` missing its
+    // `password` field. There is no typed `Login` value to hand back, so
+    // the repair is `AnyRecord::Quarantined` instead of a re-encode fix.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// Canonical CBOR bytes for a `vault/login/v1` record whose payload
+    /// is missing the required `password` field -- otherwise well-formed
+    /// (valid CBOR, a `{t,d}` envelope, `d` a map with `title`,
+    /// `username`, and an empty `urls` array).
+    ///
+    /// This is the same defect as vault-records'
+    /// `login_missing_password_is_schema_mismatch` fixture, reproduced
+    /// here (rather than imported) because it has to be embedded inside
+    /// a full sealed item revision, which vault-records has no notion of.
+    fn schema_mismatched_login_record_bytes() -> Vec<u8> {
+        let envelope = CborValue::Map(vec![
+            (CborValue::text("t"), CborValue::text(LOGIN_V1.to_string())),
+            (
+                CborValue::text("d"),
+                CborValue::Map(vec![
+                    (
+                        CborValue::text("title"),
+                        CborValue::text("Peer Login".to_string()),
+                    ),
+                    (
+                        CborValue::text("username"),
+                        CborValue::text("mallory".to_string()),
+                    ),
+                    (CborValue::text("urls"), CborValue::Array(vec![])),
+                ]),
+            ),
+        ]);
+        encode_cbor(&envelope)
+    }
+
+    /// The revision plaintext a peer seals for one live `Login` item whose
+    /// payload is schema-mismatched (missing `password`).
+    ///
+    /// Same technique as [`peer_opaque_revision_plaintext`]: encode the
+    /// revision with a placeholder record through the product's own
+    /// encoder (so field framing, timestamps, and the observed sets are
+    /// exactly what this product would write), then splice out the
+    /// placeholder record's bytes for the schema-mismatched ones. Unlike
+    /// the oversized-opaque fixture there is no size pressure here -- the
+    /// swap is small-for-small -- but the splice is still required
+    /// because there is no way to *construct* a `Login` Rust value with a
+    /// missing field; only hand-built wire bytes can carry that defect.
+    fn peer_schema_mismatched_login_revision_plaintext(item_id: ItemId) -> Vec<u8> {
+        let placeholder_login = Login {
+            title: "placeholder".to_string(),
+            username: "placeholder".to_string(),
+            password: "placeholder".to_string(),
+            urls: vec![],
+            notes: None,
+        };
+        let document = ItemDocument::new(
+            item_id,
+            ContentType::new(LOGIN_V1).unwrap(),
+            700,
+            700,
+            LwwRegister::new(false, 700, OperationId::new([0xe0; 32])),
+            ObservedSet::new(),
+            ObservedSet::new(),
+            AnyRecord::Login(placeholder_login),
+            ObservedSet::new(),
+            BTreeMap::new(),
+        )
+        .unwrap();
+        let candidate = ItemCandidate::new(
+            RevisionId::new([0; 32]),
+            [],
+            ItemState::Live(Box::new(document)),
+        )
+        .unwrap();
+        let plaintext =
+            encode_item_revision(candidate.causal_parents(), candidate.state()).unwrap();
+
+        let placeholder_record = encode_record(&Login {
+            title: "placeholder".to_string(),
+            username: "placeholder".to_string(),
+            password: "placeholder".to_string(),
+            urls: vec![],
+            notes: None,
+        })
+        .unwrap();
+        let broken_record = schema_mismatched_login_record_bytes();
+        let mut placeholder_field = cbor_header(2, placeholder_record.len());
+        placeholder_field.extend_from_slice(&placeholder_record);
+        let mut broken_field = cbor_header(2, broken_record.len());
+        broken_field.extend_from_slice(&broken_record);
+        splice_only_occurrence(&plaintext, &placeholder_field, &broken_field)
+    }
+
+    /// A peer commit carrying one live `Login` item whose payload is
+    /// schema-mismatched.
+    fn peer_schema_mismatched_login_publication(
+        active: &ActiveStateV1,
+        item_id: ItemId,
+    ) -> (PublicationJournalV1, RevisionId) {
+        let fixture = generation_zero_bytes();
+        let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+        let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+        let frame = seal_object(
+            &keys,
+            ObjectKind::ItemRevision,
+            &peer_schema_mismatched_login_revision_plaintext(item_id),
+            &ObjectRandomness::new([0xd1; 32], [0xd2; 24], [0xd3; 24]),
+        )
+        .unwrap();
+        let revision_id = RevisionId::new(*frame.id().unwrap().as_bytes());
+        let catalog = CatalogV1::new(BTreeMap::from([(item_id, vec![revision_id])])).unwrap();
+        let catalog_frame = seal_object(
+            &keys,
+            ObjectKind::Catalog,
+            &catalog.encode().unwrap(),
+            &ObjectRandomness::new([0xd4; 32], [0xd5; 24], [0xd6; 24]),
+        )
+        .unwrap();
+        (
+            publication_for_catalog(active, vec![frame], catalog_frame),
+            revision_id,
+        )
+    }
+
+    /// Sync one peer-authored schema-mismatched `Login` item into a fresh
+    /// vault and return everything needed to reopen it.
+    #[allow(clippy::type_complexity)]
+    fn vault_with_synced_schema_mismatched_login_item() -> (
+        BootstrapLocator,
+        MemoryLocalStateStore,
+        MemoryBootstrapStore,
+        V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        ItemId,
+        RevisionId,
+    ) {
+        let (locator, local, bootstrap, factory) = initialized();
+        let exact_active = local.0.lock().unwrap().clone().unwrap();
+        let LocalVaultStateV1::Active(active) = LocalVaultStateV1::decode(&exact_active).unwrap()
+        else {
+            panic!("fixture must be active")
+        };
+        let item_id = ItemId::new([0x5e; 16]);
+        let (publication, revision_id) = peer_schema_mismatched_login_publication(&active, item_id);
+        peer_publishes(locator, &local, &bootstrap, &factory, publication);
+        (locator, local, bootstrap, factory, item_id, revision_id)
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_record_leaves_the_vault_openable() {
+        // The reachability proof. Before the fix in this test's history,
+        // `decode_record`'s `Login` arm propagated `SchemaMismatch`,
+        // `decode_live` mapped it to `IntegrityFailure` (see
+        // VLT-PM05 §13.3's residual paragraph), and that denied
+        // `open_active_vault` for the whole vault -- exactly the blast
+        // radius of the oversized-opaque bug, reached without ever
+        // crossing a size ceiling.
+        let (locator, local, bootstrap, factory, item_id, revision_id) =
+            vault_with_synced_schema_mismatched_login_item();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert_eq!(candidates[0].revision_id(), revision_id);
+
+        let ItemState::Live(document) = candidates[0].state() else {
+            panic!("the synced candidate must be live")
+        };
+        let AnyRecord::Quarantined {
+            content_type,
+            reason,
+            ..
+        } = document.payload()
+        else {
+            panic!("a schema-mismatched Login must decode as Quarantined")
+        };
+        assert_eq!(content_type, LOGIN_V1);
+        assert!(reason.contains("password"));
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_item_is_visible_in_the_redacted_list() {
+        // The item must not just fail to deny open -- it has to actually
+        // show up where an operator would look for it, or the fix
+        // degrades to "the vault opens but the item silently vanishes,"
+        // which trades one failure mode for a quieter one.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_schema_mismatched_login_item();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let views = session.list_items().unwrap();
+        let view = views
+            .iter()
+            .find(|view| view.item_id == item_id)
+            .expect("the quarantined item must still appear in the item list");
+        let RedactedRecordView::Quarantined {
+            content_type,
+            reason,
+            ..
+        } = &view.record
+        else {
+            panic!("expected Quarantined, got {:?}", view.record)
+        };
+        assert_eq!(content_type.as_str(), LOGIN_V1);
+        assert!(reason.contains("password"));
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_item_can_be_deleted() {
+        // The escape hatch this section restores, on the same terms as
+        // the oversized-opaque case: deletion writes a tombstone, which
+        // carries only the item id and a timestamp and never touches the
+        // unreadable payload, so it works even though nothing can repair
+        // or even fully interpret the record itself.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_schema_mismatched_login_item();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        session
+            .delete_current_item(item_id, 701, 702, delete_item_randomness(0x5e), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+    }
+
+    #[test]
+    fn a_synced_schema_mismatched_login_item_denies_edit_as_login() {
+        // Editing requires decoding the current record as the type being
+        // edited (`login_edit_precondition`'s `let AnyRecord::Login(_) =
+        // current.payload() else { .. }`). Before quarantine existed, an
+        // item whose `schema()` field said `vault/login/v1` was
+        // guaranteed to decode as `AnyRecord::Login` -- that was a true
+        // invariant, which is why the *defensive* copy of this same
+        // check inside `replacement_login_document` reports
+        // `InternalInvariant` on failure. Quarantine breaks that
+        // invariant for the first time: `schema()` can now say
+        // `vault/login/v1` while `payload()` is `Quarantined`. This test
+        // pins that the *first* gate a real `item edit` call reaches
+        // (`login_edit_precondition`) already treats "any variant other
+        // than Login" uniformly regardless of *why* -- Opaque or
+        // Quarantined both take the same `else` branch -- so the ordinary
+        // edit ceremony reports `Unsupported`, a normal declined-command
+        // outcome, and never reaches the inner defensive check at all.
+        let (locator, local, bootstrap, factory, item_id, _) =
+            vault_with_synced_schema_mismatched_login_item();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(
+            session.prepare_login_edit(item_id).err(),
+            Some(ApplicationError::Unsupported)
+        );
+    }
+
+    // ─────────────────────────────────────────────────────────────────
+    // A synced peer's oversized *catalog* -- the item count crossed, not
+    // any one record's size (VLT-PM05 §13.2's admission/decode fix)
+    //
+    // Mirrors the opaque-record class above one level up: instead of one
+    // poisoned record, the catalog object itself carries more entries
+    // than this device's own (now-tighter) admission ceiling would ever
+    // build, delivered the way a sync delivers it. The two tests bracket
+    // `MAX_ENCODABLE_CATALOG_ENTRIES` exactly: at the ceiling, no honest
+    // encoder could have produced more, so it must still open even though
+    // this device would refuse to grow a catalog that large itself; one
+    // entry past it, no honest encoder -- old or new -- could have
+    // produced it at all, so `materialize_current_catalog` denies open,
+    // which VLT-PM05 §13.3 names as one of the cases open should still
+    // fail closed on.
+    // ─────────────────────────────────────────────────────────────────
+
+    /// One CBOR definite-length header in the smallest form, independent of
+    /// this crate's own encoder -- see [`cbor_header`] above, reused here at
+    /// the catalog level.
+    fn raw_catalog_bytes_for(entries: &[(ItemId, RevisionId)]) -> Vec<u8> {
+        let mut out = vec![
+            0xa3,
+            0x01,
+            0x01,
+            0x02,
+            ObjectKind::Catalog.code() as u8,
+            0x03,
+        ];
+        out.extend(cbor_header(4, entries.len()));
+        for (item_id, revision_id) in entries {
+            out.extend([0xa2, 0x01]);
+            out.extend(cbor_header(2, 16));
+            out.extend_from_slice(item_id.as_bytes());
+            out.extend([0x02, 0x81]);
+            out.extend(cbor_header(2, 32));
+            out.extend_from_slice(revision_id.as_bytes());
+        }
+        out
+    }
+
+    /// Publish a peer-authored catalog that ends up carrying `item_count`
+    /// distinct items, then adopt its final head locally.
+    ///
+    /// One commit cannot carry more than `MAX_ADDED_OBJECTS` (4,096) new
+    /// objects -- VLT-PM format's own bound on one publication, unrelated
+    /// to the catalog-entry bound this fix derives -- so a catalog this
+    /// size cannot be delivered as a single implausible mega-sync. It is
+    /// delivered the way a catalog this size actually comes to exist:
+    /// many small publications, each adding a batch of new items and a
+    /// fresh cumulative catalog snapshot, exactly the shape ordinary
+    /// incremental growth already takes. This is not a simplification for
+    /// the test's sake -- it is what "an ordinary vault that grew" (the
+    /// bug's own framing, VLT-PM05 §13.2) looks like at the object-store
+    /// level.
+    fn publish_peer_catalog_with_item_count(
+        locator: BootstrapLocator,
+        local: &MemoryLocalStateStore,
+        bootstrap: &MemoryBootstrapStore,
+        factory: &V1ApplicationRepositoryFactory<InMemoryObjectStore>,
+        item_count: usize,
+    ) {
+        const BATCH_SIZE: usize = 4_000;
+        let mut accumulated: BTreeMap<ItemId, RevisionId> = BTreeMap::new();
+        let mut next_index = 0_usize;
+        while next_index < item_count {
+            let batch_end = (next_index + BATCH_SIZE).min(item_count);
+
+            let exact_active = local.0.lock().unwrap().clone().unwrap();
+            let LocalVaultStateV1::Active(active) =
+                LocalVaultStateV1::decode(&exact_active).unwrap()
+            else {
+                panic!("fixture must be active")
+            };
+            let fixture = generation_zero_bytes();
+            let root_key: [u8; 32] = fixture[48..80].try_into().unwrap();
+            let keys = V1Keys::derive(active.vault_id(), &root_key).unwrap();
+
+            let mut frames = Vec::with_capacity(batch_end - next_index);
+            for index in next_index..batch_end {
+                let counter = u64::try_from(index).unwrap();
+                let mut item_id_bytes = [0_u8; 16];
+                item_id_bytes[..8].copy_from_slice(&counter.to_be_bytes());
+                let item_id = ItemId::new(item_id_bytes);
+
+                let mut dek = [0xd0_u8; 32];
+                dek[..8].copy_from_slice(&counter.to_be_bytes());
+                let mut wrap_nonce = [0xd1_u8; 24];
+                wrap_nonce[..8].copy_from_slice(&counter.to_be_bytes());
+                let mut payload_nonce = [0xd2_u8; 24];
+                payload_nonce[..8].copy_from_slice(&counter.to_be_bytes());
+
+                let frame = seal_object(
+                    &keys,
+                    ObjectKind::ItemRevision,
+                    &peer_opaque_revision_plaintext(item_id, 8),
+                    &ObjectRandomness::new(dek, wrap_nonce, payload_nonce),
+                )
+                .unwrap();
+                let revision_id = RevisionId::new(*frame.id().unwrap().as_bytes());
+                accumulated.insert(item_id, revision_id);
+                frames.push(frame);
+            }
+
+            let entries: Vec<(ItemId, RevisionId)> =
+                accumulated.iter().map(|(id, rev)| (*id, *rev)).collect();
+            let catalog_plaintext = raw_catalog_bytes_for(&entries);
+            let batch_counter = u64::try_from(next_index).unwrap();
+            let mut catalog_dek = [0xd4_u8; 32];
+            catalog_dek[..8].copy_from_slice(&batch_counter.to_be_bytes());
+            let mut catalog_wrap_nonce = [0xd5_u8; 24];
+            catalog_wrap_nonce[..8].copy_from_slice(&batch_counter.to_be_bytes());
+            let mut catalog_payload_nonce = [0xd6_u8; 24];
+            catalog_payload_nonce[..8].copy_from_slice(&batch_counter.to_be_bytes());
+            let catalog_frame = seal_object(
+                &keys,
+                ObjectKind::Catalog,
+                &catalog_plaintext,
+                &ObjectRandomness::new(catalog_dek, catalog_wrap_nonce, catalog_payload_nonce),
+            )
+            .unwrap();
+            let publication = publication_for_catalog(&active, frames, catalog_frame);
+            peer_publishes(locator, local, bootstrap, factory, publication);
+
+            next_index = batch_end;
+        }
+    }
+
+    #[test]
+    fn a_synced_catalog_at_the_proven_ceiling_opens() {
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            MAX_ENCODABLE_CATALOG_ENTRIES,
+        );
+
+        // No honest encoder -- this device's own included -- could have
+        // produced one entry more, so this is the largest catalog any
+        // peer could legitimately have handed over. It still opens, even
+        // though this device's own tighter admission ceiling would refuse
+        // to grow a catalog to this size itself.
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(
+            session.current_catalog.items.len(),
+            MAX_ENCODABLE_CATALOG_ENTRIES
+        );
+    }
+
+    #[test]
+    fn a_synced_catalog_past_the_proven_ceiling_denies_open() {
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            MAX_ENCODABLE_CATALOG_ENTRIES + 1,
+        );
+
+        // Past the proven ceiling, no device honouring MAX_ENCODED_SIZE --
+        // old or new -- could ever have written these bytes, and
+        // `CatalogV1::decode` refuses them with `BoundExceeded` before
+        // `materialize_current_catalog`'s own cross-head merge check is
+        // ever reached (that check exists for a different case: several
+        // *individually* in-bounds heads whose union exceeds the ceiling).
+        // Denying open here is deliberate either way: VLT-PM05 §13.3 names
+        // exactly this case, a catalog with more entries than the derived
+        // bound, as one of the things open should still fail closed on,
+        // distinct from the individual-record-size case that section fixed
+        // to never deny open.
+        let result = open_active_vault(
+            Zeroizing::new(b"active passphrase".to_vec()),
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+        );
+        assert_eq!(result.map(|_| ()), Err(ApplicationError::BoundExceeded));
+    }
+
+    #[test]
+    fn a_catalog_at_the_admission_ceiling_can_still_be_deleted_from() {
+        // The bug this fix closes, reproduced directly. Before it, a
+        // catalog that reached the real (undocumented, far lower than the
+        // advertised 100,000) encode ceiling could never again be
+        // re-encoded by *any* mutation -- delete included, because a
+        // deleted item becomes a tombstone *entry*, not a smaller one. An
+        // ordinary vault that grew this large had no recourse from inside
+        // the product at all. Now that admission keeps this device's own
+        // catalogs under a ceiling that always survives re-encode, delete
+        // -- the escape hatch VLT-PM05 §13.2 already relies on for
+        // oversized individual records -- keeps working even once the
+        // catalog is as large as this device will ever grow one itself,
+        // and admission correctly refuses to grow it further.
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            MAX_CATALOG_ENTRIES,
+        );
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), MAX_CATALOG_ENTRIES);
+        let item_id = ItemId::new([0; 16]);
+        session
+            .delete_current_item(item_id, 900, 901, delete_item_randomness(0x5e), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), MAX_CATALOG_ENTRIES);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+
+        // The other half of the same bug: admission still correctly
+        // refuses to grow this catalog past the ceiling it is already at
+        // -- deleting one item did not "make room," because catalog
+        // entries are never removed.
+        let randomness = add_item_randomness(0x5f);
+        let document = new_login_document(randomness.item_id(), "One too many", "x");
+        assert_eq!(
+            session
+                .add_item(document, 902, randomness, &local)
+                .map(|_| ()),
+            Err(ApplicationError::BoundExceeded),
+        );
+    }
+
+    #[test]
+    fn a_catalog_above_the_admission_ceiling_can_still_be_deleted_from() {
+        // A sharper reproduction than the test above: this vault is synced
+        // from a peer whose catalog *already* exceeds this device's own
+        // admission ceiling -- squarely in the band (MAX_CATALOG_ENTRIES,
+        // MAX_ENCODABLE_CATALOG_ENTRIES] that a fully honest peer (or this
+        // device's own pre-fix past self) could legitimately have produced.
+        // An earlier version of this fix opened such a vault fine but then
+        // refused every subsequent mutation, including delete, because
+        // rebuilding the catalog's unchanged entry count still ran through
+        // the tight admission ceiling regardless of whether anything grew
+        // -- the exact bug this fix exists to close, just relocated to a
+        // higher threshold instead of eliminated. `delete_current_item`
+        // succeeding here is the actual fix: a mutation that does not grow
+        // the catalog is never blocked by how large the catalog already is.
+        const ABOVE_ADMISSION: usize = MAX_CATALOG_ENTRIES + 500;
+        const _: () = assert!(ABOVE_ADMISSION < MAX_ENCODABLE_CATALOG_ENTRIES);
+
+        let (locator, local, bootstrap, factory) = initialized();
+        publish_peer_catalog_with_item_count(
+            locator,
+            &local,
+            &bootstrap,
+            &factory,
+            ABOVE_ADMISSION,
+        );
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), ABOVE_ADMISSION);
+        let item_id = ItemId::new([0; 16]);
+        session
+            .delete_current_item(item_id, 900, 901, delete_item_randomness(0x5f), &local)
+            .unwrap();
+
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), ABOVE_ADMISSION);
+        let candidates = &session.current_catalog.items[&item_id];
+        assert_eq!(candidates.len(), 1);
+        assert!(matches!(candidates[0].state(), ItemState::Tombstone(_)));
+
+        // A second delete on a different item, to be sure the first one
+        // wasn't a fluke of exactly matching some boundary -- the catalog
+        // stays exactly the same size delete after delete, and each one
+        // must keep succeeding.
+        // Item index 1's id, matching `publish_peer_catalog_with_item_count`'s
+        // scheme: the counter's big-endian bytes in the first 8 bytes, the
+        // rest zero.
+        let second_item_id = ItemId::new([0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0]);
+        session
+            .delete_current_item(
+                second_item_id,
+                902,
+                903,
+                delete_item_randomness(0x60),
+                &local,
+            )
+            .unwrap();
+        let session = active_session(locator, &local, &bootstrap, &factory);
+        assert_eq!(session.current_catalog.items.len(), ABOVE_ADMISSION);
     }
 
     // ---------------------------------------------------------------------

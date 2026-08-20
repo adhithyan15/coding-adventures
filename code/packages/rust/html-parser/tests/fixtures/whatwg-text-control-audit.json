@@ -1,5 +1,5 @@
 {
-  "case_count": 704,
+  "case_count": 706,
   "cases": [
     {
       "axis": "rawtext-elements",
@@ -4224,6 +4224,18 @@
       "id": "processing-instructions-dat-123",
       "reason": "noscript parsing with scripting-sensitive tokenizer handoff",
       "source": "processing-instructions.dat:123"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scripted-foster01-dat-1",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scripted_foster01.dat:1"
+    },
+    {
+      "axis": "script-rawtext",
+      "id": "scripted-foster01-dat-2",
+      "reason": "script RAWTEXT tokenizer handoff and script end-tag recovery",
+      "source": "scripted_foster01.dat:2"
     }
   ],
   "counts_by_axis": {
@@ -4233,7 +4245,7 @@
     "pre-listing-newline": 29,
     "rawtext-elements": 100,
     "rcdata-controls": 89,
-    "script-rawtext": 368,
+    "script-rawtext": 370,
     "stray-text-control-end-tags": 7
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress RCDATA, RAWTEXT, PLAINTEXT, and pre/listing recovery.",

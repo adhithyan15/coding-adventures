@@ -5230,6 +5230,631 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("આ"),
   },
+  // t30apps animates Gujarati ઇ as one unbroken run through the upper loop,
+  // central crossing, broad lower loop, and rising hook. These fitted medians
+  // preserve that zero-lift order inside the bundled Noto glyph's wider body.
+  [ductusKey("gujarati", "ઇ")]: {
+    script: "gujarati",
+    glyph: "ઇ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the small upper-left loop down to the middle crossing",
+            path: [
+              { x: 220, y: 565 },
+              { x: 165, y: 565 },
+              { x: 115, y: 535 },
+              { x: 85, y: 480 },
+              { x: 85, y: 420 },
+              { x: 120, y: 365 },
+              { x: 170, y: 330 },
+              { x: 220, y: 320 },
+            ],
+          },
+          {
+            label: "continue through the narrow crossing",
+            path: [
+              { x: 220, y: 320 },
+              { x: 265, y: 322 },
+              { x: 310, y: 322 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the broad lower loop",
+            path: [
+              { x: 310, y: 322 },
+              { x: 245, y: 285 },
+              { x: 185, y: 245 },
+              { x: 145, y: 190 },
+              { x: 145, y: 130 },
+              { x: 190, y: 75 },
+              { x: 260, y: 40 },
+              { x: 340, y: 30 },
+              { x: 420, y: 50 },
+              { x: 490, y: 100 },
+              { x: 535, y: 170 },
+              { x: 550, y: 245 },
+            ],
+          },
+          {
+            label: "rise along the right side into the upper hook",
+            path: [
+              { x: 550, y: 245 },
+              { x: 540, y: 315 },
+              { x: 505, y: 390 },
+              { x: 465, y: 460 },
+              { x: 440, y: 525 },
+              { x: 445, y: 590 },
+              { x: 475, y: 650 },
+              { x: 515, y: 690 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઇ"),
+  },
+  // t30apps gives Gujarati ઈ the same unbroken loops as ઇ, then extends the
+  // rising hook into a high clockwise curl. The fitted median preserves that
+  // zero-lift order across the taller bundled Noto outline.
+  [ductusKey("gujarati", "ઈ")]: {
+    script: "gujarati",
+    glyph: "ઈ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the small upper-left loop down to the middle crossing",
+            path: [
+              { x: 220, y: 565 },
+              { x: 165, y: 565 },
+              { x: 115, y: 535 },
+              { x: 85, y: 480 },
+              { x: 85, y: 420 },
+              { x: 120, y: 365 },
+              { x: 170, y: 330 },
+              { x: 220, y: 320 },
+            ],
+          },
+          {
+            label: "continue through the narrow crossing",
+            path: [
+              { x: 220, y: 320 },
+              { x: 265, y: 322 },
+              { x: 310, y: 322 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the broad lower loop",
+            path: [
+              { x: 310, y: 322 },
+              { x: 245, y: 285 },
+              { x: 185, y: 245 },
+              { x: 145, y: 190 },
+              { x: 145, y: 130 },
+              { x: 190, y: 75 },
+              { x: 260, y: 40 },
+              { x: 340, y: 30 },
+              { x: 420, y: 50 },
+              { x: 490, y: 100 },
+              { x: 535, y: 170 },
+              { x: 550, y: 245 },
+            ],
+          },
+          {
+            label: "rise and curl clockwise around the extended top hook",
+            path: [
+              { x: 550, y: 245 },
+              { x: 535, y: 330 },
+              { x: 500, y: 420 },
+              { x: 455, y: 510 },
+              { x: 415, y: 600 },
+              { x: 385, y: 690 },
+              { x: 385, y: 760 },
+              { x: 420, y: 825 },
+              { x: 480, y: 860 },
+              { x: 545, y: 855 },
+              { x: 600, y: 820 },
+              { x: 640, y: 765 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઈ"),
+  },
+  // t30apps animates Gujarati ઉ as one unbroken run through its small upper
+  // bowl, middle cusp, broad lower bowl, and tall returning outer curve. This
+  // fitted median preserves that zero-lift order inside the wider Noto outline.
+  [ductusKey("gujarati", "ઉ")]: {
+    script: "gujarati",
+    glyph: "ઉ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle clockwise through the small upper bowl to the middle cusp",
+            path: [
+              { x: 270, y: 550 },
+              { x: 330, y: 565 },
+              { x: 400, y: 565 },
+              { x: 470, y: 540 },
+              { x: 520, y: 500 },
+              { x: 535, y: 450 },
+              { x: 520, y: 400 },
+              { x: 475, y: 365 },
+              { x: 425, y: 335 },
+              { x: 370, y: 315 },
+              { x: 330, y: 305 },
+            ],
+          },
+          {
+            label: "continue right and sweep clockwise around the broad lower bowl",
+            path: [
+              { x: 330, y: 305 },
+              { x: 390, y: 310 },
+              { x: 445, y: 290 },
+              { x: 495, y: 250 },
+              { x: 525, y: 200 },
+              { x: 525, y: 145 },
+              { x: 490, y: 90 },
+              { x: 435, y: 50 },
+              { x: 365, y: 30 },
+            ],
+          },
+          {
+            label: "climb around the tall outer-left curve and finish at the upper right",
+            path: [
+              { x: 365, y: 30 },
+              { x: 285, y: 35 },
+              { x: 215, y: 75 },
+              { x: 160, y: 140 },
+              { x: 120, y: 225 },
+              { x: 95, y: 325 },
+              { x: 95, y: 430 },
+              { x: 115, y: 535 },
+              { x: 155, y: 635 },
+              { x: 220, y: 720 },
+              { x: 300, y: 775 },
+              { x: 390, y: 795 },
+              { x: 470, y: 785 },
+              { x: 525, y: 755 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઉ"),
+  },
+  // t30apps repeats the complete zero-lift Gujarati ઉ run for ઊ, then carries
+  // the same pen across the high shoulder and down the long right-side tail.
+  // The fitted median keeps that extension inside the wider Noto outline.
+  [ductusKey("gujarati", "ઊ")]: {
+    script: "gujarati",
+    glyph: "ઊ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "write ઉ through its upper bowl, middle cusp, and lower bowl",
+            path: [
+              { x: 270, y: 550 },
+              { x: 330, y: 565 },
+              { x: 400, y: 565 },
+              { x: 470, y: 540 },
+              { x: 520, y: 500 },
+              { x: 535, y: 450 },
+              { x: 520, y: 400 },
+              { x: 475, y: 365 },
+              { x: 425, y: 335 },
+              { x: 370, y: 315 },
+              { x: 330, y: 305 },
+              { x: 390, y: 310 },
+              { x: 445, y: 290 },
+              { x: 495, y: 250 },
+              { x: 525, y: 200 },
+              { x: 525, y: 145 },
+              { x: 490, y: 90 },
+              { x: 435, y: 50 },
+              { x: 365, y: 30 },
+            ],
+          },
+          {
+            label: "continue around the tall outer-left curve",
+            path: [
+              { x: 365, y: 30 },
+              { x: 285, y: 35 },
+              { x: 215, y: 75 },
+              { x: 160, y: 140 },
+              { x: 120, y: 225 },
+              { x: 95, y: 325 },
+              { x: 95, y: 430 },
+              { x: 115, y: 535 },
+              { x: 155, y: 635 },
+              { x: 220, y: 720 },
+              { x: 300, y: 775 },
+              { x: 390, y: 795 },
+              { x: 470, y: 785 },
+              { x: 525, y: 755 },
+            ],
+          },
+          {
+            label: "cross the high shoulder and descend the long right tail into its foot",
+            path: [
+              { x: 525, y: 755 },
+              { x: 600, y: 725 },
+              { x: 660, y: 670 },
+              { x: 710, y: 600 },
+              { x: 750, y: 520 },
+              { x: 754, y: 400 },
+              { x: 754, y: 280 },
+              { x: 754, y: 160 },
+              { x: 760, y: 90 },
+              { x: 790, y: 45 },
+              { x: 835, y: 35 },
+              { x: 875, y: 35 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઊ"),
+  },
+  // t30apps writes Gujarati ઋ as a bent left body, lifts for the central
+  // stem, then lifts again for the right loop and descending tail. These
+  // medians retain that three-path order inside the bundled Noto outline.
+  [ductusKey("gujarati", "ઋ")]: {
+    script: "gujarati",
+    glyph: "ઋ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep right along the upper body, then turn diagonally down-left",
+            path: [
+              { x: 35, y: 475 }, { x: 95, y: 495 }, { x: 160, y: 495 },
+              { x: 220, y: 480 }, { x: 275, y: 450 }, { x: 325, y: 405 },
+              { x: 375, y: 350 }, { x: 330, y: 310 }, { x: 275, y: 275 },
+              { x: 220, y: 240 }, { x: 165, y: 205 }, { x: 115, y: 165 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the central stem into its foot",
+            path: [
+              { x: 447, y: 575 }, { x: 447, y: 460 }, { x: 447, y: 350 },
+              { x: 447, y: 240 }, { x: 447, y: 140 }, { x: 460, y: 80 },
+              { x: 500, y: 40 }, { x: 550, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, circle the right loop, and descend through the tail",
+            path: [
+              { x: 500, y: 385 }, { x: 555, y: 360 }, { x: 615, y: 350 },
+              { x: 665, y: 365 }, { x: 710, y: 400 }, { x: 720, y: 445 },
+              { x: 700, y: 465 }, { x: 675, y: 455 }, { x: 660, y: 425 },
+              { x: 675, y: 390 }, { x: 720, y: 360 }, { x: 755, y: 320 },
+              { x: 765, y: 270 }, { x: 750, y: 220 }, { x: 715, y: 175 },
+              { x: 675, y: 145 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઋ"),
+  },
+  // t30apps writes Gujarati એ as a joined body, a separately descended right
+  // stem, then a separate high arc. These fitted medians preserve that
+  // three-path, two-lift order across the wider bundled Noto outline.
+  [ductusKey("gujarati", "એ")]: {
+    script: "gujarati",
+    glyph: "એ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle clockwise around the left bowl",
+            path: [
+              { x: 65, y: 560 },
+              { x: 125, y: 580 },
+              { x: 190, y: 570 },
+              { x: 250, y: 535 },
+              { x: 295, y: 480 },
+              { x: 312, y: 420 },
+              { x: 295, y: 360 },
+              { x: 250, y: 315 },
+              { x: 195, y: 280 },
+              { x: 135, y: 270 },
+              { x: 85, y: 285 },
+              { x: 55, y: 310 },
+              { x: 70, y: 325 },
+              { x: 110, y: 315 },
+              { x: 150, y: 285 },
+            ],
+          },
+          {
+            label: "continue through the lower body and small right arch",
+            path: [
+              { x: 150, y: 285 },
+              { x: 180, y: 220 },
+              { x: 225, y: 155 },
+              { x: 285, y: 115 },
+              { x: 350, y: 105 },
+              { x: 415, y: 130 },
+              { x: 470, y: 185 },
+              { x: 505, y: 255 },
+              { x: 515, y: 325 },
+              { x: 495, y: 380 },
+              { x: 520, y: 315 },
+              { x: 570, y: 270 },
+              { x: 625, y: 265 },
+              { x: 680, y: 290 },
+              { x: 710, y: 335 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the full-height right stem into its foot",
+            path: [
+              { x: 748, y: 590 },
+              { x: 748, y: 470 },
+              { x: 748, y: 350 },
+              { x: 748, y: 230 },
+              { x: 748, y: 130 },
+              { x: 760, y: 75 },
+              { x: 795, y: 40 },
+              { x: 835, y: 35 },
+              { x: 870, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and sweep the high arcing mark from left to right",
+            path: [
+              { x: 515, y: 850 },
+              { x: 565, y: 865 },
+              { x: 615, y: 855 },
+              { x: 660, y: 825 },
+              { x: 695, y: 780 },
+              { x: 720, y: 725 },
+              { x: 742, y: 665 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("એ"),
+  },
+  // t30apps repeats Gujarati એ's body, right stem, and first high arc for ઐ,
+  // then adds a fourth, higher arc. These fitted medians preserve that
+  // four-path, three-lift order inside the stacked Noto marks.
+  [ductusKey("gujarati", "ઐ")]: {
+    script: "gujarati",
+    glyph: "ઐ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "write એ through its joined bowl, lower body, and right arch",
+            path: [
+              { x: 65, y: 560 }, { x: 125, y: 580 }, { x: 190, y: 570 },
+              { x: 250, y: 535 }, { x: 295, y: 480 }, { x: 312, y: 420 },
+              { x: 295, y: 360 }, { x: 250, y: 315 }, { x: 195, y: 280 },
+              { x: 135, y: 270 }, { x: 85, y: 285 }, { x: 55, y: 310 },
+              { x: 70, y: 325 }, { x: 110, y: 315 }, { x: 150, y: 285 },
+              { x: 180, y: 220 }, { x: 225, y: 155 }, { x: 285, y: 115 },
+              { x: 350, y: 105 }, { x: 415, y: 130 }, { x: 470, y: 185 },
+              { x: 505, y: 255 }, { x: 515, y: 325 }, { x: 495, y: 380 },
+              { x: 520, y: 315 }, { x: 570, y: 270 }, { x: 625, y: 265 },
+              { x: 680, y: 290 }, { x: 710, y: 335 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the full-height right stem into its foot",
+            path: [
+              { x: 748, y: 590 }, { x: 748, y: 470 }, { x: 748, y: 350 },
+              { x: 748, y: 230 }, { x: 748, y: 130 }, { x: 760, y: 75 },
+              { x: 795, y: 40 }, { x: 835, y: 35 }, { x: 870, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and sweep the lower high arc from left to right",
+            path: [
+              { x: 425, y: 735 }, { x: 475, y: 745 }, { x: 525, y: 735 },
+              { x: 575, y: 715 }, { x: 625, y: 690 }, { x: 670, y: 665 },
+              { x: 710, y: 655 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once more and sweep the higher arc from left to right",
+            path: [
+              { x: 535, y: 850 }, { x: 580, y: 865 }, { x: 625, y: 855 },
+              { x: 665, y: 825 }, { x: 695, y: 780 }, { x: 720, y: 725 },
+              { x: 740, y: 665 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઐ"),
+  },
+  // t30apps writes Gujarati ઓ as the complete three-run આ sequence followed
+  // by a separate high arc. These fitted medians preserve that four-path,
+  // three-lift order across the wider bundled Noto outline.
+  [ductusKey("gujarati", "ઓ")]: {
+    script: "gujarati",
+    glyph: "ઓ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "write આ through its open left curve",
+            path: [
+              { x: 55, y: 550 }, { x: 115, y: 570 }, { x: 180, y: 565 },
+              { x: 240, y: 535 }, { x: 295, y: 480 }, { x: 310, y: 420 },
+              { x: 295, y: 360 }, { x: 255, y: 310 }, { x: 205, y: 280 },
+              { x: 155, y: 275 }, { x: 110, y: 300 }, { x: 75, y: 300 },
+            ],
+          },
+          {
+            label: "continue through the lower body and middle shoulder",
+            path: [
+              { x: 75, y: 300 }, { x: 115, y: 245 }, { x: 165, y: 180 },
+              { x: 230, y: 130 }, { x: 310, y: 100 }, { x: 390, y: 110 },
+              { x: 455, y: 155 }, { x: 500, y: 225 }, { x: 526, y: 310 },
+              { x: 526, y: 410 },
+            ],
+          },
+          {
+            label: "retrace down and sweep through the small right arch",
+            path: [
+              { x: 526, y: 410 }, { x: 526, y: 340 }, { x: 555, y: 285 },
+              { x: 610, y: 265 }, { x: 660, y: 275 }, { x: 708, y: 315 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the first right stem into its foot",
+            path: [
+              { x: 748, y: 570 }, { x: 748, y: 450 }, { x: 748, y: 320 },
+              { x: 748, y: 190 }, { x: 750, y: 110 }, { x: 775, y: 60 },
+              { x: 815, y: 35 }, { x: 865, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then descend the trailing stem into its foot",
+            path: [
+              { x: 1013, y: 570 }, { x: 1013, y: 450 }, { x: 1013, y: 320 },
+              { x: 1013, y: 190 }, { x: 1015, y: 110 }, { x: 1040, y: 60 },
+              { x: 1080, y: 35 }, { x: 1130, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once more and sweep the high arc from left to right",
+            path: [
+              { x: 785, y: 850 }, { x: 825, y: 870 }, { x: 865, y: 870 },
+              { x: 905, y: 850 }, { x: 940, y: 810 }, { x: 970, y: 760 },
+              { x: 995, y: 700 }, { x: 1015, y: 650 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઓ"),
+  },
+  // t30apps repeats Gujarati ઓ's body, stems, and first high arc for ઔ, then
+  // adds a fifth, higher arc. These fitted medians preserve that five-path,
+  // four-lift order inside the bundled Noto glyph's stacked marks.
+  [ductusKey("gujarati", "ઔ")]: {
+    script: "gujarati",
+    glyph: "ઔ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "write ઓ through its open left curve, lower body, and arch",
+            path: [
+              { x: 55, y: 550 }, { x: 115, y: 570 }, { x: 180, y: 565 },
+              { x: 240, y: 535 }, { x: 295, y: 480 }, { x: 310, y: 420 },
+              { x: 295, y: 360 }, { x: 255, y: 310 }, { x: 205, y: 280 },
+              { x: 155, y: 275 }, { x: 110, y: 300 }, { x: 75, y: 300 },
+              { x: 115, y: 245 }, { x: 165, y: 180 }, { x: 230, y: 130 },
+              { x: 310, y: 100 }, { x: 390, y: 110 }, { x: 455, y: 155 },
+              { x: 500, y: 225 }, { x: 526, y: 310 }, { x: 526, y: 410 },
+              { x: 526, y: 340 }, { x: 555, y: 285 }, { x: 610, y: 265 },
+              { x: 660, y: 275 }, { x: 708, y: 315 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the first right stem into its foot",
+            path: [
+              { x: 748, y: 570 }, { x: 748, y: 450 }, { x: 748, y: 320 },
+              { x: 748, y: 190 }, { x: 750, y: 110 }, { x: 775, y: 60 },
+              { x: 815, y: 35 }, { x: 865, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, then descend the trailing stem into its foot",
+            path: [
+              { x: 1013, y: 570 }, { x: 1013, y: 450 }, { x: 1013, y: 320 },
+              { x: 1013, y: 190 }, { x: 1015, y: 110 }, { x: 1040, y: 60 },
+              { x: 1080, y: 35 }, { x: 1130, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once more and sweep the lower high arc left to right",
+            path: [
+              { x: 700, y: 740 }, { x: 740, y: 748 }, { x: 780, y: 745 },
+              { x: 820, y: 735 }, { x: 860, y: 715 }, { x: 900, y: 690 },
+              { x: 940, y: 665 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and sweep the higher arc from left to right",
+            path: [
+              { x: 800, y: 850 }, { x: 840, y: 870 }, { x: 880, y: 870 },
+              { x: 920, y: 850 }, { x: 955, y: 810 }, { x: 985, y: 760 },
+              { x: 1010, y: 700 }, { x: 1025, y: 650 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઔ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
