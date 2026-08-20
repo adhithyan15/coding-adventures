@@ -74,11 +74,37 @@ function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "l
   return buildCompletionPlan({
     scriptClosure: closure([]),
     inventories: [],
+    // Most tests below isolate the older families. A fixture contract means
+    // "assessment is not the variable under test", not that the real corpus has
+    // paid this debt.
+    assessmentContracts: input.levelGate.tracks.map((track) => track.language),
     ...input,
   });
 }
 
 describe("completion plan", () => {
+  it("puts a missing pass-ready assessment contract ahead of proxy coverage", () => {
+    const built = plan({
+      levelGate: gate([{ language: "alpha", inProgressAt: "pre-A1", blockers: vocabularyBlocker(250) }]),
+      assessmentContracts: [],
+    });
+    expect(built.head[0]).toMatchObject({
+      id: "assessment-contract/alpha",
+      kind: "assessment-contract",
+      language: "alpha",
+    });
+    expect(built.head[0]?.goal).toContain("independent reading, listening, writing and speaking passes");
+  });
+
+  it("suppresses the assessment item only for a validated contracted track", () => {
+    const built = plan({
+      levelGate: gate([{ language: "alpha", inProgressAt: "pre-A1" }]),
+      assessmentContracts: ["alpha"],
+    });
+    expect(built.head.some((item) => item.kind === "assessment-contract")).toBe(false);
+    expect(built.projection.find((entry) => entry.kind === "assessment-contract")?.items).toBe(0);
+  });
+
   it("moves every track once before any track moves twice", () => {
     // Three tracks, each with two items. A flat sort by family would emit all
     // three script items and only then the vocabulary ones; the rotation must

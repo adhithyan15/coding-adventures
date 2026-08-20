@@ -168,21 +168,22 @@ The gate above says what is *wrong*. This says what to *do* about it, and it is 
 pure function of the same measurements rather than a list somebody maintains:
 
 ```text
-22 tracks, 0 done; 89 enumerable item(s) today, ~10,172 projected to C2
+22 tracks, 0 done; 118 enumerable item(s) today, ~10,190 projected to C2
 
-    1. [pre-A1] script-closure — chinese
-       teach 7 chinese glyph(s) the track shows but never taught
-    2. [pre-A1] script-closure — japanese
-       teach 43 japanese glyph(s) the track shows but never taught
-    3. [pre-A1] vocabulary — latin
-       teaches 23 distinct headwords at or below pre-A1, against 300
+    1. [pre-A1] assessment-contract — japanese
+       require independent four-skill passes, a writing ramp, and timed full mocks
+    2. [pre-A1] assessment-contract — chinese
+       require independent four-skill passes, a writing ramp, and timed full mocks
+    3. [pre-A1] assessment-contract — gujarati
+       require independent four-skill passes, a writing ramp, and timed full mocks
 ```
 
 Three ordering rules, all mechanical. **The floor is universal** — every pre-A1 item
 outranks every A1 item in any track, because a track that climbs while its floor is
 missing has built a cliff with upper-level lessons on top. **Family priority** then
-decides what a track's next action is: the external exam target first (you cannot
-climb a rung nobody has written down), then script closure, then vocabulary. And the
+decides what a track's next action is: the complete pass-ready assessment contract
+first, then its external/project content inventory, script closure, exam points, and
+vocabulary. And the
 queue **rotates across tracks**, furthest-behind first, so every language moves once
 before any language moves twice.
 
@@ -191,7 +192,7 @@ a flat sort produced a head of 22 consecutive research tasks and no content, and
 inventory for a rung a track has not reached was outranking the floor it is standing
 on. See `code/specs/HL15-the-completion-plan.md` §4.
 
-Four of the seven families report `null` rather than a number in the projection.
+Three of the eight families report `null` rather than a number in the projection.
 That means **not projectable** — reinforcement debt at B1 is a function of lessons
 nobody has written — which is a different fact from zero.
 
