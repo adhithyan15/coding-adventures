@@ -4184,6 +4184,33 @@ for it. The in-progress Go child remains coherent by refusing all three chunk
 types as `unsupported-feature` with a focused valid-CRC regression; it does not
 modify the merged neutral corpus or broaden into another lane.
 
+Before the first implementation commit was recertified, `origin/main` advanced
+to `7020ebbb1a85976dc5aec170ac61df15d7d46e25` through #12321's human-language
+gentle-ramp snapshot sharding. Its 30 changed paths are confined to the
+human-language workflow, snapshots, verifier, and existing TypeScript
+human-language-data root, with no intersection with parity or PNG surfaces and
+no added package identity. The Go branch rebased cleanly onto that exact main;
+the stored main inventory is repinned there with all counts unchanged.
+
+The implemented Go package now delegates CRC-32, raw RFC 1951 encoding, and
+counted exact-cap decoding to `go/zip`; supports the required 8-bit colour,
+filter, suggested-palette, transparency, split-IDAT, zlib, checksum, ordering,
+and stable-error behavior; and enforces both encoder and decoder edge/product
+ceilings before allocation. Its public fixture consumer passes all 82 neutral
+cases and the ordered 29-code taxonomy, while focused valid-CRC APNG controls
+cover the newly classified neutral omission. A temporary removal of the APNG
+branch made all three regressions fail, proving that evidence load-bearing.
+
+Fresh race tests report 99.0% Go statement coverage; format, vet, trimpath
+build, module tidiness, eight neutral-fixture validator tests, seven capability
+tests, ten parity-reporter tests, Ruff, strict MyPy, Bandit, state/DAG, diff,
+credential, and authority checks pass. ZIP, pixel-container, and LZSS pass race
+tests at 90.9%, 92.9%, and 97.7% coverage plus their native quality gates. A
+fresh repository build-tool binary discovers 4,973 packages, selects the exact
+four-node Go dependency closure on Linux, Darwin, and Windows, and executes the
+real front door successfully. The branch inventory remains collision-clean at
+1,368 identities and advances only the intended established Go slot to 4,553.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

@@ -3,6 +3,7 @@ package imagecodecpng_test
 import (
 	"encoding/binary"
 	"errors"
+	"math"
 	"testing"
 
 	png "github.com/adhithyan15/coding-adventures/code/packages/go/image-codec-png"
@@ -49,9 +50,24 @@ func TestPngCodecInterface(t *testing.T) {
 	if _, err := limited.Decode(encoded); err != nil {
 		t.Fatalf("limited Decode: %v", err)
 	}
-	zero := float64(0)
-	_, err = png.NewPngCodec(png.DecodeOptions{MaxPixels: &zero})
-	requireCode(t, err, png.InvalidMaxPixels)
+	invalidLimits := []struct {
+		name  string
+		value float64
+	}{
+		{"zero", 0},
+		{"negative", -1},
+		{"fractional", 1.5},
+		{"raised", float64(png.PNGMaxPixels) + 1},
+		{"nan", math.NaN()},
+		{"positive-infinity", math.Inf(1)},
+		{"negative-infinity", math.Inf(-1)},
+	}
+	for _, test := range invalidLimits {
+		t.Run("invalid-limit-"+test.name, func(t *testing.T) {
+			_, err := png.NewPngCodec(png.DecodeOptions{MaxPixels: &test.value})
+			requireCode(t, err, png.InvalidMaxPixels)
+		})
+	}
 	_, err = png.DecodePNG(encoded, png.DecodeOptions{}, png.DecodeOptions{})
 	requireCode(t, err, png.InvalidMaxPixels)
 }

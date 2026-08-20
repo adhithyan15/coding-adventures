@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "a09bb28bd19ab24760322f7fcf940184c0912409",
+    "revision": "7020ebbb1a85976dc5aec170ac61df15d7d46e25",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
@@ -4006,6 +4006,8 @@
       "pr_number": null,
       "selection_revision": "a09bb28bd19ab24760322f7fcf940184c0912409",
       "selection_notes": "Selected immediately after PNG neutral-foundation PR #12319 completed all 30 checks and merged through auto-merge. The collision-checked schema-3 inventory at exact merge main a09bb28bd1 remains 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets; the intervening human-language commits and merged TypeScript PNG work add no package identity or lane expansion. All twelve PNG toolchain children are newly ready. Go has the strongest safe dependency leverage: the installed Go 1.26.4 toolchain and existing pixel-container plus ZIP raw/count/CRC packages pass their native tests, vet, race/coverage, and build front doors, and this child unlocks both the final PNG umbrella and the separate unblocked paint-codec-png reconciliation. This tranche adds exactly go/image-codec-png, consumes every representable neutral case through its public API, documents the typed PixelContainer boundary for non-integer fixture inputs, preserves pure in-memory operation with empty capabilities, and leaves paint-adapter migration and every other lane pending.",
+      "implementation_revision": "1f801e4a9ed95ea9625096ac8991dc1890f5f3a1",
+      "validation_notes": "The Go codec consumes all 82 neutral IC18 cases and all 29 ordered stable errors through the public API wherever Go's uint32 PixelContainer can represent the fixture; the one fractional encoder input is rejected before typed conversion. Three additional valid-CRC regressions refuse APNG acTL, fcTL, and fdAT as unsupported-feature, and a temporary control removal proved those regressions fail against the generic ancillary path. Direct go test -race reports 99.0% statement coverage; gofmt, vet, trimpath build, and go mod tidy pass. The real ZIP, pixel-container, and LZSS prerequisites pass race tests at 90.9%, 92.9%, and 97.7% coverage plus vet and trimpath builds; the existing paint adapter baseline also passes while remaining separately owned. A freshly compiled repository build tool discovers 4,973 packages, validates metadata, selects exactly go/image-codec-png plus ZIP, pixel-container, and LZSS on Linux, Darwin, and Windows, and executes the Go plan successfully. Eight neutral PNG validator tests, seven capability tests, ten parity-reporter tests, Ruff, strict MyPy, Bandit, strict JSON and state DAG checks pass. The branch collision report has 1,368 identities and 4,553 slots, moving image-codec-png from the singleton band to the 2-4 band with zero collisions and zero unknown buckets; the stored exact-main inventory remains topology-neutral at 4,552 slots. Production imports only byte/math helpers and repository pixel-container/ZIP, the capability manifest is explicitly empty, and authority, credential, diff, and final read-only security scans pass.",
       "notes": "Standalone Go child consuming the neutral PNG corpus and repo ZIP raw/CRC surface. Existing go/paint-codec-png delegates to the standard-library image/png codec and is not parity evidence for this portable package."
     },
     {
