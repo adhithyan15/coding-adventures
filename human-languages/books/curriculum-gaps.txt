@@ -1,7 +1,7 @@
 Human Languages curriculum gap report
 ====================================
 23 tracks, 3399 lessons, 23 books
-2 lessons at or above 300 effective seconds
+2 lessons over 300 effective seconds
 0 unknown prerequisites; 74 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 14 mixed, 9 version-2 schema tracks
@@ -15,6 +15,9 @@ exposure: 305 native-script headwords carry no romanization, so they are load-be
 order: 246 lessons with no declared sequence across 9 tracks; 108 prerequisites and 135 reviews pointing forward
 reinforcement: 630 of 4680 atoms never revisited (13%); missed windows R1 1189, R2 3677, R3 3536, R4 2053
 forward references: 504 uses of material a later lesson teaches
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 148 named track/debt items
+writing ramp: 3 track(s) never practise writing; 7 start after lesson one
+gentleness measurement: 497 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 153/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on
 levels ATTAINED (HL09 §3.1): none; 23 track(s) touch a level they have not attained
 0 of 1004 book chapters without an HL05 capability; 79 payoffs below the 0.5 representativeness floor; 11 tracks already clean

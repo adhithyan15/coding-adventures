@@ -69736,6 +69736,2881 @@
     },
     "unknownScriptTracks": []
   },
+  "gentleRamp": {
+    "schemaVersion": 1,
+    "rule": {
+      "maxLessonSeconds": 300,
+      "durationBoundary": "strictly-greater-than",
+      "atomMeasurement": "declared-atoms-only",
+      "ranking": "learner-first-named-debt-no-composite-score"
+    },
+    "tracks": [
+      {
+        "language": "arabic",
+        "lessonCount": 100,
+        "atomMeasurableLessons": 74,
+        "atomMeasurementBlindLessons": 26,
+        "durationViolations": 0,
+        "atomLessonSpikes": 0,
+        "atomChapterSpikes": 2,
+        "glyphLessonSpikes": 3,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 71,
+        "neverTaughtGlyphs": 16,
+        "orderDefects": 53,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 12,
+        "forwardReviews": 15,
+        "forwardReferences": 19,
+        "atomsTaught": 147,
+        "atomsNeverRevisited": 85,
+        "reinforcementWindowMisses": 315,
+        "payoffSurprises": 2,
+        "writingPracticeLessons": 51,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "arabic",
+            "kind": "order-integrity",
+            "count": 53,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "arabic",
+            "kind": "forward-language",
+            "count": 19,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "arabic",
+            "kind": "script-closure",
+            "count": 16,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "arabic",
+            "kind": "atom-step",
+            "count": 2,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "arabic",
+            "kind": "glyph-step",
+            "count": 3,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "arabic",
+            "kind": "reinforcement",
+            "count": 315,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "arabic",
+            "kind": "payoff-surprise",
+            "count": 2,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "arabic",
+            "kind": "measurement-blind",
+            "count": 26,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "arabic",
+          "kind": "order-integrity",
+          "count": 53,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "bengali",
+        "lessonCount": 80,
+        "atomMeasurableLessons": 80,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 3,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 65,
+        "neverTaughtGlyphs": 39,
+        "orderDefects": 3,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 3,
+        "forwardReferences": 6,
+        "atomsTaught": 104,
+        "atomsNeverRevisited": 7,
+        "reinforcementWindowMisses": 152,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 65,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "bengali",
+            "kind": "order-integrity",
+            "count": 3,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "bengali",
+            "kind": "forward-language",
+            "count": 6,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "bengali",
+            "kind": "script-closure",
+            "count": 39,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "bengali",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "bengali",
+            "kind": "glyph-step",
+            "count": 3,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "bengali",
+            "kind": "reinforcement",
+            "count": 152,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "bengali",
+          "kind": "order-integrity",
+          "count": 3,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "chinese",
+        "lessonCount": 63,
+        "atomMeasurableLessons": 63,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 0,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 1,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 4,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 0,
+        "atomsTaught": 72,
+        "atomsNeverRevisited": 15,
+        "reinforcementWindowMisses": 98,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 31,
+        "firstWritingPracticeAt": 1,
+        "lessonsBeforeWritingPractice": 1,
+        "findings": [
+          {
+            "language": "chinese",
+            "kind": "writing-ramp",
+            "count": 1,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "chinese",
+            "kind": "glyph-step",
+            "count": 1,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "chinese",
+            "kind": "reinforcement",
+            "count": 98,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "chinese",
+          "kind": "writing-ramp",
+          "count": 1,
+          "unit": "opening lesson(s)",
+          "detail": "move the first gentle writing microstep to lesson one"
+        }
+      },
+      {
+        "language": "french",
+        "lessonCount": 118,
+        "atomMeasurableLessons": 54,
+        "atomMeasurementBlindLessons": 64,
+        "durationViolations": 0,
+        "atomLessonSpikes": 6,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 113,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 21,
+        "forwardReviews": 28,
+        "forwardReferences": 63,
+        "atomsTaught": 122,
+        "atomsNeverRevisited": 33,
+        "reinforcementWindowMisses": 230,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 3,
+        "firstWritingPracticeAt": 32,
+        "lessonsBeforeWritingPractice": 32,
+        "findings": [
+          {
+            "language": "french",
+            "kind": "order-integrity",
+            "count": 113,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "french",
+            "kind": "forward-language",
+            "count": 63,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "french",
+            "kind": "writing-ramp",
+            "count": 32,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "french",
+            "kind": "atom-step",
+            "count": 6,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "french",
+            "kind": "reinforcement",
+            "count": 230,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "french",
+            "kind": "measurement-blind",
+            "count": 64,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "french",
+          "kind": "order-integrity",
+          "count": 113,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "german",
+        "lessonCount": 106,
+        "atomMeasurableLessons": 40,
+        "atomMeasurementBlindLessons": 66,
+        "durationViolations": 0,
+        "atomLessonSpikes": 8,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 132,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 30,
+        "forwardReviews": 36,
+        "forwardReferences": 64,
+        "atomsTaught": 123,
+        "atomsNeverRevisited": 32,
+        "reinforcementWindowMisses": 181,
+        "payoffSurprises": 1,
+        "writingPracticeLessons": 3,
+        "firstWritingPracticeAt": 34,
+        "lessonsBeforeWritingPractice": 34,
+        "findings": [
+          {
+            "language": "german",
+            "kind": "order-integrity",
+            "count": 132,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "german",
+            "kind": "forward-language",
+            "count": 64,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "german",
+            "kind": "writing-ramp",
+            "count": 34,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "german",
+            "kind": "atom-step",
+            "count": 8,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "german",
+            "kind": "reinforcement",
+            "count": 181,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "german",
+            "kind": "payoff-surprise",
+            "count": 1,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "german",
+            "kind": "measurement-blind",
+            "count": 66,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "german",
+          "kind": "order-integrity",
+          "count": 132,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "gujarati",
+        "lessonCount": 69,
+        "atomMeasurableLessons": 69,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 2,
+        "atomChapterSpikes": 1,
+        "glyphLessonSpikes": 2,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 50,
+        "neverTaughtGlyphs": 32,
+        "orderDefects": 3,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 3,
+        "forwardReferences": 8,
+        "atomsTaught": 115,
+        "atomsNeverRevisited": 10,
+        "reinforcementWindowMisses": 174,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 53,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "gujarati",
+            "kind": "order-integrity",
+            "count": 3,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "gujarati",
+            "kind": "forward-language",
+            "count": 8,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "gujarati",
+            "kind": "script-closure",
+            "count": 32,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "gujarati",
+            "kind": "atom-step",
+            "count": 3,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "gujarati",
+            "kind": "glyph-step",
+            "count": 2,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "gujarati",
+            "kind": "reinforcement",
+            "count": 174,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "gujarati",
+          "kind": "order-integrity",
+          "count": 3,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "hindi",
+        "lessonCount": 273,
+        "atomMeasurableLessons": 273,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 2,
+        "glyphLessonSpikes": 3,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 72,
+        "neverTaughtGlyphs": 12,
+        "orderDefects": 1,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 1,
+        "forwardReferences": 10,
+        "atomsTaught": 350,
+        "atomsNeverRevisited": 76,
+        "reinforcementWindowMisses": 1014,
+        "payoffSurprises": 13,
+        "writingPracticeLessons": 83,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "hindi",
+            "kind": "order-integrity",
+            "count": 1,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "hindi",
+            "kind": "forward-language",
+            "count": 10,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "hindi",
+            "kind": "script-closure",
+            "count": 12,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "hindi",
+            "kind": "atom-step",
+            "count": 3,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "hindi",
+            "kind": "glyph-step",
+            "count": 3,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "hindi",
+            "kind": "reinforcement",
+            "count": 1014,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "hindi",
+            "kind": "payoff-surprise",
+            "count": 13,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          }
+        ],
+        "next": {
+          "language": "hindi",
+          "kind": "order-integrity",
+          "count": 1,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "italian",
+        "lessonCount": 88,
+        "atomMeasurableLessons": 79,
+        "atomMeasurementBlindLessons": 9,
+        "durationViolations": 0,
+        "atomLessonSpikes": 3,
+        "atomChapterSpikes": 2,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 22,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 6,
+        "forwardReviews": 7,
+        "forwardReferences": 48,
+        "atomsTaught": 197,
+        "atomsNeverRevisited": 19,
+        "reinforcementWindowMisses": 273,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 0,
+        "firstWritingPracticeAt": null,
+        "lessonsBeforeWritingPractice": 88,
+        "findings": [
+          {
+            "language": "italian",
+            "kind": "order-integrity",
+            "count": 22,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "italian",
+            "kind": "forward-language",
+            "count": 48,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "italian",
+            "kind": "writing-ramp",
+            "count": 88,
+            "unit": "opening lesson(s)",
+            "detail": "add observable, guided writing practice from the opening lesson"
+          },
+          {
+            "language": "italian",
+            "kind": "atom-step",
+            "count": 5,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "italian",
+            "kind": "reinforcement",
+            "count": 273,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "italian",
+            "kind": "measurement-blind",
+            "count": 9,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "italian",
+          "kind": "order-integrity",
+          "count": 22,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "japanese",
+        "lessonCount": 29,
+        "atomMeasurableLessons": 29,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 0,
+        "atomChapterSpikes": 1,
+        "glyphLessonSpikes": 4,
+        "scriptSystemSpikes": 5,
+        "scriptClosureViolations": 8,
+        "neverTaughtGlyphs": 21,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 0,
+        "atomsTaught": 39,
+        "atomsNeverRevisited": 8,
+        "reinforcementWindowMisses": 54,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 28,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "japanese",
+            "kind": "script-closure",
+            "count": 21,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "japanese",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "japanese",
+            "kind": "glyph-step",
+            "count": 9,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "japanese",
+            "kind": "reinforcement",
+            "count": 54,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "japanese",
+          "kind": "script-closure",
+          "count": 21,
+          "unit": "glyph(s)",
+          "detail": "teach every load-bearing glyph before asking the learner to decode it"
+        }
+      },
+      {
+        "language": "kannada",
+        "lessonCount": 242,
+        "atomMeasurableLessons": 212,
+        "atomMeasurementBlindLessons": 30,
+        "durationViolations": 1,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 7,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 37,
+        "neverTaughtGlyphs": 18,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 17,
+        "atomsTaught": 282,
+        "atomsNeverRevisited": 8,
+        "reinforcementWindowMisses": 727,
+        "payoffSurprises": 3,
+        "writingPracticeLessons": 49,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "kannada",
+            "kind": "duration",
+            "count": 1,
+            "unit": "lesson(s)",
+            "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+          },
+          {
+            "language": "kannada",
+            "kind": "forward-language",
+            "count": 17,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "kannada",
+            "kind": "script-closure",
+            "count": 18,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "kannada",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "kannada",
+            "kind": "glyph-step",
+            "count": 7,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "kannada",
+            "kind": "reinforcement",
+            "count": 727,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "kannada",
+            "kind": "payoff-surprise",
+            "count": 3,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "kannada",
+            "kind": "measurement-blind",
+            "count": 30,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "kannada",
+          "kind": "duration",
+          "count": 1,
+          "unit": "lesson(s)",
+          "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+        }
+      },
+      {
+        "language": "latin",
+        "lessonCount": 108,
+        "atomMeasurableLessons": 108,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 2,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 25,
+        "atomsTaught": 210,
+        "atomsNeverRevisited": 26,
+        "reinforcementWindowMisses": 430,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 0,
+        "firstWritingPracticeAt": null,
+        "lessonsBeforeWritingPractice": 108,
+        "findings": [
+          {
+            "language": "latin",
+            "kind": "forward-language",
+            "count": 25,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "latin",
+            "kind": "writing-ramp",
+            "count": 108,
+            "unit": "opening lesson(s)",
+            "detail": "add observable, guided writing practice from the opening lesson"
+          },
+          {
+            "language": "latin",
+            "kind": "atom-step",
+            "count": 3,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "latin",
+            "kind": "reinforcement",
+            "count": 430,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "latin",
+          "kind": "forward-language",
+          "count": 25,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
+        }
+      },
+      {
+        "language": "malayalam",
+        "lessonCount": 247,
+        "atomMeasurableLessons": 216,
+        "atomMeasurementBlindLessons": 31,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 6,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 43,
+        "neverTaughtGlyphs": 18,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 20,
+        "atomsTaught": 281,
+        "atomsNeverRevisited": 51,
+        "reinforcementWindowMisses": 789,
+        "payoffSurprises": 7,
+        "writingPracticeLessons": 57,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "malayalam",
+            "kind": "forward-language",
+            "count": 20,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "malayalam",
+            "kind": "script-closure",
+            "count": 18,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "malayalam",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "malayalam",
+            "kind": "glyph-step",
+            "count": 6,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "malayalam",
+            "kind": "reinforcement",
+            "count": 789,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "malayalam",
+            "kind": "payoff-surprise",
+            "count": 7,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "malayalam",
+            "kind": "measurement-blind",
+            "count": 31,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "malayalam",
+          "kind": "forward-language",
+          "count": 20,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
+        }
+      },
+      {
+        "language": "marathi",
+        "lessonCount": 73,
+        "atomMeasurableLessons": 40,
+        "atomMeasurementBlindLessons": 33,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 3,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 62,
+        "neverTaughtGlyphs": 36,
+        "orderDefects": 67,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 15,
+        "forwardReviews": 19,
+        "forwardReferences": 12,
+        "atomsTaught": 79,
+        "atomsNeverRevisited": 3,
+        "reinforcementWindowMisses": 98,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 52,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "marathi",
+            "kind": "order-integrity",
+            "count": 67,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "marathi",
+            "kind": "forward-language",
+            "count": 12,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "marathi",
+            "kind": "script-closure",
+            "count": 36,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "marathi",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "marathi",
+            "kind": "glyph-step",
+            "count": 3,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "marathi",
+            "kind": "reinforcement",
+            "count": 98,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "marathi",
+            "kind": "measurement-blind",
+            "count": 33,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "marathi",
+          "kind": "order-integrity",
+          "count": 67,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "marwadi",
+        "lessonCount": 7,
+        "atomMeasurableLessons": 7,
+        "atomMeasurementBlindLessons": 0,
+        "durationViolations": 0,
+        "atomLessonSpikes": 0,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 3,
+        "atomsTaught": 9,
+        "atomsNeverRevisited": 1,
+        "reinforcementWindowMisses": 1,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 5,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "marwadi",
+            "kind": "forward-language",
+            "count": 3,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "marwadi",
+            "kind": "reinforcement",
+            "count": 1,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          }
+        ],
+        "next": {
+          "language": "marwadi",
+          "kind": "forward-language",
+          "count": 3,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
+        }
+      },
+      {
+        "language": "persian",
+        "lessonCount": 69,
+        "atomMeasurableLessons": 65,
+        "atomMeasurementBlindLessons": 4,
+        "durationViolations": 0,
+        "atomLessonSpikes": 2,
+        "atomChapterSpikes": 3,
+        "glyphLessonSpikes": 1,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 50,
+        "neverTaughtGlyphs": 25,
+        "orderDefects": 6,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 2,
+        "forwardReviews": 0,
+        "forwardReferences": 10,
+        "atomsTaught": 148,
+        "atomsNeverRevisited": 7,
+        "reinforcementWindowMisses": 204,
+        "payoffSurprises": 2,
+        "writingPracticeLessons": 11,
+        "firstWritingPracticeAt": 7,
+        "lessonsBeforeWritingPractice": 7,
+        "findings": [
+          {
+            "language": "persian",
+            "kind": "order-integrity",
+            "count": 6,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "persian",
+            "kind": "forward-language",
+            "count": 10,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "persian",
+            "kind": "script-closure",
+            "count": 25,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "persian",
+            "kind": "writing-ramp",
+            "count": 7,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "persian",
+            "kind": "atom-step",
+            "count": 5,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "persian",
+            "kind": "glyph-step",
+            "count": 1,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "persian",
+            "kind": "reinforcement",
+            "count": 204,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "persian",
+            "kind": "payoff-surprise",
+            "count": 2,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "persian",
+            "kind": "measurement-blind",
+            "count": 4,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "persian",
+          "kind": "order-integrity",
+          "count": 6,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "portuguese",
+        "lessonCount": 96,
+        "atomMeasurableLessons": 87,
+        "atomMeasurementBlindLessons": 9,
+        "durationViolations": 0,
+        "atomLessonSpikes": 0,
+        "atomChapterSpikes": 2,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 21,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 6,
+        "forwardReviews": 6,
+        "forwardReferences": 59,
+        "atomsTaught": 189,
+        "atomsNeverRevisited": 8,
+        "reinforcementWindowMisses": 296,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 0,
+        "firstWritingPracticeAt": null,
+        "lessonsBeforeWritingPractice": 96,
+        "findings": [
+          {
+            "language": "portuguese",
+            "kind": "order-integrity",
+            "count": 21,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "portuguese",
+            "kind": "forward-language",
+            "count": 59,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "portuguese",
+            "kind": "writing-ramp",
+            "count": 96,
+            "unit": "opening lesson(s)",
+            "detail": "add observable, guided writing practice from the opening lesson"
+          },
+          {
+            "language": "portuguese",
+            "kind": "atom-step",
+            "count": 2,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "portuguese",
+            "kind": "reinforcement",
+            "count": 296,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "portuguese",
+            "kind": "measurement-blind",
+            "count": 9,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "portuguese",
+          "kind": "order-integrity",
+          "count": 21,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "punjabi",
+        "lessonCount": 71,
+        "atomMeasurableLessons": 40,
+        "atomMeasurementBlindLessons": 31,
+        "durationViolations": 0,
+        "atomLessonSpikes": 4,
+        "atomChapterSpikes": 1,
+        "glyphLessonSpikes": 4,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 51,
+        "neverTaughtGlyphs": 36,
+        "orderDefects": 62,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 15,
+        "forwardReviews": 16,
+        "forwardReferences": 0,
+        "atomsTaught": 92,
+        "atomsNeverRevisited": 5,
+        "reinforcementWindowMisses": 137,
+        "payoffSurprises": 0,
+        "writingPracticeLessons": 53,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "punjabi",
+            "kind": "order-integrity",
+            "count": 62,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "punjabi",
+            "kind": "script-closure",
+            "count": 36,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "punjabi",
+            "kind": "atom-step",
+            "count": 5,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "punjabi",
+            "kind": "glyph-step",
+            "count": 4,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "punjabi",
+            "kind": "reinforcement",
+            "count": 137,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "punjabi",
+            "kind": "measurement-blind",
+            "count": 31,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "punjabi",
+          "kind": "order-integrity",
+          "count": 62,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "russian",
+        "lessonCount": 84,
+        "atomMeasurableLessons": 83,
+        "atomMeasurementBlindLessons": 1,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 4,
+        "glyphLessonSpikes": 4,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 59,
+        "neverTaughtGlyphs": 23,
+        "orderDefects": 1,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 1,
+        "forwardReferences": 8,
+        "atomsTaught": 160,
+        "atomsNeverRevisited": 22,
+        "reinforcementWindowMisses": 269,
+        "payoffSurprises": 2,
+        "writingPracticeLessons": 36,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "russian",
+            "kind": "order-integrity",
+            "count": 1,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "russian",
+            "kind": "forward-language",
+            "count": 8,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "russian",
+            "kind": "script-closure",
+            "count": 23,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "russian",
+            "kind": "atom-step",
+            "count": 5,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "russian",
+            "kind": "glyph-step",
+            "count": 4,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "russian",
+            "kind": "reinforcement",
+            "count": 269,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "russian",
+            "kind": "payoff-surprise",
+            "count": 2,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "russian",
+            "kind": "measurement-blind",
+            "count": 1,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "russian",
+          "kind": "order-integrity",
+          "count": 1,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      },
+      {
+        "language": "sanskrit",
+        "lessonCount": 266,
+        "atomMeasurableLessons": 236,
+        "atomMeasurementBlindLessons": 30,
+        "durationViolations": 0,
+        "atomLessonSpikes": 3,
+        "atomChapterSpikes": 1,
+        "glyphLessonSpikes": 6,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 56,
+        "neverTaughtGlyphs": 18,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 4,
+        "atomsTaught": 274,
+        "atomsNeverRevisited": 13,
+        "reinforcementWindowMisses": 716,
+        "payoffSurprises": 6,
+        "writingPracticeLessons": 49,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "sanskrit",
+            "kind": "forward-language",
+            "count": 4,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "sanskrit",
+            "kind": "script-closure",
+            "count": 18,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "sanskrit",
+            "kind": "atom-step",
+            "count": 4,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "sanskrit",
+            "kind": "glyph-step",
+            "count": 6,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "sanskrit",
+            "kind": "reinforcement",
+            "count": 716,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "sanskrit",
+            "kind": "payoff-surprise",
+            "count": 6,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "sanskrit",
+            "kind": "measurement-blind",
+            "count": 30,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "sanskrit",
+          "kind": "forward-language",
+          "count": 4,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
+        }
+      },
+      {
+        "language": "spanish",
+        "lessonCount": 584,
+        "atomMeasurableLessons": 488,
+        "atomMeasurementBlindLessons": 96,
+        "durationViolations": 0,
+        "atomLessonSpikes": 6,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 91,
+        "atomsTaught": 876,
+        "atomsNeverRevisited": 128,
+        "reinforcementWindowMisses": 2326,
+        "payoffSurprises": 26,
+        "writingPracticeLessons": 7,
+        "firstWritingPracticeAt": 26,
+        "lessonsBeforeWritingPractice": 26,
+        "findings": [
+          {
+            "language": "spanish",
+            "kind": "forward-language",
+            "count": 91,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "spanish",
+            "kind": "writing-ramp",
+            "count": 26,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "spanish",
+            "kind": "atom-step",
+            "count": 6,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "spanish",
+            "kind": "reinforcement",
+            "count": 2326,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "spanish",
+            "kind": "payoff-surprise",
+            "count": 26,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "spanish",
+            "kind": "measurement-blind",
+            "count": 96,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "spanish",
+          "kind": "forward-language",
+          "count": 91,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
+        }
+      },
+      {
+        "language": "tamil",
+        "lessonCount": 282,
+        "atomMeasurableLessons": 249,
+        "atomMeasurementBlindLessons": 33,
+        "durationViolations": 0,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 6,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 35,
+        "neverTaughtGlyphs": 11,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 16,
+        "atomsTaught": 347,
+        "atomsNeverRevisited": 51,
+        "reinforcementWindowMisses": 934,
+        "payoffSurprises": 13,
+        "writingPracticeLessons": 75,
+        "firstWritingPracticeAt": 27,
+        "lessonsBeforeWritingPractice": 27,
+        "findings": [
+          {
+            "language": "tamil",
+            "kind": "forward-language",
+            "count": 16,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "tamil",
+            "kind": "script-closure",
+            "count": 11,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "tamil",
+            "kind": "writing-ramp",
+            "count": 27,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "tamil",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "tamil",
+            "kind": "glyph-step",
+            "count": 6,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "tamil",
+            "kind": "reinforcement",
+            "count": 934,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "tamil",
+            "kind": "payoff-surprise",
+            "count": 13,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "tamil",
+            "kind": "measurement-blind",
+            "count": 33,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "tamil",
+          "kind": "forward-language",
+          "count": 16,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
+        }
+      },
+      {
+        "language": "telugu",
+        "lessonCount": 276,
+        "atomMeasurableLessons": 246,
+        "atomMeasurementBlindLessons": 30,
+        "durationViolations": 1,
+        "atomLessonSpikes": 1,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 6,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 46,
+        "neverTaughtGlyphs": 24,
+        "orderDefects": 0,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 14,
+        "atomsTaught": 313,
+        "atomsNeverRevisited": 14,
+        "reinforcementWindowMisses": 823,
+        "payoffSurprises": 2,
+        "writingPracticeLessons": 57,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
+        "findings": [
+          {
+            "language": "telugu",
+            "kind": "duration",
+            "count": 1,
+            "unit": "lesson(s)",
+            "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+          },
+          {
+            "language": "telugu",
+            "kind": "forward-language",
+            "count": 14,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "telugu",
+            "kind": "script-closure",
+            "count": 24,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "telugu",
+            "kind": "atom-step",
+            "count": 1,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "telugu",
+            "kind": "glyph-step",
+            "count": 6,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "telugu",
+            "kind": "reinforcement",
+            "count": 823,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "telugu",
+            "kind": "payoff-surprise",
+            "count": 2,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "telugu",
+            "kind": "measurement-blind",
+            "count": 30,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "telugu",
+          "kind": "duration",
+          "count": 1,
+          "unit": "lesson(s)",
+          "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+        }
+      },
+      {
+        "language": "urdu",
+        "lessonCount": 68,
+        "atomMeasurableLessons": 64,
+        "atomMeasurementBlindLessons": 4,
+        "durationViolations": 0,
+        "atomLessonSpikes": 3,
+        "atomChapterSpikes": 3,
+        "glyphLessonSpikes": 2,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 47,
+        "neverTaughtGlyphs": 30,
+        "orderDefects": 5,
+        "unknownPrerequisites": 0,
+        "forwardPrerequisites": 1,
+        "forwardReviews": 0,
+        "forwardReferences": 7,
+        "atomsTaught": 151,
+        "atomsNeverRevisited": 8,
+        "reinforcementWindowMisses": 214,
+        "payoffSurprises": 2,
+        "writingPracticeLessons": 27,
+        "firstWritingPracticeAt": 7,
+        "lessonsBeforeWritingPractice": 7,
+        "findings": [
+          {
+            "language": "urdu",
+            "kind": "order-integrity",
+            "count": 5,
+            "unit": "order/dependency defect(s)",
+            "detail": "declare a unique reading order and close every prerequisite and review before use"
+          },
+          {
+            "language": "urdu",
+            "kind": "forward-language",
+            "count": 7,
+            "unit": "use(s)",
+            "detail": "teach target-language material before load-bearing use"
+          },
+          {
+            "language": "urdu",
+            "kind": "script-closure",
+            "count": 30,
+            "unit": "glyph(s)",
+            "detail": "teach every load-bearing glyph before asking the learner to decode it"
+          },
+          {
+            "language": "urdu",
+            "kind": "writing-ramp",
+            "count": 7,
+            "unit": "opening lesson(s)",
+            "detail": "move the first gentle writing microstep to lesson one"
+          },
+          {
+            "language": "urdu",
+            "kind": "atom-step",
+            "count": 6,
+            "unit": "lesson/chapter spike(s)",
+            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+          },
+          {
+            "language": "urdu",
+            "kind": "glyph-step",
+            "count": 2,
+            "unit": "lesson/system spike(s)",
+            "detail": "split new glyphs and writing systems across gentler steps"
+          },
+          {
+            "language": "urdu",
+            "kind": "reinforcement",
+            "count": 214,
+            "unit": "missed window(s)",
+            "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "urdu",
+            "kind": "payoff-surprise",
+            "count": 2,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
+          },
+          {
+            "language": "urdu",
+            "kind": "measurement-blind",
+            "count": 4,
+            "unit": "lesson(s)",
+            "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+          }
+        ],
+        "next": {
+          "language": "urdu",
+          "kind": "order-integrity",
+          "count": 5,
+          "unit": "order/dependency defect(s)",
+          "detail": "declare a unique reading order and close every prerequisite and review before use"
+        }
+      }
+    ],
+    "workQueue": [
+      {
+        "language": "kannada",
+        "kind": "duration",
+        "count": 1,
+        "unit": "lesson(s)",
+        "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+      },
+      {
+        "language": "telugu",
+        "kind": "duration",
+        "count": 1,
+        "unit": "lesson(s)",
+        "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+      },
+      {
+        "language": "german",
+        "kind": "order-integrity",
+        "count": 132,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "french",
+        "kind": "order-integrity",
+        "count": 113,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "marathi",
+        "kind": "order-integrity",
+        "count": 67,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "punjabi",
+        "kind": "order-integrity",
+        "count": 62,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "arabic",
+        "kind": "order-integrity",
+        "count": 53,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "italian",
+        "kind": "order-integrity",
+        "count": 22,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "portuguese",
+        "kind": "order-integrity",
+        "count": 21,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "persian",
+        "kind": "order-integrity",
+        "count": 6,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "urdu",
+        "kind": "order-integrity",
+        "count": 5,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "bengali",
+        "kind": "order-integrity",
+        "count": 3,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "gujarati",
+        "kind": "order-integrity",
+        "count": 3,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "hindi",
+        "kind": "order-integrity",
+        "count": 1,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "russian",
+        "kind": "order-integrity",
+        "count": 1,
+        "unit": "order/dependency defect(s)",
+        "detail": "declare a unique reading order and close every prerequisite and review before use"
+      },
+      {
+        "language": "spanish",
+        "kind": "forward-language",
+        "count": 91,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "german",
+        "kind": "forward-language",
+        "count": 64,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "french",
+        "kind": "forward-language",
+        "count": 63,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "portuguese",
+        "kind": "forward-language",
+        "count": 59,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "italian",
+        "kind": "forward-language",
+        "count": 48,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "latin",
+        "kind": "forward-language",
+        "count": 25,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "malayalam",
+        "kind": "forward-language",
+        "count": 20,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "arabic",
+        "kind": "forward-language",
+        "count": 19,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "kannada",
+        "kind": "forward-language",
+        "count": 17,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "tamil",
+        "kind": "forward-language",
+        "count": 16,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "telugu",
+        "kind": "forward-language",
+        "count": 14,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "marathi",
+        "kind": "forward-language",
+        "count": 12,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "hindi",
+        "kind": "forward-language",
+        "count": 10,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "persian",
+        "kind": "forward-language",
+        "count": 10,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "gujarati",
+        "kind": "forward-language",
+        "count": 8,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "russian",
+        "kind": "forward-language",
+        "count": 8,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "urdu",
+        "kind": "forward-language",
+        "count": 7,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "bengali",
+        "kind": "forward-language",
+        "count": 6,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "forward-language",
+        "count": 4,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "marwadi",
+        "kind": "forward-language",
+        "count": 3,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "bengali",
+        "kind": "script-closure",
+        "count": 39,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "marathi",
+        "kind": "script-closure",
+        "count": 36,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "punjabi",
+        "kind": "script-closure",
+        "count": 36,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "gujarati",
+        "kind": "script-closure",
+        "count": 32,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "urdu",
+        "kind": "script-closure",
+        "count": 30,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "persian",
+        "kind": "script-closure",
+        "count": 25,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "telugu",
+        "kind": "script-closure",
+        "count": 24,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "russian",
+        "kind": "script-closure",
+        "count": 23,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "japanese",
+        "kind": "script-closure",
+        "count": 21,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "kannada",
+        "kind": "script-closure",
+        "count": 18,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "malayalam",
+        "kind": "script-closure",
+        "count": 18,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "script-closure",
+        "count": 18,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "arabic",
+        "kind": "script-closure",
+        "count": 16,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "hindi",
+        "kind": "script-closure",
+        "count": 12,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "tamil",
+        "kind": "script-closure",
+        "count": 11,
+        "unit": "glyph(s)",
+        "detail": "teach every load-bearing glyph before asking the learner to decode it"
+      },
+      {
+        "language": "latin",
+        "kind": "writing-ramp",
+        "count": 108,
+        "unit": "opening lesson(s)",
+        "detail": "add observable, guided writing practice from the opening lesson"
+      },
+      {
+        "language": "portuguese",
+        "kind": "writing-ramp",
+        "count": 96,
+        "unit": "opening lesson(s)",
+        "detail": "add observable, guided writing practice from the opening lesson"
+      },
+      {
+        "language": "italian",
+        "kind": "writing-ramp",
+        "count": 88,
+        "unit": "opening lesson(s)",
+        "detail": "add observable, guided writing practice from the opening lesson"
+      },
+      {
+        "language": "german",
+        "kind": "writing-ramp",
+        "count": 34,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "french",
+        "kind": "writing-ramp",
+        "count": 32,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "tamil",
+        "kind": "writing-ramp",
+        "count": 27,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "spanish",
+        "kind": "writing-ramp",
+        "count": 26,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "persian",
+        "kind": "writing-ramp",
+        "count": 7,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "urdu",
+        "kind": "writing-ramp",
+        "count": 7,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "chinese",
+        "kind": "writing-ramp",
+        "count": 1,
+        "unit": "opening lesson(s)",
+        "detail": "move the first gentle writing microstep to lesson one"
+      },
+      {
+        "language": "german",
+        "kind": "atom-step",
+        "count": 8,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "french",
+        "kind": "atom-step",
+        "count": 6,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "spanish",
+        "kind": "atom-step",
+        "count": 6,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "urdu",
+        "kind": "atom-step",
+        "count": 6,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "italian",
+        "kind": "atom-step",
+        "count": 5,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "persian",
+        "kind": "atom-step",
+        "count": 5,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "punjabi",
+        "kind": "atom-step",
+        "count": 5,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "russian",
+        "kind": "atom-step",
+        "count": 5,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "atom-step",
+        "count": 4,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "gujarati",
+        "kind": "atom-step",
+        "count": 3,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "hindi",
+        "kind": "atom-step",
+        "count": 3,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "latin",
+        "kind": "atom-step",
+        "count": 3,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "arabic",
+        "kind": "atom-step",
+        "count": 2,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "portuguese",
+        "kind": "atom-step",
+        "count": 2,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "bengali",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "japanese",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "kannada",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "malayalam",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "marathi",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "tamil",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "telugu",
+        "kind": "atom-step",
+        "count": 1,
+        "unit": "lesson/chapter spike(s)",
+        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+      },
+      {
+        "language": "japanese",
+        "kind": "glyph-step",
+        "count": 9,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "kannada",
+        "kind": "glyph-step",
+        "count": 7,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "malayalam",
+        "kind": "glyph-step",
+        "count": 6,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "glyph-step",
+        "count": 6,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "tamil",
+        "kind": "glyph-step",
+        "count": 6,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "telugu",
+        "kind": "glyph-step",
+        "count": 6,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "punjabi",
+        "kind": "glyph-step",
+        "count": 4,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "russian",
+        "kind": "glyph-step",
+        "count": 4,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "arabic",
+        "kind": "glyph-step",
+        "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "bengali",
+        "kind": "glyph-step",
+        "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "hindi",
+        "kind": "glyph-step",
+        "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "marathi",
+        "kind": "glyph-step",
+        "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "gujarati",
+        "kind": "glyph-step",
+        "count": 2,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "urdu",
+        "kind": "glyph-step",
+        "count": 2,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "chinese",
+        "kind": "glyph-step",
+        "count": 1,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "persian",
+        "kind": "glyph-step",
+        "count": 1,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "spanish",
+        "kind": "reinforcement",
+        "count": 2326,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "hindi",
+        "kind": "reinforcement",
+        "count": 1014,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "tamil",
+        "kind": "reinforcement",
+        "count": 934,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "telugu",
+        "kind": "reinforcement",
+        "count": 823,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "malayalam",
+        "kind": "reinforcement",
+        "count": 789,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "kannada",
+        "kind": "reinforcement",
+        "count": 727,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "reinforcement",
+        "count": 716,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "latin",
+        "kind": "reinforcement",
+        "count": 430,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "arabic",
+        "kind": "reinforcement",
+        "count": 315,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "portuguese",
+        "kind": "reinforcement",
+        "count": 296,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "italian",
+        "kind": "reinforcement",
+        "count": 273,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "russian",
+        "kind": "reinforcement",
+        "count": 269,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "french",
+        "kind": "reinforcement",
+        "count": 230,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "urdu",
+        "kind": "reinforcement",
+        "count": 214,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "persian",
+        "kind": "reinforcement",
+        "count": 204,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "german",
+        "kind": "reinforcement",
+        "count": 181,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "gujarati",
+        "kind": "reinforcement",
+        "count": 174,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "bengali",
+        "kind": "reinforcement",
+        "count": 152,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "punjabi",
+        "kind": "reinforcement",
+        "count": 137,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "chinese",
+        "kind": "reinforcement",
+        "count": 98,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "marathi",
+        "kind": "reinforcement",
+        "count": 98,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "japanese",
+        "kind": "reinforcement",
+        "count": 54,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "marwadi",
+        "kind": "reinforcement",
+        "count": 1,
+        "unit": "missed window(s)",
+        "detail": "add retrieval at the expanding R1-R4 intervals"
+      },
+      {
+        "language": "spanish",
+        "kind": "payoff-surprise",
+        "count": 26,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "hindi",
+        "kind": "payoff-surprise",
+        "count": 13,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "tamil",
+        "kind": "payoff-surprise",
+        "count": 13,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "malayalam",
+        "kind": "payoff-surprise",
+        "count": 7,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "payoff-surprise",
+        "count": 6,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "kannada",
+        "kind": "payoff-surprise",
+        "count": 3,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "arabic",
+        "kind": "payoff-surprise",
+        "count": 2,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "persian",
+        "kind": "payoff-surprise",
+        "count": 2,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "russian",
+        "kind": "payoff-surprise",
+        "count": 2,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "telugu",
+        "kind": "payoff-surprise",
+        "count": 2,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "urdu",
+        "kind": "payoff-surprise",
+        "count": 2,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "german",
+        "kind": "payoff-surprise",
+        "count": 1,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
+        "language": "spanish",
+        "kind": "measurement-blind",
+        "count": 96,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "german",
+        "kind": "measurement-blind",
+        "count": 66,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "french",
+        "kind": "measurement-blind",
+        "count": 64,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "marathi",
+        "kind": "measurement-blind",
+        "count": 33,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "tamil",
+        "kind": "measurement-blind",
+        "count": 33,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "malayalam",
+        "kind": "measurement-blind",
+        "count": 31,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "punjabi",
+        "kind": "measurement-blind",
+        "count": 31,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "kannada",
+        "kind": "measurement-blind",
+        "count": 30,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "sanskrit",
+        "kind": "measurement-blind",
+        "count": 30,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "telugu",
+        "kind": "measurement-blind",
+        "count": 30,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "arabic",
+        "kind": "measurement-blind",
+        "count": 26,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "italian",
+        "kind": "measurement-blind",
+        "count": 9,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "portuguese",
+        "kind": "measurement-blind",
+        "count": 9,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "persian",
+        "kind": "measurement-blind",
+        "count": 4,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "urdu",
+        "kind": "measurement-blind",
+        "count": 4,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "russian",
+        "kind": "measurement-blind",
+        "count": 1,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      }
+    ],
+    "summary": {
+      "tracks": 23,
+      "tracksWithDetectedCliffs": 23,
+      "tracksWithNoWritingPractice": 3,
+      "tracksWhereWritingStartsLate": 7,
+      "atomMeasurementBlindLessons": 497,
+      "findings": 148
+    }
+  },
   "levelGate": {
     "vocabularyTargets": {
       "pre-A1": 300,
