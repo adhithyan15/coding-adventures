@@ -5,6 +5,20 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09FN — Gujarati ઐ repairs an inventory gap; ઓ is next
+
+The source-and-font audit found that **ઐ** was missing from `gujarati.json`, not
+merely unverified. The t30apps.com animation gives it the first three **એ** runs
+plus a fourth, higher arc; the new entry and Noto fit preserve all four paths
+and the resulting three lifts. Gujarati's inventory denominator therefore rises
+instead of hiding the omission.
+
+Gujarati is now **8/34 verified, 26 remaining**. Continue to **ઓ** next: its
+adjacent animation has four populated paths—one joined body, two separately
+descended stems, and one high arc—so it can reuse verified **આ** and **એ**
+anatomy. A correctness defect still outranks coverage if one appears during
+fitting or validation.
+
 ## HL-C09FM — Gujarati એ establishes a three-run pattern; ઐ is next
 
 The t30apps.com animation gives **એ** three populated SVG paths: a joined left
