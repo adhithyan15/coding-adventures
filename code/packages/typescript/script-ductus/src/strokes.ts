@@ -6259,6 +6259,29 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ટ"),
   },
+  // t30apps writes Gujarati ઠ as one continuous run: sweep the high shoulder
+  // from right to left, descend through the middle into the outer lower bowl,
+  // then curl back to the inner terminal. This median fits that order to Noto.
+  [ductusKey("gujarati", "ઠ")]: {
+    script: "gujarati",
+    glyph: "ઠ",
+    strokes: [
+      { segments: [{ label: "sweep left across the shoulder, circle the lower bowl, and curl inward", path: [
+        { x: 400, y: 565 }, { x: 350, y: 575 }, { x: 300, y: 575 },
+        { x: 250, y: 565 }, { x: 205, y: 545 }, { x: 175, y: 515 },
+        { x: 165, y: 480 }, { x: 180, y: 445 }, { x: 220, y: 410 },
+        { x: 275, y: 375 }, { x: 335, y: 340 }, { x: 390, y: 295 },
+        { x: 430, y: 245 }, { x: 455, y: 190 }, { x: 455, y: 135 },
+        { x: 440, y: 90 }, { x: 410, y: 55 }, { x: 365, y: 30 },
+        { x: 310, y: 20 }, { x: 250, y: 20 }, { x: 190, y: 35 },
+        { x: 140, y: 65 }, { x: 105, y: 105 }, { x: 85, y: 150 },
+        { x: 85, y: 195 }, { x: 100, y: 235 }, { x: 130, y: 270 },
+        { x: 170, y: 295 }, { x: 215, y: 310 }, { x: 260, y: 315 },
+        { x: 305, y: 310 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ઠ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

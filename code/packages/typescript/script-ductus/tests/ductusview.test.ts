@@ -313,6 +313,8 @@ const GUJARATI_NYA = ductusFor("ઞ", "gujarati")!;
 const gujaratiNyaOutline = gujaratiOutline("ઞ");
 const GUJARATI_TTA = ductusFor("ટ", "gujarati")!;
 const gujaratiTtaOutline = gujaratiOutline("ટ");
+const GUJARATI_TTHA = ductusFor("ઠ", "gujarati")!;
+const gujaratiTthaOutline = gujaratiOutline("ઠ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -4084,6 +4086,31 @@ describe("Gujarati ટ — upper turn and lower bowl stay joined", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_TTA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઠ — high shoulder, outer bowl, and inward curl stay joined", () => {
+  const steps = ductusSteps(GUJARATI_TTHA);
+  const strip = ductusFilmstrip(GUJARATI_TTHA, gujaratiTthaOutline);
+
+  it("shows the complete joined form as one movement", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep left across the shoulder, circle the lower bowl, and curl inward",
+    ]);
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 1 movement");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiTthaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_TTHA.strokes[0], 1),
     );
   });
 });
