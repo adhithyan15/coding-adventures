@@ -1,5 +1,6 @@
 ---
 id: AR-C02-anta-anti
+sequence: 180
 chapter: 2
 type: word
 headword: أنت

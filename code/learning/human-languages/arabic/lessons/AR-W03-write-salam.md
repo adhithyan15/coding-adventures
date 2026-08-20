@@ -1,5 +1,6 @@
 ---
 id: AR-W03-write-salam
+sequence: 140
 chapter: 1
 type: writing
 headword: "سلام"
