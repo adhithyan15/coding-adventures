@@ -2696,6 +2696,38 @@ radio transport, or a MeshCoP session:
 This broadens Thread infrastructure visibility while preserving the existing
 block on a production Thread network host and commissioning stack.
 
+## Current Matter Operational DNS-SD Discovery Breadth Slice
+
+The next breadth slice adds standards-based visibility into commissioned Matter
+nodes without claiming ownership of fabric credentials, secure sessions, or
+the Interaction Model:
+
+- `smart-home-matter-operational-discovery-integration` browses the Matter
+  `_matter._tcp.local` operational service through the shared production mDNS
+  scanner and strictly validates the 16-hex-digit compressed fabric id and
+  16-hex-digit node id encoded in each instance name, the resolved local host,
+  address, and non-zero endpoint port.
+- Optional common Matter TXT fields are parsed with the official canonical
+  decimal and range rules: MRP idle and active retry intervals, active
+  threshold, supported TCP client/server roles, and intermittently connected
+  device status. Case-insensitive duplicate fields, reserved TCP flags, and
+  malformed values remain isolated partial failures.
+- Fabric and node identity provide deterministic D23 candidate identity.
+  First observations win while conflicting endpoints and over-limit
+  advertisements are reported without discarding valid peers.
+- D23 discovery authorization runs before socket I/O. One browse accepts at
+  most 64 replies, uses a bounded timeout and record TTL, preserves parser
+  failures, and records only public DNS-SD facts.
+- The runtime does not browse `_matterc._udp` commissionable nodes, accept
+  fabric credentials, validate fabric membership, or open the advertised
+  endpoint. PASE, CASE, certificate validation, secure-session lifetime,
+  Interaction Model reads, subscriptions, commands, and control require
+  separately supervised commissioning, secret-custody, session, transport,
+  and operation-policy owners.
+
+This broadens Matter fabric visibility while preserving the existing block on
+a production commissioning and secure-session host.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

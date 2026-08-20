@@ -1,5 +1,16 @@
 # Changelog
 
+## Marathi chapters 1-5 regain their reading order (#12251)
+
+- Add one global, spaced sequence to all 33 legacy lessons, recovered from the
+  hand-authored book sections and closed against every prerequisite and review.
+- Remove 33 missing-sequence findings plus 15 forward prerequisites and 19
+  forward reviews that alphabetical filename fallback had fabricated. Marathi's
+  order-integrity backlog moves from 67 defects to zero.
+- Keep distinct learner debt honest: forward-language uses move from 12 to 3,
+  and one glyph spike disappears in the real order, while the remaining script
+  closure and glyph-ramp work stays measurable.
+
 ## [Unreleased]
 
 ### Added — Chapter 14, the first ten pieces of Devanagari (HL-C216)

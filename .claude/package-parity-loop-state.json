@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12271,
+  "active_pr": 12283,
   "last_inventory": {
-    "revision": "6694384516b8bd2d2b7696daf2604fa5d0118d8f",
+    "revision": "d6baf53b3ef32353fc8e4fcd9b8087349aad788e",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1367,
@@ -3681,7 +3681,7 @@
     {
       "id": "zip-raw-rfc1951-dotnet-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in the .NET lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/dotnet-zip-raw-rfc1951",
       "pr_number": 12271,
@@ -3691,7 +3691,10 @@
       "selection_notes": "Selected only after external auto-merge completed Haskell ZIP PR #12234 and the collision-checked schema-3 inventory was regenerated at exact main with no topology or count change: 15 established lanes, 1,366 implementation identities, 4,550 established slots, 174 high-consensus packages with 271 gaps, 904 singletons with 12,656 gaps, 714 Rust singletons, zero collisions, and zero unknown buckets. The .NET C#/F# pair is the lowest-risk remaining dependency-ready ZIP child: both packages are pure in-memory codecs with local LZSS project references, explicit empty capabilities, real cross-platform dotnet test front doors, and the installed .NET 9.0.315 toolchain. It advances two lanes and leaves only the JVM pair before the ZIP umbrella and fourteen PNG slots can close. No open PR overlaps the target packages, state, roadmap, CMP09, or neutral fixture; the ancient no-PR cross-lane ZIP branch remains unowned residue and will not be reused or cherry-picked.",
       "implementation_revision": "fe37c45b438cb82664420f5ed5981e6b61ac343f",
       "validation_notes": "The C# and F# implementations consume all 34 neutral RFC 1951/CRC-32 cases, decode stored/fixed/dynamic/multi-block streams, expose counted caller-capped raw APIs with the closed 14-code payload-blind taxonomy, independently verify raw deflate with Python zlib, accept a foreign full-window stream, enforce exact ZIP payload and declared-size boundaries, map raw failures back into the historical InvalidDataException container contract, and apply the 256 MiB per-entry and aggregate ceilings. The superseded fixed-only decoders were removed so each lane has one canonical codec path. Under .NET 9.0.315 the exact Windows BUILD commands pass 30 C# tests at 91.84% line/77.89% branch coverage and 21 F# tests at 91.64% line/73.43% branch coverage; strict builds are warning-free, both 0.2.0 packages build, and both complete dependency graphs report no vulnerable packages. Fresh uncached Go build-tool plans validate and build C# LZSS/ZIP (2 of 199) and F# LZSS/ZIP (2 of 198); build-tool tests, vet, and binary build pass. The neutral fixture and capability suites pass 16 tests plus 719 subtests. The exact-main schema-3 parity gate reports 15 lanes, 1,367 identities, 4,551 slots, zero collisions, and zero unknown buckets; the 393-item state is unique, dependency-complete, acyclic, and has exactly this item in progress. Production authority and credential scans are clean, capability profiles remain explicitly empty, the Windows wrappers are repeatable and safely quote checkout-derived environment paths, and git diff --check passes.",
-      "publication_notes": "Ready-for-review PR #12271 opened from fully validated branch head 8ec90fa8ca after a clean rebase onto exact main 6694384516. GitHub reports the branch mergeable with no conflict; CI and CodeQL checks are queued, so the loop is monitor-only and auto-merge remains disabled until every required check reaches an acceptable terminal conclusion.",
+      "publication_notes": "Ready-for-review PR #12271 opened from fully validated branch head 8ec90fa8ca after a clean rebase onto exact main 6694384516. GitHub reported the branch mergeable with no conflict. The final reviewed head b3c4eac6b8020717fd8be985b933a5f2815efc27 completed all 29 reported checks with 23 successes and six expected skips; after every job became terminal and acceptable and GitHub still reported a clean merge, the loop enabled squash auto-merge. GitHub merged the PR without manual merge authority as 993c78f1d65304f696cce4aeb765de40ac2f34cf at 2026-08-20T14:10:41Z.",
+      "final_review_revision": "b3c4eac6b8020717fd8be985b933a5f2815efc27",
+      "merged_at": "2026-08-20T14:10:41Z",
+      "merge_revision": "993c78f1d65304f696cce4aeb765de40ac2f34cf",
       "notes": "Portable C# and F# child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
@@ -3771,10 +3774,17 @@
     {
       "id": "zip-raw-rfc1951-jvm-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in the JVM lanes",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/jvm-zip-raw-rfc1951",
+      "pr_number": 12283,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12283",
+      "opened_at": "2026-08-20T14:52:55Z",
+      "selection_revision": "993c78f1d65304f696cce4aeb765de40ac2f34cf",
+      "selection_notes": "Selected only after .NET ZIP PR #12271 completed all 29 checks and auto-merged cleanly, the collision-checked schema-3 inventory was regenerated at exact main with unchanged topology and counts, and a fresh ownership audit found no active PR for any remaining ZIP parity surface. This Java/Kotlin pair is the sole remaining child of the ZIP raw-codec umbrella; completing it unlocks umbrella closure and fourteen dependent PNG parity slots. Both packages are pure in-memory codecs with local LZSS composite-build dependencies and explicit empty capabilities. The ancient no-PR cross-lane ZIP branch remains stale residue and will not be reused or cherry-picked; implementation is isolated on this fresh branch from merge main.",
+      "implementation_revision": "d66707e8e3dd94e9ece5b22461b58f9cc84b6056",
+      "validation_notes": "Java and Kotlin each consume all 34 neutral RFC 1951/CRC-32 cases and expose ZIP-owned raw deflate, counted caller-capped inflate, CRC-32, and the closed 14-code payload-blind failure taxonomy. Both decoders accept stored, fixed, dynamic, multi-block, foreign full-window, and historical-wrapper streams; enforce exact compressed-byte and declared-output consumption; reject suffix cavities, malformed canonical tables, invalid back-references, and ZIP size mismatches; map raw failures into IOException; and preflight Central Directory sizes against the caller's aggregate budget before decoding. The obsolete fixed-only decoder paths are removed. Under JDK 21.0.12 and Gradle 8.11.1, clean warning-failing package builds pass 17 Java tests at 93.12% line coverage and 31 Kotlin tests at 94.10% line coverage, both 80% JaCoCo gates, and both literal Windows BUILD front doors. The neutral fixture and capability suites pass 16 tests plus 719 subtests. Go build-tool tests, vet, and binary build pass; fresh diff-aware plans validate each lane and build only LZSS plus ZIP. The exact-main schema-3 parity gate reports 15 lanes, 1,367 identities, 4,551 slots, zero collisions, and zero unknown buckets; the 393-item state is unique, dependency-complete, acyclic, and has exactly this item active. Production authority and credential scans are clean, Jackson remains test-only, explicit empty capabilities remain accurate, final security review found no blocker, and git diff --check passes.",
+      "publication_notes": "Ready-for-review PR #12283 opened from fully validated implementation revision d66707e8e3 after clean rebases onto exact main d6baf53b3e. GitHub reports the branch mergeable with no conflict. CI and CodeQL checks are queued, so the loop is monitor-only and auto-merge remains disabled until every required check reaches an acceptable terminal conclusion.",
       "notes": "Portable Java and Kotlin child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {

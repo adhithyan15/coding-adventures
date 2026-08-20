@@ -437,6 +437,7 @@ dependency-shaped deliveries.
 |------------|------------------------------|--------------------------------|
 | Python     | `coding-adventures-zip`      | `coding_adventures_zip`        |
 | Go         | module `…/go/zip`            | package `zip`                  |
+| Java       | `com.codingadventures:zip`   | `com.codingadventures.zip`     |
 | Ruby       | `coding_adventures_zip`      | `CodingAdventures::Zip`        |
 | TypeScript | `@coding-adventures/zip`     | `CodingAdventures.Zip`         |
 | Rust       | `coding-adventures-zip`      | `coding_adventures_zip`        |
