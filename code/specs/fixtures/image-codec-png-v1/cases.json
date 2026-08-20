@@ -1,0 +1,831 @@
+{
+  "schema_version": 1,
+  "profile": "image-codec-png-v1",
+  "limits": {
+    "max_dimension": 16384,
+    "default_max_pixels": 33554432
+  },
+  "error_ids": [
+    "invalid-max-pixels",
+    "invalid-image-dimensions",
+    "invalid-pixel-data-length",
+    "file-too-short",
+    "invalid-signature",
+    "truncated-chunk",
+    "invalid-chunk-type",
+    "chunk-crc-mismatch",
+    "chunk-before-ihdr",
+    "duplicate-ihdr",
+    "invalid-ihdr-length",
+    "invalid-dimensions",
+    "dimension-limit",
+    "pixel-limit",
+    "unsupported-feature",
+    "invalid-plte",
+    "invalid-trns",
+    "nonconsecutive-idat",
+    "invalid-iend",
+    "trailing-data",
+    "unknown-critical-chunk",
+    "missing-required-chunk",
+    "invalid-zlib-header",
+    "preset-dictionary",
+    "inflate-failed",
+    "inflated-length-mismatch",
+    "idat-cavity",
+    "adler-mismatch",
+    "invalid-filter"
+  ],
+  "cases": [
+    {
+      "id": "png-v1-decode-rgba-none",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      }
+    },
+    {
+      "id": "png-v1-decode-all-filters",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000020000000508060000006fb33d9c0000003549444154780163e01291d330b2710b60e41695d7d4d0d0d06062646464646464646466e7111413151515656164646464646464040060130319d3f24f150000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 5,
+        "rgba_hex": "0a141e28323c46500b151f29333d47510c16202a343e48520d17212b353f49530e18222c36404a54"
+      }
+    },
+    {
+      "id": "png-v1-decode-paeth-b",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000001000000020800000000bceae9fb0000000c494441547801633062b90a000177010cc2825b6d0000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 2,
+        "rgba_hex": "323232ff070707ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-paeth-a",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000000200000002080000000057dd52f80000000e4944415478016348496159f6170005df02701154cc440000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 2,
+        "rgba_hex": "646464ff646464ff0a0a0aff070707ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-paeth-c",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000000200000002080000000057dd52f80000000e49444154780163e01761f9fd0300039b021b45a210590000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 2,
+        "rgba_hex": "0f0f0fff141414ff0a0a0aff070707ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-paeth-a-b-tie",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000000200000002080000000057dd52f80000000e4944415478016360e062e1fa0b00014b01160de8ca5b0000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 2,
+        "rgba_hex": "000000ff0a0a0aff0a0a0aff070707ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-paeth-all-tie",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000000200000002080000000057dd52f80000000e49444154780163e0e26261f80b0001690116819129840000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 2,
+        "rgba_hex": "0a0a0aff0a0a0aff0a0a0aff070707ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-greyscale",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000002000000010800000000d14920560000000b4944415478016314dc0e0000df00caf11835980000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 1,
+        "rgba_hex": "111111ffc8c8c8ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-truecolour",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000020000000108020000007b40e8dd0000000f49444154780163e01291d330b20100023700d3096df20d0000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 1,
+        "rgba_hex": "0a141eff28323cff"
+      }
+    },
+    {
+      "id": "png-v1-decode-greyscale-alpha",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000020000000108040000005e2bb7010000000d49444154780163700b884a010003250155015f9e220000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 2,
+        "height": 1,
+        "rgba_hex": "464646505a5a5a64"
+      }
+    },
+    {
+      "id": "png-v1-decode-greyscale-trns",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000002000000010800000000d14920560000000274524e5300111c23edca0000000b4944415478016310140200003700241d2164920000000049454e44ae426082",
+      "oracle": "rfc2083-hand",
+      "expected": {
+        "width": 2,
+        "height": 1,
+        "rgba_hex": "11111100121212ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-truecolour-trns",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000020000000108020000007b40e8dd0000000674524e53000100020003c94babf50000000f494441547801636064626661650300003f0016738177810000000049454e44ae426082",
+      "oracle": "rfc2083-hand",
+      "expected": {
+        "width": 2,
+        "height": 1,
+        "rgba_hex": "01020300040506ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-truecolour-plte-trns",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000020000000108020000007b40e8dd00000003504c5445090807fe1619fe0000000674524e53000100020003c94babf50000000f494441547801636064626661650300003f0016738177810000000049454e44ae426082",
+      "oracle": "rfc2083-hand",
+      "expected": {
+        "width": 2,
+        "height": 1,
+        "rgba_hex": "01020300040506ff"
+      }
+    },
+    {
+      "id": "png-v1-decode-split-idat",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000001494441547876e684e600000002494441540163b15bbc190000000949444154606462660100001900cd16af9500000001494441540bbfeaa4600000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      }
+    },
+    {
+      "id": "png-v1-decode-ancillary",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000007744558746669787475726524f6bfed0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      }
+    },
+    {
+      "id": "png-v1-decode-suggested-plte",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000003504c5445090807fe1619fe0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "oracle": "rfc2083-hand",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      }
+    },
+    {
+      "id": "png-v1-decode-lowered-limit",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      },
+      "options": {
+        "max_pixels": 1
+      }
+    },
+    {
+      "id": "png-v1-decode-stored-deflate",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000010494441547801010500faff00010203040019000bb9b0e3eb0000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      }
+    },
+    {
+      "id": "png-v1-decode-fixed-deflate",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      }
+    },
+    {
+      "id": "png-v1-decode-dynamic-deflate",
+      "operation": "decode",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000003f0000000108000000004c4429de000000354944415478010dc28911c0200c03b0d8f97028ec3f6ed129cab7dd96a0c2445bdb93809663a5d303f6b265e20c2b79ea03379d227e269b0128facf6fb60000000049454e44ae426082",
+      "oracle": "python-zlib",
+      "expected": {
+        "width": 63,
+        "height": 1,
+        "rgba_hex": "060606ff090909ff141414ff141414ff222222ff292929ff323232ff3b3b3bff3c3c3cff454545ff4b4b4bff4c4c4cff565656ff5a5a5aff616161ff616161ff686868ff686868ff686868ff686868ff686868ff6d6d6dff6e6e6eff6f6f6fff787878ff808080ff838383ff848484ff8c8c8cff919191ff949494ff969696ff999999ff9d9d9dff9e9e9eff9e9e9effa2a2a2ffa3a3a3ffa3a3a3ffa5a5a5ffacacacffb5b5b5ffb5b5b5ffbebebeffc0c0c0ffcacacaffd4d4d4ffd6d6d6ffdcdcdcffe1e1e1ffe3e3e3fff0f0f0fff6f6f6ff020202ff030303ff050505ff101010ff121212ff151515ff171717ff202020ff222222ff232323ff"
+      }
+    },
+    {
+      "id": "png-v1-encode-single-rgba",
+      "operation": "encode",
+      "input": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "01020304"
+      },
+      "oracle": "foreign-zlib",
+      "expected": {
+        "chunk_types": [
+          "IHDR",
+          "IDAT",
+          "IEND"
+        ],
+        "filter_types": [
+          0
+        ],
+        "bit_depth": 8,
+        "colour_type": 6,
+        "interlace": 0
+      }
+    },
+    {
+      "id": "png-v1-encode-two-by-two",
+      "operation": "encode",
+      "input": {
+        "width": 2,
+        "height": 2,
+        "rgba_hex": "000102030405060708090a0b0c0d0e0f"
+      },
+      "oracle": "foreign-zlib",
+      "expected": {
+        "chunk_types": [
+          "IHDR",
+          "IDAT",
+          "IEND"
+        ],
+        "filter_types": [
+          1,
+          4
+        ],
+        "bit_depth": 8,
+        "colour_type": 6,
+        "interlace": 0
+      }
+    },
+    {
+      "id": "png-v1-encode-all-filters",
+      "operation": "encode",
+      "input": {
+        "width": 2,
+        "height": 5,
+        "rgba_hex": "0ceaad0dd4010353de4215549a044c75e328c65b05bc6e3e3d4c28fd54ab76685d7c5e0dbea95aca"
+      },
+      "oracle": "foreign-zlib",
+      "expected": {
+        "chunk_types": [
+          "IHDR",
+          "IDAT",
+          "IEND"
+        ],
+        "filter_types": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "bit_depth": 8,
+        "colour_type": 6,
+        "interlace": 0
+      }
+    },
+    {
+      "id": "png-v1-adler-wikipedia",
+      "operation": "adler32",
+      "input_hex": "57696b697065646961",
+      "expected": {
+        "adler32_hex": "11e60398"
+      }
+    },
+    {
+      "id": "png-v1-adler-chunk-boundary",
+      "operation": "adler32",
+      "input_hex": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "expected": {
+        "adler32_hex": "3222f597"
+      }
+    },
+    {
+      "id": "png-v1-error-too-short",
+      "operation": "decode-error",
+      "png_hex": "89504e47",
+      "expected": {
+        "error_id": "file-too-short"
+      }
+    },
+    {
+      "id": "png-v1-error-signature",
+      "operation": "decode-error",
+      "png_hex": "00504e470d0a1a0a",
+      "expected": {
+        "error_id": "invalid-signature"
+      }
+    },
+    {
+      "id": "png-v1-error-truncated-header",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d",
+      "expected": {
+        "error_id": "truncated-chunk"
+      }
+    },
+    {
+      "id": "png-v1-error-truncated-data",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000000000",
+      "expected": {
+        "error_id": "truncated-chunk"
+      }
+    },
+    {
+      "id": "png-v1-error-crc",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010100000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "chunk-crc-mismatch"
+      }
+    },
+    {
+      "id": "png-v1-error-chunk-type-character",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000031424144821ee2bb0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-chunk-type"
+      }
+    },
+    {
+      "id": "png-v1-error-chunk-type-reserved-bit",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000000414263444e9304070000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-chunk-type"
+      }
+    },
+    {
+      "id": "png-v1-error-before-ihdr",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a000000017445587478119823e90000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "chunk-before-ihdr"
+      }
+    },
+    {
+      "id": "png-v1-error-duplicate-ihdr",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "duplicate-ihdr"
+      }
+    },
+    {
+      "id": "png-v1-error-ihdr-length",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000c494844520000000000000000000000002b0ffe5b0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-ihdr-length"
+      }
+    },
+    {
+      "id": "png-v1-error-zero-dimension",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000000000000010806000000f0d7afb70000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-dimensions"
+      }
+    },
+    {
+      "id": "png-v1-error-edge-limit",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200004001000000010806000000c95ddd660000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "dimension-limit"
+      }
+    },
+    {
+      "id": "png-v1-error-pixel-limit",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200004000000040000806000000a9c810840000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "pixel-limit"
+      }
+    },
+    {
+      "id": "png-v1-error-compression-method",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060100001ed7aebe0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unsupported-feature"
+      }
+    },
+    {
+      "id": "png-v1-error-filter-method",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000001000000010806000100060ef5c80000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unsupported-feature"
+      }
+    },
+    {
+      "id": "png-v1-error-interlace",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000016812f41f0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unsupported-feature"
+      }
+    },
+    {
+      "id": "png-v1-error-palette",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d494844520000000100000001080300000028cb34bb0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unsupported-feature"
+      }
+    },
+    {
+      "id": "png-v1-error-colour-type",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108050000000da06b670000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unsupported-feature"
+      }
+    },
+    {
+      "id": "png-v1-error-bit-depth",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000110060000004f8518ca0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unsupported-feature"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-greyscale",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108000000003a7e9b5500000003504c54450102030d8764d50000000a49444154780163100400001300129dd61bbc0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-length",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000002504c54450102e5649baf0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-incomplete-entry",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000004504c54450102030423db8aab0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-entry-cap",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000303504c5445000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000466e878c0000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-duplicate",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000003504c54450102030d8764d500000003504c54450405063467c4760000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-after-idat",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac55600000003504c54450102030d8764d50000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-plte-after-trns",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de0000000674524e53000100020003c94babf500000003504c5445090807fe1619fe0000000c494441547801636064620600000e0007c5ec582b0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-plte"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-alpha-colour",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000674524e53000100020003c94babf50000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-length",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108000000003a7e9b550000000174524e53112a56f8940000000a49444154780163100400001300129dd61bbc0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-truecolour-length",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de0000000474524e53000100025c5f6d810000000c494441547801636064620600000e0007c5ec582b0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-duplicate",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108000000003a7e9b550000000274524e5300111c23edca0000000274524e530012852abc700000000a49444154780163100400001300129dd61bbc0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-after-idat",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108000000003a7e9b550000000a49444154780163100400001300129dd61bbc0000000274524e5300111c23edca0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-sample-range",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108000000003a7e9b550000000274524e5301006f88fc790000000a49444154780163100400001300129dd61bbc0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-trns-truecolour-sample-range",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de0000000674524e530100000200033f7751e00000000c494441547801636064620600000e0007c5ec582b0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-trns"
+      }
+    },
+    {
+      "id": "png-v1-error-idat-order",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000003494441547801636e8876e90000000374455874676170579bf5270000000a494441546064626601000019000bc57847610000000049454e44ae426082",
+      "expected": {
+        "error_id": "nonconsecutive-idat"
+      }
+    },
+    {
+      "id": "png-v1-error-iend-payload",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000149454e44788fc4b6ef",
+      "expected": {
+        "error_id": "invalid-iend"
+      }
+    },
+    {
+      "id": "png-v1-error-after-iend",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae42608270617373656e676572",
+      "expected": {
+        "error_id": "trailing-data"
+      }
+    },
+    {
+      "id": "png-v1-error-critical-chunk",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000041424344db1720a50000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "unknown-critical-chunk"
+      }
+    },
+    {
+      "id": "png-v1-error-missing-ihdr",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a",
+      "expected": {
+        "error_id": "missing-required-chunk"
+      }
+    },
+    {
+      "id": "png-v1-error-missing-iend",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac556",
+      "expected": {
+        "error_id": "missing-required-chunk"
+      }
+    },
+    {
+      "id": "png-v1-error-missing-idat",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000049454e44ae426082",
+      "expected": {
+        "error_id": "missing-required-chunk"
+      }
+    },
+    {
+      "id": "png-v1-error-zlib-short",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000349444154789c007edcb25c0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-zlib-header"
+      }
+    },
+    {
+      "id": "png-v1-error-zlib-method",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547918636064626601000019000b590dcbbe0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-zlib-header"
+      }
+    },
+    {
+      "id": "png-v1-error-zlib-cinfo",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d49444154881c636064626601000019000b9d0370d70000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-zlib-header"
+      }
+    },
+    {
+      "id": "png-v1-error-zlib-fcheck",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547800636064626601000019000b8e8f89390000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-zlib-header"
+      }
+    },
+    {
+      "id": "png-v1-error-zlib-dictionary",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547820636064626601000019000b96be52c10000000049454e44ae426082",
+      "expected": {
+        "error_id": "preset-dictionary"
+      }
+    },
+    {
+      "id": "png-v1-error-inflate",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000749444154789c070000000139527fd60000000049454e44ae426082",
+      "expected": {
+        "error_id": "inflate-failed"
+      }
+    },
+    {
+      "id": "png-v1-error-inflated-length",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000c494441547801636064620600000e0007c5ec582b0000000049454e44ae426082",
+      "expected": {
+        "error_id": "inflated-length-mismatch"
+      }
+    },
+    {
+      "id": "png-v1-error-inflated-over-limit",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000e4944415478016360646266610500002900106faa400a0000000049454e44ae426082",
+      "expected": {
+        "error_id": "inflated-length-mismatch"
+      }
+    },
+    {
+      "id": "png-v1-error-idat-cavity",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c48900000013494441547801636064626601004341564954590019000b456164d30000000049454e44ae426082",
+      "expected": {
+        "error_id": "idat-cavity"
+      }
+    },
+    {
+      "id": "png-v1-error-adler",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000a622df5c00000000049454e44ae426082",
+      "expected": {
+        "error_id": "adler-mismatch"
+      }
+    },
+    {
+      "id": "png-v1-error-filter",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d49444154780163656462660100003200104d7e6eff0000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-filter"
+      }
+    },
+    {
+      "id": "png-v1-error-max-pixels-zero",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-max-pixels"
+      },
+      "options": {
+        "max_pixels": 0
+      }
+    },
+    {
+      "id": "png-v1-error-max-pixels-fractional",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-max-pixels"
+      },
+      "options": {
+        "max_pixels": 1.5
+      }
+    },
+    {
+      "id": "png-v1-error-max-pixels-raised",
+      "operation": "decode-error",
+      "png_hex": "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d494441547801636064626601000019000b152ac5560000000049454e44ae426082",
+      "expected": {
+        "error_id": "invalid-max-pixels"
+      },
+      "options": {
+        "max_pixels": 33554433
+      }
+    },
+    {
+      "id": "png-v1-error-encode-empty",
+      "operation": "encode-error",
+      "input": {
+        "width": 0,
+        "height": 1,
+        "rgba_hex": ""
+      },
+      "expected": {
+        "error_id": "invalid-image-dimensions"
+      }
+    },
+    {
+      "id": "png-v1-error-encode-fractional",
+      "operation": "encode-error",
+      "input": {
+        "width": 1.5,
+        "height": 1,
+        "rgba_hex": ""
+      },
+      "expected": {
+        "error_id": "invalid-image-dimensions"
+      }
+    },
+    {
+      "id": "png-v1-error-encode-data-length",
+      "operation": "encode-error",
+      "input": {
+        "width": 1,
+        "height": 1,
+        "rgba_hex": "010203"
+      },
+      "expected": {
+        "error_id": "invalid-pixel-data-length"
+      }
+    }
+  ]
+}

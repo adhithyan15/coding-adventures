@@ -7873,98 +7873,98 @@
     {
       "language": "punjabi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:03685e752baf67fe",
+      "sourceHash": "fnv1a64:f78461a700a667ae",
       "lessonIds": [
-        "PA-C01-dhanvaad",
-        "PA-C01-han-nahin",
-        "PA-C01-namaste",
-        "PA-C01-practice",
         "PA-C01-sat-sri-akal",
-        "PA-C01-shukriya"
+        "PA-C01-namaste",
+        "PA-C01-dhanvaad",
+        "PA-C01-shukriya",
+        "PA-C01-han-nahin",
+        "PA-C01-practice"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch01.txt",
       "json": "punjabi/narration/ch01.json",
-      "textHash": "fnv1a64:94e5319d5b71b1c7",
-      "jsonHash": "fnv1a64:282ee8756e122f80"
+      "textHash": "fnv1a64:7c55212350e70d3b",
+      "jsonHash": "fnv1a64:6367135735c04c90"
     },
     {
       "language": "punjabi",
       "chapter": 2,
-      "sourceHash": "fnv1a64:3fcfc2e95caa5978",
+      "sourceHash": "fnv1a64:9b6b1cd9e51fae7e",
       "lessonIds": [
-        "PA-C02-hai",
-        "PA-C02-khushi",
-        "PA-C02-ki",
-        "PA-C02-mera",
-        "PA-C02-mera-naam-hai",
         "PA-C02-naam",
-        "PA-C02-practice",
+        "PA-C02-mera",
+        "PA-C02-hai",
+        "PA-C02-mera-naam-hai",
         "PA-C02-tu-tusi",
-        "PA-C02-tuhada-naam-ki-hai"
+        "PA-C02-ki",
+        "PA-C02-tuhada-naam-ki-hai",
+        "PA-C02-khushi",
+        "PA-C02-practice"
       ],
       "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch02.txt",
       "json": "punjabi/narration/ch02.json",
-      "textHash": "fnv1a64:6330cfc194f24614",
-      "jsonHash": "fnv1a64:46ed7ee2aebacc82"
+      "textHash": "fnv1a64:1b9afcda9bbc0776",
+      "jsonHash": "fnv1a64:1867966d199aa211"
     },
     {
       "language": "punjabi",
       "chapter": 3,
-      "sourceHash": "fnv1a64:653a3e23669dcad9",
+      "sourceHash": "fnv1a64:bfea8e9624729dec",
       "lessonIds": [
         "PA-C03-kivein",
-        "PA-C03-koi-gall-nahin",
+        "PA-C03-tusi-kivein-ho",
         "PA-C03-main",
-        "PA-C03-practice",
         "PA-C03-thik",
-        "PA-C03-tusi-kivein-ho"
+        "PA-C03-koi-gall-nahin",
+        "PA-C03-practice"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch03.txt",
       "json": "punjabi/narration/ch03.json",
-      "textHash": "fnv1a64:ff9062c543f1735c",
-      "jsonHash": "fnv1a64:1320848cba23d07d"
+      "textHash": "fnv1a64:1e01cb177a1d4f94",
+      "jsonHash": "fnv1a64:2ba723ad40d397dc"
     },
     {
       "language": "punjabi",
       "chapter": 4,
-      "sourceHash": "fnv1a64:9d2ba0448ca47532",
+      "sourceHash": "fnv1a64:66f4223ea1fa9fd9",
       "lessonIds": [
-        "PA-C04-milaange",
         "PA-C04-phir",
+        "PA-C04-milaange",
         "PA-C04-phir-milaange",
-        "PA-C04-practice",
-        "PA-C04-rab-raakha"
+        "PA-C04-rab-raakha",
+        "PA-C04-practice"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch04.txt",
       "json": "punjabi/narration/ch04.json",
-      "textHash": "fnv1a64:2bb728a28c79d9d2",
-      "jsonHash": "fnv1a64:0d522268748bd870"
+      "textHash": "fnv1a64:d1175f4c65903808",
+      "jsonHash": "fnv1a64:0d8e6bd50f40b31f"
     },
     {
       "language": "punjabi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:25a70d4ed764c8eb",
+      "sourceHash": "fnv1a64:b15c6b4a9c21a457",
       "lessonIds": [
         "PA-C05-bolna",
-        "PA-C05-kamm-karna",
         "PA-C05-main-punjabi-bolda-han",
-        "PA-C05-practice",
-        "PA-C05-rahna"
+        "PA-C05-rahna",
+        "PA-C05-kamm-karna",
+        "PA-C05-practice"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "punjabi/narration/ch05.txt",
       "json": "punjabi/narration/ch05.json",
-      "textHash": "fnv1a64:e53129825bed02cb",
-      "jsonHash": "fnv1a64:f68149eaf0637766"
+      "textHash": "fnv1a64:13ead793841e4d4b",
+      "jsonHash": "fnv1a64:6d09aed8e899f015"
     },
     {
       "language": "punjabi",

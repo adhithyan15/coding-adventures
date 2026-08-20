@@ -1,5 +1,6 @@
 ---
 id: PA-C03-koi-gall-nahin
+sequence: 200
 chapter: 3
 type: phrase
 headword: ਕੋਈ ਗੱਲ ਨਹੀਂ
