@@ -4088,7 +4088,11 @@ authorization-ordering, and D23 projection owner separately from a blocked
 native mDNS/runtime/CLI authority review. Commissioning, fabric credentials,
 PASE/CASE, certificate validation, secure sessions, Interaction Model I/O, and
 control remain explicitly outside portable discovery parity. The ZIP closure
-therefore remains the highest-leverage active item.
+therefore remains the highest-leverage active item. A final rebase onto
+`88b12d1280e6e931ab3b7dffa68c820459bbeeef` added only existing Latin
+curriculum, TypeScript human-language-data tests, and Rust HTML-parser
+diagnostics; the collision-checked topology and every inventory count remained
+unchanged.
 
 ## Autonomous Loop Protocol
 
