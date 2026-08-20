@@ -233,6 +233,9 @@ internal sealed class BitReader
 
     public BitReader(byte[] data) { _data = data; }
 
+    /// <summary>The exact source byte reached by non-speculative bit reads.</summary>
+    public int Position => _pos;
+
     /// <summary>
     /// Ensure the accumulator holds at least <paramref name="need"/> bits.
     /// Returns false if the source is exhausted before that many bits are available.
@@ -1171,23 +1174,41 @@ public sealed class ZipReader
 
         var compressed = _data[dataStart..dataEnd];
 
-        // Decompress according to method.
-        byte[] decompressed = meta.Method switch
+        // Container boundaries are exact. A stored entry has identical sizes;
+        // a DEFLATE entry must stop at the final byte declared by the Central
+        // Directory and produce exactly the declared number of bytes. Silent
+        // trimming would let attacker-controlled size fields hide real decode
+        // work from aggregate decompression-bomb accounting.
+        byte[] decompressed;
+        switch (meta.Method)
         {
-            0 => compressed,                              // Stored — verbatim
-            8 => DeflateDecompressor.Decompress(compressed),
-            var m => throw new InvalidDataException(
-                $"zip: unsupported compression method {m} for '{meta.Name}'"),
-        };
-
-        // Trim to declared uncompressed size to guard against decompressor
-        // over-read. Compare in `long` — meta.UncompressedSize is another
-        // attacker-controlled uint, and casting a value > int.MaxValue
-        // straight to `int` would go negative, making the slice below throw
-        // ArgumentOutOfRangeException instead of failing the CRC check below
-        // with the documented InvalidDataException.
-        if ((long)decompressed.Length > meta.UncompressedSize)
-            decompressed = decompressed[..(int)meta.UncompressedSize];
+            case 0:
+                if (meta.CompressedSize != meta.UncompressedSize)
+                    throw new InvalidDataException("zip: stored entry sizes do not match");
+                decompressed = compressed;
+                break;
+            case 8:
+                if (meta.UncompressedSize > RawRfc1951.MaxOutput)
+                    throw new InvalidDataException("zip: uncompressed size exceeds the raw inflate ceiling");
+                RawInflateResult result;
+                try
+                {
+                    result = RawRfc1951.RawInflateCounted(compressed, (int)meta.UncompressedSize);
+                }
+                catch (RawInflateError error)
+                {
+                    throw new InvalidDataException($"zip: raw inflate failed: {error.Code}", error);
+                }
+                if (result.BytesConsumed != compressed.Length)
+                    throw new InvalidDataException("zip: compressed payload contains trailing bytes");
+                if ((uint)result.Output.Length != meta.UncompressedSize)
+                    throw new InvalidDataException("zip: uncompressed size does not match the directory");
+                decompressed = result.Output;
+                break;
+            default:
+                throw new InvalidDataException(
+                    $"zip: unsupported compression method {meta.Method} for '{meta.Name}'");
+        }
 
         // Verify CRC-32 — this detects corruption of the decompressed content.
         var actualCrc = Crc32Helper.Compute(decompressed);
@@ -1281,11 +1302,9 @@ public static class ZipArchive
     // a *single* entry at 256 MB, but a small archive can hold many entries
     // that each individually stay under that cap while still expanding to
     // gigabytes in total (fixed-Huffman back-references can each turn a
-    // handful of compressed bytes into up to 258 output bytes). 512 MB gives
-    // headroom for a couple of legitimately large entries while still bounding
-    // the worst case for a caller that blindly calls Unzip() on untrusted
-    // input.
-    private const long DefaultMaxTotalBytes = 512L * 1024 * 1024;
+    // handful of compressed bytes into up to 258 output bytes). CMP09
+    // standardises the default aggregate ceiling at 256 MiB.
+    private const long DefaultMaxTotalBytes = 256L * 1024 * 1024;
 
     /// <summary>
     /// Extract all file entries from a ZIP archive.
