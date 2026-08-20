@@ -4076,6 +4076,20 @@ an empty capability declaration; explicit portable reconciliation owners and
 a blocked Rust authority review now prevent either package from becoming
 silent parity evidence.
 
+A pre-publication rebase onto live main
+`0aa390af2441d94b762f45603c955c7052b32db8` added one Rust-only
+`smart-home-matter-operational-discovery-integration` root and otherwise did
+not overlap the closure. The refreshed collision gate now reports 1,368
+implementation identities, 4,552 established slots, 906 singletons, 12,684
+singleton gaps, and 716 Rust singletons; every other metric remains unchanged,
+including zero collisions and zero unknown buckets. Before publication the
+state classified an injected portable Matter DNS-SD parsing, normalization,
+authorization-ordering, and D23 projection owner separately from a blocked
+native mDNS/runtime/CLI authority review. Commissioning, fabric credentials,
+PASE/CASE, certificate validation, secure sessions, Interaction Model I/O, and
+control remain explicitly outside portable discovery parity. The ZIP closure
+therefore remains the highest-leverage active item.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

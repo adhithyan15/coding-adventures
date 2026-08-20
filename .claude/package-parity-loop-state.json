@@ -13,16 +13,16 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "f65567daa53a484eac081a750e554096b4241210",
+    "revision": "0aa390af2441d94b762f45603c955c7052b32db8",
     "schema_version": 3,
     "established_languages": 15,
-    "implementation_identities": 1367,
-    "implementation_package_slots": 4551,
+    "implementation_identities": 1368,
+    "implementation_package_slots": 4552,
     "high_consensus_packages": 174,
     "high_consensus_missing_slots": 271,
-    "singleton_packages": 905,
-    "singleton_missing_slots": 12670,
-    "rust_singletons": 715,
+    "singleton_packages": 906,
+    "singleton_missing_slots": 12684,
+    "rust_singletons": 716,
     "canonical_collisions": 0,
     "unknown_language_buckets": 0
   },
@@ -3489,6 +3489,25 @@
       "pr_number": null,
       "selection_blocked": true,
       "notes": "Excluded from autonomous portable selection. Review mDNS IPv4 bind/send/receive, multicast membership, exact _meshcop._udp.local peer and origin policy, timeout/datagram/response bounds, authorization before transport, truthful nonempty runtime and loopback-test capability profiles, redacted diagnostics, argv/stdout/stderr, and sequential discovery-upsert partial-mutation risk. Preserve discovery-only behavior; do not add commissioning secrets, MeshCoP exchanges, Thread transport, dataset reads, or device control."
+    },
+    {
+      "id": "smart-home-matter-operational-discovery-portable-core-conformance",
+      "title": "Extract and port the injected Matter operational discovery core",
+      "status": "pending",
+      "depends_on": [],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered after 0aa390af added smart-home-matter-operational-discovery-integration while the selected ZIP closure branch was under validation. Fixture injected _matter._tcp.local result validation; canonical compressed-fabric and node identity parsing; bounded host, endpoint, MRP, TCP-role, ICD, record, TTL, and partial-failure normalization; deterministic deduplication; authorization-before-transport planning; caller-supplied time; stable D23 projection; and transactional commit planning. Native mDNS sockets, peer/origin trust, runtime mutation, credentials, PASE/CASE, certificate or fabric-membership validation, secure sessions, Interaction Model I/O, CLI effects, and trusted time stay out of scope."
+    },
+    {
+      "id": "smart-home-matter-operational-discovery-native-authority-review",
+      "title": "Review Matter operational mDNS, runtime, and CLI native authority",
+      "status": "pending",
+      "depends_on": ["smart-home-matter-operational-discovery-portable-core-conformance", "rust-network-substrate-capability-truthfulness"],
+      "branch": null,
+      "pr_number": null,
+      "selection_blocked": true,
+      "notes": "Excluded from autonomous portable selection. Review mDNS IPv4 bind/send/receive and multicast membership, exact _matter._tcp.local peer and origin policy, timeout/datagram/response bounds, authorization before transport, truthful nonempty runtime and loopback-test capability profiles, and catalog primitive truthfulness because production delegates to run_mdns_ipv4_scan while the D23A catalog omits PrimitiveFamily::Udp. Also review redacted diagnostics, argv/stdout/stderr, and sequential discovery-upsert partial-mutation risk. Preserve discovery-only behavior; do not add commissioning, fabric credentials, PASE/CASE, certificate validation, secure sessions, Interaction Model reads or writes, subscriptions, commands, or control."
     },
     {
       "id": "smart-home-nut-ups-portable-core-conformance",
