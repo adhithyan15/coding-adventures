@@ -1,9 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport } from "../src/report.js";
-import { renderGentleRamp } from "../src/gentle-ramp.js";
+import { GENTLE_RAMP_PRIORITIES, renderGentleRamp, type TrackGentleRamp } from "../src/gentle-ramp.js";
 import { runGentleRampReport } from "../src/gentle-ramp-cli.js";
-import { loadChapterPolicy, loadEverything, loadTrackChapters } from "../src/loader.js";
+import {
+  GENTLE_RAMP_SNAPSHOT_DIR,
+  generatedGentleRampSnapshotOutputsFromReport,
+} from "../src/gentle-ramp-snapshot-cli.js";
+import { defaultCurriculumRoot, loadChapterPolicy, loadEverything, loadTrackChapters } from "../src/loader.js";
 import type { BookCorpus, ChapterPolicy, LanguageRegistry } from "../src/types.js";
 
 const registry: LanguageRegistry = {
@@ -102,34 +108,44 @@ describe("the corpus-wide super-gentle ramp", () => {
       trackChapters: loadTrackChapters(),
     }).gentleRamp!;
 
+    const outputs = generatedGentleRampSnapshotOutputsFromReport(report);
+    for (const [relative, expected] of outputs) {
+      expect(readFileSync(resolve(defaultCurriculumRoot(), relative), "utf8"), relative).toBe(expected);
+    }
+
+    const snappedTracks = [...outputs.values()].map((value) => JSON.parse(value) as TrackGentleRamp);
+    const priority = new Map(GENTLE_RAMP_PRIORITIES.map((kind, index) => [kind, index]));
+    const snappedQueue = snappedTracks.flatMap((track) => track.findings).sort(
+      (a, b) =>
+        (priority.get(a.kind) ?? Number.MAX_SAFE_INTEGER) -
+          (priority.get(b.kind) ?? Number.MAX_SAFE_INTEGER) ||
+        b.count - a.count ||
+        a.language.localeCompare(b.language),
+    );
+    expect(report.tracks).toEqual(snappedTracks);
+    expect(report.workQueue).toEqual(snappedQueue);
     expect(report.summary).toEqual({
-      tracks: 23,
-      tracksWithDetectedCliffs: 23,
-      tracksWithNoWritingPractice: 1, // Italian now has explicit observe-trace and guided-copy evidence.
-      tracksWhereWritingStartsLate: 4, // German and Tamil now join Chinese with writing in lesson one.
-      atomMeasurementBlindLessons: 497, // Tamil's first writing lesson now measures its introduced atoms.
-      findings: 138, // Punjabi closes its order-integrity finding after Tamil's writing repair.
+      tracks: snappedTracks.length,
+      tracksWithDetectedCliffs: snappedTracks.filter((track) => track.findings.length > 0).length,
+      tracksWithNoWritingPractice: snappedTracks.filter(
+        (track) => track.lessonCount > 0 && track.firstWritingPracticeAt === null,
+      ).length,
+      tracksWhereWritingStartsLate: snappedTracks.filter(
+        (track) => (track.firstWritingPracticeAt ?? 0) > 0,
+      ).length,
+      atomMeasurementBlindLessons: snappedTracks.reduce(
+        (sum, track) => sum + track.atomMeasurementBlindLessons,
+        0,
+      ),
+      findings: snappedQueue.length,
     });
-    expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
-      { language: "portuguese", kind: "order-integrity", count: 21 },
-      { language: "italian", kind: "order-integrity", count: 19 },
-      { language: "persian", kind: "order-integrity", count: 6 },
-    ]);
-    expect(report.tracks.find((track) => track.language === "german")).toMatchObject({
-      orderDefects: 0,
-      forwardPrerequisites: 0,
-      forwardReviews: 0,
-    });
-    expect(report.tracks.find((track) => track.language === "french")).toMatchObject({
-      orderDefects: 0,
-      forwardPrerequisites: 0,
-      forwardReviews: 0,
-    });
-    expect(report.tracks.find((track) => track.language === "marathi")).toMatchObject({
-      orderDefects: 0,
-      forwardPrerequisites: 0,
-      forwardReviews: 0,
-    });
+
+    const changed = structuredClone(report);
+    changed.tracks.find((track) => track.language === "german")!.lessonCount += 1;
+    const changedOutputs = generatedGentleRampSnapshotOutputsFromReport(changed);
+    expect(
+      [...outputs.keys()].filter((path) => outputs.get(path) !== changedOutputs.get(path)),
+    ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.json`]);
     expect(report.tracks.every((track) => track.findings.length > 0)).toBe(true);
   }, 30_000);
 });
