@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12319,
   "last_inventory": {
     "revision": "929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5",
     "schema_version": 3,
@@ -3945,12 +3945,17 @@
     {
       "id": "image-codec-png-language-neutral-conformance",
       "title": "Define language-neutral IC18 PNG conformance with TypeScript reference consumption",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-portable-conformance"],
       "branch": "codex/png-language-neutral-conformance",
-      "pr_number": null,
+      "pr_number": 12319,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12319",
+      "opened_at": "2026-08-20T19:12:43Z",
       "selection_revision": "2780825f2a7b5bf93936b6927175e975b611cb5c",
       "selection_notes": "Selected immediately after ZIP portable closure PR #12307 completed all 29 checks and merged through auto-merge, making this neutral foundation the sole newly dependency-ready prerequisite for all twelve PNG lane children. The canonical schema-3 inventory at exact live main 2780825f2a reports the same 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets, with no added, retired, or expanded package root. This bounded tranche first tightens the TypeScript reference, then defines and validates a language-neutral IC18 corpus and stable error contract for exact chunks, CRC, zlib framing, filters, supported colour forms, split IDAT, foreign interoperability, exact consumption, and caller-lowerable resource ceilings. It does not start any non-TypeScript lane port.",
+      "implementation_revision": "d237fd922c714c39deb9dc4fd3a30aea47518e04",
+      "validation_notes": "The closed Draft 2020-12 schema and deterministic generator pin 82 portable cases and 29 ordered stable error identifiers. The corpus covers stored, fixed, and a checked dynamic RFC 1951 stream; all five filters; Paeth a/b/c and tie behavior; split IDAT; exact CRC, Adler-32, chunk-order, PLTE, tRNS, zlib-framing, truncation, and caller-lowered limit boundaries; and independent encode filter inspection without compressor-byte pins. TypeScript build and 141 tests pass with 100% statement, branch, function, and line coverage. The literal package BUILD, full and production npm audits with zero vulnerabilities, eight independent PNG fixture tests, nine ZIP fixture tests, four ZIP closure tests, seven capability tests, ten parity-reporter tests, Ruff, formatting, strict MyPy, Bandit, Go test/vet/trimpath build, strict JSON and state DAG checks, collision reporting, diff, credential, and production-authority scans pass. The repository build plan selects exactly image-codec-png and its pixel-container, ZIP, and LZSS prerequisites on Unix and Windows, and the repository-native build tool executes that four-package closure successfully. The live inventory remains 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #12319 from validated implementation revision d237fd922c714c39deb9dc4fd3a30aea47518e04 after two clean late-main rebases and full recertification against origin/main 929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5. The PR is mergeable, and CI is pending; auto-merge remains disabled until every required check is terminal acceptable and GitHub reports no conflict.",
       "notes": "Decomposed from the broad image-codec-png owner during the ZIP closure security and leverage audit. Close exact chunk ordering and CRC, zlib CM/CINFO/FCHECK and Adler-32 framing, split IDAT, every supported colour type, bit depth, and filter, foreign interoperability, exact consumption and covert-cavity rejection, stable payload-blind errors, dimension/pixel/inflation ceilings, and an explicit empty capability profile. The TypeScript reference must reject CINFO above 7 and require maxPixels to be an integer no larger than the 32 Mi-pixel default before it becomes the oracle."
     },
     {
