@@ -1,7 +1,7 @@
 {
   "language": "portuguese",
-  "lessonCount": 96,
-  "atomMeasurableLessons": 87,
+  "lessonCount": 97,
+  "atomMeasurableLessons": 88,
   "atomMeasurementBlindLessons": 9,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -10,39 +10,32 @@
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
-  "orderDefects": 21,
+  "orderDefects": 17,
   "unknownPrerequisites": 0,
-  "forwardPrerequisites": 6,
-  "forwardReviews": 6,
-  "forwardReferences": 59,
-  "atomsTaught": 189,
+  "forwardPrerequisites": 4,
+  "forwardReviews": 5,
+  "forwardReferences": 63,
+  "atomsTaught": 192,
   "atomsNeverRevisited": 8,
-  "reinforcementWindowMisses": 296,
-  "payoffSurprises": 0,
-  "writingPracticeLessons": 0,
-  "firstWritingPracticeAt": null,
-  "lessonsBeforeWritingPractice": 96,
+  "reinforcementWindowMisses": 305,
+  "payoffSurprises": 1,
+  "writingPracticeLessons": 2,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
   "findings": [
     {
       "language": "portuguese",
       "kind": "order-integrity",
-      "count": 21,
+      "count": 17,
       "unit": "order/dependency defect(s)",
       "detail": "declare a unique reading order and close every prerequisite and review before use"
     },
     {
       "language": "portuguese",
       "kind": "forward-language",
-      "count": 59,
+      "count": 63,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
-    },
-    {
-      "language": "portuguese",
-      "kind": "writing-ramp",
-      "count": 96,
-      "unit": "opening lesson(s)",
-      "detail": "add observable, guided writing practice from the opening lesson"
     },
     {
       "language": "portuguese",
@@ -54,9 +47,16 @@
     {
       "language": "portuguese",
       "kind": "reinforcement",
-      "count": 296,
+      "count": 305,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
+    },
+    {
+      "language": "portuguese",
+      "kind": "payoff-surprise",
+      "count": 1,
+      "unit": "chapter payoff finding(s)",
+      "detail": "make each chapter payoff assess only taught, representative material"
     },
     {
       "language": "portuguese",
@@ -69,7 +69,7 @@
   "next": {
     "language": "portuguese",
     "kind": "order-integrity",
-    "count": 21,
+    "count": 17,
     "unit": "order/dependency defect(s)",
     "detail": "declare a unique reading order and close every prerequisite and review before use"
   }

@@ -103,11 +103,23 @@ Learner copy comes first.
     );
     expect(report.summary).toEqual({
       tracks: 23,
+      tracksWithAnyEvidence: 8,
+      tracksCompleteAtPreA1: 2,
+      evidenceBlocks: 22,
+      invalidEvidenceBlocks: 0,
+      missingTrackLevelStages: 902,
+      /* Superseded merge-side totals:
       tracksWithAnyEvidence: 7,
       tracksCompleteAtPreA1: 2,
       evidenceBlocks: 20,
       invalidEvidenceBlocks: 0,
       missingTrackLevelStages: 916,
+      tracksWithAnyEvidence: 7, // Italian and Portuguese now both begin writing in lesson one.
+      tracksCompleteAtPreA1: 1,
+      evidenceBlocks: 15, // Portuguese adds observe-trace and guided-copy beside Italian's pair.
+      invalidEvidenceBlocks: 0,
+      missingTrackLevelStages: 930, // Portuguese's two valid blocks satisfy fourteen cumulative track-level stages.
+      */
     });
     const marwadi = report.tracks.find((track) => track.language === "marwadi")!;
     expect(marwadi.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });

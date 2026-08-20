@@ -6518,6 +6518,34 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("પ"),
   },
+  // t30apps writes Gujarati ફ in two runs: the winding main body through its
+  // lower-left loop and tail, then the separate rising diagonal cross-stroke.
+  // These Noto medians retain that complete-body-before-cross-stroke order.
+  [ductusKey("gujarati", "ફ")]: {
+    script: "gujarati",
+    glyph: "ફ",
+    strokes: [
+      { segments: [{ label: "sweep left across the high cap, wind around the body and lower-left loop, then exit through the tail", path: [
+        { x: 390, y: 580 }, { x: 360, y: 592 }, { x: 319, y: 597 },
+        { x: 253, y: 597 }, { x: 200, y: 590 }, { x: 160, y: 560 },
+        { x: 125, y: 525 }, { x: 145, y: 460 }, { x: 169, y: 387 },
+        { x: 262, y: 340 }, { x: 300, y: 320 }, { x: 340, y: 295 },
+        { x: 390, y: 260 }, { x: 415, y: 230 }, { x: 430, y: 190 },
+        { x: 435, y: 145 }, { x: 425, y: 100 }, { x: 400, y: 60 },
+        { x: 375, y: 30 }, { x: 285, y: 5 }, { x: 170, y: 3 },
+        { x: 101, y: 19 }, { x: 57, y: 45 }, { x: 44, y: 73 },
+        { x: 75, y: 97 }, { x: 135, y: 82 }, { x: 193, y: 36 },
+        { x: 240, y: -35 }, { x: 270, y: -65 }, { x: 330, y: -110 },
+        { x: 370, y: -135 }, { x: 395, y: -140 },
+      ] }] },
+      { segments: [{ label: "lift and draw the diagonal cross-stroke from lower left to upper right", path: [
+        { x: 70, y: 245 }, { x: 130, y: 270 }, { x: 200, y: 300 },
+        { x: 270, y: 330 }, { x: 340, y: 360 }, { x: 410, y: 390 },
+        { x: 470, y: 420 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ફ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
