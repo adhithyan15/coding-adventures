@@ -5692,10 +5692,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "select" && self.current_element_is_table_structure() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-select-start-tag-in-table",
-                "select start tag in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-select-start-tag-in-table",
+                    "select start tag in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
                 self.open_elements.push(path);
@@ -27109,6 +27112,14 @@ mod tests {
         .at_emission(Some(start_tag_position(source, "img")))
     }
 
+    fn select_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-select-start-tag-in-table",
+            "select start tag in a table context was foster parented",
+        )
+        .at_emission(Some(start_tag_position(source, "select")))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -41759,11 +41770,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-select-start-tag-in-table",
-                            "select start tag in a table context was foster parented",
-                        )
+                    diagnostic == &select_start_tag_in_table_recovery(source)
                 }),
                 "source {source:?}"
             );
@@ -41783,6 +41790,143 @@ mod tests {
                 .iter()
                 .all(|diagnostic| { diagnostic.code != "unexpected-select-start-tag-in-table" }));
         }
+    }
+
+    #[test]
+    fn positions_select_start_tags_fostered_from_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><select>",
+            "<!doctype html><table><colgroup><select name=x>",
+            "<!doctype html><table><tbody><select name=x>",
+            "<!doctype html><table><thead><select name=x>",
+            "<!doctype html><table><tfoot><select name=x>",
+            "<!doctype html><table><tbody><tr><select name=x>",
+            "<!doctype html><template><table><select name=x>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-select-start-tag-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&select_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<select data-name='é'><option>A</select>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &select_start_tag_in_table_recovery(source)
+            }));
+            let select = find_first_element_in_nodes(&output.nodes, "select").unwrap();
+            assert_eq!(select.attribute("data-name"), Some("é"));
+            assert_eq!(element_text_content(select), "A");
+        }
+
+        for (source, context) in [
+            ("<select>", "caption"),
+            ("<select>", "colgroup"),
+            ("<select>", "td"),
+            ("<select>", "th"),
+            ("<select>", "template"),
+            ("<select>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-select-start-tag-in-table"));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><select>",
+            "<!doctype html><table><tbody><tr><td><select>",
+            "<!doctype html><table><tbody><tr><th><select>",
+            "<!doctype html><table><select><select>",
+            "<!doctype html><template><tbody><select>",
+            "<!doctype html><template><div><select>",
+            "<!doctype html><table><div><select>",
+            "<!doctype html><table><select",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let count = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-select-start-tag-in-table")
+                .count();
+            let expected = usize::from(source == "<!doctype html><table><select><select>");
+            assert_eq!(count, expected, "source {source:?}");
+        }
+
+        let state_source = "<!doctype html><main><table><select id=marker name=choice><optgroup label=group><option selected>A<option>B</select><tbody><tr><td>X</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let select = element(&main.children[0]);
+        assert_eq!(select.name, "select");
+        assert_eq!(select.attribute("id"), Some("marker"));
+        assert_eq!(select.attribute("name"), Some("choice"));
+        assert_eq!(element_text_content(select), "AB");
+        let optgroup = element(&select.children[0]);
+        assert_eq!(optgroup.name, "optgroup");
+        assert_eq!(optgroup.attribute("label"), Some("group"));
+        assert_eq!(element(&optgroup.children[0]).name, "option");
+        assert_eq!(element(&optgroup.children[1]).name, "option");
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let nested_source = "<!doctype html><table><select><option>A<select><option>B";
+        let nested = parse_html_with_diagnostics(nested_source).unwrap();
+        assert_eq!(
+            nested
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-select-start-tag-in-table")
+                .collect::<Vec<_>>(),
+            vec![&select_start_tag_in_table_recovery(nested_source)]
+        );
+        assert!(nested.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic.code == "unexpected-start-tag-in-select" && diagnostic.position.is_none()
+        }));
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><b>").unwrap();
+        assert_eq!(
+            adjacent
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
+                })
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "select".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-select-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -42005,12 +42149,14 @@ mod tests {
         assert_eq!(table.name, "table");
         assert_eq!(element_text_content(table), "X");
 
-        let adjacent = parse_html_with_diagnostics("<!doctype html><table><select>").unwrap();
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><b>").unwrap();
         assert_eq!(
             adjacent
                 .parser_diagnostics
                 .iter()
-                .find(|diagnostic| diagnostic.code == "unexpected-select-start-tag-in-table")
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
+                })
                 .unwrap()
                 .position,
             None
