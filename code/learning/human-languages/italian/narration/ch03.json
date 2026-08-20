@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Introducing Yourself",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:3703362b79bcde7b",
+  "sourceHash": "fnv1a64:2949f8ec4adec769",
   "lessons": [
     {
       "id": "IT-C03-io",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6d03fde04d5a9049",
+      "sourceHash": "fnv1a64:8e8ba87b158cb6ff",
       "notice": null,
       "blocks": [
         {
