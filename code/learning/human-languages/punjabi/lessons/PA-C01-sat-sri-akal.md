@@ -1,5 +1,6 @@
 ---
 id: PA-C01-sat-sri-akal
+sequence: 10
 chapter: 1
 type: word
 headword: ਸਤਿ ਸ੍ਰੀ ਅਕਾਲ

@@ -1,5 +1,6 @@
 ---
 id: PA-C03-kivein
+sequence: 160
 chapter: 3
 type: word
 headword: ਕਿਵੇਂ
