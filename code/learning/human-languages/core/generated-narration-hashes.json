@@ -5074,21 +5074,22 @@
     {
       "language": "latin",
       "chapter": 1,
-      "sourceHash": "fnv1a64:c50a5183e8d9432d",
+      "sourceHash": "fnv1a64:225a33fa8b3347a4",
       "lessonIds": [
         "LA-C01-salve",
+        "LA-W01-salve-guided-copy",
         "LA-C01-ave",
         "LA-C01-vale",
         "LA-C01-gratias",
         "LA-C01-ita-non",
         "LA-C01-practice"
       ],
-      "voiceLessons": 6,
-      "drivablePrefix": 6,
+      "voiceLessons": 5,
+      "drivablePrefix": 0,
       "text": "latin/narration/ch01.txt",
       "json": "latin/narration/ch01.json",
-      "textHash": "fnv1a64:dbb02b4c06a274dd",
-      "jsonHash": "fnv1a64:d8d8c9ebcddb3a07"
+      "textHash": "fnv1a64:dbc42cba1912490e",
+      "jsonHash": "fnv1a64:e0ba8d62ce34b800"
     },
     {
       "language": "latin",
