@@ -4,22 +4,22 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:644087df44cb504a",
+  "sourceHash": "fnv1a64:fe0cca28b9aa0782",
   "lessons": [
     {
-      "id": "AR-C01-al",
-      "sequence": null,
-      "title": "ال (al-) — \"the,\" hiding in English algebra",
-      "headword": "ال",
+      "id": "AR-C01-salam",
+      "sequence": 10,
+      "title": "سلام (salām) — \"peace,\" the most famous root",
+      "headword": "سلام",
       "romanization": "",
-      "gloss": "the (al- — the attached article)",
+      "gloss": "peace / hello (salām)",
       "script": "arabic",
       "modality": "sight",
       "derivedModality": "sight",
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5c3401b074a9ed4b",
+      "sourceHash": "fnv1a64:afb61c22df2784f9",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -44,7 +44,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before the fuller greetings, one tiny, mighty word: Arabic's \"the.\" You'll need it for the peace, the goodness — and you already know how to read it."
+              "text": "The first Arabic word, and the heart of the whole greeting system. You'll learn to read it — right to left — and to understand it in the same breath."
             }
           ]
         },
@@ -55,7 +55,23 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) No new letters — just ا (alif) and ل (lām), the two you met in salām, written together as ال and attached to the front of a noun (Arabic glues \"the\" on; it isn't a separate word)."
+              "text": "(If you already read Arabic, skim this — it's here so the book needs no prior knowledge.) Arabic is written right to left: the first letter is on the right. Short vowels are usually invisible; a long vowel like ā is a full letter."
+            },
+            {
+              "kind": "speech",
+              "text": "س = sīn, \"s\", ل = lām, \"l\", ا = alif, a long \"ā\", م = mīm, \"m.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Warm up on the two-letter word لا (lā, \"no\") — lām then alif, fusing into one connected shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Now read سلام (salām) right to left: s, l, ā, m, which gives:"
+            },
+            {
+              "kind": "speech",
+              "text": "سلام = salām = \"peace.\""
             }
           ]
         },
@@ -66,169 +82,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ال (al-, \"the\"). For roughly 800 years Arabic was the Mediterranean's language of science and trade, and English and Spanish absorbed its words with al- still attached: algebra (al-jabr), alcohol (al-kuḥl), algorithm (al-Khwārizmī), alchemy, almanac. Learning Arabic al- is meeting an old friend you've been carrying in English all along."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: sun letters and moon letters",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Here's a rule you can hear. Before about half the consonants — the sun letters (s, sh, n, r, t, d…) — the l of al- assimilates and the next letter doubles:"
-            },
-            {
-              "kind": "speech",
-              "text": "al- + salām becomes as-salām (not \"al-salām\")."
-            },
-            {
-              "kind": "speech",
-              "text": "al- + nūr becomes an-nūr."
-            },
-            {
-              "kind": "speech",
-              "text": "Before the moon letters (kh, k, b, m…) the l stays clear: al-khayr, al-bab. You can still hear this rule fossilized in Spanish azúcar, from Arabic as-sukkar (\"the sugar\") — the l long gone, the doubled s remaining."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"al-\" and three English words hiding it — al-gebra, al-cohol, al-manac",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"al-\" and three English words hiding it — al-gebra, al-cohol, al-manac]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "sun-letter assimilation — al- + salām becomes \"as-salām\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: sun-letter assimilation — al- + salām → \"as-salām\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "moon-letter, no change — al- + khayr becomes \"al-khayr\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: moon-letter, no change — al- + khayr → \"al-khayr\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ال mean, and how does it attach? (\"The,\" glued to the front of its noun.) What happens before a sun letter like s? (The l assimilates and the letter doubles — as-salām.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-C01-as-salamu-alaykum",
-      "sequence": null,
-      "title": "السلام عليكم (as-salāmu ʿalaykum) — \"peace be upon you\"",
-      "headword": "السلام عليكم",
-      "romanization": "",
-      "gloss": "peace be upon you (as-salāmu ʿalaykum)",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:4cecaf9d8aad4700",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Now assemble the pieces — al- and salām — into the great universal greeting of the Arabic-speaking world."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Arabic.) Three new letters, all in ʿalaykum:"
-            },
-            {
-              "kind": "speech",
-              "text": "ع = ʿayn — a voiced tightening deep in the throat, with no English equivalent; approximate it for now."
-            },
-            {
-              "kind": "speech",
-              "text": "ي = yāʾ, \"y\", ك = kāf, \"k.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The first half, السلام, is just al- + salām — already yours."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "السلام عليكم = as-salāmu (al- + salām, with the sun-letter s assimilating the l) + ʿalaykum (\"upon you [all]\"). Literally \"the peace [be] upon you.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Notice something: there is no word for \"is.\" Arabic sets the two phrases side by side — \"the-peace / upon-you\" — and lets \"is\" be understood. (Where Spanish would need está, Arabic needs nothing.)"
+              "text": "سلام (salām) sits on the root s–l–m, meaning wholeness, safety, peace — and it heads an enormous family: salām (peace), islām (\"submission\" becomes peace with God), muslim (\"one who submits,\" in the mu–_i_ pattern), sallama (\"to greet\"). It reaches beyond Arabic: Hebrew shalom is the same Semitic root. English borrowed it as salaam, and it lives in the name Salīm."
             }
           ]
         },
@@ -239,7 +93,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "This is the greeting with real weight — any time of day, any register. Its reply is fixed: وعليكم السلام (wa-ʿalaykum as-salām) — \"and upon you the peace.\" You give peace; it is given back. To greet, in Arabic, is literally to bless."
+              "text": "To offer salām is to wish someone peace, not merely to signal \"hi.\" On its own it's a warm greeting; it's also the seed of the fuller as-salāmu ʿalaykum (\"peace be upon you\"), which you'll assemble in a few lessons."
             }
           ]
         },
@@ -257,29 +111,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the two blocks — \"as-salāmu\" + \"ʿalaykum\"",
+              "instruction": "read right to left — s, l, ā, m becomes \"salām\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two blocks — \"as-salāmu\" + \"ʿalaykum\"]"
+              "source": "[YOU SAY: read right to left — s · l · ā · m → \"salām\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the throat-tightening ع in \"ʿalaykum\"",
+              "instruction": "the warm-up word لا (\"lā,\" no)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the throat-tightening ع in \"ʿalaykum\"]"
+              "source": "[YOU SAY: the warm-up word لا (\"lā,\" no)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the fixed reply — \"wa-ʿalaykum as-salām\"",
+              "instruction": "\"salām,\" and mean it — you are wishing peace",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the fixed reply — \"wa-ʿalaykum as-salām\"]"
+              "source": "[YOU SAY: \"salām,\" and mean it — you are wishing peace]"
             }
           ]
         },
@@ -296,7 +150,7 @@
             },
             {
               "kind": "speech",
-              "text": "Read السلام عليكم. What are its two pieces, and why is the s doubled? (al-+salām becomes as-salām (sun letter) + ʿalaykum.) Where is the word for \"is\"? (There isn't one — Arabic leaves it understood.)"
+              "text": "Read سلام (salām) right to left. What is its three-consonant root, and what does it mean? (s–l–m — \"wholeness, safety, peace.\") What Hebrew word is the same root? (shalom.)"
             }
           ]
         }
@@ -304,7 +158,7 @@
     },
     {
       "id": "AR-C01-marhaba",
-      "sequence": null,
+      "sequence": 20,
       "title": "مرحبا (marḥaban) — \"hello,\" i.e. \"there's room for you\"",
       "headword": "مرحبا",
       "romanization": "",
@@ -315,7 +169,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:5d9f80c6fec8c304",
+      "sourceHash": "fnv1a64:ba8af0a7ae3d9ab1",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -457,8 +311,450 @@
       ]
     },
     {
+      "id": "AR-C01-al",
+      "sequence": 30,
+      "title": "ال (al-) — \"the,\" hiding in English algebra",
+      "headword": "ال",
+      "romanization": "",
+      "gloss": "the (al- — the attached article)",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:b0be4403f2118931",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the fuller greetings, one tiny, mighty word: Arabic's \"the.\" You'll need it for the peace, the goodness — and you already know how to read it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) No new letters — just ا (alif) and ل (lām), the two you met in salām, written together as ال and attached to the front of a noun (Arabic glues \"the\" on; it isn't a separate word)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ال (al-, \"the\"). For roughly 800 years Arabic was the Mediterranean's language of science and trade, and English and Spanish absorbed its words with al- still attached: algebra (al-jabr), alcohol (al-kuḥl), algorithm (al-Khwārizmī), alchemy, almanac. Learning Arabic al- is meeting an old friend you've been carrying in English all along."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: sun letters and moon letters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's a rule you can hear. Before about half the consonants — the sun letters (s, sh, n, r, t, d…) — the l of al- assimilates and the next letter doubles:"
+            },
+            {
+              "kind": "speech",
+              "text": "al- + salām becomes as-salām (not \"al-salām\")."
+            },
+            {
+              "kind": "speech",
+              "text": "al- + nūr becomes an-nūr."
+            },
+            {
+              "kind": "speech",
+              "text": "Before the moon letters (kh, k, b, m…) the l stays clear: al-khayr, al-bab. You can still hear this rule fossilized in Spanish azúcar, from Arabic as-sukkar (\"the sugar\") — the l long gone, the doubled s remaining."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"al-\" and three English words hiding it — al-gebra, al-cohol, al-manac",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"al-\" and three English words hiding it — al-gebra, al-cohol, al-manac]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "sun-letter assimilation — al- + salām becomes \"as-salām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: sun-letter assimilation — al- + salām → \"as-salām\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "moon-letter, no change — al- + khayr becomes \"al-khayr\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: moon-letter, no change — al- + khayr → \"al-khayr\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ال mean, and how does it attach? (\"The,\" glued to the front of its noun.) What happens before a sun letter like s? (The l assimilates and the letter doubles — as-salām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C01-as-salamu-alaykum",
+      "sequence": 40,
+      "title": "السلام عليكم (as-salāmu ʿalaykum) — \"peace be upon you\"",
+      "headword": "السلام عليكم",
+      "romanization": "",
+      "gloss": "peace be upon you (as-salāmu ʿalaykum)",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:854a698437c0a889",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Now assemble the pieces — al- and salām — into the great universal greeting of the Arabic-speaking world."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) Three new letters, all in ʿalaykum:"
+            },
+            {
+              "kind": "speech",
+              "text": "ع = ʿayn — a voiced tightening deep in the throat, with no English equivalent; approximate it for now."
+            },
+            {
+              "kind": "speech",
+              "text": "ي = yāʾ, \"y\", ك = kāf, \"k.\""
+            },
+            {
+              "kind": "speech",
+              "text": "The first half, السلام, is just al- + salām — already yours."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "السلام عليكم = as-salāmu (al- + salām, with the sun-letter s assimilating the l) + ʿalaykum (\"upon you [all]\"). Literally \"the peace [be] upon you.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Notice something: there is no word for \"is.\" Arabic sets the two phrases side by side — \"the-peace / upon-you\" — and lets \"is\" be understood. (Where Spanish would need está, Arabic needs nothing.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "This is the greeting with real weight — any time of day, any register. Its reply is fixed: وعليكم السلام (wa-ʿalaykum as-salām) — \"and upon you the peace.\" You give peace; it is given back. To greet, in Arabic, is literally to bless."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the two blocks — \"as-salāmu\" + \"ʿalaykum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the two blocks — \"as-salāmu\" + \"ʿalaykum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the throat-tightening ع in \"ʿalaykum\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the throat-tightening ع in \"ʿalaykum\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the fixed reply — \"wa-ʿalaykum as-salām\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the fixed reply — \"wa-ʿalaykum as-salām\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read السلام عليكم. What are its two pieces, and why is the s doubled? (al-+salām becomes as-salām (sun letter) + ʿalaykum.) Where is the word for \"is\"? (There isn't one — Arabic leaves it understood.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-C01-sabah-al-khayr",
+      "sequence": 50,
+      "title": "صباح الخير (ṣabāḥ al-khayr) — \"morning of goodness\"",
+      "headword": "صباح الخير",
+      "romanization": "",
+      "gloss": "good morning (ṣabāḥ al-khayr — \"morning of goodness\")",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5757bf691437aa58",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Time-of-day greetings — built, like everything, from roots and the attached al-. And a chance to hear two sounds English doesn't have."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) Two new letters:"
+            },
+            {
+              "kind": "speech",
+              "text": "ص = ṣād, an emphatic (heavy, dark) \"s\" — a different letter from the light س you know."
+            },
+            {
+              "kind": "speech",
+              "text": "خ = khāʾ, a throat-scrape from the back of the mouth — the same sound as Spanish j (as in José), or the ch in Scottish loch."
+            },
+            {
+              "kind": "speech",
+              "text": "With the rest known, read صباح (ṣabāḥ, \"morning\") and خير (khayr, \"goodness\")."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "صباح (ṣabāḥ), root ṣ–b–ḥ (dawn/waking: ṣubḥ \"dawn,\" aṣbaḥa \"to become / reach morning\"). خير (khayr, \"good, goodness\"), root kh–y–r. Together صباح الخير = \"morning of the goodness.\" Note al-khayr keeps its l — خ is a moon letter — a clean contrast with as-salām."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reply mirrors it beautifully: صباح النور (ṣabāḥ an-nūr) — \"morning of the light\" (al- + nūr, sun-letter n assimilated). You wish someone goodness; they wish you light back."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ṣabāḥ al-khayr\" — the heavy ṣ, then the throat-scrape kh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ṣabāḥ al-khayr\" — the heavy ṣ, then the throat-scrape kh]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "why al-khayr keeps its l (خ is a moon letter)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: why *al-khayr* keeps its *l* (خ is a moon letter)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reply — \"ṣabāḥ an-nūr\" (\"morning of light\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reply — \"ṣabāḥ an-nūr\" (\"morning of light\")]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read صباح الخير. What are the two roots? (ṣ–b–ḥ \"morning,\" kh–y–r \"goodness.\") Why is it al-khayr but as-salām? (خ is a moon letter — l stays; s is a sun letter — l assimilates.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-C01-masa-al-khayr",
-      "sequence": null,
+      "sequence": 60,
       "title": "مساء الخير (masāʾ al-khayr) — \"evening of goodness\"",
       "headword": "مساء الخير",
       "romanization": "",
@@ -469,7 +765,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:12cfed97a5c22789",
+      "sourceHash": "fnv1a64:4a474be9522aa156",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -599,8 +895,158 @@
       ]
     },
     {
+      "id": "AR-C01-shukran",
+      "sequence": 70,
+      "title": "شكرا (shukran) — \"thank you\"",
+      "headword": "شكرا",
+      "romanization": "",
+      "gloss": "thank you (shukran)",
+      "script": "arabic",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0d8526e1fcbd3536",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word for gratitude — and a chance to watch the root-and-pattern engine do its trick on a brand-new root."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "(Skim if you read Arabic.) Two new letters:"
+            },
+            {
+              "kind": "speech",
+              "text": "ش = shīn, \"sh\" — it is simply س (sīn) plus three dots on top (the dots-on-a-skeleton idea again)."
+            },
+            {
+              "kind": "speech",
+              "text": "ك = kāf, \"k\" — already met inside ʿalaykum."
+            },
+            {
+              "kind": "speech",
+              "text": "Read شكرا right to left becomes shukran."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "شكرا (shukran), root sh–k–r (gratitude): shukr (\"thanks\"), shākir (\"thankful\"), mashkūr (\"thanked\"). Look closely: shākir and mashkūr sit in the exact same patterns as kātib (\"writer\") and maktūb (\"written\") from the root engine — fāʿil (the doer) and mafʿūl (the done-to). Learn a pattern once and it works on every root."
+            },
+            {
+              "kind": "speech",
+              "text": "And it travels: this same Semitic root sh–k–r, carried through Persian, is the source of Hindi/Urdu shukriyā (\"thanks\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reply is gentle: عفوا (ʿafwan), \"it's nothing / you're pardoned\" — from a root meaning to forgive or waive. You thank; they wave it away."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "read right to left — shuk, ran becomes \"shukran\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: read right to left — shuk · ran → \"shukran\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "how ش is just س with three dots",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: how ش is just س with three dots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pattern echo — shākir/mashkūr like kātib/maktūb",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pattern echo — *shākir/mashkūr* like *kātib/maktūb*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read شكرا. What is its root, and what two familiar patterns do shākir and mashkūr follow? (sh–k–r; the kātib / maktūb patterns — doer and done-to.) The reply to shukran? (ʿafwan.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-C01-practice",
-      "sequence": null,
+      "sequence": 80,
       "title": "Chapter 1 — the day of greetings",
       "headword": "(recap)",
       "romanization": "",
@@ -611,7 +1057,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d17a5272c766dbab",
+      "sourceHash": "fnv1a64:c8834e0835cb82cc",
       "notice": null,
       "blocks": [
         {
@@ -752,574 +1198,8 @@
       ]
     },
     {
-      "id": "AR-C01-sabah-al-khayr",
-      "sequence": null,
-      "title": "صباح الخير (ṣabāḥ al-khayr) — \"morning of goodness\"",
-      "headword": "صباح الخير",
-      "romanization": "",
-      "gloss": "good morning (ṣabāḥ al-khayr — \"morning of goodness\")",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:cb050b6fcf90da8c",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Time-of-day greetings — built, like everything, from roots and the attached al-. And a chance to hear two sounds English doesn't have."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Arabic.) Two new letters:"
-            },
-            {
-              "kind": "speech",
-              "text": "ص = ṣād, an emphatic (heavy, dark) \"s\" — a different letter from the light س you know."
-            },
-            {
-              "kind": "speech",
-              "text": "خ = khāʾ, a throat-scrape from the back of the mouth — the same sound as Spanish j (as in José), or the ch in Scottish loch."
-            },
-            {
-              "kind": "speech",
-              "text": "With the rest known, read صباح (ṣabāḥ, \"morning\") and خير (khayr, \"goodness\")."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "صباح (ṣabāḥ), root ṣ–b–ḥ (dawn/waking: ṣubḥ \"dawn,\" aṣbaḥa \"to become / reach morning\"). خير (khayr, \"good, goodness\"), root kh–y–r. Together صباح الخير = \"morning of the goodness.\" Note al-khayr keeps its l — خ is a moon letter — a clean contrast with as-salām."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The reply mirrors it beautifully: صباح النور (ṣabāḥ an-nūr) — \"morning of the light\" (al- + nūr, sun-letter n assimilated). You wish someone goodness; they wish you light back."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ṣabāḥ al-khayr\" — the heavy ṣ, then the throat-scrape kh",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ṣabāḥ al-khayr\" — the heavy ṣ, then the throat-scrape kh]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "why al-khayr keeps its l (خ is a moon letter)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: why *al-khayr* keeps its *l* (خ is a moon letter)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the reply — \"ṣabāḥ an-nūr\" (\"morning of light\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the reply — \"ṣabāḥ an-nūr\" (\"morning of light\")]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read صباح الخير. What are the two roots? (ṣ–b–ḥ \"morning,\" kh–y–r \"goodness.\") Why is it al-khayr but as-salām? (خ is a moon letter — l stays; s is a sun letter — l assimilates.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-C01-salam",
-      "sequence": null,
-      "title": "سلام (salām) — \"peace,\" the most famous root",
-      "headword": "سلام",
-      "romanization": "",
-      "gloss": "peace / hello (salām)",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:44f0446378253c51",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The first Arabic word, and the heart of the whole greeting system. You'll learn to read it — right to left — and to understand it in the same breath."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(If you already read Arabic, skim this — it's here so the book needs no prior knowledge.) Arabic is written right to left: the first letter is on the right. Short vowels are usually invisible; a long vowel like ā is a full letter."
-            },
-            {
-              "kind": "speech",
-              "text": "س = sīn, \"s\", ل = lām, \"l\", ا = alif, a long \"ā\", م = mīm, \"m.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Warm up on the two-letter word لا (lā, \"no\") — lām then alif, fusing into one connected shape."
-            },
-            {
-              "kind": "speech",
-              "text": "Now read سلام (salām) right to left: s, l, ā, m, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "سلام = salām = \"peace.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "سلام (salām) sits on the root s–l–m, meaning wholeness, safety, peace — and it heads an enormous family: salām (peace), islām (\"submission\" becomes peace with God), muslim (\"one who submits,\" in the mu–_i_ pattern), sallama (\"to greet\"). It reaches beyond Arabic: Hebrew shalom is the same Semitic root. English borrowed it as salaam, and it lives in the name Salīm."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "To offer salām is to wish someone peace, not merely to signal \"hi.\" On its own it's a warm greeting; it's also the seed of the fuller as-salāmu ʿalaykum (\"peace be upon you\"), which you'll assemble in a few lessons."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read right to left — s, l, ā, m becomes \"salām\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read right to left — s · l · ā · m → \"salām\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the warm-up word لا (\"lā,\" no)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the warm-up word لا (\"lā,\" no)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"salām,\" and mean it — you are wishing peace",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"salām,\" and mean it — you are wishing peace]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read سلام (salām) right to left. What is its three-consonant root, and what does it mean? (s–l–m — \"wholeness, safety, peace.\") What Hebrew word is the same root? (shalom.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-C01-shukran",
-      "sequence": null,
-      "title": "شكرا (shukran) — \"thank you\"",
-      "headword": "شكرا",
-      "romanization": "",
-      "gloss": "thank you (shukran)",
-      "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:e4e8e7fe129d4df8",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The word for gratitude — and a chance to watch the root-and-pattern engine do its trick on a brand-new root."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "(Skim if you read Arabic.) Two new letters:"
-            },
-            {
-              "kind": "speech",
-              "text": "ش = shīn, \"sh\" — it is simply س (sīn) plus three dots on top (the dots-on-a-skeleton idea again)."
-            },
-            {
-              "kind": "speech",
-              "text": "ك = kāf, \"k\" — already met inside ʿalaykum."
-            },
-            {
-              "kind": "speech",
-              "text": "Read شكرا right to left becomes shukran."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "شكرا (shukran), root sh–k–r (gratitude): shukr (\"thanks\"), shākir (\"thankful\"), mashkūr (\"thanked\"). Look closely: shākir and mashkūr sit in the exact same patterns as kātib (\"writer\") and maktūb (\"written\") from the root engine — fāʿil (the doer) and mafʿūl (the done-to). Learn a pattern once and it works on every root."
-            },
-            {
-              "kind": "speech",
-              "text": "And it travels: this same Semitic root sh–k–r, carried through Persian, is the source of Hindi/Urdu shukriyā (\"thanks\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The reply is gentle: عفوا (ʿafwan), \"it's nothing / you're pardoned\" — from a root meaning to forgive or waive. You thank; they wave it away."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "read right to left — shuk, ran becomes \"shukran\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: read right to left — shuk · ran → \"shukran\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "how ش is just س with three dots",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: how ش is just س with three dots]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pattern echo — shākir/mashkūr like kātib/maktūb",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pattern echo — *shākir/mashkūr* like *kātib/maktūb*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read شكرا. What is its root, and what two familiar patterns do shākir and mashkūr follow? (sh–k–r; the kātib / maktūb patterns — doer and done-to.) The reply to shukran? (ʿafwan.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "AR-W01-abjad-short-vowels",
-      "sequence": null,
-      "title": "The abjad — short vowels hiding in plain sight",
-      "headword": "الحركات",
-      "romanization": "al-ḥarakāt",
-      "gloss": "Arabic letters normally show consonants while short a, i, and u stay hidden",
-      "script": "arabic",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type"
-      ],
-      "sourceHash": "fnv1a64:3e1dd8e526ece3ab",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on"
-        ],
-        "waitUntilStopped": [
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can move right to left and draw ا (alif). Now notice why Arabic words often contain fewer written marks than their romanization suggests."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Consonant skeletons",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Look again at سلام (salām): the consonant skeleton is s-l-m, while the short a is not written as a full letter. Arabic is an abjad. Its letters primarily record consonants, and the short vowels a, i, u are normally left out—rather like still recognizing “bld a hs” as “build a house.”"
-            },
-            {
-              "kind": "speech",
-              "text": "The name abjad recites the old first four letters, a-b-j-d, just as “ABC” names an alphabet. Alphabet itself performs the same trick with Greek alpha-beta."
-            },
-            {
-              "kind": "speech",
-              "text": "Beginner texts can add tiny ḥarakāt, small marks above or below a consonant, to show the short vowels. Everyday text usually omits them because readers supply the word from grammar and context. A later lesson will teach those marks one at a time; for now, expect to write the consonant skeleton."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "abjad — a consonant-first writing system",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *abjad* — a consonant-first writing system]"
-            },
-            {
-              "kind": "prompt",
-              "action": "POINT",
-              "instruction": "سلام (salām) — s-l-m visible, short a supplied",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU POINT: **سلام** — *s-l-m* visible, short *a* supplied]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ḥarakāt — optional marks that can reveal short vowels",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: *ḥarakāt* — optional marks that can reveal short vowels]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does an abjad normally leave out? (Short vowels.) Are they impossible to mark? (No. Beginner texts can add ḥarakāt.) What do you learn to recognize first? (The consonant skeleton.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "AR-W01-direction-and-alif",
-      "sequence": null,
+      "sequence": 90,
       "title": "ا (alif) — right to left, then the first stroke",
       "headword": "ا",
       "romanization": "alif",
@@ -1330,7 +1210,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:d975959a53775213",
+      "sourceHash": "fnv1a64:7cdaf39db14b8cd3",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1461,8 +1341,128 @@
       ]
     },
     {
+      "id": "AR-W01-abjad-short-vowels",
+      "sequence": 100,
+      "title": "The abjad — short vowels hiding in plain sight",
+      "headword": "الحركات",
+      "romanization": "al-ḥarakāt",
+      "gloss": "Arabic letters normally show consonants while short a, i, and u stay hidden",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type"
+      ],
+      "sourceHash": "fnv1a64:4afc7e8902435479",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can move right to left and draw ا (alif). Now notice why Arabic words often contain fewer written marks than their romanization suggests."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Consonant skeletons",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look again at سلام (salām): the consonant skeleton is s-l-m, while the short a is not written as a full letter. Arabic is an abjad. Its letters primarily record consonants, and the short vowels a, i, u are normally left out—rather like still recognizing “bld a hs” as “build a house.”"
+            },
+            {
+              "kind": "speech",
+              "text": "The name abjad recites the old first four letters, a-b-j-d, just as “ABC” names an alphabet. Alphabet itself performs the same trick with Greek alpha-beta."
+            },
+            {
+              "kind": "speech",
+              "text": "Beginner texts can add tiny ḥarakāt, small marks above or below a consonant, to show the short vowels. Everyday text usually omits them because readers supply the word from grammar and context. A later lesson will teach those marks one at a time; for now, expect to write the consonant skeleton."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "abjad — a consonant-first writing system",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *abjad* — a consonant-first writing system]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "سلام (salām) — s-l-m visible, short a supplied",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **سلام** — *s-l-m* visible, short *a* supplied]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "ḥarakāt — optional marks that can reveal short vowels",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *ḥarakāt* — optional marks that can reveal short vowels]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does an abjad normally leave out? (Short vowels.) Are they impossible to mark? (No. Beginner texts can add ḥarakāt.) What do you learn to recognize first? (The consonant skeleton.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W02-joining-sin-lam",
-      "sequence": null,
+      "sequence": 110,
       "title": "س and ل — four shapes, one letter",
       "headword": "س، ل",
       "romanization": "sīn, lām",
@@ -1473,7 +1473,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:4be0ee678a21ed83",
+      "sourceHash": "fnv1a64:050d713fcbb214ea",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1640,7 +1640,7 @@
     },
     {
       "id": "AR-W02-lam-alif-joins",
-      "sequence": null,
+      "sequence": 120,
       "title": "سل and لا — joining the letters you know",
       "headword": "سل، لا",
       "romanization": "sīn-lām, lām-alif",
@@ -1651,7 +1651,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:c990df30657098d1",
+      "sourceHash": "fnv1a64:4eb5f5e51205df77",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1775,7 +1775,7 @@
     },
     {
       "id": "AR-W03-dots-mim-ba-salam",
-      "sequence": null,
+      "sequence": 130,
       "title": "م، ب (mīm, bāʾ) — dots that tell letters apart",
       "headword": "م، ب",
       "romanization": "mīm, bāʾ",
@@ -1787,7 +1787,7 @@
         "writing-type",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:112e88792a30e708",
+      "sourceHash": "fnv1a64:85664130a1760d63",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1955,7 +1955,7 @@
     },
     {
       "id": "AR-W03-write-salam",
-      "sequence": null,
+      "sequence": 140,
       "title": "سلام (salām) — your first whole written word",
       "headword": "سلام",
       "romanization": "salām",
@@ -1966,7 +1966,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:5a0a95b5fcedbd5f",
+      "sourceHash": "fnv1a64:694ab241f0732e69",
       "notice": {
         "modality": "pen",
         "needs": [
