@@ -7368,10 +7368,13 @@ impl HtmlParser {
             && !self.current_element_is_marked_foreign_fragment_context()
             && self.has_open_foreign_integration_point()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                "end tag `</p>` did not match the current foreign element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</p>` did not match the current foreign element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-p-end-tag",
                 "end tag `</p>` created and closed an implied `p` element",
@@ -32230,10 +32233,7 @@ mod tests {
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
-                    ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        "end tag `</p>` did not match the current foreign element"
-                    ),
+                    generic_foreign_end_tag_mismatch(&source, "p"),
                     ParserDiagnostic::new(
                         "unexpected-p-end-tag",
                         "end tag `</p>` created and closed an implied `p` element"
@@ -32269,9 +32269,9 @@ mod tests {
         assert_eq!(
             no_html_paragraph.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-end-tag-in-foreign-content",
-                    "end tag `</p>` did not match the current foreign element"
+                generic_foreign_end_tag_mismatch(
+                    "<!doctype html><svg><foreignObject id=boundary></p>X</foreignObject></svg>",
+                    "p",
                 ),
                 ParserDiagnostic::new(
                     "unexpected-p-end-tag",
@@ -32313,6 +32313,72 @@ mod tests {
         assert_eq!(element(&body.children[0]).name, "svg");
         assert_eq!(element(&body.children[1]).name, "p");
         assert_eq!(element(&body.children[2]).name, "foo");
+    }
+
+    #[test]
+    fn positions_paragraph_foreign_end_tag_mismatches_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<p><math><mi></p>X</mi></math></p>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                generic_foreign_end_tag_mismatch(source, "p"),
+                ParserDiagnostic::new(
+                    "unexpected-p-end-tag",
+                    "end tag `</p>` created and closed an implied `p` element"
+                ),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let eof_source = "<!doctype html><p><svg><foreignObject></p";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+        assert_eq!(
+            eof_output.parser_diagnostics.last(),
+            Some(&eof_with_unclosed_elements(eof_source))
+        );
+
+        let nearer_foreign_match =
+            parse_html_with_diagnostics("<!doctype html><p><svg><p></p>X</svg></p>").unwrap();
+        assert!(nearer_foreign_match
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "p".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned.diagnostics();
+        let foreign = diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+            .unwrap();
+        let companion = diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-p-end-tag")
+            .unwrap();
+        assert_eq!(foreign.position, None);
+        assert_eq!(companion.position, None);
     }
 
     #[test]
