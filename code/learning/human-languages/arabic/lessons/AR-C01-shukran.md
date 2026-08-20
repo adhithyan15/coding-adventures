@@ -1,5 +1,6 @@
 ---
 id: AR-C01-shukran
+sequence: 70
 chapter: 1
 type: word
 headword: شكرا

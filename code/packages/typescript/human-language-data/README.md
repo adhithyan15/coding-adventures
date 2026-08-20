@@ -114,13 +114,14 @@ const missing = buildTaskShapeBacklog(
 );
 ```
 
-The first four inventories are official DELE Spanish A1, official DELF French
-A1, official Goethe German A1, and a clearly labelled project-defined Latin A1
-equivalent. They are targets for later five-minute lesson decomposition and
-mocks, not claims that any current book is pass-ready. DELE's paired-skill pass
-rule and Latin's independent skill floors remain distinct; alternate published
-DELF forms, open-ended minimum lengths, and duration ranges are likewise not
-collapsed into invented single values.
+The first five inventories are official DELE Spanish A1, official DELF French
+A1, official Goethe German A1, a clearly labelled project-defined Latin A1
+equivalent, and Avant STAMP 4S Arabic with a project mapping to Level 3 /
+Novice-High in every skill. They are targets for later five-minute lesson
+decomposition and mocks, not claims that any current book is pass-ready. DELE's
+paired-skill rule, Latin's independent floors, Arabic's adaptive counts,
+alternate DELF forms, open-ended lengths, and duration ranges remain distinct
+rather than being collapsed into invented single values.
 
 ### Source-bounded exam inventories (HL20)
 

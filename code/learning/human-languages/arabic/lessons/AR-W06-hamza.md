@@ -1,5 +1,6 @@
 ---
 id: AR-W06-hamza
+sequence: 260
 chapter: 2
 type: writing
 headword: "ء، أ"
