@@ -854,7 +854,7 @@ unsafe fn render_image(rt: &ID2D1RenderTarget, image: &PaintImage) {
     }
 
     let mut pbgra = Vec::with_capacity(pixels.data.len());
-    for rgba in pixels.data.chunks_exact(4) {
+    for rgba in pixels.data.as_chunks::<4>().0 {
         let a = rgba[3] as u16;
         pbgra.push(((rgba[2] as u16 * a + 127) / 255) as u8);
         pbgra.push(((rgba[1] as u16 * a + 127) / 255) as u8);
@@ -2299,7 +2299,9 @@ mod tests {
         let pixels = render(&scene);
         let dark_pixels = pixels
             .data
-            .chunks_exact(4)
+            .as_chunks::<4>()
+            .0
+            .iter()
             .filter(|px| px[0] < 64 && px[1] < 64 && px[2] < 64 && px[3] > 0)
             .count();
         assert!(dark_pixels > 20, "expected visible glyph pixels");
