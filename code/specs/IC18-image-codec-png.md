@@ -95,6 +95,23 @@ lowercase means **ancillary**. A decoder MUST skip an unknown ancillary chunk
 one, because a critical chunk it does not understand may change what the image
 means.
 
+All four chunk-type bytes MUST be ASCII letters. The third letter's bit 5 is
+reserved by PNG and MUST be zero, so the third letter MUST be uppercase. Reject
+an invalid type before interpreting its critical/ancillary flag.
+
+`PLTE` is a known critical chunk even when palette images are out of scope.
+For truecolour types 2 and 6 it is an optional suggested palette: a decoder
+MUST accept and ignore one well-formed table before `tRNS` and `IDAT`. It MUST reject a
+duplicate, a table after `IDAT`, a table on greyscale types 0 or 4, or a length
+that is not 1 to 256 complete three-byte RGB entries.
+
+`tRNS` is ancillary in spelling but changes rendered pixels, so it MUST NOT be
+silently skipped. Before `IDAT`, one `tRNS` supplies a two-byte transparent
+greyscale sample for type 0 or three two-byte transparent samples for type 2.
+At depth 8 each sample MUST fit in 0 through 255. A matching pixel receives
+alpha 0 and every other pixel alpha 255. Reject `tRNS` on types 4 and 6, after
+`IDAT`, with the wrong length, outside the active bit depth, or when repeated.
+
 `IHDR` is:
 
 ```
@@ -129,6 +146,9 @@ CMF  FLG   <raw DEFLATE stream>   Adler-32 (u32 BE)
 ```
 
 - `CMF` low nibble is the method (8 = deflate); high nibble is the window size.
+- `CMF` high nibble (`CINFO`) MUST be at most 7. Larger values advertise a
+  window above DEFLATE's 32 KiB maximum and MUST be rejected even when the
+  mod-31 header check passes.
 - `FLG` low five bits are chosen so `CMF * 256 + FLG` is a multiple of 31. Bit 5
   is `FDICT`, a preset dictionary, which PNG forbids.
 - The trailing Adler-32 covers the **uncompressed** bytes.
@@ -215,9 +235,10 @@ differently produce different images.
 ### Choosing a filter
 
 The spec's own heuristic, and what every real encoder does: apply all five, sum
-the filtered bytes read as SIGNED values, keep the smallest total. The signed
-reading is the point -- a filtered byte of 255 means -1, a tiny correction, and
-reading it as 255 would rank the best filter worst.
+the absolute values of the filtered bytes read as SIGNED values, and keep the
+smallest total. Ties keep the lowest-numbered filter. The signed reading is the
+point -- a filtered byte of 255 means -1, a tiny correction, and reading it as
+255 would rank the best filter worst.
 
 Running DEFLATE five times per row would be more accurate and costs far more than
 it saves.
@@ -255,6 +276,8 @@ the round trip is lossless by construction rather than by luck.
        in any arithmetic
      - verify the CRC over type + data
      - IHDR: parse and validate; reject a second IHDR
+     - PLTE: validate one optional suggested palette for types 2/6 before IDAT
+     - tRNS: validate one optional transparency key for types 0/2 before IDAT
      - IDAT: collect (must follow IHDR)
      - IEND: stop
      - otherwise: skip if ancillary (lowercase first letter), reject if critical
@@ -275,7 +298,8 @@ the round trip is lossless by construction rather than by luck.
 
 - **Encode:** 8-bit colour type 6, non-interlaced, one `IDAT`.
 - **Decode:** 8-bit colour types 0, 2, 4 and 6, non-interlaced, any number of
-  `IDAT` chunks, unknown ancillary chunks skipped.
+  `IDAT` chunks, suggested `PLTE` for types 2/6, `tRNS` transparency for types
+  0/2, and unknown non-semantic ancillary chunks skipped.
 
 ### Explicitly out of scope
 
@@ -300,7 +324,9 @@ PNG is a format a program reads from strangers, so these are normative.
    filtered buffer and the transient copy made while sizing it are counted.
    A port MUST cap the edges (16384, matching IC01) AND the total pixel count
    (32 mebipixels by default, a 128 MiB RGBA buffer), and SHOULD let the caller
-   lower the latter and validate it where it is supplied.
+   lower the latter and validate it where it is supplied. A caller-supplied
+   ceiling MUST be a positive integer no larger than the 32 mebipixel default;
+   it lowers the package ceiling and can never raise or fractionalize it.
 
    The pixel ceiling is a judgement, not a law, and a port should state its
    arithmetic: decoding costs roughly THREE times the pixel buffer -- the
@@ -332,7 +358,51 @@ encode_png(pixels: PixelContainer) -> bytes
 decode_png(bytes) -> PixelContainer
 adler32(bytes) -> u32          # exported: it is testable on its own
 PngCodec implements ImageCodec # mime type "image/png"
+PngError(code, message)         # stable portable code plus explanatory text
 ```
+
+The package MUST also expose the default edge and pixel ceilings and the closed
+set of portable error identifiers. This lets an embedder and a neutral fixture
+reason about the same boundaries without parsing prose or exception messages.
+
+### Portable error taxonomy
+
+Every malformed-input or invalid-option failure MUST use one of these stable,
+payload-blind identifiers. Messages may add the bounded numbers or chunk type
+called for by the error table, but consumers MUST branch on the identifier, not
+the message.
+
+| Identifier | Boundary |
+|---|---|
+| `invalid-max-pixels` | caller ceiling is non-integer, non-positive, non-finite, or above the default |
+| `invalid-image-dimensions` | encoder dimensions are invalid or empty |
+| `invalid-pixel-data-length` | encoder RGBA byte count disagrees with dimensions |
+| `file-too-short` | input cannot contain the complete PNG signature |
+| `invalid-signature` | signature differs |
+| `truncated-chunk` | chunk header/data/CRC extends beyond input |
+| `invalid-chunk-type` | type contains a non-letter or a lowercase reserved third letter |
+| `chunk-crc-mismatch` | chunk CRC differs |
+| `chunk-before-ihdr` | any chunk precedes IHDR |
+| `duplicate-ihdr` | a second IHDR appears |
+| `invalid-ihdr-length` | IHDR is not 13 bytes |
+| `invalid-dimensions` | decoded width or height is zero |
+| `dimension-limit` | decoded edge exceeds 16,384 |
+| `pixel-limit` | decoded product exceeds the active ceiling |
+| `unsupported-feature` | unsupported compression/filter method, depth, colour type, palette, or interlace |
+| `invalid-plte` | PLTE is repeated, misplaced, malformed, or forbidden for the colour type |
+| `invalid-trns` | tRNS is repeated, misplaced, malformed, out of range, or forbidden for the colour type |
+| `nonconsecutive-idat` | an IDAT appears after the IDAT run ended |
+| `invalid-iend` | IEND is non-empty |
+| `trailing-data` | bytes follow IEND |
+| `unknown-critical-chunk` | an unrecognised critical chunk appears |
+| `missing-required-chunk` | IHDR, IDAT, or IEND is absent |
+| `invalid-zlib-header` | zlib stream is too short, has the wrong method/CINFO, or fails FCHECK |
+| `preset-dictionary` | zlib FDICT is set |
+| `inflate-failed` | the ZIP-owned raw inflater rejects the DEFLATE stream |
+| `inflated-length-mismatch` | decompressed byte count differs from IHDR's exact promise |
+| `idat-cavity` | whole bytes remain between BFINAL and Adler-32 |
+| `adler-mismatch` | Adler-32 differs |
+| `invalid-filter` | a scanline filter byte is above 4 |
 
 ## Error Cases
 
@@ -347,8 +417,10 @@ PngCodec implements ImageCodec # mime type "image/png"
 | second IHDR | error |
 | IDAT before IHDR | error |
 | colour type 3, depth != 8, interlace 1 | error naming the unsupported feature |
+| invalid, repeated, misplaced, or forbidden `PLTE` / `tRNS` | stable typed error |
 | dimension 0, or above the cap | error |
 | zlib header not method 8, or failing mod 31 | error |
+| zlib CINFO above 7 | error |
 | zlib preset dictionary requested | error |
 | inflated length != the header's promise | error |
 | Adler-32 mismatch | error |
@@ -361,6 +433,7 @@ PngCodec implements ImageCodec # mime type "image/png"
 | pixel count above the cap | error naming both numbers |
 | encoding a 0-pixel image | error |
 | encoding data of the wrong length | error naming both lengths |
+| caller `maxPixels` is fractional or above 32 mebipixels | error |
 
 ## Round-Trip Property
 
@@ -386,6 +459,20 @@ implementation:
   chunking boundary;
 - confirm the written file is accepted by at least one real image tool.
 
+The repository-owned portable corpus is
+`code/specs/fixtures/image-codec-png-v1/cases.json`. Every port MUST consume the
+same document through its public API and assert the exact stable error
+identifier for rejection cases. Fixture vectors use deterministic stored and
+fixed encoders plus a checked independent dynamic-Huffman stream; Python zlib
+independently decodes them. A package's own round trip is never sufficient
+evidence. Encode cases also pin the per-row filter choices without pinning the
+compressed bytes.
+
+Production is a pure in-memory byte transform. Every package MUST carry
+`required_capabilities.json` with an empty `capabilities` array. Filesystem,
+process, environment, time, entropy, network, and native image-tool access are
+test-only evidence and are not part of the codec API.
+
 ---
 
 ## Package Layout
@@ -397,6 +484,7 @@ code/packages/<language>/image-codec-png/
   BUILD                 chain-installs pixel-container, lzss, zip, then self
   README.md
   CHANGELOG.md
+  required_capabilities.json
 ```
 
 **Dependencies:** `pixel-container` (IC00) for the pixel type, and the language's

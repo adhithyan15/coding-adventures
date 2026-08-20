@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12307,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "12c26b50ae755ec88704c457d8264558433b96f0",
+    "revision": "929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
@@ -3926,7 +3926,7 @@
     {
       "id": "zip-raw-rfc1951-portable-conformance",
       "title": "Fixture and expose ZIP-owned raw RFC 1951 primitives across established lanes",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-dotnet-lane-parity", "zip-raw-rfc1951-dart-lane-parity", "zip-raw-rfc1951-elixir-lane-parity", "zip-raw-rfc1951-go-lane-parity", "zip-raw-rfc1951-haskell-lane-parity", "zip-raw-rfc1951-jvm-lane-parity", "zip-raw-rfc1951-lua-lane-parity", "zip-raw-rfc1951-perl-lane-parity", "zip-raw-rfc1951-python-lane-parity", "zip-raw-rfc1951-ruby-lane-parity", "zip-raw-rfc1951-rust-lane-parity", "zip-raw-rfc1951-swift-lane-parity"],
       "branch": "codex/zip-raw-rfc1951-portable-closure",
       "pr_number": 12307,
@@ -3935,17 +3935,22 @@
       "selection_revision": "f65567daa53a484eac081a750e554096b4241210",
       "selection_notes": "Selected only after JVM ZIP PR #12283 completed all 29 checks and auto-merged cleanly, the collision-checked schema-3 inventory remained exactly 15 established lanes, 1,367 identities, 4,551 slots, zero collisions, and zero unknown buckets through live main f65567daa5, and a full ownership audit found no active PR on the ZIP closure surface. All twelve toolchain-shaped children are now merged, making this the sole newly dependency-ready item. This bounded closure tranche adds a durable 15-lane adoption registry and gate over the shared 34-case corpus, public raw/count/cap/error surface, BUILD front doors, and truthful empty capabilities; it does not modify production codecs or start dependent PNG work.",
       "implementation_revision": "c4fd950cd8df692972c0bf743c10928c2e52e632",
+      "final_review_revision": "adb93159e901a352b37f534b2c8f4a345ebf1f42",
+      "merged_at": "2026-08-20T18:18:50Z",
+      "merge_revision": "2780825f2a7b5bf93936b6927175e975b611cb5c",
       "validation_notes": "The closed registry schema pins all 15 established ZIP roots, the shared 34-case corpus and 14 stable error identifiers, each native public raw/count/cap/error surface, every BUILD front door, and package-local empty capability manifests. The aggregate CI gate passes four closure tests; the neutral fixture, capability taxonomy, and parity suites pass 30 tests plus 719 subtests; and the collision report at exact main 12c26b50ae reports 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets. All 15 native package front doors pass with real coverage or language-native quality gates: C# 30 tests, F# 21, Dart 66, Elixir 69, Go race/vet/build, Haskell 21, Java 17, Kotlin 31, Lua 68 plus 40 coverage cases, Perl 74, Python 76, Ruby 72, Rust 24 unit plus two portable and five doctests, Swift 36, and TypeScript 98. The dependent TypeScript PNG front door passes 58 tests with 100% line coverage. Production npm audits report zero vulnerabilities; the Go build tool passes test, vet, trimpath build, BUILD validation, and a three-platform plan over 4,972 packages. State strict JSON, dependency uniqueness and acyclicity, safe-path traversal and symlink probes, capability and production-authority review, credential scan, diff check, and the final read-only security audit pass. No production codec or authority-bearing source changes in this closure tranche.",
-      "publication_notes": "Ready-for-review PR #12307 opened from the clean, current-main reviewed head d8288fc57076599357a2a72995d24616fb9fed31. This lifecycle-only follow-up records the required in-progress to pr-open transition and active PR identity; CI and mergeability remain pending, so auto-merge is not yet enabled.",
+      "publication_notes": "Ready-for-review PR #12307 opened from the clean, current-main reviewed head d8288fc57076599357a2a72995d24616fb9fed31. The final lifecycle commit advanced the state to pr-open at adb93159e901a352b37f534b2c8f4a345ebf1f42. All 29 reported checks reached terminal acceptable conclusions with 23 successes and six expected skips; both required gates succeeded and GitHub reported the PR clean and mergeable. The loop enabled squash auto-merge and GitHub merged that exact reviewed head as 2780825f2a7b5bf93936b6927175e975b611cb5c at 2026-08-20T18:18:50Z without manual merge authority.",
       "notes": "Completion umbrella discovered in the collision-clean 86f47eb4c3 inventory after merged PR #11088 added the TypeScript image-codec-png singleton. The neutral profile and all twelve toolchain-shaped children (.NET pair, Dart, Elixir, Go, Haskell, JVM pair, Lua, Perl, Python, Ruby, Rust, and Swift) are merged. Close the established denominator with one checked consumer registry and aggregate validation before direct PNG work becomes dependency-ready."
     },
     {
       "id": "image-codec-png-language-neutral-conformance",
       "title": "Define language-neutral IC18 PNG conformance with TypeScript reference consumption",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["zip-raw-rfc1951-portable-conformance"],
-      "branch": null,
+      "branch": "codex/png-language-neutral-conformance",
       "pr_number": null,
+      "selection_revision": "2780825f2a7b5bf93936b6927175e975b611cb5c",
+      "selection_notes": "Selected immediately after ZIP portable closure PR #12307 completed all 29 checks and merged through auto-merge, making this neutral foundation the sole newly dependency-ready prerequisite for all twelve PNG lane children. The canonical schema-3 inventory at exact live main 2780825f2a reports the same 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets, with no added, retired, or expanded package root. This bounded tranche first tightens the TypeScript reference, then defines and validates a language-neutral IC18 corpus and stable error contract for exact chunks, CRC, zlib framing, filters, supported colour forms, split IDAT, foreign interoperability, exact consumption, and caller-lowerable resource ceilings. It does not start any non-TypeScript lane port.",
       "notes": "Decomposed from the broad image-codec-png owner during the ZIP closure security and leverage audit. Close exact chunk ordering and CRC, zlib CM/CINFO/FCHECK and Adler-32 framing, split IDAT, every supported colour type, bit depth, and filter, foreign interoperability, exact consumption and covert-cavity rejection, stable payload-blind errors, dimension/pixel/inflation ceilings, and an explicit empty capability profile. The TypeScript reference must reject CINFO above 7 and require maxPixels to be an integer no larger than the 32 Mi-pixel default before it becomes the oracle."
     },
     {

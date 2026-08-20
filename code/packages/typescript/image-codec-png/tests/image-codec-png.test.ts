@@ -567,10 +567,10 @@ describe("total-pixel ceiling", () => {
 
   it("rejects a nonsensical ceiling rather than ignoring it", () => {
     const png = encodePng(sampleImage(2, 2));
-    expect(() => decodePng(png, { maxPixels: 0 })).toThrow(/positive finite/);
-    expect(() => decodePng(png, { maxPixels: -1 })).toThrow(/positive finite/);
-    expect(() => decodePng(png, { maxPixels: Infinity })).toThrow(/positive finite/);
-    expect(() => decodePng(png, { maxPixels: Number.NaN })).toThrow(/positive finite/);
+    expect(() => decodePng(png, { maxPixels: 0 })).toThrow(/positive safe integer/);
+    expect(() => decodePng(png, { maxPixels: -1 })).toThrow(/positive safe integer/);
+    expect(() => decodePng(png, { maxPixels: Infinity })).toThrow(/positive safe integer/);
+    expect(() => decodePng(png, { maxPixels: Number.NaN })).toThrow(/positive safe integer/);
   });
 
   it("carries the ceiling through PngCodec, the shared interface", () => {
@@ -691,8 +691,8 @@ describe("IHDR must be the first chunk", () => {
 
 describe("PngCodec validates its ceiling when it is supplied", () => {
   it("rejects a bad maxPixels at construction, not at first decode", () => {
-    expect(() => new PngCodec({ maxPixels: Infinity })).toThrow(/positive finite/);
-    expect(() => new PngCodec({ maxPixels: 0 })).toThrow(/positive finite/);
-    expect(() => new PngCodec({ maxPixels: Number.NaN })).toThrow(/positive finite/);
+    expect(() => new PngCodec({ maxPixels: Infinity })).toThrow(/positive safe integer/);
+    expect(() => new PngCodec({ maxPixels: 0 })).toThrow(/positive safe integer/);
+    expect(() => new PngCodec({ maxPixels: Number.NaN })).toThrow(/positive safe integer/);
   });
 });
