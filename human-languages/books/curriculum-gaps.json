@@ -30,10 +30,10 @@
     "scriptExposureExemptedGlyphs": 2220,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 246,
-    "forwardReviews": 135,
+    "lessonsWithoutSequence": 180,
+    "forwardReviews": 99,
     "atomsNeverRevisited": 630,
-    "forwardReferences": 504,
+    "forwardReferences": 495,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 11,
@@ -42,7 +42,7 @@
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2909,
     "drivablePercent": 86,
-    "chaptersWithoutDrivablePrefix": 99,
+    "chaptersWithoutDrivablePrefix": 101,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -7497,996 +7497,6 @@
       {
         "lessonId": "FR-W03-trema",
         "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-morgen",
-        "detail": "reviews GE-C01-morgen, which the learner does not reach for another 8 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-guten-morgen",
-        "detail": "reviews GE-C01-guten-morgen, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-tag",
-        "detail": "requires GE-C01-tag, which comes 11 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-der-die-das",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-der-die-das",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-gut",
-        "detail": "reviews GE-C01-gut, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-der-die-das",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-gut",
-        "detail": "requires GE-C01-gut, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-gut",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-gut",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-hallo",
-        "detail": "reviews GE-C01-hallo, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-gut",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-hallo",
-        "detail": "requires GE-C01-hallo, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-gute-nacht",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-gute-nacht",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-guten-abend",
-        "detail": "reviews GE-C01-guten-abend, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-gute-nacht",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-nacht",
-        "detail": "reviews GE-C01-nacht, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-gute-nacht",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-nacht",
-        "detail": "requires GE-C01-nacht, which comes 6 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-guten-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-guten-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-guten-morgen",
-        "detail": "reviews GE-C01-guten-morgen, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-guten-abend",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-guten-tag",
-        "detail": "requires GE-C01-guten-tag, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-guten-tag",
-        "detail": "reviews GE-C01-guten-tag, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-morgen",
-        "detail": "reviews GE-C01-morgen, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-guten-tag",
-        "detail": "requires GE-C01-guten-tag, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-morgen",
-        "detail": "requires GE-C01-morgen, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-guten-tag",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-guten-tag",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-tag",
-        "detail": "reviews GE-C01-tag, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-guten-tag",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-tag",
-        "detail": "requires GE-C01-tag, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-hallo",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "GE-C01-tag",
-        "detail": "reviews GE-C01-tag, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C01-morgen",
-        "language": "german",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "GE-C01-tag",
-        "detail": "requires GE-C01-tag, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C01-nacht",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-practice",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C01-tag",
-        "language": "german",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-du-sie",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-du-sie",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-ich",
-        "detail": "reviews GE-C02-ich, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-du-sie",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-heissen",
-        "detail": "reviews GE-C02-heissen, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-du-sie",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GE-C02-ich",
-        "detail": "requires GE-C02-ich, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C02-freut-mich",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-freut-mich",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-ich-heisse",
-        "detail": "reviews GE-C02-ich-heisse, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-freut-mich",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-wie-heissen-sie",
-        "detail": "reviews GE-C02-wie-heissen-sie, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-freut-mich",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GE-C02-ich-heisse",
-        "detail": "requires GE-C02-ich-heisse, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C02-heissen",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-heissen",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-ich",
-        "detail": "reviews GE-C02-ich, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-heissen",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GE-C02-ich",
-        "detail": "requires GE-C02-ich, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C02-ich",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-ich-heisse",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-practice",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-practice",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-wie",
-        "detail": "reviews GE-C02-wie, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-practice",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GE-C02-wie-heissen-sie",
-        "detail": "reviews GE-C02-wie-heissen-sie, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C02-practice",
-        "language": "german",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "GE-C02-wie-heissen-sie",
-        "detail": "requires GE-C02-wie-heissen-sie, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C02-wie",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C02-wie-heissen-sie",
-        "language": "german",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-bitte",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-bitte",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GE-C03-danke",
-        "detail": "reviews GE-C03-danke, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C03-bitte",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GE-C03-danke",
-        "detail": "requires GE-C03-danke, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C03-danke",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-es-geht",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-es-geht",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GE-C03-wie-geht-es",
-        "detail": "reviews GE-C03-wie-geht-es, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C03-es-geht",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GE-C03-wie-geht-es",
-        "detail": "requires GE-C03-wie-geht-es, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C03-formal-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-formal-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GE-C03-practice",
-        "detail": "reviews GE-C03-practice, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C03-formal-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GE-C03-wie-geht-register",
-        "detail": "reviews GE-C03-wie-geht-register, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C03-formal-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GE-C03-practice",
-        "detail": "requires GE-C03-practice, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C03-formal-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GE-C03-wie-geht-register",
-        "detail": "requires GE-C03-wie-geht-register, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C03-gehen",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GE-C03-wie-geht-es",
-        "detail": "reviews GE-C03-wie-geht-es, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C03-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "GE-C03-wie-geht-register",
-        "detail": "reviews GE-C03-wie-geht-register, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C03-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GE-C03-wie-geht-es",
-        "detail": "requires GE-C03-wie-geht-es, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C03-practice",
-        "language": "german",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "GE-C03-wie-geht-register",
-        "detail": "requires GE-C03-wie-geht-register, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C03-wie-geht-es",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C03-wie-geht-register",
-        "language": "german",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C04-auf-wiedersehen",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C04-bis-bald",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C04-bis-bald",
-        "language": "german",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "GE-C04-tschuss",
-        "detail": "reviews GE-C04-tschuss, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C04-bis-bald",
-        "language": "german",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "GE-C04-tschuss",
-        "detail": "requires GE-C04-tschuss, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C04-bis-morgen",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C04-bis-spater",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C04-practice",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C04-practice",
-        "language": "german",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "GE-C04-tschuss",
-        "detail": "reviews GE-C04-tschuss, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C04-practice",
-        "language": "german",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "GE-C04-tschuss",
-        "detail": "requires GE-C04-tschuss, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C04-tschuss",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C05-ich-lerne-deutsch",
-        "language": "german",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C05-ich-lerne-deutsch",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "GE-C05-lernen",
-        "detail": "reviews GE-C05-lernen, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C05-ich-lerne-deutsch",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "GE-C05-lernen",
-        "detail": "requires GE-C05-lernen, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C05-lernen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C05-lernen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "GE-C05-machen",
-        "detail": "reviews GE-C05-machen, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C05-lernen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "GE-C05-wohnen",
-        "detail": "requires GE-C05-wohnen, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C05-machen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C05-machen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "GE-C05-wohnen",
-        "detail": "reviews GE-C05-wohnen, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C05-machen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "GE-C05-wohnen",
-        "detail": "requires GE-C05-wohnen, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C05-practice",
-        "language": "german",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C05-practice",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "GE-C05-wohnen",
-        "detail": "reviews GE-C05-wohnen, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C05-practice",
-        "language": "german",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "GE-C05-wohnen",
-        "detail": "requires GE-C05-wohnen, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C05-wohnen",
-        "language": "german",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C06-zahlen-1-5",
-        "language": "german",
-        "chapter": 6,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C06-zahlen-6-10",
-        "language": "german",
-        "chapter": 6,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C07-wochentage-1",
-        "language": "german",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C07-wochentage-2",
-        "language": "german",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C08-mittag-mitternacht",
-        "language": "german",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C08-mittag-mitternacht",
-        "language": "german",
-        "chapter": 8,
-        "kind": "forward-review",
-        "other": "GE-C08-uhr",
-        "detail": "reviews GE-C08-uhr, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C08-mittag-mitternacht",
-        "language": "german",
-        "chapter": 8,
-        "kind": "forward-prerequisite",
-        "other": "GE-C08-uhr",
-        "detail": "requires GE-C08-uhr, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C08-uhr",
-        "language": "german",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C09-jahreszeiten",
-        "language": "german",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C09-jahreszeiten",
-        "language": "german",
-        "chapter": 9,
-        "kind": "forward-review",
-        "other": "GE-C09-monate",
-        "detail": "reviews GE-C09-monate, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C09-jahreszeiten",
-        "language": "german",
-        "chapter": 9,
-        "kind": "forward-prerequisite",
-        "other": "GE-C09-monate",
-        "detail": "requires GE-C09-monate, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C09-monate",
-        "language": "german",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C10-eltern",
-        "language": "german",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C10-geschwister",
-        "language": "german",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C11-brot",
-        "language": "german",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C11-wasser-wein",
-        "language": "german",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C12-elf-zwoelf",
-        "language": "german",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C12-zahlen-13-20",
-        "language": "german",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C13-rot-blau",
-        "language": "german",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C13-rot-blau",
-        "language": "german",
-        "chapter": 13,
-        "kind": "forward-review",
-        "other": "GE-C13-schwarz-weiss",
-        "detail": "reviews GE-C13-schwarz-weiss, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C13-rot-blau",
-        "language": "german",
-        "chapter": 13,
-        "kind": "forward-prerequisite",
-        "other": "GE-C13-schwarz-weiss",
-        "detail": "requires GE-C13-schwarz-weiss, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C13-schwarz-weiss",
-        "language": "german",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C14-alter",
-        "language": "german",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C14-alter",
-        "language": "german",
-        "chapter": 14,
-        "kind": "forward-review",
-        "other": "GE-C14-haben",
-        "detail": "reviews GE-C14-haben, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C14-alter",
-        "language": "german",
-        "chapter": 14,
-        "kind": "forward-prerequisite",
-        "other": "GE-C14-haben",
-        "detail": "requires GE-C14-haben, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C14-haben",
-        "language": "german",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C15-perfekt",
-        "language": "german",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C15-praeteritum",
-        "language": "german",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C15-praeteritum-map",
-        "language": "german",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein",
-        "language": "german",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein",
-        "language": "german",
-        "chapter": 16,
-        "kind": "forward-review",
-        "other": "GE-C16-sein",
-        "detail": "reviews GE-C16-sein, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein",
-        "language": "german",
-        "chapter": 16,
-        "kind": "forward-prerequisite",
-        "other": "GE-C16-sein",
-        "detail": "requires GE-C16-sein, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein-agreement",
-        "language": "german",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein-agreement",
-        "language": "german",
-        "chapter": 16,
-        "kind": "forward-review",
-        "other": "GE-C16-sein",
-        "detail": "reviews GE-C16-sein, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "GE-C16-sein",
-        "language": "german",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-W01-eszett",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-W02-umlauts",
-        "language": "german",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "GE-W03-capitalization",
-        "language": "german",
         "chapter": 4,
         "kind": "no-sequence",
         "detail": "no declared reading order; position is a fallback, not a fact"
@@ -60473,19 +59483,19 @@
         "lessonsEarly": 57
       },
       {
+        "lessonId": "GE-C03-danke",
+        "language": "german",
+        "position": 20,
+        "word": "denken",
+        "taughtBy": "GE-C24-denken",
+        "lessonsEarly": 56
+      },
+      {
         "lessonId": "ES-C56-sintesis-leer",
         "language": "spanish",
         "position": 82,
         "word": "casa",
         "taughtBy": "ES-C43-casa",
-        "lessonsEarly": 55
-      },
-      {
-        "lessonId": "GE-C03-danke",
-        "language": "german",
-        "position": 21,
-        "word": "denken",
-        "taughtBy": "GE-C24-denken",
         "lessonsEarly": 55
       },
       {
@@ -60505,14 +59515,6 @@
         "lessonsEarly": 51
       },
       {
-        "lessonId": "GE-C03-practice",
-        "language": "german",
-        "position": 25,
-        "word": "denken",
-        "taughtBy": "GE-C24-denken",
-        "lessonsEarly": 51
-      },
-      {
         "lessonId": "LA-C08-manus",
         "language": "latin",
         "position": 17,
@@ -60527,6 +59529,14 @@
         "word": "ir",
         "taughtBy": "PT-C18-ir",
         "lessonsEarly": 51
+      },
+      {
+        "lessonId": "GE-C03-practice",
+        "language": "german",
+        "position": 26,
+        "word": "denken",
+        "taughtBy": "GE-C24-denken",
+        "lessonsEarly": 50
       },
       {
         "lessonId": "GE-C06-zahlen-1-5",
@@ -60841,6 +59851,14 @@
         "lessonsEarly": 27
       },
       {
+        "lessonId": "GE-C01-morgen",
+        "language": "german",
+        "position": 5,
+        "word": "bis morgen",
+        "taughtBy": "GE-C04-bis-morgen",
+        "lessonsEarly": 26
+      },
+      {
         "lessonId": "LA-C19-valeo-family",
         "language": "latin",
         "position": 31,
@@ -60937,14 +59955,6 @@
         "lessonsEarly": 23
       },
       {
-        "lessonId": "GE-W01-eszett",
-        "language": "german",
-        "position": 34,
-        "word": "weiß",
-        "taughtBy": "GE-C13-schwarz-weiss",
-        "lessonsEarly": 23
-      },
-      {
         "lessonId": "TE-C32-tinu",
         "language": "telugu",
         "position": 87,
@@ -60961,11 +59971,11 @@
         "lessonsEarly": 22
       },
       {
-        "lessonId": "GE-C01-morgen",
+        "lessonId": "GE-W01-eszett",
         "language": "german",
-        "position": 8,
-        "word": "bis morgen",
-        "taughtBy": "GE-C04-bis-morgen",
+        "position": 34,
+        "word": "weiß",
+        "taughtBy": "GE-C13-schwarz-weiss",
         "lessonsEarly": 22
       },
       {
@@ -61393,14 +60403,6 @@
         "lessonsEarly": 11
       },
       {
-        "lessonId": "GE-C03-es-geht",
-        "language": "german",
-        "position": 22,
-        "word": "tschüss",
-        "taughtBy": "GE-C04-tschuss",
-        "lessonsEarly": 11
-      },
-      {
         "lessonId": "IT-C01-practice",
         "language": "italian",
         "position": 7,
@@ -61438,14 +60440,6 @@
         "position": 21,
         "word": "হওয়া",
         "taughtBy": "BN-C07-howa",
-        "lessonsEarly": 10
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein-agreement",
-        "language": "german",
-        "position": 64,
-        "word": "katze",
-        "taughtBy": "GE-C22-hund-katze",
         "lessonsEarly": 10
       },
       {
@@ -61489,11 +60483,11 @@
         "lessonsEarly": 10
       },
       {
-        "lessonId": "GE-C01-abend",
+        "lessonId": "GE-C16-perfekt-sein-agreement",
         "language": "german",
-        "position": 0,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
+        "position": 65,
+        "word": "katze",
+        "taughtBy": "GE-C22-hund-katze",
         "lessonsEarly": 9
       },
       {
@@ -61550,22 +60544,6 @@
         "position": 8,
         "word": "je m'appelle…",
         "taughtBy": "FR-C02-je-mappelle",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "position": 0,
-        "word": "morgen",
-        "taughtBy": "GE-C01-morgen",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "GE-C01-der-die-das",
-        "language": "german",
-        "position": 1,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
         "lessonsEarly": 8
       },
       {
@@ -61697,19 +60675,11 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "GE-C03-es-geht",
+        "lessonId": "GE-C01-der-die-das",
         "language": "german",
-        "position": 22,
-        "word": "bis bald",
-        "taughtBy": "GE-C04-bis-bald",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "GE-C14-alter",
-        "language": "german",
-        "position": 58,
-        "word": "sein",
-        "taughtBy": "GE-C16-sein",
+        "position": 2,
+        "word": "nacht",
+        "taughtBy": "GE-C01-nacht",
         "lessonsEarly": 7
       },
       {
@@ -61809,6 +60779,14 @@
         "lessonsEarly": 6
       },
       {
+        "lessonId": "GE-C01-guten-tag",
+        "language": "german",
+        "position": 4,
+        "word": "gute nacht",
+        "taughtBy": "GE-C01-gute-nacht",
+        "lessonsEarly": 6
+      },
+      {
         "lessonId": "HI-C19-age-grammar",
         "language": "hindi",
         "position": 87,
@@ -61873,19 +60851,19 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "GE-C01-gute-nacht",
+        "lessonId": "GE-C01-guten-tag",
         "language": "german",
-        "position": 3,
-        "word": "morgen",
-        "taughtBy": "GE-C01-morgen",
+        "position": 4,
+        "word": "nacht",
+        "taughtBy": "GE-C01-nacht",
         "lessonsEarly": 5
       },
       {
-        "lessonId": "GE-C04-auf-wiedersehen",
+        "lessonId": "GE-C03-es-geht",
         "language": "german",
-        "position": 28,
-        "word": "tschüss",
-        "taughtBy": "GE-C04-tschuss",
+        "position": 25,
+        "word": "bis bald",
+        "taughtBy": "GE-C04-bis-bald",
         "lessonsEarly": 5
       },
       {
@@ -62017,11 +60995,43 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "GE-C01-guten-abend",
+        "lessonId": "GE-C01-hallo",
         "language": "german",
-        "position": 4,
-        "word": "morgen",
-        "taughtBy": "GE-C01-morgen",
+        "position": 0,
+        "word": "guten tag",
+        "taughtBy": "GE-C01-guten-tag",
+        "lessonsEarly": 4
+      },
+      {
+        "lessonId": "GE-C01-practice",
+        "language": "german",
+        "position": 11,
+        "word": "du",
+        "taughtBy": "GE-C02-du-sie",
+        "lessonsEarly": 4
+      },
+      {
+        "lessonId": "GE-C01-practice",
+        "language": "german",
+        "position": 11,
+        "word": "sie",
+        "taughtBy": "GE-C02-du-sie",
+        "lessonsEarly": 4
+      },
+      {
+        "lessonId": "GE-C03-es-geht",
+        "language": "german",
+        "position": 25,
+        "word": "tschüss",
+        "taughtBy": "GE-C04-tschuss",
+        "lessonsEarly": 4
+      },
+      {
+        "lessonId": "GE-C14-alter",
+        "language": "german",
+        "position": 59,
+        "word": "sein",
+        "taughtBy": "GE-C16-sein",
         "lessonsEarly": 4
       },
       {
@@ -62153,27 +61163,19 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "GE-C01-gute-nacht",
+        "lessonId": "GE-C03-gehen",
         "language": "german",
-        "position": 3,
-        "word": "guten tag",
-        "taughtBy": "GE-C01-guten-tag",
+        "position": 22,
+        "word": "es geht",
+        "taughtBy": "GE-C03-es-geht",
         "lessonsEarly": 3
       },
       {
-        "lessonId": "GE-C01-guten-tag",
+        "lessonId": "GE-C05-wohnen",
         "language": "german",
-        "position": 6,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "GE-C04-bis-morgen",
-        "language": "german",
-        "position": 30,
-        "word": "tschüss",
-        "taughtBy": "GE-C04-tschuss",
+        "position": 37,
+        "word": "ich lerne deutsch",
+        "taughtBy": "GE-C05-ich-lerne-deutsch",
         "lessonsEarly": 3
       },
       {
@@ -62425,67 +61427,43 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "GE-C01-guten-abend",
+        "lessonId": "GE-C01-abend",
         "language": "german",
-        "position": 4,
-        "word": "guten tag",
-        "taughtBy": "GE-C01-guten-tag",
+        "position": 7,
+        "word": "nacht",
+        "taughtBy": "GE-C01-nacht",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "GE-C01-practice",
+        "lessonId": "GE-C01-guten-morgen",
         "language": "german",
-        "position": 10,
+        "position": 6,
+        "word": "guten abend",
+        "taughtBy": "GE-C01-guten-abend",
+        "lessonsEarly": 2
+      },
+      {
+        "lessonId": "GE-C02-heissen",
+        "language": "german",
+        "position": 13,
         "word": "du",
         "taughtBy": "GE-C02-du-sie",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "GE-C01-practice",
+        "lessonId": "GE-C02-heissen",
         "language": "german",
-        "position": 10,
+        "position": 13,
         "word": "sie",
         "taughtBy": "GE-C02-du-sie",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "GE-C02-freut-mich",
-        "language": "german",
-        "position": 13,
-        "word": "ich",
-        "taughtBy": "GE-C02-ich",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "GE-C04-bis-bald",
         "language": "german",
-        "position": 29,
+        "position": 30,
         "word": "bis später",
         "taughtBy": "GE-C04-bis-spater",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "GE-C04-bis-spater",
-        "language": "german",
-        "position": 31,
-        "word": "tschüss",
-        "taughtBy": "GE-C04-tschuss",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "GE-C05-machen",
-        "language": "german",
-        "position": 39,
-        "word": "wohnen",
-        "taughtBy": "GE-C05-wohnen",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein",
-        "language": "german",
-        "position": 63,
-        "word": "sein",
-        "taughtBy": "GE-C16-sein",
         "lessonsEarly": 2
       },
       {
@@ -63057,73 +62035,33 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "position": 0,
-        "word": "der",
-        "taughtBy": "GE-C01-der-die-das",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C01-gute-nacht",
-        "language": "german",
-        "position": 3,
-        "word": "guten abend",
-        "taughtBy": "GE-C01-guten-abend",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C01-guten-abend",
-        "language": "german",
-        "position": 4,
-        "word": "guten morgen",
-        "taughtBy": "GE-C01-guten-morgen",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "GE-C01-guten-morgen",
         "language": "german",
-        "position": 5,
-        "word": "guten tag",
-        "taughtBy": "GE-C01-guten-tag",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C01-guten-tag",
-        "language": "german",
         "position": 6,
-        "word": "hallo",
-        "taughtBy": "GE-C01-hallo",
+        "word": "abend",
+        "taughtBy": "GE-C01-abend",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C02-heissen",
-        "language": "german",
-        "position": 14,
-        "word": "ich",
-        "taughtBy": "GE-C02-ich",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C02-practice",
-        "language": "german",
-        "position": 17,
-        "word": "wie",
-        "taughtBy": "GE-C02-wie",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C03-bitte",
+        "lessonId": "GE-C03-danke",
         "language": "german",
         "position": 20,
-        "word": "danke",
-        "taughtBy": "GE-C03-danke",
+        "word": "bitte",
+        "taughtBy": "GE-C03-bitte",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "GE-C04-auf-wiedersehen",
+        "language": "german",
+        "position": 28,
+        "word": "tschüss",
+        "taughtBy": "GE-C04-tschuss",
         "lessonsEarly": 1
       },
       {
         "lessonId": "GE-C04-bis-bald",
         "language": "german",
-        "position": 29,
+        "position": 30,
         "word": "bis morgen",
         "taughtBy": "GE-C04-bis-morgen",
         "lessonsEarly": 1
@@ -63131,41 +62069,57 @@
       {
         "lessonId": "GE-C04-bis-morgen",
         "language": "german",
-        "position": 30,
+        "position": 31,
         "word": "bis später",
         "taughtBy": "GE-C04-bis-spater",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C04-practice",
+        "lessonId": "GE-C04-tschuss",
         "language": "german",
-        "position": 32,
-        "word": "tschüss",
-        "taughtBy": "GE-C04-tschuss",
+        "position": 29,
+        "word": "bis bald",
+        "taughtBy": "GE-C04-bis-bald",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C05-ich-lerne-deutsch",
+        "lessonId": "GE-C05-lernen",
         "language": "german",
-        "position": 37,
+        "position": 39,
+        "word": "ich lerne deutsch",
+        "taughtBy": "GE-C05-ich-lerne-deutsch",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "GE-C05-machen",
+        "language": "german",
+        "position": 38,
         "word": "lernen",
         "taughtBy": "GE-C05-lernen",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C05-practice",
+        "lessonId": "GE-C05-wohnen",
         "language": "german",
-        "position": 40,
-        "word": "wohnen",
-        "taughtBy": "GE-C05-wohnen",
+        "position": 37,
+        "word": "machen",
+        "taughtBy": "GE-C05-machen",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C08-mittag-mitternacht",
+        "lessonId": "GE-C08-uhr",
         "language": "german",
         "position": 46,
-        "word": "uhr",
-        "taughtBy": "GE-C08-uhr",
+        "word": "mittag",
+        "taughtBy": "GE-C08-mittag-mitternacht",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "GE-C08-uhr",
+        "language": "german",
+        "position": 46,
+        "word": "mitternacht",
+        "taughtBy": "GE-C08-mittag-mitternacht",
         "lessonsEarly": 1
       },
       {
@@ -63201,35 +62155,19 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C13-rot-blau",
+        "lessonId": "GE-C13-schwarz-weiss",
         "language": "german",
         "position": 56,
-        "word": "schwarz",
-        "taughtBy": "GE-C13-schwarz-weiss",
+        "word": "rot",
+        "taughtBy": "GE-C13-rot-blau",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "GE-C13-rot-blau",
+        "lessonId": "GE-C13-schwarz-weiss",
         "language": "german",
         "position": 56,
-        "word": "weiß",
-        "taughtBy": "GE-C13-schwarz-weiss",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C14-alter",
-        "language": "german",
-        "position": 58,
-        "word": "haben",
-        "taughtBy": "GE-C14-haben",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C16-perfekt-sein-agreement",
-        "language": "german",
-        "position": 64,
-        "word": "sein",
-        "taughtBy": "GE-C16-sein",
+        "word": "blau",
+        "taughtBy": "GE-C13-rot-blau",
         "lessonsEarly": 1
       },
       {
@@ -64005,12 +62943,12 @@
       {
         "language": "german",
         "lessonCount": 106,
-        "lessonsWithoutSequence": 66,
-        "forwardPrerequisites": 30,
-        "forwardReviews": 36,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 123,
         "atomsNeverRevisited": 32,
-        "forwardReferences": 64
+        "forwardReferences": 55
       },
       {
         "language": "gujarati",
@@ -64194,10 +63132,10 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 246,
-      "tracksWithUnorderedLessons": 9,
-      "forwardPrerequisites": 108,
-      "forwardReviews": 135,
+      "lessonsWithoutSequence": 180,
+      "tracksWithUnorderedLessons": 8,
+      "forwardPrerequisites": 78,
+      "forwardReviews": 99,
       "atomsTaught": 4680,
       "atomsNeverRevisited": 630,
       "neverRevisitedPercent": 13,
@@ -64207,7 +63145,7 @@
         "R3": 3536,
         "R4": 2053
       },
-      "forwardReferences": 504
+      "forwardReferences": 495
     }
   },
   "scriptClosure": {
@@ -73915,11 +72853,11 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
-        "orderDefects": 132,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 30,
-        "forwardReviews": 36,
-        "forwardReferences": 64,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 55,
         "atomsTaught": 123,
         "atomsNeverRevisited": 32,
         "reinforcementWindowMisses": 181,
@@ -73930,15 +72868,8 @@
         "findings": [
           {
             "language": "german",
-            "kind": "order-integrity",
-            "count": 132,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
-          {
-            "language": "german",
             "kind": "forward-language",
-            "count": 64,
+            "count": 55,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -73980,10 +72911,10 @@
         ],
         "next": {
           "language": "german",
-          "kind": "order-integrity",
-          "count": 132,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 55,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -75441,13 +74372,6 @@
         "detail": "split lessons whose effective duration exceeds the five-minute maximum"
       },
       {
-        "language": "german",
-        "kind": "order-integrity",
-        "count": 132,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
         "language": "french",
         "kind": "order-integrity",
         "count": 113,
@@ -75539,13 +74463,6 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "german",
-        "kind": "forward-language",
-        "count": 64,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
         "language": "french",
         "kind": "forward-language",
         "count": 63,
@@ -75556,6 +74473,13 @@
         "language": "portuguese",
         "kind": "forward-language",
         "count": 59,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "german",
+        "kind": "forward-language",
+        "count": 55,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -76469,7 +75393,7 @@
       "tracksWithNoWritingPractice": 3,
       "tracksWhereWritingStartsLate": 7,
       "atomMeasurementBlindLessons": 497,
-      "findings": 148
+      "findings": 147
     }
   },
   "levelGate": {
@@ -78569,7 +77493,7 @@
         "pen": 3,
         "coreVoice": 95,
         "drivablePercent": 90,
-        "drivablePrefixTotal": 90,
+        "drivablePrefixTotal": 85,
         "chapters": [
           {
             "language": "german",
@@ -78583,7 +77507,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 6,
+            "drivablePrefix": 4,
             "firstNonVoiceLesson": "GE-C01-guten-tag"
           },
           {
@@ -78769,7 +77693,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "GE-C14-haben"
           },
           {
@@ -78798,7 +77722,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "GE-C16-sein"
           },
           {

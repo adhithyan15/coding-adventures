@@ -12,11 +12,11 @@ script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system
 cousin layer: 218 lessons show another script (max 27 glyphs) — context, never charged to the budget
 script closure: 756 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 305 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2220 glyphs and makes 176 lessons clean on its own
-order: 246 lessons with no declared sequence across 9 tracks; 108 prerequisites and 135 reviews pointing forward
+order: 180 lessons with no declared sequence across 8 tracks; 78 prerequisites and 99 reviews pointing forward
 reinforcement: 630 of 4680 atoms never revisited (13%); missed windows R1 1189, R2 3677, R3 3536, R4 2053
-forward references: 504 uses of material a later lesson teaches
+forward references: 495 uses of material a later lesson teaches
 writing stages: 1/23 tracks prove the cumulative pre-A1 ladder; 4 evidence blocks, 0 invalid; 1007 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 148 named track/debt items
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 147 named track/debt items
 writing ramp: 3 track(s) never practise writing; 7 start after lesson one
 gentleness measurement: 497 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 153/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on
@@ -35,7 +35,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   bengali: 14 voice, 56 sight, 10 pen; 86% drivable; 16 chapters, 64 lessons reachable in chapter-prefix order; 55 rescued by a detachable writing segment
   chinese: 31 voice, 4 sight, 28 pen; 54% drivable; 11 chapters, 7 lessons reachable in chapter-prefix order; 3 rescued by a detachable writing segment
   french: 103 voice, 12 sight, 3 pen; 87% drivable; 33 chapters, 87 lessons reachable in chapter-prefix order
-  german: 95 voice, 8 sight, 3 pen; 90% drivable; 31 chapters, 90 lessons reachable in chapter-prefix order
+  german: 95 voice, 8 sight, 3 pen; 90% drivable; 31 chapters, 85 lessons reachable in chapter-prefix order
   gujarati: 16 voice, 43 sight, 10 pen; 83% drivable; 13 chapters, 53 lessons reachable in chapter-prefix order; 41 rescued by a detachable writing segment
   hindi: 189 voice, 39 sight, 45 pen; 83% drivable; 66 chapters, 219 lessons reachable in chapter-prefix order; 37 rescued by a detachable writing segment
   italian: 72 voice, 16 sight, 0 pen; 82% drivable; 25 chapters, 60 lessons reachable in chapter-prefix order
@@ -55,7 +55,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   telugu: 212 voice, 40 sight, 24 pen; 88% drivable; 73 chapters, 233 lessons reachable in chapter-prefix order; 31 rescued by a detachable writing segment
   urdu: 41 voice, 19 sight, 8 pen; 88% drivable; 16 chapters, 59 lessons reachable in chapter-prefix order; 19 rescued by a detachable writing segment
 
-Chapters that cannot be started by ear (drivable prefix 0): 99
+Chapters that cannot be started by ear (drivable prefix 0): 101
   arabic ch3: 0 of 9 (first blocker AR-W07-hook-family-ha-kha)
   arabic ch4: 0 of 8 (first blocker AR-W10-ayn)
   arabic ch8: 0 of 2 (first blocker AR-C08-al-ahad-al-khamis)
