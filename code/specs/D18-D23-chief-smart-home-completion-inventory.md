@@ -2581,6 +2581,33 @@ unauthenticated advertisement into a control session:
 This broadens generic local discovery while also establishing a reusable strict
 protocol core for existing Sonos, Wemo, Roku, and HEOS SSDP adapters.
 
+## Current HomeKit HAP mDNS Discovery Breadth Slice
+
+The next breadth slice adds concrete HomeKit Accessory Protocol IP discovery
+without claiming ownership of setup codes, pairing, or encrypted sessions:
+
+- `smart-home-homekit-discovery-integration` targets Apple's `_hap._tcp.local`
+  service through the shared mDNS scanner and requires the exact device id,
+  configuration number, pairing feature flags, model, protocol version, fixed
+  IP state number, status flags, accessory category, endpoint, and optional
+  setup hash advertised by the HomeKit ADK contract.
+- Device ids normalize to one stable six-octet identity. Decimal fields retain
+  their ADK integer widths, IP state must be exactly one, setup hashes must have
+  the exact four-byte Base64 shape, and future status or feature bits remain
+  preserved as bounded unsigned values.
+- D23 discovery authorization runs before socket I/O. One scan accepts at most
+  64 replies, uses a bounded timeout and record TTL, and isolates malformed or
+  conflicting advertisements as partial failures without replacing the
+  deterministic first identity observation.
+- The runtime opens no HAP TCP connection and performs no setup-code input,
+  SRP pairing, pair verification, encrypted HTTP exchange, accessory read,
+  subscription, or control. Those require separately supervised pairing,
+  secret-custody, session-lifetime, and operation-policy owners.
+
+This broadens local locks, lights, switches, sensors, bridges, cameras, and
+other HomeKit accessory families while preserving the authenticated pairing
+and control boundary.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
