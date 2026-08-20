@@ -281,6 +281,8 @@ const GUJARATI_U = ductusFor("ઉ", "gujarati")!;
 const gujaratiUOutline = gujaratiOutline("ઉ");
 const GUJARATI_UU = ductusFor("ઊ", "gujarati")!;
 const gujaratiUuOutline = gujaratiOutline("ઊ");
+const GUJARATI_VOCALIC_R = ductusFor("ઋ", "gujarati")!;
+const gujaratiVocalicROutline = gujaratiOutline("ઋ");
 const GUJARATI_E = ductusFor("એ", "gujarati")!;
 const gujaratiEOutline = gujaratiOutline("એ");
 const GUJARATI_AI = ductusFor("ઐ", "gujarati")!;
@@ -3623,6 +3625,33 @@ describe("Gujarati ઊ — the complete ઉ run descends a long right tail", () 
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_UU.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઋ — bent body, central stem, then right loop and tail", () => {
+  const steps = ductusSteps(GUJARATI_VOCALIC_R);
+  const strip = ductusFilmstrip(GUJARATI_VOCALIC_R, gujaratiVocalicROutline);
+
+  it("shows three movements across three ordered pen-down runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep right along the upper body, then turn diagonally down-left",
+      "lift, then descend the central stem into its foot",
+      "lift again, circle the right loop, and descend through the tail",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all three runs", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiVocalicROutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(2);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_VOCALIC_R.strokes[2], 1),
     );
   });
 });

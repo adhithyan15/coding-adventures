@@ -5501,6 +5501,56 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઊ"),
   },
+  // t30apps writes Gujarati ઋ as a bent left body, lifts for the central
+  // stem, then lifts again for the right loop and descending tail. These
+  // medians retain that three-path order inside the bundled Noto outline.
+  [ductusKey("gujarati", "ઋ")]: {
+    script: "gujarati",
+    glyph: "ઋ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep right along the upper body, then turn diagonally down-left",
+            path: [
+              { x: 35, y: 475 }, { x: 95, y: 495 }, { x: 160, y: 495 },
+              { x: 220, y: 480 }, { x: 275, y: 450 }, { x: 325, y: 405 },
+              { x: 375, y: 350 }, { x: 330, y: 310 }, { x: 275, y: 275 },
+              { x: 220, y: 240 }, { x: 165, y: 205 }, { x: 115, y: 165 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the central stem into its foot",
+            path: [
+              { x: 447, y: 575 }, { x: 447, y: 460 }, { x: 447, y: 350 },
+              { x: 447, y: 240 }, { x: 447, y: 140 }, { x: 460, y: 80 },
+              { x: 500, y: 40 }, { x: 550, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again, circle the right loop, and descend through the tail",
+            path: [
+              { x: 500, y: 385 }, { x: 555, y: 360 }, { x: 615, y: 350 },
+              { x: 665, y: 365 }, { x: 710, y: 400 }, { x: 720, y: 445 },
+              { x: 700, y: 465 }, { x: 675, y: 455 }, { x: 660, y: 425 },
+              { x: 675, y: 390 }, { x: 720, y: 360 }, { x: 755, y: 320 },
+              { x: 765, y: 270 }, { x: 750, y: 220 }, { x: 715, y: 175 },
+              { x: 675, y: 145 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઋ"),
+  },
   // t30apps writes Gujarati એ as a joined body, a separately descended right
   // stem, then a separate high arc. These fitted medians preserve that
   // three-path, two-lift order across the wider bundled Noto outline.
