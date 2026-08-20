@@ -1,0 +1,274 @@
+{
+  "schema_version": 1,
+  "profile": "zip-owned-raw-rfc1951-v1-portable-consumers",
+  "fixture": "code/specs/fixtures/zip-raw-rfc1951-v1/cases.json",
+  "case_count": 34,
+  "error_id_count": 14,
+  "established_lane_count": 15,
+  "consumers": [
+    {
+      "language": "csharp",
+      "package_root": "code/packages/csharp/zip",
+      "api_source": "code/packages/csharp/zip/RawRfc1951.cs",
+      "fixture_test": "code/packages/csharp/zip/tests/CodingAdventures.Zip.Tests/PortableConformanceTests.cs",
+      "build_files": [
+        "code/packages/csharp/zip/BUILD",
+        "code/packages/csharp/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/csharp/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "RawDeflate",
+        "raw_inflate": "RawInflate",
+        "raw_inflate_counted": "RawInflateCounted",
+        "output_limit": "MaxOutput",
+        "error_taxonomy": "ErrorCodes"
+      }
+    },
+    {
+      "language": "dart",
+      "package_root": "code/packages/dart/zip",
+      "api_source": "code/packages/dart/zip/lib/coding_adventures_zip.dart",
+      "fixture_test": "code/packages/dart/zip/test/portable_conformance_test.dart",
+      "build_files": [
+        "code/packages/dart/zip/BUILD"
+      ],
+      "capability_manifest": "code/packages/dart/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "rawInflateMaxOutput",
+        "error_taxonomy": "RawInflateError"
+      }
+    },
+    {
+      "language": "elixir",
+      "package_root": "code/packages/elixir/zip",
+      "api_source": "code/packages/elixir/zip/lib/coding_adventures/zip.ex",
+      "fixture_test": "code/packages/elixir/zip/test/portable_conformance_test.exs",
+      "build_files": [
+        "code/packages/elixir/zip/BUILD"
+      ],
+      "capability_manifest": "code/packages/elixir/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "raw_deflate",
+        "raw_inflate": "raw_inflate",
+        "raw_inflate_counted": "raw_inflate_counted",
+        "output_limit": "raw_inflate_max_output",
+        "error_taxonomy": "raw_inflate_error_codes"
+      }
+    },
+    {
+      "language": "fsharp",
+      "package_root": "code/packages/fsharp/zip",
+      "api_source": "code/packages/fsharp/zip/Zip.fs",
+      "fixture_test": "code/packages/fsharp/zip/tests/CodingAdventures.Zip.Tests/PortableConformanceTests.fs",
+      "build_files": [
+        "code/packages/fsharp/zip/BUILD",
+        "code/packages/fsharp/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/fsharp/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "maxOutput",
+        "error_taxonomy": "errorCodes"
+      }
+    },
+    {
+      "language": "go",
+      "package_root": "code/packages/go/zip",
+      "api_source": "code/packages/go/zip/zip.go",
+      "fixture_test": "code/packages/go/zip/portable_conformance_test.go",
+      "build_files": [
+        "code/packages/go/zip/BUILD"
+      ],
+      "capability_manifest": "code/packages/go/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "RawDeflate",
+        "raw_inflate": "RawInflate",
+        "raw_inflate_counted": "RawInflateCounted",
+        "output_limit": "RawInflateMaxOutput",
+        "error_taxonomy": "RawInflateErrorCode"
+      }
+    },
+    {
+      "language": "haskell",
+      "package_root": "code/packages/haskell/zip",
+      "api_source": "code/packages/haskell/zip/src/Zip.hs",
+      "fixture_test": "code/packages/haskell/zip/test/PortableConformanceSpec.hs",
+      "build_files": [
+        "code/packages/haskell/zip/BUILD",
+        "code/packages/haskell/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/haskell/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "rawInflateMaxOutput",
+        "error_taxonomy": "rawInflateErrorCodes"
+      }
+    },
+    {
+      "language": "java",
+      "package_root": "code/packages/java/zip",
+      "api_source": "code/packages/java/zip/src/main/java/com/codingadventures/zip/RawRfc1951.java",
+      "fixture_test": "code/packages/java/zip/src/test/java/com/codingadventures/zip/RawRfc1951ConformanceTest.java",
+      "build_files": [
+        "code/packages/java/zip/BUILD",
+        "code/packages/java/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/java/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "MAX_OUTPUT",
+        "error_taxonomy": "ERROR_CODES"
+      }
+    },
+    {
+      "language": "kotlin",
+      "package_root": "code/packages/kotlin/zip",
+      "api_source": "code/packages/kotlin/zip/src/main/kotlin/com/codingadventures/zip/RawRfc1951.kt",
+      "fixture_test": "code/packages/kotlin/zip/src/test/kotlin/com/codingadventures/zip/RawRfc1951ConformanceTest.kt",
+      "build_files": [
+        "code/packages/kotlin/zip/BUILD",
+        "code/packages/kotlin/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/kotlin/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "MAX_RAW_OUTPUT",
+        "error_taxonomy": "RAW_INFLATE_ERROR_CODES"
+      }
+    },
+    {
+      "language": "lua",
+      "package_root": "code/packages/lua/zip",
+      "api_source": "code/packages/lua/zip/src/coding_adventures/zip/init.lua",
+      "fixture_test": "code/packages/lua/zip/tests/test_portable_conformance.lua",
+      "build_files": [
+        "code/packages/lua/zip/BUILD",
+        "code/packages/lua/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/lua/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "raw_deflate",
+        "raw_inflate": "raw_inflate",
+        "raw_inflate_counted": "raw_inflate_counted",
+        "output_limit": "RAW_INFLATE_MAX_OUTPUT",
+        "error_taxonomy": "RAW_INFLATE_ERROR_CODES"
+      }
+    },
+    {
+      "language": "perl",
+      "package_root": "code/packages/perl/zip",
+      "api_source": "code/packages/perl/zip/lib/CodingAdventures/Zip.pm",
+      "fixture_test": "code/packages/perl/zip/t/02-portable-conformance.t",
+      "build_files": [
+        "code/packages/perl/zip/BUILD",
+        "code/packages/perl/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/perl/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "raw_deflate",
+        "raw_inflate": "raw_inflate",
+        "raw_inflate_counted": "raw_inflate_counted",
+        "output_limit": "RAW_INFLATE_MAX_OUTPUT",
+        "error_taxonomy": "raw_inflate_error_codes"
+      }
+    },
+    {
+      "language": "python",
+      "package_root": "code/packages/python/zip",
+      "api_source": "code/packages/python/zip/src/coding_adventures_zip/__init__.py",
+      "fixture_test": "code/packages/python/zip/tests/test_portable_conformance.py",
+      "build_files": [
+        "code/packages/python/zip/BUILD",
+        "code/packages/python/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/python/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "raw_deflate",
+        "raw_inflate": "raw_inflate",
+        "raw_inflate_counted": "raw_inflate_counted",
+        "output_limit": "RAW_INFLATE_MAX_OUTPUT",
+        "error_taxonomy": "RAW_INFLATE_ERROR_CODES"
+      }
+    },
+    {
+      "language": "ruby",
+      "package_root": "code/packages/ruby/zip",
+      "api_source": "code/packages/ruby/zip/lib/coding_adventures_zip.rb",
+      "fixture_test": "code/packages/ruby/zip/test/test_portable_conformance.rb",
+      "build_files": [
+        "code/packages/ruby/zip/BUILD"
+      ],
+      "capability_manifest": "code/packages/ruby/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "raw_deflate",
+        "raw_inflate": "raw_inflate",
+        "raw_inflate_counted": "raw_inflate_counted",
+        "output_limit": "RAW_INFLATE_MAX_OUTPUT",
+        "error_taxonomy": "RAW_INFLATE_ERROR_CODES"
+      }
+    },
+    {
+      "language": "rust",
+      "package_root": "code/packages/rust/zip",
+      "api_source": "code/packages/rust/zip/src/lib.rs",
+      "fixture_test": "code/packages/rust/zip/tests/portable_conformance.rs",
+      "build_files": [
+        "code/packages/rust/zip/BUILD"
+      ],
+      "capability_manifest": "code/packages/rust/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "raw_deflate",
+        "raw_inflate": "raw_inflate",
+        "raw_inflate_counted": "raw_inflate_counted",
+        "output_limit": "RAW_INFLATE_MAX_OUTPUT",
+        "error_taxonomy": "RawInflateErrorCode"
+      }
+    },
+    {
+      "language": "swift",
+      "package_root": "code/packages/swift/zip",
+      "api_source": "code/packages/swift/zip/Sources/Zip/Zip.swift",
+      "fixture_test": "code/packages/swift/zip/Tests/ZipTests/PortableConformanceTests.swift",
+      "build_files": [
+        "code/packages/swift/zip/BUILD",
+        "code/packages/swift/zip/BUILD_windows"
+      ],
+      "capability_manifest": "code/packages/swift/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "rawInflateMaxOutput",
+        "error_taxonomy": "rawInflateErrorCodes"
+      }
+    },
+    {
+      "language": "typescript",
+      "package_root": "code/packages/typescript/zip",
+      "api_source": "code/packages/typescript/zip/src/zip.ts",
+      "fixture_test": "code/packages/typescript/zip/tests/portable-conformance.test.ts",
+      "build_files": [
+        "code/packages/typescript/zip/BUILD"
+      ],
+      "capability_manifest": "code/packages/typescript/zip/required_capabilities.json",
+      "surface": {
+        "raw_deflate": "rawDeflate",
+        "raw_inflate": "rawInflate",
+        "raw_inflate_counted": "rawInflateCounted",
+        "output_limit": "RAW_INFLATE_MAX_OUTPUT",
+        "error_taxonomy": "RawInflateErrorCode"
+      }
+    }
+  ]
+}
