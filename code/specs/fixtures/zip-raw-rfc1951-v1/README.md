@@ -10,6 +10,10 @@ owned by every established ZIP package under CMP09.
 - `cases.json` contains stored, fixed, dynamic, multi-block, foreign-encoder,
   counted-consumption, malformed-stream, output-cap, encoder-interoperability,
   and incremental CRC-32 vectors.
+- `consumers.schema.json` closes the established-lane adoption record.
+- `consumers.json` binds every one of the 15 established ZIP roots to its
+  production API, neutral-corpus test, BUILD front doors, and empty capability
+  manifest.
 
 ## Operations
 
@@ -49,3 +53,15 @@ Run the independent fixture validation from the repository root:
 ```bash
 python -m pytest code/scripts/tests/test_zip_raw_rfc1951_fixtures.py -q
 ```
+
+Run the portable adoption gate from the repository root:
+
+```bash
+python -m pytest code/scripts/tests/test_zip_raw_rfc1951_portable_coverage.py -q
+```
+
+The adoption gate is structural evidence, not a substitute for executing the
+real package front doors. It pins the established denominator to the parity
+reporter, rejects path traversal and cross-wired records, verifies all 34 cases
+and 14 error identifiers remain shared, and requires every production package
+to declare an empty host-capability profile.
