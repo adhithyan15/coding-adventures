@@ -1,0 +1,340 @@
+{
+  "version": 1,
+  "language": "french",
+  "level": "A1",
+  "target": {
+    "name": "DELF A1 tout public",
+    "basis": "external"
+  },
+  "sources": [
+    {
+      "id": "fei-a1-overview",
+      "title": "DELF tout public - niveau A1",
+      "url": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a1?langue=fr",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "fei-a1-candidate-manual",
+      "title": "Manuel du candidat DELF A1",
+      "url": "https://www.france-education-international.fr/document/manuel-candidat-delf-a1",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "fei-a1-examples",
+      "title": "Exemples de sujets - niveau A1",
+      "url": "https://france-education-international.fr/diplome/delf-tout-public/niveau-a1/exemples-sujets?langue=fr",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "fei-a1-speaking-demo",
+      "title": "DELF A1 tout public - document candidat, production orale",
+      "url": "https://www.france-education-international.fr/document/delf-dalf-a1-tp-candidat-ind-sujet-demo",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "fei-a1-speaking-grid",
+      "title": "DELF A1 - grille d'evaluation de la production orale",
+      "url": "https://www.france-education-international.fr/document/grille-po-a1",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 80,
+    "speakingMinutes": {
+      "minimum": 5,
+      "maximum": 7
+    },
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 10,
+    "deliveryModes": [
+      "paper and in-person speaking at an approved examination centre"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 50,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.2,
+      "listening": 0.2,
+      "writing": 0.2,
+      "speaking": 0.2
+    },
+    "note": "Each skill is worth 25 points. France Education international requires at least 50/100 overall and at least 5/25 in every skill; any skill below 5 is eliminatory. The 0.2 values transcribe that 5/25 floor, not the project's eventual stronger readiness standard."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 30,
+      "parts": [
+        {
+          "id": "reading-short-instruction",
+          "promptModes": ["written text", "optional image"],
+          "promptGenres": ["short email", "invitation card", "short personal message"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": ["marking or underlining on the exam paper"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "document word count", "response length for mixed selection and short-answer items", "replay is not applicable to written input", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "reading-orient-in-space",
+          "promptModes": ["written text", "map or image when supplied"],
+          "promptGenres": ["notice", "sign", "public-place directions"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": ["marking or underlining on the exam paper"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "document word count", "response length for mixed selection and short-answer items", "replay is not applicable to written input", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "reading-orient-in-time",
+          "promptModes": ["written text", "optional image"],
+          "promptGenres": ["instruction", "advertisement", "schedule information"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": ["marking or underlining on the exam paper"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "document word count", "response length for mixed selection and short-answer items", "replay is not applicable to written input", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "reading-short-informative-article",
+          "promptModes": ["written text", "optional image"],
+          "promptGenres": ["short informative article"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": ["marking or underlining on the exam paper"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "article word count", "response length for mixed selection and short-answer items", "replay is not applicable to written input", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "reading-published-format-1",
+          "partIds": ["reading-short-instruction", "reading-orient-in-space", "reading-orient-in-time", "reading-short-informative-article"],
+          "note": "Official receptive format 1; question counts and document lengths differ from format 2 and remain uncollapsed.",
+          "sourceIds": ["fei-a1-examples", "fei-a1-candidate-manual"]
+        },
+        {
+          "id": "reading-published-format-2",
+          "partIds": ["reading-short-instruction", "reading-orient-in-space", "reading-orient-in-time", "reading-short-informative-article"],
+          "note": "Official receptive format 2; it preserves the same source-described purpose families with different questions and lengths.",
+          "sourceIds": ["fei-a1-examples", "fei-a1-candidate-manual"]
+        }
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 20,
+      "parts": [
+        {
+          "id": "listening-voicemail",
+          "promptModes": ["recorded audio", "written questions", "optional images"],
+          "promptGenres": ["voicemail message"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "clip duration", "speech rate", "response length for mixed item modes", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "listening-public-announcement",
+          "promptModes": ["recorded audio", "written questions", "optional images"],
+          "promptGenres": ["public-place announcement", "radio announcement"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "clip duration", "speech rate", "response length for mixed item modes", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "listening-simple-instructions",
+          "promptModes": ["recorded audio", "written questions", "optional images"],
+          "promptGenres": ["simple everyday instructions"],
+          "responseModes": ["selected response", "short answer"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["per-format question count", "clip duration", "speech rate", "response length for mixed item modes", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "listening-mini-dialogues",
+          "promptModes": ["recorded audio", "image set"],
+          "promptGenres": ["four or five short everyday dialogues"],
+          "responseModes": ["match each dialogue to one of six images"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["whether the administered form has four or five dialogues", "clip duration", "speech rate", "response length is not applicable to image matching", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "listening-identify-objects",
+          "promptModes": ["recorded audio", "image set"],
+          "promptGenres": ["short descriptions of everyday objects"],
+          "responseModes": ["identify or match objects"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["item count", "clip duration", "speech rate", "response length is not applicable to image matching", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        }
+      ],
+      "variants": [
+        {
+          "id": "listening-four-exercise-format",
+          "partIds": ["listening-voicemail", "listening-public-announcement", "listening-simple-instructions", "listening-mini-dialogues"],
+          "note": "Four-exercise form published on the current A1 overview and described by the candidate manual.",
+          "sourceIds": ["fei-a1-overview", "fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "listening-five-exercise-format",
+          "partIds": ["listening-voicemail", "listening-public-announcement", "listening-simple-instructions", "listening-mini-dialogues", "listening-identify-objects"],
+          "note": "Five-exercise circulating form adds the officially published object-identification family.",
+          "sourceIds": ["fei-a1-candidate-manual", "fei-a1-examples"]
+        }
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 30,
+      "parts": [
+        {
+          "id": "writing-form",
+          "promptModes": ["written instructions", "personal-information form"],
+          "promptGenres": ["everyday form"],
+          "responseModes": ["write requested personal details into form fields"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["supply the requested information intelligibly"] },
+          "aids": { "allowed": ["pen"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["number of form fields", "scenario word count", "response length", "replay is not applicable to written input", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-overview", "fei-a1-candidate-manual", "fei-a1-examples"]
+        },
+        {
+          "id": "writing-personal-message",
+          "promptModes": ["written situation and content instructions"],
+          "promptGenres": ["postcard", "email", "short everyday personal message"],
+          "responseModes": ["continuous written message"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": 40, "maximum": null, "approximate": false },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": ["respect the task and minimum length", "sociolinguistic appropriateness", "inform or describe", "lexicon and spelling", "morphosyntax", "cohesion"]
+          },
+          "aids": { "allowed": ["pen"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["maximum response length", "prompt word count", "replay is not applicable to written input", "part-level raw point ceiling"],
+          "sourceIds": ["fei-a1-overview", "fei-a1-candidate-manual", "fei-a1-examples"]
+        }
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": {
+        "minimum": 5,
+        "maximum": 7
+      },
+      "parts": [
+        {
+          "id": "speaking-directed-interview",
+          "promptModes": ["live examiner questions"],
+          "promptGenres": ["slow, reformulatable questions about self, family, preferences, and activities"],
+          "responseModes": ["live spoken answers about self"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 60, "maximum": 60, "approximate": true },
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 4, "criteria": ["task fulfilment: directed interview"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["question count", "question length", "repetition and reformulation count", "stimulus word count"],
+          "sourceIds": ["fei-a1-speaking-demo", "fei-a1-speaking-grid", "fei-a1-candidate-manual"]
+        },
+        {
+          "id": "speaking-information-exchange",
+          "promptModes": ["six drawn keyword cards", "live examiner responses"],
+          "promptGenres": ["familiar personal-information keywords"],
+          "responseModes": ["ask live questions prompted by the cards"],
+          "items": 6,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 120, "maximum": 120, "approximate": true },
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 4, "criteria": ["task fulfilment: information exchange"] },
+          "aids": { "allowed": ["six exam-provided keyword cards", "ten-minute preparation shared with the role play"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["card word count", "response word count", "repetition policy", "stimulus length"] ,
+          "sourceIds": ["fei-a1-speaking-demo", "fei-a1-speaking-grid", "fei-a1-candidate-manual"]
+        },
+        {
+          "id": "speaking-simulated-dialogue",
+          "promptModes": ["two drawn role-play choices", "live examiner speech", "exam-provided product images and play money"],
+          "promptGenres": ["buying or ordering in an everyday service encounter"],
+          "responseModes": ["choose one role play", "ask for information", "state quantity", "choose and pay", "use greeting and courtesy forms"],
+          "items": 1,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 120, "maximum": 120, "approximate": true },
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 4, "criteria": ["task fulfilment: simulated dialogue"] },
+          "aids": { "allowed": ["two exam-provided role-play choices", "exam-provided product images", "exam-provided play money", "ten-minute preparation shared with the information exchange"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["role-play prompt word count", "response word count", "repetition policy", "stimulus length"],
+          "sourceIds": ["fei-a1-speaking-demo", "fei-a1-speaking-grid", "fei-a1-candidate-manual"]
+        }
+      ]
+    }
+  ]
+}

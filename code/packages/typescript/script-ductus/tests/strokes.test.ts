@@ -131,6 +131,7 @@ const GUJARATI_JA = DUCTUS[ductusKey("gujarati", "જ")];
 const GUJARATI_JHA = DUCTUS[ductusKey("gujarati", "ઝ")];
 const GUJARATI_NYA = DUCTUS[ductusKey("gujarati", "ઞ")];
 const GUJARATI_TTA = DUCTUS[ductusKey("gujarati", "ટ")];
+const GUJARATI_TTHA = DUCTUS[ductusKey("gujarati", "ઠ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2079,6 +2080,17 @@ describe("handwriting ductus", () => {
     expect(path.length).toBeGreaterThanOrEqual(20);
     expect(Math.min(...path.map((point) => point.y))).toBeLessThan(50);
     expect(path.at(-1)!.x).toBeGreaterThan(path[0].x);
+  });
+
+  it("Gujarati ઠ joins its high shoulder, outer bowl, and inward curl", () => {
+    expect(GUJARATI_TTHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_TTHA)).toBe(0);
+    expect(GUJARATI_TTHA.strokes).toHaveLength(1);
+    expect(GUJARATI_TTHA.strokes[0].segments).toHaveLength(1);
+    const path = GUJARATI_TTHA.strokes[0].segments[0].path;
+    expect(path.length).toBeGreaterThanOrEqual(30);
+    expect(path[0].x).toBeGreaterThan(path[6].x);
+    expect(path.at(-1)!.y).toBeGreaterThan(Math.min(...path.map((point) => point.y)));
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4496,6 +4508,15 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ટ animation.*first SVG path/i);
     expect(src.variation).toMatch(
       /one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*rounded upper turn.*diagonally down-left.*broad lower bowl.*right side.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-turn-to-middle-to-lower-bowl order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઠ traces its shoulder, outer bowl, and inward curl to one path", () => {
+    const src = GUJARATI_TTHA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ઠ animation.*first SVG path/i);
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper right.*left across the high shoulder.*descends through the middle.*outer lower bowl.*curls back inward.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*shoulder-to-outer-bowl-to-inner-terminal order.*zero-lift evidence/i,
     );
   });
 
