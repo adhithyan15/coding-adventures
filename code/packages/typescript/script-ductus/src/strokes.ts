@@ -6414,6 +6414,60 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("થ"),
   },
+  // t30apps writes Gujarati દ in one continuous run: around the upper body,
+  // through its narrow middle turn, then around the lower body to the terminal.
+  // This Noto median retains that observed upper-before-lower order.
+  [ductusKey("gujarati", "દ")]: {
+    script: "gujarati",
+    glyph: "દ",
+    strokes: [
+      { segments: [{ label: "circle the upper body, narrow through the middle, and sweep around the lower body into its terminal", path: [
+        { x: 330, y: 555 }, { x: 285, y: 570 }, { x: 235, y: 572 },
+        { x: 185, y: 565 }, { x: 140, y: 545 }, { x: 105, y: 515 },
+        { x: 85, y: 475 }, { x: 85, y: 435 }, { x: 100, y: 400 },
+        { x: 125, y: 370 }, { x: 160, y: 350 }, { x: 205, y: 335 },
+        { x: 240, y: 325 }, { x: 290, y: 325 }, { x: 340, y: 325 },
+        { x: 375, y: 320 }, { x: 330, y: 320 }, { x: 280, y: 320 },
+        { x: 240, y: 325 }, { x: 205, y: 310 }, { x: 170, y: 290 },
+        { x: 140, y: 260 }, { x: 120, y: 225 }, { x: 110, y: 185 },
+        { x: 115, y: 145 }, { x: 135, y: 105 }, { x: 170, y: 75 },
+        { x: 215, y: 50 }, { x: 265, y: 35 }, { x: 315, y: 35 },
+        { x: 355, y: 45 }, { x: 385, y: 65 }, { x: 405, y: 90 },
+        { x: 415, y: 115 }, { x: 440, y: 120 }, { x: 452, y: 105 },
+        { x: 452, y: 85 }, { x: 442, y: 70 }, { x: 420, y: 65 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("દ"),
+  },
+  // t30apps writes Gujarati ધ in two runs: the high-entry joined body through
+  // its right shoulder, then the separate tall spine and foot. These Noto
+  // medians preserve the observed body-before-spine order.
+  [ductusKey("gujarati", "ધ")]: {
+    script: "gujarati",
+    glyph: "ધ",
+    strokes: [
+      { segments: [{ label: "descend from the high entry through the turns and sweep around the broad body into the right shoulder", path: [
+        { x: 210, y: 620 }, { x: 175, y: 600 }, { x: 140, y: 575 },
+        { x: 110, y: 545 }, { x: 90, y: 510 }, { x: 82, y: 475 },
+        { x: 88, y: 440 }, { x: 105, y: 410 }, { x: 130, y: 385 },
+        { x: 165, y: 365 }, { x: 210, y: 355 }, { x: 260, y: 360 },
+        { x: 305, y: 375 }, { x: 275, y: 370 }, { x: 235, y: 355 },
+        { x: 195, y: 335 }, { x: 165, y: 305 }, { x: 145, y: 270 },
+        { x: 140, y: 230 }, { x: 150, y: 195 }, { x: 175, y: 165 },
+        { x: 210, y: 145 }, { x: 255, y: 135 }, { x: 300, y: 140 },
+        { x: 345, y: 155 }, { x: 385, y: 180 }, { x: 420, y: 215 },
+        { x: 450, y: 245 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 471, y: 585 }, { x: 471, y: 520 }, { x: 471, y: 450 },
+        { x: 471, y: 380 }, { x: 471, y: 310 }, { x: 471, y: 240 },
+        { x: 471, y: 175 }, { x: 473, y: 125 }, { x: 481, y: 90 },
+        { x: 500, y: 62 }, { x: 530, y: 45 }, { x: 562, y: 38 },
+        { x: 585, y: 38 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ધ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

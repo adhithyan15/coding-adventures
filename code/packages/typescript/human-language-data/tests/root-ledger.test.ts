@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(3080); // Persian's schema-v2 opener exposes its s-l-m etymon atom.
-    expect(l.summary.underspent).toBe(2965); // The new Persian etymon begins below the reuse floor.
-    expect(l.summary.neverSpent).toBe(2036); // Persian's chapter-1 payoff re-spends one existing root while adding the etymon atom.
+    expect(l.summary.roots).toBe(3081); // Tamil and Persian schema-v2 openers expose their etymon atoms.
+    expect(l.summary.underspent).toBe(2966); // Both new opener etymons begin below the reuse floor.
+    expect(l.summary.neverSpent).toBe(2036); // Persian's Chapter-1 payoff re-spends one existing root while adding its etymon atom.
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -202,7 +202,7 @@ describe("the committed corpus", () => {
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
     // +53 roots, +25 etymon-atom: vocabulary wave 5.
-    expect(byNamespace).toEqual({ roots: 2194, "etymon-atom": 886 }); // +1: Persian's migrated opener etymon.
+    expect(byNamespace).toEqual({ roots: 2194, "etymon-atom": 887 }); // +2: Tamil and Persian opener etymons.
   });
 
   it("pins Spanish, the pilot track", () => {
