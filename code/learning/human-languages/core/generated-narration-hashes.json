@@ -2870,7 +2870,7 @@
     {
       "language": "hindi",
       "chapter": 32,
-      "sourceHash": "fnv1a64:fda23278fd78481e",
+      "sourceHash": "fnv1a64:f2fa269d801f0a4f",
       "lessonIds": [
         "HI-C32-shubh-sandhya",
         "HI-C32-evening-register"
@@ -2879,13 +2879,13 @@
       "drivablePrefix": 2,
       "text": "hindi/narration/ch32.txt",
       "json": "hindi/narration/ch32.json",
-      "textHash": "fnv1a64:62436b5b66d7f656",
-      "jsonHash": "fnv1a64:5bbf63629f175f5a"
+      "textHash": "fnv1a64:9eebce271d08fac0",
+      "jsonHash": "fnv1a64:08a8829c7602eff5"
     },
     {
       "language": "hindi",
       "chapter": 33,
-      "sourceHash": "fnv1a64:7ea738cf085a92be",
+      "sourceHash": "fnv1a64:62e659a8f3fef824",
       "lessonIds": [
         "HI-C33-shubh-dopahar"
       ],
@@ -2893,8 +2893,8 @@
       "drivablePrefix": 1,
       "text": "hindi/narration/ch33.txt",
       "json": "hindi/narration/ch33.json",
-      "textHash": "fnv1a64:6a0200b99c6c8314",
-      "jsonHash": "fnv1a64:2048b6c89e1283c3"
+      "textHash": "fnv1a64:749b59cbbde21161",
+      "jsonHash": "fnv1a64:cdce441391d6f8ae"
     },
     {
       "language": "hindi",

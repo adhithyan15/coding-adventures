@@ -4,7 +4,7 @@
   "chapter": 33,
   "title": "Good Afternoon",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:7ea738cf085a92be",
+  "sourceHash": "fnv1a64:62e659a8f3fef824",
   "lessons": [
     {
       "id": "HI-C33-shubh-dopahar",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:9d84a15fe3b1a2f5",
+      "sourceHash": "fnv1a64:843cef41c7488f23",
       "notice": null,
       "blocks": [
         {
@@ -42,7 +42,7 @@
         {
           "index": 1,
           "type": "input",
-          "title": "You'll want to know — शुभ दोपहर — \"good afternoon,\" using the widened सense",
+          "title": "You'll want to know — शुभ दोपहर — \"good afternoon,\" using the widened sense",
           "segments": [
             {
               "kind": "speech",
