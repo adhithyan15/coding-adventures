@@ -113,6 +113,49 @@ public func dosDatetime(year: UInt16, month: UInt16, day: UInt16,
 /// date field: (0<<9)|(1<<5)|1 = 33 = 0x0021; time = 0 → 0x00210000.
 public let dosEpoch: UInt32 = 0x0021_0000
 
+/// Default and hard ceiling for raw RFC 1951 inflation: 256 MiB.
+public let rawInflateMaxOutput = 268_435_456
+
+/// Closed, payload-blind error taxonomy for the portable raw inflater.
+public let rawInflateErrorCodes = [
+    "invalid-output-limit",
+    "unexpected-eof",
+    "reserved-block-type",
+    "stored-length-mismatch",
+    "huffman-oversubscribed",
+    "incomplete-code-length-tree",
+    "incomplete-literal-length-tree",
+    "incomplete-distance-tree",
+    "repeat-without-previous",
+    "repeat-overrun",
+    "invalid-literal-length-symbol",
+    "reserved-distance-symbol",
+    "invalid-back-reference",
+    "output-limit-exceeded",
+]
+
+/// A stable raw-inflate failure. Its description is exactly its payload-blind code.
+public struct RawInflateError: Error, Equatable, CustomStringConvertible {
+    public let code: String
+
+    fileprivate init(_ code: String) {
+        self.code = code
+    }
+
+    public var description: String { code }
+}
+
+/// Successful raw-inflate output plus the exact number of input bytes consumed.
+public struct RawInflateResult: Equatable {
+    public let output: [UInt8]
+    public let bytesConsumed: Int
+
+    public init(output: [UInt8], bytesConsumed: Int) {
+        self.output = output
+        self.bytesConsumed = bytesConsumed
+    }
+}
+
 // ============================================================================
 // RFC 1951 DEFLATE — Bit I/O
 // ============================================================================
@@ -197,18 +240,6 @@ private struct BitReader {
         return val
     }
 
-    /// Read `nbits` bits and reverse them (for decoding Huffman codes MSB-first).
-    mutating func readMSB(_ nbits: Int) -> UInt32? {
-        guard let v = readLSB(nbits) else { return nil }
-        var c = v
-        var reversed: UInt32 = 0
-        for _ in 0..<nbits {
-            reversed = (reversed << 1) | (c & 1)
-            c >>= 1
-        }
-        return reversed
-    }
-
     /// Discard any partial byte, aligning to the next byte boundary.
     mutating func align() {
         let discard = bits % 8
@@ -218,17 +249,6 @@ private struct BitReader {
         }
     }
 
-    /// Read `n` bytes as [UInt8], byte-aligned.
-    mutating func readBytes(_ n: Int) -> [UInt8]? {
-        guard fill(n * 8) else { return nil }
-        var result = [UInt8]()
-        result.reserveCapacity(n)
-        for _ in 0..<n {
-            guard let b = readLSB(8) else { return nil }
-            result.append(UInt8(b))
-        }
-        return result
-    }
 }
 
 // ============================================================================
@@ -256,30 +276,6 @@ private func fixedLLEncode(_ sym: Int) -> (code: UInt32, nbits: Int) {
     case 256...279: return (UInt32(sym - 256), 7)
     case 280...287: return (UInt32(0b1100_0000) + UInt32(sym - 280), 8)
     default: fatalError("fixedLLEncode: invalid LL symbol \(sym)")
-    }
-}
-
-/// Decode a Huffman code from `br` using the RFC 1951 fixed LL table.
-///
-/// We read bits incrementally — first 7, then up to 9 — and decode in order
-/// of increasing code length per the canonical Huffman property.
-private func fixedLLDecode(_ br: inout BitReader) -> Int? {
-    guard let v7 = br.readMSB(7) else { return nil }
-    if v7 <= 23 {
-        return Int(v7) + 256  // 7-bit codes: symbols 256-279
-    }
-    guard let b1 = br.readLSB(1) else { return nil }
-    let v8 = (v7 << 1) | b1
-    switch v8 {
-    case 48...191:  return Int(v8 - 48)             // literals 0-143
-    case 192...199: return Int(v8 + 88)             // symbols 280-287 (192+88=280)
-    default:
-        guard let b2 = br.readLSB(1) else { return nil }
-        let v9 = (v8 << 1) | b2
-        if v9 >= 400 && v9 <= 511 {
-            return Int(v9 - 256)                    // literals 144-255 (400-256=144)
-        }
-        return nil
     }
 }
 
@@ -402,123 +398,311 @@ func deflateCompress(_ data: [UInt8]) -> [UInt8] {
     return bw.finish()
 }
 
+/// Compress bytes to a raw RFC 1951 stream with no ZIP, zlib, or gzip framing.
+public func rawDeflate(_ data: [UInt8]) -> [UInt8] {
+    deflateCompress(data)
+}
+
 // ============================================================================
 // RFC 1951 DEFLATE — Decompress
 // ============================================================================
 //
-// Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-// Dynamic Huffman blocks (BTYPE=10) throw — we only produce BTYPE=01,
-// but we must be able to decompress stored blocks written by other tools.
-//
-// Zip-bomb guard: 256 MiB total decompressed output limit.
+// Handles stored, fixed-Huffman, dynamic-Huffman, and multi-block streams.
+// Output is bounded by a validated caller ceiling no greater than 256 MiB.
 
-private let maxDecompressedSize = 256 * 1024 * 1024
+private struct HuffmanTable {
+    let codesByLength: [[UInt32: Int]]
+    let maximumLength: Int
 
-/// Decompress a raw RFC 1951 DEFLATE bit-stream into its original bytes.
-/// Throws `ZipError` on malformed or unsupported (BTYPE=10) input.
-func deflateDecompress(_ data: [UInt8]) throws -> [UInt8] {
-    var br = BitReader(data)
-    var out = [UInt8]()
+    func decode(_ reader: inout BitReader) throws -> Int {
+        guard maximumLength > 0 else {
+            throw RawInflateError("unexpected-eof")
+        }
+        var code: UInt32 = 0
+        for length in 1...maximumLength {
+            guard let bit = reader.readLSB(1) else {
+                throw RawInflateError("unexpected-eof")
+            }
+            code = (code << 1) | bit
+            if let symbol = codesByLength[length][code] {
+                return symbol
+            }
+        }
+        throw RawInflateError("unexpected-eof")
+    }
+}
+
+private enum HuffmanCompleteness {
+    case codeLength
+    case literalLength
+    case distance
+}
+
+private func buildHuffman(
+    lengths: [Int],
+    completeness: HuffmanCompleteness
+) throws -> HuffmanTable {
+    var counts = [Int](repeating: 0, count: 16)
+    for length in lengths where length > 0 {
+        guard length <= 15 else {
+            throw RawInflateError("huffman-oversubscribed")
+        }
+        counts[length] += 1
+    }
+
+    var left = 1
+    for length in 1...15 {
+        left = (left * 2) - counts[length]
+        if left < 0 {
+            throw RawInflateError("huffman-oversubscribed")
+        }
+    }
+
+    let symbolCount = counts.reduce(0, +)
+    if left != 0 {
+        switch completeness {
+        case .codeLength:
+            throw RawInflateError("incomplete-code-length-tree")
+        case .literalLength:
+            throw RawInflateError("incomplete-literal-length-tree")
+        case .distance:
+            let permittedSingleCode = symbolCount == 1 && counts[1] == 1
+            guard symbolCount == 0 || permittedSingleCode else {
+                throw RawInflateError("incomplete-distance-tree")
+            }
+        }
+    }
+
+    var nextCode = [Int](repeating: 0, count: 16)
+    var code = 0
+    for length in 1...15 {
+        code = (code + counts[length - 1]) << 1
+        nextCode[length] = code
+    }
+
+    var tables = Array(repeating: [UInt32: Int](), count: 16)
+    var maximumLength = 0
+    for (symbol, length) in lengths.enumerated() where length > 0 {
+        tables[length][UInt32(nextCode[length])] = symbol
+        nextCode[length] += 1
+        maximumLength = max(maximumLength, length)
+    }
+    return HuffmanTable(codesByLength: tables, maximumLength: maximumLength)
+}
+
+private func fixedTables() throws -> (literalLength: HuffmanTable, distance: HuffmanTable) {
+    var literalLengths = [Int](repeating: 0, count: 288)
+    for symbol in 0...143 { literalLengths[symbol] = 8 }
+    for symbol in 144...255 { literalLengths[symbol] = 9 }
+    for symbol in 256...279 { literalLengths[symbol] = 7 }
+    for symbol in 280...287 { literalLengths[symbol] = 8 }
+    let distanceLengths = [Int](repeating: 5, count: 32)
+    return (
+        try buildHuffman(lengths: literalLengths, completeness: .literalLength),
+        try buildHuffman(lengths: distanceLengths, completeness: .distance)
+    )
+}
+
+private func readDynamicTables(
+    _ reader: inout BitReader
+) throws -> (literalLength: HuffmanTable, distance: HuffmanTable) {
+    guard let rawLiteralCount = reader.readLSB(5),
+          let rawDistanceCount = reader.readLSB(5),
+          let rawCodeLengthCount = reader.readLSB(4) else {
+        throw RawInflateError("unexpected-eof")
+    }
+    let literalCount = Int(rawLiteralCount) + 257
+    let distanceCount = Int(rawDistanceCount) + 1
+    let codeLengthCount = Int(rawCodeLengthCount) + 4
+    guard literalCount <= 286 else {
+        throw RawInflateError("invalid-literal-length-symbol")
+    }
+
+    let order = [16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15]
+    var codeLengths = [Int](repeating: 0, count: 19)
+    for index in 0..<codeLengthCount {
+        guard let length = reader.readLSB(3) else {
+            throw RawInflateError("unexpected-eof")
+        }
+        codeLengths[order[index]] = Int(length)
+    }
+    let codeLengthTable = try buildHuffman(lengths: codeLengths, completeness: .codeLength)
+
+    let total = literalCount + distanceCount
+    var lengths: [Int] = []
+    lengths.reserveCapacity(total)
+    while lengths.count < total {
+        let symbol = try codeLengthTable.decode(&reader)
+        switch symbol {
+        case 0...15:
+            lengths.append(symbol)
+        case 16:
+            guard let previous = lengths.last else {
+                throw RawInflateError("repeat-without-previous")
+            }
+            guard let extra = reader.readLSB(2) else {
+                throw RawInflateError("unexpected-eof")
+            }
+            let count = Int(extra) + 3
+            guard lengths.count + count <= total else {
+                throw RawInflateError("repeat-overrun")
+            }
+            lengths.append(contentsOf: repeatElement(previous, count: count))
+        case 17:
+            guard let extra = reader.readLSB(3) else {
+                throw RawInflateError("unexpected-eof")
+            }
+            let count = Int(extra) + 3
+            guard lengths.count + count <= total else {
+                throw RawInflateError("repeat-overrun")
+            }
+            lengths.append(contentsOf: repeatElement(0, count: count))
+        case 18:
+            guard let extra = reader.readLSB(7) else {
+                throw RawInflateError("unexpected-eof")
+            }
+            let count = Int(extra) + 11
+            guard lengths.count + count <= total else {
+                throw RawInflateError("repeat-overrun")
+            }
+            lengths.append(contentsOf: repeatElement(0, count: count))
+        default:
+            throw RawInflateError("unexpected-eof")
+        }
+    }
+
+    let literalLengths = Array(lengths[..<literalCount])
+    let distanceLengths = Array(lengths[literalCount...])
+    guard literalLengths[256] != 0 else {
+        throw RawInflateError("incomplete-literal-length-tree")
+    }
+    return (
+        try buildHuffman(lengths: literalLengths, completeness: .literalLength),
+        try buildHuffman(lengths: distanceLengths, completeness: .distance)
+    )
+}
+
+private func ensureOutputCapacity(_ count: Int, outputCount: Int, maximum: Int) throws {
+    guard count <= maximum - outputCount else {
+        throw RawInflateError("output-limit-exceeded")
+    }
+}
+
+private func decodeCompressedBlock(
+    reader: inout BitReader,
+    output: inout [UInt8],
+    literalLength: HuffmanTable,
+    distance: HuffmanTable,
+    maximumOutput: Int
+) throws {
+    while true {
+        let symbol = try literalLength.decode(&reader)
+        switch symbol {
+        case 0...255:
+            try ensureOutputCapacity(1, outputCount: output.count, maximum: maximumOutput)
+            output.append(UInt8(symbol))
+        case 256:
+            return
+        case 257...285:
+            let (baseLength, extraLengthBits) = lengthTable[symbol - 257]
+            guard let extraLength = reader.readLSB(extraLengthBits) else {
+                throw RawInflateError("unexpected-eof")
+            }
+            let length = baseLength + Int(extraLength)
+            let distanceSymbol = try distance.decode(&reader)
+            guard distanceSymbol < 30 else {
+                throw RawInflateError("reserved-distance-symbol")
+            }
+            let (baseDistance, extraDistanceBits) = distTable[distanceSymbol]
+            guard let extraDistance = reader.readLSB(extraDistanceBits) else {
+                throw RawInflateError("unexpected-eof")
+            }
+            let backwardDistance = baseDistance + Int(extraDistance)
+            guard backwardDistance > 0, backwardDistance <= output.count else {
+                throw RawInflateError("invalid-back-reference")
+            }
+            try ensureOutputCapacity(length, outputCount: output.count, maximum: maximumOutput)
+            for _ in 0..<length {
+                try ensureOutputCapacity(1, outputCount: output.count, maximum: maximumOutput)
+                output.append(output[output.count - backwardDistance])
+            }
+        default:
+            throw RawInflateError("invalid-literal-length-symbol")
+        }
+    }
+}
+
+/// Inflate a raw RFC 1951 stream and report the exact final byte reached.
+public func rawInflateCounted(
+    _ data: [UInt8],
+    maxOutput: Int = rawInflateMaxOutput
+) throws -> RawInflateResult {
+    guard maxOutput >= 0, maxOutput <= rawInflateMaxOutput else {
+        throw RawInflateError("invalid-output-limit")
+    }
+    var reader = BitReader(data)
+    var output: [UInt8] = []
 
     while true {
-        guard let bfinal = br.readLSB(1) else {
-            throw ZipError.malformed("deflate: unexpected EOF reading BFINAL")
+        guard let final = reader.readLSB(1), let type = reader.readLSB(2) else {
+            throw RawInflateError("unexpected-eof")
         }
-        guard let btype = br.readLSB(2) else {
-            throw ZipError.malformed("deflate: unexpected EOF reading BTYPE")
-        }
-
-        switch btype {
-        case 0b00:
-            // ── Stored block ──────────────────────────────────────────────
-            br.align()
-            guard let len16 = br.readLSB(16),
-                  let nlen16 = br.readLSB(16) else {
-                throw ZipError.malformed("deflate: EOF reading stored LEN/NLEN")
+        switch type {
+        case 0:
+            reader.align()
+            guard let length = reader.readLSB(16),
+                  let complement = reader.readLSB(16) else {
+                throw RawInflateError("unexpected-eof")
             }
-            let len = Int(len16)
-            if (nlen16 ^ 0xFFFF) != len16 {
-                throw ZipError.malformed("deflate: stored block LEN/NLEN mismatch")
+            guard length == (complement ^ 0xFFFF) else {
+                throw RawInflateError("stored-length-mismatch")
             }
-            if out.count + len > maxDecompressedSize {
-                throw ZipError.malformed("deflate: output size limit exceeded")
-            }
-            for _ in 0..<len {
-                guard let b = br.readLSB(8) else {
-                    throw ZipError.malformed("deflate: EOF inside stored block data")
+            try ensureOutputCapacity(Int(length), outputCount: output.count, maximum: maxOutput)
+            for _ in 0..<Int(length) {
+                try ensureOutputCapacity(1, outputCount: output.count, maximum: maxOutput)
+                guard let byte = reader.readLSB(8) else {
+                    throw RawInflateError("unexpected-eof")
                 }
-                out.append(UInt8(b))
+                output.append(UInt8(byte))
             }
-
-        case 0b01:
-            // ── Fixed Huffman block ───────────────────────────────────────
-            while true {
-                guard let sym = fixedLLDecode(&br) else {
-                    throw ZipError.malformed("deflate: EOF decoding fixed Huffman symbol")
-                }
-                switch sym {
-                case 0...255:
-                    if out.count >= maxDecompressedSize {
-                        throw ZipError.malformed("deflate: output size limit exceeded")
-                    }
-                    out.append(UInt8(sym))
-
-                case 256:
-                    break  // end-of-block — exit the while-true loop below
-
-                case 257...285:
-                    let idx = sym - 257
-                    guard idx < lengthTable.count else {
-                        throw ZipError.malformed("deflate: invalid length sym \(sym)")
-                    }
-                    let (baseLen, extraLenBits) = lengthTable[idx]
-                    guard let extraLen = br.readLSB(extraLenBits) else {
-                        throw ZipError.malformed("deflate: EOF reading length extra bits")
-                    }
-                    let length = baseLen + Int(extraLen)
-
-                    guard let distCode = br.readMSB(5) else {
-                        throw ZipError.malformed("deflate: EOF reading distance code")
-                    }
-                    let dc = Int(distCode)
-                    guard dc < distTable.count else {
-                        throw ZipError.malformed("deflate: invalid distance code \(dc)")
-                    }
-                    let (baseDist, extraDistBits) = distTable[dc]
-                    guard let extraDist = br.readLSB(extraDistBits) else {
-                        throw ZipError.malformed("deflate: EOF reading distance extra bits")
-                    }
-                    let offset = baseDist + Int(extraDist)
-
-                    guard offset <= out.count else {
-                        throw ZipError.malformed("deflate: back-reference offset \(offset) > output \(out.count)")
-                    }
-                    if out.count + length > maxDecompressedSize {
-                        throw ZipError.malformed("deflate: output size limit exceeded")
-                    }
-                    // Copy byte-by-byte to handle overlapping matches
-                    // (e.g. offset=1, length=10 encodes a run of one byte × 10).
-                    for _ in 0..<length {
-                        let src = out.count - offset
-                        out.append(out[src])
-                    }
-
-                default:
-                    throw ZipError.malformed("deflate: invalid LL symbol \(sym)")
-                }
-                if sym == 256 { break }
-            }
-
-        case 0b10:
-            throw ZipError.malformed("deflate: dynamic Huffman blocks (BTYPE=10) not supported")
-
+        case 1:
+            let tables = try fixedTables()
+            try decodeCompressedBlock(
+                reader: &reader,
+                output: &output,
+                literalLength: tables.literalLength,
+                distance: tables.distance,
+                maximumOutput: maxOutput
+            )
+        case 2:
+            let tables = try readDynamicTables(&reader)
+            try decodeCompressedBlock(
+                reader: &reader,
+                output: &output,
+                literalLength: tables.literalLength,
+                distance: tables.distance,
+                maximumOutput: maxOutput
+            )
         default:
-            throw ZipError.malformed("deflate: reserved BTYPE=11")
+            throw RawInflateError("reserved-block-type")
         }
-
-        if bfinal == 1 { break }
+        if final == 1 {
+            return RawInflateResult(output: output, bytesConsumed: reader.pos)
+        }
     }
-    return out
+}
+
+/// Inflate a raw RFC 1951 stream with a caller-lowerable output ceiling.
+public func rawInflate(
+    _ data: [UInt8],
+    maxOutput: Int = rawInflateMaxOutput
+) throws -> [UInt8] {
+    try rawInflateCounted(data, maxOutput: maxOutput).output
+}
+
+/// Historical package-private name retained for source compatibility.
+func deflateDecompress(_ data: [UInt8]) throws -> [UInt8] {
+    try rawInflate(data)
 }
 
 // ============================================================================
@@ -867,23 +1051,27 @@ public struct ZipReader {
         case 0:
             decompressed = compressed
         case 8:
-            decompressed = try deflateDecompress(compressed)
+            let result = try rawInflateCounted(compressed, maxOutput: Int(entry.size))
+            guard result.bytesConsumed == compressed.count else {
+                throw ZipError.malformed("zip: compressed payload contains trailing bytes")
+            }
+            decompressed = result.output
         default:
             throw ZipError.unsupported("zip: unsupported compression method \(entry.method) for '\(entry.name)'")
         }
 
-        // Trim to declared uncompressed size (guards against decompressor over-read).
-        let trimmed = decompressed.count > Int(entry.size)
-            ? Array(decompressed[..<Int(entry.size)]) : decompressed
+        guard decompressed.count == Int(entry.size) else {
+            throw ZipError.malformed("zip: uncompressed size does not match the directory")
+        }
 
-        let actualCRC = crc32(trimmed)
+        let actualCRC = crc32(decompressed)
         if actualCRC != entry.crc32 {
             throw ZipError.crcMismatch(
                 "zip: CRC-32 mismatch for '\(entry.name)': expected \(String(entry.crc32, radix: 16)), got \(String(actualCRC, radix: 16))"
             )
         }
 
-        return trimmed
+        return decompressed
     }
 
     /// Find an entry by name and return its decompressed data.

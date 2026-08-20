@@ -170,7 +170,7 @@ the atom budget, every atom revisited twice. Every criterion is scoped **at or b
 the level** — Spanish teaches 113 headwords in total but only **44** at or below
 pre-A1, and it is the 44 the gate judges.
 
-**Zero of 22 tracks have attained even pre-A1.** That gap between the two numbers is
+**Zero of 23 tracks have attained even pre-A1.** That gap between the two numbers is
 what let "Spanish reaches A2" stand on fourteen present-tense lessons.
 
 ### What to do next — the computed backlog (HL15)
@@ -185,13 +185,13 @@ The gate above says what is *wrong*. This says what to *do* about it, and it is 
 pure function of the same measurements rather than a list somebody maintains:
 
 ```text
-22 tracks, 0 done; 118 enumerable item(s) today, ~10,190 projected to C2
+23 tracks, 0 done; 123 enumerable item(s) today, ~10,654 projected to C2
 
-    1. [pre-A1] assessment-contract — japanese
+    1. [pre-A1] assessment-contract — marwadi
        require independent four-skill passes, a writing ramp, and timed full mocks
-    2. [pre-A1] assessment-contract — chinese
+    2. [pre-A1] assessment-contract — japanese
        require independent four-skill passes, a writing ramp, and timed full mocks
-    3. [pre-A1] assessment-contract — gujarati
+    3. [pre-A1] assessment-contract — chinese
        require independent four-skill passes, a writing ramp, and timed full mocks
 ```
 
@@ -212,6 +212,24 @@ on. See `code/specs/HL15-the-completion-plan.md` §4.
 Three of the eight families report `null` rather than a number in the projection.
 That means **not projectable** — reinforcement debt at B1 is a function of lessons
 nobody has written — which is a different fact from zero.
+
+### The super-gentle cross-language queue (HL17)
+
+```bash
+npm run report:gentle-ramp
+npm run report:gentle-ramp -- --format json
+```
+
+The completion plan measures the climb to the assessment target. This smaller
+report answers a different question: **where will the learner hit the next cliff?**
+It joins duration, atom and glyph load, order, forward language, script closure,
+writing, retrieval and chapter payoffs for every active track.
+
+The output intentionally has no composite score. A row retains its own unit —
+seconds, lessons, glyphs, dependency edges or retrieval windows — so a severe
+opening defect cannot be averaged away. Writing exposure does not count as writing
+practice, and the report names how many opening lessons precede the first real
+writing/script lesson or block.
 
 ### Continuity — does the course have a memory of itself? (HL09)
 

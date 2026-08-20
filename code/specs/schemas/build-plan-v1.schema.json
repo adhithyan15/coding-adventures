@@ -54,6 +54,19 @@
         "type": "boolean"
       }
     },
+    "platform_overrides": {
+      "type": "object",
+      "propertyNames": {
+        "enum": [
+          "linux",
+          "darwin",
+          "windows"
+        ]
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/platform_state"
+      }
+    },
     "shards": {
       "type": "array",
       "items": {
@@ -69,8 +82,13 @@
     },
     "package_name": {
       "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9._-]*/[a-z0-9][a-z0-9._/-]*$",
+      "pattern": "^[a-z0-9][a-z0-9._-]*/[A-Za-z0-9][A-Za-z0-9._/-]*$",
       "maxLength": 240
+    },
+    "dependency_declaration": {
+      "type": "string",
+      "pattern": "^(?:[A-Za-z0-9][A-Za-z0-9._/-]*|//[A-Za-z0-9][A-Za-z0-9._/-]*(?::[A-Za-z0-9][A-Za-z0-9._-]*)?)$",
+      "maxLength": 512
     },
     "safe_path": {
       "type": "string",
@@ -133,10 +151,37 @@
         "declared_deps": {
           "type": "array",
           "items": {
-            "$ref": "#/$defs/package_name"
+            "$ref": "#/$defs/dependency_declaration"
           },
           "uniqueItems": true,
           "default": []
+        }
+      }
+    },
+    "platform_state": {
+      "type": "object",
+      "required": [
+        "dependency_edges",
+        "affected_packages"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "dependency_edges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/edge"
+          },
+          "uniqueItems": true
+        },
+        "affected_packages": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/package_name"
+          },
+          "uniqueItems": true
         }
       }
     },

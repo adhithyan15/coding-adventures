@@ -32,17 +32,18 @@ is readable — the reactor pattern behind nginx, Redis, and Node.js. The IRC
 
 ## Multi-core
 
-By default the server runs **one reactor shard per CPU** (a `ShardedTcpRuntime`):
-N independent reactors on N threads, each with its own kqueue/epoll/IOCP instance,
-with the kernel load-balancing accepted connections across them via
-`SO_REUSEPORT`. TCP accept, reads, CRLF framing, and parsing all run in parallel
-across cores; only the `IRCServer` state transition is serialized (by a single
-shared mutex), and that critical section is small relative to the per-message
-I/O. Because every `ConnectionId` encodes its owning shard, a response destined
+On supported Unix platforms, the server defaults to **one reactor shard per
+CPU** (a `ShardedTcpRuntime`): N independent reactors on N threads, with accept
+distribution handled by `SO_REUSEPORT` or the runtime's accept fan-out. Windows
+currently runs one IOCP/WSAPoll reactor because its TCP provider does not support
+`SO_REUSEPORT`; multi-shard Windows support requires a single-listener accept
+fan-out. TCP accept, reads, CRLF framing, and parsing run in parallel across
+shards; only the `IRCServer` state transition is serialized by a single shared
+mutex. Because every `ConnectionId` encodes its owning shard, a response destined
 for a client on another reactor is routed straight there by the shard-aware
-`TcpMailbox` — so cross-shard broadcast just works. Use
+`TcpMailbox`. Use
 `IrcReactorServer::bind_with_worker_count(config, n)` to pin the shard count
-(`n = 1` reproduces the original single-reactor engine).
+(`n = 1` reproduces the original single-reactor engine; Windows clamps `n` to 1).
 
 ## The broadcast mechanism
 

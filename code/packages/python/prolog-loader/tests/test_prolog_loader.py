@@ -1492,7 +1492,7 @@ class TestPrologGoalAdapter:
     ) -> None:
         source_path = tmp_path / "nested" / "story.data"
         source_path.parent.mkdir()
-        source_path.write_text("tea\n", encoding="utf-8")
+        source_path.write_text("tea\n", encoding="utf-8", newline="\n")
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
         dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
         parsed = parse_swi_query(

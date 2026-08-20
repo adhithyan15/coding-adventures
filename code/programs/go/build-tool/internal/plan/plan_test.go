@@ -31,6 +31,12 @@ func TestRoundTrip(t *testing.T) {
 		},
 		DependencyEdges: [][2]string{{"python/bar", "python/foo"}},
 		LanguagesNeeded: map[string]bool{"python": true, "go": true, "ruby": false},
+		PlatformOverrides: map[string]PlatformState{
+			"windows": {
+				DependencyEdges:  [][2]string{{"go/bar", "python/foo"}},
+				AffectedPackages: []string{"go/bar", "python/foo"},
+			},
+		},
 	}
 
 	dir := t.TempDir()
@@ -90,6 +96,41 @@ func TestRoundTrip(t *testing.T) {
 	if got.LanguagesNeeded["ruby"] {
 		t.Error("LanguagesNeeded[ruby] should be false")
 	}
+	windows := got.StateForPlatform("windows")
+	if len(windows.DependencyEdges) != 1 || windows.DependencyEdges[0] != [2]string{"go/bar", "python/foo"} {
+		t.Fatalf("windows dependency edges = %#v", windows.DependencyEdges)
+	}
+	if len(windows.AffectedPackages) != 2 {
+		t.Fatalf("windows affected packages = %#v", windows.AffectedPackages)
+	}
+}
+
+func TestStateForPlatformFallsBackToTopLevelState(t *testing.T) {
+	bp := &BuildPlan{
+		DependencyEdges:  [][2]string{{"go/a", "go/b"}},
+		AffectedPackages: []string{},
+	}
+
+	state := bp.StateForPlatform("linux")
+	if len(state.DependencyEdges) != 1 || state.DependencyEdges[0] != [2]string{"go/a", "go/b"} {
+		t.Fatalf("fallback dependency edges = %#v", state.DependencyEdges)
+	}
+	if state.AffectedPackages == nil || len(state.AffectedPackages) != 0 {
+		t.Fatalf("fallback must preserve empty affected set, got %#v", state.AffectedPackages)
+	}
+}
+
+func TestStateForPlatformPreservesNilAffectedOverride(t *testing.T) {
+	bp := &BuildPlan{
+		AffectedPackages: []string{"go/a"},
+		PlatformOverrides: map[string]PlatformState{
+			"windows": {AffectedPackages: nil},
+		},
+	}
+
+	if state := bp.StateForPlatform("windows"); state.AffectedPackages != nil {
+		t.Fatalf("nil override affected set became %#v", state.AffectedPackages)
+	}
 }
 
 func TestNilVsEmptyAffectedPackages(t *testing.T) {
@@ -141,6 +182,47 @@ func TestNilVsEmptyAffectedPackages(t *testing.T) {
 	}
 	if len(got.AffectedPackages) != 0 {
 		t.Error("empty slice should have length 0")
+	}
+}
+
+func TestWriteNormalizesRequiredCollectionsWithoutChangingAffectedSemantics(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "normalized.json")
+	bp := &BuildPlan{
+		AffectedPackages: nil,
+		Packages: []PackageEntry{
+			{Name: "swift/Code128", BuildCommands: nil},
+		},
+		PlatformOverrides: map[string]PlatformState{
+			"windows": {AffectedPackages: []string{}},
+		},
+	}
+
+	if err := Write(bp, path); err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var raw map[string]any
+	if err := json.Unmarshal(data, &raw); err != nil {
+		t.Fatal(err)
+	}
+	if raw["packages"] == nil || raw["dependency_edges"] == nil || raw["languages_needed"] == nil {
+		t.Fatalf("required collections were not normalized: %s", data)
+	}
+	packages := raw["packages"].([]any)
+	if packages[0].(map[string]any)["build_commands"] == nil {
+		t.Fatalf("build_commands remained null: %s", data)
+	}
+	if raw["affected_packages"] != nil {
+		t.Fatalf("nil affected_packages must remain null: %s", data)
+	}
+	platforms := raw["platform_overrides"].(map[string]any)
+	windows := platforms["windows"].(map[string]any)
+	if windows["affected_packages"] == nil || windows["dependency_edges"] == nil {
+		t.Fatalf("platform empty arrays were not preserved: %s", data)
 	}
 }
 

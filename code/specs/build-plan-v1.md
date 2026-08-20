@@ -20,10 +20,11 @@ The CI pipeline has two jobs:
 2. **build** — installs toolchains, compiles the build tool again, and repeats
    all of the above before actually running builds.
 
-Steps 1–5 of the 11-step build flow are pure computation with no
-platform-specific behavior. By serializing these results as a JSON artifact,
-the build job skips straight to step 6 (hashing), saving time on each of the
-3 CI platforms.
+Steps 1–5 of the 11-step build flow are deterministic metadata computation,
+including platform-specific BUILD selection, dependency graphs, and affected
+closures; they do not execute package builds. By serializing the host state and
+the platform overrides as a JSON artifact, each build job skips discovery,
+resolution, and diff analysis while selecting the state for its own runner.
 
 ## JSON Schema
 
@@ -82,6 +83,13 @@ the checked-in schema.
       "description": "Map of language name to boolean indicating whether that language's toolchain is needed for this build.",
       "additionalProperties": { "type": "boolean" }
     },
+    "platform_overrides": {
+      "type": "object",
+      "description": "Optional dependency graph and affected closure selected by runner OS.",
+      "additionalProperties": {
+        "$ref": "#/$defs/platform_state"
+      }
+    },
     "shards": {
       "type": "array",
       "description": "Optional prerequisite-closed build shards for multi-runner CI execution. See build-plan-sharding.md.",
@@ -98,7 +106,7 @@ the checked-in schema.
       "properties": {
         "name": {
           "type": "string",
-          "description": "Qualified package name: 'language/package-name' (e.g., 'python/starlark-vm')."
+          "description": "Qualified package name: a lowercase language plus a case-preserving package identity (for example 'python/starlark-vm' or 'swift/Code128')."
         },
         "rel_path": {
           "type": "string",
@@ -129,7 +137,27 @@ the checked-in schema.
           "type": "array",
           "items": { "type": "string" },
           "default": [],
-          "description": "Qualified names of packages this package depends on, as declared in the Starlark deps field."
+          "description": "Source-level dependency declarations from the Starlark deps field. These may be qualified package names, same-language shorthand names, or repository labels. Consumers use dependency_edges for resolved package identities."
+        }
+      }
+    },
+    "platform_state": {
+      "type": "object",
+      "required": ["dependency_edges", "affected_packages"],
+      "additionalProperties": true,
+      "properties": {
+        "dependency_edges": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "affected_packages": {
+          "type": ["array", "null"],
+          "items": { "type": "string" }
         }
       }
     },
@@ -234,6 +262,22 @@ the checked-in schema.
 
 The distinction between `null` and `[]` is critical. JSON serialization
 preserves this: `null` serializes as `null`, `[]` serializes as `[]`.
+
+## Platform-specific graph state
+
+The detect job resolves Linux, Darwin, and Windows BUILD metadata
+into separate dependency graphs. The optional `platform_overrides` map stores
+the dependency edges and prerequisite-closed affected set for `linux`,
+`darwin`, and `windows`. Plan consumers select the entry for their runner OS;
+plans without the optional map retain the top-level v1 graph and affected set.
+
+This prevents a Windows-only native prerequisite from being scheduled on Unix
+while still including its toolchain and package in the Windows build. The
+top-level fields remain the detecting host's state for compatibility with v1
+readers that do not know about platform overrides. Shared shards are assigned
+from the union of every platform graph and affected set so platform-only work
+cannot disappear from the matrix; each runner still intersects the shard with
+its selected affected set before execution.
 
 ## Plan-file replacement
 

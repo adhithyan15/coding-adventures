@@ -2,6 +2,14 @@
 
 All notable changes to this package will be documented in this file.
 
+## Unreleased
+
+### Fixed
+
+- Clamp Windows to the supported single-reactor mode instead of requesting
+  `SO_REUSEPORT`, which the Windows TCP provider rejects. Unix sharding remains
+  unchanged; Windows multi-shard support requires a future accept fan-out.
+
 ## [0.1.0] - 2026-06-13
 
 ### Added

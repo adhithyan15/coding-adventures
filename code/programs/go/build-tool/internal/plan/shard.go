@@ -87,6 +87,60 @@ func ComputeShards(bp *BuildPlan, shardCount int) []ShardEntry {
 	return shards
 }
 
+// ComputePlatformShards builds a shared shard matrix from the union of every
+// platform state. Individual runners still select their own affected set and
+// dependency graph when executing the shard. The union is only for assignment:
+// it guarantees that work unique to a platform is present in some shard and
+// that its prerequisites are co-located there.
+func ComputePlatformShards(bp *BuildPlan, shardCount int) []ShardEntry {
+	if bp == nil {
+		return nil
+	}
+	if len(bp.PlatformOverrides) == 0 {
+		return ComputeShards(bp, shardCount)
+	}
+
+	shardPlan := *bp
+	affected := make(map[string]bool)
+	allAffected := bp.AffectedPackages != nil
+	for _, name := range bp.AffectedPackages {
+		affected[name] = true
+	}
+	edges := make(map[[2]string]bool)
+	for _, edge := range bp.DependencyEdges {
+		edges[edge] = true
+	}
+	for _, state := range bp.PlatformOverrides {
+		if state.AffectedPackages == nil {
+			allAffected = false
+		} else {
+			for _, name := range state.AffectedPackages {
+				affected[name] = true
+			}
+		}
+		for _, edge := range state.DependencyEdges {
+			edges[edge] = true
+		}
+	}
+	if allAffected {
+		shardPlan.AffectedPackages = sortedKeys(affected)
+	} else {
+		shardPlan.AffectedPackages = nil
+	}
+	shardPlan.DependencyEdges = make([][2]string, 0, len(edges))
+	for edge := range edges {
+		shardPlan.DependencyEdges = append(shardPlan.DependencyEdges, edge)
+	}
+	sort.Slice(shardPlan.DependencyEdges, func(i, j int) bool {
+		if shardPlan.DependencyEdges[i][0] == shardPlan.DependencyEdges[j][0] {
+			return shardPlan.DependencyEdges[i][1] < shardPlan.DependencyEdges[j][1]
+		}
+		return shardPlan.DependencyEdges[i][0] < shardPlan.DependencyEdges[j][0]
+	})
+
+	return ComputeShards(&shardPlan, shardCount)
+}
+
 // MatrixEntries returns compact shard records suitable for a GitHub Actions
 // matrix axis.
 func MatrixEntries(shards []ShardEntry) []ShardMatrixEntry {

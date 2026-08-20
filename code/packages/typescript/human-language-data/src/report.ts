@@ -4,6 +4,7 @@ import { CEFR_LEVELS, summarizeLevels, type LevelSummary } from "./levels.js";
 import { measureRamp, type RampReport } from "./ramp.js";
 import { measureContinuity, type ContinuityReport } from "./continuity.js";
 import { measureScriptClosure, type ScriptClosureReport } from "./script-closure.js";
+import { summarizeGentleRamp, type GentleRampReport } from "./gentle-ramp.js";
 import { runLevelGate, type LevelGateReport } from "./level-gate.js";
 import type { AssessmentPolicy } from "./assessment.js";
 import { measureWritingStages, type WritingStageReport } from "./writing-stages.js";
@@ -226,6 +227,13 @@ export interface CurriculumGapReport {
   scriptClosure: ScriptClosureReport;
   /** HL19: cumulative writing capability, distinct from incidental writing practice. */
   writingStages?: WritingStageReport;
+  /**
+   * HL17 -- the per-track join of every learner-facing ramp measurement.
+   *
+   * This is a named-debt queue, not a weighted score: duration seconds, glyphs,
+   * atoms and retrieval windows keep their own units so one cannot hide another.
+   */
+  gentleRamp?: GentleRampReport;
   /**
    * HL09 §3.1 — what it takes to CLAIM a level, as opposed to touch one.
    *
@@ -502,7 +510,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   const lessonIds = new Set(lessons.map((lesson) => lesson.realization.lessonId));
   const durationViolations = lessons
     .map(estimateLessonDuration)
-    .filter((estimate) => estimate.effectiveSeconds >= DURATION_THRESHOLD_SECONDS)
+    .filter((estimate) => estimate.effectiveSeconds > DURATION_THRESHOLD_SECONDS)
     .sort((a, b) => a.language.localeCompare(b.language) || a.lessonId.localeCompare(b.lessonId));
 
   const unknown: UnknownPrerequisite[] = [];
@@ -579,6 +587,19 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
           policy: input.chapterPolicy,
         })
       : undefined;
+  const gentleRamp = ramp
+    ? summarizeGentleRamp({
+        languages: registry.languages.map((language) => language.id),
+        lessons,
+        durationViolations,
+        unknownPrerequisites: unknown,
+        ramp,
+        continuity,
+        scriptClosure,
+        modality,
+        chapters: chapterGates,
+      })
+    : undefined;
 
   return {
     schemaVersion: 1,
@@ -641,6 +662,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     continuity,
     scriptClosure,
     writingStages,
+    gentleRamp,
     levelGate,
     modality,
   };
@@ -653,7 +675,7 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
     "Human Languages curriculum gap report",
     "====================================",
     `${summary.registeredTracks} tracks, ${summary.totalLessons} lessons, ${summary.authoredBooks} books`,
-    `${summary.durationViolations} lessons at or above ${report.durationModel.thresholdSeconds} effective seconds`,
+    `${summary.durationViolations} lessons over ${report.durationModel.thresholdSeconds} effective seconds`,
     `${summary.unknownPrerequisites} unknown prerequisites; ${summary.laterChapterLessonsWithoutPrerequisites} later-chapter lessons without prerequisites`,
     `${summary.tracksWithoutBooks} tracks without books; ${summary.lessonChaptersWithoutBooks} lesson chapters without book chapters`,
     `${summary.legacySchemaTracks} legacy, ${summary.mixedSchemaTracks} mixed, ${summary.version2SchemaTracks} version-2 schema tracks`,
@@ -708,6 +730,17 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
             `tracks prove the cumulative pre-A1 ladder; ${report.writingStages.summary.evidenceBlocks} evidence blocks, ` +
             `${report.writingStages.summary.invalidEvidenceBlocks} invalid; ` +
             `${report.writingStages.summary.missingTrackLevelStages} missing (track, level, stage) pairs`,
+        ]
+      : []),
+    ...(report.gentleRamp
+      ? [
+          `super-gentle ramp: ${report.gentleRamp.summary.tracksWithDetectedCliffs}/` +
+            `${report.gentleRamp.summary.tracks} tracks carry detected or unmeasured debt; ` +
+            `${report.gentleRamp.summary.findings} named track/debt items`,
+          `writing ramp: ${report.gentleRamp.summary.tracksWithNoWritingPractice} track(s) never practise writing; ` +
+            `${report.gentleRamp.summary.tracksWhereWritingStartsLate} start after lesson one`,
+          `gentleness measurement: ${report.gentleRamp.summary.atomMeasurementBlindLessons} lesson(s) ` +
+            `remain atom-measurement blind`,
         ]
       : []),
     ...(report.levelGate

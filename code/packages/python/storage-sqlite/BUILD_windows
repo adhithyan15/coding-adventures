@@ -1,0 +1,4 @@
+uv venv --quiet --clear
+uv pip install -e ../sql-backend -e .[dev] --quiet
+.venv\Scripts\ruff check src/ tests/
+.venv\Scripts\python -m pytest tests/

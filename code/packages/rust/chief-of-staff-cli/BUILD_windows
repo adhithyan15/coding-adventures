@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-cli -- --nocapture && cargo clippy -p chief-of-staff-cli --all-targets -- -D warnings

@@ -1063,7 +1063,19 @@ mod tests {
         ShardedHttpServer::bind_epoll_sharded(addr, options, worker_count, handler)
     }
 
+    // `ShardedHttpServer::bind_windows_sharded` (via `tcp_runtime::bind_windows_sharded_with_state`)
+    // sets `reuse_port = true` for `worker_count > 1` on every non-BSD platform,
+    // but the Windows `TransportPlatform::configure_listener_socket` rejects
+    // `reuse_port` outright ("SO_REUSEPORT is not supported by the Windows TCP
+    // provider" — see transport-platform/src/lib.rs). macOS/BSD hit the same
+    // "SO_REUSEPORT doesn't load-balance" problem and fixed it with an explicit
+    // accept fan-out (`tcp-runtime`'s `FanoutAcceptor`), but that fan-out is
+    // `#[cfg(unix)]`-only today, so it isn't available to route around this on
+    // Windows. This function (and the one test that called it) stay excluded
+    // from Windows until tcp-runtime grows a Windows fan-out acceptor — enabling
+    // them without that fix panics on `bind` for any `worker_count > 1`.
     #[cfg(target_os = "windows")]
+    #[allow(dead_code)]
     fn bind_native_sharded_http_server<A, F>(
         addr: A,
         options: HttpServerOptions,
@@ -1085,6 +1097,11 @@ mod tests {
     /// parallelism. (Throughput *scaling* is measured separately on a CPU-bound
     /// benchmark — see WEB01a-2; an echo handler is latency-bound and would not
     /// show speedup here.)
+    ///
+    /// Windows-excluded: see the `#[allow(dead_code)]` note on
+    /// `bind_native_sharded_http_server` above — `bind_windows_sharded` panics
+    /// for `worker_count > 1` today (pre-existing `tcp-runtime` gap, not
+    /// introduced here).
     #[cfg(not(target_os = "windows"))]
     #[test]
     fn sharded_http_server_serves_concurrent_clients_across_shards() {
