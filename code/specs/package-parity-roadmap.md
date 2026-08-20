@@ -4245,6 +4245,30 @@ updates both the TypeScript and Go consumers plus pinned corpus summaries from
 82 to 85 cases. It adds no animation parser, dependency, capability, or new
 implementation lane.
 
+Before final validation, `origin/main` advanced to
+`9237b4e1be43946aa38c1109387704e3b62a0ec1` through Gujarati `pa` ductus work.
+That commit changes only existing human-language and script-ductus surfaces,
+adds no package root, and has no path or semantic overlap with the APNG tranche.
+The branch rebased cleanly, and the collision inventory remains unchanged at
+1,368 identities, 4,553 slots, zero collisions, and zero unknown buckets.
+During the final validation pass, main advanced once more to
+`377e5add479229badcab758ee166d43edda782e7` through Italian curriculum recovery.
+That second commit is likewise root-neutral and disjoint from every owned APNG,
+fixture, package, state, and roadmap implementation surface.
+
+The completed correction grows the deterministic corpus from 82 to 85 cases
+without changing its schema or ordered 29-error taxonomy. Independent Python
+validation proves the three APNG chunks have valid framing and CRCs; removing
+the TypeScript rejection produced exactly three portable-suite failures before
+the final source change. The final TypeScript suite passes 145 tests with 100%
+statement, branch, function, and line coverage, while the Go consumer passes
+the expanded public-surface corpus with 99.0% race coverage. Build, lint, type,
+module, audit, capability, parity, state-DAG, diff, and authority scans pass.
+A freshly compiled repository build tool discovers 4,973 packages, emits the
+same eight affected nodes for Linux, Darwin, and Windows, and builds all eight
+PNG/pixel-container/ZIP/LZSS nodes on the real local Windows front door with
+4,965 unrelated packages skipped.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
