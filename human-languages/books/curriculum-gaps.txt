@@ -8,15 +8,15 @@ Human Languages curriculum gap report
 2909 drivable lessons (86% of the corpus)
 levels: 2131 pre-A1, 573 A1, 549 A2, 40 B1, 17 B2, 10 C1, 18 C2; 64 unmapped (98% placed)
 ramp: 46 lessons above 3 new atoms (497 unmeasurable, 85% measurable); 24 chapters above 12
-script ramp: 61 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
+script ramp: 59 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 219 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 756 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 306 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2190 glyphs and makes 176 lessons clean on its own
-order: 57 lessons with no declared sequence across 5 tracks; 30 prerequisites and 37 reviews pointing forward
+order: 26 lessons with no declared sequence across 4 tracks; 15 prerequisites and 21 reviews pointing forward
 reinforcement: 632 of 4687 atoms never revisited (13%); missed windows R1 1191, R2 3684, R3 3543, R4 2060
 forward references: 470 uses of material a later lesson teaches
 writing stages: 1/23 tracks prove the cumulative pre-A1 ladder; 11 evidence blocks, 0 invalid; 958 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 139 named track/debt items
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 138 named track/debt items
 writing ramp: 2 track(s) never practise writing; 4 start after lesson one
 gentleness measurement: 497 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 153/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on
@@ -45,7 +45,7 @@ Modality (HL08) — derived from lesson type and block structure, never from `sk
   marwadi: 2 voice, 0 sight, 5 pen; 29% drivable; 1 chapters, 0 lessons reachable in chapter-prefix order
   persian: 57 voice, 3 sight, 9 pen; 86% drivable; 15 chapters, 55 lessons reachable in chapter-prefix order; 2 rescued by a detachable writing segment
   portuguese: 87 voice, 9 sight, 0 pen; 91% drivable; 26 chapters, 81 lessons reachable in chapter-prefix order
-  punjabi: 18 voice, 43 sight, 10 pen; 85% drivable; 14 chapters, 60 lessons reachable in chapter-prefix order; 42 rescued by a detachable writing segment
+  punjabi: 18 voice, 43 sight, 10 pen; 85% drivable; 14 chapters, 58 lessons reachable in chapter-prefix order; 42 rescued by a detachable writing segment
   russian: 45 voice, 15 sight, 24 pen; 68% drivable; 15 chapters, 48 lessons reachable in chapter-prefix order; 12 rescued by a detachable writing segment
   sanskrit: 214 voice, 38 sight, 14 pen; 93% drivable; 51 chapters, 238 lessons reachable in chapter-prefix order; 34 rescued by a detachable writing segment
   spanish: 532 voice, 45 sight, 7 pen; 91% drivable; 302 chapters, 512 lessons reachable in chapter-prefix order

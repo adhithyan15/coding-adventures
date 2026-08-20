@@ -24,14 +24,14 @@
     "version2SchemaTracks": 9,
     "lessonsWithoutLevel": 64,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 61,
+    "scriptRampOverBudgetLessons": 59,
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 756,
     "scriptExposureExemptedGlyphs": 2190,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 306,
-    "lessonsWithoutSequence": 57,
-    "forwardReviews": 37,
+    "lessonsWithoutSequence": 26,
+    "forwardReviews": 21,
     "atomsNeverRevisited": 632,
     "forwardReferences": 470,
     "chaptersWithoutCapability": 0,
@@ -5239,6 +5239,17 @@
           "budget": 3
         },
         {
+          "lessonId": "PA-C01-sat-sri-akal",
+          "language": "punjabi",
+          "chapter": 1,
+          "glyphs": 10,
+          "sample": "ਅਕਤਰਲਸਾਿੀ੍",
+          "systems": [
+            "Gurmukhi"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "GU-C01-aabhaar",
           "language": "gujarati",
           "chapter": 1,
@@ -5493,28 +5504,6 @@
           "budget": 3
         },
         {
-          "lessonId": "PA-C01-dhanvaad",
-          "language": "punjabi",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "ਦਧਨਵਾੰ",
-          "systems": [
-            "Gurmukhi"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "PA-C01-sat-sri-akal",
-          "language": "punjabi",
-          "chapter": 1,
-          "glyphs": 6,
-          "sample": "ਅਕਰਲਿ੍",
-          "systems": [
-            "Gurmukhi"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "SA-C01-namaste",
           "language": "sanskrit",
           "chapter": 1,
@@ -5724,22 +5713,11 @@
           "budget": 3
         },
         {
-          "lessonId": "PA-C01-namaste",
+          "lessonId": "PA-C01-dhanvaad",
           "language": "punjabi",
           "chapter": 1,
           "glyphs": 4,
-          "sample": "ਤਮਸੇ",
-          "systems": [
-            "Gurmukhi"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "PA-C02-khushi",
-          "language": "punjabi",
-          "chapter": 2,
-          "glyphs": 4,
-          "sample": "ਈਖੂੋ",
+          "sample": "ਦਧਵੰ",
           "systems": [
             "Gurmukhi"
           ],
@@ -6086,7 +6064,7 @@
           "latinScript": false,
           "lessonCount": 71,
           "totalGlyphs": 45,
-          "lessonViolations": 4,
+          "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 2
         },
@@ -6152,7 +6130,7 @@
         }
       ],
       "summary": {
-        "lessonViolations": 61,
+        "lessonViolations": 59,
         "systemViolations": 5,
         "lessonsWithForeignScript": 219,
         "maxForeignGlyphsInALesson": 26,
@@ -6636,471 +6614,6 @@
         "kind": "forward-review",
         "other": "PT-C04-adeus",
         "detail": "reviews PT-C04-adeus, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C01-dhanvaad",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C01-dhanvaad",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PA-C01-namaste",
-        "detail": "requires PA-C01-namaste, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C01-han-nahin",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C01-han-nahin",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "PA-C01-namaste",
-        "detail": "reviews PA-C01-namaste, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C01-han-nahin",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PA-C01-shukriya",
-        "detail": "requires PA-C01-shukriya, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C01-namaste",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C01-namaste",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PA-C01-sat-sri-akal",
-        "detail": "requires PA-C01-sat-sri-akal, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "PA-C01-sat-sri-akal",
-        "detail": "reviews PA-C01-sat-sri-akal, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "PA-C01-shukriya",
-        "detail": "reviews PA-C01-shukriya, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PA-C01-sat-sri-akal",
-        "detail": "requires PA-C01-sat-sri-akal, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C01-practice",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PA-C01-shukriya",
-        "detail": "requires PA-C01-shukriya, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C01-sat-sri-akal",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C01-shukriya",
-        "language": "punjabi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-naam",
-        "detail": "reviews PA-C02-naam, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-mera",
-        "detail": "reviews PA-C02-mera, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "PA-C02-naam",
-        "detail": "requires PA-C02-naam, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C02-khushi",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-khushi",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "PA-C02-mera-naam-hai",
-        "detail": "requires PA-C02-mera-naam-hai, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C02-ki",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-ki",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-tu-tusi",
-        "detail": "reviews PA-C02-tu-tusi, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-ki",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "PA-C02-naam",
-        "detail": "requires PA-C02-naam, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C02-mera",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-mera",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-naam",
-        "detail": "reviews PA-C02-naam, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-mera",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "PA-C02-naam",
-        "detail": "requires PA-C02-naam, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C02-mera-naam-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-mera-naam-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-naam",
-        "detail": "reviews PA-C02-naam, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-mera-naam-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "PA-C02-naam",
-        "detail": "requires PA-C02-naam, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C02-naam",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-practice",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-practice",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-tu-tusi",
-        "detail": "reviews PA-C02-tu-tusi, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-practice",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "PA-C02-tuhada-naam-ki-hai",
-        "detail": "reviews PA-C02-tuhada-naam-ki-hai, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C02-practice",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "PA-C02-tuhada-naam-ki-hai",
-        "detail": "requires PA-C02-tuhada-naam-ki-hai, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C02-tu-tusi",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C02-tuhada-naam-ki-hai",
-        "language": "punjabi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C03-kivein",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C03-koi-gall-nahin",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C03-main",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C03-practice",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C03-practice",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "PA-C03-tusi-kivein-ho",
-        "detail": "reviews PA-C03-tusi-kivein-ho, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C03-practice",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "PA-C03-thik",
-        "detail": "reviews PA-C03-thik, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C03-practice",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "PA-C03-tusi-kivein-ho",
-        "detail": "requires PA-C03-tusi-kivein-ho, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C03-practice",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "PA-C03-thik",
-        "detail": "requires PA-C03-thik, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C03-thik",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C03-thik",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "PA-C03-tusi-kivein-ho",
-        "detail": "reviews PA-C03-tusi-kivein-ho, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C03-tusi-kivein-ho",
-        "language": "punjabi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C04-milaange",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C04-phir",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C04-phir-milaange",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C04-practice",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C04-practice",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "PA-C04-rab-raakha",
-        "detail": "reviews PA-C04-rab-raakha, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C04-practice",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "PA-C04-rab-raakha",
-        "detail": "requires PA-C04-rab-raakha, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C04-rab-raakha",
-        "language": "punjabi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C05-bolna",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C05-kamm-karna",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C05-kamm-karna",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "PA-C05-rahna",
-        "detail": "reviews PA-C05-rahna, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C05-main-punjabi-bolda-han",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C05-practice",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PA-C05-practice",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "PA-C05-rahna",
-        "detail": "reviews PA-C05-rahna, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "PA-C05-practice",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "PA-C05-rahna",
-        "detail": "requires PA-C05-rahna, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "PA-C05-rahna",
-        "language": "punjabi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "RU-C01-da",
@@ -61180,9 +60693,9 @@
       {
         "language": "punjabi",
         "lessonCount": 71,
-        "lessonsWithoutSequence": 31,
-        "forwardPrerequisites": 15,
-        "forwardReviews": 16,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 92,
         "atomsNeverRevisited": 5,
         "forwardReferences": 0
@@ -61249,10 +60762,10 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 57,
-      "tracksWithUnorderedLessons": 5,
-      "forwardPrerequisites": 30,
-      "forwardReviews": 37,
+      "lessonsWithoutSequence": 26,
+      "tracksWithUnorderedLessons": 4,
+      "forwardPrerequisites": 15,
+      "forwardReviews": 21,
       "atomsTaught": 4687,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
@@ -71998,14 +71511,14 @@
         "durationViolations": 0,
         "atomLessonSpikes": 4,
         "atomChapterSpikes": 1,
-        "glyphLessonSpikes": 4,
+        "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 51,
         "neverTaughtGlyphs": 36,
-        "orderDefects": 62,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 15,
-        "forwardReviews": 16,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "forwardReferences": 0,
         "atomsTaught": 92,
         "atomsNeverRevisited": 5,
@@ -72015,13 +71528,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "punjabi",
-            "kind": "order-integrity",
-            "count": 62,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
           {
             "language": "punjabi",
             "kind": "script-closure",
@@ -72039,7 +71545,7 @@
           {
             "language": "punjabi",
             "kind": "glyph-step",
-            "count": 4,
+            "count": 2,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -72060,10 +71566,10 @@
         ],
         "next": {
           "language": "punjabi",
-          "kind": "order-integrity",
-          "count": 62,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "script-closure",
+          "count": 36,
+          "unit": "glyph(s)",
+          "detail": "teach every load-bearing glyph before asking the learner to decode it"
         }
       },
       {
@@ -72580,13 +72086,6 @@
       }
     ],
     "workQueue": [
-      {
-        "language": "punjabi",
-        "kind": "order-integrity",
-        "count": 62,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
       {
         "language": "italian",
         "kind": "order-integrity",
@@ -73127,13 +72626,6 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "punjabi",
-        "kind": "glyph-step",
-        "count": 4,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
         "language": "russian",
         "kind": "glyph-step",
         "count": 4,
@@ -73163,6 +72655,13 @@
       },
       {
         "language": "marathi",
+        "kind": "glyph-step",
+        "count": 2,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "punjabi",
         "kind": "glyph-step",
         "count": 2,
         "unit": "lesson/system spike(s)",
@@ -73560,7 +73059,7 @@
       "tracksWithNoWritingPractice": 2,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 497,
-      "findings": 139
+      "findings": 138
     }
   },
   "levelGate": {
@@ -81185,7 +80684,7 @@
         "pen": 10,
         "coreVoice": 60,
         "drivablePercent": 85,
-        "drivablePrefixTotal": 60,
+        "drivablePrefixTotal": 58,
         "chapters": [
           {
             "language": "punjabi",
@@ -81259,7 +80758,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "PA-C05-rahna"
           },
           {
