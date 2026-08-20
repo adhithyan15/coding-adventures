@@ -1010,6 +1010,13 @@ loop and descend through its tail. The t30apps.com animation exposes three
 ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
 tracing the broader printed body and more angular loop. The source's variation
 warning continues to qualify the demonstrated school-hand form; **ક** is next.
+The two-frame Gujarati **ક** filmstrip begins consonant coverage with one
+continuous run around the upper loop, diagonally through the middle, and around
+the lower body. It then lifts once and sweeps the separate crossing diagonal
+from lower left to upper right. The t30apps.com animation exposes those as two
+ordered SVG paths; the Noto Sans Gujarati fit preserves their order while
+tracing the broader printed loops. The source's variation warning continues to
+qualify the demonstrated school-hand form; **ખ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

@@ -5855,6 +5855,45 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઔ"),
   },
+  // t30apps writes Gujarati ક as a continuous upper-loop-to-lower-body run,
+  // then lifts for a rising diagonal cross-stroke. These medians preserve the
+  // two-path order while fitting the broader bundled Noto outline.
+  [ductusKey("gujarati", "ક")]: {
+    script: "gujarati",
+    glyph: "ક",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the upper loop and continue through the rounded lower body",
+            path: [
+              { x: 370, y: 555 }, { x: 320, y: 565 }, { x: 270, y: 565 },
+              { x: 220, y: 555 }, { x: 180, y: 530 }, { x: 150, y: 495 },
+              { x: 145, y: 455 }, { x: 160, y: 415 }, { x: 200, y: 380 },
+              { x: 250, y: 350 }, { x: 305, y: 320 }, { x: 355, y: 285 },
+              { x: 395, y: 240 }, { x: 415, y: 190 }, { x: 410, y: 140 },
+              { x: 385, y: 95 }, { x: 340, y: 60 }, { x: 285, y: 40 },
+              { x: 230, y: 40 }, { x: 180, y: 55 }, { x: 130, y: 80 },
+              { x: 75, y: 115 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then sweep the diagonal cross-stroke lower-left to upper-right",
+            path: [
+              { x: 65, y: 225 }, { x: 125, y: 250 }, { x: 190, y: 275 },
+              { x: 255, y: 300 }, { x: 320, y: 330 }, { x: 385, y: 360 },
+              { x: 445, y: 390 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ક"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
