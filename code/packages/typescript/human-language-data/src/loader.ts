@@ -17,6 +17,7 @@ import {
   type ExamInventory,
 } from "./exam-inventory.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
+import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import {
   parseAssessmentContract,
   parseAssessmentPolicy,
@@ -110,7 +111,7 @@ export function loadTaskShapeInventory(
   level: string,
   root = defaultCurriculumRoot(),
 ): TaskShapeInventory {
-  if (!/^[a-z][a-z0-9-]*$/.test(language) || !/^(a1|a2|b1|b2|c1|c2)$/i.test(level)) {
+  if (!/^[a-z][a-z0-9-]*$/.test(language) || !/^(pre-a1|a1|a2|b1|b2|c1|c2)$/i.test(level)) {
     throw new Error("task shapes: unsafe language or level path");
   }
   const path = join(root, language, "task-shapes", `${level.toLowerCase()}.json`);
@@ -122,11 +123,11 @@ export function loadTaskShapeInventory(
 }
 
 /** Valid task-shape inventories present in the registry, ordered by track and level. */
-export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<{ language: string; level: string }> {
+export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<{ language: string; level: CefrLevel }> {
   const registry = loadLanguageRegistry(root);
-  const found: Array<{ language: string; level: string }> = [];
+  const found: Array<{ language: string; level: CefrLevel }> = [];
   for (const track of registry.languages) {
-    for (const current of ["A1", "A2", "B1", "B2", "C1", "C2"] as const) {
+    for (const current of CEFR_LEVELS) {
       const path = join(root, track.id, "task-shapes", `${current.toLowerCase()}.json`);
       if (!existsSync(path)) continue;
       const inventory = loadTaskShapeInventory(track.id, current, root);

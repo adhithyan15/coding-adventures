@@ -3,6 +3,26 @@ import { loadLanguageRegistry, loadTaskShapeInventory, listTaskShapeInventories 
 import { buildTaskShapeBacklog, parseTaskShapeInventory } from "../src/task-shapes.js";
 
 describe("four-skill task-shape inventories (HL18)", () => {
+  it("loads the project-defined Marwadi pre-A1 floor with independent productive writing", () => {
+    const inventory = loadTaskShapeInventory("marwadi", "pre-A1");
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Marwadi pre-A1 Assessment — project-defined equivalent",
+      basis: "project-defined",
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.sections.find((section) => section.skill === "writing")?.parts.map((part) => part.id)).toEqual([
+      "prea1-writing-delayed-recall",
+      "prea1-writing-dictation",
+      "prea1-writing-bounded-production",
+    ]);
+  });
+
   it("loads the official Spanish A1 performance target and its grouped pass rule", () => {
     const inventory = loadTaskShapeInventory("spanish", "A1");
     expect(inventory.target).toEqual({ name: "DELE A1", basis: "external" });
@@ -136,9 +156,13 @@ describe("four-skill task-shape inventories (HL18)", () => {
       { language: "french", level: "A1" },
       { language: "german", level: "A1" },
       { language: "arabic", level: "A1" },
+      { language: "marwadi", level: "pre-A1" },
     ]);
-    expect(backlog).toHaveLength(registry.languages.length * 6 - 5);
+    expect(backlog).toHaveLength(registry.languages.length * 7 - 6);
+    expect(backlog.filter((item) => item.level === "pre-A1")).toHaveLength(registry.languages.length - 1);
     expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 5);
+    expect(backlog.some((item) => item.id === "task-shape/marwadi/pre-A1")).toBe(false);
+    expect(backlog.some((item) => item.id === "task-shape/spanish/pre-A1")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/spanish/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/spanish/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/latin/A1")).toBe(false);
@@ -155,6 +179,12 @@ describe("four-skill task-shape inventories (HL18)", () => {
     const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("german", "A1")));
     value.sections = value.sections.filter((section: { skill: string }) => section.skill !== "writing");
     expect(() => parseTaskShapeInventory(value, "german")).toThrow(/missing writing section/);
+  });
+
+  it("rejects a one-skill pre-A1 inventory instead of treating it as readiness", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("marwadi", "pre-A1")));
+    value.sections = value.sections.filter((section: { skill: string }) => section.skill === "reading");
+    expect(() => parseTaskShapeInventory(value, "marwadi")).toThrow(/missing listening section/);
   });
 
   it("rejects invented-looking null measurements without an explicit source gap", () => {
@@ -231,5 +261,6 @@ describe("four-skill task-shape inventories (HL18)", () => {
   it("rejects path traversal at the loader boundary", () => {
     expect(() => loadTaskShapeInventory("../german", "A1")).toThrow(/unsafe/);
     expect(() => loadTaskShapeInventory("german", "A1\/../A2")).toThrow(/unsafe/);
+    expect(() => loadTaskShapeInventory("marwadi", "pre-A1\/../A1")).toThrow(/unsafe/);
   });
 });
