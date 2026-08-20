@@ -6092,6 +6092,51 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ચ"),
   },
+  // t30apps writes Gujarati છ as one continuous run through the upper-left
+  // lobe, lower body, outer-right curve, and upper-right lobe. These connected
+  // medians preserve that zero-lift order while fitting the Noto outline.
+  [ductusKey("gujarati", "છ")]: {
+    script: "gujarati",
+    glyph: "છ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the upper-left lobe and turn back through the middle",
+            path: [
+              { x: 280, y: 560 }, { x: 220, y: 565 }, { x: 160, y: 555 },
+              { x: 110, y: 530 }, { x: 80, y: 490 }, { x: 80, y: 450 },
+              { x: 100, y: 415 }, { x: 140, y: 385 }, { x: 170, y: 360 },
+              { x: 200, y: 345 },
+            ],
+          },
+          {
+            label: "continue around the broad lower body and climb the outer right curve",
+            path: [
+              { x: 200, y: 345 }, { x: 160, y: 315 }, { x: 135, y: 275 },
+              { x: 125, y: 225 },
+              { x: 135, y: 170 }, { x: 170, y: 115 }, { x: 225, y: 75 },
+              { x: 290, y: 45 }, { x: 360, y: 42 }, { x: 425, y: 65 },
+              { x: 530, y: 100 }, { x: 575, y: 140 }, { x: 605, y: 180 },
+              { x: 625, y: 220 }, { x: 640, y: 260 }, { x: 650, y: 300 },
+              { x: 660, y: 350 },
+            ],
+          },
+          {
+            label: "circle the upper-right lobe and finish beside the outer curve",
+            path: [
+              { x: 660, y: 350 }, { x: 630, y: 400 }, { x: 620, y: 455 },
+              { x: 590, y: 515 }, { x: 545, y: 555 }, { x: 495, y: 560 },
+              { x: 455, y: 535 }, { x: 430, y: 495 }, { x: 425, y: 450 },
+              { x: 445, y: 410 }, { x: 480, y: 380 }, { x: 520, y: 360 },
+              { x: 565, y: 345 }, { x: 620, y: 340 }, { x: 660, y: 350 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("છ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
