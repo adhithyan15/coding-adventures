@@ -1835,6 +1835,16 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         );
     }
 
+    fn assert_peer_closed(stream: &mut TcpStream) {
+        let mut one = [0u8; 1];
+        match stream.read(&mut one) {
+            Ok(0) => {}
+            Err(error) if error.kind() == io::ErrorKind::ConnectionReset => {}
+            Ok(count) => panic!("expected peer close, read {count} byte(s)"),
+            Err(error) => panic!("expected peer close, got {error}"),
+        }
+    }
+
     fn assert_invalid_worker_write_closes_connection() {
         let Some(command) = scripted_worker(
             r#"
@@ -1849,8 +1859,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         let (server, handle) = start_test_server(command);
         let mut stream = connect_client(&server);
         write_command(&mut stream, &[b"PING"]);
-        let mut one = [0u8; 1];
-        assert_eq!(stream.read(&mut one).expect("read close"), 0);
+        assert_peer_closed(&mut stream);
         stop_server(server, handle);
     }
 
@@ -1868,8 +1877,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         let (server, handle) = start_test_server(command);
         let mut stream = connect_client(&server);
         write_command(&mut stream, &[b"PING"]);
-        let mut one = [0u8; 1];
-        assert_eq!(stream.read(&mut one).expect("read close"), 0);
+        assert_peer_closed(&mut stream);
         stop_server(server, handle);
     }
 
@@ -1914,8 +1922,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         let (server, handle) = start_test_server(command);
         let mut stream = connect_client(&server);
         write_command(&mut stream, &[b"PING"]);
-        let mut one = [0u8; 1];
-        assert_eq!(stream.read(&mut one).expect("read close"), 0);
+        assert_peer_closed(&mut stream);
         stop_server(server, handle);
     }
 

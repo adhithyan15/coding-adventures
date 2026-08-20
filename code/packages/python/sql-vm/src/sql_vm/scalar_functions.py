@@ -2102,19 +2102,34 @@ def _parse_timevalue(tv: SqlValue) -> datetime | None:
         # Julian Day Number → datetime.
         # JD 2440587.5 = 1970-01-01 00:00:00 UTC
         unix_seconds = (tv - 2440587.5) * 86400.0
-        try:
-            return datetime.fromtimestamp(unix_seconds, tz=UTC).replace(microsecond=0)
-        except (ValueError, OSError, OverflowError):
-            return None
+        return _datetime_from_unix_seconds(unix_seconds)
 
     if isinstance(tv, int) and not isinstance(tv, bool):
         # Unix epoch seconds.
-        try:
-            return datetime.fromtimestamp(tv, tz=UTC).replace(microsecond=0)
-        except (ValueError, OSError, OverflowError):
-            return None
+        return _datetime_from_unix_seconds(tv)
 
     return None
+
+
+def _datetime_from_unix_seconds(seconds: float) -> datetime | None:
+    """Convert Unix-epoch seconds to a UTC ``datetime``, pre-1970 included.
+
+    ``datetime.fromtimestamp()`` goes through the platform C library's time
+    conversion, and the Windows CRT's ``_gmtime64``/``_localtime64`` reject
+    negative ``time_t`` values (dates before 1970-01-01) with ``OSError`` --
+    POSIX's ``gmtime`` handles them fine, so the same SQL query silently
+    returned NULL on Windows only. Computing the date by pure calendar
+    arithmetic from the fixed 1970-01-01 epoch avoids the platform C library
+    entirely, so this works identically on every host `datetime`/`timedelta`
+    run on, and still raises OverflowError for a genuinely unrepresentable
+    result (outside year 1-9999) rather than for an artificial platform limit.
+    """
+    try:
+        return (
+            datetime(1970, 1, 1, tzinfo=UTC) + timedelta(seconds=seconds)
+        ).replace(microsecond=0)
+    except (ValueError, OverflowError):
+        return None
 
 
 def _apply_modifier(dt: datetime, modifier: str) -> datetime | None:
@@ -2311,9 +2326,8 @@ def _resolve_datetime(args: list[SqlValue], skip_first: bool = False) -> datetim
                 return None
         elif isinstance(raw_tv, bool) or not isinstance(raw_tv, (int, float)):
             return None
-        try:
-            dt = datetime.fromtimestamp(float(raw_tv), tz=UTC).replace(microsecond=0)
-        except (ValueError, OSError, OverflowError):
+        dt = _datetime_from_unix_seconds(float(raw_tv))
+        if dt is None:
             return None
         # Strip ``unixepoch`` from the remaining modifier chain so the
         # downstream handler doesn't see it twice (it's currently a no-op

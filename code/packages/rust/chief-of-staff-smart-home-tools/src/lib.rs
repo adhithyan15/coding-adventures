@@ -119621,23 +119621,43 @@ mod tests {
         traces
     }
 
+    // `handler_for`'s dispatcher is one 364-arm `match tool_id.as_str() { ... }`;
+    // debug builds don't reuse stack slots across mutually exclusive match arms,
+    // so that single frame is big enough to overflow Windows' ~1 MiB default
+    // test-thread stack (comfortably under Linux/macOS's ~8 MiB default, so
+    // this only reproduces there). `RUST_MIN_STACK` in BUILD_windows was meant
+    // to raise the default, but two attempts (quoted and unquoted `set
+    // RUST_MIN_STACK=... &&`) both still crashed identically on real Windows
+    // CI -- something in the Go executor -> cmd.exe -> cargo test -> spawned
+    // test-binary chain isn't propagating the env var as expected, and it
+    // wasn't worth a third blind ~80-minute CI round trip to find out why.
+    // Spawning the test body on an explicitly-sized thread sidesteps env-var
+    // propagation entirely: the stack size is set in Rust, not inherited from
+    // a shell environment.
     #[test]
     fn activation_waiver_disposal_tools_project_expiration_lineage_end_to_end() {
-        let runtime = test_controller(hue_lighting_runtime());
-        let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
-        let mut tool_runtime = InMemoryToolRuntime::new();
-        bridge.register_all(&mut tool_runtime).unwrap();
+        std::thread::Builder::new()
+            .stack_size(64 * 1024 * 1024)
+            .spawn(|| {
+                let runtime = test_controller(hue_lighting_runtime());
+                let bridge = SmartHomeToolBridge::new(runtime, AgentId::trusted(AGENT_ID));
+                let mut tool_runtime = InMemoryToolRuntime::new();
+                bridge.register_all(&mut tool_runtime).unwrap();
 
-        let traces = exercise_activation_waiver_disposal_tools(&tool_runtime);
-        let mut journal = ToolExecutionJournal::new();
-        for (request, trace) in traces {
-            journal.record_trace(request, trace);
-        }
+                let traces = exercise_activation_waiver_disposal_tools(&tool_runtime);
+                let mut journal = ToolExecutionJournal::new();
+                for (request, trace) in traces {
+                    journal.record_trace(request, trace);
+                }
 
-        let summary = journal.summary();
-        assert_eq!(summary.invocation_count, 2);
-        assert_eq!(summary.completed_count, 2);
-        assert_eq!(journal.audit_records().len(), 2);
+                let summary = journal.summary();
+                assert_eq!(summary.invocation_count, 2);
+                assert_eq!(summary.completed_count, 2);
+                assert_eq!(journal.audit_records().len(), 2);
+            })
+            .expect("spawn 64 MiB test thread")
+            .join()
+            .expect("test thread panicked");
     }
 
     fn exercise_activation_waiver_disposal_tools(

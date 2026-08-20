@@ -197,9 +197,16 @@ impl IrcReactorServer {
     ///
     /// `worker_count` is clamped to at least 1.  With `1`, the server runs a
     /// single reactor (no `SO_REUSEPORT`), behaving like the original
-    /// single-threaded engine; with `N > 1`, the kernel load-balances connections
-    /// across `N` reactor threads.
+    /// single-threaded engine. On Windows the count is currently clamped to 1
+    /// because the TCP provider does not support `SO_REUSEPORT`; on supported
+    /// Unix platforms, `N > 1` distributes connections across `N` reactor threads.
     pub fn bind_with_worker_count(config: IrcConfig, worker_count: usize) -> io::Result<Self> {
+        #[cfg(target_os = "windows")]
+        let worker_count = {
+            let _ = worker_count;
+            1
+        };
+        #[cfg(not(target_os = "windows"))]
         let worker_count = worker_count.max(1);
 
         // The IRC brain.  A single shared state machine (behind a Mutex) serves
@@ -562,6 +569,7 @@ mod tests {
     /// Like `start_server`, but with an explicit number of reactor shards so a
     /// test can deterministically exercise the multi-shard path regardless of how
     /// many CPUs the runner has.
+    #[cfg(not(target_os = "windows"))]
     fn start_server_with_workers(
         worker_count: usize,
     ) -> (
@@ -693,6 +701,7 @@ mod tests {
         handle.join().expect("server thread").expect("server exit");
     }
 
+    #[cfg(not(target_os = "windows"))]
     #[test]
     fn broadcast_works_across_multiple_shards() {
         // Force 4 reactor shards so this exercises cross-shard fan-out even on a
@@ -739,17 +748,25 @@ mod tests {
             )
             .expect("server binds")
         };
-        // 0 clamps to a single reactor; an explicit count is honoured verbatim.
+        // 0 clamps to a single reactor. Supported Unix transports honour an
+        // explicit count; Windows remains single-shard until it has accept fan-out.
         assert_eq!(bind(0).worker_count(), 1);
         assert_eq!(bind(1).worker_count(), 1);
+        #[cfg(not(target_os = "windows"))]
         assert_eq!(bind(3).worker_count(), 3);
-        // The default constructor picks at least one shard (one per CPU).
+        #[cfg(target_os = "windows")]
+        assert_eq!(bind(3).worker_count(), 1);
+        // The default constructor picks at least one shard (one per CPU where
+        // sharding is supported, one on Windows).
         let default = IrcReactorServer::bind(IrcConfig {
             port: 0,
             ..IrcConfig::default()
         })
         .expect("server binds");
+        #[cfg(not(target_os = "windows"))]
         assert!(default.worker_count() >= 1);
+        #[cfg(target_os = "windows")]
+        assert_eq!(default.worker_count(), 1);
     }
 
     #[test]

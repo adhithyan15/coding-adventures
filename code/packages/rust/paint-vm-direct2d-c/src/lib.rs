@@ -151,6 +151,13 @@ fn render_scene(scene: &PaintScene) -> Option<paint_instructions::PixelContainer
 }
 
 #[no_mangle]
+/// Render a rectangle-only scene into a newly allocated RGBA8 buffer.
+///
+/// # Safety
+///
+/// `rects` must reference `rect_count` readable instructions when the count is
+/// nonzero. `out_buffer` must be null or valid and aligned for writing one
+/// [`paint_rgba8_buffer_t`], with no conflicting access for the call's duration.
 pub unsafe extern "C" fn paint_vm_direct2d_render_rect_scene(
     width: u32,
     height: u32,
@@ -204,6 +211,15 @@ pub unsafe extern "C" fn paint_vm_direct2d_render_rect_scene(
 }
 
 #[no_mangle]
+/// Render a rectangle-and-text scene with the Direct2D backend.
+///
+/// # Safety
+///
+/// Each non-null instruction pointer must reference its declared number of
+/// readable elements. Every non-null `text` and `font_ref` pointer nested in a
+/// text instruction must remain readable for its corresponding byte length.
+/// `out_buffer` must be null or valid and aligned for writing one
+/// [`paint_rgba8_buffer_t`], with no conflicting access for the call's duration.
 pub unsafe extern "C" fn paint_vm_direct2d_render_scene(
     width: u32,
     height: u32,
@@ -255,6 +271,15 @@ pub unsafe extern "C" fn paint_vm_direct2d_render_scene(
 }
 
 #[no_mangle]
+/// Render a rectangle-and-text scene with the GDI backend.
+///
+/// # Safety
+///
+/// Each non-null instruction pointer must reference its declared number of
+/// readable elements. Every non-null `text` and `font_ref` pointer nested in a
+/// text instruction must remain readable for its corresponding byte length.
+/// `out_buffer` must be null or valid and aligned for writing one
+/// [`paint_rgba8_buffer_t`], with no conflicting access for the call's duration.
 pub unsafe extern "C" fn paint_vm_gdi_render_scene(
     width: u32,
     height: u32,
@@ -305,6 +330,7 @@ pub unsafe extern "C" fn paint_vm_gdi_render_scene(
     }
 }
 
+#[cfg(not(target_os = "windows"))]
 unsafe fn clear_out_buffer(out_buffer: *mut paint_rgba8_buffer_t) {
     if out_buffer.is_null() {
         return;
@@ -316,6 +342,12 @@ unsafe fn clear_out_buffer(out_buffer: *mut paint_rgba8_buffer_t) {
 }
 
 #[no_mangle]
+/// Release pixel storage returned through a [`paint_rgba8_buffer_t`].
+///
+/// # Safety
+///
+/// `data` and `len` must be the unchanged pair returned by this library, and
+/// the allocation must not already have been freed.
 pub unsafe extern "C" fn paint_vm_direct2d_free_buffer_data(data: *mut u8, len: usize) {
     if data.is_null() || len == 0 {
         return;

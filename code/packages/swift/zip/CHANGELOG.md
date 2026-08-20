@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.2.0] - 2026-08-14
+
+### Added
+
+- Public `rawDeflate`, `rawInflate`, and `rawInflateCounted` APIs with a typed
+  stable error taxonomy, exact consumed-byte reporting, and a caller-lowerable
+  256 MiB output ceiling.
+- Strict stored, fixed, dynamic, and multi-block RFC 1951 decoding, including
+  canonical Huffman validation, HDIST 32 zero reserved slots, symbol 285, and
+  the full 32 KiB overlap window.
+- All 34 language-neutral raw RFC 1951/CRC-32 cases, an independent test-only
+  Python/zlib oracle, dynamic ZIP integration, and full-window coverage.
+- Explicit empty capability metadata for the pure in-memory production library.
+
+### Security
+
+- ZIP method 8 now rejects compressed suffix cavities and any declared
+  uncompressed-size mismatch before CRC-32 validation instead of trimming
+  excess output.
+- Raw-inflate failures return no partial output and use payload-blind messages.
+
 ## [0.1.0] - 2026-04-23
 
 ### Added

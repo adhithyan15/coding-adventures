@@ -223,6 +223,24 @@ Three of the eight families report `null` rather than a number in the projection
 That means **not projectable** — reinforcement debt at B1 is a function of lessons
 nobody has written — which is a different fact from zero.
 
+### The super-gentle cross-language queue (HL17)
+
+```bash
+npm run report:gentle-ramp
+npm run report:gentle-ramp -- --format json
+```
+
+The completion plan measures the climb to the assessment target. This smaller
+report answers a different question: **where will the learner hit the next cliff?**
+It joins duration, atom and glyph load, order, forward language, script closure,
+writing, retrieval and chapter payoffs for every active track.
+
+The output intentionally has no composite score. A row retains its own unit —
+seconds, lessons, glyphs, dependency edges or retrieval windows — so a severe
+opening defect cannot be averaged away. Writing exposure does not count as writing
+practice, and the report names how many opening lessons precede the first real
+writing/script lesson or block.
+
 ### Continuity — does the course have a memory of itself? (HL09)
 
 The ramp budgets measure how big each **step** is. This measures whether the steps
