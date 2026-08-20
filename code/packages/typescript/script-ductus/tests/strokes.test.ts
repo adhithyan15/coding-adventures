@@ -118,6 +118,7 @@ const GUJARATI_UU = DUCTUS[ductusKey("gujarati", "ઊ")];
 const GUJARATI_E = DUCTUS[ductusKey("gujarati", "એ")];
 const GUJARATI_AI = DUCTUS[ductusKey("gujarati", "ઐ")];
 const GUJARATI_O = DUCTUS[ductusKey("gujarati", "ઓ")];
+const GUJARATI_AU = DUCTUS[ductusKey("gujarati", "ઔ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1897,6 +1898,20 @@ describe("handwriting ductus", () => {
     expect(Math.max(...highArc.map((point) => point.y))).toBeGreaterThan(
       Math.max(...left.map((point) => point.y)),
     );
+  });
+
+  it("Gujarati ઔ extends ઓ with a second, higher arc", () => {
+    expect(GUJARATI_AU.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_AU)).toBe(4);
+    expect(GUJARATI_AU.strokes).toHaveLength(5);
+    expect(GUJARATI_AU.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const lowerArc = GUJARATI_AU.strokes[3].segments[0].path;
+    const higherArc = GUJARATI_AU.strokes[4].segments[0].path;
+    expect(Math.max(...higherArc.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...lowerArc.map((point) => point.y)),
+    );
+    expect(lowerArc.at(-1)!.x).toBeGreaterThan(lowerArc[0].x);
+    expect(higherArc.at(-1)!.x).toBeGreaterThan(higherArc[0].x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4177,6 +4192,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /four ordered pen-down runs.*first SVG path.*આ's joined body.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*first separate right stem.*lower foot.*lifts again.*third SVG path.*trailing stem.*matching foot.*lifts once more.*fourth SVG path.*high arc.*left to right.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem-before-high-arc order.*three-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઔ traces its stacked arcs to five ordered paths", () => {
+    const src = GUJARATI_AU.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઔ animation.*first through fifth SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /five ordered pen-down runs.*first SVG path.*ઓ's joined body.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*first separate right stem.*lower foot.*lifts again.*third SVG path.*trailing stem.*matching foot.*lifts once more.*fourth SVG path.*lower high arc.*left to right.*lifts a fourth time.*fifth SVG path.*second, higher arc.*same direction.*remaining path slot is empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem-before-lower-arc-before-higher-arc order.*four-lift evidence/i,
     );
   });
 

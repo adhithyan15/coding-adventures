@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ઔ ductus (HL-C09FP)
+
+- Restore missing Gujarati inventory entry **ઔ** and render its body, two stems, lower arc, and higher arc as five runs with four lifts.
+- Preserve t30apps.com's version-1.0 five-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue missing **ઋ** next.
+
 ### Added — cited Gujarati ઓ ductus (HL-C09FO)
 
 - Render **ઓ** in six movements across its joined body, two separate stems, and separate high arc with three lifts.
