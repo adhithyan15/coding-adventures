@@ -3,6 +3,28 @@
 All notable changes to this package will be documented in this file.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] — 2026-08-20
+
+### Added
+
+- Public ZIP-owned raw RFC 1951 deflate, inflate, counted-inflate, and
+  incremental CRC-32 APIs.
+- Dynamic-Huffman and multi-block decoding, full 32 KiB back-reference
+  support, a caller-lowerable 256 MiB output ceiling, exact compressed-byte
+  accounting, and the shared 14-code payload-blind failure taxonomy.
+- The complete 34-case language-neutral conformance corpus, an independent
+  Python/zlib interoperability oracle, a foreign full-window stream, and an
+  aggregate extraction-budget regression test.
+
+### Changed
+
+- ZIP extraction now rejects compressed suffix cavities and stored or inflated
+  size mismatches instead of ignoring or trimming them.
+- One-shot extraction defaults to the portable 256 MiB aggregate ceiling and
+  `unzipWithLimit` exposes a caller-lowerable budget.
+- Package version is 0.2.0 and Windows/Unix coverage gates select the explicit
+  `CodingAdventures.Zip.FSharp` assembly.
+
 ## [0.1.1] — 2026-08-03
 
 ### Rescued

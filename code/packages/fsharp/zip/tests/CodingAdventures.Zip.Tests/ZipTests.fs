@@ -349,17 +349,9 @@ let ``Hardening LocalOffset overflow rejected`` () =
     Assert.Throws<InvalidDataException>(fun () -> reader.Read("f.txt") |> ignore) |> ignore
 
 [<Fact>]
-let ``Hardening UncompressedSize overflow does not corrupt trim`` () =
-    // Uncompressed_Size is at offset +24 within the CD Header. The reader
-    // trims the decompressed output down to this declared size — but only
-    // when the *actual* decompressed length exceeds it. Narrowing an
-    // oversized declared size (e.g. 0x80000000u) straight to `int` before
-    // that comparison wraps it negative, making "decompressed.Length >
-    // int(declared)" spuriously TRUE and driving the trim slice with a
-    // wrapped-negative upper bound. Here the true decompressed length (46
-    // bytes) is legitimately smaller than the corrupted declared size in
-    // int64, so the fixed comparison must NOT trim, and the correct original
-    // bytes (which still match the untouched CRC field) must come back.
+let ``Hardening UncompressedSize overflow is rejected exactly`` () =
+    // Uncompressed_Size is authoritative. An oversized corrupt declaration
+    // must be rejected instead of narrowed, trimmed, or ignored.
     let data = Encoding.UTF8.GetBytes("the quick brown fox jumps over the lazy dog ")
     let archive = ZipArchive.zip (seq { { Name = "f.txt"; Data = data } })
     let corrupted = Array.copy archive
@@ -368,8 +360,7 @@ let ``Hardening UncompressedSize overflow does not corrupt trim`` () =
     pokeU32 corrupted (cdOffset + 24) 0x80000000u
 
     let reader = ZipReader(corrupted)
-    let result = reader.Read("f.txt")
-    Assert.Equal<byte[]>(data, result)
+    Assert.Throws<InvalidDataException>(fun () -> reader.Read("f.txt") |> ignore) |> ignore
 
 [<Fact>]
 let ``Hardening oversized entry name rejected`` () =

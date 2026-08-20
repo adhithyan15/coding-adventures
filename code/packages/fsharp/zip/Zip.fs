@@ -196,6 +196,9 @@ type private BitReader(data: byte[]) =
     let mutable buf  : uint64 = 0UL  // bit accumulator
     let mutable bits : int    = 0    // valid bits in buf
 
+    /// The exact source byte reached by non-speculative bit reads.
+    member _.Position = pos
+
     /// Ensure the accumulator holds at least `need` bits.
     /// Returns false if the source is exhausted.
     member private _.Fill(need: int) =
@@ -427,128 +430,218 @@ module private DeflateCompressor =
 // RFC 1951 DEFLATE — Decompressor
 // =============================================================================
 //
-// Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-// Dynamic Huffman blocks (BTYPE=10) throw InvalidDataException — we only write
-// BTYPE=01, but stored blocks from other tools must be accepted too.
+// The public decoder accepts stored (BTYPE=00), fixed-Huffman (BTYPE=01),
+// dynamic-Huffman (BTYPE=10), and multi-block raw streams.
 //
 // Security limits:
 //   - Maximum output: 256 MB (decompression bomb guard)
 //   - LEN/NLEN validation on stored blocks
 
+/// A stable, payload-blind raw RFC 1951 inflate failure.
+type RawInflateError(code: string) =
+    inherit Exception(code)
+    member _.Code = code
+
+/// Decoded bytes plus the exact compressed byte count reached.
+type RawInflateResult =
+    { Output: byte[]
+      BytesConsumed: int }
+
+type private HuffmanCompleteness =
+    | CodeLength
+    | LiteralLength
+    | Distance
+
+type private HuffmanTable(codesByLength: Dictionary<int, int>[], maximumLength: int) =
+    member _.Decode(reader: BitReader) =
+        let mutable code = 0
+        let mutable symbol = None
+        let mutable length = 1
+        while length <= maximumLength && symbol.IsNone do
+            match reader.ReadLsb(1) with
+            | None -> raise (RawInflateError "unexpected-eof")
+            | Some bit ->
+                code <- (code <<< 1) ||| bit
+                match codesByLength[length].TryGetValue(code) with
+                | true, value -> symbol <- Some value
+                | false, _ -> ()
+            length <- length + 1
+        match symbol with
+        | Some value -> value
+        | None -> raise (RawInflateError "unexpected-eof")
+
+/// ZIP-owned, in-memory raw RFC 1951 primitives.
 [<RequireQualifiedAccess>]
-module private DeflateDecompressor =
+module RawRfc1951 =
+    let [<Literal>] maxOutput = 256 * 1024 * 1024
 
-    let private maxOutputBytes = 256 * 1024 * 1024
+    let errorCodes =
+        [| "invalid-output-limit"; "unexpected-eof"; "reserved-block-type"
+           "stored-length-mismatch"; "huffman-oversubscribed"
+           "incomplete-code-length-tree"; "incomplete-literal-length-tree"
+           "incomplete-distance-tree"; "repeat-without-previous"; "repeat-overrun"
+           "invalid-literal-length-symbol"; "reserved-distance-symbol"
+           "invalid-back-reference"; "output-limit-exceeded" |]
 
-    /// Decompress raw RFC 1951 DEFLATE bytes into the original data.
-    /// Throws InvalidDataException for corrupt or unsupported input.
-    let decompress (data: byte[]) : byte[] =
-        let br     = BitReader(data)
+    let private fail code = raise (RawInflateError code)
+
+    let private ensureCapacity additional current maximum =
+        if additional > maximum - current then fail "output-limit-exceeded"
+
+    let private buildHuffman (lengths: int[]) completeness =
+        let counts = Array.zeroCreate 16
+        for length in lengths do
+            if length > 15 then fail "huffman-oversubscribed"
+            if length > 0 then counts[length] <- counts[length] + 1
+
+        let mutable left = 1
+        for length in 1 .. 15 do
+            left <- left * 2 - counts[length]
+            if left < 0 then fail "huffman-oversubscribed"
+
+        let symbolCount = Array.sum counts
+        if left <> 0 then
+            match completeness with
+            | CodeLength -> fail "incomplete-code-length-tree"
+            | LiteralLength -> fail "incomplete-literal-length-tree"
+            | Distance when symbolCount <> 0 && not (symbolCount = 1 && counts[1] = 1) ->
+                fail "incomplete-distance-tree"
+            | Distance -> ()
+
+        let nextCode = Array.zeroCreate 16
+        let mutable code = 0
+        for length in 1 .. 15 do
+            code <- (code + counts[length - 1]) <<< 1
+            nextCode[length] <- code
+
+        let tables = Array.init 16 (fun _ -> Dictionary<int, int>())
+        let mutable maximumLength = 0
+        for symbol in 0 .. lengths.Length - 1 do
+            let length = lengths[symbol]
+            if length <> 0 then
+                tables[length][nextCode[length]] <- symbol
+                nextCode[length] <- nextCode[length] + 1
+                maximumLength <- max maximumLength length
+        HuffmanTable(tables, maximumLength)
+
+    let private fixedTables () =
+        let literalLengths = Array.zeroCreate 288
+        Array.fill literalLengths 0 144 8
+        Array.fill literalLengths 144 112 9
+        Array.fill literalLengths 256 24 7
+        Array.fill literalLengths 280 8 8
+        let distanceLengths = Array.create 32 5
+        buildHuffman literalLengths LiteralLength, buildHuffman distanceLengths Distance
+
+    let private repeat (target: ResizeArray<int>) value count total =
+        if count > total - target.Count then fail "repeat-overrun"
+        for _ in 1 .. count do target.Add(value)
+
+    let private readDynamicTables (reader: BitReader) =
+        let read bits =
+            match reader.ReadLsb(bits) with
+            | Some value -> value
+            | None -> fail "unexpected-eof"
+        let literalCount = read 5 + 257
+        let distanceCount = read 5 + 1
+        let codeLengthCount = read 4 + 4
+        if literalCount > 286 then fail "invalid-literal-length-symbol"
+
+        let order = [| 16; 17; 18; 0; 8; 7; 9; 6; 10; 5; 11; 4; 12; 3; 13; 2; 14; 1; 15 |]
+        let codeLengths = Array.zeroCreate 19
+        for index in 0 .. codeLengthCount - 1 do
+            codeLengths[order[index]] <- read 3
+        let codeLengthTable = buildHuffman codeLengths CodeLength
+
+        let total = literalCount + distanceCount
+        let lengths = ResizeArray<int>(total)
+        while lengths.Count < total do
+            match codeLengthTable.Decode(reader) with
+            | literal when literal >= 0 && literal <= 15 -> lengths.Add(literal)
+            | 16 ->
+                if lengths.Count = 0 then fail "repeat-without-previous"
+                repeat lengths lengths[lengths.Count - 1] (read 2 + 3) total
+            | 17 -> repeat lengths 0 (read 3 + 3) total
+            | 18 -> repeat lengths 0 (read 7 + 11) total
+            | _ -> fail "unexpected-eof"
+
+        let literalLengths = lengths.GetRange(0, literalCount).ToArray()
+        let distanceLengths = lengths.GetRange(literalCount, distanceCount).ToArray()
+        if literalLengths[256] = 0 then fail "incomplete-literal-length-tree"
+        buildHuffman literalLengths LiteralLength, buildHuffman distanceLengths Distance
+
+    let private decodeCompressed (reader: BitReader) (output: ResizeArray<byte>)
+                                 (literalLength: HuffmanTable) (distance: HuffmanTable) maximum =
+        let read bits =
+            match reader.ReadLsb(bits) with
+            | Some value -> value
+            | None -> fail "unexpected-eof"
+        let mutable blockDone = false
+        while not blockDone do
+            let symbol = literalLength.Decode(reader)
+            if symbol >= 0 && symbol <= 255 then
+                ensureCapacity 1 output.Count maximum
+                output.Add(byte symbol)
+            elif symbol = 256 then
+                blockDone <- true
+            elif symbol >= 257 && symbol <= 285 then
+                let baseLength, extraLengthBits = DeflateTable.lengths[symbol - 257]
+                let length = baseLength + read extraLengthBits
+                let distanceSymbol = distance.Decode(reader)
+                if distanceSymbol >= 30 then fail "reserved-distance-symbol"
+                let baseDistance, extraDistanceBits = DeflateTable.dists[distanceSymbol]
+                let backwardDistance = baseDistance + read extraDistanceBits
+                if backwardDistance <= 0 || backwardDistance > output.Count then
+                    fail "invalid-back-reference"
+                ensureCapacity length output.Count maximum
+                for _ in 1 .. length do
+                    ensureCapacity 1 output.Count maximum
+                    output.Add(output[output.Count - backwardDistance])
+            else
+                fail "invalid-literal-length-symbol"
+
+    let rawInflateCounted (data: byte[]) (maximum: int) : RawInflateResult =
+        if isNull data then nullArg "data"
+        if maximum < 0 || maximum > maxOutput then fail "invalid-output-limit"
+        let reader = BitReader(data)
         let output = ResizeArray<byte>()
         let mutable finished = false
-
         while not finished do
-            let bfinal =
-                match br.ReadLsb(1) with
-                | Some v -> v
-                | None   -> raise (InvalidDataException "deflate: unexpected EOF reading BFINAL")
-            let btype =
-                match br.ReadLsb(2) with
-                | Some v -> v
-                | None   -> raise (InvalidDataException "deflate: unexpected EOF reading BTYPE")
+            let read bits =
+                match reader.ReadLsb(bits) with
+                | Some value -> value
+                | None -> fail "unexpected-eof"
+            let final = read 1
+            match read 2 with
+            | 0 ->
+                reader.Align()
+                let length = read 16
+                let complement = read 16
+                if length <> (complement ^^^ 0xffff) then fail "stored-length-mismatch"
+                ensureCapacity length output.Count maximum
+                for _ in 1 .. length do
+                    ensureCapacity 1 output.Count maximum
+                    output.Add(byte (read 8))
+            | 1 ->
+                let literalLength, distance = fixedTables ()
+                decodeCompressed reader output literalLength distance maximum
+            | 2 ->
+                let literalLength, distance = readDynamicTables reader
+                decodeCompressed reader output literalLength distance maximum
+            | _ -> fail "reserved-block-type"
+            finished <- final = 1
+        { Output = output.ToArray(); BytesConsumed = reader.Position }
 
-            match btype with
-            | 0b00 ->
-                // ── Stored block ────────────────────────────────────────────
-                // Align to byte boundary before reading the length fields.
-                br.Align()
-                let len =
-                    match br.ReadLsb(16) with
-                    | Some v -> v
-                    | None   -> raise (InvalidDataException "deflate: EOF reading stored LEN")
-                let nlen =
-                    match br.ReadLsb(16) with
-                    | Some v -> v
-                    | None   -> raise (InvalidDataException "deflate: EOF reading stored NLEN")
-                // RFC 1951 §3.2.4: NLEN is the one's complement of LEN.
-                if (nlen ^^^ 0xFFFF) <> len then
-                    raise (InvalidDataException(sprintf "deflate: stored LEN/NLEN mismatch (%d vs %d)" len nlen))
-                if output.Count + len > maxOutputBytes then
-                    raise (InvalidDataException "deflate: output size limit exceeded")
-                for _ in 0 .. len - 1 do
-                    match br.ReadLsb(8) with
-                    | Some b -> output.Add(byte b)
-                    | None   -> raise (InvalidDataException "deflate: EOF inside stored block")
+    let rawInflate (data: byte[]) (maximum: int) =
+        (rawInflateCounted data maximum).Output
 
-            | 0b01 ->
-                // ── Fixed Huffman block ──────────────────────────────────────
-                let mutable blockDone = false
-                while not blockDone do
-                    let sym =
-                        match FixedHuffman.decodeLL br with
-                        | Some v -> v
-                        | None   -> raise (InvalidDataException "deflate: EOF decoding LL symbol")
+    let rawDeflate (data: byte[]) =
+        if isNull data then nullArg "data"
+        DeflateCompressor.compress data
 
-                    if sym >= 0 && sym <= 255 then
-                        if output.Count >= maxOutputBytes then
-                            raise (InvalidDataException "deflate: output size limit exceeded")
-                        output.Add(byte sym)
-                    elif sym = 256 then
-                        // End-of-block: leave the inner loop.
-                        blockDone <- true
-                    elif sym >= 257 && sym <= 285 then
-                        // Back-reference: decode length, then distance.
-                        let idx = sym - 257
-                        if idx >= DeflateTable.lengths.Length then
-                            raise (InvalidDataException(sprintf "deflate: invalid length sym %d" sym))
-
-                        let (baseLen, extraLenBits) = DeflateTable.lengths[idx]
-                        let extraLen =
-                            if extraLenBits > 0 then
-                                match br.ReadLsb(extraLenBits) with
-                                | Some v -> v
-                                | None   -> raise (InvalidDataException "deflate: EOF reading length extra")
-                            else 0
-                        let matchLen = baseLen + extraLen
-
-                        // Distance code is always 5 bits, read MSB-first.
-                        let distCode =
-                            match br.ReadMsb(5) with
-                            | Some v -> v
-                            | None   -> raise (InvalidDataException "deflate: EOF reading distance code")
-                        if distCode >= DeflateTable.dists.Length then
-                            raise (InvalidDataException(sprintf "deflate: invalid dist code %d" distCode))
-
-                        let (baseDist, extraDistBits) = DeflateTable.dists[distCode]
-                        let extraDist =
-                            if extraDistBits > 0 then
-                                match br.ReadLsb(extraDistBits) with
-                                | Some v -> v
-                                | None   -> raise (InvalidDataException "deflate: EOF reading distance extra")
-                            else 0
-                        let matchOffset = baseDist + extraDist
-
-                        if matchOffset > output.Count then
-                            raise (InvalidDataException(
-                                sprintf "deflate: back-ref offset %d > output len %d" matchOffset output.Count))
-                        if output.Count + matchLen > maxOutputBytes then
-                            raise (InvalidDataException "deflate: output size limit exceeded")
-
-                        // Copy byte-by-byte to handle overlapping matches.
-                        // Example: offset=1, length=4 expands a single byte into a run of 4.
-                        for _ in 0 .. matchLen - 1 do
-                            output.Add(output[output.Count - matchOffset])
-                    else
-                        raise (InvalidDataException(sprintf "deflate: invalid LL symbol %d" sym))
-
-            | 0b10 ->
-                raise (InvalidDataException "deflate: dynamic Huffman blocks (BTYPE=10) not supported")
-            | _ ->
-                raise (InvalidDataException "deflate: reserved BTYPE=11")
-
-            if bfinal = 1 then finished <- true
-
-        output.ToArray()
+    let crc32 (data: byte[]) (initial: uint) =
+        if isNull data then nullArg "data"
+        Crc32.compute data initial
 
 // =============================================================================
 // Public API — ZipEntry
@@ -933,26 +1026,32 @@ type ZipReader(data: byte[]) =
 
             let compressed = data[dataStart .. dataEnd - 1]
 
-            // Decompress according to method.
+            // Container boundaries are exact: suffix bytes and declared-size
+            // mismatches are rejected rather than trimmed or ignored.
             let decompressed =
                 match int m.Method with
-                | 0 -> compressed  // Stored — verbatim
-                | 8 -> DeflateDecompressor.decompress compressed
+                | 0 ->
+                    if m.CompressedSize <> m.UncompressedSize then
+                        raise (InvalidDataException "zip: stored entry sizes do not match")
+                    compressed
+                | 8 ->
+                    if int64 m.UncompressedSize > int64 RawRfc1951.maxOutput then
+                        raise (InvalidDataException "zip: uncompressed size exceeds the raw inflate ceiling")
+                    let result =
+                        try
+                            RawRfc1951.rawInflateCounted compressed (int m.UncompressedSize)
+                        with :? RawInflateError as error ->
+                            raise (InvalidDataException(
+                                sprintf "zip: raw inflate failed: %s" error.Code,
+                                error))
+                    if result.BytesConsumed <> compressed.Length then
+                        raise (InvalidDataException "zip: compressed payload contains trailing bytes")
+                    if result.Output.Length <> int m.UncompressedSize then
+                        raise (InvalidDataException "zip: uncompressed size does not match the directory")
+                    result.Output
                 | meth ->
                     raise (InvalidDataException(
                         sprintf "zip: unsupported compression method %d for '%s'" meth m.Name))
-
-            // Trim to declared uncompressed size to guard against decompressor over-read.
-            // Compare in int64 first: `m.UncompressedSize` is an attacker-controlled
-            // uint32 straight from the header, and narrowing an oversized value
-            // (e.g. 0xFFFFFFFFu) to `int` before comparing would wrap it negative,
-            // making `decompressed.Length > int m.UncompressedSize` vacuously true
-            // and feeding a negative index into the slice below.
-            let declaredSize64 = int64 m.UncompressedSize
-            let decompressed =
-                if int64 decompressed.Length > declaredSize64 then
-                    decompressed[.. int declaredSize64 - 1]
-                else decompressed
 
             // Verify CRC-32 — this detects corruption of the decompressed content.
             let actualCrc = Crc32.compute decompressed 0u
@@ -995,15 +1094,21 @@ module ZipArchive =
                 writer.AddFile(entry.Name, entry.Data)
         writer.Finish()
 
-    /// Extract all entries from a ZIP archive.
-    /// Directory entries are included with empty Data.
-    /// Throws InvalidDataException on corrupt archives.
-    let unzip (data: byte[]) : ZipEntry list =
+    /// Extract all entries with a caller-selected aggregate output ceiling.
+    let unzipWithLimit (data: byte[]) (maxTotalBytes: int64) : ZipEntry list =
         if isNull data then nullArg "data"
         let reader = ZipReader(data)
-        reader.Entries
-        |> List.map (fun entry ->
+        let mutable totalBytes = 0L
+        reader.Entries |> List.map (fun entry ->
             let bytes =
                 if entry.Name.EndsWith('/') then [||]
                 else reader.Read(entry.Name)
+            totalBytes <- totalBytes + int64 bytes.Length
+            if totalBytes > maxTotalBytes then
+                raise (InvalidDataException(
+                    sprintf "zip: aggregate decompressed size exceeds the %d-byte limit (decompression bomb guard)" maxTotalBytes))
             { Name = entry.Name; Data = bytes })
+
+    /// Extract all entries with the portable 256 MiB aggregate ceiling.
+    let unzip (data: byte[]) : ZipEntry list =
+        unzipWithLimit data (256L * 1024L * 1024L)

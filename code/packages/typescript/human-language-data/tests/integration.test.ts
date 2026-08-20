@@ -182,11 +182,10 @@ describe("real curriculum", () => {
     expect(report.summary.totalLessons).toBe(lessons.length);
     expect(report.summary.authoredBooks).toBe(23);
     // HL-C134 made two previously hidden opening cliffs measurable:
-    // KA-C01-namaskara (333s) and TE-C01-namaskaram (314s). The Kannada lesson
-    // now keeps one greeting, one decode, one guided copy and one etymology
-    // payoff in 240 effective seconds. Telugu remains visible work; the ceiling
-    // is never raised to make either lesson look compliant.
-    expect(report.summary.durationViolations).toBe(1);
+    // KA-C01-namaskara (333s) and TE-C01-namaskaram (314s). Both lessons now
+    // keep one greeting, one decode, one guided copy, and one etymology payoff
+    // in 240 effective seconds. The ceiling was never raised to hide either.
+    expect(report.summary.durationViolations).toBe(0);
     expect(report.summary.unknownPrerequisites).toBe(0);
     expect(report.schemas.tracks).toHaveLength(23);
     expect(report.books.tracks).toHaveLength(23);
