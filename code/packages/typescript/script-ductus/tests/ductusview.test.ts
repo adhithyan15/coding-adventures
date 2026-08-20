@@ -305,6 +305,8 @@ const GUJARATI_CA = ductusFor("ચ", "gujarati")!;
 const gujaratiCaOutline = gujaratiOutline("ચ");
 const GUJARATI_CHA = ductusFor("છ", "gujarati")!;
 const gujaratiChaOutline = gujaratiOutline("છ");
+const GUJARATI_JA = ductusFor("જ", "gujarati")!;
+const gujaratiJaOutline = gujaratiOutline("જ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3964,6 +3966,33 @@ describe("Gujarati છ — both upper lobes join through one continuous body", (
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_CHA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati જ — both loops join through the crossing and exit", () => {
+  const steps = ductusSteps(GUJARATI_JA);
+  const strip = ductusFilmstrip(GUJARATI_JA, gujaratiJaOutline);
+
+  it("shows three connected movements in one pen-down run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the upper-left loop",
+      "continue diagonally through the crossing body",
+      "circle the lower-right loop and sweep into the upper-right exit",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiJaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_JA.strokes[0], 1),
     );
   });
 });
