@@ -4217,6 +4217,67 @@ child as `pr-open`, with that PR as the loop's sole active parity publication;
 all remaining PNG children and the newly classified APNG neutral correction
 remain pending while its required checks run.
 
+### Post-#12324 refresh and APNG neutral-correction selection
+
+Go PNG PR #12324 completed 30 terminal acceptable checks (24 successes, five
+expected skips, and one neutral CodeQL conclusion), including both CI gates and
+Linux, macOS, and Windows builds. After the loop invoked GitHub's squash
+auto-merge path, GitHub immediately merged final reviewed head
+`4d292e615d31af4221c95632f60706c76cb838df` as
+`cbce24c513e02c4a3d41e3b1ca731240bbddd5a4` at
+2026-08-20T21:43:31Z and deleted the source branch.
+
+The exact-merge collision inventory remains at 15 established lanes and 1,368
+canonical implementation identities. The new Go root advances the established
+slot count from 4,552 to 4,553, moves `image-codec-png` from the singleton band
+to the 2-4 band, and leaves zero collisions and zero unknown buckets. It is one
+owned expansion of an existing identity, so no additional classification owner
+is required.
+
+Two items are dependency-ready after the Go merge: the APNG neutral correction
+and the Go paint-adapter reconciliation. The neutral correction is selected
+because it unlocks all eleven remaining PNG lane children, while the adapter
+reconciliation unlocks no lane. The bounded tranche clarifies IC18's named APNG
+refusal, adds deterministic valid-CRC `acTL`, `fcTL`, and `fdAT` rejection
+vectors without changing schema version or error taxonomy, makes the TypeScript
+oracle reject those names only after normal chunk and CRC validation, and
+updates both the TypeScript and Go consumers plus pinned corpus summaries from
+82 to 85 cases. It adds no animation parser, dependency, capability, or new
+implementation lane.
+
+Before final validation, `origin/main` advanced to
+`9237b4e1be43946aa38c1109387704e3b62a0ec1` through Gujarati `pa` ductus work.
+That commit changes only existing human-language and script-ductus surfaces,
+adds no package root, and has no path or semantic overlap with the APNG tranche.
+The branch rebased cleanly, and the collision inventory remains unchanged at
+1,368 identities, 4,553 slots, zero collisions, and zero unknown buckets.
+During the final validation pass, main advanced once more to
+`377e5add479229badcab758ee166d43edda782e7` through Italian curriculum recovery.
+That second commit is likewise root-neutral and disjoint from every owned APNG,
+fixture, package, state, and roadmap implementation surface.
+
+The completed correction grows the deterministic corpus from 82 to 85 cases
+without changing its schema or ordered 29-error taxonomy. Independent Python
+validation proves the three APNG chunks have valid framing and CRCs; removing
+the TypeScript rejection produced exactly three portable-suite failures before
+the final source change. The final TypeScript suite passes 145 tests with 100%
+statement, branch, function, and line coverage, while the Go consumer passes
+the expanded public-surface corpus with 99.0% race coverage. Build, lint, type,
+module, audit, capability, parity, state-DAG, diff, and authority scans pass.
+A freshly compiled repository build tool discovers 4,973 packages, emits the
+same eight affected nodes for Linux, Darwin, and Windows, and builds all eight
+PNG/pixel-container/ZIP/LZSS nodes on the real local Windows front door with
+4,965 unrelated packages skipped.
+
+Ready-for-review PR #12334 was opened from clean validated head
+`e7bcb9026ef107d6409e1bb35502dfd290e0de7e` after a normal first push. Three
+independent final audits found no code, security, portability, topology, or
+ownership blocker across 15 live open PRs and 22 no-PR remote branches. The
+APNG item is now `pr-open` and is the loop's only active parity publication;
+its initial seven CI checks are queued, so all other parity work remains pending
+and auto-merge remains disabled until CI is terminal acceptable and conflict
+status is clear.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

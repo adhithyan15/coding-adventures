@@ -314,6 +314,7 @@ class ImageCodecPngFixtureTests(unittest.TestCase):
     def test_case_ids_are_unique_and_every_error_is_exercised(self) -> None:
         document = fixture_document()
         identifiers = [case["id"] for case in document["cases"]]
+        self.assertEqual(len(identifiers), 85)
         self.assertEqual(len(identifiers), len(set(identifiers)))
         exercised = {
             case["expected"]["error_id"]
@@ -321,6 +322,20 @@ class ImageCodecPngFixtureTests(unittest.TestCase):
             if case["operation"] in ("decode-error", "encode-error")
         }
         self.assertEqual(exercised, set(EXPECTED_ERROR_IDS))
+
+    def test_apng_rejections_have_valid_crc_and_named_chunks(self) -> None:
+        by_id = {case["id"]: case for case in fixture_document()["cases"]}
+        expected = {
+            "png-v1-error-apng-actl": "acTL",
+            "png-v1-error-apng-fctl": "fcTL",
+            "png-v1-error-apng-fdat": "fdAT",
+        }
+        for identifier, chunk_type in expected.items():
+            case = by_id[identifier]
+            self.assertEqual(case["operation"], "decode-error")
+            self.assertEqual(case["expected"], {"error_id": "unsupported-feature"})
+            chunks = parse_chunks(bytes.fromhex(case["png_hex"]))
+            self.assertIn(chunk_type, [kind for kind, _ in chunks])
 
     def test_encode_vectors_have_exact_pixel_and_chunk_contracts(self) -> None:
         schema = load_json(FIXTURE_ROOT / "schema.json")

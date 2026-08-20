@@ -1,5 +1,11 @@
 # Changelog — image-codec-png (Go)
 
+## 0.1.1 — 2026-08-20
+
+- Updated the portable consumer to the 85-case neutral corpus, adding shared
+  valid-CRC `acTL`, `fcTL`, and `fdAT` rejection evidence. Production already
+  refused all three APNG chunks, so the public codec needed no behavior change.
+
 ## 0.1.0 — 2026-08-20
 
 - Added the bounded IC18 PNG encoder and decoder for 8-bit colour types 0, 2,

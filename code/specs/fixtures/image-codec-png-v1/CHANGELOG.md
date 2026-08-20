@@ -1,5 +1,15 @@
 # Changelog — IC18 portable PNG fixtures
 
+## 1.0.1 — 2026-08-20
+
+### Added
+
+- Three deterministic valid-CRC rejection vectors for APNG `acTL`, `fcTL`,
+  and `fdAT`, growing the corpus from 82 to 85 cases without changing the
+  schema version or 29-code error taxonomy.
+- Independent validator pins for the exact corpus count, APNG chunk names,
+  chunk framing, CRC validity, and `unsupported-feature` result.
+
 ## 1.0.0 — 2026-08-20
 
 ### Added
