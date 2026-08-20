@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:b11fbbd97333cce0",
+  "sourceHash": "fnv1a64:5b6bc596ecc38521",
   "summary": {
     "totalLessons": 3404,
     "voice": 2460,
@@ -49959,7 +49959,7 @@
       "id": "PT-C01-bom",
       "language": "portuguese",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -49971,13 +49971,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d7a6174cadee47fd"
+      "sourceHash": "fnv1a64:31d095b961daee22"
     },
     {
-      "id": "PT-C01-bom-dia",
+      "id": "PT-C01-o-a",
       "language": "portuguese",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 30,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -49989,13 +49989,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8f8f5773e8d4760e"
+      "sourceHash": "fnv1a64:e659a8b5c24427ea"
     },
     {
       "id": "PT-C01-dia",
       "language": "portuguese",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 40,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -50007,13 +50007,49 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b326770e399d3ecf"
+      "sourceHash": "fnv1a64:07f32b79b9ab1dec"
+    },
+    {
+      "id": "PT-C01-bom-dia",
+      "language": "portuguese",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4e12b7a714e5bbda"
+    },
+    {
+      "id": "PT-C01-tarde",
+      "language": "portuguese",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:399c70790727c9a2"
     },
     {
       "id": "PT-C01-noite",
       "language": "portuguese",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 70,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -50025,31 +50061,13 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:453359836b8256d1"
-    },
-    {
-      "id": "PT-C01-o-a",
-      "language": "portuguese",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a99b126926f54064"
+      "sourceHash": "fnv1a64:dd07fefea56d02f3"
     },
     {
       "id": "PT-C01-obrigado",
       "language": "portuguese",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 80,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -50061,13 +50079,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5b6c01fccdfd47e7"
+      "sourceHash": "fnv1a64:bda5ac3335e039ce"
     },
     {
       "id": "PT-C01-practice",
       "language": "portuguese",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 90,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -50079,25 +50097,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eda0c2812ecde1a0"
-    },
-    {
-      "id": "PT-C01-tarde",
-      "language": "portuguese",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:1f3c824ae780a931"
+      "sourceHash": "fnv1a64:a79f2bb524a8d270"
     },
     {
       "id": "PT-C02-de-nada",
@@ -50259,7 +50259,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:426383f6e63eba27"
+      "sourceHash": "fnv1a64:9fe6fac8bed4989c"
     },
     {
       "id": "PT-C03-me-chamo",

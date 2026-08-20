@@ -7440,25 +7440,25 @@
     {
       "language": "portuguese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:7028488b19b50ec6",
+      "sourceHash": "fnv1a64:a33ac1ea92dc0dc0",
       "lessonIds": [
         "PT-C01-ola",
         "PT-W01-ola-guided-copy",
         "PT-C01-bom",
-        "PT-C01-bom-dia",
-        "PT-C01-dia",
-        "PT-C01-noite",
         "PT-C01-o-a",
+        "PT-C01-dia",
+        "PT-C01-bom-dia",
+        "PT-C01-tarde",
+        "PT-C01-noite",
         "PT-C01-obrigado",
-        "PT-C01-practice",
-        "PT-C01-tarde"
+        "PT-C01-practice"
       ],
       "voiceLessons": 7,
       "drivablePrefix": 0,
       "text": "portuguese/narration/ch01.txt",
       "json": "portuguese/narration/ch01.json",
-      "textHash": "fnv1a64:81d734ad665ab630",
-      "jsonHash": "fnv1a64:c19e5150f42e38b5"
+      "textHash": "fnv1a64:dce5e856c892bc46",
+      "jsonHash": "fnv1a64:64531726eec5b722"
     },
     {
       "language": "portuguese",
@@ -7484,7 +7484,7 @@
     {
       "language": "portuguese",
       "chapter": 3,
-      "sourceHash": "fnv1a64:1cbe7e46f5e20ee0",
+      "sourceHash": "fnv1a64:a2cd3c5b3556d9b7",
       "lessonIds": [
         "PT-C03-eu",
         "PT-C03-me-chamo",
@@ -7497,7 +7497,7 @@
       "text": "portuguese/narration/ch03.txt",
       "json": "portuguese/narration/ch03.json",
       "textHash": "fnv1a64:87481ae18c63b798",
-      "jsonHash": "fnv1a64:fb10c82be69d13c4"
+      "jsonHash": "fnv1a64:e76cb5011bbb6cb0"
     },
     {
       "language": "portuguese",
