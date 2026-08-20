@@ -62,6 +62,7 @@ if [ "$MODE" != "books" ]; then
   step "drift gates (exactly what CI runs)"
   ( cd "$PKG" && run "check:figures" npm run check:figures )
   ( cd "$PKG" && run "check:books" npm run check:books )
+  ( cd "$PKG" && run "check:gentle-snapshots" npm run check:gentle-snapshots )
   ( cd "$PKG" && run "check:modality" npm run check:modality )
   ( cd "$PKG" && run "check:narration" npm run check:narration )
 
