@@ -16181,19 +16181,19 @@
     {
       "language": "urdu",
       "chapter": 1,
-      "sourceHash": "fnv1a64:6f9688165869e235",
+      "sourceHash": "fnv1a64:6ce2489937b3a12a",
       "lessonIds": [
-        "UR-C01-ji-han",
-        "UR-C01-nahin",
         "UR-C01-salam",
-        "UR-C01-shukriya"
+        "UR-C01-shukriya",
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
       ],
       "voiceLessons": 4,
       "drivablePrefix": 4,
       "text": "urdu/narration/ch01.txt",
       "json": "urdu/narration/ch01.json",
-      "textHash": "fnv1a64:1eb4183348befa5d",
-      "jsonHash": "fnv1a64:2403ebd0c5fbf756"
+      "textHash": "fnv1a64:924e51dc3a336c5d",
+      "jsonHash": "fnv1a64:2ae1d7f98a2b635e"
     },
     {
       "language": "urdu",

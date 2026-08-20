@@ -1,5 +1,6 @@
 ---
 id: UR-C01-ji-han
+sequence: 30
 chapter: 1
 type: phrase
 headword: جی ہاں
