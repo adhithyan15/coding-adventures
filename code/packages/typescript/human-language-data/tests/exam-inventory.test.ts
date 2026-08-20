@@ -196,6 +196,26 @@ describe("the committed A1 inventory", () => {
   });
 });
 
+describe("the committed German A2 source tranche", () => {
+  it("stays explicitly partial while turning official source evidence into named gaps", () => {
+    const inventory = loadExamInventory("german", "A2");
+    expect(isExamInventoryComplete(inventory)).toBe(false);
+    expect(Object.values(inventory.scope).every((entry) => entry.status === "partial")).toBe(true);
+
+    const { lessons } = loadEverything();
+    const coverage = measureExamCoverage(inventory, lessons);
+    expect(coverage).toMatchObject({
+      language: "german",
+      level: "A2",
+      inventoryComplete: false,
+      enumerated: 51,
+      covered: 3,
+      unmapped: 48,
+    });
+    expect(formatExamCoverage(coverage)).toContain("german A2 (partial inventory): 3/51 points covered (6%)");
+  });
+});
+
 describe("the loader refuses what would move the number the wrong way", () => {
   it("refuses a language or level that could escape the curriculum root", () => {
     // `join` NORMALISES `..` inside an interpolated filename rather than

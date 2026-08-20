@@ -5593,10 +5593,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "meta" && self.current_element_is_table_structure() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-content-start-tag-in-table",
-                "head-content start tag `<meta>` in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-content-start-tag-in-table",
+                    "head-content start tag `<meta>` in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.insert_node_before_open_table(Node::element(name, attributes));
             return;
         }
@@ -27054,6 +27057,14 @@ mod tests {
         }))
     }
 
+    fn meta_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-head-content-start-tag-in-table",
+            "head-content start tag `<meta>` in a table context was foster parented",
+        )
+        .at_emission(Some(start_tag_position(source, "meta")))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -35250,14 +35261,12 @@ mod tests {
         assert_eq!(replacement.name, "table");
         assert_eq!(element_text_content(replacement), "X");
 
-        for source in ["<!doctype html><table><meta>", "<!doctype html><table><title>"] {
-            let output = parse_html_with_diagnostics(source).unwrap();
-            assert!(output
-                .parser_diagnostics
-                .iter()
-                .filter(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
-                .all(|diagnostic| diagnostic.position.is_none()));
-        }
+        let title = parse_html_with_diagnostics("<!doctype html><table><title>").unwrap();
+        assert!(title
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
+            .all(|diagnostic| diagnostic.position.is_none()));
 
         let mut unpositioned = HtmlParser::with_fragment_context_options(
             HtmlParseOptions::default(),
@@ -35421,7 +35430,7 @@ mod tests {
 
         for (source, code) in [
             (
-                "<!doctype html><table><meta>",
+                "<!doctype html><table><title>",
                 "unexpected-head-content-start-tag-in-table",
             ),
             (
@@ -42070,13 +42079,17 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
+                    if name == "meta" {
+                        diagnostic == &meta_start_tag_in_table_recovery(source)
+                    } else {
+                        diagnostic
+                            == &ParserDiagnostic::new(
                             "unexpected-head-content-start-tag-in-table",
                             format!(
                                 "head-content start tag `<{name}>` in a table context was foster parented"
                             ),
                         )
+                    }
                 }),
                 "source {source:?}"
             );
@@ -42089,6 +42102,116 @@ mod tests {
         assert!(head.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-head-content-start-tag-in-table"
         }));
+    }
+
+    #[test]
+    fn positions_meta_start_tags_fostered_from_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><meta>",
+            "<!doctype html><table><colgroup><meta>",
+            "<!doctype html><table><tbody><meta>",
+            "<!doctype html><table><thead><meta>",
+            "<!doctype html><table><tfoot><meta>",
+            "<!doctype html><table><tbody><tr><meta>",
+            "<!doctype html><template><table><meta>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-head-content-start-tag-in-table"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&meta_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<meta data-name='é'>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &meta_start_tag_in_table_recovery(source)
+            }));
+        }
+
+        for (source, context) in [
+            ("<meta>", "caption"),
+            ("<meta>", "colgroup"),
+            ("<meta>", "td"),
+            ("<meta>", "th"),
+            ("<meta>", "template"),
+            ("<meta>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-head-content-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><meta>",
+            "<!doctype html><table><tbody><tr><td><meta>",
+            "<!doctype html><table><tbody><tr><th><meta>",
+            "<!doctype html><table><select><meta>",
+            "<!doctype html><template><div><meta>",
+            "<!doctype html><table><meta",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-head-content-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let state_source = "<!doctype html><main><table><meta id=marker charset=utf-8><tbody><tr><td>X</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let meta = element(&main.children[0]);
+        assert_eq!(meta.name, "meta");
+        assert_eq!(meta.attribute("id"), Some("marker"));
+        assert_eq!(meta.attribute("charset"), Some("utf-8"));
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let title_source = "<!doctype html><table><title>A &amp; B</title>";
+        let title = parse_html_with_diagnostics(title_source).unwrap();
+        let title_diagnostic = title
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
+            .unwrap();
+        assert_eq!(title_diagnostic.position, None);
+        let title_element = find_first_element_in_nodes(&title.document.children, "title").unwrap();
+        assert_eq!(title_element.children, vec![Node::text("A & B")]);
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "meta".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
