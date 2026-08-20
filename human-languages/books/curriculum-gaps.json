@@ -30,10 +30,10 @@
     "scriptExposureExemptedGlyphs": 2220,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 180,
-    "forwardReviews": 99,
+    "lessonsWithoutSequence": 116,
+    "forwardReviews": 71,
     "atomsNeverRevisited": 630,
-    "forwardReferences": 495,
+    "forwardReferences": 484,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 11,
@@ -42,7 +42,7 @@
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2909,
     "drivablePercent": 86,
-    "chaptersWithoutDrivablePrefix": 101,
+    "chaptersWithoutDrivablePrefix": 103,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -6643,846 +6643,6 @@
         "kind": "forward-review",
         "other": "BN-C05-thaka",
         "detail": "reviews BN-C05-thaka, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-bien",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-bien",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-salut",
-        "detail": "reviews FR-C01-salut, which the learner does not reach for another 9 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-bien",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "FR-C01-salut",
-        "detail": "requires FR-C01-salut, which comes 9 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-bonjour",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-bonjour",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-jour",
-        "detail": "reviews FR-C01-jour, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-bonjour",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "FR-C01-jour",
-        "detail": "requires FR-C01-jour, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-bonsoir",
-        "detail": "reviews FR-C01-bonsoir, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-nuit",
-        "detail": "reviews FR-C01-nuit, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "FR-C01-nuit",
-        "detail": "requires FR-C01-nuit, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C01-bonsoir",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-bonsoir",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-soir",
-        "detail": "reviews FR-C01-soir, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-bonsoir",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "FR-C01-soir",
-        "detail": "requires FR-C01-soir, which comes 6 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C01-jour",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-jour",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-le-la",
-        "detail": "reviews FR-C01-le-la, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-jour",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "FR-C01-le-la",
-        "detail": "requires FR-C01-le-la, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C01-le-la",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-nuit",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-nuit",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-soir",
-        "detail": "reviews FR-C01-soir, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "FR-C01-salut",
-        "detail": "reviews FR-C01-salut, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "FR-C01-salut",
-        "detail": "requires FR-C01-salut, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C01-salut",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C01-soir",
-        "language": "french",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-appeler",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-appeler",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-je",
-        "detail": "reviews FR-C02-je, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-appeler",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "FR-C02-je",
-        "detail": "requires FR-C02-je, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C02-comment",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-comment",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-tu-vous",
-        "detail": "reviews FR-C02-tu-vous, which the learner does not reach for another 7 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-comment",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-je-mappelle",
-        "detail": "reviews FR-C02-je-mappelle, which the learner does not reach for another 4 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-comment",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "FR-C02-tu-vous",
-        "detail": "requires FR-C02-tu-vous, which comes 7 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-tu-vous",
-        "detail": "reviews FR-C02-tu-vous, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-je-mappelle",
-        "detail": "reviews FR-C02-je-mappelle, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "FR-C02-tu-vous",
-        "detail": "requires FR-C02-tu-vous, which comes 6 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C02-enchante",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-enchante",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-je-mappelle",
-        "detail": "reviews FR-C02-je-mappelle, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-enchante",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "FR-C02-je-mappelle",
-        "detail": "requires FR-C02-je-mappelle, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C02-je",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-je-mappelle",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-je-mappelle",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-me",
-        "detail": "reviews FR-C02-me, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-je-mappelle",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "FR-C02-me",
-        "detail": "requires FR-C02-me, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C02-me",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-practice",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C02-practice",
-        "language": "french",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "FR-C02-tu-vous",
-        "detail": "reviews FR-C02-tu-vous, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C02-tu-vous",
-        "language": "french",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-aller",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-aller",
-        "language": "french",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "FR-C03-merci",
-        "detail": "reviews FR-C03-merci, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C03-comme-ci-comme-ca",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-comme-ci-comme-ca",
-        "language": "french",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "FR-C03-comment-ca-va",
-        "detail": "reviews FR-C03-comment-ca-va, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C03-comme-ci-comme-ca",
-        "language": "french",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "FR-C03-comment-ca-va",
-        "detail": "requires FR-C03-comment-ca-va, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C03-comment-ca-va",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-comment-registers",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-de-rien",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-de-rien",
-        "language": "french",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "FR-C03-merci",
-        "detail": "reviews FR-C03-merci, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C03-de-rien",
-        "language": "french",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "FR-C03-merci",
-        "detail": "requires FR-C03-merci, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C03-merci",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C04-a-bientot",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C04-a-bientot",
-        "language": "french",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "FR-C04-a-plus-tard",
-        "detail": "reviews FR-C04-a-plus-tard, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C04-a-bientot",
-        "language": "french",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "FR-C04-a-plus-tard",
-        "detail": "requires FR-C04-a-plus-tard, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "FR-C04-au-revoir",
-        "detail": "reviews FR-C04-au-revoir, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C04-a-plus-tard",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C04-a-plus-tard",
-        "language": "french",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "FR-C04-au-revoir",
-        "detail": "reviews FR-C04-au-revoir, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C04-a-plus-tard",
-        "language": "french",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "FR-C04-au-revoir",
-        "detail": "requires FR-C04-au-revoir, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C04-au-revoir",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C04-practice",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "FR-C05-parler",
-        "detail": "reviews FR-C05-parler, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "FR-C05-parler",
-        "detail": "requires FR-C05-parler, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C05-je-parle-francais",
-        "language": "french",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C05-je-parle-francais",
-        "language": "french",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "FR-C05-parler",
-        "detail": "reviews FR-C05-parler, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C05-je-parle-francais",
-        "language": "french",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "FR-C05-parler",
-        "detail": "requires FR-C05-parler, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C05-parler",
-        "language": "french",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "FR-C05-travailler",
-        "detail": "reviews FR-C05-travailler, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "FR-C05-travailler",
-        "detail": "requires FR-C05-travailler, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C05-travailler",
-        "language": "french",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C06-nombres-1-5",
-        "language": "french",
-        "chapter": 6,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C06-nombres-6-10",
-        "language": "french",
-        "chapter": 6,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C07-jours-1",
-        "language": "french",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C07-jours-2",
-        "language": "french",
-        "chapter": 7,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C08-heure",
-        "language": "french",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C08-midi-minuit",
-        "language": "french",
-        "chapter": 8,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C09-mois",
-        "language": "french",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C09-saisons",
-        "language": "french",
-        "chapter": 9,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C10-freres-soeurs",
-        "language": "french",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C10-freres-soeurs",
-        "language": "french",
-        "chapter": 10,
-        "kind": "forward-review",
-        "other": "FR-C10-parents",
-        "detail": "reviews FR-C10-parents, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C10-freres-soeurs",
-        "language": "french",
-        "chapter": 10,
-        "kind": "forward-prerequisite",
-        "other": "FR-C10-parents",
-        "detail": "requires FR-C10-parents, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C10-parents",
-        "language": "french",
-        "chapter": 10,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C11-eau-vin",
-        "language": "french",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C11-eau-vin",
-        "language": "french",
-        "chapter": 11,
-        "kind": "forward-review",
-        "other": "FR-C11-pain",
-        "detail": "reviews FR-C11-pain, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C11-eau-vin",
-        "language": "french",
-        "chapter": 11,
-        "kind": "forward-prerequisite",
-        "other": "FR-C11-pain",
-        "detail": "requires FR-C11-pain, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C11-pain",
-        "language": "french",
-        "chapter": 11,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C12-nombres-11-16",
-        "language": "french",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C12-nombres-17-20",
-        "language": "french",
-        "chapter": 12,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C13-noir-blanc",
-        "language": "french",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C13-rouge-bleu",
-        "language": "french",
-        "chapter": 13,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C14-age",
-        "language": "french",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C14-age",
-        "language": "french",
-        "chapter": 14,
-        "kind": "forward-review",
-        "other": "FR-C14-avoir",
-        "detail": "reviews FR-C14-avoir, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "FR-C14-age",
-        "language": "french",
-        "chapter": 14,
-        "kind": "forward-prerequisite",
-        "other": "FR-C14-avoir",
-        "detail": "requires FR-C14-avoir, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "FR-C14-avoir",
-        "language": "french",
-        "chapter": 14,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C15-passe-compose",
-        "language": "french",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C15-passe-simple",
-        "language": "french",
-        "chapter": 15,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C16-etre",
-        "language": "french",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C16-etre-roots",
-        "language": "french",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C16-passe-compose-etre",
-        "language": "french",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-C16-pronominal-past",
-        "language": "french",
-        "chapter": 16,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-W02-cedille",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "FR-W03-trema",
-        "language": "french",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "GU-C02-anand",
@@ -59202,20 +58362,20 @@
         "lessonsEarly": 85
       },
       {
-        "lessonId": "FR-C01-nuit",
-        "language": "french",
-        "position": 7,
-        "word": "lait",
-        "taughtBy": "FR-C28-lait",
-        "lessonsEarly": 84
-      },
-      {
         "lessonId": "LA-C06-ruber-caeruleus",
         "language": "latin",
         "position": 13,
         "word": "mare",
         "taughtBy": "LA-C45-mare",
         "lessonsEarly": 84
+      },
+      {
+        "lessonId": "FR-C01-nuit",
+        "language": "french",
+        "position": 8,
+        "word": "lait",
+        "taughtBy": "FR-C28-lait",
+        "lessonsEarly": 83
       },
       {
         "lessonId": "ES-C34-leer",
@@ -59274,14 +58434,6 @@
         "lessonsEarly": 72
       },
       {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "position": 35,
-        "word": "où",
-        "taughtBy": "FR-C32-ou",
-        "lessonsEarly": 72
-      },
-      {
         "lessonId": "ES-C03-como-acento",
         "language": "spanish",
         "position": 26,
@@ -59295,6 +58447,14 @@
         "position": 253,
         "word": "por",
         "taughtBy": "ES-C51-por",
+        "lessonsEarly": 71
+      },
+      {
+        "lessonId": "FR-C05-habiter",
+        "language": "french",
+        "position": 36,
+        "word": "où",
+        "taughtBy": "FR-C32-ou",
         "lessonsEarly": 71
       },
       {
@@ -59346,14 +58506,6 @@
         "lessonsEarly": 69
       },
       {
-        "lessonId": "FR-C05-practice",
-        "language": "french",
-        "position": 38,
-        "word": "où",
-        "taughtBy": "FR-C32-ou",
-        "lessonsEarly": 69
-      },
-      {
         "lessonId": "IT-C01-notte",
         "language": "italian",
         "position": 6,
@@ -59376,6 +58528,14 @@
         "word": "ஒரு",
         "taughtBy": "TA-C39-oru",
         "lessonsEarly": 69
+      },
+      {
+        "lessonId": "FR-C05-practice",
+        "language": "french",
+        "position": 39,
+        "word": "où",
+        "taughtBy": "FR-C32-ou",
+        "lessonsEarly": 68
       },
       {
         "lessonId": "TE-C05-pani-ceyu",
@@ -59674,14 +58834,6 @@
         "lessonsEarly": 38
       },
       {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 28,
-        "word": "main",
-        "taughtBy": "FR-C17-main",
-        "lessonsEarly": 37
-      },
-      {
         "lessonId": "FR-C04-practice",
         "language": "french",
         "position": 31,
@@ -59720,6 +58872,14 @@
         "word": "essere",
         "taughtBy": "IT-C16-essere",
         "lessonsEarly": 36
+      },
+      {
+        "lessonId": "FR-C04-a-demain",
+        "language": "french",
+        "position": 30,
+        "word": "main",
+        "taughtBy": "FR-C17-main",
+        "lessonsEarly": 35
       },
       {
         "lessonId": "GE-C17-hand",
@@ -59922,14 +59082,6 @@
         "lessonsEarly": 24
       },
       {
-        "lessonId": "FR-C04-a-demain",
-        "language": "french",
-        "position": 28,
-        "word": "pain",
-        "taughtBy": "FR-C11-pain",
-        "lessonsEarly": 23
-      },
-      {
         "lessonId": "FR-C09-saisons",
         "language": "french",
         "position": 47,
@@ -59994,6 +59146,14 @@
         "lessonsEarly": 20
       },
       {
+        "lessonId": "FR-C04-a-demain",
+        "language": "french",
+        "position": 30,
+        "word": "pain",
+        "taughtBy": "FR-C11-pain",
+        "lessonsEarly": 20
+      },
+      {
         "lessonId": "ML-C19-vayassu",
         "language": "malayalam",
         "position": 68,
@@ -60042,22 +59202,6 @@
         "lessonsEarly": 17
       },
       {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 32,
-        "word": "père",
-        "taughtBy": "FR-C10-parents",
-        "lessonsEarly": 17
-      },
-      {
-        "lessonId": "FR-W01-accents",
-        "language": "french",
-        "position": 32,
-        "word": "mère",
-        "taughtBy": "FR-C10-parents",
-        "lessonsEarly": 17
-      },
-      {
         "lessonId": "ML-C01-practice",
         "language": "malayalam",
         "position": 5,
@@ -60071,6 +59215,22 @@
         "position": 265,
         "word": "gato",
         "taughtBy": "ES-C32-gato",
+        "lessonsEarly": 16
+      },
+      {
+        "lessonId": "FR-W01-accents",
+        "language": "french",
+        "position": 32,
+        "word": "père",
+        "taughtBy": "FR-C10-parents",
+        "lessonsEarly": 16
+      },
+      {
+        "lessonId": "FR-W01-accents",
+        "language": "french",
+        "position": 32,
+        "word": "mère",
+        "taughtBy": "FR-C10-parents",
         "lessonsEarly": 16
       },
       {
@@ -60135,6 +59295,14 @@
         "position": 50,
         "word": "أصفر",
         "taughtBy": "AR-C22-akhdar-asfar",
+        "lessonsEarly": 15
+      },
+      {
+        "lessonId": "FR-C01-bien",
+        "language": "french",
+        "position": 1,
+        "word": "comment",
+        "taughtBy": "FR-C02-comment",
         "lessonsEarly": 15
       },
       {
@@ -60282,14 +59450,6 @@
         "lessonsEarly": 12
       },
       {
-        "lessonId": "FR-C01-bien",
-        "language": "french",
-        "position": 0,
-        "word": "comment",
-        "taughtBy": "FR-C02-comment",
-        "lessonsEarly": 12
-      },
-      {
         "lessonId": "GE-C26-hoeren",
         "language": "german",
         "position": 87,
@@ -60368,22 +59528,6 @@
         "word": "ఉండు",
         "taughtBy": "TE-C05-undu",
         "lessonsEarly": 12
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 8,
-        "word": "tu",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 11
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 8,
-        "word": "vous",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 11
       },
       {
         "lessonId": "IT-C01-practice",
@@ -60522,14 +59666,6 @@
         "lessonsEarly": 9
       },
       {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 8,
-        "word": "je m'appelle…",
-        "taughtBy": "FR-C02-je-mappelle",
-        "lessonsEarly": 8
-      },
-      {
         "lessonId": "GE-C24-verstehen",
         "language": "german",
         "position": 77,
@@ -60634,27 +59770,11 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "FR-C01-bonjour",
+        "lessonId": "FR-C01-bon",
         "language": "french",
         "position": 2,
-        "word": "salut",
-        "taughtBy": "FR-C01-salut",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "position": 3,
-        "word": "soir",
-        "taughtBy": "FR-C01-soir",
-        "lessonsEarly": 7
-      },
-      {
-        "lessonId": "FR-C01-practice",
-        "language": "french",
-        "position": 8,
-        "word": "je",
-        "taughtBy": "FR-C02-je",
+        "word": "bonne nuit",
+        "taughtBy": "FR-C01-bonne-nuit",
         "lessonsEarly": 7
       },
       {
@@ -60740,25 +59860,9 @@
       {
         "lessonId": "FR-C01-bon",
         "language": "french",
-        "position": 1,
+        "position": 2,
         "word": "nuit",
         "taughtBy": "FR-C01-nuit",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "FR-C01-bonsoir",
-        "language": "french",
-        "position": 4,
-        "word": "soir",
-        "taughtBy": "FR-C01-soir",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "position": 13,
-        "word": "tu",
-        "taughtBy": "FR-C02-tu-vous",
         "lessonsEarly": 6
       },
       {
@@ -60831,6 +59935,46 @@
         "position": 63,
         "word": "hablar",
         "taughtBy": "ES-C06-hablar",
+        "lessonsEarly": 5
+      },
+      {
+        "lessonId": "FR-C01-bon",
+        "language": "french",
+        "position": 2,
+        "word": "bonsoir",
+        "taughtBy": "FR-C01-bonsoir",
+        "lessonsEarly": 5
+      },
+      {
+        "lessonId": "FR-C01-le-la",
+        "language": "french",
+        "position": 3,
+        "word": "nuit",
+        "taughtBy": "FR-C01-nuit",
+        "lessonsEarly": 5
+      },
+      {
+        "lessonId": "FR-C01-practice",
+        "language": "french",
+        "position": 10,
+        "word": "tu",
+        "taughtBy": "FR-C02-tu-vous",
+        "lessonsEarly": 5
+      },
+      {
+        "lessonId": "FR-C01-practice",
+        "language": "french",
+        "position": 10,
+        "word": "vous",
+        "taughtBy": "FR-C02-tu-vous",
+        "lessonsEarly": 5
+      },
+      {
+        "lessonId": "FR-C01-salut",
+        "language": "french",
+        "position": 0,
+        "word": "bonjour",
+        "taughtBy": "FR-C01-bonjour",
         "lessonsEarly": 5
       },
       {
@@ -60930,51 +60074,19 @@
         "lessonsEarly": 4
       },
       {
-        "lessonId": "FR-C01-bon",
+        "lessonId": "FR-C01-practice",
         "language": "french",
-        "position": 1,
-        "word": "jour",
-        "taughtBy": "FR-C01-jour",
+        "position": 10,
+        "word": "je m'appelle…",
+        "taughtBy": "FR-C02-je-mappelle",
         "lessonsEarly": 4
       },
       {
-        "lessonId": "FR-C02-appeler",
+        "lessonId": "FR-C02-me",
         "language": "french",
-        "position": 11,
-        "word": "je",
-        "taughtBy": "FR-C02-je",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "FR-C03-comme-ci-comme-ca",
-        "language": "french",
-        "position": 21,
-        "word": "merci",
-        "taughtBy": "FR-C03-merci",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "FR-C03-practice",
-        "language": "french",
-        "position": 26,
-        "word": "au revoir",
-        "taughtBy": "FR-C04-au-revoir",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "position": 35,
-        "word": "travailler",
-        "taughtBy": "FR-C05-travailler",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "FR-C14-age",
-        "language": "french",
-        "position": 56,
-        "word": "être",
-        "taughtBy": "FR-C16-etre",
+        "position": 12,
+        "word": "comment",
+        "taughtBy": "FR-C02-comment",
         "lessonsEarly": 4
       },
       {
@@ -61124,25 +60236,25 @@
       {
         "lessonId": "FR-C01-bon",
         "language": "french",
-        "position": 1,
-        "word": "bonsoir",
-        "taughtBy": "FR-C01-bonsoir",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "FR-C01-bonjour",
-        "language": "french",
         "position": 2,
-        "word": "jour",
-        "taughtBy": "FR-C01-jour",
+        "word": "bonjour",
+        "taughtBy": "FR-C01-bonjour",
         "lessonsEarly": 3
       },
       {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
+        "lessonId": "FR-C03-practice",
         "language": "french",
-        "position": 13,
-        "word": "je m'appelle…",
-        "taughtBy": "FR-C02-je-mappelle",
+        "position": 26,
+        "word": "à bientôt",
+        "taughtBy": "FR-C04-a-bientot",
+        "lessonsEarly": 3
+      },
+      {
+        "lessonId": "FR-C14-age",
+        "language": "french",
+        "position": 57,
+        "word": "être",
+        "taughtBy": "FR-C16-etre",
         "lessonsEarly": 3
       },
       {
@@ -61356,57 +60468,25 @@
       {
         "lessonId": "FR-C01-bon",
         "language": "french",
-        "position": 1,
-        "word": "bonne nuit",
-        "taughtBy": "FR-C01-bonne-nuit",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C01-bonjour",
-        "language": "french",
         "position": 2,
-        "word": "bonsoir",
-        "taughtBy": "FR-C01-bonsoir",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "position": 3,
         "word": "jour",
         "taughtBy": "FR-C01-jour",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "FR-C01-practice",
+        "lessonId": "FR-C01-bonjour",
         "language": "french",
-        "position": 8,
-        "word": "soir",
-        "taughtBy": "FR-C01-soir",
+        "position": 5,
+        "word": "bonsoir",
+        "taughtBy": "FR-C01-bonsoir",
         "lessonsEarly": 2
       },
       {
-        "lessonId": "FR-C02-comment-vous-appelez-vous",
-        "language": "french",
-        "position": 13,
-        "word": "je",
-        "taughtBy": "FR-C02-je",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C04-a-demain",
+        "lessonId": "FR-C04-a-plus-tard",
         "language": "french",
         "position": 28,
-        "word": "au revoir",
-        "taughtBy": "FR-C04-au-revoir",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "FR-C05-habiter",
-        "language": "french",
-        "position": 35,
-        "word": "parler",
-        "taughtBy": "FR-C05-parler",
+        "word": "à demain",
+        "taughtBy": "FR-C04-a-demain",
         "lessonsEarly": 2
       },
       {
@@ -61844,113 +60924,89 @@
       {
         "lessonId": "FR-C01-bien",
         "language": "french",
-        "position": 0,
+        "position": 1,
         "word": "bon",
         "taughtBy": "FR-C01-bon",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C01-bon",
-        "language": "french",
-        "position": 1,
-        "word": "bonjour",
-        "taughtBy": "FR-C01-bonjour",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C01-bonne-nuit",
-        "language": "french",
-        "position": 3,
-        "word": "bonsoir",
-        "taughtBy": "FR-C01-bonsoir",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C01-jour",
-        "language": "french",
-        "position": 5,
-        "word": "le",
-        "taughtBy": "FR-C01-le-la",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C01-jour",
-        "language": "french",
-        "position": 5,
-        "word": "les",
-        "taughtBy": "FR-C01-le-la",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "FR-C01-le-la",
         "language": "french",
-        "position": 6,
-        "word": "nuit",
-        "taughtBy": "FR-C01-nuit",
+        "position": 3,
+        "word": "jour",
+        "taughtBy": "FR-C01-jour",
         "lessonsEarly": 1
       },
       {
         "lessonId": "FR-C01-practice",
         "language": "french",
-        "position": 8,
-        "word": "salut",
-        "taughtBy": "FR-C01-salut",
+        "position": 10,
+        "word": "je",
+        "taughtBy": "FR-C02-je",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C02-practice",
+        "lessonId": "FR-C03-merci",
         "language": "french",
-        "position": 18,
-        "word": "vous",
-        "taughtBy": "FR-C02-tu-vous",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C03-de-rien",
-        "language": "french",
-        "position": 24,
-        "word": "merci",
-        "taughtBy": "FR-C03-merci",
+        "position": 20,
+        "word": "de rien",
+        "taughtBy": "FR-C03-de-rien",
         "lessonsEarly": 1
       },
       {
         "lessonId": "FR-C03-practice",
         "language": "french",
         "position": 26,
-        "word": "à bientôt",
-        "taughtBy": "FR-C04-a-bientot",
+        "word": "au revoir",
+        "taughtBy": "FR-C04-au-revoir",
         "lessonsEarly": 1
       },
       {
         "lessonId": "FR-C04-a-bientot",
         "language": "french",
-        "position": 27,
+        "position": 29,
         "word": "à demain",
         "taughtBy": "FR-C04-a-demain",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C04-a-demain",
+        "lessonId": "FR-C04-a-plus-tard",
         "language": "french",
         "position": 28,
+        "word": "à bientôt",
+        "taughtBy": "FR-C04-a-bientot",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "FR-C04-au-revoir",
+        "language": "french",
+        "position": 27,
         "word": "à plus tard",
         "taughtBy": "FR-C04-a-plus-tard",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C05-je-parle-francais",
+        "lessonId": "FR-C05-habiter",
         "language": "french",
         "position": 36,
-        "word": "parler",
-        "taughtBy": "FR-C05-parler",
+        "word": "travailler",
+        "taughtBy": "FR-C05-travailler",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C05-practice",
+        "lessonId": "FR-C05-parler",
         "language": "french",
-        "position": 38,
-        "word": "travailler",
-        "taughtBy": "FR-C05-travailler",
+        "position": 35,
+        "word": "habiter",
+        "taughtBy": "FR-C05-habiter",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "FR-C05-travailler",
+        "language": "french",
+        "position": 37,
+        "word": "je parle français",
+        "taughtBy": "FR-C05-je-parle-francais",
         "lessonsEarly": 1
       },
       {
@@ -61970,35 +61026,59 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C10-freres-soeurs",
+        "lessonId": "FR-C10-parents",
         "language": "french",
         "position": 48,
-        "word": "le père",
-        "taughtBy": "FR-C10-parents",
+        "word": "le frère",
+        "taughtBy": "FR-C10-freres-soeurs",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C10-freres-soeurs",
+        "lessonId": "FR-C10-parents",
         "language": "french",
         "position": 48,
-        "word": "la mère",
-        "taughtBy": "FR-C10-parents",
+        "word": "la sœur",
+        "taughtBy": "FR-C10-freres-soeurs",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C10-freres-soeurs",
+        "lessonId": "FR-C10-parents",
         "language": "french",
         "position": 48,
-        "word": "père",
-        "taughtBy": "FR-C10-parents",
+        "word": "frère",
+        "taughtBy": "FR-C10-freres-soeurs",
         "lessonsEarly": 1
       },
       {
-        "lessonId": "FR-C10-freres-soeurs",
+        "lessonId": "FR-C10-parents",
         "language": "french",
         "position": 48,
-        "word": "mère",
-        "taughtBy": "FR-C10-parents",
+        "word": "sœur",
+        "taughtBy": "FR-C10-freres-soeurs",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "FR-C11-pain",
+        "language": "french",
+        "position": 50,
+        "word": "l'eau",
+        "taughtBy": "FR-C11-eau-vin",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "FR-C11-pain",
+        "language": "french",
+        "position": 50,
+        "word": "le vin",
+        "taughtBy": "FR-C11-eau-vin",
+        "lessonsEarly": 1
+      },
+      {
+        "lessonId": "FR-C11-pain",
+        "language": "french",
+        "position": 50,
+        "word": "vin",
+        "taughtBy": "FR-C11-eau-vin",
         "lessonsEarly": 1
       },
       {
@@ -62007,14 +61087,6 @@
         "position": 54,
         "word": "rouge",
         "taughtBy": "FR-C13-rouge-bleu",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "FR-C14-age",
-        "language": "french",
-        "position": 56,
-        "word": "avoir",
-        "taughtBy": "FR-C14-avoir",
         "lessonsEarly": 1
       },
       {
@@ -62916,12 +61988,12 @@
       {
         "language": "french",
         "lessonCount": 118,
-        "lessonsWithoutSequence": 64,
-        "forwardPrerequisites": 21,
-        "forwardReviews": 28,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 122,
         "atomsNeverRevisited": 33,
-        "forwardReferences": 63
+        "forwardReferences": 52
       },
       {
         "language": "german",
@@ -63115,10 +62187,10 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 180,
-      "tracksWithUnorderedLessons": 8,
-      "forwardPrerequisites": 78,
-      "forwardReviews": 99,
+      "lessonsWithoutSequence": 116,
+      "tracksWithUnorderedLessons": 7,
+      "forwardPrerequisites": 57,
+      "forwardReviews": 71,
       "atomsTaught": 4680,
       "atomsNeverRevisited": 630,
       "neverRevisitedPercent": 13,
@@ -63128,7 +62200,7 @@
         "R3": 3536,
         "R4": 2053
       },
-      "forwardReferences": 495
+      "forwardReferences": 484
     }
   },
   "scriptClosure": {
@@ -72760,11 +71832,11 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
-        "orderDefects": 113,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 21,
-        "forwardReviews": 28,
-        "forwardReferences": 63,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 52,
         "atomsTaught": 122,
         "atomsNeverRevisited": 33,
         "reinforcementWindowMisses": 230,
@@ -72775,15 +71847,8 @@
         "findings": [
           {
             "language": "french",
-            "kind": "order-integrity",
-            "count": 113,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
-          {
-            "language": "french",
             "kind": "forward-language",
-            "count": 63,
+            "count": 52,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -72818,10 +71883,10 @@
         ],
         "next": {
           "language": "french",
-          "kind": "order-integrity",
-          "count": 113,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 52,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -74341,13 +73406,6 @@
         "detail": "split lessons whose effective duration exceeds the five-minute maximum"
       },
       {
-        "language": "french",
-        "kind": "order-integrity",
-        "count": 113,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
         "language": "marathi",
         "kind": "order-integrity",
         "count": 67,
@@ -74432,13 +73490,6 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "french",
-        "kind": "forward-language",
-        "count": 63,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
         "language": "portuguese",
         "kind": "forward-language",
         "count": 59,
@@ -74449,6 +73500,13 @@
         "language": "german",
         "kind": "forward-language",
         "count": 55,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "french",
+        "kind": "forward-language",
+        "count": 52,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -75362,7 +74420,7 @@
       "tracksWithNoWritingPractice": 3,
       "tracksWhereWritingStartsLate": 7,
       "atomMeasurementBlindLessons": 497,
-      "findings": 146
+      "findings": 145
     }
   },
   "levelGate": {
@@ -76979,7 +76037,7 @@
         "pen": 3,
         "coreVoice": 103,
         "drivablePercent": 87,
-        "drivablePrefixTotal": 87,
+        "drivablePrefixTotal": 83,
         "chapters": [
           {
             "language": "french",
@@ -76993,7 +76051,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 7,
+            "drivablePrefix": 8,
             "firstNonVoiceLesson": "FR-C01-nuit"
           },
           {
@@ -77008,7 +76066,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "FR-C02-je"
           },
           {
@@ -77023,7 +76081,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 0,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "FR-C03-aller"
           },
           {
@@ -77054,7 +76112,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 2,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "FR-C05-parler"
           },
           {
@@ -77182,7 +76240,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 1,
+            "drivablePrefix": 0,
             "firstNonVoiceLesson": "FR-C14-avoir"
           },
           {
