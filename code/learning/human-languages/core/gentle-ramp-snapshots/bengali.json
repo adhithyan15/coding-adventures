@@ -1,0 +1,76 @@
+{
+  "language": "bengali",
+  "lessonCount": 80,
+  "atomMeasurableLessons": 80,
+  "atomMeasurementBlindLessons": 0,
+  "durationViolations": 0,
+  "atomLessonSpikes": 1,
+  "atomChapterSpikes": 0,
+  "glyphLessonSpikes": 3,
+  "scriptSystemSpikes": 0,
+  "scriptClosureViolations": 65,
+  "neverTaughtGlyphs": 39,
+  "orderDefects": 3,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 3,
+  "forwardReferences": 6,
+  "atomsTaught": 104,
+  "atomsNeverRevisited": 7,
+  "reinforcementWindowMisses": 152,
+  "payoffSurprises": 0,
+  "writingPracticeLessons": 65,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
+  "findings": [
+    {
+      "language": "bengali",
+      "kind": "order-integrity",
+      "count": 3,
+      "unit": "order/dependency defect(s)",
+      "detail": "declare a unique reading order and close every prerequisite and review before use"
+    },
+    {
+      "language": "bengali",
+      "kind": "forward-language",
+      "count": 6,
+      "unit": "use(s)",
+      "detail": "teach target-language material before load-bearing use"
+    },
+    {
+      "language": "bengali",
+      "kind": "script-closure",
+      "count": 39,
+      "unit": "glyph(s)",
+      "detail": "teach every load-bearing glyph before asking the learner to decode it"
+    },
+    {
+      "language": "bengali",
+      "kind": "atom-step",
+      "count": 1,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "bengali",
+      "kind": "glyph-step",
+      "count": 3,
+      "unit": "lesson/system spike(s)",
+      "detail": "split new glyphs and writing systems across gentler steps"
+    },
+    {
+      "language": "bengali",
+      "kind": "reinforcement",
+      "count": 152,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    }
+  ],
+  "next": {
+    "language": "bengali",
+    "kind": "order-integrity",
+    "count": 3,
+    "unit": "order/dependency defect(s)",
+    "detail": "declare a unique reading order and close every prerequisite and review before use"
+  }
+}

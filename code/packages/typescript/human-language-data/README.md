@@ -292,6 +292,19 @@ opening defect cannot be averaged away. Writing exposure does not count as writi
 practice, and the report names how many opening lessons precede the first real
 writing/script lesson or block.
 
+The exact corpus regression lives in one generated snapshot per language rather
+than six hand-edited totals in the test body:
+
+```bash
+npm run generate:gentle-snapshots  # write core/gentle-ramp-snapshots/*.json
+npm run check:gentle-snapshots     # fail if any language shard is stale or orphaned
+```
+
+The test reconstructs the global summary and priority queue from those full track
+snapshots. A Tamil-only change therefore updates `tamil.json`; it cannot collide
+with a simultaneous Punjabi-only change, while a hidden debt increase still changes
+the responsible shard and fails the byte-for-byte drift gate.
+
 ### Continuity — does the course have a memory of itself? (HL09)
 
 The ramp budgets measure how big each **step** is. This measures whether the steps

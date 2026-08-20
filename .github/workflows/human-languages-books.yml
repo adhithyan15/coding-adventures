@@ -158,6 +158,10 @@ jobs:
           # language visible without hand-maintained chapter or lesson claims.
           # Regenerate with `npm run generate:progress`.
           npm run check:progress
+          # Corpus debt stays exact, but each language owns a separate generated
+          # snapshot so independent curriculum PRs do not collide on one test line.
+          # Regenerate with `npm run generate:gentle-snapshots`.
+          npm run check:gentle-snapshots
           # The modality manifest (core/lesson-modality.json) is derived from the
           # lessons and is what lets the complete book, the app, and the future
           # dictation-friendly driving edition be filtered out of one source. A stale
