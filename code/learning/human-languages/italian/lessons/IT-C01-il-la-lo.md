@@ -1,5 +1,6 @@
 ---
 id: IT-C01-il-la-lo
+sequence: 30
 chapter: 1
 type: word
 headword: il / la / lo
