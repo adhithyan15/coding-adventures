@@ -45,18 +45,18 @@ describe("the language chain", () => {
     expect(LANGUAGE_CHAIN).toEqual([
       "spanish", "latin", "french", "german", "arabic",
       "hindi", "tamil", "kannada", "telugu", "malayalam",
-      "italian", "portuguese", "marathi", "punjabi", "bengali",
+      "italian", "portuguese", "marathi", "marwadi", "punjabi", "bengali",
       "gujarati", "russian", "sanskrit", "persian", "urdu",
       "chinese", "japanese",
     ]);
-    // Derived, not hard-coded: adding a track must not require editing this file.
-    // The list above still pins the authored ORDER, which is the real contract.
+    // The runtime chain is derived. This assertion deliberately pins the authored
+    // registry ORDER, so adding a track updates this one explicit product contract.
     expect(new Set(LANGUAGE_CHAIN).size).toBe(LANGUAGE_CHAIN.length);
   });
 
   it("chainIndex and isChainLanguage locate a language, or reject a non-chain one", () => {
     expect(chainIndex("spanish")).toBe(0);
-    expect(chainIndex("urdu")).toBe(19);
+    expect(chainIndex("urdu")).toBe(20);
     expect(chainIndex("klingon")).toBe(-1);
     expect(isChainLanguage("hindi")).toBe(true);
     expect(isChainLanguage("klingon")).toBe(false);

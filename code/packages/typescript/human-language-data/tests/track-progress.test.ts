@@ -74,7 +74,7 @@ describe("track progress", () => {
     const root = defaultCurriculumRoot();
     const expected = generatedTrackProgressReadme(root);
     expect(readFileSync(join(root, "README.md"), "utf8")).toBe(expected);
-    expect(expected.match(/^\| \[[^\]]+\]\(\.\/[^/]+\/README\.md\)/gm)).toHaveLength(22);
+    expect(expected.match(/^\| \[[^\]]+\]\(\.\/[^/]+\/README\.md\)/gm)).toHaveLength(23);
     expect(runTrackProgress(["--check"], root)).toBe(0);
   });
 

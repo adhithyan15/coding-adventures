@@ -108,9 +108,9 @@ describe("corpus snapshot", () => {
     // failure that `omits`/`segments` drift produces — and no total would show it.
     expect(report.summary.universallyMissing).toEqual([]);
 
-    expect(report.summary.tracksWithNoCoreVerb).toBe(2);
+    expect(report.summary.tracksWithNoCoreVerb).toBe(3);
     expect(report.summary.universallyMissing).toHaveLength(0);
-    expect(report.summary.meanCoveredPercent).toBe(40); // HL-C247: +1 -- vouloir, pouvoir and devoir raise french core-verb coverage
+    expect(report.summary.meanCoveredPercent).toBe(38); // a new zero-verb starter makes the corpus average honest
 
     // The tracks that have joined the cross-language corpus, named explicitly so a
     // regression that silently unhooks these lessons cannot hide inside a total.
