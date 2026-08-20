@@ -1,1 +1,1 @@
-gradle test
+gradle test jacocoTestReport jacocoTestCoverageVerification

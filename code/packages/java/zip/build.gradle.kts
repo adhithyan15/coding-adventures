@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.codingadventures"
-version = "0.1.0"
+version = "0.2.0"
 
 repositories {
     mavenCentral()
@@ -21,6 +21,7 @@ tasks.withType<JavaCompile> {
 
 dependencies {
     api("com.codingadventures:lzss")
+    testImplementation("com.fasterxml.jackson.core:jackson-databind:2.18.3")
     testImplementation("org.junit.jupiter:junit-jupiter:5.11.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

@@ -53,6 +53,27 @@ val archive = ZipArchive.zip(listOf(
 val entries: List<ZipEntry> = ZipArchive.unzip(archive)
 ```
 
+### Raw RFC 1951 and CRC-32
+
+The ZIP-owned raw codec is public so zlib, gzip, and PNG wrappers can share one
+RFC 1951 implementation instead of carrying another DEFLATE decoder:
+
+```kotlin
+val encoded = rawDeflate(data)
+val decoded = rawInflateCounted(encoded, maxOutput = 8 * 1024 * 1024)
+check(decoded.bytesConsumed == encoded.size)
+check(decoded.output.contentEquals(data))
+
+var checksum = crc32(firstChunk)
+checksum = crc32(secondChunk, checksum)
+```
+
+The decoder accepts stored, fixed-Huffman, and dynamic-Huffman blocks,
+multi-block streams, overlapping copies, and the full 32 KiB distance window.
+The caller may lower the output ceiling; 256 MiB is both the default and hard
+maximum. `RawInflateError` exposes the closed 14-code CMP09 taxonomy and keeps
+messages payload-blind.
+
 ## Wire format
 
 ZIP stores Local File Headers before each entry's data, then a Central Directory
@@ -74,9 +95,17 @@ verbatim (method 0). This implementation uses fixed-Huffman blocks (BTYPE=01)
 with the LZSS package for LZ77 match finding. DEFLATE is only used when it
 actually reduces size; otherwise the entry falls back to Stored automatically.
 
+Archive extraction requires exact compressed and uncompressed boundaries.
+`ZipArchive.unzip(data, maxTotalBytes)` defaults to a 256 MiB aggregate output
+budget and lets callers lower it. CRC-32 detects accidental corruption only;
+it is not authentication or cryptographic integrity.
+
 ## Running tests
 
 ```bash
 cd code/packages/kotlin/zip
-gradle test
+gradle test jacocoTestReport jacocoTestCoverageVerification
 ```
+
+Requires JDK 21 and Gradle. The Gradle `check` task enforces JaCoCo line
+coverage above 80%; the LZSS dependency resolves through a composite build.
