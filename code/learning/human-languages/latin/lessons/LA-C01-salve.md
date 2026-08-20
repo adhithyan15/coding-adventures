@@ -19,7 +19,7 @@ introduces:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
 practises:
   knowledge: [LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03]
-skills: [listening, speaking, reading]
+skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -59,6 +59,17 @@ Romance children as the word for health itself: Spanish *salud*, Italian
 versus many (*-ēte*). This is the feature that defines Latin — meaning carried in
 endings, not in word order or extra words. English lost almost all of it; its
 Romance grandchildren kept some. You will meet it in every chapter.
+
+## Writing — follow one greeting you can see
+<!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Keep **salvē** visible. First point to the line over the final **ē**: that macron
+says to hold the vowel longer. Trace the whole word once, from **s** through
+**ē**, then say *SAL-weh*. Stop there.
+
+This is not a spelling test. Your eye and hand are only following a greeting
+whose sound and meaning are already on the page.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[LA-PHONO-SALVE-01, LA-ETYMON-SALVE-02, LA-GRAMMAR-SALVE-03] -->
