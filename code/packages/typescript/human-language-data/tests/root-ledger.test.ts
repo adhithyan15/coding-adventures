@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(3078); // +1: the Marwadi greeting records the attested rāma root
-    expect(l.summary.underspent).toBe(2963); // -1: Latin's guided-copy bridge re-spends salvē
-    expect(l.summary.neverSpent).toBe(2038); // HL-C250: +1 -- est is declared by its own lesson and spent nowhere else in russian yet // HL-C247: +3 -- the three latin roots are declared by their own french lessons and spent nowhere else in french yet // HL-C128 step 10: +4 // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive // HL-C128 step 7: +1 -- cum-latin, minted by conmigo and not re-spent // HL-C128 step 8: +2 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C194: +16 Spanish pre-A1 words // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288)
+    expect(l.summary.roots).toBe(3079); // German's schema-v2 opener exposes its etymon atom.
+    expect(l.summary.underspent).toBe(2964); // The new German etymon begins below the reuse floor.
+    expect(l.summary.neverSpent).toBe(2037); // HL-C250: +1 -- est is declared by its own lesson and spent nowhere else in russian yet // HL-C247: +3 -- the three latin roots are declared by their own french lessons and spent nowhere else in french yet // HL-C128 step 10: +4 // -6: HL-C94 payoff lessons re-spend roots latin-vos, introduced and not yet re-spent // +1: HL-C98 // +51: vocabulary wave 5 // +6: HL-C88 slices 5-6 // +2: HL-C88 slice 8 // +72: vocabulary wave 6 // +2: HL-C113 (B1 si-condition rung) // HL-C113 preterite close // HL-C113: HL-C113 imperfect subjunctive // HL-C128 step 7: +1 -- cum-latin, minted by conmigo and not re-spent // HL-C128 step 8: +2 // HL-C157: ayer + hablare close A2 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C175: +5 -- chapter 272, reading between the lines // HL-C177: +5 -- chapter 273, C1 closes // HL-C178: +5 -- chapter 274, C2 opens // HL-C179: +5 -- chapter 275, fine shades // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C194: +16 Spanish pre-A1 words // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288)
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -202,7 +202,7 @@ describe("the committed corpus", () => {
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
     // +53 roots, +25 etymon-atom: vocabulary wave 5.
-    expect(byNamespace).toEqual({ roots: 2194, "etymon-atom": 884 }); // +1 roots: the Marwadi rāma ledger entry
+    expect(byNamespace).toEqual({ roots: 2194, "etymon-atom": 885 }); // +1: German's migrated opener etymon.
   });
 
   it("pins Spanish, the pilot track", () => {
