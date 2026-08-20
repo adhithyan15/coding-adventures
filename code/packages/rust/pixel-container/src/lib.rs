@@ -215,7 +215,7 @@ impl PixelContainer {
     /// ```
     pub fn fill(&mut self, r: u8, g: u8, b: u8, a: u8) {
         // Write the RGBA pattern into every four-byte group.
-        for chunk in self.data.chunks_exact_mut(4) {
+        for chunk in self.data.as_chunks_mut::<4>().0 {
             chunk[0] = r;
             chunk[1] = g;
             chunk[2] = b;
