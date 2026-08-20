@@ -106,9 +106,9 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracks: 23,
       tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 2, // Latin now starts with observe-trace and guided copy.
-      tracksWhereWritingStartsLate: 6, // Chinese writing now starts in lesson one.
+      tracksWhereWritingStartsLate: 5, // German now joins Chinese with writing in lesson one.
       atomMeasurementBlindLessons: 498, // +1: Latin's atom-free guided-copy bridge.
-      findings: 141, // Arabic's authored order closes its order-integrity finding.
+      findings: 140, // German closes a late-writing finding and Arabic closes its order-integrity finding.
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "punjabi", kind: "order-integrity", count: 62 },
