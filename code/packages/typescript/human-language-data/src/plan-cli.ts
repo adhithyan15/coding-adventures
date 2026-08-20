@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot as defaultRoot,
   listAssessmentContracts,
+  loadAssessmentPolicy,
   listExamInventories,
   loadChapterPolicy,
   loadEverything,
@@ -88,6 +89,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     modality: { maxLinearisableTableColumns: policyTableWidth(options.root ?? defaultRoot()) },
     trackChapters: loadTrackChapters(options.root),
     chapterPolicy: loadChapterPolicy(options.root),
+    assessmentPolicy: loadAssessmentPolicy(options.root),
     curricula,
     spine,
   });

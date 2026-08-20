@@ -3,6 +3,7 @@ import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot as defaultRoot,
   loadChapterPolicy,
+  loadAssessmentPolicy,
   loadBookFonts,
   loadEverything,
   loadMainFontCharset,
@@ -65,6 +66,7 @@ export function runCurriculumGapReport(args = process.argv.slice(2)): number {
     // ledgers can never be measured against different files.
     trackChapters: loadTrackChapters(options.root),
     chapterPolicy: loadChapterPolicy(options.root),
+    assessmentPolicy: loadAssessmentPolicy(options.root),
     // Without these the `levels` section and the HL09 §3.1 level gate are both
     // silently absent — which is how the CLI managed to never once print the level
     // figures after HL-C10 shipped them.

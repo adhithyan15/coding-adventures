@@ -2,11 +2,14 @@
 
 import { describe, expect, it } from "vitest";
 import { loadEverything, loadChapterPolicy, loadTrackChapters } from "../src/loader.js";
+import { parseLesson } from "../src/parse.js";
 import { buildCurriculumGapReport } from "../src/report.js";
 import { LEVEL_VOCABULARY, runLevelGate, isEtymologyAtom } from "../src/level-gate.js";
 import { summarizeLevels } from "../src/levels.js";
 import { measureRamp } from "../src/ramp.js";
 import { measureContinuity } from "../src/continuity.js";
+import type { ContinuityReport } from "../src/continuity.js";
+import type { WritingStageReport } from "../src/writing-stages.js";
 
 // Built ONCE for the file, not once per test. The gap report now walks continuity
 // (~900ms) and the level gate on top of everything else, so rebuilding an identical
@@ -198,6 +201,93 @@ describe("the criteria themselves", () => {
     expect(new Set(worst!.blockers.map((b) => b.criterion)).size).toBe(
       worst!.blockers.length,
     );
+  });
+
+  it("cannot attain an otherwise complete level while its required writing stage is unproved", () => {
+    const lessons = Array.from({ length: LEVEL_VOCABULARY["pre-A1"] }, (_, index) =>
+      parseLesson(`---
+id: AA-${String(index + 1).padStart(3, "0")}
+chapter: 1
+type: word
+headword: word-${index + 1}
+gloss: word ${index + 1}
+concept_tag: AA-WORD-${index + 1}
+---
+
+word ${index + 1}
+`, "alpha"),
+    );
+    const curriculum = [{
+      version: 1,
+      language: "alpha",
+      path: [{
+        id: "alpha-pre-a1",
+        spine_node: "PRE",
+        lessons: lessons.map((lesson) => lesson.realization.lessonId),
+        before: [],
+        inline: [],
+        after: [],
+      }],
+      spine: { PRE: { segments: ["alpha-pre-a1"], omits: [], relocates: {} } },
+      extensions: [],
+    }];
+    const spine = {
+      version: 1,
+      stages: ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"],
+      nodes: [{
+        id: "PRE",
+        stage: "pre-A1",
+        strand: "FUNCTION",
+        canDo: "write a word",
+        prerequisites: [],
+        core: true,
+        concepts: [],
+      }],
+    };
+    const levels = summarizeLevels(lessons, curriculum, spine);
+    const ramp = measureRamp(lessons, loadChapterPolicy());
+    const continuity = { reinforcement: [] } as unknown as ContinuityReport;
+    const withoutWritingGate = runLevelGate({ lessons, levels, curricula: curriculum, spine, ramp, continuity });
+    expect(withoutWritingGate.tracks[0]?.attained).toBe("pre-A1");
+
+    const writingStages = {
+      stages: [{ id: "observe-trace", firstRequiredAt: "pre-A1", prerequisites: [] }],
+      tracks: [{
+        language: "alpha",
+        evidence: [],
+        validEvidence: [],
+        defects: [],
+        levels: [{
+          level: "pre-A1",
+          requiredStages: ["observe-trace"],
+          evidencedStages: [],
+          missingStages: ["observe-trace"],
+          complete: false,
+        }],
+      }],
+      summary: {
+        tracks: 1,
+        tracksWithAnyEvidence: 0,
+        tracksCompleteAtPreA1: 0,
+        evidenceBlocks: 0,
+        invalidEvidenceBlocks: 0,
+        missingTrackLevelStages: 1,
+      },
+    } satisfies WritingStageReport;
+    const gated = runLevelGate({
+      lessons,
+      levels,
+      curricula: curriculum,
+      spine,
+      ramp,
+      continuity,
+      writingStages,
+    });
+    expect(gated.tracks[0]).toMatchObject({
+      attained: null,
+      inProgressAt: "pre-A1",
+      blockers: [{ criterion: "writing-stage", shortfall: 1 }],
+    });
   });
 
   it("keeps the vocabulary targets ascending, since they are cumulative", () => {
