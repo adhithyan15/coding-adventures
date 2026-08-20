@@ -1,5 +1,14 @@
 # Changelog
 
+## Writing moves to the first greeting (#12303)
+
+- Migrate `FR-C01-salut` to the measured lesson schema and add one visible-model
+  observe-and-trace microstep for **salut** and its written-but-silent final **t**.
+- Add a separate two-minute guided copy of the same greeting. Neither step asks
+  for spelling from memory, a second word, or free composition.
+- Record the first two HL19 stages as a required pre-A1 extension. This moves
+  French writing from lesson 33 to lesson one; later writing stages remain debt.
+
 ## French chapters 1-16 regain their reading order (#12250)
 
 - Add one global, spaced sequence to all 64 legacy lessons, recovered from the

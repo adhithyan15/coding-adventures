@@ -973,7 +973,7 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(140); // +4: Marwadi makes guided and delayed writing blocks explicit
+    expect(summary.lessonsWithWritingSegments).toBe(142); // +2: French begins with observe-trace and guided-copy blocks
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.

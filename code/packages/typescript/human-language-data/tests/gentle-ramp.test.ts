@@ -106,7 +106,7 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracks: 23,
       tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 3,
-      tracksWhereWritingStartsLate: 7,
+      tracksWhereWritingStartsLate: 6, // French now starts with observe-trace and guided copy.
       atomMeasurementBlindLessons: 497,
       findings: 143, // Telugu duration and French/Marathi order recovery remove three independent findings.
     });
