@@ -14,7 +14,7 @@
     "registeredTracks": 23,
     "totalLessons": 3399,
     "authoredBooks": 23,
-    "durationViolations": 1,
+    "durationViolations": 0,
     "unknownPrerequisites": 0,
     "laterChapterLessonsWithoutPrerequisites": 74,
     "tracksWithoutBooks": 0,
@@ -24,16 +24,16 @@
     "version2SchemaTracks": 9,
     "lessonsWithoutLevel": 64,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 61,
+    "scriptRampOverBudgetLessons": 60,
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 756,
     "scriptExposureExemptedGlyphs": 2220,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 305,
-    "lessonsWithoutSequence": 116,
-    "forwardReviews": 71,
+    "lessonsWithoutSequence": 83,
+    "forwardReviews": 52,
     "atomsNeverRevisited": 630,
-    "forwardReferences": 484,
+    "forwardReferences": 475,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 79,
     "chapterGateCleanTracks": 11,
@@ -46,25 +46,7 @@
     "unexplainedModalityOverrides": 0
   },
   "duration": {
-    "violations": [
-      {
-        "lessonId": "TE-C01-namaskaram",
-        "language": "telugu",
-        "chapter": 1,
-        "declaredSeconds": 240,
-        "computedSeconds": 314,
-        "effectiveSeconds": 314,
-        "wordCount": 486,
-        "promptCount": 3,
-        "repeatCueCount": 0,
-        "explicitPauseSeconds": 6,
-        "authoredAudioSeconds": 0,
-        "activityResponseSeconds": 0,
-        "reasons": [
-          "computed"
-        ]
-      }
-    ]
+    "violations": []
   },
   "prerequisites": {
     "unknown": [],
@@ -5214,17 +5196,6 @@
           "budget": 3
         },
         {
-          "lessonId": "MR-C01-dhanyavad",
-          "language": "marathi",
-          "chapter": 1,
-          "glyphs": 12,
-          "sample": "आदधनभयवहाीे्",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "JA-C01-arigatou",
           "language": "japanese",
           "chapter": 1,
@@ -5283,6 +5254,17 @@
           "budget": 3
         },
         {
+          "lessonId": "MR-C01-dhanyavad",
+          "language": "marathi",
+          "chapter": 1,
+          "glyphs": 9,
+          "sample": "आदधभयवहीे",
+          "systems": [
+            "Devanagari"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "KA-C07-numbers-1-5",
           "language": "kannada",
           "chapter": 7,
@@ -5301,6 +5283,17 @@
           "sample": "ംകനമരസാ്",
           "systems": [
             "Malayalam"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "MR-C01-namaskar",
+          "language": "marathi",
+          "chapter": 1,
+          "glyphs": 8,
+          "sample": "ःकनमरसा्",
+          "systems": [
+            "Devanagari"
           ],
           "budget": 3
         },
@@ -5603,17 +5596,6 @@
           "budget": 3
         },
         {
-          "lessonId": "MR-C02-anand",
-          "language": "marathi",
-          "chapter": 2,
-          "glyphs": 5,
-          "sample": "झटणलू",
-          "systems": [
-            "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "RU-C02-ya",
           "language": "russian",
           "chapter": 2,
@@ -5720,17 +5702,6 @@
           "sample": "എഞറൻ",
           "systems": [
             "Malayalam"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "MR-C01-namaskar",
-          "language": "marathi",
-          "chapter": 1,
-          "glyphs": 4,
-          "sample": "ःकमस",
-          "systems": [
-            "Devanagari"
           ],
           "budget": 3
         },
@@ -6057,7 +6028,7 @@
           "latinScript": false,
           "lessonCount": 73,
           "totalGlyphs": 46,
-          "lessonViolations": 3,
+          "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 1
         },
@@ -6163,7 +6134,7 @@
         }
       ],
       "summary": {
-        "lessonViolations": 61,
+        "lessonViolations": 60,
         "systemViolations": 5,
         "lessonsWithForeignScript": 219,
         "maxForeignGlyphsInALesson": 26,
@@ -6842,509 +6813,6 @@
         "kind": "forward-review",
         "other": "IT-C04-arrivederci",
         "detail": "reviews IT-C04-arrivederci, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-baram",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C01-baram",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "MR-C01-ho",
-        "detail": "reviews MR-C01-ho, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-baram",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "MR-C01-nahi",
-        "detail": "reviews MR-C01-nahi, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-baram",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "MR-C01-ho",
-        "detail": "requires MR-C01-ho, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C01-dhanyavad",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C01-dhanyavad",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "MR-C01-namaskar",
-        "detail": "reviews MR-C01-namaskar, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-dhanyavad",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "MR-C01-namaskar",
-        "detail": "requires MR-C01-namaskar, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C01-ho",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C01-ho",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "MR-C01-namaskar",
-        "detail": "reviews MR-C01-namaskar, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-ho",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "MR-C01-namaskar",
-        "detail": "requires MR-C01-namaskar, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C01-nahi",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C01-nahi",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "MR-C01-namaskar",
-        "detail": "reviews MR-C01-namaskar, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-namaskar",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C01-practice",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C01-practice",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "MR-C01-yeto",
-        "detail": "reviews MR-C01-yeto, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C01-practice",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "MR-C01-yeto",
-        "detail": "requires MR-C01-yeto, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C01-yeto",
-        "language": "marathi",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-naav",
-        "detail": "reviews MR-C02-naav, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-majhe",
-        "detail": "reviews MR-C02-majhe, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "MR-C02-naav",
-        "detail": "requires MR-C02-naav, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C02-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "MR-C02-majhe",
-        "detail": "requires MR-C02-majhe, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C02-anand",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-anand",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-majhe-naav-aahe",
-        "detail": "reviews MR-C02-majhe-naav-aahe, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-anand",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "MR-C02-tumche-naav-kaay-aahe",
-        "detail": "requires MR-C02-tumche-naav-kaay-aahe, which comes 7 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C02-kaay",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-kaay",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-naav",
-        "detail": "reviews MR-C02-naav, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-kaay",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "MR-C02-tu-tumhi",
-        "detail": "requires MR-C02-tu-tumhi, which comes 5 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C02-majhe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-majhe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-naav",
-        "detail": "reviews MR-C02-naav, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-majhe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "MR-C02-naav",
-        "detail": "requires MR-C02-naav, which comes 2 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C02-majhe-naav-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-majhe-naav-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-naav",
-        "detail": "reviews MR-C02-naav, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-majhe-naav-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-prerequisite",
-        "other": "MR-C02-naav",
-        "detail": "requires MR-C02-naav, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C02-naav",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-practice",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-practice",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-tu-tumhi",
-        "detail": "reviews MR-C02-tu-tumhi, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-practice",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "MR-C02-tumche-naav-kaay-aahe",
-        "detail": "reviews MR-C02-tumche-naav-kaay-aahe, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C02-tu-tumhi",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C02-tumche-naav-kaay-aahe",
-        "language": "marathi",
-        "chapter": 2,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C03-kaahi-harkat-nahi",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C03-kaahi-harkat-nahi",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "MR-C03-mi-bara-aahe",
-        "detail": "requires MR-C03-mi-bara-aahe, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C03-kasa",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C03-mi",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C03-mi",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "forward-prerequisite",
-        "other": "MR-C03-tumhi-kase-aahat",
-        "detail": "requires MR-C03-tumhi-kase-aahat, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C03-mi-bara-aahe",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C03-practice",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C03-practice",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "forward-review",
-        "other": "MR-C03-tumhi-kase-aahat",
-        "detail": "reviews MR-C03-tumhi-kase-aahat, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C03-tumhi-kase-aahat",
-        "language": "marathi",
-        "chapter": 3,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C04-bhetu",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C04-bhetu",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "MR-C04-punha",
-        "detail": "requires MR-C04-punha, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C04-kalji-ghya",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C04-kalji-ghya",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "forward-prerequisite",
-        "other": "MR-C04-udya-bhetu",
-        "detail": "requires MR-C04-udya-bhetu, which comes 4 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "MR-C04-punha",
-        "detail": "reviews MR-C04-punha, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "MR-C04-punha-bhetu",
-        "detail": "reviews MR-C04-punha-bhetu, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "MR-C04-udya-bhetu",
-        "detail": "reviews MR-C04-udya-bhetu, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C04-punha",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C04-punha-bhetu",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C04-udya-bhetu",
-        "language": "marathi",
-        "chapter": 4,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C05-bolne",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C05-kaam-karne",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C05-kaam-karne",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "forward-prerequisite",
-        "other": "MR-C05-rahne",
-        "detail": "requires MR-C05-rahne, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "MR-C05-mi-marathi-bolto",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C05-practice",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "MR-C05-practice",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "MR-C05-rahne",
-        "detail": "reviews MR-C05-rahne, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "MR-C05-rahne",
-        "language": "marathi",
-        "chapter": 5,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
         "lessonId": "FA-C01-bale",
@@ -59698,11 +59166,11 @@
         "lessonsEarly": 8
       },
       {
-        "lessonId": "MR-C02-kaay",
+        "lessonId": "MR-C01-dhanyavad",
         "language": "marathi",
-        "position": 9,
-        "word": "कसं",
-        "taughtBy": "MR-C03-kasa",
+        "position": 1,
+        "word": "आहे",
+        "taughtBy": "MR-C02-aahe",
         "lessonsEarly": 8
       },
       {
@@ -59887,14 +59355,6 @@
         "position": 41,
         "word": "māne",
         "taughtBy": "LA-C31-mane",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "MR-C01-dhanyavad",
-        "language": "marathi",
-        "position": 1,
-        "word": "आहे",
-        "taughtBy": "MR-C02-aahe",
         "lessonsEarly": 6
       },
       {
@@ -60146,6 +59606,14 @@
         "lessonsEarly": 4
       },
       {
+        "lessonId": "MR-C02-kaay",
+        "language": "marathi",
+        "position": 12,
+        "word": "कसं",
+        "taughtBy": "MR-C03-kasa",
+        "lessonsEarly": 4
+      },
+      {
         "lessonId": "PT-C16-ser-estar-meaning",
         "language": "portuguese",
         "position": 55,
@@ -60319,14 +59787,6 @@
         "position": 39,
         "word": "quōmodo",
         "taughtBy": "LA-C26-quomodo",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "position": 24,
-        "word": "उद्या भेटू",
-        "taughtBy": "MR-C04-udya-bhetu",
         "lessonsEarly": 3
       },
       {
@@ -60607,22 +60067,6 @@
         "position": 68,
         "word": "ഇരുപത്",
         "taughtBy": "ML-C20-pathinonnu-irupathu",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "MR-C02-majhe",
-        "language": "marathi",
-        "position": 10,
-        "word": "नाव",
-        "taughtBy": "MR-C02-naav",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "position": 24,
-        "word": "पुन्हा भेटू",
-        "taughtBy": "MR-C04-punha-bhetu",
         "lessonsEarly": 2
       },
       {
@@ -61562,59 +61006,11 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "MR-C01-practice",
-        "language": "marathi",
-        "position": 5,
-        "word": "येतो",
-        "taughtBy": "MR-C01-yeto",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MR-C01-practice",
-        "language": "marathi",
-        "position": 5,
-        "word": "येते",
-        "taughtBy": "MR-C01-yeto",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MR-C02-practice",
-        "language": "marathi",
-        "position": 13,
-        "word": "तू",
-        "taughtBy": "MR-C02-tu-tumhi",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MR-C02-practice",
-        "language": "marathi",
-        "position": 13,
-        "word": "तुम्ही",
-        "taughtBy": "MR-C02-tu-tumhi",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "MR-C03-mi",
         "language": "marathi",
         "position": 18,
         "word": "मी बरा आहे",
         "taughtBy": "MR-C03-mi-bara-aahe",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MR-C04-practice",
-        "language": "marathi",
-        "position": 24,
-        "word": "पुन्हा",
-        "taughtBy": "MR-C04-punha",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MR-C05-practice",
-        "language": "marathi",
-        "position": 31,
-        "word": "राहणे",
-        "taughtBy": "MR-C05-rahne",
         "lessonsEarly": 1
       },
       {
@@ -62078,12 +61474,12 @@
       {
         "language": "marathi",
         "lessonCount": 73,
-        "lessonsWithoutSequence": 33,
-        "forwardPrerequisites": 15,
-        "forwardReviews": 19,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
         "atomsTaught": 79,
         "atomsNeverRevisited": 3,
-        "forwardReferences": 12
+        "forwardReferences": 3
       },
       {
         "language": "marwadi",
@@ -62187,10 +61583,10 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 116,
-      "tracksWithUnorderedLessons": 7,
-      "forwardPrerequisites": 57,
-      "forwardReviews": 71,
+      "lessonsWithoutSequence": 83,
+      "tracksWithUnorderedLessons": 6,
+      "forwardPrerequisites": 42,
+      "forwardReviews": 52,
       "atomsTaught": 4680,
       "atomsNeverRevisited": 630,
       "neverRevisitedPercent": 13,
@@ -62200,7 +61596,7 @@
         "R3": 3536,
         "R4": 2053
       },
-      "forwardReferences": 484
+      "forwardReferences": 475
     }
   },
   "scriptClosure": {
@@ -72498,15 +71894,15 @@
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 0,
-        "glyphLessonSpikes": 3,
+        "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 62,
         "neverTaughtGlyphs": 36,
-        "orderDefects": 67,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 15,
-        "forwardReviews": 19,
-        "forwardReferences": 12,
+        "forwardPrerequisites": 0,
+        "forwardReviews": 0,
+        "forwardReferences": 3,
         "atomsTaught": 79,
         "atomsNeverRevisited": 3,
         "reinforcementWindowMisses": 98,
@@ -72517,15 +71913,8 @@
         "findings": [
           {
             "language": "marathi",
-            "kind": "order-integrity",
-            "count": 67,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
-          {
-            "language": "marathi",
             "kind": "forward-language",
-            "count": 12,
+            "count": 3,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -72546,7 +71935,7 @@
           {
             "language": "marathi",
             "kind": "glyph-step",
-            "count": 3,
+            "count": 2,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -72567,10 +71956,10 @@
         ],
         "next": {
           "language": "marathi",
-          "kind": "order-integrity",
-          "count": 67,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 3,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -73214,7 +72603,7 @@
         "lessonCount": 276,
         "atomMeasurableLessons": 246,
         "atomMeasurementBlindLessons": 30,
-        "durationViolations": 1,
+        "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 0,
         "glyphLessonSpikes": 6,
@@ -73234,13 +72623,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "telugu",
-            "kind": "duration",
-            "count": 1,
-            "unit": "lesson(s)",
-            "detail": "split lessons whose effective duration exceeds the five-minute maximum"
-          },
           {
             "language": "telugu",
             "kind": "forward-language",
@@ -73293,10 +72675,10 @@
         ],
         "next": {
           "language": "telugu",
-          "kind": "duration",
-          "count": 1,
-          "unit": "lesson(s)",
-          "detail": "split lessons whose effective duration exceeds the five-minute maximum"
+          "kind": "forward-language",
+          "count": 14,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -73398,20 +72780,6 @@
       }
     ],
     "workQueue": [
-      {
-        "language": "telugu",
-        "kind": "duration",
-        "count": 1,
-        "unit": "lesson(s)",
-        "detail": "split lessons whose effective duration exceeds the five-minute maximum"
-      },
-      {
-        "language": "marathi",
-        "kind": "order-integrity",
-        "count": 67,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
       {
         "language": "punjabi",
         "kind": "order-integrity",
@@ -73560,13 +72928,6 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "marathi",
-        "kind": "forward-language",
-        "count": 12,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
         "language": "hindi",
         "kind": "forward-language",
         "count": 10,
@@ -73612,6 +72973,13 @@
         "language": "sanskrit",
         "kind": "forward-language",
         "count": 4,
+        "unit": "use(s)",
+        "detail": "teach target-language material before load-bearing use"
+      },
+      {
+        "language": "marathi",
+        "kind": "forward-language",
+        "count": 3,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -74022,14 +73390,14 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "marathi",
+        "language": "gujarati",
         "kind": "glyph-step",
-        "count": 3,
+        "count": 2,
         "unit": "lesson/system spike(s)",
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "gujarati",
+        "language": "marathi",
         "kind": "glyph-step",
         "count": 2,
         "unit": "lesson/system spike(s)",
@@ -74420,7 +73788,7 @@
       "tracksWithNoWritingPractice": 3,
       "tracksWhereWritingStartsLate": 7,
       "atomMeasurementBlindLessons": 497,
-      "findings": 145
+      "findings": 143
     }
   },
   "levelGate": {
@@ -81195,7 +80563,7 @@
         "pen": 11,
         "coreVoice": 61,
         "drivablePercent": 84,
-        "drivablePrefixTotal": 61,
+        "drivablePrefixTotal": 59,
         "chapters": [
           {
             "language": "marathi",
@@ -81269,7 +80637,7 @@
               "voice",
               "sight"
             ],
-            "drivablePrefix": 4,
+            "drivablePrefix": 2,
             "firstNonVoiceLesson": "MR-C05-rahne"
           },
           {
@@ -90269,7 +89637,7 @@
     "terms": 54,
     "termsUsed": 53,
     "lessonsUsingTerms": 3288,
-    "usesBeforeIntroduction": 12000,
+    "usesBeforeIntroduction": 11999,
     "technicalUsesBeforeIntroduction": 3168,
     "technicalLessons": 1646,
     "worstTerms": [
