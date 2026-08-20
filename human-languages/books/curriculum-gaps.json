@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3403,
+    "totalLessons": 3404,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -30,15 +30,15 @@
     "scriptExposureExemptedGlyphs": 2190,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 306,
-    "lessonsWithoutSequence": 17,
-    "forwardReviews": 14,
+    "lessonsWithoutSequence": 16,
+    "forwardReviews": 13,
     "atomsNeverRevisited": 632,
-    "forwardReferences": 466,
+    "forwardReferences": 470,
     "chaptersWithoutCapability": 0,
-    "chapterPayoffsNotRepresentative": 81,
-    "chapterGateCleanTracks": 10,
-    "tracksWithoutWritingStageEvidence": 17,
-    "missingWritingStagePairs": 944,
+    "chapterPayoffsNotRepresentative": 82,
+    "chapterGateCleanTracks": 9,
+    "tracksWithoutWritingStageEvidence": 16,
+    "missingWritingStagePairs": 930,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2909,
     "drivablePercent": 85,
@@ -3276,10 +3276,10 @@
       {
         "language": "portuguese",
         "status": "mixed",
-        "lessonCount": 96,
+        "lessonCount": 97,
         "versions": {
-          "1": 9,
-          "2": 87
+          "1": 8,
+          "2": 89
         }
       },
       {
@@ -3588,6 +3588,13 @@
         "chapter": 5,
         "lessonId": "FA-C05-practice",
         "message": "persian chapter 5 payoff assesses 4/11 of the chapter's atoms (0.36), below the 0.5 floor."
+      },
+      {
+        "code": "chapter-payoff-not-representative",
+        "language": "portuguese",
+        "chapter": 1,
+        "lessonId": "PT-C01-practice",
+        "message": "portuguese chapter 1 payoff assesses 0/3 of the chapter's atoms (0.00), below the 0.5 floor."
       },
       {
         "code": "chapter-payoff-not-representative",
@@ -4073,8 +4080,8 @@
         "bookChapters": 26,
         "declaredChapters": 26,
         "missingCapability": 0,
-        "findings": 0,
-        "clean": true
+        "findings": 1,
+        "clean": false
       },
       {
         "language": "punjabi",
@@ -4138,18 +4145,18 @@
       "declaredChapters": 1004,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
-      "payoffsNotRepresentative": 81,
+      "payoffsNotRepresentative": 82,
       "unknownPayoffLessons": 0,
       "titleDrift": 0,
       "duplicateChapters": 0,
-      "cleanTracks": 10,
+      "cleanTracks": 9,
       "payoffRepresentativeness": 0.5
     }
   },
   "levels": {
-    "totalLessons": 3403,
+    "totalLessons": 3404,
     "byLevel": {
-      "pre-A1": 2132,
+      "pre-A1": 2133,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4387,9 +4394,9 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 96,
+        "lessonCount": 97,
         "byLevel": {
-          "pre-A1": 53,
+          "pre-A1": 54,
           "A1": 20,
           "A2": 22,
           "B1": 0,
@@ -5129,8 +5136,8 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 96,
-        "measurable": 87,
+        "lessonCount": 97,
+        "measurable": 88,
         "unmeasurable": 9,
         "lessonViolations": 0,
         "chapterViolations": 2
@@ -6059,7 +6066,7 @@
           "language": "portuguese",
           "script": "latin",
           "latinScript": true,
-          "lessonCount": 96,
+          "lessonCount": 97,
           "totalGlyphs": 0,
           "lessonViolations": 0,
           "systemViolations": 0,
@@ -6304,22 +6311,6 @@
         "detail": "no declared reading order; position is a fallback, not a fact"
       },
       {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "PT-C01-ola",
-        "detail": "reviews PT-C01-ola, which the learner does not reach for another 6 lesson(s)"
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PT-C01-ola",
-        "detail": "requires PT-C01-ola, which comes 6 lesson(s) later"
-      },
-      {
         "lessonId": "PT-C01-bom-dia",
         "language": "portuguese",
         "chapter": 1,
@@ -6378,7 +6369,7 @@
         "chapter": 1,
         "kind": "forward-review",
         "other": "PT-C01-tarde",
-        "detail": "reviews PT-C01-tarde, which the learner does not reach for another 5 lesson(s)"
+        "detail": "reviews PT-C01-tarde, which the learner does not reach for another 4 lesson(s)"
       },
       {
         "lessonId": "PT-C01-noite",
@@ -6386,7 +6377,7 @@
         "chapter": 1,
         "kind": "forward-prerequisite",
         "other": "PT-C01-tarde",
-        "detail": "requires PT-C01-tarde, which comes 5 lesson(s) later"
+        "detail": "requires PT-C01-tarde, which comes 4 lesson(s) later"
       },
       {
         "lessonId": "PT-C01-o-a",
@@ -6397,21 +6388,6 @@
       },
       {
         "lessonId": "PT-C01-obrigado",
-        "language": "portuguese",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "PT-C01-obrigado",
-        "language": "portuguese",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "PT-C01-ola",
-        "detail": "requires PT-C01-ola, which comes 1 lesson(s) later"
-      },
-      {
-        "lessonId": "PT-C01-ola",
         "language": "portuguese",
         "chapter": 1,
         "kind": "no-sequence",
@@ -25398,7 +25374,7 @@
         "atom": "PT-ETYMON-DE-NADA-03",
         "language": "portuguese",
         "introducedBy": "PT-C02-de-nada",
-        "introducedAt": 9,
+        "introducedAt": 10,
         "missed": [
           "R1",
           "R3",
@@ -25410,7 +25386,7 @@
         "atom": "PT-ETYMON-IR-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-ir",
-        "introducedAt": 61,
+        "introducedAt": 62,
         "missed": [
           "R1",
           "R2",
@@ -25422,7 +25398,7 @@
         "atom": "PT-ETYMON-MAIS-OU-MENOS-03",
         "language": "portuguese",
         "introducedBy": "PT-C02-mais-ou-menos",
-        "introducedAt": 14,
+        "introducedAt": 15,
         "missed": [
           "R2",
           "R3",
@@ -25434,7 +25410,7 @@
         "atom": "PT-ETYMON-MAO-03",
         "language": "portuguese",
         "introducedBy": "PT-C17-mao",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2",
@@ -25443,10 +25419,22 @@
         "revisits": 1
       },
       {
+        "atom": "PT-ETYMON-OLA-02",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-ola",
+        "introducedAt": 0,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PT-ETYMON-SER-ESTAR-MEANING-02",
         "language": "portuguese",
         "introducedBy": "PT-C16-ser-estar-meaning",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R1",
           "R2",
@@ -25458,7 +25446,7 @@
         "atom": "PT-ETYMON-TOMAR-PEGAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C20-tomar-pegar",
-        "introducedAt": 70,
+        "introducedAt": 71,
         "missed": [
           "R1",
           "R2",
@@ -25470,7 +25458,7 @@
         "atom": "PT-ETYMON-TUDO-03",
         "language": "portuguese",
         "introducedBy": "PT-C02-tudo",
-        "introducedAt": 11,
+        "introducedAt": 12,
         "missed": [
           "R2",
           "R3",
@@ -25482,7 +25470,7 @@
         "atom": "PT-GRAMMAR-TUDO-04",
         "language": "portuguese",
         "introducedBy": "PT-C02-tudo",
-        "introducedAt": 11,
+        "introducedAt": 12,
         "missed": [
           "R2",
           "R3",
@@ -25494,7 +25482,7 @@
         "atom": "PT-GRAMMAR-TUDO-BEM-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-tudo-bem",
-        "introducedAt": 12,
+        "introducedAt": 13,
         "missed": [
           "R2",
           "R3",
@@ -25503,10 +25491,34 @@
         "revisits": 3
       },
       {
+        "atom": "PT-PHONO-OLA-01",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-ola",
+        "introducedAt": 0,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
+        "atom": "PT-PRAGMATIC-OLA-03",
+        "language": "portuguese",
+        "introducedBy": "PT-C01-ola",
+        "introducedAt": 0,
+        "missed": [
+          "R2",
+          "R3",
+          "R4"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "PT-SOUND-DE-NADA-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-de-nada",
-        "introducedAt": 9,
+        "introducedAt": 10,
         "missed": [
           "R1",
           "R3",
@@ -25518,7 +25530,7 @@
         "atom": "PT-SOUND-TUDO-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-tudo",
-        "introducedAt": 11,
+        "introducedAt": 12,
         "missed": [
           "R2",
           "R3",
@@ -42314,7 +42326,7 @@
         "atom": "PT-ETYMON-ACUCAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C24-acucar",
-        "introducedAt": 87,
+        "introducedAt": 88,
         "missed": [
           "R1",
           "R2"
@@ -42325,7 +42337,7 @@
         "atom": "PT-ETYMON-ADEUS-03",
         "language": "portuguese",
         "introducedBy": "PT-C04-adeus",
-        "introducedAt": 22,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3"
@@ -42336,7 +42348,7 @@
         "atom": "PT-ETYMON-AGUA-VINHO-03",
         "language": "portuguese",
         "introducedBy": "PT-C11-agua-vinho",
-        "introducedAt": 43,
+        "introducedAt": 44,
         "missed": [
           "R2",
           "R3"
@@ -42347,7 +42359,7 @@
         "atom": "PT-ETYMON-AJUDAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C20-ajudar",
-        "introducedAt": 72,
+        "introducedAt": 73,
         "missed": [
           "R2",
           "R3"
@@ -42358,7 +42370,7 @@
         "atom": "PT-ETYMON-ATE-AMANHA-03",
         "language": "portuguese",
         "introducedBy": "PT-C04-ate-amanha",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -42369,7 +42381,7 @@
         "atom": "PT-ETYMON-ATE-BREVE-03",
         "language": "portuguese",
         "introducedBy": "PT-C04-ate-breve",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R3"
@@ -42380,7 +42392,7 @@
         "atom": "PT-ETYMON-ATE-LOGO-03",
         "language": "portuguese",
         "introducedBy": "PT-C04-ate-logo",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R2",
           "R3"
@@ -42391,7 +42403,7 @@
         "atom": "PT-ETYMON-CABECA-03",
         "language": "portuguese",
         "introducedBy": "PT-C17-cabeca",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2",
           "R3"
@@ -42402,7 +42414,7 @@
         "atom": "PT-ETYMON-CABECA-CAPUT-02",
         "language": "portuguese",
         "introducedBy": "PT-C17-cabeca-caput",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R2",
           "R3"
@@ -42413,7 +42425,7 @@
         "atom": "PT-ETYMON-COMO-SE-CHAMA-02",
         "language": "portuguese",
         "introducedBy": "PT-C03-como-se-chama",
-        "introducedAt": 19,
+        "introducedAt": 20,
         "missed": [
           "R2",
           "R3"
@@ -42424,7 +42436,7 @@
         "atom": "PT-ETYMON-CONSEGUIR-03",
         "language": "portuguese",
         "introducedBy": "PT-C21-conseguir",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R2",
           "R3"
@@ -42435,7 +42447,7 @@
         "atom": "PT-ETYMON-DIAS-2-02",
         "language": "portuguese",
         "introducedBy": "PT-C07-dias-2",
-        "introducedAt": 35,
+        "introducedAt": 36,
         "missed": [
           "R1",
           "R2"
@@ -42446,7 +42458,7 @@
         "atom": "PT-ETYMON-ENTENDER-COMPREENDER-03",
         "language": "portuguese",
         "introducedBy": "PT-C19-entender-compreender",
-        "introducedAt": 67,
+        "introducedAt": 68,
         "missed": [
           "R1",
           "R3"
@@ -42457,7 +42469,7 @@
         "atom": "PT-ETYMON-ESCREVER-03",
         "language": "portuguese",
         "introducedBy": "PT-C19-escrever",
-        "introducedAt": 69,
+        "introducedAt": 70,
         "missed": [
           "R1",
           "R3"
@@ -42468,7 +42480,7 @@
         "atom": "PT-ETYMON-ESTACOES-02",
         "language": "portuguese",
         "introducedBy": "PT-C09-estacoes",
-        "introducedAt": 39,
+        "introducedAt": 40,
         "missed": [
           "R2",
           "R3"
@@ -42479,7 +42491,7 @@
         "atom": "PT-ETYMON-GOSTAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C20-gostar",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R2",
           "R3"
@@ -42490,7 +42502,7 @@
         "atom": "PT-ETYMON-HORA-03",
         "language": "portuguese",
         "introducedBy": "PT-C08-hora",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -42501,7 +42513,7 @@
         "atom": "PT-ETYMON-IDADE-03",
         "language": "portuguese",
         "introducedBy": "PT-C14-idade",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -42512,7 +42524,7 @@
         "atom": "PT-ETYMON-JOGAR-BRINCAR-TOCAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C22-jogar-brincar-tocar",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R1",
           "R2"
@@ -42523,7 +42535,7 @@
         "atom": "PT-ETYMON-LER-03",
         "language": "portuguese",
         "introducedBy": "PT-C19-ler",
-        "introducedAt": 68,
+        "introducedAt": 69,
         "missed": [
           "R2",
           "R3"
@@ -42534,7 +42546,7 @@
         "atom": "PT-ETYMON-ME-CHAMO-03",
         "language": "portuguese",
         "introducedBy": "PT-C03-me-chamo",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3"
@@ -42545,7 +42557,7 @@
         "atom": "PT-ETYMON-MEIO-DIA-MEIA-NOITE-02",
         "language": "portuguese",
         "introducedBy": "PT-C08-meio-dia-meia-noite",
-        "introducedAt": 37,
+        "introducedAt": 38,
         "missed": [
           "R1",
           "R2"
@@ -42556,7 +42568,7 @@
         "atom": "PT-ETYMON-MESES-02",
         "language": "portuguese",
         "introducedBy": "PT-C09-meses",
-        "introducedAt": 38,
+        "introducedAt": 39,
         "missed": [
           "R2",
           "R3"
@@ -42567,7 +42579,7 @@
         "atom": "PT-ETYMON-NUMEROS-1-5-03",
         "language": "portuguese",
         "introducedBy": "PT-C06-numeros-1-5",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -42578,7 +42590,7 @@
         "atom": "PT-ETYMON-NUMEROS-6-10-03",
         "language": "portuguese",
         "introducedBy": "PT-C06-numeros-6-10",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R1",
           "R3"
@@ -42589,7 +42601,7 @@
         "atom": "PT-ETYMON-PAO-03",
         "language": "portuguese",
         "introducedBy": "PT-C11-pao",
-        "introducedAt": 42,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -42600,7 +42612,7 @@
         "atom": "PT-ETYMON-PENSAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C19-pensar",
-        "introducedAt": 66,
+        "introducedAt": 67,
         "missed": [
           "R2",
           "R3"
@@ -42611,7 +42623,7 @@
         "atom": "PT-ETYMON-PRAZER-03",
         "language": "portuguese",
         "introducedBy": "PT-C03-prazer",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R2",
           "R3"
@@ -42622,7 +42634,7 @@
         "atom": "PT-ETYMON-PRETO-BRANCO-02",
         "language": "portuguese",
         "introducedBy": "PT-C13-preto-branco",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -42633,7 +42645,7 @@
         "atom": "PT-ETYMON-PRETO-BRANCO-03",
         "language": "portuguese",
         "introducedBy": "PT-C13-preto-branco",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -42644,7 +42656,7 @@
         "atom": "PT-ETYMON-PRETO-BRANCO-04",
         "language": "portuguese",
         "introducedBy": "PT-C13-preto-branco",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -42655,7 +42667,7 @@
         "atom": "PT-ETYMON-SABER-CONHECER-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-saber-conhecer",
-        "introducedAt": 65,
+        "introducedAt": 66,
         "missed": [
           "R1",
           "R3"
@@ -42666,7 +42678,7 @@
         "atom": "PT-ETYMON-SER-ESTAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-ser-estar",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R1",
           "R3"
@@ -42677,7 +42689,7 @@
         "atom": "PT-ETYMON-TER-03",
         "language": "portuguese",
         "introducedBy": "PT-C14-ter",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -42688,7 +42700,7 @@
         "atom": "PT-ETYMON-TER-HAVER-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-ter-haver",
-        "introducedAt": 60,
+        "introducedAt": 61,
         "missed": [
           "R1",
           "R3"
@@ -42699,7 +42711,7 @@
         "atom": "PT-ETYMON-TRABALHAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C05-trabalhar",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3"
@@ -42710,7 +42722,7 @@
         "atom": "PT-ETYMON-TRAZER-03",
         "language": "portuguese",
         "introducedBy": "PT-C21-trazer",
-        "introducedAt": 74,
+        "introducedAt": 75,
         "missed": [
           "R2",
           "R3"
@@ -42721,7 +42733,7 @@
         "atom": "PT-ETYMON-VER-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-ver",
-        "introducedAt": 64,
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3"
@@ -42732,7 +42744,7 @@
         "atom": "PT-ETYMON-VIR-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-vir",
-        "introducedAt": 62,
+        "introducedAt": 63,
         "missed": [
           "R2",
           "R3"
@@ -42743,7 +42755,7 @@
         "atom": "PT-GRAMMAR-COMO-04",
         "language": "portuguese",
         "introducedBy": "PT-C02-como",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R3",
           "R4"
@@ -42754,7 +42766,7 @@
         "atom": "PT-GRAMMAR-DIAS-1-03",
         "language": "portuguese",
         "introducedBy": "PT-C07-dias-1",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -42765,7 +42777,7 @@
         "atom": "PT-GRAMMAR-DIAS-2-03",
         "language": "portuguese",
         "introducedBy": "PT-C07-dias-2",
-        "introducedAt": 35,
+        "introducedAt": 36,
         "missed": [
           "R1",
           "R2"
@@ -42776,7 +42788,7 @@
         "atom": "PT-GRAMMAR-GOSTAR-DE-04",
         "language": "portuguese",
         "introducedBy": "PT-C20-gostar",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R2",
           "R3"
@@ -42787,7 +42799,7 @@
         "atom": "PT-GRAMMAR-HORA-04",
         "language": "portuguese",
         "introducedBy": "PT-C08-hora",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -42798,7 +42810,7 @@
         "atom": "PT-GRAMMAR-IDADE-04",
         "language": "portuguese",
         "introducedBy": "PT-C14-idade",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -42809,7 +42821,7 @@
         "atom": "PT-GRAMMAR-JOGAR-BRINCAR-TOCAR-04",
         "language": "portuguese",
         "introducedBy": "PT-C22-jogar-brincar-tocar",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R1",
           "R2"
@@ -42820,7 +42832,7 @@
         "atom": "PT-GRAMMAR-MAIS-OU-MENOS-04",
         "language": "portuguese",
         "introducedBy": "PT-C02-mais-ou-menos",
-        "introducedAt": 14,
+        "introducedAt": 15,
         "missed": [
           "R2",
           "R3"
@@ -42831,7 +42843,7 @@
         "atom": "PT-GRAMMAR-MAO-04",
         "language": "portuguese",
         "introducedBy": "PT-C17-mao",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2"
@@ -42842,7 +42854,7 @@
         "atom": "PT-GRAMMAR-ME-CHAMO-04",
         "language": "portuguese",
         "introducedBy": "PT-C03-me-chamo",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3"
@@ -42853,7 +42865,7 @@
         "atom": "PT-GRAMMAR-NUMEROS-1-5-04",
         "language": "portuguese",
         "introducedBy": "PT-C06-numeros-1-5",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -42864,7 +42876,7 @@
         "atom": "PT-GRAMMAR-NUMEROS-11-15-02",
         "language": "portuguese",
         "introducedBy": "PT-C12-numeros-11-15",
-        "introducedAt": 44,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -42875,7 +42887,7 @@
         "atom": "PT-GRAMMAR-NUMEROS-16-20-02",
         "language": "portuguese",
         "introducedBy": "PT-C12-numeros-16-20",
-        "introducedAt": 45,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -42886,7 +42898,7 @@
         "atom": "PT-GRAMMAR-NUMEROS-6-10-04",
         "language": "portuguese",
         "introducedBy": "PT-C06-numeros-6-10",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R1",
           "R3"
@@ -42897,7 +42909,7 @@
         "atom": "PT-GRAMMAR-PRAZER-04",
         "language": "portuguese",
         "introducedBy": "PT-C03-prazer",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R2",
           "R3"
@@ -42908,7 +42920,7 @@
         "atom": "PT-LEX-AJUDAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C20-ajudar",
-        "introducedAt": 72,
+        "introducedAt": 73,
         "missed": [
           "R2",
           "R3"
@@ -42919,7 +42931,7 @@
         "atom": "PT-LEX-C02-PRACTICE-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-practice",
-        "introducedAt": 15,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3"
@@ -42930,7 +42942,7 @@
         "atom": "PT-LEX-C03-PRACTICE-02",
         "language": "portuguese",
         "introducedBy": "PT-C03-practice",
-        "introducedAt": 21,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2"
@@ -42941,7 +42953,7 @@
         "atom": "PT-LEX-C04-PRACTICE-02",
         "language": "portuguese",
         "introducedBy": "PT-C04-practice",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R1",
           "R2"
@@ -42952,7 +42964,7 @@
         "atom": "PT-LEX-COMO-VAI-ESTA-01",
         "language": "portuguese",
         "introducedBy": "PT-C02-como-vai-esta",
-        "introducedAt": 13,
+        "introducedAt": 14,
         "missed": [
           "R2",
           "R4"
@@ -42963,7 +42975,7 @@
         "atom": "PT-LEX-CONSEGUIR-02",
         "language": "portuguese",
         "introducedBy": "PT-C21-conseguir",
-        "introducedAt": 75,
+        "introducedAt": 76,
         "missed": [
           "R2",
           "R3"
@@ -42974,7 +42986,7 @@
         "atom": "PT-LEX-FORMAL-PRACTICE-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-formal-practice",
-        "introducedAt": 16,
+        "introducedAt": 17,
         "missed": [
           "R1",
           "R2"
@@ -42985,7 +42997,7 @@
         "atom": "PT-LEX-GOSTAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C20-gostar",
-        "introducedAt": 73,
+        "introducedAt": 74,
         "missed": [
           "R2",
           "R3"
@@ -42996,7 +43008,7 @@
         "atom": "PT-LEX-IDADE-02",
         "language": "portuguese",
         "introducedBy": "PT-C14-idade",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R1",
           "R2"
@@ -43007,7 +43019,7 @@
         "atom": "PT-LEX-IR-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-ir",
-        "introducedAt": 61,
+        "introducedAt": 62,
         "missed": [
           "R2",
           "R3"
@@ -43018,7 +43030,7 @@
         "atom": "PT-LEX-MAO-02",
         "language": "portuguese",
         "introducedBy": "PT-C17-mao",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2"
@@ -43029,7 +43041,7 @@
         "atom": "PT-LEX-PRETERITO-PERFEITO-02",
         "language": "portuguese",
         "introducedBy": "PT-C15-preterito-perfeito",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -43040,7 +43052,7 @@
         "atom": "PT-LEX-SER-02",
         "language": "portuguese",
         "introducedBy": "PT-C16-ser",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -43051,7 +43063,7 @@
         "atom": "PT-LEX-SER-03",
         "language": "portuguese",
         "introducedBy": "PT-C16-ser",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2",
           "R3"
@@ -43062,7 +43074,7 @@
         "atom": "PT-LEX-TER-02",
         "language": "portuguese",
         "introducedBy": "PT-C14-ter",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2",
           "R3"
@@ -43073,7 +43085,7 @@
         "atom": "PT-LEX-TOMAR-PEGAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C20-tomar-pegar",
-        "introducedAt": 70,
+        "introducedAt": 71,
         "missed": [
           "R2",
           "R3"
@@ -43084,7 +43096,7 @@
         "atom": "PT-LEX-TRAZER-02",
         "language": "portuguese",
         "introducedBy": "PT-C21-trazer",
-        "introducedAt": 74,
+        "introducedAt": 75,
         "missed": [
           "R2",
           "R3"
@@ -43095,7 +43107,7 @@
         "atom": "PT-LEX-VER-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-ver",
-        "introducedAt": 64,
+        "introducedAt": 65,
         "missed": [
           "R2",
           "R3"
@@ -43106,7 +43118,7 @@
         "atom": "PT-LEX-VIR-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-vir",
-        "introducedAt": 62,
+        "introducedAt": 63,
         "missed": [
           "R2",
           "R3"
@@ -43117,7 +43129,7 @@
         "atom": "PT-NOTICE-C02-PRACTICE-03",
         "language": "portuguese",
         "introducedBy": "PT-C02-practice",
-        "introducedAt": 15,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3"
@@ -43128,7 +43140,7 @@
         "atom": "PT-NOTICE-C03-PRACTICE-03",
         "language": "portuguese",
         "introducedBy": "PT-C03-practice",
-        "introducedAt": 21,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2"
@@ -43139,7 +43151,7 @@
         "atom": "PT-NOTICE-C04-PRACTICE-03",
         "language": "portuguese",
         "introducedBy": "PT-C04-practice",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R1",
           "R2"
@@ -43150,7 +43162,7 @@
         "atom": "PT-NOTICE-C05-PRACTICE-04",
         "language": "portuguese",
         "introducedBy": "PT-C05-practice",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R1",
           "R2"
@@ -43161,7 +43173,7 @@
         "atom": "PT-NOTICE-NUMEROS-11-15-03",
         "language": "portuguese",
         "introducedBy": "PT-C12-numeros-11-15",
-        "introducedAt": 44,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -43172,7 +43184,7 @@
         "atom": "PT-NOTICE-NUMEROS-16-20-03",
         "language": "portuguese",
         "introducedBy": "PT-C12-numeros-16-20",
-        "introducedAt": 45,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -43183,7 +43195,7 @@
         "atom": "PT-NOTICE-SER-VS-ESTAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C16-ser-vs-estar",
-        "introducedAt": 54,
+        "introducedAt": 55,
         "missed": [
           "R2",
           "R3"
@@ -43194,7 +43206,7 @@
         "atom": "PT-NOTICE-VERMELHO-AZUL-04",
         "language": "portuguese",
         "introducedBy": "PT-C13-vermelho-azul",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -43205,7 +43217,7 @@
         "atom": "PT-PRAGMATICS-DIAS-1-02",
         "language": "portuguese",
         "introducedBy": "PT-C07-dias-1",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -43216,7 +43228,7 @@
         "atom": "PT-PRAGMATICS-PRETERITO-PERFEITO-03",
         "language": "portuguese",
         "introducedBy": "PT-C15-preterito-perfeito",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R2",
           "R3"
@@ -43227,7 +43239,7 @@
         "atom": "PT-PRAGMATICS-TENHO-FALADO-04",
         "language": "portuguese",
         "introducedBy": "PT-C15-tenho-falado",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -43238,7 +43250,7 @@
         "atom": "PT-SOUND-ADEUS-02",
         "language": "portuguese",
         "introducedBy": "PT-C04-adeus",
-        "introducedAt": 22,
+        "introducedAt": 23,
         "missed": [
           "R2",
           "R3"
@@ -43249,7 +43261,7 @@
         "atom": "PT-SOUND-ATE-AMANHA-02",
         "language": "portuguese",
         "introducedBy": "PT-C04-ate-amanha",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -43260,7 +43272,7 @@
         "atom": "PT-SOUND-ATE-BREVE-02",
         "language": "portuguese",
         "introducedBy": "PT-C04-ate-breve",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R3"
@@ -43271,7 +43283,7 @@
         "atom": "PT-SOUND-ATE-LOGO-02",
         "language": "portuguese",
         "introducedBy": "PT-C04-ate-logo",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R2",
           "R3"
@@ -43282,7 +43294,7 @@
         "atom": "PT-SOUND-COMO-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-como",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R3",
           "R4"
@@ -43293,7 +43305,7 @@
         "atom": "PT-SOUND-HORA-02",
         "language": "portuguese",
         "introducedBy": "PT-C08-hora",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -43304,7 +43316,7 @@
         "atom": "PT-SOUND-MAIS-OU-MENOS-02",
         "language": "portuguese",
         "introducedBy": "PT-C02-mais-ou-menos",
-        "introducedAt": 14,
+        "introducedAt": 15,
         "missed": [
           "R2",
           "R3"
@@ -43315,7 +43327,7 @@
         "atom": "PT-SOUND-ME-CHAMO-02",
         "language": "portuguese",
         "introducedBy": "PT-C03-me-chamo",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2",
           "R3"
@@ -43326,7 +43338,7 @@
         "atom": "PT-SOUND-NUMEROS-1-5-02",
         "language": "portuguese",
         "introducedBy": "PT-C06-numeros-1-5",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R2",
           "R3"
@@ -43337,7 +43349,7 @@
         "atom": "PT-SOUND-NUMEROS-6-10-02",
         "language": "portuguese",
         "introducedBy": "PT-C06-numeros-6-10",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R1",
           "R3"
@@ -43348,7 +43360,7 @@
         "atom": "PT-SOUND-PRAZER-02",
         "language": "portuguese",
         "introducedBy": "PT-C03-prazer",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R2",
           "R3"
@@ -54116,7 +54128,7 @@
         "atom": "PT-ETYMON-AGUA-VINHO-02",
         "language": "portuguese",
         "introducedBy": "PT-C11-agua-vinho",
-        "introducedAt": 43,
+        "introducedAt": 44,
         "missed": [
           "R2"
         ],
@@ -54126,7 +54138,7 @@
         "atom": "PT-ETYMON-AMIGO-03",
         "language": "portuguese",
         "introducedBy": "PT-C25-amigo",
-        "introducedAt": 88,
+        "introducedAt": 89,
         "missed": [
           "R2"
         ],
@@ -54136,7 +54148,7 @@
         "atom": "PT-ETYMON-ARROZ-03",
         "language": "portuguese",
         "introducedBy": "PT-C24-arroz",
-        "introducedAt": 86,
+        "introducedAt": 87,
         "missed": [
           "R2"
         ],
@@ -54146,7 +54158,7 @@
         "atom": "PT-ETYMON-BOCA-03",
         "language": "portuguese",
         "introducedBy": "PT-C26-boca",
-        "introducedAt": 94,
+        "introducedAt": 95,
         "missed": [
           "R1"
         ],
@@ -54156,7 +54168,7 @@
         "atom": "PT-ETYMON-CAFE-03",
         "language": "portuguese",
         "introducedBy": "PT-C23-cafe",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R2"
         ],
@@ -54166,7 +54178,7 @@
         "atom": "PT-ETYMON-CHA-03",
         "language": "portuguese",
         "introducedBy": "PT-C23-cha",
-        "introducedAt": 82,
+        "introducedAt": 83,
         "missed": [
           "R2"
         ],
@@ -54176,7 +54188,7 @@
         "atom": "PT-ETYMON-COMO-03",
         "language": "portuguese",
         "introducedBy": "PT-C02-como",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R4"
         ],
@@ -54186,7 +54198,7 @@
         "atom": "PT-ETYMON-COMPRAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C21-comprar",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R2"
         ],
@@ -54196,7 +54208,7 @@
         "atom": "PT-ETYMON-DIZER-03",
         "language": "portuguese",
         "introducedBy": "PT-C18-dizer",
-        "introducedAt": 63,
+        "introducedAt": 64,
         "missed": [
           "R3"
         ],
@@ -54206,7 +54218,7 @@
         "atom": "PT-ETYMON-ENCONTRAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C22-encontrar",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R2"
         ],
@@ -54216,7 +54228,7 @@
         "atom": "PT-ETYMON-ESPERAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C21-esperar",
-        "introducedAt": 76,
+        "introducedAt": 77,
         "missed": [
           "R2"
         ],
@@ -54226,7 +54238,7 @@
         "atom": "PT-ETYMON-EU-03",
         "language": "portuguese",
         "introducedBy": "PT-C03-eu",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -54236,7 +54248,7 @@
         "atom": "PT-ETYMON-FALAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C05-falar",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
@@ -54246,7 +54258,7 @@
         "atom": "PT-ETYMON-FAMILIA-03",
         "language": "portuguese",
         "introducedBy": "PT-C25-familia",
-        "introducedAt": 89,
+        "introducedAt": 90,
         "missed": [
           "R2"
         ],
@@ -54256,7 +54268,7 @@
         "atom": "PT-ETYMON-HOMEM-03",
         "language": "portuguese",
         "introducedBy": "PT-C25-homem",
-        "introducedAt": 90,
+        "introducedAt": 91,
         "missed": [
           "R2"
         ],
@@ -54266,7 +54278,7 @@
         "atom": "PT-ETYMON-IRMAOS-02",
         "language": "portuguese",
         "introducedBy": "PT-C10-irmaos",
-        "introducedAt": 41,
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
@@ -54276,7 +54288,7 @@
         "atom": "PT-ETYMON-IRMAOS-03",
         "language": "portuguese",
         "introducedBy": "PT-C10-irmaos",
-        "introducedAt": 41,
+        "introducedAt": 42,
         "missed": [
           "R2"
         ],
@@ -54286,7 +54298,7 @@
         "atom": "PT-ETYMON-LEITE-03",
         "language": "portuguese",
         "introducedBy": "PT-C23-leite",
-        "introducedAt": 83,
+        "introducedAt": 84,
         "missed": [
           "R2"
         ],
@@ -54296,7 +54308,7 @@
         "atom": "PT-ETYMON-MORAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C05-morar",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2"
         ],
@@ -54306,7 +54318,7 @@
         "atom": "PT-ETYMON-MULHER-03",
         "language": "portuguese",
         "introducedBy": "PT-C25-mulher",
-        "introducedAt": 91,
+        "introducedAt": 92,
         "missed": [
           "R1"
         ],
@@ -54316,7 +54328,7 @@
         "atom": "PT-ETYMON-OVO-03",
         "language": "portuguese",
         "introducedBy": "PT-C24-ovo",
-        "introducedAt": 85,
+        "introducedAt": 86,
         "missed": [
           "R2"
         ],
@@ -54326,7 +54338,7 @@
         "atom": "PT-ETYMON-PAIS-02",
         "language": "portuguese",
         "introducedBy": "PT-C10-pais",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2"
         ],
@@ -54336,7 +54348,7 @@
         "atom": "PT-ETYMON-PAO-02",
         "language": "portuguese",
         "introducedBy": "PT-C11-pao",
-        "introducedAt": 42,
+        "introducedAt": 43,
         "missed": [
           "R2"
         ],
@@ -54346,7 +54358,7 @@
         "atom": "PT-ETYMON-PERGUNTAR-03",
         "language": "portuguese",
         "introducedBy": "PT-C20-perguntar",
-        "introducedAt": 71,
+        "introducedAt": 72,
         "missed": [
           "R3"
         ],
@@ -54356,7 +54368,7 @@
         "atom": "PT-ETYMON-QUEIJO-03",
         "language": "portuguese",
         "introducedBy": "PT-C24-queijo",
-        "introducedAt": 84,
+        "introducedAt": 85,
         "missed": [
           "R2"
         ],
@@ -54366,7 +54378,7 @@
         "atom": "PT-ETYMON-RESPONDER-03",
         "language": "portuguese",
         "introducedBy": "PT-C22-responder",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2"
         ],
@@ -54376,7 +54388,7 @@
         "atom": "PT-ETYMON-SER-ROOTS-02",
         "language": "portuguese",
         "introducedBy": "PT-C16-ser-roots",
-        "introducedAt": 53,
+        "introducedAt": 54,
         "missed": [
           "R3"
         ],
@@ -54386,7 +54398,7 @@
         "atom": "PT-ETYMON-VERMELHO-AZUL-02",
         "language": "portuguese",
         "introducedBy": "PT-C13-vermelho-azul",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2"
         ],
@@ -54396,7 +54408,7 @@
         "atom": "PT-ETYMON-VERMELHO-AZUL-03",
         "language": "portuguese",
         "introducedBy": "PT-C13-vermelho-azul",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2"
         ],
@@ -54406,7 +54418,7 @@
         "atom": "PT-GRAMMAR-ENCONTRAR-04",
         "language": "portuguese",
         "introducedBy": "PT-C22-encontrar",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R2"
         ],
@@ -54416,7 +54428,7 @@
         "atom": "PT-GRAMMAR-ESPERAR-04",
         "language": "portuguese",
         "introducedBy": "PT-C21-esperar",
-        "introducedAt": 76,
+        "introducedAt": 77,
         "missed": [
           "R2"
         ],
@@ -54426,7 +54438,7 @@
         "atom": "PT-GRAMMAR-EU-04",
         "language": "portuguese",
         "introducedBy": "PT-C03-eu",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -54436,7 +54448,7 @@
         "atom": "PT-GRAMMAR-FALAR-04",
         "language": "portuguese",
         "introducedBy": "PT-C05-falar",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
@@ -54446,7 +54458,7 @@
         "atom": "PT-GRAMMAR-MORAR-04",
         "language": "portuguese",
         "introducedBy": "PT-C05-morar",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2"
         ],
@@ -54456,7 +54468,7 @@
         "atom": "PT-GRAMMAR-PAIS-03",
         "language": "portuguese",
         "introducedBy": "PT-C10-pais",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2"
         ],
@@ -54466,7 +54478,7 @@
         "atom": "PT-GRAMMAR-SER-VS-ESTAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C16-ser-vs-estar",
-        "introducedAt": 54,
+        "introducedAt": 55,
         "missed": [
           "R3"
         ],
@@ -54476,7 +54488,7 @@
         "atom": "PT-GRAMMAR-TENHO-FALADO-03",
         "language": "portuguese",
         "introducedBy": "PT-C15-tenho-falado",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1"
         ],
@@ -54486,7 +54498,7 @@
         "atom": "PT-GRAMMAR-TRABALHAR-04",
         "language": "portuguese",
         "introducedBy": "PT-C05-trabalhar",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2"
         ],
@@ -54496,7 +54508,7 @@
         "atom": "PT-LEX-ACUCAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C24-acucar",
-        "introducedAt": 87,
+        "introducedAt": 88,
         "missed": [
           "R2"
         ],
@@ -54506,7 +54518,7 @@
         "atom": "PT-LEX-AMIGO-02",
         "language": "portuguese",
         "introducedBy": "PT-C25-amigo",
-        "introducedAt": 88,
+        "introducedAt": 89,
         "missed": [
           "R2"
         ],
@@ -54516,7 +54528,7 @@
         "atom": "PT-LEX-ARROZ-02",
         "language": "portuguese",
         "introducedBy": "PT-C24-arroz",
-        "introducedAt": 86,
+        "introducedAt": 87,
         "missed": [
           "R2"
         ],
@@ -54526,7 +54538,7 @@
         "atom": "PT-LEX-CAFE-02",
         "language": "portuguese",
         "introducedBy": "PT-C23-cafe",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R2"
         ],
@@ -54536,7 +54548,7 @@
         "atom": "PT-LEX-CHA-02",
         "language": "portuguese",
         "introducedBy": "PT-C23-cha",
-        "introducedAt": 82,
+        "introducedAt": 83,
         "missed": [
           "R2"
         ],
@@ -54546,7 +54558,7 @@
         "atom": "PT-LEX-COMPRAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C21-comprar",
-        "introducedAt": 77,
+        "introducedAt": 78,
         "missed": [
           "R2"
         ],
@@ -54556,7 +54568,7 @@
         "atom": "PT-LEX-DIZER-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-dizer",
-        "introducedAt": 63,
+        "introducedAt": 64,
         "missed": [
           "R3"
         ],
@@ -54566,7 +54578,7 @@
         "atom": "PT-LEX-ENCONTRAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C22-encontrar",
-        "introducedAt": 79,
+        "introducedAt": 80,
         "missed": [
           "R2"
         ],
@@ -54576,7 +54588,7 @@
         "atom": "PT-LEX-ENTENDER-COMPREENDER-02",
         "language": "portuguese",
         "introducedBy": "PT-C19-entender-compreender",
-        "introducedAt": 67,
+        "introducedAt": 68,
         "missed": [
           "R3"
         ],
@@ -54586,7 +54598,7 @@
         "atom": "PT-LEX-ESCREVER-02",
         "language": "portuguese",
         "introducedBy": "PT-C19-escrever",
-        "introducedAt": 69,
+        "introducedAt": 70,
         "missed": [
           "R3"
         ],
@@ -54596,7 +54608,7 @@
         "atom": "PT-LEX-ESPERAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C21-esperar",
-        "introducedAt": 76,
+        "introducedAt": 77,
         "missed": [
           "R2"
         ],
@@ -54606,7 +54618,7 @@
         "atom": "PT-LEX-FALO-PORTUGUES-02",
         "language": "portuguese",
         "introducedBy": "PT-C05-falo-portugues",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R2"
         ],
@@ -54616,7 +54628,7 @@
         "atom": "PT-LEX-FALO-PORTUGUES-03",
         "language": "portuguese",
         "introducedBy": "PT-C05-falo-portugues",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R2"
         ],
@@ -54626,7 +54638,7 @@
         "atom": "PT-LEX-FAMILIA-02",
         "language": "portuguese",
         "introducedBy": "PT-C25-familia",
-        "introducedAt": 89,
+        "introducedAt": 90,
         "missed": [
           "R2"
         ],
@@ -54636,7 +54648,7 @@
         "atom": "PT-LEX-HOMEM-02",
         "language": "portuguese",
         "introducedBy": "PT-C25-homem",
-        "introducedAt": 90,
+        "introducedAt": 91,
         "missed": [
           "R2"
         ],
@@ -54646,7 +54658,7 @@
         "atom": "PT-LEX-JOGAR-BRINCAR-TOCAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C22-jogar-brincar-tocar",
-        "introducedAt": 80,
+        "introducedAt": 81,
         "missed": [
           "R2"
         ],
@@ -54656,7 +54668,7 @@
         "atom": "PT-LEX-LEITE-02",
         "language": "portuguese",
         "introducedBy": "PT-C23-leite",
-        "introducedAt": 83,
+        "introducedAt": 84,
         "missed": [
           "R2"
         ],
@@ -54666,7 +54678,7 @@
         "atom": "PT-LEX-LER-02",
         "language": "portuguese",
         "introducedBy": "PT-C19-ler",
-        "introducedAt": 68,
+        "introducedAt": 69,
         "missed": [
           "R3"
         ],
@@ -54676,7 +54688,7 @@
         "atom": "PT-LEX-OVO-02",
         "language": "portuguese",
         "introducedBy": "PT-C24-ovo",
-        "introducedAt": 85,
+        "introducedAt": 86,
         "missed": [
           "R2"
         ],
@@ -54686,7 +54698,7 @@
         "atom": "PT-LEX-PENSAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C19-pensar",
-        "introducedAt": 66,
+        "introducedAt": 67,
         "missed": [
           "R3"
         ],
@@ -54696,7 +54708,7 @@
         "atom": "PT-LEX-PERGUNTAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C20-perguntar",
-        "introducedAt": 71,
+        "introducedAt": 72,
         "missed": [
           "R3"
         ],
@@ -54706,7 +54718,7 @@
         "atom": "PT-LEX-QUEIJO-02",
         "language": "portuguese",
         "introducedBy": "PT-C24-queijo",
-        "introducedAt": 84,
+        "introducedAt": 85,
         "missed": [
           "R2"
         ],
@@ -54716,7 +54728,7 @@
         "atom": "PT-LEX-RESPONDER-02",
         "language": "portuguese",
         "introducedBy": "PT-C22-responder",
-        "introducedAt": 78,
+        "introducedAt": 79,
         "missed": [
           "R2"
         ],
@@ -54726,7 +54738,7 @@
         "atom": "PT-LEX-SABER-CONHECER-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-saber-conhecer",
-        "introducedAt": 65,
+        "introducedAt": 66,
         "missed": [
           "R3"
         ],
@@ -54736,7 +54748,7 @@
         "atom": "PT-LEX-SER-ESTAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-ser-estar",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R3"
         ],
@@ -54746,7 +54758,7 @@
         "atom": "PT-LEX-TENHO-FALADO-02",
         "language": "portuguese",
         "introducedBy": "PT-C15-tenho-falado",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1"
         ],
@@ -54756,7 +54768,7 @@
         "atom": "PT-LEX-TER-HAVER-02",
         "language": "portuguese",
         "introducedBy": "PT-C18-ter-haver",
-        "introducedAt": 60,
+        "introducedAt": 61,
         "missed": [
           "R3"
         ],
@@ -54766,7 +54778,7 @@
         "atom": "PT-NOTICE-C23-BEBIDAS-04",
         "language": "portuguese",
         "introducedBy": "PT-C23-leite",
-        "introducedAt": 83,
+        "introducedAt": 84,
         "missed": [
           "R2"
         ],
@@ -54776,7 +54788,7 @@
         "atom": "PT-NOTICE-C24-COMIDA-04",
         "language": "portuguese",
         "introducedBy": "PT-C24-acucar",
-        "introducedAt": 87,
+        "introducedAt": 88,
         "missed": [
           "R2"
         ],
@@ -54786,7 +54798,7 @@
         "atom": "PT-SOUND-CABECA-02",
         "language": "portuguese",
         "introducedBy": "PT-C17-cabeca",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2"
         ],
@@ -54796,7 +54808,7 @@
         "atom": "PT-SOUND-CAFE-02",
         "language": "portuguese",
         "introducedBy": "PT-C23-cafe",
-        "introducedAt": 81,
+        "introducedAt": 82,
         "missed": [
           "R2"
         ],
@@ -54806,7 +54818,7 @@
         "atom": "PT-SOUND-EU-02",
         "language": "portuguese",
         "introducedBy": "PT-C03-eu",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -54816,7 +54828,7 @@
         "atom": "PT-SOUND-FALAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C05-falar",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2"
         ],
@@ -54826,7 +54838,7 @@
         "atom": "PT-SOUND-MORAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C05-morar",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2"
         ],
@@ -54836,7 +54848,7 @@
         "atom": "PT-SOUND-TRABALHAR-02",
         "language": "portuguese",
         "introducedBy": "PT-C05-trabalhar",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2"
         ],
@@ -57135,7 +57147,7 @@
       {
         "lessonId": "PT-C04-ate-logo",
         "language": "portuguese",
-        "position": 23,
+        "position": 24,
         "word": "açúcar",
         "taughtBy": "PT-C24-acucar",
         "lessonsEarly": 64
@@ -57231,7 +57243,7 @@
       {
         "lessonId": "PT-C02-como",
         "language": "portuguese",
-        "position": 10,
+        "position": 11,
         "word": "ir",
         "taughtBy": "PT-C18-ir",
         "lessonsEarly": 51
@@ -57263,7 +57275,7 @@
       {
         "lessonId": "PT-C06-numeros-6-10",
         "language": "portuguese",
-        "position": 33,
+        "position": 34,
         "word": "leite",
         "taughtBy": "PT-C23-leite",
         "lessonsEarly": 50
@@ -57279,7 +57291,7 @@
       {
         "lessonId": "PT-C02-como",
         "language": "portuguese",
-        "position": 10,
+        "position": 11,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 49
@@ -57287,7 +57299,7 @@
       {
         "lessonId": "PT-C06-numeros-1-5",
         "language": "portuguese",
-        "position": 32,
+        "position": 33,
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 49
@@ -57295,7 +57307,7 @@
       {
         "lessonId": "PT-C02-como-vai-esta",
         "language": "portuguese",
-        "position": 13,
+        "position": 14,
         "word": "ir",
         "taughtBy": "PT-C18-ir",
         "lessonsEarly": 48
@@ -57311,7 +57323,7 @@
       {
         "lessonId": "PT-C02-como-vai-esta",
         "language": "portuguese",
-        "position": 13,
+        "position": 14,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 46
@@ -57543,7 +57555,7 @@
       {
         "lessonId": "PT-C16-ser-vs-estar",
         "language": "portuguese",
-        "position": 54,
+        "position": 55,
         "word": "o café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 27
@@ -57551,7 +57563,7 @@
       {
         "lessonId": "PT-C16-ser-vs-estar",
         "language": "portuguese",
-        "position": 54,
+        "position": 55,
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 27
@@ -57575,7 +57587,7 @@
       {
         "lessonId": "PT-C03-prazer",
         "language": "portuguese",
-        "position": 20,
+        "position": 21,
         "word": "branco",
         "taughtBy": "PT-C13-preto-branco",
         "lessonsEarly": 26
@@ -57615,7 +57627,7 @@
       {
         "lessonId": "PT-C09-estacoes",
         "language": "portuguese",
-        "position": 39,
+        "position": 40,
         "word": "ver",
         "taughtBy": "PT-C18-ver",
         "lessonsEarly": 25
@@ -58071,7 +58083,7 @@
       {
         "lessonId": "PT-C14-ter",
         "language": "portuguese",
-        "position": 48,
+        "position": 49,
         "word": "haver",
         "taughtBy": "PT-C18-ter-haver",
         "lessonsEarly": 12
@@ -58111,7 +58123,7 @@
       {
         "lessonId": "PT-C20-tomar-pegar",
         "language": "portuguese",
-        "position": 70,
+        "position": 71,
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 11
@@ -58151,7 +58163,7 @@
       {
         "lessonId": "PT-C15-tenho-falado",
         "language": "portuguese",
-        "position": 51,
+        "position": 52,
         "word": "ir",
         "taughtBy": "PT-C18-ir",
         "lessonsEarly": 10
@@ -58159,7 +58171,7 @@
       {
         "lessonId": "PT-C20-perguntar",
         "language": "portuguese",
-        "position": 71,
+        "position": 72,
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 10
@@ -58202,6 +58214,22 @@
         "position": 7,
         "word": "ನಾನು",
         "taughtBy": "KA-C03-naanu",
+        "lessonsEarly": 9
+      },
+      {
+        "lessonId": "PT-C01-ola",
+        "language": "portuguese",
+        "position": 0,
+        "word": "tarde",
+        "taughtBy": "PT-C01-tarde",
+        "lessonsEarly": 9
+      },
+      {
+        "lessonId": "PT-C01-ola",
+        "language": "portuguese",
+        "position": 0,
+        "word": "boa tarde",
+        "taughtBy": "PT-C01-tarde",
         "lessonsEarly": 9
       },
       {
@@ -58261,25 +58289,9 @@
         "lessonsEarly": 8
       },
       {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 0,
-        "word": "tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 8
-      },
-      {
-        "lessonId": "PT-C01-bom",
-        "language": "portuguese",
-        "position": 0,
-        "word": "boa tarde",
-        "taughtBy": "PT-C01-tarde",
-        "lessonsEarly": 8
-      },
-      {
         "lessonId": "PT-C16-ser-roots",
         "language": "portuguese",
-        "position": 53,
+        "position": 54,
         "word": "ir",
         "taughtBy": "PT-C18-ir",
         "lessonsEarly": 8
@@ -58287,7 +58299,7 @@
       {
         "lessonId": "PT-C20-gostar",
         "language": "portuguese",
-        "position": 73,
+        "position": 74,
         "word": "café",
         "taughtBy": "PT-C23-cafe",
         "lessonsEarly": 8
@@ -58349,17 +58361,17 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "PT-C01-bom-dia",
+        "lessonId": "PT-C01-bom",
         "language": "portuguese",
-        "position": 1,
+        "position": 2,
         "word": "tarde",
         "taughtBy": "PT-C01-tarde",
         "lessonsEarly": 7
       },
       {
-        "lessonId": "PT-C01-bom-dia",
+        "lessonId": "PT-C01-bom",
         "language": "portuguese",
-        "position": 1,
+        "position": 2,
         "word": "boa tarde",
         "taughtBy": "PT-C01-tarde",
         "lessonsEarly": 7
@@ -58367,7 +58379,7 @@
       {
         "lessonId": "PT-C16-ser",
         "language": "portuguese",
-        "position": 52,
+        "position": 53,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 7
@@ -58375,7 +58387,7 @@
       {
         "lessonId": "PT-C19-escrever",
         "language": "portuguese",
-        "position": 69,
+        "position": 70,
         "word": "esperar",
         "taughtBy": "PT-C21-esperar",
         "lessonsEarly": 7
@@ -58437,9 +58449,25 @@
         "lessonsEarly": 6
       },
       {
+        "lessonId": "PT-C01-bom-dia",
+        "language": "portuguese",
+        "position": 3,
+        "word": "tarde",
+        "taughtBy": "PT-C01-tarde",
+        "lessonsEarly": 6
+      },
+      {
+        "lessonId": "PT-C01-bom-dia",
+        "language": "portuguese",
+        "position": 3,
+        "word": "boa tarde",
+        "taughtBy": "PT-C01-tarde",
+        "lessonsEarly": 6
+      },
+      {
         "lessonId": "PT-C16-ser-roots",
         "language": "portuguese",
-        "position": 53,
+        "position": 54,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 6
@@ -58701,9 +58729,17 @@
         "lessonsEarly": 4
       },
       {
+        "lessonId": "PT-C01-ola",
+        "language": "portuguese",
+        "position": 0,
+        "word": "dia",
+        "taughtBy": "PT-C01-dia",
+        "lessonsEarly": 4
+      },
+      {
         "lessonId": "PT-C16-ser-estar-meaning",
         "language": "portuguese",
-        "position": 55,
+        "position": 56,
         "word": "estar",
         "taughtBy": "PT-C18-ser-estar",
         "lessonsEarly": 4
@@ -58871,7 +58907,7 @@
       {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
-        "position": 0,
+        "position": 2,
         "word": "noite",
         "taughtBy": "PT-C01-noite",
         "lessonsEarly": 3
@@ -58879,15 +58915,23 @@
       {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
-        "position": 0,
+        "position": 2,
         "word": "boa noite",
         "taughtBy": "PT-C01-noite",
         "lessonsEarly": 3
       },
       {
+        "lessonId": "PT-C01-ola",
+        "language": "portuguese",
+        "position": 0,
+        "word": "bom dia",
+        "taughtBy": "PT-C01-bom-dia",
+        "lessonsEarly": 3
+      },
+      {
         "lessonId": "PT-C14-idade",
         "language": "portuguese",
-        "position": 49,
+        "position": 50,
         "word": "ser",
         "taughtBy": "PT-C16-ser",
         "lessonsEarly": 3
@@ -59135,7 +59179,7 @@
       {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
-        "position": 0,
+        "position": 2,
         "word": "dia",
         "taughtBy": "PT-C01-dia",
         "lessonsEarly": 2
@@ -59143,7 +59187,7 @@
       {
         "lessonId": "PT-C01-bom-dia",
         "language": "portuguese",
-        "position": 1,
+        "position": 3,
         "word": "noite",
         "taughtBy": "PT-C01-noite",
         "lessonsEarly": 2
@@ -59151,7 +59195,7 @@
       {
         "lessonId": "PT-C01-bom-dia",
         "language": "portuguese",
-        "position": 1,
+        "position": 3,
         "word": "boa noite",
         "taughtBy": "PT-C01-noite",
         "lessonsEarly": 2
@@ -59159,23 +59203,23 @@
       {
         "lessonId": "PT-C01-ola",
         "language": "portuguese",
-        "position": 6,
-        "word": "tarde",
-        "taughtBy": "PT-C01-tarde",
+        "position": 0,
+        "word": "bom",
+        "taughtBy": "PT-C01-bom",
         "lessonsEarly": 2
       },
       {
         "lessonId": "PT-C01-ola",
         "language": "portuguese",
-        "position": 6,
-        "word": "boa tarde",
-        "taughtBy": "PT-C01-tarde",
+        "position": 0,
+        "word": "boa",
+        "taughtBy": "PT-C01-bom",
         "lessonsEarly": 2
       },
       {
         "lessonId": "PT-C03-practice",
         "language": "portuguese",
-        "position": 21,
+        "position": 22,
         "word": "até logo",
         "taughtBy": "PT-C04-ate-logo",
         "lessonsEarly": 2
@@ -60055,7 +60099,7 @@
       {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
-        "position": 0,
+        "position": 2,
         "word": "bom dia",
         "taughtBy": "PT-C01-bom-dia",
         "lessonsEarly": 1
@@ -60063,7 +60107,7 @@
       {
         "lessonId": "PT-C01-practice",
         "language": "portuguese",
-        "position": 7,
+        "position": 8,
         "word": "tarde",
         "taughtBy": "PT-C01-tarde",
         "lessonsEarly": 1
@@ -60071,7 +60115,7 @@
       {
         "lessonId": "PT-C01-practice",
         "language": "portuguese",
-        "position": 7,
+        "position": 8,
         "word": "boa tarde",
         "taughtBy": "PT-C01-tarde",
         "lessonsEarly": 1
@@ -60079,7 +60123,7 @@
       {
         "lessonId": "PT-C02-como",
         "language": "portuguese",
-        "position": 10,
+        "position": 11,
         "word": "tudo",
         "taughtBy": "PT-C02-tudo",
         "lessonsEarly": 1
@@ -60087,7 +60131,7 @@
       {
         "lessonId": "PT-C02-de-nada",
         "language": "portuguese",
-        "position": 9,
+        "position": 10,
         "word": "como",
         "taughtBy": "PT-C02-como",
         "lessonsEarly": 1
@@ -60095,7 +60139,7 @@
       {
         "lessonId": "PT-C03-como-se-chama",
         "language": "portuguese",
-        "position": 19,
+        "position": 20,
         "word": "prazer",
         "taughtBy": "PT-C03-prazer",
         "lessonsEarly": 1
@@ -60103,7 +60147,7 @@
       {
         "lessonId": "PT-C03-eu",
         "language": "portuguese",
-        "position": 17,
+        "position": 18,
         "word": "me chamo",
         "taughtBy": "PT-C03-me-chamo",
         "lessonsEarly": 1
@@ -60111,7 +60155,7 @@
       {
         "lessonId": "PT-C03-eu",
         "language": "portuguese",
-        "position": 17,
+        "position": 18,
         "word": "chamo",
         "taughtBy": "PT-C03-me-chamo",
         "lessonsEarly": 1
@@ -60119,7 +60163,7 @@
       {
         "lessonId": "PT-C04-adeus",
         "language": "portuguese",
-        "position": 22,
+        "position": 23,
         "word": "até logo",
         "taughtBy": "PT-C04-ate-logo",
         "lessonsEarly": 1
@@ -60127,7 +60171,7 @@
       {
         "lessonId": "PT-C04-ate-amanha",
         "language": "portuguese",
-        "position": 24,
+        "position": 25,
         "word": "até breve",
         "taughtBy": "PT-C04-ate-breve",
         "lessonsEarly": 1
@@ -60135,7 +60179,7 @@
       {
         "lessonId": "PT-C05-falar",
         "language": "portuguese",
-        "position": 27,
+        "position": 28,
         "word": "morar",
         "taughtBy": "PT-C05-morar",
         "lessonsEarly": 1
@@ -60143,7 +60187,7 @@
       {
         "lessonId": "PT-C05-morar",
         "language": "portuguese",
-        "position": 28,
+        "position": 29,
         "word": "trabalhar",
         "taughtBy": "PT-C05-trabalhar",
         "lessonsEarly": 1
@@ -60151,7 +60195,7 @@
       {
         "lessonId": "PT-C05-trabalhar",
         "language": "portuguese",
-        "position": 29,
+        "position": 30,
         "word": "falo português",
         "taughtBy": "PT-C05-falo-portugues",
         "lessonsEarly": 1
@@ -60159,7 +60203,7 @@
       {
         "lessonId": "PT-C07-dias-1",
         "language": "portuguese",
-        "position": 34,
+        "position": 35,
         "word": "sábado",
         "taughtBy": "PT-C07-dias-2",
         "lessonsEarly": 1
@@ -60167,7 +60211,7 @@
       {
         "lessonId": "PT-C07-dias-1",
         "language": "portuguese",
-        "position": 34,
+        "position": 35,
         "word": "domingo",
         "taughtBy": "PT-C07-dias-2",
         "lessonsEarly": 1
@@ -60175,7 +60219,7 @@
       {
         "lessonId": "PT-C09-meses",
         "language": "portuguese",
-        "position": 38,
+        "position": 39,
         "word": "estações",
         "taughtBy": "PT-C09-estacoes",
         "lessonsEarly": 1
@@ -60183,7 +60227,7 @@
       {
         "lessonId": "PT-C10-pais",
         "language": "portuguese",
-        "position": 40,
+        "position": 41,
         "word": "o irmão",
         "taughtBy": "PT-C10-irmaos",
         "lessonsEarly": 1
@@ -60191,7 +60235,7 @@
       {
         "lessonId": "PT-C10-pais",
         "language": "portuguese",
-        "position": 40,
+        "position": 41,
         "word": "a irmã",
         "taughtBy": "PT-C10-irmaos",
         "lessonsEarly": 1
@@ -60199,7 +60243,7 @@
       {
         "lessonId": "PT-C10-pais",
         "language": "portuguese",
-        "position": 40,
+        "position": 41,
         "word": "irmão",
         "taughtBy": "PT-C10-irmaos",
         "lessonsEarly": 1
@@ -60207,7 +60251,7 @@
       {
         "lessonId": "PT-C10-pais",
         "language": "portuguese",
-        "position": 40,
+        "position": 41,
         "word": "irmã",
         "taughtBy": "PT-C10-irmaos",
         "lessonsEarly": 1
@@ -60215,7 +60259,7 @@
       {
         "lessonId": "PT-C11-pao",
         "language": "portuguese",
-        "position": 42,
+        "position": 43,
         "word": "a água",
         "taughtBy": "PT-C11-agua-vinho",
         "lessonsEarly": 1
@@ -60223,7 +60267,7 @@
       {
         "lessonId": "PT-C11-pao",
         "language": "portuguese",
-        "position": 42,
+        "position": 43,
         "word": "o vinho",
         "taughtBy": "PT-C11-agua-vinho",
         "lessonsEarly": 1
@@ -60231,7 +60275,7 @@
       {
         "lessonId": "PT-C11-pao",
         "language": "portuguese",
-        "position": 42,
+        "position": 43,
         "word": "água",
         "taughtBy": "PT-C11-agua-vinho",
         "lessonsEarly": 1
@@ -60239,7 +60283,7 @@
       {
         "lessonId": "PT-C11-pao",
         "language": "portuguese",
-        "position": 42,
+        "position": 43,
         "word": "vinho",
         "taughtBy": "PT-C11-agua-vinho",
         "lessonsEarly": 1
@@ -60247,7 +60291,7 @@
       {
         "lessonId": "PT-C13-preto-branco",
         "language": "portuguese",
-        "position": 46,
+        "position": 47,
         "word": "vermelho",
         "taughtBy": "PT-C13-vermelho-azul",
         "lessonsEarly": 1
@@ -60526,13 +60570,13 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 96,
-        "lessonsWithoutSequence": 9,
-        "forwardPrerequisites": 6,
-        "forwardReviews": 6,
-        "atomsTaught": 189,
+        "lessonCount": 97,
+        "lessonsWithoutSequence": 8,
+        "forwardPrerequisites": 4,
+        "forwardReviews": 5,
+        "atomsTaught": 192,
         "atomsNeverRevisited": 8,
-        "forwardReferences": 59
+        "forwardReferences": 63
       },
       {
         "language": "punjabi",
@@ -60606,20 +60650,20 @@
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 17,
+      "lessonsWithoutSequence": 16,
       "tracksWithUnorderedLessons": 3,
-      "forwardPrerequisites": 9,
-      "forwardReviews": 14,
-      "atomsTaught": 4690,
+      "forwardPrerequisites": 7,
+      "forwardReviews": 13,
+      "atomsTaught": 4693,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
         "R1": 1191,
-        "R2": 3687,
-        "R3": 3546,
-        "R4": 2063
+        "R2": 3690,
+        "R3": 3549,
+        "R4": 2066
       },
-      "forwardReferences": 466
+      "forwardReferences": 470
     }
   },
   "scriptClosure": {
@@ -68875,8 +68919,46 @@
       },
       {
         "language": "portuguese",
-        "evidence": [],
-        "validEvidence": [],
+        "evidence": [
+          {
+            "language": "portuguese",
+            "lessonId": "PT-C01-ola",
+            "blockIndex": 4,
+            "blockTitle": "Writing — follow the greeting you can see",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W01-ola-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — one guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 15
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "portuguese",
+            "lessonId": "PT-C01-ola",
+            "blockIndex": 4,
+            "blockTitle": "Writing — follow the greeting you can see",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 10
+          },
+          {
+            "language": "portuguese",
+            "lessonId": "PT-W01-ola-guided-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — one guided copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 15
+          }
+        ],
         "defects": [],
         "levels": [
           {
@@ -68887,10 +68969,11 @@
               "delayed-copy",
               "dictation-transcription"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription"
             ],
@@ -68906,10 +68989,11 @@
               "controlled-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -68928,10 +69012,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -68951,10 +69036,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -68974,10 +69060,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -68997,10 +69084,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -69020,10 +69108,11 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
-              "guided-copy",
+              "guided-copy"
+            ],
+            "missingStages": [
               "delayed-copy",
               "dictation-transcription",
               "controlled-composition",
@@ -70209,11 +70298,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithAnyEvidence": 6,
+      "tracksWithAnyEvidence": 7,
       "tracksCompleteAtPreA1": 1,
-      "evidenceBlocks": 13,
+      "evidenceBlocks": 15,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 944
+      "missingTrackLevelStages": 930
     }
   },
   "gentleRamp": {
@@ -71311,8 +71400,8 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 96,
-        "atomMeasurableLessons": 87,
+        "lessonCount": 97,
+        "atomMeasurableLessons": 88,
         "atomMeasurementBlindLessons": 9,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -71321,39 +71410,32 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 0,
         "neverTaughtGlyphs": 0,
-        "orderDefects": 21,
+        "orderDefects": 17,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 6,
-        "forwardReviews": 6,
-        "forwardReferences": 59,
-        "atomsTaught": 189,
+        "forwardPrerequisites": 4,
+        "forwardReviews": 5,
+        "forwardReferences": 63,
+        "atomsTaught": 192,
         "atomsNeverRevisited": 8,
-        "reinforcementWindowMisses": 296,
-        "payoffSurprises": 0,
-        "writingPracticeLessons": 0,
-        "firstWritingPracticeAt": null,
-        "lessonsBeforeWritingPractice": 96,
+        "reinforcementWindowMisses": 305,
+        "payoffSurprises": 1,
+        "writingPracticeLessons": 2,
+        "firstWritingPracticeAt": 0,
+        "lessonsBeforeWritingPractice": 0,
         "findings": [
           {
             "language": "portuguese",
             "kind": "order-integrity",
-            "count": 21,
+            "count": 17,
             "unit": "order/dependency defect(s)",
             "detail": "declare a unique reading order and close every prerequisite and review before use"
           },
           {
             "language": "portuguese",
             "kind": "forward-language",
-            "count": 59,
+            "count": 63,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "portuguese",
-            "kind": "writing-ramp",
-            "count": 96,
-            "unit": "opening lesson(s)",
-            "detail": "add observable, guided writing practice from the opening lesson"
           },
           {
             "language": "portuguese",
@@ -71365,9 +71447,16 @@
           {
             "language": "portuguese",
             "kind": "reinforcement",
-            "count": 296,
+            "count": 305,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
+          },
+          {
+            "language": "portuguese",
+            "kind": "payoff-surprise",
+            "count": 1,
+            "unit": "chapter payoff finding(s)",
+            "detail": "make each chapter payoff assess only taught, representative material"
           },
           {
             "language": "portuguese",
@@ -71380,7 +71469,7 @@
         "next": {
           "language": "portuguese",
           "kind": "order-integrity",
-          "count": 21,
+          "count": 17,
           "unit": "order/dependency defect(s)",
           "detail": "declare a unique reading order and close every prerequisite and review before use"
         }
@@ -71971,7 +72060,7 @@
       {
         "language": "portuguese",
         "kind": "order-integrity",
-        "count": 21,
+        "count": 17,
         "unit": "order/dependency defect(s)",
         "detail": "declare a unique reading order and close every prerequisite and review before use"
       },
@@ -72027,7 +72116,7 @@
       {
         "language": "portuguese",
         "kind": "forward-language",
-        "count": 59,
+        "count": 63,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -72261,13 +72350,6 @@
         "count": 11,
         "unit": "glyph(s)",
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
-        "language": "portuguese",
-        "kind": "writing-ramp",
-        "count": 96,
-        "unit": "opening lesson(s)",
-        "detail": "add observable, guided writing practice from the opening lesson"
       },
       {
         "language": "french",
@@ -72622,7 +72704,7 @@
       {
         "language": "portuguese",
         "kind": "reinforcement",
-        "count": 296,
+        "count": 305,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
@@ -72809,6 +72891,13 @@
         "detail": "make each chapter payoff assess only taught, representative material"
       },
       {
+        "language": "portuguese",
+        "kind": "payoff-surprise",
+        "count": 1,
+        "unit": "chapter payoff finding(s)",
+        "detail": "make each chapter payoff assess only taught, representative material"
+      },
+      {
         "language": "spanish",
         "kind": "measurement-blind",
         "count": 96,
@@ -72931,7 +73020,7 @@
     "summary": {
       "tracks": 23,
       "tracksWithDetectedCliffs": 23,
-      "tracksWithNoWritingPractice": 1,
+      "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 497,
       "findings": 137
@@ -73361,8 +73450,8 @@
         "blockers": [
           {
             "criterion": "writing-stage",
-            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
-            "shortfall": 4
+            "detail": "2 cumulative writing stage(s) unproved at pre-A1: delayed-copy, dictation-transcription",
+            "shortfall": 2
           },
           {
             "criterion": "spine-nodes",
@@ -73376,8 +73465,8 @@
           },
           {
             "criterion": "reinforcement",
-            "detail": "5 atom(s) at or below pre-A1 are revisited fewer than twice (39 etymology hook(s) waived)",
-            "shortfall": 5
+            "detail": "7 atom(s) at or below pre-A1 are revisited fewer than twice (40 etymology hook(s) waived)",
+            "shortfall": 7
           }
         ],
         "vocabulary": 87
@@ -73582,12 +73671,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3403,
-    "voice": 2461,
+    "totalLessons": 3404,
+    "voice": 2460,
     "sight": 590,
-    "pen": 352,
+    "pen": 354,
     "coreVoice": 2909,
-    "lessonsWithWritingSegments": 149,
+    "lessonsWithWritingSegments": 151,
     "drivablePercent": 85,
     "tracks": [
       {
@@ -80175,28 +80264,29 @@
       },
       {
         "language": "portuguese",
-        "lessonCount": 96,
-        "voice": 87,
+        "lessonCount": 97,
+        "voice": 86,
         "sight": 9,
-        "pen": 0,
+        "pen": 2,
         "coreVoice": 87,
-        "drivablePercent": 91,
-        "drivablePrefixTotal": 81,
+        "drivablePercent": 90,
+        "drivablePrefixTotal": 79,
         "chapters": [
           {
             "language": "portuguese",
             "chapter": 1,
-            "lessonCount": 9,
-            "voice": 8,
+            "lessonCount": 10,
+            "voice": 7,
             "sight": 1,
-            "pen": 0,
+            "pen": 2,
             "coreVoice": 8,
             "modalities": [
               "voice",
-              "sight"
+              "sight",
+              "pen"
             ],
-            "drivablePrefix": 3,
-            "firstNonVoiceLesson": "PT-C01-noite"
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "PT-W01-ola-guided-copy"
           },
           {
             "language": "portuguese",
@@ -88760,12 +88850,12 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3081,
-    "underspent": 2966,
+    "roots": 3082,
+    "underspent": 2967,
     "neverSpent": 2037,
     "payoffDistribution": {
       "0": 2037,
-      "1": 652,
+      "1": 653,
       "2": 277,
       "3": 66,
       "4": 19,
@@ -88779,7 +88869,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3403,
+    "lessons": 3404,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -88789,8 +88879,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3292,
-    "usesBeforeIntroduction": 12012,
+    "lessonsUsingTerms": 3293,
+    "usesBeforeIntroduction": 12014,
     "technicalUsesBeforeIntroduction": 3169,
     "technicalLessons": 1646,
     "worstTerms": [
@@ -88821,7 +88911,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3403,
+    "lessonsScanned": 3404,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
