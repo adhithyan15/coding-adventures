@@ -15,11 +15,11 @@ roots: []
 duration:
   max_seconds: 150
 requires:
-  knowledge: [MW-SCRIPT-RAAM-01]
+  knowledge: [MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01]
 introduces:
   knowledge: [MW-SCRIPT-SA-01]
 practises:
-  knowledge: [MW-SCRIPT-RAAM-01, MW-SCRIPT-SA-01]
+  knowledge: [MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [language-focus]
@@ -31,9 +31,10 @@ reviews_of: [MW-W01-raam]
 # स — a second consonant
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01] -->
 
-[PAUSE 3s] Read **राम**, then write it from memory.
+[PAUSE 3s] Read **राम**, say what it means, then write it from memory. Check that
+your last sign is **म**.
 
 ## Script — notice and copy
 <!-- hl-knowledge: introduces=[MW-SCRIPT-SA-01]; assesses=[] -->

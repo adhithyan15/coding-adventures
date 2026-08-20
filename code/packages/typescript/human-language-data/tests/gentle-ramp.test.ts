@@ -146,6 +146,8 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(
       [...outputs.keys()].filter((path) => outputs.get(path) !== changedOutputs.get(path)),
     ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.json`]);
-    expect(report.tracks.every((track) => track.findings.length > 0)).toBe(true);
+    expect(
+      report.tracks.filter((track) => track.findings.length === 0).map((track) => track.language),
+    ).toEqual(["marwadi"]);
   }, 30_000);
 });

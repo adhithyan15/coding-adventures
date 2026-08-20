@@ -1,5 +1,14 @@
 # Changelog
 
+## 2026-08-20 — Teach राम before reuse (#12327)
+
+- Reclassified the whole-word **राम** lesson as both lexical and writing work,
+  while preserving its delayed-copy microstep and two-atom script build.
+- Added an immediate **म** retrieval in the next lesson and stopped presenting
+  **राम सा** as a phrase before the complete greeting lesson teaches it.
+- Closed all three measured forward-language findings and the first missed
+  reinforcement window without moving writing later.
+
 ## 2026-08-20 — Chapter 1: a greeting the hand can make
 
 - Added Marwadi (Marwari) as a real active track rather than a registry-only row.

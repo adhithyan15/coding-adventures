@@ -14,35 +14,14 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 3,
-  "atomsTaught": 9,
+  "forwardReferences": 0,
+  "atomsTaught": 10,
   "atomsNeverRevisited": 1,
-  "reinforcementWindowMisses": 1,
+  "reinforcementWindowMisses": 0,
   "payoffSurprises": 0,
   "writingPracticeLessons": 5,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
-  "findings": [
-    {
-      "language": "marwadi",
-      "kind": "forward-language",
-      "count": 3,
-      "unit": "use(s)",
-      "detail": "teach target-language material before load-bearing use"
-    },
-    {
-      "language": "marwadi",
-      "kind": "reinforcement",
-      "count": 1,
-      "unit": "missed window(s)",
-      "detail": "add retrieval at the expanding R1-R4 intervals"
-    }
-  ],
-  "next": {
-    "language": "marwadi",
-    "kind": "forward-language",
-    "count": 3,
-    "unit": "use(s)",
-    "detail": "teach target-language material before load-bearing use"
-  }
+  "findings": [],
+  "next": null
 }
