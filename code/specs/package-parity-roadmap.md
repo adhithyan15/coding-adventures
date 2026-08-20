@@ -4217,6 +4217,34 @@ child as `pr-open`, with that PR as the loop's sole active parity publication;
 all remaining PNG children and the newly classified APNG neutral correction
 remain pending while its required checks run.
 
+### Post-#12324 refresh and APNG neutral-correction selection
+
+Go PNG PR #12324 completed 30 terminal acceptable checks (24 successes, five
+expected skips, and one neutral CodeQL conclusion), including both CI gates and
+Linux, macOS, and Windows builds. After the loop invoked GitHub's squash
+auto-merge path, GitHub immediately merged final reviewed head
+`4d292e615d31af4221c95632f60706c76cb838df` as
+`cbce24c513e02c4a3d41e3b1ca731240bbddd5a4` at
+2026-08-20T21:43:31Z and deleted the source branch.
+
+The exact-merge collision inventory remains at 15 established lanes and 1,368
+canonical implementation identities. The new Go root advances the established
+slot count from 4,552 to 4,553, moves `image-codec-png` from the singleton band
+to the 2-4 band, and leaves zero collisions and zero unknown buckets. It is one
+owned expansion of an existing identity, so no additional classification owner
+is required.
+
+Two items are dependency-ready after the Go merge: the APNG neutral correction
+and the Go paint-adapter reconciliation. The neutral correction is selected
+because it unlocks all eleven remaining PNG lane children, while the adapter
+reconciliation unlocks no lane. The bounded tranche clarifies IC18's named APNG
+refusal, adds deterministic valid-CRC `acTL`, `fcTL`, and `fdAT` rejection
+vectors without changing schema version or error taxonomy, makes the TypeScript
+oracle reject those names only after normal chunk and CRC validation, and
+updates both the TypeScript and Go consumers plus pinned corpus summaries from
+82 to 85 cases. It adds no animation parser, dependency, capability, or new
+implementation lane.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

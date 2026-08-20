@@ -314,6 +314,19 @@ describe("decoding foreign PNGs", () => {
     expect(pixelAt(d, 0, 0)).toEqual([1, 2, 3, 4]);
   });
 
+  it("validates an APNG chunk CRC before refusing the feature", () => {
+    const base = Array.from(foreignPng(1, 1, 6, 4, [[1, 2, 3, 4]], [0]));
+    const animationControl = chunk("acTL", [...u32be(1), ...u32be(0)]);
+    const last = animationControl.length - 1;
+    animationControl[last] = animationControl[last]! ^ 0xff;
+    const withCorruptApng = [
+      ...base.slice(0, 33),
+      ...animationControl,
+      ...base.slice(33),
+    ];
+    expect(() => decodePng(new Uint8Array(withCorruptApng))).toThrow(/CRC-32 mismatch/);
+  });
+
   it("refuses an unknown CRITICAL chunk instead of guessing", () => {
     const base = Array.from(foreignPng(2, 1, 6, 4, [[1, 2, 3, 4, 5, 6, 7, 8]], [0]));
     const withCritical = [...base.slice(0, 33), ...chunk("zZZZ".toUpperCase(), [1]), ...base.slice(33)];
