@@ -957,7 +957,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 3402, // +1: Tamil's guided-copy bridge
+      totalLessons: 3403, // +1: Arabic harakat split adds one four-minute pen micro-lesson. // +1: Tamil's guided-copy bridge
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -993,6 +993,7 @@ describe("corpus regression", () => {
       // TA-W07 is pen even though it deliberately gives no stroke instructions.
       // voice and drivable are unchanged, which is what a writing lesson should do
       // to this table.
+      // Arabic harakat split: +1 writing lesson, with no modality override.
       // +2: both new lessons are writing lessons.
       // +4: TA-W10..TA-W13 are `type: writing` too, so rule 1 makes them pen even
       // though all four are reading-only and give no stroke order.
@@ -1000,7 +1001,7 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 350, // +2: Tamil's opener trace and guided copy
+      pen: 351, // +1: Arabic harakat split. // +2: Tamil's opener trace and guided copy
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
       drivableLessons: 2462, // Tamil's opener leaves the hands-free set.
@@ -1047,6 +1048,9 @@ describe("corpus regression", () => {
       // the 3:1 cadence puts TA-W10 between its two speaking lessons rather than after
       // them — the same mid-chapter placement TA-W06 already has in chapter 18. Chapters
       // 27/29/31 take their writing lesson after the prefix, so they hold at 1/1/2.
+      // Legacy reading-order recovery changes 2216 -> 2209 across nine tracks:
+      // authored order replaces flattering filename order. The new Arabic pen lesson
+      // lands after the chapter's blocker and does not change the measured prefix.
       // +6, and only two chapters move, both upward this time: Tamil chapter 4 gains 4
       // and chapter 5 gains 2. Nothing is lost, because TA-W14/15/16 are placed to skip
       // chapter 32 — see the ramp test for why — so no chapter's prefix is cut short.

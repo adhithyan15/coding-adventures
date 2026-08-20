@@ -4,7 +4,7 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c9ca88fe561b8c3d",
+  "sourceHash": "fnv1a64:eb0160369fc7b6f0",
   "lessons": [
     {
       "id": "AR-W10-ayn",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:68477b2c41a68c3a",
+      "sourceHash": "fnv1a64:41b676bb74266c30",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -47,6 +47,10 @@
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ْ, ّ, ً: “no vowel”, “double”, “-an”."
             },
             {
               "kind": "speech",

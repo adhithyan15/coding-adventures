@@ -312,7 +312,7 @@ describe("the script ramp against the real corpus", () => {
     // rule for a track that teaches script alongside speech and the wrong one for a
     // track that deliberately shows before it teaches. The exposure is intended; the
     // count is honest; what it measures is no longer quite what Tamil is doing.
-    expect(report.summary.lessonViolations).toBe(59); // Punjabi's authored order removes two alphabetical-fallback artifacts. // Marathi's authored order: -1, because the walk no longer mistakes filename order for lesson order. // HL-C259: -1 -- IMPROVEMENT, one fewer ramp violation once gujarati declares its atoms // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
+    expect(report.summary.lessonViolations).toBe(58); // Arabic harakat split: -1 -- the new four-minute middle step carries exactly sukūn, shadda, and fatḥatan, so no lesson introduces more than three marks. // Punjabi's authored order removes two alphabetical-fallback artifacts. // Marathi's authored order: -1, because the walk no longer mistakes filename order for lesson order. // HL-C259: -1 -- IMPROVEMENT, one fewer ramp violation once gujarati declares its atoms // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
 
     // All five are Japanese Chapter 1, which opens kanji beside hiragana in its very
     // first lesson and adds katakana in its fifth.

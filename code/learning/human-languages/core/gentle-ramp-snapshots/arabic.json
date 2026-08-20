@@ -1,12 +1,12 @@
 {
   "language": "arabic",
-  "lessonCount": 100,
-  "atomMeasurableLessons": 74,
+  "lessonCount": 101,
+  "atomMeasurableLessons": 75,
   "atomMeasurementBlindLessons": 26,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
   "atomChapterSpikes": 2,
-  "glyphLessonSpikes": 4,
+  "glyphLessonSpikes": 3,
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 71,
   "neverTaughtGlyphs": 16,
@@ -15,11 +15,11 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 14,
-  "atomsTaught": 147,
+  "atomsTaught": 150,
   "atomsNeverRevisited": 85,
-  "reinforcementWindowMisses": 315,
-  "payoffSurprises": 2,
-  "writingPracticeLessons": 51,
+  "reinforcementWindowMisses": 318,
+  "payoffSurprises": 3,
+  "writingPracticeLessons": 52,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
@@ -47,21 +47,21 @@
     {
       "language": "arabic",
       "kind": "glyph-step",
-      "count": 4,
+      "count": 3,
       "unit": "lesson/system spike(s)",
       "detail": "split new glyphs and writing systems across gentler steps"
     },
     {
       "language": "arabic",
       "kind": "reinforcement",
-      "count": 315,
+      "count": 318,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
     {
       "language": "arabic",
       "kind": "payoff-surprise",
-      "count": 2,
+      "count": 3,
       "unit": "chapter payoff finding(s)",
       "detail": "make each chapter payoff assess only taught, representative material"
     },

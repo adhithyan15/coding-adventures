@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:00cc06864fba2d3d",
+  "sourceHash": "fnv1a64:e987d72ec0053f7c",
   "lessons": [
     {
       "id": "AR-W07-hook-family-ha-kha",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:3b2e6ebe41ce9654",
+      "sourceHash": "fnv1a64:bd49196de3cd0a4a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -46,6 +46,10 @@
               "seconds": 2,
               "perItem": false,
               "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new letters, point once to ْ, ّ, and ً. Say their jobs: “no vowel”, “double”, “-an”. If one feels slow, trace it once. Then leave the marks behind for today."
             },
             {
               "kind": "speech",
