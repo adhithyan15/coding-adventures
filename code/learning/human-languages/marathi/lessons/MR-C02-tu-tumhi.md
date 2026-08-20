@@ -1,5 +1,6 @@
 ---
 id: MR-C02-tu-tumhi
+sequence: 60
 chapter: 2
 type: word
 headword: तू / तुम्ही

@@ -1,5 +1,6 @@
 ---
 id: MR-C05-kaam-karne
+sequence: 160
 chapter: 5
 type: word
 headword: काम करणे

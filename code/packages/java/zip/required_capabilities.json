@@ -3,5 +3,5 @@
   "version": 1,
   "package": "java/zip",
   "capabilities": [],
-  "justification": "Pure in-memory Java ZIP archive format implementation and tests."
+  "justification": "Pure in-memory Java ZIP, raw RFC 1951, and CRC-32 byte transforms; fixture reads and JDK interoperability oracles are test-only."
 }

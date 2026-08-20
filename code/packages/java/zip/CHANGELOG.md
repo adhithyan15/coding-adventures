@@ -3,7 +3,31 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-## [Unreleased] — 2026-08-03
+## [Unreleased] — 2026-08-20
+
+### Added
+
+- Added the CMP09 portable raw RFC 1951 surface: `rawDeflate`, `rawInflate`,
+  `rawInflateCounted`, incremental `crc32`, exact consumed-byte reporting, a
+  caller-lowerable 256 MiB ceiling, and the closed 14-code payload-blind error
+  taxonomy.
+- Added all 34 language-neutral fixture cases, JDK raw-codec interoperability,
+  a foreign full-window stream, and strict ZIP boundary/aggregate-budget tests.
+
+### Changed
+
+- Method-8 ZIP reads now accept dynamic Huffman streams, reject trailing
+  compressed bytes and declared-size mismatches, and map typed raw failures to
+  the established `IOException` container contract.
+- Removed the superseded stored/fixed-only decoder so Java ZIP has one
+  canonical raw codec path. Package version is now 0.2.0.
+
+### Security
+
+- Replaced the boxed `List<Byte>` decoder output with a primitive, bounded
+  growable buffer that checks the caller limit before every append or
+  back-reference copy. One-shot unzip also enforces a configurable 256 MiB
+  aggregate output budget.
 
 ### Fixed
 

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7609f5d346367ed3",
+  "sourceHash": "fnv1a64:209ef46702ac3df6",
   "summary": {
     "totalLessons": 3399,
     "voice": 2465,
@@ -17,9 +17,9 @@
     "drivablePercent": 73,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2206,
+    "drivablePrefixTotal": 2205,
     "fullyDrivableChapters": 669,
-    "unstartableChapters": 209,
+    "unstartableChapters": 210,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -7394,7 +7394,7 @@
       "sight": 41,
       "pen": 11,
       "drivablePercent": 29,
-      "drivablePrefixTotal": 9,
+      "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
         "sight",
@@ -7412,7 +7412,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "MR-C01-baram",
+          "firstNonVoiceLesson": "MR-C01-namaskar",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -7427,7 +7427,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "MR-C02-aahe",
+          "firstNonVoiceLesson": "MR-C02-naav",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -7441,12 +7441,10 @@
             "voice",
             "sight"
           ],
-          "drivablePrefix": 1,
+          "drivablePrefix": 0,
           "firstNonVoiceLesson": "MR-C03-kasa",
           "drivable": false,
-          "drivableLessonIds": [
-            "MR-C03-kaahi-harkat-nahi"
-          ]
+          "drivableLessonIds": []
         },
         {
           "chapter": 4,
@@ -7459,7 +7457,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "MR-C04-bhetu",
+          "firstNonVoiceLesson": "MR-C04-punha",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -46912,10 +46910,10 @@
       "sourceHash": "fnv1a64:2a77f6745297efb1"
     },
     {
-      "id": "MR-C01-baram",
+      "id": "MR-C01-namaskar",
       "language": "marathi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 5,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -46927,7 +46925,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e8acc6d28293a532",
+      "sourceHash": "fnv1a64:a41e61a17664bb0e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46936,7 +46934,7 @@
       "id": "MR-C01-dhanyavad",
       "language": "marathi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 10,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -46948,7 +46946,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dff856539c02590f",
+      "sourceHash": "fnv1a64:14237165386b41d7",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46957,7 +46955,7 @@
       "id": "MR-C01-ho",
       "language": "marathi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 15,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -46969,7 +46967,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1870ccc311c6214e",
+      "sourceHash": "fnv1a64:99109ff77646ca53",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -46978,7 +46976,7 @@
       "id": "MR-C01-nahi",
       "language": "marathi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -46990,16 +46988,16 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:014b65433ef4192f",
+      "sourceHash": "fnv1a64:3a04909f61929ae0",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "MR-C01-namaskar",
+      "id": "MR-C01-baram",
       "language": "marathi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 25,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47011,7 +47009,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ac1642934e61a0cc",
+      "sourceHash": "fnv1a64:80667628df6ff3f6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C01-yeto",
+      "language": "marathi",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3b8bdfd13c85af62",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47020,7 +47039,7 @@
       "id": "MR-C01-practice",
       "language": "marathi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 35,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47032,13 +47051,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9d187e3e6e7555ec"
+      "sourceHash": "fnv1a64:0246d5377b6f552f"
     },
     {
-      "id": "MR-C01-yeto",
+      "id": "MR-C02-naav",
       "language": "marathi",
-      "chapter": 1,
-      "sequence": null,
+      "chapter": 2,
+      "sequence": 40,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47050,67 +47069,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9860ee3897f812f0",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "MR-C02-aahe",
-      "language": "marathi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:6d76204e5a92182f",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "MR-C02-anand",
-      "language": "marathi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:22ea5d99f4a85759"
-    },
-    {
-      "id": "MR-C02-kaay",
-      "language": "marathi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a3a3199a2f631da2",
+      "sourceHash": "fnv1a64:84e4a2ba374664a5",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47119,7 +47078,7 @@
       "id": "MR-C02-majhe",
       "language": "marathi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 45,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47131,7 +47090,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:12147a7db0bc628e",
+      "sourceHash": "fnv1a64:0e9231ae6319d8fc",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C02-aahe",
+      "language": "marathi",
+      "chapter": 2,
+      "sequence": 50,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e7fb774917a93acb",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47140,7 +47120,7 @@
       "id": "MR-C02-majhe-naav-aahe",
       "language": "marathi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 55,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47152,52 +47132,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8d27ba5b3b1cc3b1"
-    },
-    {
-      "id": "MR-C02-naav",
-      "language": "marathi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:5c6ccd43c11eba92",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "MR-C02-practice",
-      "language": "marathi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb1c703edb1e5e9e"
+      "sourceHash": "fnv1a64:256f2ebb7f2f305a"
     },
     {
       "id": "MR-C02-tu-tumhi",
       "language": "marathi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 60,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47209,7 +47150,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8cd11b308e6ab1df",
+      "sourceHash": "fnv1a64:2157105d3dbc9c64",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C02-kaay",
+      "language": "marathi",
+      "chapter": 2,
+      "sequence": 65,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4df855d00b0de746",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47218,7 +47180,7 @@
       "id": "MR-C02-tumche-naav-kaay-aahe",
       "language": "marathi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 70,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47230,13 +47192,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ccc4ebc2a946857f"
+      "sourceHash": "fnv1a64:dcda6b400289f9e9"
     },
     {
-      "id": "MR-C03-kaahi-harkat-nahi",
+      "id": "MR-C02-anand",
       "language": "marathi",
-      "chapter": 3,
-      "sequence": null,
+      "chapter": 2,
+      "sequence": 75,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47248,13 +47210,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0cfa2dab83cbbabb"
+      "sourceHash": "fnv1a64:d35fcec21305a202"
+    },
+    {
+      "id": "MR-C02-practice",
+      "language": "marathi",
+      "chapter": 2,
+      "sequence": 80,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ccd08ca5523d441d"
     },
     {
       "id": "MR-C03-kasa",
       "language": "marathi",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 85,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47266,16 +47246,34 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:e695d0daa0640a61",
+      "sourceHash": "fnv1a64:1c233e47a2c3c697",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
+      "id": "MR-C03-tumhi-kase-aahat",
+      "language": "marathi",
+      "chapter": 3,
+      "sequence": 90,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1878ceb96a1105ef"
+    },
+    {
       "id": "MR-C03-mi",
       "language": "marathi",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 95,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47287,7 +47285,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:22844eecb06db04d",
+      "sourceHash": "fnv1a64:efd4afa1e04f2b3e",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47296,7 +47294,7 @@
       "id": "MR-C03-mi-bara-aahe",
       "language": "marathi",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 100,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47308,13 +47306,31 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b379c0ae628e5fbd"
+      "sourceHash": "fnv1a64:5b9eeb4b5e00142b"
+    },
+    {
+      "id": "MR-C03-kaahi-harkat-nahi",
+      "language": "marathi",
+      "chapter": 3,
+      "sequence": 105,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:68f122a0355413da"
     },
     {
       "id": "MR-C03-practice",
       "language": "marathi",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 110,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47326,91 +47342,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:70dd374d59aaf09d"
-    },
-    {
-      "id": "MR-C03-tumhi-kase-aahat",
-      "language": "marathi",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:086c5a5c922f7887"
-    },
-    {
-      "id": "MR-C04-bhetu",
-      "language": "marathi",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:d2a93e1d9ba5feca",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "MR-C04-kalji-ghya",
-      "language": "marathi",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2262fbdb932d7780",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "MR-C04-practice",
-      "language": "marathi",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b3595cc3593d4eb2"
+      "sourceHash": "fnv1a64:0cbfd4c4d68cf43e"
     },
     {
       "id": "MR-C04-punha",
       "language": "marathi",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 115,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47422,7 +47360,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8fee2b0b32a934c4",
+      "sourceHash": "fnv1a64:501419c45fe53c42",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C04-bhetu",
+      "language": "marathi",
+      "chapter": 4,
+      "sequence": 120,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e4e8920732b3bc58",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47431,7 +47390,7 @@
       "id": "MR-C04-punha-bhetu",
       "language": "marathi",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 125,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47443,13 +47402,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:29ec2b62f0225100"
+      "sourceHash": "fnv1a64:f84151f130e92c6f"
     },
     {
       "id": "MR-C04-udya-bhetu",
       "language": "marathi",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 130,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47461,16 +47420,55 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:97e1110a9c571d0b",
+      "sourceHash": "fnv1a64:1ddc3123dad77f0e",
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "MR-C04-kalji-ghya",
+      "language": "marathi",
+      "chapter": 4,
+      "sequence": 135,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:be091079899f3274",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C04-practice",
+      "language": "marathi",
+      "chapter": 4,
+      "sequence": 140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9997a842146c7dc4"
     },
     {
       "id": "MR-C05-bolne",
       "language": "marathi",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 145,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47482,28 +47480,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e3878fbe5f91411",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "MR-C05-kaam-karne",
-      "language": "marathi",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:77068cc88a0a5570",
+      "sourceHash": "fnv1a64:81e7b99c0c387066",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -47512,7 +47489,7 @@
       "id": "MR-C05-mi-marathi-bolto",
       "language": "marathi",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 150,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -47524,31 +47501,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb6cd9255ece76d5"
-    },
-    {
-      "id": "MR-C05-practice",
-      "language": "marathi",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:73fed83793c9bc8c"
+      "sourceHash": "fnv1a64:5635716ae8257b4a"
     },
     {
       "id": "MR-C05-rahne",
       "language": "marathi",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 155,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -47561,10 +47520,49 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:a5aee5a710cf9dc8",
+      "sourceHash": "fnv1a64:9c323b7cc45baf10",
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "MR-C05-kaam-karne",
+      "language": "marathi",
+      "chapter": 5,
+      "sequence": 160,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b016575cf7ba1984",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "MR-C05-practice",
+      "language": "marathi",
+      "chapter": 5,
+      "sequence": 165,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8c0ee15b77ea2b65"
     },
     {
       "id": "MR-C06-numbers-1-5",
