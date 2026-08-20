@@ -16,6 +16,7 @@ export const LANGUAGE_SCRIPT: Record<string, Script> = {
   latin: "latin",
   hindi: "devanagari",
   marathi: "devanagari",
+  marwadi: "devanagari",
   sanskrit: "devanagari",
   punjabi: "gurmukhi",
   bengali: "bengali",

@@ -63,7 +63,7 @@ describe("the plan CLI", () => {
     expect(err).toMatch(/french A1 inventory exists but could not be read/);
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
-    expect(out).toMatch(/130\s+exam-inventory/);
+    expect(out).toMatch(/136\s+exam-inventory/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -92,7 +92,7 @@ describe("the plan CLI", () => {
     const { out } = run(root);
     // 103 -> 98: the French questions chapter covered five of them (HL-C229).
     expect(out).toMatch(/98 uncovered point\(s\) across 3 written/);
-    expect(out).toMatch(/the other 19 track\(s\)/);
+    expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {

@@ -365,6 +365,7 @@ describe("corpus snapshot", () => {
       "japanese",
       "latin",
       "marathi",
+      "marwadi",
       "portuguese",
       "punjabi",
     ]);

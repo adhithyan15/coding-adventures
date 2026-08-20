@@ -1,0 +1,90 @@
+% Preamble for "Marwadi (Marwari), Step by Step, Sign by Sign".
+% XeLaTeX only; the vendored Devanagari font makes local and CI builds match.
+
+\usepackage{fontspec}
+\setmainfont{Latin Modern Roman}
+\setsansfont{Latin Modern Sans}
+\setmonofont{Latin Modern Mono}
+
+\usepackage{newunicodechar}
+\newunicodechar{ā}{\={a}}
+
+\usepackage[table]{xcolor}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins,breakable}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[hidelinks]{hyperref}
+\usepackage[raggedright]{titlesec}
+\input{../../_shared/visual.tex}
+
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\newfontfamily\marwadifont[
+  Path=../../_fonts/,
+  Script=Devanagari,
+  BoldFont=NotoSansDevanagari-Static.ttf,
+  ItalicFont=NotoSansDevanagari-Static.ttf,
+  BoldItalicFont=NotoSansDevanagari-Static.ttf
+]{NotoSansDevanagari-Static.ttf}
+\newcommand{\mw}[1]{{\marwadifont #1}}
+
+\hypersetup{
+  pdftitle={Marwadi (Marwari), Step by Step, Sign by Sign},
+  pdfauthor={Adhithya Rajasekaran},
+  pdfsubject={Writing-first Marwadi curriculum},
+  pdfkeywords={Marwadi, Marwari, Rajasthani, Devanagari, language learning}
+}
+\pdfstringdefDisableCommands{\def\mw#1{#1}\def\marwadifont{}}
+
+\raggedbottom
+\tolerance=2000
+\emergencystretch=3em
+\tcbset{before upper=\raggedright}
+
+\newtcolorbox{cousinweb}{
+  breakable, skin=enhanced, colback=yellow!8, colframe=yellow!45!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The word, taken apart}
+}
+\newtcolorbox{culture}{
+  breakable, skin=enhanced, colback=red!5, colframe=red!40!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Why it is said this way}
+}
+\newtcolorbox{grammarlens}[1][]{
+  breakable, skin=enhanced, colback=blue!5, colframe=blue!35!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={Grammar Lens}, #1
+}
+\newtcolorbox{sounds}{
+  breakable, skin=enhanced, colback=green!6, colframe=green!30!black,
+  boxrule=0.5pt, arc=1mm, left=6pt, right=6pt, top=4pt, bottom=4pt,
+  fonttitle=\bfseries, title={The signs in this word}
+}
+
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries}{Chapter \thechapter}{10pt}{\huge\raggedright}
+\newenvironment{chapteropening}
+  {\begin{quote}\itshape\small\raggedright}
+  {\end{quote}\par\medskip}
+
+\makeatletter
+\renewcommand*\l@chapter[2]{%
+  \ifnum \c@tocdepth >\m@ne
+    \addpenalty{-\@highpenalty}\vskip 1.0em \@plus\p@
+    \setlength\@tempdima{2.8em}\begingroup
+      \parindent \z@ \rightskip \@pnumwidth \parfillskip -\@pnumwidth
+      \leavevmode \bfseries \advance\leftskip\@tempdima \hskip -\leftskip
+      #1\nobreak\hfil\nobreak\hb@xt@\@pnumwidth{\hss #2\kern-\p@\kern\p@}\par
+      \penalty\@highpenalty
+    \endgroup
+  \fi}
+\renewcommand*\l@section{\@dottedtocline{1}{2.8em}{3.2em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{6.0em}{4.1em}}
+\makeatother
+
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection}}

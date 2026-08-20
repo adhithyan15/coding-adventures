@@ -1,0 +1,36 @@
+% GENERATED FILE. Edit canonical lessons, then run npm run generate:books.
+% Full modes use the whole printed lesson; the hands-free prefix uses its voice core.
+
+% Font-independent modality signs, drawn from paths so every PDF gets the same glyphs.
+\newcommand{\hlvoicesign}{%
+  \tikz[baseline=-0.55ex,x=0.11em,y=0.11em,line width=0.45pt]{%
+    \draw[rounded corners=0.5] (0,1) rectangle (8,4);%
+    \draw (1.5,4) -- (2.7,6) -- (5.8,6) -- (7,4);%
+    \fill (2,0.7) circle (0.8); \fill (6,0.7) circle (0.8);%
+  }%
+}
+\newcommand{\hlsightsign}{%
+  \tikz[baseline=-0.55ex,x=0.11em,y=0.11em,line width=0.45pt]{%
+    \draw (0,3) .. controls (2,6) and (6,6) .. (8,3)%
+      .. controls (6,0) and (2,0) .. cycle;%
+    \fill (4,3) circle (1.05);%
+  }%
+}
+\newcommand{\hlpensign}{%
+  \tikz[baseline=-0.55ex,x=0.11em,y=0.11em,line width=0.7pt]{%
+    \draw (1,1) -- (7,7); \draw (0.5,0.5) -- (2.4,1.1) -- (1.1,2.4) -- cycle;%
+  }%
+}
+
+\newcommand{\hlchaptermodality}[1]{%
+  \ifcsname hlchaptermodality#1\endcsname
+    \csname hlchaptermodality#1\endcsname
+  \fi
+}
+
+\expandafter\def\csname hlchaptermodality1\endcsname{%
+  {\small\noindent
+    \textbf{Modes:} \hlvoicesign{}~\textbf{voice} (2) \quad \hlpensign{}~\textbf{pen} (5)\quad
+    \hlvoicesign{}~\textbf{Hands-free start:} none of the 7 lessons.%
+    \par}\medskip
+}

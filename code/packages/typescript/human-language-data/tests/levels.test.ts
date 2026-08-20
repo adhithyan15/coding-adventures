@@ -303,7 +303,7 @@ describe("corpus snapshot", () => {
       // track still holds twenty-five lessons and can say hello and count to five. The
       // metric is honest about what it measures and misleading about what it implies,
       // which is worth writing down here rather than celebrating in a changelog.
-    ).toEqual(["japanese"]);
+    ).toEqual(["japanese", "marwadi"]);
   });
 
   it("can already build a ramp-to-A1 edition from the canonical corpus", () => {
