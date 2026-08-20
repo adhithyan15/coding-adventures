@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ધ ductus (HL-C09GJ)
+
+- Render Gujarati **ધ** as a joined high-entry body and separate tall right spine with one lift.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **ન** next.
+
 ### Added — cited Gujarati દ ductus (HL-C09GI)
 
 - Render Gujarati **દ** as one continuous upper-body, middle-turn, and lower-body run with no lift.
