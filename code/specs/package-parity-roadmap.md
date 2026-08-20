@@ -3907,7 +3907,11 @@ new scanner root received an injected portable-core owner plus a blocked
 native DNS-SD/HTTP/filesystem/CLI authority review. This late discovery does
 not displace the already selected dependency-ready Haskell ZIP tranche.
 Ready-for-review PR #12234 publishes that tranche from validated implementation
-head `b1bbe5ec1a`; GitHub reports it mergeable while required CI is pending.
+head `b1bbe5ec1a`. Its first Ubuntu runs exposed Cabal 3.10.3.0 applying the
+command-line coverage switch to the dependency plan, disabling per-component
+builds and then rejecting `vector`'s internal libraries. Coverage now lives in
+the `zip` package stanza instead: exact Cabal 3.10.3.0 and 3.16.1 runs both
+produce HPC reports while dependency per-component builds remain enabled.
 
 ## Autonomous Loop Protocol
 

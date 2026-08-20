@@ -23,6 +23,8 @@
   and uncompressed sizes; decoded data is never silently truncated.
 - Both Unix and Windows build front doors now execute Cabal tests with coverage
   and compile the library/test suite with `-Wall -Werror`.
+- Coverage is scoped to the local `zip` package in `cabal.project`, preserving
+  Cabal per-component builds for dependencies that expose internal libraries.
 
 ### Security
 

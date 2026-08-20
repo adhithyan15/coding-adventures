@@ -123,7 +123,7 @@ independent Python `zlib` oracle exist only in the test suite.
 
 ```bash
 cd code/packages/haskell/zip
-cabal test --enable-coverage
+cabal test
 cabal build zip:lib:zip zip:test:spec --ghc-options="-Wall -Werror"
 ```
 
