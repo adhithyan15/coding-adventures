@@ -1,5 +1,6 @@
 ---
 id: MR-C02-kaay
+sequence: 65
 chapter: 2
 type: word
 headword: काय
