@@ -6,11 +6,14 @@
       "id": "PT-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "PT-C01-ola"
+        "PT-C01-ola",
+        "PT-W01-ola-guided-copy"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "PT-EXT-001-WRITING-START"
+      ]
     },
     {
       "id": "PT-PATH-002",
@@ -779,6 +782,17 @@
     }
   },
   "extensions": [
+    {
+      "id": "PT-EXT-001-WRITING-START",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can copy my first Portuguese greeting with the model still visible and preserve its stress accent.",
+      "prerequisites": [],
+      "lessons": [
+        "PT-W01-ola-guided-copy"
+      ]
+    },
     {
       "id": "PT-EXT-009-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",

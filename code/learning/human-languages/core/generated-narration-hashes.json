@@ -6,12 +6,19 @@
     {
       "language": "arabic",
       "chapter": 1,
-      "sourceHash": "fnv1a64:fe0cca28b9aa0782",
+      "sourceHash": "fnv1a64:1e2cf51768b44af2",
       "lessonIds": [
         "AR-C01-salam",
+        "AR-W00-sin-lam",
+        "AR-W00-alif-mim-salam",
         "AR-C01-marhaba",
+        "AR-W00-ra-ha",
+        "AR-W00-ba-family-marhaba",
         "AR-C01-al",
         "AR-C01-as-salamu-alaykum",
+        "AR-W00-ayn-ya",
+        "AR-W00-kaf-waw-alaykum",
+        "AR-W00-full-greeting-recall",
         "AR-C01-sabah-al-khayr",
         "AR-C01-masa-al-khayr",
         "AR-C01-shukran",
@@ -23,12 +30,12 @@
         "AR-W03-dots-mim-ba-salam",
         "AR-W03-write-salam"
       ],
-      "voiceLessons": 1,
+      "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "arabic/narration/ch01.txt",
       "json": "arabic/narration/ch01.json",
-      "textHash": "fnv1a64:389df15bb69d443d",
-      "jsonHash": "fnv1a64:3747da915f84866d"
+      "textHash": "fnv1a64:7bb61b2c461da3f0",
+      "jsonHash": "fnv1a64:3cee96adba00e407"
     },
     {
       "language": "arabic",
@@ -7441,24 +7448,25 @@
     {
       "language": "portuguese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:eeea38606ef36d23",
+      "sourceHash": "fnv1a64:7028488b19b50ec6",
       "lessonIds": [
+        "PT-C01-ola",
+        "PT-W01-ola-guided-copy",
         "PT-C01-bom",
         "PT-C01-bom-dia",
         "PT-C01-dia",
         "PT-C01-noite",
         "PT-C01-o-a",
         "PT-C01-obrigado",
-        "PT-C01-ola",
         "PT-C01-practice",
         "PT-C01-tarde"
       ],
-      "voiceLessons": 8,
-      "drivablePrefix": 3,
+      "voiceLessons": 7,
+      "drivablePrefix": 0,
       "text": "portuguese/narration/ch01.txt",
       "json": "portuguese/narration/ch01.json",
-      "textHash": "fnv1a64:652565ec968b9a75",
-      "jsonHash": "fnv1a64:8d2ea3bbf1df7637"
+      "textHash": "fnv1a64:81d734ad665ab630",
+      "jsonHash": "fnv1a64:c19e5150f42e38b5"
     },
     {
       "language": "portuguese",

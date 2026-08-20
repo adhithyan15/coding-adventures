@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — cited Gujarati બ ductus (HL-C09GN)
+
+- Replace Gujarati **બ**'s conventional placeholder and render its rounded body and inner turn before the separate tall right spine.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing conventional **ભ** next.
+
+### Added — cited Gujarati ફ ductus (HL-C09GM)
+
+- Restore missing Gujarati **ફ** and render its winding body and tail before the separate diagonal cross-stroke.
+- Pin the t30apps.com two-path order, lift evidence, and variation warning to the bundled Noto Sans Gujarati fit.
+- Cover source provenance and exact-outline filmstrip rendering while queuing missing **બ** next.
+
 ### Added — cited Gujarati પ ductus (HL-C09GL)
 
 - Restore missing Gujarati **પ** and render its hooked left stem and broad lower body plus separate tall spine with one lift.

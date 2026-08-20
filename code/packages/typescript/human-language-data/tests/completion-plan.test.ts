@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildCompletionPlan,
   CERTIFIABLE_LEVELS,
+  TASK_SHAPE_LEVELS,
   renderCompletionPlan,
   type CompletionPlanInput,
 } from "../src/completion-plan.js";
@@ -73,7 +74,7 @@ const vocabularyBlocker = (short: number) =>
 
 function plan(input: Partial<CompletionPlanInput> & Pick<CompletionPlanInput, "levelGate">) {
   const taskShapes = input.levelGate.tracks.flatMap((track) =>
-    CERTIFIABLE_LEVELS.map((level) => ({ language: track.language, level })),
+    TASK_SHAPE_LEVELS.map((level) => ({ language: track.language, level })),
   );
   return buildCompletionPlan({
     scriptClosure: closure([]),
@@ -165,12 +166,42 @@ describe("completion plan", () => {
       kind: "task-shape",
       language: "alpha",
     });
-    expect(missing.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
+    expect(missing.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(7);
 
     const withA1 = plan({ levelGate, taskShapes: [{ language: "alpha", level: "A1" }] });
     expect(withA1.head.some((item) => item.id === "task-shape/alpha/A1")).toBe(false);
     expect(withA1.head.some((item) => item.id === "task-shape/alpha/A2")).toBe(true);
-    expect(withA1.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(5);
+    expect(withA1.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
+  });
+
+  it("measures pre-A1 task shapes without inventing a pre-A1 exam inventory", () => {
+    const levelGate = gate([{ language: "alpha", inProgressAt: "pre-A1" }]);
+    const missing = plan({ levelGate, taskShapes: [] });
+    expect(missing.head[0]).toMatchObject({
+      id: "task-shape/alpha/pre-A1",
+      kind: "task-shape",
+      level: "pre-A1",
+    });
+    expect(missing.head.some((item) => item.id === "exam-inventory/alpha/pre-A1")).toBe(false);
+    expect(missing.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(7);
+    expect(missing.projection.find((entry) => entry.kind === "exam-inventory")?.items).toBe(6);
+
+    const present = plan({
+      levelGate,
+      taskShapes: [{ language: "alpha", level: "pre-A1" }],
+    });
+    expect(present.head.some((item) => item.id === "task-shape/alpha/pre-A1")).toBe(false);
+    expect(present.head.some((item) => item.id === "task-shape/alpha/A1")).toBe(true);
+    expect(present.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
+
+    const duplicate = plan({
+      levelGate,
+      taskShapes: [
+        { language: "alpha", level: "pre-A1" },
+        { language: "alpha", level: "pre-A1" },
+      ],
+    });
+    expect(duplicate.projection.find((entry) => entry.kind === "task-shape")?.items).toBe(6);
   });
 
   it("moves every track once before any track moves twice", () => {
@@ -315,6 +346,10 @@ describe("completion plan", () => {
   it("excludes pre-A1 from the certifiable levels", () => {
     expect(CERTIFIABLE_LEVELS).not.toContain("pre-A1");
     expect(CERTIFIABLE_LEVELS).toHaveLength(6);
+  });
+
+  it("includes pre-A1 in the independently scored task-shape levels", () => {
+    expect(TASK_SHAPE_LEVELS).toEqual(["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"]);
   });
 
   it("renders a head and a projection", () => {

@@ -125,8 +125,8 @@
  * Reads: 8-bit greyscale, truecolour, greyscale+alpha and truecolour+alpha
  * (types 0, 2, 4, 6), non-interlaced, with suggested PLTE validated, tRNS
  * transparency applied, and unknown non-semantic ancillary chunks skipped.
- * Palette (type 3), 16-bit depths and Adam7 interlacing are refused by name
- * rather than half-supported.
+ * Palette (type 3), 16-bit depths, Adam7 interlacing, and APNG's
+ * `acTL`/`fcTL`/`fdAT` chunks are refused by name rather than half-supported.
  */
 import {
   type PixelContainer,
@@ -728,6 +728,12 @@ export function decodePng(bytes: Uint8Array, options: DecodePngOptions = {}): Pi
         fail("unsupported-feature", `PNG: unsupported bit depth ${bitDepth}, only 8 is supported`);
       }
       sawIHDR = true;
+    } else if (type === "acTL" || type === "fcTL" || type === "fdAT") {
+      // These names are ancillary by PNG's case bit, but they carry APNG's
+      // animation semantics and therefore are not safe for the generic
+      // ancillary skip below. CRC and the first-chunk rule have already been
+      // validated, so the stable failure is specifically the refused feature.
+      fail("unsupported-feature", `PNG: APNG chunk '${type}' is not supported`);
     } else if (type === "PLTE") {
       // PLTE is required for palette images, but it is also a legal suggested
       // palette for truecolour images. Palette images themselves remain out of

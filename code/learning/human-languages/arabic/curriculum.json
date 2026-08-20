@@ -6,7 +6,9 @@
       "id": "AR-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "AR-C01-salam"
+        "AR-C01-salam",
+        "AR-W00-sin-lam",
+        "AR-W00-alif-mim-salam"
       ],
       "before": [],
       "inline": [
@@ -28,11 +30,18 @@
       "id": "AR-PATH-003",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
+        "AR-C01-marhaba",
+        "AR-W00-ra-ha",
+        "AR-W00-ba-family-marhaba",
         "AR-C01-as-salamu-alaykum",
-        "AR-C01-marhaba"
+        "AR-W00-ayn-ya",
+        "AR-W00-kaf-waw-alaykum",
+        "AR-W00-full-greeting-recall"
       ],
       "before": [],
-      "inline": [],
+      "inline": [
+        "AR-EXT-003-SCRIPT"
+      ],
       "after": []
     },
     {
@@ -50,11 +59,14 @@
       "id": "AR-PATH-005",
       "spine_node": "SPINE-COURTESY-THANK",
       "lessons": [
-        "AR-C01-shukran"
+        "AR-C01-shukran",
+        "AR-C01-practice"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "AR-EXT-005-CONSOLIDATION"
+      ]
     },
     {
       "id": "AR-PATH-006",
@@ -819,6 +831,32 @@
   },
   "extensions": [
     {
+      "id": "AR-EXT-005-CONSOLIDATION",
+      "stage": "pre-A1",
+      "kind": "supporting",
+      "category": "consolidation",
+      "canDo": "I can retrieve, read, say, and transcribe the greetings from the whole opening chapter.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-C01-practice"
+      ]
+    },
+    {
+      "id": "AR-EXT-003-SCRIPT",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace and guided-copy the greeting forms I first learned by ear, adding no more than three new shapes at a time.",
+      "prerequisites": [],
+      "lessons": [
+        "AR-W00-ra-ha",
+        "AR-W00-ba-family-marhaba",
+        "AR-W00-ayn-ya",
+        "AR-W00-kaf-waw-alaykum",
+        "AR-W00-full-greeting-recall"
+      ]
+    },
+    {
       "id": "AR-EXT-006-SCRIPT",
       "stage": "pre-A1",
       "kind": "required",
@@ -1070,7 +1108,9 @@
       "canDo": "I can recognize the first Arabic script pattern inside a greeting I already understand.",
       "prerequisites": [],
       "lessons": [
-        "AR-C01-salam"
+        "AR-C01-salam",
+        "AR-W00-sin-lam",
+        "AR-W00-alif-mim-salam"
       ]
     },
     {
