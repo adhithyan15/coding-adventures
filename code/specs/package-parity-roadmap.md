@@ -3913,6 +3913,53 @@ builds and then rejecting `vector`'s internal libraries. Coverage now lives in
 the `zip` package stanza instead: exact Cabal 3.10.3.0 and 3.16.1 runs both
 produce HPC reports while dependency per-component builds remain enabled.
 
+## Post-#12234 Refresh and .NET ZIP Raw-Conformance Selection
+
+External auto-merge completed ready-for-review Haskell ZIP PR #12234 at final
+reviewed head `94831785259007b7d1cbeea2f2cffe429e34411d`, merged as
+`9aaeaf55b4ebc161508de52380afdded8c134dd2` at
+2026-08-20T12:38:31Z. Its final 29 reported checks ended with 23 successes,
+six expected skips, and no failure or pending job. The parity loop did not
+exercise manual merge authority, and GitHub deleted the remote branch.
+
+The collision-checked schema-3 inventory at exact live main
+`9aaeaf55b4ebc161508de52380afdded8c134dd2` remains unchanged from the stored
+`9873bf0170673631ea338541d235b76aaba78ff6` topology: 15 established lanes,
+1,366 normalized implementation identities, 4,550 established slots, 174
+high-consensus identities with 271 gaps, 904 singletons with 12,656 singleton
+gaps, 714 Rust singletons, zero canonical collisions, and zero unknown
+buckets. The exact root comparison found no added or retired identity, no lane
+expansion, and no new work requiring classification before selection.
+
+A fresh ownership audit of every open PR found no direct overlap with the
+parity state, roadmap, CMP09, neutral RFC 1951 fixture, or either remaining
+.NET/JVM ZIP child. The only overlapping remote is still the ancient no-PR
+`worktree-feat+zstd-and-catchups` branch, now more than ten thousand commits
+behind main. It is residue rather than active ownership and must not be reused
+or cherry-picked. Two live PRs continue to touch global Go build-tool
+validation/execution surfaces, so this tranche deliberately avoids those
+files and will rebase and recertify if either merges.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-dotnet-lane-parity` on fresh branch
+`codex/dotnet-zip-raw-rfc1951` from `9aaeaf55`. It advances both C# and F# and
+leaves only the JVM pair before the ZIP portable-conformance umbrella can
+close and release its fourteen dependent PNG slots. Both .NET ZIP packages
+already own pure in-memory stored/fixed RFC 1951 codecs, local LZSS project
+references, explicit empty capability profiles, and real Unix/Windows
+`dotnet test` front doors. The installed .NET 9.0.315 toolchain can validate
+both immediately; no downstream .NET package imports either ZIP package.
+Compared with JVM, the combined source/test surface is smaller and avoids a
+missing standalone Gradle plus a Kotlin coverage-gate follow-up.
+
+This coherent tranche consumes every one of the 34 neutral cases in both
+lanes, adds dynamic canonical Huffman decoding, caller output limits, exact
+input consumption, the closed payload-blind error taxonomy, strict ZIP
+compressed/uncompressed-size boundaries, independent foreign-codec
+interoperability, and package documentation/metadata updates. Production
+remains a memory-only byte transform with no filesystem, process, network,
+environment, clock, entropy, FFI, or credential authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
