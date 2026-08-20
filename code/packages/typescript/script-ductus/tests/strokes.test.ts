@@ -115,6 +115,7 @@ const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
 const GUJARATI_II = DUCTUS[ductusKey("gujarati", "ઈ")];
 const GUJARATI_U = DUCTUS[ductusKey("gujarati", "ઉ")];
 const GUJARATI_UU = DUCTUS[ductusKey("gujarati", "ઊ")];
+const GUJARATI_E = DUCTUS[ductusKey("gujarati", "એ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1846,6 +1847,22 @@ describe("handwriting ductus", () => {
     expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(body.at(-1)!.x);
     expect(Math.max(...tail.map((point) => point.x))).toBeGreaterThan(outer.at(-1)!.x);
     expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
+  });
+
+  it("Gujarati એ writes the joined body, right stem, then high arc", () => {
+    expect(GUJARATI_E.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_E)).toBe(2);
+    expect(GUJARATI_E.strokes).toHaveLength(3);
+    expect(GUJARATI_E.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const [bowl, body] = GUJARATI_E.strokes[0].segments.map((segment) => segment.path);
+    expect(bowl.at(-1)).toEqual(body[0]);
+    expect(Math.min(...bowl.map((point) => point.x))).toBeLessThan(bowl[0].x);
+    expect(GUJARATI_E.strokes[1].segments[0].path.at(-1)!.y).toBeLessThan(
+      GUJARATI_E.strokes[1].segments[0].path[0].y,
+    );
+    expect(Math.max(...GUJARATI_E.strokes[2].segments[0].path.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...bowl.map((point) => point.y)),
+    );
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4093,6 +4110,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one continuous pen-down run.*remaining path slots are empty.*repeats ઉ.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left return.*upper shoulder.*long right-side tail.*lower foot.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*complete-u-before-extended-tail order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati એ traces its body, stem, and high arc to three ordered paths", () => {
+    const src = GUJARATI_E.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*એ animation.*first through third SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /three ordered pen-down runs.*first SVG path.*left bowl.*broad lower body.*small right arch.*lifts once.*second SVG path.*full-height right stem.*lower foot.*lifts again.*third SVG path.*high arcing mark.*left to right.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-right-stem-before-high-arc order.*two-lift evidence/i,
     );
   });
 

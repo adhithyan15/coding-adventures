@@ -975,6 +975,13 @@ motion in one populated SVG path; the Noto Sans Gujarati fit preserves the
 zero-lift complete-u-before-extended-tail order while tracing the printed
 glyph's open shoulder and straighter tail. The source's variation warning
 continues to qualify the demonstrated school-hand form.
+The four-frame Gujarati **એ** filmstrip circles the joined left bowl and lower
+body through the small right arch, lifts to descend the full-height right stem,
+then lifts again to sweep the separate high arc from left to right. The next
+t30apps.com animation exposes those parts as three ordered SVG paths; the Noto
+Sans Gujarati fit preserves the body-before-stem-before-arc order and two lifts
+while tracing the wider printed joins. The source's variation warning continues
+to qualify the demonstrated school-hand form.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
