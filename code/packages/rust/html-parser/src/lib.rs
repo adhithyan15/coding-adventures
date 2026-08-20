@@ -5577,10 +5577,13 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "form" && self.current_element_is_table_structure() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-form-start-tag-in-table",
-                "form start tag in a table context was processed with a parse error",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-form-start-tag-in-table",
+                    "form start tag in a table context was processed with a parse error",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if self.form_element_pointer_set {
                 return;
             }
@@ -27021,6 +27024,36 @@ mod tests {
         }))
     }
 
+    fn form_start_tag_in_table_recovery(source: &str, occurrence: usize) -> ParserDiagnostic {
+        let prefix = "<form";
+        let start = source
+            .match_indices(prefix)
+            .filter_map(|(start, _)| {
+                source[start + prefix.len()..]
+                    .chars()
+                    .next()
+                    .filter(|next| matches!(next, ' ' | '/' | '>'))
+                    .map(|_| start)
+            })
+            .nth(occurrence)
+            .expect("source should contain the requested form start tag");
+        let delimiter = start
+            + source[start..]
+                .find('>')
+                .expect("source should contain a complete form start tag");
+        let line_start = source[..delimiter].rfind('\n').map_or(0, |index| index + 1);
+        ParserDiagnostic::new(
+            "unexpected-form-start-tag-in-table",
+            "form start tag in a table context was processed with a parse error",
+        )
+        .at_emission(Some(SourcePosition {
+            byte_offset: delimiter,
+            char_offset: source[..delimiter].chars().count(),
+            line: source[..delimiter].lines().count(),
+            column: source[line_start..delimiter].chars().count() + 1,
+        }))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -35217,22 +35250,12 @@ mod tests {
         assert_eq!(replacement.name, "table");
         assert_eq!(element_text_content(replacement), "X");
 
-        for source in [
-            "<!doctype html><table><form>",
-            "<!doctype html><table><meta>",
-            "<!doctype html><table><title>",
-        ] {
+        for source in ["<!doctype html><table><meta>", "<!doctype html><table><title>"] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output
                 .parser_diagnostics
                 .iter()
-                .filter(|diagnostic| {
-                    matches!(
-                        diagnostic.code.as_str(),
-                        "unexpected-form-start-tag-in-table"
-                            | "unexpected-head-content-start-tag-in-table"
-                    )
-                })
+                .filter(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
                 .all(|diagnostic| diagnostic.position.is_none()));
         }
 
@@ -35260,19 +35283,13 @@ mod tests {
 
     #[test]
     fn reports_form_start_tags_processed_in_table_mode() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html><table><form><form></table>").unwrap();
+        let source = "<!doctype html><table><form><form></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert_eq!(
             output.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-form-start-tag-in-table",
-                    "form start tag in a table context was processed with a parse error",
-                ),
-                ParserDiagnostic::new(
-                    "unexpected-form-start-tag-in-table",
-                    "form start tag in a table context was processed with a parse error",
-                ),
+                form_start_tag_in_table_recovery(source, 0),
+                form_start_tag_in_table_recovery(source, 1),
             ]
         );
 
@@ -35291,6 +35308,161 @@ mod tests {
                 .iter()
                 .all(|diagnostic| { diagnostic.code != "unexpected-form-start-tag-in-table" }));
         }
+    }
+
+    #[test]
+    fn positions_form_start_tags_in_table_mode_at_token_emission() {
+        for source in [
+            "<!doctype html><table><form>",
+            "<!doctype html><table><colgroup><form>",
+            "<!doctype html><table><tbody><form>",
+            "<!doctype html><table><thead><form>",
+            "<!doctype html><table><tfoot><form>",
+            "<!doctype html><table><tbody><tr><form>",
+            "<!doctype html><template><table><form>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-form-start-tag-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&form_start_tag_in_table_recovery(source, 0)],
+                "source {source:?}"
+            );
+        }
+
+        let repeated_source = "<!doctype html><table><form id=first><form id=ignored>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        let diagnostics = repeated
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-form-start-tag-in-table")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &form_start_tag_in_table_recovery(repeated_source, 0),
+                &form_start_tag_in_table_recovery(repeated_source, 1),
+            ]
+        );
+        assert!(repeated
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "nested-form-start-tag"));
+        let table = element(&body(&repeated.document).children[0]);
+        assert_eq!(table.children.len(), 1);
+        assert_eq!(element(&table.children[0]).attribute("id"), Some("first"));
+
+        let reset_source =
+            "<!doctype html><table><form id=first></form><form id=second></table>";
+        let reset = parse_html_with_diagnostics(reset_source).unwrap();
+        let diagnostics = reset
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-form-start-tag-in-table")
+            .collect::<Vec<_>>();
+        assert_eq!(
+            diagnostics,
+            vec![
+                &form_start_tag_in_table_recovery(reset_source, 0),
+                &form_start_tag_in_table_recovery(reset_source, 1),
+            ]
+        );
+        let table = element(&body(&reset.document).children[0]);
+        assert_eq!(table.children.len(), 2);
+        assert_eq!(element(&table.children[0]).attribute("id"), Some("first"));
+        assert_eq!(element(&table.children[1]).attribute("id"), Some("second"));
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<form data-name='é'>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &form_start_tag_in_table_recovery(source, 0)
+            }));
+        }
+
+        for (source, context) in [
+            ("<form>", "caption"),
+            ("<form>", "colgroup"),
+            ("<form>", "td"),
+            ("<form>", "th"),
+            ("<form>", "template"),
+            ("<form>", "form"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-form-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><form>",
+            "<!doctype html><table><tbody><tr><td><form>",
+            "<!doctype html><table><tbody><tr><th><form>",
+            "<!doctype html><table><select><form>",
+            "<!doctype html><table><div><form>",
+            "<!doctype html><template><div><form>",
+            "<!doctype html><table><form",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-form-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        for (source, code) in [
+            (
+                "<!doctype html><table><meta>",
+                "unexpected-head-content-start-tag-in-table",
+            ),
+            (
+                "<!doctype html><table><input type=hidden>",
+                "unexpected-hidden-input-start-tag-in-table",
+            ),
+            (
+                "<!doctype html><table><b>",
+                "unexpected-formatting-start-tag-in-table",
+            ),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == code)
+                .unwrap()
+                .position,
+                None
+            );
+        }
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "form".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-form-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]

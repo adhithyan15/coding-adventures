@@ -58,6 +58,7 @@ Writing counts only if the model was hidden. Copying was the ramp; this is recal
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-DIALOGUE-GREETING-01] -->
+<!-- hl-writing-stage: dictation-transcription -->
 <!-- hl-activity: {"id":"MW-C01-practice-answer","kind":"text","assesses":["MW-DIALOGUE-GREETING-01"],"prompt":"You hear rām-rām sā. Write the respectful reply from memory.","answer":"राम-राम सा","accepted":["राम राम सा","rām-rām sā","ram-ram sa"],"feedback":{"correct":"You completed the chapter payoff in writing.","incorrect":"Build राम, repeat it, then add respectful सा: राम-राम सा."},"response_seconds":18} -->
 
 If one sign stalled, mark that sign and repeat only its short lesson tomorrow.

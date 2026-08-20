@@ -46,6 +46,7 @@ Hold *ā* steady; do not turn it into English *ray*.
 
 ## Writing — guided copy
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01] -->
+<!-- hl-writing-stage: guided-copy -->
 
 - copy **र**
 - add **ा** on its right
