@@ -41,6 +41,10 @@ foreach (var entry in reader.Entries)
 
 byte[] data = reader.Read("hello.txt");
 
+// Raw RFC 1951 without ZIP/zlib/gzip framing
+byte[] raw = RawRfc1951.RawDeflate(data);
+RawInflateResult decoded = RawRfc1951.RawInflateCounted(raw);
+
 // ── Convenience API ──────────────────────────────────────────────────────────
 
 byte[] zipped = ZipArchive.Zip([
@@ -75,7 +79,15 @@ IReadOnlyList<ZipEntry> extracted = ZipArchive.Unzip(zipped);
 | Method | Description |
 |--------|-------------|
 | `Zip(IEnumerable<ZipEntry>)` | Compress a list of entries into a ZIP archive. |
-| `Unzip(byte[] data, long maxTotalBytes = 512 MiB)` | Extract all entries from an archive. Throws `InvalidDataException` if the combined decompressed size of all entries exceeds `maxTotalBytes` (decompression-bomb guard). |
+| `Unzip(byte[] data, long maxTotalBytes = 256 MiB)` | Extract all entries from an archive. Throws `InvalidDataException` if the combined decompressed size of all entries exceeds `maxTotalBytes` (decompression-bomb guard). |
+
+### `RawRfc1951`
+
+`RawDeflate`, `RawInflate`, and `RawInflateCounted` provide ZIP-owned raw
+RFC 1951 transforms. The decoder accepts stored, fixed-Huffman, dynamic-Huffman,
+and multi-block streams; enforces a caller-lowerable 256 MiB output ceiling;
+reports exact compressed bytes consumed; and raises `RawInflateError` with one
+of the 14 stable portable error codes. `Crc32` supports incremental checksums.
 
 ### `ZipEntry`
 
@@ -123,10 +135,10 @@ adversarial-input classes beyond simple format conformance:
   a single entry name encoding to more than 65535 UTF-8 bytes, is rejected
   outright rather than silently truncated (which would desynchronize a
   declared length from the bytes actually written and corrupt the archive).
-- **Decompression-bomb guards**: `DeflateDecompressor` caps any single
+- **Decompression-bomb guards**: `RawRfc1951` caps any single
   entry's decompressed output at 256 MiB, and `ZipArchive.Unzip` separately
   caps the *aggregate* decompressed size across all entries in one archive
-  (default 512 MiB, overridable via `maxTotalBytes`) — several
+  (default 256 MiB, overridable via `maxTotalBytes`) — several
   moderately-sized entries can each stay under the per-entry cap while still
   exhausting memory in total.
 

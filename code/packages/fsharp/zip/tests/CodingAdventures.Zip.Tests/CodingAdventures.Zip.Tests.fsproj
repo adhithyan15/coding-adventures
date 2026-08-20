@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.Zip.FSharp.Tests</AssemblyName>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
@@ -13,5 +14,6 @@
   <ItemGroup>
     <ProjectReference Include="../../CodingAdventures.Zip.fsproj" />
     <Compile Include="ZipTests.fs" />
+    <Compile Include="PortableConformanceTests.fs" />
   </ItemGroup>
 </Project>
