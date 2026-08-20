@@ -105,7 +105,7 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(report.summary).toEqual({
       tracks: 23,
       tracksWithDetectedCliffs: 23,
-      tracksWithNoWritingPractice: 2, // Latin now starts with observe-trace and guided copy.
+      tracksWithNoWritingPractice: 1, // Latin and Portuguese now start with gentle writing.
       tracksWhereWritingStartsLate: 7,
       atomMeasurementBlindLessons: 498, // +1: Latin's atom-free guided-copy bridge.
       findings: 143, // Telugu duration and French/Marathi order recovery remove three independent findings.
