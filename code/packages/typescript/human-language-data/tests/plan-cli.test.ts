@@ -49,6 +49,7 @@ describe("the plan CLI", () => {
     expect(out).toMatch(/exam-point — german/);
     // Spanish is at 100%, so it must NOT get one.
     expect(out).not.toMatch(/exam-point — spanish/);
+    expect(out).toMatch(/0 complete and 3 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -66,7 +67,8 @@ describe("the plan CLI", () => {
     expect(err).toMatch(/french A1 inventory exists but could not be read/);
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
-    expect(out).toMatch(/136\s+exam-inventory/);
+    expect(out).toMatch(/138\s+exam-inventory/);
+    expect(out).toMatch(/0 complete and 2 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -95,6 +97,7 @@ describe("the plan CLI", () => {
     const { out } = run(root);
     // 103 -> 98: the French questions chapter covered five of them (HL-C229).
     expect(out).toMatch(/98 uncovered point\(s\) across 3 written/);
+    expect(out).toMatch(/0 complete and 3 partial of 138/);
     expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);
 

@@ -11,10 +11,12 @@
 // list, so it can fall, and it can stay flat while the corpus grows.
 // ---------------------------------------------------------------------------
 import { describe, expect, it } from "vitest";
-import { loadEverything, loadExamInventory } from "../src/loader.js";
+import { listExamInventories, loadEverything, loadExamInventory } from "../src/loader.js";
 import {
+  EXAM_CONTENT_DIMENSIONS,
   measureExamCoverage,
   formatExamCoverage,
+  isExamInventoryComplete,
   trackIntroducedAtoms,
   type ExamInventory,
 } from "../src/exam-inventory.js";
@@ -61,12 +63,20 @@ variety: general
   );
 }
 
+const COMPLETE_SCOPE: ExamInventory["scope"] = {
+  "communicative-functions": { status: "complete", source: "fixture", note: "fixture" },
+  grammar: { status: "complete", source: "fixture", note: "fixture" },
+  "phonology-orthography": { status: "complete", source: "fixture", note: "fixture" },
+  lexicon: { status: "complete", source: "fixture", note: "fixture" },
+};
+
 const FIXTURE: ExamInventory = {
   version: 1,
   language: "spanish",
   level: "A1",
   about: "fixture",
   source: "fixture",
+  scope: COMPLETE_SCOPE,
   probeSemantics: "fixture",
   points: [
     { id: "P-1", category: "Uno", label: "both atoms present", probe: ["ES-A", "ES-B"] },
@@ -115,6 +125,24 @@ describe("probe semantics", () => {
     // 0% coverage — which looks like a devastating finding rather than a bug.
     expect(trackIntroducedAtoms(corpus, "spanish")).toEqual(new Set(["ES-A", "ES-B"]));
     expect(trackIntroducedAtoms(corpus, "french").size).toBe(0);
+  });
+});
+
+describe("inventory completeness", () => {
+  it("requires every content dimension and keeps partial point coverage measurable", () => {
+    expect(Object.keys(COMPLETE_SCOPE).sort()).toEqual([...EXAM_CONTENT_DIMENSIONS].sort());
+    expect(isExamInventoryComplete(FIXTURE)).toBe(true);
+    const partial = {
+      ...FIXTURE,
+      scope: {
+        ...COMPLETE_SCOPE,
+        lexicon: { ...COMPLETE_SCOPE.lexicon, status: "partial" as const },
+      },
+    };
+    expect(isExamInventoryComplete(partial)).toBe(false);
+    const coverage = measureExamCoverage(partial, [lesson("ES-1", ["ES-A", "ES-B"])]);
+    expect(coverage).toMatchObject({ enumerated: 3, covered: 1, inventoryComplete: false });
+    expect(formatExamCoverage(coverage)).toContain("(partial inventory)");
   });
 });
 
@@ -192,6 +220,7 @@ describe("a hostile inventory cannot corrupt the process", () => {
       level: "A1",
       about: "fixture",
       source: "fixture",
+      scope: COMPLETE_SCOPE,
       probeSemantics: "fixture",
       points: [{ id: "X", category, label: "attack", probe: null }],
     };
@@ -262,7 +291,7 @@ describe("the loader refuses a malformed file rather than crashing downstream", 
 
   it("refuses a reserved category name before it reaches the accumulator", () => {
     withTempInventory((root) => {
-      write(root, { version: 1, points: [{ id: "X", category: "__proto__", label: "l", probe: null }] });
+      write(root, { ...FIXTURE, points: [{ id: "X", category: "__proto__", label: "l", probe: null }] });
       expect(() => loadExamInventory("spanish", "A1", root)).toThrow(/reserved category name/);
     });
   });
@@ -270,7 +299,7 @@ describe("the loader refuses a malformed file rather than crashing downstream", 
   it("refuses a duplicate point id, which would double-count a category", () => {
     withTempInventory((root) => {
       write(root, {
-        version: 1,
+        ...FIXTURE,
         points: [
           { id: "X", category: "Uno", label: "l", probe: null },
           { id: "X", category: "Uno", label: "l", probe: null },
@@ -279,12 +308,48 @@ describe("the loader refuses a malformed file rather than crashing downstream", 
       expect(() => loadExamInventory("spanish", "A1", root)).toThrow(/duplicate point id/);
     });
   });
+
+  it("requires an exact, sourced boundary for every content dimension", () => {
+    withTempInventory((root) => {
+      const { lexicon: _lexicon, ...missingLexicon } = COMPLETE_SCOPE;
+      write(root, { ...FIXTURE, scope: missingLexicon });
+      expect(() => loadExamInventory("spanish", "A1", root)).toThrow(
+        /scope must contain exactly.*missing \[lexicon\]/,
+      );
+
+      write(root, {
+        ...FIXTURE,
+        scope: {
+          ...COMPLETE_SCOPE,
+          grammar: { ...COMPLETE_SCOPE.grammar, source: "" },
+        },
+      });
+      expect(() => loadExamInventory("spanish", "A1", root)).toThrow(
+        /scope\.grammar\.source must name its provenance/,
+      );
+    });
+  });
+
+  it("loads and lists a partial inventory without claiming it is complete", () => {
+    withTempInventory((root) => {
+      write(root, {
+        ...FIXTURE,
+        scope: {
+          ...COMPLETE_SCOPE,
+          lexicon: { ...COMPLETE_SCOPE.lexicon, status: "partial" },
+        },
+      });
+      expect(isExamInventoryComplete(loadExamInventory("spanish", "A1", root))).toBe(false);
+      expect(listExamInventories(root)).toEqual([{ language: "spanish", level: "A1", complete: false }]);
+    });
+  });
 });
 
 describe("what the corpus actually covers", () => {
   it("pins A1 coverage, which is the number this project is judged on", () => {
     const { lessons } = loadEverything();
     const coverage = measureExamCoverage(loadExamInventory("spanish", "A1"), lessons);
+    expect(coverage.inventoryComplete).toBe(false);
 
     // First measured at 53/85 over 220 chapters — a curriculum that had climbed
     // to a B2 node while missing 62% of... no: while holding only 62% of the A1
@@ -350,7 +415,7 @@ describe("what the corpus actually covers", () => {
     const report = formatExamCoverage(
       measureExamCoverage(loadExamInventory("spanish", "A1"), lessons),
     );
-    expect(report).toContain("spanish A1: 85/85 points covered (100%)");
+    expect(report).toContain("spanish A1 (partial inventory): 85/85 points covered (100%)");
     // Worst category first, not alphabetical. This USED to be checkable against
     // the real corpus, whose emptiest category kept changing as the campaign
     // closed points — `El sintagma adjetival` at 0/1, then `Los cuantificadores`

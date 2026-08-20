@@ -28,6 +28,7 @@ import {
   type InventoryPresence,
 } from "./completion-plan.js";
 import { measureExamCoverage } from "./exam-inventory.js";
+import { isExamInventoryComplete } from "./exam-inventory.js";
 import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 
 interface PlanOptions {
@@ -137,10 +138,12 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
   const examCoverage: ExamCoverageSummary[] = [];
   const unreadable: { language: string; level: CefrLevel; reason: string }[] = [];
   const readable: InventoryPresence[] = [];
+  const partial: InventoryPresence[] = [];
   for (const entry of inventories) {
     try {
-      const coverage = measureExamCoverage(loadExamInventory(entry.language, entry.level, options.root), lessons);
-      readable.push(entry);
+      const inventory = loadExamInventory(entry.language, entry.level, options.root);
+      const coverage = measureExamCoverage(inventory, lessons);
+      (isExamInventoryComplete(inventory) ? readable : partial).push(entry);
       examCoverage.push({
         language: entry.language,
         level: entry.level,
@@ -170,6 +173,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     scriptClosure: report.scriptClosure,
     assessmentContracts: listAssessmentContracts(options.root),
     inventories: readable,
+    partialInventories: partial,
     examCoverage,
     unreadableInventories: unreadable.length,
     ceiling: options.ceiling,

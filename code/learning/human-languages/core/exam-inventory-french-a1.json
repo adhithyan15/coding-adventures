@@ -4,6 +4,28 @@
   "level": "A1",
   "about": "An enumeration of the grammar, phonology and core lexis a DELF A1 candidate is expected to hold, restated in our own words from the CECRL A1 descriptors and the structure the DELF A1 syllabus and the Alliance francaise referentials publish for the level. It is a working restatement for measuring this corpus, not a reproduction of any awarding body's document.",
   "source": "https://www.france-education-international.fr/diplome/delf-tout-public",
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a1",
+      "note": "Some A1 functions appear among the points, but the complete official communicative construct is not yet enumerated."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a1",
+      "note": "This working restatement is useful for coverage measurement but is not yet source-closed against a complete official grammar inventory."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a1",
+      "note": "The file contains pronunciation and spelling points, but its source does not publish a complete finite dimension list."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "https://www.france-education-international.fr/diplome/delf-tout-public/niveau-a1",
+      "note": "Core themes are represented, but the full source-bounded A1 lexical inventory has not yet been enumerated."
+    }
+  },
   "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is a finding rather than a gap in the data -- so a null probe counts as UNCOVERED and is reported by name.",
   "points": [
     {
