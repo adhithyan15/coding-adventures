@@ -973,7 +973,11 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
+    expect(summary.lessonsWithWritingSegments).toBe(157); // Arabic adds six segments after Portuguese adds two beside Italian's pair.
+    /* Superseded merge-side totals:
+    expect(summary.lessonsWithWritingSegments).toBe(155); // +6: Arabic adds opening trace, guided-copy, delayed-copy, and dictation blocks. // +2: Italian adds observe-trace and guided-copy evidence.
     expect(summary.lessonsWithWritingSegments).toBe(151); // +4: Italian and Portuguese each add observe-trace and guided-copy evidence.
+    */
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.
