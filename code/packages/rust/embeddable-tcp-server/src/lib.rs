@@ -2094,7 +2094,7 @@ print(json.dumps({"version":1,"kind":"response","body":{"id":body["id"],"result"
         }
         let mut output = Vec::with_capacity(input.len() / 2);
         let bytes = input.as_bytes();
-        for pair in bytes.chunks_exact(2) {
+        for pair in bytes.as_chunks::<2>().0 {
             let high = hex_value(pair[0])?;
             let low = hex_value(pair[1])?;
             output.push((high << 4) | low);

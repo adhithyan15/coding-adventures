@@ -44,9 +44,9 @@
 //!
 //! ## References
 //!
-//! - WebP lossless bitstream spec: https://developers.google.com/speed/webp/docs/webp_lossless_bitstream_specification
-//! - WebP container spec: https://developers.google.com/speed/webp/docs/riff_container
-//! - VP8 lossy spec: https://www.rfc-editor.org/rfc/rfc6386
+//! - WebP lossless bitstream spec: <https://developers.google.com/speed/webp/docs/webp_lossless_bitstream_specification>
+//! - WebP container spec: <https://developers.google.com/speed/webp/docs/riff_container>
+//! - VP8 lossy spec: <https://www.rfc-editor.org/rfc/rfc6386>
 
 pub const VERSION: &str = "0.3.8";
 

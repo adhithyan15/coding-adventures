@@ -565,7 +565,7 @@ impl<T: HeosTransport> HeosClient<T> {
         }
 
         let mut snapshots = Vec::with_capacity(players.len());
-        for (player, responses) in players.into_iter().zip(details.chunks_exact(4)) {
+        for (player, responses) in players.into_iter().zip(details.as_chunks::<4>().0) {
             successful_response(&responses[0], "player/get_play_state")?;
             successful_response(&responses[1], "player/get_now_playing_media")?;
             successful_response(&responses[2], "player/get_volume")?;

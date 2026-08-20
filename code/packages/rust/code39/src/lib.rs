@@ -289,7 +289,9 @@ mod tests {
         let pixels = paint_vm_direct2d::render(&scene);
         let label_dark_pixels = pixels
             .data
-            .chunks_exact(4)
+            .as_chunks::<4>()
+            .0
+            .iter()
             .enumerate()
             .filter(|(index, px)| {
                 let y = index / pixels.width as usize;

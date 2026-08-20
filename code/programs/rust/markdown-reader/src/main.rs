@@ -143,7 +143,6 @@ fn main() {
         unsafe {
             paint_vm_direct2d::show_scene_in_window(&scene, "Markdown Reader - Direct2D");
         }
-        return;
     }
 
     #[cfg(not(target_os = "windows"))]

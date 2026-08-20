@@ -568,7 +568,7 @@ fn decode_base64(value: &str, maximum: usize) -> Result<Vec<u8>, MessageProfileE
     }
     let bytes = value.as_bytes();
     let mut output = Vec::with_capacity(value.len() / 4 * 3);
-    for (index, chunk) in bytes.chunks_exact(4).enumerate() {
+    for (index, chunk) in bytes.as_chunks::<4>().0.iter().enumerate() {
         let final_chunk = index + 1 == bytes.len() / 4;
         let a = base64_digit(chunk[0])?;
         let b = base64_digit(chunk[1])?;
@@ -638,7 +638,7 @@ fn decode_hex_array<const N: usize>(value: &str) -> Result<[u8; N], MessageProfi
         return Err(MessageProfileError::InvalidField);
     }
     let mut output = [0u8; N];
-    for (index, pair) in value.as_bytes().chunks_exact(2).enumerate() {
+    for (index, pair) in value.as_bytes().as_chunks::<2>().0.iter().enumerate() {
         output[index] = hex_digit(pair[0]) * 16 + hex_digit(pair[1]);
     }
     Ok(output)

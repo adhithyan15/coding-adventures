@@ -181,7 +181,9 @@ fn print_decision(decision: &str) {
 fn decode_hex(encoded: &str) -> String {
     let bytes = encoded
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| (hex_nibble(pair[0]) << 4) | hex_nibble(pair[1]))
         .collect::<Vec<_>>();
     String::from_utf8(bytes).unwrap()
