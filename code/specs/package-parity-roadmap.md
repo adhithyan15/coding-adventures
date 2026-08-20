@@ -3960,6 +3960,22 @@ interoperability, and package documentation/metadata updates. Production
 remains a memory-only byte transform with no filesystem, process, network,
 environment, clock, entropy, FFI, or credential authority.
 
+A late refresh onto live `origin/main`
+`6694384516b8bd2d2b7696daf2604fa5d0118d8f` adds one Rust-only
+`smart-home-thread-border-agent-discovery-integration` identity and otherwise
+does not overlap this tranche. The schema-3 collision gate now reports 15
+established lanes, 1,367 identities, 4,551 slots, 174 high-consensus packages
+with 271 gaps, 905 singletons with 12,670 missing singleton slots, 715 Rust
+singletons, zero collisions, and zero unknown buckets. The new mixed package
+has an injected portable-core owner for bounded MeshCoP DNS-SD record parsing,
+deduplication, authorization ordering, and D23 projection, plus a blocked
+native-authority review for mDNS sockets, peer/origin policy, runtime mutation,
+CLI effects, truthful capabilities, and transactional commits. Commissioning,
+credentials, Thread sessions, datasets, and control remain explicitly outside
+portable discovery parity. Recording both owners before publication preserves
+the selection boundary and leaves the dependency-ready .NET ZIP child as the
+highest-leverage active unit.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
