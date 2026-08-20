@@ -6,11 +6,14 @@
       "id": "GE-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "GE-C01-hallo"
+        "GE-C01-hallo",
+        "GE-W01-hallo-guided-copy"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "GE-EXT-001-WRITING-START"
+      ]
     },
     {
       "id": "GE-PATH-002",
@@ -791,6 +794,17 @@
     }
   },
   "extensions": [
+    {
+      "id": "GE-EXT-001-WRITING-START",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can copy my first German greeting with the model still visible.",
+      "prerequisites": [],
+      "lessons": [
+        "GE-W01-hallo-guided-copy"
+      ]
+    },
     {
       "id": "GE-EXT-007-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",

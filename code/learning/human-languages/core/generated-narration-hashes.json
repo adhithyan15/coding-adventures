@@ -1615,9 +1615,10 @@
     {
       "language": "german",
       "chapter": 1,
-      "sourceHash": "fnv1a64:05733273242c39f1",
+      "sourceHash": "fnv1a64:ca5f3cc4bc7edc73",
       "lessonIds": [
         "GE-C01-hallo",
+        "GE-W01-hallo-guided-copy",
         "GE-C01-gut",
         "GE-C01-der-die-das",
         "GE-C01-tag",
@@ -1630,12 +1631,12 @@
         "GE-C01-gute-nacht",
         "GE-C01-practice"
       ],
-      "voiceLessons": 11,
-      "drivablePrefix": 4,
+      "voiceLessons": 10,
+      "drivablePrefix": 0,
       "text": "german/narration/ch01.txt",
       "json": "german/narration/ch01.json",
-      "textHash": "fnv1a64:fd32dd76d71491b3",
-      "jsonHash": "fnv1a64:d17c3f2b2cf43c83"
+      "textHash": "fnv1a64:7712e130236f9460",
+      "jsonHash": "fnv1a64:be027de48acae907"
     },
     {
       "language": "german",
