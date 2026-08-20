@@ -164,9 +164,10 @@ gate.tracks.find((t) => t.language === "spanish");
 ```
 
 `touches` is the highest level any lesson **sits at** — one lesson pointing at one A2
-node is enough to move it. `attained` is the highest level where all four §3.1 criteria
-hold, here and below: spine nodes realized, cumulative vocabulary met, no lesson over
-the atom budget, every atom revisited twice. Every criterion is scoped **at or below
+node is enough to move it. `attained` is the highest level where every gate criterion
+holds, here and below: spine nodes realized, cumulative vocabulary met, no lesson over
+the atom budget, every atom revisited twice, and every required cumulative writing
+stage proved. Every criterion is scoped **at or below
 the level** — Spanish teaches 113 headwords in total but only **44** at or below
 pre-A1, and it is the 44 the gate judges.
 

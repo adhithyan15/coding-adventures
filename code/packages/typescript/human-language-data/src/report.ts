@@ -237,8 +237,9 @@ export interface CurriculumGapReport {
   /**
    * HL09 §3.1 — what it takes to CLAIM a level, as opposed to touch one.
    *
-   * Present only when levels, ramp and continuity were all computed, since the
-   * gate needs all four criteria. Absent is "not measured", never "not attained".
+   * Present only when levels, ramp and continuity were all computed. When an
+   * assessment policy is supplied, HL19 writing stages join the gate as a fifth
+   * criterion. Absent is "not measured", never "not attained".
    */
   levelGate?: LevelGateReport;
   modality: ModalitySummary;

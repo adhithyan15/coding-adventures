@@ -9,7 +9,7 @@
 // what happens when the ordering lives in prose that nothing recomputes.
 //
 // Meanwhile every number needed to order the work is computed on every run.
-// `level-gate.ts` says which of four criteria each track fails and by how much.
+// `level-gate.ts` says which attainment criteria each track fails and by how much.
 // `script-closure.ts` says exactly how many glyphs a track shows its reader and
 // never taught. `exam-inventory.ts` measures against the named external exam or
 // clearly labelled project-defined equivalent.

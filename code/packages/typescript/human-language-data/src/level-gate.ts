@@ -11,13 +11,14 @@
 // is enough to move `reach`; it is nowhere near enough to sit the exam.
 //
 // So this module computes a second, stricter number and reports both. `touches`
-// keeps the old meaning. `attained` is the highest level where all four HL09 §3.1
-// criteria hold, at that level AND every level below it:
+// keeps the old meaning. `attained` is the highest level where every enabled
+// criterion holds, at that level AND every level below it:
 //
 //   1. every spine node at the level is realized by some path segment,
 //   2. the track teaches at least the level's cumulative vocabulary,
-//   3. no lesson at or below the level exceeds the new-atom budget, and
-//   4. every atom at or below the level is revisited at least twice.
+//   3. no lesson at or below the level exceeds the new-atom budget,
+//   4. every atom at or below the level is revisited at least twice, and
+//   5. when HL19 evidence is supplied, every cumulative writing stage is proved.
 //
 // A track that fails any of them is "in progress at X", never "reached X", and
 // the report says WHICH criterion failed and by how much — a bare `false` would
@@ -63,7 +64,7 @@ export function isEtymologyAtom(atom: string): boolean {
   return /-ETYMON-/.test(atom);
 }
 
-/** Which of the four criteria a level failed, and by how much. */
+/** Which attainment criterion a level failed, and by how much. */
 export interface LevelBlocker {
   criterion: "spine-nodes" | "vocabulary" | "atom-budget" | "reinforcement" | "writing-stage";
   detail: string;
