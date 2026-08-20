@@ -335,7 +335,7 @@ fn decode_base64(value: &str) -> Result<Vec<u8>, ProtocolError> {
     }
     let bytes = value.as_bytes();
     let mut output = Vec::with_capacity(value.len() / 4 * 3);
-    for (index, chunk) in bytes.chunks_exact(4).enumerate() {
+    for (index, chunk) in bytes.as_chunks::<4>().0.iter().enumerate() {
         let final_chunk = index + 1 == bytes.len() / 4;
         let a = base64_digit(chunk[0])?;
         let b = base64_digit(chunk[1])?;

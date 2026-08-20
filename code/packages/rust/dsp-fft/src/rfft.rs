@@ -77,7 +77,7 @@ use dsp_complex::ComplexTensor;
 ///
 /// The output buffer has length `2 · (⌊N / 2⌋ + 1)`.
 ///
-/// This is the canonical scalar oracle; the public [`crate::rfft`]
+/// This is the canonical scalar oracle; the public [`crate::rfft()`]
 /// wraps it as a [`ComplexTensor`].
 pub fn rfft_scalar(signal: &[f32]) -> Result<Vec<f32>, FftError> {
     let n = signal.len();

@@ -1,6 +1,6 @@
 //! `cuda_emitter` — CUDA C string generator for specialised kernels.
 //!
-//! MX06 Phase 4.  Direct port of [`matrix_metal::msl_emitter`] —
+//! MX06 Phase 4. Direct port of `matrix_metal::msl_emitter` —
 //! same API surface, same constant-folding logic, same SpecKey
 //! coverage — emitting CUDA C instead of MSL.  The two emitters are
 //! intentionally close in shape so reviewers can diff them side by

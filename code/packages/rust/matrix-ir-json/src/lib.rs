@@ -65,7 +65,7 @@
 //! - `inputs` and `outputs` — arrays of tensor ids (u32).
 //! - `ops` — array of op objects.  Every op has `"kind"` (string)
 //!   and `"output"` (tensor id); other fields vary per variant.
-//!   See [`encode_op`] / [`decode_op`] for the per-variant layout
+//!   See `encode_op` / `decode_op` for the per-variant layout
 //!   — it mirrors [`matrix_ir::Op`] 1:1.
 //! - `constants` — literal-data tensors.  `bytes_hex` is a
 //!   lowercase hex string with `2 * byte_count` characters.
@@ -821,7 +821,7 @@ fn decode_hex(v: &JsonValue, path: &str) -> Result<Vec<u8>, Error> {
         });
     }
     let mut out = Vec::with_capacity(bytes.len() / 2);
-    for chunk in bytes.chunks_exact(2) {
+    for chunk in bytes.as_chunks::<2>().0 {
         let hi = hex_nibble(chunk[0], path)?;
         let lo = hex_nibble(chunk[1], path)?;
         out.push((hi << 4) | lo);
