@@ -56,10 +56,10 @@ describe("the gate that would have caught the A2 claim", () => {
   });
 
   it("reports every track as overstating, which is the finding", () => {
-    // All 22 tracks touch a level none of them has attained. That is not 22 bugs —
+    // All 23 tracks touch a level none of them has attained. That is not 23 bugs —
     // it is one measurement having been read as another for the whole project.
     const gate = realReport().levelGate!;
-    expect(gate.summary.tracksOverstating).toBe(22);
+    expect(gate.summary.tracksOverstating).toBe(23);
     expect(gate.summary.tracksWithAnyLevel).toBe(0);
     for (const level of Object.values(gate.summary.attainedByLevel)) {
       expect(level).toBe(0);

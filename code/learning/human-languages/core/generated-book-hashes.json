@@ -4356,6 +4356,21 @@
       "tex": "marathi/book/chapters/ch14-script-first.tex"
     },
     {
+      "language": "marwadi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:96502e4e4a9d47f8",
+      "lessonIds": [
+        "MW-W01-ra",
+        "MW-W01-aa-matra",
+        "MW-W01-raam",
+        "MW-W01-sa",
+        "MW-W01-saa",
+        "MW-C01-raam-raam-saa",
+        "MW-C01-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch01-ram-ram-sa.tex"
+    },
+    {
       "language": "persian",
       "chapter": 2,
       "sourceHash": "fnv1a64:497f80f61dd5767f",
