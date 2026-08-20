@@ -72,6 +72,33 @@ mixedCurriculumFrontier(
 );
 ```
 
+### Exam task shapes (HL18)
+
+`<track>/task-shapes/<level>.json` records the sourced performance target behind
+an exam-ready claim: what the learner reads or hears, what they must write or
+say, timing, interaction, replay, scoring and aids for all four skills. Unknown
+source measurements remain explicit rather than being guessed.
+
+```ts
+import {
+  buildTaskShapeBacklog,
+  listTaskShapeInventories,
+  loadLanguageRegistry,
+  loadTaskShapeInventory,
+} from "@coding-adventures/human-language-data";
+
+const germanA1 = loadTaskShapeInventory("german", "A1");
+const present = listTaskShapeInventories();
+const missing = buildTaskShapeBacklog(
+  loadLanguageRegistry().languages.map((track) => track.id),
+  present,
+);
+```
+
+The first inventory is official Goethe German A1. It is a target for later
+five-minute lesson decomposition and mocks, not a claim that the current German
+book is pass-ready.
+
 ### Chapter capabilities (HL05)
 
 A chapter used to be nothing but an integer on each lesson, so nothing could check

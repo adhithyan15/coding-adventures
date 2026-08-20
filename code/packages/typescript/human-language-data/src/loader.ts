@@ -12,6 +12,7 @@ import {
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import type { ExamInventory } from "./exam-inventory.js";
+import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
 import {
   parseAssessmentContract,
   parseAssessmentPolicy,
@@ -97,6 +98,41 @@ export function listAssessmentContracts(root = defaultCurriculumRoot()): string[
     out.push(track.id);
   }
   return out;
+}
+
+/** Load and validate one `<track>/task-shapes/<level>.json` inventory. */
+export function loadTaskShapeInventory(
+  language: string,
+  level: string,
+  root = defaultCurriculumRoot(),
+): TaskShapeInventory {
+  if (!/^[a-z][a-z0-9-]*$/.test(language) || !/^(a1|a2|b1|b2|c1|c2)$/i.test(level)) {
+    throw new Error("task shapes: unsafe language or level path");
+  }
+  const path = join(root, language, "task-shapes", `${level.toLowerCase()}.json`);
+  const inventory = parseTaskShapeInventory(JSON.parse(readFileSync(path, "utf8")), language);
+  if (inventory.level.toLowerCase() !== level.toLowerCase()) {
+    throw new Error(`task shapes: ${language}/${level} file declares level ${inventory.level}`);
+  }
+  return inventory;
+}
+
+/** Valid task-shape inventories present in the registry, ordered by track and level. */
+export function listTaskShapeInventories(root = defaultCurriculumRoot()): Array<{ language: string; level: string }> {
+  const registry = loadLanguageRegistry(root);
+  const found: Array<{ language: string; level: string }> = [];
+  for (const track of registry.languages) {
+    for (const current of ["A1", "A2", "B1", "B2", "C1", "C2"] as const) {
+      const path = join(root, track.id, "task-shapes", `${current.toLowerCase()}.json`);
+      if (!existsSync(path)) continue;
+      const inventory = loadTaskShapeInventory(track.id, current, root);
+      if (inventory.level !== current) {
+        throw new Error(`task shapes: ${track.id}/${current} file declares level ${inventory.level}`);
+      }
+      found.push({ language: track.id, level: current });
+    }
+  }
+  return found;
 }
 
 export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumSpine {
