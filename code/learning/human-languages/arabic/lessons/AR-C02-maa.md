@@ -1,5 +1,6 @@
 ---
 id: AR-C02-maa
+sequence: 190
 chapter: 2
 type: word
 headword: ما

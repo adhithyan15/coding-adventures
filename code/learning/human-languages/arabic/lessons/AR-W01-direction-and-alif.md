@@ -1,5 +1,6 @@
 ---
 id: AR-W01-direction-and-alif
+sequence: 90
 chapter: 1
 type: writing
 headword: "ا"

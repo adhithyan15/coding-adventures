@@ -1,5 +1,6 @@
 ---
 id: AR-C01-sabah-al-khayr
+sequence: 50
 chapter: 1
 type: word
 headword: صباح الخير
