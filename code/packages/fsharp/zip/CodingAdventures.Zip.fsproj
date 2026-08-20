@@ -4,7 +4,7 @@
     <AssemblyName>CodingAdventures.Zip.FSharp</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>CodingAdventures.Zip.FSharp</PackageId>
-    <Version>0.1.1</Version>
+    <Version>0.2.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>
     <Description>Pure F# ZIP archive format (CMP09) — read and write .zip files</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

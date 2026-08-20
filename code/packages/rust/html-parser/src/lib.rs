@@ -5650,20 +5650,26 @@ impl HtmlParser {
                 );
                 self.append_node(Node::element(name, attributes));
             } else {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-input-start-tag-in-table",
-                    "non-hidden input start tag in a table context was foster parented",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-input-start-tag-in-table",
+                        "non-hidden input start tag in a table context was foster parented",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.insert_node_before_open_table(Node::element(name, attributes));
             }
             return;
         }
 
         if !in_foreign_content && name == "img" && self.current_element_is_table_structure() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-img-start-tag-in-table",
-                "img start tag in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-img-start-tag-in-table",
+                    "img start tag in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if let Some(path) =
                 self.insert_node_before_open_table_inside_previous_center_font_context(
                     Node::element(name.clone(), attributes.clone()),
@@ -27087,6 +27093,22 @@ mod tests {
         .at_emission(Some(start_tag_position(source, "input")))
     }
 
+    fn input_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-input-start-tag-in-table",
+            "non-hidden input start tag in a table context was foster parented",
+        )
+        .at_emission(Some(start_tag_position(source, "input")))
+    }
+
+    fn img_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-img-start-tag-in-table",
+            "img start tag in a table context was foster parented",
+        )
+        .at_emission(Some(start_tag_position(source, "img")))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -35283,12 +35305,12 @@ mod tests {
         assert_eq!(replacement.name, "table");
         assert_eq!(element_text_content(replacement), "X");
 
-        let input = parse_html_with_diagnostics("<!doctype html><table><input type=text>").unwrap();
-        assert!(input
+        let image = parse_html_with_diagnostics("<!doctype html><table><img>").unwrap();
+        assert!(image
             .parser_diagnostics
             .iter()
-            .filter(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
-            .all(|diagnostic| diagnostic.position.is_none()));
+            .any(|diagnostic| diagnostic
+                == &img_start_tag_in_table_recovery("<!doctype html><table><img>")));
 
         let mut unpositioned = HtmlParser::with_fragment_context_options(
             HtmlParseOptions::default(),
@@ -35450,27 +35472,18 @@ mod tests {
             );
         }
 
-        for (source, code) in [
-            (
-                "<!doctype html><table><input type=text>",
-                "unexpected-input-start-tag-in-table",
-            ),
-            (
-                "<!doctype html><table><b>",
-                "unexpected-formatting-start-tag-in-table",
-            ),
-        ] {
-            let output = parse_html_with_diagnostics(source).unwrap();
-            assert_eq!(
-                output
+        let formatting = parse_html_with_diagnostics("<!doctype html><table><b>").unwrap();
+        assert_eq!(
+            formatting
                 .parser_diagnostics
                 .iter()
-                .find(|diagnostic| diagnostic.code == code)
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
+                })
                 .unwrap()
                 .position,
-                None
-            );
-        }
+            None
+        );
 
         let mut unpositioned = HtmlParser::with_fragment_context_options(
             HtmlParseOptions::default(),
@@ -41524,7 +41537,11 @@ mod tests {
                 .iter()
                 .find(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
                 .unwrap();
-            assert_eq!(companion.position, None, "source {source:?}");
+            assert_eq!(
+                companion,
+                &input_start_tag_in_table_recovery(source),
+                "source {source:?}"
+            );
         }
 
         let state_source = "<!doctype html><main><table><input id=marker type=hidden><tbody><tr><td>X</table></main>";
@@ -41573,11 +41590,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-input-start-tag-in-table",
-                            "non-hidden input start tag in a table context was foster parented",
-                        )
+                    diagnostic == &input_start_tag_in_table_recovery(source)
                 }),
                 "source {source:?}"
             );
@@ -41598,6 +41611,142 @@ mod tests {
                 .iter()
                 .all(|diagnostic| { diagnostic.code != "unexpected-input-start-tag-in-table" }));
         }
+    }
+
+    #[test]
+    fn positions_non_hidden_input_start_tags_in_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><input>",
+            "<!doctype html><table><colgroup><input type=text>",
+            "<!doctype html><table><tbody><input type=text>",
+            "<!doctype html><table><thead><input type=text>",
+            "<!doctype html><table><tfoot><input type=text>",
+            "<!doctype html><table><tbody><tr><input type=text>",
+            "<!doctype html><template><table><input type=text>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&input_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><input type=>",
+            "<!doctype html><table><input type=' hidden'>",
+            "<!doctype html><table><input type=text type=hidden>",
+            "<!doctype html><table><input type=hidden/>",
+            "<!doctype html><table><input type=text />",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &input_start_tag_in_table_recovery(source)
+            }));
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
+                    && diagnostic.code != "non-void-html-element-self-closing"
+            }));
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<input type=text data-name='é'>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &input_start_tag_in_table_recovery(source)
+            }));
+            let input = find_first_element_in_nodes(&output.nodes, "input").unwrap();
+            assert_eq!(input.attribute("type"), Some("text"));
+            assert_eq!(input.attribute("data-name"), Some("é"));
+        }
+
+        for (source, context) in [
+            ("<input type=text>", "caption"),
+            ("<input type=text>", "colgroup"),
+            ("<input type=text>", "td"),
+            ("<input type=text>", "th"),
+            ("<input type=text>", "template"),
+            ("<input type=text>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-input-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><input type=text>",
+            "<!doctype html><table><tbody><tr><td><input type=text>",
+            "<!doctype html><table><tbody><tr><th><input type=text>",
+            "<!doctype html><table><select><input type=text>",
+            "<!doctype html><template><div><input type=text>",
+            "<!doctype html><table><div><input type=text>",
+            "<!doctype html><table><input type=text",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-input-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><input type=hidden>",
+            "<!doctype html><table><input type=HiDdEn />",
+            "<!doctype html><table><input type=hidd&#x65;n>",
+            "<!doctype html><table><input type=hidden type=text>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-input-start-tag-in-table"
+            }));
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &hidden_input_start_tag_in_table_recovery(source)
+            }));
+        }
+
+        let state_source = "<!doctype html><main><table><input id=marker type=text><tbody><tr><td>X</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let input = element(&main.children[0]);
+        assert_eq!(input.name, "input");
+        assert_eq!(input.attribute("id"), Some("marker"));
+        assert!(input.children.is_empty());
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "input".to_string(),
+            attributes: vec![LexerAttribute {
+                name: "type".to_string(),
+                value: "text".to_string(),
+            }],
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -41713,14 +41862,10 @@ mod tests {
 
     #[test]
     fn reports_img_start_tags_fostered_from_table_structure() {
-        let output =
-            parse_html_with_diagnostics("<!doctype html><table><img src=x></table>").unwrap();
+        let source = "<!doctype html><table><img src=x></table>";
+        let output = parse_html_with_diagnostics(source).unwrap();
         assert!(output.parser_diagnostics.iter().any(|diagnostic| {
-            diagnostic
-                == &ParserDiagnostic::new(
-                    "unexpected-img-start-tag-in-table",
-                    "img start tag in a table context was foster parented",
-                )
+            diagnostic == &img_start_tag_in_table_recovery(source)
         }));
         let children = &body(&output.document).children;
         assert_eq!(element(&children[0]).name, "img");
@@ -41751,6 +41896,144 @@ mod tests {
                 .iter()
                 .all(|diagnostic| diagnostic.code != "unexpected-img-start-tag-in-table"));
         }
+    }
+
+    #[test]
+    fn positions_img_start_tags_fostered_from_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><img>",
+            "<!doctype html><table><colgroup><img src=x>",
+            "<!doctype html><table><tbody><img src=x>",
+            "<!doctype html><table><thead><img src=x>",
+            "<!doctype html><table><tfoot><img src=x>",
+            "<!doctype html><table><tbody><tr><img src=x>",
+            "<!doctype html><template><table><img src=x>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-img-start-tag-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&img_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<img data-name='é'>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &img_start_tag_in_table_recovery(source)
+            }));
+            let image = find_first_element_in_nodes(&output.nodes, "img").unwrap();
+            assert_eq!(image.attribute("data-name"), Some("é"));
+            assert!(image.children.is_empty());
+        }
+
+        for (source, context) in [
+            ("<img>", "caption"),
+            ("<img>", "colgroup"),
+            ("<img>", "td"),
+            ("<img>", "th"),
+            ("<img>", "template"),
+            ("<img>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-img-start-tag-in-table"));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><img>",
+            "<!doctype html><table><tbody><tr><td><img>",
+            "<!doctype html><table><tbody><tr><th><img>",
+            "<!doctype html><table><select><img>",
+            "<!doctype html><template><div><img>",
+            "<!doctype html><table><div><img>",
+            "<!doctype html><table><img",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .all(|diagnostic| diagnostic.code != "unexpected-img-start-tag-in-table"),
+                "source {source:?}"
+            );
+        }
+
+        let ordinary_source = "<!doctype html><main><table><img id=ordinary src=x /><tbody><tr><td>X</table></main>";
+        let ordinary = parse_html_with_diagnostics(ordinary_source).unwrap();
+        assert!(ordinary.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &img_start_tag_in_table_recovery(ordinary_source)
+        }));
+        assert!(ordinary.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "non-void-html-element-self-closing"
+        }));
+        let main = find_first_element_in_nodes(&ordinary.document.children, "main").unwrap();
+        let image = element(&main.children[0]);
+        assert_eq!(image.name, "img");
+        assert_eq!(image.attribute("id"), Some("ordinary"));
+        assert_eq!(image.attribute("src"), Some("x"));
+        assert!(image.children.is_empty());
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let reconstructed_source = "<!doctype html><main><table><center><font>A</center><img id=reconstructed><tbody><tr><td>X</table></main>";
+        let reconstructed = parse_html_with_diagnostics(reconstructed_source).unwrap();
+        assert!(reconstructed.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &img_start_tag_in_table_recovery(reconstructed_source)
+        }));
+        let main = find_first_element_in_nodes(&reconstructed.document.children, "main").unwrap();
+        assert_eq!(element(&main.children[0]).name, "center");
+        let font = element(&main.children[1]);
+        assert_eq!(font.name, "font");
+        let image = element(&font.children[0]);
+        assert_eq!(image.name, "img");
+        assert_eq!(image.attribute("id"), Some("reconstructed"));
+        assert!(image.children.is_empty());
+        let table = element(&main.children[2]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><select>").unwrap();
+        assert_eq!(
+            adjacent
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-select-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "img".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-img-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -42336,13 +42619,16 @@ mod tests {
         assert_eq!(table.name, "table");
         assert_eq!(element_text_content(table), "X");
 
-        let input = parse_html_with_diagnostics("<!doctype html><table><input type=text>").unwrap();
-        let input_diagnostic = input
+        let image = parse_html_with_diagnostics("<!doctype html><table><img>").unwrap();
+        let image_diagnostic = image
             .parser_diagnostics
             .iter()
-            .find(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
+            .find(|diagnostic| diagnostic.code == "unexpected-img-start-tag-in-table")
             .unwrap();
-        assert_eq!(input_diagnostic.position, None);
+        assert_eq!(
+            image_diagnostic,
+            &img_start_tag_in_table_recovery("<!doctype html><table><img>")
+        );
 
         let mut unpositioned = HtmlParser::with_fragment_context_options(
             HtmlParseOptions::default(),

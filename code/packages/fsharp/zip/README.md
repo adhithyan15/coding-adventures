@@ -51,9 +51,20 @@ for entry in reader.Entries do
 // Random-access: read only one file
 let bytes = reader.Read("hello.txt")
 
+// Raw RFC 1951 without ZIP/zlib/gzip framing
+let raw = RawRfc1951.rawDeflate bytes
+let decoded = RawRfc1951.rawInflateCounted raw RawRfc1951.maxOutput
+
 // One-shot extract everything
 let all : ZipEntry list = ZipArchive.unzip archive
 ```
+
+`RawRfc1951` accepts stored, fixed-Huffman, dynamic-Huffman, and multi-block
+streams. Its caller-lowerable 256 MiB ceiling is checked before every output
+append or copy, counted inflate reports exact compressed bytes consumed, and
+`RawInflateError.Code` uses the shared 14-code portable taxonomy. `crc32`
+supports incremental checksums. For one-shot extraction with a lower aggregate
+budget, use `ZipArchive.unzipWithLimit`.
 
 ## Wire format
 
@@ -95,8 +106,8 @@ Or simply run the `BUILD` script from the package root.
   For tamper detection, use AES-GCM or a signed manifest.
 - **Decompression bomb guard**: output is capped at 256 MB.
 - **Encrypted entries** are rejected with a clear `InvalidDataException`.
-- **Dynamic Huffman blocks** (BTYPE=10) are not decompressed — only Stored and
-  fixed Huffman blocks are supported (matching what this compressor emits).
+- **Portable raw RFC 1951 decoding** supports Stored, fixed Huffman, dynamic
+  Huffman, and multi-block streams with stable payload-blind failures.
 - **Offset/size arithmetic is overflow-checked**: the Central Directory's
   `Compressed_Size`, `Uncompressed_Size`, `Relative_Offset_Of_Local_Header`,
   `CD_Offset` and `CD_Size` fields are attacker-controlled `uint32` values;
