@@ -56,5 +56,5 @@ fn tree_construction_diagnostic_coverage_is_ratcheted() {
     assert_eq!(expected_error_cases, 2183);
     assert_eq!(missing_diagnostic_cases, 0);
     assert_eq!(expected_error_cases - missing_diagnostic_cases, 2183);
-    assert_eq!(undeclared_diagnostic_cases, 139);
+    assert_eq!(undeclared_diagnostic_cases, 141);
 }

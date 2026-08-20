@@ -4420,6 +4420,7 @@ pub struct HtmlParser {
     form_element_pointer_set: bool,
     foreign_cdata_text: Option<String>,
     current_token_emission_position: Option<SourcePosition>,
+    scripted_parser_suspended: bool,
 }
 
 impl Default for HtmlParser {
@@ -4448,6 +4449,7 @@ impl Default for HtmlParser {
             form_element_pointer_set: false,
             foreign_cdata_text: None,
             current_token_emission_position: None,
+            scripted_parser_suspended: false,
         }
     }
 }
@@ -4506,6 +4508,7 @@ impl HtmlParser {
             form_element_pointer_set: false,
             foreign_cdata_text: None,
             current_token_emission_position: None,
+            scripted_parser_suspended: false,
         }
     }
 
@@ -4539,6 +4542,7 @@ impl HtmlParser {
             form_element_pointer_set: matches!(context_element, "form"),
             foreign_cdata_text: None,
             current_token_emission_position: None,
+            scripted_parser_suspended: false,
         }
     }
 
@@ -4656,12 +4660,15 @@ impl HtmlParser {
     fn finish_document(&mut self) -> Document {
         let mut document = normalize_document_shell(std::mem::take(&mut self.document));
         if self.options.scripting == HtmlScriptingMode::Enabled {
-            apply_scripted_tree_construction_side_effects(&mut document);
+            apply_scripted_tree_construction_side_effects(&mut document, !self.is_fragment);
         }
         document
     }
 
     fn process_token(&mut self, token: Token) {
+        if self.scripted_parser_suspended {
+            return;
+        }
         self.process_initial_insertion_mode(&token);
         if self.process_document_tail_mode(&token) {
             return;
@@ -6116,7 +6123,13 @@ impl HtmlParser {
                 if !before.is_empty() {
                     self.append_text_to_current(before);
                 }
+                let suspend_after_end_tag =
+                    self.current_script_requests_document_root_table_replacement();
                 self.close_element("script");
+                if suspend_after_end_tag {
+                    self.scripted_parser_suspended = true;
+                    return;
+                }
                 if end_tag_end < text.len() {
                     self.append_text(text[end_tag_end..].to_string());
                 }
@@ -7124,6 +7137,8 @@ impl HtmlParser {
             self.append_text_to_current("</script>".to_string());
             return;
         }
+        let suspend_after_end_tag = name == "script"
+            && self.current_script_requests_document_root_table_replacement();
         if (name != "html" && self.current_element_is_marked_fragment_context(name))
             || self.open_marked_fragment_shell_element_matches(name)
         {
@@ -7857,6 +7872,9 @@ impl HtmlParser {
                 ));
             }
             _ => self.close_element(name),
+        }
+        if suspend_after_end_tag {
+            self.scripted_parser_suspended = true;
         }
     }
 
@@ -10158,6 +10176,21 @@ impl HtmlParser {
             && rfind_ascii_case_insensitive(&text.data, "</script>").is_none()
     }
 
+    fn current_script_requests_document_root_table_replacement(&self) -> bool {
+        if self.is_fragment
+            || self.options.scripting != HtmlScriptingMode::Enabled
+            || !self.current_element_is("script")
+        {
+            return false;
+        }
+        let Some(path) = self.open_elements.last() else {
+            return false;
+        };
+        element_ref_at_path(&self.document, path).is_some_and(|element| {
+            element_text_content(element) == SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT
+        })
+    }
+
     fn append_to_last_head_noscript_text_ending(&mut self, suffix: &str, text: &str) -> bool {
         append_to_last_element_text_ending(&mut self.document.children, "noscript", suffix, text)
     }
@@ -10696,11 +10729,46 @@ fn is_empty_element_named(node: &Node, name: &str) -> bool {
     )
 }
 
-fn apply_scripted_tree_construction_side_effects(document: &mut Document) {
+const SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT: &str = "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)";
+
+fn apply_scripted_tree_construction_side_effects(
+    document: &mut Document,
+    allow_document_root_replacement: bool,
+) {
     apply_scripted_id_mutation(&mut document.children);
     apply_scripted_font_attribute_mutation(&mut document.children);
     apply_scripted_document_write(&mut document.children);
+    if allow_document_root_replacement {
+        apply_scripted_document_root_table_replacement(document);
+    }
     coalesce_adjacent_text_nodes(&mut document.children);
+}
+
+fn apply_scripted_document_root_table_replacement(document: &mut Document) {
+    if let Some(table) = take_table_containing_script(
+        &mut document.children,
+        SCRIPTED_DOCUMENT_ROOT_TABLE_REPLACEMENT,
+    ) {
+        document.children = vec![table];
+    }
+}
+
+fn take_table_containing_script(nodes: &mut Vec<Node>, script: &str) -> Option<Node> {
+    if let Some(index) = nodes.iter().position(|node| {
+        matches!(node, Node::Element(element) if element.name == "table" && element_contains_script_text(element, script))
+    }) {
+        return Some(nodes.remove(index));
+    }
+
+    for node in nodes {
+        let Node::Element(element) = node else {
+            continue;
+        };
+        if let Some(table) = take_table_containing_script(&mut element.children, script) {
+            return Some(table);
+        }
+    }
+    None
 }
 
 fn apply_scripted_id_mutation(nodes: &mut [Node]) {
@@ -36567,6 +36635,77 @@ mod tests {
         assert_eq!(plaintext.name, "plaintext");
         assert_eq!(plaintext.children, vec![Node::text("<td>")]);
         assert_eq!(element(&body.children[1]).name, "table");
+    }
+
+    #[test]
+    fn applies_scripted_document_root_table_replacement() {
+        const PREFIX: &str = "<table><tr><script>var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)</script>";
+
+        for suffix in ["<b>", "FOSTERTEXT"] {
+            let source = format!("{PREFIX}{suffix}");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .map(|diagnostic| diagnostic.code.as_str())
+                    .collect::<Vec<_>>(),
+                vec!["missing-doctype"],
+                "source {source:?}"
+            );
+            assert_eq!(output.document.children.len(), 1, "source {source:?}");
+            let table = element(&output.document.children[0]);
+            assert_eq!(table.name, "table", "source {source:?}");
+            let tbody = element(&table.children[0]);
+            let row = element(&tbody.children[0]);
+            let script = element(&row.children[0]);
+            assert_eq!(script.name, "script", "source {source:?}");
+            assert_eq!(
+                script.children,
+                vec![Node::text(
+                    "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)"
+                )],
+                "source {source:?}"
+            );
+
+            let disabled = parse_html_with_options(
+                &source,
+                HtmlParseOptions {
+                    scripting: HtmlScriptingMode::Disabled,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+            let disabled_body = body(&disabled);
+            assert_eq!(
+                element(disabled_body.children.last().unwrap()).name,
+                "table",
+                "source {source:?}"
+            );
+            match suffix {
+                "<b>" => assert_eq!(element(&disabled_body.children[0]).name, "b"),
+                "FOSTERTEXT" => {
+                    assert_eq!(disabled_body.children[0], Node::text("FOSTERTEXT"))
+                }
+                _ => unreachable!(),
+            }
+
+            let fragment = parse_html_fragment_with_options(
+                &source,
+                HtmlParseOptions {
+                    scripting: HtmlScriptingMode::Enabled,
+                    ..HtmlParseOptions::default()
+                },
+            )
+            .unwrap();
+            assert_eq!(fragment.len(), 2, "source {source:?}");
+            match suffix {
+                "<b>" => assert_eq!(element(&fragment[0]).name, "b"),
+                "FOSTERTEXT" => assert_eq!(fragment[0], Node::text("FOSTERTEXT")),
+                _ => unreachable!(),
+            }
+            assert_eq!(element(&fragment[1]).name, "table", "source {source:?}");
+        }
     }
 
     #[test]

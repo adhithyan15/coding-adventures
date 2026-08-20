@@ -42012,3 +42012,27 @@ there=1?>
 |       content
 |         <?pi ?>
 |   <body>
+
+#source scripted_foster01.dat:1
+#data
+<table><tr><script>var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)</script><b>
+#errors
+#script-on
+#document
+| <table>
+|   <tbody>
+|     <tr>
+|       <script>
+|         "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)"
+
+#source scripted_foster01.dat:2
+#data
+<table><tr><script>var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)</script>FOSTERTEXT
+#errors
+#script-on
+#document
+| <table>
+|   <tbody>
+|     <tr>
+|       <script>
+|         "var t=document.querySelector('table');document.documentElement.remove();document.appendChild(t)"
