@@ -1145,6 +1145,176 @@ fn invalid_i32x4_trunc_sat_f64x2_u_zero_given_an_i32_operand_instead_of_v128() {
 }
 
 #[test]
+fn valid_simd_extend_low_high_family() {
+    // SIMD widen PR26 (task #193-195): i16x8.extend_low/high_i8x16_s/_u
+    // and i32x4.extend_low/high_i16x8_s/_u -- UNARY (pop one v128, push
+    // one v128), same shape as extadd_pairwise_i8x16_s/_u and
+    // extadd_pairwise_i16x8_s/_u above. This is exactly the
+    // lane-selection + sign/zero-extend half of the already-typechecked
+    // extmul_low/high families, minus the multiply -- the type checker
+    // never sees the narrower lane interpretation either way, just the
+    // opaque V128 type in and out. Opcode-only PR: no corpus vendoring
+    // yet, these 8 opcodes are part of the 16-opcode set (extend, narrow,
+    // promote/demote/convert_low) needed to unlock simd_conversions.wast.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (i16x8.extend_low_i8x16_s (local.get 0)))
+             (func (param v128) (result v128) (i16x8.extend_high_i8x16_s (local.get 0)))
+             (func (param v128) (result v128) (i16x8.extend_low_i8x16_u (local.get 0)))
+             (func (param v128) (result v128) (i16x8.extend_high_i8x16_u (local.get 0)))
+             (func (param v128) (result v128) (i32x4.extend_low_i16x8_s (local.get 0)))
+             (func (param v128) (result v128) (i32x4.extend_high_i16x8_s (local.get 0)))
+             (func (param v128) (result v128) (i32x4.extend_low_i16x8_u (local.get 0)))
+             (func (param v128) (result v128) (i32x4.extend_high_i16x8_u (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_i16x8_extend_low_i8x16_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in the operand
+    // slot, not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (i16x8.extend_low_i8x16_s (local.get 0))))");
+}
+
+#[test]
+fn invalid_i16x8_extend_high_i8x16_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (i16x8.extend_high_i8x16_u (local.get 0))))");
+}
+
+#[test]
+fn invalid_i32x4_extend_low_i16x8_s_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (i32x4.extend_low_i16x8_s (local.get 0))))");
+}
+
+#[test]
+fn invalid_i32x4_extend_high_i16x8_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (i32x4.extend_high_i16x8_u (local.get 0))))");
+}
+
+#[test]
+fn invalid_i16x8_extend_low_i8x16_s_given_no_operand_at_all() {
+    // Confirms the type checker rejects an empty stack, not just a
+    // wrong-typed one -- the pop must fail on an underflow, same
+    // discipline as every other UNARY SIMD op's own invalid test.
+    assert_invalid("(module (func (result v128) (i16x8.extend_low_i8x16_s)))");
+}
+
+#[test]
+fn valid_simd_narrow_saturating_family() {
+    // SIMD widen PR27 (task #196-198): i8x16.narrow_i16x8_s/_u and
+    // i16x8.narrow_i32x4_s/_u -- the saturating-demote OPPOSITE of PR26's
+    // "extend" family: BINARY (pop TWO v128 operands, push one), unlike
+    // "extend"'s UNARY shape. Same as every other SIMD binary op in this
+    // table, the type checker only ever sees the opaque V128 type in
+    // both operand slots and the result -- the per-lane saturating clamp
+    // and the operand-to-half (first operand -> low half, second
+    // operand -> high half) concatenation are entirely runtime concerns,
+    // invisible here. Opcode-only PR: no corpus vendoring yet, these 4
+    // opcodes are the second of three PRs (extend done in PR26, narrow
+    // here, promote/demote/convert_low to follow) needed to unlock
+    // simd_conversions.wast.
+    assert_valid(
+        r#"(module
+             (func (param v128 v128) (result v128) (i8x16.narrow_i16x8_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i8x16.narrow_i16x8_u (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.narrow_i32x4_s (local.get 0) (local.get 1)))
+             (func (param v128 v128) (result v128) (i16x8.narrow_i32x4_u (local.get 0) (local.get 1))))"#,
+    );
+}
+
+#[test]
+fn invalid_i8x16_narrow_i16x8_s_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in both operand
+    // slots, not just accepting whatever's on the stack -- one operand
+    // here is a plain i32, so the pop (expecting V128) must reject it.
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.narrow_i16x8_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_narrow_i16x8_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i8x16.narrow_i16x8_u (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_narrow_i32x4_s_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.narrow_i32x4_s (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i16x8_narrow_i32x4_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param v128 i32) (result v128) (i16x8.narrow_i32x4_u (local.get 0) (local.get 1))))");
+}
+
+#[test]
+fn invalid_i8x16_narrow_i16x8_s_given_only_one_operand_instead_of_two() {
+    // Confirms the type checker rejects a stack underflow, not just a
+    // wrong-typed operand -- BINARY ops need TWO v128s on the stack, and
+    // this one only pushes one before the op runs.
+    assert_invalid("(module (func (param v128) (result v128) (i8x16.narrow_i16x8_s (local.get 0))))");
+}
+
+#[test]
+fn invalid_i16x8_narrow_i32x4_s_given_no_operand_at_all() {
+    assert_invalid("(module (func (result v128) (i16x8.narrow_i32x4_s)))");
+}
+
+#[test]
+fn valid_simd_promote_demote_convert_low_family() {
+    // SIMD widen PR28 (task #199-201): f32x4.demote_f64x2_zero,
+    // f64x2.promote_low_f32x4, f64x2.convert_low_i32x4_s/_u -- the
+    // THIRD and FINAL PR of a 3-PR sequence (extend done in PR26,
+    // narrow done in PR27, this one) needed to unlock
+    // simd_conversions.wast. All four are UNARY (pop one v128, push
+    // one v128), same shape as the "extend" family -- even though they
+    // cross lane COUNT (4<->2) and lane TYPE (int/float, f32/f64)
+    // boundaries at runtime, the type checker only ever sees the
+    // opaque V128 type on both sides; the zero-fill vs. lane-dropping
+    // distinction is entirely a runtime concern, invisible here.
+    assert_valid(
+        r#"(module
+             (func (param v128) (result v128) (f32x4.demote_f64x2_zero (local.get 0)))
+             (func (param v128) (result v128) (f64x2.promote_low_f32x4 (local.get 0)))
+             (func (param v128) (result v128) (f64x2.convert_low_i32x4_s (local.get 0)))
+             (func (param v128) (result v128) (f64x2.convert_low_i32x4_u (local.get 0))))"#,
+    );
+}
+
+#[test]
+fn invalid_f32x4_demote_f64x2_zero_given_an_i32_operand_instead_of_v128() {
+    // Confirms the type checker actually enforces V128 in the operand
+    // slot, not just accepting whatever's on the stack.
+    assert_invalid("(module (func (param i32) (result v128) (f32x4.demote_f64x2_zero (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_promote_low_f32x4_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f64x2.promote_low_f32x4 (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_convert_low_i32x4_s_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f64x2.convert_low_i32x4_s (local.get 0))))");
+}
+
+#[test]
+fn invalid_f64x2_convert_low_i32x4_u_given_an_i32_operand_instead_of_v128() {
+    assert_invalid("(module (func (param i32) (result v128) (f64x2.convert_low_i32x4_u (local.get 0))))");
+}
+
+#[test]
+fn invalid_f32x4_demote_f64x2_zero_given_no_operand_at_all() {
+    // Confirms the type checker rejects an empty stack, not just a
+    // wrong-typed one -- the pop must fail on an underflow, same
+    // discipline as every other UNARY SIMD op's own invalid test.
+    assert_invalid("(module (func (result v128) (f32x4.demote_f64x2_zero)))");
+}
+
+#[test]
+fn invalid_f64x2_convert_low_i32x4_s_given_no_operand_at_all() {
+    assert_invalid("(module (func (result v128) (f64x2.convert_low_i32x4_s)))");
+}
+
+#[test]
 fn valid_v128_local_and_global_round_trip() {
     // `ValueType::V128` used as a local type and a global type, not just
     // a param/result -- proves the value-type parser and validator agree

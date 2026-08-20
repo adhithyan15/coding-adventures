@@ -2,6 +2,60 @@
 
 ## Unreleased
 
+### Added — cited Gujarati ઋ ductus (HL-C09FQ)
+
+- Restore missing Gujarati inventory entry **ઋ** and render its bent body, central stem, and right loop-and-tail as three runs with two lifts.
+- Preserve t30apps.com's version-1.0 first-through-third-path order while fitting all three medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,294 tests.
+
+### Added — cited Gujarati ઔ ductus (HL-C09FP)
+
+- Restore missing Gujarati inventory entry **ઔ** and render it as the four **ઓ** runs plus a second, higher arc with four lifts.
+- Preserve t30apps.com's version-1.0 first-through-fifth-path order while fitting all five medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and five-frame filmstrip coverage; the focused suite now passes 1,287 tests.
+
+### Added — cited Gujarati ઓ ductus (HL-C09FO)
+
+- Render **ઓ** as the three **આ** runs plus a separate high arc with three lifts.
+- Preserve t30apps.com's version-1.0 first-through-fourth-path order while fitting all four medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and six-frame filmstrip coverage; the focused suite now passes 1,280 tests.
+
+### Added — cited Gujarati ઐ ductus (HL-C09FN)
+
+- Restore missing Gujarati inventory entry **ઐ** and render it as the three **એ** runs plus a second, higher arc with three lifts.
+- Preserve t30apps.com's version-1.0 first-through-fourth-path order while fitting all four medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,273 tests.
+
+### Added — cited Gujarati એ ductus (HL-C09FM)
+
+- Render **એ** as a joined body, separately descended right stem, and separate high arc in three ordered runs with two lifts.
+- Preserve t30apps.com's version-1.0 first-through-third-path order while fitting all three medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,266 tests.
+
+### Added — cited Gujarati ઊ ductus (HL-C09FL)
+
+- Render **ઊ** as the complete zero-lift **ઉ** run extended across a high shoulder and down a long right-side tail into its foot.
+- Preserve t30apps.com's version-1.0 first-path order and zero-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,259 tests.
+
+### Added — cited Gujarati ઉ ductus (HL-C09FK)
+
+- Render **ઉ** as one zero-lift run through its small upper bowl, middle cusp, broad lower bowl, and tall returning outer curve.
+- Preserve t30apps.com's version-1.0 first-path order and zero-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,252 tests.
+
+### Added — cited Gujarati ઈ ductus (HL-C09FJ)
+
+- Render **ઈ** as the zero-lift **ઇ** run extended upward into a tall clockwise curl.
+- Preserve t30apps.com's version-1.0 first-path order and zero-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,245 tests.
+
+### Added — cited Gujarati ઇ ductus (HL-C09FI)
+
+- Render **ઇ** as one continuous upper loop, middle crossing, broad lower loop, and rising upper-right hook.
+- Preserve t30apps.com's version-1.0 first-path order and zero-lift evidence while fitting Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and four-frame filmstrip coverage; the focused suite now passes 1,238 tests.
+
 ### Added — cited Chinese numeral ductus 一 二 三 四 五 (HL-C230)
 
 - Render the five numerals from Hanzi Writer Data's ordered medians at pinned commit `68d10a4`: 一 as one unbroken héng; 二 and 三 as top-before-bottom héng runs with the widening base; 四 as the box built left wall, then top-and-right in one turning héngzhé, two inner pieces, bottom closed last; 五 as top bar, leaning shù, héngzhé, and the widest closing stroke.

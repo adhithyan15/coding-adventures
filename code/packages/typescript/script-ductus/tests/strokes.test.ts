@@ -111,6 +111,15 @@ const CYRILLIC_YU = DUCTUS[ductusKey("cyrillic", "ю")];
 const CYRILLIC_YA = DUCTUS[ductusKey("cyrillic", "я")];
 const GUJARATI_A = DUCTUS[ductusKey("gujarati", "અ")];
 const GUJARATI_AA = DUCTUS[ductusKey("gujarati", "આ")];
+const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
+const GUJARATI_II = DUCTUS[ductusKey("gujarati", "ઈ")];
+const GUJARATI_U = DUCTUS[ductusKey("gujarati", "ઉ")];
+const GUJARATI_UU = DUCTUS[ductusKey("gujarati", "ઊ")];
+const GUJARATI_VOCALIC_R = DUCTUS[ductusKey("gujarati", "ઋ")];
+const GUJARATI_E = DUCTUS[ductusKey("gujarati", "એ")];
+const GUJARATI_AI = DUCTUS[ductusKey("gujarati", "ઐ")];
+const GUJARATI_O = DUCTUS[ductusKey("gujarati", "ઓ")];
+const GUJARATI_AU = DUCTUS[ductusKey("gujarati", "ઔ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1780,6 +1789,144 @@ describe("handwriting ductus", () => {
     expect(firstStem[0].y).toBeGreaterThan(firstStem.at(-1)!.y);
     expect(trailingStem[0].y).toBeGreaterThan(trailingStem.at(-1)!.y);
     expect(trailingStem[0].x).toBeGreaterThan(firstStem[0].x);
+  });
+
+  it("Gujarati ઇ keeps both loops and the rising hook in one pen-down run", () => {
+    expect(GUJARATI_I.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_I)).toBe(0);
+    expect(GUJARATI_I.strokes).toHaveLength(1);
+    expect(GUJARATI_I.strokes[0].segments).toHaveLength(4);
+    const [upper, crossing, lower, hook] = GUJARATI_I.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(upper.at(-1)).toEqual(crossing[0]);
+    expect(crossing.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(hook[0]);
+    expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
+    expect(Math.min(...lower.map((point) => point.y))).toBeLessThan(lower[0].y);
+    expect(hook.at(-1)!.y).toBeGreaterThan(hook[0].y);
+  });
+
+  it("Gujarati ઈ extends the zero-lift ઇ run into a high clockwise curl", () => {
+    expect(GUJARATI_II.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_II)).toBe(0);
+    expect(GUJARATI_II.strokes).toHaveLength(1);
+    expect(GUJARATI_II.strokes[0].segments).toHaveLength(4);
+    const [upper, crossing, lower, curl] = GUJARATI_II.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(upper.at(-1)).toEqual(crossing[0]);
+    expect(crossing.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(curl[0]);
+    expect(Math.min(...upper.map((point) => point.x))).toBeLessThan(upper[0].x);
+    expect(Math.max(...curl.map((point) => point.y))).toBeGreaterThan(upper[0].y);
+    expect(curl.at(-1)!.x).toBeGreaterThan(curl[0].x);
+  });
+
+  it("Gujarati ઉ joins both bowls to its tall returning outer curve", () => {
+    expect(GUJARATI_U.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_U)).toBe(0);
+    expect(GUJARATI_U.strokes).toHaveLength(1);
+    expect(GUJARATI_U.strokes[0].segments).toHaveLength(3);
+    const [upper, lower, outer] = GUJARATI_U.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(upper.at(-1)).toEqual(lower[0]);
+    expect(lower.at(-1)).toEqual(outer[0]);
+    expect(Math.max(...lower.map((point) => point.x))).toBeGreaterThan(upper.at(-1)!.x);
+    expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(lower.at(-1)!.x);
+    expect(outer.at(-1)!.y).toBeGreaterThan(upper[0].y);
+  });
+
+  it("Gujarati ઊ extends the zero-lift ઉ run down a long right tail", () => {
+    expect(GUJARATI_UU.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_UU)).toBe(0);
+    expect(GUJARATI_UU.strokes).toHaveLength(1);
+    expect(GUJARATI_UU.strokes[0].segments).toHaveLength(3);
+    const [body, outer, tail] = GUJARATI_UU.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(body.at(-1)).toEqual(outer[0]);
+    expect(outer.at(-1)).toEqual(tail[0]);
+    expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(body.at(-1)!.x);
+    expect(Math.max(...tail.map((point) => point.x))).toBeGreaterThan(outer.at(-1)!.x);
+    expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
+  });
+
+  it("Gujarati ઋ writes the bent body, central stem, then right loop and tail", () => {
+    expect(GUJARATI_VOCALIC_R.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_VOCALIC_R)).toBe(2);
+    expect(GUJARATI_VOCALIC_R.strokes).toHaveLength(3);
+    expect(GUJARATI_VOCALIC_R.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const body = GUJARATI_VOCALIC_R.strokes[0].segments[0].path;
+    const stem = GUJARATI_VOCALIC_R.strokes[1].segments[0].path;
+    const loopAndTail = GUJARATI_VOCALIC_R.strokes[2].segments[0].path;
+    expect(body.at(-1)!.x).toBeLessThan(Math.max(...body.map((point) => point.x)));
+    expect(stem.at(-1)!.y).toBeLessThan(stem[0].y);
+    expect(Math.max(...loopAndTail.map((point) => point.y))).toBeGreaterThan(loopAndTail[0].y);
+    expect(loopAndTail.at(-1)!.y).toBeLessThan(loopAndTail[0].y);
+  });
+
+  it("Gujarati એ writes the joined body, right stem, then high arc", () => {
+    expect(GUJARATI_E.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_E)).toBe(2);
+    expect(GUJARATI_E.strokes).toHaveLength(3);
+    expect(GUJARATI_E.strokes.map((stroke) => stroke.segments.length)).toEqual([2, 1, 1]);
+    const [bowl, body] = GUJARATI_E.strokes[0].segments.map((segment) => segment.path);
+    expect(bowl.at(-1)).toEqual(body[0]);
+    expect(Math.min(...bowl.map((point) => point.x))).toBeLessThan(bowl[0].x);
+    expect(GUJARATI_E.strokes[1].segments[0].path.at(-1)!.y).toBeLessThan(
+      GUJARATI_E.strokes[1].segments[0].path[0].y,
+    );
+    expect(Math.max(...GUJARATI_E.strokes[2].segments[0].path.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...bowl.map((point) => point.y)),
+    );
+  });
+
+  it("Gujarati ઐ extends એ with a second, higher arc", () => {
+    expect(GUJARATI_AI.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_AI)).toBe(3);
+    expect(GUJARATI_AI.strokes).toHaveLength(4);
+    expect(GUJARATI_AI.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const lowerArc = GUJARATI_AI.strokes[2].segments[0].path;
+    const higherArc = GUJARATI_AI.strokes[3].segments[0].path;
+    expect(Math.max(...higherArc.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...lowerArc.map((point) => point.y)),
+    );
+    expect(lowerArc.at(-1)!.x).toBeGreaterThan(lowerArc[0].x);
+    expect(higherArc.at(-1)!.x).toBeGreaterThan(higherArc[0].x);
+  });
+
+  it("Gujarati ઓ writes the complete આ sequence before its high arc", () => {
+    expect(GUJARATI_O.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_O)).toBe(3);
+    expect(GUJARATI_O.strokes).toHaveLength(4);
+    expect(GUJARATI_O.strokes.map((stroke) => stroke.segments.length)).toEqual([3, 1, 1, 1]);
+    const [left, body, arch] = GUJARATI_O.strokes[0].segments.map((segment) => segment.path);
+    expect(left.at(-1)).toEqual(body[0]);
+    expect(body.at(-1)).toEqual(arch[0]);
+    expect(GUJARATI_O.strokes[2].segments[0].path[0].x).toBeGreaterThan(
+      GUJARATI_O.strokes[1].segments[0].path[0].x,
+    );
+    const highArc = GUJARATI_O.strokes[3].segments[0].path;
+    expect(highArc.at(-1)!.x).toBeGreaterThan(highArc[0].x);
+    expect(Math.max(...highArc.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...left.map((point) => point.y)),
+    );
+  });
+
+  it("Gujarati ઔ extends ઓ with a second, higher arc", () => {
+    expect(GUJARATI_AU.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_AU)).toBe(4);
+    expect(GUJARATI_AU.strokes).toHaveLength(5);
+    expect(GUJARATI_AU.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const lowerArc = GUJARATI_AU.strokes[3].segments[0].path;
+    const higherArc = GUJARATI_AU.strokes[4].segments[0].path;
+    expect(Math.max(...higherArc.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...lowerArc.map((point) => point.y)),
+    );
+    expect(lowerArc.at(-1)!.x).toBeGreaterThan(lowerArc[0].x);
+    expect(higherArc.at(-1)!.x).toBeGreaterThan(higherArc[0].x);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -3983,6 +4130,105 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /three ordered pen-down runs.*first SVG path.*joined અ body.*open curve.*clockwise.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*separate right stem.*lifts again.*third SVG path.*trailing ā stem.*matching foot.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem order.*two-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઇ traces its unbroken loop-and-hook order to the next animation", () => {
+    const src = GUJARATI_I.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઇ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper loop.*narrow middle crossing.*broad lower body.*right side.*upper-right hook.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-loop-to-lower-loop-to-hook order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઈ traces its unbroken extended curl to the adjacent animation", () => {
+    const src = GUJARATI_II.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઈ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper loop.*narrow middle crossing.*broad lower body.*right side.*clockwise.*extended top hook.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-loop-to-lower-loop-to-extended-curl order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઉ traces its unbroken bowls and returning curve to the next animation", () => {
+    const src = GUJARATI_U.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઉ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left curve.*upper right.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-bowl-to-lower-bowl-to-outer-curve order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઊ traces its unbroken extended tail to the adjacent animation", () => {
+    const src = GUJARATI_UU.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઊ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*repeats ઉ.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left return.*upper shoulder.*long right-side tail.*lower foot.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*complete-u-before-extended-tail order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઋ traces its bent body, stem, and right loop to three paths", () => {
+    const src = GUJARATI_VOCALIC_R.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઋ animation.*first through third SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /three ordered pen-down runs.*first SVG path.*begins at the left.*sweeps right.*shallow upper body.*middle turn.*reverses diagonally down-left.*lower terminal.*lifts once.*second SVG path.*separate central stem.*lower foot.*lifts again.*third SVG path.*stem junction.*compact upper-right loop.*longer right-side tail.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*left-body-before-central-stem-before-right-loop-and-tail order.*two-lift evidence/i,
+    );
+  });
+
+  it("Gujarati એ traces its body, stem, and high arc to three ordered paths", () => {
+    const src = GUJARATI_E.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*એ animation.*first through third SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /three ordered pen-down runs.*first SVG path.*left bowl.*broad lower body.*small right arch.*lifts once.*second SVG path.*full-height right stem.*lower foot.*lifts again.*third SVG path.*high arcing mark.*left to right.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-right-stem-before-high-arc order.*two-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઐ traces its stacked arcs to four ordered paths", () => {
+    const src = GUJARATI_AI.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઐ animation.*first through fourth SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /four ordered pen-down runs.*first SVG path.*joined left bowl.*broad lower body.*small right arch.*lifts once.*second SVG path.*full-height right stem.*lower foot.*lifts again.*third SVG path.*lower high arc.*left to right.*lifts once more.*fourth SVG path.*second higher arc.*same direction.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-right-stem-before-lower-arc-before-higher-arc order.*three-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઓ traces its આ sequence and high arc to four ordered paths", () => {
+    const src = GUJARATI_O.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઓ animation.*first through fourth SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /four ordered pen-down runs.*first SVG path.*આ's joined body.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*first separate right stem.*lower foot.*lifts again.*third SVG path.*trailing stem.*matching foot.*lifts once more.*fourth SVG path.*high arc.*left to right.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem-before-high-arc order.*three-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઔ traces its stacked arcs to five ordered paths", () => {
+    const src = GUJARATI_AU.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઔ animation.*first through fifth SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /five ordered pen-down runs.*first SVG path.*ઓ's joined body.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*first separate right stem.*lower foot.*lifts again.*third SVG path.*trailing stem.*matching foot.*lifts once more.*fourth SVG path.*lower high arc.*left to right.*lifts a fourth time.*fifth SVG path.*second, higher arc.*same direction.*remaining path slot is empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem-before-lower-arc-before-higher-arc order.*four-lift evidence/i,
     );
   });
 

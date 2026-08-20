@@ -1,5 +1,124 @@
 # Changelog — wasm-wast-parser
 
+## 0.1.50 — 2026-08-19 — SIMD widen PR28: promote/demote/convert_low family text-form, v128 NaN-class expected lanes (task #199-201)
+
+### Added
+
+- `SimdOpKind::DemoteF64x2Zero`/`PromoteLowF32x4`/`ConvertLowI32x4S`/
+  `ConvertLowI32x4U` join the shared "no immediate beyond the opcode
+  byte itself" SIMD dispatch arm (already used for `AddI8x16`/
+  `ExtendLowI8x16S`/`NarrowI16x8S`/etc.) in both the folded
+  (`encode_stream_instr`) and flat (`encode_flat_instr`) instruction
+  encoders -- verified byte-identical at both call sites before
+  editing, per this campaign's own documented past gotcha. All four
+  sub-opcodes are looked up by name from `wasm_opcodes::SIMD_OPS`
+  (data-driven, via `get_simd_op_by_name`), so no separate
+  name-parsing change was needed beyond the two match-arm additions.
+  All four are UNARY -- same no-immediate encoding shape as `ExtendLow/
+  HighI8x16S/_U` (PR26), unlike PR27's BINARY "narrow" family.
+- 1 new test confirming all 4 opcodes encode their real sub-opcodes --
+  `0x5E`/`0x5F` as single-byte LEB128 (`< 128`), `0xFE`/`0xFF` as real
+  2-byte LEB128 (`>= 128`) -- in both folded and flat/stream syntax.
+- **New parser feature, found while vendoring `simd_conversions.wast`
+  (not opcode-related):** `Expected::V128F32x4`/`V128F64x2` and their
+  `F32LaneExpected`/`F64LaneExpected` per-lane representations. A
+  `v128.const f32x4`/`f64x2` used as an `assert_return` EXPECTED value
+  can now mix exact literal lanes with `nan:canonical`/
+  `nan:arithmetic` NaN-CLASS lanes -- something the pre-existing
+  byte-exact `ConstValue::V128` representation genuinely cannot
+  express (it has no way to say "this lane must be SOME NaN, exact
+  payload unconstrained", the same problem the scalar
+  `Expected::NanCanonicalF32`/etc. variants already solve for a whole
+  `f32`/`f64` result, just never extended to individual v128 lanes
+  before). `parse_expected`'s `v128.const` match arm now checks
+  whether ANY lane token is a NaN-class token before choosing this new
+  path -- a `v128.const` with NO NaN-class lanes is untouched, still
+  routing through the original byte-exact path (zero regression risk,
+  confirmed by a dedicated test). 3 new tests: mixed exact/NaN-class
+  `f32x4` lanes, all-NaN-class `f64x2` lanes, and the no-regression
+  proof for exact-only lanes.
+
+### Notes
+
+- `simd_conversions.wast`'s own two failing assert_return directives
+  before this fix were actually a hard SCRIPT PARSE FAILURE, not a
+  per-directive grading gap: `(v128.const f64x2 nan:canonical
+  nan:canonical)` used as an expected value hit
+  `numeric::parse_f64_bits`, which correctly rejects `nan:canonical`
+  as not a valid CONCRETE bit pattern (it isn't one -- that's the
+  whole point of a NaN class) and returns `InvalidNumericLiteral`,
+  aborting the ENTIRE script's parse (this crate's parser design: one
+  bad top-level form fails the whole file, see this crate's own module
+  doc comments). Real modules never legitimately use `nan:canonical`/
+  `nan:arithmetic` as an ACTUAL instruction operand (only the WAST
+  *script* syntax allows it, and only in `assert_return`'s own expected
+  position) -- so this fix lives entirely in `script.rs`'s
+  `parse_expected`, not in `module.rs`'s `parse_v128_const` (which
+  stays exact-bytes-only, correctly, since real code needs concrete
+  values).
+- **Campaign complete, corpus now vendored.** With this PR, all 16
+  opcodes across PR26 (`extend`)/PR27 (`narrow`)/PR28
+  (`promote`/`demote`/`convert_low`) exist, and the NaN-class-lane
+  parser gap above is fixed, so `wasm-conformance` now vendors
+  `simd_conversions.wast` for the first time -- 100% pass, 280/280
+  directives. See `wasm-conformance`'s own CHANGELOG.
+
+## 0.1.49 — 2026-08-19 — SIMD widen PR27: narrow saturating family text-form (task #196-198)
+
+### Added
+
+- `SimdOpKind::NarrowI16x8S`/`NarrowI16x8U`/`NarrowI32x4S`/
+  `NarrowI32x4U` join the shared "no immediate beyond the opcode byte
+  itself" SIMD dispatch arm (already used for `AddI8x16`/`Swizzle`/
+  `ExtendLowI8x16S`/etc.) in both the folded (`encode_stream_instr`)
+  and flat (`encode_flat_instr`) instruction encoders -- verified
+  byte-identical at both call sites before editing, per this
+  campaign's own documented past gotcha. All four sub-opcodes are
+  looked up by name from `wasm_opcodes::SIMD_OPS` (data-driven, via
+  `get_simd_op_by_name`), so no separate name-parsing change was
+  needed beyond the two match-arm additions. Unlike `ExtendLow/
+  HighI8x16S/_U` (PR26, UNARY), the "narrow" family is BINARY -- two
+  v128 operands -- but has the identical no-immediate encoding shape.
+- 1 new test confirming all 4 `narrow` opcodes encode their real
+  sub-opcodes -- `0x65`/`0x66` as single-byte LEB128 (`< 128`),
+  `0x85`/`0x86` as real 2-byte LEB128 (`>= 128`) -- in both folded and
+  flat/stream syntax.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** These 4 opcodes are the
+  second of a 3-PR sequence (`extend_low`/`high` done in PR26, `narrow`
+  here, `promote`/`demote`/`convert_low` in a future PR) needed to
+  unlock the upstream `simd_conversions.wast` corpus file. This PR is
+  opcode-only.
+
+## 0.1.48 — 2026-08-19 — SIMD widen PR26: extend_low/high family text-form (task #193-195)
+
+### Added
+
+- `SimdOpKind::ExtendLowI8x16S`/`ExtendHighI8x16S`/`ExtendLowI8x16U`/
+  `ExtendHighI8x16U`/`ExtendLowI16x8S`/`ExtendHighI16x8S`/
+  `ExtendLowI16x8U`/`ExtendHighI16x8U` join the shared "no immediate
+  beyond the opcode byte itself" SIMD dispatch arm (already used for
+  `ExtaddPairwiseI8x16S`/`_U`/`ExtaddPairwiseI16x8S`/`_U`) in both the
+  folded (`encode_stream_instr`) and flat (`encode_flat_instr`)
+  instruction encoders -- verified byte-identical at both call sites
+  before editing, per this campaign's own documented past gotcha. All
+  eight sub-opcodes are looked up by name from
+  `wasm_opcodes::SIMD_OPS` (data-driven, via `get_simd_op_by_name`), so
+  no separate name-parsing change was needed beyond the two match-arm
+  additions.
+- 1 new test confirming all 8 `extend_low`/`high` opcodes encode their
+  real 2-byte LEB128 sub-opcodes (all `>= 128`) in both folded and
+  flat/stream syntax.
+
+### Notes
+
+- **Staged campaign, no corpus vendoring yet.** Part of the 16-opcode
+  set (`extend_low`/`high` here, `narrow` and `promote`/`demote`/
+  `convert_low` in future PRs) needed to unlock the upstream
+  `simd_conversions.wast` corpus file. This PR is opcode-only.
+
 ## 0.1.47 — 2026-08-19 — SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero text-form (task #190-192)
 
 ### Added

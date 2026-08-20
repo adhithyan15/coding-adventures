@@ -12,3 +12,18 @@
 - Add a strict versioned binary host-record codec and stable storage keys.
 - Add create-if-absent registration, revision-CAS updates and deregistration,
   deterministic listings, and local-folder restart coverage.
+- Add `RestartLedger` and `RestartWindow`, and take the ledger whole in
+  `HostObservation::new` in place of the loose `restart_count` /
+  `last_restart_ns` pair. Restart bookkeeping now travels as one value, so an
+  observation cannot carry part of it and drop the rest.
+- Record which daemon run opened a restart window, so a monotonic timestamp from
+  a previous run is not compared against this run's clock.
+- Bump the on-disk observation format to version 2. Version 1 records still
+  decode -- with the window closed, and with a quarantine deadline decoded as
+  `Permanent` if it was the old `u64::MAX` sentinel and `Lapsed` otherwise,
+  since a bare monotonic reading cannot be placed on this run's clock.
+- Replace `HostStatus::Quarantined`'s bare `until_ns` with `QuarantineDeadline`,
+  which names the daemon run that set it and makes `Permanent` a variant rather
+  than a `u64::MAX` sentinel.
+- Refuse a restart ledger whose window records more restarts than the lifetime
+  tally.

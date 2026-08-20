@@ -1,5 +1,5 @@
 {
-  "case_count": 1217,
+  "case_count": 1219,
   "cases": [
     {
       "axis": "head-text-mode",
@@ -7302,6 +7302,18 @@
       "id": "processing-instructions-dat-122",
       "reason": "title, style, and script handoff around document shell boundaries",
       "source": "processing-instructions.dat:122"
+    },
+    {
+      "axis": "head-text-mode",
+      "id": "scripted-foster01-dat-1",
+      "reason": "title, style, and script handoff around document shell boundaries",
+      "source": "scripted_foster01.dat:1"
+    },
+    {
+      "axis": "head-text-mode",
+      "id": "scripted-foster01-dat-2",
+      "reason": "title, style, and script handoff around document shell boundaries",
+      "source": "scripted_foster01.dat:2"
     }
   ],
   "counts_by_axis": {
@@ -7309,7 +7321,7 @@
     "body-frameset-transition": 153,
     "head-boundary": 51,
     "head-metadata-boundary": 50,
-    "head-text-mode": 485,
+    "head-text-mode": 487,
     "html-boundary": 73
   },
   "description": "Focused parser audit over selected html5lib tree-construction cases that stress html/head/body shell transitions, metadata relocation, head text-mode handoff, frameset/body compatibility, and late shell tags.",

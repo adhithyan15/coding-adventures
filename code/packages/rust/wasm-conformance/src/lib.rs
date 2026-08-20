@@ -57,7 +57,7 @@ use wasm_execution::{HostFunction, HostInterface, LinearMemory, Table, TrapError
 use wasm_module_parser::WasmModuleParser;
 use wasm_runtime::{WasmInstance, WasmRuntime};
 use wasm_types::{ExternalKind, FuncType, GlobalType};
-use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, ModuleSource};
+use wasm_wast_parser::script::{Action, ConstValue, Directive, Expected, F32LaneExpected, F64LaneExpected, ModuleSource};
 use wasm_wast_parser::{parse_script, WastParseError};
 
 /// Run every directive in one `.wast` file's source text, in order, and
@@ -718,6 +718,35 @@ fn value_matches_expected(actual: &WasmValue, v128_bytes: Option<V128Bytes>, exp
         Expected::NanArithmeticF64 => {
             matches!(actual, WasmValue::F64(a) if a.is_nan() && (a.to_bits() & F64_QUIET_BIT) != 0)
         }
+        // SIMD widen PR28: `v128.const f32x4`/`f64x2` expected values with
+        // at least one NaN-class lane (see `Expected::V128F32x4`/
+        // `V128F64x2`'s own doc comments in wasm-wast-parser). Every lane
+        // must match independently -- an exact lane compares bits, a
+        // NaN-class lane reuses exactly the same canonical/arithmetic
+        // check as the scalar `NanCanonicalF32`/`NanArithmeticF32` arms
+        // above, just applied per-lane instead of to one whole value.
+        Expected::V128F32x4(lanes) => match (actual, v128_bytes) {
+            (WasmValue::V128(_), Some(bytes)) => (0..4).all(|i| {
+                let bits = u32::from_le_bytes(bytes.0[i * 4..i * 4 + 4].try_into().unwrap());
+                match lanes[i] {
+                    F32LaneExpected::Exact(want) => bits == want,
+                    F32LaneExpected::NanCanonical => (bits & !F32_SIGN_BIT) == F32_CANONICAL_NAN_UNSIGNED,
+                    F32LaneExpected::NanArithmetic => f32::from_bits(bits).is_nan() && (bits & F32_QUIET_BIT) != 0,
+                }
+            }),
+            _ => false,
+        },
+        Expected::V128F64x2(lanes) => match (actual, v128_bytes) {
+            (WasmValue::V128(_), Some(bytes)) => (0..2).all(|i| {
+                let bits = u64::from_le_bytes(bytes.0[i * 8..i * 8 + 8].try_into().unwrap());
+                match lanes[i] {
+                    F64LaneExpected::Exact(want) => bits == want,
+                    F64LaneExpected::NanCanonical => (bits & !F64_SIGN_BIT) == F64_CANONICAL_NAN_UNSIGNED,
+                    F64LaneExpected::NanArithmetic => f64::from_bits(bits).is_nan() && (bits & F64_QUIET_BIT) != 0,
+                }
+            }),
+            _ => false,
+        },
     }
 }
 

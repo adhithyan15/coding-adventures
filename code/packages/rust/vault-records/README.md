@@ -149,6 +149,21 @@ Every type that carries secrets (`Login.password`, `Card.cvv`,
 `DatabaseCredential.password`) implements `Zeroize`. Higher layers
 wrap held records in `Zeroizing<T>`.
 
+That covers the typed structs. The `CborValue` tree `encode_record` builds
+and `decode_record`/`decode_record_as` decode on the way to or from those
+structs is *also* plaintext — canonical-CBOR's own `CborValue` has no
+`Zeroize` impl and, being deliberately zero-dependency (see
+[`CBR01`](../../../specs/CBR01-canonical-cbor.md)'s "Non-goals"), never will.
+This crate wipes that tree itself: `zeroize_cbor_value` recursively clears
+every `Text`/`Bytes` leaf reachable through `Array`/`Map`/`Tag` nesting (an
+exhaustive match with no wildcard arm, so a future `CborValue` variant fails
+to compile here rather than silently escaping the wipe), and the local
+`SecretCborValue` wrapper — `Zeroizing<CborValue>` in everything but name —
+calls it from `Drop`, so the wipe runs on every exit path `encode_record`,
+`decode_record`, `decode_record_as`, `split_envelope`, and `encode_opaque`
+can take, not only the success path. See VLT-PM05 §13.6 for the full design
+account of why this lives here rather than in `canonical-cbor`.
+
 Diagnostic formatting is closed and value-redacted. `Debug` for each typed
 record emits only its type name and `<redacted>`; `AnyRecord` retains only the
 variant name and the same marker. Opaque content types, opaque payload bytes,

@@ -4873,7 +4873,14 @@ fn record_title(record: &RedactedRecordView) -> &str {
         RedactedRecordView::TotpSeed { label, .. }
         | RedactedRecordView::ApiKey { label, .. }
         | RedactedRecordView::DatabaseCredential { label, .. } => label,
-        RedactedRecordView::Opaque { content_type, .. } => content_type.as_str(),
+        // Neither an opaque nor a quarantined record has a title field to
+        // show, so both fall back to their (always-present) declared
+        // content type — `item list` still names the item instead of
+        // showing a blank column, which matters most for `Quarantined`:
+        // it is the one signal in the list that this item exists and is
+        // broken, rather than the item silently vanishing from the list.
+        RedactedRecordView::Opaque { content_type, .. }
+        | RedactedRecordView::Quarantined { content_type, .. } => content_type.as_str(),
     }
 }
 
@@ -5018,6 +5025,20 @@ fn render_item(item: RedactedItemView) -> Result<CliOutput, CliFailure> {
                 None => output.push_str("none"),
             }
             output.push_str("\nPassword: <redacted>\n");
+        }
+        // Unlike `Opaque` (an ordinary content type this build simply
+        // doesn't have a renderer for, and therefore declines with
+        // `Unsupported`), a quarantined item's declared type IS
+        // recognised — its payload just doesn't parse as that type's
+        // schema. There is no per-field detail to show, so `item show`
+        // succeeds with a placeholder instead of erroring: an operator
+        // asking to see item X should learn that X exists and is broken,
+        // not receive an error that reads the same as "this command
+        // doesn't support that kind of item yet."
+        RedactedRecordView::Quarantined { reason, .. } => {
+            output.push_str("Content: could not be read (");
+            output.push_str(reason);
+            output.push_str(")\n");
         }
         _ => return Err(CliFailure::Unsupported),
     }
@@ -6455,11 +6476,74 @@ mod tests {
     use coding_adventures_vault_pm_application::{
         prepare_generation_zero, GenerationZeroRandomness, GENERATION_ZERO_RANDOM_BYTES,
     };
+    use coding_adventures_vault_pm_domain::RedactedSecret;
     use std::collections::VecDeque;
     use std::fs;
     use std::path::PathBuf;
     use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
     use std::sync::Mutex;
+
+    // ─────────────────────────────────────────────────────────────────
+    // `record_title` / `render_item` rendering for a quarantined record
+    // (VLT-PM05 §13.3's schema-mismatch fix). Unlike the rest of this
+    // module's tests, these drive the two rendering functions directly
+    // rather than through a full CLI command, because producing a
+    // genuinely quarantined item requires peer-injecting a schema-broken
+    // record past this product's own encoder -- exercised end-to-end in
+    // `vault-pm-application`'s `open::tests` module, where the fixture
+    // machinery for that already lives. These tests instead pin what
+    // `item list` and `item show` do with the `RedactedRecordView` that
+    // layer hands back, independent of how it was produced.
+    fn quarantined_login_view() -> RedactedRecordView {
+        RedactedRecordView::Quarantined {
+            content_type: ContentType::new(LOGIN_V1).unwrap(),
+            payload_bytes: 42,
+            reason: "Login.password missing",
+            payload: RedactedSecret,
+        }
+    }
+
+    #[test]
+    fn record_title_falls_back_to_content_type_for_a_quarantined_record() {
+        // Mirrors `Opaque`'s existing fallback: neither has a title field,
+        // so both use the one thing they do have -- the declared content
+        // type -- rather than leaving the `item list` title column blank.
+        assert_eq!(record_title(&quarantined_login_view()), LOGIN_V1);
+    }
+
+    #[test]
+    fn render_item_shows_a_redacted_placeholder_for_a_quarantined_record_instead_of_erroring() {
+        // Unlike `Opaque` (an ordinary content type this build has no
+        // renderer for, and therefore declines with `Unsupported`), a
+        // quarantined item's declared type IS recognised -- decode just
+        // couldn't materialise it. `item show` must still succeed, with a
+        // placeholder that says the item exists and is broken, not an
+        // error that reads the same as "unsupported item kind."
+        let item = RedactedItemView {
+            item_id: ItemId::new([0x11; 16]),
+            schema: ContentType::new(LOGIN_V1).unwrap(),
+            record: quarantined_login_view(),
+            favorite: false,
+            collection_count: 0,
+            tag_count: 0,
+            attachment_count: 0,
+            updated_at_ms: 900,
+        };
+        let output = render_item(item).unwrap();
+        let text = output.stdout();
+        assert!(
+            text.contains("could not be read"),
+            "expected a could-not-be-read placeholder, got: {text}"
+        );
+        assert!(
+            text.contains("Login.password missing"),
+            "expected the decode reason surfaced, got: {text}"
+        );
+        // The placeholder must never claim to be showing real field
+        // values -- there are none to show.
+        assert!(!text.contains("Username:"));
+        assert!(!text.contains("Password:"));
+    }
 
     static NEXT_TEMP: AtomicU64 = AtomicU64::new(1);
 

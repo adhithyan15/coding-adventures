@@ -598,9 +598,37 @@ pub fn run(config: ChiefConfig, home: &Path) -> Result<(), ChiefDaemonError> {
     .map_err(ChiefDaemonError::Process)?;
     let interval = config.host_defaults().health_check_interval();
     let interval_ns = u64::try_from(interval.as_nanos()).unwrap_or(u64::MAX);
-    let reconcile_config =
-        ReconcileConfig::new(interval_ns.saturating_mul(HEARTBEAT_GRACE_INTERVALS))
-            .map_err(ChiefDaemonError::Reconciliation)?;
+    // Durable restart windows and quarantine deadlines both hold monotonic
+    // readings, which count from daemon start and so mean nothing to the next
+    // run. The boot id is what lets a later daemon tell "this run's reading"
+    // apart from "some previous run's reading", and the only thing asked of it
+    // is that two runs never share one.
+    //
+    // Random, not the wall clock. A clock reading collides whenever two runs
+    // start in the same millisecond, and it collides *constantly* if the clock
+    // cannot be read at all and every run falls back to the same constant. A
+    // collision does not fail loudly: it silently makes a previous run's
+    // readings look like this run's, which is the exact condition the boot id
+    // exists to detect. Mixing the clock in keeps the ids time-separated even
+    // if the entropy source is poor.
+    let boot_id = coding_adventures_uuid::v4()
+        .map(|id| id.to_u128() as u64)
+        .unwrap_or_else(|_| SystemUnixTimeClock.now_ms().unwrap_or_default())
+        ^ SystemUnixTimeClock
+            .now_ms()
+            .unwrap_or_default()
+            .rotate_left(32);
+    let reconcile_config = ReconcileConfig::new(
+        boot_id,
+        interval_ns.saturating_mul(HEARTBEAT_GRACE_INTERVALS),
+    )
+    .and_then(|config_value| {
+        config_value.with_restart_intensity(
+            config.host_defaults().restart_window_ns(),
+            config.host_defaults().max_restarts_per_window(),
+        )
+    })
+    .map_err(ChiefDaemonError::Reconciliation)?;
     let schedule = ReconcileSchedule::new(interval).map_err(ChiefDaemonError::Runtime)?;
     let clock: Arc<dyn MonotonicClock> = Arc::new(SystemMonotonicClock::new());
     let launch_bindings = Arc::new(DurableHostLaunchBindings::new(Arc::clone(&backend)));
@@ -5450,5 +5478,22 @@ hardware_key_timeout = 60
             load_config_file(&link),
             Err(ChiefDaemonError::ConfigFileNotRegular)
         ));
+    }
+
+    /// The two crates each carry their own restart-intensity defaults, and a
+    /// config that omits both keys must land on the same bound the reconciler
+    /// would have chosen for itself. Nothing in the type system ties the two
+    /// constants together, so this test does.
+    #[test]
+    fn restart_intensity_defaults_match_the_reconciler() {
+        let defaults = ReconcileConfig::new(1, 100).expect("valid heartbeat age");
+        assert_eq!(
+            defaults.restart_window_ns(),
+            chief_of_staff_daemon_config::default_restart_window_ns()
+        );
+        assert_eq!(
+            defaults.max_restarts_per_window(),
+            chief_of_staff_daemon_config::default_max_restarts_per_window()
+        );
     }
 }

@@ -1488,7 +1488,11 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2S
                     | wasm_opcodes::SimdOpKind::ExtmulLowI64x2U
                     | wasm_opcodes::SimdOpKind::ExtmulHighI64x2U
-                    | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S => {
+                    | wasm_opcodes::SimdOpKind::Q15mulrSatI16x8S
+                    | wasm_opcodes::SimdOpKind::NarrowI16x8S
+                    | wasm_opcodes::SimdOpKind::NarrowI16x8U
+                    | wasm_opcodes::SimdOpKind::NarrowI32x4S
+                    | wasm_opcodes::SimdOpKind::NarrowI32x4U => {
                         // `dot_i16x8_s`/`extmul_low`/`high_i16x8_s`/`_u`/
                         // `i8x16.add`/`sub`/`i16x8.add`/`sub`/`mul`/
                         // `i8x16.min_s`/`min_u`/`max_s`/`max_u`/`avgr_u`/
@@ -1512,6 +1516,14 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // final "extmul" rung -- same reasoning: the
                         // `i32x4` -> `i64x2` widening is entirely a
                         // runtime concern, invisible to the type checker.
+                        // `i8x16.narrow_i16x8_s`/`_u`/`i16x8.narrow_i32x4_s`/
+                        // `_u` (SIMD widen PR27) join too: the "narrow"
+                        // family is genuinely BINARY (two v128 operands,
+                        // unlike the UNARY "extend" family in PR26 above),
+                        // and its saturating-then-narrowing runtime
+                        // behavior is, same as every other kind in this
+                        // arm, entirely invisible to the type checker --
+                        // still just two V128 pops, one V128 push.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
@@ -1581,7 +1593,19 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                     | wasm_opcodes::SimdOpKind::ConvertI32x4S
                     | wasm_opcodes::SimdOpKind::ConvertI32x4U
                     | wasm_opcodes::SimdOpKind::TruncSatF64x2SZero
-                    | wasm_opcodes::SimdOpKind::TruncSatF64x2UZero => {
+                    | wasm_opcodes::SimdOpKind::TruncSatF64x2UZero
+                    | wasm_opcodes::SimdOpKind::ExtendLowI8x16S
+                    | wasm_opcodes::SimdOpKind::ExtendHighI8x16S
+                    | wasm_opcodes::SimdOpKind::ExtendLowI8x16U
+                    | wasm_opcodes::SimdOpKind::ExtendHighI8x16U
+                    | wasm_opcodes::SimdOpKind::ExtendLowI16x8S
+                    | wasm_opcodes::SimdOpKind::ExtendHighI16x8S
+                    | wasm_opcodes::SimdOpKind::ExtendLowI16x8U
+                    | wasm_opcodes::SimdOpKind::ExtendHighI16x8U
+                    | wasm_opcodes::SimdOpKind::DemoteF64x2Zero
+                    | wasm_opcodes::SimdOpKind::PromoteLowF32x4
+                    | wasm_opcodes::SimdOpKind::ConvertLowI32x4S
+                    | wasm_opcodes::SimdOpKind::ConvertLowI32x4U => {
                         // UNARY, unlike every kind in the two arms above.
                         // `extadd_pairwise_i16x8_s`/`_u`/`i8x16.neg`/
                         // `i16x8.neg`/`i8x16.abs`/`popcnt`/`i16x8.abs`/
@@ -1604,7 +1628,25 @@ fn type_check_function(ctx: &ModuleContext, func_idx: usize, func_type: &FuncTyp
                         // runtime reads only 2 f64 lanes and writes 4 i32
                         // lanes (2 real + 2 zero-filled), the type
                         // checker still sees plain pop-one-`V128`-push-
-                        // one-`V128`.
+                        // one-`V128`. `ExtendLow/HighI8x16S/_U`/
+                        // `ExtendLow/HighI16x8S/_U` (SIMD widen PR26) join
+                        // too: the "extend" family reads a narrower lane
+                        // width and writes a wider one, but -- same
+                        // reasoning as `ExtaddPairwiseI16x8S`/`_U` above --
+                        // the type checker only ever sees the opaque
+                        // `V128` type, never the narrower interpretation.
+                        // `DemoteF64x2Zero`/`PromoteLowF32x4`/
+                        // `ConvertLowI32x4S`/`_U` (SIMD widen PR28, the
+                        // final PR of the 16-opcode `extend`/`narrow`/
+                        // `promote`/`demote`/`convert_low` set) join too:
+                        // all UNARY, and even though they cross both lane
+                        // COUNT (4<->2) and lane TYPE (int/float, f32/f64)
+                        // boundaries, the type checker still only ever
+                        // sees the opaque `V128` type on both sides --
+                        // the zero-fill (`DemoteF64x2Zero`) vs.
+                        // lane-dropping (the other three) distinction is,
+                        // like every other lane-shape detail above,
+                        // entirely a runtime concern.
                         pop_expect(&mut stack, frame!(), ValueType::V128)?;
                         push_val(&mut stack, ValueType::V128);
                     }
