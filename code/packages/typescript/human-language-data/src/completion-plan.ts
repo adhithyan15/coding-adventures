@@ -37,9 +37,10 @@ import { CEFR_LEVELS, levelRank } from "./levels.js";
 import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
 
-/** The eight families of work. Every item belongs to exactly one. */
+/** The nine families of work. Every item belongs to exactly one. */
 export type WorkKind =
   | "assessment-contract"
+  | "task-shape"
   | "exam-inventory"
   | "script-closure"
   | "vocabulary"
@@ -51,7 +52,12 @@ export type WorkKind =
 /**
  * Sort key 2 — see HL15 §4.2. Lower goes first.
  *
- * The two entries worth defending:
+ * The entries worth defending:
+ *
+ * `task-shape` sits immediately after the outer assessment contract. The
+ * contract says evidence must exist; the shape says what a candidate actually
+ * reads, hears, writes and says. Content cannot be decomposed gently toward a
+ * performance target that has not been named.
  *
  * `exam-inventory` follows because until the target list exists, every other
  * number for that level is a proxy for something nobody is graded on. It is also
@@ -81,13 +87,14 @@ export type WorkKind =
  */
 export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
-  "exam-inventory": 2,
-  "script-closure": 3,
-  "exam-point": 4,
-  vocabulary: 5,
-  reinforcement: 6,
-  "atom-budget": 7,
-  "spine-nodes": 8,
+  "task-shape": 2,
+  "exam-inventory": 3,
+  "script-closure": 4,
+  "exam-point": 5,
+  vocabulary: 6,
+  reinforcement: 7,
+  "atom-budget": 8,
+  "spine-nodes": 9,
 });
 
 /**
@@ -101,6 +108,7 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
  */
 export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
+  "task-shape": 1,
   "exam-inventory": 1,
   "script-closure": 10,
   vocabulary: 35,
@@ -185,6 +193,8 @@ export interface CompletionPlanInput {
   assessmentContracts?: readonly string[];
   /** Which target inventories exist. Absent ones become `exam-inventory` items. */
   inventories: readonly InventoryPresence[];
+  /** Which sourced four-skill performance shapes exist. Absent pairs become `task-shape` items. */
+  taskShapes?: readonly InventoryPresence[];
   /**
    * Measured coverage for every inventory that exists.
    *
@@ -249,6 +259,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const ceiling = input.ceiling ?? "C2";
   const headSize = input.headSize ?? 25;
   const have = new Set(input.inventories.map((entry) => `${entry.language}/${entry.level}`));
+  const haveTaskShapes = new Set((input.taskShapes ?? []).map((entry) => `${entry.language}/${entry.level}`));
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
 
@@ -293,7 +304,27 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 1. The external target for the next certifiable rung, if it is not written.
+    // The finite performance target between a contract and its language-point
+    // inventory. Without it, "writing A1" can still collapse into one vague
+    // terminal exercise rather than a sourced chain of response lengths,
+    // interaction modes, timings and scoring shapes that five-minute lessons
+    // can approach one dimension at a time.
+    const missingTaskShape = nextMissingInventory(track.language, level, ceiling, haveTaskShapes);
+    if (missingTaskShape !== null) {
+      mine.push({
+        id: `task-shape/${track.language}/${missingTaskShape}`,
+        kind: "task-shape",
+        language: track.language,
+        level,
+        goal:
+          `inventory the sourced ${missingTaskShape} reading, listening, writing and speaking task shapes ` +
+          `for ${track.language}; keep unpublished speed and length measurements explicitly unknown`,
+        outstanding: 1,
+        tranches: 1,
+      });
+    }
+
+    // The external language-point target for the next certifiable rung, if it is not written.
     const missing = nextMissingInventory(track.language, level, ceiling, have);
     if (missing !== null) {
       mine.push({
@@ -309,7 +340,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 2. The script. `violations` is the symptom — lessons that ask for an
+    // The script. `violations` is the symptom — lessons that ask for an
     // untaught glyph — but the WORK is teaching the glyphs, so the outstanding
     // count is `neverTaughtGlyphs`. Counting violations instead would make the
     // queue shrink by deleting a lesson, which is not progress.
@@ -328,7 +359,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 3. Points the external list enumerates and the corpus does not cover.
+    // Points the external list enumerates and the corpus does not cover.
     //
     // Ranked at the track's IN-PROGRESS level rather than at the level the
     // inventory describes, so it competes with that track's floor work instead
@@ -358,7 +389,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
       });
     }
 
-    // 4..7. Whatever the level gate says is short, in its own units. The gate
+    // Whatever the level gate says is short, in its own units. The gate
     // already scopes each criterion to at-or-below the level, which is the bug
     // HL09 recorded and this module must not reintroduce by re-deriving them.
     for (const blocker of track.blockers) {
@@ -417,7 +448,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
  * a precondition for the climb; it stops being a precondition for the floor.
  */
 function effectivePriority(item: WorkItem): number {
-  if (item.kind === "exam-inventory" && !CERTIFIABLE_LEVELS.includes(item.level)) {
+  if ((item.kind === "task-shape" || item.kind === "exam-inventory") && !CERTIFIABLE_LEVELS.includes(item.level)) {
     return KIND_PRIORITY["spine-nodes"] + 1;
   }
   return KIND_PRIORITY[item.kind];
@@ -481,8 +512,9 @@ function interleave(byTrack: ReadonlyMap<string, readonly WorkItem[]>, gate: Lev
 /**
  * The tail, counted per family.
  *
- * Five families can honestly be projected to the ceiling. Assessment contracts
- * are exactly one per track. Vocabulary can be counted because `LEVEL_VOCABULARY`
+ * Six families can honestly be projected to the ceiling. Assessment contracts
+ * are exactly one per track. Task shapes and exam inventories are exactly one
+ * per certifiable (track, level). Vocabulary can be counted because `LEVEL_VOCABULARY`
  * states the cumulative target at every level. Exam inventories are exactly one
  * per track and certifiable level. Script closure counts a finite observed glyph
  * set, and exam points are projectable over the inventories that already exist.
@@ -506,6 +538,7 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
 
   const wanted = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter((level) => levelRank(level) <= levelRank(ceiling)).length;
   const inventoryItems = Math.max(0, wanted - input.inventories.length);
+  const taskShapeItems = Math.max(0, wanted - (input.taskShapes ?? []).length);
   const trackNames = new Set(input.levelGate.tracks.map((track) => track.language));
   const validAssessmentContracts = new Set(
     (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
@@ -538,6 +571,11 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
       detail:
         `${validAssessmentContracts.size} of ${input.levelGate.tracks.length} track(s) have a validated ` +
         `four-skill, writing-ramp and timed-mock contract`,
+    },
+    {
+      kind: "task-shape",
+      items: taskShapeItems,
+      detail: `${(input.taskShapes ?? []).length} of ${wanted} (track x certifiable level) four-skill task shapes written`,
     },
     {
       kind: "vocabulary",
