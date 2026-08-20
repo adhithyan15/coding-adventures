@@ -1,65 +1,80 @@
 ---
+schema_version: 2
 id: AR-C01-salam
+spine_node: SPINE-MEET-GREET
 sequence: 10
 chapter: 1
 type: word
-headword: سلام
-gloss: peace / hello (salām)
+headword: salām
+gloss: peace / hello
 concept_tag: GREETING-PEACE
 prerequisites: []
-sounds: [rtl, alif-lam-mim-sin, long-vowel-alif]
+sounds: [s-l-m, long-a]
 roots: [s-l-m]
-est_minutes: 4
+duration:
+  max_seconds: 240
+requires:
+  knowledge: []
+introduces:
+  knowledge: [AR-C01-SALAM-01]
+practises:
+  knowledge: [AR-C01-SALAM-01]
+skills: [listening, speaking, reading, writing]
+modes: [interpretive, interpersonal, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: modern-standard-arabic
 reviews_of: []
 ---
 
-# سلام (salām) — "peace," the most famous root
+# *salām* — say “peace” before meeting the page
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[AR-C01-SALAM-01]; assesses=[] -->
 
-[PAUSE 2s] The first Arabic word, and the heart of the whole greeting system.
-You'll learn to *read* it — right to left — and to understand it in the same
-breath.
+[PAUSE 2s] Your first Arabic greeting is *salām*. For this lesson, keep your
+eyes off the script. Put the sound and meaning in your ear first; the next two
+tiny lessons will reveal its written pieces without asking you to swallow four
+new shapes at once.
 
-## The letters in this word
+## You'll want to know — Hear the word
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01] -->
 
-*(If you already read Arabic, skim this — it's here so the book needs no prior
-knowledge.)* Arabic is written **right to left**: the first letter is on the
-*right*. Short vowels are usually invisible; a long vowel like *ā* is a full
-letter.
+Say it in two easy beats: *sa* — *lām*. Hold the second *a* a little longer:
+*sa-LAAM*. The last sound is a clean *m*.
 
-- **س** = *sīn*, "s" · **ل** = *lām*, "l" · **ا** = *alif*, a long "ā" ·
-  **م** = *mīm*, "m."
-- Warm up on the two-letter word **لا** (*lā*, "no") — *lām* then *alif*,
-  fusing into one connected shape.
-- Now read **سلام** right to left: *s · l · ā · m* →
-
-> **سلام** = **salām** = "peace."
+> *salām* = peace; as a greeting, “peace to you.”
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01] -->
 
-**سلام** (*salām*) sits on the root **s–l–m**, meaning *wholeness, safety,
-peace* — and it heads an enormous family: *salām* (peace), *islām*
-("submission" → peace with God), *muslim* ("one who submits," in the *mu–\_i_*
-pattern), *sallama* ("to greet"). It reaches beyond Arabic: Hebrew **shalom**
-is the *same* Semitic root. English borrowed it as *salaam*, and it lives in
-the name *Salīm*.
-
-## Why it's said this way
-
-To offer *salām* is to wish someone **peace**, not merely to signal "hi." On
-its own it's a warm greeting; it's also the seed of the fuller *as-salāmu
-ʿalaykum* ("peace be upon you"), which you'll assemble in a few lessons.
+*salām* sits on the three-consonant root **s–l–m**, carrying the idea of
+wholeness, safety, and peace. The same family gives *islām*, *muslim*, and
+*sallama*, “to greet.” Hebrew *shalom* is a close Semitic cousin, and English
+borrowed *salaam*.
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01] -->
 
 [PAUSE 1s]
-- [YOU SAY: read right to left — s · l · ā · m → "salām"]
-- [YOU SAY: the warm-up word لا ("lā," no)]
-- [YOU SAY: "salām," and mean it — you are wishing peace]
+- [YOU SAY: *sa* — *lām*]
+- [YOU SAY: *salām*, with the long vowel in the second beat]
+- [YOU SAY: “peace,” while offering *salām* to an imagined person]
+
+## Writing — first microstep
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Only after you can say the greeting, meet one isolated shape: **س** is *sīn*,
+the *s* at the start of *salām*. Notice three small teeth and a trailing bowl.
+Trace **س** once with a finger, hide it, then air-write the three teeth. Do not
+decode or copy the complete word yet.
+
+- [YOU WRITE: **س** once, then compare its three teeth with the model]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01] -->
 
-[PAUSE 3s] Read **سلام** right to left. What is its three-consonant root, and
-what does it mean? (*s–l–m* — "wholeness, safety, peace.") What Hebrew word is
-the same root? (*shalom*.)
+[PAUSE 3s] What does *salām* offer? (**Peace.**) Which three consonants carry
+its root? (**s–l–m.**) Which one shape did you trace? (**س, sīn.**) Say the word
+once more. Do not decode or copy the complete word yet.

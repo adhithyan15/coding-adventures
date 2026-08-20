@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+### Changed - Arabic chapter-1 glyph ramp (#12315)
+
+- Split three four-to-five-glyph greeting cliffs into seven writing-after-voice
+  micro-lessons: six introduce no more than three Arabic shapes at a time, and
+  the seventh retrieves the complete greeting without adding a shape.
+- Keep each spoken greeting before whole-form decoding and require tracing,
+  guided copy, delayed recall, and correction in the writing strand.
+
 ### Added - Marwadi pre-A1-to-C2 assessment contract (#12216)
 
 - Define the project-owned seven-rung target for a track with no identified

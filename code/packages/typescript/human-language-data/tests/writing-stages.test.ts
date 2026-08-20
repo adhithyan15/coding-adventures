@@ -92,7 +92,7 @@ Learner copy comes first.
     expect(prerequisites.get("timed-assessment-production")).not.toContain("connected-composition");
   });
 
-  it("measures every live track and pins Marwadi's gentle pre-A1 proof", () => {
+  it("measures every live track and pins the completed Marwadi and Arabic pre-A1 ramps", () => {
     const { registry, lessons, curricula, spine: realSpine } = loadEverything();
     const report = measureWritingStages(
       loadAssessmentPolicy(),
@@ -103,11 +103,11 @@ Learner copy comes first.
     );
     expect(report.summary).toEqual({
       tracks: 23,
-      tracksWithAnyEvidence: 6,
-      tracksCompleteAtPreA1: 1,
-      evidenceBlocks: 13,
+      tracksWithAnyEvidence: 7,
+      tracksCompleteAtPreA1: 2,
+      evidenceBlocks: 20,
       invalidEvidenceBlocks: 0,
-      missingTrackLevelStages: 944,
+      missingTrackLevelStages: 916,
     });
     const marwadi = report.tracks.find((track) => track.language === "marwadi")!;
     expect(marwadi.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
@@ -117,6 +117,8 @@ Learner copy comes first.
       "delayed-copy",
       "dictation-transcription",
     ]);
-    expect(report.tracks.filter((track) => track.levels[0]?.complete)).toHaveLength(1);
+    const arabic = report.tracks.find((track) => track.language === "arabic")!;
+    expect(arabic.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
+    expect(report.tracks.filter((track) => track.levels[0]?.complete)).toHaveLength(2);
   }, 30_000);
 });
