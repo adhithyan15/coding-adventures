@@ -973,7 +973,7 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(145); // Tamil's two blocks join Chinese's opener trace.
+    expect(summary.lessonsWithWritingSegments).toBe(147); // +2: Tamil begins with observe-trace and guided copy
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.

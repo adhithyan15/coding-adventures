@@ -1,0 +1,190 @@
+{
+  "version": 1,
+  "language": "arabic",
+  "level": "A1",
+  "target": {
+    "name": "Avant STAMP 4S Arabic (Modern Standard) — Level 3 / Novice-High project A1 floor",
+    "basis": "external"
+  },
+  "sources": [
+    {
+      "id": "avant-stamp-4s-overview-2026",
+      "title": "Avant STAMP 4S",
+      "url": "https://www.avantassessment.com/tests/stamp/4s",
+      "published": "updated 2026",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "avant-stamp-test-taker-2026",
+      "title": "STAMP 4S Test Taker Guide",
+      "url": "https://www.avantassessment.com/en/guides/test-taker/stamp",
+      "published": "updated 2026",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "avant-stamp-faq-2026",
+      "title": "STAMP FAQs",
+      "url": "https://www.avantassessment.com/en/guides/faq/stamp",
+      "published": "updated 2026",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "avant-stamp-rubric-2026",
+      "title": "STAMP Benchmarks and Rubric Guide",
+      "url": "https://www.avantassessment.com/en/guides/benchmark-rubric/stamp",
+      "published": "updated 2026",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "avant-arabic-technical-report",
+      "title": "Arabic STAMP 4S Technical Report",
+      "url": "https://cdnprodwpv2.avantassessment.com/wp-content/uploads/arabic-avant-stamp-technical-document.pdf",
+      "published": "not stated on current file",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "ca-arabic-level-mapping",
+      "title": "Coding Adventures human-language exam-level mappings",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/core/exam-levels.json",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": { "minimum": 90, "maximum": 105 },
+    "speakingMinutes": { "minimum": 20, "maximum": 25 },
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": null,
+    "deliveryModes": ["web-based computer-adaptive assessment in a proctored environment"]
+  },
+  "passRule": {
+    "maximumPoints": 9,
+    "passPoints": 3,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.3333333333333333,
+      "listening": 0.3333333333333333,
+      "writing": 0.375,
+      "speaking": 0.375
+    },
+    "note": "STAMP reports a separate benchmark level for each skill and does not publish an A1 pass/fail decision. Coding Adventures maps A1 to ILR 0+ in core/exam-levels.json; Avant's Arabic technical report maps ILR 0+ to Level 3 / Novice-High. The project therefore requires Level 3 in every skill: 3/9 for reading and listening and 3/8 for writing and speaking. maximumPoints and passPoints use the receptive scale only because this schema requires one headline pair; the four independent ratios encode the real project floor. This is not an Avant pass rule, no composite average may hide a lower skill, and the target is Modern Standard Arabic rather than a dialect claim."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": { "minimum": 35, "maximum": 40 },
+      "parts": [
+        {
+          "id": "reading-adaptive-real-world-texts",
+          "promptModes": ["written situation", "Modern Standard Arabic text", "written question and answer options"],
+          "promptGenres": ["authentic real-world text such as an article, menu, sign, or other adaptively selected text"],
+          "responseModes": ["select one multiple-choice answer before advancing"],
+          "items": 30,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": ["computer-generated benchmark level from performance on adaptively selected questions"]
+          },
+          "aids": {
+            "allowed": [],
+            "forbidden": ["dictionary", "textbook", "notes", "phone", "translation aid", "copy and paste", "backtracking"],
+            "notPublished": []
+          },
+          "notPublished": ["the official count is approximately 30 rather than a fixed form", "stimulus word count", "exact genre distribution", "number of options per item", "item-level raw-point ceiling", "replay is not applicable to written input"],
+          "sourceIds": ["avant-stamp-4s-overview-2026", "avant-stamp-test-taker-2026", "avant-stamp-rubric-2026", "avant-arabic-technical-report"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": { "minimum": 35, "maximum": 40 },
+      "parts": [
+        {
+          "id": "listening-adaptive-real-world-audio",
+          "promptModes": ["written situation and question", "Modern Standard Arabic recording", "written answer options"],
+          "promptGenres": ["authentic real-world audio selected adaptively"],
+          "responseModes": ["select one multiple-choice answer before advancing"],
+          "items": 30,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": ["computer-generated benchmark level from performance on adaptively selected questions"]
+          },
+          "aids": {
+            "allowed": ["exam-provided play control for at most two plays per item"],
+            "forbidden": ["transcript", "dictionary", "textbook", "notes", "phone", "translation aid", "backtracking"],
+            "notPublished": []
+          },
+          "notPublished": ["the official count is approximately 30 rather than a fixed form", "clip duration", "speech rate", "exact genre distribution", "number of options per item", "item-level raw-point ceiling", "response length is not applicable to selected response"],
+          "sourceIds": ["avant-stamp-4s-overview-2026", "avant-stamp-test-taker-2026", "avant-stamp-rubric-2026", "avant-arabic-technical-report"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": { "minimum": 20, "maximum": 25 },
+      "parts": [
+        {
+          "id": "writing-adaptive-prompts",
+          "promptModes": ["written prompt", "recorded prompt in the testing language"],
+          "promptGenres": ["adaptively selected real-world situation"],
+          "responseModes": ["type one Modern Standard Arabic response per prompt"],
+          "items": 3,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": null, "maximum": 600, "approximate": true },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": ["ratability and relevance to the prompt", "text type", "language control and comprehensibility", "three responses combine into one skill benchmark level"]
+          },
+          "aids": {
+            "allowed": ["Arabic keyboard or approved input method", "exam-provided prompt audio played at most twice"],
+            "forbidden": ["dictionary", "textbook", "notes", "phone", "translation aid", "copy and paste", "backtracking"],
+            "notPublished": []
+          },
+          "notPublished": ["prompt word count", "exact prompt genres", "minimum response length", "the official ceiling is 2500 characters and is described as approximately 400-600 words rather than as a fixed word count", "response-level raw points before the three ratings combine into the eight-level skill scale"],
+          "sourceIds": ["avant-stamp-test-taker-2026", "avant-stamp-faq-2026", "avant-stamp-rubric-2026", "avant-arabic-technical-report"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": { "minimum": 20, "maximum": 25 },
+      "parts": [
+        {
+          "id": "speaking-adaptive-prompts",
+          "promptModes": ["written prompt", "recorded prompt in the testing language"],
+          "promptGenres": ["adaptively selected real-world situation"],
+          "responseModes": ["record one Modern Standard Arabic response per prompt"],
+          "items": 3,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": null, "maximum": 180, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": {
+            "maxRawPoints": null,
+            "criteria": ["ratability and relevance to the prompt", "text type", "language control and comprehensibility", "three responses combine into one skill benchmark level"]
+          },
+          "aids": {
+            "allowed": ["exam-provided prompt audio played at most twice", "listen to the recorded answer", "add to the answer once", "replace the answer with one re-recording"],
+            "forbidden": ["written speaking script", "dictionary", "textbook", "notes", "phone", "translation aid", "backtracking"],
+            "notPublished": []
+          },
+          "notPublished": ["prompt word count", "exact prompt genres", "minimum response duration", "preparation time", "response-level raw points before the three ratings combine into the eight-level skill scale"],
+          "sourceIds": ["avant-stamp-test-taker-2026", "avant-stamp-faq-2026", "avant-stamp-rubric-2026", "avant-arabic-technical-report"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
