@@ -49,42 +49,42 @@ public sealed class PortableConformanceTests
             switch (operation)
             {
                 case "inflate":
-                {
-                    var input = Convert.FromHexString(testCase.GetProperty("input_hex").GetString()!);
-                    var expected = Materialize(testCase.GetProperty("expected").GetProperty("output"));
-                    var result = RawRfc1951.RawInflateCounted(input, limit);
-                    Assert.True(result.Output.SequenceEqual(expected), id);
-                    Assert.Equal(testCase.GetProperty("expected").GetProperty("bytes_consumed").GetInt32(), result.BytesConsumed);
-                    Assert.True(RawRfc1951.RawInflate(input, limit).SequenceEqual(expected), id);
-                    break;
-                }
+                    {
+                        var input = Convert.FromHexString(testCase.GetProperty("input_hex").GetString()!);
+                        var expected = Materialize(testCase.GetProperty("expected").GetProperty("output"));
+                        var result = RawRfc1951.RawInflateCounted(input, limit);
+                        Assert.True(result.Output.SequenceEqual(expected), id);
+                        Assert.Equal(testCase.GetProperty("expected").GetProperty("bytes_consumed").GetInt32(), result.BytesConsumed);
+                        Assert.True(RawRfc1951.RawInflate(input, limit).SequenceEqual(expected), id);
+                        break;
+                    }
                 case "inflate-error":
-                {
-                    var input = Convert.FromHexString(testCase.GetProperty("input_hex").GetString()!);
-                    var expected = testCase.GetProperty("expected").GetProperty("error_id").GetString();
-                    var error = Assert.Throws<RawInflateError>(() => RawRfc1951.RawInflateCounted(input, limit));
-                    Assert.Equal(expected, error.Code);
-                    Assert.Equal(expected, error.Message);
-                    Assert.Empty(error.Data);
-                    break;
-                }
+                    {
+                        var input = Convert.FromHexString(testCase.GetProperty("input_hex").GetString()!);
+                        var expected = testCase.GetProperty("expected").GetProperty("error_id").GetString();
+                        var error = Assert.Throws<RawInflateError>(() => RawRfc1951.RawInflateCounted(input, limit));
+                        Assert.Equal(expected, error.Code);
+                        Assert.Equal(expected, error.Message);
+                        Assert.Empty(error.Data);
+                        break;
+                    }
                 case "deflate-interoperability":
-                {
-                    var input = Convert.FromHexString(testCase.GetProperty("input_hex").GetString()!);
-                    var expected = Materialize(testCase.GetProperty("expected").GetProperty("output"));
-                    Assert.True(PythonCodec("decompress", RawRfc1951.RawDeflate(input)).SequenceEqual(expected), id);
-                    break;
-                }
+                    {
+                        var input = Convert.FromHexString(testCase.GetProperty("input_hex").GetString()!);
+                        var expected = Materialize(testCase.GetProperty("expected").GetProperty("output"));
+                        Assert.True(PythonCodec("decompress", RawRfc1951.RawDeflate(input)).SequenceEqual(expected), id);
+                        break;
+                    }
                 case "crc32":
-                {
-                    uint checksum = testCase.TryGetProperty("initial_crc32_hex", out var initial)
-                        ? Convert.ToUInt32(initial.GetString(), 16)
-                        : 0;
-                    foreach (var chunk in testCase.GetProperty("chunks_hex").EnumerateArray())
-                        checksum = RawRfc1951.Crc32(Convert.FromHexString(chunk.GetString()!), checksum);
-                    Assert.Equal(testCase.GetProperty("expected").GetProperty("crc32_hex").GetString(), checksum.ToString("x8"));
-                    break;
-                }
+                    {
+                        uint checksum = testCase.TryGetProperty("initial_crc32_hex", out var initial)
+                            ? Convert.ToUInt32(initial.GetString(), 16)
+                            : 0;
+                        foreach (var chunk in testCase.GetProperty("chunks_hex").EnumerateArray())
+                            checksum = RawRfc1951.Crc32(Convert.FromHexString(chunk.GetString()!), checksum);
+                        Assert.Equal(testCase.GetProperty("expected").GetProperty("crc32_hex").GetString(), checksum.ToString("x8"));
+                        break;
+                    }
                 default:
                     throw new Xunit.Sdk.XunitException($"{id}: unknown operation {operation}");
             }

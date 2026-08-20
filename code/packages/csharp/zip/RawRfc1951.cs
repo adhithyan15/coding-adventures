@@ -118,17 +118,17 @@ internal static class RawInflater
                     ReadStored(reader, output, maximumOutput);
                     break;
                 case 1:
-                {
-                    var tables = FixedTables();
-                    DecodeCompressed(reader, output, tables.LiteralLength, tables.Distance, maximumOutput);
-                    break;
-                }
+                    {
+                        var tables = FixedTables();
+                        DecodeCompressed(reader, output, tables.LiteralLength, tables.Distance, maximumOutput);
+                        break;
+                    }
                 case 2:
-                {
-                    var tables = ReadDynamicTables(reader);
-                    DecodeCompressed(reader, output, tables.LiteralLength, tables.Distance, maximumOutput);
-                    break;
-                }
+                    {
+                        var tables = ReadDynamicTables(reader);
+                        DecodeCompressed(reader, output, tables.LiteralLength, tables.Distance, maximumOutput);
+                        break;
+                    }
                 default:
                     Fail("reserved-block-type");
                     break;
@@ -202,27 +202,27 @@ internal static class RawInflater
                     lengths.Add(literal);
                     break;
                 case 16:
-                {
-                    if (lengths.Count == 0) Fail("repeat-without-previous");
-                    var extra = reader.ReadLsb(2);
-                    if (extra is null) Fail("unexpected-eof");
-                    Repeat(lengths, lengths[^1], extra!.Value + 3, total);
-                    break;
-                }
+                    {
+                        if (lengths.Count == 0) Fail("repeat-without-previous");
+                        var extra = reader.ReadLsb(2);
+                        if (extra is null) Fail("unexpected-eof");
+                        Repeat(lengths, lengths[^1], extra!.Value + 3, total);
+                        break;
+                    }
                 case 17:
-                {
-                    var extra = reader.ReadLsb(3);
-                    if (extra is null) Fail("unexpected-eof");
-                    Repeat(lengths, 0, extra!.Value + 3, total);
-                    break;
-                }
+                    {
+                        var extra = reader.ReadLsb(3);
+                        if (extra is null) Fail("unexpected-eof");
+                        Repeat(lengths, 0, extra!.Value + 3, total);
+                        break;
+                    }
                 case 18:
-                {
-                    var extra = reader.ReadLsb(7);
-                    if (extra is null) Fail("unexpected-eof");
-                    Repeat(lengths, 0, extra!.Value + 11, total);
-                    break;
-                }
+                    {
+                        var extra = reader.ReadLsb(7);
+                        if (extra is null) Fail("unexpected-eof");
+                        Repeat(lengths, 0, extra!.Value + 11, total);
+                        break;
+                    }
                 default:
                     Fail("unexpected-eof");
                     break;
