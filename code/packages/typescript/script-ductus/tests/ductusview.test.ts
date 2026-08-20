@@ -273,6 +273,8 @@ const GUJARATI_A = ductusFor("અ", "gujarati")!;
 const gujaratiAOutline = gujaratiOutline("અ");
 const GUJARATI_AA = ductusFor("આ", "gujarati")!;
 const gujaratiAaOutline = gujaratiOutline("આ");
+const GUJARATI_I = ductusFor("ઇ", "gujarati")!;
+const gujaratiIOutline = gujaratiOutline("ઇ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3493,6 +3495,36 @@ describe("Gujarati આ — complete અ before the lifted trailing ā stem", () 
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_AA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Gujarati ઇ — two loops flow into the rising hook without a lift", () => {
+  const steps = ductusSteps(GUJARATI_I);
+  const strip = ductusFilmstrip(GUJARATI_I, gujaratiIOutline);
+
+  it("shows the upper loop, crossing, lower loop, and hook as one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the small upper-left loop down to the middle crossing",
+      "continue through the narrow crossing",
+      "sweep clockwise around the broad lower loop",
+      "rise along the right side into the upper hook",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiIOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_I.strokes[0], 1),
     );
   });
 });

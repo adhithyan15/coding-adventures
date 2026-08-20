@@ -948,6 +948,13 @@ t30apps.com's next version-1.0 animation exposes those runs as three ordered
 SVG paths; the Noto Sans Gujarati fit preserves the two-lift order while
 tracing the printed glyph's wider stem spacing. The source's variation warning
 continues to qualify the demonstrated school-hand form.
+The four-frame Gujarati **ઇ** filmstrip circles the small upper-left loop,
+passes through its narrow middle crossing, sweeps clockwise around the broad
+lower loop, then rises into the upper-right hook without lifting. t30apps.com's
+version-1.0 animation exposes only its first SVG path for this letter; the Noto
+Sans Gujarati fit preserves that zero-lift loop-to-loop-to-hook order while
+tracing the wider printed body. The source's variation warning continues to
+qualify the demonstrated school-hand form.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

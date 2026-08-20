@@ -5230,6 +5230,71 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("આ"),
   },
+  // t30apps animates Gujarati ઇ as one unbroken run through the upper loop,
+  // central crossing, broad lower loop, and rising hook. These fitted medians
+  // preserve that zero-lift order inside the bundled Noto glyph's wider body.
+  [ductusKey("gujarati", "ઇ")]: {
+    script: "gujarati",
+    glyph: "ઇ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the small upper-left loop down to the middle crossing",
+            path: [
+              { x: 220, y: 565 },
+              { x: 165, y: 565 },
+              { x: 115, y: 535 },
+              { x: 85, y: 480 },
+              { x: 85, y: 420 },
+              { x: 120, y: 365 },
+              { x: 170, y: 330 },
+              { x: 220, y: 320 },
+            ],
+          },
+          {
+            label: "continue through the narrow crossing",
+            path: [
+              { x: 220, y: 320 },
+              { x: 265, y: 322 },
+              { x: 310, y: 322 },
+            ],
+          },
+          {
+            label: "sweep clockwise around the broad lower loop",
+            path: [
+              { x: 310, y: 322 },
+              { x: 245, y: 285 },
+              { x: 185, y: 245 },
+              { x: 145, y: 190 },
+              { x: 145, y: 130 },
+              { x: 190, y: 75 },
+              { x: 260, y: 40 },
+              { x: 340, y: 30 },
+              { x: 420, y: 50 },
+              { x: 490, y: 100 },
+              { x: 535, y: 170 },
+              { x: 550, y: 245 },
+            ],
+          },
+          {
+            label: "rise along the right side into the upper hook",
+            path: [
+              { x: 550, y: 245 },
+              { x: 540, y: 315 },
+              { x: 505, y: 390 },
+              { x: 465, y: 460 },
+              { x: 440, y: 525 },
+              { x: 445, y: 590 },
+              { x: 475, y: 650 },
+              { x: 515, y: 690 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઇ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
