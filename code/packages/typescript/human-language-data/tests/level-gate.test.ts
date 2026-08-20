@@ -84,7 +84,7 @@ describe("the gate that would have caught the A2 claim", () => {
     // was the first version of this module committing the very error it exists to
     // catch — a number meaning "everything taught" published against one meaning
     // "by the end of pre-A1".
-    expect(vocab.shortfall).toBe(147); // -2 more: the repair kit adds two pre-A1 headwords // +1: HL-C98 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) -- 118/300 to 153/300, a drop of exactly the lesson count
+    expect(vocab.shortfall).toBe(146); // -1: quien now has its own pre-A1 voice-first lesson // -2 more: the repair kit adds two pre-A1 headwords // +1: HL-C98 // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) -- 118/300 to 153/300, a drop of exactly the lesson count
     // Chapter 16 reclassifies two paradigm bundles as grammar and adds ver;
     // Chapter 17 correctly reclassifies its two tense bundles as grammar.
     // Chapter 18 likewise replaces two word/phrase bundles with typed grammar.
