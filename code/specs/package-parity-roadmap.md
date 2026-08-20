@@ -3976,6 +3976,24 @@ portable discovery parity. Recording both owners before publication preserves
 the selection boundary and leaves the dependency-ready .NET ZIP child as the
 highest-leverage active unit.
 
+Implementation revision `fe37c45b438cb82664420f5ed5981e6b61ac343f`
+publishes the same strict raw profile in C# and F#. Both lanes consume all 34
+neutral cases, decode stored, fixed, dynamic, multi-block, foreign, and full
+32 KiB-window streams, report exact compressed-byte consumption, enforce the
+14 payload-blind typed errors and caller output limits, and map raw failures
+back into the historical `InvalidDataException` ZIP-container contract. The
+Windows wrappers are repeatable when setup directories already exist and
+safely quote checkout-derived environment paths.
+
+The exact BUILD front doors pass 30 C# tests at 91.84% line and 77.89% branch
+coverage and 21 F# tests at 91.64% line and 73.43% branch coverage after the
+superseded fixed-only decoder in each lane was removed. Strict
+builds, both 0.2.0 package builds, dependency vulnerability audits, fresh
+uncached C#/F# build-tool plans, Go build-tool tests/vet/build, the neutral
+fixture and capability suites, state-DAG validation, authority and credential
+scans, collision reporting, and diff checks all pass. Production remains pure
+in-memory; fixture reads and the independent Python zlib oracle are test-only.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
