@@ -1673,7 +1673,9 @@ fn decode_lower_hex(value: String, maximum_bytes: usize) -> Result<Vec<u8>, Conf
     }
     Ok(value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| (hex_nibble(pair[0]) << 4) | hex_nibble(pair[1]))
         .collect())
 }

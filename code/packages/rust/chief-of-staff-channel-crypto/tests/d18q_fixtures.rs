@@ -809,7 +809,7 @@ fn frame(fields: &[&[u8]]) -> Vec<u8> {
 fn decode_base64(value: &str) -> Vec<u8> {
     assert_eq!(value.len() % 4, 0);
     let mut output = Vec::with_capacity(value.len() / 4 * 3);
-    for chunk in value.as_bytes().chunks_exact(4) {
+    for chunk in value.as_bytes().as_chunks::<4>().0 {
         let a = base64_digit(chunk[0]) as u32;
         let b = base64_digit(chunk[1]) as u32;
         let c = if chunk[2] == b'=' {
@@ -849,7 +849,9 @@ fn decode_hex(value: &str) -> Vec<u8> {
     assert_eq!(value.len() % 2, 0);
     value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| (hex_digit(pair[0]) << 4) | hex_digit(pair[1]))
         .collect()
 }

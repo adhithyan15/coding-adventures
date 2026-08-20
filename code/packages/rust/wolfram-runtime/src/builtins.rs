@@ -2080,7 +2080,7 @@ fn which_handler(vm: &mut VM, expr: IRApply) -> IRNode {
     }
     // Walk the (condition, value) pairs left to right; the FIRST condition that
     // evaluates to True selects — and is the only branch we evaluate the value of.
-    for pair in expr.args.chunks_exact(2) {
+    for pair in expr.args.as_chunks::<2>().0 {
         let condition = vm.eval(pair[0].clone());
         if is_true_symbol(&condition) {
             return vm.eval(pair[1].clone());
@@ -2117,9 +2117,9 @@ fn switch_handler(vm: &mut VM, expr: IRApply) -> IRNode {
         return unevaluated(expr);
     }
     let subject = vm.eval(expr.args[0].clone());
-    // The remaining args are (form, value) pairs; `chunks_exact(2)` over them is
-    // exact because the total arity (minus the leading subject) is even.
-    for pair in expr.args[1..].chunks_exact(2) {
+    // The remaining args are (form, value) pairs; `as_chunks::<2>()` over them
+    // has no remainder because the total arity (minus the leading subject) is even.
+    for pair in expr.args[1..].as_chunks::<2>().0 {
         if form_matches(&pair[0], &subject) {
             return vm.eval(pair[1].clone());
         }

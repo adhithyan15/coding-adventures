@@ -1482,7 +1482,7 @@ fn declare_handler(state: &Arc<Mutex<MacsymaBackendState>>, expr: IRApply) -> IR
         return IRNode::Apply(Box::new(expr));
     }
     let mut state = state.lock().expect("macsyma backend state poisoned");
-    for pair in expr.args.chunks_exact(2) {
+    for pair in expr.args.as_chunks::<2>().0 {
         state.assumptions.assume_property(&pair[0], &pair[1]);
     }
     sym(DONE)

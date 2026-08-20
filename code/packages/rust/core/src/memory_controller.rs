@@ -113,7 +113,7 @@ impl MemoryController {
 
         // Process pending reads: drain into a temporary vec to avoid
         // borrowing self while iterating.
-        let reads: Vec<_> = self.pending_reads.drain(..).collect();
+        let reads = std::mem::take(&mut self.pending_reads);
         for mut req in reads {
             req.cycles_left -= 1;
             if req.cycles_left == 0 {
@@ -129,7 +129,7 @@ impl MemoryController {
         }
 
         // Process pending writes: same pattern.
-        let writes: Vec<_> = self.pending_writes.drain(..).collect();
+        let writes = std::mem::take(&mut self.pending_writes);
         for mut req in writes {
             req.cycles_left -= 1;
             if req.cycles_left == 0 {

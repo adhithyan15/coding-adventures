@@ -1298,15 +1298,17 @@ impl BlockParser {
                         inner = item_id;
 
                         if !blank_start {
-                            let new_base_col;
-                            let item_content;
-                            if marker.space_after >= 5 {
-                                new_base_col = virtual_col_after(&line_content, marker.marker_len - marker.space_after + 1, line_base_col);
-                                item_content = format!("{}{}", " ".repeat(marker.space_after - 1), &line_content[marker.marker_len..]);
+                            let (new_base_col, item_content) = if marker.space_after >= 5 {
+                                (
+                                    virtual_col_after(&line_content, marker.marker_len - marker.space_after + 1, line_base_col),
+                                    format!("{}{}", " ".repeat(marker.space_after - 1), &line_content[marker.marker_len..]),
+                                )
                             } else {
-                                new_base_col = virtual_col_after(&line_content, marker.marker_len, line_base_col);
-                                item_content = line_content[marker.marker_len..].to_string();
-                            }
+                                (
+                                    virtual_col_after(&line_content, marker.marker_len, line_base_col),
+                                    line_content[marker.marker_len..].to_string(),
+                                )
+                            };
 
                             // Handle tab separator (GFM §2.1).
                             //

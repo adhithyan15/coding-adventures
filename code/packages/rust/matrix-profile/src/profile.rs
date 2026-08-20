@@ -343,8 +343,7 @@ impl Profiler {
 
         match dtype {
             DType::F32 => {
-                let mut chunks = bytes.chunks_exact(4);
-                for chunk in &mut chunks {
+                for chunk in bytes.as_chunks::<4>().0 {
                     let v = f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]) as f64;
                     if v.is_nan() {
                         // NaN propagates poorly through min/max; skip.
@@ -366,10 +365,8 @@ impl Profiler {
                 }
             }
             DType::F64 => {
-                let mut chunks = bytes.chunks_exact(8);
-                for chunk in &mut chunks {
-                    let arr: [u8; 8] = chunk.try_into().unwrap();
-                    let v = f64::from_le_bytes(arr);
+                for chunk in bytes.as_chunks::<8>().0 {
+                    let v = f64::from_le_bytes(*chunk);
                     if v.is_nan() {
                         entry.samples = entry.samples.saturating_add(1);
                         continue;
@@ -402,8 +399,7 @@ impl Profiler {
                 }
             }
             DType::I32 => {
-                let mut chunks = bytes.chunks_exact(4);
-                for chunk in &mut chunks {
+                for chunk in bytes.as_chunks::<4>().0 {
                     let v = i32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]) as f64;
                     if v < entry.observed_min {
                         entry.observed_min = v;

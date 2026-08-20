@@ -68,7 +68,7 @@ pub enum TransformKind {
 /// For each pixel: `R' = (R - G) & 0xFF`, `B' = (B - G) & 0xFF`.
 /// The green channel is left unchanged.
 pub fn apply_subtract_green(pixels: &mut PixelContainer) {
-    for chunk in pixels.data.chunks_exact_mut(4) {
+    for chunk in pixels.data.as_chunks_mut::<4>().0 {
         let g = chunk[1];
         chunk[0] = chunk[0].wrapping_sub(g); // R -= G
         chunk[2] = chunk[2].wrapping_sub(g); // B -= G
@@ -79,7 +79,7 @@ pub fn apply_subtract_green(pixels: &mut PixelContainer) {
 ///
 /// For each pixel: `R = (R' + G) & 0xFF`, `B = (B' + G) & 0xFF`.
 pub fn inverse_subtract_green(pixels: &mut PixelContainer) {
-    for chunk in pixels.data.chunks_exact_mut(4) {
+    for chunk in pixels.data.as_chunks_mut::<4>().0 {
         let g = chunk[1];
         chunk[0] = chunk[0].wrapping_add(g); // R += G
         chunk[2] = chunk[2].wrapping_add(g); // B += G

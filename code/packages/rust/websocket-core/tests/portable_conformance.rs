@@ -31,7 +31,9 @@ fn hex(value: &str) -> Vec<u8> {
     assert_eq!(value.len() % 2, 0, "fixture hex must be byte aligned");
     value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| {
             let digits = core::str::from_utf8(pair).expect("fixture hex must be ASCII");
             u8::from_str_radix(digits, 16).expect("fixture hex must be lowercase hexadecimal")
