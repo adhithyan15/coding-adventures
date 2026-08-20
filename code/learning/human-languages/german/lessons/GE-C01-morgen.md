@@ -1,5 +1,6 @@
 ---
 id: GE-C01-morgen
+sequence: 30
 chapter: 1
 type: word
 headword: Morgen

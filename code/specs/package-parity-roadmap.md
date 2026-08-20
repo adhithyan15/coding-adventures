@@ -3839,6 +3839,80 @@ tests, paint backend tests, strict Clippy gates, and release C bridge build all
 pass locally. Auto-merge remains disabled until the replacement head has no CI
 failure or merge conflict.
 
+## Post-#11553 Refresh and Haskell ZIP Raw-Conformance Selection
+
+External auto-merge completed ready-for-review Swift ZIP PR #11553 at final
+reviewed head `cd14d81f5618878a4aee18f5b735a6819baf291e`, merged as
+`10e9e80610f639b13b5d6123aa70a822f5194e9d` at
+2026-08-20T09:36:56Z. Its final 32 reported checks ended with 28 successes,
+three expected skips, one neutral conclusion, and no failure or pending job.
+The parity loop did not exercise merge authority, and the remote branch was
+deleted.
+
+The collision-checked schema-3 inventory at exact live main
+`afa7975ba76037907138e9208481a360cfe4f14a` covers the same 15 established
+lanes, 1,365 normalized implementation identities, and 4,549 established
+slots. It reports 174 high-consensus identities with 271 gaps, 903 singletons
+with 12,642 singleton gaps, 713 Rust singletons, zero canonical collisions,
+and zero unknown buckets. Compared with the stored `09877072d2` snapshot, the
+net delta is 44 identities, 72 slots, one high-consensus identity and two
+high-consensus gaps, 32 singletons and 448 singleton gaps, and 41 Rust
+singletons. The exact topology movement is 49 added identities and five
+retired Rust `iir-to-*` identities (`armv7`, `ge225`, `intel4004`,
+`intel8008`, and `riscv`).
+
+Every new root was classified before selection. Two family owners cover 19
+historical target backend/encoder/simulator identities plus seven simulator
+lane expansions, and 13 symbolic-CAS IIR compiler/VM identities. Separate
+portable owners cover Chief channel epoch activation; the sole missing Swift
+paint-vm-ascii slot; the five remaining ct-compare slots; Python-expanded SIR
+array/symbolic runtimes; NUT, SNMP, and SSDP framing; Chief Vault dispatch;
+Bitwarden/CSV Vault imports; the Vault local-agent protocol; password policy;
+and removable-storage semantics. HomeKit and IPP discovery plus NUT, SNMP, and
+SSDP smart-home integrations each have an injected portable-core owner and a
+blocked native network/CLI authority review. The Vault agent host,
+crash-injection package, and removable filesystem adapter likewise have
+explicit blocked native reviews. These records preserve the loop's
+portable-only selection boundary while preventing any new singleton from
+remaining unowned.
+
+No open PR touches the parity state, roadmap, CMP09, neutral RFC 1951 fixture,
+or any remaining .NET/Haskell/JVM ZIP package. One ancient no-PR branch,
+`worktree-feat+zstd-and-catchups`, still overlaps those three complete ZIP
+trees but is more than ten thousand commits behind main; it is residue, not
+ownership, and must not be reused or cherry-picked.
+
+The dependency/leverage pass selected
+`zip-raw-rfc1951-haskell-lane-parity` on a fresh branch from `afa7975`. It is
+one isolated implementation lane, directly advances the three-child ZIP
+blocker, and ultimately unlocks fourteen PNG slots. GHC 9.4.8 and Cabal
+3.16.1 are available; the package depends only on local LZSS; no downstream
+Haskell package imports ZIP; and production remains a pure in-memory byte
+transform. The existing decoder already handles stored/fixed multi-block
+streams and hardened output accumulation, but rejects dynamic Huffman,
+lacks counted caller-capped typed raw APIs, trims container size mismatches,
+and skips Windows validation. This tranche consumes all 34 neutral cases,
+adds exact dynamic-tree and suffix boundaries, explicit empty capabilities,
+real cross-platform Cabal front doors, and strict ZIP size/CRC integration
+without duplicating DEFLATE or adding native authority.
+
+A late clean rebase onto `9873bf0170673631ea338541d235b76aaba78ff6`
+added one Rust-only `smart-home-ipp-scanner-discovery-integration` identity and
+did not overlap any ZIP, fixture, state, roadmap, or CMP09 file. The refreshed
+collision gate therefore records 1,366 identities, 4,550 slots, 904
+singletons with 12,656 missing singleton slots, and 714 Rust singletons; the
+15-language denominator, 174 high-consensus identities with 271 gaps, zero
+collisions, and zero unknown buckets are unchanged. Before publication the
+new scanner root received an injected portable-core owner plus a blocked
+native DNS-SD/HTTP/filesystem/CLI authority review. This late discovery does
+not displace the already selected dependency-ready Haskell ZIP tranche.
+Ready-for-review PR #12234 publishes that tranche from validated implementation
+head `b1bbe5ec1a`. Its first Ubuntu runs exposed Cabal 3.10.3.0 applying the
+command-line coverage switch to the dependency plan, disabling per-component
+builds and then rejecting `vector`'s internal libraries. Coverage now lives in
+the `zip` package stanza instead: exact Cabal 3.10.3.0 and 3.16.1 runs both
+produce HPC reports while dependency per-component builds remain enabled.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

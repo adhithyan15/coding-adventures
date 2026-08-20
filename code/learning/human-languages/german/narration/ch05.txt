@@ -3,155 +3,6 @@ German, chapter 5: The First Verbs.
 
 
 Lesson 1 of 5.
-Ich lerne Deutsch — your first real sentence.
-
-Warm-up.
-[pause 2 seconds]
-Everything pays off: you take a verb you conjugated and a noun, and build a sentence no one handed you — Ich lerne Deutsch, "I'm learning German." (There's no separate "am …-ing" in German — ich lerne covers both "I learn" and "I am learning.")
-
-The new word: Deutsch.
-Deutsch = "German" (the language) — and note it's capitalized, because it's a noun here (your Großschreibung writing lesson). It comes from Old High German diutisc, "of the people, of the folk" — from þeudō, "the people." The Germanic tribes simply called their own tongue "the people's [language]", as opposed to Latin.
-That "folk" root spread far:
-English Dutch — the same word (it once meant all continental West Germanic; English later narrowed it to the Netherlands).
-Teutonic — via Latin Teutonicus, from the same þeudō.
-Italian calls Germany Tedesco, French thiois (historical) — all echoes of diutisc.
-Say it DOYTCH (eu-vowel = oy; tsch-ch = the tch of "match").
-
-The sentence, and why German keeps ich.
-Ich (I) + lerne (learn, from lernen) = Ich lerne Deutsch.
-Now the contrast that completes the verb chapter:
-German keeps the pronoun (ich, du, er…) — like French, unlike Spanish or Italian, which drop it.
-But for a different reason. Spanish drops yo because hablo already says "I". French keeps je because its endings are silent. German's endings aren't silent (wohne / wohnst / wohnt differ) — yet German still needs the pronoun because its grammar demands an overt subject (German sentences are built around the verb sitting in second position, with something before it). So: Spanish drops, French keeps for sound, German keeps for structure.
-Swap the pieces: Ich wohne in Berlin., Was machst du?
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Ich lerne Deutsch" — ikh LER-neh DOYTCH]
-[pause 8 seconds for the answer]
-[your turn — say: keep the ich — German can't drop it (structure), unlike Spanish]
-[pause 8 seconds for the answer]
-[your turn — say: "Deutsch" corresponds to English "Dutch" — the same diutisc, "of the people"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Where does Deutsch come from, and what English word is its twin? (diutisc, "of the people"; English Dutch.) Spanish drops yo, French keeps je for silence — why does German keep ich? (Its grammar needs an overt subject — structure, not sound.) Next: practice.
-
-
-Lesson 2 of 5.
-lernen — "to learn," and it is English learn.
-
-Warm-up.
-[pause 2 seconds]
-A third weak verb to make the pattern automatic — lernen ("to learn") — and it sets up your first full German sentence. It's a straight cousin of English learn.
-
-Sounds you'll need.
-r-uvular-german — the German r is a soft guttural at the back of the throat: lernen = LER-nen.
-
-The word, taken apart.
-lernen comes from Germanic liznōjan, "to learn, to get to know" — the same root as English "learn." Its close relatives are lovely:
-lore — the body of what has been learned (folklore, the lore of a craft).
-last (a shoemaker's last) and Gothic lais ("I know") share the deep root — the idea of following a track to knowledge.
-So lernen isn't foreign at all — it's learn, and its noun die Lehre ("the teaching, the lesson") is lore.
-
-Grammar Lens: same weak endings, one last time.
-[a table of 2 rows, read aloud]
-ich lerne, du lernst, er lernt, (-e / -st / -t).
-wir lernen, ihr lernt, sie lernen, blank.
-Three verbs — wohne, mache, lerne — one pattern. You now conjugate the regular German present.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "lernen" — LER-nen, guttural r]
-[pause 8 seconds for the answer]
-[your turn — say: "ich lerne, du lernst, er lernt"]
-[pause 8 seconds for the answer]
-[your turn — say: "lernen" then English "learn, lore" — one Germanic root]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What English verb is lernen? (Learn — same root.) What English noun for "accumulated knowledge" shares it? (Lore.) Say "I learn." (Ich lerne.) Next: build your first German sentence — Ich lerne Deutsch.
-
-
-Lesson 3 of 5.
-machen — "to make / to do," and it's just English make.
-
-Warm-up.
-[pause 2 seconds]
-A second weak verb — snap it into the endings you just learned. machen is one of the most-used verbs in German: "to make" and "to do," and it powers the everyday question Was machst du? — "What are you doing?"
-
-Sounds you'll need.
-ch-ach — the ch after a is the raspy ach-sound (from the throat, like Scottish loch): machen = MAKH-en.
-vowel-a-german — a clean open ah.
-
-The word, taken apart.
-machen descends from Germanic makōn, "to make, to shape, to fit together" — the same word as English "make." (The German k-sound became the ch rasp along the way, by the High German consonant shift: make becomes machen, just as ik becomes ich, book becomes Buch.) So machen is make, wearing German pronunciation.
-German uses it for both "make" and "do":
-Ich mache einen Kuchen. — "I'm making a cake."
-Was machst du? — "What are you doing?"
-
-Grammar Lens: same weak endings.
-[a table of 2 rows, read aloud]
-ich mache, du machst, er macht, (-e / -st / -t).
-wir machen, ihr macht, sie machen, blank.
-Identical to wohnen — nothing new to learn. That's the payoff of a regular pattern.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "machen" — MAKH-en, raspy ch]
-[pause 8 seconds for the answer]
-[your turn — say: "ich mache, du machst, er macht"]
-[pause 8 seconds for the answer]
-[your turn — say: "Was machst du?" — "What are you doing?"; and machen = make]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What English word is machen, at the root? (Make — same Germanic makōn.) What consonant shift turned k into ch? (The High German shift: make becomes machen, ik becomes ich.) Ask "what are you doing?" (Was machst du?) Next: lernen, "to learn."
-
-
-Lesson 4 of 5.
-Practice — making sentences with weak verbs.
-
-Warm-up.
-[pause 2 seconds]
-For the first time you're building German sentences from a pattern, not reciting phrases. Drill the three verbs and the everyday exchange until it's automatic.
-
-Conjugate on command.
-[pause 1 second]
-Run each through ich / du / er:
-wohnen: ich wohne, du wohnst, er wohnt.
-machen: ich mache, du machst, er macht.
-lernen: ich lerne, du lernst, er lernt.
-Same endings every time (-e / -st / -t), and — unlike French — you can hear them all. But you still keep the pronoun (German needs an overt subject).
-
-Say something real.
-— Wo wohnst du? — Ich wohne in Berlin. Und du? — Ich wohne in Wien. Was machst du? — Ich lerne Deutsch! — Sehr gut! — Danke! — Bitte.
-
-What you've built this chapter.
-the regular (weak) present tense — drop -en, add -e/-st/-t/-en/-t/-en; the endings are audible (contrast: French's are silent).
-wohnen ( from wonēn becomes wont), machen ( from makōn becomes make; Was machst du?), lernen ( from liznōjan becomes learn/lore).
-Ich lerne Deutsch — first self-assembled sentence (Deutsch from diutisc, "of the people" becomes English Dutch).
-The pronoun rule, three ways: Spanish drops yo (ending says who); French keeps je (endings silent); German keeps ich (grammar needs an overt subject).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: conjugate all three verbs, ich/du/er — hear the endings]
-[pause 8 seconds for the answer]
-[your turn — say: answer about yourself — where you live, what you're doing]
-[pause 8 seconds for the answer]
-[your turn — say: chain it — "Hallo! Ich lerne Deutsch. Wo wohnst du? … Auf Wiedersehen!"]
-[pause 8 seconds for the answer]
-[repeat that twice]
-"Wo wohnst du? — Ich wohne in Berlin."
-
-Wrap-up Recall.
-[pause 3 seconds]
-What are the three singular weak endings, and are they audible? (-e/-st/-t; yes — unlike French.) Give the "I" forms of the three verbs. (Ich wohne, ich mache, ich lerne.) Why does German keep ich when Spanish drops yo? (German grammar needs an overt subject.) German now moves in real sentences.
-
-
-Lesson 5 of 5.
 wohnen — "to live," and the regular German verb.
 
 Warm-up.
@@ -192,3 +43,152 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What does German w sound like, and what does wohnen mean? (V; "to live/dwell.") The three singular endings? (-e / -st / -t.) What English word for "accustomed" shares its root? (Wont.) Next: machen, "to make."
+
+
+Lesson 2 of 5.
+machen — "to make / to do," and it's just English make.
+
+Warm-up.
+[pause 2 seconds]
+A second weak verb — snap it into the endings you just learned. machen is one of the most-used verbs in German: "to make" and "to do," and it powers the everyday question Was machst du? — "What are you doing?"
+
+Sounds you'll need.
+ch-ach — the ch after a is the raspy ach-sound (from the throat, like Scottish loch): machen = MAKH-en.
+vowel-a-german — a clean open ah.
+
+The word, taken apart.
+machen descends from Germanic makōn, "to make, to shape, to fit together" — the same word as English "make." (The German k-sound became the ch rasp along the way, by the High German consonant shift: make becomes machen, just as ik becomes ich, book becomes Buch.) So machen is make, wearing German pronunciation.
+German uses it for both "make" and "do":
+Ich mache einen Kuchen. — "I'm making a cake."
+Was machst du? — "What are you doing?"
+
+Grammar Lens: same weak endings.
+[a table of 2 rows, read aloud]
+ich mache, du machst, er macht, (-e / -st / -t).
+wir machen, ihr macht, sie machen, blank.
+Identical to wohnen — nothing new to learn. That's the payoff of a regular pattern.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "machen" — MAKH-en, raspy ch]
+[pause 8 seconds for the answer]
+[your turn — say: "ich mache, du machst, er macht"]
+[pause 8 seconds for the answer]
+[your turn — say: "Was machst du?" — "What are you doing?"; and machen = make]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What English word is machen, at the root? (Make — same Germanic makōn.) What consonant shift turned k into ch? (The High German shift: make becomes machen, ik becomes ich.) Ask "what are you doing?" (Was machst du?) Next: lernen, "to learn."
+
+
+Lesson 3 of 5.
+lernen — "to learn," and it is English learn.
+
+Warm-up.
+[pause 2 seconds]
+A third weak verb to make the pattern automatic — lernen ("to learn") — and it sets up your first full German sentence. It's a straight cousin of English learn.
+
+Sounds you'll need.
+r-uvular-german — the German r is a soft guttural at the back of the throat: lernen = LER-nen.
+
+The word, taken apart.
+lernen comes from Germanic liznōjan, "to learn, to get to know" — the same root as English "learn." Its close relatives are lovely:
+lore — the body of what has been learned (folklore, the lore of a craft).
+last (a shoemaker's last) and Gothic lais ("I know") share the deep root — the idea of following a track to knowledge.
+So lernen isn't foreign at all — it's learn, and its noun die Lehre ("the teaching, the lesson") is lore.
+
+Grammar Lens: same weak endings, one last time.
+[a table of 2 rows, read aloud]
+ich lerne, du lernst, er lernt, (-e / -st / -t).
+wir lernen, ihr lernt, sie lernen, blank.
+Three verbs — wohne, mache, lerne — one pattern. You now conjugate the regular German present.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "lernen" — LER-nen, guttural r]
+[pause 8 seconds for the answer]
+[your turn — say: "ich lerne, du lernst, er lernt"]
+[pause 8 seconds for the answer]
+[your turn — say: "lernen" then English "learn, lore" — one Germanic root]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What English verb is lernen? (Learn — same root.) What English noun for "accumulated knowledge" shares it? (Lore.) Say "I learn." (Ich lerne.) Next: build your first German sentence — Ich lerne Deutsch.
+
+
+Lesson 4 of 5.
+Ich lerne Deutsch — your first real sentence.
+
+Warm-up.
+[pause 2 seconds]
+Everything pays off: you take a verb you conjugated and a noun, and build a sentence no one handed you — Ich lerne Deutsch, "I'm learning German." (There's no separate "am …-ing" in German — ich lerne covers both "I learn" and "I am learning.")
+
+The new word: Deutsch.
+Deutsch = "German" (the language) — and note it's capitalized, because it's a noun here (your Großschreibung writing lesson). It comes from Old High German diutisc, "of the people, of the folk" — from þeudō, "the people." The Germanic tribes simply called their own tongue "the people's [language]", as opposed to Latin.
+That "folk" root spread far:
+English Dutch — the same word (it once meant all continental West Germanic; English later narrowed it to the Netherlands).
+Teutonic — via Latin Teutonicus, from the same þeudō.
+Italian calls Germany Tedesco, French thiois (historical) — all echoes of diutisc.
+Say it DOYTCH (eu-vowel = oy; tsch-ch = the tch of "match").
+
+The sentence, and why German keeps ich.
+Ich (I) + lerne (learn, from lernen) = Ich lerne Deutsch.
+Now the contrast that completes the verb chapter:
+German keeps the pronoun (ich, du, er…) — like French, unlike Spanish or Italian, which drop it.
+But for a different reason. Spanish drops yo because hablo already says "I". French keeps je because its endings are silent. German's endings aren't silent (wohne / wohnst / wohnt differ) — yet German still needs the pronoun because its grammar demands an overt subject (German sentences are built around the verb sitting in second position, with something before it). So: Spanish drops, French keeps for sound, German keeps for structure.
+Swap the pieces: Ich wohne in Berlin., Was machst du?
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Ich lerne Deutsch" — ikh LER-neh DOYTCH]
+[pause 8 seconds for the answer]
+[your turn — say: keep the ich — German can't drop it (structure), unlike Spanish]
+[pause 8 seconds for the answer]
+[your turn — say: "Deutsch" corresponds to English "Dutch" — the same diutisc, "of the people"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Where does Deutsch come from, and what English word is its twin? (diutisc, "of the people"; English Dutch.) Spanish drops yo, French keeps je for silence — why does German keep ich? (Its grammar needs an overt subject — structure, not sound.) Next: practice.
+
+
+Lesson 5 of 5.
+Practice — making sentences with weak verbs.
+
+Warm-up.
+[pause 2 seconds]
+For the first time you're building German sentences from a pattern, not reciting phrases. Drill the three verbs and the everyday exchange until it's automatic.
+
+Conjugate on command.
+[pause 1 second]
+Run each through ich / du / er:
+wohnen: ich wohne, du wohnst, er wohnt.
+machen: ich mache, du machst, er macht.
+lernen: ich lerne, du lernst, er lernt.
+Same endings every time (-e / -st / -t), and — unlike French — you can hear them all. But you still keep the pronoun (German needs an overt subject).
+
+Say something real.
+— Wo wohnst du? — Ich wohne in Berlin. Und du? — Ich wohne in Wien. Was machst du? — Ich lerne Deutsch! — Sehr gut! — Danke! — Bitte.
+
+What you've built this chapter.
+the regular (weak) present tense — drop -en, add -e/-st/-t/-en/-t/-en; the endings are audible (contrast: French's are silent).
+wohnen ( from wonēn becomes wont), machen ( from makōn becomes make; Was machst du?), lernen ( from liznōjan becomes learn/lore).
+Ich lerne Deutsch — first self-assembled sentence (Deutsch from diutisc, "of the people" becomes English Dutch).
+The pronoun rule, three ways: Spanish drops yo (ending says who); French keeps je (endings silent); German keeps ich (grammar needs an overt subject).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: conjugate all three verbs, ich/du/er — hear the endings]
+[pause 8 seconds for the answer]
+[your turn — say: answer about yourself — where you live, what you're doing]
+[pause 8 seconds for the answer]
+[your turn — say: chain it — "Hallo! Ich lerne Deutsch. Wo wohnst du? … Auf Wiedersehen!"]
+[pause 8 seconds for the answer]
+[repeat that twice]
+"Wo wohnst du? — Ich wohne in Berlin."
+
+Wrap-up Recall.
+[pause 3 seconds]
+What are the three singular weak endings, and are they audible? (-e/-st/-t; yes — unlike French.) Give the "I" forms of the three verbs. (Ich wohne, ich mache, ich lerne.) Why does German keep ich when Spanish drops yo? (German grammar needs an overt subject.) German now moves in real sentences.

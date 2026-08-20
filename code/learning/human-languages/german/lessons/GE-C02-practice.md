@@ -1,5 +1,6 @@
 ---
 id: GE-C02-practice
+sequence: 100
 chapter: 2
 type: practice
 headword: (dialogue)

@@ -1,5 +1,6 @@
 ---
 id: GE-C10-geschwister
+sequence: 260
 chapter: 10
 type: word
 headword: der Bruder, die Schwester

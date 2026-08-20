@@ -1,5 +1,6 @@
 ---
 id: GE-C01-guten-tag
+sequence: 25
 chapter: 1
 type: word
 headword: Guten Tag

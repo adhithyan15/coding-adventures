@@ -5,6 +5,41 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09FZ — Gujarati ઝ repairs the next consonant inventory gap
+
+The canonical-order audit found **ઝ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses
+three populated SVG paths: the rounded left body, a separate right loop-and-tail
+run, and a final short descending upper stem. The restored entry and fitted
+medians preserve that order and the two observed lifts.
+
+Gujarati is now **20/39 verified, 19 remaining**. Continue in source order with
+**ઞ** next; it is also absent from the current inventory. A correctness defect
+still outranks coverage if one appears during fitting or validation.
+
+## HL-C09FY — Gujarati જ keeps its left loop, crossing body, and right loop joined
+
+The t30apps.com animation gives **જ** one populated SVG path: the pen circles
+the upper-left loop, continues diagonally through the crossing body, circles
+the lower-right loop, and sweeps into the long upper-right exit without lifting.
+The fitted Noto Sans Gujarati median preserves that zero-lift order.
+
+Gujarati is now **19/38 verified, 19 remaining**. Continue in source order with
+**ઝ** next; it is absent from the current inventory. A correctness defect still
+outranks coverage if one appears during fitting or validation.
+
+## HL-C09FX — Gujarati છ keeps both rounded bodies in one continuous run
+
+The t30apps.com animation gives **છ** one populated SVG path: the pen circles
+the upper-left lobe, turns back through the middle, continues around the broad
+lower body, climbs the outer right curve, and finishes by circling the
+upper-right lobe without lifting. The fitted Noto Sans Gujarati median preserves
+that zero-lift order.
+
+Gujarati is now **18/38 verified, 20 remaining**. Continue in source and
+inventory order with **જ** next. A correctness defect still outranks coverage
+if one appears during fitting or validation.
+
 ## HL-C09FW — Gujarati ચ joins its upper bowl, middle loop, and lower body
 
 The t30apps.com animation gives **ચ** two populated SVG paths: one continuous

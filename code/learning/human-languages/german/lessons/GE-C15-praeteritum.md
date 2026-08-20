@@ -1,5 +1,6 @@
 ---
 id: GE-C15-praeteritum
+sequence: 310
 chapter: 15
 type: word
 headword: ich sagte

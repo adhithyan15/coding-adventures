@@ -1,5 +1,6 @@
 ---
 id: GE-C03-es-geht
+sequence: 130
 chapter: 3
 type: word
 headword: es geht

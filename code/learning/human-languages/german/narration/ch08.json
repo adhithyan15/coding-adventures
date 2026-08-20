@@ -4,148 +4,11 @@
   "chapter": 8,
   "title": "Telling the Time",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:6d770a78d187c917",
+  "sourceHash": "fnv1a64:43f8eec17cde9e22",
   "lessons": [
     {
-      "id": "GE-C08-mittag-mitternacht",
-      "sequence": null,
-      "title": "Mittag and Mitternacht — the native middle of day and night",
-      "headword": "Mittag, Mitternacht",
-      "romanization": "Mittag, Mitternacht",
-      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:0c248766c31bc500",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The two words, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "German",
-                "=",
-                "literally"
-              ],
-              "columns": 3,
-              "rowCount": 2,
-              "utterances": [
-                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
-                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
-            },
-            {
-              "kind": "speech",
-              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
-            },
-            {
-              "kind": "speech",
-              "text": "To tell the time with them:"
-            },
-            {
-              "kind": "speech",
-              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-C08-uhr",
-      "sequence": null,
+      "sequence": 235,
       "title": "Uhr — the clock, and a Roman word in the German day",
       "headword": "Uhr",
       "romanization": "Uhr",
@@ -156,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a5e68a19ad335ee0",
+      "sourceHash": "fnv1a64:e5cc9aeede24f93f",
       "notice": null,
       "blocks": [
         {
@@ -294,6 +157,143 @@
             {
               "kind": "speech",
               "text": "Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say \"it is three o'clock\"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C08-mittag-mitternacht",
+      "sequence": 240,
+      "title": "Mittag and Mitternacht — the native middle of day and night",
+      "headword": "Mittag, Mitternacht",
+      "romanization": "Mittag, Mitternacht",
+      "gloss": "noon and midnight — native \"mid-day\" and \"mid-night\"",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f3b70fa1b579e8b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — \"the day's middle\" and \"the night's middle\" — built from words you can already almost read."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The two words, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Both start with Mitte, \"middle\" (cousin of English mid, middle, and of Latin medius):"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "German",
+                "=",
+                "literally"
+              ],
+              "columns": 3,
+              "rowCount": 2,
+              "utterances": [
+                "German: Mittag. =: Mitte + Tag. literally: \"mid-day\" (noon).",
+                "German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: \"mid-night\" (midnight)."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Mittag = \"mid-day.\" Tag (\"day\") you met in Montag, Dienstag; put \"middle\" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one."
+            },
+            {
+              "kind": "speech",
+              "text": "Mitternacht = \"mid-night.\" Nacht (\"night\") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues."
+            },
+            {
+              "kind": "speech",
+              "text": "To tell the time with them:"
+            },
+            {
+              "kind": "speech",
+              "text": "Es ist Mittag. — \"It is noon.\" Es ist Mitternacht. — \"It is midnight.\""
+            },
+            {
+              "kind": "speech",
+              "text": "So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mittag\" (noon), \"Mitternacht\" (midnight)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mittag\" (noon), \"Mitternacht\" (midnight)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: break them — \"Mitte (middle) + Tag (day)\", \"Mitte + Nacht (night)\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Mitternacht / mid-night\" — the same Germanic compound",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Mitternacht / mid-night\" — the same Germanic compound]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What do Mittag and Mitternacht literally mean, and from what native word? (\"Mid-day\" / \"mid-night\"; from Mitte \"middle\" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family."
             }
           ]
         }

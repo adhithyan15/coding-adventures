@@ -1,5 +1,6 @@
 ---
 id: GE-C09-jahreszeiten
+sequence: 250
 chapter: 9
 type: word
 headword: die Jahreszeiten

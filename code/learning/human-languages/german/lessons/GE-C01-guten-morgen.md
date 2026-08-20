@@ -1,5 +1,6 @@
 ---
 id: GE-C01-guten-morgen
+sequence: 35
 chapter: 1
 type: word
 headword: Guten Morgen

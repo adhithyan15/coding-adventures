@@ -464,15 +464,14 @@ it would produce archives no real `unzip` could open and would be unable to read
 archives from other real-world tools. The CRC-32 implementation is inlined (no separate
 package — it's a trivial table-driven function).
 
-**Divergence (Haskell):** the Haskell package depends on `lzss` (CMP02) rather than
-`deflate` (CMP05). It reimplements the RFC 1951 raw-DEFLATE bitstream itself — fixed
-(BTYPE=01) Huffman tables plus LZ77 match-finding delegated to `LZSS.encodeWith` — instead
-of reusing the sibling `deflate` package's dynamic-Huffman encoder. This is a narrower
-DEFLATE (fixed Huffman only, no BTYPE=10 dynamic tables on the encode side; decode
-rejects BTYPE=10), which is sufficient for producing and reading valid ZIP entries but is
-not a byte-for-byte match with the `deflate` package's output. Documented here rather than
-changed, since the implementation is otherwise complete, tested, and correct for the
-DEFLATE subset it emits.
+**Divergence (Haskell encoder):** the Haskell package depends on `lzss` (CMP02)
+rather than `deflate` (CMP05). It owns the RFC 1951 raw-DEFLATE framing and
+delegates only LZ77 match-finding to `LZSS.encodeWith`. Its encoder deliberately
+emits stored or fixed-Huffman blocks rather than dynamic-Huffman blocks, so its
+bytes are not expected to match the sibling `deflate` package. Its decoder is
+not narrowed by that encoder choice: the ZIP-owned `rawInflate` and
+`rawInflateCounted` APIs accept stored, fixed, and dynamic blocks with the full
+portable profile above, including exact compressed-byte consumption.
 
 **Divergence (C):** the C package depends directly on `deflate` (CMP05, `c/deflate`)
 rather than `lzss` (CMP02), and does not touch `lzss` at all. This is the opposite of the

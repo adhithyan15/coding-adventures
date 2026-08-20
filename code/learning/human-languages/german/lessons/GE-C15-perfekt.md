@@ -1,5 +1,6 @@
 ---
 id: GE-C15-perfekt
+sequence: 305
 chapter: 15
 type: word
 headword: ich habe gesagt

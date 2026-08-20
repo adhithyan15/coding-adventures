@@ -1,5 +1,6 @@
 ---
 id: GE-C01-nacht
+sequence: 50
 chapter: 1
 type: word
 headword: Nacht

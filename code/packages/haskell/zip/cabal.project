@@ -1,2 +1,5 @@
 packages: .
          ../lzss
+
+package zip
+  coverage: True

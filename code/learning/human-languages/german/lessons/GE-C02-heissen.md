@@ -1,5 +1,6 @@
 ---
 id: GE-C02-heissen
+sequence: 70
 chapter: 2
 type: word
 headword: heißen

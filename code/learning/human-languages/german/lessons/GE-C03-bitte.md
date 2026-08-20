@@ -1,5 +1,6 @@
 ---
 id: GE-C03-bitte
+sequence: 110
 chapter: 3
 type: word
 headword: bitte

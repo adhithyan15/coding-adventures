@@ -197,8 +197,10 @@ export interface CompletionPlanInput {
   writingStages?: WritingStageReport;
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
-  /** Which target inventories exist. Absent ones become `exam-inventory` items. */
+  /** Which target inventories are complete. Every other rung becomes an `exam-inventory` item. */
   inventories: readonly InventoryPresence[];
+  /** Valid but incomplete source inventories. Their points count; their presence does not close the item. */
+  partialInventories?: readonly InventoryPresence[];
   /** Which sourced four-skill performance shapes exist. Absent pairs become `task-shape` items. */
   taskShapes?: readonly InventoryPresence[];
   /**
@@ -265,6 +267,7 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
   const ceiling = input.ceiling ?? "C2";
   const headSize = input.headSize ?? 25;
   const have = new Set(input.inventories.map((entry) => `${entry.language}/${entry.level}`));
+  const partial = new Set((input.partialInventories ?? []).map((entry) => `${entry.language}/${entry.level}`));
   const haveTaskShapes = new Set((input.taskShapes ?? []).map((entry) => `${entry.language}/${entry.level}`));
   const closureByLanguage = new Map(input.scriptClosure.tracks.map((track) => [track.language, track]));
   const contracted = new Set(input.assessmentContracts ?? []);
@@ -333,13 +336,17 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
     // The external language-point target for the next certifiable rung, if it is not written.
     const missing = nextMissingInventory(track.language, level, ceiling, have);
     if (missing !== null) {
+      const partialKey = `${track.language}/${missing}`;
+      const action = partial.has(partialKey)
+        ? `complete the partial ${missing}`
+        : `write the external or project-defined ${missing}`;
       mine.push({
         id: `exam-inventory/${track.language}/${missing}`,
         kind: "exam-inventory",
         language: track.language,
         level,
         goal:
-          `write the external or project-defined ${missing} assessment inventory for ${track.language}; ` +
+          `${action} assessment inventory for ${track.language}; ` +
           `until it exists, every ${track.language} number at ${missing} is a proxy`,
         outstanding: 1,
         tranches: 1,
@@ -544,6 +551,9 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
 
   const wanted = input.levelGate.tracks.length * CERTIFIABLE_LEVELS.filter((level) => levelRank(level) <= levelRank(ceiling)).length;
   const inventoryItems = Math.max(0, wanted - input.inventories.length);
+  const partialInventoryItems = (input.partialInventories ?? []).filter(
+    (entry) => levelRank(entry.level) <= levelRank(ceiling),
+  ).length;
   const taskShapeItems = Math.max(0, wanted - (input.taskShapes ?? []).length);
   const trackNames = new Set(input.levelGate.tracks.map((track) => track.language));
   const validAssessmentContracts = new Set(
@@ -611,7 +621,9 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     {
       kind: "exam-inventory",
       items: inventoryItems,
-      detail: `${input.inventories.length} of ${wanted} (track x certifiable level) inventories written`,
+      detail:
+        `${input.inventories.length} complete and ${partialInventoryItems} partial of ${wanted} ` +
+        `(track x certifiable level) inventories written; partial never counts as complete`,
     },
     {
       kind: "script-closure",
