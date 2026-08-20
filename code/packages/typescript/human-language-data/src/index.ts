@@ -8,6 +8,7 @@ export * from "./types.js";
 export * from "./constants.js";
 export * from "./cousins.js";
 export * from "./exam-inventory.js";
+export * from "./assessment.js";
 export { splitFrontmatter, type Frontmatter } from "./frontmatter.js";
 export {
   declaredStrands,

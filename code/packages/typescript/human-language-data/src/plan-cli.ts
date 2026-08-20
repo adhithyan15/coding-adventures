@@ -12,6 +12,7 @@ import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot as defaultRoot,
+  listAssessmentContracts,
   listExamInventories,
   loadChapterPolicy,
   loadEverything,
@@ -167,6 +168,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
   const plan = buildCompletionPlan({
     levelGate: report.levelGate,
     scriptClosure: report.scriptClosure,
+    assessmentContracts: listAssessmentContracts(options.root),
     inventories: readable,
     examCoverage,
     unreadableInventories: unreadable.length,

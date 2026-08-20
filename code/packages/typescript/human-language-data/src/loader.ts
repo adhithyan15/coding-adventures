@@ -12,6 +12,11 @@ import {
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
 import type { ExamInventory } from "./exam-inventory.js";
+import {
+  parseAssessmentContract,
+  parseAssessmentPolicy,
+  type AssessmentPolicy,
+} from "./assessment.js";
 import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
 import type {
   BookChapter,
@@ -65,6 +70,33 @@ export function loadLanguageRegistry(root = defaultCurriculumRoot()): LanguageRe
   return JSON.parse(
     readFileSync(join(root, "core", "languages.json"), "utf8"),
   ) as LanguageRegistry;
+}
+
+/** HL16: the universal five-minute, four-skill and writing-ramp contract. */
+export function loadAssessmentPolicy(root = defaultCurriculumRoot()): AssessmentPolicy {
+  return parseAssessmentPolicy(
+    JSON.parse(readFileSync(join(root, "core", "assessment-policy.json"), "utf8")),
+  );
+}
+
+/**
+ * Tracks whose complete assessment contract is present and valid.
+ *
+ * Absence is backlog. Invalidity is an error: treating a malformed contract as
+ * absent would send the next contributor to create a second file while hiding
+ * the broken one already in the tree.
+ */
+export function listAssessmentContracts(root = defaultCurriculumRoot()): string[] {
+  const policy = loadAssessmentPolicy(root);
+  const registry = loadLanguageRegistry(root);
+  const out: string[] = [];
+  for (const track of registry.languages) {
+    const path = join(root, track.id, "assessment.json");
+    if (!existsSync(path)) continue;
+    parseAssessmentContract(JSON.parse(readFileSync(path, "utf8")), track.id, policy);
+    out.push(track.id);
+  }
+  return out;
 }
 
 export function loadCurriculumSpine(root = defaultCurriculumRoot()): CurriculumSpine {
