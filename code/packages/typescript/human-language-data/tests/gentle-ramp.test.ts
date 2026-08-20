@@ -106,9 +106,9 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracks: 23,
       tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 2, // Latin now starts with observe-trace and guided copy.
-      tracksWhereWritingStartsLate: 7,
+      tracksWhereWritingStartsLate: 6, // Chinese writing now starts in lesson one.
       atomMeasurementBlindLessons: 498, // +1: Latin's atom-free guided-copy bridge.
-      findings: 142, // Punjabi joins the tracks with recovered authored order.
+      findings: 141, // Punjabi order recovery and Chinese writing each remove one finding.
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "arabic", kind: "order-integrity", count: 53 },
