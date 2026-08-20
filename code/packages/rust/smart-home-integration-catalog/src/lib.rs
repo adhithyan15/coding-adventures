@@ -45182,6 +45182,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         .with_notes(&[
             "Account-backed source browsing remains separate work; local playback, volume, grouping, and queue controls are available without HEOS account credentials.",
         ]),
+        kodi_entry(),
         google_cast_entry(),
         camera_entry(
             "onvif",
@@ -49314,6 +49315,57 @@ fn matter_operational_discovery_entry() -> IntegrationCatalogEntry {
             "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/TxtFields.h"
                 .to_string(),
         external_id: Some("CommonTxtKey".to_string()),
+    });
+    entry
+}
+
+fn kodi_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "kodi",
+        "Kodi JSON-RPC",
+        "Bounded local Kodi application and active-player telemetry with low-risk media control.",
+        IntegrationCategory::CameraMedia,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        2,
+        "kodi",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("kodi_jsonrpc".to_string())])
+    .with_capabilities(&["smart_home.read", "smart_home.command.media"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Manual])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime accepts one explicit local IP endpoint and fixed JSON-RPC methods for application state, active-player state, play, pause, stop, volume, and mute.",
+        "Credentialed endpoints, WebSocket subscriptions, library or item browsing, playback URLs, arbitrary JSON-RPC, input, add-on, queue, and power operations remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::LocalHttp,
+        PrimitiveFamily::Tcp,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::CommandMapping,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Kodi JSON-RPC method schema".to_string(),
+        url:
+            "https://github.com/xbmc/xbmc/blob/master/xbmc/interfaces/json-rpc/schema/methods.json"
+                .to_string(),
+        external_id: Some("Application.GetProperties / Player.GetProperties".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Kodi JSON-RPC type schema".to_string(),
+        url: "https://github.com/xbmc/xbmc/blob/master/xbmc/interfaces/json-rpc/schema/types.json"
+            .to_string(),
+        external_id: Some("Application.Property.Value / Player.Property.Value".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Kodi JSON-RPC examples".to_string(),
+        url: "https://kodi.wiki/view/JSON-RPC_API/Examples".to_string(),
+        external_id: None,
     });
     entry
 }
@@ -82045,6 +82097,48 @@ mod tests {
             PrimitiveFamily::TestSimulator,
         ] {
             assert!(heos.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn kodi_entry_exposes_bounded_local_jsonrpc_media_runtime() {
+        let catalog = first_party_catalog();
+        let kodi = find_entry(&catalog, &IntegrationId::trusted("kodi")).unwrap();
+
+        assert_eq!(
+            kodi.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(kodi.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(kodi.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            kodi.supported_protocols,
+            vec![ProtocolFamily::Vendor("kodi_jsonrpc".to_string())]
+        );
+        assert_eq!(
+            kodi.required_capabilities,
+            vec![
+                CapabilityId::trusted("smart_home.read"),
+                CapabilityId::trusted("smart_home.command.media"),
+            ]
+        );
+        assert_eq!(kodi.discovery_mechanisms, vec![DiscoveryMechanism::Manual]);
+        for primitive in [
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(kodi.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::VaultLease,
+            PrimitiveFamily::WebSocket,
+        ] {
+            assert!(!kodi.required_primitives.contains(&primitive));
         }
     }
 

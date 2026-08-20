@@ -2728,6 +2728,36 @@ the Interaction Model:
 This broadens Matter fabric visibility while preserving the existing block on
 a production commissioning and secure-session host.
 
+## Current Kodi JSON-RPC Media Breadth Slice
+
+The next breadth slice adds a common local media telemetry and control surface
+without accepting Kodi credentials or exposing its broad administrative API:
+
+- `smart-home-kodi-jsonrpc-integration` connects only to one explicit private,
+  link-local, or loopback IP literal and non-zero port. HTTP requests, response
+  bodies, timeouts, and active-player count are bounded, and redirects,
+  chunked responses, authentication challenges, public endpoints, and DNS
+  resolution are rejected.
+- The fixed read allowlist uses Kodi's official `Application.GetProperties`,
+  `Player.GetActivePlayers`, and `Player.GetProperties` contracts to normalize
+  application identity and version, volume, mute state, active player type and
+  runtime, speed, elapsed and total time, percentage, repeat, shuffle, seek,
+  and live-state facts into one D23 media entity. It requests no item metadata,
+  filenames, library records, or playback URLs.
+- D23 read authorization runs before TCP connection. Low-risk D23 media command
+  authorization runs before native I/O and maps only play, pause, stop, volume,
+  and mute to `Player.PlayPause`, `Player.Stop`, `Application.SetVolume`, and
+  `Application.SetMute`; each native response must prove the requested result.
+- The runtime accepts no username, password, token, cookie, or TLS exception
+  and exposes no WebSocket subscription, library or item browse, queue change,
+  arbitrary JSON-RPC method, input action, add-on execution, power action,
+  public endpoint, or long-lived connection. Credentialed deployments require
+  a separately supervised Vault-leased authentication and session owner.
+
+This broadens local media telemetry and low-risk control beyond proprietary
+player protocols while preserving explicit endpoint, authorization, lifetime,
+and secret boundaries.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 
