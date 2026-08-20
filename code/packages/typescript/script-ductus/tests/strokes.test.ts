@@ -134,6 +134,7 @@ const GUJARATI_TTA = DUCTUS[ductusKey("gujarati", "ટ")];
 const GUJARATI_TTHA = DUCTUS[ductusKey("gujarati", "ઠ")];
 const GUJARATI_DDA = DUCTUS[ductusKey("gujarati", "ડ")];
 const GUJARATI_DDHA = DUCTUS[ductusKey("gujarati", "ઢ")];
+const GUJARATI_NNA = DUCTUS[ductusKey("gujarati", "ણ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2115,6 +2116,19 @@ describe("handwriting ductus", () => {
     expect(path.length).toBeGreaterThanOrEqual(34);
     expect(Math.max(...path.map((point) => point.y))).toBeGreaterThan(570);
     expect(path.at(-1)!.y).toBeGreaterThan(Math.min(...path.map((point) => point.y)));
+  });
+
+  it("Gujarati ણ separates its hooked body, middle bowl, and right spine", () => {
+    expect(GUJARATI_NNA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_NNA)).toBe(2);
+    expect(GUJARATI_NNA.strokes).toHaveLength(3);
+    expect(GUJARATI_NNA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1]);
+    const body = GUJARATI_NNA.strokes[0].segments[0].path;
+    const bowl = GUJARATI_NNA.strokes[1].segments[0].path;
+    const spine = GUJARATI_NNA.strokes[2].segments[0].path;
+    expect(body.at(-1)!.y).toBeLessThan(body[0].y);
+    expect(bowl.length).toBeGreaterThanOrEqual(15);
+    expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4559,6 +4573,15 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ઢ animation.*first SVG path/i);
     expect(src.variation).toMatch(
       /one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*right across the high shoulder.*descends through the middle.*broad outer lower bowl.*small inner loop.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*shoulder-to-outer-bowl-to-inner-loop order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ણ traces its hooked body, bowl, and right spine to three paths", () => {
+    const src = GUJARATI_NNA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ણ animation.*first through third SVG paths/i);
+    expect(src.variation).toMatch(
+      /three ordered pen-down runs.*first SVG path.*left spine.*hooked lower tail.*lifts once.*second SVG path.*middle bowl.*lifts again.*third SVG path.*tall right spine.*lower foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-middle-bowl-before-right-spine order.*two-lift evidence/i,
     );
   });
 

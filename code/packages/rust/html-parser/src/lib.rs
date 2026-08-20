@@ -6672,12 +6672,15 @@ impl HtmlParser {
         if self.current_element_is_table_structure()
             && (incoming_name == "a" || is_formatting_element(incoming_name))
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-formatting-start-tag-in-table",
-                format!(
-                    "formatting start tag `<{incoming_name}>` in a table context was foster parented"
-                ),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-formatting-start-tag-in-table",
+                    format!(
+                        "formatting start tag `<{incoming_name}>` in a table context was foster parented"
+                    ),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if incoming_name == "a" && self.has_active_html_anchor() {
                 self.diagnostics.push(ParserDiagnostic::new(
                     "nested-anchor-start-tag",
@@ -27120,6 +27123,14 @@ mod tests {
         .at_emission(Some(start_tag_position(source, "select")))
     }
 
+    fn formatting_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-formatting-start-tag-in-table",
+            format!("formatting start tag `<{name}>` in a table context was foster parented"),
+        )
+        .at_emission(Some(start_tag_position(source, name)))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -35483,14 +35494,12 @@ mod tests {
             );
         }
 
-        let formatting = parse_html_with_diagnostics("<!doctype html><table><b>").unwrap();
+        let generic = parse_html_with_diagnostics("<!doctype html><table><div>").unwrap();
         assert_eq!(
-            formatting
+            generic
                 .parser_diagnostics
                 .iter()
-                .find(|diagnostic| {
-                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
-                })
+                .find(|diagnostic| diagnostic.code == "unexpected-start-tag-in-table")
                 .unwrap()
                 .position,
             None
@@ -40107,13 +40116,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-formatting-start-tag-in-table",
-                            format!(
-                                "formatting start tag `<{name}>` in a table context was foster parented"
-                            ),
-                        )
+                    diagnostic == &formatting_start_tag_in_table_recovery(source, name)
                 }),
                 "source {source:?}"
             );
@@ -40123,10 +40126,7 @@ mod tests {
             parse_html_fragment_for_context_with_diagnostics("<a><tr>", "table").unwrap();
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-formatting-start-tag-in-table",
-                "formatting start tag `<a>` in a table context was foster parented"
-            )]
+            vec![formatting_start_tag_in_table_recovery("<a><tr>", "a")]
         );
 
         for source in ["<!doctype html><a>x", "<!doctype html><table><tr><td><b>x"] {
@@ -40138,19 +40138,179 @@ mod tests {
     }
 
     #[test]
+    fn positions_formatting_start_tags_fostered_from_tables_at_token_emission() {
+        for name in [
+            "a", "b", "big", "code", "em", "font", "i", "nobr", "s", "small", "span",
+            "strike", "strong", "tt", "u",
+        ] {
+            let source = format!("<!doctype html><table><{name} data-name=x>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&formatting_start_tag_in_table_recovery(&source, name)],
+                "source {source:?}"
+            );
+        }
+
+        for (source, name) in [
+            ("<!doctype html><table><colgroup><b>", "b"),
+            ("<!doctype html><table><tbody><em>", "em"),
+            ("<!doctype html><table><thead><strong>", "strong"),
+            ("<!doctype html><table><tfoot><i>", "i"),
+            ("<!doctype html><table><tbody><tr><nobr>", "nobr"),
+            ("<!doctype html><template><table><font>", "font"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &formatting_start_tag_in_table_recovery(source, name)
+            }));
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<strong data-name='é'>X";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &formatting_start_tag_in_table_recovery(source, "strong")
+            }));
+            let strong = find_first_element_in_nodes(&output.nodes, "strong").unwrap();
+            assert_eq!(strong.attribute("data-name"), Some("é"));
+            assert_eq!(strong.children, vec![Node::text("X")]);
+        }
+
+        for (source, context) in [
+            ("<b>", "caption"),
+            ("<em>", "colgroup"),
+            ("<strong>", "td"),
+            ("<i>", "th"),
+            ("<nobr>", "template"),
+            ("<a>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-formatting-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><b>",
+            "<!doctype html><table><tbody><tr><td><em>",
+            "<!doctype html><table><tbody><tr><th><strong>",
+            "<!doctype html><template><div><i>",
+            "<!doctype html><table><div><nobr>",
+            "<!doctype html><table><b",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-formatting-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let state_source = "<!doctype html><main><table><b id=outer><i id=inner>X</i></b><tbody><tr><td>Y</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let bold = element(&main.children[0]);
+        assert_eq!(bold.name, "b");
+        assert_eq!(bold.attribute("id"), Some("outer"));
+        let italic = element(&bold.children[0]);
+        assert_eq!(italic.name, "i");
+        assert_eq!(italic.attribute("id"), Some("inner"));
+        assert_eq!(italic.children, vec![Node::text("X")]);
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "Y");
+
+        let repeated_source = "<!doctype html><A><table><a id=inner>";
+        let repeated = parse_html_with_diagnostics(repeated_source).unwrap();
+        assert!(repeated.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &formatting_start_tag_in_table_recovery(repeated_source, "a")
+        }));
+        for code in ["nested-anchor-start-tag", "formatting-element-not-in-table-scope"] {
+            assert_eq!(
+                repeated
+                    .parser_diagnostics
+                    .iter()
+                    .find(|diagnostic| diagnostic.code == code)
+                    .unwrap()
+                    .position,
+                None
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><i>A</table><i>B",
+            "<!doctype html><table><nobr>A</table><nobr>B",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert_eq!(
+                output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-formatting-start-tag-in-table"
+                    })
+                    .count(),
+                1,
+                "source {source:?}"
+            );
+        }
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><div>").unwrap();
+        assert_eq!(
+            adjacent
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "b".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
+                })
+                .unwrap()
+                .position,
+            None
+        );
+    }
+
+    #[test]
     fn reports_repeated_anchor_recovery_from_table_foster_parenting() {
         for source in [
-            "<!doctype html><a><table><a></table>",
-            "<!doctype html><template><a><table><a></template>",
+            "<!doctype html><A><table><a></table>",
+            "<!doctype html><template><A><table><a></template>",
         ] {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(output.parser_diagnostics.windows(3).any(|diagnostics| {
                 diagnostics
                     == [
-                        ParserDiagnostic::new(
-                            "unexpected-formatting-start-tag-in-table",
-                            "formatting start tag `<a>` in a table context was foster parented",
-                        ),
+                        formatting_start_tag_in_table_recovery(source, "a"),
                         ParserDiagnostic::new(
                             "nested-anchor-start-tag",
                             "start tag `<a>` triggered adoption-agency recovery for an active anchor",
@@ -41896,14 +42056,12 @@ mod tests {
             diagnostic.code == "unexpected-start-tag-in-select" && diagnostic.position.is_none()
         }));
 
-        let adjacent = parse_html_with_diagnostics("<!doctype html><table><b>").unwrap();
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><div>").unwrap();
         assert_eq!(
             adjacent
                 .parser_diagnostics
                 .iter()
-                .find(|diagnostic| {
-                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
-                })
+                .find(|diagnostic| diagnostic.code == "unexpected-start-tag-in-table")
                 .unwrap()
                 .position,
             None
@@ -42149,14 +42307,12 @@ mod tests {
         assert_eq!(table.name, "table");
         assert_eq!(element_text_content(table), "X");
 
-        let adjacent = parse_html_with_diagnostics("<!doctype html><table><b>").unwrap();
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><div>").unwrap();
         assert_eq!(
             adjacent
                 .parser_diagnostics
                 .iter()
-                .find(|diagnostic| {
-                    diagnostic.code == "unexpected-formatting-start-tag-in-table"
-                })
+                .find(|diagnostic| diagnostic.code == "unexpected-start-tag-in-table")
                 .unwrap()
                 .position,
             None

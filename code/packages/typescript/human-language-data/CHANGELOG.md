@@ -2,6 +2,27 @@
 
 ## Unreleased
 
+### Added - official DELE A1 four-skill target (#12285)
+
+- Inventory all 13 reading, listening, writing, and speaking task families in
+  the current DELE A1 format from official Instituto Cervantes sources.
+- Preserve exact item counts, stimulus and response bounds, two-play listening,
+  oral preparation, and the three-part live speaking sequence.
+- Record DELE's two 30/50 paired-skill pass thresholds without inventing four
+  independent skill floors. This is a target for gentle lesson decomposition,
+  not a claim that the Spanish book is already pass-ready.
+
+### Added - project-defined Latin A1 four-skill target (#12288)
+
+- Define twelve reading, listening, writing, and speaking task families for the
+  track whose registry correctly says there is no modern proficiency exam.
+- Preserve Latin's reading-first reality while requiring 15/25 independently in
+  every skill, so an aggregate cannot hide absent writing or interaction.
+- Fix task counts, lengths, listening speeds and replay, interlocutor protocol,
+  timing, aids, orthographic treatment, and analytic point ceilings. This is the
+  assessment target; later work must still decompose it into gentle lessons and
+  supply mocks and human validation.
+
 ### Added - official DELF A1 four-skill target (#12237)
 
 - Inventory all four DELF A1 tout public skills from France Education

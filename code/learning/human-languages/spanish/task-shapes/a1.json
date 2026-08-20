@@ -1,0 +1,289 @@
+{
+  "version": 1,
+  "language": "spanish",
+  "level": "A1",
+  "target": {
+    "name": "DELE A1",
+    "basis": "external"
+  },
+  "sources": [
+    {
+      "id": "cervantes-a1-overview",
+      "title": "Exámenes DELE A1",
+      "url": "https://examenes.cervantes.es/es/dele/como-son-los-examenes/a1",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "cervantes-a1-guide-2020",
+      "title": "Guía del examen DELE A1, versión 2020",
+      "url": "https://examenes.cervantes.es/sites/default/files/DELE_A1_v2020_Guia-de-examen.pdf",
+      "published": "2019",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "cervantes-a1-specification-2020",
+      "title": "Especificaciones del examen DELE A1, versión 2020",
+      "url": "https://examenes.cervantes.es/sites/default/files/Especificaciones_DELE_A1_2020.pdf",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "cervantes-a1-model-2020",
+      "title": "Modelo 0 del examen DELE A1, versión 2020",
+      "url": "https://examenes.cervantes.es/sites/default/files/DELE-A1_v2020_Modelo0.pdf",
+      "published": "2020",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "cervantes-dele-scoring",
+      "title": "Cómo son las pruebas DELE",
+      "url": "https://examenes.cervantes.es/es/node/265480",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 95,
+    "speakingMinutes": 10,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 10,
+    "deliveryModes": [
+      "paper at an accredited examination centre",
+      "in-person speaking, which the centre may schedule on the official date or an immediately adjacent day"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 60,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": null,
+      "listening": null,
+      "writing": null,
+      "speaking": null
+    },
+    "note": "DELE A1 awards 25 points per skill and requires at least 30/50 in each paired group: reading plus writing, and listening plus speaking. Sixty is therefore the smallest possible passing total, but 60/100 alone is not sufficient. Instituto Cervantes does not publish four independent skill thresholds; the project assessment contract must add them rather than misattribute them to DELE."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 45,
+      "parts": [
+        {
+          "id": "reading-personal-message",
+          "promptModes": ["written text", "one image option"],
+          "promptGenres": ["short personal email", "postcard"],
+          "responseModes": ["choose one of three options for each question"],
+          "items": 5,
+          "stimulusLength": { "unit": "words", "minimum": 150, "maximum": 175, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 5, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["response length is not applicable to selected response", "replay is not applicable to written input"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "reading-very-short-notices",
+          "promptModes": ["nine written texts", "written statements", "graphic support"],
+          "promptGenres": ["agenda note", "catalogue entry", "advertisement", "instruction", "sign", "notice"],
+          "responseModes": ["match six statements to six of nine texts"],
+          "items": 6,
+          "stimulusLength": { "unit": "words", "minimum": 20, "maximum": 30, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 6, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["the published 20-30-word bound is per text, not an aggregate", "response length is not applicable to matching", "replay is not applicable to written input"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "reading-public-information-match",
+          "promptModes": ["nine written advertisements", "six short person statements", "graphic support"],
+          "promptGenres": ["brochure", "advertisement", "catalogue", "promotional information", "person statement of 10-25 words"],
+          "responseModes": ["match six people to six of nine texts"],
+          "items": 6,
+          "stimulusLength": { "unit": "words", "minimum": 20, "maximum": 30, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 6, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["the 20-30-word bound is per advertisement; person statements have a separate published 10-25-word bound", "response length is not applicable to matching", "replay is not applicable to written input"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "reading-everyday-information",
+          "promptModes": ["written text", "written questions"],
+          "promptGenres": ["everyday advertisement", "notice", "label", "ticket", "very short instruction or promotional text"],
+          "responseModes": ["choose one of three options for each question"],
+          "items": 8,
+          "stimulusLength": { "unit": "words", "minimum": 175, "maximum": 210, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 8, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["response length is not applicable to selected response", "replay is not applicable to written input"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        }
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 25,
+      "parts": [
+        {
+          "id": "listening-brief-dialogues",
+          "promptModes": ["five recorded dialogues", "written questions", "image options"],
+          "promptGenres": ["two- or three-turn everyday dialogue"],
+          "responseModes": ["choose one of three images for each question"],
+          "items": 5,
+          "stimulusLength": { "unit": "words", "minimum": 30, "maximum": 40, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 5, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["the published 30-40-word bound is per dialogue", "audio duration", "response length is not applicable to selected response"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "listening-public-messages",
+          "promptModes": ["five recorded messages", "eight images"],
+          "promptGenres": ["very short face-to-face message", "public-address announcement"],
+          "responseModes": ["match five messages to five of eight images"],
+          "items": 5,
+          "stimulusLength": { "unit": "words", "minimum": 15, "maximum": 30, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 5, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["the published 15-30-word bound is per message", "audio duration", "response length is not applicable to matching"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "listening-descriptive-monologue",
+          "promptModes": ["eight recorded utterances from one monologue", "written sentence beginnings", "eleven written continuations"],
+          "promptGenres": ["simple descriptions of familiar people, places, or objects"],
+          "responseModes": ["match eight sentence beginnings to eight of eleven continuations"],
+          "items": 8,
+          "stimulusLength": { "unit": "words", "minimum": 15, "maximum": 25, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 8, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["the published 15-25-word bound is per utterance", "audio duration", "response length is not applicable to matching"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "listening-everyday-conversation",
+          "promptModes": ["one recorded conversation", "seven incomplete written statements", "eight written options"],
+          "promptGenres": ["clear, slow conversation on a familiar everyday topic"],
+          "responseModes": ["complete seven statements with seven of eight options"],
+          "items": 7,
+          "stimulusLength": { "unit": "words", "minimum": 160, "maximum": 185, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 7, "criteria": ["official answer-key match; one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided answer sheet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["audio duration", "response length is not applicable to matching"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-model-2020"]
+        }
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 25,
+      "parts": [
+        {
+          "id": "writing-personal-information-form",
+          "promptModes": ["written instructions", "exam-provided form"],
+          "promptGenres": ["public-service or everyday personal-information form"],
+          "responseModes": ["complete short fields", "write simple phrases and sentences about identity or immediate surroundings"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": 15, "maximum": 25, "approximate": false },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["holistic task fulfilment", "intelligible simple language appropriate to the requested personal information"] },
+          "aids": { "allowed": ["exam-provided response booklet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["number of fields", "prompt word count", "part-level raw point ceiling; the two writing tasks have equal weight", "replay is not applicable to written input"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-specification-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "writing-short-correspondence",
+          "promptModes": ["written situation", "written content prompts"],
+          "promptGenres": ["postcard", "email", "message", "brief letter"],
+          "responseModes": ["write a short epistolary text addressing the prompts"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": 30, "maximum": 40, "approximate": false },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["holistic task fulfilment", "courtesy and genre appropriateness", "intelligible personal information or immediate-need message"] },
+          "aids": { "allowed": ["exam-provided response booklet"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["number of content prompts", "prompt word count", "part-level raw point ceiling; the two writing tasks have equal weight", "replay is not applicable to written input"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-specification-2020", "cervantes-a1-model-2020"]
+        }
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "speaking-personal-presentation",
+          "promptModes": ["exam-provided keyword sheet"],
+          "promptGenres": ["personal identity prompts: name, age, nationality, home, occupation or studies, languages, character"],
+          "responseModes": ["prepared live monologue"],
+          "items": 7,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 60, "maximum": 120, "approximate": true },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["use of language", "task fulfilment across the required identity points"] },
+          "aids": { "allowed": ["exam-provided prompt sheet", "ten-minute preparation shared with task 2"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["prompt word count", "response word count", "part-level raw point ceiling", "repetition policy"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-specification-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "speaking-familiar-topic-monologue",
+          "promptModes": ["one selected topic sheet with five options"],
+          "promptGenres": ["familiar personal topic such as holidays, weekend, home, or family"],
+          "responseModes": ["select three of five prompts", "prepared live monologue"],
+          "items": 3,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 120, "maximum": 180, "approximate": true },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["use of language", "task fulfilment across all three selected points"] },
+          "aids": { "allowed": ["exam-provided topic sheet", "ten-minute preparation shared with task 1"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["topic-sheet word count", "response word count", "part-level raw point ceiling", "repetition policy"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-specification-2020", "cervantes-a1-model-2020"]
+        },
+        {
+          "id": "speaking-examiner-conversation",
+          "promptModes": ["live examiner questions", "exam-provided topic sheet"],
+          "promptGenres": ["cooperative conversation continuing the task-2 topic"],
+          "responseModes": ["answer live follow-up questions", "ask the examiner two prepared questions"],
+          "items": 2,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 180, "maximum": 240, "approximate": true },
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["use of language", "task fulfilment in a brief cooperative exchange"] },
+          "aids": { "allowed": ["exam-provided topic sheet", "two questions prepared during the ten-minute preparation"], "forbidden": ["dictionary", "phone"], "notPublished": ["other aids"] },
+          "notPublished": ["examiner question count", "question length", "response word count", "part-level raw point ceiling", "reformulation count"],
+          "sourceIds": ["cervantes-a1-guide-2020", "cervantes-a1-specification-2020", "cervantes-a1-model-2020"]
+        }
+      ]
+    }
+  ]
+}

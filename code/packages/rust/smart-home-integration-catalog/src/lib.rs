@@ -44928,6 +44928,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         ipp_printer_entry(),
         ipp_scanner_entry(),
         thread_border_agent_entry(),
+        matter_operational_discovery_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49265,6 +49266,54 @@ fn thread_border_agent_entry() -> IntegrationCatalogEntry {
         label: "Thread Border Router white paper".to_string(),
         url: "https://www.threadgroup.org/Portals/0/documents/support/ThreadBorderRouterWhitePaper_07192022_4001_1.pdf".to_string(),
         external_id: None,
+    });
+    entry
+}
+
+fn matter_operational_discovery_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "matter_operational_discovery",
+        "Matter Operational Discovery",
+        "Bounded DNS-SD discovery for commissioned Matter nodes on the local infrastructure link.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "matter",
+    )
+    .with_protocols(vec![ProtocolFamily::Matter])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only authorized bounded _matter._tcp operational identity, endpoint, MRP, TCP-capability, and ICD discovery.",
+        "Commissionable discovery, fabric credentials, PASE, CASE, certificate validation, secure sessions, Interaction Model traffic, and control remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Matter DNS-SD service naming".to_string(),
+        url: "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/ServiceNaming.h".to_string(),
+        external_id: Some("_matter._tcp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Matter operational instance-name parsing".to_string(),
+        url: "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/ServiceNaming.cpp".to_string(),
+        external_id: Some("ExtractIdFromInstanceName".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Matter DNS-SD TXT field bounds".to_string(),
+        url:
+            "https://github.com/project-chip/connectedhomeip/blob/master/src/lib/dnssd/TxtFields.h"
+                .to_string(),
+        external_id: Some("CommonTxtKey".to_string()),
     });
     entry
 }
@@ -82346,6 +82395,47 @@ mod tests {
             PrimitiveFamily::VaultLease,
         ] {
             assert!(!thread.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn matter_operational_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let matter = find_entry(
+            &catalog,
+            &IntegrationId::trusted("matter_operational_discovery"),
+        )
+        .unwrap();
+        assert_eq!(
+            matter.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(matter.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(matter.auth_modes, vec![AuthMode::None]);
+        assert_eq!(matter.supported_protocols, vec![ProtocolFamily::Matter]);
+        assert_eq!(
+            matter.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(matter.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(matter.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::MatterCommissioning,
+            PrimitiveFamily::CertificatePairing,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!matter.required_primitives.contains(&primitive));
         }
     }
 
