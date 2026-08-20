@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12283,
   "last_inventory": {
     "revision": "d6baf53b3ef32353fc8e4fcd9b8087349aad788e",
     "schema_version": 3,
@@ -3774,12 +3774,17 @@
     {
       "id": "zip-raw-rfc1951-jvm-lane-parity",
       "title": "Expose ZIP raw RFC 1951 conformance in the JVM lanes",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["zip-raw-rfc1951-language-neutral-conformance"],
       "branch": "codex/jvm-zip-raw-rfc1951",
-      "pr_number": null,
+      "pr_number": 12283,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12283",
+      "opened_at": "2026-08-20T14:52:55Z",
       "selection_revision": "993c78f1d65304f696cce4aeb765de40ac2f34cf",
       "selection_notes": "Selected only after .NET ZIP PR #12271 completed all 29 checks and auto-merged cleanly, the collision-checked schema-3 inventory was regenerated at exact main with unchanged topology and counts, and a fresh ownership audit found no active PR for any remaining ZIP parity surface. This Java/Kotlin pair is the sole remaining child of the ZIP raw-codec umbrella; completing it unlocks umbrella closure and fourteen dependent PNG parity slots. Both packages are pure in-memory codecs with local LZSS composite-build dependencies and explicit empty capabilities. The ancient no-PR cross-lane ZIP branch remains stale residue and will not be reused or cherry-picked; implementation is isolated on this fresh branch from merge main.",
+      "implementation_revision": "d66707e8e3dd94e9ece5b22461b58f9cc84b6056",
+      "validation_notes": "Java and Kotlin each consume all 34 neutral RFC 1951/CRC-32 cases and expose ZIP-owned raw deflate, counted caller-capped inflate, CRC-32, and the closed 14-code payload-blind failure taxonomy. Both decoders accept stored, fixed, dynamic, multi-block, foreign full-window, and historical-wrapper streams; enforce exact compressed-byte and declared-output consumption; reject suffix cavities, malformed canonical tables, invalid back-references, and ZIP size mismatches; map raw failures into IOException; and preflight Central Directory sizes against the caller's aggregate budget before decoding. The obsolete fixed-only decoder paths are removed. Under JDK 21.0.12 and Gradle 8.11.1, clean warning-failing package builds pass 17 Java tests at 93.12% line coverage and 31 Kotlin tests at 94.10% line coverage, both 80% JaCoCo gates, and both literal Windows BUILD front doors. The neutral fixture and capability suites pass 16 tests plus 719 subtests. Go build-tool tests, vet, and binary build pass; fresh diff-aware plans validate each lane and build only LZSS plus ZIP. The exact-main schema-3 parity gate reports 15 lanes, 1,367 identities, 4,551 slots, zero collisions, and zero unknown buckets; the 393-item state is unique, dependency-complete, acyclic, and has exactly this item active. Production authority and credential scans are clean, Jackson remains test-only, explicit empty capabilities remain accurate, final security review found no blocker, and git diff --check passes.",
+      "publication_notes": "Ready-for-review PR #12283 opened from fully validated implementation revision d66707e8e3 after clean rebases onto exact main d6baf53b3e. GitHub reports the branch mergeable with no conflict. CI and CodeQL checks are queued, so the loop is monitor-only and auto-merge remains disabled until every required check reaches an acceptable terminal conclusion.",
       "notes": "Portable Java and Kotlin child of the ZIP raw-codec completion umbrella. Consume CMP09 and every closed zip-raw-rfc1951-v1 case, expose the ZIP-owned raw primitives without duplicating DEFLATE, preserve pure in-memory operation, and add explicit empty capability metadata."
     },
     {
