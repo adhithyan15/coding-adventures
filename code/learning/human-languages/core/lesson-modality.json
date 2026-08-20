@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7508cc012919aa93",
+  "sourceHash": "fnv1a64:d1ed6010437be1a3",
   "summary": {
-    "totalLessons": 3401,
-    "voice": 2463,
+    "totalLessons": 3402,
+    "voice": 2462,
     "sight": 590,
-    "pen": 348,
-    "drivableLessons": 2463,
+    "pen": 350,
+    "drivableLessons": 2462,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2195,
-    "fullyDrivableChapters": 668,
-    "unstartableChapters": 212,
+    "drivablePrefixTotal": 2186,
+    "fullyDrivableChapters": 667,
+    "unstartableChapters": 213,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -14957,12 +14957,12 @@
     },
     {
       "language": "tamil",
-      "lessonCount": 282,
-      "voice": 202,
+      "lessonCount": 283,
+      "voice": 201,
       "sight": 32,
-      "pen": 48,
-      "drivablePercent": 72,
-      "drivablePrefixTotal": 186,
+      "pen": 50,
+      "drivablePercent": 71,
+      "drivablePrefixTotal": 177,
       "modalities": [
         "voice",
         "sight",
@@ -14971,27 +14971,19 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 9,
-          "voice": 9,
+          "lessonCount": 10,
+          "voice": 8,
           "sight": 0,
-          "pen": 0,
+          "pen": 2,
           "modalities": [
-            "voice"
+            "voice",
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 9,
-          "firstNonVoiceLesson": null,
-          "drivable": true,
-          "drivableLessonIds": [
-            "TA-C01-vanakkam",
-            "TA-C01-vanakkam-family-register",
-            "TA-C01-aam",
-            "TA-C01-illai",
-            "TA-C01-nandri",
-            "TA-C01-nandri-family-register",
-            "TA-C01-sari",
-            "TA-C01-answering",
-            "TA-C01-practice"
-          ]
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C01-vanakkam",
+          "drivable": false,
+          "drivableLessonIds": []
         },
         {
           "chapter": 2,
@@ -70307,18 +70299,44 @@
       "language": "tamil",
       "chapter": 1,
       "sequence": 10,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6277ee309e891075"
+      "sourceHash": "fnv1a64:b55f10876077d66f",
+      "detachableSegments": [
+        "Writing — let your finger meet one shape"
+      ]
+    },
+    {
+      "id": "TA-W00-va-guided-copy",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 15,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3fd7da2bd03a3964",
+      "detachableSegments": [
+        "Writing — one supported copy"
+      ],
+      "delivery": "script"
     },
     {
       "id": "TA-C01-vanakkam-family-register",
@@ -70462,7 +70480,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:eaca356117a007ca"
+      "sourceHash": "fnv1a64:b61caef2405d511a"
     },
     {
       "id": "TA-C02-peyar",

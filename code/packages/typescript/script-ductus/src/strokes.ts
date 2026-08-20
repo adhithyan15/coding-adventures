@@ -6414,6 +6414,31 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("થ"),
   },
+  // t30apps writes Gujarati દ in one continuous run: around the upper body,
+  // through its narrow middle turn, then around the lower body to the terminal.
+  // This Noto median retains that observed upper-before-lower order.
+  [ductusKey("gujarati", "દ")]: {
+    script: "gujarati",
+    glyph: "દ",
+    strokes: [
+      { segments: [{ label: "circle the upper body, narrow through the middle, and sweep around the lower body into its terminal", path: [
+        { x: 330, y: 555 }, { x: 285, y: 570 }, { x: 235, y: 572 },
+        { x: 185, y: 565 }, { x: 140, y: 545 }, { x: 105, y: 515 },
+        { x: 85, y: 475 }, { x: 85, y: 435 }, { x: 100, y: 400 },
+        { x: 125, y: 370 }, { x: 160, y: 350 }, { x: 205, y: 335 },
+        { x: 240, y: 325 }, { x: 290, y: 325 }, { x: 340, y: 325 },
+        { x: 375, y: 320 }, { x: 330, y: 320 }, { x: 280, y: 320 },
+        { x: 240, y: 325 }, { x: 205, y: 310 }, { x: 170, y: 290 },
+        { x: 140, y: 260 }, { x: 120, y: 225 }, { x: 110, y: 185 },
+        { x: 115, y: 145 }, { x: 135, y: 105 }, { x: 170, y: 75 },
+        { x: 215, y: 50 }, { x: 265, y: 35 }, { x: 315, y: 35 },
+        { x: 355, y: 45 }, { x: 385, y: 65 }, { x: 405, y: 90 },
+        { x: 415, y: 115 }, { x: 440, y: 120 }, { x: 452, y: 105 },
+        { x: 452, y: 85 }, { x: 442, y: 70 }, { x: 420, y: 65 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("દ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
