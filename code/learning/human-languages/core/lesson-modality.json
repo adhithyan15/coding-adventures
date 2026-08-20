@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:70ce2ebb8797e671",
+  "sourceHash": "fnv1a64:5c53db69b0a1a277",
   "summary": {
     "totalLessons": 3399,
     "voice": 2466,
@@ -48434,7 +48434,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:25a9dffbb61fa98c",
+      "sourceHash": "fnv1a64:b78e4f5768fbc249",
       "detachableSegments": [
         "Script — notice the sign",
         "Writing — guided copy"
@@ -48459,7 +48459,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:58dce2d58482f3ae",
+      "sourceHash": "fnv1a64:f27c34dde7229fbb",
       "detachableSegments": [
         "Script — add one mark",
         "Writing — guided copy"
@@ -48484,7 +48484,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:927def5fab545df8",
+      "sourceHash": "fnv1a64:542256ac8122031b",
       "detachableSegments": [
         "Script — add म",
         "Writing — from copy to memory"
@@ -48573,7 +48573,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:783d01e78084f62c"
+      "sourceHash": "fnv1a64:21fe9ce5062a315d"
     },
     {
       "id": "FA-C01-bale",

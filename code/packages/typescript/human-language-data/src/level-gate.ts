@@ -11,13 +11,14 @@
 // is enough to move `reach`; it is nowhere near enough to sit the exam.
 //
 // So this module computes a second, stricter number and reports both. `touches`
-// keeps the old meaning. `attained` is the highest level where all four HL09 §3.1
-// criteria hold, at that level AND every level below it:
+// keeps the old meaning. `attained` is the highest level where every enabled
+// criterion holds, at that level AND every level below it:
 //
 //   1. every spine node at the level is realized by some path segment,
 //   2. the track teaches at least the level's cumulative vocabulary,
-//   3. no lesson at or below the level exceeds the new-atom budget, and
-//   4. every atom at or below the level is revisited at least twice.
+//   3. no lesson at or below the level exceeds the new-atom budget,
+//   4. every atom at or below the level is revisited at least twice, and
+//   5. when HL19 evidence is supplied, every cumulative writing stage is proved.
 //
 // A track that fails any of them is "in progress at X", never "reached X", and
 // the report says WHICH criterion failed and by how much — a bare `false` would
@@ -30,6 +31,7 @@ import type { ContinuityReport } from "./continuity.js";
 import type { RampReport } from "./ramp.js";
 import type { ParsedLesson } from "./parse.js";
 import type { CurriculumSpine, LanguageCurriculum } from "./types.js";
+import type { WritingStageReport } from "./writing-stages.js";
 
 /**
  * Cumulative vocabulary a level asks for, in distinct taught headwords.
@@ -62,9 +64,9 @@ export function isEtymologyAtom(atom: string): boolean {
   return /-ETYMON-/.test(atom);
 }
 
-/** Which of the four criteria a level failed, and by how much. */
+/** Which attainment criterion a level failed, and by how much. */
 export interface LevelBlocker {
-  criterion: "spine-nodes" | "vocabulary" | "atom-budget" | "reinforcement";
+  criterion: "spine-nodes" | "vocabulary" | "atom-budget" | "reinforcement" | "writing-stage";
   detail: string;
   /** How far short the track is, in the criterion's own units. */
   shortfall: number;
@@ -104,6 +106,8 @@ export interface LevelGateInput {
   spine: CurriculumSpine;
   ramp: RampReport;
   continuity: ContinuityReport;
+  /** Optional only for compatibility with callers that have not loaded HL16 policy. */
+  writingStages?: WritingStageReport;
 }
 
 /**
@@ -129,7 +133,7 @@ function vocabularyOf(lessons: ParsedLesson[]): number {
 
 /** Run the HL09 §3.1 gate over every track. */
 export function runLevelGate(input: LevelGateInput): LevelGateReport {
-  const { lessons, levels, curricula, spine, ramp, continuity } = input;
+  const { lessons, levels, curricula, spine, ramp, continuity, writingStages } = input;
 
   // Spine nodes per level, and the segments that realize them.
   const nodesByLevel = new Map<CefrLevel, string[]>();
@@ -202,6 +206,7 @@ export function runLevelGate(input: LevelGateInput): LevelGateReport {
     const vocabulary = vocabularyOf(trackLessons);
     const rampViolations = ramp.lessons.filter((v) => v.language === language);
     const underReinforced = continuity.reinforcement.filter((d) => d.language === language);
+    const writingCoverage = writingStages?.tracks.find((track) => track.language === language);
 
     let attained: CefrLevel | null = null;
     let inProgressAt: CefrLevel | null = null;
@@ -209,6 +214,20 @@ export function runLevelGate(input: LevelGateInput): LevelGateReport {
 
     for (const level of CEFR_LEVELS) {
       const failures: LevelBlocker[] = [];
+
+      if (writingStages) {
+        const stageCoverage = writingCoverage?.levels.find((entry) => entry.level === level);
+        const missing = stageCoverage?.missingStages ?? writingStages.stages
+          .filter((stage) => levelRank(stage.firstRequiredAt) <= levelRank(level))
+          .map((stage) => stage.id);
+        if (missing.length > 0) {
+          failures.push({
+            criterion: "writing-stage",
+            detail: `${missing.length} cumulative writing stage(s) unproved at ${level}: ${missing.join(", ")}`,
+            shortfall: missing.length,
+          });
+        }
+      }
 
       const nodes = nodesByLevel.get(level) ?? [];
       if (nodes.length === 0) {

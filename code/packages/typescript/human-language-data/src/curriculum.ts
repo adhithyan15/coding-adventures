@@ -642,6 +642,12 @@ export function validateCurriculum(input: CurriculumValidationInput): Issue[] {
           `${id}: block '${block.title}' ${directiveError}`,
         );
       }
+      if (block.writingStageDirectiveError) {
+        error(
+          "schema-v2-invalid-writing-stage-directive",
+          `${id}: block '${block.title}' ${block.writingStageDirectiveError}`,
+        );
+      }
       for (const activity of block.activities ?? []) {
         if (!activity.id.startsWith(`${id}-`)) {
           error(

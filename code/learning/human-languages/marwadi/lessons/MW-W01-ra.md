@@ -46,6 +46,7 @@ bare *r*. The *r* is a quick tongue-tip tap.
 
 ## Writing — guided copy
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
 Put a finger over **र** and follow the printed shape. Then copy it three times,
 large and slow. Say *ra* each time your pen stops.

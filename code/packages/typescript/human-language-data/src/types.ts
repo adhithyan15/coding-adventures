@@ -583,6 +583,10 @@ export interface LessonBodyBlock {
   activities?: LessonActivity[];
   /** Present when one or more `hl-activity` directives are invalid or misplaced. */
   activityDirectiveErrors?: string[];
+  /** One explicit HL16 writing-stage claim for this evidence block. */
+  writingStage?: string;
+  /** Present when an author attempted a malformed or misplaced stage directive. */
+  writingStageDirectiveError?: string;
 }
 
 // ---- Script / character-breakdown data (data/scripts/<script>.json) ----
