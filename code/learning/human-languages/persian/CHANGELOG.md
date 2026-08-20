@@ -1,5 +1,12 @@
 # Changelog
 
+## Opening chapter reading order (#12259)
+
+- Add sequence 10 through 40 to the four legacy opening lessons in the book's
+  explicit greet, thank, yes, no dependency order.
+- Remove Persian's missing-sequence and false forward-prerequisite debt without
+  changing the four three-to-four-minute lessons.
+
 ## 0.11.0 — 2026-08-12
 
 - Added fourteen schema-v2 word lessons across three new chapters (12-14),

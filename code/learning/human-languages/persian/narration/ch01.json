@@ -4,238 +4,11 @@
   "chapter": 1,
   "title": "Greetings and responses",
   "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",
+  "sourceHash": "fnv1a64:0b99de82564908df",
   "lessons": [
     {
-      "id": "FA-C01-bale",
-      "sequence": null,
-      "title": "بله (bale) — yes",
-      "headword": "بله",
-      "romanization": "bale",
-      "gloss": "yes",
-      "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8cab01c60aea34a5",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "Three letters, two hidden vowels",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Read بله (bale) from right to left: ب b, ل l, ه h. Persian does not normally print the short vowels, but speakers supply them:"
-            },
-            {
-              "kind": "speech",
-              "text": "ب, ل, ه becomes bale becomes yes."
-            },
-            {
-              "kind": "speech",
-              "text": "The last ه is written even though careful speech ends with a light vowel sound rather than a strong English h. Listen for the whole word; do not force every letter to sound identical in every position."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Use it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "bale is a standard, polite “yes.” A more casual âre exists, but one clear affirmative is enough for this lesson."
-            },
-            {
-              "kind": "speech",
-              "text": "“Is this Persian?” — Bale."
-            },
-            {
-              "kind": "speech",
-              "text": "“Are you ready?” — Bale, mamnun. — Yes, thank you."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Quick recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the romanization. Read بله. Which sounds are not written as separate letters? The short a and e. Answer once: bale."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FA-C01-mamnoon",
-      "sequence": null,
-      "title": "ممنون (mamnun) — thank you",
-      "headword": "ممنون",
-      "romanization": "mamnun",
-      "gloss": "thank you / grateful",
-      "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:831ed1da893de263",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "Reuse what you know",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You already know final م m from سلام (salâm). In ممنون (mamnun), it appears first, on the right. Read the visible consonants right to left:"
-            },
-            {
-              "kind": "speech",
-              "text": "م, م, ن, و, ن becomes mamnun."
-            },
-            {
-              "kind": "speech",
-              "text": "Persian normally leaves short vowels unwritten, so the first a is something you learn with the word. و supplies the long u sound here. Its sound can change in other words; today, it is simply u."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Meaning and history",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "mamnun literally describes someone as grateful or obliged, and in ordinary conversation it works as “thanks.” Persian received the word from Arabic. Its consonant family is m-n-n, associated in Arabic with favor or kindness."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Build the exchange",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "A: سلام — salâm — Hello."
-            },
-            {
-              "kind": "speech",
-              "text": "B: سلام — salâm — Hello."
-            },
-            {
-              "kind": "speech",
-              "text": "A: ممنون — mamnun — Thank you."
-            },
-            {
-              "kind": "speech",
-              "text": "Do not add a new grammar rule. Treat mamnun as one useful social move."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Quick recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Which direction do you read? Right to left. Which visible letter carries long u here? و. Say: salâm — mamnun."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FA-C01-na",
-      "sequence": null,
-      "title": "نه (na) — no",
-      "headword": "نه",
-      "romanization": "na",
-      "gloss": "no",
-      "script": "perso-arabic",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:c0df8ec253b9b50b",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "One new letter",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You know final ه from بله (bale). Add ن n on its right:"
-            },
-            {
-              "kind": "speech",
-              "text": "ن, ه becomes na becomes no."
-            },
-            {
-              "kind": "speech",
-              "text": "The short a is understood rather than printed. The same ن appeared inside ممنون (mamnun), so this is mostly recognition, not a fresh alphabet lesson."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "A very old negative",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Persian na belongs to an old Indo-Iranian negative family. Related forms turn up across Iranian and Indo-Aryan languages. That bridge will be useful when you compare Persian with Hindi or Urdu, but for now the job is simple: bale affirms; na rejects."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Contrast",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "بله — bale — yes."
-            },
-            {
-              "kind": "speech",
-              "text": "نه — na — no."
-            },
-            {
-              "kind": "speech",
-              "text": "Say the pair twice, changing only the answer: bale — na."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Quick recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Read نه from right to left. Which first sound does ن make? n. Answer “no” in Persian: na."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "FA-C01-salam",
-      "sequence": null,
+      "sequence": 10,
       "title": "سلام (salâm) — hello, one joined word at a time",
       "headword": "سلام",
       "romanization": "salâm",
@@ -246,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a0e9314f433cb6ab",
+      "sourceHash": "fnv1a64:215c6313bfc3f0c3",
       "notice": null,
       "blocks": [
         {
@@ -317,6 +90,233 @@
             {
               "kind": "speech",
               "text": "Persian Online: the writing system."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C01-mamnoon",
+      "sequence": 20,
+      "title": "ممنون (mamnun) — thank you",
+      "headword": "ممنون",
+      "romanization": "mamnun",
+      "gloss": "thank you / grateful",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e31a8de76d621fee",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "Reuse what you know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You already know final م m from سلام (salâm). In ممنون (mamnun), it appears first, on the right. Read the visible consonants right to left:"
+            },
+            {
+              "kind": "speech",
+              "text": "م, م, ن, و, ن becomes mamnun."
+            },
+            {
+              "kind": "speech",
+              "text": "Persian normally leaves short vowels unwritten, so the first a is something you learn with the word. و supplies the long u sound here. Its sound can change in other words; today, it is simply u."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Meaning and history",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "mamnun literally describes someone as grateful or obliged, and in ordinary conversation it works as “thanks.” Persian received the word from Arabic. Its consonant family is m-n-n, associated in Arabic with favor or kindness."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Build the exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "A: سلام — salâm — Hello."
+            },
+            {
+              "kind": "speech",
+              "text": "B: سلام — salâm — Hello."
+            },
+            {
+              "kind": "speech",
+              "text": "A: ممنون — mamnun — Thank you."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not add a new grammar rule. Treat mamnun as one useful social move."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Quick recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which direction do you read? Right to left. Which visible letter carries long u here? و. Say: salâm — mamnun."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C01-bale",
+      "sequence": 30,
+      "title": "بله (bale) — yes",
+      "headword": "بله",
+      "romanization": "bale",
+      "gloss": "yes",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b9354e71cefaaf4b",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "Three letters, two hidden vowels",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read بله (bale) from right to left: ب b, ل l, ه h. Persian does not normally print the short vowels, but speakers supply them:"
+            },
+            {
+              "kind": "speech",
+              "text": "ب, ل, ه becomes bale becomes yes."
+            },
+            {
+              "kind": "speech",
+              "text": "The last ه is written even though careful speech ends with a light vowel sound rather than a strong English h. Listen for the whole word; do not force every letter to sound identical in every position."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "Use it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "bale is a standard, polite “yes.” A more casual âre exists, but one clear affirmative is enough for this lesson."
+            },
+            {
+              "kind": "speech",
+              "text": "“Is this Persian?” — Bale."
+            },
+            {
+              "kind": "speech",
+              "text": "“Are you ready?” — Bale, mamnun. — Yes, thank you."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Quick recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the romanization. Read بله. Which sounds are not written as separate letters? The short a and e. Answer once: bale."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FA-C01-na",
+      "sequence": 40,
+      "title": "نه (na) — no",
+      "headword": "نه",
+      "romanization": "na",
+      "gloss": "no",
+      "script": "perso-arabic",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2eb22855c75322ae",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "unknown",
+          "title": "One new letter",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You know final ه from بله (bale). Add ن n on its right:"
+            },
+            {
+              "kind": "speech",
+              "text": "ن, ه becomes na becomes no."
+            },
+            {
+              "kind": "speech",
+              "text": "The short a is understood rather than printed. The same ن appeared inside ممنون (mamnun), so this is mostly recognition, not a fresh alphabet lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "A very old negative",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Persian na belongs to an old Indo-Iranian negative family. Related forms turn up across Iranian and Indo-Aryan languages. That bridge will be useful when you compare Persian with Hindi or Urdu, but for now the job is simple: bale affirms; na rejects."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Contrast",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "بله — bale — yes."
+            },
+            {
+              "kind": "speech",
+              "text": "نه — na — no."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the pair twice, changing only the answer: bale — na."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "Quick recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read نه from right to left. Which first sound does ن make? n. Answer “no” in Persian: na."
             }
           ]
         }

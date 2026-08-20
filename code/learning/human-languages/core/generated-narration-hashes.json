@@ -7173,19 +7173,19 @@
     {
       "language": "persian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:7c2f7fb0cadec8f6",
+      "sourceHash": "fnv1a64:0b99de82564908df",
       "lessonIds": [
-        "FA-C01-bale",
+        "FA-C01-salam",
         "FA-C01-mamnoon",
-        "FA-C01-na",
-        "FA-C01-salam"
+        "FA-C01-bale",
+        "FA-C01-na"
       ],
       "voiceLessons": 4,
       "drivablePrefix": 4,
       "text": "persian/narration/ch01.txt",
       "json": "persian/narration/ch01.json",
-      "textHash": "fnv1a64:2ab896ea64610c90",
-      "jsonHash": "fnv1a64:f9b79a6243393058"
+      "textHash": "fnv1a64:8243210c37cb05a6",
+      "jsonHash": "fnv1a64:f41481dac3337809"
     },
     {
       "language": "persian",
