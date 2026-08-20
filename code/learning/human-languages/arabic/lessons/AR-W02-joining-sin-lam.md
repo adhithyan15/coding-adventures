@@ -1,5 +1,6 @@
 ---
 id: AR-W02-joining-sin-lam
+sequence: 110
 chapter: 1
 type: writing
 headword: "س، ل"

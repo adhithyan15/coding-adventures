@@ -1,5 +1,6 @@
 ---
 id: AR-W06-harakat-and-hamza
+sequence: 250
 chapter: 2
 type: writing
 headword: "َ ِ ُ"
