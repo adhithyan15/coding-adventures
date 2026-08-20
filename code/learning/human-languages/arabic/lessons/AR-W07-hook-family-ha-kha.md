@@ -14,11 +14,11 @@ roots: [phoenician-heth, phoenician-giml]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
 introduces:
   knowledge: [AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
 practises:
-  knowledge: [AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-01, AR-CONCEPT-W07-HOOK-FAMILY-HA-KHA-02]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,9 +30,13 @@ reviews_of: [AR-W06-hamza, AR-W06-harakat-and-hamza, AR-W04-dots-family-nun-ta, 
 # ح، خ، ج — the dots trick, on a brand-new body
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03] -->
 
-[PAUSE 2s] Back in Lesson 4 you learned a whole family of letters that share one
+[PAUSE 2s] Before the new letters, point once to **ْ**, **ّ**, and **ً**. Say their
+jobs: “no vowel”, “double”, “-an”. If one feels slow, trace it once. Then leave
+the marks behind for today.
+
+Back in Lesson 4 you learned a whole family of letters that share one
 **bowl** and differ only by dots. Arabic does the *same trick* on a **second**
 skeleton — a curvy **hook-and-tail body** — giving three more common letters. Learn
 the body once; the dots do the rest, exactly as before.

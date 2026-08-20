@@ -7,12 +7,12 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:74ffb2700b42dab1",
+  "sourceHash": "fnv1a64:7cef61bb5364158e",
   "summary": {
-    "totalLessons": 3399,
+    "totalLessons": 3400,
     "voice": 2466,
     "sight": 590,
-    "pen": 343,
+    "pen": 344,
     "drivableLessons": 2466,
     "drivablePercent": 73,
     "trackCount": 23,
@@ -26,10 +26,10 @@
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 100,
+      "lessonCount": 101,
       "voice": 44,
       "sight": 40,
-      "pen": 16,
+      "pen": 17,
       "drivablePercent": 44,
       "drivablePrefixTotal": 32,
       "modalities": [
@@ -56,10 +56,10 @@
         },
         {
           "chapter": 2,
-          "lessonCount": 12,
+          "lessonCount": 13,
           "voice": 3,
           "sight": 5,
-          "pen": 4,
+          "pen": 5,
           "modalities": [
             "voice",
             "sight",
@@ -18290,7 +18290,30 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3105b37e28ab1c2a"
+      "sourceHash": "fnv1a64:13bced16a8854a06"
+    },
+    {
+      "id": "AR-W06-sukun-shadda-tanwin",
+      "language": "arabic",
+      "chapter": 2,
+      "sequence": 255,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5be0d04de4f8d163",
+      "detachableSegments": [
+        "Script — Three marks, three instructions"
+      ]
     },
     {
       "id": "AR-W06-hamza",
@@ -18308,7 +18331,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d9cec21cdeff2a6f"
+      "sourceHash": "fnv1a64:2b2be3970ae44451"
     },
     {
       "id": "AR-W07-hook-family-ha-kha",
@@ -18327,7 +18350,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:3b2e6ebe41ce9654",
+      "sourceHash": "fnv1a64:bd49196de3cd0a4a",
       "detachableSegments": [
         "Script — The hook-and-tail family",
         "Script — Draw them",
@@ -18505,7 +18528,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:68477b2c41a68c3a",
+      "sourceHash": "fnv1a64:41b676bb74266c30",
       "detachableSegments": [
         "Script — Draw it",
         "Script — A third dots-family",
