@@ -1,5 +1,6 @@
 ---
 id: FR-C09-saisons
+sequence: 240
 chapter: 9
 type: word
 headword: les saisons

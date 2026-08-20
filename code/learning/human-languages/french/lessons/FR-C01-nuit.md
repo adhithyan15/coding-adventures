@@ -1,5 +1,6 @@
 ---
 id: FR-C01-nuit
+sequence: 45
 chapter: 1
 type: word
 headword: nuit

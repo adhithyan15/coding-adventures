@@ -1,5 +1,6 @@
 ---
 id: FR-W01-accents
+sequence: 165
 chapter: 4
 type: writing
 headword: "é è ê"

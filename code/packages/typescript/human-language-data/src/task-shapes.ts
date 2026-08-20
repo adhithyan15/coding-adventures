@@ -17,8 +17,8 @@ export interface TaskShapeSource {
 
 export interface TaskLength {
   unit: TaskLengthUnit;
-  minimum: number;
-  maximum: number;
+  minimum: number | null;
+  maximum: number | null;
   approximate: boolean;
 }
 
@@ -198,8 +198,12 @@ function parseLength(value: unknown, where: string): TaskLength | null {
   if (!unit) throw new Error(`task shapes: ${where}.unit must be one of ${TASK_LENGTH_UNITS.join(", ")}`);
   const minimum = nullableNonNegativeInteger(raw.minimum, `${where}.minimum`);
   const maximum = nullableNonNegativeInteger(raw.maximum, `${where}.maximum`);
-  if (minimum === null || maximum === null) throw new Error(`task shapes: ${where} bounds cannot be null`);
-  if (minimum > maximum) throw new Error(`task shapes: ${where}.minimum cannot exceed maximum`);
+  if (minimum === null && maximum === null) {
+    throw new Error(`task shapes: ${where} must publish at least one finite bound`);
+  }
+  if (minimum !== null && maximum !== null && minimum > maximum) {
+    throw new Error(`task shapes: ${where}.minimum cannot exceed maximum`);
+  }
   if (typeof raw.approximate !== "boolean") throw new Error(`task shapes: ${where}.approximate must be boolean`);
   return { unit, minimum, maximum, approximate: raw.approximate };
 }
@@ -311,7 +315,10 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
       const notPublished = strings(part.notPublished, `${id}.notPublished`, true);
       const stimulusLength = parseLength(part.stimulusLength, `${id}.stimulusLength`);
       const responseLength = parseLength(part.responseLength, `${id}.responseLength`);
-      if ((stimulusLength === null || part.replayCount === null) && notPublished.length === 0) {
+      const hasOpenLength = [stimulusLength, responseLength].some(
+        (length) => length !== null && (length.minimum === null || length.maximum === null),
+      );
+      if ((stimulusLength === null || part.replayCount === null || hasOpenLength) && notPublished.length === 0) {
         throw new Error(`task shapes: ${id} has null measurements but no notPublished explanation`);
       }
       return {

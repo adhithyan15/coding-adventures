@@ -4,11 +4,317 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:eaff6c8fad389e25",
+  "sourceHash": "fnv1a64:ec0f68883c275cfe",
   "lessons": [
     {
+      "id": "FR-C04-au-revoir",
+      "sequence": 140,
+      "title": "au revoir — \"goodbye,\" i.e. \"until we see each other again\"",
+      "headword": "au revoir",
+      "romanization": "au revoir",
+      "gloss": "goodbye (literally \"until the seeing-again\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:1db881ea75cc37d5",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can open a French conversation; now close it. The standard goodbye is au revoir — and where Spanish adiós commends you to God, French makes a promise to see you again."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "r-uvular — two guttural French r's: oh ruh-VWAHR."
+            },
+            {
+              "kind": "speech",
+              "text": "vowel-oi — -voir = vwahr (the oi = wa, as in soir from Chapter 1)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "au revoir is au + revoir = \"at the re-seeing\":"
+            },
+            {
+              "kind": "speech",
+              "text": "au = \"at/to the\" (a fusion of à + le)."
+            },
+            {
+              "kind": "speech",
+              "text": "revoir = \"to see again\" = re- (\"again\") + voir (\"to see\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So au revoir literally means \"until the seeing-again\" — a small promise that this isn't the end. It's built on voir, from Latin vidēre, \"to see\" — one of the richest roots in English:"
+            },
+            {
+              "kind": "speech",
+              "text": "vision, visible, visit, visa, view, video (\"I see\")."
+            },
+            {
+              "kind": "speech",
+              "text": "re-vise (\"look again\"), e-vident (\"seen out\"), pro-vide, super-vise, sur-vey."
+            },
+            {
+              "kind": "speech",
+              "text": "A goodbye that sees — French and German agree."
+            },
+            {
+              "kind": "speech",
+              "text": "Here's a satisfying cross-language pair: German says the exact same thing. Auf Wiedersehen = auf (\"on\") + wieder (\"again\") + sehen (\"to see\") = \"on the seeing-again.\" French and German, side by side, both promise a re-seeing; Spanish adiós instead commends you to God. Same moment, two different pictures."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"au revoir\" — oh ruh-VWAHR",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"au revoir\" — *oh ruh-VWAHR*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"au revoir\" then English \"vision, revise, video\" — the vidēre family",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"au revoir\" then English \"vision, revise, video\" — the *vidēre* family]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "French au revoir and German auf Wiedersehen — both \"see you again\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: French *au revoir* and German *auf Wiedersehen* — both \"see you again\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does au revoir literally mean? (\"Until the seeing-again.\") What Latin verb is voir from, and two English cousins? (vidēre — vision, video, revise.) Which other language builds its goodbye the same \"see again\" way? (German auf Wiedersehen.) Next: à plus tard."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C04-a-plus-tard",
+      "sequence": 145,
+      "title": "à plus tard — the casual \"see you later\"",
+      "headword": "à plus tard",
+      "romanization": "à plus tard",
+      "gloss": "see you later (literally \"to more late\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:10ff815d3018b5a0",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The everyday, friendly \"see you later\" is à plus tard — and among friends it shrinks to just à plus (ah PLUSS, and here you do sound the final s). It's the French twin of Spanish hasta luego."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "silent-final — in the full phrase, plus is ploo (silent s): ah ploo TAR. But in the clipped à plus, the s is pronounced: ah PLUSS."
+            },
+            {
+              "kind": "speech",
+              "text": "tard = tar (silent d)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The phrase, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "à plus tard = literally \"to more late\" becomes \"see you later.\""
+            },
+            {
+              "kind": "speech",
+              "text": "à = \"to / at\" (Latin ad) — French's all-purpose farewell preposition, the way Spanish leans on hasta: à + a time = a soft goodbye."
+            },
+            {
+              "kind": "speech",
+              "text": "plus = \"more,\" from Latin plūs — the plus you already write in English (and the plu- of plural, surplus)."
+            },
+            {
+              "kind": "speech",
+              "text": "tard = \"late,\" from Latin tarde, \"slowly, late.\" And that is exactly the Spanish word tarde (\"afternoon / late\") you met in Chapter 2 — French kept it meaning late, Spanish grew it into afternoon. Same Latin tarde. English keeps it in tardy and retard (\"hold back, make late\")."
+            },
+            {
+              "kind": "speech",
+              "text": "So à plus tard is \"until more-late\" — see you at some later point."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: the \"à …\" farewells",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "French's soft goodbyes are all à + a time word — mirror this against Spanish hasta:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "French",
+                "Spanish",
+                "\"until / to …\""
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "French: à plus tard / à plus. Spanish: hasta luego. \"until / to …\": later.",
+                "French: à bientôt. Spanish: hasta pronto. \"until / to …\": soon.",
+                "French: à demain. Spanish: hasta mañana. \"until / to …\": tomorrow."
+              ]
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"à plus tard\" (ah ploo TAR), then clipped \"à plus\" (ah PLUSS)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"à plus tard\" (*ah ploo TAR*), then clipped \"à plus\" (*ah PLUSS*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tard\" then Spanish \"tarde\" — the same Latin tarde, \"late\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tard\" then Spanish \"tarde\" — the same Latin *tarde*, \"late\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "English \"tardy, retard\" — held back, late",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: English \"tardy, retard\" — held back, late]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does à plus tard literally mean? (\"To more late.\") What Spanish word is tard identical to at the root, and what does each mean now? (tarde — French \"late\", Spanish \"afternoon\".) What preposition carries French's soft goodbyes, like Spanish hasta? (à.) Next: à bientôt."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "FR-C04-a-bientot",
-      "sequence": null,
+      "sequence": 150,
       "title": "à bientôt — \"see you soon\"",
       "headword": "à bientôt",
       "romanization": "à bientôt",
@@ -19,7 +325,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:658b24338124089f",
+      "sourceHash": "fnv1a64:ec345aa06dcc9d70",
       "notice": null,
       "blocks": [
         {
@@ -161,7 +467,7 @@
     },
     {
       "id": "FR-C04-a-demain",
-      "sequence": null,
+      "sequence": 155,
       "title": "à demain — \"see you tomorrow\"",
       "headword": "à demain",
       "romanization": "à demain",
@@ -172,7 +478,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d36a604ae3a9cff3",
+      "sourceHash": "fnv1a64:1dcea8be89335333",
       "notice": null,
       "blocks": [
         {
@@ -324,314 +630,8 @@
       ]
     },
     {
-      "id": "FR-C04-a-plus-tard",
-      "sequence": null,
-      "title": "à plus tard — the casual \"see you later\"",
-      "headword": "à plus tard",
-      "romanization": "à plus tard",
-      "gloss": "see you later (literally \"to more late\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:68bc38c723215615",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The everyday, friendly \"see you later\" is à plus tard — and among friends it shrinks to just à plus (ah PLUSS, and here you do sound the final s). It's the French twin of Spanish hasta luego."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "silent-final — in the full phrase, plus is ploo (silent s): ah ploo TAR. But in the clipped à plus, the s is pronounced: ah PLUSS."
-            },
-            {
-              "kind": "speech",
-              "text": "tard = tar (silent d)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "à plus tard = literally \"to more late\" becomes \"see you later.\""
-            },
-            {
-              "kind": "speech",
-              "text": "à = \"to / at\" (Latin ad) — French's all-purpose farewell preposition, the way Spanish leans on hasta: à + a time = a soft goodbye."
-            },
-            {
-              "kind": "speech",
-              "text": "plus = \"more,\" from Latin plūs — the plus you already write in English (and the plu- of plural, surplus)."
-            },
-            {
-              "kind": "speech",
-              "text": "tard = \"late,\" from Latin tarde, \"slowly, late.\" And that is exactly the Spanish word tarde (\"afternoon / late\") you met in Chapter 2 — French kept it meaning late, Spanish grew it into afternoon. Same Latin tarde. English keeps it in tardy and retard (\"hold back, make late\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So à plus tard is \"until more-late\" — see you at some later point."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: the \"à …\" farewells",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "French's soft goodbyes are all à + a time word — mirror this against Spanish hasta:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "French",
-                "Spanish",
-                "\"until / to …\""
-              ],
-              "columns": 3,
-              "rowCount": 3,
-              "utterances": [
-                "French: à plus tard / à plus. Spanish: hasta luego. \"until / to …\": later.",
-                "French: à bientôt. Spanish: hasta pronto. \"until / to …\": soon.",
-                "French: à demain. Spanish: hasta mañana. \"until / to …\": tomorrow."
-              ]
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"à plus tard\" (ah ploo TAR), then clipped \"à plus\" (ah PLUSS)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"à plus tard\" (*ah ploo TAR*), then clipped \"à plus\" (*ah PLUSS*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tard\" then Spanish \"tarde\" — the same Latin tarde, \"late\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tard\" then Spanish \"tarde\" — the same Latin *tarde*, \"late\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "English \"tardy, retard\" — held back, late",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: English \"tardy, retard\" — held back, late]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does à plus tard literally mean? (\"To more late.\") What Spanish word is tard identical to at the root, and what does each mean now? (tarde — French \"late\", Spanish \"afternoon\".) What preposition carries French's soft goodbyes, like Spanish hasta? (à.) Next: à bientôt."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "FR-C04-au-revoir",
-      "sequence": null,
-      "title": "au revoir — \"goodbye,\" i.e. \"until we see each other again\"",
-      "headword": "au revoir",
-      "romanization": "au revoir",
-      "gloss": "goodbye (literally \"until the seeing-again\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:39b820a6b7b1e4b1",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You can open a French conversation; now close it. The standard goodbye is au revoir — and where Spanish adiós commends you to God, French makes a promise to see you again."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "r-uvular — two guttural French r's: oh ruh-VWAHR."
-            },
-            {
-              "kind": "speech",
-              "text": "vowel-oi — -voir = vwahr (the oi = wa, as in soir from Chapter 1)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "au revoir is au + revoir = \"at the re-seeing\":"
-            },
-            {
-              "kind": "speech",
-              "text": "au = \"at/to the\" (a fusion of à + le)."
-            },
-            {
-              "kind": "speech",
-              "text": "revoir = \"to see again\" = re- (\"again\") + voir (\"to see\")."
-            },
-            {
-              "kind": "speech",
-              "text": "So au revoir literally means \"until the seeing-again\" — a small promise that this isn't the end. It's built on voir, from Latin vidēre, \"to see\" — one of the richest roots in English:"
-            },
-            {
-              "kind": "speech",
-              "text": "vision, visible, visit, visa, view, video (\"I see\")."
-            },
-            {
-              "kind": "speech",
-              "text": "re-vise (\"look again\"), e-vident (\"seen out\"), pro-vide, super-vise, sur-vey."
-            },
-            {
-              "kind": "speech",
-              "text": "A goodbye that sees — French and German agree."
-            },
-            {
-              "kind": "speech",
-              "text": "Here's a satisfying cross-language pair: German says the exact same thing. Auf Wiedersehen = auf (\"on\") + wieder (\"again\") + sehen (\"to see\") = \"on the seeing-again.\" French and German, side by side, both promise a re-seeing; Spanish adiós instead commends you to God. Same moment, two different pictures."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"au revoir\" — oh ruh-VWAHR",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"au revoir\" — *oh ruh-VWAHR*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"au revoir\" then English \"vision, revise, video\" — the vidēre family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"au revoir\" then English \"vision, revise, video\" — the *vidēre* family]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "French au revoir and German auf Wiedersehen — both \"see you again\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: French *au revoir* and German *auf Wiedersehen* — both \"see you again\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does au revoir literally mean? (\"Until the seeing-again.\") What Latin verb is voir from, and two English cousins? (vidēre — vision, video, revise.) Which other language builds its goodbye the same \"see again\" way? (German auf Wiedersehen.) Next: à plus tard."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "FR-C04-practice",
-      "sequence": null,
+      "sequence": 160,
       "title": "Practice — saying goodbye in French",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -642,7 +642,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6eb87bacdc6239d6",
+      "sourceHash": "fnv1a64:7b5dadbc9d383bb2",
       "notice": null,
       "blocks": [
         {
@@ -775,7 +775,7 @@
     },
     {
       "id": "FR-W01-accents",
-      "sequence": null,
+      "sequence": 165,
       "title": "é è ê — the three hats on e, and the one that hides an s",
       "headword": "é è ê",
       "romanization": "é è ê",
@@ -786,7 +786,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:857f79ebbf15c5d7",
+      "sourceHash": "fnv1a64:6df2b4f3b0d65d38",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -939,7 +939,7 @@
     },
     {
       "id": "FR-W02-cedille",
-      "sequence": null,
+      "sequence": 170,
       "title": "ç — the little tail that softens c",
       "headword": "ç",
       "romanization": "ç",
@@ -950,7 +950,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:b1ecaf14ebba004b",
+      "sourceHash": "fnv1a64:d331c582d116496e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1094,7 +1094,7 @@
     },
     {
       "id": "FR-W03-trema",
-      "sequence": null,
+      "sequence": 175,
       "title": "ï ë ü — the two dots that say \"say me on my own\"",
       "headword": "ï ë ü",
       "romanization": "ï ë ü",
@@ -1105,7 +1105,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:0f7ca1460edd6157",
+      "sourceHash": "fnv1a64:37c9708187ac645d",
       "notice": {
         "modality": "pen",
         "needs": [

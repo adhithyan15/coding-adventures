@@ -1,5 +1,6 @@
 ---
 id: FR-C08-midi-minuit
+sequence: 230
 chapter: 8
 type: word
 headword: midi, minuit

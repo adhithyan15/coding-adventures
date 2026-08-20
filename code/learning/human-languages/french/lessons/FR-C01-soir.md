@@ -1,5 +1,6 @@
 ---
 id: FR-C01-soir
+sequence: 35
 chapter: 1
 type: word
 headword: soir

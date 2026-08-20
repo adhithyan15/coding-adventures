@@ -1,5 +1,6 @@
 ---
 id: FR-C04-au-revoir
+sequence: 140
 chapter: 4
 type: word
 headword: au revoir

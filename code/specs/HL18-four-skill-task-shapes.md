@@ -57,6 +57,11 @@ This preserves a four-exercise and a five-exercise paper as two alternatives;
 it never flattens them into a fictional nine-exercise paper. With no explicit
 variants, all parts form one backward-compatible implicit administration.
 
+Length bounds follow the source too. A closed range carries two finite bounds;
+a published “at least 40 words” carries `minimum: 40` and `maximum: null` plus a
+`notPublished` explanation. At least one bound is mandatory. A missing source
+maximum must never be replaced by the minimum or by an editorial estimate.
+
 ## 4. Awarding-body pass rules versus project evidence
 
 The inventory transcribes the awarding body's real rule. It does not improve

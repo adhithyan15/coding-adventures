@@ -1,5 +1,6 @@
 ---
 id: FR-C01-bon
+sequence: 15
 chapter: 1
 type: word
 headword: bon / bonne

@@ -1,5 +1,6 @@
 ---
 id: FR-C13-rouge-bleu
+sequence: 280
 chapter: 13
 type: word
 headword: rouge, bleu

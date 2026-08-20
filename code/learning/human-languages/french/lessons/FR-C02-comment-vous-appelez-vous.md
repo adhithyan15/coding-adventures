@@ -1,5 +1,6 @@
 ---
 id: FR-C02-comment-vous-appelez-vous
+sequence: 90
 chapter: 2
 type: phrase
 headword: comment vous appelez-vous?

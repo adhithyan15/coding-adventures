@@ -1,5 +1,6 @@
 ---
 id: FR-C12-nombres-11-16
+sequence: 265
 chapter: 12
 type: word
 headword: onze — seize
