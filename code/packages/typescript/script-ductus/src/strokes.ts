@@ -6011,6 +6011,46 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઘ"),
   },
+  // t30apps writes Gujarati ઙ as one long S-like body, then lifts for the
+  // compact upper-right dot. These medians preserve the two-path order while
+  // fitting the bundled Noto outline.
+  [ductusKey("gujarati", "ઙ")]: {
+    script: "gujarati",
+    glyph: "ઙ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep from the upper right through the S-like body to the lower left",
+            path: [
+              { x: 375, y: 560 }, { x: 330, y: 565 }, { x: 280, y: 565 },
+              { x: 235, y: 555 }, { x: 200, y: 535 }, { x: 175, y: 505 },
+              { x: 155, y: 470 }, { x: 160, y: 435 }, { x: 180, y: 405 },
+              { x: 215, y: 380 }, { x: 255, y: 355 }, { x: 300, y: 330 },
+              { x: 345, y: 300 }, { x: 380, y: 265 }, { x: 405, y: 225 },
+              { x: 415, y: 180 }, { x: 405, y: 135 }, { x: 380, y: 95 },
+              { x: 340, y: 65 }, { x: 290, y: 45 }, { x: 240, y: 40 },
+              { x: 190, y: 55 }, { x: 145, y: 80 }, { x: 105, y: 115 },
+              { x: 65, y: 160 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then circle the separate upper-right dot",
+            path: [
+              { x: 399, y: 452 }, { x: 420, y: 444 }, { x: 430, y: 424 },
+              { x: 420, y: 402 }, { x: 399, y: 392 }, { x: 378, y: 402 },
+              { x: 370, y: 424 }, { x: 378, y: 444 }, { x: 399, y: 452 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઙ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
