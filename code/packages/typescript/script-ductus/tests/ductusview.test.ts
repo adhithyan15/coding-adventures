@@ -307,6 +307,8 @@ const GUJARATI_CHA = ductusFor("છ", "gujarati")!;
 const gujaratiChaOutline = gujaratiOutline("છ");
 const GUJARATI_JA = ductusFor("જ", "gujarati")!;
 const gujaratiJaOutline = gujaratiOutline("જ");
+const GUJARATI_JHA = ductusFor("ઝ", "gujarati")!;
+const gujaratiJhaOutline = gujaratiOutline("ઝ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3993,6 +3995,36 @@ describe("Gujarati જ — both loops join through the crossing and exit", () =>
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_JA.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઝ — left body before right loop and upper stem", () => {
+  const steps = ductusSteps(GUJARATI_JHA);
+  const strip = ductusFilmstrip(GUJARATI_JHA, gujaratiJhaOutline);
+
+  it("shows three movements across three ordered pen-down runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the rounded left body from upper left to lower left",
+      "lift, then circle the right loop and finish through its lower tail",
+      "lift again, then descend the short upper stem",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all three runs", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiJhaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_JHA.strokes[0], 1),
+      penPathD(GUJARATI_JHA.strokes[1], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_JHA.strokes[2], 1),
     );
   });
 });
