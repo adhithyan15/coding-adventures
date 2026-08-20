@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ક ductus (HL-C09FR)
+
+- Render **ક** as a joined upper-loop-to-lower-body run followed by a rising diagonal cross-stroke with one lift.
+- Preserve t30apps.com's version-1.0 two-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **ખ** next.
+
 ### Added — cited Gujarati ઋ ductus (HL-C09FQ)
 
 - Restore missing Gujarati inventory entry **ઋ** and render its bent body, central stem, and right loop-and-tail as three runs with two lifts.
