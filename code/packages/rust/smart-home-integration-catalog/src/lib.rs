@@ -44927,6 +44927,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         upnp_ssdp_entry(),
         ipp_printer_entry(),
         ipp_scanner_entry(),
+        thread_border_agent_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49216,6 +49217,53 @@ fn homekit_controller_entry() -> IntegrationCatalogEntry {
     entry.source_refs.push(SourceReference {
         label: "Apple Home developer page".to_string(),
         url: "https://developer.apple.com/apple-home/".to_string(),
+        external_id: None,
+    });
+    entry
+}
+
+fn thread_border_agent_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "thread_border_agent",
+        "Thread Border Agent Discovery",
+        "Bounded mDNS discovery for Thread Border Agents on the local infrastructure link.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "thread",
+    )
+    .with_protocols(vec![ProtocolFamily::Thread])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::NetworkDiagnostic])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only authorized bounded _meshcop._udp mDNS identity, state, network, topology, and endpoint discovery.",
+        "PSKc, ePSKc, operational datasets, MeshCoP exchanges, commissioning, Thread transport, network mutation, and control remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "OpenThread Border Router mDNS discovery".to_string(),
+        url: "https://openthread.io/guides/border-router/mdns-discovery".to_string(),
+        external_id: Some("_meshcop._udp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "OpenThread Border Agent TXT data API".to_string(),
+        url: "https://github.com/openthread/openthread/blob/main/include/openthread/border_agent_txt_data.h".to_string(),
+        external_id: Some("otBorderAgentTxtDataInfo".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Thread Border Router white paper".to_string(),
+        url: "https://www.threadgroup.org/Portals/0/documents/support/ThreadBorderRouterWhitePaper_07192022_4001_1.pdf".to_string(),
         external_id: None,
     });
     entry
@@ -82258,6 +82306,46 @@ mod tests {
             PrimitiveFamily::VaultLease,
         ] {
             assert!(!homekit.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn thread_border_agent_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let thread = find_entry(&catalog, &IntegrationId::trusted("thread_border_agent")).unwrap();
+        assert_eq!(
+            thread.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(thread.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(thread.auth_modes, vec![AuthMode::None]);
+        assert_eq!(thread.supported_protocols, vec![ProtocolFamily::Thread]);
+        assert_eq!(
+            thread.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(
+            thread.target_entity_kinds,
+            vec![EntityKind::NetworkDiagnostic]
+        );
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(thread.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::Radio802154,
+            PrimitiveFamily::LocalPairing,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!thread.required_primitives.contains(&primitive));
         }
     }
 
