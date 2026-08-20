@@ -3495,24 +3495,25 @@
     {
       "language": "italian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
+      "sourceHash": "fnv1a64:6585a6b1e8e15fe7",
       "lessonIds": [
-        "IT-C01-buongiorno",
-        "IT-C01-buono",
         "IT-C01-ciao",
-        "IT-C01-giorno",
-        "IT-C01-grazie",
+        "IT-W01-ciao-guided-copy",
+        "IT-C01-buono",
         "IT-C01-il-la-lo",
+        "IT-C01-giorno",
+        "IT-C01-buongiorno",
+        "IT-C01-sera",
         "IT-C01-notte",
-        "IT-C01-practice",
-        "IT-C01-sera"
+        "IT-C01-grazie",
+        "IT-C01-practice"
       ],
-      "voiceLessons": 8,
-      "drivablePrefix": 6,
+      "voiceLessons": 7,
+      "drivablePrefix": 0,
       "text": "italian/narration/ch01.txt",
       "json": "italian/narration/ch01.json",
-      "textHash": "fnv1a64:24a5f6350baebaf6",
-      "jsonHash": "fnv1a64:b943cd38ac54e50e"
+      "textHash": "fnv1a64:a3cab2a642418c39",
+      "jsonHash": "fnv1a64:b8705170264b838d"
     },
     {
       "language": "italian",
@@ -3538,7 +3539,7 @@
     {
       "language": "italian",
       "chapter": 3,
-      "sourceHash": "fnv1a64:3703362b79bcde7b",
+      "sourceHash": "fnv1a64:2949f8ec4adec769",
       "lessonIds": [
         "IT-C03-io",
         "IT-C03-mi-chiamo",
@@ -3551,7 +3552,7 @@
       "text": "italian/narration/ch03.txt",
       "json": "italian/narration/ch03.json",
       "textHash": "fnv1a64:9980c0eb2f0cba0d",
-      "jsonHash": "fnv1a64:5b4d6755af88d941"
+      "jsonHash": "fnv1a64:0ee2060a5eee7e8f"
     },
     {
       "language": "italian",

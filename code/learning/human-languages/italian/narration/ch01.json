@@ -3,24 +3,29 @@
   "language": "italian",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:6585a6b1e8e15fe7",
   "lessons": [
     {
-      "id": "IT-C01-buongiorno",
-      "sequence": null,
-      "title": "buongiorno — \"good day,\" assembled",
-      "headword": "buongiorno",
-      "romanization": "buongiorno",
-      "gloss": "good day / good morning",
+      "id": "IT-C01-ciao",
+      "sequence": 10,
+      "title": "ciao — \"hi,\" and the word that means \"I am your slave\"",
+      "headword": "ciao",
+      "romanization": "ciao",
+      "gloss": "hi / bye (informal)",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:bf5ba98deca296b4",
-      "notice": null,
+      "sourceHash": "fnv1a64:8c20b66619135cdf",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -35,38 +40,60 @@
             },
             {
               "kind": "speech",
-              "text": "Put the two pieces together into the polite, all-purpose hello."
+              "text": "The most famous \"hello\" in the world — and it hides an astonishing history."
             }
           ]
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "buon (\"good\") + giorno (\"day\")."
-            },
-            {
-              "kind": "speech",
-              "text": "buongiorno = \"good day,\" one word."
+              "text": "ciao = CHOW: ci before a vowel is the ch of church; -ao is one gliding syllable."
             }
           ]
         },
         {
           "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Where the casual ciao says \"I'm your servant,\" buongiorno simply wishes you a good day — and it's the safe, respectful choice with anyone: shopkeepers, strangers, elders. Used through the day until late afternoon, when it gives way to buonasera."
+              "text": "ciao began as the Venetian greeting s-ciào (vostro) — \"[I am your] slave / servant,\" a humble \"at your service.\" That s-ciào is Venetian for schiavo (\"slave\") from Medieval Latin sclavus. The very same word is English slave — and, astonishingly, Slav: medieval slaves were so often Slavic captives that the ethnic name became the word for \"slave\" across Europe. So every casual ciao is a fossil of \"I am your servant.\""
             }
           ]
         },
         {
           "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ciao is informal, and works both coming and going (\"hi\" and \"bye\") — for friends, family, peers. To someone you'd show respect, or on a first meeting, you reach for buongiorno (coming soon). Doubled, ciao ciao, it's a breezy \"bye-bye.\""
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — follow the greeting you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ciao visible. Point to ci, the two letters that begin the ch sound, then slide your finger through ao. Trace the whole word once from c to o, and say CHOW."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not a spelling test. Your eye and hand are only following one short greeting whose sound and meaning are still on the page."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -79,25 +106,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"buongiorno\" — buon + giorno",
+              "instruction": "\"ciao\" (CHOW)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"buongiorno\" — buon + giorno]"
+              "source": "[YOU SAY: \"ciao\" (*CHOW*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "when to use it (respect, daytime) vs ciao (friends)",
+              "instruction": "its buried meaning — \"I am your slave/servant\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: when to use it (respect, daytime) vs *ciao* (friends)]"
+              "source": "[YOU SAY: its buried meaning — \"I am your slave/servant\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English cousins — slave, Slav",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English cousins — *slave*, *Slav*]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -109,7 +145,70 @@
             },
             {
               "kind": "speech",
-              "text": "What two words make buongiorno, and when do you use it rather than ciao? (buon + giorno; for respect / strangers / daytime.)"
+              "text": "What did ciao literally mean, and what two English words share its root? (\"I am your slave\"; slave and Slav, from Latin sclavus.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "IT-W01-ciao-guided-copy",
+      "sequence": 15,
+      "title": "ciao — copy one greeting with help",
+      "headword": "ciao",
+      "romanization": "ciao",
+      "gloss": "copy the first greeting once with the model still visible",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:aabf5233b92fb743",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to ciao and say it once: CHOW. The model stays on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy ciao once on the line below it. Write ci, pause, then add ao. Look back at the model whenever you want. Check that the i has its dot."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word as you finish. The four letters record the sound you already know; there is nothing to guess and no second word today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare your copy with the model. If one letter differs, repair only that letter. No hiding, no spelling from memory, and no free sentence yet."
             }
           ]
         }
@@ -117,7 +216,7 @@
     },
     {
       "id": "IT-C01-buono",
-      "sequence": null,
+      "sequence": 20,
       "title": "buono / buon — \"good\"",
       "headword": "buono / buon",
       "romanization": "buono / buon",
@@ -128,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ef4e2a70ce4f96f",
+      "sourceHash": "fnv1a64:2db5c41d4c4ee96c",
       "notice": null,
       "blocks": [
         {
@@ -232,19 +331,19 @@
       ]
     },
     {
-      "id": "IT-C01-ciao",
-      "sequence": null,
-      "title": "ciao — \"hi,\" and the word that means \"I am your slave\"",
-      "headword": "ciao",
-      "romanization": "ciao",
-      "gloss": "hi / bye (informal)",
+      "id": "IT-C01-il-la-lo",
+      "sequence": 30,
+      "title": "il / la / lo — \"the,\" and the gender it carries",
+      "headword": "il / la / lo",
+      "romanization": "il / la / lo",
+      "gloss": "the (masculine / feminine)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4ff5252d6115ac5b",
+      "sourceHash": "fnv1a64:4e47245ae0ffffe4",
       "notice": null,
       "blocks": [
         {
@@ -260,45 +359,34 @@
             },
             {
               "kind": "speech",
-              "text": "The most famous \"hello\" in the world — and it hides an astonishing history."
+              "text": "Before your first noun: the words for \"the.\" Italian splits \"the\" by gender — a habit inherited from Latin."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ciao = CHOW: ci before a vowel is the ch of church; -ao is one gliding syllable."
-            }
-          ]
-        },
-        {
-          "index": 2,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "ciao began as the Venetian greeting s-ciào (vostro) — \"[I am your] slave / servant,\" a humble \"at your service.\" That s-ciào is Venetian for schiavo (\"slave\") from Medieval Latin sclavus. The very same word is English slave — and, astonishingly, Slav: medieval slaves were so often Slavic captives that the ethnic name became the word for \"slave\" across Europe. So every casual ciao is a fossil of \"I am your servant.\""
+              "text": "il and lo (masculine \"the\") and la (feminine) from Latin ille / illa (\"that one\"), the pointing word worn down to \"the.\" The same ille/illa gave Spanish el/la and French le/la — and also Italian lui / lei (\"he/she\"). (English \"the\" is Germanic, unrelated.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: gender, and two masculine \"the\"s",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Italian noun is masculine or feminine — Latin's three genders (the neuter folding into the masculine) collapsed to two. Learn each noun with its article. Italian has two masculine articles: lo before tricky clusters (lo studente, lo zio), il everywhere else (il giorno); feminine is always la. Meet il at your first noun, next."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ciao is informal, and works both coming and going (\"hi\" and \"bye\") — for friends, family, peers. To someone you'd show respect, or on a first meeting, you reach for buongiorno (coming soon). Doubled, ciao ciao, it's a breezy \"bye-bye.\""
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -311,34 +399,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"ciao\" (CHOW)",
+              "instruction": "\"il\", \"la\", \"lo\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"ciao\" (*CHOW*)]"
+              "source": "[YOU SAY: \"il\", \"la\", \"lo\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its buried meaning — \"I am your slave/servant\"",
+              "instruction": "their source — Latin ille / illa",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its buried meaning — \"I am your slave/servant\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English cousins — slave, Slav",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English cousins — *slave*, *Slav*]"
+              "source": "[YOU SAY: their source — Latin *ille / illa*]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -350,7 +429,7 @@
             },
             {
               "kind": "speech",
-              "text": "What did ciao literally mean, and what two English words share its root? (\"I am your slave\"; slave and Slav, from Latin sclavus.)"
+              "text": "What Latin word gave il / lo / la, and how many genders does Italian have? (ille / illa; two — masculine and feminine.)"
             }
           ]
         }
@@ -358,7 +437,7 @@
     },
     {
       "id": "IT-C01-giorno",
-      "sequence": null,
+      "sequence": 40,
       "title": "giorno — \"day,\" and the road to English journey",
       "headword": "giorno",
       "romanization": "giorno",
@@ -369,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2db996eea27f7291",
+      "sourceHash": "fnv1a64:41d5c0fe0be4d53c",
       "notice": null,
       "blocks": [
         {
@@ -485,19 +564,19 @@
       ]
     },
     {
-      "id": "IT-C01-grazie",
-      "sequence": null,
-      "title": "grazie — \"thank you,\" from grace",
-      "headword": "grazie",
-      "romanization": "grazie",
-      "gloss": "thank you",
+      "id": "IT-C01-buongiorno",
+      "sequence": 50,
+      "title": "buongiorno — \"good day,\" assembled",
+      "headword": "buongiorno",
+      "romanization": "buongiorno",
+      "gloss": "good day / good morning",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:24727ed3519a514e",
+      "sourceHash": "fnv1a64:4d06591169ec14c8",
       "notice": null,
       "blocks": [
         {
@@ -513,45 +592,38 @@
             },
             {
               "kind": "speech",
-              "text": "\"Thanks\" — and it literally offers someone grace."
+              "text": "Put the two pieces together into the polite, all-purpose hello."
             }
           ]
         },
         {
           "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
+          "type": "unknown",
+          "title": "The phrase, assembled",
           "segments": [
             {
               "kind": "speech",
-              "text": "grazie = GRAH-tsyeh: z in Italian is ts; the final -e is sounded (so -zie is two beats)."
+              "text": "buon (\"good\") + giorno (\"day\")."
+            },
+            {
+              "kind": "speech",
+              "text": "buongiorno = \"good day,\" one word."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "grazie (\"thanks\") from Latin gratiae, plural of gratia (\"favour, thanks, grace\"). It's the same gratia behind English grace, gratitude, grateful, gratis (\"free\"), congratulate, and ingratiate. So grazie literally wishes someone grace."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "culture-pragmatics",
           "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "The reply is prego (\"you're welcome\") — literally \"I pray [it's nothing],\" from Latin precari (\"to pray,\" becomes English pray, precarious). You give thanks/grace; they wave it off with a prayer."
+              "text": "Where the casual ciao says \"I'm your servant,\" buongiorno simply wishes you a good day — and it's the safe, respectful choice with anyone: shopkeepers, strangers, elders. Used through the day until late afternoon, when it gives way to buonasera."
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -564,34 +636,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"grazie\" (GRAH-tsyeh)",
+              "instruction": "\"buongiorno\" — buon + giorno",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"grazie\" (*GRAH-tsyeh*)]"
+              "source": "[YOU SAY: \"buongiorno\" — buon + giorno]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the cousins — grace, gratitude, gratis",
+              "instruction": "when to use it (respect, daytime) vs ciao (friends)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the cousins — *grace*, *gratitude*, *gratis*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the reply — \"prego\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the reply — \"prego\"]"
+              "source": "[YOU SAY: when to use it (respect, daytime) vs *ciao* (friends)]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -603,26 +666,26 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is grazie from, and three English cousins? (gratia, \"grace\"; grace, gratitude, gratis.) The reply to grazie? (prego.)"
+              "text": "What two words make buongiorno, and when do you use it rather than ciao? (buon + giorno; for respect / strangers / daytime.)"
             }
           ]
         }
       ]
     },
     {
-      "id": "IT-C01-il-la-lo",
-      "sequence": null,
-      "title": "il / la / lo — \"the,\" and the gender it carries",
-      "headword": "il / la / lo",
-      "romanization": "il / la / lo",
-      "gloss": "the (masculine / feminine)",
+      "id": "IT-C01-sera",
+      "sequence": 60,
+      "title": "sera / buonasera — \"evening\" and \"good evening\"",
+      "headword": "sera / buonasera",
+      "romanization": "sera / buonasera",
+      "gloss": "evening / good evening",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:42abb1bb4b06d812",
+      "sourceHash": "fnv1a64:1eb2fa43556aab91",
       "notice": null,
       "blocks": [
         {
@@ -638,7 +701,7 @@
             },
             {
               "kind": "speech",
-              "text": "Before your first noun: the words for \"the.\" Italian splits \"the\" by gender — a habit inherited from Latin."
+              "text": "The evening swap for buongiorno."
             }
           ]
         },
@@ -649,18 +712,18 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "il and lo (masculine \"the\") and la (feminine) from Latin ille / illa (\"that one\"), the pointing word worn down to \"the.\" The same ille/illa gave Spanish el/la and French le/la — and also Italian lui / lei (\"he/she\"). (English \"the\" is Germanic, unrelated.)"
+              "text": "la sera (fem.) from Latin sera (\"late [hour]\"), from serus, \"late.\" English cousin: the rare serotine (a bat of the late evening). buonasera = buona + sera, \"good evening\" — buona in its feminine form, because sera is feminine (contrast the masculine buon giorno)."
             }
           ]
         },
         {
           "index": 2,
           "type": "grammar",
-          "title": "Grammar Lens: gender, and two masculine \"the\"s",
+          "title": "Grammar Lens: feminine agreement",
           "segments": [
             {
               "kind": "speech",
-              "text": "Every Italian noun is masculine or feminine — Latin's three genders (the neuter folding into the masculine) collapsed to two. Learn each noun with its article. Italian has two masculine articles: lo before tricky clusters (lo studente, lo zio), il everywhere else (il giorno); feminine is always la. Meet il at your first noun, next."
+              "text": "Notice buona sera vs. buon giorno: the \"good\" word matches its noun's gender — feminine sera takes buona, masculine giorno takes buon. Same adjective, two coats."
             }
           ]
         },
@@ -678,20 +741,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"il\", \"la\", \"lo\"",
+              "instruction": "\"buonasera\" (buona + sera)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"il\", \"la\", \"lo\"]"
+              "source": "[YOU SAY: \"buonasera\" (*buona* + *sera*)]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "their source — Latin ille / illa",
+              "instruction": "why it's buona here but buon in buon giorno (gender)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: their source — Latin *ille / illa*]"
+              "source": "[YOU SAY: why it's *buona* here but *buon* in *buon giorno* (gender)]"
             }
           ]
         },
@@ -708,7 +771,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gave il / lo / la, and how many genders does Italian have? (ille / illa; two — masculine and feminine.)"
+              "text": "What Latin word gave sera, and why is it buonasera but buon giorno? (sera from serus, \"late\"; sera is feminine so \"good\" is buona.)"
             }
           ]
         }
@@ -716,7 +779,7 @@
     },
     {
       "id": "IT-C01-notte",
-      "sequence": null,
+      "sequence": 70,
       "title": "notte / buonanotte — \"night,\" and the -ct- becomes -tt- rule",
       "headword": "notte / buonanotte",
       "romanization": "notte / buonanotte",
@@ -727,7 +790,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:51cf1ab986e10d2c",
+      "sourceHash": "fnv1a64:80c32e88e71504c6",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -840,8 +903,133 @@
       ]
     },
     {
+      "id": "IT-C01-grazie",
+      "sequence": 80,
+      "title": "grazie — \"thank you,\" from grace",
+      "headword": "grazie",
+      "romanization": "grazie",
+      "gloss": "thank you",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:45be76e3ae3aa5cf",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "\"Thanks\" — and it literally offers someone grace."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grazie = GRAH-tsyeh: z in Italian is ts; the final -e is sounded (so -zie is two beats)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "grazie (\"thanks\") from Latin gratiae, plural of gratia (\"favour, thanks, grace\"). It's the same gratia behind English grace, gratitude, grateful, gratis (\"free\"), congratulate, and ingratiate. So grazie literally wishes someone grace."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The reply is prego (\"you're welcome\") — literally \"I pray [it's nothing],\" from Latin precari (\"to pray,\" becomes English pray, precarious). You give thanks/grace; they wave it off with a prayer."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"grazie\" (GRAH-tsyeh)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"grazie\" (*GRAH-tsyeh*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the cousins — grace, gratitude, gratis",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the cousins — *grace*, *gratitude*, *gratis*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the reply — \"prego\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the reply — \"prego\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word is grazie from, and three English cousins? (gratia, \"grace\"; grace, gratitude, gratis.) The reply to grazie? (prego.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "IT-C01-practice",
-      "sequence": null,
+      "sequence": 90,
       "title": "Chapter 1 — the day of greetings",
       "headword": "(recap)",
       "romanization": "(recap)",
@@ -852,7 +1040,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:82dfa21619caa6fc",
+      "sourceHash": "fnv1a64:c887f7af7f33d4a4",
       "notice": null,
       "blocks": [
         {
@@ -964,111 +1152,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: introducing yourself — mi chiamo… (\"my name is…\") — and Italian's tu vs. Lei (familiar / formal \"you\")."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "IT-C01-sera",
-      "sequence": null,
-      "title": "sera / buonasera — \"evening\" and \"good evening\"",
-      "headword": "sera / buonasera",
-      "romanization": "sera / buonasera",
-      "gloss": "evening / good evening",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:f8d015596bda6a34",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The evening swap for buongiorno."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "la sera (fem.) from Latin sera (\"late [hour]\"), from serus, \"late.\" English cousin: the rare serotine (a bat of the late evening). buonasera = buona + sera, \"good evening\" — buona in its feminine form, because sera is feminine (contrast the masculine buon giorno)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: feminine agreement",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Notice buona sera vs. buon giorno: the \"good\" word matches its noun's gender — feminine sera takes buona, masculine giorno takes buon. Same adjective, two coats."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"buonasera\" (buona + sera)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"buonasera\" (*buona* + *sera*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "why it's buona here but buon in buon giorno (gender)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: why it's *buona* here but *buon* in *buon giorno* (gender)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word gave sera, and why is it buonasera but buon giorno? (sera from serus, \"late\"; sera is feminine so \"good\" is buona.)"
             }
           ]
         }

@@ -1,5 +1,6 @@
 ---
 id: IT-C01-buono
+sequence: 20
 chapter: 1
 type: word
 headword: buono / buon

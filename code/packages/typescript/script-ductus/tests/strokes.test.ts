@@ -139,6 +139,8 @@ const GUJARATI_TA = DUCTUS[ductusKey("gujarati", "ત")];
 const GUJARATI_THA = DUCTUS[ductusKey("gujarati", "થ")];
 const GUJARATI_DA = DUCTUS[ductusKey("gujarati", "દ")];
 const GUJARATI_DHA = DUCTUS[ductusKey("gujarati", "ધ")];
+const GUJARATI_NA = DUCTUS[ductusKey("gujarati", "ન")];
+const GUJARATI_PA = DUCTUS[ductusKey("gujarati", "પ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2176,6 +2178,28 @@ describe("handwriting ductus", () => {
     const body = GUJARATI_DHA.strokes[0].segments[0].path;
     const spine = GUJARATI_DHA.strokes[1].segments[0].path;
     expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(600);
+    expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
+  });
+
+  it("Gujarati ન separates its loop-and-shoulder body and tall right spine", () => {
+    expect(GUJARATI_NA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_NA)).toBe(1);
+    expect(GUJARATI_NA.strokes).toHaveLength(2);
+    expect(GUJARATI_NA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const body = GUJARATI_NA.strokes[0].segments[0].path;
+    const spine = GUJARATI_NA.strokes[1].segments[0].path;
+    expect(body.length).toBeGreaterThanOrEqual(18);
+    expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
+  });
+
+  it("Gujarati પ separates its hooked lower body and tall right spine", () => {
+    expect(GUJARATI_PA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_PA)).toBe(1);
+    expect(GUJARATI_PA.strokes).toHaveLength(2);
+    expect(GUJARATI_PA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const body = GUJARATI_PA.strokes[0].segments[0].path;
+    const spine = GUJARATI_PA.strokes[1].segments[0].path;
+    expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(550);
     expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
   });
 
@@ -4666,6 +4690,24 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ધ animation.*first and second SVG paths/i);
     expect(src.variation).toMatch(
       /two ordered pen-down runs.*first SVG path.*high left entry.*upper turn.*middle.*broad lower body.*right shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*joined-body-before-right-spine order.*one-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ન traces its loop, shoulder, and right spine to two paths", () => {
+    const src = GUJARATI_NA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ન animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(
+      /two ordered pen-down runs.*first SVG path.*upper left.*small loop.*long shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*loop-and-shoulder-before-right-spine order.*one-lift evidence/i,
+    );
+  });
+
+  it("Gujarati પ traces its hooked body and right spine to two paths", () => {
+    const src = GUJARATI_PA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*પ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(
+      /two ordered pen-down runs.*first SVG path.*high left hook.*curls upward and right.*left stem.*broad lower body.*right shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*hooked-body-before-right-spine order.*one-lift evidence/i,
     );
   });
 
