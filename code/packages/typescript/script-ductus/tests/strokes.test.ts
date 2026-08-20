@@ -120,6 +120,7 @@ const GUJARATI_E = DUCTUS[ductusKey("gujarati", "એ")];
 const GUJARATI_AI = DUCTUS[ductusKey("gujarati", "ઐ")];
 const GUJARATI_O = DUCTUS[ductusKey("gujarati", "ઓ")];
 const GUJARATI_AU = DUCTUS[ductusKey("gujarati", "ઔ")];
+const GUJARATI_KA = DUCTUS[ductusKey("gujarati", "ક")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1927,6 +1928,19 @@ describe("handwriting ductus", () => {
     );
     expect(lowerArc.at(-1)!.x).toBeGreaterThan(lowerArc[0].x);
     expect(higherArc.at(-1)!.x).toBeGreaterThan(higherArc[0].x);
+  });
+
+  it("Gujarati ક writes its joined loop-body before the diagonal cross-stroke", () => {
+    expect(GUJARATI_KA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_KA)).toBe(1);
+    expect(GUJARATI_KA.strokes).toHaveLength(2);
+    expect(GUJARATI_KA.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const body = GUJARATI_KA.strokes[0].segments[0].path;
+    const cross = GUJARATI_KA.strokes[1].segments[0].path;
+    expect(body.at(-1)!.x).toBeLessThan(body[0].x);
+    expect(body.at(-1)!.y).toBeLessThan(body[0].y);
+    expect(cross.at(-1)!.x).toBeGreaterThan(cross[0].x);
+    expect(cross.at(-1)!.y).toBeGreaterThan(cross[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4229,6 +4243,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /five ordered pen-down runs.*first SVG path.*ઓ's joined body.*open left curve.*broad lower body.*middle shoulder.*small right arch.*lifts once.*second SVG path.*first separate right stem.*lower foot.*lifts again.*third SVG path.*trailing stem.*matching foot.*lifts once more.*fourth SVG path.*lower high arc.*left to right.*lifts a fourth time.*fifth SVG path.*second, higher arc.*same direction.*remaining path slot is empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*body-before-first-stem-before-trailing-stem-before-lower-arc-before-higher-arc order.*four-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ક traces its joined body and crossing diagonal to two paths", () => {
+    const src = GUJARATI_KA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ક animation.*first and second SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /two ordered pen-down runs.*first SVG path.*upper right.*circles left.*upper loop.*diagonally down-right.*middle crossing.*rounded lower body.*lower left.*lifts once.*second SVG path.*diagonal cross-stroke.*lower left to upper right.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*joined-loop-body-before-diagonal-cross-stroke order.*one-lift evidence/i,
     );
   });
 
