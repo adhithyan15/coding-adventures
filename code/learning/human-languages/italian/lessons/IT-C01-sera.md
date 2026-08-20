@@ -1,5 +1,6 @@
 ---
 id: IT-C01-sera
+sequence: 60
 chapter: 1
 type: word
 headword: sera / buonasera

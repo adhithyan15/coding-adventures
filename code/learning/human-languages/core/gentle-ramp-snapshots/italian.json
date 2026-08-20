@@ -1,7 +1,7 @@
 {
   "language": "italian",
-  "lessonCount": 88,
-  "atomMeasurableLessons": 79,
+  "lessonCount": 89,
+  "atomMeasurableLessons": 80,
   "atomMeasurementBlindLessons": 9,
   "durationViolations": 0,
   "atomLessonSpikes": 3,
@@ -10,39 +10,25 @@
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
-  "orderDefects": 22,
+  "orderDefects": 0,
   "unknownPrerequisites": 0,
-  "forwardPrerequisites": 6,
-  "forwardReviews": 7,
-  "forwardReferences": 48,
-  "atomsTaught": 197,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 44,
+  "atomsTaught": 200,
   "atomsNeverRevisited": 19,
-  "reinforcementWindowMisses": 273,
-  "payoffSurprises": 0,
-  "writingPracticeLessons": 0,
-  "firstWritingPracticeAt": null,
-  "lessonsBeforeWritingPractice": 88,
+  "reinforcementWindowMisses": 282,
+  "payoffSurprises": 1,
+  "writingPracticeLessons": 2,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
   "findings": [
     {
       "language": "italian",
-      "kind": "order-integrity",
-      "count": 22,
-      "unit": "order/dependency defect(s)",
-      "detail": "declare a unique reading order and close every prerequisite and review before use"
-    },
-    {
-      "language": "italian",
       "kind": "forward-language",
-      "count": 48,
+      "count": 44,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
-    },
-    {
-      "language": "italian",
-      "kind": "writing-ramp",
-      "count": 88,
-      "unit": "opening lesson(s)",
-      "detail": "add observable, guided writing practice from the opening lesson"
     },
     {
       "language": "italian",
@@ -54,9 +40,16 @@
     {
       "language": "italian",
       "kind": "reinforcement",
-      "count": 273,
+      "count": 282,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
+    },
+    {
+      "language": "italian",
+      "kind": "payoff-surprise",
+      "count": 1,
+      "unit": "chapter payoff finding(s)",
+      "detail": "make each chapter payoff assess only taught, representative material"
     },
     {
       "language": "italian",
@@ -68,9 +61,9 @@
   ],
   "next": {
     "language": "italian",
-    "kind": "order-integrity",
-    "count": 22,
-    "unit": "order/dependency defect(s)",
-    "detail": "declare a unique reading order and close every prerequisite and review before use"
+    "kind": "forward-language",
+    "count": 44,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }

@@ -329,6 +329,10 @@ const GUJARATI_DA = ductusFor("દ", "gujarati")!;
 const gujaratiDaOutline = gujaratiOutline("દ");
 const GUJARATI_DHA = ductusFor("ધ", "gujarati")!;
 const gujaratiDhaOutline = gujaratiOutline("ધ");
+const GUJARATI_NA = ductusFor("ન", "gujarati")!;
+const gujaratiNaOutline = gujaratiOutline("ન");
+const GUJARATI_PA = ductusFor("પ", "gujarati")!;
+const gujaratiPaOutline = gujaratiOutline("પ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -4310,6 +4314,60 @@ describe("Gujarati ધ — joined body before the separate tall spine", () => {
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_DHA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Gujarati ન — loop and shoulder before the separate tall spine", () => {
+  const steps = ductusSteps(GUJARATI_NA);
+  const strip = ductusFilmstrip(GUJARATI_NA, gujaratiNaOutline);
+
+  it("shows the two source runs in order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the small left loop and continue across the long rightward shoulder",
+      "lift, descend the tall right spine, and turn through its lower foot",
+    ]);
+    expect(strip.frames).toHaveLength(2);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind both runs", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiNaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_NA.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_NA.strokes[1], 1),
+    );
+  });
+});
+
+describe("Gujarati પ — hooked lower body before the separate tall spine", () => {
+  const steps = ductusSteps(GUJARATI_PA);
+  const strip = ductusFilmstrip(GUJARATI_PA, gujaratiPaOutline);
+
+  it("shows the two source runs in order", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "curl over the high left hook, descend, and sweep around the broad lower body into the right shoulder",
+      "lift, descend the tall right spine, and turn through its lower foot",
+    ]);
+    expect(strip.frames).toHaveLength(2);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true]);
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind both runs", () => {
+    const paths = byTag(strip.frames[1], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiPaOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d)).toEqual([
+      penPathD(GUJARATI_PA.strokes[0], 1),
+    ]);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_PA.strokes[1], 1),
     );
   });
 });

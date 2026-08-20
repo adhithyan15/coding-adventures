@@ -341,7 +341,7 @@ describe("corpus snapshot", () => {
     // exactly 2/4 (0.50), which clears the floor rather than falling below it. So this is
     // +2 and not +4, and the difference is one atom of arithmetic, not a difference in
     // kind. Both new members are recorded in tamil/chapters.json's own payoff notes.
-    expect(report.summary.payoffsNotRepresentative).toBe(80); // +1: German chapter 1 gains an atom-bearing writing step; its existing payoff is not widened.
+    expect(report.summary.payoffsNotRepresentative).toBe(81); // +1: Italian's typed opener makes its legacy chapter-1 payoff debt measurable.
   });
 
   it("names the tracks whose chapter debt is already zero", () => {
@@ -361,7 +361,6 @@ describe("corpus snapshot", () => {
       "chinese",
       "french",
       "gujarati",
-      "italian",
       "japanese",
       "latin",
       "marathi",

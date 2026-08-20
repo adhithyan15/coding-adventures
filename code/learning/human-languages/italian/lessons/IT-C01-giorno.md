@@ -1,5 +1,6 @@
 ---
 id: IT-C01-giorno
+sequence: 40
 chapter: 1
 type: word
 headword: giorno
