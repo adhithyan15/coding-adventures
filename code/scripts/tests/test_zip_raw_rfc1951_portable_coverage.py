@@ -5,11 +5,11 @@ from __future__ import annotations
 import importlib
 import json
 import sys
+import unittest
 from copy import deepcopy
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-import pytest
 from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -262,7 +262,7 @@ def safe_repo_file(value: str, package_root: str) -> Path:
     return target
 
 
-def test_consumer_registry_matches_closed_schema_and_denominator() -> None:
+def check_consumer_registry_matches_closed_schema_and_denominator() -> None:
     schema = load_json(FIXTURE_ROOT / "consumers.schema.json")
     document = consumers_document()
     Draft202012Validator.check_schema(schema)
@@ -274,7 +274,7 @@ def test_consumer_registry_matches_closed_schema_and_denominator() -> None:
     assert document["established_lane_count"] == len(lanes)
 
 
-def test_registry_pins_package_paths_builds_and_public_surface() -> None:
+def check_registry_pins_package_paths_builds_and_public_surface() -> None:
     for consumer in consumers_document()["consumers"]:
         language = consumer["language"]
         expected = EXPECTED_CONSUMERS[language]
@@ -298,7 +298,7 @@ def test_registry_pins_package_paths_builds_and_public_surface() -> None:
             safe_repo_file(build_file, package_root)
 
 
-def test_every_lane_loads_the_same_closed_fixture_and_declares_no_authority() -> None:
+def check_every_lane_loads_the_same_closed_fixture_and_declares_no_authority() -> None:
     fixture = consumers_document()["fixture"]
     cases = load_json(REPO_ROOT / fixture)
     assert len(cases["cases"]) == consumers_document()["case_count"] == 34
@@ -316,7 +316,7 @@ def test_every_lane_loads_the_same_closed_fixture_and_declares_no_authority() ->
         assert capabilities["capabilities"] == [], consumer["language"]
 
 
-def test_schema_rejects_a_sixteenth_or_cross_wired_consumer() -> None:
+def check_schema_rejects_a_sixteenth_or_cross_wired_consumer() -> None:
     schema = load_json(FIXTURE_ROOT / "consumers.schema.json")
     document = deepcopy(consumers_document())
     document["consumers"].append(deepcopy(document["consumers"][0]))
@@ -324,8 +324,28 @@ def test_schema_rejects_a_sixteenth_or_cross_wired_consumer() -> None:
 
     document = consumers_document()
     document["consumers"][0]["package_root"] = "code/packages/rust/zip"
-    with pytest.raises(AssertionError):
+    try:
         safe_repo_file(
             document["consumers"][0]["api_source"],
             document["consumers"][0]["package_root"],
         )
+    except AssertionError:
+        pass
+    else:
+        raise AssertionError("cross-wired consumer unexpectedly resolved")
+
+
+class PortableCoverageTests(unittest.TestCase):
+    """Exercise the closure registry through the CI unittest front door."""
+
+    def test_consumer_registry_matches_closed_schema_and_denominator(self) -> None:
+        check_consumer_registry_matches_closed_schema_and_denominator()
+
+    def test_registry_pins_package_paths_builds_and_public_surface(self) -> None:
+        check_registry_pins_package_paths_builds_and_public_surface()
+
+    def test_every_lane_loads_same_fixture_and_declares_no_authority(self) -> None:
+        check_every_lane_loads_the_same_closed_fixture_and_declares_no_authority()
+
+    def test_schema_rejects_sixteenth_or_cross_wired_consumer(self) -> None:
+        check_schema_rejects_a_sixteenth_or_cross_wired_consumer()
