@@ -22,6 +22,13 @@ export interface TaskLength {
   approximate: boolean;
 }
 
+/** A published duration may be exact or an exact bounded range. */
+export interface TaskMinutesRange {
+  minimum: number;
+  maximum: number;
+}
+export type TaskMinutes = number | TaskMinutesRange;
+
 export interface TaskPartShape {
   id: string;
   promptModes: string[];
@@ -55,8 +62,8 @@ export interface TaskShapeInventory {
   };
   sources: TaskShapeSource[];
   administration: {
-    writtenMinutes: number;
-    speakingMinutes: number;
+    writtenMinutes: TaskMinutes;
+    speakingMinutes: TaskMinutes;
     speakingGroupMaximum: number | null;
     speakingPreparationMinutes: number | null;
     deliveryModes: string[];
@@ -70,7 +77,7 @@ export interface TaskShapeInventory {
   };
   sections: Array<{
     skill: AssessmentSkill;
-    minutes: number;
+    minutes: TaskMinutes;
     parts: TaskPartShape[];
   }>;
 }
@@ -138,6 +145,25 @@ function positive(value: unknown, where: string): number {
     throw new Error(`task shapes: ${where} must be a positive finite number`);
   }
   return value;
+}
+
+function parseMinutes(value: unknown, where: string): TaskMinutes {
+  if (typeof value === "number") return positive(value, where);
+  const raw = object(value, where);
+  const minimum = positive(raw.minimum, `${where}.minimum`);
+  const maximum = positive(raw.maximum, `${where}.maximum`);
+  if (minimum > maximum) throw new Error(`task shapes: ${where}.minimum cannot exceed maximum`);
+  return { minimum, maximum };
+}
+
+function minuteBounds(value: TaskMinutes): TaskMinutesRange {
+  return typeof value === "number" ? { minimum: value, maximum: value } : value;
+}
+
+function sameMinutes(left: TaskMinutes, right: TaskMinutes): boolean {
+  const a = minuteBounds(left);
+  const b = minuteBounds(right);
+  return a.minimum === b.minimum && a.maximum === b.maximum;
 }
 
 function nullableNonNegativeInteger(value: unknown, where: string): number | null {
@@ -212,6 +238,8 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
   });
 
   const administration = object(raw.administration, `${expectedLanguage}.administration`);
+  const writtenMinutes = parseMinutes(administration.writtenMinutes, `${expectedLanguage}.administration.writtenMinutes`);
+  const speakingMinutes = parseMinutes(administration.speakingMinutes, `${expectedLanguage}.administration.speakingMinutes`);
   const speakingGroupMaximum = nullablePositiveInteger(
     administration.speakingGroupMaximum,
     `${expectedLanguage}.administration.speakingGroupMaximum`,
@@ -297,19 +325,25 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
         sourceIds: partSources,
       };
     });
-    return { skill, minutes: positive(section.minutes, `${skill}.minutes`), parts };
+    return { skill, minutes: parseMinutes(section.minutes, `${skill}.minutes`), parts };
   });
   for (const skill of ASSESSMENT_SKILLS) {
     if (!seenSkills.has(skill)) throw new Error(`task shapes: missing ${skill} section`);
   }
   const writtenSectionMinutes = sections
     .filter((section) => section.skill !== "speaking")
-    .reduce((sum, section) => sum + section.minutes, 0);
+    .reduce(
+      (sum, section) => {
+        const bounds = minuteBounds(section.minutes);
+        return { minimum: sum.minimum + bounds.minimum, maximum: sum.maximum + bounds.maximum };
+      },
+      { minimum: 0, maximum: 0 },
+    );
   const speakingSectionMinutes = sections.find((section) => section.skill === "speaking")?.minutes;
-  if (writtenSectionMinutes !== administration.writtenMinutes) {
+  if (!sameMinutes(writtenSectionMinutes, writtenMinutes)) {
     throw new Error(`task shapes: written section minutes do not add up to administration.writtenMinutes`);
   }
-  if (speakingSectionMinutes !== administration.speakingMinutes) {
+  if (speakingSectionMinutes === undefined || !sameMinutes(speakingSectionMinutes, speakingMinutes)) {
     throw new Error(`task shapes: speaking minutes do not match administration.speakingMinutes`);
   }
 
@@ -323,8 +357,8 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
     },
     sources,
     administration: {
-      writtenMinutes: positive(administration.writtenMinutes, `${expectedLanguage}.administration.writtenMinutes`),
-      speakingMinutes: positive(administration.speakingMinutes, `${expectedLanguage}.administration.speakingMinutes`),
+      writtenMinutes,
+      speakingMinutes,
       speakingGroupMaximum,
       speakingPreparationMinutes,
       deliveryModes: strings(administration.deliveryModes, `${expectedLanguage}.administration.deliveryModes`),
