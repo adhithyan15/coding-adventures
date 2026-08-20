@@ -1,0 +1,7 @@
+{
+  "$schema": "https://raw.githubusercontent.com/adhithyan15/coding-adventures/main/code/specs/schemas/required_capabilities.schema.json",
+  "version": 1,
+  "package": "haskell/zip",
+  "capabilities": [],
+  "justification": "Pure in-memory ZIP, raw RFC 1951, CRC-32, and timestamp computation. No filesystem, network, process, environment, clock, entropy, console, or credential authority."
+}

@@ -76,6 +76,14 @@ module Zip
     , unzip'
       -- * Low-level (exported for tests)
     , crc32
+    , RawInflateError(..)
+    , rawInflateErrorCode
+    , rawInflateErrorCodes
+    , RawInflateResult(..)
+    , rawInflateMaxOutput
+    , rawDeflate
+    , rawInflate
+    , rawInflateCounted
     , deflateCompress
     , deflateDecompress
     , deflateDecompressCapped
@@ -84,13 +92,22 @@ module Zip
 import Data.ByteString (ByteString)
 import qualified Data.ByteString as BS
 import Data.Word (Word8, Word16, Word32, Word64)
-import Data.Bits ((.&.), (.|.), shiftL, shiftR, xor, testBit, complement, popCount)
+import Data.Bits ((.&.), (.|.), shiftL, shiftR, xor)
 import Data.List (foldl')
 import qualified Data.Array as Array
 import Data.Sequence (Seq, (|>))
 import qualified Data.Sequence as Seq
 import Data.Foldable (toList)
 import LZSS (Token(..), encodeWith)
+import RawInflate
+    ( RawInflateError(..)
+    , rawInflateErrorCode
+    , rawInflateErrorCodes
+    , RawInflateResult(..)
+    , rawInflateMaxOutput
+    , rawInflate
+    , rawInflateCounted
+    )
 
 -- =============================================================================
 -- Wire constants
@@ -155,7 +172,7 @@ versionMadeBy = 0x031E
 
 -- | Build the 256-entry CRC-32 lookup table for polynomial 0xEDB88320.
 buildCrcTable :: Array.Array Int Word32
-buildCrcTable = Array.listArray (0, 255) (map entry [0..255])
+buildCrcTable = Array.listArray (0, 255) (map entry [0..255 :: Word32])
   where
     entry i = foldl' step (fromIntegral i) ([0..7] :: [Int])
     step c _ =
@@ -351,15 +368,16 @@ fixedLLEncode sym
 --   actual_length   = base + extra_value
 --   actual_distance = base + extra_value
 
--- | (base_length, extra_bits) for LL symbols 257..284 (index = symbol - 257).
+-- | (base_length, extra_bits) for LL symbols 257..285 (index = symbol - 257).
 lengthTable :: Array.Array Int (Int, Int)
-lengthTable = Array.listArray (0, 27)
+lengthTable = Array.listArray (0, 28)
     [ (3,  0), (4,  0), (5,  0), (6,  0), (7,  0), (8,  0), (9,  0), (10, 0)  -- 257-264
     , (11, 1), (13, 1), (15, 1), (17, 1)                                         -- 265-268
     , (19, 2), (23, 2), (27, 2), (31, 2)                                         -- 269-272
     , (35, 3), (43, 3), (51, 3), (59, 3)                                         -- 273-276
     , (67, 4), (83, 4), (99, 4), (115, 4)                                        -- 277-280
     , (131, 5), (163, 5), (195, 5), (227, 5)                                     -- 281-284
+    , (258, 0)                                                                    -- 285
     ]
 
 -- | (base_distance, extra_bits) for distance codes 0..29.
@@ -443,6 +461,10 @@ deflateCompress bs
             (eobCode, eobBits) = fixedLLEncode 256
             bw3    = writeHuffman bw2 eobCode eobBits
         in BS.pack (finishWriter bw3)
+
+-- | Portable ZIP-owned name for the raw RFC 1951 encoder.
+rawDeflate :: ByteString -> ByteString
+rawDeflate = deflateCompress
 
 -- | Encode a single LZSS token into the BitWriter.
 encodeToken :: BitWriter -> Token -> BitWriter
@@ -655,6 +677,7 @@ deflateDecompressCapped capBytes bs =
     -- only tightening is possible, not loosening.
     maxOut = min (max 0 capBytes) (256 * 1024 * 1024)
 
+    go :: BitReader -> Seq Word8 -> Either String ByteString
     go br acc =
         case readLsb br 1 of
             (Nothing, _)       -> Left "deflate: unexpected EOF reading BFINAL"
@@ -668,6 +691,7 @@ deflateDecompressCapped capBytes bs =
                             2 -> Left "deflate: dynamic Huffman (BTYPE=10) not supported"
                             _ -> Left "deflate: reserved BTYPE=11"
 
+    handleStored :: Word32 -> BitReader -> Seq Word8 -> Either String ByteString
     handleStored bfinal br acc =
         -- Stored block: discard partial byte, read LEN + NLEN, copy bytes.
         let br1 = alignReader br
@@ -684,6 +708,7 @@ deflateDecompressCapped capBytes bs =
                                         then Left "deflate: output size limit exceeded"
                                         else copyStored (fromIntegral n) br3 acc bfinal
 
+    copyStored :: Int -> BitReader -> Seq Word8 -> Word32 -> Either String ByteString
     copyStored 0 br acc bfinal =
         if bfinal == 1
             then Right (BS.pack (toList acc))
@@ -696,8 +721,10 @@ deflateDecompressCapped capBytes bs =
                     then Left "deflate: output size limit exceeded"
                     else copyStored (n-1) br' (acc |> fromIntegral b) bfinal
 
+    handleFixed :: Word32 -> BitReader -> Seq Word8 -> Either String ByteString
     handleFixed bfinal br acc = decodeFixedSymbols bfinal br acc
 
+    decodeFixedSymbols :: Word32 -> BitReader -> Seq Word8 -> Either String ByteString
     decodeFixedSymbols bfinal br acc =
         case fixedLLDecode br of
             (Nothing, _)    -> Left "deflate: EOF decoding Huffman symbol"
@@ -1086,19 +1113,22 @@ readLocalData bs localOffset compSize uncompSize method = do
         else do
             let compressed = BS.take compSize (BS.drop dataStart bs)
             case method of
-                0 -> Right compressed   -- Stored: verbatim
-                8 -> -- Cap decode at the entry's own declared uncompressed
-                     -- size (from the Central Directory), not just the
-                     -- absolute 256 MB ceiling — see
-                     -- 'deflateDecompressCapped's Haddock for why this
-                     -- matters: without it, a declared size far smaller
-                     -- than the real decompressed output lets the full,
-                     -- expensive decode happen before a post-hoc 'BS.take'
-                     -- discards it, which silently reopens the aggregate
-                     -- decompression-bomb hole 'readZip' otherwise closes.
-                     case deflateDecompressCapped uncompSize compressed of
-                        Left err -> Left ("zip: DEFLATE: " ++ err)
-                        Right d  -> Right (BS.take uncompSize d)
+                0 ->
+                    if compSize == uncompSize
+                        then Right compressed
+                        else Left "zip: uncompressed size does not match the directory"
+                8 -> -- Decode only to the directory's declared size, then
+                     -- require both exact output size and exact compressed
+                     -- payload consumption. This keeps aggregate accounting
+                     -- honest and rejects suffix cavities.
+                     case rawInflateCounted compressed uncompSize of
+                        Left err -> Left ("zip: DEFLATE: " ++ rawInflateErrorCode err)
+                        Right result
+                            | rawInflateBytesConsumed result /= compSize ->
+                                Left "zip: compressed payload contains trailing bytes"
+                            | BS.length (rawInflateOutput result) /= uncompSize ->
+                                Left "zip: uncompressed size does not match the directory"
+                            | otherwise -> Right (rawInflateOutput result)
                 m -> Left ("zip: unsupported method " ++ show m)
 
 -- | Read a specific file by name from a ZIP archive.

@@ -45,6 +45,11 @@ or response length is represented by `null` plus a `notPublished` explanation.
 It must never be filled with a plausible-looking estimate just to satisfy a
 schema.
 
+Published time ranges are first-class too. An administration or section may use
+one exact positive minute count or an exact `{ minimum, maximum }` range. A
+published 5–7 minute speaking paper stays 5–7; it must not become an invented 5,
+6, or 7. Section ranges must add up to the administration range exactly.
+
 ## 4. Awarding-body pass rules versus project evidence
 
 The inventory transcribes the awarding body's real rule. It does not improve
