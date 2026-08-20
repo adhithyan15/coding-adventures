@@ -7387,10 +7387,13 @@ impl HtmlParser {
             && matches!(name, "applet" | "marquee" | "object")
             && self.has_open_foreign_integration_point()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                format!("end tag `</{name}>` did not match the current foreign element"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    format!("end tag `</{name}>` did not match the current foreign element"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if self.close_open_foreign_element_before_html_boundary(name) {
                 return;
             }
@@ -32891,12 +32894,7 @@ mod tests {
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
-                    ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        format!(
-                            "end tag `</{marker_name}>` did not match the current foreign element"
-                        )
-                    ),
+                    generic_foreign_end_tag_mismatch(&source, marker_name),
                     ParserDiagnostic::new(
                         "unexpected-marker-element-end-tag-outside-scope",
                         format!(
@@ -32918,9 +32916,9 @@ mod tests {
         .unwrap();
         assert_eq!(
             matching_foreign.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                "end tag `</object>` did not match the current foreign element"
+            vec![generic_foreign_end_tag_mismatch(
+                "<!doctype html><object id=outer><svg><foreignObject><svg id=inner><object id=foreign><g></object>X</svg></foreignObject></svg></object>",
+                "object",
             )]
         );
         let foreign = find_element_by_id(&matching_foreign.document.children, "foreign").unwrap();
@@ -32935,9 +32933,9 @@ mod tests {
         assert_eq!(
             unmatched.parser_diagnostics,
             vec![
-                ParserDiagnostic::new(
-                    "unexpected-end-tag-in-foreign-content",
-                    "end tag `</marquee>` did not match the current foreign element"
+                generic_foreign_end_tag_mismatch(
+                    "<!doctype html><svg><foreignObject id=boundary></marquee>X</foreignObject></svg>",
+                    "marquee",
                 ),
                 ParserDiagnostic::new(
                     "unexpected-marker-element-end-tag-outside-scope",
@@ -32986,6 +32984,45 @@ mod tests {
                 )]
             );
         }
+    }
+
+    #[test]
+    fn positions_marker_foreign_end_tag_mismatches_at_token_emission() {
+        for name in ["applet", "marquee", "object"] {
+            let source = format!(
+                "<!doctype html><!--é-->\r\n<{name}><math><mi></{name}>X</mi></math></{name}>"
+            );
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert_eq!(
+                output.parser_diagnostics[0],
+                generic_foreign_end_tag_mismatch(&source, name)
+            );
+            assert_eq!(output.parser_diagnostics[1].position, None);
+
+            let eof_source = format!("<!doctype html><{name}><svg><foreignObject></{name}");
+            let eof_output = parse_html_with_diagnostics(&eof_source).unwrap();
+            assert!(eof_output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-end-tag-in-foreign-content"
+            }));
+        }
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "object".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::StartTag {
+                name: "svg".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(), attributes: Vec::new(), self_closing: false,
+            },
+            Token::EndTag { name: "object".to_string() },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        assert!(unpositioned.diagnostics().iter().all(|diagnostic| diagnostic.position.is_none()));
     }
 
     #[test]
