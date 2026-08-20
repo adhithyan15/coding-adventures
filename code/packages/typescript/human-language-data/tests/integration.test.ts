@@ -172,14 +172,15 @@ describe("real curriculum", () => {
     const report = buildCurriculumGapReport({ registry, lessons, books });
     expect(report.schemaVersion).toBe(1);
     expect(report.durationModel.version).toBe(2);
-    // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese). Each joined
+    // 20 -> 21 in HL-C39 (Mandarin Chinese) -> 22 in HL-C40 (Japanese) -> 23
+    // with the writing-first Marwadi starter. Each joined
     // the registry with its own authored book, so the track, schema, and
     // book-coverage counts all move together and stay equal to the registry.
     // Duration violations stay at zero: Chinese's seven and Japanese's eight
     // Chapter 1 lessons are each under 300 effective seconds.
-    expect(report.summary.registeredTracks).toBe(22);
+    expect(report.summary.registeredTracks).toBe(23);
     expect(report.summary.totalLessons).toBe(lessons.length);
-    expect(report.summary.authoredBooks).toBe(22);
+    expect(report.summary.authoredBooks).toBe(23);
     // 0 -> 2. HL-C134 carried the hand-written prose back into the lessons, and
     // KA-C01-namaskara (333s) and TE-C01-namaskaram (314s) crossed the
     // five-minute line. Worth being exact about what changed: NOT the lessons.
@@ -194,8 +195,8 @@ describe("real curriculum", () => {
     // by quietly raising a threshold.
     expect(report.summary.durationViolations).toBe(2);
     expect(report.summary.unknownPrerequisites).toBe(0);
-    expect(report.schemas.tracks).toHaveLength(22);
-    expect(report.books.tracks).toHaveLength(22);
+    expect(report.schemas.tracks).toHaveLength(23);
+    expect(report.books.tracks).toHaveLength(23);
   });
 
   it("compiles the cross-language objective activities from canonical blocks", () => {
@@ -1151,6 +1152,13 @@ describe("real curriculum", () => {
       "LA-C36-practice-afternoon-line",
       "ML-C23-naal-survival",
       "MR-C06-number-differences-don-ending",
+      "MW-C01-practice-answer",
+      "MW-C01-raam-raam-saa-greeting-cue",
+      "MW-W01-aa-matra-change",
+      "MW-W01-ra-read",
+      "MW-W01-raam-build",
+      "MW-W01-sa-choice",
+      "MW-W01-saa-build",
       "PA-C06-panj-convergence-borrowing",
       "PA-C07-janna-two-js",
       "PA-C08-likhna-four-roots",

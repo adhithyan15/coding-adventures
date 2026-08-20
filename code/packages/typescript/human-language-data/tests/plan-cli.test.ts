@@ -22,12 +22,12 @@ function corpus(): string {
   return root;
 }
 
-function run(root: string): { code: number; out: string; err: string } {
+function run(root: string, headSize = 25): { code: number; out: string; err: string } {
   let out = "";
   let err = "";
   vi.spyOn(process.stdout, "write").mockImplementation((chunk) => ((out += chunk), true));
   vi.spyOn(process.stderr, "write").mockImplementation((chunk) => ((err += chunk), true));
-  const code = runCompletionPlan(["--root", root]);
+  const code = runCompletionPlan(["--root", root, "--head", String(headSize)]);
   return { code, out, err };
 }
 
@@ -40,7 +40,10 @@ function editInventory(root: string, name: string, edit: (doc: Record<string, un
 
 describe("the plan CLI", () => {
   it("leads French and German with their exam gap on a clean corpus", () => {
-    const { code, out } = run(corpus());
+    // HL16 adds one assessment-contract item per track ahead of content proxy
+    // work. Ask for the complete enumerable queue so this test continues to
+    // assert that the measured French/German exam gaps survive behind that gate.
+    const { code, out } = run(corpus(), 200);
     expect(code).toBe(0);
     expect(out).toMatch(/exam-point — french/);
     expect(out).toMatch(/exam-point — german/);
@@ -63,7 +66,7 @@ describe("the plan CLI", () => {
     expect(err).toMatch(/french A1 inventory exists but could not be read/);
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
-    expect(out).toMatch(/130\s+exam-inventory/);
+    expect(out).toMatch(/136\s+exam-inventory/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -92,7 +95,7 @@ describe("the plan CLI", () => {
     const { out } = run(root);
     // 103 -> 98: the French questions chapter covered five of them (HL-C229).
     expect(out).toMatch(/98 uncovered point\(s\) across 3 written/);
-    expect(out).toMatch(/the other 19 track\(s\)/);
+    expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);
 
   it("rejects a flag used as another flag's value", () => {

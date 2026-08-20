@@ -2,6 +2,35 @@
 
 ## Unreleased
 
+### Added - Marwadi becomes the 23rd active track
+
+- Register **Marwadi (Marwari)** as a real Devanagari track with a generated
+  book, curriculum map, chapter capability, narration, and modality data.
+- Add seven schema-v2 lessons, all at most four minutes. The writing demand
+  moves one step at a time: observe and copy a sign, reuse a vowel mark, delay
+  the copy, assemble a word, and only then write the greeting from memory.
+- Pin the honest corpus movement: 3,399 lessons and 1,004 chapters across 23
+  tracks. Marwadi starts at pre-A1 and does not pretend that touching the level
+  means attaining it.
+
+### Added - pass-ready assessment contracts and the gentle writing policy (#12207)
+
+- Add HL16 and `core/assessment-policy.json`: instructional lessons remain capped
+  at five minutes while reading, listening, writing, and speaking must each pass
+  independently. The writing strand now has seven cumulative stages, from
+  observe/trace through timed assessment production.
+- Add a strict assessment-policy and per-track contract parser. A valid
+  `<track>/assessment.json` must name an external exam or clearly labelled
+  project-defined equivalent at every level, inventory all four skills, require
+  explicit thresholds and writing stages, and provide at least two timed full
+  mocks with rubrics and answer keys. Invalid contracts fail loudly.
+- Add `assessment-contract` as the completion plan's highest-priority family.
+  The current corpus now reports 22 visible contract deficits instead of letting
+  content-coverage proxies imply exam readiness: 118 enumerable items and about
+  10,190 projected tranches at the 2026-08-20 baseline.
+- This tranche does not claim that the books are pass-ready. It makes the missing
+  pass evidence machine-visible so the writing/task/mock rewrites cannot be
+  forgotten or reported as zero.
 ### Changed - exam points now outrank vocabulary, and the plan finally emits them (HL-C228)
 
 - `exam-point` was a declared family that **nothing generated**. The plan has been ranking work for 22 tracks with one of its seven families permanently empty, which is why vocabulary won every time — it was not beating exam points, it was running unopposed.

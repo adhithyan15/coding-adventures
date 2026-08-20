@@ -1586,7 +1586,7 @@
     {
       "language": "hindi",
       "chapter": 32,
-      "sourceHash": "fnv1a64:0912b451b348901e",
+      "sourceHash": "fnv1a64:7f75f272d7f2c544",
       "lessonIds": [
         "HI-C32-shubh-sandhya",
         "HI-C32-evening-register"
@@ -1596,7 +1596,7 @@
     {
       "language": "hindi",
       "chapter": 33,
-      "sourceHash": "fnv1a64:c3290650264b0fb0",
+      "sourceHash": "fnv1a64:8ad39e76573f0b70",
       "lessonIds": [
         "HI-C33-shubh-dopahar"
       ],
@@ -4356,6 +4356,21 @@
       "tex": "marathi/book/chapters/ch14-script-first.tex"
     },
     {
+      "language": "marwadi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:96502e4e4a9d47f8",
+      "lessonIds": [
+        "MW-W01-ra",
+        "MW-W01-aa-matra",
+        "MW-W01-raam",
+        "MW-W01-sa",
+        "MW-W01-saa",
+        "MW-C01-raam-raam-saa",
+        "MW-C01-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch01-ram-ram-sa.tex"
+    },
+    {
       "language": "persian",
       "chapter": 2,
       "sourceHash": "fnv1a64:497f80f61dd5767f",
@@ -5848,7 +5863,7 @@
     {
       "language": "spanish",
       "chapter": 9,
-      "sourceHash": "fnv1a64:b40867e900385ab8",
+      "sourceHash": "fnv1a64:ba793dc971cbbce1",
       "lessonIds": [
         "ES-C04-como-estas-register",
         "ES-C04-regular",

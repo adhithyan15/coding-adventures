@@ -130,6 +130,12 @@
         "scriptCommand": "ru"
       }
     ],
+    "marwadi-main": [
+      {
+        "unicodeScript": "Devanagari",
+        "scriptCommand": "mw"
+      }
+    ],
     "japanese-main": [
       {
         "unicodeScript": "Katakana",
@@ -160,6 +166,13 @@
       "source": "japanese/pronunciation-reference.md",
       "output": "japanese/book/chapters/appendix-pronunciation.tex",
       "scriptSet": "japanese-main"
+    },
+    {
+      "language": "marwadi",
+      "title": "Pronunciation & Writing Reference",
+      "source": "marwadi/pronunciation-reference.md",
+      "output": "marwadi/book/chapters/appendix-pronunciation.tex",
+      "scriptSet": "marwadi-main"
     },
     {
       "language": "persian",
@@ -251,6 +264,11 @@
       "output": "marathi/book/chapters/appendix-glossary.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
+    },
+    {
+      "language": "marwadi",
+      "output": "marwadi/book/chapters/appendix-glossary.tex",
+      "scriptSet": "marwadi-main"
     },
     {
       "language": "persian",
@@ -372,6 +390,11 @@
       "scriptCommand": "mr"
     },
     {
+      "language": "marwadi",
+      "output": "marwadi/book/chapters/appendix-answer-key.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "persian",
       "output": "persian/book/chapters/appendix-answer-key.tex",
       "unicodeScript": "Arabic",
@@ -489,6 +512,11 @@
       "output": "marathi/book/chapters/appendix-index.tex",
       "unicodeScript": "Devanagari",
       "scriptCommand": "mr"
+    },
+    {
+      "language": "marwadi",
+      "output": "marwadi/book/chapters/appendix-index.tex",
+      "scriptSet": "marwadi-main"
     },
     {
       "language": "persian",
@@ -1631,6 +1659,12 @@
       "chapter": 3,
       "output": "japanese/book/chapters/ch03-thanks.tex",
       "scriptSet": "japanese-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 1,
+      "output": "marwadi/book/chapters/ch01-ram-ram-sa.tex",
+      "scriptSet": "marwadi-main"
     },
     {
       "language": "kannada",

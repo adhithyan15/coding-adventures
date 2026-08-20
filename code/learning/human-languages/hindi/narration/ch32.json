@@ -4,7 +4,7 @@
   "chapter": 32,
   "title": "Good Evening",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:fda23278fd78481e",
+  "sourceHash": "fnv1a64:f2fa269d801f0a4f",
   "lessons": [
     {
       "id": "HI-C32-shubh-sandhya",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:855f30fc2772ef89",
+      "sourceHash": "fnv1a64:5699c07d488dfa2e",
       "notice": null,
       "blocks": [
         {
@@ -57,7 +57,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "संध्या has its own Hindi tadbhava doublet, साँझ (sāñjh), worn down through Prakrit the same way रात्रि became राat (HI-C26/27). But be careful not to force that exact parallel: unlike rātri/raat, where the tadbhava form clearly became the everyday word and the tatsama stayed formal, sources describe साँझ as used across both literary/poetic and everyday communication — not simply \"the casual one.\" The doublet exists; the clean formal/casual split doesn't carry over as neatly this time."
+              "text": "संध्या has its own Hindi tadbhava doublet, साँझ (sāñjh), worn down through Prakrit the same way रात्रि became रात (HI-C26/27). But be careful not to force that exact parallel: unlike rātri/raat, where the tadbhava form clearly became the everyday word and the tatsama stayed formal, sources describe साँझ as used across both literary/poetic and everyday communication — not simply \"the casual one.\" The doublet exists; the clean formal/casual split doesn't carry over as neatly this time."
             }
           ]
         },
@@ -114,7 +114,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does संध्या literally mean, and what is it built from? (\"Holding together\" — सम् + धा — i.e. the junction of day and night.) Does साँझ work the same way रात्रि/राat's tatsama/tadbhava split did — one strictly formal, one strictly casual? (No — साँझ is used across both literary and everyday registers, not confined to one.) Next: choose between the written greeting and the casual all-day greeting."
+              "text": "What does संध्या literally mean, and what is it built from? (\"Holding together\" — सम् + धा — i.e. the junction of day and night.) Does साँझ work the same way रात्रि/रात's tatsama/tadbhava split did — one strictly formal, one strictly casual? (No — साँझ is used across both literary and everyday registers, not confined to one.) Next: choose between the written greeting and the casual all-day greeting."
             }
           ]
         }

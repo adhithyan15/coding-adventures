@@ -5067,10 +5067,13 @@ impl HtmlParser {
             && self.current_element_is_marked_foreign_fragment_context()
             && matches!(name.as_str(), "br" | "p")
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-html-start-tag-in-foreign-content",
-                format!("HTML start tag `<{name}>` forced recovery from foreign content"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag-in-foreign-content",
+                    format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             let child_index = self.append_node(Node::element(name.clone(), Vec::new()));
             if name == "p" {
                 let mut path = self.current_parent_path().to_vec();
@@ -5083,10 +5086,13 @@ impl HtmlParser {
             && !self.current_node_is_svg_html_integration_point()
             && exits_foreign_content_on_start_tag(&name, &attributes)
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-html-start-tag-in-foreign-content",
-                format!("HTML start tag `<{name}>` forced recovery from foreign content"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-html-start-tag-in-foreign-content",
+                    format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if self.has_open_svg_html_integration_point() {
                 while self.current_namespace().is_some()
                     && !self.current_node_is_svg_html_integration_point()
@@ -26940,6 +26946,39 @@ mod tests {
         }
     }
 
+    fn start_tag_position(source: &str, name: &str) -> SourcePosition {
+        let prefix = format!("<{name}");
+        let start = source
+            .match_indices(&prefix)
+            .find_map(|(start, _)| {
+                source[start + prefix.len()..]
+                    .chars()
+                    .next()
+                    .filter(|next| matches!(next, ' ' | '/' | '>'))
+                    .map(|_| start)
+            })
+            .expect("source should contain the start tag");
+        let delimiter = start
+            + source[start..]
+                .find('>')
+                .expect("source should contain a complete start tag");
+        let line_start = source[..delimiter].rfind('\n').map_or(0, |index| index + 1);
+        SourcePosition {
+            byte_offset: delimiter,
+            char_offset: source[..delimiter].chars().count(),
+            line: source[..delimiter].lines().count(),
+            column: source[line_start..delimiter].chars().count() + 1,
+        }
+    }
+
+    fn html_foreign_start_tag_recovery(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-html-start-tag-in-foreign-content",
+            format!("HTML start tag `<{name}>` forced recovery from foreign content"),
+        )
+        .at_emission(Some(start_tag_position(source, name)))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -41771,11 +41810,269 @@ mod tests {
         assert_eq!(element(&fragment.nodes[0]).name, "p");
         assert_eq!(
             fragment.parser_diagnostics,
-            vec![ParserDiagnostic::new(
-                "unexpected-html-start-tag-in-foreign-content",
-                "HTML start tag `<p>` forced recovery from foreign content"
-            )]
+            vec![html_foreign_start_tag_recovery("<p>", "p")]
         );
+    }
+
+    #[test]
+    fn positions_general_html_start_tag_foreign_recovery_at_token_emission() {
+        for name in [
+            "b",
+            "big",
+            "blockquote",
+            "body",
+            "br",
+            "center",
+            "code",
+            "dd",
+            "div",
+            "dl",
+            "dt",
+            "em",
+            "embed",
+            "h1",
+            "h2",
+            "h3",
+            "h4",
+            "h5",
+            "h6",
+            "head",
+            "hr",
+            "i",
+            "img",
+            "li",
+            "listing",
+            "menu",
+            "meta",
+            "nobr",
+            "ol",
+            "p",
+            "pre",
+            "ruby",
+            "s",
+            "small",
+            "span",
+            "strong",
+            "strike",
+            "sub",
+            "sup",
+            "table",
+            "tt",
+            "u",
+            "ul",
+            "var",
+        ] {
+            let source = format!("<!doctype html><svg><g><{name}>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&html_foreign_start_tag_recovery(&source, name)],
+                "source {source:?}"
+            );
+        }
+
+        for (attribute, value) in [("color", "red"), ("face", "serif"), ("size", "3")] {
+            let source = format!("<!doctype html><math><mrow><font {attribute}={value}>");
+            let output = parse_html_with_diagnostics(&source).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &html_foreign_start_tag_recovery(&source, "font")
+            }));
+        }
+
+        for source in [
+            "<!doctype html><svg><foreignObject><p>",
+            "<!doctype html><svg><desc><p>",
+            "<!doctype html><svg><title><p>",
+            "<!doctype html><math><mtext><p>",
+            "<!doctype html><math><annotation-xml encoding=text/html><p>",
+            "<!doctype html><svg><g><font>",
+            "<!doctype html><svg><path>",
+            "<!doctype html><math><mrow>",
+            "<!doctype html><table><svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-html-start-tag-in-foreign-content"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><svg><foreignObject><svg><g><p>",
+            "<!doctype html><svg><select><p>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic == &html_foreign_start_tag_recovery(source, "p")
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let recovered_source = "<!doctype html><svg><g><p id=recovered>X";
+        let recovered = parse_html_with_diagnostics(recovered_source).unwrap();
+        let paragraph = find_element_by_id(&recovered.document.children, "recovered").unwrap();
+        assert_eq!(paragraph.namespace, None);
+        assert_eq!(paragraph.children, vec![Node::text("X")]);
+
+        let table_source = "<!doctype html><table><svg>";
+        let table = parse_html_with_diagnostics(table_source).unwrap();
+        let table_diagnostic = table
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-foreign-start-tag-in-table")
+            .unwrap();
+        assert_eq!(table_diagnostic.position, None);
+
+        let unicode_source = "<!doctype html><!--é-->\r\n<math><mrow><div>";
+        let unicode = parse_html_with_diagnostics(unicode_source).unwrap();
+        assert!(unicode.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &html_foreign_start_tag_recovery(unicode_source, "div")
+        }));
+        assert!(unicode_source.len() > unicode_source.chars().count());
+
+        let fragment_source = "<svg><g><p>";
+        let fragment =
+            parse_html_fragment_for_context_with_diagnostics(fragment_source, "html body").unwrap();
+        assert!(fragment.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &html_foreign_start_tag_recovery(fragment_source, "p")
+        }));
+
+        let incomplete_source = "<!doctype html><svg><g><p";
+        let incomplete = parse_html_with_diagnostics(incomplete_source).unwrap();
+        assert!(incomplete.parser_diagnostics.iter().all(|diagnostic| {
+            diagnostic.code != "unexpected-html-start-tag-in-foreign-content"
+        }));
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for name in ["svg", "g", "p"] {
+            unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+        }
+        unpositioned.process_token(Token::Eof);
+        assert!(unpositioned
+            .diagnostics()
+            .iter()
+            .all(|diagnostic| diagnostic.position.is_none()));
+    }
+
+    #[test]
+    fn positions_seeded_foreign_fragment_br_and_p_recovery_at_token_emission() {
+        for context in [
+            "svg svg",
+            "svg g",
+            "svg br",
+            "svg p",
+            "math math",
+            "math mrow",
+            "math br",
+            "math p",
+        ] {
+            for name in ["br", "p"] {
+                let source = format!("<!--é-->\r\n<{name}>");
+                let output =
+                    parse_html_fragment_for_context_with_diagnostics(&source, context).unwrap();
+                let diagnostics = output
+                    .parser_diagnostics
+                    .iter()
+                    .filter(|diagnostic| {
+                        diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                    })
+                    .collect::<Vec<_>>();
+                assert_eq!(
+                    diagnostics,
+                    vec![&html_foreign_start_tag_recovery(&source, name)],
+                    "source {source:?} in {context:?}"
+                );
+                assert!(source.len() > source.chars().count());
+            }
+        }
+
+        for context in [
+            "svg foreignObject",
+            "svg desc",
+            "svg title",
+            "math mi",
+            "math mo",
+            "math mn",
+            "math ms",
+            "math mtext",
+        ] {
+            for source in ["<br>", "<p>"] {
+                let output =
+                    parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+                assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-html-start-tag-in-foreign-content"
+                }));
+            }
+        }
+
+        for (context, source) in [
+            ("svg foreignObject", "<svg><g><p>"),
+            ("math mtext", "<math><mrow><p>"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &html_foreign_start_tag_recovery(source, "p")
+            }));
+        }
+
+        for context in ["svg svg", "math math"] {
+            let br = parse_html_fragment_for_context_with_diagnostics("<br>X", context).unwrap();
+            assert_eq!(element(&br.nodes[0]).name, "br");
+            assert_eq!(element(&br.nodes[0]).namespace, None);
+            assert_eq!(br.nodes[1], Node::text("X"));
+
+            let paragraph =
+                parse_html_fragment_for_context_with_diagnostics("<p>X", context).unwrap();
+            assert_eq!(element(&paragraph.nodes[0]).name, "p");
+            assert_eq!(element(&paragraph.nodes[0]).namespace, None);
+            assert_eq!(element(&paragraph.nodes[0]).children, vec![Node::text("X")]);
+        }
+
+        for context in ["svg svg", "math math"] {
+            for source in ["<br", "<p"] {
+                let output =
+                    parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+                assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-html-start-tag-in-foreign-content"
+                }));
+            }
+        }
+
+        for (context, name) in [("svg svg", "br"), ("math math", "p")] {
+            let mut unpositioned = HtmlParser::with_fragment_context_options(
+                HtmlParseOptions::default(),
+                context,
+            );
+            unpositioned.process_token(Token::StartTag {
+                name: name.to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            });
+            let diagnostic = unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-html-start-tag-in-foreign-content"
+                })
+                .unwrap();
+            assert_eq!(diagnostic.position, None);
+        }
     }
 
     #[test]
@@ -41956,10 +42253,7 @@ mod tests {
             let output = parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
             let mut expected = Vec::new();
             if context == "svg path" {
-                expected.push(ParserDiagnostic::new(
-                    "unexpected-html-start-tag-in-foreign-content",
-                    "HTML start tag `<nobr>` forced recovery from foreign content",
-                ));
+                expected.push(html_foreign_start_tag_recovery(source, "nobr"));
             }
             expected.push(eof_with_unclosed_elements(source));
             assert_eq!(

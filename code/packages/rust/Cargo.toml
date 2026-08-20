@@ -1012,6 +1012,7 @@ members = [
     "smart-home-esphome-discovery-integration",
     "smart-home-google-cast-discovery-integration",
     "smart-home-homekit-discovery-integration",
+    "smart-home-ipp-printer-discovery-integration",
     "smart-home-enphase-envoy-integration",
     "smart-home-airgradient-local-integration",
     "smart-home-govee-lan-integration",

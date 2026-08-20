@@ -37,7 +37,7 @@ reviews_of: [HI-C30-dopahar-widened, HI-C32-evening-register, HI-C32-shubh-sandh
 noon" to "the afternoon." This greeting rides that widened sense — but
 it's the least commonly heard of the three you've now met.
 
-## You'll want to know — शुभ दोपहर — "good afternoon," using the widened सense
+## You'll want to know — शुभ दोपहर — "good afternoon," using the widened sense
 <!-- hl-knowledge: introduces=[HI-CONCEPT-C33-SHUBH-DOPAHAR-01]; assesses=[] -->
 
 **शुभ दोपहर** (**shubh dopahar**) — "**good afternoon**" — pairs

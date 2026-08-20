@@ -192,7 +192,7 @@
     {
       "chapter": 9,
       "title": "Answering, and Handing It Back",
-      "label": "ch:how-are-you",
+      "label": "ch:answering",
       "canDo": "I can answer how I am, choose my register, and return the question.",
       "spineNodes": [
         "SPINE-CHECK-WELLBEING"

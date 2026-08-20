@@ -41,7 +41,7 @@ const SURFACES = [
 const TRACK_PREFIX: Record<string, string> = {
   arabic: "AR", bengali: "BN", chinese: "ZH", french: "FR", german: "GE",
   gujarati: "GU", hindi: "HI", italian: "IT", japanese: "JA", kannada: "KA",
-  latin: "LA", malayalam: "ML", marathi: "MR", persian: "FA", portuguese: "PT",
+  latin: "LA", malayalam: "ML", marathi: "MR", marwadi: "MW", persian: "FA", portuguese: "PT",
   punjabi: "PA", russian: "RU", sanskrit: "SA", spanish: "ES", tamil: "TA",
   telugu: "TE", urdu: "UR",
 };
