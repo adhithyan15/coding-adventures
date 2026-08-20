@@ -293,6 +293,23 @@ pub fn twigc_self_check(
             ),
         })?;
 
+    // `canonicalize` returns a verbatim `\\?\` path on Windows. The compiler
+    // appends `/span.tw`, but verbatim Windows paths reject forward slashes.
+    // Convert the path back to a regular slash-separated form before embedding
+    // it so the self-hosted compiler can append portable path components.
+    #[cfg(target_os = "windows")]
+    let raw_dir_str = if let Some(unc) = raw_dir_str.strip_prefix(r"\\?\UNC\") {
+        format!("//{}", unc.replace('\\', "/"))
+    } else {
+        raw_dir_str
+            .strip_prefix(r"\\?\")
+            .unwrap_or(raw_dir_str)
+            .replace('\\', "/")
+    };
+
+    #[cfg(target_os = "windows")]
+    let raw_dir_str = raw_dir_str.as_str();
+
     // Reject control characters (ASCII < 0x20 or 0x7F) in the path.
     //
     // On Linux/macOS, directory names may legally contain newlines or other

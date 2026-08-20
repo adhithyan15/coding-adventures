@@ -444,7 +444,7 @@ fn e2e_after_handler_adds_header() {
 
     let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
     stream.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
-    write!(stream, "GET /ping HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n").unwrap();
+    write!(stream, "GET /ping HTTP/1.1\r\nHost: localhost\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
 
     let mut reader = BufReader::new(&stream);
     let mut all_headers: Vec<String> = Vec::new();

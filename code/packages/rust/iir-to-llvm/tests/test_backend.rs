@@ -2544,9 +2544,13 @@ fn conversions_round_trip_runs_on_real_clang() {
     // a libm `floor` call, which on Linux must be linked explicitly with `-lm`
     // (on macOS libm lives in libSystem, so it is harmless there). A real
     // entier-using program links the same way.
-    let built = Command::new("clang")
-        .arg("-x").arg("ir").arg(&ll_path)
-        .arg("-lm")
+    let mut clang = Command::new("clang");
+    clang.arg("-x").arg("ir").arg(&ll_path);
+    // Linux needs libm explicitly for the floor call emitted at -O0. Windows
+    // provides floor through its C runtime and has no separate m.lib.
+    #[cfg(not(target_os = "windows"))]
+    clang.arg("-lm");
+    let built = clang
         .arg("-o").arg(&exe)
         .output().expect("run clang");
     assert!(built.status.success(),
