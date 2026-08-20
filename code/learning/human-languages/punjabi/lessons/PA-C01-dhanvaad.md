@@ -1,5 +1,6 @@
 ---
 id: PA-C01-dhanvaad
+sequence: 30
 chapter: 1
 type: word
 headword: ਧੰਨਵਾਦ

@@ -4096,6 +4096,41 @@ unchanged. The final publication rebase onto
 `12c26b50ae755ec88704c457d8264558433b96f0` added only Gujarati and
 Spanish curriculum evidence and likewise left the parity topology unchanged.
 
+## Post-#12307 Refresh and PNG Neutral-Foundation Selection
+
+Ready-for-review ZIP closure PR #12307 completed all 29 reported checks with
+23 successes, six expected skips, and no failure or pending job. Both required
+gates succeeded. After GitHub reported the branch clean and mergeable, the loop
+enabled squash auto-merge; GitHub merged final reviewed head
+`adb93159e901a352b37f534b2c8f4a345ebf1f42` as
+`2780825f2a7b5bf93936b6927175e975b611cb5c` at
+2026-08-20T18:18:50Z without manual merge authority.
+
+The canonical schema-3 collision inventory at that exact live main remains 15
+established lanes, 1,368 normalized implementation identities, 4,552
+established slots, 174 high-consensus identities with 271 gaps, 906 singletons
+with 12,684 missing slots, 716 Rust singletons, zero canonical collisions, and
+zero unknown buckets. The closure added no package root: the exact comparison
+found no added or retired identity and no existing-identity lane expansion, so
+no topology-driven owner was required before selection.
+
+Before publication, `origin/main` advanced through the unrelated Arabic
+curriculum repair in #12316 and Gujarati ductus repair in #12317 to
+`929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5`. The branch was rebased onto that
+exact revision; neither incoming change adds a package root, and the collision
+inventory remains unchanged at the counts above.
+
+Merging the ZIP umbrella made exactly one dependency-shaped item newly ready:
+`image-codec-png-language-neutral-conformance`. The loop selected it on fresh
+branch `codex/png-language-neutral-conformance` from exact merge main. This
+foundation will first correct the TypeScript reference's CINFO and caller pixel
+ceiling boundaries, then bind IC18 to a checked language-neutral corpus for
+chunk ordering and CRC, zlib framing and Adler-32, split IDAT, supported colour
+types, bit depths and filters, independent interoperability, exact consumption,
+stable payload-blind errors, and caller-lowerable resource ceilings. It will not
+start any non-TypeScript lane port. Once this full lifecycle merges, all twelve
+toolchain-shaped PNG children become dependency-ready.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
