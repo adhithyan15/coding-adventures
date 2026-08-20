@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ઊ ductus (HL-C09FL)
+
+- Render **ઊ** in three joined movements across the complete **ઉ** body, high shoulder, and long right-side tail with zero lifts.
+- Preserve t30apps.com's version-1.0 one-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue **એ** next.
+
 ### Added — cited Gujarati ઉ ductus (HL-C09FK)
 
 - Render **ઉ** in three joined movements across its small upper bowl, middle cusp, broad lower bowl, and returning outer curve with zero lifts.

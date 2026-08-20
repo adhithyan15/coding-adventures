@@ -279,6 +279,8 @@ const GUJARATI_II = ductusFor("ઈ", "gujarati")!;
 const gujaratiIiOutline = gujaratiOutline("ઈ");
 const GUJARATI_U = ductusFor("ઉ", "gujarati")!;
 const gujaratiUOutline = gujaratiOutline("ઉ");
+const GUJARATI_UU = ductusFor("ઊ", "gujarati")!;
+const gujaratiUuOutline = gujaratiOutline("ઊ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3586,6 +3588,33 @@ describe("Gujarati ઉ — two bowls return around one tall outer curve", () => 
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_U.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઊ — the complete ઉ run descends a long right tail", () => {
+  const steps = ductusSteps(GUJARATI_UU);
+  const strip = ductusFilmstrip(GUJARATI_UU, gujaratiUuOutline);
+
+  it("shows the complete ઉ body before its extended tail in one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "write ઉ through its upper bowl, middle cusp, and lower bowl",
+      "continue around the tall outer-left curve",
+      "cross the high shoulder and descend the long right tail into its foot",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiUuOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_UU.strokes[0], 1),
     );
   });
 });

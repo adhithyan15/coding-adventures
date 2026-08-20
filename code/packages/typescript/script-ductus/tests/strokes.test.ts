@@ -114,6 +114,7 @@ const GUJARATI_AA = DUCTUS[ductusKey("gujarati", "આ")];
 const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
 const GUJARATI_II = DUCTUS[ductusKey("gujarati", "ઈ")];
 const GUJARATI_U = DUCTUS[ductusKey("gujarati", "ઉ")];
+const GUJARATI_UU = DUCTUS[ductusKey("gujarati", "ઊ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -1830,6 +1831,21 @@ describe("handwriting ductus", () => {
     expect(Math.max(...lower.map((point) => point.x))).toBeGreaterThan(upper.at(-1)!.x);
     expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(lower.at(-1)!.x);
     expect(outer.at(-1)!.y).toBeGreaterThan(upper[0].y);
+  });
+
+  it("Gujarati ઊ extends the zero-lift ઉ run down a long right tail", () => {
+    expect(GUJARATI_UU.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_UU)).toBe(0);
+    expect(GUJARATI_UU.strokes).toHaveLength(1);
+    expect(GUJARATI_UU.strokes[0].segments).toHaveLength(3);
+    const [body, outer, tail] = GUJARATI_UU.strokes[0].segments.map(
+      (segment) => segment.path,
+    );
+    expect(body.at(-1)).toEqual(outer[0]);
+    expect(outer.at(-1)).toEqual(tail[0]);
+    expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(body.at(-1)!.x);
+    expect(Math.max(...tail.map((point) => point.x))).toBeGreaterThan(outer.at(-1)!.x);
+    expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4066,6 +4082,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one continuous pen-down run.*remaining path slots are empty.*upper-left.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left curve.*upper right.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*upper-bowl-to-lower-bowl-to-outer-curve order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઊ traces its unbroken extended tail to the adjacent animation", () => {
+    const src = GUJARATI_UU.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઊ animation.*first SVG path/i,
+    );
+    expect(src.variation).toMatch(
+      /one continuous pen-down run.*remaining path slots are empty.*repeats ઉ.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left return.*upper shoulder.*long right-side tail.*lower foot.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*complete-u-before-extended-tail order.*zero-lift evidence/i,
     );
   });
 
