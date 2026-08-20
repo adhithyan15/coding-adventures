@@ -14,6 +14,7 @@ this package. It gives discovery workers a shared shape for:
 - injectable mDNS worker scan executors that run request/report and grouped
   plan handoffs without coupling runtime mutation to socket I/O
 - mDNS/DNS-SD PTR/SRV/TXT/A/AAAA response parsing into advertisements
+- raw mDNS TXT value preservation for binary protocol fields
 - per-datagram scan failures for malformed mDNS responses
 - bridge candidate records with stable integration/native identifiers
 - stable discovery fingerprints and freshness signals for supervisor loops

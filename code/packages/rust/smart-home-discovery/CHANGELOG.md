@@ -6,6 +6,9 @@ All notable changes to this package will be documented in this file.
 
 ### Added
 
+- Raw mDNS TXT value preservation alongside the existing lossy text view, so
+  protocol integrations can validate binary DNS-SD fields without regressing
+  existing text consumers.
 - Serde support for discovery worker identifiers, kinds, run statuses, and
   sources so central runtime snapshots can retain scheduler state.
 - Serde support for normalized discovery records, confidence, and pairing

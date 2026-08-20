@@ -77,7 +77,8 @@ pieces taught before the whole; and a book you can read straight through.
 
 Kannada now covers **fourteen** of the shared spine's core forty verbs.
 
-All forty-four later lessons remain below five effective minutes.
+Every Kannada lesson now remains below five effective minutes, including the
+rewritten four-minute opening greeting.
 
 ---
 
