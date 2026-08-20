@@ -4131,6 +4131,59 @@ stable payload-blind errors, and caller-lowerable resource ceilings. It will not
 start any non-TypeScript lane port. Once this full lifecycle merges, all twelve
 toolchain-shaped PNG children become dependency-ready.
 
+## Post-#12319 Refresh and Go PNG Selection
+
+Ready-for-review PNG neutral-foundation PR #12319 completed all 30 reported
+checks with 23 successes, six expected skips, and one neutral CodeQL
+conclusion. Both CI gates and every Linux, macOS, and Windows build succeeded.
+After GitHub reported final reviewed head
+`e9ae38873f3606d764e2786e824d6fd1c297a8dc` clean and mergeable, the loop
+enabled squash auto-merge; GitHub merged that exact head as
+`a09bb28bd19ab24760322f7fcf940184c0912409` at 2026-08-20T20:03:24Z without
+manual merge authority and deleted the source branch.
+
+The canonical schema-3 collision inventory at exact merge main remains 15
+established lanes, 1,368 normalized implementation identities, 4,552
+established slots, 174 high-consensus identities with 271 gaps, 906 singletons
+with 12,684 missing slots, 716 Rust singletons, zero canonical collisions, and
+zero unknown buckets. The intervening Tamil, Gujarati, and Punjabi curriculum
+commits modify only existing roots, while #12319 modifies the established
+TypeScript image-codec-png root. The exact topology comparison therefore found
+no added or retired identity, no new package root, and no existing-identity
+lane expansion; no additional classification owner was needed.
+
+Merging the neutral foundation made all twelve toolchain-shaped PNG children
+dependency-ready. The quick leverage and delivery-risk pass selected
+`image-codec-png-go-lane-parity` on fresh branch
+`codex/image-codec-png-go-lane-parity` from exact merge main. Go has the strongest safe
+dependency leverage: it unlocks both the final PNG umbrella and the separate
+unblocked paint-codec-png reconciliation. Go 1.26.4 is installed, and its
+pixel-container and ZIP raw-deflate, counted-inflate, and CRC-32 prerequisites
+pass native tests, race/coverage, vet, and build front doors. No live PR or
+remote branch owns the selected PNG surface.
+
+The tranche will add exactly the Go image-codec-png package, consume every
+representable closed `image-codec-png-v1` case through its public API, and
+implement exact IC18 chunk, zlib, filter, transparency, resource-limit, and
+stable-error behavior without duplicating DEFLATE or CRC. Go's typed
+`PixelContainer` cannot represent the neutral corpus's fractional encoder
+dimensions, so the fixture consumer will validate that schema boundary before
+routing every representable case through the public codec. Production remains
+an in-memory byte transform with explicit empty capabilities. The existing Go
+paint adapter continues to use the standard library until its separately owned
+reconciliation, every other lane remains pending, and the completion umbrella
+stays blocked until all twelve children merge.
+
+The Go security pass also found one neutral-contract omission before source
+publication: IC18 requires APNG refusal, but the merged TypeScript reference and
+82-case corpus currently skip the APNG `acTL`, `fcTL`, and `fdAT` chunks as
+ordinary ancillary data. The queue now records
+`image-codec-png-apng-neutral-rejection-conformance` as a separate pending
+reference-and-fixture correction and makes every not-yet-started PNG child wait
+for it. The in-progress Go child remains coherent by refusing all three chunk
+types as `unsupported-feature` with a focused valid-CRC regression; it does not
+modify the merged neutral corpus or broaden into another lane.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
