@@ -93,6 +93,13 @@
       "file": "marathi.pdf"
     },
     {
+      "id": "marwadi",
+      "name": "Marwadi (Marwari)",
+      "family": "Indo-Aryan",
+      "script": "devanagari",
+      "file": "marwadi.pdf"
+    },
+    {
       "id": "punjabi",
       "name": "Punjabi",
       "family": "Indo-Aryan",
