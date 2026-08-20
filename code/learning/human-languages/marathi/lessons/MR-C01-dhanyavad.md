@@ -1,5 +1,6 @@
 ---
 id: MR-C01-dhanyavad
+sequence: 10
 chapter: 1
 type: word
 headword: धन्यवाद

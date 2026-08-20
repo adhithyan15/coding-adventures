@@ -1,5 +1,6 @@
 ---
 id: MR-C01-nahi
+sequence: 20
 chapter: 1
 type: word
 headword: नाही

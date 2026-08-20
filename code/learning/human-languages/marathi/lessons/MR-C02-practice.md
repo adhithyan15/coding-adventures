@@ -1,5 +1,6 @@
 ---
 id: MR-C02-practice
+sequence: 80
 chapter: 2
 type: practice
 headword: (recap)
