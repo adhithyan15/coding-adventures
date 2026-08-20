@@ -204,8 +204,8 @@ func filteredBytes(t *testing.T, chunks []pngChunk) []byte {
 
 func TestPortableConformance(t *testing.T) {
 	fixtures := loadFixtures(t)
-	if len(fixtures.Cases) != 82 {
-		t.Fatalf("portable case count = %d, want 82", len(fixtures.Cases))
+	if len(fixtures.Cases) != 85 {
+		t.Fatalf("portable case count = %d, want 85", len(fixtures.Cases))
 	}
 	if fixtures.Limits.MaxDimension != png.PNGMaxDimension || fixtures.Limits.DefaultMaxPixels != png.PNGMaxPixels {
 		t.Fatalf("public limits = (%d,%d), fixture = (%d,%d)", png.PNGMaxDimension, png.PNGMaxPixels, fixtures.Limits.MaxDimension, fixtures.Limits.DefaultMaxPixels)
