@@ -1003,6 +1003,13 @@ t30apps.com animation exposes five ordered SVG paths; the Noto Sans Gujarati fit
 preserves that order while tracing the printed glyph's tighter stacked arcs.
 The source's variation warning continues to qualify the demonstrated
 school-hand form. A canonical-order audit now queues missing **ઋ** next.
+The three-frame Gujarati **ઋ** filmstrip restores the remaining source-backed
+independent-vowel gap. It sweeps across the bent left body and turns down-left,
+lifts to descend the central stem, then lifts again to circle the compact right
+loop and descend through its tail. The t30apps.com animation exposes three
+ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
+tracing the broader printed body and more angular loop. The source's variation
+warning continues to qualify the demonstrated school-hand form; **ક** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

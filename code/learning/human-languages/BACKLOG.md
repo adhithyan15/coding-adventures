@@ -5,6 +5,19 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09FQ — Gujarati ઋ closes the canonical-vowel inventory gap; ક is next
+
+The canonical-order audit found **ઋ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses
+three populated SVG paths: a bent left body, a separately descended central
+stem, and a final right loop-and-tail run. The restored entry and fitted medians
+preserve that order and the two observed lifts.
+
+Gujarati is now **11/36 verified, 25 remaining**. With the source-backed
+independent-vowel gaps repaired, continue to the first existing consonant,
+**ક**, next. A correctness defect still outranks coverage if one appears during
+fitting or validation.
+
 ## HL-C09FP — Gujarati ઔ repairs the second adjacent vowel gap; ઋ is next
 
 The source-and-font audit found **ઔ** missing from `gujarati.json`. Its

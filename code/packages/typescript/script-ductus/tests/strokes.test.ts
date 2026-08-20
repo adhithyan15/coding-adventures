@@ -115,6 +115,7 @@ const GUJARATI_I = DUCTUS[ductusKey("gujarati", "ઇ")];
 const GUJARATI_II = DUCTUS[ductusKey("gujarati", "ઈ")];
 const GUJARATI_U = DUCTUS[ductusKey("gujarati", "ઉ")];
 const GUJARATI_UU = DUCTUS[ductusKey("gujarati", "ઊ")];
+const GUJARATI_VOCALIC_R = DUCTUS[ductusKey("gujarati", "ઋ")];
 const GUJARATI_E = DUCTUS[ductusKey("gujarati", "એ")];
 const GUJARATI_AI = DUCTUS[ductusKey("gujarati", "ઐ")];
 const GUJARATI_O = DUCTUS[ductusKey("gujarati", "ઓ")];
@@ -1850,6 +1851,20 @@ describe("handwriting ductus", () => {
     expect(Math.min(...outer.map((point) => point.x))).toBeLessThan(body.at(-1)!.x);
     expect(Math.max(...tail.map((point) => point.x))).toBeGreaterThan(outer.at(-1)!.x);
     expect(tail.at(-1)!.y).toBeLessThan(tail[0].y);
+  });
+
+  it("Gujarati ઋ writes the bent body, central stem, then right loop and tail", () => {
+    expect(GUJARATI_VOCALIC_R.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_VOCALIC_R)).toBe(2);
+    expect(GUJARATI_VOCALIC_R.strokes).toHaveLength(3);
+    expect(GUJARATI_VOCALIC_R.strokes.every((stroke) => stroke.segments.length === 1)).toBe(true);
+    const body = GUJARATI_VOCALIC_R.strokes[0].segments[0].path;
+    const stem = GUJARATI_VOCALIC_R.strokes[1].segments[0].path;
+    const loopAndTail = GUJARATI_VOCALIC_R.strokes[2].segments[0].path;
+    expect(body.at(-1)!.x).toBeLessThan(Math.max(...body.map((point) => point.x)));
+    expect(stem.at(-1)!.y).toBeLessThan(stem[0].y);
+    expect(Math.max(...loopAndTail.map((point) => point.y))).toBeGreaterThan(loopAndTail[0].y);
+    expect(loopAndTail.at(-1)!.y).toBeLessThan(loopAndTail[0].y);
   });
 
   it("Gujarati એ writes the joined body, right stem, then high arc", () => {
@@ -4159,6 +4174,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one continuous pen-down run.*remaining path slots are empty.*repeats ઉ.*small upper bowl.*middle cusp.*broad lower bowl.*tall outer-left return.*upper shoulder.*long right-side tail.*lower foot.*without lifting.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*complete-u-before-extended-tail order.*zero-lift evidence/i,
+    );
+  });
+
+  it("Gujarati ઋ traces its bent body, stem, and right loop to three paths", () => {
+    const src = GUJARATI_VOCALIC_R.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(
+      /t30apps\.com.*Gujarati Alphabet Writing Practice.*version 1\.0.*ઋ animation.*first through third SVG paths/i,
+    );
+    expect(src.variation).toMatch(
+      /three ordered pen-down runs.*first SVG path.*begins at the left.*sweeps right.*shallow upper body.*middle turn.*reverses diagonally down-left.*lower terminal.*lifts once.*second SVG path.*separate central stem.*lower foot.*lifts again.*third SVG path.*stem junction.*compact upper-right loop.*longer right-side tail.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*left-body-before-central-stem-before-right-loop-and-tail order.*two-lift evidence/i,
     );
   });
 
