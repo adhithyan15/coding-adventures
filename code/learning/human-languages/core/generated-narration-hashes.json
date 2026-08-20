@@ -7155,7 +7155,7 @@
     {
       "language": "marwadi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:10793221f1804f01",
+      "sourceHash": "fnv1a64:7312bd0d6718cbd3",
       "lessonIds": [
         "MW-W01-ra",
         "MW-W01-aa-matra",
@@ -7170,7 +7170,7 @@
       "text": "marwadi/narration/ch01.txt",
       "json": "marwadi/narration/ch01.json",
       "textHash": "fnv1a64:fdbc7de99e53235e",
-      "jsonHash": "fnv1a64:e5aaa155c7bdb663"
+      "jsonHash": "fnv1a64:ba868c7b04f3c9a9"
     },
     {
       "language": "persian",

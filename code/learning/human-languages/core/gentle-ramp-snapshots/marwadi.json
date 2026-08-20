@@ -8,7 +8,7 @@
   "atomChapterSpikes": 0,
   "glyphLessonSpikes": 0,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 0,
+  "scriptClosureViolations": 1,
   "neverTaughtGlyphs": 0,
   "orderDefects": 0,
   "unknownPrerequisites": 0,

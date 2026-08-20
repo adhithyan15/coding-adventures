@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:a7888ecc54c69b97",
+  "sourceHash": "fnv1a64:52dca6c25e025e31",
   "summary": {
     "totalLessons": 3402,
     "voice": 2462,
@@ -48504,12 +48504,11 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:96c8eeede3977bdc",
+      "sourceHash": "fnv1a64:75400d08ec5a3897",
       "detachableSegments": [
         "Script — add म",
         "Writing — from copy to memory"
-      ],
-      "delivery": "script"
+      ]
     },
     {
       "id": "MW-W01-sa",

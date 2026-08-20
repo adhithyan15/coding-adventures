@@ -3,7 +3,6 @@ schema_version: 2
 id: MW-W01-raam
 spine_node: SPINE-MEET-GREET
 sequence: 30
-delivery: script
 chapter: 1
 type: word
 headword: "राम"
