@@ -50,7 +50,7 @@ describe("the plan CLI", () => {
     // Spanish teaches 100% of the points currently enumerated, so it must not
     // get an exam-point item. Its partial scope still gets an inventory item.
     expect(out).not.toMatch(/exam-point — spanish/);
-    expect(out).toMatch(/0 complete and 3 partial of 138/);
+    expect(out).toMatch(/0 complete and 4 partial of 138/);
   }, 120_000);
 
   it("does not let an unreadable inventory look like an absent one", () => {
@@ -69,7 +69,7 @@ describe("the plan CLI", () => {
     // It comes BACK as an inventory to write, which is what the old comment
     // falsely claimed already happened.
     expect(out).toMatch(/138\s+exam-inventory/);
-    expect(out).toMatch(/0 complete and 2 partial of 138/);
+    expect(out).toMatch(/0 complete and 3 partial of 138/);
     expect(out).toMatch(/1 exist but could not be READ/);
   }, 120_000);
 
@@ -96,9 +96,10 @@ describe("the plan CLI", () => {
       join(root, "core", "exam-inventory-fr-a1.json"),
     );
     const { out } = run(root);
-    // 103 -> 98: the French questions chapter covered five of them (HL-C229).
-    expect(out).toMatch(/98 uncovered point\(s\) across 3 written/);
-    expect(out).toMatch(/0 complete and 3 partial of 138/);
+    // 103 -> 98: the French questions chapter covered five A1 points (HL-C229).
+    // German A2 adds 51 source-bounded points; three already have exact atoms.
+    expect(out).toMatch(/146 uncovered point\(s\) across 4 written/);
+    expect(out).toMatch(/0 complete and 4 partial of 138/);
     expect(out).toMatch(/the other 20 track\(s\)/);
   }, 120_000);
 
