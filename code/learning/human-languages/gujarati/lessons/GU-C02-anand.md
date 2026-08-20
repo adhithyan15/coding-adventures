@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-gujarati
-reviews_of: [GU-C02-tamarun-naam-shun-chhe]
+reviews_of: []
 ---
 
 # તમને મળીને આનંદ થયો (tamne maḷīne ānand thayo) — "pleased to meet you"

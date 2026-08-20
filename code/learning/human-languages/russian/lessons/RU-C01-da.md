@@ -26,7 +26,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [RU-C01-privet, RU-C01-spasibo]
+reviews_of: [RU-C01-privet]
 ---
 
 # да (da) — "yes"

@@ -365,7 +365,7 @@
     {
       "language": "bengali",
       "chapter": 2,
-      "sourceHash": "fnv1a64:687cbb726f9250a3",
+      "sourceHash": "fnv1a64:994c68c72d4cd893",
       "lessonIds": [
         "BN-C02-naam",
         "BN-C02-amar",
@@ -408,7 +408,7 @@
     {
       "language": "bengali",
       "chapter": 5,
-      "sourceHash": "fnv1a64:604ebb6fadbc7bc9",
+      "sourceHash": "fnv1a64:26c27f34d6626e40",
       "lessonIds": [
         "BN-C05-bola",
         "BN-C05-ami-bangla-boli",
@@ -1074,7 +1074,7 @@
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d5b0e868e7ad8b29",
+      "sourceHash": "fnv1a64:5d492aee5555d49b",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
@@ -1105,7 +1105,7 @@
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:e9c89a04a63fdf2c",
+      "sourceHash": "fnv1a64:d871a2b393b70f92",
       "lessonIds": [
         "GU-C04-malishun",
         "GU-C04-kaale",
@@ -1118,7 +1118,7 @@
     {
       "language": "gujarati",
       "chapter": 5,
-      "sourceHash": "fnv1a64:85cfbdfb2d1b62c4",
+      "sourceHash": "fnv1a64:60a19d30501cd678",
       "lessonIds": [
         "GU-C05-bolvun",
         "GU-C05-hun-gujarati-bolun-chhun",
@@ -1304,7 +1304,7 @@
     {
       "language": "hindi",
       "chapter": 5,
-      "sourceHash": "fnv1a64:0dea8590c0d94d96",
+      "sourceHash": "fnv1a64:4fa51946d5b4ccee",
       "lessonIds": [
         "HI-C05-bolna",
         "HI-C05-rahna",
@@ -4949,7 +4949,7 @@
     {
       "language": "russian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:dc92887cccce9ba4",
+      "sourceHash": "fnv1a64:a38f499b53cb6add",
       "lessonIds": [
         "RU-C01-privet",
         "RU-C01-zdravstvuyte",

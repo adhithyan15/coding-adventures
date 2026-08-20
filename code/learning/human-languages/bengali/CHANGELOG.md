@@ -1,5 +1,10 @@
 # Changelog
 
+## Close unsupported forward reviews (#12262)
+
+- Remove three legacy `reviews_of` edges to lessons the learner has not reached;
+  each schema-v2 evidence block already names only the earlier material assessed.
+
 ## [Unreleased]
 
 ### Added — Chapter 16, the first nine pieces of the script (HL-C222)

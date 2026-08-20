@@ -1,5 +1,10 @@
 # Changelog
 
+## Close an unsupported forward review (#12262)
+
+- Keep `HI-C05-rahna`'s real review of `bolna` and remove its claim to review
+  the later assembled phrase `main-hindi-bolta-hun`.
+
 ## [Unreleased]
 
 ### Added — Chapters 60-66: Thirty-five more everyday words, round three

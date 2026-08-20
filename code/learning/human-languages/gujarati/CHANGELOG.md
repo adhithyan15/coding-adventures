@@ -1,5 +1,10 @@
 # Changelog
 
+## Close unsupported forward reviews (#12262)
+
+- Remove three legacy `reviews_of` edges to future lessons while preserving the
+  already-taught reviews the lesson bodies and knowledge evidence actually assess.
+
 ## [Unreleased]
 
 ### Added — Chapter 13, the first nine pieces of the script (HL-C215)

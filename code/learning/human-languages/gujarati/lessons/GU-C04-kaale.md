@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-gujarati
-reviews_of: [GU-C04-pachha-malishun]
+reviews_of: []
 ---
 
 # કાલે મળીશું (kāle maḷīshũ) — "see you tomorrow"

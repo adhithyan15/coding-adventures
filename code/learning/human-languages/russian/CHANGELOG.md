@@ -1,5 +1,10 @@
 # Changelog — Russian track
 
+## Close an unsupported forward review (#12262)
+
+- Keep `RU-C01-da`'s real review of `privet` and remove its claim to review the
+  later `spasibo` lesson.
+
 ## 0.11.0 — 2026-08-12
 
 Pre-A1 vocabulary tranche, round 2 (wave 6 of the cross-track vocabulary

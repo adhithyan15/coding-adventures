@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings and courtesy",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:36fb7b7d712393ce",
+  "sourceHash": "fnv1a64:db167b47c317b2aa",
   "lessons": [
     {
       "id": "RU-C01-privet",
@@ -409,7 +409,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fbeba526677daaf0",
+      "sourceHash": "fnv1a64:2b79661ddeebf392",
       "notice": {
         "modality": "sight",
         "needs": [
