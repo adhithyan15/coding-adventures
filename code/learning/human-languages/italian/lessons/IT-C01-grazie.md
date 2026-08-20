@@ -1,5 +1,6 @@
 ---
 id: IT-C01-grazie
+sequence: 80
 chapter: 1
 type: word
 headword: grazie

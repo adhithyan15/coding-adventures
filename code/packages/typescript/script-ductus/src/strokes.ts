@@ -6468,6 +6468,56 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ધ"),
   },
+  // t30apps writes Gujarati ન in two runs: the small left loop through the long
+  // shoulder, then the separate tall spine and foot. These Noto medians retain
+  // the observed loop-and-shoulder-before-spine order.
+  [ductusKey("gujarati", "ન")]: {
+    script: "gujarati",
+    glyph: "ન",
+    strokes: [
+      { segments: [{ label: "circle the small left loop and continue across the long rightward shoulder", path: [
+        { x: 110, y: 365 }, { x: 145, y: 365 }, { x: 170, y: 340 },
+        { x: 172, y: 305 }, { x: 160, y: 270 }, { x: 135, y: 245 },
+        { x: 105, y: 245 }, { x: 75, y: 265 }, { x: 55, y: 295 },
+        { x: 50, y: 330 }, { x: 62, y: 355 }, { x: 85, y: 370 },
+        { x: 110, y: 365 }, { x: 160, y: 365 }, { x: 215, y: 365 },
+        { x: 270, y: 365 }, { x: 325, y: 365 }, { x: 390, y: 365 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 412, y: 585 }, { x: 412, y: 520 }, { x: 412, y: 450 },
+        { x: 412, y: 380 }, { x: 412, y: 310 }, { x: 412, y: 240 },
+        { x: 412, y: 175 }, { x: 414, y: 125 }, { x: 422, y: 90 },
+        { x: 440, y: 62 }, { x: 470, y: 45 }, { x: 502, y: 38 },
+        { x: 525, y: 38 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ન"),
+  },
+  // t30apps writes Gujarati પ in two runs: the high left hook through the
+  // broad lower body and right shoulder, then the separate tall spine and foot.
+  // These Noto medians retain that hooked-body-before-spine order.
+  [ductusKey("gujarati", "પ")]: {
+    script: "gujarati",
+    glyph: "પ",
+    strokes: [
+      { segments: [{ label: "curl over the high left hook, descend, and sweep around the broad lower body into the right shoulder", path: [
+        { x: 20, y: 520 }, { x: 25, y: 555 }, { x: 55, y: 570 },
+        { x: 90, y: 565 }, { x: 120, y: 540 }, { x: 133, y: 500 },
+        { x: 133, y: 450 }, { x: 133, y: 390 }, { x: 133, y: 340 },
+        { x: 140, y: 300 }, { x: 160, y: 260 }, { x: 190, y: 225 },
+        { x: 225, y: 205 }, { x: 270, y: 197 }, { x: 315, y: 207 },
+        { x: 350, y: 225 }, { x: 380, y: 255 }, { x: 410, y: 285 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 433, y: 585 }, { x: 433, y: 520 }, { x: 433, y: 450 },
+        { x: 433, y: 380 }, { x: 433, y: 310 }, { x: 433, y: 240 },
+        { x: 433, y: 175 }, { x: 435, y: 125 }, { x: 443, y: 90 },
+        { x: 460, y: 62 }, { x: 490, y: 45 }, { x: 525, y: 38 },
+        { x: 550, y: 38 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("પ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
