@@ -1,0 +1,274 @@
+{
+  "version": 1,
+  "language": "latin",
+  "level": "A1",
+  "target": {
+    "name": "Coding Adventures Latin A1 Assessment — project-defined equivalent",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "ca-latin-level-mapping",
+      "title": "Coding Adventures human-language exam-level mappings",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/core/exam-levels.json",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "ca-latin-pronunciation",
+      "title": "Coding Adventures Latin pronunciation reference",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/latin/pronunciation-reference.md",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "coe-cefr-companion-2024",
+      "title": "Common European Framework of Reference for Languages: Learning, Teaching, Assessment — Companion volume",
+      "url": "https://www.coe.int/en/web/education/-/common-european-framework-of-reference-for-languages-learning-teaching-assessment-14",
+      "published": "2024",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 90,
+    "speakingMinutes": 12,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 10,
+    "deliveryModes": [
+      "paper or equivalent locked digital form",
+      "live or recorded speaking with a trained cooperative interlocutor"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 60,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is worth 25 points and must independently reach 15/25. The aggregate must also reach 60/100, so strength in Latin's traditional reading emphasis cannot hide absent listening, writing, or speaking. This is a project standard, not an external certificate or claim about ancient Roman pedagogy."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 35,
+      "parts": [
+        {
+          "id": "reading-labels-and-inscriptions",
+          "promptModes": ["six short written texts", "optional layout or object image"],
+          "promptGenres": ["label", "caption", "name line", "short adapted inscription", "very short notice"],
+          "responseModes": ["match each text to its meaning or situation"],
+          "items": 6,
+          "stimulusLength": { "unit": "words", "minimum": 2, "maximum": 12, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 6, "criteria": ["answer-key match", "one point per correct match and no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided vocabulary gloss for a maximum of two non-target proper names"], "forbidden": ["dictionary", "grammar reference", "translation tool", "phone"], "notPublished": [] },
+          "notPublished": ["response length is not applicable to matching", "replay is not applicable to written input"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "reading-social-exchange",
+          "promptModes": ["one written exchange", "seven written questions"],
+          "promptGenres": ["adapted greeting, introduction, wellbeing, and leave-taking dialogue"],
+          "responseModes": ["selected response", "match speaker to fact"],
+          "items": 7,
+          "stimulusLength": { "unit": "words", "minimum": 60, "maximum": 90, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 7, "criteria": ["answer-key match", "one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "grammar reference", "translation tool", "phone"], "notPublished": [] },
+          "notPublished": ["response length is not applicable to selected response", "replay is not applicable to written input"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "reading-short-adapted-account",
+          "promptModes": ["one continuous written text", "written questions"],
+          "promptGenres": ["adapted first-person account of home, family, day, possessions, or immediate surroundings"],
+          "responseModes": ["selected response", "put four events or facts in order", "identify the phrase supporting an answer"],
+          "items": 12,
+          "stimulusLength": { "unit": "words", "minimum": 120, "maximum": 160, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 12, "criteria": ["answer-key match", "credit only evidence supported by the Latin text", "no wrong-answer penalty"] },
+          "aids": { "allowed": ["exam-provided glosses for at most five non-target content words"], "forbidden": ["dictionary", "grammar reference", "translation tool", "phone"], "notPublished": [] },
+          "notPublished": ["response length is not applicable to selected and ordering responses", "replay is not applicable to written input"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        }
+      ]
+    },
+    {
+      "skill": "listening",
+      "minutes": 25,
+      "parts": [
+        {
+          "id": "listening-sound-and-word-contrast",
+          "promptModes": ["five recorded Classical Latin items at 55-70 words per minute", "written or image options"],
+          "promptGenres": ["known word or very short phrase contrasting vowel length, consonant value, or inflectional ending"],
+          "responseModes": ["choose the heard item or matching meaning"],
+          "items": 5,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 3, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 5, "criteria": ["answer-key match", "one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "dictionary", "playback control", "phone"], "notPublished": [] },
+          "notPublished": ["response length is not applicable to selected response"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-pronunciation", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "listening-mini-exchanges",
+          "promptModes": ["four recorded exchanges at 65-80 words per minute", "written or image options"],
+          "promptGenres": ["two- or three-turn greeting, introduction, wellbeing, request, time, or leave-taking exchange"],
+          "responseModes": ["identify speaker, situation, or concrete detail"],
+          "items": 8,
+          "stimulusLength": { "unit": "words", "minimum": 15, "maximum": 30, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 8, "criteria": ["answer-key match", "one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "dictionary", "playback control", "phone"], "notPublished": [] },
+          "notPublished": ["the 15-30-word bound is per exchange", "response length is not applicable to selected response"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "listening-supported-dialogue",
+          "promptModes": ["one recorded dialogue at 70-85 words per minute", "twelve written questions or options"],
+          "promptGenres": ["clear cooperative dialogue about identity, family, place, routine, food, weather, or immediate needs"],
+          "responseModes": ["selected response", "order facts", "match speaker to statement"],
+          "items": 12,
+          "stimulusLength": { "unit": "words", "minimum": 100, "maximum": 140, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 12, "criteria": ["answer-key match", "one point per correct answer and no wrong-answer penalty"] },
+          "aids": { "allowed": ["thirty seconds to preview the questions before first playback"], "forbidden": ["transcript", "dictionary", "playback control", "phone"], "notPublished": [] },
+          "notPublished": ["response length is not applicable to selected and ordering responses"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        }
+      ]
+    },
+    {
+      "skill": "writing",
+      "minutes": 30,
+      "parts": [
+        {
+          "id": "writing-dictation-and-orthography",
+          "promptModes": ["five recorded familiar phrases at 45-60 words per minute"],
+          "promptGenres": ["greeting, name, number, time, or concrete everyday phrase"],
+          "responseModes": ["write each phrase in Latin"],
+          "items": 5,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 4, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 8, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 5, "criteria": ["recognisable word forms", "correct consonants and inflectional endings", "macrons scored only when the prompt explicitly tests vowel length"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "grammar reference", "translation tool", "phone"], "notPublished": [] },
+          "notPublished": ["none; this project-defined task fixes the item and response bounds"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-pronunciation", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "writing-controlled-sentences",
+          "promptModes": ["four image or English-meaning prompts", "one required Latin word or ending per prompt"],
+          "promptGenres": ["identity, possession, location, routine, preference, or immediate need"],
+          "responseModes": ["write one original Latin sentence per prompt"],
+          "items": 4,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": 20, "maximum": 35, "approximate": false },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 8, "criteria": ["two points per sentence: communicative fit and intelligible morphology or syntax", "macrons optional unless meaning depends on a prompted contrast"] },
+          "aids": { "allowed": ["exam-provided list of the four required words or endings"], "forbidden": ["dictionary", "grammar reference", "translation tool", "phone"], "notPublished": [] },
+          "notPublished": ["prompt word count", "replay is not applicable to written input"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "writing-short-personal-note",
+          "promptModes": ["written situation", "three content prompts"],
+          "promptGenres": ["short note, message, or first-person account to a named reader"],
+          "responseModes": ["write connected Latin sentences addressing all three prompts"],
+          "items": 3,
+          "stimulusLength": null,
+          "responseLength": { "unit": "words", "minimum": 35, "maximum": 50, "approximate": false },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 12, "criteria": ["three content points", "reader and purpose", "intelligible vocabulary and morphology", "elementary connection and order", "orthographic consistency"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "grammar reference", "translation tool", "phone"], "notPublished": [] },
+          "notPublished": ["prompt word count", "replay is not applicable to written input"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        }
+      ]
+    },
+    {
+      "skill": "speaking",
+      "minutes": 12,
+      "parts": [
+        {
+          "id": "speaking-read-aloud",
+          "promptModes": ["visible vocalised Latin text with macrons"],
+          "promptGenres": ["familiar dialogue or first-person paragraph"],
+          "responseModes": ["read the text aloud once after silent preview"],
+          "items": 1,
+          "stimulusLength": { "unit": "words", "minimum": 50, "maximum": 70, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 45, "maximum": 75, "approximate": true },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 5, "criteria": ["intelligibility", "Classical consonant values", "marked vowel quantity", "word grouping and phrasing"] },
+          "aids": { "allowed": ["visible exam text", "one minute of silent preview"], "forbidden": ["dictionary", "recorded model", "phone"], "notPublished": [] },
+          "notPublished": ["replay is not applicable to live production"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-pronunciation"]
+        },
+        {
+          "id": "speaking-personal-presentation",
+          "promptModes": ["visible keyword sheet"],
+          "promptGenres": ["name, home, family, studies or work, languages, routine, and one preference"],
+          "responseModes": ["prepared live monologue in Latin"],
+          "items": 7,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 60, "maximum": 90, "approximate": true },
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 8, "criteria": ["coverage of at least six prompt areas", "intelligible basic vocabulary and morphology", "pronunciation", "minimal continuity"] },
+          "aids": { "allowed": ["exam-provided keyword sheet", "ten-minute preparation shared across speaking tasks"], "forbidden": ["dictionary", "full written script", "phone"], "notPublished": [] },
+          "notPublished": ["response word count", "replay is not applicable to live production"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        },
+        {
+          "id": "speaking-cooperative-exchange",
+          "promptModes": ["live interlocutor using memorised protocol", "two exam-provided situation cards"],
+          "promptGenres": ["greeting and name exchange", "wellbeing, place, possession, time, food, or simple request"],
+          "responseModes": ["choose one situation", "ask at least two questions", "answer at least three questions", "close the exchange"],
+          "items": 6,
+          "stimulusLength": null,
+          "responseLength": { "unit": "seconds", "minimum": 180, "maximum": 240, "approximate": true },
+          "interaction": "pair",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 12, "criteria": ["complete the opening, information exchange, and closing", "ask and answer intelligibly", "basic vocabulary and morphology", "pronunciation", "interaction with a cooperative partner"] },
+          "aids": { "allowed": ["two exam-provided situation cards", "interlocutor may repeat or rephrase once in slower Latin without translating", "ten-minute preparation shared across speaking tasks"], "forbidden": ["dictionary", "full written script", "translation by interlocutor", "phone"], "notPublished": [] },
+          "notPublished": ["response word count", "the protocol fixes one permitted repetition but no numeric word ceiling", "replay is not applicable to live interaction"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-level-mapping", "coe-cefr-companion-2024"]
+        }
+      ]
+    }
+  ]
+}

@@ -106,6 +106,7 @@ import {
 
 const frenchA1 = loadTaskShapeInventory("french", "A1");
 const germanA1 = loadTaskShapeInventory("german", "A1");
+const latinA1 = loadTaskShapeInventory("latin", "A1");
 const present = listTaskShapeInventories();
 const missing = buildTaskShapeBacklog(
   loadLanguageRegistry().languages.map((track) => track.id),
@@ -113,11 +114,13 @@ const missing = buildTaskShapeBacklog(
 );
 ```
 
-The first two inventories are official DELF French A1 and Goethe German A1.
-They are targets for later five-minute lesson decomposition and mocks, not claims
-that either current book is pass-ready. Alternate published DELF receptive forms,
-open-ended minimum lengths, and duration ranges remain distinct rather than being
-collapsed into invented single values.
+The first three inventories are official DELF French A1, official Goethe German
+A1, and a clearly labelled project-defined Latin A1 equivalent. They are targets
+for later five-minute lesson decomposition and mocks, not claims that any current
+book is pass-ready. Latin keeps four independent skill floors even though its
+tradition is reading-heavy; alternate published DELF forms, open-ended minimum
+lengths, and duration ranges remain distinct rather than being collapsed into
+invented single values.
 
 ### Source-bounded exam inventories (HL20)
 
