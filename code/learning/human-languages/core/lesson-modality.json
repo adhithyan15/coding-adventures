@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:368c9cd8ac2200fc",
+  "sourceHash": "fnv1a64:27d7e0457424094e",
   "summary": {
-    "totalLessons": 3399,
-    "voice": 2466,
+    "totalLessons": 3400,
+    "voice": 2467,
     "sight": 590,
     "pen": 343,
-    "drivableLessons": 2466,
+    "drivableLessons": 2467,
     "drivablePercent": 73,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2211,
+    "drivablePrefixTotal": 2212,
     "fullyDrivableChapters": 669,
     "unstartableChapters": 206,
     "overriddenLessons": 0,
@@ -9938,12 +9938,12 @@
     },
     {
       "language": "spanish",
-      "lessonCount": 584,
-      "voice": 532,
+      "lessonCount": 585,
+      "voice": 533,
       "sight": 45,
       "pen": 7,
       "drivablePercent": 91,
-      "drivablePrefixTotal": 512,
+      "drivablePrefixTotal": 513,
       "modalities": [
         "voice",
         "sight",
@@ -10032,14 +10032,14 @@
         },
         {
           "chapter": 5,
-          "lessonCount": 5,
-          "voice": 5,
+          "lessonCount": 6,
+          "voice": 6,
           "sight": 0,
           "pen": 0,
           "modalities": [
             "voice"
           ],
-          "drivablePrefix": 5,
+          "drivablePrefix": 6,
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
@@ -10047,6 +10047,7 @@
             "ES-C03-tu-usted-register",
             "ES-C03-vos",
             "ES-C03-usted-origin",
+            "ES-C03-quien",
             "ES-C03-repaso-tu-usted"
           ]
         },
@@ -60159,6 +60160,24 @@
       "sourceHash": "fnv1a64:469def272bcc1174"
     },
     {
+      "id": "ES-C03-quien",
+      "language": "spanish",
+      "chapter": 5,
+      "sequence": 183,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6a5cd1a3ddc3f199"
+    },
+    {
       "id": "ES-C03-repaso-tu-usted",
       "language": "spanish",
       "chapter": 5,
@@ -60174,7 +60193,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dafb0a60f912c355"
+      "sourceHash": "fnv1a64:4b4ce599da6dabd1"
     },
     {
       "id": "ES-C03-como",
@@ -60211,7 +60230,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:045f46f9d26ad328",
+      "sourceHash": "fnv1a64:182383cc4cfb6072",
       "detachableSegments": [
         "Script — the upside-down opener"
       ]
@@ -60232,7 +60251,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:590e6bda98194f56"
+      "sourceHash": "fnv1a64:4f96f90fe4b39680"
     },
     {
       "id": "ES-C03-se-llama",
@@ -60322,7 +60341,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:14f2dbd042b4ff42"
+      "sourceHash": "fnv1a64:ad563f20c2908f86"
     },
     {
       "id": "ES-C19-si",
@@ -66610,7 +66629,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:3cf7084a43dd9a50"
+      "sourceHash": "fnv1a64:3260de7602a22290"
     },
     {
       "id": "ES-C61-o",
