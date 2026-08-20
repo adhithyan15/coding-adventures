@@ -1,5 +1,6 @@
 ---
 id: MR-C01-yeto
+sequence: 30
 chapter: 1
 type: word
 headword: येतो / येते

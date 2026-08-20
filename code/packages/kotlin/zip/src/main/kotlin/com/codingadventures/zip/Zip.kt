@@ -270,7 +270,7 @@ private class BitWriter {
  * Mirrors BitWriter: fills a 64-bit accumulator from bytes in the source array.
  * Huffman code decoding reads MSB-first by bit-reversing the extracted value.
  */
-private class BitReader(private val data: ByteArray) {
+internal class BitReader(private val data: ByteArray) {
     private var pos: Int = 0   // next byte to consume from data
     private var buf: Long = 0L // bit accumulator
     private var bits: Int = 0  // valid bits in buf
@@ -304,21 +304,6 @@ private class BitReader(private val data: ByteArray) {
     }
 
     /**
-     * Read [nbits] bits and bit-reverse the result.
-     * Used when decoding Huffman codes (logically MSB-first).
-     */
-    fun readMsb(nbits: Int): Int? {
-        val v = readLsb(nbits) ?: return null
-        var rev = 0
-        var u = v
-        repeat(nbits) {
-            rev = (rev shl 1) or (u and 1)
-            u = u ushr 1
-        }
-        return rev
-    }
-
-    /**
      * Discard any partial-byte bits, aligning to the next byte boundary.
      * Required before reading stored-block length fields.
      */
@@ -329,6 +314,9 @@ private class BitReader(private val data: ByteArray) {
             bits -= discard
         }
     }
+
+    /** Exact number of source bytes fetched, including a partial final byte. */
+    fun position(): Int = pos
 }
 
 // =============================================================================
@@ -361,61 +349,28 @@ private fun fixedLlEncode(sym: Int): Pair<Int, Int> = when (sym) {
     else        -> throw IOException("fixedLlEncode: invalid LL symbol $sym")
 }
 
-/**
- * Decode one literal/length symbol from [br] using the RFC 1951 fixed Huffman table.
- *
- * Reads bits incrementally — first 7, then up to 9 — and decodes in order
- * of increasing code length per the canonical Huffman property.
- * Returns null on end-of-input.
- *
- * Decode order:
- *   1. Try 7 bits: codes 0–23 → symbols 256–279 (end-of-block + length codes)
- *   2. Need 8 bits: codes 48–191 → literals 0–143; codes 192–199 → symbols 280–287
- *   3. Need 9 bits: codes 400–511 → literals 144–255
- */
-private fun fixedLlDecode(br: BitReader): Int? {
-    val v7 = br.readMsb(7) ?: return null
-    if (v7 <= 23) {
-        // 7-bit code: symbols 256–279.
-        return v7 + 256
-    }
-    // Need one more bit for 8-bit codes.
-    val extra1 = br.readLsb(1) ?: return null
-    val v8 = (v7 shl 1) or extra1
-    return when {
-        v8 in 48..191  -> v8 - 48                  // literals 0–143
-        v8 in 192..199 -> v8 + 88                  // symbols 280–287 (192+88=280)
-        else           -> {
-            // Need one more bit for 9-bit codes (literals 144–255).
-            val extra2 = br.readLsb(1) ?: return null
-            val v9 = (v8 shl 1) or extra2
-            if (v9 in 400..511) v9 - 256 else null // literals 144–255 (400-256=144)
-        }
-    }
-}
-
 // =============================================================================
 // RFC 1951 DEFLATE — Length / Distance Tables
 // =============================================================================
 //
-// Match lengths (3-255) map to LL symbols 257-284 + extra bits.
+// Match lengths (3-258) map to LL symbols 257-285 + extra bits.
 // Match distances (1-32768) map to distance codes 0-29 + extra bits.
 // The tables come directly from RFC 1951 §3.2.5.
 
 /**
- * (base_length, extra_bits) for LL symbols 257..284, indexed by (symbol - 257).
+ * (base_length, extra_bits) for LL symbols 257..285, indexed by (symbol - 257).
  *
  * To encode a match of length L: find the largest base ≤ L, emit the
  * corresponding LL symbol + (L - base) as extra bits.
  */
-private val LENGTH_TABLE: Array<Pair<Int, Int>> = arrayOf(
+internal val LENGTH_TABLE: Array<Pair<Int, Int>> = arrayOf(
     Pair(3, 0), Pair(4, 0), Pair(5, 0), Pair(6, 0),
     Pair(7, 0), Pair(8, 0), Pair(9, 0), Pair(10, 0), // 257–264
     Pair(11, 1), Pair(13, 1), Pair(15, 1), Pair(17, 1),                 // 265–268
     Pair(19, 2), Pair(23, 2), Pair(27, 2), Pair(31, 2),                 // 269–272
     Pair(35, 3), Pair(43, 3), Pair(51, 3), Pair(59, 3),                 // 273–276
     Pair(67, 4), Pair(83, 4), Pair(99, 4), Pair(115, 4),               // 277–280
-    Pair(131, 5), Pair(163, 5), Pair(195, 5), Pair(227, 5)             // 281–284
+    Pair(131, 5), Pair(163, 5), Pair(195, 5), Pair(227, 5), Pair(258, 0) // 281–285
 )
 
 /**
@@ -424,7 +379,7 @@ private val LENGTH_TABLE: Array<Pair<Int, Int>> = arrayOf(
  * To encode a match at distance D: find the largest base ≤ D, emit the
  * distance code number (5 bits) + (D - base) as extra bits.
  */
-private val DIST_TABLE: Array<Pair<Int, Int>> = arrayOf(
+internal val DIST_TABLE: Array<Pair<Int, Int>> = arrayOf(
     Pair(1, 0), Pair(2, 0), Pair(3, 0), Pair(4, 0),
     Pair(5, 1), Pair(7, 1), Pair(9, 2), Pair(13, 2),
     Pair(17, 3), Pair(25, 3), Pair(33, 4), Pair(49, 4),
@@ -436,7 +391,7 @@ private val DIST_TABLE: Array<Pair<Int, Int>> = arrayOf(
 )
 
 /**
- * Map a match length (3–255) to its RFC 1951 LL symbol, base, and extra-bit count.
+ * Map a match length (3–258) to its RFC 1951 LL symbol, base, and extra-bit count.
  *
  * Returns `Triple(ll_symbol, base, extra_bits)`.
  * Scans from the highest entry downward to find the rightmost entry where base ≤ length.
@@ -546,129 +501,6 @@ internal fun deflateCompress(data: ByteArray): ByteArray {
 }
 
 // =============================================================================
-// RFC 1951 DEFLATE — Decompress
-// =============================================================================
-//
-// Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-// Dynamic Huffman blocks (BTYPE=10) throw IOException — we only produce BTYPE=01,
-// but we must be able to decompress stored blocks written by other tools.
-//
-// Security limits:
-//   - Maximum output: 256 MB (decompression bomb guard)
-//   - LEN/NLEN validation on stored blocks
-
-private const val MAX_OUTPUT_BYTES = 256 * 1024 * 1024  // 256 MB
-
-/**
- * Decompress a raw RFC 1951 DEFLATE bit-stream into its original bytes.
- *
- * Throws [IOException] on malformed or unsupported (BTYPE=10 dynamic Huffman) input.
- *
- * Security: a 256 MB hard limit prevents decompression bomb attacks where
- * a tiny compressed input expands to gigabytes of output.
- */
-internal fun deflateDecompress(data: ByteArray): ByteArray {
-    val br = BitReader(data)
-    val out = mutableListOf<Byte>()
-
-    while (true) {
-        val bfinal = br.readLsb(1)
-            ?: throw IOException("deflate: unexpected EOF reading BFINAL")
-        val btype = br.readLsb(2)
-            ?: throw IOException("deflate: unexpected EOF reading BTYPE")
-
-        when (btype) {
-            0b00 -> {
-                // ── Stored block ──────────────────────────────────────────────
-                // Align to byte boundary before reading the length fields.
-                br.align()
-                val len = br.readLsb(16)
-                    ?: throw IOException("deflate: EOF reading stored LEN")
-                val nlen = br.readLsb(16)
-                    ?: throw IOException("deflate: EOF reading stored NLEN")
-                // RFC 1951 §3.2.4: NLEN is the one's complement of LEN.
-                if ((nlen xor 0xFFFF) != len) {
-                    throw IOException("deflate: stored LEN/NLEN mismatch: $len vs $nlen")
-                }
-                if (out.size + len > MAX_OUTPUT_BYTES) {
-                    throw IOException("deflate: output size limit exceeded")
-                }
-                repeat(len) {
-                    val b = br.readLsb(8)
-                        ?: throw IOException("deflate: EOF inside stored block data")
-                    out.add(b.toByte())
-                }
-            }
-            0b01 -> {
-                // ── Fixed Huffman block ───────────────────────────────────────
-                while (true) {
-                    val sym = fixedLlDecode(br)
-                        ?: throw IOException("deflate: EOF decoding fixed Huffman symbol")
-                    when {
-                        sym in 0..255 -> {
-                            // Guard against decompression bombs.
-                            if (out.size >= MAX_OUTPUT_BYTES) {
-                                throw IOException("deflate: output size limit exceeded")
-                            }
-                            out.add(sym.toByte())
-                        }
-                        sym == 256 -> break  // end-of-block
-                        sym in 257..285 -> {
-                            // Back-reference: decode length, then distance.
-                            val idx = sym - 257
-                            if (idx >= LENGTH_TABLE.size) {
-                                throw IOException("deflate: invalid length sym $sym")
-                            }
-                            val (baseLen, extraLenBits) = LENGTH_TABLE[idx]
-                            val extraLen = if (extraLenBits > 0) {
-                                br.readLsb(extraLenBits)
-                                    ?: throw IOException("deflate: EOF reading length extra bits")
-                            } else 0
-                            val matchLen = baseLen + extraLen
-
-                            // Distance code: 5-bit fixed, read MSB-first.
-                            val distCode = br.readMsb(5)
-                                ?: throw IOException("deflate: EOF reading distance code")
-                            if (distCode >= DIST_TABLE.size) {
-                                throw IOException("deflate: invalid dist code $distCode")
-                            }
-                            val (baseDist, extraDistBits) = DIST_TABLE[distCode]
-                            val extraDist = if (extraDistBits > 0) {
-                                br.readLsb(extraDistBits)
-                                    ?: throw IOException("deflate: EOF reading distance extra bits")
-                            } else 0
-                            val offset = baseDist + extraDist
-
-                            // Bounds check: offset must not exceed decoded output.
-                            if (offset > out.size) {
-                                throw IOException(
-                                    "deflate: back-reference offset $offset > output len ${out.size}"
-                                )
-                            }
-                            if (out.size + matchLen > MAX_OUTPUT_BYTES) {
-                                throw IOException("deflate: output size limit exceeded")
-                            }
-                            // Copy byte-by-byte to handle overlapping matches
-                            // (e.g. offset=1, length=10 encodes a run of one byte × 10).
-                            repeat(matchLen) {
-                                out.add(out[out.size - offset])
-                            }
-                        }
-                        else -> throw IOException("deflate: invalid LL symbol $sym")
-                    }
-                }
-            }
-            0b10 -> throw IOException("deflate: dynamic Huffman blocks (BTYPE=10) not supported")
-            else -> throw IOException("deflate: reserved BTYPE=11")
-        }
-
-        if (bfinal == 1) break
-    }
-
-    return out.toByteArray()
-}
-
-// =============================================================================
 // MS-DOS Date / Time Encoding
 // =============================================================================
 //
@@ -766,7 +598,7 @@ class ZipWriter {
 
         // Decide compression: try DEFLATE and fall back to Stored if it doesn't help.
         val (method, fileData) = if (compress && data.isNotEmpty()) {
-            val compressed = deflateCompress(data)
+            val compressed = rawDeflate(data)
             if (compressed.size < data.size) {
                 Pair(METHOD_DEFLATE, compressed)
             } else {
@@ -1017,6 +849,11 @@ class ZipReader(private val data: ByteArray) {
         entries = meta.map { ZipEntry(it.name, ByteArray(0)) }
     }
 
+    /** Return the Central Directory's declared uncompressed size without decoding. */
+    internal fun declaredUncompressedSize(name: String): Int =
+        meta.find { it.name == name }?.uncompressedSize
+            ?: throw IOException("zip: entry '$name' not found")
+
     /**
      * Decompress and return the data for the named entry. Verifies CRC-32.
      *
@@ -1088,23 +925,36 @@ class ZipReader(private val data: ByteArray) {
 
         // Decompress according to method.
         val decompressed: ByteArray = when (m.method.toInt()) {
-            0 -> compressed                         // Stored — verbatim copy
-            8 -> deflateDecompress(compressed)      // DEFLATE
+            0 -> {
+                if (m.compressedSize != m.uncompressedSize) {
+                    throw IOException("zip: stored entry sizes do not match")
+                }
+                compressed
+            }
+            8 -> {
+                if (m.uncompressedSize > MAX_RAW_OUTPUT) {
+                    throw IOException("zip: uncompressed size exceeds the raw inflate ceiling")
+                }
+                val inflated = try {
+                    rawInflateCounted(compressed, m.uncompressedSize)
+                } catch (error: RawInflateError) {
+                    throw IOException("zip: raw inflate failed: ${error.code}", error)
+                }
+                if (inflated.bytesConsumed != compressed.size) {
+                    throw IOException("zip: compressed payload contains trailing bytes")
+                }
+                if (inflated.output.size != m.uncompressedSize) {
+                    throw IOException("zip: uncompressed size does not match the directory")
+                }
+                inflated.output
+            }
             else -> throw IOException(
                 "zip: unsupported compression method ${m.method} for '${m.name}'"
             )
         }
 
-        // Trim to declared uncompressed size (guards against decompressor over-read).
-        // m.uncompressedSize was validated non-negative above.
-        val trimmed = if (decompressed.size > m.uncompressedSize) {
-            decompressed.copyOf(m.uncompressedSize)
-        } else {
-            decompressed
-        }
-
         // Verify CRC-32 — detects corruption of the decompressed content.
-        val actualCrc = crc32(trimmed)
+        val actualCrc = crc32(decompressed)
         if (actualCrc != m.crc) {
             throw IOException(
                 "zip: CRC-32 mismatch for '${m.name}': expected ${Integer.toHexString(m.crc).uppercase()}, " +
@@ -1112,7 +962,7 @@ class ZipReader(private val data: ByteArray) {
             )
         }
 
-        return trimmed
+        return decompressed
     }
 
     // ── Private helpers ────────────────────────────────────────────────────────
@@ -1202,14 +1052,37 @@ object ZipArchive {
      * File entries have their data decompressed; directory entries have empty data.
      * Throws [IOException] on corrupt archives.
      */
-    fun unzip(data: ByteArray): List<ZipEntry> {
+    fun unzip(data: ByteArray, maxTotalBytes: Long = MAX_RAW_OUTPUT.toLong()): List<ZipEntry> {
+        if (maxTotalBytes < 0 || maxTotalBytes > MAX_RAW_OUTPUT) {
+            throw IOException("zip: invalid aggregate output limit")
+        }
         val reader = ZipReader(data)
+        var totalBytes = 0L
         return reader.entries.map { entry ->
-            if (entry.name.endsWith('/')) {
-                ZipEntry(entry.name, ByteArray(0))
+            val declaredSize = if (entry.name.endsWith('/')) {
+                0L
             } else {
-                ZipEntry(entry.name, reader.read(entry.name))
+                reader.declaredUncompressedSize(entry.name).toLong()
             }
+            if (declaredSize > maxTotalBytes - totalBytes) {
+                throw IOException(
+                    "zip: aggregate decompressed size exceeds the $maxTotalBytes-byte limit " +
+                        "(decompression bomb guard)"
+                )
+            }
+            val bytes = if (entry.name.endsWith('/')) {
+                ByteArray(0)
+            } else {
+                reader.read(entry.name)
+            }
+            totalBytes += bytes.size
+            if (totalBytes > maxTotalBytes) {
+                throw IOException(
+                    "zip: aggregate decompressed size exceeds the $maxTotalBytes-byte limit " +
+                        "(decompression bomb guard)"
+                )
+            }
+            ZipEntry(entry.name, bytes)
         }
     }
 }

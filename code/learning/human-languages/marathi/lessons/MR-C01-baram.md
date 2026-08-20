@@ -1,5 +1,6 @@
 ---
 id: MR-C01-baram
+sequence: 25
 chapter: 1
 type: word
 headword: बरं

@@ -1,5 +1,6 @@
 ---
 id: MR-C02-naav
+sequence: 40
 chapter: 2
 type: word
 headword: नाव

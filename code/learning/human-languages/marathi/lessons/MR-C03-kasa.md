@@ -1,5 +1,6 @@
 ---
 id: MR-C03-kasa
+sequence: 85
 chapter: 3
 type: word
 headword: कसा / कशी / कसं

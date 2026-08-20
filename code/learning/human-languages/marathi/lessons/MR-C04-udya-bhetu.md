@@ -1,5 +1,6 @@
 ---
 id: MR-C04-udya-bhetu
+sequence: 130
 chapter: 4
 type: phrase
 headword: उद्या भेटू

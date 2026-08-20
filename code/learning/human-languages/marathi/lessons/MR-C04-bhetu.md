@@ -1,5 +1,6 @@
 ---
 id: MR-C04-bhetu
+sequence: 120
 chapter: 4
 type: word
 headword: भेटू
