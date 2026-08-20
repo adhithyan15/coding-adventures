@@ -8,6 +8,7 @@ import {
 import { LEVEL_VOCABULARY, type LevelGateReport } from "../src/level-gate.js";
 import type { ScriptClosureReport, TrackClosure } from "../src/script-closure.js";
 import type { CefrLevel } from "../src/levels.js";
+import type { WritingStageReport } from "../src/writing-stages.js";
 
 // A two-track fixture is enough to pin every ordering rule, and it keeps these
 // tests off the corpus — which is the point of `buildCompletionPlan` being pure
@@ -103,6 +104,53 @@ describe("completion plan", () => {
     });
     expect(built.head.some((item) => item.kind === "assessment-contract")).toBe(false);
     expect(built.projection.find((entry) => entry.kind === "assessment-contract")?.items).toBe(0);
+  });
+
+  it("queues cumulative writing proof before downstream content and projects every missing stage", () => {
+    const writingStages = {
+      stages: [{ id: "observe-trace", firstRequiredAt: "pre-A1", prerequisites: [] }],
+      tracks: [{
+        language: "alpha",
+        evidence: [],
+        validEvidence: [],
+        defects: [],
+        levels: [{
+          level: "pre-A1",
+          requiredStages: ["observe-trace"],
+          evidencedStages: [],
+          missingStages: ["observe-trace"],
+          complete: false,
+        }],
+      }],
+      summary: {
+        tracks: 1,
+        tracksWithAnyEvidence: 0,
+        tracksCompleteAtPreA1: 0,
+        evidenceBlocks: 0,
+        invalidEvidenceBlocks: 0,
+        missingTrackLevelStages: 1,
+      },
+    } satisfies WritingStageReport;
+    const built = plan({
+      levelGate: gate([{
+        language: "alpha",
+        inProgressAt: "pre-A1",
+        blockers: [
+          { criterion: "writing-stage", detail: "observe-trace is unproved", shortfall: 1 },
+          ...vocabularyBlocker(250),
+        ],
+      }]),
+      writingStages,
+    });
+    expect(built.head[0]).toMatchObject({
+      id: "writing-stage/alpha/pre-A1",
+      kind: "writing-stage",
+      outstanding: 1,
+      tranches: 1,
+    });
+    expect(built.projection.find((entry) => entry.kind === "writing-stage")).toMatchObject({
+      items: 1,
+    });
   });
 
   it("moves every track once before any track moves twice", () => {

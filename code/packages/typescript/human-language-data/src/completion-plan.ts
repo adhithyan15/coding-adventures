@@ -36,10 +36,12 @@ import type { CefrLevel } from "./levels.js";
 import { CEFR_LEVELS, levelRank } from "./levels.js";
 import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
+import type { WritingStageReport } from "./writing-stages.js";
 
 /** The eight families of work. Every item belongs to exactly one. */
 export type WorkKind =
   | "assessment-contract"
+  | "writing-stage"
   | "exam-inventory"
   | "script-closure"
   | "vocabulary"
@@ -81,13 +83,17 @@ export type WorkKind =
  */
 export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
-  "exam-inventory": 2,
-  "script-closure": 3,
-  "exam-point": 4,
-  vocabulary: 5,
-  reinforcement: 6,
-  "atom-budget": 7,
-  "spine-nodes": 8,
+  // Priority 2 is the sourced task-shape dependency introduced by HL18. This
+  // branch may merge before or after that independent tranche; keep the durable
+  // order stable either way.
+  "writing-stage": 3,
+  "exam-inventory": 4,
+  "script-closure": 5,
+  "exam-point": 6,
+  vocabulary: 7,
+  reinforcement: 8,
+  "atom-budget": 9,
+  "spine-nodes": 10,
 });
 
 /**
@@ -101,6 +107,7 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
  */
 export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
+  "writing-stage": 1,
   "exam-inventory": 1,
   "script-closure": 10,
   vocabulary: 35,
@@ -181,6 +188,8 @@ export interface ExamCoverageSummary {
 export interface CompletionPlanInput {
   levelGate: LevelGateReport;
   scriptClosure: ScriptClosureReport;
+  /** HL19 cumulative stage proof. Without it the projection is unmeasured, not zero. */
+  writingStages?: WritingStageReport;
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
   /** Which target inventories exist. Absent ones become `exam-inventory` items. */
@@ -513,6 +522,14 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
   const assessmentItems = Math.max(0, input.levelGate.tracks.length - validAssessmentContracts.size);
 
   const glyphs = input.scriptClosure.tracks.reduce((sum, track) => sum + track.neverTaughtGlyphs, 0);
+  const writingStagePairs = input.writingStages
+    ? input.writingStages.tracks.reduce(
+        (sum, track) => sum + track.levels
+          .filter((entry) => levelRank(entry.level) <= levelRank(ceiling))
+          .reduce((trackSum, entry) => trackSum + entry.missingStages.length, 0),
+        0,
+      )
+    : null;
 
   const counted = (kind: WorkKind) => items.filter((item) => item.kind === kind).length;
 
@@ -538,6 +555,16 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
       detail:
         `${validAssessmentContracts.size} of ${input.levelGate.tracks.length} track(s) have a validated ` +
         `four-skill, writing-ramp and timed-mock contract`,
+    },
+    {
+      kind: "writing-stage",
+      items: writingStagePairs,
+      detail:
+        writingStagePairs === null
+          ? "not measured — no cumulative writing-stage report was supplied"
+          : `${writingStagePairs} missing (track x level x required stage) proof(s) through ${ceiling}; ` +
+            `${input.writingStages!.summary.tracksCompleteAtPreA1} of ` +
+            `${input.writingStages!.summary.tracks} track(s) currently prove pre-A1`,
     },
     {
       kind: "vocabulary",
