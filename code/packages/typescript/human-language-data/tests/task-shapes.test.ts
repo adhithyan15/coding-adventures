@@ -3,6 +3,34 @@ import { loadLanguageRegistry, loadTaskShapeInventory, listTaskShapeInventories 
 import { buildTaskShapeBacklog, parseTaskShapeInventory } from "../src/task-shapes.js";
 
 describe("four-skill task-shape inventories (HL18)", () => {
+  it("loads the official Spanish A1 performance target and its grouped pass rule", () => {
+    const inventory = loadTaskShapeInventory("spanish", "A1");
+    expect(inventory.target).toEqual({ name: "DELE A1", basis: "external" });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.flatMap((section) => section.parts)).toHaveLength(13);
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 95,
+      speakingMinutes: 10,
+      speakingPreparationMinutes: 10,
+    });
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([null, null, null, null]);
+
+    const reading = inventory.sections.find((section) => section.skill === "reading");
+    expect(reading?.parts.map((part) => part.items)).toEqual([5, 6, 6, 8]);
+    const listening = inventory.sections.find((section) => section.skill === "listening");
+    expect(listening?.parts.map((part) => part.replayCount)).toEqual([2, 2, 2, 2]);
+    const writing = inventory.sections.find((section) => section.skill === "writing");
+    expect(writing?.parts.map((part) => part.responseLength)).toEqual([
+      { unit: "words", minimum: 15, maximum: 25, approximate: false },
+      { unit: "words", minimum: 30, maximum: 40, approximate: false },
+    ]);
+  });
+
   it("loads the external Arabic STAMP 4S target with a four-skill project A1 floor", () => {
     const inventory = loadTaskShapeInventory("arabic", "A1");
     expect(inventory.target).toEqual({
@@ -103,13 +131,16 @@ describe("four-skill task-shape inventories (HL18)", () => {
     const present = listTaskShapeInventories();
     const backlog = buildTaskShapeBacklog(registry.languages.map((track) => track.id), present);
     expect(present).toEqual([
+      { language: "spanish", level: "A1" },
       { language: "latin", level: "A1" },
       { language: "french", level: "A1" },
       { language: "german", level: "A1" },
       { language: "arabic", level: "A1" },
     ]);
-    expect(backlog).toHaveLength(registry.languages.length * 6 - 4);
-    expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 4);
+    expect(backlog).toHaveLength(registry.languages.length * 6 - 5);
+    expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 5);
+    expect(backlog.some((item) => item.id === "task-shape/spanish/A1")).toBe(false);
+    expect(backlog.some((item) => item.id === "task-shape/spanish/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/latin/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/latin/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/french/A1")).toBe(false);
