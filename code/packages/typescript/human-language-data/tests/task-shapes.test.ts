@@ -31,6 +31,34 @@ describe("four-skill task-shape inventories (HL18)", () => {
     ]);
   });
 
+  it("loads the external Arabic STAMP 4S target with a four-skill project A1 floor", () => {
+    const inventory = loadTaskShapeInventory("arabic", "A1");
+    expect(inventory.target).toEqual({
+      name: "Avant STAMP 4S Arabic (Modern Standard) — Level 3 / Novice-High project A1 floor",
+      basis: "external",
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.flatMap((section) => section.parts)).toHaveLength(4);
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: { minimum: 90, maximum: 105 },
+      speakingMinutes: { minimum: 20, maximum: 25 },
+      speakingPreparationMinutes: null,
+    });
+    expect(inventory.sections.map((section) => section.parts[0]?.items)).toEqual([30, 30, 3, 3]);
+    expect(inventory.sections.map((section) => section.parts[0]?.scoring.maxRawPoints)).toEqual([null, null, null, null]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([
+      1 / 3,
+      1 / 3,
+      3 / 8,
+      3 / 8,
+    ]);
+  });
+
   it("loads the project-defined Latin A1 target with four independent thresholds", () => {
     const inventory = loadTaskShapeInventory("latin", "A1");
     expect(inventory.target).toEqual({
@@ -107,9 +135,10 @@ describe("four-skill task-shape inventories (HL18)", () => {
       { language: "latin", level: "A1" },
       { language: "french", level: "A1" },
       { language: "german", level: "A1" },
+      { language: "arabic", level: "A1" },
     ]);
-    expect(backlog).toHaveLength(registry.languages.length * 6 - 4);
-    expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 4);
+    expect(backlog).toHaveLength(registry.languages.length * 6 - 5);
+    expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 5);
     expect(backlog.some((item) => item.id === "task-shape/spanish/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/spanish/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/latin/A1")).toBe(false);
@@ -118,6 +147,8 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(backlog.some((item) => item.id === "task-shape/french/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/german/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/german/A2")).toBe(true);
+    expect(backlog.some((item) => item.id === "task-shape/arabic/A1")).toBe(false);
+    expect(backlog.some((item) => item.id === "task-shape/arabic/A2")).toBe(true);
   });
 
   it("rejects a missing skill instead of treating it as exam-ready", () => {
