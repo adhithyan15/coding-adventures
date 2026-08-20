@@ -7313,10 +7313,13 @@ impl HtmlParser {
             && self.has_authored_open_html_element("li")
             && self.open_list_item_in_scope_index().is_none()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-end-tag-in-foreign-content",
-                "end tag `</li>` did not match the current foreign element",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-end-tag-in-foreign-content",
+                    "end tag `</li>` did not match the current foreign element",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.diagnostics.push(ParserDiagnostic::new(
                 "unexpected-li-end-tag",
                 "end tag `</li>` did not match a list item in scope",
@@ -33888,10 +33891,7 @@ mod tests {
             assert_eq!(
                 output.parser_diagnostics,
                 vec![
-                    ParserDiagnostic::new(
-                        "unexpected-end-tag-in-foreign-content",
-                        "end tag `</li>` did not match the current foreign element"
-                    ),
+                    generic_foreign_end_tag_mismatch(&source, "li"),
                     ParserDiagnostic::new(
                         "unexpected-li-end-tag",
                         "end tag `</li>` did not match a list item in scope"
@@ -33945,6 +33945,70 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-li-end-tag"));
+    }
+
+    #[test]
+    fn positions_list_item_foreign_end_tag_mismatches_at_token_emission() {
+        let source = "<!doctype html><!--é-->\r\n<ul><li><math><mi></li></mi></math></li></ul>";
+        let output = parse_html_with_diagnostics(source).unwrap();
+        assert_eq!(
+            output.parser_diagnostics,
+            vec![
+                generic_foreign_end_tag_mismatch(source, "li"),
+                ParserDiagnostic::new(
+                    "unexpected-li-end-tag",
+                    "end tag `</li>` did not match a list item in scope"
+                ),
+            ]
+        );
+        assert!(source.len() > source.chars().count());
+
+        let eof_source = "<!doctype html><ul><li><svg><foreignObject></li";
+        let eof_output = parse_html_with_diagnostics(eof_source).unwrap();
+        assert!(eof_output
+            .parser_diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.code != "unexpected-end-tag-in-foreign-content"));
+        assert_eq!(
+            eof_output.parser_diagnostics.last(),
+            Some(&eof_with_unclosed_elements(eof_source))
+        );
+
+        let mut unpositioned = HtmlParser::with_body_fragment_options(HtmlParseOptions::default());
+        for token in [
+            Token::StartTag {
+                name: "li".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "svg".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::StartTag {
+                name: "foreignObject".to_string(),
+                attributes: Vec::new(),
+                self_closing: false,
+            },
+            Token::EndTag {
+                name: "li".to_string(),
+            },
+            Token::Eof,
+        ] {
+            unpositioned.process_token(token);
+        }
+        let diagnostics = unpositioned.diagnostics();
+        let foreign = diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-end-tag-in-foreign-content")
+            .unwrap();
+        let companion = diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-li-end-tag")
+            .unwrap();
+        assert_eq!(foreign.position, None);
+        assert_eq!(companion.position, None);
     }
 
     #[test]
