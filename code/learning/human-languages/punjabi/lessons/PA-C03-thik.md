@@ -1,5 +1,6 @@
 ---
 id: PA-C03-thik
+sequence: 190
 chapter: 3
 type: word
 headword: ਠੀਕ

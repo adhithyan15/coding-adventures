@@ -1,5 +1,6 @@
 ---
 id: PA-C02-mera-naam-hai
+sequence: 100
 chapter: 2
 type: phrase
 headword: ਮੇਰਾ ਨਾਂ … ਹੈ

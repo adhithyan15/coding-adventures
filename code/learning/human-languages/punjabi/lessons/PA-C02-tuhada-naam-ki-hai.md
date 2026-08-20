@@ -1,5 +1,6 @@
 ---
 id: PA-C02-tuhada-naam-ki-hai
+sequence: 130
 chapter: 2
 type: phrase
 headword: ਤੁਹਾਡਾ ਨਾਂ ਕੀ ਹੈ?

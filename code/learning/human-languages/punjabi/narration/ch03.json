@@ -4,11 +4,11 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:653a3e23669dcad9",
+  "sourceHash": "fnv1a64:bfea8e9624729dec",
   "lessons": [
     {
       "id": "PA-C03-kivein",
-      "sequence": null,
+      "sequence": 160,
       "title": "ਕਿਵੇਂ (kivēṁ) — \"how,\" another of the k- questions",
       "headword": "ਕਿਵੇਂ",
       "romanization": "",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:fb0615eb3dc5a6d0",
+      "sourceHash": "fnv1a64:09a7203d80792994",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -121,29 +121,20 @@
       ]
     },
     {
-      "id": "PA-C03-koi-gall-nahin",
-      "sequence": null,
-      "title": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — \"it's nothing\"",
-      "headword": "ਕੋਈ ਗੱਲ ਨਹੀਂ",
+      "id": "PA-C03-tusi-kivein-ho",
+      "sequence": 170,
+      "title": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) — \"how are you?\"",
+      "headword": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?",
       "romanization": "",
-      "gloss": "it's nothing / no problem / you're welcome",
+      "gloss": "how are you? (respectful)",
       "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0ffbdb425dfe11b1",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:d3b3ca65e4644c92",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -158,29 +149,29 @@
             },
             {
               "kind": "speech",
-              "text": "When someone thanks you — or apologises — this is the easy, gracious reply, built on a word from Chapter 1."
+              "text": "Three words you own, assembled into the first thing you ask after hello."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "etymology",
+          "title": "The phrase, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ (koī, \"any\") + ਗੱਲ (gall, \"matter, talk\" — note the addak, the doubling mark, on ੱਲ) + ਨਹੀਂ (nahīṁ, \"not,\" from Chapter 1) becomes koī gall nahīṁ."
+              "text": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? = ਤੁਸੀਂ (tusī̃, respectful \"you\") + ਕਿਵੇਂ (kivēṁ, \"how\") + ਹੋ (ho, \"are\") — literally \"you how are?\" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful \"are\" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
+          "type": "grammar",
+          "title": "Grammar Lens: match the \"you\" to the verb",
           "segments": [
             {
               "kind": "speech",
-              "text": "ਕੋਈ ਗੱਲ ਨਹੀਂ literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
+              "text": "To an elder or stranger: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? To a friend (tū̃): ਤੂੰ ਕਿਵੇਂ ਹੈਂ? (tū̃ kivēṁ haiṁ?). Respect takes the plural-shaped tusī̃ … ho."
             }
           ]
         },
@@ -198,29 +189,29 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"koī gall nahīṁ\"",
+              "instruction": "the respectful question — tusī̃ kivēṁ ho?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"koī gall nahīṁ\"]"
+              "source": "[YOU SAY: the respectful question — *tusī̃ kivēṁ ho?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "what it literally means (\"[there is] no matter\")",
+              "instruction": "the familiar version — tū̃ kivēṁ haiṁ?",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: what it literally means (\"[there is] no matter\")]"
+              "source": "[YOU SAY: the familiar version — *tū̃ kivēṁ haiṁ?*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the exchange — dhannavād / koī gall nahīṁ",
+              "instruction": "where the verb sits (at the end)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the exchange — *dhannavād* / *koī gall nahīṁ*]"
+              "source": "[YOU SAY: where the verb sits (at the end)]"
             }
           ]
         },
@@ -237,7 +228,7 @@
             },
             {
               "kind": "speech",
-              "text": "What does koī gall nahīṁ literally say, and which Chapter-1 word does it reuse? (\"There's no matter\"; nahīṁ, \"not\" — from PIE ne, English no.)"
+              "text": "Ask \"how are you?\" respectfully, and say where the verb goes. (Tusī̃ kivēṁ ho?; the verb is last.)"
             }
           ]
         }
@@ -245,7 +236,7 @@
     },
     {
       "id": "PA-C03-main",
-      "sequence": null,
+      "sequence": 180,
       "title": "ਮੈਂ (maiṁ) — \"I,\" the m- of the first person",
       "headword": "ਮੈਂ",
       "romanization": "",
@@ -256,7 +247,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:0ab088277790b4ee",
+      "sourceHash": "fnv1a64:643699aead30de28",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -378,8 +369,269 @@
       ]
     },
     {
+      "id": "PA-C03-thik",
+      "sequence": 190,
+      "title": "ਠੀਕ (ṭhīk) — \"fine,\" and how to answer",
+      "headword": "ਠੀਕ",
+      "romanization": "",
+      "gloss": "fine, well — and the reply \"ਮੈਂ ਠੀਕ ਹਾਂ\"",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:dc0a8812af25b22e",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The word that answers \"how are you?\" — and does a dozen other jobs."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ੀ (long ī) + ਕ (ka) becomes ਠੀਕ (ṭhīk). The retroflex ਟ-ਠ-ਡ series is a hallmark of Indian sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਠੀਕ (ṭhīk) means \"correct, right, fine, OK\" — a native Indian word (shared with Hindi and Urdu), one of the most useful in the language: ṭhīk hai (\"OK / agreed\"), sab ṭhīk? (\"all well?\"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "The reply",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Put it together: ਮੈਂ ਠੀਕ ਹਾਂ (maiṁ ṭhīk hāṁ) — \"I am fine\" (literally \"I fine am,\" verb last). Add thanks: maiṁ ṭhīk hāṁ, dhannavād. The whole exchange:"
+            },
+            {
+              "kind": "speech",
+              "text": "— tusī̃ kivēṁ ho? (\"How are you?\") — maiṁ ṭhīk hāṁ, dhannavād. (\"I'm fine, thank you.\")"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ṭhīk\" — feel the retroflex ṭh",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ṭhīk\" — feel the retroflex *ṭh*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the full reply — maiṁ ṭhīk hāṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the full reply — *maiṁ ṭhīk hāṁ*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the casual \"OK\" — ṭhīk hai",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the casual \"OK\" — *ṭhīk hai*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the reply to tusī̃ kivēṁ ho?, and say what's special about ṭhīk's origin. (Maiṁ ṭhīk hāṁ; it is a native Indian word, no European cognate.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PA-C03-koi-gall-nahin",
+      "sequence": 200,
+      "title": "ਕੋਈ ਗੱਲ ਨਹੀਂ (koī gall nahīṁ) — \"it's nothing\"",
+      "headword": "ਕੋਈ ਗੱਲ ਨਹੀਂ",
+      "romanization": "",
+      "gloss": "it's nothing / no problem / you're welcome",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:7404aad0e287139a",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "When someone thanks you — or apologises — this is the easy, gracious reply, built on a word from Chapter 1."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੋਈ (koī, \"any\") + ਗੱਲ (gall, \"matter, talk\" — note the addak, the doubling mark, on ੱਲ) + ਨਹੀਂ (nahīṁ, \"not,\" from Chapter 1) becomes koī gall nahīṁ."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਕੋਈ ਗੱਲ ਨਹੀਂ literally means \"[there is] no matter\" — koī (\"any\") + gall (\"matter, thing, talk\") + nahīṁ (\"not\"). It serves as \"it's nothing / no worries / never mind / you're welcome.\" The word ਗੱਲ (gall, \"talk, matter\") is a warm, everyday native Punjabi word — gall karnā (\"to have a chat\"). And ਨਹੀਂ (nahīṁ) you already met in Chapter 1: the ancient negative na-, the same PIE ne behind English no, not, none."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"koī gall nahīṁ\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"koī gall nahīṁ\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it literally means (\"[there is] no matter\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it literally means (\"[there is] no matter\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the exchange — dhannavād / koī gall nahīṁ",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the exchange — *dhannavād* / *koī gall nahīṁ*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does koī gall nahīṁ literally say, and which Chapter-1 word does it reuse? (\"There's no matter\"; nahīṁ, \"not\" — from PIE ne, English no.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-C03-practice",
-      "sequence": null,
+      "sequence": 210,
       "title": "Chapter 3 — The how-are-you exchange",
       "headword": "(dialogue)",
       "romanization": "",
@@ -390,7 +642,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2601e4b885cf4a55",
+      "sourceHash": "fnv1a64:de8278e80a1fbf85",
       "notice": null,
       "blocks": [
         {
@@ -542,258 +794,6 @@
             {
               "kind": "speech",
               "text": "A stranger asks tusī̃ kivēṁ ho? — give a full, polite reply, and answer their thanks. (Maiṁ ṭhīk hāṁ, dhannavād — and to thanks, koī gall nahīṁ.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "PA-C03-thik",
-      "sequence": null,
-      "title": "ਠੀਕ (ṭhīk) — \"fine,\" and how to answer",
-      "headword": "ਠੀਕ",
-      "romanization": "",
-      "gloss": "fine, well — and the reply \"ਮੈਂ ਠੀਕ ਹਾਂ\"",
-      "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:aeae745d883bd1c5",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The word that answers \"how are you?\" — and does a dozen other jobs."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਠ (ṭha, a retroflex th — tongue curled to the roof of the mouth) + ੀ (long ī) + ਕ (ka) becomes ਠੀਕ (ṭhīk). The retroflex ਟ-ਠ-ਡ series is a hallmark of Indian sound."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਠੀਕ (ṭhīk) means \"correct, right, fine, OK\" — a native Indian word (shared with Hindi and Urdu), one of the most useful in the language: ṭhīk hai (\"OK / agreed\"), sab ṭhīk? (\"all well?\"). Not every word has a far-flung cognate, and that is worth seeing too: ṭhīk is Indian to the core."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "The reply",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Put it together: ਮੈਂ ਠੀਕ ਹਾਂ (maiṁ ṭhīk hāṁ) — \"I am fine\" (literally \"I fine am,\" verb last). Add thanks: maiṁ ṭhīk hāṁ, dhannavād. The whole exchange:"
-            },
-            {
-              "kind": "speech",
-              "text": "— tusī̃ kivēṁ ho? (\"How are you?\") — maiṁ ṭhīk hāṁ, dhannavād. (\"I'm fine, thank you.\")"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ṭhīk\" — feel the retroflex ṭh",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ṭhīk\" — feel the retroflex *ṭh*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the full reply — maiṁ ṭhīk hāṁ",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the full reply — *maiṁ ṭhīk hāṁ*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the casual \"OK\" — ṭhīk hai",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the casual \"OK\" — *ṭhīk hai*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give the reply to tusī̃ kivēṁ ho?, and say what's special about ṭhīk's origin. (Maiṁ ṭhīk hāṁ; it is a native Indian word, no European cognate.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "PA-C03-tusi-kivein-ho",
-      "sequence": null,
-      "title": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? (tusī̃ kivēṁ ho?) — \"how are you?\"",
-      "headword": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ?",
-      "romanization": "",
-      "gloss": "how are you? (respectful)",
-      "script": "gurmukhi",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:d146aca7ee5de71f",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Three words you own, assembled into the first thing you ask after hello."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The phrase, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? = ਤੁਸੀਂ (tusī̃, respectful \"you\") + ਕਿਵੇਂ (kivēṁ, \"how\") + ਹੋ (ho, \"are\") — literally \"you how are?\" Punjabi keeps the verb last, as in Chapter 2. The copula ho is the respectful \"are\" that goes with tusī̃ — its whole set is maiṁ hāṁ (I am), tū̃ haiṁ (you are, familiar), oh hai (he is), tusī̃ ho (you are, respectful)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: match the \"you\" to the verb",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "To an elder or stranger: ਤੁਸੀਂ ਕਿਵੇਂ ਹੋ? To a friend (tū̃): ਤੂੰ ਕਿਵੇਂ ਹੈਂ? (tū̃ kivēṁ haiṁ?). Respect takes the plural-shaped tusī̃ … ho."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the respectful question — tusī̃ kivēṁ ho?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the respectful question — *tusī̃ kivēṁ ho?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the familiar version — tū̃ kivēṁ haiṁ?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the familiar version — *tū̃ kivēṁ haiṁ?*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "where the verb sits (at the end)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: where the verb sits (at the end)]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Ask \"how are you?\" respectfully, and say where the verb goes. (Tusī̃ kivēṁ ho?; the verb is last.)"
             }
           ]
         }

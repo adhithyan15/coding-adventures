@@ -1,5 +1,6 @@
 ---
 id: PA-C04-rab-raakha
+sequence: 250
 chapter: 4
 type: phrase
 headword: ਰੱਬ ਰਾਖਾ

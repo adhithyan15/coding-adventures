@@ -1,5 +1,6 @@
 ---
 id: PA-C04-milaange
+sequence: 230
 chapter: 4
 type: word
 headword: ਮਿਲਾਂਗੇ

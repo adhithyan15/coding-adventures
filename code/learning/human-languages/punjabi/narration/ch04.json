@@ -4,11 +4,125 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:9d2ba0448ca47532",
+  "sourceHash": "fnv1a64:66f4223ea1fa9fd9",
   "lessons": [
     {
+      "id": "PA-C04-phir",
+      "sequence": 220,
+      "title": "ਫਿਰ (phir) — \"again,\" the seed of \"see you again\"",
+      "headword": "ਫਿਰ",
+      "romanization": "",
+      "gloss": "again, then",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ea13054a5cc9a863",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "One small word turns a goodbye from \"farewell\" into \"till next time.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫ (pha, an aspirated p) + ਿ (the sihārī, i-sign) + ਰ (ra) becomes ਫਿਰ (phir)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਫਿਰ (phir) means \"again, then, afterwards\" — a native Indo-Aryan adverb (the same word as Hindi phir) with no tidy English cognate, but a familiar job: it turns a parting into a promise. English \"see you again,\" Punjabi phir milāṁge (\"we'll meet again\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"phir\" — mind the aspirated ph",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"phir\" — mind the aspirated *ph*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it adds to a goodbye (\"again / then\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it adds to a goodbye (\"again / then\")]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does phir mean, and what does it do to a farewell? (\"Again / then\"; it makes the parting a promise of return.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-C04-milaange",
-      "sequence": null,
+      "sequence": 230,
       "title": "ਮਿਲਾਂਗੇ (milāṁge) — \"(we) will meet\"",
       "headword": "ਮਿਲਾਂਗੇ",
       "romanization": "",
@@ -19,7 +133,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f84a739655088280",
+      "sourceHash": "fnv1a64:1b26872acd2dbb72",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -132,122 +246,8 @@
       ]
     },
     {
-      "id": "PA-C04-phir",
-      "sequence": null,
-      "title": "ਫਿਰ (phir) — \"again,\" the seed of \"see you again\"",
-      "headword": "ਫਿਰ",
-      "romanization": "",
-      "gloss": "again, then",
-      "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:c5e8584e9954c824",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "One small word turns a goodbye from \"farewell\" into \"till next time.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਫ (pha, an aspirated p) + ਿ (the sihārī, i-sign) + ਰ (ra) becomes ਫਿਰ (phir)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਫਿਰ (phir) means \"again, then, afterwards\" — a native Indo-Aryan adverb (the same word as Hindi phir) with no tidy English cognate, but a familiar job: it turns a parting into a promise. English \"see you again,\" Punjabi phir milāṁge (\"we'll meet again\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"phir\" — mind the aspirated ph",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"phir\" — mind the aspirated *ph*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it adds to a goodbye (\"again / then\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it adds to a goodbye (\"again / then\")]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does phir mean, and what does it do to a farewell? (\"Again / then\"; it makes the parting a promise of return.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "PA-C04-phir-milaange",
-      "sequence": null,
+      "sequence": 240,
       "title": "ਫਿਰ ਮਿਲਾਂਗੇ (phir milāṁge) — \"we'll meet again\"",
       "headword": "ਫਿਰ ਮਿਲਾਂਗੇ",
       "romanization": "",
@@ -258,7 +258,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:47d4e46fef3f9a03",
+      "sourceHash": "fnv1a64:49e2d83eab58ca6e",
       "notice": null,
       "blocks": [
         {
@@ -349,8 +349,131 @@
       ]
     },
     {
+      "id": "PA-C04-rab-raakha",
+      "sequence": 250,
+      "title": "ਰੱਬ ਰਾਖਾ (rabb rākhā) — \"God keep you\"",
+      "headword": "ਰੱਬ ਰਾਖਾ",
+      "romanization": "",
+      "gloss": "goodbye (lit. \"God [be your] keeper\")",
+      "script": "gurmukhi",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5e7d8ed503bf8ecb",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "The letters in this word"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "A tender Punjabi goodbye — one that puts you in God's care."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "The letters in this word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੱਬ (rabb, \"God\" — note the addak doubling on ੱਬ) + ਰਾਖਾ (rākhā, \"keeper, protector\"). Read rabb rākhā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ਰੱਬ ਰਾਖਾ means \"[may] God [be your] keeper\" — rabb (\"God\") + rākhā (\"protector,\" from rakhṇā, \"to keep, protect,\" from Sanskrit rakṣ-, \"to guard,\" the root of rākṣas and of English-borrowed rakhi). The word for God, ਰੱਬ (rabb), is itself telling: it is Arabic rabb (\"lord, master\") — the same rabb of Arabic rabb al-ʿālamīn (\"Lord of the worlds\"). So this most Punjabi of farewells fuses an Arabic name for God with a Sanskrit verb of keeping — Punjabi's two vocabularies in one blessing. Warmer still: rabb rākhā, phir milāṁge (\"God keep you, we'll meet again\")."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"rabb rākhā\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"rabb rākhā\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "its two heritages (Arabic rabb \"God\" + Sanskrit rakṣ- \"to keep\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: its two heritages (Arabic *rabb* \"God\" + Sanskrit *rakṣ-* \"to keep\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "pair it with the other goodbye — rabb rākhā, phir milāṁge",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: pair it with the other goodbye — *rabb rākhā, phir milāṁge*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does rabb rākhā mean, and what two vocabularies meet in it? (\"God [be your] keeper\"; Arabic rabb \"God\" + Sanskrit rakṣ- \"to protect.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PA-C04-practice",
-      "sequence": null,
+      "sequence": 260,
       "title": "Chapter 4 — The farewells",
       "headword": "(dialogue)",
       "romanization": "",
@@ -361,7 +484,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5661e05e766f61d3",
+      "sourceHash": "fnv1a64:4dd9516e6d142ae2",
       "notice": null,
       "blocks": [
         {
@@ -500,129 +623,6 @@
             {
               "kind": "speech",
               "text": "You're leaving a friend and expect to see them soon. Give the warm goodbye, then bless them on the way. (Phir milāṁge — and rabb rākhā.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "PA-C04-rab-raakha",
-      "sequence": null,
-      "title": "ਰੱਬ ਰਾਖਾ (rabb rākhā) — \"God keep you\"",
-      "headword": "ਰੱਬ ਰਾਖਾ",
-      "romanization": "",
-      "gloss": "goodbye (lit. \"God [be your] keeper\")",
-      "script": "gurmukhi",
-      "modality": "sight",
-      "derivedModality": "sight",
-      "modalityReasons": [
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:ee53d2792100e157",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "The letters in this word"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "A tender Punjabi goodbye — one that puts you in God's care."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਰੱਬ (rabb, \"God\" — note the addak doubling on ੱਬ) + ਰਾਖਾ (rākhā, \"keeper, protector\"). Read rabb rākhā."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ਰੱਬ ਰਾਖਾ means \"[may] God [be your] keeper\" — rabb (\"God\") + rākhā (\"protector,\" from rakhṇā, \"to keep, protect,\" from Sanskrit rakṣ-, \"to guard,\" the root of rākṣas and of English-borrowed rakhi). The word for God, ਰੱਬ (rabb), is itself telling: it is Arabic rabb (\"lord, master\") — the same rabb of Arabic rabb al-ʿālamīn (\"Lord of the worlds\"). So this most Punjabi of farewells fuses an Arabic name for God with a Sanskrit verb of keeping — Punjabi's two vocabularies in one blessing. Warmer still: rabb rākhā, phir milāṁge (\"God keep you, we'll meet again\")."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"rabb rākhā\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"rabb rākhā\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "its two heritages (Arabic rabb \"God\" + Sanskrit rakṣ- \"to keep\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: its two heritages (Arabic *rabb* \"God\" + Sanskrit *rakṣ-* \"to keep\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "pair it with the other goodbye — rabb rākhā, phir milāṁge",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: pair it with the other goodbye — *rabb rākhā, phir milāṁge*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does rabb rākhā mean, and what two vocabularies meet in it? (\"God [be your] keeper\"; Arabic rabb \"God\" + Sanskrit rakṣ- \"to protect.\")"
             }
           ]
         }

@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:f4227f775842a13e",
+  "sourceHash": "fnv1a64:4068dbfe27304f41",
   "summary": {
     "totalLessons": 3403,
     "voice": 2463,
@@ -8443,7 +8443,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C01-dhanvaad",
+          "firstNonVoiceLesson": "PA-C01-sat-sri-akal",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -8458,7 +8458,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C02-hai",
+          "firstNonVoiceLesson": "PA-C02-naam",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -8488,7 +8488,7 @@
             "sight"
           ],
           "drivablePrefix": 0,
-          "firstNonVoiceLesson": "PA-C04-milaange",
+          "firstNonVoiceLesson": "PA-C04-phir",
           "drivable": false,
           "drivableLessonIds": []
         },
@@ -51626,10 +51626,10 @@
       "sourceHash": "fnv1a64:b39f1cf1104a200b"
     },
     {
-      "id": "PA-C01-dhanvaad",
+      "id": "PA-C01-sat-sri-akal",
       "language": "punjabi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 10,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51641,28 +51641,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a89b857d7542da98",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C01-han-nahin",
-      "language": "punjabi",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:711c263e7b6de012",
+      "sourceHash": "fnv1a64:246e72c51d71bb9b",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -51671,7 +51650,7 @@
       "id": "PA-C01-namaste",
       "language": "punjabi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51683,34 +51662,16 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2e52f78d315f8fba",
+      "sourceHash": "fnv1a64:89d1e8ab3059bd5b",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "PA-C01-practice",
+      "id": "PA-C01-dhanvaad",
       "language": "punjabi",
       "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:b0d8a58c3deaf7ab"
-    },
-    {
-      "id": "PA-C01-sat-sri-akal",
-      "language": "punjabi",
-      "chapter": 1,
-      "sequence": null,
+      "sequence": 30,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51722,7 +51683,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:093c9a80c31e6643",
+      "sourceHash": "fnv1a64:963da7c3f9b2d586",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -51731,7 +51692,7 @@
       "id": "PA-C01-shukriya",
       "language": "punjabi",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 40,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51743,16 +51704,16 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:9d7714fe70dee67b",
+      "sourceHash": "fnv1a64:4b447479bb7d8e7c",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "PA-C02-hai",
+      "id": "PA-C01-han-nahin",
       "language": "punjabi",
-      "chapter": 2,
-      "sequence": null,
+      "chapter": 1,
+      "sequence": 50,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51764,37 +51725,34 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:922e7239562cb946",
+      "sourceHash": "fnv1a64:7183c9af946c23e6",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "PA-C02-khushi",
+      "id": "PA-C01-practice",
       "language": "punjabi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2d68323af6b51fd6",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
+      "sourceHash": "fnv1a64:67cc16c67acf9242"
     },
     {
-      "id": "PA-C02-ki",
+      "id": "PA-C02-naam",
       "language": "punjabi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 70,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51806,7 +51764,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6fde17101437fdf7",
+      "sourceHash": "fnv1a64:7bf8ae26798a135f",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -51815,7 +51773,7 @@
       "id": "PA-C02-mera",
       "language": "punjabi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 80,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51827,7 +51785,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:1750d6e42b415d7f",
+      "sourceHash": "fnv1a64:c7f9fabf5c007270",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C02-hai",
+      "language": "punjabi",
+      "chapter": 2,
+      "sequence": 90,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5daccefa0110cc86",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -51836,7 +51815,7 @@
       "id": "PA-C02-mera-naam-hai",
       "language": "punjabi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 100,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -51848,52 +51827,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6d39215d0cc51e57"
-    },
-    {
-      "id": "PA-C02-naam",
-      "language": "punjabi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:6e4f130bce7c66bd",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C02-practice",
-      "language": "punjabi",
-      "chapter": 2,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:46c2d78c663c06a3"
+      "sourceHash": "fnv1a64:63378f5513133299"
     },
     {
       "id": "PA-C02-tu-tusi",
       "language": "punjabi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 110,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51905,7 +51845,28 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:af3a545579ee1871",
+      "sourceHash": "fnv1a64:acd2cf2d1eb84998",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C02-ki",
+      "language": "punjabi",
+      "chapter": 2,
+      "sequence": 120,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1d30f46f7b103247",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -51914,7 +51875,7 @@
       "id": "PA-C02-tuhada-naam-ki-hai",
       "language": "punjabi",
       "chapter": 2,
-      "sequence": null,
+      "sequence": 130,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -51926,13 +51887,52 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4ba5461017c82525"
+      "sourceHash": "fnv1a64:46ae1a3294fd8f6a"
+    },
+    {
+      "id": "PA-C02-khushi",
+      "language": "punjabi",
+      "chapter": 2,
+      "sequence": 140,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:825b94b81299bf10",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C02-practice",
+      "language": "punjabi",
+      "chapter": 2,
+      "sequence": 150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:abeab0324c331eb4"
     },
     {
       "id": "PA-C03-kivein",
       "language": "punjabi",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 160,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -51944,88 +51944,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fb0615eb3dc5a6d0",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C03-koi-gall-nahin",
-      "language": "punjabi",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0ffbdb425dfe11b1",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C03-main",
-      "language": "punjabi",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:0ab088277790b4ee",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C03-practice",
-      "language": "punjabi",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2601e4b885cf4a55"
-    },
-    {
-      "id": "PA-C03-thik",
-      "language": "punjabi",
-      "chapter": 3,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:aeae745d883bd1c5",
+      "sourceHash": "fnv1a64:09a7203d80792994",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -52034,7 +51953,7 @@
       "id": "PA-C03-tusi-kivein-ho",
       "language": "punjabi",
       "chapter": 3,
-      "sequence": null,
+      "sequence": 170,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -52046,13 +51965,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:d146aca7ee5de71f"
+      "sourceHash": "fnv1a64:d3b3ca65e4644c92"
     },
     {
-      "id": "PA-C04-milaange",
+      "id": "PA-C03-main",
       "language": "punjabi",
-      "chapter": 4,
-      "sequence": null,
+      "chapter": 3,
+      "sequence": 180,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -52064,16 +51983,16 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f84a739655088280",
+      "sourceHash": "fnv1a64:643699aead30de28",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "PA-C04-phir",
+      "id": "PA-C03-thik",
       "language": "punjabi",
-      "chapter": 4,
-      "sequence": null,
+      "chapter": 3,
+      "sequence": 190,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -52085,7 +52004,88 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c5e8584e9954c824",
+      "sourceHash": "fnv1a64:dc0a8812af25b22e",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C03-koi-gall-nahin",
+      "language": "punjabi",
+      "chapter": 3,
+      "sequence": 200,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7404aad0e287139a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C03-practice",
+      "language": "punjabi",
+      "chapter": 3,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:de8278e80a1fbf85"
+    },
+    {
+      "id": "PA-C04-phir",
+      "language": "punjabi",
+      "chapter": 4,
+      "sequence": 220,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ea13054a5cc9a863",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C04-milaange",
+      "language": "punjabi",
+      "chapter": 4,
+      "sequence": 230,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1b26872acd2dbb72",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -52094,7 +52094,7 @@
       "id": "PA-C04-phir-milaange",
       "language": "punjabi",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 240,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -52106,31 +52106,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:47d4e46fef3f9a03"
-    },
-    {
-      "id": "PA-C04-practice",
-      "language": "punjabi",
-      "chapter": 4,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:5661e05e766f61d3"
+      "sourceHash": "fnv1a64:49e2d83eab58ca6e"
     },
     {
       "id": "PA-C04-rab-raakha",
       "language": "punjabi",
       "chapter": 4,
-      "sequence": null,
+      "sequence": 250,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -52142,16 +52124,34 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ee53d2792100e157",
+      "sourceHash": "fnv1a64:5e7d8ed503bf8ecb",
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "PA-C04-practice",
+      "language": "punjabi",
+      "chapter": 4,
+      "sequence": 260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4dd9516e6d142ae2"
     },
     {
       "id": "PA-C05-bolna",
       "language": "punjabi",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 270,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -52163,28 +52163,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:307dfe45fa3042e4",
-      "detachableSegments": [
-        "The letters in this word"
-      ]
-    },
-    {
-      "id": "PA-C05-kamm-karna",
-      "language": "punjabi",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
-      "reasons": [
-        "script-block"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:f9467160d95bc6b0",
+      "sourceHash": "fnv1a64:91152ea2eb70d804",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -52193,7 +52172,7 @@
       "id": "PA-C05-main-punjabi-bolda-han",
       "language": "punjabi",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 280,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -52205,34 +52184,16 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:f4f87d3d34970a4c",
+      "sourceHash": "fnv1a64:f8c7d9086fdad599",
       "detachableSegments": [
         "The letters in this word"
       ]
     },
     {
-      "id": "PA-C05-practice",
-      "language": "punjabi",
-      "chapter": 5,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:09b5dca7f4ed542c"
-    },
-    {
       "id": "PA-C05-rahna",
       "language": "punjabi",
       "chapter": 5,
-      "sequence": null,
+      "sequence": 290,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -52245,10 +52206,49 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:78cb36385d3494ad",
+      "sourceHash": "fnv1a64:a481a7f420f50af5",
       "detachableSegments": [
         "The letters in this word"
       ]
+    },
+    {
+      "id": "PA-C05-kamm-karna",
+      "language": "punjabi",
+      "chapter": 5,
+      "sequence": 300,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a02e18de4af72c4e",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "PA-C05-practice",
+      "language": "punjabi",
+      "chapter": 5,
+      "sequence": 310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:795000bcb5396917"
     },
     {
       "id": "PA-C06-numbers-1-5",
