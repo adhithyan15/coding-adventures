@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati જ ductus (HL-C09FY)
+
+- Render **જ** as one continuous left-loop, crossing-body, right-loop, and upper-right-exit run with no lift.
+- Preserve t30apps.com's version-1.0 one-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue missing **ઝ** next.
+
 ### Added — cited Gujarati છ ductus (HL-C09FX)
 
 - Render **છ** as one continuous upper-left-lobe, lower-body, outer-curve, and upper-right-lobe run with no lift.
