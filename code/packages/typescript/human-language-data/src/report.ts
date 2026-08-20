@@ -6,6 +6,8 @@ import { measureContinuity, type ContinuityReport } from "./continuity.js";
 import { measureScriptClosure, type ScriptClosureReport } from "./script-closure.js";
 import { summarizeGentleRamp, type GentleRampReport } from "./gentle-ramp.js";
 import { runLevelGate, type LevelGateReport } from "./level-gate.js";
+import type { AssessmentPolicy } from "./assessment.js";
+import { measureWritingStages, type WritingStageReport } from "./writing-stages.js";
 import type {
   BookCorpus,
   ChapterPolicy,
@@ -154,6 +156,12 @@ export interface CurriculumGapReport {
     chaptersWithoutCapability: number | null;
     chapterPayoffsNotRepresentative: number | null;
     chapterGateCleanTracks: number | null;
+    /** HL19: registered tracks with no explicit, valid writing-stage evidence. */
+    tracksWithoutWritingStageEvidence: number | null;
+    /** HL19: cumulative (track, level, stage) pairs still unproved. */
+    missingWritingStagePairs: number | null;
+    /** HL19: authored evidence that fails the strict evidence contract. */
+    invalidWritingStageEvidence: number | null;
   };
   duration: {
     violations: DurationEstimate[];
@@ -217,6 +225,8 @@ export interface CurriculumGapReport {
    * reader arrives already knowing the alphabet.
    */
   scriptClosure: ScriptClosureReport;
+  /** HL19: cumulative writing capability, distinct from incidental writing practice. */
+  writingStages?: WritingStageReport;
   /**
    * HL17 -- the per-track join of every learner-facing ramp measurement.
    *
@@ -227,8 +237,9 @@ export interface CurriculumGapReport {
   /**
    * HL09 §3.1 — what it takes to CLAIM a level, as opposed to touch one.
    *
-   * Present only when levels, ramp and continuity were all computed, since the
-   * gate needs all four criteria. Absent is "not measured", never "not attained".
+   * Present only when levels, ramp and continuity were all computed. When an
+   * assessment policy is supplied, HL19 writing stages join the gate as a fifth
+   * criterion. Absent is "not measured", never "not attained".
    */
   levelGate?: LevelGateReport;
   modality: ModalitySummary;
@@ -247,6 +258,8 @@ export interface CurriculumGapReportInput {
   trackChapters?: TrackChapters[];
   /** HL05/HL08 thresholds; required for the chapter gates to run. */
   chapterPolicy?: ChapterPolicy;
+  /** HL16/HL19 writing-stage ladder and its first-required-at levels. */
+  assessmentPolicy?: AssessmentPolicy;
 }
 
 const SPOKEN_WORDS_PER_MINUTE = 120;
@@ -543,9 +556,27 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
   const ramp = input.chapterPolicy ? measureRamp(lessons, input.chapterPolicy) : undefined;
   const continuity = measureContinuity(lessons);
   const scriptClosure = measureScriptClosure(lessons);
+  const writingStages =
+    input.assessmentPolicy && input.curricula && input.spine
+      ? measureWritingStages(
+          input.assessmentPolicy,
+          registry.languages.map((language) => language.id),
+          lessons,
+          input.curricula,
+          input.spine,
+        )
+      : undefined;
   const levelGate =
     levels && ramp && input.curricula && input.spine
-      ? runLevelGate({ lessons, levels, curricula: input.curricula, spine: input.spine, ramp, continuity })
+      ? runLevelGate({
+          lessons,
+          levels,
+          curricula: input.curricula,
+          spine: input.spine,
+          ramp,
+          continuity,
+          writingStages,
+        })
       : undefined;
 
   const chapterGates =
@@ -610,6 +641,11 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
       chaptersWithoutCapability: chapterGates?.summary.chaptersWithoutCapability ?? null,
       chapterPayoffsNotRepresentative: chapterGates?.summary.payoffsNotRepresentative ?? null,
       chapterGateCleanTracks: chapterGates?.summary.cleanTracks ?? null,
+      tracksWithoutWritingStageEvidence: writingStages
+        ? writingStages.summary.tracks - writingStages.summary.tracksWithAnyEvidence
+        : null,
+      missingWritingStagePairs: writingStages?.summary.missingTrackLevelStages ?? null,
+      invalidWritingStageEvidence: writingStages?.summary.invalidEvidenceBlocks ?? null,
       drivableLessons: modality.coreVoice,
       drivablePercent: modality.drivablePercent,
       chaptersWithoutDrivablePrefix,
@@ -626,6 +662,7 @@ export function buildCurriculumGapReport(input: CurriculumGapReportInput): Curri
     ramp,
     continuity,
     scriptClosure,
+    writingStages,
     gentleRamp,
     levelGate,
     modality,
@@ -688,6 +725,14 @@ export function renderCurriculumGapReport(report: CurriculumGapReport): string {
         .map(([name, count]) => `${name} ${count}`)
         .join(", "),
     `forward references: ${report.continuity.summary.forwardReferences} uses of material a later lesson teaches`,
+    ...(report.writingStages
+      ? [
+          `writing stages: ${report.writingStages.summary.tracksCompleteAtPreA1}/${report.writingStages.summary.tracks} ` +
+            `tracks prove the cumulative pre-A1 ladder; ${report.writingStages.summary.evidenceBlocks} evidence blocks, ` +
+            `${report.writingStages.summary.invalidEvidenceBlocks} invalid; ` +
+            `${report.writingStages.summary.missingTrackLevelStages} missing (track, level, stage) pairs`,
+        ]
+      : []),
     ...(report.gentleRamp
       ? [
           `super-gentle ramp: ${report.gentleRamp.summary.tracksWithDetectedCliffs}/` +

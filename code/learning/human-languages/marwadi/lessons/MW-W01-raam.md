@@ -49,6 +49,7 @@ ordinary speech. Read the whole word *rām*.
 
 ## Writing — from copy to memory
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01] -->
+<!-- hl-writing-stage: delayed-copy -->
 
 1. copy **म** twice
 2. copy **राम** once while looking

@@ -13,6 +13,7 @@ import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot as defaultRoot,
   listAssessmentContracts,
+  loadAssessmentPolicy,
   listExamInventories,
   loadChapterPolicy,
   loadEverything,
@@ -89,6 +90,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
     modality: { maxLinearisableTableColumns: policyTableWidth(options.root ?? defaultRoot()) },
     trackChapters: loadTrackChapters(options.root),
     chapterPolicy: loadChapterPolicy(options.root),
+    assessmentPolicy: loadAssessmentPolicy(options.root),
     curricula,
     spine,
   });
@@ -99,8 +101,8 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
   // yields an EMPTY queue, and an empty queue reads exactly like victory. This
   // is the same trap `report-cli` fell into when it silently omitted `levels`
   // from every run for the life of that feature.
-  if (!report.levelGate) {
-    process.stderr.write("plan: the level gate did not run; cannot compute a queue\n");
+  if (!report.levelGate || !report.writingStages) {
+    process.stderr.write("plan: the level or cumulative writing-stage gate did not run; cannot compute a queue\n");
     return 2;
   }
 
@@ -169,6 +171,7 @@ export function runCompletionPlan(args = process.argv.slice(2)): number {
   const plan = buildCompletionPlan({
     levelGate: report.levelGate,
     scriptClosure: report.scriptClosure,
+    writingStages: report.writingStages,
     assessmentContracts: listAssessmentContracts(options.root),
     inventories: readable,
     taskShapes: listTaskShapeInventories(options.root).flatMap<InventoryPresence>((entry) => {
