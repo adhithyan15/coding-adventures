@@ -104,6 +104,7 @@ import {
   loadTaskShapeInventory,
 } from "@coding-adventures/human-language-data";
 
+const spanishA1 = loadTaskShapeInventory("spanish", "A1");
 const frenchA1 = loadTaskShapeInventory("french", "A1");
 const germanA1 = loadTaskShapeInventory("german", "A1");
 const present = listTaskShapeInventories();
@@ -113,11 +114,12 @@ const missing = buildTaskShapeBacklog(
 );
 ```
 
-The first two inventories are official DELF French A1 and Goethe German A1.
-They are targets for later five-minute lesson decomposition and mocks, not claims
-that either current book is pass-ready. Alternate published DELF receptive forms,
-open-ended minimum lengths, and duration ranges remain distinct rather than being
-collapsed into invented single values.
+The first three inventories are official DELE Spanish A1, DELF French A1, and
+Goethe German A1. They are targets for later five-minute lesson decomposition
+and mocks, not claims that any current book is pass-ready. DELE's paired-skill
+pass rule, alternate DELF receptive forms, open-ended minimum lengths, and
+duration ranges remain distinct rather than being collapsed into invented
+single values.
 
 ### Source-bounded exam inventories (HL20)
 
