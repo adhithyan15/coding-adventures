@@ -4,31 +4,29 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:fe0cca28b9aa0782",
+  "sourceHash": "fnv1a64:1e2cf51768b44af2",
   "lessons": [
     {
       "id": "AR-C01-salam",
       "sequence": 10,
-      "title": "سلام (salām) — \"peace,\" the most famous root",
-      "headword": "سلام",
+      "title": "salām — say “peace” before meeting the page",
+      "headword": "salām",
       "romanization": "",
-      "gloss": "peace / hello (salām)",
+      "gloss": "peace / hello",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "script-block"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:afb61c22df2784f9",
+      "sourceHash": "fnv1a64:6a36c8df576540f0",
       "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, for letter shapes on the page"
-        ],
+        "modality": "pen",
+        "needs": [],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Writing — first microstep"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to everything else now — leave the section called Writing — first microstep until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -44,34 +42,22 @@
             },
             {
               "kind": "speech",
-              "text": "The first Arabic word, and the heart of the whole greeting system. You'll learn to read it — right to left — and to understand it in the same breath."
+              "text": "Your first Arabic greeting is salām. For this lesson, keep your eyes off the script. Put the sound and meaning in your ear first; the next two tiny lessons will reveal its written pieces without asking you to swallow four new shapes at once."
             }
           ]
         },
         {
           "index": 1,
-          "type": "script",
-          "title": "The letters in this word",
+          "type": "input",
+          "title": "You'll want to know — Hear the word",
           "segments": [
             {
               "kind": "speech",
-              "text": "(If you already read Arabic, skim this — it's here so the book needs no prior knowledge.) Arabic is written right to left: the first letter is on the right. Short vowels are usually invisible; a long vowel like ā is a full letter."
+              "text": "Say it in two easy beats: sa — lām. Hold the second a a little longer: sa-LAAM. The last sound is a clean m."
             },
             {
               "kind": "speech",
-              "text": "س = sīn, \"s\", ل = lām, \"l\", ا = alif, a long \"ā\", م = mīm, \"m.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Warm up on the two-letter word لا (lā, \"no\") — lām then alif, fusing into one connected shape."
-            },
-            {
-              "kind": "speech",
-              "text": "Now read سلام (salām) right to left: s, l, ā, m, which gives:"
-            },
-            {
-              "kind": "speech",
-              "text": "سلام = salām = \"peace.\""
+              "text": "salām = peace; as a greeting, “peace to you.”"
             }
           ]
         },
@@ -82,23 +68,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "سلام (salām) sits on the root s–l–m, meaning wholeness, safety, peace — and it heads an enormous family: salām (peace), islām (\"submission\" becomes peace with God), muslim (\"one who submits,\" in the mu–_i_ pattern), sallama (\"to greet\"). It reaches beyond Arabic: Hebrew shalom is the same Semitic root. English borrowed it as salaam, and it lives in the name Salīm."
+              "text": "salām sits on the three-consonant root s–l–m, carrying the idea of wholeness, safety, and peace. The same family gives islām, muslim, and sallama, “to greet.” Hebrew shalom is a close Semitic cousin, and English borrowed salaam."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "To offer salām is to wish someone peace, not merely to signal \"hi.\" On its own it's a warm greeting; it's also the seed of the fuller as-salāmu ʿalaykum (\"peace be upon you\"), which you'll assemble in a few lessons."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -111,29 +86,49 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read right to left — s, l, ā, m becomes \"salām\"",
+              "instruction": "sa — lām",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read right to left — s · l · ā · m → \"salām\"]"
+              "source": "[YOU SAY: *sa* — *lām*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the warm-up word لا (\"lā,\" no)",
+              "instruction": "salām, with the long vowel in the second beat",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the warm-up word لا (\"lā,\" no)]"
+              "source": "[YOU SAY: *salām*, with the long vowel in the second beat]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"salām,\" and mean it — you are wishing peace",
+              "instruction": "“peace,” while offering salām to an imagined person",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"salām,\" and mean it — you are wishing peace]"
+              "source": "[YOU SAY: “peace,” while offering *salām* to an imagined person]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "writing",
+          "title": "Writing — first microstep",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Only after you can say the greeting, meet one isolated shape: س is sīn, the s at the start of salām. Notice three small teeth and a trailing bowl. Trace س once with a finger, hide it, then air-write the three teeth. Do not decode or copy the complete word yet."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "س once, then compare its three teeth with the model",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **س** once, then compare its three teeth with the model]"
             }
           ]
         },
@@ -150,7 +145,256 @@
             },
             {
               "kind": "speech",
-              "text": "Read سلام (salām) right to left. What is its three-consonant root, and what does it mean? (s–l–m — \"wholeness, safety, peace.\") What Hebrew word is the same root? (shalom.)"
+              "text": "What does salām offer? (Peace.) Which three consonants carry its root? (s–l–m.) Which one shape did you trace? (س, sīn.) Say the word once more. Do not decode or copy the complete word yet."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-sin-lam",
+      "sequence": 12,
+      "title": "س and ل — recall one shape, add one",
+      "headword": "س ل",
+      "romanization": "sīn, lām",
+      "gloss": "notice and trace the first two shapes in salām",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8183e294b0c9840b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — recall sīn and add lām",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — recall sīn and add lām and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say salām. You already know what it means and traced س once. Now recall that shape and add only its next consonant. Arabic runs right to left, so the first shape waits on the right."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — recall sīn and add lām",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "س is sīn, the s sound you are retrieving from lesson one."
+            },
+            {
+              "kind": "speech",
+              "text": "ل is lām, the l sound. Notice its tall upright and low curve."
+            },
+            {
+              "kind": "speech",
+              "text": "Slide a finger from right to left under س ل (sīn, lām) and say s — l. Do not build the whole word yet."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — trace, then recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace س once with a finger: three teeth, then the bowl."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace ل once: tall upright, then the low curve."
+            },
+            {
+              "kind": "speech",
+              "text": "Hide the models. Air-write the three teeth of sīn, then the tall lām."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "س, and say sīn",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **س**, and say *sīn*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "POINT",
+              "instruction": "ل, and say lām",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU POINT: **ل**, and say *lām*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "س ل (sīn, lām) once, leaving them separate",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: **س ل** once, leaving them separate]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which way do Arabic words run? (Right to left.) Which letter has three teeth? (س, sīn.) Which has the tall upright? (ل, lām.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-alif-mim-salam",
+      "sequence": 14,
+      "title": "ا (alif) and م — finish سلام (salām) without a cliff",
+      "headword": "ا م — سلام",
+      "romanization": "alif, mīm — salām",
+      "gloss": "add alif and mim, then guided-copy salām",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:48bee2dd55aefe69",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — observe two new shapes"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — observe two new shapes until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall س and ل. Add just two shapes, then the spoken word salām becomes readable and writable."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — observe two new shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ا is alif: one clean upright carrying the long ā here."
+            },
+            {
+              "kind": "speech",
+              "text": "م is mīm: a small round head and a tail; it gives the final m."
+            },
+            {
+              "kind": "speech",
+              "text": "Arabic letters join. In سلام (salām), sīn reaches into lām; lām and alif form لا; then alif forces a pen lift before final mīm."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, then delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point right to left: س, ل, ا (alif), م. Say s, l, ā, m."
+            },
+            {
+              "kind": "speech",
+              "text": "Trace سلام (salām) once: teeth, tall hook, upright, lift, round-headed mīm."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy سلام (salām) once while looking."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover it. Write it once from memory, then compare and correct one feature."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read سلام. (salām, peace.) Where does the pen lift? (After alif.) Write the word once without looking. This is delayed recall, not penmanship perfection."
             }
           ]
         }
@@ -159,26 +403,147 @@
     {
       "id": "AR-C01-marhaba",
       "sequence": 20,
-      "title": "مرحبا (marḥaban) — \"hello,\" i.e. \"there's room for you\"",
-      "headword": "مرحبا",
+      "title": "marḥaban — make room for someone",
+      "headword": "marḥaban",
       "romanization": "",
-      "gloss": "hello / welcome (marḥaban — \"there's room for you\")",
+      "gloss": "hello / welcome — there is room for you",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b856a38826ac85f3",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can say salām. Now learn the light, everyday “hello” by ear before its written form asks anything of your eyes or hand."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need — Hear the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Build three small beats: mar — ḥa — ban. The middle consonant is a warm, breathy sound made deeper in the throat than English h. Approximate it gently; clarity matters more than force."
+            },
+            {
+              "kind": "speech",
+              "text": "marḥaban = hello / welcome."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The root r–ḥ–b carries spaciousness: raḥb is roomy. So marḥaban is not an empty signal. It suggests, “There is room for you here.” A warm reply is marḥabtayn — literally, “two welcomes.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "mar — ḥa — ban",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *mar* — *ḥa* — *ban*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marḥaban, keeping the middle consonant gentle",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marḥaban*, keeping the middle consonant gentle]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "marḥabtayn, “two welcomes”",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *marḥabtayn*, “two welcomes”]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does the root r–ḥ–b suggest? (Room, spaciousness.) Say the three beats of marḥaban. The next two lessons reveal its new letter shapes in groups of two and three before you copy the whole greeting."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-ra-ha",
+      "sequence": 22,
+      "title": "ر and ح — two shapes inside marḥaban",
+      "headword": "ر ح",
+      "romanization": "rāʾ, ḥāʾ",
+      "gloss": "notice and trace ra and deep ha after saying marḥaban",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:ba8af0a7ae3d9ab1",
+      "sourceHash": "fnv1a64:7f866a3742cef536",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script — observe rāʾ and ḥāʾ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — observe rāʾ and ḥāʾ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -194,65 +559,31 @@
             },
             {
               "kind": "speech",
-              "text": "The casual, everyday \"hi\" — and, like the last word, a little sentence hiding inside a greeting."
+              "text": "Say marḥaban. Its sound and welcome already belong to you. Now notice only two of its new written consonants."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script — observe rāʾ and ḥāʾ",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) Three new letters:"
+              "text": "ر is rāʾ, the tapped r. It curves down and left. It joins to what comes before it but not to what follows."
             },
             {
               "kind": "speech",
-              "text": "ب = bāʾ, \"b\" — one dot below."
+              "text": "ح is ḥāʾ, the deep, breathy ḥ. Its open bowl has no dot."
             },
             {
               "kind": "speech",
-              "text": "ر = rāʾ, a tapped \"r\" — a one-way letter (joins the letter before, not the one after)."
-            },
-            {
-              "kind": "speech",
-              "text": "ح = ḥāʾ, a heavy, throaty \"h\" (from deep in the throat)."
-            },
-            {
-              "kind": "speech",
-              "text": "With م and ا (alif) from salām, you can now read باب (bāb, \"door\"), حب (ḥubb, \"love\"), and then مرحبا right to left becomes marḥaban."
-            },
-            {
-              "kind": "speech",
-              "text": "Dots on a shared skeleton distinguish letters: ب / ت / ث (b / t / th) are the same shape with one dot below / two above / three above. Learn one skeleton, often get three letters."
+              "text": "Trace ر ح (rāʾ, ḥāʾ) separately. Keep ḥāʾ open and dotless."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "مرحبا (marḥaban) is built on the root r–ḥ–b, spaciousness: raḥuba (\"to be wide\"), raḥb (\"roomy\") becomes marḥaban = \"[a place of] welcome, there is room for you.\" Not an empty sound but a small welcome. Reply: marḥabtayn, \"two welcomes.\""
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "marḥaban is the light, friendly greeting — warm and unfussy, for friends and easy encounters, where as-salāmu ʿalaykum carries more weight and formality."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -265,34 +596,34 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "read right to left — mar, ḥa, ban becomes \"marḥaban\"",
+              "instruction": "rāʾ, and trace ر",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: read right to left — mar · ḥa · ban → \"marḥaban\"]"
+              "source": "[YOU SAY: *rāʾ*, and trace **ر**]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the throaty ح in the middle — mar-Ḥa-ban",
+              "instruction": "ḥāʾ, and trace ح",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the throaty ح in the middle — mar-**Ḥa**-ban]"
+              "source": "[YOU SAY: *ḥāʾ*, and trace **ح**]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the reply, \"marḥabtayn\" (\"two welcomes\")",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "ر ح (rāʾ, ḥāʾ) once from memory, then compare",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the reply, \"marḥabtayn\" (\"two welcomes\")]"
+              "source": "[YOU WRITE: **ر ح** once from memory, then compare]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -304,7 +635,117 @@
             },
             {
               "kind": "speech",
-              "text": "Read مرحبا. What does it literally say, and from what root? (\"There's room for you,\" root r–ḥ–b, \"spaciousness.\") How do ب ت ث differ? (Same skeleton; one dot below / two above / three above.)"
+              "text": "Which letter refuses to join forward? (ر.) Which one is the dotless open bowl? (ح.) Say marḥaban again; the next step adds its final new skeleton and two dot-cousins."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-ba-family-marhaba",
+      "sequence": 24,
+      "title": "ب ت ث — one bowl, three dot choices",
+      "headword": "ب ت ث — مرحبا",
+      "romanization": "bāʾ, tāʾ, thāʾ — marḥaban",
+      "gloss": "one shared bowl, three dot patterns, then guided-copy marḥaban",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:1e9f2729aa20a317",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one skeleton, three letters"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one skeleton, three letters until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You know ر and ح. Today introduces one shared bowl and three dot patterns — exactly three new shapes — before you copy marḥaban."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one skeleton, three letters",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ب = bāʾ: one dot below."
+            },
+            {
+              "kind": "speech",
+              "text": "ت = tāʾ: two dots above."
+            },
+            {
+              "kind": "speech",
+              "text": "ث = thāʾ: three dots above."
+            },
+            {
+              "kind": "speech",
+              "text": "The dots are not decoration. They decide which letter you wrote. Trace the bowl once, then practise the three dot choices."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, then delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The greeting uses ب. Its full form is مرحبا."
+            },
+            {
+              "kind": "speech",
+              "text": "Point right to left: م, ر, ح, ب, ا (alif)."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy مرحبا once while looking."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover it. Write it once from memory, then check the dot below ب."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which cousin has one dot below? (ب.) Two above? (ت.) Three above? (ث.) Read and write مرحبا once: marḥaban, “welcome.”"
             }
           ]
         }
@@ -459,26 +900,151 @@
     {
       "id": "AR-C01-as-salamu-alaykum",
       "sequence": 40,
-      "title": "السلام عليكم (as-salāmu ʿalaykum) — \"peace be upon you\"",
-      "headword": "السلام عليكم",
+      "title": "as-salāmu ʿalaykum — offer the full greeting by ear",
+      "headword": "as-salāmu ʿalaykum",
       "romanization": "",
-      "gloss": "peace be upon you (as-salāmu ʿalaykum)",
+      "gloss": "peace be upon you",
       "script": "arabic",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e06a7cce98b601f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already own salām and al-. Now speak the full greeting before decoding or copying its unfamiliar second half."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need — Hear the two blocks",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say as-salāmu — then ʿalaykum. In ʿalaykum, begin with a light tightening deep in the throat. That sound is ʿayn; an approximation is enough today."
+            },
+            {
+              "kind": "speech",
+              "text": "as-salāmu ʿalaykum = peace be upon you."
+            },
+            {
+              "kind": "speech",
+              "text": "The l of al- blends into the following s, so al-salām is pronounced as-salām. Arabic then places “the peace” beside “upon you” and leaves the verb “is” understood."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "input",
+          "title": "The exchange — the reply",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The fixed reply is wa-ʿalaykum as-salām: “and upon you, peace.” Hear the little wa- at the front; it means “and.”"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "as-salāmu — ʿalaykum",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *as-salāmu* — *ʿalaykum*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the complete greeting once, slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the complete greeting once, slowly]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "wa-ʿalaykum as-salām, the reply",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: *wa-ʿalaykum as-salām*, the reply]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What are the two spoken blocks? (as-salāmu + ʿalaykum.) Where is the word “is”? (It is understood.) Speak the greeting and reply once. The next two lessons reveal the remaining shapes before showing the full line."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-ayn-ya",
+      "sequence": 42,
+      "title": "ع and ي — open ʿalaykum gently",
+      "headword": "ع ي",
+      "romanization": "ʿayn, yāʾ",
+      "gloss": "observe and trace ayn and ya after speaking the full greeting",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:854a698437c0a889",
+      "sourceHash": "fnv1a64:5b4d2d841746677d",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
+          "a pen and something to write on",
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "The letters in this word"
+          "Script — observe ʿayn and yāʾ",
+          "Guided Practice"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — observe ʿayn and yāʾ and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -494,61 +1060,31 @@
             },
             {
               "kind": "speech",
-              "text": "Now assemble the pieces — al- and salām — into the great universal greeting of the Arabic-speaking world."
+              "text": "Say as-salāmu ʿalaykum. Only after speaking the whole greeting do you meet two shapes from its second block."
             }
           ]
         },
         {
           "index": 1,
           "type": "script",
-          "title": "The letters in this word",
+          "title": "Script — observe ʿayn and yāʾ",
           "segments": [
             {
               "kind": "speech",
-              "text": "(Skim if you read Arabic.) Three new letters, all in ʿalaykum:"
+              "text": "ع is ʿayn, the deep opening sound in ʿalaykum. Notice its curved hook."
             },
             {
               "kind": "speech",
-              "text": "ع = ʿayn — a voiced tightening deep in the throat, with no English equivalent; approximate it for now."
+              "text": "ي is yāʾ, the y sound. In isolation it carries two dots below."
             },
             {
               "kind": "speech",
-              "text": "ي = yāʾ, \"y\", ك = kāf, \"k.\""
-            },
-            {
-              "kind": "speech",
-              "text": "The first half, السلام, is just al- + salām — already yours."
+              "text": "Trace each once. Then point right to left at ع ي (ʿayn, yāʾ) while saying ʿ — y."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "السلام عليكم = as-salāmu (al- + salām, with the sun-letter s assimilating the l) + ʿalaykum (\"upon you [all]\"). Literally \"the peace [be] upon you.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Notice something: there is no word for \"is.\" Arabic sets the two phrases side by side — \"the-peace / upon-you\" — and lets \"is\" be understood. (Where Spanish would need está, Arabic needs nothing.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "This is the greeting with real weight — any time of day, any register. Its reply is fixed: وعليكم السلام (wa-ʿalaykum as-salām) — \"and upon you the peace.\" You give peace; it is given back. To greet, in Arabic, is literally to bless."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -560,35 +1096,35 @@
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the two blocks — \"as-salāmu\" + \"ʿalaykum\"",
-              "spoken": true,
+              "action": "TRACE",
+              "instruction": "ع, and say ʿayn",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the two blocks — \"as-salāmu\" + \"ʿalaykum\"]"
+              "source": "[YOU TRACE: **ع**, and say *ʿayn*]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the throat-tightening ع in \"ʿalaykum\"",
-              "spoken": true,
+              "action": "TRACE",
+              "instruction": "ي, and say yāʾ",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the throat-tightening ع in \"ʿalaykum\"]"
+              "source": "[YOU TRACE: **ي**, and say *yāʾ*]"
             },
             {
               "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the fixed reply — \"wa-ʿalaykum as-salām\"",
-              "spoken": true,
+              "action": "WRITE",
+              "instruction": "both once from memory, then compare",
+              "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the fixed reply — \"wa-ʿalaykum as-salām\"]"
+              "source": "[YOU WRITE: both once from memory, then compare]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -600,7 +1136,200 @@
             },
             {
               "kind": "speech",
-              "text": "Read السلام عليكم. What are its two pieces, and why is the s doubled? (al-+salām becomes as-salām (sun letter) + ʿalaykum.) Where is the word for \"is\"? (There isn't one — Arabic leaves it understood.)"
+              "text": "Which shape begins the throat sound? (ع.) Which has two dots below when isolated? (ي.) No whole phrase yet; two final shapes come next."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-kaf-waw-alaykum",
+      "sequence": 44,
+      "title": "ك and و — complete the greeting after the sound",
+      "headword": "ك و — السلام عليكم",
+      "romanization": "kāf, wāw — as-salāmu ʿalaykum",
+      "gloss": "add kaf and waw, then copy the greeting and its reply cue",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:3f3f294e2cf38289",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — observe two new shapes"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — observe two new shapes until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You can speak the greeting and recognize ع and ي. Add just two shapes, then copy the complete line."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — observe two new shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ك is kāf, the k near the end of ʿalaykum."
+            },
+            {
+              "kind": "speech",
+              "text": "و is wāw, the w in the reply’s opening wa-, “and.” Like ر, it does not join to the letter after it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided copy, then delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Find the familiar peace word inside السلام عليكم (as-salāmu ʿalaykum)."
+            },
+            {
+              "kind": "speech",
+              "text": "Point through the second block, عليكم, right to left."
+            },
+            {
+              "kind": "speech",
+              "text": "Copy السلام عليكم (as-salāmu ʿalaykum) once while looking."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover it. Write عليكم from memory, then compare and correct one shape."
+            },
+            {
+              "kind": "speech",
+              "text": "Add و before that block to begin the reply: وعليكم."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which letter gives the k? (ك.) Which gives wa-, “and”? (و.) Read السلام عليكم (as-salāmu ʿalaykum), then write the shorter block عليكم without looking."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AR-W00-full-greeting-recall",
+      "sequence": 46,
+      "title": "as-salāmu ʿalaykum — hear, write, repair",
+      "headword": "السلام عليكم",
+      "romanization": "as-salāmu ʿalaykum",
+      "gloss": "hear the full greeting, write it without a model, then repair",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:d30562ce6eec0d04",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say as-salāmu ʿalaykum once. Then turn the page or cover every Arabic model. This lesson adds no shape and no new phrase."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — dictation and repair",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear or read the romanization as-salāmu ʿalaykum."
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Arabic greeting from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "Reveal السلام عليكم (as-salāmu ʿalaykum)."
+            },
+            {
+              "kind": "speech",
+              "text": "Compare from right to left. Circle one uncertain shape and repair it once."
+            },
+            {
+              "kind": "speech",
+              "text": "Stop after one repaired attempt. Retrieval is the goal; repetition without attention is not."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read السلام عليكم (as-salāmu ʿalaykum) aloud. Which part did you repair? Cover the model and write only عليكم once more if that repair still feels uncertain."
             }
           ]
         }
@@ -1057,7 +1786,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c8834e0835cb82cc",
+      "sourceHash": "fnv1a64:b8468db8e3642fb9",
       "notice": null,
       "blocks": [
         {
@@ -1079,8 +1808,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "Read them back",
+          "type": "input",
+          "title": "You'll want to know — Read them back",
           "segments": [
             {
               "kind": "speech",
@@ -1108,8 +1837,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "The greetings and their replies",
+          "type": "input",
+          "title": "The exchange — greetings and replies",
           "segments": [
             {
               "kind": "table",
@@ -1171,6 +1900,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: greet, then thank — \"ṣabāḥ al-khayr!\" … \"shukran.\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "hear salām, write سلام without looking, then compare and repair one shape",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: hear *salām*, write **سلام** without looking, then compare and repair one shape]"
             }
           ]
         },
