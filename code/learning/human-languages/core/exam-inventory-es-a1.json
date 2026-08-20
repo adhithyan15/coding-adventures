@@ -4,6 +4,28 @@
   "level": "A1",
   "about": "An enumeration of the grammar an A1 candidate is expected to hold, restated in our own words from the structure of the Plan Curricular del Instituto Cervantes, whose grammar inventory is published as a finite checklist in 15 categories with separate A1 and A2 columns. This file is an independent restatement for gating purposes, not a copy: the source is a reference, and the labels here are ours. Where the source lists several closely related items we have merged them into one point, so this file's total is not the source's total.",
   "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm",
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm",
+      "note": "The PCIC publishes separate functional inventories, but this file currently enumerates grammar points only."
+    },
+    "grammar": {
+      "status": "complete",
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/niveles/02_gramatica_inventario_a1-a2.htm",
+      "note": "The file restates every A1 grammar category selected from the cited PCIC grammar inventory."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm",
+      "note": "The separate PCIC pronunciation and prosody inventory has not yet been enumerated here."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "https://cvc.cervantes.es/ensenanza/biblioteca_ele/plan_curricular/indice.htm",
+      "note": "The separate PCIC general and specific notions have not yet been enumerated here."
+    }
+  },
   "probeSemantics": "A point counts as COVERED when every atom in `probe` is introduced by some lesson in the track. `probe: null` means no atom in the corpus corresponds to this point, which is itself the finding — an unmapped point is uncovered, never skipped.",
   "points": [
     {
