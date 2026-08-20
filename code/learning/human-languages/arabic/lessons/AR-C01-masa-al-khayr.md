@@ -1,5 +1,6 @@
 ---
 id: AR-C01-masa-al-khayr
+sequence: 60
 chapter: 1
 type: word
 headword: مساء الخير

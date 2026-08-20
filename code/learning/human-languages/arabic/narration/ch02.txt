@@ -3,33 +3,30 @@ Arabic, chapter 2: Introducing Yourself.
 
 
 Lesson 1 of 12.
-أنت (anta / anti) — "you," marked by gender.
+اسم (ism) — "name".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-To ask a name you need "you" — and Arabic's is unlike any you've met: it changes with the listener's gender.
+To introduce yourself you need "name" — and it needs no new letters.
 
 The letters in this word.
-(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal "a"-start) and ت (tāʾ, "t" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: أنتَ anta, أنتِ anti.
+(Skim if you read Arabic.) All three are from Chapter 1: ا (alif), س (sīn), م (mīm). Read اسم right to left becomes ism.
 
 The word, taken apart.
-أنت is "you" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks "you" in Hebrew atta/att.)
-
-Grammar Lens: a different axis of "you".
-The European and Dravidian tracks split "you" by register (familiar vs. respectful — tū/vous, nī/nīṅgaḷ). Arabic splits it by gender: anta (to a man) vs. anti (to a woman). Same pronoun, a wholly different distinction — you choose by who you're talking to, not how formal you are.
+اسم (ism, "name"), root s–m–w. It is a Semitic word, cousin of Hebrew shem ("name") — the same pairing you saw with salām / shalom. It has no tie to the Indo-European name / Latin nōmen: Arabic is a different family entirely, and its word for "name" is its own.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "anta" (to a man), "anti" (to a woman)]
+[your turn — say: read right to left — "ism"]
 [pause 8 seconds for the answer]
-[your turn — say: the contrast — European/Dravidian split by register, Arabic by gender]
+[your turn — say: its Hebrew cousin — shem]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-How does Arabic split "you," and how is that different from French or Tamil? (By gender — anta (m.) / anti (f.); the others split by register.)
+What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)
 
 
 Lesson 2 of 12.
@@ -60,33 +57,6 @@ How does Arabic say "my," and what is "my name"? (A suffix ي (yāʾ) (-ī) glue
 
 
 Lesson 3 of 12.
-اسم (ism) — "name".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-To introduce yourself you need "name" — and it needs no new letters.
-
-The letters in this word.
-(Skim if you read Arabic.) All three are from Chapter 1: ا (alif), س (sīn), م (mīm). Read اسم right to left becomes ism.
-
-The word, taken apart.
-اسم (ism, "name"), root s–m–w. It is a Semitic word, cousin of Hebrew shem ("name") — the same pairing you saw with salām / shalom. It has no tie to the Indo-European name / Latin nōmen: Arabic is a different family entirely, and its word for "name" is its own.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: read right to left — "ism"]
-[pause 8 seconds for the answer]
-[your turn — say: its Hebrew cousin — shem]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What family does اسم belong to, and what Hebrew word is its cousin? (Semitic; shem. Not related to English name.)
-
-
-Lesson 4 of 12.
 اسمي … (ismī …) — "my name is…," with no "is".
 
 Warm-up.
@@ -111,6 +81,36 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give your name in Arabic. (Ismī ….) What does Arabic leave out, and which other family does the same? (The verb "is" — the zero copula, shared with the Dravidian languages.)
+
+
+Lesson 4 of 12.
+أنت (anta / anti) — "you," marked by gender.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+To ask a name you need "you" — and Arabic's is unlike any you've met: it changes with the listener's gender.
+
+The letters in this word.
+(Skim if you read Arabic.) Two new letters: أ (alif with a hamza seat, a glottal "a"-start) and ت (tāʾ, "t" — the ب/ت/ث skeleton from Ch. 1, two dots above). The final vowel is a mark: أنتَ anta, أنتِ anti.
+
+The word, taken apart.
+أنت is "you" — but Arabic splits it by the listener's gender: anta to a man, anti to a woman. (Note the Semitic -ta/-ti ending — the same t that marks "you" in Hebrew atta/att.)
+
+Grammar Lens: a different axis of "you".
+The European and Dravidian tracks split "you" by register (familiar vs. respectful — tū/vous, nī/nīṅgaḷ). Arabic splits it by gender: anta (to a man) vs. anti (to a woman). Same pronoun, a wholly different distinction — you choose by who you're talking to, not how formal you are.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "anta" (to a man), "anti" (to a woman)]
+[pause 8 seconds for the answer]
+[your turn — say: the contrast — European/Dravidian split by register, Arabic by gender]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How does Arabic split "you," and how is that different from French or Tamil? (By gender — anta (m.) / anti (f.); the others split by register.)
 
 
 Lesson 5 of 12.
@@ -168,6 +168,33 @@ What does ما اسمك؟ literally say, and where is the gender marked? ("What 
 
 
 Lesson 7 of 12.
+تشرفنا (tasharrafnā) — "pleased to meet you".
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The warm close — and it presents the meeting as an honour.
+
+The letters in this word.
+(Skim if you read Arabic.) Uses ت (tāʾ, just met), ش (shīn) and ر (rāʾ) from Ch. 1, plus ف (fāʾ, "f").
+
+The word, taken apart.
+تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf ("honour"), sharīf ("noble" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally "we have been honoured" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, "a happy occasion").
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "tasharrafnā"]
+[pause 8 seconds for the answer]
+[your turn — say: the root family — sharaf (honour), sharīf (noble)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does تشرفنا literally mean, and from what root? ("We have been honoured"; sh–r–f, "honour.")
+
+
+Lesson 8 of 12.
 Chapter 2 — the introduction, whole.
 
 The dialogue.
@@ -196,33 +223,6 @@ Wrap-up Recall.
 [pause 3 seconds]
 Give your name, ask someone else's, say you're pleased. (Ismī …. / Mā ismuka? / Tasharrafnā.) Two things Arabic does differently from the European tracks? (No word for "is" — zero copula; and "you" split by gender, not register.)
 Next chapter: kayfa ḥāluka? ("how are you?") and al-ḥamdu lillāh — the responding cycle.
-
-
-Lesson 8 of 12.
-تشرفنا (tasharrafnā) — "pleased to meet you".
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called The letters in this word until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The warm close — and it presents the meeting as an honour.
-
-The letters in this word.
-(Skim if you read Arabic.) Uses ت (tāʾ, just met), ش (shīn) and ر (rāʾ) from Ch. 1, plus ف (fāʾ, "f").
-
-The word, taken apart.
-تشرفنا (tasharrafnā), root sh–r–f (honour, nobility): sharaf ("honour"), sharīf ("noble" — the Sharif of Mecca, and distantly the title behind English sheriff). tasharrafnā means literally "we have been honoured" — to meet you is presented as an honour received. A more literal option is فرصة سعيدة (furṣa saʿīda, "a happy occasion").
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "tasharrafnā"]
-[pause 8 seconds for the answer]
-[your turn — say: the root family — sharaf (honour), sharīf (noble)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does تشرفنا literally mean, and from what root? ("We have been honoured"; sh–r–f, "honour.")
 
 
 Lesson 9 of 12.
@@ -306,35 +306,6 @@ Where do yāʾ's dots sit, and how many? (Two, below.) Name yāʾ's three jobs. 
 
 
 Lesson 11 of 12.
-ء and أ — the glottal catch.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-The marks in the last lesson supplied vowels. Hamza is different: it writes a real consonant sound.
-
-The catch in “uh-oh”.
-Say English “uh-oh” slowly. The little catch between the two syllables is a glottal stop. Arabic writes that consonant with ء, called hamza.
-Hamza often sits on a seat. At the start of أنت (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant.
-That gives alif two roles you must keep separate:
-ا can carry long ā.
-أ can be an alif seat bearing the consonant ء.
-Hamza is therefore not another short-vowel mark. Its sound is the catch itself.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “uh-oh” and feel the glottal catch]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: ء alone, then أ on its alif seat]
-[once you have stopped driving — point: أنتَ / أنتِ — the same initial hamza in both]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Is hamza a vowel mark? (No.) What sound does it write? (A glottal stop.) What is أ? (Hamza riding on an alif seat.)
-
-
-Lesson 12 of 12.
 َ ِ ُ (fatḥa, kasra, ḍamma; hamza) — the short vowels the abjad usually hides.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the sections called The ḥarakāt — three short-vowel marks and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -363,3 +334,32 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 What are the ḥarakāt, and does everyday text show them? (The short- vowel marks — fatḥa/kasra/ḍamma; normally left off, since Arabic is an abjad.) Which mark, and where, turns anta into anti? (A kasra — the "i" slash—below the final tāʾ, instead of the fatḥa above.) You have now made one consonant skeleton say anta or anti with one tiny mark.
+
+
+Lesson 12 of 12.
+ء and أ — the glottal catch.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to everything else now — leave the section called Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+The marks in the last lesson supplied vowels. Hamza is different: it writes a real consonant sound.
+
+The catch in “uh-oh”.
+Say English “uh-oh” slowly. The little catch between the two syllables is a glottal stop. Arabic writes that consonant with ء, called hamza.
+Hamza often sits on a seat. At the start of أنت (anta/anti, “you”), it rides above ا, producing أ. The alif supplies the seat; the hamza marks the glottal-stop consonant.
+That gives alif two roles you must keep separate:
+ا can carry long ā.
+أ can be an alif seat bearing the consonant ء.
+Hamza is therefore not another short-vowel mark. Its sound is the catch itself.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “uh-oh” and feel the glottal catch]
+[pause 8 seconds for the answer]
+[once you have stopped driving — write: ء alone, then أ on its alif seat]
+[once you have stopped driving — point: أنتَ / أنتِ — the same initial hamza in both]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Is hamza a vowel mark? (No.) What sound does it write? (A glottal stop.) What is أ? (Hamza riding on an alif seat.)

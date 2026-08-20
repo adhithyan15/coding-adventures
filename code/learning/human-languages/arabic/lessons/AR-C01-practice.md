@@ -1,5 +1,6 @@
 ---
 id: AR-C01-practice
+sequence: 80
 chapter: 1
 type: practice
 headword: (recap)
