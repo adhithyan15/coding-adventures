@@ -1,0 +1,62 @@
+{
+  "language": "japanese",
+  "lessonCount": 29,
+  "atomMeasurableLessons": 29,
+  "atomMeasurementBlindLessons": 0,
+  "durationViolations": 0,
+  "atomLessonSpikes": 0,
+  "atomChapterSpikes": 1,
+  "glyphLessonSpikes": 4,
+  "scriptSystemSpikes": 5,
+  "scriptClosureViolations": 8,
+  "neverTaughtGlyphs": 21,
+  "orderDefects": 0,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 0,
+  "atomsTaught": 39,
+  "atomsNeverRevisited": 8,
+  "reinforcementWindowMisses": 54,
+  "payoffSurprises": 0,
+  "writingPracticeLessons": 28,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
+  "findings": [
+    {
+      "language": "japanese",
+      "kind": "script-closure",
+      "count": 21,
+      "unit": "glyph(s)",
+      "detail": "teach every load-bearing glyph before asking the learner to decode it"
+    },
+    {
+      "language": "japanese",
+      "kind": "atom-step",
+      "count": 1,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "japanese",
+      "kind": "glyph-step",
+      "count": 9,
+      "unit": "lesson/system spike(s)",
+      "detail": "split new glyphs and writing systems across gentler steps"
+    },
+    {
+      "language": "japanese",
+      "kind": "reinforcement",
+      "count": 54,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    }
+  ],
+  "next": {
+    "language": "japanese",
+    "kind": "script-closure",
+    "count": 21,
+    "unit": "glyph(s)",
+    "detail": "teach every load-bearing glyph before asking the learner to decode it"
+  }
+}
