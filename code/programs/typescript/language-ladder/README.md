@@ -1037,7 +1037,13 @@ turns through its lower foot. The t30apps.com animation exposes those as two
 ordered SVG paths; the Noto Sans Gujarati fit preserves their order while
 tracing the broader printed lobes and more angular foot. The source's variation
 warning continues to qualify the demonstrated school-hand form; missing **ઙ**
-is next.
+is next. Its two-frame filmstrip begins at the upper right, sweeps left through
+the upper turn, continues through the middle and rounded lower body, and
+finishes at the lower left. It then lifts once and circles the separate
+upper-right dot. The t30apps.com animation exposes those as two ordered SVG
+paths; the Noto Sans Gujarati fit preserves their order while tracing the
+broader printed turns and larger dot. The source's variation warning continues
+to qualify the demonstrated school-hand form; **ચ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
