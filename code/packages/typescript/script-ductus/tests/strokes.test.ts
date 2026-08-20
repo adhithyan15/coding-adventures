@@ -143,6 +143,7 @@ const GUJARATI_NA = DUCTUS[ductusKey("gujarati", "ન")];
 const GUJARATI_PA = DUCTUS[ductusKey("gujarati", "પ")];
 const GUJARATI_PHA = DUCTUS[ductusKey("gujarati", "ફ")];
 const GUJARATI_BA = DUCTUS[ductusKey("gujarati", "બ")];
+const GUJARATI_BHA = DUCTUS[ductusKey("gujarati", "ભ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2225,6 +2226,12 @@ describe("handwriting ductus", () => {
     const spine = GUJARATI_BA.strokes[1].segments[0].path;
     expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(550);
     expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
+  });
+
+  it("Gujarati ભ completes its loop before the right spine", () => {
+    expect(GUJARATI_BHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_BHA)).toBe(1);
+    expect(GUJARATI_BHA.strokes).toHaveLength(2);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4751,6 +4758,12 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /two ordered pen-down runs.*first SVG path.*upper left.*rounded left body.*compact middle turn.*right.*shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*rounded-body-before-right-spine order.*one-lift evidence/i,
     );
+  });
+
+  it("Gujarati ભ traces its loop and right spine to two paths", () => {
+    const src = GUJARATI_BHA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ભ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*broad left loop.*compact middle turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-before-right-spine order.*one-lift evidence/i);
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
