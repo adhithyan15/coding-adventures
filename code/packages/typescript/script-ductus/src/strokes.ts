@@ -5971,6 +5971,46 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ગ"),
   },
+  // t30apps writes Gujarati ઘ as one joined upper-lobe-to-lower-body run,
+  // then lifts for the full-height right spine and its lower foot. These
+  // medians preserve the two-path order while fitting the bundled Noto outline.
+  [ductusKey("gujarati", "ઘ")]: {
+    script: "gujarati",
+    glyph: "ઘ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the upper lobe, turn through the middle, and round the lower body",
+            path: [
+              { x: 280, y: 560 }, { x: 220, y: 565 }, { x: 160, y: 555 },
+              { x: 110, y: 530 }, { x: 80, y: 490 }, { x: 80, y: 450 },
+              { x: 100, y: 415 }, { x: 140, y: 385 }, { x: 185, y: 370 },
+              { x: 235, y: 370 }, { x: 285, y: 380 }, { x: 245, y: 375 },
+              { x: 200, y: 365 }, { x: 160, y: 340 }, { x: 135, y: 305 },
+              { x: 125, y: 265 }, { x: 135, y: 220 }, { x: 160, y: 180 },
+              { x: 200, y: 150 }, { x: 250, y: 135 }, { x: 305, y: 140 },
+              { x: 355, y: 160 }, { x: 400, y: 195 }, { x: 430, y: 240 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the right spine and turn through its lower foot",
+            path: [
+              { x: 485, y: 560 }, { x: 485, y: 500 }, { x: 485, y: 430 },
+              { x: 485, y: 350 }, { x: 485, y: 270 }, { x: 485, y: 190 },
+              { x: 485, y: 120 }, { x: 500, y: 75 }, { x: 535, y: 45 },
+              { x: 580, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ઘ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
