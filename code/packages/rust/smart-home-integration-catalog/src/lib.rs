@@ -44925,6 +44925,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
         snmp_entry(),
         nut_entry(),
         upnp_ssdp_entry(),
+        ipp_printer_entry(),
         protocol_entry(
             "matter",
             "Matter",
@@ -49403,6 +49404,53 @@ fn upnp_ssdp_entry() -> IntegrationCatalogEntry {
             "https://openconnectivity.org/upnp-specs/UPnP-arch-DeviceArchitecture-v2.0-20200417.pdf"
                 .to_string(),
         external_id: Some("UPnP Device Architecture 2.0".to_string()),
+    });
+    entry
+}
+
+fn ipp_printer_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "ipp_printer",
+        "IPP Printer Discovery",
+        "Bounded local DNS-SD discovery for IPP and IPP Everywhere printers.",
+        IntegrationCategory::ProtocolStandard,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "ipp_printer",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("ipp_everywhere".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_entities(&[EntityKind::Unknown])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime performs one authorized bounded _ipp._tcp.local scan and validates standard IPP Everywhere identity, access, and capability TXT keys.",
+        "IPP requests, status reads, credential input, print jobs, queue mutation, public endpoints, and long-lived browse sockets remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::Udp,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "PWG IPP Everywhere 1.1".to_string(),
+        url: "https://ftp.pwg.org/pub/pwg/candidates/cs-ippeve11-20200515-5100.14.pdf".to_string(),
+        external_id: Some("PWG 5100.14-2020".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IETF DNS-Based Service Discovery".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc6763.html".to_string(),
+        external_id: Some("RFC 6763".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "IETF Internet Printing Protocol".to_string(),
+        url: "https://www.rfc-editor.org/rfc/rfc8011.html".to_string(),
+        external_id: Some("RFC 8011".to_string()),
     });
     entry
 }
@@ -82344,6 +82392,46 @@ mod tests {
             PrimitiveFamily::VaultLease,
         ] {
             assert!(!upnp.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn ipp_printer_entry_exposes_bounded_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let ipp = find_entry(&catalog, &IntegrationId::trusted("ipp_printer")).unwrap();
+        assert_eq!(
+            ipp.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(ipp.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(ipp.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            ipp.supported_protocols,
+            vec![ProtocolFamily::Vendor("ipp_everywhere".to_string())]
+        );
+        assert_eq!(
+            ipp.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert_eq!(ipp.target_entity_kinds, vec![EntityKind::Unknown]);
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::Udp,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(ipp.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!ipp.required_primitives.contains(&primitive));
         }
     }
 
