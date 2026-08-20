@@ -1,5 +1,6 @@
 ---
 id: FR-C01-le-la
+sequence: 20
 chapter: 1
 type: word
 headword: le / la / les

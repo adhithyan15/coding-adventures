@@ -1,5 +1,16 @@
 # Changelog
 
+## French chapters 1-16 regain their reading order (#12250)
+
+- Add one global, spaced sequence to all 64 legacy lessons, recovered from the
+  hand-authored book sections and closed against every prerequisite and review.
+- Remove 64 missing-sequence findings plus 21 forward prerequisites and 28
+  forward reviews that alphabetical filename fallback had fabricated. French's
+  order-integrity backlog moves from 113 defects to zero.
+- Keep genuine content-placement debt separate: eleven apparent
+  forward-language uses disappear with the real order, while 52 still require
+  teaching or reseating work. No learner content is silently declared taught.
+
 ## [Unreleased]
 
 ### Added — Chapter 32, asking a question (HL-C229)

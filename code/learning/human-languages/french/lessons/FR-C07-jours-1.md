@@ -1,5 +1,6 @@
 ---
 id: FR-C07-jours-1
+sequence: 215
 chapter: 7
 type: word
 headword: lundi, mardi, mercredi, jeudi, vendredi

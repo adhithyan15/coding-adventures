@@ -17,8 +17,8 @@ export interface TaskShapeSource {
 
 export interface TaskLength {
   unit: TaskLengthUnit;
-  minimum: number;
-  maximum: number;
+  minimum: number | null;
+  maximum: number | null;
   approximate: boolean;
 }
 
@@ -28,6 +28,13 @@ export interface TaskMinutesRange {
   maximum: number;
 }
 export type TaskMinutes = number | TaskMinutesRange;
+
+export interface TaskShapeVariant {
+  id: string;
+  partIds: string[];
+  note: string;
+  sourceIds: string[];
+}
 
 export interface TaskPartShape {
   id: string;
@@ -79,6 +86,8 @@ export interface TaskShapeInventory {
     skill: AssessmentSkill;
     minutes: TaskMinutes;
     parts: TaskPartShape[];
+    /** Empty means one implicit form containing every part. */
+    variants: TaskShapeVariant[];
   }>;
 }
 
@@ -189,8 +198,12 @@ function parseLength(value: unknown, where: string): TaskLength | null {
   if (!unit) throw new Error(`task shapes: ${where}.unit must be one of ${TASK_LENGTH_UNITS.join(", ")}`);
   const minimum = nullableNonNegativeInteger(raw.minimum, `${where}.minimum`);
   const maximum = nullableNonNegativeInteger(raw.maximum, `${where}.maximum`);
-  if (minimum === null || maximum === null) throw new Error(`task shapes: ${where} bounds cannot be null`);
-  if (minimum > maximum) throw new Error(`task shapes: ${where}.minimum cannot exceed maximum`);
+  if (minimum === null && maximum === null) {
+    throw new Error(`task shapes: ${where} must publish at least one finite bound`);
+  }
+  if (minimum !== null && maximum !== null && minimum > maximum) {
+    throw new Error(`task shapes: ${where}.minimum cannot exceed maximum`);
+  }
   if (typeof raw.approximate !== "boolean") throw new Error(`task shapes: ${where}.approximate must be boolean`);
   return { unit, minimum, maximum, approximate: raw.approximate };
 }
@@ -274,6 +287,7 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
   if (!Array.isArray(raw.sections)) throw new Error(`task shapes: ${expectedLanguage}.sections must be an array`);
   const seenSkills = new Set<AssessmentSkill>();
   const seenParts = new Set<string>();
+  const seenVariants = new Set<string>();
   const sections = raw.sections.map((entry, sectionIndex) => {
     const section = object(entry, `${expectedLanguage}.sections[${sectionIndex}]`);
     const skill = ASSESSMENT_SKILLS.find((candidate) => candidate === section.skill);
@@ -283,11 +297,13 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
     if (!Array.isArray(section.parts) || section.parts.length === 0) {
       throw new Error(`task shapes: ${skill}.parts must be a non-empty array`);
     }
+    const sectionPartIds = new Set<string>();
     const parts = section.parts.map((entryPart, partIndex) => {
       const part = object(entryPart, `${skill}.parts[${partIndex}]`);
       const id = nonEmpty(part.id, `${skill}.parts[${partIndex}].id`);
       if (seenParts.has(id)) throw new Error(`task shapes: duplicate part id '${id}'`);
       seenParts.add(id);
+      sectionPartIds.add(id);
       const interaction = TASK_INTERACTIONS.find((candidate) => candidate === part.interaction);
       if (!interaction) throw new Error(`task shapes: ${id}.interaction must be ${TASK_INTERACTIONS.join(", ")}`);
       const scoring = object(part.scoring, `${id}.scoring`);
@@ -299,7 +315,10 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
       const notPublished = strings(part.notPublished, `${id}.notPublished`, true);
       const stimulusLength = parseLength(part.stimulusLength, `${id}.stimulusLength`);
       const responseLength = parseLength(part.responseLength, `${id}.responseLength`);
-      if ((stimulusLength === null || part.replayCount === null) && notPublished.length === 0) {
+      const hasOpenLength = [stimulusLength, responseLength].some(
+        (length) => length !== null && (length.minimum === null || length.maximum === null),
+      );
+      if ((stimulusLength === null || part.replayCount === null || hasOpenLength) && notPublished.length === 0) {
         throw new Error(`task shapes: ${id} has null measurements but no notPublished explanation`);
       }
       return {
@@ -325,7 +344,47 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
         sourceIds: partSources,
       };
     });
-    return { skill, minutes: parseMinutes(section.minutes, `${skill}.minutes`), parts };
+
+    const variants = section.variants === undefined
+      ? []
+      : (() => {
+          if (!Array.isArray(section.variants)) {
+            throw new Error(`task shapes: ${skill}.variants must be an array`);
+          }
+          const usedParts = new Set<string>();
+          const parsed = section.variants.map((entryVariant, variantIndex) => {
+            const variant = object(entryVariant, `${skill}.variants[${variantIndex}]`);
+            const id = nonEmpty(variant.id, `${skill}.variants[${variantIndex}].id`);
+            if (seenVariants.has(id)) throw new Error(`task shapes: duplicate variant id '${id}'`);
+            seenVariants.add(id);
+            const partIds = strings(variant.partIds, `${id}.partIds`);
+            if (new Set(partIds).size !== partIds.length) {
+              throw new Error(`task shapes: ${id}.partIds must not contain duplicates`);
+            }
+            for (const partId of partIds) {
+              if (!sectionPartIds.has(partId)) throw new Error(`task shapes: ${id} cites unknown part '${partId}'`);
+              usedParts.add(partId);
+            }
+            const variantSources = strings(variant.sourceIds, `${id}.sourceIds`);
+            for (const sourceId of variantSources) {
+              if (!sourceIds.has(sourceId)) throw new Error(`task shapes: ${id} cites unknown source '${sourceId}'`);
+            }
+            return {
+              id,
+              partIds,
+              note: nonEmpty(variant.note, `${id}.note`),
+              sourceIds: variantSources,
+            };
+          });
+          if (parsed.length > 0) {
+            const uncovered = [...sectionPartIds].filter((partId) => !usedParts.has(partId));
+            if (uncovered.length > 0) {
+              throw new Error(`task shapes: ${skill} variant sets omit part(s): ${uncovered.join(", ")}`);
+            }
+          }
+          return parsed;
+        })();
+    return { skill, minutes: parseMinutes(section.minutes, `${skill}.minutes`), parts, variants };
   });
   for (const skill of ASSESSMENT_SKILLS) {
     if (!seenSkills.has(skill)) throw new Error(`task shapes: missing ${skill} section`);

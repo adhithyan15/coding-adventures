@@ -1,5 +1,6 @@
 ---
 id: FR-C02-tu-vous
+sequence: 80
 chapter: 2
 type: word
 headword: tu / vous

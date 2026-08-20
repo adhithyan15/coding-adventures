@@ -181,19 +181,12 @@ describe("real curriculum", () => {
     expect(report.summary.registeredTracks).toBe(23);
     expect(report.summary.totalLessons).toBe(lessons.length);
     expect(report.summary.authoredBooks).toBe(23);
-    // 0 -> 2. HL-C134 carried the hand-written prose back into the lessons, and
-    // KA-C01-namaskara (333s) and TE-C01-namaskaram (314s) crossed the
-    // five-minute line. Worth being exact about what changed: NOT the lessons.
-    // A reader of the book always read every one of those words -- the
-    // `sounds`, `cousinweb` and `cognates` blocks were on the page all along.
-    // What changed is that the markdown now knows about them, so the gate can
-    // finally see a lesson it could not measure before.
-    //
-    // So this is not new debt, it is newly VISIBLE debt, and the fix is the one
-    // the owner's own rule prescribes: where a lesson is too big it splits, and
-    // it never gets compressed to fit. Logged as HL-C151 rather than absorbed
-    // by quietly raising a threshold.
-    expect(report.summary.durationViolations).toBe(2);
+    // HL-C134 made two previously hidden opening cliffs measurable:
+    // KA-C01-namaskara (333s) and TE-C01-namaskaram (314s). The Kannada lesson
+    // now keeps one greeting, one decode, one guided copy and one etymology
+    // payoff in 240 effective seconds. Telugu remains visible work; the ceiling
+    // is never raised to make either lesson look compliant.
+    expect(report.summary.durationViolations).toBe(1);
     expect(report.summary.unknownPrerequisites).toBe(0);
     expect(report.schemas.tracks).toHaveLength(23);
     expect(report.books.tracks).toHaveLength(23);

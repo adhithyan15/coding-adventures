@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — cited Gujarati ટ ductus (HL-C09GB)
+
+- Render **ટ** as one continuous upper-turn, diagonal-middle, and lower-bowl run with no lift.
+- Preserve t30apps.com's version-1.0 first-path order while fitting the median to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and one-frame filmstrip coverage; the focused suite now passes 1,371 tests.
+
+### Added — cited Gujarati ઞ ductus (HL-C09GA)
+
+- Restore missing **ઞ** to the inventory and render its left body, short rightward shoulder, and tall spine with lower terminal as three runs with two lifts.
+- Preserve t30apps.com's version-1.0 first-through-third-path order while fitting all medians to Noto Sans Gujarati.
+- Add source, font-routing, on-ink, whole-glyph, and three-frame filmstrip coverage; the focused suite now passes 1,364 tests.
+
 ### Added — cited Gujarati ઝ ductus (HL-C09FZ)
 
 - Restore missing **ઝ** to the inventory and render its left body, right loop-and-tail, and upper stem as three runs with two lifts.

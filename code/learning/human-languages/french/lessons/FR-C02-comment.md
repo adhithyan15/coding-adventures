@@ -1,5 +1,6 @@
 ---
 id: FR-C02-comment
+sequence: 85
 chapter: 2
 type: word
 headword: comment

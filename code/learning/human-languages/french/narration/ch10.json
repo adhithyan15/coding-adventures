@@ -4,137 +4,11 @@
   "chapter": 10,
   "title": "Family",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:310363476cb5df5c",
+  "sourceHash": "fnv1a64:775d82c740dc2d99",
   "lessons": [
     {
-      "id": "FR-C10-freres-soeurs",
-      "sequence": null,
-      "title": "le frère, la sœur — brother and sister",
-      "headword": "le frère, la sœur",
-      "romanization": "le frère, la sœur",
-      "gloss": "brother and sister — frater and soror, behind fraternal and sorority",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:ffbb959364731298",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "With parents in hand, the next pair: frère (\"brother\") and sœur (\"sister\"). Both are straight from Latin, and both hand English a whole family of words."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "Taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "le frère (\"brother\") from Latin frāter from PIE bʰréh₂tēr (the same PIE root that, through Grimm's law bʰ becomes b, gave English brother)."
-            },
-            {
-              "kind": "speech",
-              "text": "la sœur (\"sister\") from Latin soror. The odd-looking œ (an o and e fused into one letter) spells the vowel that soror wore down to — soror becomes seror becomes sœur."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "The English cousins",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "frère becomes fraternal, fraternity, fraternize, and — softened in old French — friar (a \"brother\" in a religious order)."
-            },
-            {
-              "kind": "speech",
-              "text": "sœur becomes sorority, sororal; and a sister in a convent is still called a sœur. (English sister comes from the same PIE root swésōr, by the Germanic road — Latin soror and English sister are cousins.)"
-            },
-            {
-              "kind": "speech",
-              "text": "So the four family words now form a set: père, mère, frère, sœur — each one a key to a Latin-through-English word (paternal, maternal, fraternal, sorority)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "all four — \"le père, la mère, le frère, la sœur\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: all four — \"le père, la mère, le frère, la sœur\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"frère becomes fraternal, friar; sœur becomes sorority\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"frère → fraternal, friar; sœur → sorority\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "spell it — \"s-œ-u-r, the œ is one letter\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: spell it — \"s-œ-u-r, the *œ* is one letter\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Give \"brother\" and \"sister\" with articles. (le frère, la sœur.) What Latin words are they from? (frāter, soror.) An English cousin of each? (frère becomes fraternal/friar; sœur becomes sorority.) What is unusual about spelling sœur? (The œ ligature — o and e fused into one letter.) Next chapter: building sentences about your family."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "FR-C10-parents",
-      "sequence": null,
+      "sequence": 245,
       "title": "le père, la mère — the oldest words in the family",
       "headword": "le père, la mère",
       "romanization": "le père, la mère",
@@ -145,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ff682d3bb7e27e0f",
+      "sourceHash": "fnv1a64:8324934c578d1137",
       "notice": null,
       "blocks": [
         {
@@ -267,6 +141,132 @@
             {
               "kind": "speech",
               "text": "Give \"father\" and \"mother\" with their articles. (le père, la mère.) What one sound-change makes père into English father? (Grimm's law: p becomes f — and t becomes th.) Name an English cousin of each. (père becomes paternal/patron; mère becomes maternal/matron.) Next: le frère, la sœur — brother and sister."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-C10-freres-soeurs",
+      "sequence": 250,
+      "title": "le frère, la sœur — brother and sister",
+      "headword": "le frère, la sœur",
+      "romanization": "le frère, la sœur",
+      "gloss": "brother and sister — frater and soror, behind fraternal and sorority",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:db502b2cdfbc65f4",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With parents in hand, the next pair: frère (\"brother\") and sœur (\"sister\"). Both are straight from Latin, and both hand English a whole family of words."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "Taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "le frère (\"brother\") from Latin frāter from PIE bʰréh₂tēr (the same PIE root that, through Grimm's law bʰ becomes b, gave English brother)."
+            },
+            {
+              "kind": "speech",
+              "text": "la sœur (\"sister\") from Latin soror. The odd-looking œ (an o and e fused into one letter) spells the vowel that soror wore down to — soror becomes seror becomes sœur."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "The English cousins",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "frère becomes fraternal, fraternity, fraternize, and — softened in old French — friar (a \"brother\" in a religious order)."
+            },
+            {
+              "kind": "speech",
+              "text": "sœur becomes sorority, sororal; and a sister in a convent is still called a sœur. (English sister comes from the same PIE root swésōr, by the Germanic road — Latin soror and English sister are cousins.)"
+            },
+            {
+              "kind": "speech",
+              "text": "So the four family words now form a set: père, mère, frère, sœur — each one a key to a Latin-through-English word (paternal, maternal, fraternal, sorority)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "all four — \"le père, la mère, le frère, la sœur\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: all four — \"le père, la mère, le frère, la sœur\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"frère becomes fraternal, friar; sœur becomes sorority\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"frère → fraternal, friar; sœur → sorority\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "spell it — \"s-œ-u-r, the œ is one letter\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: spell it — \"s-œ-u-r, the *œ* is one letter\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give \"brother\" and \"sister\" with articles. (le frère, la sœur.) What Latin words are they from? (frāter, soror.) An English cousin of each? (frère becomes fraternal/friar; sœur becomes sorority.) What is unusual about spelling sœur? (The œ ligature — o and e fused into one letter.) Next chapter: building sentences about your family."
             }
           ]
         }

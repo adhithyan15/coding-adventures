@@ -1,5 +1,6 @@
 ---
 id: FR-C01-jour
+sequence: 25
 chapter: 1
 type: word
 headword: jour

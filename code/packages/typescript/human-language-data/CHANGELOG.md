@@ -2,6 +2,26 @@
 
 ## Unreleased
 
+### Changed - preserve open-ended published task lengths (#12241)
+
+- Allow a task length to carry only a minimum or only a maximum when that is all
+  the awarding body publishes; at least one finite non-negative bound remains
+  mandatory.
+- Keep closed ranges backward compatible and reject reversed or wholly unknown
+  bounds.
+- Require the existing `notPublished` boundary note for an open length, so a
+  missing maximum remains evidence rather than becoming an accidental default.
+
+### Added - alternate official task-shape variants (#12240)
+
+- Let a skill section name multiple official forms as exact part-ID sets with
+  their own source and boundary note. The union remains inspectable without
+  claiming every optional exercise appears in one administration.
+- Keep existing inventories backward compatible as one implicit form containing
+  every listed part.
+- Reject duplicate or unknown part IDs, unknown sources, duplicate variant IDs,
+  and union parts stranded outside every declared form.
+
 ### Changed - preserve published task-duration ranges (#12238)
 
 - Accept either an exact positive minute count or an exact positive

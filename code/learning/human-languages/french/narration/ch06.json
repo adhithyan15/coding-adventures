@@ -4,11 +4,11 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:25abe4ad2f43a9c8",
+  "sourceHash": "fnv1a64:0fcca13612dc3a29",
   "lessons": [
     {
       "id": "FR-C06-nombres-1-5",
-      "sequence": null,
+      "sequence": 205,
       "title": "un, deux, trois, quatre, cinq — counting to five",
       "headword": "un, deux, trois, quatre, cinq",
       "romanization": "un, deux, trois, quatre, cinq",
@@ -20,7 +20,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:513c62c8264deb55",
+      "sourceHash": "fnv1a64:8c9f0cdcece630b7",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -161,7 +161,7 @@
     },
     {
       "id": "FR-C06-nombres-6-10",
-      "sequence": null,
+      "sequence": 210,
       "title": "six, sept, huit, neuf, dix — and the calendar's secret",
       "headword": "six, sept, huit, neuf, dix",
       "romanization": "six, sept, huit, neuf, dix",
@@ -173,7 +173,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:bdcb67f5105f9909",
+      "sourceHash": "fnv1a64:b995cd448c777eef",
       "notice": {
         "modality": "sight",
         "needs": [

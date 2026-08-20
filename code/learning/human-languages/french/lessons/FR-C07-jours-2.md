@@ -1,5 +1,6 @@
 ---
 id: FR-C07-jours-2
+sequence: 220
 chapter: 7
 type: word
 headword: samedi, dimanche

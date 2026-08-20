@@ -1068,78 +1068,78 @@
     {
       "language": "french",
       "chapter": 1,
-      "sourceHash": "fnv1a64:b9a7455b1f549b7d",
+      "sourceHash": "fnv1a64:75a7d74a39e7efd4",
       "lessonIds": [
+        "FR-C01-salut",
         "FR-C01-bien",
         "FR-C01-bon",
-        "FR-C01-bonjour",
-        "FR-C01-bonne-nuit",
-        "FR-C01-bonsoir",
-        "FR-C01-jour",
         "FR-C01-le-la",
+        "FR-C01-jour",
+        "FR-C01-bonjour",
+        "FR-C01-soir",
+        "FR-C01-bonsoir",
         "FR-C01-nuit",
-        "FR-C01-practice",
-        "FR-C01-salut",
-        "FR-C01-soir"
+        "FR-C01-bonne-nuit",
+        "FR-C01-practice"
       ],
       "voiceLessons": 10,
-      "drivablePrefix": 7,
+      "drivablePrefix": 8,
       "text": "french/narration/ch01.txt",
       "json": "french/narration/ch01.json",
-      "textHash": "fnv1a64:7634ef9e32d05a0f",
-      "jsonHash": "fnv1a64:d220ace98be4c407"
+      "textHash": "fnv1a64:646f032e768ce910",
+      "jsonHash": "fnv1a64:144f5df5a80bf077"
     },
     {
       "language": "french",
       "chapter": 2,
-      "sourceHash": "fnv1a64:e3cb86d5fd9a61c0",
+      "sourceHash": "fnv1a64:ab8ecf4dad6f9ede",
       "lessonIds": [
+        "FR-C02-je",
+        "FR-C02-me",
         "FR-C02-appeler",
+        "FR-C02-je-mappelle",
+        "FR-C02-tu-vous",
         "FR-C02-comment",
         "FR-C02-comment-vous-appelez-vous",
         "FR-C02-enchante",
-        "FR-C02-je",
-        "FR-C02-je-mappelle",
-        "FR-C02-me",
-        "FR-C02-practice",
-        "FR-C02-tu-vous"
+        "FR-C02-practice"
       ],
       "voiceLessons": 7,
-      "drivablePrefix": 4,
+      "drivablePrefix": 0,
       "text": "french/narration/ch02.txt",
       "json": "french/narration/ch02.json",
-      "textHash": "fnv1a64:ebe80ac9567ace54",
-      "jsonHash": "fnv1a64:3b242daf063ad4ba"
+      "textHash": "fnv1a64:d91003b30cc29ea4",
+      "jsonHash": "fnv1a64:77b62607ed037cd9"
     },
     {
       "language": "french",
       "chapter": 3,
-      "sourceHash": "fnv1a64:db59db21d0da9d56",
+      "sourceHash": "fnv1a64:af7ee37600335d12",
       "lessonIds": [
+        "FR-C03-merci",
+        "FR-C03-de-rien",
         "FR-C03-aller",
-        "FR-C03-comme-ci-comme-ca",
         "FR-C03-comment-ca-va",
         "FR-C03-comment-registers",
-        "FR-C03-de-rien",
-        "FR-C03-merci",
+        "FR-C03-comme-ci-comme-ca",
         "FR-C03-practice"
       ],
       "voiceLessons": 6,
-      "drivablePrefix": 0,
+      "drivablePrefix": 2,
       "text": "french/narration/ch03.txt",
       "json": "french/narration/ch03.json",
-      "textHash": "fnv1a64:b1786bfb7f1c1667",
-      "jsonHash": "fnv1a64:983995d8d295d216"
+      "textHash": "fnv1a64:487f9ca4aa5c5383",
+      "jsonHash": "fnv1a64:d3da7e0154d85000"
     },
     {
       "language": "french",
       "chapter": 4,
-      "sourceHash": "fnv1a64:eaff6c8fad389e25",
+      "sourceHash": "fnv1a64:ec0f68883c275cfe",
       "lessonIds": [
+        "FR-C04-au-revoir",
+        "FR-C04-a-plus-tard",
         "FR-C04-a-bientot",
         "FR-C04-a-demain",
-        "FR-C04-a-plus-tard",
-        "FR-C04-au-revoir",
         "FR-C04-practice",
         "FR-W01-accents",
         "FR-W02-cedille",
@@ -1149,31 +1149,31 @@
       "drivablePrefix": 5,
       "text": "french/narration/ch04.txt",
       "json": "french/narration/ch04.json",
-      "textHash": "fnv1a64:b7aab45591b81e48",
-      "jsonHash": "fnv1a64:7a310938e7e933d1"
+      "textHash": "fnv1a64:cf3f56faa8699ed4",
+      "jsonHash": "fnv1a64:ac3b6504039f6b12"
     },
     {
       "language": "french",
       "chapter": 5,
-      "sourceHash": "fnv1a64:1ac542fc6064f48f",
+      "sourceHash": "fnv1a64:44a61a56f4245df8",
       "lessonIds": [
-        "FR-C05-habiter",
-        "FR-C05-je-parle-francais",
         "FR-C05-parler",
-        "FR-C05-practice",
-        "FR-C05-travailler"
+        "FR-C05-habiter",
+        "FR-C05-travailler",
+        "FR-C05-je-parle-francais",
+        "FR-C05-practice"
       ],
       "voiceLessons": 4,
-      "drivablePrefix": 2,
+      "drivablePrefix": 0,
       "text": "french/narration/ch05.txt",
       "json": "french/narration/ch05.json",
-      "textHash": "fnv1a64:51f91084fe1f94d4",
-      "jsonHash": "fnv1a64:70785937d63a9f35"
+      "textHash": "fnv1a64:0038a3edaf66e650",
+      "jsonHash": "fnv1a64:3e394f962669b15a"
     },
     {
       "language": "french",
       "chapter": 6,
-      "sourceHash": "fnv1a64:25abe4ad2f43a9c8",
+      "sourceHash": "fnv1a64:0fcca13612dc3a29",
       "lessonIds": [
         "FR-C06-nombres-1-5",
         "FR-C06-nombres-6-10"
@@ -1183,12 +1183,12 @@
       "text": "french/narration/ch06.txt",
       "json": "french/narration/ch06.json",
       "textHash": "fnv1a64:55dd85d4f40913cc",
-      "jsonHash": "fnv1a64:15073b5791b4c34c"
+      "jsonHash": "fnv1a64:82c59b2c5b82ccd5"
     },
     {
       "language": "french",
       "chapter": 7,
-      "sourceHash": "fnv1a64:5ec84f262f3c7a49",
+      "sourceHash": "fnv1a64:446ab9036ea79d9f",
       "lessonIds": [
         "FR-C07-jours-1",
         "FR-C07-jours-2"
@@ -1198,12 +1198,12 @@
       "text": "french/narration/ch07.txt",
       "json": "french/narration/ch07.json",
       "textHash": "fnv1a64:9e5a5270e9d9b801",
-      "jsonHash": "fnv1a64:23a95c61dec4bb74"
+      "jsonHash": "fnv1a64:2827f854dbbfc3ea"
     },
     {
       "language": "french",
       "chapter": 8,
-      "sourceHash": "fnv1a64:82538ce167e89fcb",
+      "sourceHash": "fnv1a64:2dab988c5a7db51b",
       "lessonIds": [
         "FR-C08-heure",
         "FR-C08-midi-minuit"
@@ -1213,12 +1213,12 @@
       "text": "french/narration/ch08.txt",
       "json": "french/narration/ch08.json",
       "textHash": "fnv1a64:abb25242190f022f",
-      "jsonHash": "fnv1a64:dd9552e5f9d0a93a"
+      "jsonHash": "fnv1a64:520937a3c51a702d"
     },
     {
       "language": "french",
       "chapter": 9,
-      "sourceHash": "fnv1a64:8841e970ee25edfd",
+      "sourceHash": "fnv1a64:06cc4bc5b102db61",
       "lessonIds": [
         "FR-C09-mois",
         "FR-C09-saisons"
@@ -1228,42 +1228,42 @@
       "text": "french/narration/ch09.txt",
       "json": "french/narration/ch09.json",
       "textHash": "fnv1a64:554d3cc3486706e3",
-      "jsonHash": "fnv1a64:db7ee143271fd9ad"
+      "jsonHash": "fnv1a64:2fa19f7c3055ddc1"
     },
     {
       "language": "french",
       "chapter": 10,
-      "sourceHash": "fnv1a64:310363476cb5df5c",
+      "sourceHash": "fnv1a64:775d82c740dc2d99",
       "lessonIds": [
-        "FR-C10-freres-soeurs",
-        "FR-C10-parents"
+        "FR-C10-parents",
+        "FR-C10-freres-soeurs"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "french/narration/ch10.txt",
       "json": "french/narration/ch10.json",
-      "textHash": "fnv1a64:6a36d292e653e74d",
-      "jsonHash": "fnv1a64:c464c1297a575673"
+      "textHash": "fnv1a64:4cf523063f4801eb",
+      "jsonHash": "fnv1a64:6169b6c73763dc39"
     },
     {
       "language": "french",
       "chapter": 11,
-      "sourceHash": "fnv1a64:9b1a16bd909e6a7a",
+      "sourceHash": "fnv1a64:51837bc7fb216a4f",
       "lessonIds": [
-        "FR-C11-eau-vin",
-        "FR-C11-pain"
+        "FR-C11-pain",
+        "FR-C11-eau-vin"
       ],
       "voiceLessons": 2,
       "drivablePrefix": 2,
       "text": "french/narration/ch11.txt",
       "json": "french/narration/ch11.json",
-      "textHash": "fnv1a64:77054f8bf6cbf8d7",
-      "jsonHash": "fnv1a64:a8a178e4429fa8bf"
+      "textHash": "fnv1a64:fd7e799738d7faef",
+      "jsonHash": "fnv1a64:262ac43c81d8f580"
     },
     {
       "language": "french",
       "chapter": 12,
-      "sourceHash": "fnv1a64:61f59b165c29bd13",
+      "sourceHash": "fnv1a64:caa28c1b4c8252f2",
       "lessonIds": [
         "FR-C12-nombres-11-16",
         "FR-C12-nombres-17-20"
@@ -1273,12 +1273,12 @@
       "text": "french/narration/ch12.txt",
       "json": "french/narration/ch12.json",
       "textHash": "fnv1a64:ba25cd8c811e667f",
-      "jsonHash": "fnv1a64:5d780500d40b39d7"
+      "jsonHash": "fnv1a64:589b062a58469766"
     },
     {
       "language": "french",
       "chapter": 13,
-      "sourceHash": "fnv1a64:4a24fc14ce11546c",
+      "sourceHash": "fnv1a64:065584545ac3079c",
       "lessonIds": [
         "FR-C13-noir-blanc",
         "FR-C13-rouge-bleu"
@@ -1288,27 +1288,27 @@
       "text": "french/narration/ch13.txt",
       "json": "french/narration/ch13.json",
       "textHash": "fnv1a64:d1689b83301e3678",
-      "jsonHash": "fnv1a64:dd810a1420bacae7"
+      "jsonHash": "fnv1a64:8d31d218e701b94a"
     },
     {
       "language": "french",
       "chapter": 14,
-      "sourceHash": "fnv1a64:a60c4c85228a0399",
+      "sourceHash": "fnv1a64:a3300ab0ba96729b",
       "lessonIds": [
-        "FR-C14-age",
-        "FR-C14-avoir"
+        "FR-C14-avoir",
+        "FR-C14-age"
       ],
       "voiceLessons": 1,
-      "drivablePrefix": 1,
+      "drivablePrefix": 0,
       "text": "french/narration/ch14.txt",
       "json": "french/narration/ch14.json",
-      "textHash": "fnv1a64:5f21133dbb676f2a",
-      "jsonHash": "fnv1a64:1eb920adfa33ad72"
+      "textHash": "fnv1a64:4197b60d2dea3e09",
+      "jsonHash": "fnv1a64:82655632a9d368b9"
     },
     {
       "language": "french",
       "chapter": 15,
-      "sourceHash": "fnv1a64:671e0691db37e94a",
+      "sourceHash": "fnv1a64:237798a3995c753e",
       "lessonIds": [
         "FR-C15-passe-compose",
         "FR-C15-passe-simple"
@@ -1318,12 +1318,12 @@
       "text": "french/narration/ch15.txt",
       "json": "french/narration/ch15.json",
       "textHash": "fnv1a64:d4e5a0c4a5a468ee",
-      "jsonHash": "fnv1a64:65cb84df7dc43392"
+      "jsonHash": "fnv1a64:dcb787f073c10840"
     },
     {
       "language": "french",
       "chapter": 16,
-      "sourceHash": "fnv1a64:d8315d6d2e9e3429",
+      "sourceHash": "fnv1a64:7b90e63b031ff511",
       "lessonIds": [
         "FR-C16-etre",
         "FR-C16-etre-roots",
@@ -1335,7 +1335,7 @@
       "text": "french/narration/ch16.txt",
       "json": "french/narration/ch16.json",
       "textHash": "fnv1a64:13b47fb3a41c58d7",
-      "jsonHash": "fnv1a64:f2b3f1b830e60f90"
+      "jsonHash": "fnv1a64:26ba5d33ac4690fb"
     },
     {
       "language": "french",
@@ -3974,7 +3974,7 @@
     {
       "language": "kannada",
       "chapter": 1,
-      "sourceHash": "fnv1a64:dc1b0406cbf54722",
+      "sourceHash": "fnv1a64:b7d4eda5acb6e6d2",
       "lessonIds": [
         "KA-C01-namaskara",
         "KA-C01-dhanyavada",
@@ -3987,8 +3987,8 @@
       "drivablePrefix": 0,
       "text": "kannada/narration/ch01.txt",
       "json": "kannada/narration/ch01.json",
-      "textHash": "fnv1a64:ff110ce25f48bffa",
-      "jsonHash": "fnv1a64:b7a8b0c78cfb9d9c"
+      "textHash": "fnv1a64:af510d51eb8dd3cb",
+      "jsonHash": "fnv1a64:b8d817be2a9dd832"
     },
     {
       "language": "kannada",

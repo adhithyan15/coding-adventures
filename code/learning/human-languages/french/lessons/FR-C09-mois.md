@@ -1,5 +1,6 @@
 ---
 id: FR-C09-mois
+sequence: 235
 chapter: 9
 type: word
 headword: les mois
