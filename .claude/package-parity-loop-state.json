@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12319,
+  "active_pr": 12324,
   "last_inventory": {
-    "revision": "929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5",
+    "revision": "7020ebbb1a85976dc5aec170ac61df15d7d46e25",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
@@ -3945,7 +3945,7 @@
     {
       "id": "image-codec-png-language-neutral-conformance",
       "title": "Define language-neutral IC18 PNG conformance with TypeScript reference consumption",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["zip-raw-rfc1951-portable-conformance"],
       "branch": "codex/png-language-neutral-conformance",
       "pr_number": 12319,
@@ -3954,15 +3954,27 @@
       "selection_revision": "2780825f2a7b5bf93936b6927175e975b611cb5c",
       "selection_notes": "Selected immediately after ZIP portable closure PR #12307 completed all 29 checks and merged through auto-merge, making this neutral foundation the sole newly dependency-ready prerequisite for all twelve PNG lane children. The canonical schema-3 inventory at exact live main 2780825f2a reports the same 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets, with no added, retired, or expanded package root. This bounded tranche first tightens the TypeScript reference, then defines and validates a language-neutral IC18 corpus and stable error contract for exact chunks, CRC, zlib framing, filters, supported colour forms, split IDAT, foreign interoperability, exact consumption, and caller-lowerable resource ceilings. It does not start any non-TypeScript lane port.",
       "implementation_revision": "d237fd922c714c39deb9dc4fd3a30aea47518e04",
+      "final_review_revision": "e9ae38873f3606d764e2786e824d6fd1c297a8dc",
+      "merged_at": "2026-08-20T20:03:24Z",
+      "merge_revision": "a09bb28bd19ab24760322f7fcf940184c0912409",
       "validation_notes": "The closed Draft 2020-12 schema and deterministic generator pin 82 portable cases and 29 ordered stable error identifiers. The corpus covers stored, fixed, and a checked dynamic RFC 1951 stream; all five filters; Paeth a/b/c and tie behavior; split IDAT; exact CRC, Adler-32, chunk-order, PLTE, tRNS, zlib-framing, truncation, and caller-lowered limit boundaries; and independent encode filter inspection without compressor-byte pins. TypeScript build and 141 tests pass with 100% statement, branch, function, and line coverage. The literal package BUILD, full and production npm audits with zero vulnerabilities, eight independent PNG fixture tests, nine ZIP fixture tests, four ZIP closure tests, seven capability tests, ten parity-reporter tests, Ruff, formatting, strict MyPy, Bandit, Go test/vet/trimpath build, strict JSON and state DAG checks, collision reporting, diff, credential, and production-authority scans pass. The repository build plan selects exactly image-codec-png and its pixel-container, ZIP, and LZSS prerequisites on Unix and Windows, and the repository-native build tool executes that four-package closure successfully. The live inventory remains 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets.",
-      "publication_notes": "Opened ready-for-review PR #12319 from validated implementation revision d237fd922c714c39deb9dc4fd3a30aea47518e04 after two clean late-main rebases and full recertification against origin/main 929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5. The PR is mergeable, and CI is pending; auto-merge remains disabled until every required check is terminal acceptable and GitHub reports no conflict.",
+      "publication_notes": "Opened ready-for-review PR #12319 from validated implementation revision d237fd922c714c39deb9dc4fd3a30aea47518e04 after two clean late-main rebases and full recertification against origin/main 929de1d639ea9e76e2f38fcf9fbfaf55d596a5d5. All 30 reported checks reached terminal acceptable conclusions with 23 successes, six expected skips, and one neutral CodeQL conclusion; both CI gates and every Linux, macOS, and Windows build succeeded. GitHub reported final reviewed head e9ae38873f3606d764e2786e824d6fd1c297a8dc clean and mergeable. The loop enabled squash auto-merge, and GitHub merged that exact head as a09bb28bd19ab24760322f7fcf940184c0912409 at 2026-08-20T20:03:24Z without manual merge authority.",
       "notes": "Decomposed from the broad image-codec-png owner during the ZIP closure security and leverage audit. Close exact chunk ordering and CRC, zlib CM/CINFO/FCHECK and Adler-32 framing, split IDAT, every supported colour type, bit depth, and filter, foreign interoperability, exact consumption and covert-cavity rejection, stable payload-blind errors, dimension/pixel/inflation ceilings, and an explicit empty capability profile. The TypeScript reference must reject CINFO above 7 and require maxPixels to be an integer no larger than the 32 Mi-pixel default before it becomes the oracle."
+    },
+    {
+      "id": "image-codec-png-apng-neutral-rejection-conformance",
+      "title": "Close APNG refusal in the IC18 neutral PNG contract",
+      "status": "pending",
+      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Discovered during the Go PNG child security audit. IC18 says APNG is refused, but the merged TypeScript reference and 82-case neutral corpus treat acTL, fcTL, and fdAT as skippable ancillary chunks. Add valid-CRC neutral rejection vectors, make the TypeScript oracle reject all three as unsupported-feature, and update the corpus summary pins before the remaining lane ports start. The already-selected Go child carries a focused direct regression and explicit refusal so it does not reproduce the ambiguity."
     },
     {
       "id": "image-codec-png-dotnet-lane-parity",
       "title": "Port IC18 image-codec-png to C# and F#",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Toolchain-shaped .NET child. Consume the neutral PNG corpus and the established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
@@ -3971,7 +3983,7 @@
       "id": "image-codec-png-dart-lane-parity",
       "title": "Port IC18 image-codec-png to Dart",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Dart child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -3980,7 +3992,7 @@
       "id": "image-codec-png-elixir-lane-parity",
       "title": "Port IC18 image-codec-png to Elixir",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Elixir child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -3988,17 +4000,24 @@
     {
       "id": "image-codec-png-go-lane-parity",
       "title": "Port IC18 image-codec-png to Go",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["image-codec-png-language-neutral-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/image-codec-png-go-lane-parity",
+      "pr_number": 12324,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12324",
+      "opened_at": "2026-08-20T20:48:18Z",
+      "selection_revision": "a09bb28bd19ab24760322f7fcf940184c0912409",
+      "selection_notes": "Selected immediately after PNG neutral-foundation PR #12319 completed all 30 checks and merged through auto-merge. The collision-checked schema-3 inventory at exact merge main a09bb28bd1 remains 15 established lanes, 1,368 identities, 4,552 slots, zero collisions, and zero unknown buckets; the intervening human-language commits and merged TypeScript PNG work add no package identity or lane expansion. All twelve PNG toolchain children are newly ready. Go has the strongest safe dependency leverage: the installed Go 1.26.4 toolchain and existing pixel-container plus ZIP raw/count/CRC packages pass their native tests, vet, race/coverage, and build front doors, and this child unlocks both the final PNG umbrella and the separate unblocked paint-codec-png reconciliation. This tranche adds exactly go/image-codec-png, consumes every representable neutral case through its public API, documents the typed PixelContainer boundary for non-integer fixture inputs, preserves pure in-memory operation with empty capabilities, and leaves paint-adapter migration and every other lane pending.",
+      "implementation_revision": "1f801e4a9ed95ea9625096ac8991dc1890f5f3a1",
+      "validation_notes": "The Go codec consumes all 82 neutral IC18 cases and all 29 ordered stable errors through the public API wherever Go's uint32 PixelContainer can represent the fixture; the one fractional encoder input is rejected before typed conversion. Three additional valid-CRC regressions refuse APNG acTL, fcTL, and fdAT as unsupported-feature, and a temporary control removal proved those regressions fail against the generic ancillary path. Direct go test -race reports 99.0% statement coverage; gofmt, vet, trimpath build, and go mod tidy pass. The real ZIP, pixel-container, and LZSS prerequisites pass race tests at 90.9%, 92.9%, and 97.7% coverage plus vet and trimpath builds; the existing paint adapter baseline also passes while remaining separately owned. A freshly compiled repository build tool discovers 4,973 packages, validates metadata, selects exactly go/image-codec-png plus ZIP, pixel-container, and LZSS on Linux, Darwin, and Windows, and executes the Go plan successfully. Eight neutral PNG validator tests, seven capability tests, ten parity-reporter tests, Ruff, strict MyPy, Bandit, strict JSON and state DAG checks pass. The branch collision report has 1,368 identities and 4,553 slots, moving image-codec-png from the singleton band to the 2-4 band with zero collisions and zero unknown buckets; the stored exact-main inventory remains topology-neutral at 4,552 slots. Production imports only byte/math helpers and repository pixel-container/ZIP, the capability manifest is explicitly empty, and authority, credential, diff, and final read-only security scans pass.",
+      "publication_notes": "Opened ready-for-review PR #12324 from clean validated head 1b5e34acf32d31feac5acdabf460b0f870dc1606 after a normal first push from exact origin/main 7020ebbb1a85976dc5aec170ac61df15d7d46e25. The source branch had no prior remote or PR owner, all live open-PR and no-PR branch audits were disjoint from the owned Go PNG, dependency, fixture, state, and roadmap surfaces, and GitHub initially reported the PR mergeable with required checks queued.",
       "notes": "Standalone Go child consuming the neutral PNG corpus and repo ZIP raw/CRC surface. Existing go/paint-codec-png delegates to the standard-library image/png codec and is not parity evidence for this portable package."
     },
     {
       "id": "image-codec-png-haskell-lane-parity",
       "title": "Port IC18 image-codec-png to Haskell",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Haskell child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -4007,7 +4026,7 @@
       "id": "image-codec-png-jvm-lane-parity",
       "title": "Port IC18 image-codec-png to Java and Kotlin",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Toolchain-shaped JVM child. Consume the neutral PNG corpus and established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
@@ -4016,7 +4035,7 @@
       "id": "image-codec-png-lua-lane-parity",
       "title": "Port IC18 image-codec-png to Lua",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Lua child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -4025,7 +4044,7 @@
       "id": "image-codec-png-perl-lane-parity",
       "title": "Port IC18 image-codec-png to Perl",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Perl child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -4034,7 +4053,7 @@
       "id": "image-codec-png-python-lane-parity",
       "title": "Port IC18 image-codec-png to Python",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Python child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -4043,7 +4062,7 @@
       "id": "image-codec-png-ruby-lane-parity",
       "title": "Port IC18 image-codec-png to Ruby",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Ruby child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
@@ -4052,7 +4071,7 @@
       "id": "image-codec-png-rust-lane-parity",
       "title": "Port IC18 image-codec-png to Rust",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Rust child consuming the neutral PNG corpus and established ZIP raw/CRC surface. The legacy rust/png crate duplicates CRC/DEFLATE and exposes filesystem writes while declaring empty capabilities, so it is migration input rather than parity evidence."
@@ -4061,7 +4080,7 @@
       "id": "image-codec-png-swift-lane-parity",
       "title": "Port IC18 image-codec-png to Swift",
       "status": "pending",
-      "depends_on": ["image-codec-png-language-neutral-conformance"],
+      "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": null,
       "pr_number": null,
       "notes": "Standalone Swift child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
