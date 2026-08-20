@@ -7,13 +7,13 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:b11fbbd97333cce0",
+  "sourceHash": "fnv1a64:490c59fc86f5ea9b",
   "summary": {
-    "totalLessons": 3404,
-    "voice": 2460,
-    "sight": 590,
-    "pen": 354,
-    "drivableLessons": 2460,
+    "totalLessons": 3411,
+    "voice": 2462,
+    "sight": 587,
+    "pen": 362,
+    "drivableLessons": 2462,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1004,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "arabic",
-      "lessonCount": 100,
-      "voice": 44,
-      "sight": 40,
-      "pen": 16,
-      "drivablePercent": 44,
+      "lessonCount": 107,
+      "voice": 46,
+      "sight": 37,
+      "pen": 24,
+      "drivablePercent": 43,
       "drivablePrefixTotal": 32,
       "modalities": [
         "voice",
@@ -40,10 +40,10 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 14,
-          "voice": 1,
-          "sight": 7,
-          "pen": 6,
+          "lessonCount": 21,
+          "voice": 3,
+          "sight": 4,
+          "pen": 14,
           "modalities": [
             "voice",
             "sight",
@@ -17780,20 +17780,68 @@
       "language": "arabic",
       "chapter": 1,
       "sequence": 10,
-      "modality": "sight",
-      "derived": "sight",
+      "modality": "pen",
+      "derived": "pen",
       "drivable": false,
       "reasons": [
-        "script-block"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:afb61c22df2784f9",
+      "sourceHash": "fnv1a64:6a36c8df576540f0",
       "detachableSegments": [
-        "The letters in this word"
+        "Writing — first microstep"
+      ]
+    },
+    {
+      "id": "AR-W00-sin-lam",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 12,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8183e294b0c9840b",
+      "detachableSegments": [
+        "Script — recall sīn and add lām",
+        "Writing — trace, then recall"
+      ]
+    },
+    {
+      "id": "AR-W00-alif-mim-salam",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 14,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:48bee2dd55aefe69",
+      "detachableSegments": [
+        "Script — observe two new shapes",
+        "Writing — guided copy, then delayed copy"
       ]
     },
     {
@@ -17801,20 +17849,63 @@
       "language": "arabic",
       "chapter": 1,
       "sequence": 20,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:ba8af0a7ae3d9ab1",
+      "sourceHash": "fnv1a64:b856a38826ac85f3"
+    },
+    {
+      "id": "AR-W00-ra-ha",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 22,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7f866a3742cef536",
       "detachableSegments": [
-        "The letters in this word"
+        "Script — observe rāʾ and ḥāʾ"
+      ]
+    },
+    {
+      "id": "AR-W00-ba-family-marhaba",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 24,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1e9f2729aa20a317",
+      "detachableSegments": [
+        "Script — one skeleton, three letters",
+        "Writing — guided copy, then delayed copy"
       ]
     },
     {
@@ -17843,20 +17934,85 @@
       "language": "arabic",
       "chapter": 1,
       "sequence": 40,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "script-block"
+        "no-visual-dependency"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:854a698437c0a889",
+      "sourceHash": "fnv1a64:e06a7cce98b601f1"
+    },
+    {
+      "id": "AR-W00-ayn-ya",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 42,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5b4d2d841746677d",
       "detachableSegments": [
-        "The letters in this word"
+        "Script — observe ʿayn and yāʾ"
+      ]
+    },
+    {
+      "id": "AR-W00-kaf-waw-alaykum",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 44,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3f3f294e2cf38289",
+      "detachableSegments": [
+        "Script — observe two new shapes",
+        "Writing — guided copy, then delayed copy"
+      ]
+    },
+    {
+      "id": "AR-W00-full-greeting-recall",
+      "language": "arabic",
+      "chapter": 1,
+      "sequence": 46,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d30562ce6eec0d04",
+      "detachableSegments": [
+        "Writing — dictation and repair"
       ]
     },
     {
@@ -17938,7 +18094,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c8834e0835cb82cc"
+      "sourceHash": "fnv1a64:b8468db8e3642fb9"
     },
     {
       "id": "AR-W01-direction-and-alif",
