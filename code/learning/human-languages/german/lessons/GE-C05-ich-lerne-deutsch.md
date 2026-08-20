@@ -1,5 +1,6 @@
 ---
 id: GE-C05-ich-lerne-deutsch
+sequence: 205
 chapter: 5
 type: phrase
 headword: Ich lerne Deutsch

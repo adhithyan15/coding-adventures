@@ -1,5 +1,6 @@
 ---
 id: GE-W03-capitalization
+sequence: 185
 chapter: 4
 type: writing
 headword: "das Haus, die Freiheit"

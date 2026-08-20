@@ -4,11 +4,11 @@
   "chapter": 12,
   "title": "Numbers Eleven to Twenty",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:67b1d99f86f090c2",
+  "sourceHash": "fnv1a64:8f39891bf2f8c2d6",
   "lessons": [
     {
       "id": "GE-C12-elf-zwoelf",
-      "sequence": null,
+      "sequence": 275,
       "title": "elf und zwölf — \"one left over,\" \"two left over\"",
       "headword": "elf, zwölf",
       "romanization": "elf, zwölf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d65805c696c22eea",
+      "sourceHash": "fnv1a64:8d1c66b0b25a26d9",
       "notice": null,
       "blocks": [
         {
@@ -146,7 +146,7 @@
     },
     {
       "id": "GE-C12-zahlen-13-20",
-      "sequence": null,
+      "sequence": 280,
       "title": "dreizehn becomes zwanzig — the pattern that never breaks",
       "headword": "dreizehn — zwanzig",
       "romanization": "dreizehn — zwanzig",
@@ -158,7 +158,7 @@
         "sight-cue",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:83effc86b2ea8b52",
+      "sourceHash": "fnv1a64:632c4bc9ece29d05",
       "notice": {
         "modality": "sight",
         "needs": [

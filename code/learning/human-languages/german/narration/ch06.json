@@ -4,11 +4,11 @@
   "chapter": 6,
   "title": "Numbers One to Ten",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7e9dfcbdcfad6638",
+  "sourceHash": "fnv1a64:6866acd0f8171296",
   "lessons": [
     {
       "id": "GE-C06-zahlen-1-5",
-      "sequence": null,
+      "sequence": 215,
       "title": "eins, zwei, drei, vier, fünf — counting to five",
       "headword": "eins, zwei, drei, vier, fünf",
       "romanization": "eins, zwei, drei, vier, fünf",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:195cf21d12ee7be8",
+      "sourceHash": "fnv1a64:709327fa212ffb51",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -159,7 +159,7 @@
     },
     {
       "id": "GE-C06-zahlen-6-10",
-      "sequence": null,
+      "sequence": 220,
       "title": "sechs, sieben, acht, neun, zehn — finishing the count",
       "headword": "sechs, sieben, acht, neun, zehn",
       "romanization": "sechs, sieben, acht, neun, zehn",
@@ -170,7 +170,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:0b668449ae50e38f",
+      "sourceHash": "fnv1a64:79b90ac4f55c4080",
       "notice": {
         "modality": "sight",
         "needs": [

@@ -3,6 +3,102 @@ German, chapter 2: Introducing Yourself.
 
 
 Lesson 1 of 8.
+ich — "I," the same ancient word as Latin ego.
+
+Warm-up.
+[pause 2 seconds]
+To introduce yourself, first "I." German's is a three-letter word hiding a very deep root.
+
+Sounds you'll need.
+ich = ikh — the ch here is soft: a light hiss at the front of the mouth (the "ich-sound"), not the throat-scrape of Nacht. German has both; after i and e it's the soft one.
+
+The word, taken apart.
+ich — "I." Root: Proto-Germanic ik, from Proto-Indo-European eǵ — the same deep root that became:
+Latin ego (and English ego), Greek egō,
+and, worn down hardest of all, English I.
+So German ich, Latin ego, and English I are three survivals of one ancient word for "I" — English filed it down to a single letter, German kept a bit more.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich" (ikh, soft ch)]
+[pause 8 seconds for the answer]
+[your turn — say: the three cousins — ich / ego / I]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What PIE root gave ich, and what Latin and English words are its cousins? (eǵ — Latin ego, English I.) Which ch sound does ich use — soft or the Nacht scrape? (The soft "ich-sound.")
+
+
+Lesson 2 of 8.
+heißen — "to be called," the verb English almost lost.
+
+Warm-up.
+[pause 2 seconds]
+German gives its name with one plain verb — heißen, "to be called." No "myself" needed, unlike the Romance languages.
+
+Sounds you'll need.
+heißen = HY-ssen. The ß (Eszett) is just a sharp "ss." ei is the vowel of English eye. So heiße = HY-ssuh.
+
+The word, taken apart.
+heißen — "to be called / to be named." Root: Proto-Germanic haitaną. English had this verb:
+hight, "named" — now archaic ("a knight hight Gawain"), and.
+behest, "a command" — literally something called for.
+So German kept as an everyday word a verb English let fade to poetry. And where Spanish and French say "I call myself" (a reflexive), German uses heißen as a plain verb of being called — no "myself" at all.
+
+Grammar Lens: one verb, changing its ending.
+heißen is the dictionary (infinitive) form. German swaps the ending for each person:
+ich heiße — I am called.
+du heißt — you (familiar) are called.
+Sie heißen — you (formal) are called.
+That ending-swap is the same machine on every German verb. You'll use ich heiße and Sie heißen in the next lessons.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "heißen" (HY-ssen)]
+[pause 8 seconds for the answer]
+[your turn — say: the English fossil — hight ("named"), behest]
+[pause 8 seconds for the answer]
+[your turn — say: the three forms — ich heiße / du heißt / Sie heißen]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does heißen mean, and what archaic English word is its cousin? ("To be called"; hight.) How is German's way of giving a name different from Spanish/French? (A plain verb "to be called," no reflexive "myself.")
+
+
+Lesson 3 of 8.
+ich heiße… — "my name is…," literally "I am called".
+
+Warm-up.
+[pause 2 seconds]
+Assemble the two pieces — ich and heißen — into the sentence you need for meeting anyone.
+
+The phrase, assembled.
+ich (I) + heiße (am called).
+ich heiße… = word for word "I am called…" = "my name is…"
+Ich heiße Arun. becomes "My name is Arun." Ich heiße Mira. becomes "My name is Mira."
+
+Why it's said this way.
+German also has the literal "my name is":
+mein Name ist… — where Name from Proto-Germanic namô, the same root as English name and Latin nōmen ( becomes English noun, nominate). It's correct and common.
+But ich heiße is warmer and more idiomatic — German prefers the verb ("I am called") over the noun phrase ("my name is"). (Note Name is Capitalized: German capitalizes every noun — you'll see it on every naming word.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "ich heiße…" then your own name]
+[pause 8 seconds for the answer]
+[your turn — say: what it literally says ("I am called")]
+[pause 8 seconds for the answer]
+[your turn — say: the literal alternative — "mein Name ist…"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does ich heiße literally mean? ("I am called.") What's the more literal "my name is," and what English words is Name cousin to? (mein Name ist; name, noun.)
+
+
+Lesson 4 of 8.
 du / Sie — "you," familiar and formal.
 
 Warm-up.
@@ -40,7 +136,71 @@ Wrap-up Recall.
 What is the formal Sie literally, and why capitalized? (It's "they," sie, promoted to polite "you"; capitalized to distinguish it.) What old English word was the lost du? (thou.)
 
 
-Lesson 2 of 8.
+Lesson 5 of 8.
+wie — "how," cousin of English how.
+
+Warm-up.
+[pause 2 seconds]
+German asks "what's your name?" as "how are you called?" — so first, "how."
+
+Sounds you'll need.
+wie = vee. Two traps: German w is an English v, and ie is a long ee. So wie sounds like English "vee," never "wy."
+
+The word, taken apart.
+wie — "how." Root: Proto-Germanic hwī, from the PIE interrogative root kʷo- — the very root behind the English wh- words:
+how, what, who, why — and, through Latin, the qu- of question, quantity, and the quo modo that became French comment.
+German wie and English how are the same question-word, lightly reshaped.
+
+Grammar Lens: German counts names as a matter of "how".
+Like French, German asks a name with "how," not "what": wie heißen Sie? is literally "how are you called?" — about the manner of your being called. Don't translate word for word; learn the logic: the name-question runs on wie.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "wie" (vee — w is v, ie is ee)]
+[pause 8 seconds for the answer]
+[your turn — say: the English wh- cousins — how, what, who, why]
+[pause 8 seconds for the answer]
+[your turn — say: "how are you called?" is the German for "what's your name?"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+How is wie pronounced, and what English question-words share its root? (vee; how / what / who / why.) English asks "what is your name?" — what does German literally ask? ("How are you called?")
+
+
+Lesson 6 of 8.
+wie heißen Sie? — "what's your name?"
+
+Warm-up.
+[pause 2 seconds]
+Assemble it: "how" + "are you called" = the polite question that opens the introduction.
+
+The phrase, assembled.
+wie (how) + heißen Sie ("are you [formal] called").
+wie heißen Sie? = literally "how are you called?" = the polite "what's your name?"
+
+Grammar Lens: verb in second place.
+German likes the verb in the second slot of a sentence:
+Wie (1) heißen (2) Sie?
+The informal version swaps in du and its ending:
+Wie heißt du?
+So the one verb heißen runs the whole exchange: ich heiße… to give your name, wie heißen Sie? to ask for someone else's. (Reply to wie heißen Sie? with Ich heiße….)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "wie heißen Sie?" (formal)]
+[pause 8 seconds for the answer]
+[your turn — say: the informal — "wie heißt du?"]
+[pause 8 seconds for the answer]
+[your turn — say: the pair — ask, then answer: "wie heißen Sie?" / "ich heiße…"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What does wie heißen Sie? literally say? ("How are you called?") What's the informal version, and where does German put the verb? (Wie heißt du?; the verb goes second.)
+
+
+Lesson 7 of 8.
 freut mich — "pleased to meet you," i.e. "it gladdens me".
 
 Warm-up.
@@ -75,103 +235,7 @@ Wrap-up Recall.
 What does freut mich literally mean, and on what word is freuen built? ("It gladdens me"; froh, "glad.") What does mich mean in it? ("Me" — the meeting gladdens me.)
 
 
-Lesson 3 of 8.
-heißen — "to be called," the verb English almost lost.
-
-Warm-up.
-[pause 2 seconds]
-German gives its name with one plain verb — heißen, "to be called." No "myself" needed, unlike the Romance languages.
-
-Sounds you'll need.
-heißen = HY-ssen. The ß (Eszett) is just a sharp "ss." ei is the vowel of English eye. So heiße = HY-ssuh.
-
-The word, taken apart.
-heißen — "to be called / to be named." Root: Proto-Germanic haitaną. English had this verb:
-hight, "named" — now archaic ("a knight hight Gawain"), and.
-behest, "a command" — literally something called for.
-So German kept as an everyday word a verb English let fade to poetry. And where Spanish and French say "I call myself" (a reflexive), German uses heißen as a plain verb of being called — no "myself" at all.
-
-Grammar Lens: one verb, changing its ending.
-heißen is the dictionary (infinitive) form. German swaps the ending for each person:
-ich heiße — I am called.
-du heißt — you (familiar) are called.
-Sie heißen — you (formal) are called.
-That ending-swap is the same machine on every German verb. You'll use ich heiße and Sie heißen in the next lessons.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "heißen" (HY-ssen)]
-[pause 8 seconds for the answer]
-[your turn — say: the English fossil — hight ("named"), behest]
-[pause 8 seconds for the answer]
-[your turn — say: the three forms — ich heiße / du heißt / Sie heißen]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does heißen mean, and what archaic English word is its cousin? ("To be called"; hight.) How is German's way of giving a name different from Spanish/French? (A plain verb "to be called," no reflexive "myself.")
-
-
-Lesson 4 of 8.
-ich — "I," the same ancient word as Latin ego.
-
-Warm-up.
-[pause 2 seconds]
-To introduce yourself, first "I." German's is a three-letter word hiding a very deep root.
-
-Sounds you'll need.
-ich = ikh — the ch here is soft: a light hiss at the front of the mouth (the "ich-sound"), not the throat-scrape of Nacht. German has both; after i and e it's the soft one.
-
-The word, taken apart.
-ich — "I." Root: Proto-Germanic ik, from Proto-Indo-European eǵ — the same deep root that became:
-Latin ego (and English ego), Greek egō,
-and, worn down hardest of all, English I.
-So German ich, Latin ego, and English I are three survivals of one ancient word for "I" — English filed it down to a single letter, German kept a bit more.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich" (ikh, soft ch)]
-[pause 8 seconds for the answer]
-[your turn — say: the three cousins — ich / ego / I]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What PIE root gave ich, and what Latin and English words are its cousins? (eǵ — Latin ego, English I.) Which ch sound does ich use — soft or the Nacht scrape? (The soft "ich-sound.")
-
-
-Lesson 5 of 8.
-ich heiße… — "my name is…," literally "I am called".
-
-Warm-up.
-[pause 2 seconds]
-Assemble the two pieces — ich and heißen — into the sentence you need for meeting anyone.
-
-The phrase, assembled.
-ich (I) + heiße (am called).
-ich heiße… = word for word "I am called…" = "my name is…"
-Ich heiße Arun. becomes "My name is Arun." Ich heiße Mira. becomes "My name is Mira."
-
-Why it's said this way.
-German also has the literal "my name is":
-mein Name ist… — where Name from Proto-Germanic namô, the same root as English name and Latin nōmen ( becomes English noun, nominate). It's correct and common.
-But ich heiße is warmer and more idiomatic — German prefers the verb ("I am called") over the noun phrase ("my name is"). (Note Name is Capitalized: German capitalizes every noun — you'll see it on every naming word.)
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "ich heiße…" then your own name]
-[pause 8 seconds for the answer]
-[your turn — say: what it literally says ("I am called")]
-[pause 8 seconds for the answer]
-[your turn — say: the literal alternative — "mein Name ist…"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does ich heiße literally mean? ("I am called.") What's the more literal "my name is," and what English words is Name cousin to? (mein Name ist; name, noun.)
-
-
-Lesson 6 of 8.
+Lesson 8 of 8.
 Chapter 2 — the introduction, whole.
 
 Warm-up.
@@ -205,67 +269,3 @@ Wrap-up Recall.
 [pause 3 seconds]
 Give your name in German, ask someone else's, and say you're pleased to meet them. (Ich heiße… / Wie heißen Sie? / Freut mich.) What two German habits does this show? (Naming with a plain "to be called" verb; politeness by the third person, Sie.)
 Next chapter: Wie geht's? ("how's it going?") and answering with gut again — the responding cycle.
-
-
-Lesson 7 of 8.
-wie — "how," cousin of English how.
-
-Warm-up.
-[pause 2 seconds]
-German asks "what's your name?" as "how are you called?" — so first, "how."
-
-Sounds you'll need.
-wie = vee. Two traps: German w is an English v, and ie is a long ee. So wie sounds like English "vee," never "wy."
-
-The word, taken apart.
-wie — "how." Root: Proto-Germanic hwī, from the PIE interrogative root kʷo- — the very root behind the English wh- words:
-how, what, who, why — and, through Latin, the qu- of question, quantity, and the quo modo that became French comment.
-German wie and English how are the same question-word, lightly reshaped.
-
-Grammar Lens: German counts names as a matter of "how".
-Like French, German asks a name with "how," not "what": wie heißen Sie? is literally "how are you called?" — about the manner of your being called. Don't translate word for word; learn the logic: the name-question runs on wie.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "wie" (vee — w is v, ie is ee)]
-[pause 8 seconds for the answer]
-[your turn — say: the English wh- cousins — how, what, who, why]
-[pause 8 seconds for the answer]
-[your turn — say: "how are you called?" is the German for "what's your name?"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-How is wie pronounced, and what English question-words share its root? (vee; how / what / who / why.) English asks "what is your name?" — what does German literally ask? ("How are you called?")
-
-
-Lesson 8 of 8.
-wie heißen Sie? — "what's your name?"
-
-Warm-up.
-[pause 2 seconds]
-Assemble it: "how" + "are you called" = the polite question that opens the introduction.
-
-The phrase, assembled.
-wie (how) + heißen Sie ("are you [formal] called").
-wie heißen Sie? = literally "how are you called?" = the polite "what's your name?"
-
-Grammar Lens: verb in second place.
-German likes the verb in the second slot of a sentence:
-Wie (1) heißen (2) Sie?
-The informal version swaps in du and its ending:
-Wie heißt du?
-So the one verb heißen runs the whole exchange: ich heiße… to give your name, wie heißen Sie? to ask for someone else's. (Reply to wie heißen Sie? with Ich heiße….)
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "wie heißen Sie?" (formal)]
-[pause 8 seconds for the answer]
-[your turn — say: the informal — "wie heißt du?"]
-[pause 8 seconds for the answer]
-[your turn — say: the pair — ask, then answer: "wie heißen Sie?" / "ich heiße…"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What does wie heißen Sie? literally say? ("How are you called?") What's the informal version, and where does German put the verb? (Wie heißt du?; the verb goes second.)

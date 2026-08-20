@@ -3,6 +3,45 @@ German, chapter 13: Colours.
 
 
 Lesson 1 of 2.
+schwarz, weiß — and the word German lent away.
+
+Warm-up.
+[pause 2 seconds]
+German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for "shining" became the word for white in French, Italian and Portuguese.
+
+schwarz.
+schwarz ("black") from Proto-Germanic swartaz. Its English cousin survives in swarthy ("dark-complexioned"). Further back it's related to Latin sordēs ("dirt") — the root of English sordid. Black and grubby, from one idea.
+
+weiß.
+weiß ("white") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes.
+Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there.
+
+The word that emigrated.
+German also has blank — "shiny, polished, bare." That word, in its Frankish form blank ("shining"), was borrowed into Romance, where it pushed Latin's own albus out and became:
+[a table of 4 rows, read aloud]
+language: French. "white": blanc.
+language: Italian. "white": bianco.
+language: Portuguese. "white": branco.
+language: German. "white": blank — still just "shiny".
+This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from Chapter 11). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "schwarz, weiß"]
+[pause 8 seconds for the answer]
+[your turn — say: "der Wein ist weiß" — Chapter 11's wine, coloured]
+[pause 8 seconds for the answer]
+[your turn — say: "weiß, white" — hear the same word]
+[pause 8 seconds for the answer]
+[your turn — say: "blank" — and remember: French made this one mean white]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, "shining" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled.
+
+
+Lesson 2 of 2.
 rot, blau — cousins and emigrants.
 
 Warm-up.
@@ -48,42 +87,3 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Is rot related to French rouge by borrowing or by descent? (Descent — both from PIE h₁rewdʰ-.) Which two German colour words did Romance borrow? (Blank becomes blanc/bianco/branco, and blau becomes bleu/blu.) Where did English get blue from? (French — the long way round.) Next chapter: putting colours onto the things you already name.
-
-
-Lesson 2 of 2.
-schwarz, weiß — and the word German lent away.
-
-Warm-up.
-[pause 2 seconds]
-German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for "shining" became the word for white in French, Italian and Portuguese.
-
-schwarz.
-schwarz ("black") from Proto-Germanic swartaz. Its English cousin survives in swarthy ("dark-complexioned"). Further back it's related to Latin sordēs ("dirt") — the root of English sordid. Black and grubby, from one idea.
-
-weiß.
-weiß ("white") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes.
-Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there.
-
-The word that emigrated.
-German also has blank — "shiny, polished, bare." That word, in its Frankish form blank ("shining"), was borrowed into Romance, where it pushed Latin's own albus out and became:
-[a table of 4 rows, read aloud]
-language: French. "white": blanc.
-language: Italian. "white": bianco.
-language: Portuguese. "white": branco.
-language: German. "white": blank — still just "shiny".
-This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from Chapter 11). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "schwarz, weiß"]
-[pause 8 seconds for the answer]
-[your turn — say: "der Wein ist weiß" — Chapter 11's wine, coloured]
-[pause 8 seconds for the answer]
-[your turn — say: "weiß, white" — hear the same word]
-[pause 8 seconds for the answer]
-[your turn — say: "blank" — and remember: French made this one mean white]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, "shining" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled.

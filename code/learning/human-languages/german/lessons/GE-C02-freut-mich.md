@@ -1,5 +1,6 @@
 ---
 id: GE-C02-freut-mich
+sequence: 95
 chapter: 2
 type: phrase
 headword: freut mich

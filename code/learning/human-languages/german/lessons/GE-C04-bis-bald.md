@@ -1,5 +1,6 @@
 ---
 id: GE-C04-bis-bald
+sequence: 155
 chapter: 4
 type: phrase
 headword: bis bald

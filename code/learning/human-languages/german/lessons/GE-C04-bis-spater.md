@@ -1,5 +1,6 @@
 ---
 id: GE-C04-bis-spater
+sequence: 165
 chapter: 4
 type: phrase
 headword: bis später

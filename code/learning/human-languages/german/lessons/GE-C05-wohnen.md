@@ -1,5 +1,6 @@
 ---
 id: GE-C05-wohnen
+sequence: 190
 chapter: 5
 type: word
 headword: wohnen
