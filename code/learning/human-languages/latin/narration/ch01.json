@@ -3,8 +3,8 @@
   "language": "latin",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:c50a5183e8d9432d",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:225a33fa8b3347a4",
   "lessons": [
     {
       "id": "LA-C01-salve",
@@ -14,13 +14,18 @@
       "romanization": "salvē / salvēte",
       "gloss": "hello (lit. \"be well\")",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:dc3a533dd64d2208",
-      "notice": null,
+      "sourceHash": "fnv1a64:9dda29aae05f0453",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -74,6 +79,21 @@
         },
         {
           "index": 4,
+          "type": "writing",
+          "title": "Writing — follow one greeting you can see",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep salvē visible. First point to the line over the final ē: that macron says to hold the vowel longer. Trace the whole word once, from s through ē, then say SAL-weh. Stop there."
+            },
+            {
+              "kind": "speech",
+              "text": "This is not a spelling test. Your eye and hand are only following a greeting whose sound and meaning are already on the page."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -113,7 +133,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 6,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -126,6 +146,69 @@
             {
               "kind": "speech",
               "text": "What does salvē literally wish, and how do you greet more than one person? (\"Be well / be in good health\"; salvēte, with the plural -ēte ending.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "LA-W01-salve-guided-copy",
+      "sequence": 105,
+      "title": "salvē — copy one greeting with help",
+      "headword": "salvē / salvēte",
+      "romanization": "salvē / salvēte",
+      "gloss": "copy the first greeting once with the model still visible",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:10dd2485d465e053",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to salvē and say it once: SAL-weh. The model stays on the page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy salvē once on the line below it. Write salve first, then add the short macron over the final ē. Look back at the model whenever you want."
+            },
+            {
+              "kind": "speech",
+              "text": "Say the word as you finish. The macron belongs to the vowel: it records the long sound you already heard; it is not a new letter and not something to guess."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare your copy with the model. If one mark differs, repair only that mark. No hiding, no spelling from memory, and no second word today."
             }
           ]
         }

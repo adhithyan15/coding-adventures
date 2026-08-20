@@ -2,6 +2,16 @@
 
 ## [Unreleased]
 
+### Added — writing begins with the first greeting (#12292)
+
+- Add a short observe-and-trace microstep to `LA-C01-salve`, then one separate
+  two-minute guided copy of **salvē** while the model remains visible.
+- Make the macron a gentle eye-to-hand cue for the long final vowel; neither
+  step asks for spelling from memory, a second word, or free composition.
+- Record both HL19 writing stages and place the atom-free copy lesson directly
+  after the three-atom opener. This closes only Latin's no-writing-at-all cliff,
+  not the rest of its pre-A1-to-C2 writing backlog.
+
 ### Added — twenty pre-A1 nouns, four themed chapters (HL-C212)
 
 Chapters 44–47, five words each, one word per lesson:

@@ -7,11 +7,14 @@
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
         "LA-C01-salve",
+        "LA-W01-salve-guided-copy",
         "LA-C01-ave"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "LA-EXT-001-WRITING-START"
+      ]
     },
     {
       "id": "LA-PATH-002",
@@ -802,6 +805,17 @@
     }
   },
   "extensions": [
+    {
+      "id": "LA-EXT-001-WRITING-START",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can copy my first Latin greeting with the model still visible and preserve its macron.",
+      "prerequisites": [],
+      "lessons": [
+        "LA-W01-salve-guided-copy"
+      ]
+    },
     {
       "id": "LA-EXT-005-CONSOLIDATION",
       "stage": "pre-A1",
