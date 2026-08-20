@@ -1,5 +1,6 @@
 ---
 id: PT-C01-obrigado
+sequence: 80
 chapter: 1
 type: word
 headword: obrigado / obrigada

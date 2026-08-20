@@ -1,5 +1,6 @@
 ---
 id: PT-C01-ola
+sequence: 10
 chapter: 1
 type: word
 headword: olá
