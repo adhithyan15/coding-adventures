@@ -2394,8 +2394,8 @@ hardware_key_timeout = 60
         let command = config.privilege().tier_1_notification_command().unwrap();
         assert_eq!(command.as_str(), "~/.chief-of-staff/bin/notify");
         assert_eq!(
-            command.resolve(Path::new("/home/operator")).unwrap(),
-            PathBuf::from("/home/operator/.chief-of-staff/bin/notify")
+            command.resolve(&absolute_home()).unwrap(),
+            absolute_home().join(".chief-of-staff/bin/notify")
         );
         for invalid in ["notify", "~/../notify", "", "~/"] {
             assert_eq!(
@@ -2415,8 +2415,8 @@ hardware_key_timeout = 60
         let command = config.privilege().tier_2_biometric_command().unwrap();
         assert_eq!(command.as_str(), "~/.chief-of-staff/bin/biometric");
         assert_eq!(
-            command.resolve(Path::new("/home/operator")).unwrap(),
-            PathBuf::from("/home/operator/.chief-of-staff/bin/biometric")
+            command.resolve(&absolute_home()).unwrap(),
+            absolute_home().join(".chief-of-staff/bin/biometric")
         );
         for invalid in ["biometric", "~/../biometric", "", "~/"] {
             assert_eq!(
@@ -2436,8 +2436,8 @@ hardware_key_timeout = 60
         let command = config.privilege().tier_3_hardware_key_command().unwrap();
         assert_eq!(command.as_str(), "~/.chief-of-staff/bin/hardware-key");
         assert_eq!(
-            command.resolve(Path::new("/home/operator")).unwrap(),
-            PathBuf::from("/home/operator/.chief-of-staff/bin/hardware-key")
+            command.resolve(&absolute_home()).unwrap(),
+            absolute_home().join(".chief-of-staff/bin/hardware-key")
         );
         for invalid in ["hardware-key", "~/../hardware-key", "", "~/"] {
             assert_eq!(

@@ -316,7 +316,7 @@ class TestPrologBytecodeVMStress:
     ) -> None:
         source_path = tmp_path / "nested" / "story.data"
         source_path.parent.mkdir()
-        source_path.write_text("bytecode\n", encoding="utf-8")
+        source_path.write_text("bytecode\n", encoding="utf-8", newline="\n")
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
         dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
         compiled = compile_swi_prolog_source(

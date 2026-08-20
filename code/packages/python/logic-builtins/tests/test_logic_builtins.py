@@ -286,7 +286,7 @@ class TestFileTextBuiltins:
         directory = tmp_path / "nested"
         directory.mkdir()
         source_path = directory / "story.pl"
-        source_path.write_text("fact(a).\n", encoding="utf-8")
+        source_path.write_text("fact(a).\n", encoding="utf-8", newline="")
         symlink_path = tmp_path / "story-link.pl"
         try:
             symlink_path.symlink_to(source_path)

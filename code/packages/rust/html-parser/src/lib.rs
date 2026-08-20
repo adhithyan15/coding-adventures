@@ -5537,10 +5537,13 @@ impl HtmlParser {
             && matches!(name.as_str(), "svg" | "math")
             && self.current_element_is_table_structure()
         {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-foreign-start-tag-in-table",
-                format!("start tag `<{name}>` in a table context was foster parented"),
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-foreign-start-tag-in-table",
+                    format!("start tag `<{name}>` in a table context was foster parented"),
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             let namespace = self.namespace_for_start_tag(&name);
             let name = adjusted_foreign_start_tag_name(name, namespace);
             let attributes = adjusted_foreign_attributes(attributes, namespace);
@@ -26979,6 +26982,14 @@ mod tests {
         .at_emission(Some(start_tag_position(source, name)))
     }
 
+    fn foreign_start_tag_in_table_recovery(source: &str, name: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-foreign-start-tag-in-table",
+            format!("start tag `<{name}>` in a table context was foster parented"),
+        )
+        .at_emission(Some(start_tag_position(source, name)))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -41763,11 +41774,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-foreign-start-tag-in-table",
-                            format!("start tag `<{name}>` in a table context was foster parented"),
-                        )
+                    diagnostic == &foreign_start_tag_in_table_recovery(source, name)
                 }),
                 "source {source:?}"
             );
@@ -41781,6 +41788,133 @@ mod tests {
             .parser_diagnostics
             .iter()
             .all(|diagnostic| diagnostic.code != "unexpected-foreign-start-tag-in-table"));
+    }
+
+    #[test]
+    fn positions_foreign_start_tags_fostered_from_tables_at_token_emission() {
+        for (source, name) in [
+            ("<!doctype html><table><svg>", "svg"),
+            ("<!doctype html><table><colgroup><math>", "math"),
+            ("<!doctype html><table><tbody><svg>", "svg"),
+            ("<!doctype html><table><thead><math>", "math"),
+            ("<!doctype html><table><tfoot><svg>", "svg"),
+            ("<!doctype html><table><tbody><tr><math>", "math"),
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| diagnostic.code == "unexpected-foreign-start-tag-in-table")
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&foreign_start_tag_in_table_recovery(source, name)],
+                "source {source:?}"
+            );
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            for name in ["svg", "math"] {
+                let source = format!("<!--é-->\r\n<{name}>");
+                let output =
+                    parse_html_fragment_for_context_with_diagnostics(&source, context).unwrap();
+                assert!(
+                    output.parser_diagnostics.iter().any(|diagnostic| {
+                        diagnostic == &foreign_start_tag_in_table_recovery(&source, name)
+                    }),
+                    "source {source:?} in {context:?}"
+                );
+                assert!(source.len() > source.chars().count());
+            }
+        }
+
+        for (source, context) in [
+            ("<svg>", "caption"),
+            ("<math>", "colgroup"),
+            ("<math>", "td"),
+            ("<svg>", "th"),
+            ("<math>", "template"),
+            ("<svg>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-foreign-start-tag-in-table"));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><svg>",
+            "<!doctype html><table><tbody><tr><td><math>",
+            "<!doctype html><table><template><svg>",
+            "<!doctype html><table><select><math>",
+            "<!doctype html><table><div><svg>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output
+                .parser_diagnostics
+                .iter()
+                .all(|diagnostic| diagnostic.code != "unexpected-foreign-start-tag-in-table"));
+        }
+
+        let svg_source = "<!doctype html><main id=host><table><svg id=foreign viewbox='0 0 1 1' xlink:href=x><g></g></svg><tbody><tr><td>X</td></tr></tbody></table></main>";
+        let svg_output = parse_html_with_diagnostics(svg_source).unwrap();
+        let host = find_element_by_id(&svg_output.document.children, "host").unwrap();
+        let svg = element(&host.children[0]);
+        assert_eq!(svg.name, "svg");
+        assert_eq!(svg.namespace.as_deref(), Some("svg"));
+        assert_eq!(svg.attribute("viewBox"), Some("0 0 1 1"));
+        assert_eq!(svg.attribute("xlink href"), Some("x"));
+        let table = element(&host.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let math_source = "<!doctype html><table><math id=foreign definitionurl=x></math></table>";
+        let math_output = parse_html_with_diagnostics(math_source).unwrap();
+        let math = find_element_by_id(&math_output.document.children, "foreign").unwrap();
+        assert_eq!(math.namespace.as_deref(), Some("math"));
+        assert_eq!(math.attribute("definitionURL"), Some("x"));
+
+        for context in ["table", "tr"] {
+            for source in ["<svg", "<math"] {
+                let output =
+                    parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+                assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-foreign-start-tag-in-table"
+                }));
+            }
+        }
+
+        let adjacent = parse_html_with_diagnostics("<!doctype html><table><table>").unwrap();
+        assert_eq!(
+            adjacent
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-table-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "svg".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-foreign-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -41932,7 +42066,10 @@ mod tests {
             .iter()
             .find(|diagnostic| diagnostic.code == "unexpected-foreign-start-tag-in-table")
             .unwrap();
-        assert_eq!(table_diagnostic.position, None);
+        assert_eq!(
+            table_diagnostic,
+            &foreign_start_tag_in_table_recovery(table_source, "svg")
+        );
 
         let unicode_source = "<!doctype html><!--é-->\r\n<math><mrow><div>";
         let unicode = parse_html_with_diagnostics(unicode_source).unwrap();

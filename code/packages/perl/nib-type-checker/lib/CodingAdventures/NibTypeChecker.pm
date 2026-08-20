@@ -55,20 +55,13 @@ use constant {
     TYPE_BOOL => 'bool',
 };
 
-# mul_expr sits between add_expr and bitwise_expr in the precedence cascade
-# (LANG-FULL N1). shift_expr sits between add_expr and mul_expr (add_expr's
-# operands are shift_expr nodes, not mul_expr nodes directly). Both must be
-# in this set so _expression_children does not filter them out when add_expr
-# walks its operands via _check_add_expression.
-#
-# Note: the Nib lexer does not yet tokenize SHL/SHR, so every shift_expr node
-# the parser produces wraps exactly one mul_expr child (a transparent
-# pass-through). It is still routed through the generic single-child fallback
-# in _check_expression (rather than through _check_add_expression like
-# mul_expr), which already handles that case correctly.
+# shift_expr and mul_expr sit between add_expr and bitwise_expr in the
+# precedence cascade (LANG-FULL N1). They must be in this set so
+# _expression_children does not filter them out while walking operands.
+# Both route through the numeric compound-expression checker below.
 my %_EXPRESSION_RULE = map { $_ => 1 } qw(
-    expr or_expr and_expr eq_expr cmp_expr add_expr shift_expr mul_expr
-    bitwise_expr unary_expr primary call_expr
+    expr or_expr and_expr eq_expr cmp_expr add_expr shift_expr mul_expr bitwise_expr
+    unary_expr primary call_expr
 );
 
 sub check_source {
@@ -393,9 +386,11 @@ sub _check_expression {
     elsif ($subject->rule_name eq 'primary') {
         $result = _check_primary($state, $subject);
     }
-    elsif ($subject->rule_name eq 'add_expr' || $subject->rule_name eq 'mul_expr') {
-        # mul_expr shares additive numeric semantics (same-type operands,
-        # numeric result), so it routes through the same checker.
+    elsif ($subject->rule_name eq 'add_expr'
+        || $subject->rule_name eq 'shift_expr'
+        || $subject->rule_name eq 'mul_expr') {
+        # shift_expr and mul_expr share additive numeric semantics (same-type
+        # operands, numeric result), so they route through the same checker.
         $result = _check_add_expression($state, $subject);
     }
     elsif ($subject->rule_name eq 'or_expr'

@@ -2,6 +2,14 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <!-- Without this, AssemblyName defaults to the project file name and this
+         library emits CodingAdventures.Conduit.dll — byte-for-byte the same
+         assembly identity as the unrelated csharp/conduit package, which also
+         has no explicit AssemblyName. Two different libraries answering to one
+         module name is wrong on its face, and it also puts two concurrently
+         scheduled coverlet runs on the same module key. The namespace and
+         PackageId already say FSharp; the assembly now agrees with them. -->
+    <AssemblyName>CodingAdventures.Conduit.FSharp</AssemblyName>
     <PackageId>CodingAdventures.Conduit.FSharp</PackageId>
     <Version>0.1.0</Version>
     <Authors>Adhithya Rajasekaran</Authors>

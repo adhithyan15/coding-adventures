@@ -1,2 +1,1 @@
-REM prereqs: ../compiler-ir ../grammar-tools ../lexer ../nib-lexer ../parser ../nib-parser ../type-checker-protocol ../nib-type-checker ../nib-ir-compiler ../virtual-machine ../wasm-leb128 ../wasm-types ../wasm-opcodes ../wasm-module-parser ../wasm-validator ../wasm-execution ../wasm-runtime ../wasm-module-encoder ../ir-to-wasm-compiler ../ir-to-wasm-validator
 echo Perl testing is not supported on Windows - skipping

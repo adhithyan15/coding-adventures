@@ -3710,6 +3710,672 @@ build tool never discovered it and no CI leg ever compiled it. A `cfg`-gated
 literal inside an unwatched package is doubly invisible. Before concluding "CI
 is green, so this package is fine", confirm the package is actually in the
 build graph — `ls <pkg>/BUILD`.
+## A fixed-once-per-package fix doesn't reach a fallback path — an absent `BUILD_windows` still runs the POSIX `BUILD` verbatim on Windows
+
+PR #11553 (Swift ZIP) repaired the Windows dependency-closure detection so far more
+packages actually get *evaluated* on `windows-latest` than before. That correctly
+exposed 28 packages that were never Windows-tested until this PR, even though the
+`.[dev]`-quoting bug they hit (lesson at line 31) has been documented for a long time.
+
+- **`GetBuildFileForPlatform` (`code/programs/go/build-tool/internal/discovery/discovery.go`)
+  falls back to the generic POSIX `BUILD` file when no `BUILD_windows` exists — for
+  EVERY platform, including Windows.** There is no "this package doesn't support
+  Windows" opt-out mechanism anywhere in the build tool (no marker file, no
+  platform field). A package with only a `BUILD` file is not "skipped on Windows" —
+  its POSIX script is handed to `cmd /C` verbatim. `#!/bin/sh` / `set -eu` headers,
+  `if [ "$(uname)" = "Linux" ]; then ...; fi` guards, and quoted `-e ".[dev]"` all
+  fail loudly (`Environment variable -eu not defined`, `"$(uname)" was unexpected at
+  this time.`, `not a valid editable requirement`) the first time such a package
+  actually gets exercised on Windows.
+- **A known, documented fix (line 31) does not self-propagate.** 21 packages had the
+  exact `-e ".[dev]"` quoting bug the lesson already named, either because they never
+  had a `BUILD_windows` at all, or because their hand-authored `BUILD_windows`
+  predated/diverged from `code/programs/python/scaffold-generator/scaffold_generator.py`
+  (which has always emitted the correct unquoted form). Two packages
+  (`prolog-core`, `swi-prolog-lexer`) used `.venv\Scripts\python -m pip install`
+  instead of `uv pip install` — a second hand-authored variant of the same bug.
+  **Fix:** unquoted `-e .[dev]` — copy an existing multi-dep `BUILD_windows` (e.g.
+  `nib-parser`) as the template rather than re-deriving it.
+- **A POSIX-only guard line (`if [ "$(uname)" = "Linux" ]; then cargo tarpaulin ...;
+  fi`) is not "harmless to skip" on Windows — it is a syntax error there.** `cmd.exe`
+  has no `[ ]`/`$()` and reads `$(uname)` as a literal command name. Fix: give the
+  package a `BUILD_windows` that drops the tarpaulin line entirely (tarpaulin is
+  Linux-only anyway) — see `bytecode-compiler/BUILD_windows` for the established
+  one-line precedent.
+- **When newly exposing a previously-untested platform for dozens of packages at
+  once, budget review time per failure, not just per PR.** Six inherited defects
+  were fixed before this head; 28 were still failing after — because "expose more of
+  the closure" and "fix everything the closure exposes" are different amounts of
+  work, and the former doesn't bound the latter.
+
+## A non-recursive function can still overflow a 1 MiB Windows test-thread stack — debug builds don't reuse stack slots across `match` arms
+
+`chief-of-staff-smart-home-tools` aborted on `windows-latest` with
+`0xC00000FD`/`STATUS_STACK_OVERFLOW` in a two-call, non-recursive integration test.
+The existing stack-overflow lessons (line ~1980, ~2557) are all about *recursive*
+walkers whose frame gets multiplied by depth. This one had no recursion at all.
+
+**Cause:** the tool dispatcher is one `match tool_id.as_str() { ... }` with 364 arms,
+each declaring its own small `let query = ...;` local before calling a handler
+function. In a debug build, rustc does not reuse stack slots across mutually
+exclusive `match` arms (same mechanism as the recursive-eval lessons, just applied
+to breadth instead of depth) — so the function's single stack frame sums roughly
+364 arms' worth of locals. That is comfortably under macOS/Linux's ~8 MiB default
+test-thread stack but over Windows' ~1 MiB floor. Reproduced locally without a
+Windows box: build the test binary, then run it directly (not via `cargo test`,
+which also applies `RUST_MIN_STACK` to `rustc` itself and breaks compilation) with
+`RUST_MIN_STACK=1048576 ./target/debug/deps/<binary> tests::<name> --exact` —
+overflowed at 1 MiB, passed cleanly at 2 MiB.
+
+**Fix, and why raising the stack here is correct (not a band-aid):** the earlier
+recursive-`eval` lesson fixed depth×frame-size by shrinking the frame, because a
+depth cap that keeps growing would eventually re-overflow any fixed stack. Here
+there is no depth to bound — the frame size is fixed regardless of input, so
+widening the stack for this one test binary is a proportionate, permanent fix, not
+a deferral. Set it in `BUILD_windows` (not committed to `Cargo.toml` or a global
+CI env var, since only this package's frame is oversized):
+`set "RUST_MIN_STACK=4194304" && cargo test -p <pkg> && cargo clippy -p <pkg> --all-targets -- -D warnings`.
+Chose 4 MiB (2x the proven-sufficient 2 MiB) for margin. `set "VAR=value" &&
+command` (not bare `VAR=value command`) is required — see the existing Windows
+env-var lesson (line 35); each `BUILD_windows` line runs as its own `cmd /C`
+process, so the `set` and the command it configures must be chained with `&&` on
+one line.
+
+## `Path.write_text(...)` without `newline=""` silently adds a byte on Windows and breaks exact-size assertions
+
+`logic-builtins`' `test_file_path_metadata_facade` asserted a Prolog `size_fileo/2`
+builtin returned `len("fact(a).\n")` (9) for a file it had just written with
+`source_path.write_text("fact(a).\n", encoding="utf-8")`. It got 10 on Windows.
+
+**Cause:** `Path.write_text` defaults to platform newline translation unless
+`newline=""` is passed (the exact mechanism documented at the CRLF lesson,
+line ~3121, but there for a content-generation script — here it silently
+corrupted a test's own fixture size instead of a hash). `\n` became `\r\n` on
+write, so the file the test created was one byte longer than the string literal's
+`len()`, and the byte-count assertion — computed from the string, not the file —
+went stale relative to what was actually on disk.
+
+**Fix:** `source_path.write_text("fact(a).\n", encoding="utf-8", newline="")`
+whenever a test both writes a fixture file with embedded `\n` AND later asserts
+something about that file's exact byte size (not just its content). Content-only
+assertions (`read_text()` back and compare) are unaffected because Python
+normalizes `\r\n` back to `\n` on text-mode read — only a *size*/byte-count
+assertion computed from the pre-write string is at risk. The general write-side
+guidance from line 3145 (open in binary, or pass `newline=''`) applies to test
+fixtures exactly as much as to generated production files.
+
+## A test's own `#[cfg(not(target_os = "windows"))]` guard can be stale evidence, not a platform limitation
+
+`embeddable-http-server`'s `sharded_http_server_serves_concurrent_clients_across_shards`
+test — the ONLY caller of the `#[cfg(target_os = "windows")]` variant of
+`bind_native_sharded_http_server` — was itself gated `#[cfg(not(target_os =
+"windows"))]`. Once the build tool started actually building this package on
+Windows (see the BUILD-closure lesson above), that made the Windows
+`bind_native_sharded_http_server` dead code under `-D warnings`
+(`function 'bind_native_sharded_http_server' is never used`).
+
+**Investigation, not just suppression:** `#[allow(dead_code)]` would have silenced
+this without checking whether the underlying claim (sharded Windows HTTP serving
+doesn't work / isn't tested) was still true. It wasn't: `bind_windows_sharded`
+(`ShardedHttpServer<WindowsTransportPlatform>`, IOCP-backed) is a complete,
+real implementation sitting right next to the Unix ones, not a stub. Two sibling
+tests in the same file (`mailbox_http_server_*`) ARE legitimately Windows-excluded
+because `MailboxHttpServer` has no Windows reactor at all — so the sharded test's
+exclusion reads, at a glance, like it follows the same precedent, but it doesn't:
+different underlying type, different actual platform support.
+
+**Fix:** remove the `#[cfg(not(target_os = "windows"))]` from the sharded test so
+it runs everywhere the implementation exists — verified with
+`cargo check --target x86_64-pc-windows-gnu --tests` under `RUSTFLAGS="-D warnings"`
+(no Windows box needed for a cross-compile check; only actually *running* the test
+needs one, which real Windows CI will do on push). **Lesson:** when a `-D warnings`
+lint fires on a `#[cfg(target_os = "windows")]` item, check whether its only caller
+is excluded from Windows before reaching for `allow` — the cfg may be describing a
+gap that was since closed, not a permanent constraint.
+
+**Correction (same PR, next CI round):** this was wrong, and the wrongness was
+only reachable by actually running on Windows — `cargo check --target
+x86_64-pc-windows-gnu` type-checks but never *executes* `bind_windows_sharded`,
+so it happily passed while the runtime path was broken. Real windows-latest CI
+panicked: `"SO_REUSEPORT is not supported by the Windows TCP provider"`. Tracing
+into `tcp_runtime::bind_sharded_runtime_with_state`, the "default" sharding path
+(used by every platform except macOS/BSD) sets `reuse_port = true` for any
+`worker_count > 1` — correct for Linux (where `SO_REUSEPORT` load-balances) but
+fatal for Windows (no `SO_REUSEPORT` at all). macOS/BSD hit the identical
+"`SO_REUSEPORT` exists but doesn't load-balance" problem and already fixed it
+with an explicit accept fan-out (`FanoutAcceptor`) — but that fan-out's
+`spawn`/`run` are `#[cfg(unix)]`-only, so Windows has no route around the
+`reuse_port` panic today. `bind_windows_sharded` is also a **real, currently
+broken for `worker_count > 1`** part of the public API — `web-core`'s
+`ShardedWebServer` and `conduit` both wrap it — but neither is exercised on
+Windows CI yet either, so this was a pre-existing gap this PR's build-plan fix
+merely exposed here first, not something this PR introduced or should silently
+paper over. Reverted the test back to `#[cfg(not(target_os = "windows"))]`, kept
+the Windows-only dispatcher function alive with a `#[allow(dead_code)]` whose
+comment states exactly why (a rare case where the suppression IS the honest
+answer — see next lesson) and what would need to exist (a Windows fan-out
+acceptor in `tcp-runtime`) to remove it.
+
+**Generalized lesson:** "verified with a cross-compile check" only proves the
+code *type-checks* for that target — it does not execute a single line of
+target-specific runtime logic (socket options, syscalls, ABI-dependent
+behavior). Treat a cross-compile check as ruling out compile errors only, never
+as confirmation that a previously-excluded-from-Windows test will actually pass
+there. When you can't run the real target and the round-trip to find out is
+expensive (~80 minutes of CI here), say so plainly in the commit/PR rather than
+implying the cross-compile check was sufficient evidence.
+
+## Sometimes the honest fix after investigation IS the suppression you started with — don't force a "real" fix past what the evidence supports
+
+Follow-on to the `embeddable-http-server` correction above. The instinct from
+"investigate before suppressing" is to keep digging until you find a positive
+fix. But investigation can just as validly conclude "the exclusion was correct,
+the capability really is incomplete, and fixing it properly is out of scope for
+this change" — and forcing a deeper fix at that point (e.g. hand-rolling a
+Windows fan-out acceptor inside a CI-rescue with no way to test it before a
+slow, blind CI round trip) trades a well-understood, honestly-labeled gap for
+an *unverified* one. The deliverable of "investigate, don't just suppress" is
+not always a positive change — sometimes it's a suppression with a comment that
+correctly explains the boundary of what was and wasn't fixed, and a decision
+about scope that a human reading the commit message can evaluate and revisit.
+
+## The SAME "`Path::is_absolute()`/`is_symlink()` is platform-dependent" bug class recurs across unrelated crates — check by INTENT, not by pattern-matching the previous fix
+
+Three different Windows CI failures in one PR rescue all trace back to
+`std::path::Path`'s platform-dependent behavior, but needed **three different
+fixes** because the code's *intent* differed each time:
+
+1. **`sql-parser`** (`grammar_path.read_text()`): platform default *encoding*
+   (cp1252 on Windows) silently misreads UTF-8 bytes. Fix: pin
+   `encoding="utf-8"` explicitly — the file's encoding is a property of the
+   file, never the host platform.
+2. **`chief-of-staff-daemon-service-files`** (`validate_unix_path`): the
+   function validates paths for a launchd/systemd config being rendered for
+   **macOS/Linux, regardless of the host compiling and testing this crate**.
+   `Path::is_absolute()` uses the *build host's* semantics, which is wrong
+   here on principle, not just on Windows — the fix (`value.starts_with('/')`)
+   hardcodes POSIX semantics because the target is always POSIX.
+3. **`chief-of-staff-daemon-config`** (`ConfigPath::resolve`'s `home` param):
+   this validates the **actual runtime host's** home directory — a real
+   Windows deployment legitimately passes a `C:\Users\...` path. Here
+   `Path::is_absolute()` is *correct as written* (there's already a
+   `#[cfg(windows)] fn absolute_home()` test helper proving the crate expects
+   platform-native paths); the bug was three tests hardcoding a POSIX path
+   directly instead of calling that helper, like every other test in the file
+   already did.
+
+**Before reaching for the fix pattern that worked last time on `is_absolute()`
+or `is_symlink()`, ask: is this code validating "a path meaningful on THIS host
+right now" (use platform-native `Path` semantics — case 3) or "a path meaningful
+on some OTHER, possibly-fixed target regardless of build host" (use an explicit,
+target-specific string check — case 2)?** Getting this backwards either breaks
+real Windows deployments (over-hardcoding POSIX) or reintroduces the original
+bug (using native semantics for a fixed-target validator). Grep for an existing
+`#[cfg(windows)]` test helper near the failing assertion before writing a new
+fix — case 3's `absolute_home()` was sitting three functions away and would
+have caught the real bug (a test authoring slip) immediately instead of
+requiring a `Path::is_absolute()` investigation that turned out to be a red
+herring.
+
+## `os.remove()`/`os.replace()` on a file another handle still has open: fine on POSIX, `PermissionError`/`WinError 32` on Windows — check every early-return path, not just the obvious one
+
+`storage-sqlite`'s `Pager._recover()` opened the journal file for reading
+(`with open(self._journal_path, "rb") as j:`) and, on two of its three exit
+paths, called `self._drop_journal()` (an `os.remove()`) from **inside** that
+`with` block — while `j` was still open. POSIX unlinks an open file just fine
+(the inode survives until the last handle closes); Windows refuses
+(`PermissionError: [WinError 32] ... being used by another process`).
+
+The third exit path (successful replay) already called `_drop_journal()`
+**after** the `with` block closed `j`, so it never had this bug — which is
+exactly what made the two early-return call sites easy to miss on a read-through
+that only checks "does this function eventually close its handles," rather than
+"does *every* removal of a path happen after every handle to that path is
+closed." **When auditing a function for this class of bug, don't stop at
+finding one instance that does it correctly — the correct and incorrect
+versions can coexist in the same function, on different branches, and a partial
+read makes the whole function look safe.**
+
+**Fix:** collapse the three early-return branches into one control-flow path
+that always exits the `with` block before removing the file — a `header = None`
+sentinel plus a combined boolean condition, rather than three separate
+`self._drop_journal(); return` call sites. One removal call site, reached after
+every branch, is easier to audit than three copies of the same call scattered
+across early returns — and this class of bug is specifically about a removal
+call's *position relative to a `with` block*, so collapsing to one call site is
+the fix, not just a refactor.
+
+## A documented, non-fully-TOCTOU-proof fallback can still be the right call — say why in the code, not just that it's imperfect
+
+`ir-to-jvm-class-file`'s POSIX symlink defense (`os.open(..., dir_fd=...)`
+chained through every path component) has no Windows equivalent — `os.open()`
+can't even open a bare directory there. The Windows fallback
+(`Path.is_symlink()` checks before `mkdir`/write) has a real TOCTOU gap: a
+symlink swapped in between the check and the use isn't caught, unlike the
+atomic dir_fd chain.
+
+Two things made this an acceptable ship, not a deferred vulnerability:
+
+1. **Close the cheap half of the gap.** The final file write went through a
+   temp file + `os.replace()` instead of opening the checked path directly —
+   `os.replace()`/`rename(2)` replace the directory entry itself rather than
+   following a symlink placed there afterward, so that specific race is fully
+   closed for near-zero extra code. The intermediate-directory `mkdir` race is
+   harder to close without a dir_fd equivalent and was left as documented,
+   accepted risk rather than force-fixed.
+2. **State the actual threat model in the comment, not just "not fully safe."**
+   `class_filename` is compiler-internal input already validated (no absolute
+   paths, no `.`/`..`) before either write path runs, so the residual race
+   requires an attacker who already has write access to the output tree,
+   racing a local build — not a remote/network-facing threat. A reviewer (or a
+   future security audit) reading "not fully TOCTOU-proof" alone has to
+   re-derive this; reading it inline saves that re-derivation and makes the
+   accepted-risk decision auditable instead of just asserted.
+
+**Correction, one CI round later:** point 2's premise — "already validated,
+no absolute paths" — was itself broken on Windows by the SAME `Path.is_absolute()`
+platform-dependence bug documented two lessons up, just in a fourth location
+this time: `_validated_output_relative_path()` used `Path(class_filename).is_absolute()`
+to reject `class_name=".Escape"` → `class_filename="/Escape.class"`. That
+check passes (correctly rejects) on POSIX and silently **passed the file
+through unrejected on Windows** (`PureWindowsPath("/Escape.class").is_absolute()`
+is `False` — no drive/UNC prefix). `class_filename` is always POSIX-separated
+(built via `class_name.replace(".", "/")`, see `JVMClassArtifact.class_filename`),
+so the fix is the same pattern as the Rust cases: check `class_filename.startswith("/")`
+directly instead of asking the platform-native `Path` what it thinks
+"absolute" means. **The generalized lesson from three lessons up undersold its
+own stakes**: this wasn't just "pick the right fix for the code's intent" in
+the abstract — a stale platform-dependent validator can invalidate a security
+argument that was written assuming the validator worked. When accepting a
+residual risk *because* an earlier check already narrows the threat model,
+verify that check cross-platform before relying on it, not just on the
+platform you happen to be testing on.
+
+**Second correction, before push this time (security review, not CI):** the
+`class_filename.startswith("/")` fix above was itself an incomplete swap, not
+a complete one — it closed the reported gap (POSIX-style `/...` under-rejected
+on Windows) but reopened a *different* one the original `Path.is_absolute()`
+had actually caught when the validator happened to run in Windows CI:
+`class_name` is adversarial, unrestricted, attacker-supplied input (the test
+suite constructs it deliberately), so nothing stops it from containing `:`
+or `\` — neither of which `.replace(".", "/")` touches. `startswith("/")`
+alone does not reject `"C:\\evil.class"`, `"C:/evil.class"`, or
+`"\\\\server\\share\\evil.class"` on ANY host platform (not just Windows —
+these were never rejected when the validator ran on POSIX either, since
+POSIX's native `Path.is_absolute()` doesn't recognize Windows drive/UNC
+syntax at all; the original code only caught them by accident, when the
+validator happened to execute on an actual Windows host). **Correct fix:**
+check both conventions explicitly and platform-independently — `PurePosixPath(x).is_absolute()
+or PureWindowsPath(x).is_absolute()` — plus reject any `":"` outright to catch
+drive-relative paths (`"C:evil.class"`, absolute under neither convention,
+also never caught by the original code). `PurePosixPath`/`PureWindowsPath`
+(unlike bare `Path`) are always available and always mean the same thing
+regardless of host OS — exactly the tool this whole bug class was missing.
+**Lesson: when a security check depends on "is this path absolute," check
+it means "absolute under every convention the input could plausibly use,"
+not "absolute under the one convention this function's `Path` happens to
+resolve to on whichever host runs it."** A narrow platform-specific patch for
+a reported failure is exactly the moment to ask what the *general* property
+being checked for is, not just what makes the one failing test pass.
+
+## A quoted `set "VAR=value" && command` in `BUILD_windows` can silently fail to set the variable — and the failure is invisible unless something downstream crashes
+
+`chief-of-staff-smart-home-tools`' `BUILD_windows` used
+`set "RUST_MIN_STACK=33554432" && cargo test -p ... && cargo clippy ...` (the
+form the existing Windows env-var lesson, line 35, recommends for defensive
+quoting). CI still overflowed the stack at the exact same test, with the exact
+same crash, as before the fix was written. Direct evidence the variable was
+never applied: grepping the full job log for the literal string
+`RUST_MIN_STACK` — anywhere in the log, not just this package's section —
+returned zero matches, and cargo doesn't otherwise announce which env vars a
+subprocess inherited.
+
+**Suspected mechanism** (not independently confirmed on a real Windows box,
+but consistent with every observed symptom): the build tool's Go executor
+(`code/programs/go/build-tool/internal/executor/executor.go`) runs
+`exec.Command("cmd", "/C", command)` — the ENTIRE `BUILD_windows` line as one
+argument. Because that line contains spaces, Go's own Windows argument-escaping
+wraps it in an outer pair of `"..."` and backslash-escapes any quotes already
+inside it (standard CRT-argv escaping rules) before handing it to `CreateProcess`.
+`cmd.exe`'s `/C` parsing has its own, different, long-documented quirk: when
+the string after `/C` starts with a `"`, cmd applies special stripping logic
+and does NOT understand `\"` as an escaped quote the way CRT argv parsing
+does. The net effect: the literal backslash-quote sequences Go inserted around
+`"RUST_MIN_STACK=33554432"` can survive into the variable name/value `set`
+actually parses, silently setting a garbage-named variable instead of
+`RUST_MIN_STACK` — no error, no warning, just a `set` that ran and did
+something other than what the line says.
+
+**Fix:** drop the quotes when the value has no spaces or shell metacharacters
+that need protecting — `set RUST_MIN_STACK=33554432 && cargo test ...` — which
+sidesteps the whole Go-escaping/cmd-`/C`-quirk interaction rather than
+depending on it working correctly. The existing "defensive quoting" lesson
+(line 35) is not wrong for values that DO contain `&|()`/`%CD%`/spaces — where
+quoting is genuinely necessary and presumably already proven by the Lua/Perl
+`BUILD_windows` files that use it for such values — but it's an unnecessary
+risk for a value that doesn't need it, and this PR shipped one real,
+CI-confirmed case of the quoted form silently failing.
+
+**Generalized lesson:** an env-var-setting line in `BUILD_windows` that "did
+nothing" fails silently — there's no error, just whatever downstream default
+behavior kicks in. If a fix that sets an env var to work around a platform
+failure doesn't change the failure at all on the next CI run, suspect the
+`set` line itself before re-deriving the original bug's root cause a second
+time. Grep the job log for the variable name as a first, cheap diagnostic —
+its total absence from the log (build tools rarely echo inherited env) doesn't
+prove failure by itself, but combined with an unchanged crash, it's strong
+evidence the assignment never reached the process that needed it.
+
+## Stop waiting for CI's truncated logs to dribble out failures one round at a time — run the build tool's own detection locally against the same diff base
+
+Four consecutive CI rounds on PR #11553 each fixed a batch of Windows failures
+only to have the NEXT push reveal another batch — 21, then 17, then 16 (13
+identifiable). Two things made this slower than it needed to be:
+
+1. **`get_job_logs` truncates to roughly the last 5,000 lines of a job's
+   combined output, regardless of the `tail_lines` value requested** (100,000
+   and 2,000,000 both returned the identical last-~564KB slice). For a
+   22,784-line "build and test affected packages" step, that's the last
+   ~22% only — the earlier ~78% (including some `--- FAILED: pkg ---`
+   markers) is simply not retrievable through that tool, and there's no
+   `offset` parameter to page through it. Downloading the raw log directly
+   (the Azure blob SAS URL `get_job_logs` returns with `return_content=false`)
+   is also not an option here — the sandbox's outbound proxy denies that
+   specific blob-storage host outright (403 on CONNECT), a policy decision,
+   not a transient failure.
+2. **The fix doesn't require CI at all.** The build tool that decides what's
+   "windows-affected" runs anywhere: `go build -o /tmp/build-tool-local .`
+   in `code/programs/go/build-tool/`, then
+   `./build-tool-local -root . -diff-base <same base CI diffs against> -dry-run
+   -emit-plan plan.json -validate-build-files=false`. The emitted plan JSON's
+   `platform_overrides.windows.affected_packages` is the EXACT list windows-latest
+   CI is about to attempt — computed from git diff + BUILD graph, not from
+   actually running anything, so it doesn't need Windows or even a full build.
+   Cross-referencing every package's resolved `BUILD_windows`/`BUILD` content
+   against the two known bug regexes (`"\.\[dev\]"`, `\$\(uname\)`/`set -eu`)
+   found 23 more failures in one pass — MORE than the partial CI log could
+   even show, comprehensively, without waiting ~80 minutes for a Windows
+   runner and then only seeing the tail of the result.
+
+**Lesson:** once a bug's regex/pattern signature is known (from even one
+confirmed CI hit), don't wait for CI to reveal the rest of its instances one
+truncated log at a time — grep for the pattern across whatever the build
+tool's own "affected on this platform" computation says is in scope, using
+the SAME diff base CI will use. This is strictly more complete than the log
+(reaches packages CI hasn't logged yet) and doesn't burn an ~80-minute round
+trip per increment. Reserve actual CI runs for what can't be predicted from
+static analysis: real test failures, runtime-only platform gaps (permission
+enforcement, ABI-dependent stack sizes), and confirming the fix set is
+actually exhaustive.
+
+## `datetime.fromtimestamp()` silently fails for pre-1970 dates on Windows — pure `timedelta` arithmetic doesn't
+
+`sql-vm`'s `unixepoch` date handling used `datetime.fromtimestamp(seconds,
+tz=UTC)` to convert Unix-epoch seconds to a date. `SELECT date('-1234567890',
+'unixepoch')` — a pre-1970 date — returned `NULL` on Windows only; the
+correct answer (`'1930-11-18'`) came back fine on Linux/macOS, and the code
+already had `except (ValueError, OSError, OverflowError): return None`
+around the call, which is precisely what swallowed the platform-specific
+failure into silent NULL instead of surfacing it.
+
+**Cause:** `datetime.fromtimestamp()` converts through the platform C
+library's time functions. glibc's `gmtime` handles negative `time_t` (dates
+before 1970-01-01) without complaint; the Windows CRT's `_gmtime64`/
+`_localtime64` explicitly reject negative `time_t` with an error — a
+documented, longstanding Windows CRT limitation, not a Python bug.
+
+**Fix:** compute the date by pure calendar arithmetic instead —
+`datetime(1970, 1, 1, tzinfo=UTC) + timedelta(seconds=seconds)` — which
+never touches the platform C library, so it behaves identically on every
+host `datetime`/`timedelta` run on. Verified this doesn't trade the fixed
+platform bug for a worse one: extreme inputs (`1e300`, `inf`, `nan`,
+`-1e300`) still raise `OverflowError`/`ValueError` in microseconds, same
+failure class as before, just now bounded by `datetime`'s actual year
+1-9999 representable range instead of an incidental platform ceiling.
+**Generalizable lesson:** any `datetime.fromtimestamp()` (or `time.gmtime()`/
+`time.localtime()`, same underlying mechanism) call that might see a
+pre-1970 value is a Windows-only landmine — prefer epoch-relative
+`timedelta` arithmetic when the code needs to work the same way
+cross-platform, not just "not crash."
+
+## `RUST_MIN_STACK` correction: two shell-quoting theories, two CI round trips, both wrong — the fix that actually worked doesn't depend on the shell at all
+
+Continuing the `chief-of-staff-smart-home-tools` saga (two lessons up): the
+"drop the unnecessary quotes" fix (`set "RUST_MIN_STACK=..." &&` → `set
+RUST_MIN_STACK=... &&`) was itself wrong. The NEXT CI round crashed at the
+exact same test with the exact same `0xC00000FD` — proving the quoting
+theory, however plausible it sounded, was not the actual mechanism (or was
+only part of a bigger propagation problem never fully diagnosed).
+
+**What actually fixed it:** stop trying to get an environment variable
+through the Go executor → `cmd.exe` `/C` → `cargo test` → spawned
+test-binary chain at all. Wrap the test body in
+`std::thread::Builder::new().stack_size(64 * 1024 * 1024).spawn(...).join()`
+instead — the stack size is a Rust-level property of the thread `cargo
+test`'s harness spawns to run the test, not something inherited from a
+shell environment several processes up the chain. Verified locally that this
+is the actual fix (not just "different enough to maybe work"): running the
+compiled test binary directly with `RUST_MIN_STACK=1048576` (the exact value
+that reproduced the original overflow) now passes, because the explicit
+`stack_size()` call overrides whatever `RUST_MIN_STACK` would have set —
+proof the fix no longer depends on that env var reaching the process at all.
+
+**Lesson, sharper than the one two entries up:** when an env-var-based
+workaround for a platform bug fails to change the failure on the very next
+CI round, don't spend a SECOND blind ~80-minute round trip on a second theory
+about why the env var isn't propagating (quoting, escaping, `cmd.exe`
+quirks, Go's argument handling — there are a lot of plausible-sounding
+culprits in that chain, and this got two wrong in a row). If the *tool*
+whose behavior you're trying to influence exposes a way to set the same
+property directly in code — here, `Thread::Builder::stack_size()` for
+exactly what `RUST_MIN_STACK` configures — prefer that path outright rather
+than debugging an indirect shell/env mechanism you can't test end-to-end
+locally (only the CI round trip proves an env var actually reached the
+target process; a direct API call you can verify with a single local run).
+
+## Postscript: the RUST_MIN_STACK mystery above has a concrete answer — `set VAR=value &&` puts a TRAILING SPACE in the value
+
+The entry above correctly concludes "prefer `Thread::Builder::stack_size()`
+over an env var you can't verify locally," but leaves *why* the env var never
+propagated as an open question after two wrong theories. It is worth naming,
+because 19 other `BUILD_windows` files depend on getting this exact detail
+right:
+
+`cmd.exe`'s `SET` consumes **everything** between `=` and the `&&`, including
+the space immediately before it, and does not trim. So
+
+    set RUST_MIN_STACK=33554432 && cargo test ...
+
+assigns the string `"33554432 "` — with a trailing space. Rust then reads it
+as `env::var("RUST_MIN_STACK").ok().and_then(|s| s.parse().ok())`, and
+`"33554432 ".parse::<usize>()` is an `Err`, so the value is **silently
+discarded** and the default stack is used. The variable *was* set; it was just
+unparseable. That is why raising 8 MiB → 32 MiB changed nothing: no stack
+value was ever arriving.
+
+The repo already encodes the correct idiom in 19 places — `set PYTHONPATH=src&&
+...`, `set BISECT_FILE=%CD%\bisect&& ...`, `set PYTHONIOENCODING=utf-8&& ...`
+— all with **no space before `&&`**. `smart-home-tools` was the lone deviation.
+The readable spelling is the broken one, which is exactly why this recurs.
+
+Corollaries worth keeping:
+
+1. **A malformed env var is indistinguishable from an unset one** whenever the
+   reader uses `.parse().ok()` / `unwrap_or(default)`. The symptom is "my fix
+   did nothing," never an error — so confirm the value *as the process
+   received it* before escalating the magnitude of the fix.
+2. Still-outstanding: several `code/packages/perl/*/BUILD_windows` files use the
+   spaced form for `PERL5LIB` (e.g. `set PERL5LIB=..\hash-functions\lib && perl
+   ...`). Those happen to be tolerable — the value is a path list whose last
+   entry merely gains a trailing space, and each also passes explicit `-I`
+   flags — but they are the same latent bug and should move to `&&`-adjacent
+   form if they ever start failing to find a sibling lib.
+
+## `chief-of-staff-daemon-credential`: 250ms retry budget too tight under real CI contention (ubuntu-latest, non-root)
+
+`concurrent_creators_converge_without_overwrite` spawns 8 threads that all race
+`load_or_create_credential()` on the same not-yet-existing path. Exactly one
+thread wins the `O_CREAT|O_EXCL` (Unix) / `CREATE_NEW` (Windows) create; the
+other seven get `Exists` and fall back to polling `open_existing` in a loop
+(`PUBLICATION_RETRIES` iterations of a 1ms sleep) waiting for the winner to
+finish `write_all` + two `sync_all` + `fchmod`/ACL-set on the file it just
+created — until then the file is either mode-000 (Unix) or opened exclusively
+(Windows), so losers see `EACCES`/`ERROR_SHARING_VIOLATION` → `Busy` → retry.
+
+`PUBLICATION_RETRIES = 250` (a ~250ms budget) is enough on an idle machine but
+not guaranteed on a loaded/shared GitHub Actions runner: real CI (ubuntu-latest,
+**not** root, so this is not the root-permission-bypass artifact documented
+elsewhere in this file) showed multiple losing threads exhausting the retry
+loop and surfacing `AccessFailed` from `tests::concurrent_creators_converge_
+without_overwrite` — a genuine robustness gap in the retry budget, not a logic
+bug in the create/publish protocol itself. Fix: widen `PUBLICATION_RETRIES` to
+3000 (~3s) in both `unix.rs` and `windows.rs` — same protocol, just more
+headroom for CI scheduling noise. This is a case where an env-specific-looking
+failure (multiple threads, same panic site, same error) needs the same "is
+this the known root-sandbox artifact or a real gap?" check as any other
+concurrency test: reproduced locally as root it presents as
+`InsecurePermissions` (root bypasses the mode-000 gate entirely, so the loser
+opens+reads before the winner's `fchmod`, then fails the strict-permissions
+check) — a different symptom from the real CI's `AccessFailed`, confirming
+these are two distinct issues and the local root reproduction cannot be used
+to validate this particular fix.
+
+## `smart-home-platform-http`: Windows RST-on-close race in test HTTP client — same accepted quirk as the embeddable TCP tests, this time on the client side
+
+`build (windows-latest)` failed with exactly 2 of 54 `smart-home-platform-http`
+tests down — `runtime_web_app_serves_runtime_snapshot_over_repo_http_server`
+and `runtime_web_app_serves_smoke_script_over_repo_http_server` — both
+panicking at the *first* `read_line` call for the HTTP status line:
+`Os { code: 10054, kind: ConnectionReset, message: "An existing connection
+was forcibly closed by the remote host." }`. The other 52 tests, which hit the
+same shared `WebServer::bind_windows` instance through the same `http_request`
+test helper with `Connection: close` on every request, passed.
+
+This is the client-side twin of a quirk this very PR already normalized on
+the server side (see `embeddable-tcp-server::assert_peer_closed`, which
+explicitly treats `io::ErrorKind::ConnectionReset` as an acceptable outcome
+of a deliberate peer close): on Windows, closing a socket while there is any
+unflushed/unacknowledged data in play can produce a hard RST instead of a
+graceful FIN, and it appears more readily on the two endpoints serving the
+largest response bodies (a JSON runtime snapshot and a generated shell
+script) — plausibly a larger multi-chunk write racing the reactor's own
+`Connection: close` teardown. It reproduces only on `windows-latest`; the
+identical test passes reliably on Linux and macOS CI.
+
+Rather than touch the Windows reactor's write/close sequencing in
+`tcp-runtime`/`embeddable-http-server` (large, shared, security-sensitive
+surface, out of scope for this rescue), keep the fix in the test helper. A
+fresh-connection retry alone was not sufficient under a later loaded Windows
+build: all five attempts for the runtime snapshot could hit the same close
+race. The helper now sends `Connection: keep-alive`, reads exactly the
+advertised `Content-Length`, and lets dropping the client stream initiate the
+close only after the response is complete. It retains the narrow whole-request
+retry for `io::ErrorKind::ConnectionReset`; any other error still panics
+immediately. This avoids depending on close timing while preserving the known
+Windows-platform-quirk handling already established elsewhere in the repo.
+
+## `chief-of-staff-cli`: fifth recurrence of native `Path::join` used to build a path for a *different target platform* than the host
+
+Once `chief-of-staff-daemon-credential` stopped failing, `chief-of-staff-cli`
+and `chief-of-staff-daemon` came off `DEP-SKIP` and ran for the first time
+this rescue — immediately surfacing `derives_reviewable_requests_for_every_
+native_supervisor`, failing on Windows CI with
+`left: "/opt/chief\\chief-of-staff-daemon"` vs.
+`right: "/opt/chief/chief-of-staff-daemon"`.
+
+`sibling_executable()`'s non-Windows branch built the launchd/systemd sibling
+path with `Path::new(current).parent().join("chief-of-staff-daemon")`. The
+test deliberately feeds a POSIX `current_executable` (`"/opt/chief/chief-of-
+staff"`) for the `Launchd` platform variant *unconditionally* — this
+function must produce a POSIX path regardless of which OS built and ran the
+test binary, because the target is always a macOS/Linux daemon. `Path::join`
+uses the **host** platform's preferred separator, so on a Windows-built test
+binary it silently produced a mixed `/opt/chief\chief-of-staff-daemon`.
+
+This is the same family as the four earlier `is_absolute()` bugs in this
+rescue (`ir_to_jvm_class_file`, `chief-of-staff-daemon-service-files`,
+storage paths in general): **`std::path::Path`/`PathBuf` encode the host's
+path conventions, not the path string's own.** Whenever code manipulates a
+path that is contractually for a specific *other* platform — a POSIX daemon
+supervisor path, a Windows registry path, anything not "this process's own
+filesystem" — reach for explicit string splitting/joining (as the sibling
+`windows: bool` branch in this very function already did with
+`rsplit_once('\\')`), never `Path`. The fix (`unix_sibling_path()`) hand-rolls
+`Path`'s own POSIX parent semantics (root normalizes to `/`, a trailing slash
+is insignificant, a bare relative name has no usable parent) with plain
+string operations, verified against all three cases already covered by
+`invalid_sibling_paths_fail_stably` plus the new-to-Windows-CI
+`derives_reviewable_requests_for_every_native_supervisor`.
+
+Tell: whenever a test constructs an `InstallEnvironment`/similar struct with
+a path literal that does **not** match `cfg!(windows)` (a `/`-style path
+fed into a test that runs unconditionally, not gated by `#[cfg(unix)]`), any
+`Path`-based manipulation of that literal downstream is host-dependent and
+therefore Windows-CI-only-broken — grep for `Path::new(` / `.parent()` /
+`.join(` near a hardcoded POSIX or Windows path literal before trusting it
+is portable.
+
+## Two packages that emit the same assembly name will eventually collide — and coverlet reports the collision as 0% coverage, not as an error
+
+`fsharp/conduit` failed `build (macos-latest)` with all 40 tests passing and
+coverage reported as a flat **0% line / 0% branch / 0% method** against a
+`/p:Threshold=80` gate. It had passed the two previous macOS rounds on code
+neither intervening commit touched, so it was intermittent, not a regression.
+
+Two independent defects were behind it, and the first one hid the second.
+
+**1. The coverage margin was less than one line.** Measured locally, the
+package sits at 169 of 211 lines = **80.09%** against a threshold of **80** —
+it needs 168.8 lines, so the entire margin is **0.2 of a line**. One covered
+line failing to execute takes it to 79.62% and the build red. Eight sequential
+local runs all produced exactly 80.09%, so the number is stable *locally*;
+it is the CI environment that perturbs it. CLAUDE.md already requires coverage
+to "WELL exceed 80%" — 80.09% is the letter of that rule and the opposite of
+its intent.
+
+**2. Two different libraries emitted the same assembly.** Neither
+`code/packages/csharp/conduit/CodingAdventures.Conduit.csproj` nor
+`code/packages/fsharp/conduit/CodingAdventures.Conduit.fsproj` set
+`<AssemblyName>`, so both defaulted to their project file name and both
+produced `CodingAdventures.Conduit.dll`, with test assemblies both named
+`CodingAdventures.Conduit.Tests` — and coverlet derives its mapping file name
+from the *test* assembly (`CoverletSourceRootsMapping_CodingAdventures.Conduit.Tests`),
+so renaming only the library would have left half the collision standing. The
+build tool schedules packages in
+parallel, and the failing macOS run shows `csharp/conduit` (18.3s) and
+`fsharp/conduit` (20.0s) overlapping. Two concurrent coverlet runs keyed on
+one module name is the only mechanism found that yields *exactly* zero rather
+than a low-but-nonzero number. The F# project already declared
+`PackageId = CodingAdventures.Conduit.FSharp` and its namespace is
+`CodingAdventures.Conduit.FSharp`; only the assembly name disagreed.
+
+Lessons:
+
+1. **A coverage threshold with sub-line margin is a scheduled outage.** Treat
+   `covered - threshold*total < ~2 lines` as failing, whatever the gate says.
+   Raise it by adding tests, never by lowering the threshold — the gate was
+   right, the coverage was thin.
+2. **Set `<AssemblyName>` explicitly whenever two packages could plausibly
+   share a project file name.** The default (project filename) makes assembly
+   identity an accident of directory layout, and nothing warns you: the build
+   succeeds, the tests pass, and only a name-keyed tool downstream
+   (coverage, instrumentation, a plugin loader) notices there are two of them.
+3. **"0%" from a coverage tool means "measured nothing," not "covered
+   nothing."** With 40 tests passing, zero is categorically impossible as a
+   real measurement — read it as a collection failure and hunt the
+   infrastructure, rather than as a signal to go write tests.
+4. **When an unrelated package's broken *measurement* blocks real work,
+   quarantine the measurement, not the tests.** This gate was disabled (issue
+   #11859) so PR #11553's Swift ZIP work could land: `/p:Threshold=80` is
+   omitted while `/p:CollectCoverage=true` stays, so all 47 tests still run and
+   still fail the build if any breaks — verified by injecting a deliberate
+   failure and confirming exit 1 — and the coverage number stays visible in the
+   log for whoever re-arms the gate. Disabling the whole package would have
+   thrown away a working 47-test suite to silence one broken number.
+5. Verify a rename like this by checking the *consumers* build, not just the
+   renamed package: `programs/fsharp/conduit-hello` references it via
+   `ProjectReference`, which resolves by path and so survives an assembly
+   rename — but a by-name reference would not have.
 
 ## `BUILD_windows` drifts from `BUILD` silently, because almost no PR runs the Windows shard
 

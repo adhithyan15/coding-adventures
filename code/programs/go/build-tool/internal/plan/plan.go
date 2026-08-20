@@ -65,9 +65,40 @@ type BuildPlan struct {
 	// that language's toolchain is needed for this build.
 	LanguagesNeeded map[string]bool `json:"languages_needed"`
 
+	// PlatformOverrides contains dependency and affected-package state for
+	// runners whose platform BUILD file differs from the detect job's view.
+	// Missing keys fall back to the top-level state for compatibility with
+	// plans written before this optional field existed.
+	PlatformOverrides map[string]PlatformState `json:"platform_overrides,omitempty"`
+
 	// Shards describes optional prerequisite-closed package slices that
 	// can be executed independently by parallel CI runners.
 	Shards []ShardEntry `json:"shards,omitempty"`
+}
+
+// PlatformState is the platform-specific portion of a build plan. Package
+// discovery is shared, while dependency edges and affected closure may differ
+// when BUILD_windows or another platform override declares native prerequisites.
+type PlatformState struct {
+	DependencyEdges  [][2]string `json:"dependency_edges"`
+	AffectedPackages []string    `json:"affected_packages"`
+}
+
+// StateForPlatform returns the platform-specific graph state when present and
+// otherwise preserves the top-level v1 behavior for older plans.
+func (bp *BuildPlan) StateForPlatform(goos string) PlatformState {
+	if bp != nil && bp.PlatformOverrides != nil {
+		if state, ok := bp.PlatformOverrides[goos]; ok {
+			return state
+		}
+	}
+	if bp == nil {
+		return PlatformState{}
+	}
+	return PlatformState{
+		DependencyEdges:  bp.DependencyEdges,
+		AffectedPackages: bp.AffectedPackages,
+	}
 }
 
 // ShardEntry describes one independently executable slice of a build plan.
@@ -115,7 +146,8 @@ type PackageEntry struct {
 	// DeclaredSrcs are glob patterns from the Starlark srcs field.
 	DeclaredSrcs []string `json:"declared_srcs,omitempty"`
 
-	// DeclaredDeps are qualified names from the Starlark deps field.
+	// DeclaredDeps are source-level references from the Starlark deps field.
+	// DependencyEdges contains their resolved package identities.
 	DeclaredDeps []string `json:"declared_deps,omitempty"`
 }
 
@@ -123,6 +155,26 @@ type PackageEntry struct {
 // It always stamps SchemaVersion to CurrentSchemaVersion.
 func Write(bp *BuildPlan, path string) error {
 	bp.SchemaVersion = CurrentSchemaVersion
+	if bp.Packages == nil {
+		bp.Packages = []PackageEntry{}
+	}
+	if bp.DependencyEdges == nil {
+		bp.DependencyEdges = [][2]string{}
+	}
+	if bp.LanguagesNeeded == nil {
+		bp.LanguagesNeeded = map[string]bool{}
+	}
+	for i := range bp.Packages {
+		if bp.Packages[i].BuildCommands == nil {
+			bp.Packages[i].BuildCommands = []string{}
+		}
+	}
+	for platform, state := range bp.PlatformOverrides {
+		if state.DependencyEdges == nil {
+			state.DependencyEdges = [][2]string{}
+			bp.PlatformOverrides[platform] = state
+		}
+	}
 
 	data, err := json.MarshalIndent(bp, "", "  ")
 	if err != nil {

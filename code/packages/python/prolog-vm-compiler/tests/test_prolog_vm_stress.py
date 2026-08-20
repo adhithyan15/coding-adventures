@@ -1030,7 +1030,7 @@ class TestPrologVMStress:
     def test_file_metadata_predicates_run_through_vm(self, tmp_path: Path) -> None:
         source_path = tmp_path / "nested" / "story.data"
         source_path.parent.mkdir()
-        source_path.write_text("tea\n", encoding="utf-8")
+        source_path.write_text("tea\n", encoding="utf-8", newline="\n")
         path_atom = str(source_path).replace("\\", "\\\\").replace("'", "\\'")
         dir_atom = str(source_path.parent).replace("\\", "\\\\").replace("'", "\\'")
         compiled = compile_swi_prolog_source(

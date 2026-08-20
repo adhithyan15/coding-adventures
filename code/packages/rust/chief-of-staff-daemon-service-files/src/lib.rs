@@ -226,7 +226,13 @@ fn validate_unix_paths(executable: &str, config_path: &str) -> Result<(), Servic
 }
 
 fn validate_unix_path(value: &str) -> Result<(), ()> {
-    if has_forbidden_text(value) || !Path::new(value).is_absolute() {
+    // POSIX absoluteness ("starts with `/`"), not `Path::is_absolute()`: this
+    // renders launchd/systemd definitions from POSIX-style paths regardless of
+    // which platform the crate itself was built and tested on, and `Path`'s
+    // notion of "absolute" is platform-dependent — on Windows a bare `/…` path
+    // has a root but no drive/UNC prefix, so `Path::is_absolute()` returns
+    // `false` for exactly the paths this function must accept.
+    if has_forbidden_text(value) || !value.starts_with('/') {
         return Err(());
     }
     if Path::new(value)

@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ઘ ductus (HL-C09FU)
+
+- Restore missing **ઘ** to the inventory and render its joined upper-and-lower body before the separate right spine and lower foot with one lift.
+- Preserve t30apps.com's version-1.0 two-path teaching order while retaining the source's explicit variation warning.
+- Show the exact Noto Sans Gujarati glyph behind every filmstrip frame and queue the missing **ઙ** next.
+
 ### Added — cited Gujarati ગ ductus (HL-C09FT)
 
 - Render **ગ** as a rounded left-body run followed by its separate right spine and lower foot with one lift.

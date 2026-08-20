@@ -3682,6 +3682,163 @@ These two owners were recorded before publication. They do not alter the
 dependency-shaped Lua ZIP selection: the rebased branch remains path-disjoint,
 pure in memory, and the only active parity tranche.
 
+## Post-#11525 Refresh
+
+External review merged Lua ZIP raw-RFC-1951 parity PR #11525 from final
+reviewed head `f1b5f88692456abc7e8b52f8016c43e18bb30eb8` as
+`14f15adda03c69074b1178fe124efc0907630821` at
+2026-08-14T06:27:41Z. Thirteen checks succeeded and six non-applicable checks
+skipped; no check failed or remained pending. GitHub deleted the source branch,
+and the parity loop did not exercise merge authority.
+
+The late collision-checked refresh is pinned to exact live main
+`4425641359dfa2d23b17bbee7e866c10817b75af`. It covers 15 established lanes,
+1,319 normalized identities, and 4,475 slots. It reports 173 high-consensus
+identities with 269 gaps, 869 singletons with 12,166 singleton gaps, 670 Rust
+singletons, zero canonical collisions, and zero unknown buckets. The Lua merge
+changes only the existing `lua/zip` identity and is topology-neutral.
+
+The exact root delta from the prior `c6bdc3694a85711a213340ac5f12370703051ff6`
+inventory is one identity, one slot, one singleton, 14 singleton gaps, and one
+Rust singleton. External PR #11528 introduced the sole new root,
+`rust/chief-of-staff-hardware-key-approval`, from final reviewed head
+`149b13105ccff2c7ee0d604195253afef7a58abe`, merged as
+`223b14a14e87807ee59b534192540244347be1bd` at
+2026-08-14T06:29:40Z. Later human-language and WASM documentation changes are
+topology-neutral.
+
+The bounded `CHIEF-TIER3-HARDWARE-KEY/1` transcript is now owned by
+`chief-hardware-key-approval-protocol-portable-conformance`, downstream of the
+Tier 2 protocol owner. Absolute helper provenance, process and pipe isolation,
+deadlines, termination, native UI and FIDO2/WebAuthn/YubiKey semantics, and
+credential and assertion custody are owned by the blocked
+`chief-hardware-key-approval-native-authority-review`. The daemon receives only
+a canonical strength label over a private pipe, not a cryptographically bound
+hardware assertion, so the reviewed helper and OS process identity remain the
+attestation boundary. The Rust package has no capability manifest; the native
+review must replace that false zero-authority default with independently
+hardware-key-signed evidence for its concrete process, environment, and timing
+effects without attributing the external helper's credential authority to the
+Rust crate.
+
+These two ownership records were added before reprioritization. Lua is merged,
+leaving exactly four pending ZIP raw-profile children: .NET, Haskell, JVM, and
+Swift. No other new owner was discovered in this refresh.
+
+### Post-#11517/#11539 Late-Main Refresh
+
+Before reprioritization, live main advanced to
+`97094db1b26beb22b506bdf8432919bea1dca873`. External PR #11517 added the
+Rust `coap-protocol` and `smart-home-coap-integration` roots from final
+reviewed head `061dc1b5f01c1ce75f0f8854d1eaa8d7bb1987bb`, merged as
+`ea036d82100a7530792f7944638be464c4288a05` at
+2026-08-14T06:33:47Z after 13 checks succeeded and six non-applicable checks
+skipped. PR #11539 adds only ADJ facts and documentation and is
+topology-neutral.
+
+The regenerated collision-clean report now covers 1,321 normalized identities
+and 4,477 slots across the same 15 established lanes. It reports 173
+high-consensus identities with 269 gaps, 871 singletons with 12,194 singleton
+gaps, 672 Rust singletons, zero canonical collisions, and zero unknown
+buckets. The exact delta from the preceding `4425641359dfa2d23b17bbee7e866c10817b75af`
+snapshot is two identities, two slots, two singletons, 28 singleton gaps, and
+two Rust singletons, entirely explained by the two CoAP roots.
+
+The socket-free bounded CoAP v1 Confirmable-GET framing contract is owned by
+`coap-protocol-portable-conformance`, including strict URI-Path and option
+encoding, token and message-ID correlation, piggybacked and separate response
+framing, bounded datagrams, and stable payload-blind failures. Its absent
+capability manifest defaults to a truthful zero-authority runtime but must be
+made explicit when the portable fixture and ports land.
+
+Injected endpoint and profile validation, deterministic exchange planning,
+text and JSON scalar decoding, complete-snapshot validation, stable D23
+projection, and authorization-before-transport ordering are owned by
+`smart-home-coap-portable-core-conformance`. Concrete UDP bind/connect/send/
+receive and timeouts, plaintext peer trust and replay risk, direct CLI I/O,
+and sequential runtime-mutation risk are owned by the blocked
+`smart-home-coap-native-authority-review`. That integration's absent manifest
+falsely presents concrete network and console authority as zero; the native
+review must add minimum `net:listen`, `net:connect`, and `stdout:write`
+runtime evidence plus a loopback UDP test profile, coordinated with the shared
+network-substrate truthfulness owner. Read-only local telemetry remains the
+boundary: parity does not manufacture writes, subscriptions, discovery,
+multicast, blockwise transfer, DTLS, OSCORE, or all-language socket adapters.
+
+All three CoAP ownership records were added before selection. The four pending
+ZIP raw-profile children remain .NET, Haskell, JVM, and Swift.
+
+The dependency/leverage pass selected `zip-raw-rfc1951-swift-lane-parity`.
+Swift is the only remaining ZIP child with no live or historical branch
+overlap: the ancient unmerged catch-up residue still touches the complete
+.NET, Haskell, and JVM ZIP trees and must not be reused or cherry-picked.
+Swift 6.3.3 is available, the package is a standalone pure in-memory library
+with only the local LZSS dependency, and no downstream Swift package imports
+it. Its decoder already owns stored/fixed and multi-block framing plus a 256
+MiB guard, but rejects dynamic Huffman blocks, lacks counted caller-capped raw
+APIs and stable errors, and trims declared-size mismatches. This coherent
+tranche consumes all 34 neutral fixtures, hardens exact compressed and
+uncompressed ZIP boundaries, adds an independent test-only raw-DEFLATE oracle,
+and records explicit empty production capabilities without adding native
+authority. The newly recorded CoAP owners remain high-leverage pending work but
+do not shorten the four-child ZIP blocker; Swift is therefore the next serial
+delivery.
+
+## Swift ZIP RFC 1951 Implementation
+
+The Swift tranche was rebased cleanly onto live `origin/main`
+`09877072d243dcadc76f1ea6b7afeaff7124768e`. The six intervening ALGOL,
+Mermaid, HTML, ADJ, WASM, and human-language commits are path-disjoint and add
+no package root, so the collision-clean inventory remains 1,321 identities,
+4,477 slots, 871 singletons, 672 Rust singletons, zero collisions, and zero
+unknown buckets.
+
+Implementation revision `0911c7e129f3c9cf0d60836654f4bf7f7a68dd7d`
+adds the strict public raw inflater/deflater surface, canonical dynamic-Huffman
+decoding, exact consumed-byte reporting, caller-lowerable output bounds, stable
+payload-blind failures, strict method-8 ZIP cavity and declared-size checks,
+all 34 neutral fixtures, and explicit empty capability metadata. Both BUILD
+front doors pass under Swift 6.3.3 with 36 tests; the release build treats
+warnings as errors, and LLVM reports 93.76% production line coverage. The
+neutral fixture, capability, and parity suites pass 26 tests plus 678 subtests,
+the Swift build-tool dry run validates all 164 discovered Swift roots, and the
+state DAG, dependency, credential, authority, package-manifest, and diff checks
+are clean. Production remains pure in-memory with only the local LZSS
+dependency; Foundation, fixture reads, Process, and zlib remain test-only.
+
+### PR #11553 CI build repair
+
+After the Swift package itself passed on all three runners, repository-wide
+BUILD validation exposed legacy Windows metadata drift. The bounded repair
+restores the exact Perl, Python, and Swift standalone dependency declarations,
+keeps Windows `cmd /C` metadata comments executable-safe, fixes the affected
+virtual-environment path and LF-sensitive byte fixtures, and repairs the Perl
+Nib type checker's missing `shift_expr` precedence node.
+
+The first Direct2D workaround duplicated Windows-only Rust dependencies into
+Unix BUILD files. That made the Linux-generated plan validate on Windows but
+incorrectly scheduled the native Direct2D/GDI dependency chain on Unix. Build
+plan v1 now carries optional Linux, Darwin, and Windows dependency graphs plus
+prerequisite-closed affected sets, unions their toolchain requirements, assigns
+shared shards from the platform union, and selects only the current runner's
+state for execution. The Windows Rust bridge is therefore never omitted from
+the matrix but is built and ordered only where it applies; older v1 plans
+continue to use the top-level graph. The branch was rebased cleanly onto
+`952c9ce7f162467039818f00347186f04dc7bb9c`; auto-merge remains disabled until
+the replacement CI run is entirely acceptable and GitHub reports no conflict.
+
+The following Windows run built Swift ZIP and the native Direct2D bridge, then
+exercised six inherited affected-package gaps. The focused follow-up restores
+the complete grammar-tools CLI dependency set, removes two `cmd.exe`-literal
+editable-extra quotes, and adds the missing symbolic-ir Windows front door.
+Windows peer close tests now accept either EOF or `ConnectionReset`; IRC clamps
+Windows to its supported single reactor instead of requesting unavailable
+`SO_REUSEPORT`; and the exposed GDI/Direct2D/C bridge code is warning-clean under
+strict Windows Clippy. The three Python front doors, full embeddable and IRC
+tests, paint backend tests, strict Clippy gates, and release C bridge build all
+pass locally. Auto-merge remains disabled until the replacement head has no CI
+failure or merge conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
