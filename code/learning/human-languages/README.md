@@ -133,7 +133,7 @@ enter cross-language review only after focused retrieval.
 | Language | Family / script | Canonical lessons | Mapped lessons | Book progress |
 |---|---|---:|---:|---|
 | [Spanish](./spanish/README.md) | Romance / Latin | 584 | 584 | 302 chapters; through Ch. 302; 302 generated |
-| [Latin](./latin/README.md) | Italic / Latin | 108 | 108 | 47 chapters; through Ch. 47; 47 generated |
+| [Latin](./latin/README.md) | Italic / Latin | 109 | 109 | 47 chapters; through Ch. 47; 47 generated |
 | [French](./french/README.md) | Romance / Latin | 119 | 105 | 33 chapters; through Ch. 33; 17 generated |
 | [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
