@@ -16193,24 +16193,25 @@
     {
       "language": "urdu",
       "chapter": 1,
-      "sourceHash": "fnv1a64:6ce2489937b3a12a",
+      "sourceHash": "fnv1a64:98b8d72bdfe4dab5",
       "lessonIds": [
         "UR-C01-salam",
+        "UR-W01-shukriya-first-three",
         "UR-C01-shukriya",
         "UR-C01-ji-han",
         "UR-C01-nahin"
       ],
-      "voiceLessons": 4,
-      "drivablePrefix": 4,
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
       "text": "urdu/narration/ch01.txt",
       "json": "urdu/narration/ch01.json",
-      "textHash": "fnv1a64:924e51dc3a336c5d",
-      "jsonHash": "fnv1a64:2ae1d7f98a2b635e"
+      "textHash": "fnv1a64:c9be4191db4256ef",
+      "jsonHash": "fnv1a64:7f8d4b8cf8202bad"
     },
     {
       "language": "urdu",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d7e6c7d21186e200",
+      "sourceHash": "fnv1a64:a3f4a0b44c5ad7e6",
       "lessonIds": [
         "UR-C02-mera-naam"
       ],
@@ -16219,12 +16220,12 @@
       "text": "urdu/narration/ch02.txt",
       "json": "urdu/narration/ch02.json",
       "textHash": "fnv1a64:b51d3358d9b6bb75",
-      "jsonHash": "fnv1a64:ea3231d5c2ec1fbe"
+      "jsonHash": "fnv1a64:1544dc44968542d9"
     },
     {
       "language": "urdu",
       "chapter": 3,
-      "sourceHash": "fnv1a64:f1d09ed02a13ed81",
+      "sourceHash": "fnv1a64:2373594a092cc216",
       "lessonIds": [
         "UR-C03-aap-tum-tu",
         "UR-C03-kya",
@@ -16236,8 +16237,8 @@
       "drivablePrefix": 2,
       "text": "urdu/narration/ch03.txt",
       "json": "urdu/narration/ch03.json",
-      "textHash": "fnv1a64:8a352f6f14de56b1",
-      "jsonHash": "fnv1a64:8b2367abf1f50ec6"
+      "textHash": "fnv1a64:410c6d05f04f80a7",
+      "jsonHash": "fnv1a64:c04da71a970e5e83"
     },
     {
       "language": "urdu",
@@ -16278,7 +16279,7 @@
     {
       "language": "urdu",
       "chapter": 6,
-      "sourceHash": "fnv1a64:a64f60f1bf438db1",
+      "sourceHash": "fnv1a64:94e111bc86ef5d38",
       "lessonIds": [
         "UR-C06-hona",
         "UR-C06-jana",
@@ -16290,8 +16291,8 @@
       "drivablePrefix": 5,
       "text": "urdu/narration/ch06.txt",
       "json": "urdu/narration/ch06.json",
-      "textHash": "fnv1a64:ddde1e5f5fcb8c9f",
-      "jsonHash": "fnv1a64:d392cba52a248c15"
+      "textHash": "fnv1a64:ac88e352a71cb761",
+      "jsonHash": "fnv1a64:6ce3579e4f251d3f"
     },
     {
       "language": "urdu",
