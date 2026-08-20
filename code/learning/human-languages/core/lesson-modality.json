@@ -7,19 +7,19 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:417e7222ade563d5",
+  "sourceHash": "fnv1a64:5ccee552c67319aa",
   "summary": {
     "totalLessons": 3400,
-    "voice": 2465,
+    "voice": 2464,
     "sight": 590,
-    "pen": 345,
-    "drivableLessons": 2465,
-    "drivablePercent": 73,
+    "pen": 346,
+    "drivableLessons": 2464,
+    "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1004,
-    "drivablePrefixTotal": 2200,
+    "drivablePrefixTotal": 2199,
     "fullyDrivableChapters": 668,
-    "unstartableChapters": 210,
+    "unstartableChapters": 211,
     "overriddenLessons": 0,
     "lessonsWithoutChapter": 0
   },
@@ -868,11 +868,11 @@
     {
       "language": "chinese",
       "lessonCount": 63,
-      "voice": 31,
+      "voice": 30,
       "sight": 4,
-      "pen": 28,
-      "drivablePercent": 49,
-      "drivablePrefixTotal": 1,
+      "pen": 29,
+      "drivablePercent": 48,
+      "drivablePrefixTotal": 0,
       "modalities": [
         "voice",
         "sight",
@@ -882,19 +882,18 @@
         {
           "chapter": 1,
           "lessonCount": 7,
-          "voice": 5,
+          "voice": 4,
           "sight": 2,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 1,
-          "firstNonVoiceLesson": "ZH-C01-ni",
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "ZH-C01-tones",
           "drivable": false,
-          "drivableLessonIds": [
-            "ZH-C01-tones"
-          ]
+          "drivableLessonIds": []
         },
         {
           "chapter": 2,
@@ -21401,18 +21400,21 @@
       "language": "chinese",
       "chapter": 1,
       "sequence": 10,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4b569881c35225c0"
+      "sourceHash": "fnv1a64:dab90814614ce676",
+      "detachableSegments": [
+        "Writing — trace four visible paths"
+      ]
     },
     {
       "id": "ZH-C01-ni",
