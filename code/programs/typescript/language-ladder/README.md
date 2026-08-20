@@ -1063,7 +1063,13 @@ and sweeps into the long upper-right exit without lifting. The t30apps.com
 animation exposes that as one continuous SVG path; the Noto Sans Gujarati fit
 preserves its order while tracing broader printed loops and a more angular
 crossing. The source's variation warning continues to qualify the demonstrated
-school-hand form; missing **ઝ** is next.
+school-hand form; the source-and-font audit then exposes **ઝ** as a missing
+inventory entry. Its three-frame filmstrip circles the rounded left body, lifts
+for the right loop and lower tail, then lifts again to descend the short upper
+stem. The t30apps.com animation exposes those as three ordered SVG paths; the
+Noto Sans Gujarati fit preserves their order while tracing broader printed
+bodies and more angular joins. The source's variation warning continues to
+qualify the demonstrated school-hand form; missing **ઞ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
