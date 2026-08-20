@@ -1,5 +1,6 @@
 ---
 id: PA-C02-mera
+sequence: 80
 chapter: 2
 type: word
 headword: ਮੇਰਾ
