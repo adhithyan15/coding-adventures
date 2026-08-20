@@ -1,5 +1,6 @@
 ---
 id: AR-C02-ism
+sequence: 150
 chapter: 2
 type: word
 headword: اسم

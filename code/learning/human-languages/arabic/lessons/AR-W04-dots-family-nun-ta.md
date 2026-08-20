@@ -1,5 +1,6 @@
 ---
 id: AR-W04-dots-family-nun-ta
+sequence: 230
 chapter: 2
 type: writing
 headword: "ن، ت، ث"
