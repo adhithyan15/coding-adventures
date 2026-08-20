@@ -344,7 +344,8 @@ describe("corpus snapshot", () => {
     // Arabic harakat split: +1. Chapter 2 gains typed writing-recognition atoms,
     // while its payoff still measures the separate spoken name-exchange promise.
     // Widening that payoff would hide writing debt rather than pay it.
-    expect(report.summary.payoffsNotRepresentative).toBe(81); // +1: German chapter 1 gains an atom-bearing writing step; its existing payoff is not widened.
+    // Italian's typed opener adds the other new measurable payoff debt.
+    expect(report.summary.payoffsNotRepresentative).toBe(82); // +1: German chapter 1 gains an atom-bearing writing step; its existing payoff is not widened.
   });
 
   it("names the tracks whose chapter debt is already zero", () => {
@@ -364,7 +365,6 @@ describe("corpus snapshot", () => {
       "chinese",
       "french",
       "gujarati",
-      "italian",
       "japanese",
       "latin",
       "marathi",

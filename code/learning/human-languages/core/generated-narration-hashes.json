@@ -3495,11 +3495,12 @@
     {
       "language": "italian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:3e905f2b1c3dd36b",
+      "sourceHash": "fnv1a64:1e1afb2e61c5fb93",
       "lessonIds": [
+        "IT-C01-ciao",
+        "IT-W01-ciao-guided-copy",
         "IT-C01-buongiorno",
         "IT-C01-buono",
-        "IT-C01-ciao",
         "IT-C01-giorno",
         "IT-C01-grazie",
         "IT-C01-il-la-lo",
@@ -3507,12 +3508,12 @@
         "IT-C01-practice",
         "IT-C01-sera"
       ],
-      "voiceLessons": 8,
-      "drivablePrefix": 6,
+      "voiceLessons": 7,
+      "drivablePrefix": 0,
       "text": "italian/narration/ch01.txt",
       "json": "italian/narration/ch01.json",
-      "textHash": "fnv1a64:24a5f6350baebaf6",
-      "jsonHash": "fnv1a64:b943cd38ac54e50e"
+      "textHash": "fnv1a64:6f87f2e8059e3cdf",
+      "jsonHash": "fnv1a64:a232b3c9bd95a899"
     },
     {
       "language": "italian",

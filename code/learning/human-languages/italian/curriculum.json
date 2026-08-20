@@ -6,11 +6,14 @@
       "id": "IT-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "IT-C01-ciao"
+        "IT-C01-ciao",
+        "IT-W01-ciao-guided-copy"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "IT-EXT-001-WRITING-START"
+      ]
     },
     {
       "id": "IT-PATH-002",
@@ -753,6 +756,17 @@
     }
   },
   "extensions": [
+    {
+      "id": "IT-EXT-001-WRITING-START",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can copy my first Italian greeting with the model still visible and preserve its four-letter shape.",
+      "prerequisites": [],
+      "lessons": [
+        "IT-W01-ciao-guided-copy"
+      ]
+    },
     {
       "id": "IT-EXT-008-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",
