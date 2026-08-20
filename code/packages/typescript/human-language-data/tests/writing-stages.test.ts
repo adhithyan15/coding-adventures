@@ -103,11 +103,11 @@ Learner copy comes first.
     );
     expect(report.summary).toEqual({
       tracks: 23,
-      tracksWithAnyEvidence: 1,
+      tracksWithAnyEvidence: 2,
       tracksCompleteAtPreA1: 1,
-      evidenceBlocks: 4,
+      evidenceBlocks: 5,
       invalidEvidenceBlocks: 0,
-      missingTrackLevelStages: 1007,
+      missingTrackLevelStages: 1000,
     });
     const marwadi = report.tracks.find((track) => track.language === "marwadi")!;
     expect(marwadi.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
@@ -118,5 +118,10 @@ Learner copy comes first.
       "dictation-transcription",
     ]);
     expect(report.tracks.filter((track) => track.levels[0]?.complete)).toHaveLength(1);
+    const chinese = report.tracks.find((track) => track.language === "chinese")!;
+    expect(chinese.validEvidence[0]).toMatchObject({
+      lessonId: "ZH-C01-tones",
+      stage: "observe-trace",
+    });
   }, 30_000);
 });
