@@ -5501,6 +5501,94 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઊ"),
   },
+  // t30apps writes Gujarati એ as a joined body, a separately descended right
+  // stem, then a separate high arc. These fitted medians preserve that
+  // three-path, two-lift order across the wider bundled Noto outline.
+  [ductusKey("gujarati", "એ")]: {
+    script: "gujarati",
+    glyph: "એ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle clockwise around the left bowl",
+            path: [
+              { x: 65, y: 560 },
+              { x: 125, y: 580 },
+              { x: 190, y: 570 },
+              { x: 250, y: 535 },
+              { x: 295, y: 480 },
+              { x: 312, y: 420 },
+              { x: 295, y: 360 },
+              { x: 250, y: 315 },
+              { x: 195, y: 280 },
+              { x: 135, y: 270 },
+              { x: 85, y: 285 },
+              { x: 55, y: 310 },
+              { x: 70, y: 325 },
+              { x: 110, y: 315 },
+              { x: 150, y: 285 },
+            ],
+          },
+          {
+            label: "continue through the lower body and small right arch",
+            path: [
+              { x: 150, y: 285 },
+              { x: 180, y: 220 },
+              { x: 225, y: 155 },
+              { x: 285, y: 115 },
+              { x: 350, y: 105 },
+              { x: 415, y: 130 },
+              { x: 470, y: 185 },
+              { x: 505, y: 255 },
+              { x: 515, y: 325 },
+              { x: 495, y: 380 },
+              { x: 520, y: 315 },
+              { x: 570, y: 270 },
+              { x: 625, y: 265 },
+              { x: 680, y: 290 },
+              { x: 710, y: 335 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the full-height right stem into its foot",
+            path: [
+              { x: 748, y: 590 },
+              { x: 748, y: 470 },
+              { x: 748, y: 350 },
+              { x: 748, y: 230 },
+              { x: 748, y: 130 },
+              { x: 760, y: 75 },
+              { x: 795, y: 40 },
+              { x: 835, y: 35 },
+              { x: 870, y: 35 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift again and sweep the high arcing mark from left to right",
+            path: [
+              { x: 515, y: 850 },
+              { x: 565, y: 865 },
+              { x: 615, y: 855 },
+              { x: 660, y: 825 },
+              { x: 695, y: 780 },
+              { x: 720, y: 725 },
+              { x: 742, y: 665 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("એ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
