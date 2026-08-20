@@ -105,7 +105,7 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(report.summary).toEqual({
       tracks: 23,
       tracksWithDetectedCliffs: 23,
-      tracksWithNoWritingPractice: 3,
+      tracksWithNoWritingPractice: 2, // Italian now starts with observe-trace and guided copy.
       tracksWhereWritingStartsLate: 7,
       atomMeasurementBlindLessons: 497,
       findings: 143, // Telugu duration and French/Marathi order recovery remove three independent findings.
@@ -113,7 +113,7 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "punjabi", kind: "order-integrity", count: 62 },
       { language: "arabic", kind: "order-integrity", count: 53 },
-      { language: "italian", kind: "order-integrity", count: 22 },
+      { language: "portuguese", kind: "order-integrity", count: 21 },
     ]);
     expect(report.tracks.find((track) => track.language === "german")).toMatchObject({
       orderDefects: 0,
