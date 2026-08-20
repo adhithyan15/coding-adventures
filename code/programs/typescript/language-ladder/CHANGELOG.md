@@ -69,6 +69,12 @@ at the package. `scriptdata` stays out of that chunk on purpose — the shell ne
 
 ## Unreleased — schema-v2 lesson compatibility
 
+### Added — cited Gujarati ફ ductus (HL-C09GM)
+
+- Restore missing Gujarati **ફ** and render its winding body and tail before the separate diagonal cross-stroke.
+- Keep the source's two-path evidence and variation caveat alongside the learner-facing order.
+- Show the exact Noto Sans Gujarati glyph behind both filmstrip frames and queue missing **બ** next.
+
 ### Added — cited Gujarati પ ductus (HL-C09GL)
 
 - Restore missing Gujarati **પ** and render its hooked left stem and broad lower body plus separate tall spine with one lift.

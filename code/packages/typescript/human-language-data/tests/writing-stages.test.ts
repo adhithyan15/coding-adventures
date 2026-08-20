@@ -103,11 +103,11 @@ Learner copy comes first.
     );
     expect(report.summary).toEqual({
       tracks: 23,
-      tracksWithAnyEvidence: 7,
+      tracksWithAnyEvidence: 8,
       tracksCompleteAtPreA1: 1,
-      evidenceBlocks: 15,
+      evidenceBlocks: 17,
       invalidEvidenceBlocks: 0,
-      missingTrackLevelStages: 930,
+      missingTrackLevelStages: 916,
     });
     const marwadi = report.tracks.find((track) => track.language === "marwadi")!;
     expect(marwadi.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
