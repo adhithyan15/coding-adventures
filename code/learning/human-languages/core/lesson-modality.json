@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:7f72ba32aea13923",
+  "sourceHash": "fnv1a64:9eb7b803da07dfb5",
   "summary": {
     "totalLessons": 3404,
     "voice": 2461,
@@ -33488,28 +33488,10 @@
       ]
     },
     {
-      "id": "IT-C01-buongiorno",
-      "language": "italian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:bf5ba98deca296b4"
-    },
-    {
       "id": "IT-C01-buono",
       "language": "italian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -33521,49 +33503,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4ef4e2a70ce4f96f"
-    },
-    {
-      "id": "IT-C01-giorno",
-      "language": "italian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:2db996eea27f7291"
-    },
-    {
-      "id": "IT-C01-grazie",
-      "language": "italian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:24727ed3519a514e"
+      "sourceHash": "fnv1a64:2db5c41d4c4ee96c"
     },
     {
       "id": "IT-C01-il-la-lo",
       "language": "italian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 30,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -33575,13 +33521,67 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:42abb1bb4b06d812"
+      "sourceHash": "fnv1a64:4e47245ae0ffffe4"
+    },
+    {
+      "id": "IT-C01-giorno",
+      "language": "italian",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:41d5c0fe0be4d53c"
+    },
+    {
+      "id": "IT-C01-buongiorno",
+      "language": "italian",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4d06591169ec14c8"
+    },
+    {
+      "id": "IT-C01-sera",
+      "language": "italian",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1eb2fa43556aab91"
     },
     {
       "id": "IT-C01-notte",
       "language": "italian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 70,
       "modality": "sight",
       "derived": "sight",
       "drivable": false,
@@ -33593,13 +33593,31 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:51cf1ab986e10d2c"
+      "sourceHash": "fnv1a64:80c32e88e71504c6"
+    },
+    {
+      "id": "IT-C01-grazie",
+      "language": "italian",
+      "chapter": 1,
+      "sequence": 80,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:45be76e3ae3aa5cf"
     },
     {
       "id": "IT-C01-practice",
       "language": "italian",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 90,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -33611,25 +33629,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:82dfa21619caa6fc"
-    },
-    {
-      "id": "IT-C01-sera",
-      "language": "italian",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:f8d015596bda6a34"
+      "sourceHash": "fnv1a64:c887f7af7f33d4a4"
     },
     {
       "id": "IT-C02-prego",
@@ -33791,7 +33791,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6d03fde04d5a9049"
+      "sourceHash": "fnv1a64:8e8ba87b158cb6ff"
     },
     {
       "id": "IT-C03-mi-chiamo",
