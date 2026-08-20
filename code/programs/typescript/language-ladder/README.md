@@ -955,6 +955,12 @@ version-1.0 animation exposes only its first SVG path for this letter; the Noto
 Sans Gujarati fit preserves that zero-lift loop-to-loop-to-hook order while
 tracing the wider printed body. The source's variation warning continues to
 qualify the demonstrated school-hand form.
+The four-frame Gujarati **ઈ** filmstrip repeats that unbroken **ઇ** motion, but
+continues upward and curls clockwise around the taller top hook. The adjacent
+t30apps.com animation again populates only its first SVG path; the Noto Sans
+Gujarati fit preserves the zero-lift loop-to-loop-to-extended-curl order while
+tracing the printed glyph's rounded high terminal. The source's variation
+warning continues to qualify the demonstrated school-hand form.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
