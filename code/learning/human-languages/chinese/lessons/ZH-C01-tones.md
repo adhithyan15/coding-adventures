@@ -14,15 +14,15 @@ sounds: [tone-lexical, tone-1, tone-2, tone-3, tone-4, tone-neutral]
 roots: []
 etymology_hook: One syllable, four pitches, four different words — in Mandarin the pitch is inside the word, doing a consonant's job.
 duration:
-  max_seconds: 200
+  max_seconds: 240
 requires:
   knowledge: []
 introduces:
   knowledge: [ZH-TONE-LEXICAL]
 practises:
   knowledge: [ZH-TONE-LEXICAL]
-skills: [listening, speaking]
-modes: [interpretive]
+skills: [listening, speaking, writing]
+modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-mandarin-simplified
@@ -60,6 +60,18 @@ Chinese characters themselves record no tone anywhere, so the accent is a
 teaching aid, not part of the writing.
 
 Say all four in order now, slowly: **mā, má, mǎ, mà**. [REPEAT x2]
+
+## Writing — trace four visible paths
+<!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-LEXICAL] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Keep the model visible. With a finger first, then a pencil, trace only the mark
+above each **a**: **ā, á, ǎ, à**. Move flat, up, down-then-up, and down. Say the
+matching pitch while your pencil moves.
+
+Stop after one slow pass. This is not a memory test, and these pinyin marks are
+not Chinese characters. The next lesson will give your hand its first two-stroke
+character; this tiny step only lets pitch become a line you can see and follow.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-TONE-LEXICAL] -->

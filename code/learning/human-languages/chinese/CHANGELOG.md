@@ -5,6 +5,12 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Changed — writing now starts with the first lesson
+
+The opening tone lesson now asks for one model-visible pass over the four pinyin
+tone contours. It does not ask the learner to recall a shape, and the first
+Chinese character remains the following two-stroke lesson.
+
 ### Added — Chapter 2, the components, one glyph per lesson (HL-C209)
 
 Seven writing lessons, each teaching **exactly one** glyph, in the order that

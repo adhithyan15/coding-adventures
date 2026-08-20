@@ -6,7 +6,8 @@
       "id": "TA-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "TA-C01-vanakkam"
+        "TA-C01-vanakkam",
+        "TA-W00-va-guided-copy"
       ],
       "before": [],
       "inline": [
@@ -1731,10 +1732,11 @@
       "stage": "pre-A1",
       "kind": "required",
       "category": "script",
-      "canDo": "I can recognize the first Tamil script pattern inside a greeting I already understand.",
+      "canDo": "I can recognize and copy the first visible Tamil shape inside a greeting I already understand, with the model still present.",
       "prerequisites": [],
       "lessons": [
-        "TA-C01-vanakkam"
+        "TA-C01-vanakkam",
+        "TA-W00-va-guided-copy"
       ]
     },
     {

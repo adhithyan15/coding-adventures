@@ -135,10 +135,10 @@ enter cross-language review only after focused retrieval.
 | [Spanish](./spanish/README.md) | Romance / Latin | 585 | 585 | 302 chapters; through Ch. 302; 302 generated |
 | [Latin](./latin/README.md) | Italic / Latin | 109 | 109 | 47 chapters; through Ch. 47; 47 generated |
 | [French](./french/README.md) | Romance / Latin | 118 | 104 | 33 chapters; through Ch. 33; 17 generated |
-| [German](./german/README.md) | Germanic / Latin | 106 | 91 | 31 chapters; through Ch. 31; 15 generated |
+| [German](./german/README.md) | Germanic / Latin | 107 | 92 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 100 | 98 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 273 | 273 | 66 chapters; through Ch. 66; 66 generated |
-| [Tamil](./tamil/README.md) | Dravidian / Tamil | 282 | 278 | 64 chapters; through Ch. 64; 59 generated |
+| [Tamil](./tamil/README.md) | Dravidian / Tamil | 283 | 279 | 64 chapters; through Ch. 64; 59 generated |
 | [Kannada](./kannada/README.md) | Dravidian / Kannada | 242 | 238 | 66 chapters; through Ch. 66; 61 generated |
 | [Telugu](./telugu/README.md) | Dravidian / Telugu | 276 | 272 | 73 chapters; through Ch. 73; 68 generated |
 | [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 247 | 243 | 66 chapters; through Ch. 66; 61 generated |

@@ -1,5 +1,6 @@
 ---
 id: AR-W02-lam-alif-joins
+sequence: 120
 chapter: 1
 type: writing
 headword: "سل، لا"

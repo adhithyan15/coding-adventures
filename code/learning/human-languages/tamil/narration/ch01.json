@@ -3,8 +3,8 @@
   "language": "tamil",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 9,
-  "sourceHash": "fnv1a64:6df1383fd4404bac",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:984b5063db16fad9",
   "lessons": [
     {
       "id": "TA-C01-vanakkam",
@@ -14,13 +14,18 @@
       "romanization": "vaṇakkam",
       "gloss": "hello / greetings (vaṇakkam — \"reverence, homage\")",
       "script": "tamil",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:6277ee309e891075",
-      "notice": null,
+      "sourceHash": "fnv1a64:b55f10876077d66f",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -41,8 +46,8 @@
         },
         {
           "index": 1,
-          "type": "unknown",
-          "title": "The word",
+          "type": "input",
+          "title": "You'll want to know: வணக்கம்",
           "segments": [
             {
               "kind": "speech",
@@ -97,6 +102,21 @@
         },
         {
           "index": 5,
+          "type": "writing",
+          "title": "Writing — let your finger meet one shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep வணக்கம் (vaṇakkam) visible. Find only its first shape: வ. Follow that printed shape once with your finger while you say the whole greeting."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not write it yet, and do not try to remember the whole word. This first pass only lets your eye, voice, and hand notice the same greeting together. A later script lesson will teach how Tamil letters are formed; tracing a typeface here does not claim a handwriting stroke order."
+            }
+          ]
+        },
+        {
+          "index": 6,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -136,7 +156,7 @@
           ]
         },
         {
-          "index": 6,
+          "index": 7,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -149,6 +169,69 @@
             {
               "kind": "speech",
               "text": "Say வணக்கம் (vaṇakkam). Does it change between morning and evening? (No — one greeting, all day.) Does it change for one person or a crowd? (No.) Next: the same greeting across the Dravidian family."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "TA-W00-va-guided-copy",
+      "sequence": 15,
+      "title": "வ — copy one visible shape with help",
+      "headword": "வ",
+      "romanization": "",
+      "gloss": "copy the first visible shape of the greeting once with the model present",
+      "script": "tamil",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:3fd7da2bd03a3964",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to வணக்கம் and say vaṇakkam once. Keep the model on the page. Find the first shape, வ, which your finger just followed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one supported copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy வ once beside the model. Look back as often as you need. Your copy can be large and slow; it does not need to look like a font."
+            },
+            {
+              "kind": "speech",
+              "text": "This is shape familiarity, not a stroke-order test. Do not hide the model, do not copy the rest of வணக்கம் (vaṇakkam), and do not add a second new shape today. The later Tamil writing sequence will teach letter construction explicitly."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare your one copy with வ while both remain visible. Repair one curve if you want, then stop. Say vaṇakkam once more: one known greeting, one tiny hand movement."
             }
           ]
         }
@@ -1168,7 +1251,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eaca356117a007ca",
+      "sourceHash": "fnv1a64:b61caef2405d511a",
       "notice": null,
       "blocks": [
         {
@@ -1184,7 +1267,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five words, all of them said and none of them written. Let's gather them — and add the farewell, which carries a small piece of Tamil culture."
+              "text": "Five spoken words, plus the one visible shape your hand has copied. Let's gather them — and add the farewell, which carries a small piece of Tamil culture."
             }
           ]
         },
@@ -1216,7 +1299,7 @@
             },
             {
               "kind": "speech",
-              "text": "The Tamil is printed beside each word on purpose. You are not expected to read it yet and nothing here will ask you to — but five words is a good number of shapes to start getting used to. Writing begins in chapter 4, and by then every letter you meet will spell a word you already say."
+              "text": "The Tamil is printed beside each word on purpose. You are expected to recognise only the opening வ of வணக்கம் (vaṇakkam), and you may keep that model visible when you copy it below. Nothing asks you to read or write the other shapes. Formal letter construction still begins later, when every shape will spell a word you already say."
             }
           ]
         },
@@ -1241,17 +1324,6 @@
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Why Tamil won't just say “I'm leaving.” The everyday goodbye is போய் வருகிறேன் (pōy varugiṟēṉ) — literally “I'll go and come [back],” and the reply is போய் வா (pōy vā), “go, and come back.” A bare “I go” sounds like a final parting, so you always promise a return. A whole worldview folded into a farewell. (Or simply say vaṇakkam again — it parts as well as it meets.)"
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1281,6 +1353,15 @@
             },
             {
               "kind": "prompt",
+              "action": "COPY",
+              "instruction": "வ once beside the visible model, large and slowly",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU COPY: **வ** once beside the visible model, large and slowly]"
+            },
+            {
+              "kind": "prompt",
               "action": "SAY",
               "instruction": "the farewell exchange — \"pōy varugiṟēṉ\" / \"pōy vā\"",
               "spoken": true,
@@ -1291,7 +1372,7 @@
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1303,7 +1384,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say all five words aloud. What does the everyday Tamil goodbye literally mean, and why isn't it just \"I'm leaving\"? (\"I'll go and come back\" — a bare \"I go\" sounds like a final parting, so you promise a return.) Which of the five works both to meet someone and to part from them? (வணக்கம் (vaṇakkam).)"
+              "text": "Say all five words aloud. What does the everyday Tamil goodbye literally mean, and why isn't it just \"I'm leaving\"? (\"I'll go and come back\" — a bare \"I go\" sounds like a final parting, so you promise a return.) Which of the five works both to meet someone and to part from them? (வணக்கம் (vaṇakkam).) Compare your one copied வ with the model. Repair one curve if you want, then stop."
             },
             {
               "kind": "speech",
