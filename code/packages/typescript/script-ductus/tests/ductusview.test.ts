@@ -283,6 +283,8 @@ const GUJARATI_UU = ductusFor("ઊ", "gujarati")!;
 const gujaratiUuOutline = gujaratiOutline("ઊ");
 const GUJARATI_E = ductusFor("એ", "gujarati")!;
 const gujaratiEOutline = gujaratiOutline("એ");
+const GUJARATI_AI = ductusFor("ઐ", "gujarati")!;
+const gujaratiAiOutline = gujaratiOutline("ઐ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3645,6 +3647,34 @@ describe("Gujarati એ — joined body, right stem, then high arc", () => {
     expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(2);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_E.strokes[2], 1),
+    );
+  });
+});
+
+describe("Gujarati ઐ — the એ sequence gains a second high arc", () => {
+  const steps = ductusSteps(GUJARATI_AI);
+  const strip = ductusFilmstrip(GUJARATI_AI, gujaratiAiOutline);
+
+  it("shows the body, stem, lower arc, then higher arc as four runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "write એ through its joined bowl, lower body, and right arch",
+      "lift, then descend the full-height right stem into its foot",
+      "lift again and sweep the lower high arc from left to right",
+      "lift once more and sweep the higher arc from left to right",
+    ]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all four runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAiOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(3);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_AI.strokes[3], 1),
     );
   });
 });
