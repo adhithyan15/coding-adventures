@@ -139,7 +139,7 @@ fixed here, with adversarial regression tests added for each:
   write side), and an entry name encoding to more than 65535 UTF-8 bytes silently truncated
   the 16-bit `name_len` field while still writing the full name bytes — desynchronizing the
   declared length from the archive layout. Both now throw instead of corrupting the archive.
-- **Decompression bomb via many moderate-sized entries**: `DeflateDecompressor` already
+- **Decompression bomb via many moderate-sized entries**: the raw inflater already
   capped a single entry's decompressed output at 256 MiB, but `ZipArchive.Unzip` had no
   budget across an entire archive, so several entries each individually under that cap
   could still force gigabytes of aggregate allocation in one call. Added an aggregate

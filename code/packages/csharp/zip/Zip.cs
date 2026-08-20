@@ -526,133 +526,6 @@ internal static class DeflateCompressor
 }
 
 // =============================================================================
-// RFC 1951 DEFLATE — Decompressor
-// =============================================================================
-//
-// Handles stored blocks (BTYPE=00) and fixed Huffman blocks (BTYPE=01).
-// Dynamic Huffman blocks (BTYPE=10) throw InvalidDataException — we only write
-// BTYPE=01, but stored blocks from other tools must be accepted too.
-//
-// Security limits:
-//   - Maximum output: 256 MB (decompression bomb guard)
-//   - LEN/NLEN validation on stored blocks
-
-internal static class DeflateDecompressor
-{
-    private const int MaxOutputBytes = 256 * 1024 * 1024;
-
-    /// <summary>
-    /// Decompress raw RFC 1951 DEFLATE bytes into the original data.
-    /// Throws <see cref="InvalidDataException"/> for corrupt or unsupported input.
-    /// </summary>
-    public static byte[] Decompress(byte[] data)
-    {
-        var br = new BitReader(data);
-        var output = new List<byte>();
-
-        while (true)
-        {
-            var bfinal = br.ReadLsb(1) ?? throw new InvalidDataException("deflate: unexpected EOF reading BFINAL");
-            var btype  = br.ReadLsb(2) ?? throw new InvalidDataException("deflate: unexpected EOF reading BTYPE");
-
-            switch (btype)
-            {
-                case 0b00:
-                    // ── Stored block ──────────────────────────────────────────
-                    // Align to byte boundary before reading the length fields.
-                    br.Align();
-                    var len  = br.ReadLsb(16) ?? throw new InvalidDataException("deflate: EOF reading stored LEN");
-                    var nlen = br.ReadLsb(16) ?? throw new InvalidDataException("deflate: EOF reading stored NLEN");
-                    // RFC 1951 §3.2.4: NLEN is the one's complement of LEN.
-                    if ((nlen ^ 0xFFFF) != len)
-                        throw new InvalidDataException($"deflate: stored LEN/NLEN mismatch ({len} vs {nlen})");
-                    if (output.Count + len > MaxOutputBytes)
-                        throw new InvalidDataException("deflate: output size limit exceeded");
-                    for (var i = 0; i < len; i++)
-                    {
-                        var b = br.ReadLsb(8) ?? throw new InvalidDataException("deflate: EOF inside stored block");
-                        output.Add((byte)b);
-                    }
-                    break;
-
-                case 0b01:
-                    // ── Fixed Huffman block ───────────────────────────────────
-                    while (true)
-                    {
-                        var sym = FixedHuffman.DecodeLL(br)
-                            ?? throw new InvalidDataException("deflate: EOF decoding LL symbol");
-
-                        if (sym is >= 0 and <= 255)
-                        {
-                            if (output.Count >= MaxOutputBytes)
-                                throw new InvalidDataException("deflate: output size limit exceeded");
-                            output.Add((byte)sym);
-                        }
-                        else if (sym == 256)
-                        {
-                            // End-of-block: leave the inner loop.
-                            break;
-                        }
-                        else if (sym is >= 257 and <= 285)
-                        {
-                            // Back-reference: decode length, then distance.
-                            var idx = sym - 257;
-                            if (idx >= DeflateTable.Length.Length)
-                                throw new InvalidDataException($"deflate: invalid length sym {sym}");
-
-                            var (baseLen, extraLenBits) = DeflateTable.Length[idx];
-                            var extraLen = extraLenBits > 0
-                                ? (br.ReadLsb(extraLenBits) ?? throw new InvalidDataException("deflate: EOF reading length extra"))
-                                : 0;
-                            var matchLen = baseLen + extraLen;
-
-                            // Distance code is always 5 bits, read MSB-first.
-                            var distCode = br.ReadMsb(5)
-                                ?? throw new InvalidDataException("deflate: EOF reading distance code");
-                            if (distCode >= DeflateTable.Dist.Length)
-                                throw new InvalidDataException($"deflate: invalid dist code {distCode}");
-
-                            var (baseDist, extraDistBits) = DeflateTable.Dist[distCode];
-                            var extraDist = extraDistBits > 0
-                                ? (br.ReadLsb(extraDistBits) ?? throw new InvalidDataException("deflate: EOF reading distance extra"))
-                                : 0;
-                            var offset = baseDist + extraDist;
-
-                            if (offset > output.Count)
-                                throw new InvalidDataException(
-                                    $"deflate: back-ref offset {offset} > output len {output.Count}");
-                            if (output.Count + matchLen > MaxOutputBytes)
-                                throw new InvalidDataException("deflate: output size limit exceeded");
-
-                            // Copy byte-by-byte to handle overlapping matches.
-                            // Example: offset=1, length=4 expands a single byte into a run of 4.
-                            for (var i = 0; i < matchLen; i++)
-                            {
-                                output.Add(output[output.Count - offset]);
-                            }
-                        }
-                        else
-                        {
-                            throw new InvalidDataException($"deflate: invalid LL symbol {sym}");
-                        }
-                    }
-                    break;
-
-                case 0b10:
-                    throw new InvalidDataException("deflate: dynamic Huffman blocks (BTYPE=10) not supported");
-
-                default:
-                    throw new InvalidDataException("deflate: reserved BTYPE=11");
-            }
-
-            if (bfinal == 1) break;
-        }
-
-        return [.. output];
-    }
-}
-
-// =============================================================================
 // Public API — ZipEntry
 // =============================================================================
 
@@ -1298,7 +1171,7 @@ public static class ZipArchive
     }
 
     // Default aggregate decompression-bomb budget for Unzip(): the sum of every
-    // entry's decompressed size in one call. DeflateDecompressor already caps
+    // entry's decompressed size in one call. RawRfc1951 already caps
     // a *single* entry at 256 MB, but a small archive can hold many entries
     // that each individually stay under that cap while still expanding to
     // gigabytes in total (fixed-Huffman back-references can each turn a
