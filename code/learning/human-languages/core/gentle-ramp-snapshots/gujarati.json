@@ -1,0 +1,76 @@
+{
+  "language": "gujarati",
+  "lessonCount": 69,
+  "atomMeasurableLessons": 69,
+  "atomMeasurementBlindLessons": 0,
+  "durationViolations": 0,
+  "atomLessonSpikes": 2,
+  "atomChapterSpikes": 1,
+  "glyphLessonSpikes": 2,
+  "scriptSystemSpikes": 0,
+  "scriptClosureViolations": 50,
+  "neverTaughtGlyphs": 32,
+  "orderDefects": 3,
+  "unknownPrerequisites": 0,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 3,
+  "forwardReferences": 8,
+  "atomsTaught": 115,
+  "atomsNeverRevisited": 10,
+  "reinforcementWindowMisses": 174,
+  "payoffSurprises": 0,
+  "writingPracticeLessons": 53,
+  "firstWritingPracticeAt": 0,
+  "lessonsBeforeWritingPractice": 0,
+  "findings": [
+    {
+      "language": "gujarati",
+      "kind": "order-integrity",
+      "count": 3,
+      "unit": "order/dependency defect(s)",
+      "detail": "declare a unique reading order and close every prerequisite and review before use"
+    },
+    {
+      "language": "gujarati",
+      "kind": "forward-language",
+      "count": 8,
+      "unit": "use(s)",
+      "detail": "teach target-language material before load-bearing use"
+    },
+    {
+      "language": "gujarati",
+      "kind": "script-closure",
+      "count": 32,
+      "unit": "glyph(s)",
+      "detail": "teach every load-bearing glyph before asking the learner to decode it"
+    },
+    {
+      "language": "gujarati",
+      "kind": "atom-step",
+      "count": 3,
+      "unit": "lesson/chapter spike(s)",
+      "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
+    },
+    {
+      "language": "gujarati",
+      "kind": "glyph-step",
+      "count": 2,
+      "unit": "lesson/system spike(s)",
+      "detail": "split new glyphs and writing systems across gentler steps"
+    },
+    {
+      "language": "gujarati",
+      "kind": "reinforcement",
+      "count": 174,
+      "unit": "missed window(s)",
+      "detail": "add retrieval at the expanding R1-R4 intervals"
+    }
+  ],
+  "next": {
+    "language": "gujarati",
+    "kind": "order-integrity",
+    "count": 3,
+    "unit": "order/dependency defect(s)",
+    "detail": "declare a unique reading order and close every prerequisite and review before use"
+  }
+}
