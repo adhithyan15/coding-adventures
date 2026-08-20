@@ -1,5 +1,6 @@
 ---
 id: AR-C01-marhaba
+sequence: 20
 chapter: 1
 type: word
 headword: مرحبا

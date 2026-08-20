@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.1.0] - 2026-08-20
+
+### Added
+
+- Closed 15-lane consumer schema and registry for the established ZIP
+  implementations.
+- Repository adoption gate binding each production surface, neutral-corpus
+  test, BUILD front door, and explicit empty capability profile.
+
 ## [1.0.0] - 2026-08-13
 
 ### Added

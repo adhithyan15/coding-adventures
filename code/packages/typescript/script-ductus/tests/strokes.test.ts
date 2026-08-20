@@ -136,6 +136,7 @@ const GUJARATI_DDA = DUCTUS[ductusKey("gujarati", "ડ")];
 const GUJARATI_DDHA = DUCTUS[ductusKey("gujarati", "ઢ")];
 const GUJARATI_NNA = DUCTUS[ductusKey("gujarati", "ણ")];
 const GUJARATI_TA = DUCTUS[ductusKey("gujarati", "ત")];
+const GUJARATI_THA = DUCTUS[ductusKey("gujarati", "થ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2140,6 +2141,17 @@ describe("handwriting ductus", () => {
     const body = GUJARATI_TA.strokes[0].segments[0].path;
     const spine = GUJARATI_TA.strokes[1].segments[0].path;
     expect(body[0].y).toBeLessThan(body.at(-1)!.y);
+    expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
+  });
+
+  it("Gujarati થ separates its looped body and tall right spine", () => {
+    expect(GUJARATI_THA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_THA)).toBe(1);
+    expect(GUJARATI_THA.strokes).toHaveLength(2);
+    expect(GUJARATI_THA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1]);
+    const body = GUJARATI_THA.strokes[0].segments[0].path;
+    const spine = GUJARATI_THA.strokes[1].segments[0].path;
+    expect(body.length).toBeGreaterThanOrEqual(28);
     expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
   });
 
@@ -4603,6 +4615,15 @@ describe("handwriting ductus", () => {
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ત animation.*first and second SVG paths/i);
     expect(src.variation).toMatch(
       /two ordered pen-down runs.*first SVG path.*lower terminal.*open left body.*upper shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*open-body-before-right-spine order.*one-lift evidence/i,
+    );
+  });
+
+  it("Gujarati થ traces its looped body and right spine to two paths", () => {
+    const src = GUJARATI_THA.source;
+    expect(src.url).toBe("https://www.t30apps.com/gujarati-alphabet-writing/");
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*થ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(
+      /two ordered pen-down runs.*first SVG path.*small upper loop.*downward through the middle.*broad lower body.*right shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*loop-and-body-before-right-spine order.*one-lift evidence/i,
     );
   });
 

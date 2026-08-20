@@ -1,5 +1,6 @@
 ---
 id: AR-C01-al
+sequence: 30
 chapter: 1
 type: word
 headword: ال

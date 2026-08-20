@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://coding-adventures.dev/schemas/zip-raw-rfc1951-v1-consumers.json",
+  "title": "Established-lane consumers of the ZIP raw RFC 1951 v1 corpus",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "profile",
+    "fixture",
+    "case_count",
+    "error_id_count",
+    "established_lane_count",
+    "consumers"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "profile": { "const": "zip-owned-raw-rfc1951-v1-portable-consumers" },
+    "fixture": { "const": "code/specs/fixtures/zip-raw-rfc1951-v1/cases.json" },
+    "case_count": { "const": 34 },
+    "error_id_count": { "const": 14 },
+    "established_lane_count": { "const": 15 },
+    "consumers": {
+      "type": "array",
+      "minItems": 15,
+      "maxItems": 15,
+      "items": { "$ref": "#/$defs/consumer" }
+    }
+  },
+  "$defs": {
+    "repo_path": {
+      "type": "string",
+      "pattern": "^code/packages/[a-z]+/zip/[A-Za-z0-9_.@+\\/-]+$"
+    },
+    "surface_name": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "pattern": "^[A-Za-z_][A-Za-z0-9_.:]*$"
+    },
+    "consumer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "language",
+        "package_root",
+        "api_source",
+        "fixture_test",
+        "build_files",
+        "capability_manifest",
+        "surface"
+      ],
+      "properties": {
+        "language": {
+          "enum": [
+            "csharp",
+            "dart",
+            "elixir",
+            "fsharp",
+            "go",
+            "haskell",
+            "java",
+            "kotlin",
+            "lua",
+            "perl",
+            "python",
+            "ruby",
+            "rust",
+            "swift",
+            "typescript"
+          ]
+        },
+        "package_root": {
+          "type": "string",
+          "pattern": "^code/packages/[a-z]+/zip$"
+        },
+        "api_source": { "$ref": "#/$defs/repo_path" },
+        "fixture_test": { "$ref": "#/$defs/repo_path" },
+        "build_files": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/repo_path" }
+        },
+        "capability_manifest": { "$ref": "#/$defs/repo_path" },
+        "surface": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "raw_deflate",
+            "raw_inflate",
+            "raw_inflate_counted",
+            "output_limit",
+            "error_taxonomy"
+          ],
+          "properties": {
+            "raw_deflate": { "$ref": "#/$defs/surface_name" },
+            "raw_inflate": { "$ref": "#/$defs/surface_name" },
+            "raw_inflate_counted": { "$ref": "#/$defs/surface_name" },
+            "output_limit": { "$ref": "#/$defs/surface_name" },
+            "error_taxonomy": { "$ref": "#/$defs/surface_name" }
+          }
+        }
+      }
+    }
+  }
+}
