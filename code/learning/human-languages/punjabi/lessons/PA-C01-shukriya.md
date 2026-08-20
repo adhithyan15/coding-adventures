@@ -1,5 +1,6 @@
 ---
 id: PA-C01-shukriya
+sequence: 40
 chapter: 1
 type: word
 headword: ਸ਼ੁਕਰੀਆ

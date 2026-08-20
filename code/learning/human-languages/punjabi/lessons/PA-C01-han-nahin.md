@@ -1,5 +1,6 @@
 ---
 id: PA-C01-han-nahin
+sequence: 50
 chapter: 1
 type: word
 headword: ਹਾਂ / ਨਹੀਂ

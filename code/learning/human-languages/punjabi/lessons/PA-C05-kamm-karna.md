@@ -1,5 +1,6 @@
 ---
 id: PA-C05-kamm-karna
+sequence: 300
 chapter: 5
 type: word
 headword: ਕੰਮ ਕਰਨਾ

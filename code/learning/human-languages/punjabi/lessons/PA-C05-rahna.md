@@ -1,5 +1,6 @@
 ---
 id: PA-C05-rahna
+sequence: 290
 chapter: 5
 type: word
 headword: ਰਹਿਣਾ
