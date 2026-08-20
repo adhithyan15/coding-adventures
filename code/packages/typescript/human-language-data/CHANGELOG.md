@@ -19,7 +19,7 @@
   only a lesson over 300 seconds violates a five-minute maximum.
 - The initial 23-track baseline finds debt in every track: two over-five-minute
   lessons, three tracks with no writing practice, seven more starting late, and
-  504 lessons whose atom load remains unmeasurable. These are visible migration
+  497 lessons whose atom load remains unmeasurable. These are visible migration
   debts, not a claim that any book is yet exam-ready.
 
 ### Added - Marwadi becomes the 23rd active track

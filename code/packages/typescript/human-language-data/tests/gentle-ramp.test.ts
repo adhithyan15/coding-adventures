@@ -103,12 +103,12 @@ describe("the corpus-wide super-gentle ramp", () => {
     }).gentleRamp!;
 
     expect(report.summary).toEqual({
-      tracks: 22,
-      tracksWithDetectedCliffs: 22,
+      tracks: 23,
+      tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 3,
       tracksWhereWritingStartsLate: 7,
       atomMeasurementBlindLessons: 497,
-      findings: 146,
+      findings: 148,
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "kannada", kind: "duration", count: 1 },

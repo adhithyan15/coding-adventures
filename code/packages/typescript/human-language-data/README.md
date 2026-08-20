@@ -153,7 +153,7 @@ the atom budget, every atom revisited twice. Every criterion is scoped **at or b
 the level** — Spanish teaches 113 headwords in total but only **44** at or below
 pre-A1, and it is the 44 the gate judges.
 
-**Zero of 22 tracks have attained even pre-A1.** That gap between the two numbers is
+**Zero of 23 tracks have attained even pre-A1.** That gap between the two numbers is
 what let "Spanish reaches A2" stand on fourteen present-tense lessons.
 
 ### What to do next — the computed backlog (HL15)
@@ -168,13 +168,13 @@ The gate above says what is *wrong*. This says what to *do* about it, and it is 
 pure function of the same measurements rather than a list somebody maintains:
 
 ```text
-22 tracks, 0 done; 118 enumerable item(s) today, ~10,190 projected to C2
+23 tracks, 0 done; 123 enumerable item(s) today, ~10,654 projected to C2
 
-    1. [pre-A1] assessment-contract — japanese
+    1. [pre-A1] assessment-contract — marwadi
        require independent four-skill passes, a writing ramp, and timed full mocks
-    2. [pre-A1] assessment-contract — chinese
+    2. [pre-A1] assessment-contract — japanese
        require independent four-skill passes, a writing ramp, and timed full mocks
-    3. [pre-A1] assessment-contract — gujarati
+    3. [pre-A1] assessment-contract — chinese
        require independent four-skill passes, a writing ramp, and timed full mocks
 ```
 
