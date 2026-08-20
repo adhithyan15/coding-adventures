@@ -1,6 +1,26 @@
 # Changelog — CodingAdventures.Zip (CSharp)
 
-## [Unreleased] — 2026-08-03
+## [0.2.0] — 2026-08-20
+
+### Added
+
+- Public ZIP-owned raw RFC 1951 deflate, inflate, counted-inflate, and
+  incremental CRC-32 APIs.
+- Dynamic-Huffman and multi-block decoding, full 32 KiB back-reference
+  support, a caller-lowerable 256 MiB output ceiling, exact compressed-byte
+  accounting, and the shared 14-code payload-blind failure taxonomy.
+- The complete 34-case language-neutral conformance corpus plus an independent
+  Python/zlib interoperability oracle and foreign full-window stream.
+
+### Changed
+
+- ZIP extraction now rejects compressed suffix cavities and stored or inflated
+  size mismatches instead of ignoring or trimming them.
+- The one-shot aggregate extraction ceiling is now the portable 256 MiB.
+- Package version is 0.2.0 and the assembly name is explicitly
+  `CodingAdventures.Zip.CSharp`.
+
+## [0.1.1] — 2026-08-03
 
 ### Fixed
 
