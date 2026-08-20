@@ -124,6 +124,10 @@ public sealed class PortableConformanceTests
         var storedSizeError = Assert.Throws<InvalidDataException>(() =>
             new ZipReader(RawZip("stored.bin", plain, plain, plain.Length + 1, method: 0)).ReadByName("stored.bin"));
         Assert.Equal("zip: stored entry sizes do not match", storedSizeError.Message);
+
+        var malformedError = Assert.Throws<InvalidDataException>(() =>
+            new ZipReader(RawZip("malformed.bin", new byte[] { 0x07 }, Array.Empty<byte>(), 0)).ReadByName("malformed.bin"));
+        Assert.Equal("zip: raw inflate failed: reserved-block-type", malformedError.Message);
     }
 
     private static byte[] Materialize(JsonElement output)

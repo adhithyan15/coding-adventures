@@ -1152,7 +1152,13 @@ type ZipReader(data: byte[]) =
                 | 8 ->
                     if int64 m.UncompressedSize > int64 RawRfc1951.maxOutput then
                         raise (InvalidDataException "zip: uncompressed size exceeds the raw inflate ceiling")
-                    let result = RawRfc1951.rawInflateCounted compressed (int m.UncompressedSize)
+                    let result =
+                        try
+                            RawRfc1951.rawInflateCounted compressed (int m.UncompressedSize)
+                        with :? RawInflateError as error ->
+                            raise (InvalidDataException(
+                                sprintf "zip: raw inflate failed: %s" error.Code,
+                                error))
                     if result.BytesConsumed <> compressed.Length then
                         raise (InvalidDataException "zip: compressed payload contains trailing bytes")
                     if result.Output.Length <> int m.UncompressedSize then

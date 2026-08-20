@@ -141,6 +141,8 @@ module PortableConformanceTests =
         Assert.Equal("zip: uncompressed size does not match the directory", sizeError.Message)
         let storedError = Assert.Throws<InvalidDataException>(fun () -> ZipReader(rawZip "stored.bin" plain plain (plain.Length + 1) 0us).Read("stored.bin") |> ignore)
         Assert.Equal("zip: stored entry sizes do not match", storedError.Message)
+        let malformedError = Assert.Throws<InvalidDataException>(fun () -> ZipReader(rawZip "malformed.bin" [| 0x07uy |] [||] 0 8us).Read("malformed.bin") |> ignore)
+        Assert.Equal("zip: raw inflate failed: reserved-block-type", malformedError.Message)
 
     [<Fact>]
     let ``one-shot extraction enforces an aggregate output budget`` () =
