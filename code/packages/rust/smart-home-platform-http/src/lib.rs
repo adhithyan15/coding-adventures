@@ -11075,13 +11075,11 @@ mod tests {
     }
 
     fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
-        // Windows occasionally delivers a hard RST (io::ErrorKind::ConnectionReset,
-        // WSAECONNRESET/10054) instead of the response on a `Connection: close`
-        // round trip, racing the server's own graceful teardown of the socket it
-        // just finished writing to (the same class of platform quirk already
-        // accepted for the embeddable TCP tests — see lessons.md). It is not
-        // reproducible on Linux/macOS CI and does not indicate a lost or
-        // malformed response, so a fresh connection retry recovers cleanly.
+        // Windows can deliver a hard RST (io::ErrorKind::ConnectionReset,
+        // WSAECONNRESET/10054) while the server is finishing a response. Keep
+        // the targeted retry for that platform quirk; the request itself stays
+        // alive until this helper has read the advertised Content-Length, then
+        // dropping the stream performs the close from the client side.
         const MAX_ATTEMPTS: usize = 5;
         let mut last_error = None;
         for _ in 0..MAX_ATTEMPTS {
@@ -11109,7 +11107,7 @@ mod tests {
         stream.set_read_timeout(Some(Duration::from_secs(5)))?;
 
         let request = format!(
-            "{method} {path} HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
+            "{method} {path} HTTP/1.1\r\nHost: localhost\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: keep-alive\r\n\r\n{body}",
             body.len()
         );
         stream.write_all(request.as_bytes())?;

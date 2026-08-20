@@ -4263,14 +4263,15 @@ identical test passes reliably on Linux and macOS CI.
 
 Rather than touch the Windows reactor's write/close sequencing in
 `tcp-runtime`/`embeddable-http-server` (large, shared, security-sensitive
-surface, out of scope for this rescue), the fix stays in the test helper:
-`http_request()` in `smart-home-platform-http/src/lib.rs` now retries the
-*whole* request (fresh `TcpStream`, up to 5 attempts) specifically when the
-underlying I/O call — connect, write, or any read — returns
-`io::ErrorKind::ConnectionReset`; any other error still panics immediately.
-This mirrors the "known Windows platform quirk, not a correctness bug" idiom
-already established elsewhere in this codebase rather than introducing a new
-one.
+surface, out of scope for this rescue), keep the fix in the test helper. A
+fresh-connection retry alone was not sufficient under a later loaded Windows
+build: all five attempts for the runtime snapshot could hit the same close
+race. The helper now sends `Connection: keep-alive`, reads exactly the
+advertised `Content-Length`, and lets dropping the client stream initiate the
+close only after the response is complete. It retains the narrow whole-request
+retry for `io::ErrorKind::ConnectionReset`; any other error still panics
+immediately. This avoids depending on close timing while preserving the known
+Windows-platform-quirk handling already established elsewhere in the repo.
 
 ## `chief-of-staff-cli`: fifth recurrence of native `Path::join` used to build a path for a *different target platform* than the host
 
