@@ -1,5 +1,6 @@
 ---
 id: AR-W01-abjad-short-vowels
+sequence: 100
 chapter: 1
 type: writing
 headword: الحركات

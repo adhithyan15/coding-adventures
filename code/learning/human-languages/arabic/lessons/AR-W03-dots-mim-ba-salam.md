@@ -1,5 +1,6 @@
 ---
 id: AR-W03-dots-mim-ba-salam
+sequence: 130
 chapter: 1
 type: writing
 headword: "م، ب"
