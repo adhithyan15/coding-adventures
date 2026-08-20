@@ -167,7 +167,7 @@ describe("curriculum gap report", () => {
       registeredTracks: 2,
       totalLessons: 3,
       authoredBooks: 1,
-      durationViolations: 2,
+      durationViolations: 1,
       unknownPrerequisites: 1,
       laterChapterLessonsWithoutPrerequisites: 1,
       tracksWithoutBooks: 1,
@@ -187,6 +187,6 @@ describe("curriculum gap report", () => {
       status: "mixed",
       versions: { "1": 1, "2": 1 },
     });
-    expect(renderCurriculumGapReport(report)).toContain("2 lessons at or above 300 effective seconds");
+    expect(renderCurriculumGapReport(report)).toContain("1 lessons over 300 effective seconds");
   });
 });

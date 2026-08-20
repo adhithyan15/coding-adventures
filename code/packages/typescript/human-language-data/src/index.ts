@@ -295,6 +295,16 @@ export {
   type WindowName,
 } from "./continuity.js";
 export {
+  GENTLE_RAMP_PRIORITIES,
+  summarizeGentleRamp,
+  renderGentleRamp,
+  type GentleRampFindingKind,
+  type GentleRampFinding,
+  type TrackGentleRamp,
+  type GentleRampReport,
+  type GentleRampInput,
+} from "./gentle-ramp.js";
+export {
   runLevelGate,
   LEVEL_VOCABULARY,
   type LevelGateReport,
@@ -303,6 +313,7 @@ export {
 } from "./level-gate.js";
 export { runValidate } from "./cli.js";
 export { runCurriculumGapReport } from "./report-cli.js";
+export { runGentleRampReport } from "./gentle-ramp-cli.js";
 export { runCompletionPlan } from "./plan-cli.js";
 export {
   measureGlyphCoverage,
