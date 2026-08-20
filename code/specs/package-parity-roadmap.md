@@ -4092,7 +4092,9 @@ therefore remains the highest-leverage active item. A final rebase onto
 `88b12d1280e6e931ab3b7dffa68c820459bbeeef` added only existing Latin
 curriculum, TypeScript human-language-data tests, and Rust HTML-parser
 diagnostics; the collision-checked topology and every inventory count remained
-unchanged.
+unchanged. The final publication rebase onto
+`12c26b50ae755ec88704c457d8264558433b96f0` added only Gujarati and
+Spanish curriculum evidence and likewise left the parity topology unchanged.
 
 ## Autonomous Loop Protocol
 
