@@ -11,12 +11,19 @@
 pub mod codegen;
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
+#[cfg(unix)]
 use std::ffi::CString;
 use std::fmt;
 use std::fs;
 use std::io::Write;
+#[cfg(unix)]
 use std::os::fd::{AsRawFd, FromRawFd, OwnedFd};
+#[cfg(unix)]
 use std::os::unix::ffi::OsStrExt;
+#[cfg(windows)]
+use std::os::windows::fs::{MetadataExt, OpenOptionsExt};
+#[cfg(windows)]
+use std::os::windows::io::AsRawHandle;
 use std::path::{Path, PathBuf};
 
 use compiler_ir::{IrInstruction, IrOp, IrOperand, IrProgram};
@@ -1353,6 +1360,7 @@ pub fn validate_for_jvm(program: &IrProgram) -> Vec<String> {
     }
 }
 
+#[cfg(unix)]
 pub fn write_class_file(
     artifact: &JvmClassArtifact,
     output_dir: impl AsRef<Path>,
@@ -1395,10 +1403,152 @@ pub fn write_class_file(
     Ok(target)
 }
 
+#[cfg(windows)]
+pub fn write_class_file(
+    artifact: &JvmClassArtifact,
+    output_dir: impl AsRef<Path>,
+) -> Result<PathBuf, JvmBackendError> {
+    const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x0000_0400;
+    const FILE_SHARE_READ: u32 = 0x0000_0001;
+    const FILE_FLAG_OPEN_REPARSE_POINT: u32 = 0x0020_0000;
+
+    validate_class_name(&artifact.class_name)?;
+    let root = if output_dir.as_ref().as_os_str().is_empty() {
+        Path::new(".")
+    } else {
+        output_dir.as_ref()
+    };
+    let relative_path = validated_output_relative_path(&artifact.class_filename())?;
+    let mut held_directory_handles = hold_windows_directory_tree(root)?;
+    let canonical_root = fs::canonicalize(root).map_err(io_err("write"))?;
+
+    let parent = relative_path
+        .parent()
+        .map(|path| canonical_root.join(path))
+        .unwrap_or_else(|| canonical_root.clone());
+    held_directory_handles.extend(hold_windows_directory_tree(&parent)?);
+    let canonical_parent = fs::canonicalize(&parent).map_err(io_err("write"))?;
+    if !canonical_parent.starts_with(&canonical_root) {
+        return Err(JvmBackendError::new(
+            "class_filename contains a symlinked or invalid directory component",
+        ));
+    }
+
+    let target = canonical_parent.join(
+        relative_path
+            .file_name()
+            .expect("validated output filename should exist"),
+    );
+    let mut options = fs::OpenOptions::new();
+    options
+        .write(true)
+        .create(true)
+        .share_mode(FILE_SHARE_READ)
+        .custom_flags(FILE_FLAG_OPEN_REPARSE_POINT);
+    let mut output = options.open(&target).map_err(io_err("write"))?;
+    let metadata = output.metadata().map_err(io_err("write"))?;
+    if metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0
+        || windows_number_of_links(&output)? != 1
+        || !metadata.is_file()
+    {
+        return Err(JvmBackendError::new(
+            "class_filename points at a symlinked or invalid output file",
+        ));
+    }
+    output.set_len(0).map_err(io_err("write"))?;
+    output
+        .write_all(&artifact.class_bytes)
+        .map_err(io_err("write"))?;
+    output.flush().map_err(io_err("write"))?;
+    Ok(target)
+}
+
+#[cfg(windows)]
+fn hold_windows_directory_tree(path: &Path) -> Result<Vec<fs::File>, JvmBackendError> {
+    const FILE_ATTRIBUTE_REPARSE_POINT: u32 = 0x0000_0400;
+    const FILE_SHARE_READ: u32 = 0x0000_0001;
+    const FILE_FLAG_BACKUP_SEMANTICS: u32 = 0x0200_0000;
+    const FILE_FLAG_OPEN_REPARSE_POINT: u32 = 0x0020_0000;
+
+    let absolute = if path.is_absolute() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map_err(io_err("write"))?
+            .join(path)
+    };
+    let mut current = PathBuf::new();
+    let mut handles = Vec::new();
+    for component in absolute.components() {
+        current.push(component.as_os_str());
+        if !matches!(component, std::path::Component::Normal(_)) {
+            continue;
+        }
+        let open_directory = || {
+            let mut options = fs::OpenOptions::new();
+            options
+                .read(true)
+                .share_mode(FILE_SHARE_READ)
+                .custom_flags(FILE_FLAG_BACKUP_SEMANTICS | FILE_FLAG_OPEN_REPARSE_POINT);
+            options.open(&current)
+        };
+        let handle = match open_directory() {
+            Ok(handle) => handle,
+            Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+                match fs::create_dir(&current) {
+                    Ok(()) => {}
+                    Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => {}
+                    Err(error) => return Err(io_err("write")(error)),
+                }
+                open_directory().map_err(io_err("write"))?
+            }
+            Err(error) => return Err(io_err("write")(error)),
+        };
+        let metadata = handle.metadata().map_err(io_err("write"))?;
+        if metadata.file_attributes() & FILE_ATTRIBUTE_REPARSE_POINT != 0 || !metadata.is_dir() {
+            return Err(JvmBackendError::new(
+                "class_filename contains a symlinked or invalid directory component",
+            ));
+        }
+        handles.push(handle);
+    }
+    Ok(handles)
+}
+
+#[cfg(windows)]
+fn windows_number_of_links(file: &fs::File) -> Result<u32, JvmBackendError> {
+    #[link(name = "kernel32")]
+    extern "system" {
+        fn GetFileInformationByHandle(
+            file: *mut std::ffi::c_void,
+            information: *mut std::ffi::c_void,
+        ) -> i32;
+    }
+
+    // BY_HANDLE_FILE_INFORMATION is thirteen consecutive DWORD fields. The
+    // link count is field 10; using a DWORD array keeps the FFI representation
+    // exact without duplicating the Windows SDK's private field names here.
+    let mut information = [0_u32; 13];
+    // SAFETY: `file` remains open for this call, the output buffer is correctly
+    // sized/aligned for BY_HANDLE_FILE_INFORMATION, and the API writes only to
+    // that buffer before returning synchronously.
+    let result = unsafe {
+        GetFileInformationByHandle(
+            file.as_raw_handle(),
+            information.as_mut_ptr().cast::<std::ffi::c_void>(),
+        )
+    };
+    if result == 0 {
+        return Err(io_err("write")(std::io::Error::last_os_error()));
+    }
+    Ok(information[10])
+}
+
 fn io_err(stage: &'static str) -> impl Fn(std::io::Error) -> JvmBackendError {
     move |err| JvmBackendError::new(format!("[{stage}] {err}"))
 }
 
+#[cfg(unix)]
 fn secure_open_root(root: &Path) -> Result<(OwnedFd, PathBuf), JvmBackendError> {
     if let Ok(metadata) = fs::symlink_metadata(root) {
         if metadata.file_type().is_symlink() || !metadata.is_dir() {
@@ -1426,6 +1576,7 @@ fn secure_open_root(root: &Path) -> Result<(OwnedFd, PathBuf), JvmBackendError> 
     Ok((current_fd, absolute_root))
 }
 
+#[cfg(unix)]
 fn normalize_absolute_path(path: &Path) -> Result<PathBuf, JvmBackendError> {
     let absolute = if path.is_absolute() {
         path.to_path_buf()
@@ -1451,6 +1602,7 @@ fn normalize_absolute_path(path: &Path) -> Result<PathBuf, JvmBackendError> {
     Ok(normalized)
 }
 
+#[cfg(unix)]
 fn open_root_directory() -> Result<OwnedFd, JvmBackendError> {
     let root = CString::new("/").expect("root path literal must not contain NUL");
     let flags = libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
@@ -1464,6 +1616,7 @@ fn open_root_directory() -> Result<OwnedFd, JvmBackendError> {
     Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
 }
 
+#[cfg(unix)]
 fn open_existing_directory(path: &Path) -> Result<OwnedFd, JvmBackendError> {
     let name = CString::new(path.as_os_str().as_bytes())
         .map_err(|_| JvmBackendError::new("[write] path contains NUL"))?;
@@ -1478,6 +1631,7 @@ fn open_existing_directory(path: &Path) -> Result<OwnedFd, JvmBackendError> {
     Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
 }
 
+#[cfg(unix)]
 fn mkdir_at(parent_fd: &OwnedFd, component: &Path) -> Result<(), std::io::Error> {
     let name = component_to_c_string(component)?;
     let result = unsafe { libc::mkdirat(parent_fd.as_raw_fd(), name.as_ptr(), 0o755) };
@@ -1491,6 +1645,7 @@ fn mkdir_at(parent_fd: &OwnedFd, component: &Path) -> Result<(), std::io::Error>
     Err(error)
 }
 
+#[cfg(unix)]
 fn open_directory_at(parent_fd: &OwnedFd, component: &Path) -> Result<OwnedFd, std::io::Error> {
     let name = component_to_c_string(component)?;
     let flags = libc::O_RDONLY | libc::O_DIRECTORY | libc::O_NOFOLLOW | libc::O_CLOEXEC;
@@ -1501,6 +1656,7 @@ fn open_directory_at(parent_fd: &OwnedFd, component: &Path) -> Result<OwnedFd, s
     Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
 }
 
+#[cfg(unix)]
 fn open_output_file_at(
     parent_fd: &OwnedFd,
     file_name: &std::ffi::OsStr,
@@ -1515,6 +1671,7 @@ fn open_output_file_at(
     Ok(unsafe { OwnedFd::from_raw_fd(raw_fd) })
 }
 
+#[cfg(unix)]
 fn component_to_c_string(component: &Path) -> Result<CString, std::io::Error> {
     CString::new(component.as_os_str().as_bytes())
         .map_err(|_| std::io::Error::new(std::io::ErrorKind::InvalidInput, "path contains NUL"))
@@ -1643,6 +1800,30 @@ mod tests {
         assert_eq!(target, canonical_root.join("demo/Example.class"));
         assert_eq!(fs::read(&target).unwrap(), artifact.class_bytes);
         let _ = fs::remove_dir_all(output_root);
+    }
+
+    #[cfg(windows)]
+    #[test]
+    fn rejects_hard_linked_output_file_without_overwriting_source() {
+        let artifact =
+            lower_ir_to_jvm_class_file(&simple_program(), JvmBackendConfig::new("demo.Example"))
+                .unwrap();
+        let output_root = unique_temp_dir("ir-to-jvm-hard-link-output");
+        let victim_root = unique_temp_dir("ir-to-jvm-hard-link-victim");
+        fs::create_dir_all(output_root.join("demo")).unwrap();
+        fs::create_dir_all(&victim_root).unwrap();
+        let victim = victim_root.join("victim.txt");
+        fs::write(&victim, b"must stay intact").unwrap();
+        fs::hard_link(&victim, output_root.join("demo/Example.class")).unwrap();
+
+        let error = write_class_file(&artifact, &output_root).unwrap_err();
+        assert!(error
+            .to_string()
+            .contains("symlinked or invalid output file"));
+        assert_eq!(fs::read(&victim).unwrap(), b"must stay intact");
+
+        let _ = fs::remove_dir_all(output_root);
+        let _ = fs::remove_dir_all(victim_root);
     }
 
     #[test]

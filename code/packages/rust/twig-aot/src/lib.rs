@@ -1900,7 +1900,6 @@ pub fn link_windows_x86_64_executable(
         WinLinkerKind::Link | WinLinkerKind::LldLink => {
             std::process::Command::new(&linker.path)
                 .arg(format!("/OUT:{}", out.display()))
-                .arg("/ENTRY:main")
                 .arg("/SUBSYSTEM:CONSOLE")
                 .arg(&obj_tmp)
                 .arg(&rt_tmp)
