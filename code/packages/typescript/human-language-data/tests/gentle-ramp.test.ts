@@ -140,6 +140,12 @@ describe("the corpus-wide super-gentle ramp", () => {
       findings: snappedQueue.length,
     });
 
+    expect(report.tracks.find((track) => track.language === "italian")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+
     const changed = structuredClone(report);
     changed.tracks.find((track) => track.language === "german")!.lessonCount += 1;
     const changedOutputs = generatedGentleRampSnapshotOutputsFromReport(changed);

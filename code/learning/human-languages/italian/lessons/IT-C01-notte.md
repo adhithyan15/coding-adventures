@@ -1,5 +1,6 @@
 ---
 id: IT-C01-notte
+sequence: 70
 chapter: 1
 type: word
 headword: notte / buonanotte
