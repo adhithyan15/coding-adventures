@@ -6051,6 +6051,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ઙ"),
   },
+  // t30apps writes Gujarati ચ as one joined upper-bowl-to-middle-loop-to-lower-
+  // body run, then lifts for the full-height right spine and its lower foot.
+  // These medians preserve the two-path order while fitting the Noto outline.
+  [ductusKey("gujarati", "ચ")]: {
+    script: "gujarati",
+    glyph: "ચ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "circle the upper bowl, turn through the middle loop, and round the lower body",
+            path: [
+              { x: 70, y: 550 }, { x: 120, y: 565 }, { x: 175, y: 565 },
+              { x: 225, y: 550 }, { x: 265, y: 520 }, { x: 290, y: 480 },
+              { x: 305, y: 435 }, { x: 300, y: 395 }, { x: 280, y: 360 },
+              { x: 245, y: 330 }, { x: 205, y: 305 }, { x: 165, y: 290 },
+              { x: 125, y: 285 }, { x: 90, y: 295 }, { x: 65, y: 285 },
+              { x: 75, y: 265 }, { x: 100, y: 260 }, { x: 125, y: 275 },
+              { x: 145, y: 240 }, { x: 180, y: 205 }, { x: 225, y: 175 },
+              { x: 280, y: 155 }, { x: 335, y: 155 }, { x: 385, y: 170 },
+              { x: 430, y: 200 }, { x: 470, y: 245 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then descend the right spine and turn through its lower foot",
+            path: [
+              { x: 526, y: 560 }, { x: 526, y: 500 }, { x: 526, y: 430 },
+              { x: 526, y: 350 }, { x: 526, y: 270 }, { x: 526, y: 190 },
+              { x: 526, y: 120 }, { x: 545, y: 75 }, { x: 580, y: 45 },
+              { x: 620, y: 38 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: gujaratiAlphabetSource("ચ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
