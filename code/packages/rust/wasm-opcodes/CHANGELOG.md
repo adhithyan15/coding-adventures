@@ -2,6 +2,136 @@
 
 All notable changes to this package will be documented in this file.
 
+## [0.2.31] - 2026-08-19 - SIMD widen PR28: promote/demote/convert_low family (task #199-201)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `f32x4.demote_f64x2_zero` (`0x5E`),
+  `f64x2.promote_low_f32x4` (`0x5F`), `f64x2.convert_low_i32x4_s`
+  (`0xFE`), `f64x2.convert_low_i32x4_u` (`0xFF`) -- the
+  "promote/demote/convert_low" family, the THIRD and FINAL PR of a
+  3-PR sequence (PR26 "extend", 8 opcodes; PR27 "narrow", 4 opcodes;
+  this PR, 4 opcodes) needed to land all 16 opcodes the upstream
+  `simd_conversions.wast` corpus file's two modules bundle together.
+  154 SIMD opcodes total, up from 150. Each sub-opcode byte fetched
+  live from the SIMD proposal's own `BinarySIMD.md` and cross-checked
+  against this table's own already-implemented neighbors: `0x5E`/
+  `0x5F` sit immediately past `v128.xor`'s (`0x51`)/`v128.bitselect`'s
+  (`0x52`) run with no collision; `0xFE`/`0xFF` sit immediately past
+  `i32x4.trunc_sat_f64x2_u_zero`'s `0xFD` (PR25) with no gap.
+- `SimdOpKind::DemoteF64x2Zero`/`PromoteLowF32x4`/`ConvertLowI32x4S`/
+  `ConvertLowI32x4U`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): all
+  UNARY (pop one `v128`, push one). `f32x4.demote_f64x2_zero` reads 2
+  `f64` lanes, demotes each to `f32` (plain IEEE-754 narrowing -- CAN
+  overflow to +/-infinity for out-of-range magnitudes, that's expected
+  behavior, not saturation), writes 4 `f32` lanes: 0-1 demoted, 2-3
+  ALWAYS zero (mirrors PR25's `trunc_sat_f64x2_*_zero` zero-fill
+  shape). `f64x2.promote_low_f32x4` reads 4 `f32` lanes but only uses
+  the LOW 2 (indices 0-1 are promoted, 2-3 are DROPPED, never read),
+  writes 2 `f64` lanes (exact, lossless widening). `f64x2.convert_low_
+  i32x4_s`/`_u` read 4 `i32` lanes, use only the LOW 2 (same
+  lane-DROPPING as `promote_low_f32x4`), convert each to `f64` (signed
+  or unsigned-bit-pattern interpretation), write 2 `f64` lanes -- the
+  reverse direction of PR25's `trunc_sat_f64x2_s/u_zero` (that went
+  `f64x2` -> `i32x4` with zero-padding; this goes `i32x4` -> `f64x2`
+  with lane-dropping).
+- **Campaign complete, corpus now vendored.** With this PR, all 16
+  opcodes across PR26/PR27/PR28 exist, so `wasm-conformance` now
+  vendors `simd_conversions.wast` for the first time -- 100% pass on
+  every directive (2/2 modules, 232/232 `assert_return`, 18/18
+  `assert_invalid`, 30/30 `assert_malformed`), zero `NotYetSupported`.
+  See `wasm-conformance`'s own CHANGELOG for the full grading detail,
+  including a real parser gap this vendoring surfaced and fixed
+  (`nan:canonical`/`nan:arithmetic` NaN-class lanes inside a
+  `v128.const f32x4`/`f64x2` expected value, previously unsupported).
+
+## [0.2.30] - 2026-08-19 - SIMD widen PR27: narrow saturating family (task #196-198)
+
+### Added
+
+- 4 new `SIMD_OPS` entries: `i8x16.narrow_i16x8_s` (`0x65`),
+  `i8x16.narrow_i16x8_u` (`0x66`), `i16x8.narrow_i32x4_s` (`0x85`),
+  `i16x8.narrow_i32x4_u` (`0x86`) -- the "narrow" family, the
+  saturating-demote OPPOSITE of PR26's "extend" family. 150 SIMD
+  opcodes total, up from 146. Each sub-opcode byte fetched live from
+  the SIMD proposal's own `BinarySIMD.md` and cross-checked against
+  the already-implemented `i8x16.bitmask` (`0x64`)/`i16x8.all_true`
+  (`0x83`)/`i16x8.bitmask` (`0x84`) entries: `0x65`/`0x66` sit
+  immediately past `i8x16.bitmask`'s `0x64` with no gap, `0x85`/`0x86`
+  sit immediately past `i16x8.bitmask`'s `0x84` with no gap -- both
+  confirmed free of collision with every existing `SIMD_OPS` entry.
+- `SimdOpKind::NarrowI16x8S`/`NarrowI16x8U`/`NarrowI32x4S`/
+  `NarrowI32x4U`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): BINARY
+  (pop TWO `v128`s, push one `v128`) -- unlike PR26's UNARY "extend"
+  family. `i8x16.narrow_i16x8_s/u` reinterpret both operands as 8 `i16`
+  lanes each, saturate every lane to the `i8` range (signed:
+  `i8::MIN..=i8::MAX`; unsigned: `0..=u8::MAX`, a negative lane
+  saturates to 0, it does NOT wrap), and concatenate: the FIRST
+  operand's 8 saturated lanes become the LOW half (0-7) of the
+  `i8x16` result, the SECOND operand's 8 saturated lanes become the
+  HIGH half (8-15). Same pattern one lane width up for
+  `i16x8.narrow_i32x4_s/u` (4 `i32` lanes per operand, saturated to
+  the `i16` range, LOW 0-3 / HIGH 4-7).
+- **Staged campaign, no corpus vendoring yet.** These 4 opcodes are the
+  second of a 3-PR sequence (`extend_low`/`high` done in PR26,
+  `narrow` here, `promote`/`demote`/`convert_low` in a future PR)
+  needed to unlock the upstream `simd_conversions.wast` corpus file --
+  its modules bundle all 16 together, so it can't be vendored until
+  every PR in the set has landed (12 of 16 opcodes done after this
+  PR). This PR is opcode-only, verified by unit tests.
+- Table-size test bumped from 146 to 150 entries; new dedicated
+  sub-opcode-value test added alongside the existing per-family tests.
+
+## [0.2.29] - 2026-08-19 - SIMD widen PR26: extend_low/high family (task #193-195)
+
+### Added
+
+- 8 new `SIMD_OPS` entries: `i16x8.extend_low_i8x16_s` (`0x87`),
+  `i16x8.extend_high_i8x16_s` (`0x88`), `i16x8.extend_low_i8x16_u`
+  (`0x89`), `i16x8.extend_high_i8x16_u` (`0x8A`),
+  `i32x4.extend_low_i16x8_s` (`0xA7`), `i32x4.extend_high_i16x8_s`
+  (`0xA8`), `i32x4.extend_low_i16x8_u` (`0xA9`),
+  `i32x4.extend_high_i16x8_u` (`0xAA`) -- the "extend" family: EXACTLY
+  the lane-selection + sign/zero-extend half of the already-implemented
+  `ExtmulLowI8x16S`/`ExtmulHighI8x16S`/etc. handlers, minus the
+  multiply. 146 SIMD opcodes total, up from 138. Each sub-opcode byte
+  fetched live from the SIMD proposal's own `BinarySIMD.md` and
+  cross-checked against the already-implemented
+  `i16x8.extmul_low_i8x16_s` (`0x9C`)/`i16x8.shl` (`0x8B`)/
+  `i16x8.q15mulr_sat_s` (`0x82`)/`i32x4.extmul_low_i16x8_s` (`0xBC`)/
+  `i32x4.all_true` (`0xA3`)/`i32x4.shl` (`0xAB`) entries (all six
+  matched exactly, confirming `0x87`-`0x8A` and `0xA7`-`0xAA` are free
+  gaps in their respective runs).
+- `SimdOpKind::ExtendLowI8x16S`/`ExtendHighI8x16S`/`ExtendLowI8x16U`/
+  `ExtendHighI8x16U`/`ExtendLowI16x8S`/`ExtendHighI16x8S`/
+  `ExtendLowI16x8U`/`ExtendHighI16x8U`.
+
+### Notes
+
+- Semantics (implemented in `wasm-execution`, not this crate): UNARY
+  (pop one `v128`, push one `v128`). `i16x8.extend_low/high_i8x16_s/u`
+  reinterpret the operand as 16 `i8` lanes, take only the LOW (0-7) or
+  HIGH (8-15) 8 lanes, sign- or zero-extend each to `i16`. Same pattern
+  one lane width up for `i32x4.extend_low/high_i16x8_s/u` (8 `i16`
+  lanes in, LOW 0-3 / HIGH 4-7 selected, extended to `i32`).
+- **Staged campaign, no corpus vendoring yet.** These 8 opcodes are
+  part of a 16-opcode set (`extend_low`/`high` here, `narrow` in a
+  future PR, `promote`/`demote`/`convert_low` in a future PR) needed to
+  unlock the upstream `simd_conversions.wast` corpus file -- its
+  modules bundle all 16 together, so it can't be vendored until every
+  PR in the set has landed. This PR is opcode-only, verified by unit
+  tests.
+- Table-size test bumped from 138 to 146 entries; new dedicated
+  sub-opcode-value test added alongside the existing per-family tests.
+
 ## [0.2.28] - 2026-08-19 - SIMD widen PR25: i32x4.trunc_sat_f64x2_s/u_zero (task #190-192)
 
 ### Added

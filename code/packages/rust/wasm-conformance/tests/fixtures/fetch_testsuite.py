@@ -457,6 +457,21 @@ TESTSUITE_FILES = [
     # independently) plus its own `assert_invalid` type-check coverage
     # (wrong-operand-type, empty-argument for both ops).
     "simd_i32x4_trunc_sat_f64x2.wast",
+    # SIMD widen PR28 (task #199-201): simd_conversions.wast -- the THIRD
+    # and FINAL PR of a 3-PR sequence (PR26 "extend" family, 8 opcodes;
+    # PR27 "narrow" family, 4 opcodes; this PR's "promote/demote/
+    # convert_low" family, 4 opcodes) needed to land all 16 opcodes this
+    # single upstream file's two modules bundle together. Unlike every
+    # earlier extend/narrow/widening file above, this file could NOT be
+    # partially vendored -- both of its modules export functions that
+    # exercise opcodes from ALL THREE of those PRs at once, so PR26 and
+    # PR27 each left this file un-vendored (opcode-only, unit-test-
+    # verified) until this PR's 4 new opcodes (`f32x4.demote_f64x2_zero`
+    # 0x5E, `f64x2.promote_low_f32x4` 0x5F, `f64x2.convert_low_i32x4_s`
+    # 0xFE, `f64x2.convert_low_i32x4_u` 0xFF) completed the set. First
+    # real integration test exercising opcodes from all three PRs
+    # together in one corpus file.
+    "simd_conversions.wast",
 ]
 
 # Reference-types/threads-proposal files whose UPSTREAM path lives under

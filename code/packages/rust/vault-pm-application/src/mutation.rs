@@ -1554,6 +1554,7 @@ fn prepare_item_publication_with_objects(
         .map_err(|_| ApplicationError::InternalInvariant)?;
     let revision_id = RevisionId::new(*revision_object_id.as_bytes());
 
+    let previous_entry_count = current_items.len();
     let mut catalog_entries = BTreeMap::new();
     for (existing_item_id, candidates) in current_items {
         let mut revision_ids = candidates
@@ -1565,7 +1566,18 @@ fn prepare_item_publication_with_objects(
         catalog_entries.insert(*existing_item_id, revision_ids);
     }
     catalog_entries.insert(item_id, vec![revision_id]);
-    let catalog_plaintext = Zeroizing::new(CatalogV1::new(catalog_entries)?.encode()?);
+    // `new_for_mutation`, not `CatalogV1::new`: this rebuild carries
+    // forward every entry `current_items` already had and touches exactly
+    // one, so it is only genuine growth when `item_id` was not already a
+    // key -- and only genuine growth should be capped by the tight
+    // admission ceiling. See VLT-PM05 §13.4 and that constructor's doc
+    // comment: applying the tight bound unconditionally here would refuse
+    // an ordinary edit or delete on a catalog that is already open but
+    // sits above the admission ceiling, reopening the bug this fix exists
+    // to close.
+    let catalog_plaintext = Zeroizing::new(
+        CatalogV1::new_for_mutation(catalog_entries, previous_entry_count)?.encode()?,
+    );
     let catalog_frame = seal_object(
         keys,
         ObjectKind::Catalog,

@@ -44958,19 +44958,7 @@ pub fn first_party_catalog() -> Vec<IntegrationCatalogEntry> {
             PrimitiveFamily::LocalPairing,
             PrimitiveFamily::CertificatePairing,
         ]),
-        local_device_entry(
-            "homekit_controller",
-            "HomeKit Controller",
-            "Local controller for devices that expose the HomeKit Accessory Protocol.",
-            ConnectivityClass::LocalPush,
-            ImplementationStatus::Specified,
-            1,
-            &["smart_home.read", "smart_home.command.light", "smart_home.command.lock"],
-            &[EntityKind::Light, EntityKind::Switch, EntityKind::Sensor, EntityKind::Lock],
-            &[DiscoveryMechanism::Mdns, DiscoveryMechanism::Bluetooth, DiscoveryMechanism::Manual],
-            &[AuthMode::LocalPairing],
-            "homekit_controller",
-        ),
+        homekit_controller_entry(),
         esphome_entry(),
         tasmota_entry(),
         local_device_entry(
@@ -49186,6 +49174,47 @@ fn google_cast_entry() -> IntegrationCatalogEntry {
         label: "Chromium Open Screen receiver info".to_string(),
         url: "https://github.com/chromium/openscreen/blob/876b5381036e91ca05e21b1446f453ebccfc3acf/cast/common/public/receiver_info.h".to_string(),
         external_id: Some("876b5381036e91ca05e21b1446f453ebccfc3acf".to_string()),
+    });
+    entry
+}
+
+fn homekit_controller_entry() -> IntegrationCatalogEntry {
+    let mut entry = base_entry(
+        "homekit_controller",
+        "HomeKit Controller",
+        "Bounded mDNS discovery for HomeKit Accessory Protocol IP accessories.",
+        IntegrationCategory::LocalDevice,
+        ConnectivityClass::LocalPolling,
+        ImplementationStatus::FirstPartyRuntime,
+        1,
+        "homekit_controller",
+    )
+    .with_protocols(vec![ProtocolFamily::Vendor("homekit_hap_ip".to_string())])
+    .with_capabilities(&["smart_home.read"])
+    .with_discovery(&[DiscoveryMechanism::Mdns])
+    .with_auth(&[AuthMode::None])
+    .with_notes(&[
+        "The first-party runtime supports only bounded _hap._tcp mDNS identity, pairing-state, and accessory-category discovery.",
+        "Setup-code input, SRP pairing, pair verification, encrypted HTTP sessions, accessory reads, subscriptions, and controls remain out of scope.",
+    ]);
+    entry.required_primitives = vec![
+        PrimitiveFamily::DiscoveryIndex,
+        PrimitiveFamily::Mdns,
+        PrimitiveFamily::NormalizedModel,
+        PrimitiveFamily::CapabilityPolicy,
+        PrimitiveFamily::Supervision,
+        PrimitiveFamily::TestSimulator,
+    ];
+    entry.source_refs.push(SourceReference {
+        label: "Apple HomeKit ADK IP service discovery".to_string(),
+        url: "https://github.com/apple/HomeKitADK/blob/master/HAP/HAPIPServiceDiscovery.c"
+            .to_string(),
+        external_id: Some("_hap._tcp".to_string()),
+    });
+    entry.source_refs.push(SourceReference {
+        label: "Apple Home developer page".to_string(),
+        url: "https://developer.apple.com/apple-home/".to_string(),
+        external_id: None,
     });
     entry
 }
@@ -82091,6 +82120,46 @@ mod tests {
             PrimitiveFamily::VaultLease,
         ] {
             assert!(!cast.required_primitives.contains(&primitive));
+        }
+    }
+
+    #[test]
+    fn homekit_controller_entry_exposes_bounded_mdns_discovery_only_runtime() {
+        let catalog = first_party_catalog();
+        let homekit = find_entry(&catalog, &IntegrationId::trusted("homekit_controller")).unwrap();
+        assert_eq!(
+            homekit.implementation_status,
+            ImplementationStatus::FirstPartyRuntime
+        );
+        assert_eq!(homekit.connectivity, ConnectivityClass::LocalPolling);
+        assert_eq!(homekit.auth_modes, vec![AuthMode::None]);
+        assert_eq!(
+            homekit.supported_protocols,
+            vec![ProtocolFamily::Vendor("homekit_hap_ip".to_string())]
+        );
+        assert_eq!(
+            homekit.required_capabilities,
+            vec![CapabilityId::trusted("smart_home.read")]
+        );
+        assert!(homekit.target_entity_kinds.is_empty());
+        for primitive in [
+            PrimitiveFamily::DiscoveryIndex,
+            PrimitiveFamily::Mdns,
+            PrimitiveFamily::NormalizedModel,
+            PrimitiveFamily::CapabilityPolicy,
+            PrimitiveFamily::Supervision,
+            PrimitiveFamily::TestSimulator,
+        ] {
+            assert!(homekit.required_primitives.contains(&primitive));
+        }
+        for primitive in [
+            PrimitiveFamily::CommandMapping,
+            PrimitiveFamily::HomeKitPairing,
+            PrimitiveFamily::LocalHttp,
+            PrimitiveFamily::Tcp,
+            PrimitiveFamily::VaultLease,
+        ] {
+            assert!(!homekit.required_primitives.contains(&primitive));
         }
     }
 

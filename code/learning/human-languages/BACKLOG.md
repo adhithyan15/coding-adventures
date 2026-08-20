@@ -5,6 +5,126 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09FQ — Gujarati ઋ closes the canonical-vowel inventory gap; ક is next
+
+The canonical-order audit found **ઋ** in both the t30apps.com source and bundled
+Noto Sans Gujarati font but absent from `gujarati.json`. Its animation uses
+three populated SVG paths: a bent left body, a separately descended central
+stem, and a final right loop-and-tail run. The restored entry and fitted medians
+preserve that order and the two observed lifts.
+
+Gujarati is now **11/36 verified, 25 remaining**. With the source-backed
+independent-vowel gaps repaired, continue to the first existing consonant,
+**ક**, next. A correctness defect still outranks coverage if one appears during
+fitting or validation.
+
+## HL-C09FP — Gujarati ઔ repairs the second adjacent vowel gap; ઋ is next
+
+The source-and-font audit found **ઔ** missing from `gujarati.json`. Its
+t30apps.com animation repeats the four verified **ઓ** runs—joined body, first
+stem, trailing stem, and lower high arc—then adds a fifth, higher arc. The new
+inventory entry and Noto Sans Gujarati fit preserve all five paths and four
+observed lifts.
+
+Gujarati is now **10/35 verified, 25 remaining**. Rechecking canonical vowel
+order exposed another inventory gap at **ઋ**, which appears in both the same
+teaching source and bundled font but not the current data. Repair **ઋ** before
+starting **ક**; a correctness defect still outranks coverage if one appears
+during fitting or validation.
+
+## HL-C09FO — Gujarati ઓ combines the verified આ body with one high arc
+
+The t30apps.com animation exposes **ઓ** as four populated SVG paths: the joined
+body, two separately descended stems, and a final high arc. The fitted Noto Sans
+Gujarati medians therefore reuse the verified **આ** three-run structure before
+adding **એ**'s high-mark movement, preserving all three observed lifts.
+
+Gujarati is now **9/34 verified, 25 remaining**. Continue to **ઔ** next: the
+source-and-font audit found another missing independent vowel rather than a
+merely unverified entry, and its adjacent animation adds a second high arc to
+the **ઓ** sequence. Repairing that inventory gap outranks the later consonants;
+a correctness defect still outranks coverage if one appears during validation.
+
+## HL-C09FN — Gujarati ઐ repairs an inventory gap; ઓ is next
+
+The source-and-font audit found that **ઐ** was missing from `gujarati.json`, not
+merely unverified. The t30apps.com animation gives it the first three **એ** runs
+plus a fourth, higher arc; the new entry and Noto fit preserve all four paths
+and the resulting three lifts. Gujarati's inventory denominator therefore rises
+instead of hiding the omission.
+
+Gujarati is now **8/34 verified, 26 remaining**. Continue to **ઓ** next: its
+adjacent animation has four populated paths—one joined body, two separately
+descended stems, and one high arc—so it can reuse verified **આ** and **એ**
+anatomy. A correctness defect still outranks coverage if one appears during
+fitting or validation.
+
+## HL-C09FM — Gujarati એ establishes a three-run pattern; ઐ is next
+
+The t30apps.com animation gives **એ** three populated SVG paths: a joined left
+bowl, lower body, and small right arch; a separately descended full-height
+right stem; then a separate high arc. The fitted Noto Sans Gujarati medians
+preserve that body-before-stem-before-arc order and both observed lifts.
+
+Gujarati is now **7/33 verified, 26 remaining**. Continue to **ઐ** next: its
+adjacent animation repeats the same first three runs and adds a fourth high arc,
+providing direct evidence for three lifts. Reusing the verified body, stem, and
+first arc makes that the lowest-risk next tranche. A correctness defect still
+outranks coverage if one appears during fitting or validation.
+
+## HL-C09FL — Gujarati ઊ extends ઉ without lifting; એ is next
+
+The t30apps.com animation repeats the complete **ઉ** path for **ઊ**, then keeps
+the pen down across a high shoulder and along the extended right-side tail to
+its lower foot. The fitted Noto Sans Gujarati median reuses the verified bowls
+and outer curve before entering that added printed tail.
+
+Gujarati is now **6/33 verified, 27 remaining**. Continue to **એ** next: its
+adjacent animation changes the source pattern to three populated SVG paths, so
+the next tranche should verify the joined body, separate right-side run, and
+high arcing run plus the resulting two lifts. A correctness defect still
+outranks coverage if one appears during fitting or validation.
+
+## HL-C09FK — Gujarati ઉ verifies the bowl-and-return pattern; ઊ is next
+
+The t30apps.com animation gives **ઉ** as exactly one populated SVG path. It
+circles the small upper bowl through the middle cusp, sweeps around the broad
+lower bowl, then climbs the tall outer-left curve to finish at the upper right.
+The fitted Noto Sans Gujarati median preserves that whole zero-lift sequence.
+
+Gujarati is now **5/33 verified, 28 remaining**. Continue to **ઊ** next: its
+adjacent animation repeats the complete **ઉ** path and then extends the same
+unbroken run into a long right-side tail. That direct reuse makes it the
+lowest-risk next provenance and fitting tranche. A correctness defect still
+outranks coverage if one appears during fitting or validation.
+
+## HL-C09FJ — Gujarati ઈ confirms the adjacent source pattern; ઉ is next
+
+The next t30apps.com animation also has exactly one populated SVG path. It
+repeats **ઇ** through the upper loop, middle crossing, and lower loop, then
+extends the rising motion into **ઈ**'s high clockwise curl. The fitted Noto Sans
+Gujarati median stays on the taller printed outline without inventing a lift.
+
+Gujarati is now **4/33 verified, 29 remaining**. Continue to **ઉ** next: it is
+the next independent vowel in source order and keeps this tranche inside one
+already-audited source before moving to ઊ. A correctness defect still outranks
+coverage if one appears during fitting or validation.
+
+## HL-C09FI — Gujarati ઇ is the next verified ductus; ઈ now outranks the rest
+
+The t30apps.com version-1.0 animation gives **ઇ** as exactly one populated SVG
+path: small upper-left loop, narrow middle crossing, broad lower loop, then the
+rising upper-right hook. Its other path slots are empty, so this is positive
+zero-lift evidence rather than a guess based on the finished outline. The fitted
+Noto Sans Gujarati median stays on the bundled glyph's ink and preserves that
+upper-loop → lower-loop → hook order.
+
+Gujarati is now **3/33 verified, 30 remaining**. The next item is **ઈ**: it is
+adjacent in the same source, reuses the newly checked loop-and-hook anatomy, and
+therefore has lower provenance and fitting risk than jumping to a different
+script or a later Gujarati letter. After ઈ, continue in source order through
+ઉ and ઊ unless a correctness defect outranks coverage.
+
 ## HL-C213 — build all 22 books LOCALLY before pushing; it takes ~100 seconds
 
 Measured on a 14-core laptop, clean rebuild, 8-way parallel:

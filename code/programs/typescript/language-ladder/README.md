@@ -948,6 +948,68 @@ t30apps.com's next version-1.0 animation exposes those runs as three ordered
 SVG paths; the Noto Sans Gujarati fit preserves the two-lift order while
 tracing the printed glyph's wider stem spacing. The source's variation warning
 continues to qualify the demonstrated school-hand form.
+The four-frame Gujarati **ઇ** filmstrip circles the small upper-left loop,
+passes through its narrow middle crossing, sweeps clockwise around the broad
+lower loop, then rises into the upper-right hook without lifting. t30apps.com's
+version-1.0 animation exposes only its first SVG path for this letter; the Noto
+Sans Gujarati fit preserves that zero-lift loop-to-loop-to-hook order while
+tracing the wider printed body. The source's variation warning continues to
+qualify the demonstrated school-hand form.
+The four-frame Gujarati **ઈ** filmstrip repeats that unbroken **ઇ** motion, but
+continues upward and curls clockwise around the taller top hook. The adjacent
+t30apps.com animation again populates only its first SVG path; the Noto Sans
+Gujarati fit preserves the zero-lift loop-to-loop-to-extended-curl order while
+tracing the printed glyph's rounded high terminal. The source's variation
+warning continues to qualify the demonstrated school-hand form.
+The three-frame Gujarati **ઉ** filmstrip circles clockwise through the small
+upper bowl and middle cusp, sweeps around the broad lower bowl, then climbs the
+tall outer-left curve to finish at the upper right without lifting. The next
+t30apps.com animation again populates only its first SVG path; the Noto Sans
+Gujarati fit preserves that zero-lift upper-bowl-to-lower-bowl-to-outer-curve
+order while tracing the wider printed body. The source's variation warning
+continues to qualify the demonstrated school-hand form.
+The three-frame Gujarati **ઊ** filmstrip repeats the complete unbroken **ઉ**
+body, continues across its high shoulder, then descends the long right-side
+tail into its lower foot. The adjacent t30apps.com animation keeps all of that
+motion in one populated SVG path; the Noto Sans Gujarati fit preserves the
+zero-lift complete-u-before-extended-tail order while tracing the printed
+glyph's open shoulder and straighter tail. The source's variation warning
+continues to qualify the demonstrated school-hand form.
+The four-frame Gujarati **એ** filmstrip circles the joined left bowl and lower
+body through the small right arch, lifts to descend the full-height right stem,
+then lifts again to sweep the separate high arc from left to right. The next
+t30apps.com animation exposes those parts as three ordered SVG paths; the Noto
+Sans Gujarati fit preserves the body-before-stem-before-arc order and two lifts
+while tracing the wider printed joins. The source's variation warning continues
+to qualify the demonstrated school-hand form.
+The four-frame Gujarati **ઐ** filmstrip restores a previously missing inventory
+entry. It writes the complete **એ** body and stem, sweeps the lower high arc,
+then lifts a third time to sweep the second, higher arc from left to right. The
+adjacent t30apps.com animation exposes four ordered SVG paths; the Noto Sans
+Gujarati fit preserves that order while tracing the printed glyph's tighter
+stacked arcs. The source's variation warning continues to qualify the
+demonstrated school-hand form.
+The six-frame Gujarati **ઓ** filmstrip writes the complete **આ** body and two
+stems, then lifts a third time to sweep the separate high arc from left to
+right. The adjacent t30apps.com animation exposes those parts as four ordered
+SVG paths; the Noto Sans Gujarati fit preserves that order while tracing the
+wider printed body and shorter arc. The source's variation warning continues
+to qualify the demonstrated school-hand form. The next audit target is **ઔ**,
+which is missing from the current inventory and adds a second high arc.
+The five-frame Gujarati **ઔ** filmstrip restores that missing inventory entry.
+It writes the complete **ઓ** body and stems, sweeps the lower high arc, then
+lifts a fourth time to sweep the second, higher arc from left to right. The
+t30apps.com animation exposes five ordered SVG paths; the Noto Sans Gujarati fit
+preserves that order while tracing the printed glyph's tighter stacked arcs.
+The source's variation warning continues to qualify the demonstrated
+school-hand form. A canonical-order audit now queues missing **ઋ** next.
+The three-frame Gujarati **ઋ** filmstrip restores the remaining source-backed
+independent-vowel gap. It sweeps across the bent left body and turns down-left,
+lifts to descend the central stem, then lifts again to circle the compact right
+loop and descend through its tail. The t30apps.com animation exposes three
+ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
+tracing the broader printed body and more angular loop. The source's variation
+warning continues to qualify the demonstrated school-hand form; **ક** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

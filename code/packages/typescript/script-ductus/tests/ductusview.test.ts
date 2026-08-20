@@ -273,6 +273,24 @@ const GUJARATI_A = ductusFor("અ", "gujarati")!;
 const gujaratiAOutline = gujaratiOutline("અ");
 const GUJARATI_AA = ductusFor("આ", "gujarati")!;
 const gujaratiAaOutline = gujaratiOutline("આ");
+const GUJARATI_I = ductusFor("ઇ", "gujarati")!;
+const gujaratiIOutline = gujaratiOutline("ઇ");
+const GUJARATI_II = ductusFor("ઈ", "gujarati")!;
+const gujaratiIiOutline = gujaratiOutline("ઈ");
+const GUJARATI_U = ductusFor("ઉ", "gujarati")!;
+const gujaratiUOutline = gujaratiOutline("ઉ");
+const GUJARATI_UU = ductusFor("ઊ", "gujarati")!;
+const gujaratiUuOutline = gujaratiOutline("ઊ");
+const GUJARATI_VOCALIC_R = ductusFor("ઋ", "gujarati")!;
+const gujaratiVocalicROutline = gujaratiOutline("ઋ");
+const GUJARATI_E = ductusFor("એ", "gujarati")!;
+const gujaratiEOutline = gujaratiOutline("એ");
+const GUJARATI_AI = ductusFor("ઐ", "gujarati")!;
+const gujaratiAiOutline = gujaratiOutline("ઐ");
+const GUJARATI_O = ductusFor("ઓ", "gujarati")!;
+const gujaratiOOutline = gujaratiOutline("ઓ");
+const GUJARATI_AU = ductusFor("ઔ", "gujarati")!;
+const gujaratiAuOutline = gujaratiOutline("ઔ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -3493,6 +3511,262 @@ describe("Gujarati આ — complete અ before the lifted trailing ā stem", () 
     ]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(GUJARATI_AA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Gujarati ઇ — two loops flow into the rising hook without a lift", () => {
+  const steps = ductusSteps(GUJARATI_I);
+  const strip = ductusFilmstrip(GUJARATI_I, gujaratiIOutline);
+
+  it("shows the upper loop, crossing, lower loop, and hook as one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the small upper-left loop down to the middle crossing",
+      "continue through the narrow crossing",
+      "sweep clockwise around the broad lower loop",
+      "rise along the right side into the upper hook",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiIOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_I.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઈ — the ઇ run rises into a taller clockwise curl", () => {
+  const steps = ductusSteps(GUJARATI_II);
+  const strip = ductusFilmstrip(GUJARATI_II, gujaratiIiOutline);
+
+  it("shows both loops before the extended top curl in one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle the small upper-left loop down to the middle crossing",
+      "continue through the narrow crossing",
+      "sweep clockwise around the broad lower loop",
+      "rise and curl clockwise around the extended top hook",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, false, false, false]);
+    expect(steps.map((step) => step.strokeIndex)).toEqual([0, 0, 0, 0]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiIiOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_II.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઉ — two bowls return around one tall outer curve", () => {
+  const steps = ductusSteps(GUJARATI_U);
+  const strip = ductusFilmstrip(GUJARATI_U, gujaratiUOutline);
+
+  it("shows the upper bowl, lower bowl, and returning curve in one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle clockwise through the small upper bowl to the middle cusp",
+      "continue right and sweep clockwise around the broad lower bowl",
+      "climb around the tall outer-left curve and finish at the upper right",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiUOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_U.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઊ — the complete ઉ run descends a long right tail", () => {
+  const steps = ductusSteps(GUJARATI_UU);
+  const strip = ductusFilmstrip(GUJARATI_UU, gujaratiUuOutline);
+
+  it("shows the complete ઉ body before its extended tail in one run", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "write ઉ through its upper bowl, middle cusp, and lower bowl",
+      "continue around the tall outer-left curve",
+      "cross the high shoulder and descend the long right tail into its foot",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(0);
+    expect(strip.summary).toBe("one unbroken stroke · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind the continuous run", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiUuOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(0);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_UU.strokes[0], 1),
+    );
+  });
+});
+
+describe("Gujarati ઋ — bent body, central stem, then right loop and tail", () => {
+  const steps = ductusSteps(GUJARATI_VOCALIC_R);
+  const strip = ductusFilmstrip(GUJARATI_VOCALIC_R, gujaratiVocalicROutline);
+
+  it("shows three movements across three ordered pen-down runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep right along the upper body, then turn diagonally down-left",
+      "lift, then descend the central stem into its foot",
+      "lift again, circle the right loop, and descend through the tail",
+    ]);
+    expect(strip.frames).toHaveLength(3);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 3 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all three runs", () => {
+    const paths = byTag(strip.frames[2], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiVocalicROutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(2);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_VOCALIC_R.strokes[2], 1),
+    );
+  });
+});
+
+describe("Gujarati એ — joined body, right stem, then high arc", () => {
+  const steps = ductusSteps(GUJARATI_E);
+  const strip = ductusFilmstrip(GUJARATI_E, gujaratiEOutline);
+
+  it("shows four movements across three ordered pen-down runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "circle clockwise around the left bowl",
+      "continue through the lower body and small right arch",
+      "lift, then descend the full-height right stem into its foot",
+      "lift again and sweep the high arcing mark from left to right",
+    ]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(2);
+    expect(strip.summary).toBe("3 strokes · 2 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all three runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiEOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(2);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_E.strokes[2], 1),
+    );
+  });
+});
+
+describe("Gujarati ઐ — the એ sequence gains a second high arc", () => {
+  const steps = ductusSteps(GUJARATI_AI);
+  const strip = ductusFilmstrip(GUJARATI_AI, gujaratiAiOutline);
+
+  it("shows the body, stem, lower arc, then higher arc as four runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "write એ through its joined bowl, lower body, and right arch",
+      "lift, then descend the full-height right stem into its foot",
+      "lift again and sweep the lower high arc from left to right",
+      "lift once more and sweep the higher arc from left to right",
+    ]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all four runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAiOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(3);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_AI.strokes[3], 1),
+    );
+  });
+});
+
+describe("Gujarati ઓ — the complete આ sequence gains a high arc", () => {
+  const steps = ductusSteps(GUJARATI_O);
+  const strip = ductusFilmstrip(GUJARATI_O, gujaratiOOutline);
+
+  it("shows the body, two stems, then high arc as four runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "write આ through its open left curve",
+      "continue through the lower body and middle shoulder",
+      "retrace down and sweep through the small right arch",
+      "lift, then descend the first right stem into its foot",
+      "lift again, then descend the trailing stem into its foot",
+      "lift once more and sweep the high arc from left to right",
+    ]);
+    expect(strip.frames).toHaveLength(6);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 6 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all four runs", () => {
+    const paths = byTag(strip.frames[5], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiOOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(3);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_O.strokes[3], 1),
+    );
+  });
+});
+
+describe("Gujarati ઔ — the ઓ sequence gains a second high arc", () => {
+  const steps = ductusSteps(GUJARATI_AU);
+  const strip = ductusFilmstrip(GUJARATI_AU, gujaratiAuOutline);
+
+  it("shows the body, two stems, lower arc, then higher arc as five runs", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "write ઓ through its open left curve, lower body, and arch",
+      "lift, then descend the first right stem into its foot",
+      "lift again, then descend the trailing stem into its foot",
+      "lift once more and sweep the lower high arc left to right",
+      "lift again and sweep the higher arc from left to right",
+    ]);
+    expect(strip.frames).toHaveLength(5);
+    expect(strip.penLifts).toBe(4);
+    expect(strip.summary).toBe("5 strokes · 4 pen lifts · 5 movements");
+  });
+
+  it("draws the exact Noto Sans Gujarati character behind all five runs", () => {
+    const paths = byTag(strip.frames[4], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      gujaratiAuOutline.path,
+    );
+    expect(paths.filter((path) => path.attrs.class === "ductus__done")).toHaveLength(4);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(GUJARATI_AU.strokes[4], 1),
     );
   });
 });

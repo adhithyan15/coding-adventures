@@ -18,8 +18,8 @@ use chief_of_staff_service_reconciler::{
     HostSupervisor, ReconcileAction, ReconcileReport, SupervisorObservation, SupervisorPhase,
 };
 use chief_of_staff_service_registry::{
-    DesiredState, HostName, HostRegistration, HostStatus, LoadedHost, PackagePath, RegistryError,
-    RestartPolicy,
+    DesiredState, HostName, HostRegistration, HostStatus, LoadedHost, PackagePath,
+    QuarantineDeadline, RegistryError, RestartPolicy,
 };
 use chief_of_staff_trust_checker::TrustRequestContext;
 use coding_adventures_json_parser::try_parse_json;
@@ -1548,11 +1548,35 @@ fn status_json(status: &HostStatus) -> JsonValue {
             ("kind", JsonValue::String("crashed".to_string())),
             ("exit_code", optional_i32(*exit_code)),
         ]),
-        HostStatus::Quarantined { until_ns, reason } => object(vec![
-            ("kind", JsonValue::String("quarantined".to_string())),
-            ("until_ns", JsonValue::String(until_ns.to_string())),
-            ("reason", JsonValue::String(reason.clone())),
-        ]),
+        // `until_ns` is reported only when the quarantine actually lifts.
+        // `permanent` and `expired` together say which of the three cases this
+        // is; neither alone does. The reading is monotonic and
+        // scoped to the daemon run named by `boot_id`, so a client must not
+        // compare it against anything of its own -- reporting it bare would
+        // invite exactly that.
+        HostStatus::Quarantined { until, reason } => object(match until {
+            QuarantineDeadline::Permanent => vec![
+                ("kind", JsonValue::String("quarantined".to_string())),
+                ("permanent", JsonValue::Bool(true)),
+                ("reason", JsonValue::String(reason.clone())),
+            ],
+            // A lapsed deadline reports as already expired: it came from a
+            // record whose deadline this daemon cannot place on its own clock,
+            // and there is no number to give a client that would mean anything.
+            QuarantineDeadline::Lapsed => vec![
+                ("kind", JsonValue::String("quarantined".to_string())),
+                ("permanent", JsonValue::Bool(false)),
+                ("expired", JsonValue::Bool(true)),
+                ("reason", JsonValue::String(reason.clone())),
+            ],
+            QuarantineDeadline::Until { boot_id, ns } => vec![
+                ("kind", JsonValue::String("quarantined".to_string())),
+                ("permanent", JsonValue::Bool(false)),
+                ("boot_id", JsonValue::String(boot_id.to_string())),
+                ("until_ns", JsonValue::String(ns.to_string())),
+                ("reason", JsonValue::String(reason.clone())),
+            ],
+        }),
     }
 }
 
@@ -1572,6 +1596,14 @@ fn reconcile_report_json(report: &ReconcileReport) -> JsonValue {
                         JsonValue::String(reconcile_action_name(outcome.action()).to_string()),
                     ),
                     ("status", status_json(outcome.status())),
+                    // Present only for a failed outcome, where the status is
+                    // what stood *before* the tick -- nothing was written.
+                    (
+                        "failure",
+                        outcome.failure().map_or(JsonValue::Null, |failure| {
+                            JsonValue::String(failure.to_string())
+                        }),
+                    ),
                 ])
             })
             .collect(),
@@ -1684,6 +1716,7 @@ fn reconcile_action_name(action: ReconcileAction) -> &'static str {
         ReconcileAction::Started => "started",
         ReconcileAction::Stopped => "stopped",
         ReconcileAction::Deferred => "deferred",
+        ReconcileAction::Failed => "failed",
     }
 }
 
@@ -1705,7 +1738,9 @@ mod tests {
     }
 
     impl HostSupervisor for FakeSupervisor {
-        type Error = ();
+        // A per-host failure is reported rather than raised, so the error has
+        // to be describable. This fake never produces one.
+        type Error = String;
 
         fn inspect(
             &mut self,
@@ -1839,7 +1874,7 @@ mod tests {
             FakeSupervisor::default(),
             NoopWiring,
             Arc::new(TestClock::new()),
-            ReconcileConfig::new(50).expect("valid reconcile config"),
+            ReconcileConfig::new(1, 50).expect("valid reconcile config"),
         )
     }
 
@@ -2604,6 +2639,7 @@ mod tests {
         assert_eq!(restart_policy_name(RestartPolicy::OnFailure), "on_failure");
         assert_eq!(desired_state_name(DesiredState::Stopped), "stopped");
         assert_eq!(reconcile_action_name(ReconcileAction::Deferred), "deferred");
+        assert_eq!(reconcile_action_name(ReconcileAction::Failed), "failed");
         assert_eq!(
             DaemonApiError::Poisoned.to_string(),
             "chief daemon API control plane is unavailable"
@@ -2624,7 +2660,14 @@ mod tests {
             HostStatus::Stopped,
             HostStatus::Crashed { exit_code: Some(7) },
             HostStatus::Quarantined {
-                until_ns: u64::MAX,
+                until: QuarantineDeadline::Permanent,
+                reason: "policy".to_string(),
+            },
+            HostStatus::Quarantined {
+                until: QuarantineDeadline::Until {
+                    boot_id: 11,
+                    ns: u64::MAX,
+                },
                 reason: "policy".to_string(),
             },
         ];
@@ -2633,8 +2676,13 @@ mod tests {
             .map(status_json)
             .map(|value| serialize(&value).unwrap())
             .collect::<String>();
+        // A u64 is serialised as a string, so full precision survives.
         assert!(text.contains(&u64::MAX.to_string()));
         assert!(text.contains("quarantined"));
+        // A permanent quarantine reports no deadline at all -- there is no
+        // sentinel number for a client to compare against its own clock.
+        assert!(text.contains("\"permanent\":true"));
+        assert!(text.contains("\"boot_id\":\"11\""));
         for phase in [
             SupervisorPhase::Starting,
             SupervisorPhase::Running,

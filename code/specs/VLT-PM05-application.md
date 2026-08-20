@@ -435,10 +435,13 @@ CatalogV1 {
 }
 ```
 
-V1 permits 100,000 entries and at most 16 current candidates per item. Every
-candidate frame must decrypt as `ItemRevisionV1` with the same item ID. Empty
-candidate sets, duplicate item IDs, wrong-kind frames, dangling references, and
-candidate amplification are corruption.
+V1 permits at most 16 current candidates per item. Entry count is bounded by
+two different numbers depending on which side of the wire is asking — see
+§13.4 for the derivation and why decode and admission deliberately disagree —
+rather than one flat, round figure. Every candidate frame must decrypt as
+`ItemRevisionV1` with the same item ID. Empty candidate sets, duplicate item
+IDs, wrong-kind frames, dangling references, and candidate amplification are
+corruption.
 
 Catalogs are immutable snapshots. Phase 1A rewrites one encrypted catalog frame
 per mutation. A later tree format may optimize this without changing domain or
@@ -682,8 +685,8 @@ After authentication, the opener strictly decodes the closed snapshot, checks
 the exact candidate count and domain-separated hash, and verifies the embedded
 bootstrap's authority public key and self-signature. Candidate entries must be
 strictly increasing by source item/revision identity, unique, bounded to
-100,000 items and 16 candidates per item, canonically decode as item revisions,
-and reproduce the entry's item identity. Every intermediate plaintext CBOR
+`MAX_CATALOG_ENTRIES` items (§13.4) and 16 candidates per item, canonically
+decode as item revisions, and reproduce the entry's item identity. Every intermediate plaintext CBOR
 tree, passphrase, derived key, ciphertext copy, bootstrap, encoded revision,
 and hash preimage is wiped on every return path.
 
@@ -740,7 +743,8 @@ Additional V1 bounds are checked before allocation:
 |---|---:|
 | local state bytes | 32 MiB |
 | prepared/pending publication objects | 4,096 |
-| catalog entries | 100,000 |
+| catalog entries admitted by this device (`MAX_CATALOG_ENTRIES`) | 18,064 |
+| catalog entries this device will still decode (`MAX_ENCODABLE_CATALOG_ENTRIES`) | 19,064 |
 | candidates per item | 16 |
 | application plaintext object | 16 MiB |
 | search query | 256 bytes |
@@ -918,7 +922,10 @@ correct.
 
 It is about *materialisation*, not about the whole open. Open still fails
 closed on the things it should: a corrupt frame, a broken pin, a failed
-signature, a catalog with more entries than `MAX_CATALOG_ENTRIES`.
+signature, a catalog with more entries than the decode-time ceiling
+(`MAX_ENCODABLE_CATALOG_ENTRIES` as of §13.4 — this bound was named
+`MAX_CATALOG_ENTRIES` and set to a flat, unreachable `100,000` when this
+section was written).
 
 And it is about *size*, not about every per-item failure. A revision that
 does not decode still denies open, and one case of that is reachable from
@@ -926,14 +933,14 @@ the same threat model: a peer authoring a first-party record whose
 payload does not match the schema its content type names — a `Login`
 missing a required field — yields `SchemaMismatch`, which
 `decode_live` maps to `IntegrityFailure`, which travels the same path
-shown above. That residual is pre-existing, is unchanged by this change,
-and is deliberately not repaired here. The size failure could be *removed*
-because the re-encode was never needed; a payload that does not match its
-schema has to be represented somehow instead, which means deciding what a
+shown above. That residual was pre-existing when this section was
+written and was left deliberately unrepaired here, because unlike the
+size failure it could not be *removed* the same way — a payload that does
+not match its schema has to be represented somehow instead of an
+already-typed value handed back verbatim, which means deciding what a
 partly-unreadable item looks like to search, list, show, conflict
-resolution, export, and restore — a design question, not a local fix. It
-is tracked as follow-on work against this section, alongside the two
-repairs named in §13.2.
+resolution, export, and restore. **This one is now fixed too; §13.5
+states the repair.**
 
 Also newly reachable, and fixed here rather than deferred: `encode_any_record`'s
 opaque arm folded every `encode_opaque` failure into `IntegrityFailure`.
@@ -977,6 +984,501 @@ was declined. The third could not be answered that way, because on the
 open path a closed error *is* the loss. Fixing it meant removing the
 failure rather than reporting it — which was available, because the
 re-encode was never needed in the first place.
+
+### 13.4 The catalog's own entry ceiling was fictional
+
+§13.1 gave every record encode a `BoundExceeded` outcome instead of an abort,
+including `CatalogV1::encode` itself. That fix assumed the catalog's own
+admission check — `entries.len() > MAX_CATALOG_ENTRIES`, with
+`MAX_CATALOG_ENTRIES` a flat, round `100,000` — was merely the *looser* of
+two bounds, the same relationship the plaintext gate has to the encoder's
+ceiling everywhere else in this layer. It was not. `100,000` was never
+reachable: `CatalogV1::encode`'s own comment already said so — "an ordinary
+vault crosses the codec's ceiling somewhere below twenty thousand items" —
+but the number the catalog *admitted* was never brought down to match the
+number it could actually carry.
+
+**Why this one has no delete escape hatch.** §13.2 names deletion as the
+recourse for an oversized individual record: a tombstone revision carries
+only the item id and a timestamp, so it never re-triggers the record encode
+that failed. That recourse does not exist for an oversized *catalog*, because
+catalog entries are not removed by deletion — an item's tombstone is still a
+catalog entry, the same size on the wire as the live entry it replaced. A
+catalog that has reached the real ceiling stays at that size forever. Every
+subsequent mutation that has to re-encode the full catalog — `item add`,
+`item edit`, `item delete`, every authored conflict merge, and `export` —
+fails the same way, permanently, with no operation left inside the product
+that shrinks the catalog back under the ceiling. An ordinary vault that grew
+past roughly nineteen thousand items had no recourse at all, and needed no
+hostile peer to get there.
+
+**The derivation.** `CatalogV1::encode`'s wire shape for one entry with one
+candidate is exactly:
+
+```text
+  entry map header (2 pairs, < 24)              1
+  key 1 (unsigned < 24)                          1
+  item id   bytes header (len 16, < 24)          1
+            item id bytes                       16
+  key 2 (unsigned < 24)                          1
+  candidates  array header (1 elem, < 24)        1
+    revision id  bytes header (len 32, >= 24)    2
+                 revision id bytes               32
+                                                ----
+                                                 55
+```
+
+`ItemId` and `RevisionId` are fixed-width byte strings, and canonical-CBOR's
+header for a definite-length byte string depends only on its length, never
+its content, so 55 bytes is exact, not an estimate — and it is the *cheapest*
+an entry can encode to: a second candidate (a conflict) costs 34 more bytes,
+never fewer. With a 16-byte conservative allowance for the frame around the
+entries array (the outer map's three fields plus the entries array's own
+length header), the largest entry count any encode of a `CatalogV1` can ever
+reach is:
+
+```text
+MAX_ENCODABLE_CATALOG_ENTRIES = (MAX_ENCODED_SIZE - 16) / 55 = 19,064
+```
+
+No catalog produced by any device honouring `MAX_ENCODED_SIZE` — this one,
+past or present, or any other implementation of this wire format — can ever
+exceed 19,064 entries. That makes it a *proven* ceiling rather than a policy
+choice, which is what lets it be used as a decode-time bound with zero
+backward-compatibility cost (below).
+
+Admission then subtracts a safety margin of 1,000 entries — 55,000 bytes of
+slack, enough to absorb on the order of a thousand simultaneously-conflicted
+items (each extra candidate costs 34 bytes, not a full entry) without a
+per-entry accounting — arriving at:
+
+```text
+MAX_CATALOG_ENTRIES = MAX_ENCODABLE_CATALOG_ENTRIES - 1,000 = 18,064
+```
+
+**Two bounds, not one, and why they must differ.** The fix is not "lower
+`MAX_CATALOG_ENTRIES` to the real number." A single tightened bound applied
+uniformly would repeat, at the catalog level, the exact mistake §13.3
+corrected for individual records: a hard reject on the *open* path over
+*size*, which does not refuse one mutation, it denies the whole vault. A
+catalog between the two bounds is not hypothetical residue — under the old
+`100,000`-entry admission check, this device's own past self could
+legitimately have grown a catalog anywhere up to the *real* 19,064-entry
+ceiling before this fix shipped, and any other device honouring the same
+wire format could have too. That catalog must stay openable.
+
+So admission and decode use different bounds, on purpose:
+
+- **Admission of new growth** (`validate_catalog`, used by `CatalogV1::new`
+  — portable import, and any construction with no "previous" catalog to
+  compare against) applies the tight, margined `MAX_CATALOG_ENTRIES`
+  (18,064) to the whole entry count. Reaching it refuses the *next* item
+  with `BoundExceeded`, before that catalog is ever built.
+- **Ordinary item mutation** (`CatalogV1::new_for_mutation`, used by every
+  local mutation that touches one item — `item add`, `item delete`, `item
+  edit`, restore, and the authored conflict merges) is more careful,
+  because it does not build a catalog from scratch: it carries forward
+  every entry the vault already had and touches exactly one, so the
+  resulting entry count is either unchanged (an edit, delete, restore, or
+  conflict-resolution of an item that already had a catalog entry) or one
+  more than before (a genuinely new item — the only case that is actual
+  growth). Only the growth case is checked against the tight
+  `MAX_CATALOG_ENTRIES`; a mutation that does not grow the catalog is
+  checked against the looser, proven `MAX_ENCODABLE_CATALOG_ENTRIES`
+  instead. `CatalogV1::encode` does not independently re-apply either
+  bound — it trusts whichever constructor built its `self.entries` already
+  chose the right one, and confirms only that the actual bytes still fit
+  `MAX_ENCODED_SIZE`.
+
+  This split was caught in security review, not designed in from the
+  start: an earlier version of this fix applied the tight ceiling to
+  *every* catalog rebuild uniformly, admission and mutation alike. That
+  reopened this section's own bug at a narrower band — a catalog synced
+  from a peer, or grown under this device's own pre-fix admission policy,
+  with an entry count anywhere in `(MAX_CATALOG_ENTRIES,
+  MAX_ENCODABLE_CATALOG_ENTRIES]` decoded and opened fine (decode already
+  used the looser bound) but then failed *every* subsequent mutation,
+  delete included, because rebuilding that same, unchanged entry count
+  still ran into the tight bound regardless of whether the mutation added
+  anything. The lesson generalises: an admission ceiling on total entry
+  count is only correct for constructions where every entry is new growth.
+  Anywhere a mutation carries forward entries that already existed,
+  admission has to ask whether *this* mutation grows the catalog, not
+  merely how big the catalog already is.
+- **Decode** (`CatalogV1::decode`) uses the same looser, unmargined
+  `MAX_ENCODABLE_CATALOG_ENTRIES` (19,064) as a non-growing mutation — the
+  proven ceiling, not this device's own admission policy. This runs on the
+  open path, through `materialize_current_catalog`, so a hard reject here
+  denies the whole vault rather than one mutation; using the proven ceiling
+  means the only catalogs it ever rejects are ones no honest encoder, old
+  or new, could ever have produced. A catalog this device would no longer
+  *admit* building fresh — because it exceeds 18,064 — still opens, because
+  it might be exactly what a past version of this device, or any honest
+  peer, legitimately wrote. Only past 19,064 is a catalog certainly the
+  product of a peer whose own encoder does not honour `MAX_ENCODED_SIZE` —
+  hand-crafting wire bytes rather than running a compliant encoder — and
+  that is the case this closes: a peer cannot install a catalog this
+  device could decode but never again re-encode.
+
+`materialize_current_catalog`'s own cross-head merge check (reachable when
+several unreconciled concurrent heads each individually decode within bounds
+but their union does not) uses the same proven ceiling as decode, for the
+same reason. A merged view that does exceed it cannot have come from any
+device honouring this wire format, so denying open there remains one of the
+cases open should still fail closed on — §13.3 already named exactly this,
+"a catalog with more entries than `MAX_CATALOG_ENTRIES`," as the accepted
+exception to the invariant it otherwise established.
+
+**Tests.** `codec.rs` pins the derivation directly against the real encoder:
+`catalog_entry_byte_cost_is_exact` measures the 55-byte cost;
+`max_encodable_catalog_entries_is_a_proven_ceiling` shows the encoder accepts
+exactly 19,064 single-candidate entries and refuses one more, from any
+caller, not only this device's own admission path;
+`admission_refuses_growth_before_the_catalog_is_ever_unencodable` shows
+admission refuses the 18,065th entry itself, rather than building a catalog
+that fails later on encode; `decode_stays_open_to_a_legacy_or_peer_catalog_
+admission_would_now_refuse` and `decode_rejects_a_catalog_no_honest_encoder_
+could_have_produced` cover the two decode-time halves. `open.rs` reproduces
+the bug end to end against a real, unlocked vault: `a_synced_catalog_at_the_
+proven_ceiling_opens` and `a_synced_catalog_past_the_proven_ceiling_denies_
+open` bracket 19,064 exactly, through `open_active_vault` against a
+peer-authored catalog delivered the way a real sync would deliver one (many
+small publications, since one commit cannot itself carry more than
+`MAX_ADDED_OBJECTS` new objects); `a_catalog_at_the_admission_ceiling_can_
+still_be_deleted_from` reproduces the named symptom directly — a real
+`delete_current_item` call succeeds on a catalog sitting at this device's own
+admission ceiling, and a subsequent `add_item` is correctly refused.
+`mutation_of_an_above_admission_catalog_succeeds_when_it_does_not_grow`
+(`codec.rs`) and `a_catalog_above_the_admission_ceiling_can_still_be_deleted_
+from` (`open.rs`) pin the growth-vs-non-growth correction above directly:
+the latter opens a real, peer-synced vault whose catalog already exceeds the
+admission ceiling and performs two real `delete_current_item` calls against
+it, which is exactly the scenario security review found broken in the first
+version of this fix.
+
+### 13.5 A schema-mismatched payload has no bytes to hand back
+
+§13.3 named this residual and left it deliberately unrepaired: a peer
+authoring a first-party record whose payload does not match the schema its
+content type names — a `Login` missing its `password` field is the running
+example — decodes into `SchemaMismatch`, which `decode_live` mapped to
+`IntegrityFailure`, which travels the same `decode_record → decode_
+item_revision → read_candidate → materialize_current_catalog →
+open_active_vault` chain the oversized-opaque bug did. One synced record
+denied the whole vault, the identical blast radius, reached without ever
+crossing a size ceiling.
+
+**Confirmed reachable, not assumed.** Before writing any fix, this was
+proven with a real reproduction rather than trusted from the code reading
+above: `a_synced_schema_mismatched_login_record_leaves_the_vault_openable`
+(`open.rs`) synthesises a peer-authored `Login` revision whose payload is
+valid canonical CBOR — decodable, and legal to hold under
+`MAX_PLAINTEXT_BYTES` — but missing `password`, delivers it through the
+shared object store the way a real sync would, and opens the vault.
+Temporarily reverting only the repair below (keeping everything else, so
+the test still compiles) reproduces the exact failure: `active_session`
+panics on `Err(IntegrityFailure)` from `open_active_vault`. The fix in this
+section is what turns that panic back into a normal open.
+
+**Why this is not §13.3's fix again.** §13.3's oversized-opaque payload
+decoded successfully — the failure was purely in a needless re-encode on
+the way out, so the repair was "hand back the bytes that already decoded
+correctly, don't re-encode them." A schema-mismatched payload never
+decodes as its declared type at all: there is no `Login` value to hand
+back, because none was ever constructed. "Return the original bytes"
+therefore cannot mean "return the original *typed value*" here; it can
+only mean "return the original *record's raw bytes*, unintepreted" — which
+is exactly the shape `AnyRecord::Opaque` already uses for a different
+reason (a content type this crate doesn't recognise at all). The repair
+reuses that shape under a new variant rather than folding into `Opaque`
+itself, because *why* a record is unreadable is worth keeping distinct from
+*whether* it is:
+
+```rust
+// coding_adventures_vault_records::AnyRecord (vault-records/src/lib.rs)
+Quarantined {
+    content_type: String,   // one of this crate's own *_V1 constants
+    payload_bytes: Vec<u8>, // the payload's own canonical-CBOR bytes
+    reason: &'static str,   // e.g. "Login.password missing" — never
+                             // attacker-controlled, always a literal
+                             // from this crate's own typed decoders
+},
+```
+
+`Opaque` means "this crate doesn't recognise the content type" — an
+ordinary forward-compatibility case, no different in kind from an older
+client seeing a newer peer's record. `Quarantined` means "this crate
+recognises the content type and the payload is still wrong" — which only
+happens if a peer authored a malformed record, by bug or by malice. The two
+get identical downstream treatment (below) because a caller's remedy is the
+same either way: it cannot repair the record, only remove it. They stay
+distinct variants because *why* a record is unreadable is a fact worth
+preserving — collapsing them would make "how many records has this vault
+received that this client cannot even parse against the type they
+themselves claim" permanently unanswerable, which matters for anyone
+auditing a vault for peer misbehaviour after the fact.
+
+`decode_record`'s six typed-dispatch arms now catch `SchemaMismatch`
+specifically and quarantine instead of propagating; every other
+`VaultRecordError` variant (a broken `{t,d}` envelope, `t` the wrong CBOR
+type, and so on) still denies decode outright, because those describe a
+record no content type can be attributed to — quarantine needs a content
+type to quarantine *under*. `decode_record_as::<T>`, used only when a
+caller specifically requires one exact type, is untouched and still
+returns `SchemaMismatch` directly; only the general decoder `decode_live`
+calls at open time changed behaviour.
+
+**What each affected surface does with a quarantined item**, mirroring the
+precedent §13.3 and §13.2 already set for the oversized-opaque case:
+
+- **Open.** `open_active_vault` no longer fails. The item materialises into
+  the current catalog as any other item would.
+- **`item list`.** The item appears. `RedactedRecordView` gained a matching
+  `Quarantined { content_type, payload_bytes, reason, payload:
+  RedactedSecret }` variant (`vault-pm-domain`), and the CLI's title
+  fallback (`record_title`) uses the declared content type as the display
+  title — the same fallback `Opaque` already uses, since neither has a
+  title field. A quarantined item silently missing from `item list` would
+  trade one failure mode (vault won't open) for a quieter one (item exists,
+  operator never learns it does).
+- **`item show`.** Unlike `Opaque` — an ordinary content type this build
+  simply has no renderer for, which `item show` declines with
+  `Unsupported` — a quarantined item's declared type *is* recognised; only
+  its payload failed to parse. `item show` therefore succeeds with a
+  redacted placeholder (`Content: could not be read (<reason>)`) instead of
+  erroring, because an `Unsupported` error reads the same as "this command
+  doesn't handle that item kind," which is the wrong message for "this item
+  is broken."
+- **Search.** Indexed the same as `Opaque`: no title text contributed (there
+  is none to index), tags still index normally. A quarantined item can be
+  found by tag but not by guessing at its unreadable content.
+- **Conflict resolution.** `conflict choose` (`resolve_item_conflict`) never
+  matches on `AnyRecord` at all — it operates on whichever candidate's
+  revision id is selected without decoding its payload — so it is
+  unaffected by construction. The six typed `conflict merge <type>`
+  ceremonies each gate on a `let AnyRecord::<Type>(_) = base.payload() else
+  { return Err(Unsupported) }` precondition (`login_conflict_merge_
+  precondition` and its five siblings) that already treated every non-
+  matching variant uniformly; `Quarantined` falls into that same `else`
+  branch as `Opaque` always has, so `conflict merge login` against a
+  quarantined base already returned `Unsupported` with no code change.
+  `a_synced_schema_mismatched_login_item_denies_edit_as_login` pins the
+  identically-shaped `item edit` precondition (`login_edit_precondition`)
+  directly, since editing and conflict-merging share this exact pattern.
+- **Deletion.** Unaffected, by the same structural argument as §13.2 and
+  §13.3: a tombstone revision carries only the item id and a timestamp, so
+  `delete_current_item` never reaches `encode_any_record` and never touches
+  the unreadable bytes.
+- **`export` / `history restore` / conflict merges that re-encode.**
+  `encode_any_record` gained a `Quarantined` arm that forwards through
+  `encode_opaque(content_type, payload_bytes)` — the identical call the
+  `Opaque` arm already makes. The record round-trips byte for byte: still
+  unreadable, never silently repaired, never dropped.
+
+**A zeroization window, found and closed during security review.** Unlike
+`Opaque` — genuinely unknown content, not assumed sensitive — a
+`Quarantined` record's declared type names one of this crate's own
+secret-bearing schemas, so its `payload_bytes` usually *are* real plaintext
+(the vault-records doc comment on the variant states this explicitly).
+`AnyRecord` has no `Drop` impl of its own (typed variants each wipe
+themselves; `Opaque` and `Quarantined` do not, by design — see the
+`AnyRecord`/`Zeroize` NOTE in vault-records), so a `payload` value bound to
+a bare local variable is wiped only by something that explicitly zeroizes
+it. `ItemDocument` does that the moment `payload` is moved inside it, since
+its own `Drop` zeroizes on any later failure — but only from that point
+on. `decode_live`'s original field order (1–8, then 9, then 10) left a
+window: `payload` was bound by decoding field 8, and two more fallible
+decodes (fields 9 and 10) ran *after* it and *before* `ItemDocument::new`
+consumed it. A peer-authored revision fully controls all three fields in
+one sealed object, so a schema-mismatched record paired with a malformed
+attachments or manifest field would return early through `?` with
+`payload` still a bare local — dropped by ordinary (non-zeroizing) Rust
+drop semantics, leaking its plaintext into freed heap memory. `decode_live`
+now decodes fields 9 and 10 before field 8; `fields` is already a
+key-indexed map by that point; so nothing about the wire's byte order
+depends on which order the `remove` calls happen in, and reordering closes
+the window: the statement immediately after `payload` is bound is
+`ItemDocument::new`, with no fallible step between them.
+
+A second round of review found the identical gap one line earlier, on
+`record_bytes` — the record's still-encoded plaintext that `decode_record`
+reads `payload` from. It is not `Quarantined`-specific (every content type
+carries genuine secret plaintext in this buffer) and was not introduced by
+this fix, but it sits inside the exact function this fix already touches
+and the same threat model applies: a malformed `{t,d}` envelope around a
+genuinely secret `"d"` payload makes `decode_record` itself fail, dropping
+`record_bytes` unwiped, and — a strictly larger window than the one above —
+`record_bytes` is read only once and otherwise sits unwiped for the rest of
+every successful decode too. `record_bytes` is now wrapped in `Zeroizing`,
+matching the convention this module already applies to every other
+secret-bearing decode buffer (e.g. `take_secret_fixed`).
+
+**One new gap this closes in passing.** Before this fix, an item's
+`schema()` field (the revision's own declared content type, checked for
+agreement with `record_content_type(&payload)` by `ItemDocument::validate`)
+matching a first-party constant was a true guarantee that `payload()`
+decoded as that type — `AnyRecord::Login(_)` could not fail to match if
+`schema() == LOGIN_V1`. That is exactly why the defensive re-check inside
+`replacement_login_document` (and its five siblings) reports
+`InternalInvariant` on mismatch: reaching it meant this crate's own code
+had a bug, never that a peer did. Quarantine breaks that guarantee for the
+first time — `schema()` can now say `vault/login/v1` while `payload()` is
+`Quarantined` — but only *before* the first real precondition gate
+(`login_edit_precondition` and siblings), which every ordinary `item edit`
+and `conflict merge` call path reaches first and which already reports the
+ordinary `Unsupported` outcome instead. The inner defensive checks remain
+correctly unreachable through any call this product's own commands can
+make; nothing needed to change there.
+
+**Tests.** `vault-records` pins the decode primitive directly:
+`login_missing_password_via_decode_record_is_quarantined_not_denied` and
+`card_with_invalid_month_via_decode_record_is_quarantined` show
+`decode_record` quarantines instead of failing, while
+`login_missing_password_is_schema_mismatch` (unchanged) confirms
+`decode_record_as::<T>` still fails closed for a caller that wants one
+exact type; `quarantined_record_kind_and_summary_are_distinct_from_opaque`
+and `quarantined_record_debug_is_value_redacted` cover the new
+`VaultRecordKind` and redaction surfaces; `a_malformed_envelope_still_
+denies_decode_record_entirely` confirms envelope-level corruption (not
+attributable to any content type) still fails outright. `open.rs`
+reproduces the bug end to end and pins the fix against a real, peer-synced
+vault: `a_synced_schema_mismatched_login_record_leaves_the_vault_openable`
+(the reachability proof — see above), `a_synced_schema_mismatched_login_
+item_is_visible_in_the_redacted_list`, `a_synced_schema_mismatched_login_
+item_can_be_deleted`, and `a_synced_schema_mismatched_login_item_denies_
+edit_as_login`. `vault-pm-cli` pins the two rendering surfaces directly:
+`record_title_falls_back_to_content_type_for_a_quarantined_record` and
+`render_item_shows_a_redacted_placeholder_for_a_quarantined_record_
+instead_of_erroring`.
+
+### 13.6 CborValue trees and Debug-escaped reveals, wiped end to end
+
+§13.5 closed the zeroization gaps in `decode_live`'s own locals
+(`record_bytes`, the window around `payload`) once a decoded `AnyRecord` had
+already been produced. Two lower-severity, pre-existing gaps — logged
+separately, batched here because a round-1 security review flagged them as
+the same root pattern — sat one layer further down, in the codec plumbing
+every one of those decodes and encodes goes through, and in the CLI's own
+terminal-reveal path. Both are "build, use, then let an unwiped intermediate
+drop" defects; both are fixed by building the final, correctly-sized buffer
+up front instead.
+
+**Gap 1 — the caller-side `CborValue` tree (`vault-records`).**
+`encode_record` builds a `CborValue::Map` from `rec.encode_payload()`, which
+clones every field of a `Login`/`Card`/`TotpSeed`/`ApiKey`/
+`DatabaseCredential`/`SecureNote` into fresh `CborValue::Text`/`Bytes`
+leaves; `decode_record` and `decode_record_as` decode a `CborValue` tree that
+*is* somebody's plaintext and then clone fields back out of it into a typed
+struct. The typed structs already wipe themselves (`Login` and its five
+siblings implement `Zeroize` + `Drop`; see section 4 of `vault-records`), but
+the intermediate `CborValue` tree used to build or decode them did not —
+`envelope` in `encode_record`, `payload` in `decode_record`/
+`decode_record_as`, and the equivalent locals inside `split_envelope` and
+`encode_opaque` all dropped through ordinary, non-wiping `Vec`/`String`/
+`CborValue` destructors, once per record encode or decode, across all seven
+record kinds (six typed plus opaque pass-through).
+
+A round-1 security review's suggested quick fix — wipe only `try_encode`'s
+own output buffer on its error path — was correctly rejected as incomplete
+by construction: the plaintext clone the encoder's error path can reach was
+never the whole problem. The *caller's* tree is built and dropped
+regardless of whether the encode call inside it succeeds, and canonical-CBOR
+itself cannot be the one to fix this — see CBR01's "Non-goals": `CborValue`
+is defined in a deliberately zero-dependency crate that cannot take on a
+zeroization dependency, and no third crate can implement the sibling
+`coding_adventures_zeroize::Zeroize` trait on `CborValue` either, because
+Rust's orphan rule forbids a foreign trait on a foreign type from anywhere
+but the two crates that define them.
+
+The fix lives in `vault-records`, which already depends on
+`coding_adventures_zeroize` for the typed records' own `Drop` impls:
+
+```rust
+// coding_adventures_vault_records (vault-records/src/lib.rs)
+
+/// Recursively wipes every owned Text/Bytes buffer, through any nesting
+/// of Array, Map (keys and values), and Tag. No wildcard arm: a future
+/// CborValue variant fails this match at compile time instead of
+/// silently escaping the wipe.
+fn zeroize_cbor_value(value: &mut CborValue) { /* ... */ }
+
+/// `Zeroizing<CborValue>` in everything but name — a local wrapper
+/// (not a trait impl on CborValue) whose Drop calls zeroize_cbor_value.
+/// Derefs to &CborValue, so it drops straight into every call site that
+/// used to hold a bare CborValue.
+struct SecretCborValue(CborValue);
+```
+
+`encode_record`, `encode_opaque`, and `split_envelope` (the shared helper
+`decode_record` and `decode_record_as` both go through for the `"d"` field)
+now build their `CborValue` trees as `SecretCborValue` instead of bare
+`CborValue`. Because the wipe is a `Drop` impl rather than a call inserted at
+each known return point, it runs on every exit path — the success path, an
+early `?`-propagated error, and a panic unwind — which is the actual
+difference from the rejected quick fix: "wipe as you build" (a guard that
+cannot be forgotten because it doesn't require remembering) instead of
+"build, then hope every return path remembers to wipe." `split_envelope`
+wraps the `"d"` value the instant it is captured, before the loop that reads
+it can reach any later `BadEnvelope` return, so a malformed envelope's
+*other* entry cannot cause the already-captured secret half to leak on the
+way to reporting the error.
+
+**Gap 2 — `escaped_revealed_text` (`vault-pm-cli-host`).** `item reveal` and
+`conflict reveal` both write a secret to the controlling terminal through
+`write_revealed_text`, which quote- and control-escapes the value first via
+`escaped_revealed_text`. That function used to be
+`Zeroizing::new(format!("{value:?}"))`. `format!` builds its `String` from an
+empty start and grows it, via a sequence of `push`/`push_str` calls as
+`Debug` escapes each character, using `String`'s ordinary incremental-growth
+reallocation — which `memcpy`s whatever plaintext is already written into a
+larger allocation and frees the old one through the global allocator without
+scrubbing it first. `Zeroizing` wipes only the final allocation it ends up
+holding; every intermediate allocation the buffer grew out of along the way
+is a stale, unwiped copy of a secret sitting in freed heap. This is the same
+reallocation-leaves-a-stale-copy pattern already found and fixed in
+`AgentRequest::encode` (`vault-pm-agent-protocol`), applied to text escaping
+instead of binary wire framing.
+
+The fix is the same shape as that one: reserve the buffer's capacity once,
+before any byte of the secret is written, so no reallocation can occur while
+a copy is resident. The one difference is that Debug-escaping cannot be
+sized *exactly* the way fixed-width binary framing can, without duplicating
+`core`'s own private per-character escaping tables — so
+`escaped_revealed_text` reserves a **provably sufficient upper bound**
+instead of an exact size: `2 + 6 * value.len()`, where 6 is the most any
+single input *byte* can expand to (a lone ASCII control byte escaping to
+`\u{xx}`) and every other case — named escapes, unescaped printable
+characters, multi-byte UTF-8 sequences — expands by less per input byte, not
+more. The real, unmodified `Debug` formatter still writes the escaped text;
+this only changes where it writes into. A full `assert_eq!` on the buffer's
+capacity — not `debug_assert_eq!`; this runs only on an already-slow,
+human-attended reveal, so the cost is immaterial, and compiling the check
+out of release builds would let a future `std` Debug-escaping change widen
+past the reserved bound and reopen this exact leak with no signal in the
+build that ships — turns "did the bound stay sufficient" into a standing
+invariant enforced everywhere, not just in debug and test builds.
+
+**Tests.** `vault-records`: `zeroize_cbor_value_wipes_every_variant` builds
+one tree exercising every `CborValue` variant, nested under `Array`/`Map`/
+`Tag`, and asserts every `Text`/`Bytes` leaf is empty afterward, via a
+checker with its own independent exhaustive match (no wildcard) —
+`zeroize_cbor_value_on_scalars_is_a_harmless_no_op` covers the four
+no-owned-buffer variants explicitly.
+`secret_cbor_value_drop_runs_even_on_panic_unwind` proves `SecretCborValue`'s
+`Drop` fires on ordinary scope exit and on a panic mid-operation, using a
+`#[cfg(test)]` counter rather than reading through a pointer into memory the
+real `Drop` has already deallocated — unsound, and this crate is
+`#![forbid(unsafe_code)]` besides.
+`encode_and_decode_record_each_wipe_their_own_cbor_tree` pins the same
+property at the actual call sites, not just the primitives in isolation.
+`vault-pm-cli-host`:
+`escaped_revealed_text_never_reallocates_a_buffer_already_holding_a_secret`
+mirrors `AgentRequest::encode`'s
+`encode_never_reallocates_a_buffer_already_holding_a_secret` — a sweep of
+plain-ASCII, all-widest-escape, and mixed-content secrets, each asserting
+`String::capacity()` stays exactly equal to the reserved upper bound (no
+reallocation occurred), plus one exact-output check confirming the
+capacity discipline did not change what gets written.
 
 ## 14. Required verification
 
