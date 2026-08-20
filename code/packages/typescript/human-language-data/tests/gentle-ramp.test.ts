@@ -106,9 +106,9 @@ describe("the corpus-wide super-gentle ramp", () => {
       tracks: 23,
       tracksWithDetectedCliffs: 23,
       tracksWithNoWritingPractice: 2, // Latin now starts with observe-trace and guided copy.
-      tracksWhereWritingStartsLate: 6, // Tamil now reaches the hand in lesson one.
+      tracksWhereWritingStartsLate: 5, // Tamil and Chinese now reach the hand in lesson one.
       atomMeasurementBlindLessons: 497, // Tamil's guided copy declares one measured shape atom.
-      findings: 142, // Tamil removes one late-writing finding.
+      findings: 141, // Tamil removes one late-writing finding on the Chinese baseline.
     });
     expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
       { language: "punjabi", kind: "order-integrity", count: 62 },
