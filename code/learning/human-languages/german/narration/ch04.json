@@ -4,11 +4,11 @@
   "chapter": 4,
   "title": "Farewells",
   "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:911ace96428ac7d3",
+  "sourceHash": "fnv1a64:93f7fa99a45c99fc",
   "lessons": [
     {
       "id": "GE-C04-auf-wiedersehen",
-      "sequence": null,
+      "sequence": 145,
       "title": "auf Wiedersehen — \"goodbye,\" i.e. \"till we see again\"",
       "headword": "auf Wiedersehen",
       "romanization": "auf Wiedersehen",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:603d5de9c422f34b",
+      "sourceHash": "fnv1a64:fca729a124df09d6",
       "notice": null,
       "blocks": [
         {
@@ -164,8 +164,165 @@
       ]
     },
     {
+      "id": "GE-C04-tschuss",
+      "sequence": 150,
+      "title": "tschüss — the casual \"bye\" that used to say \"to God\"",
+      "headword": "tschüss",
+      "romanization": "tschüss",
+      "gloss": "bye (casual)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:f7b3dd7cb55a59f7",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Between friends, Germans rarely say the full auf Wiedersehen — they say tschüss, a breezy \"bye.\" And it hides one of the best secrets in this whole chapter: tschüss is, distantly, the same word as Spanish adiós."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tsch-ch — tschüss starts with the ch of English \"church\": chüss."
+            },
+            {
+              "kind": "speech",
+              "text": "u-umlaut — ü is the front-rounded vowel (say ee with rounded lips); tschüss ≈ chuess. Short and clipped."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — a great migration",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tschüss looks purely German, but trace it back and it leaves the country:"
+            },
+            {
+              "kind": "speech",
+              "text": "French adieu (\"to God\") becomes borrowed into Walloon (a language of southern Belgium) as adjûs becomes carried north into Low German dialects as atschüs / atschüss becomes clipped to modern tschüss."
+            },
+            {
+              "kind": "speech",
+              "text": "So the chain is adieu becomes adjûs becomes atschüss becomes tschüss — and since adieu is \"à Dieu,\" \"to God,\" the casual German tschüss is a far-travelled cousin of:"
+            },
+            {
+              "kind": "speech",
+              "text": "French adieu — \"to God,\""
+            },
+            {
+              "kind": "speech",
+              "text": "Spanish adiós — \"to God,\""
+            },
+            {
+              "kind": "speech",
+              "text": "…all three the same little blessing, \"to God,\" just worn down more and more. The friendliest, most throwaway German goodbye is secretly the most solemn one. (You'll also hear tschau — that one is Italian ciao borrowed straight.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: register",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "tschüss — friends, family, peers, casual shops. Never in a formal meeting."
+            },
+            {
+              "kind": "speech",
+              "text": "auf Wiedersehen — strangers, elders, officials, the phone."
+            },
+            {
+              "kind": "speech",
+              "text": "Same split you've drilled all along (du vs Sie): pick the parting to match the relationship."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"tschüss\" — chüss, short and light",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"tschüss\" — *chüss*, short and light]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the migration — adieu becomes adjûs becomes tschüss (\"to God\" all along)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the migration — adieu → adjûs → tschüss (\"to God\" all along)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tschüss (casual) vs auf Wiedersehen (formal) — friend vs stranger",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: tschüss (casual) vs auf Wiedersehen (formal) — friend vs stranger]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What language did tschüss ultimately come from, and what did it originally mean? (French adieu — \"to God\".) What two other goodbyes are its cousins? (adiós, adieu.) When do you use tschüss vs auf Wiedersehen? (Casual vs formal.) Next: bis bald."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C04-bis-bald",
-      "sequence": null,
+      "sequence": 155,
       "title": "bis bald — \"see you soon\"",
       "headword": "bis bald",
       "romanization": "bis bald",
@@ -176,7 +333,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:e2e43a680f43b24a",
+      "sourceHash": "fnv1a64:584e5cda57f07c8e",
       "notice": null,
       "blocks": [
         {
@@ -313,7 +470,7 @@
     },
     {
       "id": "GE-C04-bis-morgen",
-      "sequence": null,
+      "sequence": 160,
       "title": "bis morgen — \"see you tomorrow\" (and Morgen comes back)",
       "headword": "bis morgen",
       "romanization": "bis morgen",
@@ -324,7 +481,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2e55d77a4ab3c56b",
+      "sourceHash": "fnv1a64:123b4019e0d69ee7",
       "notice": null,
       "blocks": [
         {
@@ -466,7 +623,7 @@
     },
     {
       "id": "GE-C04-bis-spater",
-      "sequence": null,
+      "sequence": 165,
       "title": "bis später — \"see you later,\" the one without an English cousin",
       "headword": "bis später",
       "romanization": "bis später",
@@ -477,7 +634,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:53c74c7dc2bc27f0",
+      "sourceHash": "fnv1a64:6eb967cfba8dcf4f",
       "notice": null,
       "blocks": [
         {
@@ -610,7 +767,7 @@
     },
     {
       "id": "GE-C04-practice",
-      "sequence": null,
+      "sequence": 170,
       "title": "Practice — saying goodbye in German",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -621,7 +778,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:13fb8570c59d5d1c",
+      "sourceHash": "fnv1a64:a89a1c3fffa3de57",
       "notice": null,
       "blocks": [
         {
@@ -770,165 +927,8 @@
       ]
     },
     {
-      "id": "GE-C04-tschuss",
-      "sequence": null,
-      "title": "tschüss — the casual \"bye\" that used to say \"to God\"",
-      "headword": "tschüss",
-      "romanization": "tschüss",
-      "gloss": "bye (casual)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8db665fdc2105356",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Between friends, Germans rarely say the full auf Wiedersehen — they say tschüss, a breezy \"bye.\" And it hides one of the best secrets in this whole chapter: tschüss is, distantly, the same word as Spanish adiós."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tsch-ch — tschüss starts with the ch of English \"church\": chüss."
-            },
-            {
-              "kind": "speech",
-              "text": "u-umlaut — ü is the front-rounded vowel (say ee with rounded lips); tschüss ≈ chuess. Short and clipped."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — a great migration",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tschüss looks purely German, but trace it back and it leaves the country:"
-            },
-            {
-              "kind": "speech",
-              "text": "French adieu (\"to God\") becomes borrowed into Walloon (a language of southern Belgium) as adjûs becomes carried north into Low German dialects as atschüs / atschüss becomes clipped to modern tschüss."
-            },
-            {
-              "kind": "speech",
-              "text": "So the chain is adieu becomes adjûs becomes atschüss becomes tschüss — and since adieu is \"à Dieu,\" \"to God,\" the casual German tschüss is a far-travelled cousin of:"
-            },
-            {
-              "kind": "speech",
-              "text": "French adieu — \"to God,\""
-            },
-            {
-              "kind": "speech",
-              "text": "Spanish adiós — \"to God,\""
-            },
-            {
-              "kind": "speech",
-              "text": "…all three the same little blessing, \"to God,\" just worn down more and more. The friendliest, most throwaway German goodbye is secretly the most solemn one. (You'll also hear tschau — that one is Italian ciao borrowed straight.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: register",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "tschüss — friends, family, peers, casual shops. Never in a formal meeting."
-            },
-            {
-              "kind": "speech",
-              "text": "auf Wiedersehen — strangers, elders, officials, the phone."
-            },
-            {
-              "kind": "speech",
-              "text": "Same split you've drilled all along (du vs Sie): pick the parting to match the relationship."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"tschüss\" — chüss, short and light",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"tschüss\" — *chüss*, short and light]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the migration — adieu becomes adjûs becomes tschüss (\"to God\" all along)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the migration — adieu → adjûs → tschüss (\"to God\" all along)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "tschüss (casual) vs auf Wiedersehen (formal) — friend vs stranger",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: tschüss (casual) vs auf Wiedersehen (formal) — friend vs stranger]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What language did tschüss ultimately come from, and what did it originally mean? (French adieu — \"to God\".) What two other goodbyes are its cousins? (adiós, adieu.) When do you use tschüss vs auf Wiedersehen? (Casual vs formal.) Next: bis bald."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-W01-eszett",
-      "sequence": null,
+      "sequence": 175,
       "title": "ß — the letter that is two s's in a coat",
       "headword": "ß",
       "romanization": "ß",
@@ -939,7 +939,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:a130c926f83687f6",
+      "sourceHash": "fnv1a64:eb6d5b012494ff66",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1086,7 +1086,7 @@
     },
     {
       "id": "GE-W02-umlauts",
-      "sequence": null,
+      "sequence": 180,
       "title": "ä ö ü — the two dots that used to be an e",
       "headword": "ä ö ü",
       "romanization": "ä ö ü",
@@ -1097,7 +1097,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:57e4243f4d53946f",
+      "sourceHash": "fnv1a64:cff48016d9149243",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1270,7 +1270,7 @@
     },
     {
       "id": "GE-W03-capitalization",
-      "sequence": null,
+      "sequence": 185,
       "title": "Großschreibung — why German shouts every noun",
       "headword": "das Haus, die Freiheit",
       "romanization": "das Haus, die Freiheit",
@@ -1281,7 +1281,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:02d89a8bc07422d9",
+      "sourceHash": "fnv1a64:e6b30785e5e895b4",
       "notice": {
         "modality": "pen",
         "needs": [

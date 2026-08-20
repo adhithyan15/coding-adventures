@@ -39,6 +39,24 @@
 import type { ParsedLesson } from "./parse.js";
 import { introducedAtoms as atomsIntroducedBy } from "./ramp.js";
 
+/** Content dimensions a level inventory must enumerate before it is complete. */
+export const EXAM_CONTENT_DIMENSIONS = [
+  "communicative-functions",
+  "grammar",
+  "phonology-orthography",
+  "lexicon",
+] as const;
+export type ExamContentDimension = (typeof EXAM_CONTENT_DIMENSIONS)[number];
+
+export interface ExamInventoryScopeEntry {
+  /** Partial evidence remains useful, but may never suppress the backlog item. */
+  status: "complete" | "partial";
+  /** Exact awarding-body or checked-in project source for this dimension. */
+  source: string;
+  /** What this source does and does not enumerate, in the project's own words. */
+  note: string;
+}
+
 /** One thing an examiner may expect a candidate at this level to hold. */
 export interface ExamPoint {
   id: string;
@@ -61,8 +79,15 @@ export interface ExamInventory {
   level: string;
   about: string;
   source: string;
+  /** Completeness is derived: every required dimension must say `complete`. */
+  scope: Record<ExamContentDimension, ExamInventoryScopeEntry>;
   probeSemantics: string;
   points: ExamPoint[];
+}
+
+/** A single partial dimension keeps the whole inventory honestly partial. */
+export function isExamInventoryComplete(inventory: ExamInventory): boolean {
+  return EXAM_CONTENT_DIMENSIONS.every((dimension) => inventory.scope[dimension].status === "complete");
 }
 
 /** What one point resolved to against a given corpus. */
@@ -81,6 +106,8 @@ export interface PointCoverage {
 export interface ExamCoverage {
   language: string;
   level: string;
+  /** Point coverage can be measured even while the source inventory is partial. */
+  inventoryComplete: boolean;
   /** Points enumerated by the inventory. */
   enumerated: number;
   /** Points every one of whose atoms is introduced somewhere in the track. */
@@ -179,6 +206,7 @@ export function measureExamCoverage(
   return {
     language: inventory.language,
     level: inventory.level,
+    inventoryComplete: isExamInventoryComplete(inventory),
     enumerated: points.length,
     covered,
     unmapped: points.filter((point) => point.unmapped).length,
@@ -200,7 +228,8 @@ export function measureExamCoverage(
  */
 export function formatExamCoverage(coverage: ExamCoverage): string {
   const lines: string[] = [
-    `${coverage.language} ${coverage.level}: ${coverage.covered}/${coverage.enumerated} points covered (${coverage.percent}%)`,
+    `${coverage.language} ${coverage.level}${coverage.inventoryComplete ? "" : " (partial inventory)"}: ` +
+      `${coverage.covered}/${coverage.enumerated} points covered (${coverage.percent}%)`,
     `  ${coverage.unmapped} with no corresponding atom, ${coverage.partial} only partly taught`,
   ];
   const categories = Object.entries(coverage.byCategory).sort(

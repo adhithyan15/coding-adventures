@@ -1,5 +1,6 @@
 ---
 id: GE-C16-sein
+sequence: 320
 chapter: 16
 type: word
 headword: sein

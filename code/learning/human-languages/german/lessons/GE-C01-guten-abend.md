@@ -1,5 +1,6 @@
 ---
 id: GE-C01-guten-abend
+sequence: 45
 chapter: 1
 type: word
 headword: Guten Abend

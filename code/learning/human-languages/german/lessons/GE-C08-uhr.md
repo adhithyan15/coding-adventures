@@ -1,5 +1,6 @@
 ---
 id: GE-C08-uhr
+sequence: 235
 chapter: 8
 type: word
 headword: Uhr

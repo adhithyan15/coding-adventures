@@ -1,5 +1,6 @@
 ---
 id: GE-C03-gehen
+sequence: 115
 chapter: 3
 type: word
 headword: gehen

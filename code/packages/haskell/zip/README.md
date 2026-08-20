@@ -1,9 +1,10 @@
 # zip — Haskell ZIP archive format (CMP09)
 
 An educational Haskell implementation of the ZIP archive format (PKZIP, 1989),
-part of the CMP compression series. Compresses with RFC 1951 DEFLATE (fixed
-Huffman, method 8) and falls back to Stored (method 0) when DEFLATE would not
-reduce size.
+part of the CMP compression series. Its encoder emits RFC 1951 stored or fixed
+Huffman blocks and falls back to ZIP method 0 when compression would not reduce
+size. Its decoder accepts stored, fixed, and dynamic Huffman blocks, including
+multi-block streams and the full 32 KiB history window.
 
 ## Position in the compression series
 
@@ -58,6 +59,27 @@ readEntry :: ByteString -> ByteString -> Either String ByteString
 unzip' :: ByteString -> Either String [(ByteString, ByteString)]
 ```
 
+### Raw RFC 1951 and CRC-32
+
+```haskell
+rawDeflate :: ByteString -> ByteString
+rawInflate :: ByteString -> Int -> Either RawInflateError ByteString
+rawInflateCounted :: ByteString -> Int -> Either RawInflateError RawInflateResult
+rawInflateMaxOutput :: Int
+
+data RawInflateResult = RawInflateResult
+    { rawInflateOutput :: ByteString
+    , rawInflateBytesConsumed :: Int
+    }
+```
+
+`rawInflateCounted` reports the exact byte reached at the final RFC 1951 block,
+so ZIP readers can reject undeclared trailing compressed bytes. Output limits
+are validated before decoding and cannot exceed 256 MiB. Failures use the
+closed, payload-blind identifiers returned by `rawInflateErrorCode`.
+
+CRC-32 detects accidental corruption; it is not authentication.
+
 ### Entry type
 
 ```haskell
@@ -90,14 +112,21 @@ file.
 
 ## Dependencies
 
-- `base`, `bytestring`, `array` — from the standard GHC distribution.
+Production code is a pure in-memory byte transform. Fixture loading and the
+independent Python `zlib` oracle exist only in the test suite.
+
+- `base`, `bytestring`, `array`, `containers` — core Haskell libraries used
+  for byte handling, canonical tables, and overlap-safe bounded output.
 - `lzss` — local sibling package providing LZ77 tokenisation (`LZSS.encodeWith`).
 
 ## Running tests
 
 ```bash
 cd code/packages/haskell/zip
-mise exec -- cabal test all
+cabal test
+cabal build zip:lib:zip zip:test:spec --ghc-options="-Wall -Werror"
 ```
 
-All 12 test cases should pass in roughly 5 seconds.
+The suite includes the 34-case language-neutral raw RFC 1951/CRC-32 corpus,
+foreign dynamic streams, exact-consumption container checks, a real 32 KiB
+history-window stream, and the package's historical ZIP regressions.

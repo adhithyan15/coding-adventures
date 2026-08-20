@@ -3,23 +3,23 @@
   "language": "german",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 6,
-  "sourceHash": "fnv1a64:3eb0a576892fbc9e",
+  "drivablePrefix": 4,
+  "sourceHash": "fnv1a64:05733273242c39f1",
   "lessons": [
     {
-      "id": "GE-C01-abend",
-      "sequence": null,
-      "title": "Abend — \"evening,\" cousin of English eve",
-      "headword": "Abend",
-      "romanization": "Abend",
-      "gloss": "evening (der Abend — masculine)",
+      "id": "GE-C01-hallo",
+      "sequence": 5,
+      "title": "hallo — \"hello,\" and this time it is a cousin",
+      "headword": "hallo",
+      "romanization": "hallo",
+      "gloss": "hello (informal)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:fbd99324fd67ea41",
+      "sourceHash": "fnv1a64:9efcd7690091a743",
       "notice": null,
       "blocks": [
         {
@@ -35,138 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "The evening word — a quieter English cousin than the others, but a real one."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Tag — the same guten + noun build."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Abend = AH-bent — long open a; the final d hardens to a t sound (German de-voices final consonants)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "der Abend — \"the evening\" (masculine). Root: Proto-Germanic ābanþs — the same root as English eve and even(ing) (as in Christmas Eve, \"the eve of…\"). English wore it down to eve; German kept more of it as Abend. Same Germanic word for \"the close of the day.\""
-            },
-            {
-              "kind": "speech",
-              "text": "Contrast worth banking across all four languages: \"evening\" has a different root in each branch — Germanic ābanþs (German Abend, English eve), vs Latin sērus \"late\" (French soir) and Latin tardus \"late\" (Spanish tarde). The Romance pair named it after lateness; the Germanic pair named it after the evening-down of the day."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Abend is masculine (der Abend) — so, again, guten in the greeting. Three masculine day-parts in a row (Tag, Morgen, Abend) all take guten; the feminine Nacht, next, will break the streak."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Abend\" — dair AH-bent",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Abend\" — *dair AH-bent*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Abend\" then English \"eve\", \"evening\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Abend\" then English \"eve\", \"evening\"]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Abend is a cousin of which English words? (eve, evening.) Is it masculine or feminine? (Masculine — der Abend, takes guten.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C01-der-die-das",
-      "sequence": null,
-      "title": "der, die, das — \"the,\" and the gender English and the Romance languages lost",
-      "headword": "der / die / das",
-      "romanization": "der / die / das",
-      "gloss": "the (masculine / feminine / neuter)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:513754e8b498f1ac",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Before your first noun: German's words for \"the.\" Many European languages tag every noun with a grammatical gender — Spanish and French each run two — and German has it too, but with a twist neither of them kept."
+              "text": "Your first German word — and a reassuring one, because German and English are close cousins: both are Germanic languages. That kinship will help you all through this book, and hallo is the first proof."
             }
           ]
         },
@@ -177,7 +46,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "der = dair, die = dee, das = dahss. The German r is soft/guttural; final German s here is a sharp ss."
+              "text": "German h is pronounced (not silent like Spanish/French): HA-lo."
+            },
+            {
+              "kind": "speech",
+              "text": "German a is a clean, open ah."
             }
           ]
         },
@@ -188,34 +61,22 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "der — \"the\" (masculine). die — \"the\" (feminine). das — \"the\" (neuter). Roots: the old Germanic demonstratives sa / sō / þat (\"that one\") — the same family as English the and that:"
+              "text": "hallo — informal \"hello / hi.\" Unlike Spanish hola (which only looks like \"hello\" by coincidence — a false friend), German hallo and English hello are the real thing: both grew from the same old Germanic hailing call (hala, a shout to get attention or hail a ferryman), the same family as English holla, hollo, and hail. Nineteenth-century English \"hello\" was even shaped partly by German hallo."
             },
             {
               "kind": "speech",
-              "text": "das corresponds to English that (the High German shift again: English t becomes German s, so that becomes das)."
-            },
-            {
-              "kind": "speech",
-              "text": "die corresponds to the -y of English the/they."
-            },
-            {
-              "kind": "speech",
-              "text": "Unlike Spanish el/la (from Latin ille/illa), German's articles are cousins of English's own \"the\" — Germanic all the way."
+              "text": "The pattern to carry through this whole book: because English is a Germanic language, German words are often direct cousins of English words — same family, no Latin middleman. (The Romance languages like Spanish and French reach English mostly through Latin; German reaches it directly.)"
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: German kept THREE genders",
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun (der Tag, die Nacht, das Kind \"the child\"). English, meanwhile, threw gender out entirely and kept a single \"the\" — the opposite extreme."
-            },
-            {
-              "kind": "speech",
-              "text": "One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; just learn der / die / das as the three \"the\"s."
+              "text": "hallo is informal-to-neutral — fine among friends, and increasingly common generally, but for polite or first meetings German reaches for Guten Tag (\"good day\"), which you'll build over the next few lessons."
             }
           ]
         },
@@ -233,29 +94,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der\", \"die\", \"das\"",
+              "instruction": "\"hallo\" — HA-lo, with a real h",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der\", \"die\", \"das\"]"
+              "source": "[YOU SAY: \"hallo\" — *HA-lo*, with a real *h*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"das\" then English \"that\" — the t becomes s shift",
+              "instruction": "\"hallo\" then English \"hail\", \"holler\" — the true hailing family",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"das\" then English \"that\" — the t→s shift]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Tag\" (masc.), \"die Nacht\" (fem.) — the nouns are coming",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Tag\" (masc.), \"die Nacht\" (fem.) — the nouns are coming]"
+              "source": "[YOU SAY: \"hallo\" then English \"hail\", \"holler\" — the true hailing family]"
             }
           ]
         },
@@ -272,7 +124,7 @@
             },
             {
               "kind": "speech",
-              "text": "How many genders does German keep, vs Spanish/French? (Three vs two — German kept the neuter, das.) What English word is das a cousin of? (That.)"
+              "text": "Is German hallo a real cousin of English hello, or a coincidence like Spanish hola? (A real cousin — same Germanic hailing root.)"
             }
           ]
         }
@@ -280,7 +132,7 @@
     },
     {
       "id": "GE-C01-gut",
-      "sequence": null,
+      "sequence": 10,
       "title": "gut — \"good,\" and the sound-law that reshapes German",
       "headword": "gut",
       "romanization": "gut",
@@ -291,7 +143,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:712e97cbb7e062da",
+      "sourceHash": "fnv1a64:1b7781e82f855dca",
       "notice": null,
       "blocks": [
         {
@@ -431,19 +283,19 @@
       ]
     },
     {
-      "id": "GE-C01-gute-nacht",
-      "sequence": null,
-      "title": "Gute Nacht — good night, and the ending that finally changes",
-      "headword": "Gute Nacht",
-      "romanization": "Gute Nacht",
-      "gloss": "good night",
+      "id": "GE-C01-der-die-das",
+      "sequence": 15,
+      "title": "der, die, das — \"the,\" and the gender English and the Romance languages lost",
+      "headword": "der / die / das",
+      "romanization": "der / die / das",
+      "gloss": "the (masculine / feminine / neuter)",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:89208bbe2b536b32",
+      "sourceHash": "fnv1a64:6442b9425c44ff75",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +311,148 @@
             },
             {
               "kind": "speech",
-              "text": "The greeting that breaks the guten streak — and shows you exactly what German's endings are tracking."
+              "text": "Before your first noun: German's words for \"the.\" Many European languages tag every noun with a grammatical gender — Spanish and French each run two — and German has it too, but with a twist neither of them kept."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der = dair, die = dee, das = dahss. The German r is soft/guttural; final German s here is a sharp ss."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der — \"the\" (masculine). die — \"the\" (feminine). das — \"the\" (neuter). Roots: the old Germanic demonstratives sa / sō / þat (\"that one\") — the same family as English the and that:"
+            },
+            {
+              "kind": "speech",
+              "text": "das corresponds to English that (the High German shift again: English t becomes German s, so that becomes das)."
+            },
+            {
+              "kind": "speech",
+              "text": "die corresponds to the -y of English the/they."
+            },
+            {
+              "kind": "speech",
+              "text": "Unlike Spanish el/la (from Latin ille/illa), German's articles are cousins of English's own \"the\" — Germanic all the way."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: German kept THREE genders",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun (der Tag, die Nacht, das Kind \"the child\"). English, meanwhile, threw gender out entirely and kept a single \"the\" — the opposite extreme."
+            },
+            {
+              "kind": "speech",
+              "text": "One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; just learn der / die / das as the three \"the\"s."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der\", \"die\", \"das\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der\", \"die\", \"das\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"das\" then English \"that\" — the t becomes s shift",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"das\" then English \"that\" — the t→s shift]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Tag\" (masc.), \"die Nacht\" (fem.) — the nouns are coming",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Tag\" (masc.), \"die Nacht\" (fem.) — the nouns are coming]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How many genders does German keep, vs Spanish/French? (Three vs two — German kept the neuter, das.) What English word is das a cousin of? (That.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C01-tag",
+      "sequence": 20,
+      "title": "Tag — \"day,\" a straight cousin of English day",
+      "headword": "Tag",
+      "romanization": "Tag",
+      "gloss": "day (der Tag — masculine)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:dbcac780e0277f22",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first German noun. In Spanish \"day\" was día (via Latin); in French, jour (via a longer Latin detour). In German it's Tag — and it's simply English \"day\" with one consonant shifted."
             }
           ]
         },
@@ -470,52 +463,44 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "gut, Nacht."
+              "text": "der / die / das — gender; Tag is masculine, der Tag."
             }
           ]
         },
         {
           "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
           "segments": [
             {
               "kind": "speech",
-              "text": "Gute Nacht = gut (\"good\") + Nacht (\"night\") = \"good night,\" GOO-te nahkht."
+              "text": "Tag = tahk — long open a; the final g hardens toward k. German nouns are always Capitalized (every noun, not just names)."
             }
           ]
         },
         {
           "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: gute, not guten",
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
-              "text": "Three greetings in a row were guten (Tag, Morgen, Abend — all masculine). This one is gute. The reason is the one you set up: Nacht is feminine, and a feminine noun in the \"(I wish you a) good ___\" accusative takes the ending -e, not -en. So the endings line up:"
+              "text": "der Tag — \"the day\" (masculine). Root: Proto-Germanic dagaz — and English day is the same word. The only difference is the High German Consonant Shift from the gut lesson (d becomes t): dagaz becomes English day, German Tag."
             },
             {
               "kind": "speech",
-              "text": "guten Tag / Morgen / Abend — masculine becomes -en."
-            },
-            {
-              "kind": "speech",
-              "text": "gute Nacht — feminine becomes -e."
-            },
-            {
-              "kind": "speech",
-              "text": "That single vowel is German's adjective quietly reporting the noun's gender — exactly the job bueno/buena and bon/bonne did in Spanish and French, just with German's own endings."
+              "text": "So the three Romance-and-Germanic \"day\" words line up by ancestry: Spanish día, French jour from Latin dies / diurnum German Tag corresponds to English day from Germanic dagaz Two entirely different roots for \"day\" (Latin dies vs Germanic dagaz) — which is why día and Tag look nothing alike, even though both languages are cousins far enough back."
             }
           ]
         },
         {
           "index": 4,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
+          "type": "grammar",
+          "title": "Grammar Lens",
           "segments": [
             {
               "kind": "speech",
-              "text": "Like Spanish buenas noches and French bonne nuit, Gute Nacht is the bedtime farewell — \"sleep well,\" said on parting for the night, not an evening hello (that's Guten Abend). Same split French makes; German keeps the greeting (Abend) and the send-off (Nacht) apart."
+              "text": "Tag is masculine (der Tag) — learn it with its article, as always. Also note the capital T: German writes every noun with a capital letter, a spelling rule no other language here shares."
             }
           ]
         },
@@ -533,20 +518,20 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Gute Nacht\" — GOO-te nahkht",
+              "instruction": "\"der Tag\" — dair tahk",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Gute Nacht\" — *GOO-te nahkht*]"
+              "source": "[YOU SAY: \"der Tag\" — *dair tahk*]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"Guten Tag\" then \"Gute Nacht\" — hear -en vs -e, and say why",
+              "instruction": "\"Tag\" then \"day\" — hear the d becomes t shift",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"Guten Tag\" then \"Gute Nacht\" — hear *-en* vs *-e*, and say why]"
+              "source": "[YOU SAY: \"Tag\" then \"day\" — hear the d→t shift]"
             }
           ]
         },
@@ -563,225 +548,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why gute Nacht but guten Tag? (Nacht is feminine, Tag masculine — the ending agrees.) Is Gute Nacht a greeting or a bedtime farewell? (Bedtime farewell.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C01-guten-abend",
-      "sequence": null,
-      "title": "Guten Abend — good evening",
-      "headword": "Guten Abend",
-      "romanization": "Guten Abend",
-      "gloss": "good evening",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:8e27f83b4cbae57e",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The evening member of the set. Same guten, one more masculine noun."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Guten Tag, Abend."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Guten Abend = gut + Abend (masculine) = \"good evening,\" GOO-ten AH-bent. guten again — the third masculine day-part in a row."
-            },
-            {
-              "kind": "speech",
-              "text": "You now have the daytime arc: Guten Morgen (morning) becomes Guten Tag (midday/afternoon) becomes Guten Abend (evening). All guten, all masculine. Only bedtime is left — and it breaks the pattern."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Guten Abend\" — GOO-ten AH-bent",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Guten Abend\" — *GOO-ten AH-bent*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the arc — \"Guten Morgen, Guten Tag, Guten Abend\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the arc — \"Guten Morgen, Guten Tag, Guten Abend\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "All three day-greetings use guten — because their nouns are all which gender? (Masculine.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C01-guten-morgen",
-      "sequence": null,
-      "title": "Guten Morgen — good morning",
-      "headword": "Guten Morgen",
-      "romanization": "Guten Morgen",
-      "gloss": "good morning",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:9c2a570d56028e9c",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Same assembly as Guten Tag, one noun swapped. Nearly free."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Guten Tag, Morgen."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart — by assembling it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Guten Morgen = gut (\"good\") + Morgen (\"morning\") = \"good morning.\" Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen."
-            },
-            {
-              "kind": "speech",
-              "text": "Used in the morning (roughly until midday); after that, German switches to Guten Tag, then Guten Abend in the evening — the same day-parts you're building."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Guten Morgen\" — GOO-ten MOR-gen",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Guten Morgen\" — *GOO-ten MOR-gen*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Guten Morgen\" then \"Guten Tag\" — morning, then midday",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Guten Morgen\" then \"Guten Tag\" — morning, then midday]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Why is it guten Morgen (same ending as Guten Tag)? (Morgen is masculine too.)"
+              "text": "Tag and English day share a Germanic root; the shift is which consonant change? (d becomes t.) What's odd about how German writes Tag? (Capitalized — all German nouns are.)"
             }
           ]
         }
@@ -789,7 +556,7 @@
     },
     {
       "id": "GE-C01-guten-tag",
-      "sequence": null,
+      "sequence": 25,
       "title": "Guten Tag — assembled, and a first taste of German endings",
       "headword": "Guten Tag",
       "romanization": "Guten Tag",
@@ -800,7 +567,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:7212a1c5b8e5d18d",
+      "sourceHash": "fnv1a64:5c29417226d35125",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -915,132 +682,8 @@
       ]
     },
     {
-      "id": "GE-C01-hallo",
-      "sequence": null,
-      "title": "hallo — \"hello,\" and this time it is a cousin",
-      "headword": "hallo",
-      "romanization": "hallo",
-      "gloss": "hello (informal)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:79105bbc22c09803",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your first German word — and a reassuring one, because German and English are close cousins: both are Germanic languages. That kinship will help you all through this book, and hallo is the first proof."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German h is pronounced (not silent like Spanish/French): HA-lo."
-            },
-            {
-              "kind": "speech",
-              "text": "German a is a clean, open ah."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hallo — informal \"hello / hi.\" Unlike Spanish hola (which only looks like \"hello\" by coincidence — a false friend), German hallo and English hello are the real thing: both grew from the same old Germanic hailing call (hala, a shout to get attention or hail a ferryman), the same family as English holla, hollo, and hail. Nineteenth-century English \"hello\" was even shaped partly by German hallo."
-            },
-            {
-              "kind": "speech",
-              "text": "The pattern to carry through this whole book: because English is a Germanic language, German words are often direct cousins of English words — same family, no Latin middleman. (The Romance languages like Spanish and French reach English mostly through Latin; German reaches it directly.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "hallo is informal-to-neutral — fine among friends, and increasingly common generally, but for polite or first meetings German reaches for Guten Tag (\"good day\"), which you'll build over the next few lessons."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hallo\" — HA-lo, with a real h",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hallo\" — *HA-lo*, with a real *h*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"hallo\" then English \"hail\", \"holler\" — the true hailing family",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"hallo\" then English \"hail\", \"holler\" — the true hailing family]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Is German hallo a real cousin of English hello, or a coincidence like Spanish hola? (A real cousin — same Germanic hailing root.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-C01-morgen",
-      "sequence": null,
+      "sequence": 30,
       "title": "Morgen — \"morning,\" hiding in your English tomorrow",
       "headword": "Morgen",
       "romanization": "Morgen",
@@ -1051,7 +694,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:64875806604e97aa",
+      "sourceHash": "fnv1a64:dd3aadddd2d82dbc",
       "notice": null,
       "blocks": [
         {
@@ -1170,8 +813,357 @@
       ]
     },
     {
+      "id": "GE-C01-guten-morgen",
+      "sequence": 35,
+      "title": "Guten Morgen — good morning",
+      "headword": "Guten Morgen",
+      "romanization": "Guten Morgen",
+      "gloss": "good morning",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:6670390c03e20b0f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Same assembly as Guten Tag, one noun swapped. Nearly free."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Guten Tag, Morgen."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — by assembling it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Guten Morgen = gut (\"good\") + Morgen (\"morning\") = \"good morning.\" Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen."
+            },
+            {
+              "kind": "speech",
+              "text": "Used in the morning (roughly until midday); after that, German switches to Guten Tag, then Guten Abend in the evening — the same day-parts you're building."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Guten Morgen\" — GOO-ten MOR-gen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Guten Morgen\" — *GOO-ten MOR-gen*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Guten Morgen\" then \"Guten Tag\" — morning, then midday",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Guten Morgen\" then \"Guten Tag\" — morning, then midday]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why is it guten Morgen (same ending as Guten Tag)? (Morgen is masculine too.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C01-abend",
+      "sequence": 40,
+      "title": "Abend — \"evening,\" cousin of English eve",
+      "headword": "Abend",
+      "romanization": "Abend",
+      "gloss": "evening (der Abend — masculine)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8e8a86c2d8f81402",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The evening word — a quieter English cousin than the others, but a real one."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Tag — the same guten + noun build."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Abend = AH-bent — long open a; the final d hardens to a t sound (German de-voices final consonants)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "der Abend — \"the evening\" (masculine). Root: Proto-Germanic ābanþs — the same root as English eve and even(ing) (as in Christmas Eve, \"the eve of…\"). English wore it down to eve; German kept more of it as Abend. Same Germanic word for \"the close of the day.\""
+            },
+            {
+              "kind": "speech",
+              "text": "Contrast worth banking across all four languages: \"evening\" has a different root in each branch — Germanic ābanþs (German Abend, English eve), vs Latin sērus \"late\" (French soir) and Latin tardus \"late\" (Spanish tarde). The Romance pair named it after lateness; the Germanic pair named it after the evening-down of the day."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "grammar",
+          "title": "Grammar Lens",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Abend is masculine (der Abend) — so, again, guten in the greeting. Three masculine day-parts in a row (Tag, Morgen, Abend) all take guten; the feminine Nacht, next, will break the streak."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Abend\" — dair AH-bent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Abend\" — *dair AH-bent*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Abend\" then English \"eve\", \"evening\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Abend\" then English \"eve\", \"evening\"]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Abend is a cousin of which English words? (eve, evening.) Is it masculine or feminine? (Masculine — der Abend, takes guten.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C01-guten-abend",
+      "sequence": 45,
+      "title": "Guten Abend — good evening",
+      "headword": "Guten Abend",
+      "romanization": "Guten Abend",
+      "gloss": "good evening",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:2873d705d4660a78",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The evening member of the set. Same guten, one more masculine noun."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Guten Tag, Abend."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — by assembling it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Guten Abend = gut + Abend (masculine) = \"good evening,\" GOO-ten AH-bent. guten again — the third masculine day-part in a row."
+            },
+            {
+              "kind": "speech",
+              "text": "You now have the daytime arc: Guten Morgen (morning) becomes Guten Tag (midday/afternoon) becomes Guten Abend (evening). All guten, all masculine. Only bedtime is left — and it breaks the pattern."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Guten Abend\" — GOO-ten AH-bent",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Guten Abend\" — *GOO-ten AH-bent*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the arc — \"Guten Morgen, Guten Tag, Guten Abend\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the arc — \"Guten Morgen, Guten Tag, Guten Abend\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "All three day-greetings use guten — because their nouns are all which gender? (Masculine.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C01-nacht",
-      "sequence": null,
+      "sequence": 50,
       "title": "Nacht — \"night,\" where all four of your languages meet",
       "headword": "Nacht",
       "romanization": "Nacht",
@@ -1182,7 +1174,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:7cf6769d247e4e45",
+      "sourceHash": "fnv1a64:25dc252d3716b3d9",
       "notice": null,
       "blocks": [
         {
@@ -1317,8 +1309,147 @@
       ]
     },
     {
+      "id": "GE-C01-gute-nacht",
+      "sequence": 55,
+      "title": "Gute Nacht — good night, and the ending that finally changes",
+      "headword": "Gute Nacht",
+      "romanization": "Gute Nacht",
+      "gloss": "good night",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:0c7e010108582b09",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "The greeting that breaks the guten streak — and shows you exactly what German's endings are tracking."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know first",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "gut, Nacht."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — by assembling it",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gute Nacht = gut (\"good\") + Nacht (\"night\") = \"good night,\" GOO-te nahkht."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: gute, not guten",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Three greetings in a row were guten (Tag, Morgen, Abend — all masculine). This one is gute. The reason is the one you set up: Nacht is feminine, and a feminine noun in the \"(I wish you a) good ___\" accusative takes the ending -e, not -en. So the endings line up:"
+            },
+            {
+              "kind": "speech",
+              "text": "guten Tag / Morgen / Abend — masculine becomes -en."
+            },
+            {
+              "kind": "speech",
+              "text": "gute Nacht — feminine becomes -e."
+            },
+            {
+              "kind": "speech",
+              "text": "That single vowel is German's adjective quietly reporting the noun's gender — exactly the job bueno/buena and bon/bonne did in Spanish and French, just with German's own endings."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Like Spanish buenas noches and French bonne nuit, Gute Nacht is the bedtime farewell — \"sleep well,\" said on parting for the night, not an evening hello (that's Guten Abend). Same split French makes; German keeps the greeting (Abend) and the send-off (Nacht) apart."
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Gute Nacht\" — GOO-te nahkht",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Gute Nacht\" — *GOO-te nahkht*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"Guten Tag\" then \"Gute Nacht\" — hear -en vs -e, and say why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"Guten Tag\" then \"Gute Nacht\" — hear *-en* vs *-e*, and say why]"
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Why gute Nacht but guten Tag? (Nacht is feminine, Tag masculine — the ending agrees.) Is Gute Nacht a greeting or a bedtime farewell? (Bedtime farewell.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C01-practice",
-      "sequence": null,
+      "sequence": 60,
       "title": "Practice — the German greetings",
       "headword": "(practice)",
       "romanization": "(practice)",
@@ -1329,7 +1460,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:aebbb094a3522a39",
+      "sourceHash": "fnv1a64:a70d2ffe19ee7038",
       "notice": null,
       "blocks": [
         {
@@ -1452,137 +1583,6 @@
             {
               "kind": "speech",
               "text": "Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Next chapter: introducing yourself — ich heiße… — and German's formal/informal \"you,\" du vs Sie."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C01-tag",
-      "sequence": null,
-      "title": "Tag — \"day,\" a straight cousin of English day",
-      "headword": "Tag",
-      "romanization": "Tag",
-      "gloss": "day (der Tag — masculine)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:75645fd51c847743",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Your first German noun. In Spanish \"day\" was día (via Latin); in French, jour (via a longer Latin detour). In German it's Tag — and it's simply English \"day\" with one consonant shifted."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "input",
-          "title": "You'll want to know first",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "der / die / das — gender; Tag is masculine, der Tag."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Tag = tahk — long open a; the final g hardens toward k. German nouns are always Capitalized (every noun, not just names)."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "der Tag — \"the day\" (masculine). Root: Proto-Germanic dagaz — and English day is the same word. The only difference is the High German Consonant Shift from the gut lesson (d becomes t): dagaz becomes English day, German Tag."
-            },
-            {
-              "kind": "speech",
-              "text": "So the three Romance-and-Germanic \"day\" words line up by ancestry: Spanish día, French jour from Latin dies / diurnum German Tag corresponds to English day from Germanic dagaz Two entirely different roots for \"day\" (Latin dies vs Germanic dagaz) — which is why día and Tag look nothing alike, even though both languages are cousins far enough back."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "grammar",
-          "title": "Grammar Lens",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Tag is masculine (der Tag) — learn it with its article, as always. Also note the capital T: German writes every noun with a capital letter, a spelling rule no other language here shares."
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Tag\" — dair tahk",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Tag\" — *dair tahk*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"Tag\" then \"day\" — hear the d becomes t shift",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"Tag\" then \"day\" — hear the d→t shift]"
-            }
-          ]
-        },
-        {
-          "index": 6,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Tag and English day share a Germanic root; the shift is which consonant change? (d becomes t.) What's odd about how German writes Tag? (Capitalized — all German nouns are.)"
             }
           ]
         }

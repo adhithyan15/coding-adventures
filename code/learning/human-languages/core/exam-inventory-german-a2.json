@@ -1,0 +1,344 @@
+{
+  "version": 1,
+  "language": "german",
+  "level": "A2",
+  "about": "A first source-bounded, project-owned restatement of content evidenced by the official Goethe-Zertifikat A2 adult model set and A2 word list. It is deliberately partial: the task samples and approximately 1,300-item lexical list provide useful finite evidence, but this file does not yet enumerate the entire lexical list or a source-closed grammar and phonology construct.",
+  "source": "https://www.goethe.de/de/spr/prf/ueb/pa2.html",
+  "scope": {
+    "communicative-functions": {
+      "status": "partial",
+      "source": "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Modellsatz_Erwachsene.pdf",
+      "note": "The official model set supplies concrete reading, listening, writing, and speaking purposes, but a sample paper is not a closed inventory of every A2 communicative function."
+    },
+    "grammar": {
+      "status": "partial",
+      "source": "https://www.goethe.de/pro/relaunch/prf/ka/Goethe-Zertifikat_A2_Wortliste.pdf",
+      "note": "The word list contains example language and structural evidence, but it does not publish a finite, complete grammar syllabus; the grammar points below remain a reviewable first tranche."
+    },
+    "phonology-orthography": {
+      "status": "partial",
+      "source": "https://www.goethe.de/pro/relaunch/prf/materialien/A2/A2_Modellsatz_Erwachsene.pdf",
+      "note": "The model tasks require intelligible listening, speaking, and written production, but the source does not enumerate a complete A2 sound, spelling, or punctuation inventory."
+    },
+    "lexicon": {
+      "status": "partial",
+      "source": "https://www.goethe.de/pro/relaunch/prf/ka/Goethe-Zertifikat_A2_Wortliste.pdf",
+      "note": "Goethe publishes an approximately 1,300-unit A2 word list and domain groups. This tranche records the domain boundaries but does not reproduce or probe every lexical unit, so the dimension remains partial."
+    }
+  },
+  "probeSemantics": "A point counts as COVERED only when every atom in `probe` is introduced by some German lesson. `probe: null` means the current corpus has no atom precise enough to substantiate the point. A domain heading or one example word never proves an entire lexical domain.",
+  "points": [
+    {
+      "id": "A2-FUNC-01",
+      "category": "Kommunikative Handlungen",
+      "label": "give and request connected personal information for an everyday form or exchange",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-02",
+      "category": "Kommunikative Handlungen",
+      "label": "make, confirm, change, and cancel an everyday appointment",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-03",
+      "category": "Kommunikative Handlungen",
+      "label": "explain a delay briefly and propose a concrete alternative",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-04",
+      "category": "Kommunikative Handlungen",
+      "label": "invite someone and accept or decline with a simple reason",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-05",
+      "category": "Kommunikative Handlungen",
+      "label": "ask for and give practical route, travel, and timetable information",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-06",
+      "category": "Kommunikative Handlungen",
+      "label": "request goods or services and resolve a simple problem involving price or quantity",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-07",
+      "category": "Kommunikative Handlungen",
+      "label": "describe a routine, a recent event, and a past personal experience",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-08",
+      "category": "Kommunikative Handlungen",
+      "label": "state a preference and compare familiar options with a brief reason",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-09",
+      "category": "Kommunikative Handlungen",
+      "label": "report an everyday problem, ask for help, and understand the proposed solution",
+      "probe": null
+    },
+    {
+      "id": "A2-FUNC-10",
+      "category": "Kommunikative Handlungen",
+      "label": "choose appropriately between familiar and formal address",
+      "probe": null
+    },
+    {
+      "id": "A2-TEXT-01",
+      "category": "Text und Interaktion",
+      "label": "extract purpose, participants, place, time, and action from a short everyday text",
+      "probe": null
+    },
+    {
+      "id": "A2-TEXT-02",
+      "category": "Text und Interaktion",
+      "label": "follow the main point and selected details in a short announcement or conversation",
+      "probe": null
+    },
+    {
+      "id": "A2-TEXT-03",
+      "category": "Text und Interaktion",
+      "label": "write a short personal message that answers every supplied content point",
+      "probe": null
+    },
+    {
+      "id": "A2-TEXT-04",
+      "category": "Text und Interaktion",
+      "label": "sustain a short prompted conversation with an answer and a relevant follow-up",
+      "probe": null
+    },
+    {
+      "id": "A2-V-01",
+      "category": "Das Verb",
+      "label": "use common regular, irregular, modal, separable, and reflexive verbs in the present",
+      "probe": null
+    },
+    {
+      "id": "A2-V-02",
+      "category": "Das Verb",
+      "label": "place the separated prefix at the end of a main clause",
+      "probe": [
+        "GE-GRAMMAR-SEPARABLE-09"
+      ]
+    },
+    {
+      "id": "A2-V-03",
+      "category": "Das Verb",
+      "label": "form and use the conversational perfect with haben",
+      "probe": null
+    },
+    {
+      "id": "A2-V-04",
+      "category": "Das Verb",
+      "label": "form and use the conversational perfect with sein for the appropriate verb family",
+      "probe": null
+    },
+    {
+      "id": "A2-V-05",
+      "category": "Das Verb",
+      "label": "build regular and common irregular past participles",
+      "probe": null
+    },
+    {
+      "id": "A2-V-06",
+      "category": "Das Verb",
+      "label": "use the simple past of sein, haben, modal verbs, and frequent narrative verbs",
+      "probe": null
+    },
+    {
+      "id": "A2-V-07",
+      "category": "Das Verb",
+      "label": "use an infinitive construction with zu in a familiar context",
+      "probe": null
+    },
+    {
+      "id": "A2-SATZ-01",
+      "category": "Der Satz",
+      "label": "keep the finite verb second when a time, place, or object starts the main clause",
+      "probe": null
+    },
+    {
+      "id": "A2-SATZ-02",
+      "category": "Der Satz",
+      "label": "put the finite verb at the end of clauses introduced by weil, dass, and wenn",
+      "probe": null
+    },
+    {
+      "id": "A2-SATZ-03",
+      "category": "Der Satz",
+      "label": "connect an account with sequencing, contrast, reason, and consequence",
+      "probe": null
+    },
+    {
+      "id": "A2-SATZ-04",
+      "category": "Der Satz",
+      "label": "form direct information questions and polite indirect requests for information",
+      "probe": null
+    },
+    {
+      "id": "A2-SATZ-05",
+      "category": "Der Satz",
+      "label": "negate a clause or noun phrase and contradict a negative premise with doch",
+      "probe": [
+        "GE-PRAGMATICS-DOCH-05"
+      ]
+    },
+    {
+      "id": "A2-NP-01",
+      "category": "Nomen, Artikel und Pronomen",
+      "label": "choose nominative, accusative, and dative forms in common sentence patterns",
+      "probe": null
+    },
+    {
+      "id": "A2-NP-02",
+      "category": "Nomen, Artikel und Pronomen",
+      "label": "choose case after frequent accusative, dative, and two-way prepositions",
+      "probe": null
+    },
+    {
+      "id": "A2-NP-03",
+      "category": "Nomen, Artikel und Pronomen",
+      "label": "use personal and possessive pronouns in frequent nominative, accusative, and dative forms",
+      "probe": null
+    },
+    {
+      "id": "A2-NP-04",
+      "category": "Nomen, Artikel und Pronomen",
+      "label": "use common indefinite pronouns and quantity expressions",
+      "probe": null
+    },
+    {
+      "id": "A2-ADJ-01",
+      "category": "Adjektiv und Adverb",
+      "label": "add frequent adjective endings after definite, indefinite, and zero articles",
+      "probe": null
+    },
+    {
+      "id": "A2-ADJ-02",
+      "category": "Adjektiv und Adverb",
+      "label": "compare familiar people and things with comparative and superlative forms",
+      "probe": null
+    },
+    {
+      "id": "A2-ADJ-03",
+      "category": "Adjektiv und Adverb",
+      "label": "express likes and ranked preferences with gern and lieber",
+      "probe": [
+        "GE-GRAMMAR-GERN-11"
+      ]
+    },
+    {
+      "id": "A2-ORTH-01",
+      "category": "Aussprache und Orthografie",
+      "label": "hear and write the contrast among plain vowels, umlauts, and common diphthongs",
+      "probe": null
+    },
+    {
+      "id": "A2-ORTH-02",
+      "category": "Aussprache und Orthografie",
+      "label": "apply the spelling contrast between ss and eszett in familiar words",
+      "probe": null
+    },
+    {
+      "id": "A2-ORTH-03",
+      "category": "Aussprache und Orthografie",
+      "label": "capitalize nouns and formal Sie consistently in connected writing",
+      "probe": null
+    },
+    {
+      "id": "A2-ORTH-04",
+      "category": "Aussprache und Orthografie",
+      "label": "use sentence punctuation and the comma before a familiar subordinate clause",
+      "probe": null
+    },
+    {
+      "id": "A2-ORTH-05",
+      "category": "Aussprache und Orthografie",
+      "label": "produce intelligible word stress and common consonant clusters in familiar language",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-01",
+      "category": "Wortschatzbereiche",
+      "label": "personal identity, relationships, family, and everyday social contact",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-02",
+      "category": "Wortschatzbereiche",
+      "label": "housing, rooms, furniture, chores, and the immediate neighborhood",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-03",
+      "category": "Wortschatzbereiche",
+      "label": "places, directions, travel, transport, tickets, and accommodation",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-04",
+      "category": "Wortschatzbereiche",
+      "label": "food, drink, meals, quantities, ordering, and paying",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-05",
+      "category": "Wortschatzbereiche",
+      "label": "shops, clothing, products, prices, money, and common transactions",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-06",
+      "category": "Wortschatzbereiche",
+      "label": "public and private services, offices, post, banking, and simple repairs",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-07",
+      "category": "Wortschatzbereiche",
+      "label": "education, language learning, courses, schedules, and study materials",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-08",
+      "category": "Wortschatzbereiche",
+      "label": "jobs, workplaces, duties, applications, and basic work arrangements",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-09",
+      "category": "Wortschatzbereiche",
+      "label": "leisure, sport, culture, invitations, plans, and holidays",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-10",
+      "category": "Wortschatzbereiche",
+      "label": "body, health, hygiene, symptoms, appointments, and simple advice",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-11",
+      "category": "Wortschatzbereiche",
+      "label": "phones, messages, everyday media, and basic digital communication",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-12",
+      "category": "Wortschatzbereiche",
+      "label": "weather, seasons, environment, and familiar outdoor conditions",
+      "probe": null
+    },
+    {
+      "id": "A2-LEX-13",
+      "category": "Wortschatzbereiche",
+      "label": "dates, clock time, duration, frequency, numbers, prices, and measures",
+      "probe": null
+    }
+  ]
+}

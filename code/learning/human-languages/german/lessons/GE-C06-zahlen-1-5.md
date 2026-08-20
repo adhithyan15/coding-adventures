@@ -1,5 +1,6 @@
 ---
 id: GE-C06-zahlen-1-5
+sequence: 215
 chapter: 6
 type: word
 headword: eins, zwei, drei, vier, fünf

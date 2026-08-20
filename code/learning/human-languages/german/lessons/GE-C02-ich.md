@@ -1,5 +1,6 @@
 ---
 id: GE-C02-ich
+sequence: 65
 chapter: 2
 type: word
 headword: ich

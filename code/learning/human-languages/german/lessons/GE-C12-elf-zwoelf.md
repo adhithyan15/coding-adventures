@@ -1,5 +1,6 @@
 ---
 id: GE-C12-elf-zwoelf
+sequence: 275
 chapter: 12
 type: word
 headword: elf, zwölf

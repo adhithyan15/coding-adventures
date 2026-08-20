@@ -1,5 +1,6 @@
 ---
 id: GE-C14-alter
+sequence: 300
 chapter: 14
 type: phrase
 headword: ich bin zwanzig Jahre alt

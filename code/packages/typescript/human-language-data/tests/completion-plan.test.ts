@@ -244,6 +244,21 @@ describe("completion plan", () => {
     expect(built.head.map((item) => item.id)).toEqual(["exam-inventory/alpha/A2"]);
   });
 
+  it("keeps a partial inventory in the queue while preserving its measured points", () => {
+    const built = plan({
+      levelGate: gate([{ language: "alpha", inProgressAt: "A1" }]),
+      partialInventories: [{ language: "alpha", level: "A1" }],
+      examCoverage: [{ language: "alpha", level: "A1", enumerated: 10, covered: 6 }],
+    });
+    const item = built.head.find((entry) => entry.id === "exam-inventory/alpha/A1");
+    expect(item?.goal).toContain("complete the partial A1 assessment inventory");
+    expect(built.head).toContainEqual(expect.objectContaining({ id: "exam-point/alpha/A1", outstanding: 4 }));
+    expect(built.projection.find((entry) => entry.kind === "exam-inventory")).toMatchObject({
+      items: 6,
+      detail: expect.stringContaining("0 complete and 1 partial of 6"),
+    });
+  });
+
   it("asks for no inventory once every level up to the ceiling is written", () => {
     const built = plan({
       levelGate: gate([{ language: "alpha", inProgressAt: "A1" }]),
