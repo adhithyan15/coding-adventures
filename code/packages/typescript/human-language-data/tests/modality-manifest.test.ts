@@ -957,7 +957,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 3403, // +1: Portuguese's guided-copy bridge on the Tamil baseline.
+      totalLessons: 3404, // +2: Italian and Portuguese guided-copy bridges on the Tamil baseline.
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -966,7 +966,7 @@ describe("corpus regression", () => {
       // All eight Chapter-17 lessons remain voice-first.
       // +6, and it is the same six lessons that leave `sight` below.
       // +8, the eight chapter 4-5 lessons that drop their inline script sections.
-      voice: 2461, // Portuguese's legacy opener now exposes its pen dependency.
+      voice: 2460, // Italian and Portuguese legacy openers now expose their pen dependencies.
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -1000,10 +1000,10 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 352, // +2: Portuguese's opener trace and guided copy.
+      pen: 354, // +4: Italian and Portuguese each add an opener trace and guided copy.
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
-      drivableLessons: 2461, // Portuguese's opener leaves the hands-free set.
+      drivableLessons: 2460, // Both Romance openers leave the hands-free set.
       drivablePercent: 72, // Chinese crosses the rounding boundary after its opener becomes pen. // telugu pre-A1 round 4: 72 -> 73, an IMPROVEMENT and a rounding boundary crossed: 2464/3392 is 72.6% against 2429/3357's 72.4%, because all 35 new lessons are drivable // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- 35 ear-only lessons lift the whole-corpus share by one point // HL-C194: +16 Spanish words, all drivable // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // marathi script tranche: +11 lessons, +1 chapter (ch14) -- ten pieces, one per lesson, plus one assembly -- three script tranches in a row have added pen-only lessons and nothing drivable, so the corpus share finally rounds down; that is the cost of teaching script and it is recorded, not hidden
       trackCount: 23,
       chapterCount: 1004, // +1: Marwadi Chapter 1
@@ -1047,12 +1047,12 @@ describe("corpus regression", () => {
       // the 3:1 cadence puts TA-W10 between its two speaking lessons rather than after
       // them — the same mid-chapter placement TA-W06 already has in chapter 18. Chapters
       // 27/29/31 take their writing lesson after the prefix, so they hold at 1/1/2.
-      // Portuguese Chapter 1 now begins with pen, so its former three-lesson voice
+      // Italian Chapter 1 now begins with pen, so its former six-lesson voice
       // prefix becomes intentionally unavailable in the hands-free view.
       // +6, and only two chapters move, both upward this time: Tamil chapter 4 gains 4
       // and chapter 5 gains 2. Nothing is lost, because TA-W14/15/16 are placed to skip
       // chapter 32 — see the ramp test for why — so no chapter's prefix is cut short.
-      drivablePrefixTotal: 2183, // Chinese chapter 1 now begins with pen. // French and Marathi recovered order on current main: measured together. // telugu pre-A1 round 4: +35 lessons, +7 chapters (chapters 67-73) // -- every one of the seven chapters is drivable end to end, so each contributes its whole 5-lesson prefix // malayalam pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // kannada pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // merge with main: +9 -- HL-C229 French question tranche landed on main while this tranche was in flight; the new chapter is drivable end to end // tamil pre-A1 tranche: +35 lessons, +7 chapters (chapters 44-50) // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C194: +16 Spanish words // HL-C192: +24 family words // HL-C190: see/say verbs across four tracks // HL-C189: +8 -- Tamil and Sanskrit verb tranche // HL-C187: +20 -- verb tranche across the five behind tracks // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C175: +5 -- chapter 272, reading between the lines // HL-C173: +3 -- B2 closes (chapter 271) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C157: the future-tense conjugation table is sight so ch49 leaves the drivable prefix, // +32: vocabulary wave 5's new chapters, mostly ear-only from their own start // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +26: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +3 // HL-C128 step 2: +4 // HL-C128 step 3: +3 // HL-C128 step 4: +6 // HL-C128 step 5: +4 // HL-C127: +3 // HL-C128 step 7: +3 // HL-C128 step 8: +6 // HL-C128 step 9: +5 // HL-C128 step 10: +5 // HL-C136 wave I: +42 -- each of the six chapters is drivable from its own first lesson to its last, so the prefix is the whole chapter // HL-C137 wave II: +36 adjective lessons, +6 chapters, and drivablePercent rises AGAIN // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: 35 lessons over 7 chapters -- voice +34 and sight +1 sum to 35; the prefix figures follow from the per-chapter walk // hindi pre-A1 tranche: +35 lessons, +7 chapters (chapters 45-51) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // telugu pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // kannada pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // latin pre-A1 tranche: +20 lessons, +4 chapters (chapters 44-47) // malayalam pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) -- each new chapter is drivable end to end, so the prefix is the whole chapter // tamil pre-A1 round 2: +35 lessons, +7 chapters (chapters 51-57) // sanskrit pre-A1 round 3: +35 lessons, +7 chapters (chapters 38-44) -- each new chapter is drivable end to end, so the prefix is the whole chapter // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // hindi pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- each new chapter is drivable end to end, so the prefix is the whole chapter // sanskrit pre-A1 round 4: +35 lessons, +7 chapters (chapters 45-51) -- each of the seven new chapters is drivable end to end
+      drivablePrefixTotal: 2177, // Italian removes six hands-free opening lessons and Portuguese removes three.
       // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
       // Spreading the strand cannot happen without landing a pen lesson somewhere.
       // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
@@ -1071,7 +1071,7 @@ describe("corpus regression", () => {
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.
       // -2 more: Tamil chapters 4 and 5 now start by ear as well.
-      unstartableChapters: 214, // Portuguese Chapter 1 now honestly starts with pen.
+      unstartableChapters: 215, // Italian and Portuguese Chapter 1 now honestly start with pen.
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     }); // hindi pre-A1 round 2: +35 lessons, +7 chapters (chapters 52-58)
