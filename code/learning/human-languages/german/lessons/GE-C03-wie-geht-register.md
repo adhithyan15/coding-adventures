@@ -1,5 +1,6 @@
 ---
 id: GE-C03-wie-geht-register
+sequence: 125
 chapter: 3
 type: grammar
 headword: Wie geht es Ihnen?

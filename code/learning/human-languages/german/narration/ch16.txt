@@ -1,79 +1,8 @@
 German, chapter 16: To Be, and the Past That Takes It.
-3 lessons. You can do the first 2 of them in the car; after that you will want to have stopped.
+3 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
 Lesson 1 of 3.
-Ich bin gegangen — the perfect with sein.
-
-Warm-up.
-[pause 2 seconds]
-Chapter 15 built ich habe gelernt with haben. A smaller family uses sein.
-[a table of 4 rows, read aloud]
-ich bin gegangen, I went / have gone.
-du bist gegangen, you went.
-er ist gegangen, he went.
-wir sind gegangen, we went.
-
-The family.
-The centre is a change of place or state with a clear result:
-[a table of 4 rows, read aloud]
-verb: gehen. perfect: bin gegangen. meaning: went.
-verb: kommen. perfect: bin gekommen. meaning: came.
-verb: fahren. perfect: bin gefahren. meaning: travelled.
-verb: werden. perfect: bin geworden. meaning: became.
-Ordinary activity without that result usually keeps haben: ich habe gearbeitet, ich habe getanzt.
-A small learned group also takes sein: sein itself (bin gewesen), bleiben (bin geblieben), plus verbs such as gelingen (succeed), geschehen / passieren (happen), and begegnen (meet).
-Build each perfect as:
-present form of sein + past participle.
-The participle stays at the end, just as it did with haben.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “ich bin gegangen; wir sind gegangen”]
-[pause 8 seconds for the answer]
-[your turn — say: “ich habe gelernt; ich bin gegangen”]
-[pause 8 seconds for the answer]
-[your turn — say: “bin gekommen; bin geworden; bin geblieben”]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Which broad family takes sein? (Resultative motion/change.) Say “I went.” (Ich bin gegangen.) Name two learned exceptions. (Sein, bleiben, or geschehen.) Where does the participle go? (At the end.) Next: compare German agreement with French.
-
-
-Lesson 2 of 3.
-Gegangen — no agreement in the perfect.
-
-Warm-up.
-[pause 2 seconds]
-German and French both split their compound past between “have” and “be,” but their participles behave differently.
-[a table of 3 rows, read aloud]
-subject: he. French: il est allé. German: er ist gegangen.
-subject: she. French: elle est allée. German: sie ist gegangen.
-subject: they. French: ils sont allés. German: sie sind gegangen.
-In the German perfect, gegangen never changes for person, number, or gender. French preserves adjective-like agreement; German lost it in this position.
-German participles still inflect when they stand before a noun as adjectives:
-der angekommene Zug — the arrived train;
-die eingeschlafene Katze — the fallen-asleep cat.
-So the participle did not lose every adjective ending everywhere. It is specifically the perfect construction where agreement disappeared.
-Old High German varied in this position. Modern German simplified it to one unchanging form.
-The haben/sein split is a native Germanic development, not a borrowing from Latin. It grew alongside neighbouring Romance systems through centuries of contact. The auxiliary split is parallel; the agreement outcome differs.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: “er ist gegangen; sie ist gegangen”]
-[pause 8 seconds for the answer]
-[your turn — say: “wir sind gegangen — same participle”]
-[pause 8 seconds for the answer]
-[your turn — say: “der angekommene Zug — adjective ending returns”]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Does the participle agree inside the German perfect? (No.) Where can it still take endings? (Before a noun as an adjective.) Does French agree? (Yes.) Did German inherit its split from Latin? (No; it developed in parallel.)
-
-
-Lesson 3 of 3.
 sein — "to be".
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
@@ -117,3 +46,74 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Give the six present forms of sein. (Bin, bist, ist, sind, seid, sind.) How many ancient roots is sein built from? (Three.) Which root do bin/bist come from, and which Spanish word shares it? (bʰuH- — Spanish fui.) Which root gives English was/were? (wes-, the same one as German war.) Why are "be" verbs so irregular everywhere? (They're too common to be regularized by analogy.) Next: the perfect tense built on sein.
+
+
+Lesson 2 of 3.
+Ich bin gegangen — the perfect with sein.
+
+Warm-up.
+[pause 2 seconds]
+Chapter 15 built ich habe gelernt with haben. A smaller family uses sein.
+[a table of 4 rows, read aloud]
+ich bin gegangen, I went / have gone.
+du bist gegangen, you went.
+er ist gegangen, he went.
+wir sind gegangen, we went.
+
+The family.
+The centre is a change of place or state with a clear result:
+[a table of 4 rows, read aloud]
+verb: gehen. perfect: bin gegangen. meaning: went.
+verb: kommen. perfect: bin gekommen. meaning: came.
+verb: fahren. perfect: bin gefahren. meaning: travelled.
+verb: werden. perfect: bin geworden. meaning: became.
+Ordinary activity without that result usually keeps haben: ich habe gearbeitet, ich habe getanzt.
+A small learned group also takes sein: sein itself (bin gewesen), bleiben (bin geblieben), plus verbs such as gelingen (succeed), geschehen / passieren (happen), and begegnen (meet).
+Build each perfect as:
+present form of sein + past participle.
+The participle stays at the end, just as it did with haben.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “ich bin gegangen; wir sind gegangen”]
+[pause 8 seconds for the answer]
+[your turn — say: “ich habe gelernt; ich bin gegangen”]
+[pause 8 seconds for the answer]
+[your turn — say: “bin gekommen; bin geworden; bin geblieben”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Which broad family takes sein? (Resultative motion/change.) Say “I went.” (Ich bin gegangen.) Name two learned exceptions. (Sein, bleiben, or geschehen.) Where does the participle go? (At the end.) Next: compare German agreement with French.
+
+
+Lesson 3 of 3.
+Gegangen — no agreement in the perfect.
+
+Warm-up.
+[pause 2 seconds]
+German and French both split their compound past between “have” and “be,” but their participles behave differently.
+[a table of 3 rows, read aloud]
+subject: he. French: il est allé. German: er ist gegangen.
+subject: she. French: elle est allée. German: sie ist gegangen.
+subject: they. French: ils sont allés. German: sie sind gegangen.
+In the German perfect, gegangen never changes for person, number, or gender. French preserves adjective-like agreement; German lost it in this position.
+German participles still inflect when they stand before a noun as adjectives:
+der angekommene Zug — the arrived train;
+die eingeschlafene Katze — the fallen-asleep cat.
+So the participle did not lose every adjective ending everywhere. It is specifically the perfect construction where agreement disappeared.
+Old High German varied in this position. Modern German simplified it to one unchanging form.
+The haben/sein split is a native Germanic development, not a borrowing from Latin. It grew alongside neighbouring Romance systems through centuries of contact. The auxiliary split is parallel; the agreement outcome differs.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: “er ist gegangen; sie ist gegangen”]
+[pause 8 seconds for the answer]
+[your turn — say: “wir sind gegangen — same participle”]
+[pause 8 seconds for the answer]
+[your turn — say: “der angekommene Zug — adjective ending returns”]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Does the participle agree inside the German perfect? (No.) Where can it still take endings? (Before a noun as an adjective.) Does French agree? (Yes.) Did German inherit its split from Latin? (No; it developed in parallel.)

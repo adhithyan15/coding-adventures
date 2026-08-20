@@ -1,5 +1,6 @@
 ---
 id: GE-C03-danke
+sequence: 105
 chapter: 3
 type: word
 headword: danke

@@ -3,38 +3,6 @@ German, chapter 8: Telling the Time.
 
 
 Lesson 1 of 2.
-Mittag and Mitternacht — the native middle of day and night.
-
-Warm-up.
-[pause 2 seconds]
-The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — "the day's middle" and "the night's middle" — built from words you can already almost read.
-
-The two words, taken apart.
-Both start with Mitte, "middle" (cousin of English mid, middle, and of Latin medius):
-[a table of 2 rows, read aloud]
-German: Mittag. =: Mitte + Tag. literally: "mid-day" (noon).
-German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: "mid-night" (midnight).
-Mittag = "mid-day." Tag ("day") you met in Montag, Dienstag; put "middle" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one.
-Mitternacht = "mid-night." Nacht ("night") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues.
-To tell the time with them:
-Es ist Mittag. — "It is noon." Es ist Mitternacht. — "It is midnight."
-So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "Mittag" (noon), "Mitternacht" (midnight)]
-[pause 8 seconds for the answer]
-[your turn — say: break them — "Mitte (middle) + Tag (day)", "Mitte + Nacht (night)"]
-[pause 8 seconds for the answer]
-[your turn — say: "Mitternacht / mid-night" — the same Germanic compound]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What do Mittag and Mitternacht literally mean, and from what native word? ("Mid-day" / "mid-night"; from Mitte "middle" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family.
-
-
-Lesson 2 of 2.
 Uhr — the clock, and a Roman word in the German day.
 
 Warm-up.
@@ -70,3 +38,35 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Where does Uhr come from, and why is that notable? (Latin hōra — a loanword, unlike German's native numbers and Germanic day-gods.) Two French/English cousins of Uhr? (heure, hour.) How does German say "it is three o'clock"? (Es ist drei Uhr.) Next: Mittag and Mitternacht — noon and midnight.
+
+
+Lesson 2 of 2.
+Mittag and Mitternacht — the native middle of day and night.
+
+Warm-up.
+[pause 2 seconds]
+The clock-word Uhr was Latin. But noon and midnight swing back to native German: Mittag and Mitternacht are plain Germanic compounds — "the day's middle" and "the night's middle" — built from words you can already almost read.
+
+The two words, taken apart.
+Both start with Mitte, "middle" (cousin of English mid, middle, and of Latin medius):
+[a table of 2 rows, read aloud]
+German: Mittag. =: Mitte + Tag. literally: "mid-day" (noon).
+German: Mitternacht. =: Mitter (Mitte) + Nacht. literally: "mid-night" (midnight).
+Mittag = "mid-day." Tag ("day") you met in Montag, Dienstag; put "middle" in front and you get noon. Its meaning matches French midi (medius diēs) exactly — same idea, but German built it from its own words instead of borrowing the Latin one.
+Mitternacht = "mid-night." Nacht ("night") is the twin of English night (remember acht/eight, Nacht/night — the -cht/-ght pair). So Mitternacht and English mid-night are the same compound in two Germanic tongues.
+To tell the time with them:
+Es ist Mittag. — "It is noon." Es ist Mitternacht. — "It is midnight."
+So German splits the day three ways by origin: Uhr (Latin) for the hours, Mittag/Mitternacht (native) for its pivots.
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "Mittag" (noon), "Mitternacht" (midnight)]
+[pause 8 seconds for the answer]
+[your turn — say: break them — "Mitte (middle) + Tag (day)", "Mitte + Nacht (night)"]
+[pause 8 seconds for the answer]
+[your turn — say: "Mitternacht / mid-night" — the same Germanic compound]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What do Mittag and Mitternacht literally mean, and from what native word? ("Mid-day" / "mid-night"; from Mitte "middle" + Tag/Nacht.) How does this differ from Uhr? (Uhr is a Latin loan; these are native compounds.) What English word is Mitternacht the twin of? (Midnight.) Next chapter builds on this toward months and family.

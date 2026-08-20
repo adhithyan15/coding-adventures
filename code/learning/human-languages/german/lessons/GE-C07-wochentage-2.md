@@ -1,5 +1,6 @@
 ---
 id: GE-C07-wochentage-2
+sequence: 230
 chapter: 7
 type: word
 headword: Samstag, Sonntag

@@ -1,5 +1,6 @@
 ---
 id: GE-C01-hallo
+sequence: 5
 chapter: 1
 type: word
 headword: hallo

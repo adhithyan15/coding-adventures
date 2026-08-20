@@ -1,5 +1,6 @@
 ---
 id: GE-C01-tag
+sequence: 20
 chapter: 1
 type: word
 headword: Tag

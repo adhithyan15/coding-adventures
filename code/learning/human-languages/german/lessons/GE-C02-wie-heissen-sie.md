@@ -1,5 +1,6 @@
 ---
 id: GE-C02-wie-heissen-sie
+sequence: 90
 chapter: 2
 type: phrase
 headword: wie heißen Sie?

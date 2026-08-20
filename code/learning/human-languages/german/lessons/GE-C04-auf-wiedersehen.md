@@ -1,5 +1,6 @@
 ---
 id: GE-C04-auf-wiedersehen
+sequence: 145
 chapter: 4
 type: word
 headword: auf Wiedersehen

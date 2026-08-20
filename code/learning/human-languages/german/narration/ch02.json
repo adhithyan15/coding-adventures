@@ -4,11 +4,411 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:a3ce192e57bc4fbf",
+  "sourceHash": "fnv1a64:c44c7d00c35088f5",
   "lessons": [
     {
+      "id": "GE-C02-ich",
+      "sequence": 65,
+      "title": "ich — \"I,\" the same ancient word as Latin ego",
+      "headword": "ich",
+      "romanization": "ich",
+      "gloss": "I",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:7fcf9c447a684ec1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "To introduce yourself, first \"I.\" German's is a three-letter word hiding a very deep root."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich = ikh — the ch here is soft: a light hiss at the front of the mouth (the \"ich-sound\"), not the throat-scrape of Nacht. German has both; after i and e it's the soft one."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich — \"I.\" Root: Proto-Germanic ik, from Proto-Indo-European eǵ — the same deep root that became:"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ego (and English ego), Greek egō,"
+            },
+            {
+              "kind": "speech",
+              "text": "and, worn down hardest of all, English I."
+            },
+            {
+              "kind": "speech",
+              "text": "So German ich, Latin ego, and English I are three survivals of one ancient word for \"I\" — English filed it down to a single letter, German kept a bit more."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich\" (ikh, soft ch)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich\" (*ikh*, soft *ch*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three cousins — ich / ego / I",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three cousins — *ich* / *ego* / *I*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What PIE root gave ich, and what Latin and English words are its cousins? (eǵ — Latin ego, English I.) Which ch sound does ich use — soft or the Nacht scrape? (The soft \"ich-sound.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C02-heissen",
+      "sequence": 70,
+      "title": "heißen — \"to be called,\" the verb English almost lost",
+      "headword": "heißen",
+      "romanization": "heißen",
+      "gloss": "to be called / to be named",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9f6015d810726f28",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German gives its name with one plain verb — heißen, \"to be called.\" No \"myself\" needed, unlike the Romance languages."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "heißen = HY-ssen. The ß (Eszett) is just a sharp \"ss.\" ei is the vowel of English eye. So heiße = HY-ssuh."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "heißen — \"to be called / to be named.\" Root: Proto-Germanic haitaną. English had this verb:"
+            },
+            {
+              "kind": "speech",
+              "text": "hight, \"named\" — now archaic (\"a knight hight Gawain\"), and."
+            },
+            {
+              "kind": "speech",
+              "text": "behest, \"a command\" — literally something called for."
+            },
+            {
+              "kind": "speech",
+              "text": "So German kept as an everyday word a verb English let fade to poetry. And where Spanish and French say \"I call myself\" (a reflexive), German uses heißen as a plain verb of being called — no \"myself\" at all."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: one verb, changing its ending",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "heißen is the dictionary (infinitive) form. German swaps the ending for each person:"
+            },
+            {
+              "kind": "speech",
+              "text": "ich heiße — I am called."
+            },
+            {
+              "kind": "speech",
+              "text": "du heißt — you (familiar) are called."
+            },
+            {
+              "kind": "speech",
+              "text": "Sie heißen — you (formal) are called."
+            },
+            {
+              "kind": "speech",
+              "text": "That ending-swap is the same machine on every German verb. You'll use ich heiße and Sie heißen in the next lessons."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"heißen\" (HY-ssen)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"heißen\" (*HY-ssen*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English fossil — hight (\"named\"), behest",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English fossil — *hight* (\"named\"), *behest*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the three forms — ich heiße / du heißt / Sie heißen",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the three forms — ich heiße / du heißt / Sie heißen]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does heißen mean, and what archaic English word is its cousin? (\"To be called\"; hight.) How is German's way of giving a name different from Spanish/French? (A plain verb \"to be called,\" no reflexive \"myself.\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C02-ich-heisse",
+      "sequence": 75,
+      "title": "ich heiße… — \"my name is…,\" literally \"I am called\"",
+      "headword": "ich heiße…",
+      "romanization": "ich heiße…",
+      "gloss": "my name is… (literally \"I am called…\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8c9792382585a965",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble the two pieces — ich and heißen — into the sentence you need for meeting anyone."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ich (I) + heiße (am called)."
+            },
+            {
+              "kind": "speech",
+              "text": "ich heiße… = word for word \"I am called…\" = \"my name is…\""
+            },
+            {
+              "kind": "speech",
+              "text": "Ich heiße Arun. becomes \"My name is Arun.\" Ich heiße Mira. becomes \"My name is Mira.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German also has the literal \"my name is\":"
+            },
+            {
+              "kind": "speech",
+              "text": "mein Name ist… — where Name from Proto-Germanic namô, the same root as English name and Latin nōmen ( becomes English noun, nominate). It's correct and common."
+            },
+            {
+              "kind": "speech",
+              "text": "But ich heiße is warmer and more idiomatic — German prefers the verb (\"I am called\") over the noun phrase (\"my name is\"). (Note Name is Capitalized: German capitalizes every noun — you'll see it on every naming word.)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"ich heiße…\" then your own name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"ich heiße…\" then your own name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "what it literally says (\"I am called\")",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: what it literally says (\"I am called\")]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the literal alternative — \"mein Name ist…\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the literal alternative — \"mein Name ist…\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does ich heiße literally mean? (\"I am called.\") What's the more literal \"my name is,\" and what English words is Name cousin to? (mein Name ist; name, noun.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C02-du-sie",
-      "sequence": null,
+      "sequence": 80,
       "title": "du / Sie — \"you,\" familiar and formal",
       "headword": "du / Sie",
       "romanization": "du / Sie",
@@ -19,7 +419,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:3dd3c611a81e6cb4",
+      "sourceHash": "fnv1a64:e740c0e4c476fe4d",
       "notice": null,
       "blocks": [
         {
@@ -164,8 +564,275 @@
       ]
     },
     {
+      "id": "GE-C02-wie",
+      "sequence": 85,
+      "title": "wie — \"how,\" cousin of English how",
+      "headword": "wie",
+      "romanization": "wie",
+      "gloss": "how",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:b3ce29558f031a2d",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German asks \"what's your name?\" as \"how are you called?\" — so first, \"how.\""
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "pronunciation",
+          "title": "Sounds you'll need",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wie = vee. Two traps: German w is an English v, and ie is a long ee. So wie sounds like English \"vee,\" never \"wy.\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wie — \"how.\" Root: Proto-Germanic hwī, from the PIE interrogative root kʷo- — the very root behind the English wh- words:"
+            },
+            {
+              "kind": "speech",
+              "text": "how, what, who, why — and, through Latin, the qu- of question, quantity, and the quo modo that became French comment."
+            },
+            {
+              "kind": "speech",
+              "text": "German wie and English how are the same question-word, lightly reshaped."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "grammar",
+          "title": "Grammar Lens: German counts names as a matter of \"how\"",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Like French, German asks a name with \"how,\" not \"what\": wie heißen Sie? is literally \"how are you called?\" — about the manner of your being called. Don't translate word for word; learn the logic: the name-question runs on wie."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"wie\" (vee — w is v, ie is ee)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"wie\" (*vee* — *w* is *v*, *ie* is *ee*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the English wh- cousins — how, what, who, why",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the English *wh-* cousins — how, what, who, why]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"how are you called?\" is the German for \"what's your name?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"how are you called?\" is the German for \"what's your name?\"]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "How is wie pronounced, and what English question-words share its root? (vee; how / what / who / why.) English asks \"what is your name?\" — what does German literally ask? (\"How are you called?\")"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GE-C02-wie-heissen-sie",
+      "sequence": 90,
+      "title": "wie heißen Sie? — \"what's your name?\"",
+      "headword": "wie heißen Sie?",
+      "romanization": "wie heißen Sie?",
+      "gloss": "what's your name? (literally \"how are you called?\")",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e24fbfa882144a60",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Assemble it: \"how\" + \"are you called\" = the polite question that opens the introduction."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "The phrase, assembled",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "wie (how) + heißen Sie (\"are you [formal] called\")."
+            },
+            {
+              "kind": "speech",
+              "text": "wie heißen Sie? = literally \"how are you called?\" = the polite \"what's your name?\""
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: verb in second place",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German likes the verb in the second slot of a sentence:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wie (1) heißen (2) Sie?"
+            },
+            {
+              "kind": "speech",
+              "text": "The informal version swaps in du and its ending:"
+            },
+            {
+              "kind": "speech",
+              "text": "Wie heißt du?"
+            },
+            {
+              "kind": "speech",
+              "text": "So the one verb heißen runs the whole exchange: ich heiße… to give your name, wie heißen Sie? to ask for someone else's. (Reply to wie heißen Sie? with Ich heiße….)"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"wie heißen Sie?\" (formal)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"wie heißen Sie?\" (formal)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the informal — \"wie heißt du?\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the informal — \"wie heißt du?\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the pair — ask, then answer: \"wie heißen Sie?\" / \"ich heiße…\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the pair — ask, then answer: \"wie heißen Sie?\" / \"ich heiße…\"]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does wie heißen Sie? literally say? (\"How are you called?\") What's the informal version, and where does German put the verb? (Wie heißt du?; the verb goes second.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C02-freut-mich",
-      "sequence": null,
+      "sequence": 95,
       "title": "freut mich — \"pleased to meet you,\" i.e. \"it gladdens me\"",
       "headword": "freut mich",
       "romanization": "freut mich",
@@ -176,7 +843,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:cc06db614ab8a56b",
+      "sourceHash": "fnv1a64:7c05232d91c953d0",
       "notice": null,
       "blocks": [
         {
@@ -308,408 +975,8 @@
       ]
     },
     {
-      "id": "GE-C02-heissen",
-      "sequence": null,
-      "title": "heißen — \"to be called,\" the verb English almost lost",
-      "headword": "heißen",
-      "romanization": "heißen",
-      "gloss": "to be called / to be named",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:cc38318948ace522",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German gives its name with one plain verb — heißen, \"to be called.\" No \"myself\" needed, unlike the Romance languages."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "heißen = HY-ssen. The ß (Eszett) is just a sharp \"ss.\" ei is the vowel of English eye. So heiße = HY-ssuh."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "heißen — \"to be called / to be named.\" Root: Proto-Germanic haitaną. English had this verb:"
-            },
-            {
-              "kind": "speech",
-              "text": "hight, \"named\" — now archaic (\"a knight hight Gawain\"), and."
-            },
-            {
-              "kind": "speech",
-              "text": "behest, \"a command\" — literally something called for."
-            },
-            {
-              "kind": "speech",
-              "text": "So German kept as an everyday word a verb English let fade to poetry. And where Spanish and French say \"I call myself\" (a reflexive), German uses heißen as a plain verb of being called — no \"myself\" at all."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: one verb, changing its ending",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "heißen is the dictionary (infinitive) form. German swaps the ending for each person:"
-            },
-            {
-              "kind": "speech",
-              "text": "ich heiße — I am called."
-            },
-            {
-              "kind": "speech",
-              "text": "du heißt — you (familiar) are called."
-            },
-            {
-              "kind": "speech",
-              "text": "Sie heißen — you (formal) are called."
-            },
-            {
-              "kind": "speech",
-              "text": "That ending-swap is the same machine on every German verb. You'll use ich heiße and Sie heißen in the next lessons."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"heißen\" (HY-ssen)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"heißen\" (*HY-ssen*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English fossil — hight (\"named\"), behest",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English fossil — *hight* (\"named\"), *behest*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three forms — ich heiße / du heißt / Sie heißen",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three forms — ich heiße / du heißt / Sie heißen]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does heißen mean, and what archaic English word is its cousin? (\"To be called\"; hight.) How is German's way of giving a name different from Spanish/French? (A plain verb \"to be called,\" no reflexive \"myself.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C02-ich",
-      "sequence": null,
-      "title": "ich — \"I,\" the same ancient word as Latin ego",
-      "headword": "ich",
-      "romanization": "ich",
-      "gloss": "I",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:e73eeedf80a17a79",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "To introduce yourself, first \"I.\" German's is a three-letter word hiding a very deep root."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ich = ikh — the ch here is soft: a light hiss at the front of the mouth (the \"ich-sound\"), not the throat-scrape of Nacht. German has both; after i and e it's the soft one."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ich — \"I.\" Root: Proto-Germanic ik, from Proto-Indo-European eǵ — the same deep root that became:"
-            },
-            {
-              "kind": "speech",
-              "text": "Latin ego (and English ego), Greek egō,"
-            },
-            {
-              "kind": "speech",
-              "text": "and, worn down hardest of all, English I."
-            },
-            {
-              "kind": "speech",
-              "text": "So German ich, Latin ego, and English I are three survivals of one ancient word for \"I\" — English filed it down to a single letter, German kept a bit more."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich\" (ikh, soft ch)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich\" (*ikh*, soft *ch*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the three cousins — ich / ego / I",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the three cousins — *ich* / *ego* / *I*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What PIE root gave ich, and what Latin and English words are its cousins? (eǵ — Latin ego, English I.) Which ch sound does ich use — soft or the Nacht scrape? (The soft \"ich-sound.\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C02-ich-heisse",
-      "sequence": null,
-      "title": "ich heiße… — \"my name is…,\" literally \"I am called\"",
-      "headword": "ich heiße…",
-      "romanization": "ich heiße…",
-      "gloss": "my name is… (literally \"I am called…\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:6061fcf1c4ce8830",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble the two pieces — ich and heißen — into the sentence you need for meeting anyone."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ich (I) + heiße (am called)."
-            },
-            {
-              "kind": "speech",
-              "text": "ich heiße… = word for word \"I am called…\" = \"my name is…\""
-            },
-            {
-              "kind": "speech",
-              "text": "Ich heiße Arun. becomes \"My name is Arun.\" Ich heiße Mira. becomes \"My name is Mira.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German also has the literal \"my name is\":"
-            },
-            {
-              "kind": "speech",
-              "text": "mein Name ist… — where Name from Proto-Germanic namô, the same root as English name and Latin nōmen ( becomes English noun, nominate). It's correct and common."
-            },
-            {
-              "kind": "speech",
-              "text": "But ich heiße is warmer and more idiomatic — German prefers the verb (\"I am called\") over the noun phrase (\"my name is\"). (Note Name is Capitalized: German capitalizes every noun — you'll see it on every naming word.)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"ich heiße…\" then your own name",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"ich heiße…\" then your own name]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "what it literally says (\"I am called\")",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: what it literally says (\"I am called\")]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the literal alternative — \"mein Name ist…\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the literal alternative — \"mein Name ist…\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does ich heiße literally mean? (\"I am called.\") What's the more literal \"my name is,\" and what English words is Name cousin to? (mein Name ist; name, noun.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "GE-C02-practice",
-      "sequence": null,
+      "sequence": 100,
       "title": "Chapter 2 — the introduction, whole",
       "headword": "(dialogue)",
       "romanization": "(dialogue)",
@@ -720,7 +987,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c071790ad9287d04",
+      "sourceHash": "fnv1a64:e2b91fe073b8f820",
       "notice": null,
       "blocks": [
         {
@@ -848,273 +1115,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: Wie geht's? (\"how's it going?\") and answering with gut again — the responding cycle."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C02-wie",
-      "sequence": null,
-      "title": "wie — \"how,\" cousin of English how",
-      "headword": "wie",
-      "romanization": "wie",
-      "gloss": "how",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:78ef6723de639e03",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German asks \"what's your name?\" as \"how are you called?\" — so first, \"how.\""
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "pronunciation",
-          "title": "Sounds you'll need",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "wie = vee. Two traps: German w is an English v, and ie is a long ee. So wie sounds like English \"vee,\" never \"wy.\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "wie — \"how.\" Root: Proto-Germanic hwī, from the PIE interrogative root kʷo- — the very root behind the English wh- words:"
-            },
-            {
-              "kind": "speech",
-              "text": "how, what, who, why — and, through Latin, the qu- of question, quantity, and the quo modo that became French comment."
-            },
-            {
-              "kind": "speech",
-              "text": "German wie and English how are the same question-word, lightly reshaped."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "grammar",
-          "title": "Grammar Lens: German counts names as a matter of \"how\"",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Like French, German asks a name with \"how,\" not \"what\": wie heißen Sie? is literally \"how are you called?\" — about the manner of your being called. Don't translate word for word; learn the logic: the name-question runs on wie."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"wie\" (vee — w is v, ie is ee)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"wie\" (*vee* — *w* is *v*, *ie* is *ee*)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the English wh- cousins — how, what, who, why",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the English *wh-* cousins — how, what, who, why]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"how are you called?\" is the German for \"what's your name?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"how are you called?\" is the German for \"what's your name?\"]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "How is wie pronounced, and what English question-words share its root? (vee; how / what / who / why.) English asks \"what is your name?\" — what does German literally ask? (\"How are you called?\")"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C02-wie-heissen-sie",
-      "sequence": null,
-      "title": "wie heißen Sie? — \"what's your name?\"",
-      "headword": "wie heißen Sie?",
-      "romanization": "wie heißen Sie?",
-      "gloss": "what's your name? (literally \"how are you called?\")",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a47d3f6219fcb248",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Assemble it: \"how\" + \"are you called\" = the polite question that opens the introduction."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "The phrase, assembled",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "wie (how) + heißen Sie (\"are you [formal] called\")."
-            },
-            {
-              "kind": "speech",
-              "text": "wie heißen Sie? = literally \"how are you called?\" = the polite \"what's your name?\""
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: verb in second place",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German likes the verb in the second slot of a sentence:"
-            },
-            {
-              "kind": "speech",
-              "text": "Wie (1) heißen (2) Sie?"
-            },
-            {
-              "kind": "speech",
-              "text": "The informal version swaps in du and its ending:"
-            },
-            {
-              "kind": "speech",
-              "text": "Wie heißt du?"
-            },
-            {
-              "kind": "speech",
-              "text": "So the one verb heißen runs the whole exchange: ich heiße… to give your name, wie heißen Sie? to ask for someone else's. (Reply to wie heißen Sie? with Ich heiße….)"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"wie heißen Sie?\" (formal)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"wie heißen Sie?\" (formal)]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the informal — \"wie heißt du?\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the informal — \"wie heißt du?\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the pair — ask, then answer: \"wie heißen Sie?\" / \"ich heiße…\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the pair — ask, then answer: \"wie heißen Sie?\" / \"ich heiße…\"]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does wie heißen Sie? literally say? (\"How are you called?\") What's the informal version, and where does German put the verb? (Wie heißt du?; the verb goes second.)"
             }
           ]
         }

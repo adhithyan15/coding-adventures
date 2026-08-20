@@ -3,38 +3,6 @@ German, chapter 9: Months and Seasons.
 
 
 Lesson 1 of 2.
-die Jahreszeiten — the seasons go native.
-
-Warm-up.
-[pause 2 seconds]
-The months were Latin. The seasons swing back to native German — and one of them, Herbst, is the same word as English harvest. The word for "season" itself is transparent: Jahres-zeit = "year-time."
-
-The four seasons, taken apart.
-[a table of 4 rows, read aloud]
-German: der Frühling (spring). =: früh "early" + -ling. English twin: early-season (from früh, cousin of English early).
-German: der Sommer (summer). =: native Germanic. English twin: summer.
-German: der Herbst (autumn). =: native Germanic. English twin: harvest.
-German: der Winter (winter). =: native Germanic. English twin: winter.
-All four are homegrown Germanic, and three are the plain twins of English summer, winter, and — the surprise — harvest:
-Frühling is built from früh ("early") — literally the "early-season," the year's first. (German also uses Lenz, an old poetic word for spring.)
-Herbst corresponds to harvest. They're the same Germanic word: the reaping season. English kept harvest but narrowed it to the act of gathering and reached for Latin-derived autumn for the season; German kept the old word for the season itself. Two languages, one word, split in meaning.
-So the German year splits cleanly: Latin for the months (like Uhr, the clock), native Germanic for the seasons (like the numbers and Mittag/Mitternacht).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "der Frühling, der Sommer, der Herbst, der Winter"]
-[pause 8 seconds for the answer]
-[your turn — say: the twins — "Sommer/summer, Winter/winter, Herbst/harvest"]
-[pause 8 seconds for the answer]
-[your turn — say: "Frühling = früh (early) + -ling — the early season"]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-Are German seasons native or Latin, unlike the months? (Native Germanic.) What English word is Herbst the twin of, and what happened to it? (Harvest — English narrowed it to the reaping act and took autumn from Latin for the season.) What is Frühling built from? (früh "early" — the early season.) Next chapter builds on this toward family and food.
-
-
-Lesson 2 of 2.
 die Monate — Rome's calendar in German.
 
 Warm-up.
@@ -72,3 +40,35 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Are German month names native or borrowed, and like which other German word? (Borrowed from Latin — like the clock-word Uhr.) What links März to Dienstag? (The war-god Mars = Germanic Tiw.) Why is Dezember Latin for "ten"? (The Roman year began in March.) Next: the seasons — where German goes native again.
+
+
+Lesson 2 of 2.
+die Jahreszeiten — the seasons go native.
+
+Warm-up.
+[pause 2 seconds]
+The months were Latin. The seasons swing back to native German — and one of them, Herbst, is the same word as English harvest. The word for "season" itself is transparent: Jahres-zeit = "year-time."
+
+The four seasons, taken apart.
+[a table of 4 rows, read aloud]
+German: der Frühling (spring). =: früh "early" + -ling. English twin: early-season (from früh, cousin of English early).
+German: der Sommer (summer). =: native Germanic. English twin: summer.
+German: der Herbst (autumn). =: native Germanic. English twin: harvest.
+German: der Winter (winter). =: native Germanic. English twin: winter.
+All four are homegrown Germanic, and three are the plain twins of English summer, winter, and — the surprise — harvest:
+Frühling is built from früh ("early") — literally the "early-season," the year's first. (German also uses Lenz, an old poetic word for spring.)
+Herbst corresponds to harvest. They're the same Germanic word: the reaping season. English kept harvest but narrowed it to the act of gathering and reached for Latin-derived autumn for the season; German kept the old word for the season itself. Two languages, one word, split in meaning.
+So the German year splits cleanly: Latin for the months (like Uhr, the clock), native Germanic for the seasons (like the numbers and Mittag/Mitternacht).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "der Frühling, der Sommer, der Herbst, der Winter"]
+[pause 8 seconds for the answer]
+[your turn — say: the twins — "Sommer/summer, Winter/winter, Herbst/harvest"]
+[pause 8 seconds for the answer]
+[your turn — say: "Frühling = früh (early) + -ling — the early season"]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+Are German seasons native or Latin, unlike the months? (Native Germanic.) What English word is Herbst the twin of, and what happened to it? (Harvest — English narrowed it to the reaping act and took autumn from Latin for the season.) What is Frühling built from? (früh "early" — the early season.) Next chapter builds on this toward family and food.

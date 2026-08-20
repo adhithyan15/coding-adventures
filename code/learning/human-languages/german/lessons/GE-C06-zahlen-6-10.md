@@ -1,5 +1,6 @@
 ---
 id: GE-C06-zahlen-6-10
+sequence: 220
 chapter: 6
 type: word
 headword: sechs, sieben, acht, neun, zehn
