@@ -66,6 +66,27 @@ All notable changes to the Go build tool will be documented in this file.
 
 ### Fixed
 
+- **Platform BUILD dependencies stay platform-scoped in shared CI plans.** The
+  detect job now resolves Linux, macOS, and Windows BUILD metadata into
+  separate graph/affected states, unions their toolchain requirements, and
+  serializes the optional states in plan v1. Shared shard assignment uses the
+  union of those states, then runners select their own state for execution, so
+  Windows native prerequisites remain assigned and ordered without being
+  scheduled on Unix. Changes to a platform-specific BUILD file also affect
+  only runners that select that file. Older plans fall back to the top-level
+  state.
+- **Build-plan schema accepts case-preserving package identities.** The
+  language prefix remains lowercase, while the package portion now admits the
+  uppercase characters already used by established Swift roots such as
+  `swift/Code128`; generated repository plans validate against their schema.
+- **Required build-plan collections serialize as arrays/objects, never JSON
+  `null`.** Writers normalize empty package, edge, toolchain, command, and
+  platform-edge collections while preserving the contractually distinct
+  `affected_packages: null` rebuild-all state.
+- **Declared dependency schema matches the emitted source references.** Same-
+  language shorthand and repository labels are accepted in `declared_deps`;
+  resolved identities remain authoritative in `dependency_edges`.
+
 - **A Starlark BUILD that declares no targets is no longer labelled Starlark.**
   On that path `BuildCommands` is still the raw file lines, which the executor
   runs through the shell exactly as for a shell BUILD, so keeping `IsStarlark`

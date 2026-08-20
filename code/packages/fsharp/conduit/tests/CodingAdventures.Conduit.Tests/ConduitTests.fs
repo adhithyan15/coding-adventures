@@ -91,6 +91,26 @@ module ResponseUnitTests =
         Assert.Throws<ArgumentException>(fun () ->
             Response.json "{}" |> Response.withStatus 1000 |> ignore) |> ignore
 
+    // `withStatus` above validates on the *mutation* path. `respond` is the only
+    // public entry point that reaches the constructor's own range guard, so it
+    // needs its own case — otherwise that guard is never executed.
+    [<Fact>]
+    let ``respond rejects a status below the valid range`` () =
+        Assert.Throws<ArgumentException>(fun () ->
+            Response.respond 99 "body" [] |> ignore) |> ignore
+
+    [<Fact>]
+    let ``respond rejects a status above the valid range`` () =
+        Assert.Throws<ArgumentException>(fun () ->
+            Response.respond 1000 "body" [] |> ignore) |> ignore
+
+    [<Fact>]
+    let ``respond builds an arbitrary status body and headers`` () =
+        let r = Response.respond 418 "teapot" ["x-brew", "tea"]
+        Assert.Equal(418, r.Status)
+        Assert.Equal("teapot", r.Body)
+        Assert.Contains(r.Headers, fun (n, v) -> n = "x-brew" && v = "tea")
+
 // ═════════════════════════════════════════════════════════════════════════════
 // GROUP 2 — Application unit tests (configure-only; requires native library)
 // ═════════════════════════════════════════════════════════════════════════════
@@ -132,6 +152,29 @@ module ApplicationUnitTests =
     let ``post registration does not throw`` () =
         use app = Application.create()
         app |> Application.post "/api" (fun _ -> Response.json "{}") |> ignore
+
+    // `get` and `post` were covered above, but the remaining verb helpers are
+    // each their own one-line binding, so they stay unexecuted — and therefore
+    // uncovered — unless registered explicitly.
+    [<Fact>]
+    let ``put registration does not throw`` () =
+        use app = Application.create()
+        app |> Application.put "/api/:id" (fun _ -> Response.json "{}") |> ignore
+
+    [<Fact>]
+    let ``delete registration does not throw`` () =
+        use app = Application.create()
+        app |> Application.delete "/api/:id" (fun _ -> Response.json "{}") |> ignore
+
+    [<Fact>]
+    let ``patch registration does not throw`` () =
+        use app = Application.create()
+        app |> Application.patch "/api/:id" (fun _ -> Response.json "{}") |> ignore
+
+    [<Fact>]
+    let ``route registers an explicit method string`` () =
+        use app = Application.create()
+        app |> Application.route "OPTIONS" "/api" (fun _ -> Response.text "") |> ignore
 
     [<Fact>]
     let ``before filter registration does not throw`` () =

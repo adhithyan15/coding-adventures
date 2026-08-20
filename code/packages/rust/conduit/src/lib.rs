@@ -581,20 +581,44 @@ mod tests {
     }
 
     fn request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
-        let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
-        stream
-            .set_read_timeout(Some(Duration::from_secs(5)))
-            .unwrap();
+        // Windows can report WSAECONNRESET when `Connection: close` races the
+        // server's socket teardown after a response. Retry the whole request on
+        // a fresh connection, matching the other in-repository HTTP test clients.
+        const MAX_ATTEMPTS: usize = 5;
+        let mut last_error = None;
+        for _ in 0..MAX_ATTEMPTS {
+            match try_request(port, method, path, body) {
+                Ok(result) => return result,
+                Err(error) if error.kind() == std::io::ErrorKind::ConnectionReset => {
+                    last_error = Some(error);
+                }
+                Err(error) => panic!("http request failed: {error}"),
+            }
+        }
+        panic!(
+            "http request failed after {MAX_ATTEMPTS} attempts: {}",
+            last_error.expect("at least one attempt records an error")
+        )
+    }
+
+    fn try_request(
+        port: u16,
+        method: &str,
+        path: &str,
+        body: &str,
+    ) -> std::io::Result<(u16, String)> {
+        let mut stream = TcpStream::connect(("127.0.0.1", port))?;
+        stream.set_read_timeout(Some(Duration::from_secs(5)))?;
 
         let req = format!(
             "{method} {path} HTTP/1.1\r\nHost: localhost\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
             body.len()
         );
-        stream.write_all(req.as_bytes()).expect("write request");
+        stream.write_all(req.as_bytes())?;
 
         let mut reader = BufReader::new(&stream);
         let mut status_line = String::new();
-        reader.read_line(&mut status_line).expect("read status");
+        reader.read_line(&mut status_line)?;
         let status = status_line
             .split_whitespace()
             .nth(1)
@@ -605,7 +629,7 @@ mod tests {
         let mut content_length = 0usize;
         loop {
             let mut line = String::new();
-            reader.read_line(&mut line).expect("read header");
+            reader.read_line(&mut line)?;
             let trimmed = line.trim();
             if trimmed.is_empty() {
                 break;
@@ -619,8 +643,8 @@ mod tests {
         }
 
         let mut body_buf = vec![0; content_length];
-        reader.read_exact(&mut body_buf).unwrap_or(());
-        (status, String::from_utf8_lossy(&body_buf).into_owned())
+        reader.read_exact(&mut body_buf)?;
+        Ok((status, String::from_utf8_lossy(&body_buf).into_owned()))
     }
 
     #[test]

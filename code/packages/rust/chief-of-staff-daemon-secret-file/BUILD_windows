@@ -1,0 +1,1 @@
+cargo test -p chief-of-staff-daemon-secret-file && cargo clippy -p chief-of-staff-daemon-secret-file --all-targets -- -D warnings

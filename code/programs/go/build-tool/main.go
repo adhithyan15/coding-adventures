@@ -150,6 +150,121 @@ func expandAffectedSetWithPrereqs(
 	return expanded
 }
 
+func packagesForPlatform(packages []discovery.Package, goos string) []discovery.Package {
+	platformPackages := make([]discovery.Package, len(packages))
+	copy(platformPackages, packages)
+
+	for i := range platformPackages {
+		pkg := &platformPackages[i]
+		if pkg.IsStarlark {
+			continue
+		}
+		buildFile := discovery.GetBuildFileForPlatform(pkg.Path, goos)
+		if buildFile == "" {
+			continue
+		}
+		data, err := os.ReadFile(buildFile)
+		if err != nil {
+			continue
+		}
+		pkg.BuildContent = string(data)
+		if commands := discovery.ReadLines(buildFile); len(commands) > 0 {
+			pkg.BuildCommands = commands
+		}
+	}
+
+	return platformPackages
+}
+
+func changedPackageRootsForPlatform(
+	changedFiles []string,
+	packages []discovery.Package,
+	repoRoot string,
+	goos string,
+) map[string]bool {
+	if changedFiles == nil {
+		return nil
+	}
+
+	packageByDir := make(map[string]discovery.Package, len(packages))
+	for _, pkg := range packages {
+		rel, err := filepath.Rel(repoRoot, pkg.Path)
+		if err == nil {
+			packageByDir[filepath.Clean(rel)] = pkg
+		}
+	}
+
+	filtered := make([]string, 0, len(changedFiles))
+	for _, changed := range changedFiles {
+		nativeChanged := filepath.Clean(filepath.FromSlash(changed))
+		base := filepath.Base(nativeChanged)
+		if base != "BUILD" && !strings.HasPrefix(base, "BUILD_") {
+			filtered = append(filtered, changed)
+			continue
+		}
+
+		pkg, ok := packageByDir[filepath.Dir(nativeChanged)]
+		if !ok {
+			filtered = append(filtered, changed)
+			continue
+		}
+		selected := discovery.GetBuildFileForPlatform(pkg.Path, goos)
+		selectedRel, err := filepath.Rel(repoRoot, selected)
+		if err == nil && filepath.Clean(selectedRel) == nativeChanged {
+			filtered = append(filtered, changed)
+		}
+	}
+
+	return gitdiff.MapFilesToPackages(filtered, packages, repoRoot)
+}
+
+func graphEdges(graph *directedgraph.Graph) [][2]string {
+	var edges [][2]string
+	if graph == nil {
+		return edges
+	}
+	for _, node := range graph.Nodes() {
+		successors, err := graph.Successors(node)
+		if err != nil {
+			continue
+		}
+		for _, successor := range successors {
+			edges = append(edges, [2]string{node, successor})
+		}
+	}
+	return edges
+}
+
+func affectedForGraph(
+	graph *directedgraph.Graph,
+	changedPackageRoots map[string]bool,
+	fallback map[string]bool,
+	force bool,
+) map[string]bool {
+	if force {
+		return nil
+	}
+	if changedPackageRoots == nil {
+		return fallback
+	}
+	if len(changedPackageRoots) == 0 {
+		return map[string]bool{}
+	}
+	affected := graph.AffectedNodes(changedPackageRoots)
+	return expandAffectedSetWithPrereqs(graph, affected)
+}
+
+func affectedListFromSet(affectedSet map[string]bool) []string {
+	if affectedSet == nil {
+		return nil
+	}
+	affected := make([]string, 0, len(affectedSet))
+	for name := range affectedSet {
+		affected = append(affected, name)
+	}
+	return affected
+}
+
 // run contains the actual logic, separated from main() so we can
 // return an exit code cleanly.
 func run() int {
@@ -206,6 +321,8 @@ func run() int {
 	var packages []discovery.Package
 	var graph *directedgraph.Graph
 	var affectedSet map[string]bool
+	var changedPackageRoots map[string]bool
+	var changedFilesForPlan []string
 	ciToolchains := make(map[string]bool)
 	usedPlan := false
 
@@ -228,34 +345,16 @@ func run() int {
 					DeclaredDeps:  pe.DeclaredDeps,
 				}
 
-				// Re-read the platform-appropriate BUILD file for this package.
-				// The plan's BuildCommands were generated on the detect job's OS
-				// (typically Linux) and may contain shell syntax that doesn't
-				// work on Windows (e.g., 2>/dev/null, shell quoting). By re-reading
-				// the BUILD file for the current platform, we get the correct
-				// commands for this runner's OS.
-				//
-				// Skip this for Starlark packages: their commands come from
-				// Starlark evaluation, not from reading the BUILD file as shell.
-				// Reading a Starlark BUILD file as shell lines would produce
-				// load("...") as a command, which shells cannot execute.
-				if !packages[i].IsStarlark {
-					platformBuild := discovery.GetBuildFileForPlatform(packages[i].Path, runtime.GOOS)
-					if platformBuild != "" {
-						platformCmds := discovery.ReadLines(platformBuild)
-						if len(platformCmds) > 0 {
-							packages[i].BuildCommands = platformCmds
-						}
-					}
-				}
 			}
+			packages = packagesForPlatform(packages, runtime.GOOS)
+			platformState := bp.StateForPlatform(runtime.GOOS)
 
 			// Reconstruct dependency graph from edges.
 			graph = directedgraph.New()
 			for _, pe := range bp.Packages {
 				graph.AddNode(pe.Name)
 			}
-			for _, edge := range bp.DependencyEdges {
+			for _, edge := range platformState.DependencyEdges {
 				graph.AddEdge(edge[0], edge[1])
 			}
 
@@ -263,18 +362,18 @@ func run() int {
 			if *force || bp.Force {
 				*force = true
 				affectedSet = nil
-			} else if bp.AffectedPackages == nil {
+			} else if platformState.AffectedPackages == nil {
 				affectedSet = nil
 			} else {
 				affectedSet = make(map[string]bool)
-				for _, name := range bp.AffectedPackages {
+				for _, name := range platformState.AffectedPackages {
 					affectedSet[name] = true
 				}
 			}
 
 			if *shardIndex >= 0 {
 				if len(bp.Shards) == 0 {
-					bp.Shards = plan.ComputeShards(bp, *shardCount)
+					bp.Shards = plan.ComputePlatformShards(bp, *shardCount)
 				}
 
 				shard, ok := plan.FindShard(bp.Shards, *shardIndex)
@@ -422,6 +521,7 @@ func run() int {
 		// Git is the source of truth — no cache file needed for primary workflow.
 		if !*force {
 			changedFiles := gitdiff.GetChangedFiles(repoRoot, *diffBase)
+			changedFilesForPlan = changedFiles
 			if len(changedFiles) > 0 {
 				if containsPath(changedFiles, gitdiff.CIWorkflowPath) {
 					ciChange := gitdiff.AnalyzeCIWorkflowChanges(repoRoot, *diffBase)
@@ -459,7 +559,13 @@ func run() int {
 					*force = true
 					affectedSet = nil
 				} else {
-					changedPkgs := gitdiff.MapFilesToPackages(changedFiles, packages, repoRoot)
+					changedPkgs := changedPackageRootsForPlatform(
+						changedFiles,
+						packages,
+						repoRoot,
+						runtime.GOOS,
+					)
+					changedPackageRoots = changedPkgs
 					if len(changedPkgs) > 0 {
 						affectedSet = graph.AffectedNodes(changedPkgs)
 						affectedSet = expandAffectedSetWithPrereqs(graph, affectedSet)
@@ -492,6 +598,8 @@ func run() int {
 			packages,
 			graph,
 			affectedSet,
+			changedPackageRoots,
+			changedFilesForPlan,
 			*force,
 			ciToolchains,
 			*diffBase,
@@ -710,6 +818,8 @@ func emitBuildPlan(
 	packages []discovery.Package,
 	graph *directedgraph.Graph,
 	affectedSet map[string]bool,
+	changedPackageRoots map[string]bool,
+	changedFiles []string,
 	force bool,
 	ciToolchains map[string]bool,
 	diffBase string,
@@ -737,41 +847,64 @@ func emitBuildPlan(
 		}
 	}
 
-	// Build dependency edges from the graph.
-	var edges [][2]string
-	for _, node := range graph.Nodes() {
-		successors, err := graph.Successors(node)
-		if err != nil {
-			continue
-		}
-		for _, succ := range successors {
-			edges = append(edges, [2]string{node, succ})
-		}
-	}
+	// Build dependency edges from the detect platform's graph.
+	edges := graphEdges(graph)
 
 	// Build affected packages list.
-	var affectedList []string
-	if affectedSet != nil {
-		affectedList = make([]string, 0, len(affectedSet))
-		for name := range affectedSet {
-			affectedList = append(affectedList, name)
+	affectedList := affectedListFromSet(affectedSet)
+
+	// Compute per-platform dependency/affected state. Platform BUILD files can
+	// declare native prerequisites that must be scheduled only on that runner.
+	platformOverrides := make(map[string]plan.PlatformState)
+	platformLanguages := make(map[string]bool)
+	for _, goos := range []string{"linux", "darwin", "windows"} {
+		platformPackages := packagesForPlatform(packages, goos)
+		platformGraph, err := resolver.ResolveDependencies(platformPackages)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error resolving %s build plan: %v\n", goos, err)
+			return 1
+		}
+		platformChanged := changedPackageRootsForPlatform(changedFiles, platformPackages, repoRoot, goos)
+		platformAffected := affectedForGraph(
+			platformGraph,
+			platformChanged,
+			affectedSet,
+			force,
+		)
+		platformOverrides[goos] = plan.PlatformState{
+			DependencyEdges:  graphEdges(platformGraph),
+			AffectedPackages: affectedListFromSet(platformAffected),
+		}
+		for language, needed := range computeLanguagesNeeded(
+			platformPackages,
+			platformAffected,
+			force,
+			ciToolchains,
+		) {
+			if needed {
+				platformLanguages[language] = true
+			}
 		}
 	}
 
-	// Compute languages needed.
+	// Compute languages needed as the union across runner platforms.
 	languagesNeeded := computeLanguagesNeeded(packages, affectedSet, force, ciToolchains)
+	for language := range platformLanguages {
+		languagesNeeded[language] = true
+	}
 
 	bp := &plan.BuildPlan{
-		DiffBase:         diffBase,
-		Force:            force,
-		AffectedPackages: affectedList,
-		Packages:         entries,
-		DependencyEdges:  edges,
-		LanguagesNeeded:  languagesNeeded,
+		DiffBase:          diffBase,
+		Force:             force,
+		AffectedPackages:  affectedList,
+		Packages:          entries,
+		DependencyEdges:   edges,
+		LanguagesNeeded:   languagesNeeded,
+		PlatformOverrides: platformOverrides,
 	}
 
 	if shardCount > 0 {
-		bp.Shards = plan.ComputeShards(bp, shardCount)
+		bp.Shards = plan.ComputePlatformShards(bp, shardCount)
 	}
 
 	if err := plan.Write(bp, outputPath); err != nil {
@@ -783,7 +916,7 @@ func emitBuildPlan(
 
 	if alsoEmitShardMatrix {
 		if len(bp.Shards) == 0 {
-			bp.Shards = plan.ComputeShards(bp, shardCount)
+			bp.Shards = plan.ComputePlatformShards(bp, shardCount)
 		}
 		if code := outputShardMatrix(bp.Shards); code != 0 {
 			return code

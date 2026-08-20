@@ -12,7 +12,15 @@ use std::os::unix::ffi::OsStrExt;
 use std::path::{Component, Path};
 use std::time::Duration;
 
-const PUBLICATION_RETRIES: usize = 250;
+// A losing thread in the create race waits here for the winner to finish
+// writing, fsync-ing, and fchmod-ing the file it just created (see
+// `create_new` below). 250ms was enough locally but proved too tight on
+// loaded/shared CI runners: with 8 threads contending on a 2-vCPU box, the
+// winner's `write_all` + two `sync_all` + `fchmod` can occasionally take
+// longer than that, so losers exhausted retries and surfaced a spurious
+// `AccessFailed` (see lessons.md). 3s of headroom absorbs that CI noise
+// while still failing fast on a genuinely stuck/unavailable file.
+const PUBLICATION_RETRIES: usize = 3000;
 
 enum OpenFailure {
     Missing,

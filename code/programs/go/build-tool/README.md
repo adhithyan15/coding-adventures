@@ -72,6 +72,15 @@ On Windows, use the compiled `.exe`:
 
 ## Metadata safety
 
+Build plans carry optional platform-specific dependency graphs and affected
+closures. The detect job resolves Linux, Darwin, and Windows BUILD metadata,
+unions their required toolchains, and assigns shared shards from the union so
+platform-only work cannot disappear from the matrix. Each build runner then
+selects only its own graph and affected set. A Windows-only native prerequisite
+is therefore installed and ordered on Windows without causing unrelated Unix
+packages to build. Older v1 plans without platform overrides continue to use
+the top-level graph and affected set.
+
 Text package metadata is decoded according to the language-neutral build-tool
 contract. In particular, Lua `.rockspec` files must be strict UTF-8. Invalid
 bytes stop resolution with `METADATA_INVALID_UTF8`, identify the package and
