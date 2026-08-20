@@ -1,5 +1,6 @@
 ---
 id: GE-W01-eszett
+sequence: 175
 chapter: 4
 type: writing
 headword: "ß"

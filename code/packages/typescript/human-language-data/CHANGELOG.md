@@ -31,6 +31,35 @@
 - Reject reversed and mismatched ranges rather than rounding an awarding body's
   published range to one invented minute.
 
+### Added - first source-bounded German A2 content tranche (#12217)
+
+- Add 51 project-owned content points grounded in the official Goethe A2 adult
+  model set and word-list publication: communicative purposes, text handling,
+  grammar, orthography/phonology, and thirteen lexical domains.
+- Keep all four source dimensions explicitly partial. The official word list is
+  finite evidence, but this tranche neither reproduces nor probes all roughly
+  1,300 lexical units, and the model paper is not a closed grammar or phonology
+  syllabus.
+- Measure the result without flattering it: 3/51 points already have exact
+  German atoms, 48 remain named gaps, and German A2 continues to generate an
+  `exam-inventory` completion item.
+
+### Changed - source-bounded exam inventory completeness (#12230)
+
+- Require every inventory to declare sourced boundaries for communicative
+  functions, grammar, phonology/orthography, and lexicon. A file is complete
+  only when all four dimensions are complete.
+- Keep valid partial inventories measurable: their enumerated exam points still
+  generate coverage work, while their presence no longer suppresses the
+  `exam-inventory` backlog item.
+- Migrate the Spanish, French, and German A1 inventories without inflating their
+  claims. The measured baseline is now 0 complete and 3 partial of 138 targets;
+  Spanish still covers 85/85 currently enumerated points, but that 100% is not
+  misreported as a complete A1 construct.
+- Reject missing dimensions, extra dimensions, empty provenance, empty boundary
+  notes, identity mismatches, malformed metadata, and malformed point labels at
+  the strict loader boundary.
+
 ### Added - cumulative writing-stage evidence (#12211)
 
 - Add HL19 and the exact `hl-writing-stage` block directive. Evidence must name

@@ -2665,6 +2665,37 @@ scanner sessions:
 This broadens common local multifunction and standalone scanner discovery while
 reusing the same DNS-SD and D23 boundaries as the printer discovery slice.
 
+## Current Thread Border Agent mDNS Discovery Breadth Slice
+
+The next breadth slice adds standards-based Thread Border Agent discovery
+without claiming ownership of commissioner credentials, operational datasets,
+radio transport, or a MeshCoP session:
+
+- `smart-home-discovery` now preserves raw DNS-SD TXT value bytes alongside
+  its existing text view, so binary MeshCoP identity and state fields are not
+  corrupted by lossy UTF-8 conversion while existing text consumers retain
+  their current API.
+- `smart-home-thread-border-agent-discovery-integration` browses the
+  Thread-required `_meshcop._udp.local` service through the shared production
+  mDNS scanner and validates TXT record version 1, optional 128-bit Border
+  Agent identity, Thread version, the four-byte state bitmap, extended address,
+  endpoint, and optional network, backbone-router, OMR, and vendor fields.
+- A canonical Border Agent id provides stable identity when advertised;
+  otherwise the required extended address provides a deterministic fallback.
+  First observations win while conflicting endpoints and malformed or
+  over-limit advertisements remain isolated partial failures.
+- D23 discovery authorization runs before socket I/O. One browse accepts at
+  most 64 replies, uses a bounded timeout and record TTL, preserves parser
+  failures, and records only non-secret advertised state and capability facts.
+- The runtime opens no Border Agent UDP session and accepts no PSKc, ePSKc,
+  operational dataset, network key, commissioner credential, or joiner code.
+  MeshCoP exchange, commissioning, Thread transport, dataset reads, network
+  mutation, and control require separately supervised session, secret-custody,
+  transport, and operation-policy owners.
+
+This broadens Thread infrastructure visibility while preserving the existing
+block on a production Thread network host and commissioning stack.
+
 The protocol- and vendor-specific backlog below remains valid after these
 breadth steps:
 

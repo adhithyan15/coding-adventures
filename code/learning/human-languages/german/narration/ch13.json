@@ -4,11 +4,168 @@
   "chapter": 13,
   "title": "Colours",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:0903bc711593d695",
+  "sourceHash": "fnv1a64:d26e6b5bb3b7dc17",
   "lessons": [
     {
+      "id": "GE-C13-schwarz-weiss",
+      "sequence": 285,
+      "title": "schwarz, weiß — and the word German lent away",
+      "headword": "schwarz, weiß",
+      "romanization": "schwarz, weiß",
+      "gloss": "black and white — both native Germanic, and one of them German lent to half of Europe",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:91824c7953fa0f52",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for \"shining\" became the word for white in French, Italian and Portuguese."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "unknown",
+          "title": "schwarz",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "schwarz (\"black\") from Proto-Germanic swartaz. Its English cousin survives in swarthy (\"dark-complexioned\"). Further back it's related to Latin sordēs (\"dirt\") — the root of English sordid. Black and grubby, from one idea."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "weiß",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "weiß (\"white\") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes."
+            },
+            {
+              "kind": "speech",
+              "text": "Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "unknown",
+          "title": "The word that emigrated",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "German also has blank — \"shiny, polished, bare.\" That word, in its Frankish form blank (\"shining\"), was borrowed into Romance, where it pushed Latin's own albus out and became:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "language",
+                "\"white\""
+              ],
+              "columns": 2,
+              "rowCount": 4,
+              "utterances": [
+                "language: French. \"white\": blanc.",
+                "language: Italian. \"white\": bianco.",
+                "language: Portuguese. \"white\": branco.",
+                "language: German. \"white\": blank — still just \"shiny\"."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from Chapter 11). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"schwarz, weiß\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"schwarz, weiß\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"der Wein ist weiß\" — Chapter 11's wine, coloured",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"der Wein ist weiß\" — Chapter 11's wine, coloured]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"weiß, white\" — hear the same word",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"weiß · white\" — hear the same word]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"blank\" — and remember: French made this one mean white",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"blank\" — and remember: French made this one mean *white*]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, \"shining\" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GE-C13-rot-blau",
-      "sequence": null,
+      "sequence": 290,
       "title": "rot, blau — cousins and emigrants",
       "headword": "rot, blau",
       "romanization": "rot, blau",
@@ -19,7 +176,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c066fb5de47769ca",
+      "sourceHash": "fnv1a64:9ab18db470249d00",
       "notice": null,
       "blocks": [
         {
@@ -188,163 +345,6 @@
             {
               "kind": "speech",
               "text": "Is rot related to French rouge by borrowing or by descent? (Descent — both from PIE h₁rewdʰ-.) Which two German colour words did Romance borrow? (Blank becomes blanc/bianco/branco, and blau becomes bleu/blu.) Where did English get blue from? (French — the long way round.) Next chapter: putting colours onto the things you already name."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GE-C13-schwarz-weiss",
-      "sequence": null,
-      "title": "schwarz, weiß — and the word German lent away",
-      "headword": "schwarz, weiß",
-      "romanization": "schwarz, weiß",
-      "gloss": "black and white — both native Germanic, and one of them German lent to half of Europe",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:85b588745f1df6fc",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "German's colour words are home-grown — no Latin here. But one of them has a sibling that emigrated: a German word for \"shining\" became the word for white in French, Italian and Portuguese."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "schwarz",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "schwarz (\"black\") from Proto-Germanic swartaz. Its English cousin survives in swarthy (\"dark-complexioned\"). Further back it's related to Latin sordēs (\"dirt\") — the root of English sordid. Black and grubby, from one idea."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "weiß",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "weiß (\"white\") from Proto-Germanic hwītaz = exactly English white. Same word, different spelling clothes."
-            },
-            {
-              "kind": "speech",
-              "text": "Note the ß (Eszett): it marks a sharp s after a long vowel. Weiß rhymes with English vice, not vice-versa's second half. In Switzerland you'll see it written weiss — the letter is optional there."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "The word that emigrated",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "German also has blank — \"shiny, polished, bare.\" That word, in its Frankish form blank (\"shining\"), was borrowed into Romance, where it pushed Latin's own albus out and became:"
-            },
-            {
-              "kind": "table",
-              "headers": [
-                "language",
-                "\"white\""
-              ],
-              "columns": 2,
-              "rowCount": 4,
-              "utterances": [
-                "language: French. \"white\": blanc.",
-                "language: Italian. \"white\": bianco.",
-                "language: Portuguese. \"white\": branco.",
-                "language: German. \"white\": blank — still just \"shiny\"."
-              ]
-            },
-            {
-              "kind": "speech",
-              "text": "This is the reverse of the usual flow. Latin normally lends to Germanic (Fenster from fenestra, Wein from vīnum, from Chapter 11). Here Germanic lent to Latin's daughters — and German kept the original meaning while they turned it into a colour."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"schwarz, weiß\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"schwarz, weiß\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"der Wein ist weiß\" — Chapter 11's wine, coloured",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Wein ist weiß\" — Chapter 11's wine, coloured]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"weiß, white\" — hear the same word",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"weiß · white\" — hear the same word]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"blank\" — and remember: French made this one mean white",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"blank\" — and remember: French made this one mean *white*]"
-            }
-          ]
-        },
-        {
-          "index": 5,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Are German's colour words borrowed from Latin? (No — both are native Germanic.) What English word is schwarz's cousin? (Swarthy — and, further off, sordid.) What is weiß in English, letter for letter? (White.) Which German word became French blanc? (Blank, \"shining\" — Germanic lending into Romance for once.) Next: rot and blau, and one more word that travelled."
             }
           ]
         }

@@ -1,5 +1,6 @@
 ---
 id: GE-W02-umlauts
+sequence: 180
 chapter: 4
 type: writing
 headword: "ä ö ü"

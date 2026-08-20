@@ -1,5 +1,6 @@
 ---
 id: GE-C02-du-sie
+sequence: 80
 chapter: 2
 type: word
 headword: du / Sie

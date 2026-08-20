@@ -5593,19 +5593,25 @@ impl HtmlParser {
         }
 
         if !in_foreign_content && name == "meta" && self.current_element_is_table_structure() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-content-start-tag-in-table",
-                "head-content start tag `<meta>` in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-content-start-tag-in-table",
+                    "head-content start tag `<meta>` in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             self.insert_node_before_open_table(Node::element(name, attributes));
             return;
         }
 
         if !in_foreign_content && name == "title" && self.current_element_is_table_structure() {
-            self.diagnostics.push(ParserDiagnostic::new(
-                "unexpected-head-content-start-tag-in-table",
-                "head-content start tag `<title>` in a table context was foster parented",
-            ));
+            self.diagnostics.push(
+                ParserDiagnostic::new(
+                    "unexpected-head-content-start-tag-in-table",
+                    "head-content start tag `<title>` in a table context was foster parented",
+                )
+                .at_emission(self.current_token_emission_position),
+            );
             if let Some(path) = self.insert_node_before_open_table(Node::element(name, attributes))
             {
                 self.open_elements.push(path);
@@ -5635,10 +5641,13 @@ impl HtmlParser {
             if attribute_value(&attributes, "type")
                 .is_some_and(|value| value.eq_ignore_ascii_case("hidden"))
             {
-                self.diagnostics.push(ParserDiagnostic::new(
-                    "unexpected-hidden-input-start-tag-in-table",
-                    "hidden input start tag in a table context was inserted with a parse error",
-                ));
+                self.diagnostics.push(
+                    ParserDiagnostic::new(
+                        "unexpected-hidden-input-start-tag-in-table",
+                        "hidden input start tag in a table context was inserted with a parse error",
+                    )
+                    .at_emission(self.current_token_emission_position),
+                );
                 self.append_node(Node::element(name, attributes));
             } else {
                 self.diagnostics.push(ParserDiagnostic::new(
@@ -27054,6 +27063,30 @@ mod tests {
         }))
     }
 
+    fn meta_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-head-content-start-tag-in-table",
+            "head-content start tag `<meta>` in a table context was foster parented",
+        )
+        .at_emission(Some(start_tag_position(source, "meta")))
+    }
+
+    fn title_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-head-content-start-tag-in-table",
+            "head-content start tag `<title>` in a table context was foster parented",
+        )
+        .at_emission(Some(start_tag_position(source, "title")))
+    }
+
+    fn hidden_input_start_tag_in_table_recovery(source: &str) -> ParserDiagnostic {
+        ParserDiagnostic::new(
+            "unexpected-hidden-input-start-tag-in-table",
+            "hidden input start tag in a table context was inserted with a parse error",
+        )
+        .at_emission(Some(start_tag_position(source, "input")))
+    }
+
     fn generic_foreign_end_tag_mismatch(source: &str, name: &str) -> ParserDiagnostic {
         ParserDiagnostic::new(
             "unexpected-end-tag-in-foreign-content",
@@ -35250,14 +35283,12 @@ mod tests {
         assert_eq!(replacement.name, "table");
         assert_eq!(element_text_content(replacement), "X");
 
-        for source in ["<!doctype html><table><meta>", "<!doctype html><table><title>"] {
-            let output = parse_html_with_diagnostics(source).unwrap();
-            assert!(output
-                .parser_diagnostics
-                .iter()
-                .filter(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
-                .all(|diagnostic| diagnostic.position.is_none()));
-        }
+        let input = parse_html_with_diagnostics("<!doctype html><table><input type=text>").unwrap();
+        assert!(input
+            .parser_diagnostics
+            .iter()
+            .filter(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
+            .all(|diagnostic| diagnostic.position.is_none()));
 
         let mut unpositioned = HtmlParser::with_fragment_context_options(
             HtmlParseOptions::default(),
@@ -35421,12 +35452,8 @@ mod tests {
 
         for (source, code) in [
             (
-                "<!doctype html><table><meta>",
-                "unexpected-head-content-start-tag-in-table",
-            ),
-            (
-                "<!doctype html><table><input type=hidden>",
-                "unexpected-hidden-input-start-tag-in-table",
+                "<!doctype html><table><input type=text>",
+                "unexpected-input-start-tag-in-table",
             ),
             (
                 "<!doctype html><table><b>",
@@ -41375,11 +41402,7 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-hidden-input-start-tag-in-table",
-                            "hidden input start tag in a table context was inserted with a parse error",
-                        )
+                    diagnostic == &hidden_input_start_tag_in_table_recovery(source)
                 }),
                 "source {source:?}"
             );
@@ -41394,6 +41417,151 @@ mod tests {
                 diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
             }));
         }
+    }
+
+    #[test]
+    fn positions_hidden_input_start_tags_in_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><input type=hidden>",
+            "<!doctype html><table><colgroup><input type=HIDDEN>",
+            "<!doctype html><table><tbody><input type=hidden>",
+            "<!doctype html><table><thead><input type=hidden>",
+            "<!doctype html><table><tfoot><input type=hidden>",
+            "<!doctype html><table><tbody><tr><input type=hidden>",
+            "<!doctype html><template><table><input type=hidden>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-hidden-input-start-tag-in-table"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&hidden_input_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><input type=HiDdEn />",
+            "<!doctype html><table><input type=hidd&#x65;n>",
+            "<!doctype html><table><input type=hidden type=text>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().any(|diagnostic| {
+                    diagnostic == &hidden_input_start_tag_in_table_recovery(source)
+                }),
+                "source {source:?}"
+            );
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "non-void-html-element-self-closing"
+            }));
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<input type=hidden data-name='é'>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &hidden_input_start_tag_in_table_recovery(source)
+            }));
+            let input = find_first_element_in_nodes(&output.nodes, "input").unwrap();
+            assert_eq!(input.attribute("type"), Some("hidden"));
+            assert_eq!(input.attribute("data-name"), Some("é"));
+        }
+
+        for (source, context) in [
+            ("<input type=hidden>", "caption"),
+            ("<input type=hidden>", "colgroup"),
+            ("<input type=hidden>", "td"),
+            ("<input type=hidden>", "th"),
+            ("<input type=hidden>", "template"),
+            ("<input type=hidden>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><input type=hidden>",
+            "<!doctype html><table><tbody><tr><td><input type=hidden>",
+            "<!doctype html><table><tbody><tr><th><input type=hidden>",
+            "<!doctype html><table><select><input type=hidden>",
+            "<!doctype html><template><div><input type=hidden>",
+            "<!doctype html><table><div><input type=hidden>",
+            "<!doctype html><table><input type=hidden",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        for source in [
+            "<!doctype html><table><input>",
+            "<!doctype html><table><input type=>",
+            "<!doctype html><table><input type=' hidden'>",
+            "<!doctype html><table><input type=text type=hidden>",
+            "<!doctype html><table><input type=hidden/>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-hidden-input-start-tag-in-table"
+            }));
+            let companion = output
+                .parser_diagnostics
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
+                .unwrap();
+            assert_eq!(companion.position, None, "source {source:?}");
+        }
+
+        let state_source = "<!doctype html><main><table><input id=marker type=hidden><tbody><tr><td>X</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let table = element(&main.children[0]);
+        assert_eq!(table.name, "table");
+        let input = element(&table.children[0]);
+        assert_eq!(input.name, "input");
+        assert_eq!(input.attribute("id"), Some("marker"));
+        assert!(input.children.is_empty());
+        assert_eq!(element(&table.children[1]).name, "tbody");
+        assert_eq!(element_text_content(table), "X");
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "input".to_string(),
+            attributes: vec![LexerAttribute {
+                name: "type".to_string(),
+                value: "hidden".to_string(),
+            }],
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| {
+                    diagnostic.code == "unexpected-hidden-input-start-tag-in-table"
+                })
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]
@@ -42070,13 +42238,11 @@ mod tests {
             let output = parse_html_with_diagnostics(source).unwrap();
             assert!(
                 output.parser_diagnostics.iter().any(|diagnostic| {
-                    diagnostic
-                        == &ParserDiagnostic::new(
-                            "unexpected-head-content-start-tag-in-table",
-                            format!(
-                                "head-content start tag `<{name}>` in a table context was foster parented"
-                            ),
-                        )
+                    if name == "meta" {
+                        diagnostic == &meta_start_tag_in_table_recovery(source)
+                    } else {
+                        diagnostic == &title_start_tag_in_table_recovery(source)
+                    }
                 }),
                 "source {source:?}"
             );
@@ -42089,6 +42255,248 @@ mod tests {
         assert!(head.parser_diagnostics.iter().all(|diagnostic| {
             diagnostic.code != "unexpected-head-content-start-tag-in-table"
         }));
+    }
+
+    #[test]
+    fn positions_meta_start_tags_fostered_from_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><meta>",
+            "<!doctype html><table><colgroup><meta>",
+            "<!doctype html><table><tbody><meta>",
+            "<!doctype html><table><thead><meta>",
+            "<!doctype html><table><tfoot><meta>",
+            "<!doctype html><table><tbody><tr><meta>",
+            "<!doctype html><template><table><meta>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-head-content-start-tag-in-table"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&meta_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<meta data-name='é'>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &meta_start_tag_in_table_recovery(source)
+            }));
+        }
+
+        for (source, context) in [
+            ("<meta>", "caption"),
+            ("<meta>", "colgroup"),
+            ("<meta>", "td"),
+            ("<meta>", "th"),
+            ("<meta>", "template"),
+            ("<meta>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-head-content-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><meta>",
+            "<!doctype html><table><tbody><tr><td><meta>",
+            "<!doctype html><table><tbody><tr><th><meta>",
+            "<!doctype html><table><select><meta>",
+            "<!doctype html><template><div><meta>",
+            "<!doctype html><table><meta",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-head-content-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let state_source = "<!doctype html><main><table><meta id=marker charset=utf-8><tbody><tr><td>X</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let meta = element(&main.children[0]);
+        assert_eq!(meta.name, "meta");
+        assert_eq!(meta.attribute("id"), Some("marker"));
+        assert_eq!(meta.attribute("charset"), Some("utf-8"));
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let input = parse_html_with_diagnostics("<!doctype html><table><input type=text>").unwrap();
+        let input_diagnostic = input
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "unexpected-input-start-tag-in-table")
+            .unwrap();
+        assert_eq!(input_diagnostic.position, None);
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "meta".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
+    }
+
+    #[test]
+    fn positions_title_start_tags_fostered_from_tables_at_token_emission() {
+        for source in [
+            "<!doctype html><table><title>A &amp; B</title>",
+            "<!doctype html><table><colgroup><title>A</title>",
+            "<!doctype html><table><tbody><title>A</title>",
+            "<!doctype html><table><thead><title>A</title>",
+            "<!doctype html><table><tfoot><title>A</title>",
+            "<!doctype html><table><tbody><tr><title>A</title>",
+            "<!doctype html><template><table><title>A</title>",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            let diagnostics = output
+                .parser_diagnostics
+                .iter()
+                .filter(|diagnostic| {
+                    diagnostic.code == "unexpected-head-content-start-tag-in-table"
+                })
+                .collect::<Vec<_>>();
+            assert_eq!(
+                diagnostics,
+                vec![&title_start_tag_in_table_recovery(source)],
+                "source {source:?}"
+            );
+        }
+
+        for context in ["table", "tbody", "thead", "tfoot", "tr"] {
+            let source = "<!--é-->\r\n<title data-name='é'>A &amp; B</title>";
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(source.len() > source.chars().count());
+            assert!(output.parser_diagnostics.iter().any(|diagnostic| {
+                diagnostic == &title_start_tag_in_table_recovery(source)
+            }));
+            let title = find_first_element_in_nodes(&output.nodes, "title").unwrap();
+            assert_eq!(title.children, vec![Node::text("A & B")]);
+            assert_eq!(title.attribute("data-name"), Some("é"));
+        }
+
+        for (source, context) in [
+            ("<title>A</title>", "caption"),
+            ("<title>A</title>", "colgroup"),
+            ("<title>A</title>", "td"),
+            ("<title>A</title>", "th"),
+            ("<title>A</title>", "template"),
+            ("<title>A</title>", "html body"),
+        ] {
+            let output =
+                parse_html_fragment_for_context_with_diagnostics(source, context).unwrap();
+            assert!(output.parser_diagnostics.iter().all(|diagnostic| {
+                diagnostic.code != "unexpected-head-content-start-tag-in-table"
+            }));
+        }
+
+        for source in [
+            "<!doctype html><table><caption><title>A</title>",
+            "<!doctype html><table><tbody><tr><td><title>A</title>",
+            "<!doctype html><table><tbody><tr><th><title>A</title>",
+            "<!doctype html><table><select><title>A</title>",
+            "<!doctype html><template><div><title>A</title>",
+            "<!doctype html><table><div><title>A</title>",
+            "<!doctype html><table><title",
+        ] {
+            let output = parse_html_with_diagnostics(source).unwrap();
+            assert!(
+                output.parser_diagnostics.iter().all(|diagnostic| {
+                    diagnostic.code != "unexpected-head-content-start-tag-in-table"
+                }),
+                "source {source:?}"
+            );
+        }
+
+        let state_source = "<!doctype html><main><table><title id=marker>A</not-title>&amp;B</title><tbody><tr><td>X</table></main>";
+        let state = parse_html_with_diagnostics(state_source).unwrap();
+        let main = find_first_element_in_nodes(&state.document.children, "main").unwrap();
+        let title = element(&main.children[0]);
+        assert_eq!(title.name, "title");
+        assert_eq!(title.attribute("id"), Some("marker"));
+        assert_eq!(title.children, vec![Node::text("A</not-title>&B")]);
+        let table = element(&main.children[1]);
+        assert_eq!(table.name, "table");
+        assert_eq!(element_text_content(table), "X");
+
+        let malformed_close_source =
+            "<!doctype html><table><title>A</title data-name='ignored'><tbody>";
+        let malformed_close = parse_html_with_diagnostics(malformed_close_source).unwrap();
+        assert!(malformed_close.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &title_start_tag_in_table_recovery(malformed_close_source)
+        }));
+        let title = find_first_element_in_nodes(&malformed_close.document.children, "title")
+            .unwrap();
+        assert_eq!(title.children, vec![Node::text("A")]);
+
+        let incomplete_close_source = "<!doctype html><table><title>A &amp; B</title";
+        let incomplete_close = parse_html_with_diagnostics(incomplete_close_source).unwrap();
+        assert!(incomplete_close.parser_diagnostics.iter().any(|diagnostic| {
+            diagnostic == &title_start_tag_in_table_recovery(incomplete_close_source)
+        }));
+        let eof_diagnostic = incomplete_close
+            .parser_diagnostics
+            .iter()
+            .find(|diagnostic| diagnostic.code == "eof-in-text-mode")
+            .unwrap();
+        assert_eq!(
+            eof_diagnostic.position,
+            Some(eof_position(incomplete_close_source))
+        );
+        let title = find_first_element_in_nodes(&incomplete_close.document.children, "title")
+            .unwrap();
+        assert_eq!(title.children, vec![Node::text("A & B</title")]);
+
+        let mut unpositioned = HtmlParser::with_fragment_context_options(
+            HtmlParseOptions::default(),
+            "table",
+        );
+        unpositioned.process_token(Token::StartTag {
+            name: "title".to_string(),
+            attributes: Vec::new(),
+            self_closing: false,
+        });
+        unpositioned.process_token(Token::Text("A &amp; B".to_string()));
+        unpositioned.process_token(Token::EndTag {
+            name: "title".to_string(),
+        });
+        assert_eq!(
+            unpositioned
+                .diagnostics()
+                .iter()
+                .find(|diagnostic| diagnostic.code == "unexpected-head-content-start-tag-in-table")
+                .unwrap()
+                .position,
+            None
+        );
     }
 
     #[test]

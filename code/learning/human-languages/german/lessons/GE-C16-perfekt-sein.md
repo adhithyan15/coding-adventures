@@ -1,5 +1,6 @@
 ---
 id: GE-C16-perfekt-sein
+sequence: 325
 chapter: 16
 type: phrase
 headword: ich bin gegangen

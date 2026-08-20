@@ -1,5 +1,6 @@
 ---
 id: GE-C16-perfekt-sein-agreement
+sequence: 330
 chapter: 16
 type: grammar
 headword: gegangen — no agreement in the perfect

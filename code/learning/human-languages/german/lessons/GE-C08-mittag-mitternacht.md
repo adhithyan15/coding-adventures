@@ -1,5 +1,6 @@
 ---
 id: GE-C08-mittag-mitternacht
+sequence: 240
 chapter: 8
 type: word
 headword: Mittag, Mitternacht

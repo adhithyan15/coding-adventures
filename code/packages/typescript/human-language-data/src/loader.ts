@@ -11,7 +11,11 @@ import {
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
 import { buildDataset, parseLesson, type ParsedLesson } from "./parse.js";
-import type { ExamInventory } from "./exam-inventory.js";
+import {
+  EXAM_CONTENT_DIMENSIONS,
+  type ExamContentDimension,
+  type ExamInventory,
+} from "./exam-inventory.js";
 import { parseTaskShapeInventory, type TaskShapeInventory } from "./task-shapes.js";
 import {
   parseAssessmentContract,
@@ -518,6 +522,47 @@ export function loadEverything(root = defaultCurriculumRoot()): {
  */
 const SAFE_INVENTORY_SEGMENT = /^[A-Za-z0-9]+$/;
 
+function declaredInventoryComplete(value: unknown): boolean {
+  if (typeof value !== "object" || value === null || Array.isArray(value)) return false;
+  const scope = (value as { scope?: unknown }).scope;
+  if (typeof scope !== "object" || scope === null || Array.isArray(scope)) return false;
+  return EXAM_CONTENT_DIMENSIONS.every((dimension) => {
+    const entry = (scope as Record<string, unknown>)[dimension];
+    return typeof entry === "object" && entry !== null && !Array.isArray(entry) &&
+      (entry as { status?: unknown }).status === "complete";
+  });
+}
+
+function validateInventoryScope(inventory: ExamInventory): void {
+  if (typeof inventory.scope !== "object" || inventory.scope === null || Array.isArray(inventory.scope)) {
+    throw new Error("exam inventory: scope must be an object covering every required content dimension");
+  }
+  const keys = Object.keys(inventory.scope);
+  const extras = keys.filter((key) => !EXAM_CONTENT_DIMENSIONS.includes(key as ExamContentDimension));
+  const missing = EXAM_CONTENT_DIMENSIONS.filter((dimension) => !Object.hasOwn(inventory.scope, dimension));
+  if (missing.length > 0 || extras.length > 0) {
+    throw new Error(
+      `exam inventory: scope must contain exactly ${EXAM_CONTENT_DIMENSIONS.join(", ")}; ` +
+      `missing [${missing.join(", ")}], extra [${extras.join(", ")}]`,
+    );
+  }
+  for (const dimension of EXAM_CONTENT_DIMENSIONS) {
+    const entry = inventory.scope[dimension];
+    if (typeof entry !== "object" || entry === null || Array.isArray(entry)) {
+      throw new Error(`exam inventory: scope.${dimension} must be an object`);
+    }
+    if (entry.status !== "complete" && entry.status !== "partial") {
+      throw new Error(`exam inventory: scope.${dimension}.status must be complete or partial`);
+    }
+    if (typeof entry.source !== "string" || entry.source.trim() === "") {
+      throw new Error(`exam inventory: scope.${dimension}.source must name its provenance`);
+    }
+    if (typeof entry.note !== "string" || entry.note.trim() === "") {
+      throw new Error(`exam inventory: scope.${dimension}.note must state the coverage boundary`);
+    }
+  }
+}
+
 export function loadExamInventory(
   language: string,
   level: string,
@@ -561,8 +606,37 @@ export function loadExamInventory(
     throw new Error(`exam inventory: ${file} has no non-empty 'points' array`);
   }
   const inventory = parsed as ExamInventory;
+  if (inventory.version !== 1) throw new Error("exam inventory: version must be 1");
+  if (
+    typeof inventory.language !== "string" ||
+    typeof inventory.level !== "string" ||
+    inventory.language !== normalized ||
+    inventory.level.toLowerCase() !== level.toLowerCase()
+  ) {
+    throw new Error(
+      `exam inventory: requested ${normalized}/${level} but file declares ${String(inventory.language)}/${String(inventory.level)}`,
+    );
+  }
+  for (const [field, value] of [
+    ["about", inventory.about],
+    ["source", inventory.source],
+    ["probeSemantics", inventory.probeSemantics],
+  ] as const) {
+    if (typeof value !== "string" || value.trim() === "") {
+      throw new Error(`exam inventory: ${field} must be a non-empty string`);
+    }
+  }
+  validateInventoryScope(inventory);
   const seen = new Set<string>();
   for (const point of inventory.points) {
+    if (
+      typeof point !== "object" || point === null ||
+      typeof point.id !== "string" || point.id.trim() === "" ||
+      typeof point.category !== "string" || point.category.trim() === "" ||
+      typeof point.label !== "string" || point.label.trim() === ""
+    ) {
+      throw new Error("exam inventory: every point must have non-empty id, category, and label strings");
+    }
     if (seen.has(point.id)) throw new Error(`exam inventory: duplicate point id '${point.id}'`);
     seen.add(point.id);
     // `__proto__` and friends as a category would pollute the accumulator in
@@ -601,16 +675,22 @@ export function loadExamInventory(
  * whole plan from being computed — `loadExamInventory` is still the strict door
  * that anything actually measuring coverage has to come through.
  */
-export function listExamInventories(root = defaultCurriculumRoot()): { language: string; level: string }[] {
+export function listExamInventories(
+  root = defaultCurriculumRoot(),
+): { language: string; level: string; complete: boolean }[] {
   const directory = resolve(root, "core");
   if (!existsSync(directory)) return [];
-  const found: { language: string; level: string }[] = [];
+  const found: { language: string; level: string; complete: boolean }[] = [];
   for (const file of readdirSync(directory).sort()) {
     if (!file.startsWith("exam-inventory-") || !file.endsWith(".json")) continue;
     try {
       const parsed = JSON.parse(readFileSync(resolve(directory, file), "utf8")) as Partial<ExamInventory>;
       if (typeof parsed.language === "string" && typeof parsed.level === "string") {
-        found.push({ language: parsed.language, level: parsed.level });
+        found.push({
+          language: parsed.language,
+          level: parsed.level,
+          complete: declaredInventoryComplete(parsed),
+        });
       }
     } catch {
       // Skipped on purpose — see the note above.

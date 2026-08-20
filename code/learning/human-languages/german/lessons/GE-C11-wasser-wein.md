@@ -1,5 +1,6 @@
 ---
 id: GE-C11-wasser-wein
+sequence: 270
 chapter: 11
 type: word
 headword: das Wasser, der Wein

@@ -1,5 +1,6 @@
 ---
 id: GE-C01-abend
+sequence: 40
 chapter: 1
 type: word
 headword: Abend

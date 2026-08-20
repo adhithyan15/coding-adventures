@@ -4,11 +4,11 @@
   "chapter": 7,
   "title": "The Days of the Week",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:df41328f5c217864",
+  "sourceHash": "fnv1a64:3d80023a6ae5350c",
   "lessons": [
     {
       "id": "GE-C07-wochentage-1",
-      "sequence": null,
+      "sequence": 225,
       "title": "Montag to Freitag — the gods of the Germanic week",
       "headword": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag",
       "romanization": "Montag, Dienstag, Mittwoch, Donnerstag, Freitag",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:a531e91aa4bf08b4",
+      "sourceHash": "fnv1a64:b343e18a7a666572",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -160,7 +160,7 @@
     },
     {
       "id": "GE-C07-wochentage-2",
-      "sequence": null,
+      "sequence": 230,
       "title": "Samstag and Sonntag — the German weekend",
       "headword": "Samstag, Sonntag",
       "romanization": "Samstag, Sonntag",
@@ -171,7 +171,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:dec34d31bc1fdb7a",
+      "sourceHash": "fnv1a64:0cfaf7f430f0d8c2",
       "notice": {
         "modality": "sight",
         "needs": [

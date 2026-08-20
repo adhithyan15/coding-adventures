@@ -1,5 +1,6 @@
 ---
 id: GE-C03-formal-practice
+sequence: 140
 chapter: 3
 type: practice-mix
 headword: Wie geht es Ihnen?
