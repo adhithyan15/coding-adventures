@@ -20,6 +20,11 @@ seven-rung machine-readable contract. Lessons stay at five minutes or less and
 writing grows one action at a time; full mocks keep authentic continuous timing.
 The contract is a target, not present-tense readiness evidence.
 
+The first two external performance envelopes are now inventoried without
+inventing unpublished measurements: [DILF A1.1](task-shapes/pre-a1.json) and
+[DELF A1](task-shapes/a1.json). A2 through C2 remain finite research items on the
+generated completion plan.
+
 ## Authored
 
 - **Ch. 1 — Greetings**: salut → bien → bon/bonne → **le/la/les** (gender) →

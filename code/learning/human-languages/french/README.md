@@ -26,10 +26,10 @@ The track's [assessment contract](assessment-spec.md) targets DILF A1.1 as the
 closest official pre-A1 runway, DELF *tout public* at A1–B2, and DALF at C1–C2.
 The machine-readable [contract](assessment.json) requires all four skills, the
 complete gentle writing ramp, and two timed mocks at every rung. This names the
-destination; it does not claim that the current book is exam-ready. French A1
-already has a sourced [task-shape inventory](task-shapes/a1.json). The other
-inventories, mocks, rubrics, answer keys, calibration, and book-only human
-validation remain explicit backlog.
+destination; it does not claim that the current book is exam-ready. French now
+has sourced task-shape inventories for [DILF A1.1](task-shapes/pre-a1.json) and
+[DELF A1](task-shapes/a1.json). The later inventories, mocks, rubrics, answer
+keys, calibration, and book-only human validation remain explicit backlog.
 
 ## Progress
 
