@@ -31,9 +31,12 @@ Assessment](assessment-spec.md) from pre-A1 through C2. Its machine-readable
 [contract](assessment.json) requires separate passes in reading, listening,
 writing, and speaking, the full gentle writing ladder, and two timed mocks at
 every rung. This names the destination; it does not claim that the current book
-or the future certificate is externally accredited. Task inventories, mocks,
-rubrics, answer keys, calibration, and book-only human validation remain
-explicit backlog.
+or the future certificate is externally accredited. The pre-A1
+[four-skill task inventory](task-shapes/pre-a1.json) now makes that first rung
+executable, including independent writing from memory; it is an assessment
+blueprint, not proof that the current lessons teach every task. A1–C2
+inventories, mocks, rubrics, answer keys, calibration, and book-only human
+validation remain explicit backlog.
 
 ## Progress
 

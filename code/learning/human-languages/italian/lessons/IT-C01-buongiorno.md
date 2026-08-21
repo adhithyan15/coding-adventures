@@ -29,8 +29,8 @@ reviews_of: [IT-C01-buono, IT-C01-giorno]
 
 Where the casual *ciao* says "I'm your servant," *buongiorno* simply wishes you
 a good day — and it's the **safe, respectful** choice with anyone: shopkeepers,
-strangers, elders. Used through the day until late afternoon, when it gives way
-to *buonasera*.
+strangers, elders. Use it through the day until late afternoon. A later lesson
+will build the corresponding evening greeting.
 
 ## Guided Practice
 

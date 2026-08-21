@@ -328,6 +328,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // The same page's Arabic ل clip keeps the tall upright and leftward base bowl
 // in one pen-down run. Its scoped source remains distinct from the Persian and
 // Urdu records even though all three share the same Unicode glyph and outline.
+// Arabic م follows Waraqa Institute's explicit beginner order: form the small
+// closed head first, then continue down-left through the below-baseline tail in
+// the same pen-down run. Its Arabic source stays distinct from the Persian and
+// Urdu records even though all three paths fit the same vendored Noto outline.
 // The later Arabic ه clip starts at the independent form's upper right, closes
 // its lower counter, threads through the centre into the upper-right counter,
 // then sweeps left along the baseline without lifting. The compact handwritten
@@ -6720,6 +6724,51 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("શ"),
   },
+  // t30apps writes Gujarati સ as a joined upper loop, left body, and long
+  // right shoulder followed by the separately descended right spine.
+  [ductusKey("gujarati", "સ")]: {
+    script: "gujarati", glyph: "સ",
+    strokes: [
+      { segments: [{ label: "circle the rounded upper loop and continue through the left body into the long right shoulder", path: [
+        { x: 45, y: 500 }, { x: 45, y: 530 }, { x: 60, y: 555 }, { x: 90, y: 565 },
+        { x: 120, y: 560 }, { x: 150, y: 550 }, { x: 195, y: 575 },
+        { x: 245, y: 580 }, { x: 295, y: 565 }, { x: 335, y: 530 }, { x: 355, y: 485 },
+        { x: 355, y: 430 }, { x: 365, y: 380 }, { x: 350, y: 340 }, { x: 320, y: 305 },
+        { x: 280, y: 275 }, { x: 235, y: 245 }, { x: 185, y: 225 }, { x: 135, y: 215 },
+        { x: 95, y: 225 }, { x: 70, y: 250 }, { x: 90, y: 275 }, { x: 130, y: 275 },
+        { x: 170, y: 260 }, { x: 215, y: 275 }, { x: 260, y: 300 }, { x: 305, y: 325 },
+        { x: 355, y: 330 }, { x: 405, y: 320 }, { x: 455, y: 320 }, { x: 500, y: 335 },
+        { x: 535, y: 360 }, { x: 500, y: 335 }, { x: 455, y: 320 }, { x: 405, y: 320 },
+        { x: 355, y: 330 }, { x: 305, y: 325 }, { x: 260, y: 300 }, { x: 215, y: 275 },
+        { x: 200, y: 225 }, { x: 220, y: 180 }, { x: 250, y: 140 }, { x: 290, y: 100 },
+        { x: 340, y: 65 }, { x: 390, y: 40 }, { x: 425, y: 38 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 577, y: 585 }, { x: 577, y: 500 }, { x: 577, y: 400 }, { x: 577, y: 300 },
+        { x: 577, y: 200 }, { x: 577, y: 125 }, { x: 585, y: 80 }, { x: 610, y: 55 },
+        { x: 650, y: 40 }, { x: 685, y: 38 }, { x: 700, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("સ"),
+  },
+  // t30apps writes Gujarati હ as one continuous upper-loop, middle-turn, and
+  // broad-lower-bowl run.
+  [ductusKey("gujarati", "હ")]: {
+    script: "gujarati", glyph: "હ",
+    strokes: [
+      { segments: [{ label: "circle the compact upper loop and continue through the middle turn around the broad lower bowl", path: [
+        { x: 500, y: 550 }, { x: 455, y: 565 }, { x: 410, y: 565 }, { x: 365, y: 550 },
+        { x: 330, y: 525 }, { x: 315, y: 495 }, { x: 330, y: 465 }, { x: 370, y: 440 },
+        { x: 420, y: 420 }, { x: 470, y: 400 }, { x: 510, y: 375 }, { x: 535, y: 340 },
+        { x: 540, y: 295 }, { x: 525, y: 250 }, { x: 490, y: 220 }, { x: 445, y: 200 },
+        { x: 395, y: 200 }, { x: 350, y: 215 }, { x: 310, y: 240 }, { x: 275, y: 275 },
+        { x: 257, y: 332 }, { x: 161, y: 433 }, { x: 125, y: 440 },
+        { x: 105, y: 400 }, { x: 90, y: 350 }, { x: 85, y: 295 }, { x: 95, y: 235 },
+        { x: 120, y: 180 }, { x: 160, y: 125 }, { x: 215, y: 80 }, { x: 280, y: 50 },
+        { x: 350, y: 35 }, { x: 420, y: 35 }, { x: 490, y: 45 }, { x: 550, y: 65 },
+        { x: 600, y: 90 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("હ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
@@ -7991,6 +8040,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: arabicAlphabetSource("ت"),
   },
+  [ductusKey("arabic", "ث")]: {
+    script: "arabic",
+    glyph: "ث",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 }, { x: 663, y: 345 }, { x: 650, y: 305 },
+              { x: 654, y: 260 }, { x: 672, y: 215 }, { x: 688, y: 170 },
+              { x: 686, y: 126 }, { x: 620, y: 94 }, { x: 530, y: 65 },
+              { x: 430, y: 42 }, { x: 335, y: 38 }, { x: 245, y: 51 },
+              { x: 170, y: 83 }, { x: 120, y: 135 }, { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      { segments: [{ label: "lift, then place the lower-left dot above", path: [
+        { x: 247, y: 369 }, { x: 295, y: 420 }, { x: 340, y: 375 },
+      ] }] },
+      { segments: [{ label: "lift again and place the lower-right dot", path: [
+        { x: 390, y: 382 }, { x: 438, y: 433 }, { x: 483, y: 388 },
+      ] }] },
+      { segments: [{ label: "lift a third time and place the centred upper dot", path: [
+        { x: 320, y: 458 }, { x: 365, y: 504 }, { x: 410, y: 458 },
+      ] }] },
+    ],
+    source: arabicAlphabetSource("ث"),
+  },
   [ductusKey("arabic", "ج")]: {
     script: "arabic",
     glyph: "ج",
@@ -8673,6 +8753,47 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ل"),
+  },
+  [ductusKey("arabic", "م")]: {
+    script: "arabic",
+    glyph: "م",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "form the small closed head in a tight circular movement",
+            path: [
+              { x: 120, y: 210 },
+              { x: 150, y: 250 },
+              { x: 200, y: 300 },
+              { x: 245, y: 315 },
+              { x: 285, y: 300 },
+              { x: 330, y: 260 },
+              { x: 365, y: 215 },
+              { x: 400, y: 175 },
+              { x: 430, y: 150 },
+            ],
+          },
+          {
+            label: "continue down and left through the below-baseline tail without lifting",
+            path: [
+              { x: 430, y: 150 },
+              { x: 390, y: 110 },
+              { x: 330, y: 95 },
+              { x: 260, y: 80 },
+              { x: 180, y: 65 },
+              { x: 100, y: 35 },
+              { x: 90, y: -20 },
+              { x: 100, y: -90 },
+              { x: 110, y: -160 },
+              { x: 120, y: -240 },
+              { x: 105, y: -285 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("م"),
   },
   [ductusKey("arabic", "ه")]: {
     script: "arabic",

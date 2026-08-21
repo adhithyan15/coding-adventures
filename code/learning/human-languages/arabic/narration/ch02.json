@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2f9e8dc860cdbf23",
+  "sourceHash": "fnv1a64:6ab19f4d7131734d",
   "lessons": [
     {
       "id": "AR-C02-ism",
@@ -1293,7 +1293,7 @@
         "writing-type",
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:3105b37e28ab1c2a",
+      "sourceHash": "fnv1a64:13bced16a8854a06",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1349,7 +1349,7 @@
             },
             {
               "kind": "speech",
-              "text": "Two more you will see: ْ sukūn (a small circle = \"no vowel here\") and ّ shadda (a small w = \"double this consonant\"). In everyday text they all vanish — the reader supplies them from knowing the word — but they are the abjad's \"training wheels,\" and the tail on shukran (شكرًا) is one of them."
+              "text": "Stop at these three vowel marks. The next four-minute micro-lesson adds the separate ideas “no vowel,” “double this consonant,” and the -an ending. Their shapes wait there so this page never asks you to absorb two writing steps at once."
             }
           ]
         },
@@ -1427,6 +1427,151 @@
       ]
     },
     {
+      "id": "AR-W06-sukun-shadda-tanwin",
+      "sequence": 255,
+      "title": "ْ ّ ً (sukūn, shadda, fatḥatan) — stop, double, or add -an",
+      "headword": "ْ ّ ً",
+      "romanization": "sukūn, shadda, fatḥatan",
+      "gloss": "no vowel, doubled consonant, and the -an ending — three marks in one gentle step",
+      "script": "arabic",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:5be0d04de4f8d163",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — Three marks, three instructions",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — Three marks, three instructions and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "You already know the three short-vowel marks. Keep those shapes in mind. This lesson adds exactly three more marks, one job at a time."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — Three marks, three instructions",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Each mark sits around a consonant. It changes how you read that consonant; it is not another full letter."
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "mark",
+                "name",
+                "instruction"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "mark: ْ. name: sukūn. instruction: stop: no vowel follows this consonant.",
+                "mark: ّ. name: shadda. instruction: hold or double this consonant.",
+                "mark: ً. name: fatḥatan. instruction: add the ending -an."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the last mark in شكرًا (shukran, “thank you”). The small doubled stroke above the final letter supplies -an. You have seen the word before; today you are learning what that one mark tells the reader."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "draw ْ once — a small circle above the line; say “no vowel”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: draw **ْ** once — a small circle above the line; say “no vowel”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "draw ّ once — a small w above the line; say “double”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: draw **ّ** once — a small *w* above the line; say “double”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "draw ً once — two light slashes above the line; say “-an”",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: draw **ً** once — two light slashes above the line; say “-an”]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "point in order — sukūn, shadda, fatḥatan",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: point in order — *sukūn*, *shadda*, *fatḥatan*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which mark means “no vowel”? (ْ, sukūn.) Which doubles a consonant? (ّ, shadda.) Which gives shukran its -an ending? (ً, fatḥatan.) Trace each once more without rushing."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "AR-W06-hamza",
       "sequence": 260,
       "title": "ء and أ — the glottal catch",
@@ -1439,7 +1584,7 @@
       "modalityReasons": [
         "writing-type"
       ],
-      "sourceHash": "fnv1a64:d9cec21cdeff2a6f",
+      "sourceHash": "fnv1a64:2b2be3970ae44451",
       "notice": {
         "modality": "pen",
         "needs": [

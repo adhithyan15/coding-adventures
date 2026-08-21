@@ -5,7 +5,7 @@
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:8cb8e93eac4de300",
+      "sourceHash": "fnv1a64:6c8b8bdf2e102d1c",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -22,7 +22,7 @@
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:df6fb15ff943b7f9",
+      "sourceHash": "fnv1a64:f8cee96db1f38174",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -5822,12 +5822,13 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:6acb9c9f2140f9ca",
+      "sourceHash": "fnv1a64:c8a7a866d54f7d48",
       "lessonIds": [
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
         "ES-C03-vos",
         "ES-C03-usted-origin",
+        "ES-C03-quien",
         "ES-C03-repaso-tu-usted"
       ],
       "tex": "spanish/book/chapters/ch05-three-yous.tex"
@@ -5835,7 +5836,7 @@
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:4f945bf4fb855d06",
+      "sourceHash": "fnv1a64:b980035e19dfc64f",
       "lessonIds": [
         "ES-C03-como",
         "ES-C03-como-acento",
@@ -7998,7 +7999,7 @@
     {
       "language": "spanish",
       "chapter": 232,
-      "sourceHash": "fnv1a64:37771abb164fbb1c",
+      "sourceHash": "fnv1a64:29e446b8acddc1a2",
       "lessonIds": [
         "ES-C61-quien"
       ],

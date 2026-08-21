@@ -64,7 +64,7 @@ describe("generated book source hashes", () => {
     [2, 6],
     [3, 3],
     [4, 4],
-    [5, 5],
+    [5, 6],
     [6, 8],
     [7, 5],
     [8, 4],

@@ -17,13 +17,13 @@ reviews_of: [IT-C01-ciao]
 
 ## Warm-up
 
-[PAUSE 2s] The word that starts *buongiorno*, *buonasera*, *buonanotte*. Learn
-it alone first.
+[PAUSE 2s] One small word meaning "good." Learn it alone first; later lessons
+will show how it helps build several greetings.
 
 ## Sounds you'll need
 
 - **buono** = *BWOH-no* (the *uo* is a glide). Before a masculine noun it clips
-  to **buon** (*bwon*) — *buon giorno*.
+  to **buon** (*bwon*).
 
 ## The word, taken apart
 
@@ -35,7 +35,8 @@ made *bonus* into *bueno*; Italian kept it closer, *buono*.
 
 **buono** changes to match its noun's gender and number: *buono* (m.), *buona*
 (f.), *buoni* / *buone* (pl.) — Latin's legacy across the Romance family. Before
-a masculine noun it drops the *-o* to **buon** (*buon giorno*).
+a masculine noun it can drop the *-o* to **buon**. For now, just hear and say
+that small change; the next nouns will give it a job.
 
 ## Guided Practice
 
@@ -45,5 +46,5 @@ a masculine noun it drops the *-o* to **buon** (*buon giorno*).
 
 ## Wrap-up Recall
 
-[PAUSE 3s] What Latin word is **buono** from, and why does it become *buon* in
-*buon giorno*? (*bonus*; it drops *-o* before a masculine noun.)
+[PAUSE 3s] What Latin word is **buono** from, and what short form can it take
+before a masculine noun? (*bonus*; *buon*, with the final *-o* dropped.)

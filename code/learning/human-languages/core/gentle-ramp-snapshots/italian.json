@@ -11,13 +11,20 @@
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
   "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 44,
+  "forwardReferences": 34,
   "atomsTaught": 200,
   "atomsNeverRevisited": 19,
   "reinforcementWindowMisses": 282,
+  "reinforcementMissesByWindow": {
+    "R1": 34,
+    "R2": 139,
+    "R3": 106,
+    "R4": 3
+  },
   "payoffSurprises": 1,
   "writingPracticeLessons": 2,
   "firstWritingPracticeAt": 0,
@@ -26,7 +33,7 @@
     {
       "language": "italian",
       "kind": "forward-language",
-      "count": 44,
+      "count": 34,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -62,7 +69,7 @@
   "next": {
     "language": "italian",
     "kind": "forward-language",
-    "count": 44,
+    "count": 34,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

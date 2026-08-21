@@ -48,5 +48,5 @@ hesitating on *guten*/*gute*.
 ## Wrap-up Recall
 
 [PAUSE 3s] Which German greeting uses *gute*, not *guten*, and why? (*Gute
-Nacht* — *Nacht* is feminine.) Next chapter: introducing yourself — *ich
-heiße…* — and German's formal/informal "you," **du** vs **Sie**.
+Nacht* — *Nacht* is feminine.) Next chapter, you will learn to introduce
+yourself and then build the friendly and respectful ways to address someone.

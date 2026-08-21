@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:87215aacbb547f09",
+  "sourceHash": "fnv1a64:771e0c15b213dbad",
   "lessons": [
     {
       "id": "ML-C01-namaskaram",
@@ -571,7 +571,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:082eb704b9b04ef0",
+      "sourceHash": "fnv1a64:b63d31de2389c720",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -634,7 +634,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ഇല്ല (illa) is built on the ancient Dravidian root il, \"not-being, absence\" — so, exactly like Tamil illai, it really means \"[it] is not, [there] is not,\" and serves as the everyday \"no.\" Its positive twin is ഉണ്ട് (uṇṭŭ), \"there is.\""
+              "text": "ഇല്ല (illa) is built on the ancient Dravidian root il, \"not-being, absence\" — so, exactly like Tamil illai, it really means \"[it] is not, [there] is not,\" and serves as the everyday \"no.\" The positive partner will come much later, after you have enough sentence pieces to use the contrast."
             }
           ]
         },
@@ -645,19 +645,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "English inserts not / no. Malayalam — like Tamil and Kannada — instead swaps in the negative verb of existence:"
-            },
-            {
-              "kind": "speech",
-              "text": "pustakam uṇṭŭ — \"there is a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "pustakam illa — \"there is not a book.\""
-            },
-            {
-              "kind": "speech",
-              "text": "So illa is both the plain \"no\" and the word that negates a whole sentence. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)"
+              "text": "English inserts not / no. Malayalam — like Tamil and Kannada — can instead use a negative verb of existence. So illa is both the plain \"no\" and, later, a word that can make a whole sentence mean \"there is not.\" Today, only the short answer is yours to use. This is a shared Dravidian inheritance, strongest across the Tamil–Malayalam pair: Tamil illai, Malayalam illa, Kannada illa — one family, one way to say a thing is not. (Recall Telugu was the outlier here, using lēdu.)"
             }
           ]
         },
@@ -728,11 +716,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"pustakam illa\" — \"there is no book\"",
+              "instruction": "illa once as the short answer \"no\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"pustakam illa\" — \"there is no book\"]"
+              "source": "[YOU SAY: *illa* once as the short answer \"no\"]"
             }
           ]
         },
@@ -919,7 +907,7 @@
     {
       "id": "ML-C01-practice",
       "sequence": 60,
-      "title": "Chapter 1 — recap, and how Malayalam says goodbye",
+      "title": "Chapter 1 — a five-word recap",
       "headword": "(recap)",
       "romanization": "",
       "gloss": "Chapter 1 recap + the Malayalam farewell",
@@ -929,7 +917,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:6f6ee9b070afef33",
+      "sourceHash": "fnv1a64:5a03202775f4a9a5",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -954,7 +942,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five words, and a first handful of Malayalam letters read straight off the page. Let's gather them — and add the farewell, which is almost word-for-word the Tamil one."
+              "text": "Five words, and a first handful of Malayalam letters read straight off the page. Let's gather only what you have already learned and make it feel easy."
             }
           ]
         },
@@ -993,35 +981,16 @@
         {
           "index": 2,
           "type": "unknown",
-          "title": "The farewell — nearly the Tamil words exactly",
+          "title": "A promise for later",
           "segments": [
             {
               "kind": "speech",
-              "text": "Malayalam, like Tamil, will not say a bare \"I'm leaving.\" The everyday goodbye is:"
-            },
-            {
-              "kind": "speech",
-              "text": "പോയി വരാം (pōyi varām) — literally \"having gone, I [will] come [back].\""
-            },
-            {
-              "kind": "speech",
-              "text": "Set it beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview — never simply depart, always promise a return — and in Malayalam and Tamil, almost the same words. (Casually, Malayalam also uses śari — \"okay\" — to sign off, or repeats namaskāram.)"
+              "text": "Malayalam has a warm departure phrase built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Nearly the Tamil words exactly. Malayalam, too, will not say a bare “I'm leaving.” The everyday goodbye is പോയി വരാം (pōyi varām), “having gone, I [will] come [back]” — set beside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: the same sentence, the same worldview, and in Malayalam and Tamil almost the same words."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1048,20 +1017,11 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: greet and thank — \"namaskāram!\" … \"nandi.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the farewell — \"pōyi varām,\" and its Tamil twin \"pōy varugiṟēṉ\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the farewell — \"pōyi varām,\" and its Tamil twin \"pōy varugiṟēṉ\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1073,11 +1033,11 @@
             },
             {
               "kind": "speech",
-              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāram. Native: nandi, athe, illa, śari.) What does the Malayalam goodbye literally mean, and which Tamil farewell does it almost exactly match? (\"Having gone, I'll come back\" — Tamil pōy varugiṟēṉ.)"
+              "text": "Read all five aloud. Which one is Sanskrit, and which four are native Dravidian shared with Tamil? (Sanskrit: namaskāram. Native: nandi, athe, illa, śari.) Which word can mean both \"okay\" and a casual sign-off? (śari.)"
             },
             {
               "kind": "speech",
-              "text": "That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Malayalam. Next chapter: introducing yourself — enṟe pēru… (\"my name…\") — and Malayalam's nī / niṅṅaḷ (familiar / respectful \"you\")."
+              "text": "That completes the four Dravidian first chapters — Tamil, Kannada, Telugu, Malayalam. Next chapter starts introducing yourself, one short possession form at a time."
             }
           ]
         }

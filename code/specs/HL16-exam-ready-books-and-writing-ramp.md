@@ -79,7 +79,17 @@ contract contains every level and, at each level:
 5. an independent pass threshold for each skill;
 6. the writing stages required at that level;
 7. at least two complete timed mocks;
-8. a rubric and answer key for every mock.
+8. a rubric and answer key for every mock;
+9. every compulsory provider-specific component beyond the four-skill floor.
+
+An external exam may require a separately passed component that is not itself
+one of the four universal skills—for example, TORFL's `Lexis. Grammar`
+subtest. Declare each such part in the level's optional `additionalComponents`
+object, keyed by a lowercase slug. Every declared component has a learner-facing
+name, non-empty task-inventory references, and its own pass threshold. A slug may
+not shadow `reading`, `listening`, `writing`, or `speaking`. Omission means the
+level has no known additional required component; it must never be used to hide
+one that the named provider actually requires.
 
 “No widely-sat ladder” is no longer a terminal answer. It selects the
 project-defined path. The equivalent must be published and reviewable; it may

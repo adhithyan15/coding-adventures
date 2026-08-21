@@ -54,7 +54,8 @@ The machine-readable layer alongside the tracks is:
 core/languages.json             complete active-language registry and default mix order
 core/spine.json                 ordered, language-independent can-do spine
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
-core/lesson-modality.json       generated: per-lesson voice/sight/pen and per-chapter drivable prefix
+core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
+progress/*.md                   generated per-language progress cards for conflict-free authoring
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
 core/generated-figure-hashes.json generated: figure source/SVG drift fingerprints
 concepts/taxonomy.json          cross-language semantic join keys
@@ -91,7 +92,8 @@ recorded numbers, and a track recorded as `null` has not been measured yet, so i
 reported and never failed. Until this gate existed, every track's "builds with zero
 warnings" claim was prose that nothing checked.
 
-`core/lesson-modality.json` is generated, never authored. It records for every lesson
+`core/lesson-modality/*.json` is generated, never authored. Each language owns one
+independently mergeable shard recording for every lesson
 whether it needs `voice`, `sight`, or a `pen`, and for every chapter how many of its
 lessons a commuter can do in the car before hitting the first that needs eyes. This is
 what lets **two editions build from one source**: the complete book keeps everything,
@@ -129,33 +131,11 @@ enter cross-language review only after focused retrieval.
 
 ## Tracks
 
-<!-- BEGIN GENERATED TRACK PROGRESS -->
-| Language | Family / script | Canonical lessons | Mapped lessons | Book progress |
-|---|---|---:|---:|---|
-| [Spanish](./spanish/README.md) | Romance / Latin | 584 | 584 | 302 chapters; through Ch. 302; 302 generated |
-| [Latin](./latin/README.md) | Italic / Latin | 109 | 109 | 47 chapters; through Ch. 47; 47 generated |
-| [French](./french/README.md) | Romance / Latin | 122 | 108 | 33 chapters; through Ch. 33; 17 generated |
-| [German](./german/README.md) | Germanic / Latin | 107 | 92 | 31 chapters; through Ch. 31; 15 generated |
-| [Arabic](./arabic/README.md) | Semitic / Arabic | 107 | 106 | 36 chapters; through Ch. 36; 34 generated |
-| [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 273 | 273 | 66 chapters; through Ch. 66; 66 generated |
-| [Tamil](./tamil/README.md) | Dravidian / Tamil | 283 | 279 | 64 chapters; through Ch. 64; 59 generated |
-| [Kannada](./kannada/README.md) | Dravidian / Kannada | 242 | 238 | 66 chapters; through Ch. 66; 61 generated |
-| [Telugu](./telugu/README.md) | Dravidian / Telugu | 276 | 272 | 73 chapters; through Ch. 73; 68 generated |
-| [Malayalam](./malayalam/README.md) | Dravidian / Malayalam | 247 | 243 | 66 chapters; through Ch. 66; 61 generated |
-| [Italian](./italian/README.md) | Romance / Latin | 89 | 88 | 25 chapters; through Ch. 25; 24 generated |
-| [Portuguese](./portuguese/README.md) | Romance / Latin | 97 | 96 | 26 chapters; through Ch. 26; 25 generated |
-| [Marathi](./marathi/README.md) | Indo-Aryan / Devanagari | 73 | 68 | 14 chapters; through Ch. 14; 9 generated |
-| [Marwadi (Marwari)](./marwadi/README.md) | Indo-Aryan / Devanagari | 11 | 11 | 2 chapters; through Ch. 2; 2 generated |
-| [Punjabi](./punjabi/README.md) | Indo-Aryan / Gurmukhi | 71 | 64 | 14 chapters; through Ch. 14; 9 generated |
-| [Bengali](./bengali/README.md) | Indo-Aryan / Bengali | 80 | 80 | 16 chapters; through Ch. 16; 16 generated |
-| [Gujarati](./gujarati/README.md) | Indo-Aryan / Gujarati | 69 | 69 | 13 chapters; through Ch. 13; 13 generated |
-| [Russian](./russian/README.md) | Slavic / Cyrillic | 84 | 84 | 15 chapters; through Ch. 15; 15 generated |
-| [Sanskrit](./sanskrit/README.md) | Indo-Aryan / Devanagari | 266 | 263 | 51 chapters; through Ch. 51; 46 generated |
-| [Persian](./persian/README.md) | Iranian / Perso-Arabic | 69 | 69 | 15 chapters; through Ch. 15; 14 generated |
-| [Urdu](./urdu/README.md) | Indo-Aryan / Urdu-Nastaliq | 69 | 69 | 16 chapters; through Ch. 16; 15 generated |
-| [Mandarin Chinese](./chinese/README.md) | Sinitic / Chinese | 63 | 63 | 11 chapters; through Ch. 11; 11 generated |
-| [Japanese](./japanese/README.md) | Japonic / Japanese | 29 | 29 | 3 chapters; through Ch. 3; 3 generated |
-<!-- END GENERATED TRACK PROGRESS -->
+Each language owns an independently generated card under [`progress/`](./progress/).
+Keeping those facts in one file per track lets Spanish, Gujarati, French, and every
+other curriculum advance without rewriting this shared README. A release or docs
+collector may assemble the cards into a consolidated table; authoring PRs never need
+to wait for that presentation step.
 
 Spanish is the pilot that proved the format; every other track replicates it,
 grounding each word against English plus whatever languages the learner already

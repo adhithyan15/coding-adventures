@@ -15,9 +15,9 @@ etymology_hook: "quién is Latin quem, and it kept the accusative's shape while 
 duration:
   max_seconds: 270
 requires:
-  knowledge: [ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT, ES-LEX-PROFESOR, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-REPORTED-WH-ACCENT]
+  knowledge: [ES-LEX-QUIEN, ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT, ES-LEX-PROFESOR, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-REPORTED-WH-ACCENT]
 introduces:
-  knowledge: [ES-LEX-QUIEN, ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-ETYMON-QUIEN-QUEM]
+  knowledge: [ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-ETYMON-QUIEN-QUEM]
 practises:
   knowledge: [ES-LEX-QUIEN, ES-GRAMMAR-QUIEN-PEOPLE-ONLY, ES-ETYMON-QUIEN-QUEM, ES-LEX-QUE, ES-GRAMMAR-QUESTION-ACCENT, ES-SCRIPT-INVERTED-QUESTION]
 skills: [listening, speaking, reading, writing]
@@ -39,7 +39,7 @@ reviews_of: [ES-C07-que, ES-C57-pregunto-donde]
 people, Spanish keeps a different word entirely.
 
 ## The word, taken apart: quién
-<!-- hl-knowledge: introduces=[ES-LEX-QUIEN, ES-ETYMON-QUIEN-QUEM]; assesses=[ES-SCRIPT-INVERTED-QUESTION] -->
+<!-- hl-knowledge: introduces=[ES-ETYMON-QUIEN-QUEM]; assesses=[ES-LEX-QUIEN, ES-SCRIPT-INVERTED-QUESTION] -->
 
 > *¿****Quién*** *es?* — Who is it?
 
