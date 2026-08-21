@@ -25,7 +25,7 @@ modes: [interpretive, interpersonal, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-contemporary
-reviews_of: [PT-C04-adeus]
+reviews_of: []
 ---
 
 # eu — “I,” often dropped in Portuguese

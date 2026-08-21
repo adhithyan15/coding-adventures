@@ -10,12 +10,12 @@
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
-  "orderDefects": 17,
-  "lessonsWithoutSequence": 8,
+  "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
-  "forwardPrerequisites": 4,
-  "forwardReviews": 5,
-  "forwardReferences": 63,
+  "forwardPrerequisites": 0,
+  "forwardReviews": 0,
+  "forwardReferences": 62,
   "atomsTaught": 192,
   "atomsNeverRevisited": 8,
   "reinforcementWindowMisses": 305,
@@ -32,15 +32,8 @@
   "findings": [
     {
       "language": "portuguese",
-      "kind": "order-integrity",
-      "count": 17,
-      "unit": "order/dependency defect(s)",
-      "detail": "declare a unique reading order and close every prerequisite and review before use"
-    },
-    {
-      "language": "portuguese",
       "kind": "forward-language",
-      "count": 63,
+      "count": 62,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -75,9 +68,9 @@
   ],
   "next": {
     "language": "portuguese",
-    "kind": "order-integrity",
-    "count": 17,
-    "unit": "order/dependency defect(s)",
-    "detail": "declare a unique reading order and close every prerequisite and review before use"
+    "kind": "forward-language",
+    "count": 62,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }
