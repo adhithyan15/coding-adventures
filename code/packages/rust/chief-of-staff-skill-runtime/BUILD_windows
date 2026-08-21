@@ -1,0 +1,3 @@
+cargo test -p chief-of-staff-skill-runtime -- --nocapture
+cargo clippy -p chief-of-staff-skill-runtime --all-targets -- -D warnings
+set "RUSTDOCFLAGS=-D warnings" && cargo doc -p chief-of-staff-skill-runtime --no-deps
