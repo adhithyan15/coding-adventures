@@ -7163,7 +7163,7 @@
     {
       "language": "marwadi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:7312bd0d6718cbd3",
+      "sourceHash": "fnv1a64:ac69312516661d42",
       "lessonIds": [
         "MW-W01-ra",
         "MW-W01-aa-matra",
@@ -7177,8 +7177,25 @@
       "drivablePrefix": 0,
       "text": "marwadi/narration/ch01.txt",
       "json": "marwadi/narration/ch01.json",
-      "textHash": "fnv1a64:fdbc7de99e53235e",
-      "jsonHash": "fnv1a64:ba868c7b04f3c9a9"
+      "textHash": "fnv1a64:9ed0384bad3462e2",
+      "jsonHash": "fnv1a64:2b437b9cdc4110f3"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:2b82af50b3ab04d0",
+      "lessonIds": [
+        "MW-W02-aa-independent",
+        "MW-W02-bha",
+        "MW-C02-aabhaar",
+        "MW-C02-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "marwadi/narration/ch02.txt",
+      "json": "marwadi/narration/ch02.json",
+      "textHash": "fnv1a64:e35cca3d954d646a",
+      "jsonHash": "fnv1a64:5b00e74e60f6c24d"
     },
     {
       "language": "persian",
