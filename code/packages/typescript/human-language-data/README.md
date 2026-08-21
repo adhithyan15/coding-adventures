@@ -641,14 +641,14 @@ derivation currently moves no number; the regression test pins that.
 
 ### The modality manifest — two editions from one source (HL-C44)
 
-The derivation above is only useful to a *program* if it is a *file*. `core/lesson-modality.json`
-is that file: one row per lesson, generated and drift-gated, so the complete book, the
+The derivation above is only useful to a *program* if it is data. `core/lesson-modality/*.json`
+holds one independently mergeable shard per language: one row per lesson, generated and drift-gated, so the complete book, the
 app, and the forthcoming dictation-friendly driving edition can each filter the same
 canonical corpus instead of maintaining three copies of it.
 
 ```bash
 npm run build
-npm run generate:modality   # write core/lesson-modality.json
+npm run generate:modality   # write core/lesson-modality/*.json
 npm run check:modality      # fail (exit 1) if it drifted from the lessons
 ```
 
@@ -774,10 +774,10 @@ until the existing corpus has been split.
 | `cli.ts` | `validate` command + report | ⛔ (fs) |
 | `report-cli.ts` | prints JSON or text for CI artifact capture | ⛔ (fs) |
 | `book-cli.ts` | writes or checks generated chapters and their hash manifest | ⛔ (fs) |
-| `modality-cli.ts` | writes or checks `core/lesson-modality.json` | ⛔ (fs) |
+| `modality-cli.ts` | writes or checks `core/lesson-modality/*.json` | ⛔ (fs) |
 | `narration-cli.ts` | writes or checks the narration export and its hash manifest | ⛔ (fs) |
-| `track-progress.ts` | registry/curriculum/book facts → top-level progress rows | ✅ |
-| `track-progress-cli.ts` | rewrites or checks the marked README track table | ⛔ (fs) |
+| `track-progress.ts` | registry/curriculum/book facts → per-language progress cards | ✅ |
+| `track-progress-cli.ts` | writes or checks `progress/*.md` | ⛔ (fs) |
 
 Only the modules marked `fs` touch the filesystem (declared in
 `required_capabilities.json`); everything the app relies on is pure and unit-tested
