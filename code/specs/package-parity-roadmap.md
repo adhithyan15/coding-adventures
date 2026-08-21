@@ -4520,6 +4520,34 @@ through public APIs, focused resource and precedence regressions, SwiftPM and
 BUILD metadata, documentation, changelog, and an empty capability manifest.
 It does not change IC18, the neutral corpus, adapters, or unrelated lanes.
 
+### Swift PNG implementation and validation
+
+The Swift package implements the native IC18 encoder and bounded decoder over
+the established PixelContainer and ZIP-owned raw RFC 1951/counting/CRC APIs.
+Swift 6.3.3 passes all eight XCTest methods, including all 85 neutral cases
+through public APIs and focused maxPixels, malformed mutable PixelContainer,
+product-before-allocation, APNG-precedence, Adler-boundary, taxonomy, and
+ImageCodec regressions. Encoder output is independently inflated and parsed by
+Python and accepted by the real Windows WIC PNG decoder; the same test target
+uses ImageIO on macOS. Production coverage is 434/440 lines (98.64%) and 27/28
+functions (96.43%). Format lint, SwiftPM manifest resolution, the warnings-as-
+errors release build, and the PixelContainer, LZSS, and ZIP prerequisite BUILD
+front doors pass.
+
+A freshly compiled Go build tool passes tests, vet, and trimpath build. Its
+full collision-checked plan evaluates 45 Starlark files, discovers 4,979
+packages, and selects exactly Swift ImageCodecPNG, PixelContainer, ZIP, and
+LZSS on Linux, Darwin, and Windows; real Windows execution builds those four
+with 161 unrelated Swift packages skipped. Neutral fixture, capability-
+taxonomy, and parity-reporter suites pass 9, 7, and 10 tests. The prospective
+schema-3 inventory retains 1,368 identities and adds one reviewed slot for
+4,559 total. `image-codec-png` spans eight lanes, the 5-9 band has 123 packages
+and 933 gaps, and canonical collisions and unknown buckets remain zero.
+Production imports only repository PixelContainer and ZIP; its empty capability
+profile is valid, test-only Foundation/Python/WIC/ImageIO authority is
+documented, and production authority, credential, dependency, diff, security,
+build, and ownership audits are clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
