@@ -14,11 +14,11 @@ roots: [phoenician-ayin]
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03]
 introduces:
   knowledge: [AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02]
 practises:
-  knowledge: [AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02]
+  knowledge: [AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03, AR-CONCEPT-W10-AYN-01, AR-CONCEPT-W10-AYN-02]
 skills: [speaking, reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -30,9 +30,11 @@ reviews_of: [AR-W09-khayr-bikhayr, AR-W07-hook-family-ha-kha, AR-C01-as-salamu-a
 # ع (ʿayn) — the eye that became an O
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[AR-CONCEPT-W06-SUKUN-01, AR-CONCEPT-W06-SHADDA-02, AR-CONCEPT-W06-FATHATAN-03] -->
 
-[PAUSE 2s] This is the letter people think of when they think "Arabic." **ع**
+[PAUSE 2s] Point to **ْ**, **ّ**, **ً**: “no vowel”, “double”, “-an”.
+
+This is the letter people think of when they think "Arabic." **ع**
 (*ʿayn*) writes a sound made **deep in the throat** — one English simply does not
 have. And its history holds the best surprise in the whole alphabet: this
 consonant is the ancestor of our vowel **O**.

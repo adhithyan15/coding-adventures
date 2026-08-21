@@ -969,11 +969,12 @@ describe("corpus regression", () => {
     // (HL11) are the first lessons to author a `## Writing:` section, so the
     // machinery is finally exercised by real content rather than by fixtures.
     //
-    // It stays an exact pin rather than a `toBeGreaterThan`, because the value
-    // this assertion originally caught was a conflation that made it read 276 —
-    // every lesson with any detachable block, not the ones that teach the hand.
-    // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(159); // Persian adds two segments beside Arabic's six and the Romance opener work.
+    // Derive the count from the language-owned lesson corpus. A global literal
+    // made every new writing microstep edit this shared algorithm suite.
+    expect(summary.lessonsWithWritingSegments).toBe(
+      lessons.filter((lesson) => lesson.blocks.some((block) => block.type === "writing")).length,
+    );
+    expect(summary.lessonsWithWritingSegments).toBeGreaterThan(0);
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.

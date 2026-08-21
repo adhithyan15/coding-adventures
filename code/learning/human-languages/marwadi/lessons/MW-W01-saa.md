@@ -46,13 +46,16 @@ building, **सा** is a respectful form of address.
 ## Writing — delayed copy
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SAA-01, MW-SCRIPT-RAAM-01] -->
 
-Copy **सा** once. Look away for ten seconds, say *sā*, and write it again.
-Then copy the two pieces with a space:
+Copy **सा** once. Look away for ten seconds, say *sā*, and write it again. Then
+retrieve the two known pieces separately rather than using them as a phrase
+before the next lesson teaches the greeting:
 
-> **राम सा**
+> **राम**
+>
+> **सा**
 
 ## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-SAA-01] -->
 <!-- hl-activity: {"id":"MW-W01-saa-build","kind":"text","assesses":["MW-SCRIPT-SAA-01"],"prompt":"Write sā by adding the long-vowel mark to स.","answer":"सा","accepted":["स + ा","saa"],"feedback":{"correct":"Yes: स + ा makes सा.","incorrect":"Put ा on the right of स: सा."},"response_seconds":10} -->
 
-Read **राम सा**. Circle the two copies of **ा**.
+Read **राम**, then **सा**. Circle the copy of **ा** in each separate word.

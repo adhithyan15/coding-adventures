@@ -39,18 +39,15 @@ Left to right: **ഇ · ല്ല** = *i-lla* →
 
 **ഇല്ല** (*illa*) is built on the ancient Dravidian root **il**, "not-being,
 absence" — so, exactly like Tamil *illai*, it really means **"[it] is not,
-[there] is not,"** and serves as the everyday "no." Its positive twin is
-**ഉണ്ട്** (*uṇṭŭ*), "there is."
+[there] is not,"** and serves as the everyday "no." The positive partner will
+come much later, after you have enough sentence pieces to use the contrast.
 
 ## Grammar Lens: Dravidian negates by *being*
 
-English inserts *not* / *no*. Malayalam — like Tamil and Kannada — instead
-swaps in the **negative verb of existence**:
-
-- *pustakam **uṇṭŭ*** — "there **is** a book."
-- *pustakam **illa*** — "there **is not** a book."
-
-So *illa* is both the plain "no" and the word that negates a whole sentence.
+English inserts *not* / *no*. Malayalam — like Tamil and Kannada — can instead
+use a **negative verb of existence**. So *illa* is both the plain "no" and,
+later, a word that can make a whole sentence mean "there is not." Today, only
+the short answer is yours to use.
 This is a **shared Dravidian inheritance**, strongest across the Tamil–Malayalam
 pair: Tamil *illai*, Malayalam *illa*, Kannada *illa* — one family, one way to
 say a thing is not. (Recall Telugu was the outlier here, using *lēdu*.)
@@ -77,7 +74,7 @@ conjunct of ല (la) + ല (la), a held “ll.” Read ഇ·ല്ല →
 [PAUSE 1s]
 - [YOU SAY: i · lla → "illa"]
 - [YOU SAY: the pair — *athe* ("yes") / *illa* ("no")]
-- [YOU SAY: "pustakam illa" — "there is no book"]
+- [YOU SAY: *illa* once as the short answer "no"]
 
 ## Wrap-up Recall
 

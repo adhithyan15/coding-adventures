@@ -4,13 +4,15 @@ import { describe, expect, it, vi } from "vitest";
 import { defaultCurriculumRoot } from "../src/loader.js";
 import type { ParsedLesson } from "../src/parse.js";
 import {
-  generatedTrackProgressReadme,
-  replaceTrackProgressSection,
+  generatedTrackProgressOutputs,
   runTrackProgress,
-  TRACK_PROGRESS_END,
-  TRACK_PROGRESS_START,
+  TRACK_PROGRESS_DIR,
 } from "../src/track-progress-cli.js";
-import { buildTrackProgress, renderTrackProgressTable } from "../src/track-progress.js";
+import {
+  buildTrackProgress,
+  renderTrackProgressCard,
+  renderTrackProgressTable,
+} from "../src/track-progress.js";
 import type { BookCorpus, LanguageCurriculum, LanguageRegistry } from "../src/types.js";
 
 const lesson = (language: string) => ({ language }) as ParsedLesson;
@@ -54,28 +56,29 @@ describe("track progress", () => {
     expect(renderTrackProgressTable(tracks)).toContain(
       "| [Alpha](./alpha/README.md) | Test / Latin | 2 | 3 | 2 chapters; through Ch. 3; 1 generated |",
     );
-    expect(renderTrackProgressTable(tracks)).toContain("Test / Perso-Arabic");
+    expect(renderTrackProgressCard(tracks[1]!)).toContain("# Alpha progress");
   });
 
-  it("replaces one marker pair and preserves CRLF", () => {
-    const source = `before\r\n${TRACK_PROGRESS_START}\r\nstale\r\n${TRACK_PROGRESS_END}\r\nafter\r\n`;
-    expect(replaceTrackProgressSection(source, "| a |\n| b |")).toBe(
-      `before\r\n${TRACK_PROGRESS_START}\r\n| a |\r\n| b |\r\n${TRACK_PROGRESS_END}\r\nafter\r\n`,
-    );
-  });
-
-  it("fails closed on absent, repeated, or reversed markers", () => {
-    expect(() => replaceTrackProgressSection("none", "table")).toThrow(/exactly one/);
-    expect(() => replaceTrackProgressSection(`${TRACK_PROGRESS_START}${TRACK_PROGRESS_START}${TRACK_PROGRESS_END}`, "table")).toThrow(/exactly one/);
-    expect(() => replaceTrackProgressSection(`${TRACK_PROGRESS_END}${TRACK_PROGRESS_START}`, "table")).toThrow(/exactly one/);
-  });
-
-  it("keeps the committed top-level table byte-current and complete", () => {
+  it("keeps every committed per-language card byte-current", () => {
     const root = defaultCurriculumRoot();
-    const expected = generatedTrackProgressReadme(root);
-    expect(readFileSync(join(root, "README.md"), "utf8")).toBe(expected);
-    expect(expected.match(/^\| \[[^\]]+\]\(\.\/[^/]+\/README\.md\)/gm)).toHaveLength(23);
+    const outputs = generatedTrackProgressOutputs(root);
+    expect(outputs.size).toBe(23);
+    for (const [relative, expected] of outputs) {
+      expect(relative.startsWith(`${TRACK_PROGRESS_DIR}/`)).toBe(true);
+      expect(readFileSync(join(root, relative), "utf8"), relative).toBe(expected);
+    }
     expect(runTrackProgress(["--check"], root)).toBe(0);
+  });
+
+  it("changes only one output when one track changes", () => {
+    const root = defaultCurriculumRoot();
+    const outputs = generatedTrackProgressOutputs(root);
+    const spanish = outputs.get("progress/spanish.md")!;
+    const changed = new Map(outputs);
+    changed.set("progress/spanish.md", spanish.replace("Canonical lessons:", "Canonical lessons changed:"));
+    expect([...outputs.keys()].filter((path) => outputs.get(path) !== changed.get(path))).toEqual([
+      "progress/spanish.md",
+    ]);
   });
 
   it("rejects an unknown CLI mode", () => {

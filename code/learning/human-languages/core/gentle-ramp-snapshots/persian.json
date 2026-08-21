@@ -11,6 +11,7 @@
   "scriptClosureViolations": 47,
   "neverTaughtGlyphs": 25,
   "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
@@ -18,6 +19,12 @@
   "atomsTaught": 150,
   "atomsNeverRevisited": 7,
   "reinforcementWindowMisses": 209,
+  "reinforcementMissesByWindow": {
+    "R1": 27,
+    "R2": 93,
+    "R3": 89,
+    "R4": 0
+  },
   "payoffSurprises": 2,
   "writingPracticeLessons": 13,
   "firstWritingPracticeAt": 0,

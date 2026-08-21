@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "Ask and Answer Names",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:f1d09ed02a13ed81",
+  "sourceHash": "fnv1a64:2373594a092cc216",
   "lessons": [
     {
       "id": "UR-C03-aap-tum-tu",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:ccaa2c3c41a8cd7e",
+      "sourceHash": "fnv1a64:8c1550787faff2c8",
       "notice": null,
       "blocks": [
         {
@@ -35,7 +35,7 @@
             },
             {
               "kind": "speech",
-              "text": "Say merā nām... hai with your own name. To ask the other person's name, begin with the respectful form."
+              "text": "Say nahī̃ once, then merā nām... hai with your own name. To ask the other person's name, begin with the respectful form."
             }
           ]
         },
@@ -443,7 +443,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c9a50b04d3fe8bea",
+      "sourceHash": "fnv1a64:2688b429c36ed450",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +459,7 @@
             },
             {
               "kind": "speech",
-              "text": "Ask āp kā nām kyā hai? and answer merā nām... hai. This fixed response now closes the meeting."
+              "text": "Say the opening ladder once: shukriyā — jī hā̃ — nahī̃. Point to the three shapes you traced before the joined thank-you word. Then ask āp kā nām kyā hai? and answer merā nām... hai."
             }
           ]
         },

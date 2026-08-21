@@ -143,6 +143,16 @@ const GUJARATI_NA = DUCTUS[ductusKey("gujarati", "ન")];
 const GUJARATI_PA = DUCTUS[ductusKey("gujarati", "પ")];
 const GUJARATI_PHA = DUCTUS[ductusKey("gujarati", "ફ")];
 const GUJARATI_BA = DUCTUS[ductusKey("gujarati", "બ")];
+const GUJARATI_BHA = DUCTUS[ductusKey("gujarati", "ભ")];
+const GUJARATI_MA = DUCTUS[ductusKey("gujarati", "મ")];
+const GUJARATI_YA = DUCTUS[ductusKey("gujarati", "ય")];
+const GUJARATI_RA = DUCTUS[ductusKey("gujarati", "ર")];
+const GUJARATI_LA = DUCTUS[ductusKey("gujarati", "લ")];
+const GUJARATI_LLA = DUCTUS[ductusKey("gujarati", "ળ")];
+const GUJARATI_VA = DUCTUS[ductusKey("gujarati", "વ")];
+const GUJARATI_SHA = DUCTUS[ductusKey("gujarati", "શ")];
+const GUJARATI_SA = DUCTUS[ductusKey("gujarati", "સ")];
+const GUJARATI_HA = DUCTUS[ductusKey("gujarati", "હ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -168,6 +178,7 @@ const HEBREW_TAV = DUCTUS[ductusKey("hebrew", "ת")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
+const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
@@ -319,6 +330,20 @@ describe("handwriting ductus", () => {
     expect(letters.length).toBeGreaterThan(0);
   });
 
+  it("keeps every canonical script inventory free of duplicate glyph rows", () => {
+    for (const script of SCRIPTS) {
+      const glyphs = script.letters.map((letter) => letter.glyph);
+      expect(new Set(glyphs).size, `${script.script} repeats a canonical glyph`).toBe(glyphs.length);
+    }
+  });
+
+  it("marks Gujarati complete only with all 44 unique letters source-verified", () => {
+    const gujarati = SCRIPTS.find((script) => script.script === "gujarati")!;
+    expect(gujarati.complete).toBe(true);
+    expect(gujarati.letters).toHaveLength(44);
+    expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+  });
+
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
       const glyph = () => fontForDuctus(letter).glyphFor(letter.glyph)!;
@@ -327,7 +352,12 @@ describe("handwriting ductus", () => {
         const inInk = makeInInk(glyph().contours);
         for (let s = 0; s < letter.strokes.length; s++) {
           const frac = fractionOnInk(penPath(letter.strokes[s]), inInk);
-          expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(0.97);
+          // Noto Sans Gujarati prints હ as two disconnected contours, while
+          // the cited handwriting animation keeps them in one pen-down run.
+          // Permit only that documented bridge; every other authored path
+          // retains the stricter general-purpose ink-fit floor.
+          const minimumInkFit = letter.script === "gujarati" && letter.glyph === "હ" ? 0.92 : 0.97;
+          expect(frac, `stroke ${s} strays off the glyph`).toBeGreaterThan(minimumInkFit);
         }
       });
 
@@ -2227,6 +2257,66 @@ describe("handwriting ductus", () => {
     expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
   });
 
+  it("Gujarati ભ completes its loop before the right spine", () => {
+    expect(GUJARATI_BHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_BHA)).toBe(1);
+    expect(GUJARATI_BHA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati મ completes its left body before the right spine", () => {
+    expect(GUJARATI_MA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_MA)).toBe(1);
+    expect(GUJARATI_MA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati ય completes its rounded body before the right spine", () => {
+    expect(GUJARATI_YA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_YA)).toBe(1);
+    expect(GUJARATI_YA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati ર keeps its upper body, middle loop, and tail continuous", () => {
+    expect(GUJARATI_RA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_RA)).toBe(0);
+    expect(GUJARATI_RA.strokes).toHaveLength(1);
+  });
+
+  it("Gujarati લ completes its body and shoulder before the right spine", () => {
+    expect(GUJARATI_LA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_LA)).toBe(2);
+    expect(GUJARATI_LA.strokes).toHaveLength(3);
+  });
+
+  it("Gujarati ળ keeps its bowl, turn, arch, and spine continuous", () => {
+    expect(GUJARATI_LLA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_LLA)).toBe(0);
+    expect(GUJARATI_LLA.strokes).toHaveLength(1);
+  });
+
+  it("Gujarati વ completes its rounded body before the right spine", () => {
+    expect(GUJARATI_VA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_VA)).toBe(1);
+    expect(GUJARATI_VA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati શ completes its looped body before the right spine", () => {
+    expect(GUJARATI_SHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_SHA)).toBe(1);
+    expect(GUJARATI_SHA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati સ completes its looped body and shoulder before the right spine", () => {
+    expect(GUJARATI_SA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_SA)).toBe(1);
+    expect(GUJARATI_SA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati હ joins its upper loop and broad lower bowl without lifting", () => {
+    expect(GUJARATI_HA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_HA)).toBe(0);
+    expect(GUJARATI_HA.strokes).toHaveLength(1);
+  });
+
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
     expect(HEBREW_ALEF.script).toBe("hebrew");
     expect(penLifts(HEBREW_ALEF)).toBe(1);
@@ -2795,6 +2885,17 @@ describe("handwriting ductus", () => {
     expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
     expect(ARABIC_TAA.strokes[1].segments[0].path[0].x).toBeLessThan(
       ARABIC_TAA.strokes[2].segments[0].path[0].x,
+    );
+  });
+
+  it("Arabic independent ث uses the shared bowl, then three separately lifted dots", () => {
+    expect(penLifts(ARABIC_THAA)).toBe(3);
+    expect(ARABIC_THAA.strokes).toHaveLength(4);
+    expect(ARABIC_THAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 1]);
+    const bowl = penPath(ARABIC_THAA.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(ARABIC_THAA.strokes[3].segments[0].path[0].y).toBeGreaterThan(
+      ARABIC_THAA.strokes[1].segments[0].path[0].y,
     );
   });
 
@@ -4753,6 +4854,66 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Gujarati ભ traces its loop and right spine to two paths", () => {
+    const src = GUJARATI_BHA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ભ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*broad left loop.*compact middle turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati મ traces its left body and right spine to two paths", () => {
+    const src = GUJARATI_MA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*મ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*upper left.*compact inner turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*left-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati ય traces its rounded body and right spine to two paths", () => {
+    const src = GUJARATI_YA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ય animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*upper left.*rounded upper turn.*broad lower body.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati ર traces its upper body, middle loop, and tail to one path", () => {
+    const src = GUJARATI_RA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ર animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*rounded upper body.*small middle loop.*lower-right tail.*without lifting.*one variant.*upper-body-to-middle-loop-to-lower-tail order.*zero-lift evidence/i);
+  });
+
+  it("Gujarati લ traces its body, shoulder, and spine to three paths", () => {
+    const src = GUJARATI_LA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*લ animation.*first through third SVG paths/i);
+    expect(src.variation).toMatch(/three ordered pen-down runs.*first SVG path.*upper right.*broad rounded left body.*lower-right terminal.*lifts once.*second SVG path.*middle shoulder.*left to right.*lifts again.*third SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-middle-shoulder-before-right-spine order.*two-lift evidence/i);
+  });
+
+  it("Gujarati ળ traces its bowl, turn, arch, and spine to one path", () => {
+    const src = GUJARATI_LLA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ળ animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*broad left bowl.*narrow middle turn.*high right arch.*tall right spine.*without lifting.*one variant.*left-bowl-to-middle-turn-to-right-spine order.*zero-lift evidence/i);
+  });
+
+  it("Gujarati વ traces its rounded body and spine to two paths", () => {
+    const src = GUJARATI_VA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*વ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*broad rounded left body.*right shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati શ traces its looped body and spine to two paths", () => {
+    const src = GUJARATI_SHA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*શ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*small upper loop.*broad lower body.*lower-right tail.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-and-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati સ traces its looped body, shoulder, and spine to two paths", () => {
+    const src = GUJARATI_SA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*સ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*rounded upper loop.*left body.*long right shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-and-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati હ traces its loop and lower bowl to one continuous path", () => {
+    const src = GUJARATI_HA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*હ animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*remaining path slots are empty.*upper right.*compact upper loop.*middle turn.*broad lower bowl.*rightward finish.*without lifting.*one variant.*upper-loop-to-middle-turn-to-lower-bowl order.*zero-lift evidence/i);
+  });
+
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
     const src = HEBREW_ALEF.source;
     expect(src.url).toBe("https://www.youtube.com/watch?v=JBVpQzvrJ4w");
@@ -5124,6 +5285,17 @@ describe("handwriting ductus", () => {
       /Baa demonstration.*upper-right tip.*right-to-left.*turned-up left tip.*Taa demonstration opens.*complete bowl.*left dot.*00:00.45–00:00.70.*right dot.*00:00.75–00:01.00.*does not redraw.*rather than inferring.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
     );
     expect(src.url).not.toBe(DUCTUS["ت"].source.url);
+  });
+
+  it("Arabic independent ث traces its bowl-first form to the University of Oregon", () => {
+    const src = ARABIC_THAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/two-way-connectors-%D8%A8-%D8%AA-%D8%AB-%D9%86-%D9%8A/",
+    );
+    expect(src.citation).toMatch(/Introduction to Arabic.*Alphabet: ب ت ث.*Thaa demonstration.*Oregon/i);
+    expect(src.variation).toMatch(
+      /dedicated Thaa video.*body-first.*upper-right tip.*right-to-left.*turned-up left tip.*three upper dots.*two-lower-and-one-centred-upper.*lower-left.*lower-right.*centred upper.*four pen-down runs.*three lifts.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance/i,
+    );
   });
 
   it("Arabic independent ج traces its body-first order to the University of Oregon", () => {

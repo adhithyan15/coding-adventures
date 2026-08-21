@@ -1,0 +1,11 @@
+return {
+    include = {
+        "src/coding_adventures/image_codec_png/init$",
+    },
+    modules = {
+        ["coding_adventures.image_codec_png"] = "../src/coding_adventures/image_codec_png/init.lua",
+    },
+    includeuntestedfiles = {
+        "../src/coding_adventures/image_codec_png/init.lua",
+    },
+}

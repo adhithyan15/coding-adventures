@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:98a621e1729512a5",
+  "sourceHash": "fnv1a64:da4d2f30bce7d386",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -144,7 +144,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:17c41728004599b4",
+      "sourceHash": "fnv1a64:b47a8e77b0049d38",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -191,7 +191,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "എന്റെ (enṟe, \"my\") is the possessive of ഞാൻ (ñāṉ, \"I\") — native Dravidian, the same pronoun stem behind Tamil nāṉ / eṉ. No Indo-European cousin: the Dravidian \"I/my\" is a different word from the European I/my."
+              "text": "എന്റെ (enṟe) means \"my.\" It belongs to Malayalam's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need enṟe."
             }
           ]
         },
@@ -229,11 +229,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its source — ñāṉ (\"I\") becomes enṟe (\"my\")",
+              "instruction": "enṟe once with its meaning, \"my\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its source — *ñāṉ* (\"I\") → *enṟe* (\"my\")]"
+              "source": "[YOU SAY: *enṟe* once with its meaning, \"my\"]"
             }
           ]
         },
@@ -250,7 +250,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is എന്റെ (enṟe) the possessive of? (ñāṉ, \"I\".)"
+              "text": "What does എന്റെ (enṟe) mean? (\"My.\") Is it native Dravidian or an Indo-European loan? (Native Dravidian.)"
             }
           ]
         }

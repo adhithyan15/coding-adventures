@@ -11,13 +11,20 @@
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
   "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 55,
+  "forwardReferences": 45,
   "atomsTaught": 126,
   "atomsNeverRevisited": 32,
   "reinforcementWindowMisses": 190,
+  "reinforcementMissesByWindow": {
+    "R1": 43,
+    "R2": 83,
+    "R3": 61,
+    "R4": 3
+  },
   "payoffSurprises": 2,
   "writingPracticeLessons": 5,
   "firstWritingPracticeAt": 0,
@@ -26,7 +33,7 @@
     {
       "language": "german",
       "kind": "forward-language",
-      "count": 55,
+      "count": 45,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -62,7 +69,7 @@
   "next": {
     "language": "german",
     "kind": "forward-language",
-    "count": 55,
+    "count": 45,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }
