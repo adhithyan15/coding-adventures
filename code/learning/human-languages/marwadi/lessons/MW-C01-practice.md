@@ -14,11 +14,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
+  knowledge: [MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
 introduces:
   knowledge: [MW-DIALOGUE-GREETING-01]
 practises:
-  knowledge: [MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-DIALOGUE-GREETING-01]
+  knowledge: [MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-DIALOGUE-GREETING-01]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -30,7 +30,7 @@ reviews_of: [MW-W01-ra, MW-W01-aa-matra, MW-W01-raam, MW-W01-sa, MW-W01-saa, MW-
 # Practice — hear it, answer it, write it
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01, MW-SCRIPT-SAA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01] -->
 
 [PAUSE 5s] With the page covered, write **राम** and **सा** separately. Check
 only after both are down.
@@ -57,7 +57,7 @@ Run both voices once. Then cover B and answer A aloud. Switch roles.
 Writing counts only if the model was hidden. Copying was the ramp; this is recall.
 
 ## Wrap-up recall
-<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-DIALOGUE-GREETING-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RA-01, MW-SCRIPT-AA-MATRA-01, MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SA-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA, MW-DIALOGUE-GREETING-01] -->
 <!-- hl-writing-stage: dictation-transcription -->
 <!-- hl-activity: {"id":"MW-C01-practice-answer","kind":"text","assesses":["MW-DIALOGUE-GREETING-01"],"prompt":"You hear rām-rām sā. Write the respectful reply from memory.","answer":"राम-राम सा","accepted":["राम राम सा","rām-rām sā","ram-ram sa"],"feedback":{"correct":"You completed the chapter payoff in writing.","incorrect":"Build राम, repeat it, then add respectful सा: राम-राम सा."},"response_seconds":18} -->
 

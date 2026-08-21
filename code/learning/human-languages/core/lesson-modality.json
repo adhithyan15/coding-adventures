@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:aa6148b0dec837f6",
+  "sourceHash": "fnv1a64:1b29820d1527cd20",
   "summary": {
     "totalLessons": 3411,
     "voice": 2462,
@@ -48670,21 +48670,19 @@
       "derived": "pen",
       "drivable": false,
       "reasons": [
-        "writing-type",
         "writing-block",
         "script-block"
       ],
-      "coreModality": "pen",
+      "coreModality": "voice",
       "coreReasons": [
-        "writing-type"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:542256ac8122031b",
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:75400d08ec5a3897",
       "detachableSegments": [
         "Script — add म",
         "Writing — from copy to memory"
-      ],
-      "delivery": "script"
+      ]
     },
     {
       "id": "MW-W01-sa",
@@ -48703,7 +48701,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:558bfae057c1134d",
+      "sourceHash": "fnv1a64:8d376cf0652b9fbf",
       "detachableSegments": [
         "Script — notice and copy"
       ],
@@ -48727,7 +48725,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:553047dd213b091b",
+      "sourceHash": "fnv1a64:9f7b7e40a12feb9f",
       "detachableSegments": [
         "Script — assemble",
         "Writing — delayed copy"
@@ -48750,7 +48748,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:5fd7a2ec7e405405"
+      "sourceHash": "fnv1a64:3e647aa08c287903"
     },
     {
       "id": "MW-C01-practice",
@@ -48768,7 +48766,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:21fe9ce5062a315d"
+      "sourceHash": "fnv1a64:3dcad37b006211fd"
     },
     {
       "id": "FA-C01-bale",
