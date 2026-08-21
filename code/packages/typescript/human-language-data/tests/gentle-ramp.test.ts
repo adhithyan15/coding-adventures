@@ -190,28 +190,13 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(
       [...outputs.keys()].filter((path) => outputs.get(path) !== changedOutputs.get(path)),
     ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.json`]);
-    /* Superseded assertions from order branches not yet on main:
-    expect(report.tracks.find((track) => track.language === "portuguese")).toMatchObject({
-      orderDefects: 0,
-      forwardPrerequisites: 0,
-      forwardReviews: 0,
-    });
-    expect(report.tracks.find((track) => track.language === "persian")).toMatchObject({
-      orderDefects: 0,
-      forwardPrerequisites: 0,
-      forwardReviews: 0,
-    });
     expect(report.tracks.find((track) => track.language === "urdu")).toMatchObject({
       orderDefects: 0,
       forwardPrerequisites: 0,
       forwardReviews: 0,
     });
-    */
-    expect(report.tracks.find((track) => track.language === "urdu")).toMatchObject({
-      orderDefects: 0,
-      forwardPrerequisites: 0,
-      forwardReviews: 0,
-    });
-    expect(report.tracks.every((track) => track.findings.length > 0)).toBe(true);
+    expect(
+      report.tracks.filter((track) => track.findings.length === 0).map((track) => track.language),
+    ).toEqual(["marwadi"]);
   }, 30_000);
 });

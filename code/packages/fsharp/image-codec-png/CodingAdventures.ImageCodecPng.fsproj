@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <AssemblyName>CodingAdventures.ImageCodecPng.FSharp</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>CodingAdventures.ImageCodecPng.FSharp</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Adhithya Rajasekaran</Authors>
+    <Description>Pure bounded IC18 PNG encoder and decoder</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\pixel-container\CodingAdventures.PixelContainer.fsproj" />
+    <ProjectReference Include="..\zip\CodingAdventures.Zip.fsproj" />
+    <Compile Include="Png.fs" />
+  </ItemGroup>
+</Project>
