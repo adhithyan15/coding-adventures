@@ -4411,6 +4411,15 @@ tests and vet are green, its dry run selects exactly PNG, PixelContainer, ZIP,
 and LZSS in each JVM lane, and its real Windows executor builds all eight
 affected nodes successfully.
 
+Ready-for-review PR #12360 was opened from clean validated head
+`4f4b60bd701bcab5933d529b5917891962856503` after a normal first push from exact
+main `4f15cd2aee15562bff204076608205b5d32f2c80`. Independent implementation,
+security, build, inventory, and live-ownership audits found no blocker or
+competing owner. GitHub reports the PR mergeable while its initial CI and
+CodeQL checks are queued, so the JVM item is now `pr-open`, every other parity
+item remains pending, and auto-merge stays disabled until the exact-head checks
+are terminal acceptable and conflict status is clear.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

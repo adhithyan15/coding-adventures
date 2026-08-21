@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12360,
   "last_inventory": {
     "revision": "4f15cd2aee15562bff204076608205b5d32f2c80",
     "schema_version": 3,
@@ -4046,14 +4046,17 @@
     {
       "id": "image-codec-png-jvm-lane-parity",
       "title": "Port IC18 image-codec-png to Java and Kotlin",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": "codex/image-codec-png-jvm-lane-parity",
-      "pr_number": null,
+      "pr_number": 12360,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12360",
+      "opened_at": "2026-08-21T02:24:32Z",
       "selection_revision": "4f15cd2aee15562bff204076608205b5d32f2c80",
       "implementation_revision": "b881d8119c",
       "selection_notes": "Selected after .NET PNG PR #12341 completed all 29 checks and merged, closing the C# and F# slots. The collision-checked schema-3 inventory at exact live main 4f15cd2aee remains 15 established lanes and 1,368 identities while advancing to 4,555 implementation slots, with zero collisions and zero unknown buckets; the only new roots are the reviewed C# and F# image-codec-png packages, and intervening human-language commits add no package root. This JVM tranche is the highest-leverage ready child because it closes the only remaining two-slot PNG gap, Java and Kotlin, with one installed JDK 21 toolchain. Both lanes already have passing PixelContainer and ZIP-owned raw RFC 1951, counted-inflate, and CRC-32 prerequisites with cached Gradle 8.11.1 and BUILD/BUILD_windows front doors. The bounded work adds independent native Java and Kotlin IC18 packages, complete 85-case public fixture consumers, focused allocation and precedence tests, Gradle metadata, docs, changelogs, BUILD front doors, and empty capabilities without changing IC18, the neutral corpus, adapters, or unrelated lanes.",
       "validation_notes": "Implementation commit b881d8119c adds native Java and Kotlin PNG codecs backed only by each lane's PixelContainer and ZIP raw RFC 1951/CRC surfaces. Both public fixture consumers pass all 85 neutral cases while pinning schema 1, profile image-codec-png-v1, and the exact 29-code taxonomy; focused tests make maxPixels validation, malformed supplied PixelContainers, APNG precedence, exact inflate consumption, Adler, palette/transparency, and all five encoder filters load-bearing. Java reports 98.53% line and 93.95% branch coverage; Kotlin reports 96.28% line and 82.51% branch coverage. Literal BUILD and BUILD_windows front doors pass for both packages with JDK 21 and Gradle 8.11.1. The repository Go build tool passes all tests and vet, validates the full Starlark graph, selects exactly PNG, PixelContainer, ZIP, and LZSS in each JVM lane, and successfully executes all eight affected Windows front doors. The fixture generator and nine validator tests, seven capability-taxonomy tests, ten parity reporter tests, collision-checked prospective inventory, formatting/diff checks, and independent security/authority review are green. The prospective inventory remains 1,368 canonical identities with 4,557 slots and zero collisions or unknown buckets; image-codec-png advances to six lanes without creating a new identity or classification owner.",
+      "publication_notes": "Opened ready-for-review PR #12360 from clean validated head 4f4b60bd701bcab5933d529b5917891962856503 after a normal first push from exact origin/main 4f15cd2aee15562bff204076608205b5d32f2c80. Independent implementation, security, build, inventory, and live-ownership audits found no blocker; the live audit covered all current open PRs and no-PR remotes with zero direct overlap and confirmed the target branch and PR were previously absent. GitHub reports the PR mergeable, while its initial CI and CodeQL checks are queued, so auto-merge remains disabled and every other parity item remains pending until the exact-head checks reach terminal acceptable conclusions.",
       "notes": "Toolchain-shaped JVM child. Consume the neutral PNG corpus and established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
     },
     {
