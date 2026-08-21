@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:b3924c2ba696cbb9",
+  "sourceHash": "fnv1a64:7432373ee3872190",
   "lessons": [
     {
       "id": "GU-C01-namaste",
@@ -492,6 +492,538 @@
       ]
     },
     {
+      "id": "GU-W01-ha",
+      "sequence": 41,
+      "title": "હ — the consonant ha",
+      "headword": "હ",
+      "romanization": "ha",
+      "gloss": "the consonant ha — and the vowel you get for free with it",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:6efab0c57893ef21",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the tiny answer you already know: હા, hā, \"yes.\" Today your hand meets only its first piece."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Gujarati is written with an abugida, and that word is doing a lot of work. It is not an alphabet, where each letter is one sound. It is a system where a consonant already carries a vowel, and you only write a vowel when you want a different one."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the first consonant:"
+            },
+            {
+              "kind": "speech",
+              "text": "હ (ha)."
+            },
+            {
+              "kind": "speech",
+              "text": "That is not h. It is ha — the consonant h with an a already inside it, the a of English about. Nobody wrote that vowel. It is there because a bare consonant in this script is understood to carry it, and this is called the inherent vowel."
+            },
+            {
+              "kind": "speech",
+              "text": "Look at the shape while you say it. Notice what is not there: no line across the top. Gujarati is Devanagari's sister and the two share most of their skeleton, but Devanagari hangs its letters from a horizontal bar and Gujarati has erased it. The letters float. That single missing line is how you tell the two scripts apart at a glance, and it is why Gujarati is sometimes called the headless script."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace one consonant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep હ visible. Finger-trace it once, slowly, then trace it once in the air. Say ha after your finger stops. Do not try to write the word for \"yes\" yet; its vowel sign comes next."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What vowel does a bare consonant carry? (a — the inherent vowel, unwritten.) And what is the one visible difference from Devanagari? (No line across the top.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gujarati chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-ha-observe-check",
+              "prompt": "Trace the visible Gujarati consonant once, then name its built-in vowel.",
+              "assesses": [
+                "GU-SCRIPT-HA-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "હ — ha, with inherent a",
+                "હ",
+                "ha",
+                "a",
+                "inherent a"
+              ],
+              "feedback": {
+                "correct": "Right: હ is ha; the a is already present.",
+                "incorrect": "Keep હ visible, trace it once, and remember that a bare Gujarati consonant carries a."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W01-aa-matra",
+      "sequence": 42,
+      "title": "ા (-ā) — the vowel sign that replaces the inherent a",
+      "headword": "ા",
+      "romanization": "-ā",
+      "gloss": "the vowel sign that replaces the inherent a — and your first readable word",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:13450a998237f98a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the piece from the previous lesson before adding another."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The inherent a is a default. To get a different vowel you replace it, and you replace it with a mark called a mātrā."
+            },
+            {
+              "kind": "speech",
+              "text": "Here is the first one:"
+            },
+            {
+              "kind": "speech",
+              "text": "ા (-ā)."
+            },
+            {
+              "kind": "speech",
+              "text": "On its own it is nothing — a vertical stroke you would never write alone. It only means anything attached to a consonant, where it swaps the inherent short a for a long ā, the a of English father."
+            },
+            {
+              "kind": "speech",
+              "text": "Put it on the consonant you just learned:"
+            },
+            {
+              "kind": "speech",
+              "text": "હ (ha) + ા (-ā) becomes હા (hā)."
+            },
+            {
+              "kind": "speech",
+              "text": "hā. And that is a word — it is yes, and you have been saying it since your first lesson in this language."
+            },
+            {
+              "kind": "speech",
+              "text": "Take the measure of that. You learned one consonant and one mark, and a word you already knew how to say became a word you can read. Nothing was memorised as a picture."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — notice and trace one vowel sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ા (-ā) visible beside હ (ha). Finger-trace the vowel sign once, then point to where it attaches on the consonant. Read હા as hā. You are not copying the whole word yet; today is only the second piece."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What does a mātrā do to the inherent vowel? (Replaces it.) What word did those two pieces make? (હા — hā, \"yes\".)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Gujarati chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-aa-matra-observe-check",
+              "prompt": "Trace the visible long-aa sign once, attach it to હ (ha) with your finger, and read the result.",
+              "assesses": [
+                "GU-SCRIPT-HA-01",
+                "GU-SCRIPT-AA-MATRA-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "હ + ા = હા, hā",
+                "હા",
+                "hā",
+                "ha"
+              ],
+              "feedback": {
+                "correct": "Yes: the attached ા replaces inherent a, giving હા hā.",
+                "incorrect": "Keep both pieces visible: હ plus attached ા makes હા."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W01-haa-guided-copy",
+      "sequence": 43,
+      "title": "હા (hā) — one supported copy",
+      "headword": "હા",
+      "romanization": "hā",
+      "gloss": "copy yes once after learning both pieces",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:5fb3f061ef181ce7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the consonant હ (ha), then the attached vowel sign ા (-ā). Say the whole known word: હા, hā, \"yes.\" Keep the model visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy હા once. You may look back after each piece: first હ (ha), then ા (-ā). Touch both pieces in your copy and read hā."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare only the two pieces and their order. Repair one piece if needed, then stop. The model stays visible today."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-haa-guided-copy-check",
+              "prompt": "Copy the visible Gujarati word for yes once, then name its two pieces.",
+              "assesses": [
+                "GU-CONCEPT-C01-HAANAA-01",
+                "GU-SCRIPT-HA-01",
+                "GU-SCRIPT-AA-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "હા — હ plus ા",
+                "હા",
+                "હ + ા",
+                "હ plus ા"
+              ],
+              "feedback": {
+                "correct": "Good: one supported copy, built from હ and attached ા.",
+                "incorrect": "Keep the model visible and copy only two pieces: હ, then ા."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W01-haa-delayed-copy",
+      "sequence": 44,
+      "title": "હા (hā) — look, hide, write, compare",
+      "headword": "હા",
+      "romanization": "hā",
+      "gloss": "look, hide, write, compare, and repair yes",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d162a51c1d5aafc1",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at હા (hā) for five seconds. Point first to હ (ha), then to ા (-ā). Do not copy it yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cover હા (hā)."
+            },
+            {
+              "kind": "speech",
+              "text": "wait five seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write it once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover the model and compare the two pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "If one piece differs, circle it and repair only that place. Repair is part of the exercise, not a failure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read your repaired word as hā. Stop after one memory attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-haa-delayed-copy-check",
+              "prompt": "After hiding the model for five seconds, write the Gujarati word for yes and then compare it.",
+              "assesses": [
+                "GU-CONCEPT-C01-HAANAA-01",
+                "GU-SCRIPT-HA-01",
+                "GU-SCRIPT-AA-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "હા"
+              ],
+              "feedback": {
+                "correct": "Yes: હા, one consonant and its attached long-aa sign.",
+                "incorrect": "Uncover the model, repair only the differing piece, and try once more tomorrow."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "GU-W01-haa-dictation",
+      "sequence": 45,
+      "title": "One heard answer — write what you know",
+      "headword": "હા",
+      "romanization": "hā",
+      "gloss": "write yes from a heard cue with no visible model",
+      "script": "gujarati",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:5668f9df02601043",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer lower on this page. You will hear one familiar answer. No new Gujarati is hiding in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "hā — \"yes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *hā* — \"yes\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Gujarati word from sound alone. Now uncover and compare: હા (hā). Check હ (ha) first and attached ા (-ā) second. Repair one place if needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Writing from sound completes this tiny runway. It is not a mock assessment; later lessons must grow from one known word to forms, messages, and timed tasks."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-W01-haa-dictation-answer",
+              "prompt": "From the heard cue hā alone, write the known Gujarati word for yes.",
+              "assesses": [
+                "GU-CONCEPT-C01-HAANAA-01",
+                "GU-SCRIPT-HA-01",
+                "GU-SCRIPT-AA-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "હા"
+              ],
+              "feedback": {
+                "correct": "હા — હ with attached long-aa sign ા.",
+                "incorrect": "The word has two pieces: હ, then attached ા: હા."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "GU-C01-saarun",
       "sequence": 50,
       "title": "સારું (sārũ) — \"good,\" \"okay\"",
@@ -651,21 +1183,22 @@
       "romanization": "",
       "gloss": "Chapter 1 recap — the greetings",
       "script": "gujarati",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a48cc8dab3ef6975",
+      "sourceHash": "fnv1a64:05b69aef6adbfbba",
       "notice": {
-        "modality": "sight",
+        "modality": "pen",
         "needs": [
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
           "Script — the script and the language"
         ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the script and the language until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the script and the language until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -776,6 +1309,36 @@
         },
         {
           "index": 3,
+          "type": "writing",
+          "title": "Writing — retrieve the tiny word once",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover every written answer. Hear hā, \"yes,\" once in your mind and write it from memory. Then uncover હા and check the two pieces: હ (ha), then attached ા (-ā). One repair is allowed."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "GU-C01-practice-writing-payoff",
+              "prompt": "Without a visible model, write the Gujarati word you hear: hā, yes.",
+              "assesses": [
+                "GU-CONCEPT-C01-HAANAA-01",
+                "GU-SCRIPT-HA-01",
+                "GU-SCRIPT-AA-MATRA-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "હા"
+              ],
+              "feedback": {
+                "correct": "હા — the chapter now closes with independent writing as well as speech.",
+                "incorrect": "Repair just the differing piece: હ first, then attached ા."
+              }
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "notice",
           "title": "What you've built — roots you now carry",
           "segments": [
@@ -804,7 +1367,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [

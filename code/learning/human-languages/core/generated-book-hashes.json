@@ -1060,12 +1060,17 @@
     {
       "language": "gujarati",
       "chapter": 1,
-      "sourceHash": "fnv1a64:c5b09ea90cec9a61",
+      "sourceHash": "fnv1a64:4ab5a5a316211d9e",
       "lessonIds": [
         "GU-C01-namaste",
         "GU-C01-aabhaar",
         "GU-C01-aavjo",
         "GU-C01-haa-naa",
+        "GU-W01-ha",
+        "GU-W01-aa-matra",
+        "GU-W01-haa-guided-copy",
+        "GU-W01-haa-delayed-copy",
+        "GU-W01-haa-dictation",
         "GU-C01-saarun",
         "GU-C01-practice"
       ],
@@ -1215,10 +1220,8 @@
     {
       "language": "gujarati",
       "chapter": 13,
-      "sourceHash": "fnv1a64:f47d16047dfdaa32",
+      "sourceHash": "fnv1a64:f6dd70fcfd4830ea",
       "lessonIds": [
-        "GU-W01-ha",
-        "GU-W01-aa-matra",
         "GU-W01-aa",
         "GU-W01-na",
         "GU-W01-ma",

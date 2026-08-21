@@ -27,9 +27,11 @@ materials, and human pass evidence remain separate gates.
 
 ## Authored
 
-- **Ch. 1 — Greetings**: namaste → ābhār → hā/nā → sārũ → āvjo → practice.
-  Gujarati script introduced through the words; the missing top line and three
-  genders foregrounded.
+- **Ch. 1 — Greetings and the first written answer**: namaste → ābhār → āvjo →
+  hā/nā → **હ** → **ા** → guided copy → delayed copy → dictation → sārũ →
+  practice. The writing runway spends one piece at a time before the whole word
+  and keeps every step under five minutes; the payoff retrieves **હા** from
+  sound with no visible model.
 - **Ch. 2 — Introducing Yourself**: nām → mārũ → chhe → "my name is…" → tũ/tame
   → shũ → "what's your name?" → ānand → practice. The copula *chhe* and gender
   agreement.
