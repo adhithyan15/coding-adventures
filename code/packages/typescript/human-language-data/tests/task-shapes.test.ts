@@ -155,6 +155,27 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(inventory.passRule.note).toContain("not an official HSK level");
   });
 
+  it("loads the project-defined Japanese pre-A1 precursor without inventing a JLPT level", () => {
+    const inventory = loadTaskShapeInventory("japanese", "pre-A1");
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Japanese pre-A1 Assessment — project-defined JLPT/JF Standard precursor",
+      basis: "project-defined",
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.sections.find((section) => section.skill === "writing")?.parts.map((part) => part.id)).toEqual([
+      "prea1-writing-delayed-kana-recall",
+      "prea1-writing-dictation",
+      "prea1-writing-bounded-production",
+    ]);
+    expect(inventory.passRule.note).toContain("below the official JLPT");
+  });
+
   it("loads the official Spanish A1 performance target and its grouped pass rule", () => {
     const inventory = loadTaskShapeInventory("spanish", "A1");
     expect(inventory.target).toEqual({ name: "DELE A1", basis: "external" });
@@ -326,6 +347,7 @@ describe("four-skill task-shape inventories (HL18)", () => {
       { language: "marwadi", level: "A1" },
       { language: "gujarati", level: "pre-A1" },
       { language: "chinese", level: "pre-A1" },
+      { language: "japanese", level: "pre-A1" },
     ]));
     expect(new Set(present.map((item) => `${item.language}/${item.level}`)).size).toBe(present.length);
     expect(present).toEqual([...present].sort((left, right) => {
@@ -354,6 +376,8 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(backlog.some((item) => item.id === "task-shape/arabic/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/chinese/pre-A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/chinese/A1")).toBe(true);
+    expect(backlog.some((item) => item.id === "task-shape/japanese/pre-A1")).toBe(false);
+    expect(backlog.some((item) => item.id === "task-shape/japanese/A1")).toBe(true);
   });
 
   it("rejects a missing skill instead of treating it as exam-ready", () => {
