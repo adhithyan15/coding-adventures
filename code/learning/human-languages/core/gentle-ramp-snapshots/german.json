@@ -14,7 +14,7 @@
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 55,
+  "forwardReferences": 45,
   "atomsTaught": 126,
   "atomsNeverRevisited": 32,
   "reinforcementWindowMisses": 190,
@@ -26,7 +26,7 @@
     {
       "language": "german",
       "kind": "forward-language",
-      "count": 55,
+      "count": 45,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -62,7 +62,7 @@
   "next": {
     "language": "german",
     "kind": "forward-language",
-    "count": 55,
+    "count": 45,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }
