@@ -4589,6 +4589,40 @@ allocation, and precedence regressions, LuaRocks and BUILD metadata,
 documentation, changelog, and an empty capability manifest. It does not change
 IC18, the neutral corpus, adapters, or unrelated lanes.
 
+### Lua PNG implementation and allocation hardening
+
+Tests-first implementation exposed a Lua-specific allocation hazard that the
+small neutral vectors alone could not reveal. Both PixelContainer RGBA storage
+and ZIP counted inflate previously retained one boxed Lua number per byte. At
+the normative 33,554,432-pixel ceiling those two buffers could exceed 4 GiB
+before PNG decoder overhead, contradicting IC18's bounded-resource contract.
+The selected dependency-shaped tranche therefore hardens both prerequisites:
+PixelContainer preserves its mutable 1-indexed `data` table interface over
+compact 4 KiB byte strings, while ZIP retains completed inflate output as byte
+strings plus only one bounded numeric tail. Focused compact-storage and
+multi-megabyte overlapping-back-reference regressions keep that boundary
+load-bearing. The Windows PixelContainer and LZSS BUILD fronts are also made
+directly executable through LuaRocks' extensionless Busted wrapper.
+
+The native Lua PNG package now passes 94 Busted tests: all 85 neutral cases
+through public APIs plus focused max-pixel, malformed/sparse buffer, unsigned
+chunk-length, APNG precedence, compact output, taxonomy, and Adler-boundary
+regressions. Test-only LibDeflate independently inflates encoder output and
+Windows System.Drawing accepts each encoded PNG and recovers exact RGBA bytes.
+Production line coverage is 98.58%. PixelContainer passes 36 tests; ZIP passes
+69 full tests and 40 focused portable coverage cases at 90.44%; BMP, PPM, QOI,
+point-operation, and geometric-transform downstream suites pass 31, 28, 33,
+28, and 41 tests respectively. Syntax and LuaCheck gates report zero warnings.
+
+The prospective collision-checked schema-3 inventory contains 15 established
+lanes, 1,368 identities, and 4,560 implementation slots. `image-codec-png`
+spans nine lanes, the 5-9 band remains 123 packages with 932 gaps, and
+collisions and unknown buckets remain zero. The neutral PNG and capability
+taxonomy suites pass 9 and 7 tests. Production imports only repository
+PixelContainer and ZIP; all filesystem, LibDeflate, process, and real-image
+tool authority is confined to tests and the empty production capability
+manifest remains valid.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

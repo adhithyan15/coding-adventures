@@ -161,6 +161,15 @@ describe("ZIP raw RFC 1951 v1 cases", function()
 end)
 
 describe("raw RFC 1951 integration boundaries", function()
+    it("inflates a multi-megabyte overlapping stream through bounded storage #slow", function()
+        local seed = ("portable-window-"):rep(2048)
+        local expected = seed:rep(64)
+        local stream = LibDeflate:CompressDeflate(expected, {level = 9})
+        local result = assert(zip.raw_inflate_counted(stream, #expected))
+        assert.equal(expected, result.output)
+        assert.equal(#stream, result.bytes_consumed)
+    end)
+
     it("decodes an independently generated full 32 KiB window stream #slow", function()
         local prefix = {}
         for index = 0, 32767 do

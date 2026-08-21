@@ -547,17 +547,45 @@ local function read_dynamic_trees(br)
     return literal_tree, distance_tree
 end
 
-local function bytes_to_string(bytes, total)
-    local chunks = {}
-    for first = 1, total, 4096 do
-        local last = math.min(first + 4095, total)
-        chunks[#chunks + 1] = string.char(table.unpack(bytes, first, last))
+-- Keep inflated bytes in completed strings plus one small numeric tail.  A
+-- dense Lua table costs roughly sixteen bytes per logical byte on the standard
+-- 64-bit VM, so the old one-number-per-byte representation could consume more
+-- than four gigabytes at the public 256 MiB output ceiling.
+local OUTPUT_CHUNK_SIZE = 4096
+
+local function new_output_buffer()
+    return {chunks = {}, tail = {}, total = 0}
+end
+
+local function output_append(output, byte)
+    output.total = output.total + 1
+    output.tail[#output.tail + 1] = byte
+    if #output.tail == OUTPUT_CHUNK_SIZE then
+        output.chunks[#output.chunks + 1] = string.char(table.unpack(output.tail))
+        output.tail = {}
     end
-    return table.concat(chunks)
+end
+
+local function output_byte(output, index)
+    local completed = #output.chunks * OUTPUT_CHUNK_SIZE
+    if index <= completed then
+        local chunk_index = ((index - 1) // OUTPUT_CHUNK_SIZE) + 1
+        local chunk_offset = ((index - 1) % OUTPUT_CHUNK_SIZE) + 1
+        return output.chunks[chunk_index]:byte(chunk_offset)
+    end
+    return output.tail[index - completed]
+end
+
+local function output_string(output)
+    if #output.tail > 0 then
+        output.chunks[#output.chunks + 1] = string.char(table.unpack(output.tail))
+        output.tail = {}
+    end
+    return table.concat(output.chunks)
 end
 
 local function decode_compressed_block(br, literal_tree, distance_tree,
-                                       out_bytes, total, max_output)
+                                       output, total, max_output)
     while true do
         local symbol, symbol_error = decode_symbol(
             br, literal_tree, "invalid-literal-length-symbol")
@@ -566,7 +594,7 @@ local function decode_compressed_block(br, literal_tree, distance_tree,
         if symbol < 256 then
             if total >= max_output then return nil, "output-limit-exceeded" end
             total = total + 1
-            out_bytes[total] = symbol
+            output_append(output, symbol)
         elseif symbol == 256 then
             return total
         elseif symbol <= 285 then
@@ -595,8 +623,9 @@ local function decode_compressed_block(br, literal_tree, distance_tree,
                     return nil, "output-limit-exceeded"
                 end
                 local source = total - distance + 1
+                local byte = output_byte(output, source)
                 total = total + 1
-                out_bytes[total] = out_bytes[source]
+                output_append(output, byte)
             end
         else
             return nil, "invalid-literal-length-symbol"
@@ -614,7 +643,7 @@ local function inflate_counted(data, max_output)
     end
 
     local br = new_bit_reader(data)
-    local out_bytes = {}
+    local output = new_output_buffer()
     local total = 0
 
     while true do
@@ -642,7 +671,7 @@ local function inflate_counted(data, max_output)
                 local byte = br_read_lsb(br, 8)
                 if byte == nil then return nil, "unexpected-eof" end
                 total = total + 1
-                out_bytes[total] = byte
+                output_append(output, byte)
             end
         elseif btype == 1 or btype == 2 then
             local literal_tree = FIXED_LITERAL_TREE
@@ -653,7 +682,7 @@ local function inflate_counted(data, max_output)
                 if literal_tree == nil then return nil, tree_error end
             end
             local block_total, block_error = decode_compressed_block(
-                br, literal_tree, distance_tree, out_bytes, total, max_output)
+                br, literal_tree, distance_tree, output, total, max_output)
             if block_total == nil then return nil, block_error end
             total = block_total
         else
@@ -662,7 +691,7 @@ local function inflate_counted(data, max_output)
 
         if bfinal == 1 then
             return {
-                output = bytes_to_string(out_bytes, total),
+                output = output_string(output),
                 bytes_consumed = br.pos - 1,
             }
         end
