@@ -1210,13 +1210,6 @@
       "scriptCommand": "gu"
     },
     {
-      "language": "gujarati",
-      "chapter": 13,
-      "output": "gujarati/book/chapters/ch13-script-first.tex",
-      "unicodeScript": "Gujarati",
-      "scriptCommand": "gu"
-    },
-    {
       "language": "hindi",
       "chapter": 4,
       "output": "hindi/book/chapters/ch04-farewells.tex",

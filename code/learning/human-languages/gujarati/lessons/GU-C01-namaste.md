@@ -2,10 +2,11 @@
 schema_version: 2
 id: GU-C01-namaste
 spine_node: SPINE-MEET-GREET
-sequence: 10
+sequence: 1
 chapter: 1
 type: word
 headword: નમસ્તે
+romanization: "namaste"
 gloss: hello / goodbye (namaste)
 concept_tag: GREETING-HELLO
 prerequisites: []
@@ -19,7 +20,7 @@ introduces:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
 practises:
   knowledge: [GU-CONCEPT-C01-NAMASTE-01]
-skills: [listening, speaking, reading]
+skills: [listening, speaking]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
@@ -27,44 +28,44 @@ variety: standard-gujarati
 reviews_of: []
 ---
 
-# નમસ્તે (namaste) — "hello," and a script with no ceiling
+# Namaste — first hear the greeting
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] The first Gujarati word — and your first look at a script that is
-Devanagari's sister, but bareheaded.
+[PAUSE 2s] Imagine meeting someone at the start of the day. First, only listen:
+*namaste*.
 
-## The letters in this word
+## The exchange
 <!-- hl-knowledge: introduces=[GU-CONCEPT-C01-NAMASTE-01]; assesses=[] -->
 
-*(If you already read Gujarati, skim this.)* Gujarati runs **left to right**, and
-every consonant carries a built-in "a": **ન** na, **મ** ma, **સ** sa, **ત** ta.
-A *virama* strips the vowel so it joins the next as a conjunct: **સ + ્ + ત →
-સ્ત**. And the one thing to notice above all: Gujarati has **no top line**. Hindi,
-Marathi, and Bengali hang their letters from a horizontal bar (the *shirorekhā*);
-Gujarati cut that bar away, so its letters float free. It is sometimes called
-"the headless script" — the quickest way to tell it from Devanagari at a glance.
+*Namaste* works as a greeting when you meet someone. You can also hear it at a
+leave-taking. For this first pass, the sound and social job are enough: hear
+*na-ma-ste*, then answer with the same greeting.
+
+The Gujarati spelling is deliberately not decoded here. The next ten tiny
+lessons will give your eye and hand one reusable piece at a time. Only after all
+six pieces of this word are familiar will the book ask you to read or copy it.
 
 ## The word, taken apart
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->
 
-**નમસ્તે** (*namaste*) is Sanskrit **નમસ્** (*namas*, "a bow") + **તે** (*te*, "to
-you") — "**I bow to you**," the very same word as in Hindi and Sanskrit. Gujarati
-is **Indo-Aryan**, a granddaughter of Sanskrit, so it inherited this greeting
-whole. (An even more common Gujarati hello, among Hindus, is **કેમ છો?** *kem
-chho?* — "how are you?" — which you will build in Chapter 3.)
+*Namaste* continues Sanskrit *namas*, "a bow," plus *te*, "to you": literally,
+"a bow to you." Gujarati inherited the greeting through its Indo-Aryan history.
+You do not need to remember the two historical pieces yet; they are simply a
+memory hook for the greeting's respectful shape.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->
 
 [PAUSE 1s]
 - [YOU SAY: "namaste"]
-- [YOU SAY: the one visible difference from Devanagari (no top line)]
-- [YOU SAY: its two parts (*namas* "a bow" + *te* "to you")]
+- [YOU SAY: "namaste" once as a greeting and once as a leave-taking]
+- [YOU SAY: its literal memory hook ("a bow to you")]
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-CONCEPT-C01-NAMASTE-01] -->
 
-[PAUSE 3s] What does *namaste* mean, and what marks Gujarati apart from Devanagari
-at a glance? ("I bow to you"; it has no top line — the "headless" script.)
+[PAUSE 3s] What can you say when you meet someone? (***Namaste.***) What is its
+literal memory hook? (***A bow to you.***) Do you need to read its Gujarati
+spelling yet? (**No** — the script ramp starts next, one piece at a time.)

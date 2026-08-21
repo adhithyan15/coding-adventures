@@ -2,6 +2,24 @@
 
 ## [Unreleased]
 
+### Fixed — opening script prerequisites now precede the first read
+
+- Turned the first *namaste* encounter into a meaning-first listening and
+  speaking lesson. Its Gujarati headword is exposure with romanization; the
+  body makes no decoding or copying demand.
+- Moved the ten existing <=5-minute script micro-lessons out of the end-of-book
+  Chapter 13 appendix and into the opening of Chapter 1 in authored sequence.
+  Nine signs remain model-visible observe/trace work; the whole greeting is a
+  supported guided copy only after every load-bearing sign is known.
+- Removed the now-empty Chapter 13 book slot. This is a prerequisite-order
+  repair, not a claim that Gujarati's remaining script or exam backlog is done.
+- The measurable result is honest rather than cosmetic: load-bearing script
+  violations fall **49 → 46**, forward-language uses **8 → 7**, and missed
+  reinforcement windows **164 → 148**; the 32 never-taught signs remain future
+  work. Consolidating 19 tiny lessons in Chapter 1 raises the aggregate
+  chapter-atom spike count **1 → 2**, so #12452 records the prerequisite-safe
+  learner-visible chapter split rather than hiding that debt.
+
 ### Added — Chapter 1 pre-A1 writing runway
 
 - Moved the existing **હ** and **ા** piece lessons from the late script chapter

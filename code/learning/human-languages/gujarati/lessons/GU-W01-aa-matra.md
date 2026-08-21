@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-aa-matra
 spine_node: SPINE-MEET-GREET
-sequence: 42
+sequence: 3
 delivery: script
 chapter: 1
 type: writing
@@ -49,30 +49,30 @@ On its own it is nothing — a vertical stroke you would never write alone. It o
 means anything **attached to a consonant**, where it swaps the inherent short *a*
 for a long **ā**, the *a* of English *father*.
 
-Put it on the consonant you just learned:
+Place it immediately to the right of the consonant you just learned:
 
-> **હ** + **ા** → **હા**
+> **હ** + **ા**
 
-**hā.** And that is a word — it is **yes**, and you have been saying it since your
-first lesson in this language.
+Together they sound **hā**. Keep the pieces separated on this first pass so your
+hand learns the sign itself rather than copying a whole-word picture. A later
+spoken lesson will give that sound a conversational job.
 
-Take the measure of that. You learned one consonant and one mark, and a word you
-already knew how to say became a word you can **read**. Nothing was memorised as a
-picture.
+Take the measure of that. You learned one consonant and one mark, and they made a
+syllable you can **read**. Nothing was memorised as a picture.
 
 ## Writing — notice and trace one vowel sign
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
 <!-- hl-writing-stage: observe-trace -->
 
 Keep **ા** visible beside **હ**. Finger-trace the vowel sign once, then point to
-where it attaches on the consonant. Read **હા** as *hā*. You are not copying the
-whole word yet; today is only the second piece.
+where it attaches on the consonant. Say *hā*. You are not copying a whole word
+yet; today is only the second piece.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
-<!-- hl-activity: {"id":"GU-W01-aa-matra-observe-check","kind":"text","assesses":["GU-SCRIPT-HA-01","GU-SCRIPT-AA-MATRA-01"],"prompt":"Trace the visible long-aa sign once, attach it to હ with your finger, and read the result.","answer":"હ + ા = હા, hā","accepted":["હા","hā","ha"],"feedback":{"correct":"Yes: the attached ા replaces inherent a, giving હા hā.","incorrect":"Keep both pieces visible: હ plus attached ા makes હા."},"response_seconds":15} -->
+<!-- hl-activity: {"id":"GU-W01-aa-matra-observe-check","kind":"text","assesses":["GU-SCRIPT-HA-01","GU-SCRIPT-AA-MATRA-01"],"prompt":"Trace the visible long-aa sign once, point from હ to the separate ા, and say the resulting syllable.","answer":"હ plus ા — hā","accepted":["hā","ha","long aa"],"feedback":{"correct":"Yes: the attached long-aa sign replaces the inherent a, giving hā.","incorrect":"Keep the two pieces separate and visible: point from હ to ા, then say hā."},"response_seconds":15} -->
 
-[PAUSE 3s] What does a mātrā do to the inherent vowel? (**Replaces** it.) What word did
-those two pieces make? (**હા** — *hā*, "yes".)
+[PAUSE 3s] What does a mātrā do to the inherent vowel? (**Replaces** it.) What
+syllable do those two separate pieces make together? (***Hā.***)
 
 Source: [Unicode Gujarati chart](https://www.unicode.org/charts/PDF/U0A80.pdf).
