@@ -196,6 +196,7 @@ const ARABIC_NOON = DUCTUS[ductusKey("arabic", "ن")];
 const ARABIC_HEH = DUCTUS[ductusKey("arabic", "ه")];
 const ARABIC_WAW = DUCTUS[ductusKey("arabic", "و")];
 const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
+const ARABIC_HAMZA = DUCTUS[ductusKey("arabic", "ء")];
 const URDU_ALEF = DUCTUS[ductusKey("urdu-nastaliq", "ا")];
 const URDU_JIM = DUCTUS[ductusKey("urdu-nastaliq", "ج")];
 const URDU_RE = DUCTUS[ductusKey("urdu-nastaliq", "ر")];
@@ -344,6 +345,13 @@ describe("handwriting ductus", () => {
     expect(gujarati.complete).toBe(true);
     expect(gujarati.letters).toHaveLength(44);
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+  });
+
+  it("keeps all 22 unique Arabic starter rows sourced without overstating completion", () => {
+    const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
+    expect(arabic.complete).toBe(false);
+    expect(arabic.letters).toHaveLength(22);
+    expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
   for (const letter of letters) {
@@ -3147,6 +3155,20 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Arabic independent ء continues from its c-shaped head through the lower diagonal", () => {
+    expect(ARABIC_HAMZA.script).toBe("arabic");
+    expect(penLifts(ARABIC_HAMZA)).toBe(0);
+    expect(ARABIC_HAMZA.strokes).toHaveLength(1);
+    expect(ARABIC_HAMZA.strokes[0].segments).toHaveLength(2);
+    const head = ARABIC_HAMZA.strokes[0].segments[0].path;
+    const diagonal = ARABIC_HAMZA.strokes[0].segments[1].path;
+    expect(head[0].x).toBeGreaterThan(head.at(-1)!.x);
+    expect(Math.max(...head.map((point) => point.y))).toBeGreaterThan(head[0].y);
+    expect(head.at(-1)).toEqual(diagonal[0]);
+    expect(diagonal[0].x).toBeLessThan(diagonal.at(-1)!.x);
+    expect(diagonal[0].y).toBeGreaterThan(diagonal.at(-1)!.y);
+  });
+
   it("Persian ب sweeps right-to-left, then lifts once for the dot", () => {
     const beh = DUCTUS["ب"];
     expect(penLifts(beh)).toBe(1);
@@ -5538,6 +5560,17 @@ describe("handwriting ductus", () => {
     );
     expect(src.url).not.toBe(URDU_YE.source.url);
     expect(ARABIC_YAA.glyph).not.toBe(URDU_YE.glyph);
+  });
+
+  it("Arabic independent ء traces its one-stroke variant to Arabic Language Learning Notes", () => {
+    const src = ARABIC_HAMZA.source;
+    expect(src.url).toBe("https://alarabiyah.sakura.ne.jp/arabic/alphabets/naskh/hamzah/");
+    expect(src.citation).toMatch(
+      /Arabic Language Learning Notes.*Basic Naskh.*Hamza ء.*00:33–00:38.*2022-04-09.*2026-08-21/i,
+    );
+    expect(src.variation).toMatch(
+      /c-shaped upper head.*lower slash.*books vary.*lift after the c.*one-stroke variant.*without lifting.*embedded original video.*00:33.*lower-left end.*lower diagonal.*right.*00:38.*upper part of ع.*alone or on a carrier.*one-stroke.*zero-lift.*Noto Naskh.*alternative two-stroke convention/i,
+    );
   });
 
   it("Arabic independent ه traces its two counters and baseline sweep to the Oregon MOV", () => {

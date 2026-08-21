@@ -335,6 +335,10 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // Arabic ن follows the adjacent Waraqa beginner lesson: sweep the deep bowl
 // from its upper-right tip down and around, then lift once to place the centered
 // dot last. Its Arabic provenance remains separate from Persian and Urdu ن.
+// The Hamza lesson explicitly contrasts two accepted variants. This learner
+// path follows its embedded one-stroke demonstration: shape the upper
+// c-like ʿayn head, then continue from its lower-left end through the lower
+// diagonal without lifting. The alternative lifted slash stays in provenance.
 // The later Arabic ه clip starts at the independent form's upper right, closes
 // its lower counter, threads through the centre into the upper-right counter,
 // then sweeps left along the baseline without lifting. The compact handwritten
@@ -9026,6 +9030,58 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("ي"),
+  },
+  // The source explicitly demonstrates the one-stroke Hamza variant: its
+  // c-shaped upper head flows directly into the lower diagonal.
+  [ductusKey("arabic", "ء")]: {
+    script: "arabic",
+    glyph: "ء",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep counterclockwise through the c-shaped upper head",
+            path: [
+              { x: 292, y: 194 },
+              { x: 300, y: 219 },
+              { x: 286, y: 239 },
+              { x: 261, y: 250 },
+              { x: 232, y: 252 },
+              { x: 203, y: 242 },
+              { x: 178, y: 225 },
+              { x: 156, y: 202 },
+              { x: 139, y: 177 },
+              { x: 126, y: 151 },
+              { x: 118, y: 126 },
+            ],
+          },
+          {
+            label: "continue through the lower diagonal toward the right without lifting",
+            path: [
+              { x: 118, y: 126 },
+              { x: 124, y: 105 },
+              { x: 134, y: 82 },
+              { x: 144, y: 60 },
+              { x: 151, y: 42 },
+              { x: 137, y: 31 },
+              { x: 111, y: 19 },
+              { x: 86, y: 7 },
+              { x: 71, y: -5 },
+              { x: 104, y: 5 },
+              { x: 140, y: 18 },
+              { x: 179, y: 29 },
+              { x: 221, y: 36 },
+              { x: 265, y: 42 },
+              { x: 308, y: 48 },
+              { x: 348, y: 55 },
+              { x: 383, y: 62 },
+              { x: 402, y: 66 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ء"),
   },
   [ductusKey("urdu-nastaliq", "ج")]: {
     script: "urdu-nastaliq",
