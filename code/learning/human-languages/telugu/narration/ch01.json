@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:92d6bccb7615f262",
+  "sourceHash": "fnv1a64:3c5406c0ec971779",
   "lessons": [
     {
       "id": "TE-C01-namaskaram",
@@ -895,7 +895,7 @@
     {
       "id": "TE-C01-practice",
       "sequence": 60,
-      "title": "Chapter 1 — recap, and how Telugu says goodbye",
+      "title": "Chapter 1 — a five-word recap",
       "headword": "(recap)",
       "romanization": "",
       "gloss": "Chapter 1 recap + the Telugu farewell",
@@ -905,7 +905,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:72cfb8497206d816",
+      "sourceHash": "fnv1a64:c593b7c329fbf4cc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -930,7 +930,7 @@
             },
             {
               "kind": "speech",
-              "text": "Five words, and a first handful of Telugu letters read straight off the page. Let's gather them — and add the farewell, which shares its logic with the rest of the family."
+              "text": "Five words, and a first handful of Telugu letters read straight off the page. Let's gather only what you have already learned and make it feel easy."
             }
           ]
         },
@@ -969,35 +969,16 @@
         {
           "index": 2,
           "type": "unknown",
-          "title": "The farewell — the same \"go and come back\"",
+          "title": "A promise for later",
           "segments": [
             {
               "kind": "speech",
-              "text": "Telugu, too, avoids a bare \"I'm leaving.\" The everyday goodbye is:"
-            },
-            {
-              "kind": "speech",
-              "text": "వెళ్ళి వస్తాను (veḷḷi vastānu) — literally \"having gone, I [will] come [back].\""
-            },
-            {
-              "kind": "speech",
-              "text": "and the reply is వెళ్ళి రండి (veḷḷi raṇḍi) — \"go, and come [back].\" The same worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne: never simply depart — promise a return. (Casually, Telugu also just says veḷtānu, \"I'll go,\" or re-uses namaskāram.)"
+              "text": "Telugu has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part."
             }
           ]
         },
         {
           "index": 3,
-          "type": "culture-pragmatics",
-          "title": "Why it's said this way",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The same “go and come back.” Telugu, too, avoids a bare “I'm leaving.” The everyday goodbye is వెళ్ళి వస్తాను (veḷḷi vastānu), “having gone, I [will] come [back],” with the reply వెళ్ళి రండి (veḷḷi raṇḍi), “go, and come back” — the worldview inside Tamil's pōy varugiṟēṉ and Kannada's hōgi baruttēne."
-            }
-          ]
-        },
-        {
-          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -1024,20 +1005,11 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: greet and thank — \"namaskāram!\" … \"dhanyavādamulu.\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the farewell exchange — \"veḷḷi vastānu\" / \"veḷḷi raṇḍi\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the farewell exchange — \"veḷḷi vastānu\" / \"veḷḷi raṇḍi\"]"
             }
           ]
         },
         {
-          "index": 5,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1049,11 +1021,11 @@
             },
             {
               "kind": "speech",
-              "text": "Read all five aloud. Which two are Sanskrit, which three native? (Sanskrit: namaskāram, dhanyavādamulu. Native: avunu, lēdu, sarē.) How does Telugu's \"no\" differ from its sisters'? (Different root — lē- / kā-, not il-.) What does the Telugu goodbye literally mean? (\"Having gone, I'll come back.\")"
+              "text": "Read all five aloud. Which two are Sanskrit, which three native? (Sanskrit: namaskāram, dhanyavādamulu. Native: avunu, lēdu, sarē.) How does Telugu's \"no\" differ from its sisters'? (Different root — lē- / kā-, not il-.) Which word means \"okay\"? (sarē.)"
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — nā pēru… (\"my name…\") — and Telugu's nuvvu / mīru (familiar / respectful \"you\")."
+              "text": "Next chapter starts introducing yourself, one short possession form at a time."
             }
           ]
         }

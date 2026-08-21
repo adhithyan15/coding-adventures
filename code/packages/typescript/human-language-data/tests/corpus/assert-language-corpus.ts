@@ -3,17 +3,21 @@ import { resolve } from "node:path";
 import { expect } from "vitest";
 import { measureContinuity, REINFORCEMENT_WINDOWS } from "../../src/continuity.js";
 import type { TrackGentleRamp } from "../../src/gentle-ramp.js";
-import { defaultCurriculumRoot, loadTrackLessons } from "../../src/loader.js";
+import { defaultCurriculumRoot, loadChapterPolicy, loadTrackLessons } from "../../src/loader.js";
 import {
   MODALITY_MANIFEST_DIR,
   buildModalityManifest,
   serializeModalityManifest,
 } from "../../src/modality-manifest.js";
+import { measureRamp } from "../../src/ramp.js";
 
 export function expectLanguageContinuity(language: string): void {
   const root = defaultCurriculumRoot();
   const lessons = loadTrackLessons(language, root);
   const report = measureContinuity(lessons);
+  const ramp = measureRamp(lessons, loadChapterPolicy(root));
+  const atomRamp = ramp.tracks[0]!;
+  const scriptRamp = ramp.script.tracks[0]!;
   const track = report.tracks[0]!;
   const snapshot = JSON.parse(
     readFileSync(resolve(root, "core", "gentle-ramp-snapshots", `${language}.json`), "utf8"),
@@ -38,6 +42,11 @@ export function expectLanguageContinuity(language: string): void {
         0,
       ),
       reinforcementMissesByWindow,
+      atomMeasurementBlindLessons: atomRamp.unmeasurable,
+      atomLessonSpikes: atomRamp.lessonViolations,
+      atomChapterSpikes: atomRamp.chapterViolations,
+      glyphLessonSpikes: scriptRamp.lessonViolations,
+      scriptSystemSpikes: scriptRamp.systemViolations,
     },
     `${language} continuity ledger`,
   ).toEqual({
@@ -52,6 +61,11 @@ export function expectLanguageContinuity(language: string): void {
     atomsNeverRevisited: snapshot.atomsNeverRevisited,
     reinforcementWindowMisses: snapshot.reinforcementWindowMisses,
     reinforcementMissesByWindow: snapshot.reinforcementMissesByWindow,
+    atomMeasurementBlindLessons: snapshot.atomMeasurementBlindLessons,
+    atomLessonSpikes: snapshot.atomLessonSpikes,
+    atomChapterSpikes: snapshot.atomChapterSpikes,
+    glyphLessonSpikes: snapshot.glyphLessonSpikes,
+    scriptSystemSpikes: snapshot.scriptSystemSpikes,
   });
 }
 

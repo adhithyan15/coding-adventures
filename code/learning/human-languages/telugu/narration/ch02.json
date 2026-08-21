@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:51db2902b3e6b5f0",
+  "sourceHash": "fnv1a64:39395b76d48dcd8b",
   "lessons": [
     {
       "id": "TE-C02-peru",
@@ -148,7 +148,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:7d91f0d59b61c29c",
+      "sourceHash": "fnv1a64:affcd5254104a7fc",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -195,7 +195,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "నా (nā, \"my\") is the possessive of నేను (nēnu, \"I\") — native Dravidian, on the pronoun stem nān/yān behind Tamil nāṉ and Kannada nānu. No Indo-European cousin: the Dravidian \"I/my\" is a wholly different word from the European I/my."
+              "text": "నా (nā) means \"my.\" It belongs to Telugu's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need nā."
             }
           ]
         },
@@ -233,11 +233,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its source — nēnu (\"I\") becomes nā (\"my\")",
+              "instruction": "nā once with its meaning, \"my\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its source — *nēnu* (\"I\") → *nā* (\"my\")]"
+              "source": "[YOU SAY: *nā* once with its meaning, \"my\"]"
             }
           ]
         },
@@ -254,7 +254,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is నా the possessive of, and which Tamil/Kannada pronouns share its root? (nēnu, \"I\"; Tamil nāṉ, Kannada nānu.)"
+              "text": "What does నా (nā) mean? (\"My.\") Is it native Dravidian or an Indo-European loan? (Native Dravidian.)"
             }
           ]
         }

@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:019cb1ff72c2a304",
+  "sourceHash": "fnv1a64:804526dd486188eb",
   "lessons": [
     {
       "id": "KA-C02-hesaru",
@@ -157,7 +157,7 @@
       "modalityReasons": [
         "script-block"
       ],
-      "sourceHash": "fnv1a64:87fa1eb4380ad2c5",
+      "sourceHash": "fnv1a64:63758b2ac00bd6df",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -204,7 +204,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ನನ್ನ (nanna, \"my\") is the possessive of ನಾನು (nānu, \"I\") — native Dravidian, on the pronoun stem nān, the same one behind Tamil nāṉ / eṉ. It has no Indo-European cousin: the Dravidian \"I/my\" is a different word from the European I/my."
+              "text": "ನನ್ನ (nanna) means \"my.\" It belongs to Kannada's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need nanna."
             }
           ]
         },
@@ -242,11 +242,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its source — nānu (\"I\") becomes nanna (\"my\")",
+              "instruction": "nanna once with its meaning, \"my\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its source — *nānu* (\"I\") → *nanna* (\"my\")]"
+              "source": "[YOU SAY: *nanna* once with its meaning, \"my\"]"
             }
           ]
         },
@@ -263,7 +263,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is ನನ್ನ (nanna) the possessive of? (nānu, \"I\".) Which Tamil pronoun shares its root? (nāṉ.)"
+              "text": "What does ನನ್ನ (nanna) mean? (\"My.\") Is it native Dravidian or an Indo-European loan? (Native Dravidian.)"
             }
           ]
         }
