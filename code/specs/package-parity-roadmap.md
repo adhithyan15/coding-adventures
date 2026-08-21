@@ -4637,8 +4637,41 @@ Ready-for-review PR #12396 was opened from validated implementation head
 `origin/main` `5eb6fc0589a08d53c4db3fe7f6c9e2e23d0d897c`. The intervening
 human-language-only commits were disjoint from this tranche, the source branch
 had no prior remote or PR owner, and the complete post-rebase validation above
-was repeated before the normal first push. Lua PNG is now the loop's sole
-`pr-open` item and PR #12396 is the sole active parity PR.
+was repeated before the normal first push. Final reviewed head
+`e02e491307a510b4783e8a6e4dd7e3106a5187f8` completed all 29 checks with 23
+successes and six expected skips; both CI gates and every operating-system
+build succeeded. After the loop requested squash auto-merge, GitHub merged the
+PR as `20c704d960e3d62e81571f8834ea1bdeabb33621` at
+2026-08-21T08:15:48Z and deleted the source branch.
+
+### Post-#12396 refresh and Go paint PNG reconciliation
+
+The exact live-main inventory at `f6ef9169c3d5a89da0e1e65b18f0811a8b46f194`
+contains 15 established lanes, 1,368 canonical identities, and 4,560
+implementation slots. High-consensus coverage remains 174 packages with 271
+gaps; the 5-9 band contains 123 packages with 932 gaps; the 2-4 band contains
+166 packages with 2,087 gaps; and 905 singletons have 12,670 gaps, including
+716 Rust singletons. `image-codec-png` now spans nine lanes. Canonical
+collisions and unknown language buckets remain zero. The reviewed Lua package
+is the only new root since the prior inventory; two later Gujarati
+human-language commits modify established TypeScript roots only.
+
+The Go paint PNG reconciliation is selected next. The existing adapter still
+delegates to the standard-library PNG decoder, bypassing IC18's 16,384-edge,
+33,554,432-pixel, bounded-inflate, exact-consumption, and APNG-refusal
+contracts even though the repository Go IC18 core is merged. This is the
+highest immediate security and downstream leverage among ready unowned work:
+Go 1.26.4 and the compact byte-backed PixelContainer, ZIP, and LZSS chain are
+installed, open-PR and no-PR audits find no overlap, and `barcode-1d` is a real
+downstream. The bounded tranche preserves the adapter's public aliases and
+panic/error compatibility while delegating production behavior to
+`image-codec-png`, adding typed-error and portable regression evidence,
+raising coverage, and validating the downstream. It adds no package slot, but
+closes an eligible owned security gap before more resource-sensitive lane
+ports. Rust remains deferred behind live prerequisite overlap, Haskell retains
+a quarantined stale ZIP/LZSS owner, Elixir and Perl lack complete local
+toolchains, and boxed-byte Ruby, Perl, and Haskell paths need allocation-safe
+prerequisite decisions before claiming IC18's ceiling.
 
 ## Autonomous Loop Protocol
 
