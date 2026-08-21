@@ -13,6 +13,17 @@
 
 ## [Unreleased]
 
+### Added — complete pre-A1 writing-stage runway
+
+- Put four tiny writing lessons immediately after the already-taught *salut*:
+  observe and trace, copy with the model visible, hide and copy after a short
+  delay, then write from a heard cue. Every lesson is capped at 90 or 120
+  seconds and introduces no new French vocabulary.
+- Give French valid cumulative evidence for all four pre-A1 writing stages
+  without conflating that foundation with DILF readiness. Contact details,
+  numbers, forms, practical messages, timed mocks, and human scoring remain
+  explicit later work.
+
 ### Added — sourced DILF A1.1 four-skill task shapes (HL18)
 
 - Inventory the official 25-minute listening, 25-minute reading, 10-minute
