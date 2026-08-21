@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3442,
+    "totalLessons": 3460,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -32,7 +32,7 @@
     "headwordsWithoutRomanization": 302,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 632,
+    "atomsNeverRevisited": 633,
     "forwardReferences": 428,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 83,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 8,
     "missingWritingStagePairs": 727,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 2923,
+    "drivableLessons": 2934,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 103,
     "unexplainedModalityOverrides": 0
@@ -2760,13 +2760,17 @@
           1,
           2,
           3,
-          4
+          4,
+          5,
+          6
         ],
         "bookChapters": [
           1,
           2,
           3,
-          4
+          4,
+          5,
+          6
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3298,9 +3302,9 @@
       {
         "language": "marwadi",
         "status": "version-2",
-        "lessonCount": 22,
+        "lessonCount": 40,
         "versions": {
-          "2": 22
+          "2": 40
         }
       },
       {
@@ -4072,8 +4076,8 @@
       },
       {
         "language": "marwadi",
-        "bookChapters": 4,
-        "declaredChapters": 4,
+        "bookChapters": 6,
+        "declaredChapters": 6,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4152,8 +4156,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1006,
-      "declaredChapters": 1006,
+      "bookChapters": 1008,
+      "declaredChapters": 1008,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 83,
@@ -4165,9 +4169,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3442,
+    "totalLessons": 3460,
     "byLevel": {
-      "pre-A1": 2172,
+      "pre-A1": 2190,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4375,9 +4379,9 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 22,
+        "lessonCount": 40,
         "byLevel": {
-          "pre-A1": 22,
+          "pre-A1": 40,
           "A1": 0,
           "A2": 0,
           "B1": 0,
@@ -5138,8 +5142,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 22,
-        "measurable": 22,
+        "lessonCount": 40,
+        "measurable": 40,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -5954,8 +5958,8 @@
           "language": "marwadi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 22,
-          "totalGlyphs": 11,
+          "lessonCount": 40,
+          "totalGlyphs": 18,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -59985,12 +59989,12 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 22,
+        "lessonCount": 40,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 27,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 47,
+        "atomsNeverRevisited": 2,
         "forwardReferences": 0
       },
       {
@@ -60089,8 +60093,8 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 4740,
-      "atomsNeverRevisited": 632,
+      "atomsTaught": 4760,
+      "atomsNeverRevisited": 633,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
         "R1": 1194,
@@ -60223,10 +60227,10 @@
       {
         "language": "marwadi",
         "script": "devanagari",
-        "lessonCount": 22,
-        "scriptLessons": 11,
-        "taughtGlyphs": 11,
-        "shownGlyphs": 11,
+        "lessonCount": 40,
+        "scriptLessons": 18,
+        "taughtGlyphs": 18,
+        "shownGlyphs": 18,
         "neverTaughtGlyphs": 0,
         "violations": 0,
         "exposureOnly": 1,
@@ -68641,6 +68645,123 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 220
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-virama",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 240
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-o-matra",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 250
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-mharo",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 260
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-na",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 280
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-naam",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 290
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-ai-matra",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 310
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-answer",
+            "blockIndex": 3,
+            "blockTitle": "Wrap-up Recall",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 320
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-tha",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 340
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-tharo",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 350
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-ka",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 370
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-ii-independent",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 380
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-kain",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 390
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-practice",
+            "blockIndex": 3,
+            "blockTitle": "Wrap-up Recall",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 400
           }
         ],
         "validEvidence": [
@@ -68796,6 +68917,123 @@
             "stage": "dictation-transcription",
             "level": "pre-A1",
             "sequence": 220
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-virama",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 240
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-o-matra",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 250
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-mharo",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 260
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-na",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 280
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-naam",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 290
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-ai-matra",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 310
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-answer",
+            "blockIndex": 3,
+            "blockTitle": "Wrap-up Recall",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 320
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-tha",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 340
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-tharo",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 350
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-ka",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 370
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-W05-ii-independent",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 380
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-kain",
+            "blockIndex": 2,
+            "blockTitle": "Guided Practice",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 390
+          },
+          {
+            "language": "marwadi",
+            "lessonId": "MW-C05-practice",
+            "blockIndex": 3,
+            "blockTitle": "Wrap-up Recall",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 400
           }
         ],
         "defects": [],
@@ -70577,7 +70815,7 @@
       "tracks": 23,
       "tracksWithAnyEvidence": 15,
       "tracksCompleteAtPreA1": 7,
-      "evidenceBlocks": 69,
+      "evidenceBlocks": 82,
       "invalidEvidenceBlocks": 0,
       "missingTrackLevelStages": 727
     }
@@ -71609,8 +71847,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 22,
-        "atomMeasurableLessons": 22,
+        "lessonCount": 40,
+        "atomMeasurableLessons": 40,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -71625,8 +71863,8 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 27,
-        "atomsNeverRevisited": 1,
+        "atomsTaught": 47,
+        "atomsNeverRevisited": 2,
         "reinforcementWindowMisses": 0,
         "reinforcementMissesByWindow": {
           "R1": 0,
@@ -71635,7 +71873,7 @@
           "R4": 0
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 15,
+        "writingPracticeLessons": 22,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [],
@@ -73672,16 +73910,16 @@
         "blockers": [
           {
             "criterion": "spine-nodes",
-            "detail": "3 of 7 pre-A1 spine node(s) unrealized: SPINE-EXCHANGE-NAMES, SPINE-CHECK-WELLBEING, SPINE-TAKE-LEAVE",
-            "shortfall": 3
+            "detail": "2 of 7 pre-A1 spine node(s) unrealized: SPINE-CHECK-WELLBEING, SPINE-TAKE-LEAVE",
+            "shortfall": 2
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 4 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 296
+            "detail": "teaches 9 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 291
           }
         ],
-        "vocabulary": 4
+        "vocabulary": 9
       },
       {
         "language": "persian",
@@ -73941,11 +74179,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3442,
-    "voice": 2467,
+    "totalLessons": 3460,
+    "voice": 2478,
     "sight": 585,
-    "pen": 390,
-    "coreVoice": 2923,
+    "pen": 397,
+    "coreVoice": 2934,
     "lessonsWithWritingSegments": 188,
     "drivablePercent": 85,
     "tracks": [
@@ -80271,13 +80509,13 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 22,
-        "voice": 7,
+        "lessonCount": 40,
+        "voice": 18,
         "sight": 0,
-        "pen": 15,
-        "coreVoice": 11,
-        "drivablePercent": 50,
-        "drivablePrefixTotal": 1,
+        "pen": 22,
+        "coreVoice": 22,
+        "drivablePercent": 55,
+        "drivablePrefixTotal": 3,
         "chapters": [
           {
             "language": "marwadi",
@@ -80342,6 +80580,38 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": "MW-W04-pa"
+          },
+          {
+            "language": "marwadi",
+            "chapter": 5,
+            "lessonCount": 10,
+            "voice": 6,
+            "sight": 0,
+            "pen": 4,
+            "coreVoice": 6,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "MW-W05-virama"
+          },
+          {
+            "language": "marwadi",
+            "chapter": 6,
+            "lessonCount": 8,
+            "voice": 5,
+            "sight": 0,
+            "pen": 3,
+            "coreVoice": 5,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "MW-W05-tha"
           }
         ]
       },
@@ -89162,14 +89432,14 @@
     "taughtPercent": 8
   },
   "rootLedger": {
-    "roots": 3086,
-    "underspent": 2969,
+    "roots": 3090,
+    "underspent": 2971,
     "neverSpent": 2029,
     "payoffDistribution": {
       "0": 2029,
       "1": 659,
-      "2": 281,
-      "3": 66,
+      "2": 283,
+      "3": 68,
       "4": 20,
       "5": 12,
       "6": 9,
@@ -89181,7 +89451,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3442,
+    "lessons": 3460,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -89191,10 +89461,10 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3331,
-    "usesBeforeIntroduction": 12097,
-    "technicalUsesBeforeIntroduction": 3175,
-    "technicalLessons": 1651,
+    "lessonsUsingTerms": 3343,
+    "usesBeforeIntroduction": 12120,
+    "technicalUsesBeforeIntroduction": 3179,
+    "technicalLessons": 1655,
     "worstTerms": [
       {
         "term": "verb",
@@ -89202,7 +89472,7 @@
       },
       {
         "term": "noun",
-        "lessons": 528
+        "lessons": 530
       },
       {
         "term": "tense",
@@ -89223,12 +89493,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3442,
+    "lessonsScanned": 3460,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1144,
+    "filesScanned": 1146,
     "mainCharacters": 126,
     "scriptCharacters": 693,
     "gaps": 0
