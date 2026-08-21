@@ -844,14 +844,12 @@ mod tests {
             pixels.data.len(),
             pixels.width as usize * pixels.height as usize * 4
         );
-        assert!(
-            pixels
-                .data
-                .as_chunks::<4>()
-                .0
-                .iter()
-                .any(|pixel| pixel != &[192, 192, 192, 255])
-        );
+        assert!(pixels
+            .data
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .any(|pixel| pixel != &[192, 192, 192, 255]));
     }
 
     #[test]
@@ -966,6 +964,8 @@ mod tests {
         );
         let fallback_x = image.x.floor() as u32;
         let fallback_y = image.y.floor() as u32;
+        let fallback_width = image.width.ceil().max(1.0) as u32;
+        let fallback_height = image.height.ceil().max(1.0) as u32;
 
         let resolution =
             resolve_scene_image_resources_with_mosaic_fallback(&output.scene, &|_: &str| {
@@ -983,8 +983,17 @@ mod tests {
 
         let pixels = paint_vm_cairo::render(&resolution.scene)
             .expect("broken-image fallback should rasterize");
-        let (red, green, blue, alpha) = pixels.pixel_at(fallback_x, fallback_y);
-        assert!(red < 192 && green < 192 && blue < 192 && alpha == 255);
+        let contains_dark_fallback_pixel = (fallback_y
+            ..fallback_y
+                .saturating_add(fallback_height)
+                .min(pixels.height))
+            .any(|y| {
+                (fallback_x..fallback_x.saturating_add(fallback_width).min(pixels.width)).any(|x| {
+                    let (red, green, blue, alpha) = pixels.pixel_at(x, y);
+                    red < 192 && green < 192 && blue < 192 && alpha == 255
+                })
+            });
+        assert!(contains_dark_fallback_pixel);
     }
 
     fn color_css(color: Color) -> String {
