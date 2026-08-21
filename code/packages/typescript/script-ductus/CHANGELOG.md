@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Added — cited Gujarati હ ductus (HL-C09GX)
+
+- Replace Gujarati **હ**'s conventional placeholder with a cited one-run variant.
+- Render its upper loop, middle turn, and broad lower bowl continuously.
+- Cover provenance and exact-outline rendering while returning to **ન** next.
+
 ### Added — cited Gujarati સ ductus (HL-C09GW)
 
 - Replace Gujarati **સ**'s conventional placeholder with a cited two-run variant.

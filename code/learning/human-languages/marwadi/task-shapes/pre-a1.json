@@ -37,8 +37,8 @@
     "deliveryModes": ["paper", "recorded-audio", "live-interlocutor"]
   },
   "passRule": {
-    "maximumPoints": 100,
-    "passPoints": 60,
+    "maximumPoints": 400,
+    "passPoints": 240,
     "requiresEverySectionAttempted": true,
     "independentSkillThresholds": {
       "reading": 0.6,
@@ -46,7 +46,7 @@
       "writing": 0.6,
       "speaking": 0.6
     },
-    "note": "Each skill is worth 25 points and must independently reach 60%; the overall 60-point floor cannot compensate for a failed skill."
+    "note": "Each skill is a separate 100-point paper and must independently reach 60/100; the 240-point headline sum cannot compensate for a failed paper."
   },
   "sections": [
     {
@@ -63,7 +63,7 @@
           "responseLength": null,
           "interaction": "individual",
           "replayCount": 0,
-          "scoring": { "maxRawPoints": 25, "criteria": ["meaning selection", "script recognition"] },
+          "scoring": { "maxRawPoints": 100, "criteria": ["meaning selection", "script recognition"] },
           "aids": { "allowed": [], "forbidden": ["romanization", "dictionary"], "notPublished": [] },
           "notPublished": [],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-marwadi-assessment"]
@@ -85,7 +85,7 @@
           "responseLength": null,
           "interaction": "individual",
           "replayCount": 2,
-          "scoring": { "maxRawPoints": 25, "criteria": ["gist recognition", "detail recognition"] },
+          "scoring": { "maxRawPoints": 100, "criteria": ["gist recognition", "detail recognition"] },
           "aids": { "allowed": [], "forbidden": ["transcript", "dictionary"], "notPublished": [] },
           "notPublished": [],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-marwadi-assessment"]
@@ -107,7 +107,7 @@
           "responseLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
           "interaction": "individual",
           "replayCount": 0,
-          "scoring": { "maxRawPoints": 5, "criteria": ["recognizable letter sequence", "matra placement", "legibility"] },
+          "scoring": { "maxRawPoints": 20, "criteria": ["recognizable letter sequence", "matra placement", "legibility"] },
           "aids": { "allowed": ["ten-second initial model view"], "forbidden": ["visible model during response", "romanization"], "notPublished": [] },
           "notPublished": [],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-marwadi-assessment"]
@@ -122,7 +122,7 @@
           "responseLength": { "unit": "words", "minimum": 1, "maximum": 3, "approximate": false },
           "interaction": "individual",
           "replayCount": 2,
-          "scoring": { "maxRawPoints": 10, "criteria": ["sound-to-script mapping", "word boundary", "legibility"] },
+          "scoring": { "maxRawPoints": 40, "criteria": ["sound-to-script mapping", "word boundary", "legibility"] },
           "aids": { "allowed": [], "forbidden": ["transcript", "romanization", "dictionary"], "notPublished": [] },
           "notPublished": [],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-marwadi-assessment"]
@@ -137,7 +137,7 @@
           "responseLength": { "unit": "words", "minimum": 1, "maximum": 5, "approximate": false },
           "interaction": "individual",
           "replayCount": 0,
-          "scoring": { "maxRawPoints": 10, "criteria": ["task completion", "independent retrieval", "orthographic control", "legibility"] },
+          "scoring": { "maxRawPoints": 40, "criteria": ["task completion", "independent retrieval", "orthographic control", "legibility"] },
           "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["copyable answer model", "romanization", "dictionary"], "notPublished": [] },
           "notPublished": [],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-marwadi-assessment"]
@@ -159,7 +159,7 @@
           "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
           "interaction": "individual",
           "replayCount": 1,
-          "scoring": { "maxRawPoints": 25, "criteria": ["task completion", "intelligibility", "appropriate greeting response"] },
+          "scoring": { "maxRawPoints": 100, "criteria": ["task completion", "intelligibility", "appropriate greeting response"] },
           "aids": { "allowed": ["nonverbal picture cue", "one repeat request"], "forbidden": ["written answer script", "romanization"], "notPublished": [] },
           "notPublished": [],
           "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-marwadi-assessment"]
