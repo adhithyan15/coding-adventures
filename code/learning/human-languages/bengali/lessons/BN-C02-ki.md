@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-bengali
-reviews_of: [BN-C02-tumi-apni]
+reviews_of: [BN-C02-naam]
 ---
 
 # কি (ki) — "what"
