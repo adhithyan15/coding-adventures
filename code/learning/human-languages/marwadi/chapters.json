@@ -89,6 +89,48 @@
           "MW-PERFORMANCE-PAANI-FOUR-SKILL-01"
         ]
       }
+    },
+    {
+      "chapter": 5,
+      "title": "Mharo Naam: Give One Name",
+      "label": "ch:mw-name-answer",
+      "canDo": "I can hear, say, read, and independently write म्हारो नाम राम है, then substitute a chosen name in speech.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C05-answer",
+        "kind": "production",
+        "summary": "A source-attested name statement built by ear before four new signs are isolated and the complete line is retrieved from dictation.",
+        "assesses": [
+          "MW-LEX-MHARO-01",
+          "MW-SCRIPT-MHARO-01",
+          "MW-LEX-NAAM-01",
+          "MW-SCRIPT-NAAM-01",
+          "MW-LEX-HAI-01",
+          "MW-SCRIPT-HAI-01",
+          "MW-PHRASE-MY-NAME-IS-01"
+        ]
+      }
+    },
+    {
+      "chapter": 6,
+      "title": "Tharo Naam: Ask One Name",
+      "label": "ch:mw-name-question",
+      "canDo": "I can ask थारो नाम कांई है and answer with a chosen name in four separately scored skills.",
+      "spineNodes": ["SPINE-EXCHANGE-NAMES"],
+      "payoff": {
+        "lesson": "MW-C05-practice",
+        "kind": "dialogue",
+        "summary": "The question half of the name exchange, built by ear before three new signs are isolated and joined to the already-secure answer.",
+        "assesses": [
+          "MW-PHRASE-MY-NAME-IS-01",
+          "MW-LEX-THARO-01",
+          "MW-SCRIPT-THARO-01",
+          "MW-LEX-KAIN-01",
+          "MW-SCRIPT-KAIN-01",
+          "MW-QUESTION-NAME-01",
+          "MW-DIALOGUE-NAME-EXCHANGE-01"
+        ]
+      }
     }
   ]
 }

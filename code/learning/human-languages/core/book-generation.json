@@ -1678,6 +1678,18 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 5,
+      "output": "marwadi/book/chapters/ch05-name-answer.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 6,
+      "output": "marwadi/book/chapters/ch06-name-question.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",

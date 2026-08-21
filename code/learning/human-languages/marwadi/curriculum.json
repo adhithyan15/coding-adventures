@@ -33,13 +33,21 @@
       "before": [],
       "inline": ["MW-EXT-006-HEAR-PAANI", "MW-EXT-007-WRITE-PAANI", "MW-EXT-008-RETRIEVE-PAANI"],
       "after": []
+    },
+    {
+      "id": "MW-PATH-005",
+      "spine_node": "SPINE-EXCHANGE-NAMES",
+      "lessons": ["MW-C05-hear-mharo", "MW-W05-virama", "MW-W05-o-matra", "MW-C05-mharo", "MW-C05-hear-naam", "MW-W05-na", "MW-C05-naam", "MW-C05-hear-hai", "MW-W05-ai-matra", "MW-C05-answer", "MW-C05-hear-tharo", "MW-W05-tha", "MW-C05-tharo", "MW-C05-hear-kain", "MW-W05-ka", "MW-W05-ii-independent", "MW-C05-kain", "MW-C05-practice"],
+      "before": [],
+      "inline": ["MW-EXT-009-HEAR-MHARO", "MW-EXT-010-WRITE-MHARO", "MW-EXT-011-NAME-ANSWER", "MW-EXT-012-HEAR-THARO", "MW-EXT-013-WRITE-NAME-QUESTION", "MW-EXT-014-EXCHANGE-NAMES"],
+      "after": []
     }
   ],
   "spine": {
     "SPINE-MEET-GREET": { "segments": ["MW-PATH-001"], "omits": ["GREETING-FORMAL", "GREETING-PEACE", "GREETING-WELCOME"], "relocates": {} },
     "SPINE-COURTESY-THANK": { "segments": ["MW-PATH-002"], "omits": ["COURTESY-THANKS-CASUAL", "COURTESY-YOUREWELCOME"], "relocates": {} },
     "SPINE-RESPOND-BASIC": { "segments": ["MW-PATH-003"], "omits": ["RESPONSE-NO", "RESPONSE-YESNO", "RESPONSE-OKAY"], "relocates": {} },
-    "SPINE-EXCHANGE-NAMES": { "segments": [], "omits": ["QUESTION-WHAT", "PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "PRONOUN-MY", "WORD-NAME", "WORD-IS", "INTRO-MY-NAME-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
+    "SPINE-EXCHANGE-NAMES": { "segments": ["MW-PATH-005"], "omits": ["PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "WORD-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
     "SPINE-CHECK-WELLBEING": { "segments": [], "omits": ["QUESTION-HOW", "STATE-HOW-ARE-YOU", "WORD-GOOD", "WORD-WELL", "WORD-SOSO"], "relocates": {} },
     "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
     "SPINE-TAKE-LEAVE": { "segments": [], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
@@ -142,6 +150,60 @@
       "canDo": "I can hear, say, read, and independently write पाणी as the Marwadi word for water.",
       "prerequisites": ["MW-EXT-007-WRITE-PAANI"],
       "lessons": ["MW-C04-practice"]
+    },
+    {
+      "id": "MW-EXT-009-HEAR-MHARO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can recognise mhāro by ear and use it as my before a masculine name word.",
+      "prerequisites": ["MW-EXT-008-RETRIEVE-PAANI"],
+      "lessons": ["MW-C05-hear-mharo"]
+    },
+    {
+      "id": "MW-EXT-010-WRITE-MHARO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can use the virāma and o sign with known consonants to read and write म्हारो after a short delay.",
+      "prerequisites": ["MW-EXT-009-HEAR-MHARO"],
+      "lessons": ["MW-W05-virama", "MW-W05-o-matra", "MW-C05-mharo"]
+    },
+    {
+      "id": "MW-EXT-011-NAME-ANSWER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can hear, say, read, and independently write म्हारो नाम राम है and substitute a chosen name in speech.",
+      "prerequisites": ["MW-EXT-010-WRITE-MHARO"],
+      "lessons": ["MW-C05-hear-naam", "MW-W05-na", "MW-C05-naam", "MW-C05-hear-hai", "MW-W05-ai-matra", "MW-C05-answer"]
+    },
+    {
+      "id": "MW-EXT-012-HEAR-THARO",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can distinguish heard thāro, your, from mhāro, my.",
+      "prerequisites": ["MW-EXT-011-NAME-ANSWER"],
+      "lessons": ["MW-C05-hear-tharo"]
+    },
+    {
+      "id": "MW-EXT-013-WRITE-NAME-QUESTION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can isolate थ, क, and independent ई, then read and write थारो नाम कांई है without meeting an untaught sign.",
+      "prerequisites": ["MW-EXT-012-HEAR-THARO"],
+      "lessons": ["MW-W05-tha", "MW-C05-tharo", "MW-C05-hear-kain", "MW-W05-ka", "MW-W05-ii-independent", "MW-C05-kain"]
+    },
+    {
+      "id": "MW-EXT-014-EXCHANGE-NAMES",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask what another person's name is and answer with a chosen name in listening, speaking, reading, and independent writing tasks.",
+      "prerequisites": ["MW-EXT-013-WRITE-NAME-QUESTION"],
+      "lessons": ["MW-C05-practice"]
     }
   ]
 }
