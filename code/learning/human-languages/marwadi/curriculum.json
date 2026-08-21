@@ -49,6 +49,14 @@
       "before": [],
       "inline": ["MW-EXT-015-HEAR-WELLBEING-QUESTION", "MW-EXT-016-WRITE-WELLBEING-QUESTION", "MW-EXT-017-BUILD-WELLBEING-ANSWER", "MW-EXT-018-WELLBEING-EXCHANGE"],
       "after": []
+    },
+    {
+      "id": "MW-PATH-007",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": ["MW-C07-hear-later", "MW-W07-chha", "MW-W07-e-matra", "MW-W07-i-matra", "MW-W07-la", "MW-C07-read-later", "MW-C07-practice"],
+      "before": [],
+      "inline": ["MW-EXT-019-HEAR-LATER", "MW-EXT-020-WRITE-LATER", "MW-EXT-021-FAREWELL-LATER"],
+      "after": []
     }
   ],
   "spine": {
@@ -58,7 +66,7 @@
     "SPINE-EXCHANGE-NAMES": { "segments": ["MW-PATH-005"], "omits": ["PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "WORD-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
     "SPINE-CHECK-WELLBEING": { "segments": ["MW-PATH-006"], "omits": ["QUESTION-HOW", "WORD-GOOD", "WORD-SOSO"], "relocates": {} },
     "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
-    "SPINE-TAKE-LEAVE": { "segments": [], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
+    "SPINE-TAKE-LEAVE": { "segments": ["MW-PATH-007"], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
     "SPINE-TIME-OF-DAY": { "segments": [], "omits": ["TIME-DAY", "TIME-MORNING", "TIME-AFTERNOON", "TIME-EVENING", "TIME-NIGHT", "GREETING-DAY", "GREETING-MORNING", "GREETING-AFTERNOON", "GREETING-EVENING"], "relocates": {} },
     "SPINE-ASK-LOCATION": { "segments": [], "omits": ["QUESTION-WHERE"], "relocates": {} },
     "SPINE-DEFINITE-REFERENCE": { "segments": [], "omits": ["GRAMMAR-THE"], "relocates": {} },
@@ -248,6 +256,33 @@
       "canDo": "I can ask how a person is and answer that I am fine in independently scored listening, speaking, reading, and writing tasks.",
       "prerequisites": ["MW-EXT-017-BUILD-WELLBEING-ANSWER"],
       "lessons": ["MW-C06-practice"]
+    },
+    {
+      "id": "MW-EXT-019-HEAR-LATER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "communication",
+      "canDo": "I can recognise and say pāchhe milsū as see you later before seeing its spelling.",
+      "prerequisites": ["MW-EXT-018-WELLBEING-EXCHANGE"],
+      "lessons": ["MW-C07-hear-later"]
+    },
+    {
+      "id": "MW-EXT-020-WRITE-LATER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can isolate छ, े, ि, and ल, then assemble and write पाछे मिलसू from sound.",
+      "prerequisites": ["MW-EXT-019-HEAR-LATER"],
+      "lessons": ["MW-W07-chha", "MW-W07-e-matra", "MW-W07-i-matra", "MW-W07-la", "MW-C07-read-later"]
+    },
+    {
+      "id": "MW-EXT-021-FAREWELL-LATER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can distinguish a common farewell from see you later and pass the latter in independently scored listening, speaking, reading, and writing tasks.",
+      "prerequisites": ["MW-EXT-020-WRITE-LATER"],
+      "lessons": ["MW-C07-practice"]
     }
   ]
 }

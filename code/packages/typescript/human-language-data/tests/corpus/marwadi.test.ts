@@ -56,7 +56,7 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4, 5, 6, 7, 8]),
+    new Set([1, 2, 3, 4, 5, 6, 7, 8, 9]),
   );
   expect(
     lessons
@@ -90,6 +90,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C06-hear-question-meaning",
     "MW-C06-practice-wellbeing",
     "MW-C06-question-write",
+    "MW-C07-hear-later-meaning",
+    "MW-C07-practice-later",
+    "MW-C07-read-later-build",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -111,5 +114,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W05-virama-function",
     "MW-W06-ttha-read",
     "MW-W06-uu-matra-build",
+    "MW-W07-chha-read",
+    "MW-W07-e-matra-build",
+    "MW-W07-i-matra-order",
+    "MW-W07-la-write",
   ]);
 });

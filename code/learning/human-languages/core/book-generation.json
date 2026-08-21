@@ -1732,6 +1732,12 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 9,
+      "output": "marwadi/book/chapters/ch09-see-you-later.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
