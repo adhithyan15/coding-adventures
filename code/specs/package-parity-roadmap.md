@@ -4558,6 +4558,37 @@ blocker. The exact 11-path diff is clean, GitHub reports the branch mergeable,
 and required checks queued immediately after publication. The loop remains in
 monitor-only mode until the exact lifecycle-update head is terminal.
 
+### Post-#12383 refresh and Lua PNG lane selection
+
+Final reviewed Swift head `5e4de3817ca0089978d4b23ac83bb481934e5e2b`
+completed all 30 checks with 24 successes, five expected skips, and one neutral
+CodeQL result. Both CI gates and the Linux, macOS, and Windows builds succeeded.
+After the loop requested squash auto-merge, GitHub merged PR #12383 as
+`a81801eb17fd3f980f23211522011cb69de2d005` at 2026-08-21T06:25:58Z and
+deleted the source branch.
+
+The refreshed collision-checked schema-3 inventory at that exact merge main
+contains 15 established lanes, 1,368 canonical identities, and 4,559
+implementation slots. High-consensus coverage remains 174 packages with 271
+gaps; the 5-9 band contains 123 packages with 933 gaps; the 2-4 band contains
+166 packages with 2,087 gaps; and 905 singletons have 12,670 gaps, including
+716 Rust singletons. `image-codec-png` now spans eight lanes. Canonical
+collisions and unknown language buckets remain zero, and the reviewed Swift
+package is the only new root.
+
+The Lua PNG child is selected next. It closes another umbrella slot, is tied
+for the thinnest collision-free established lane, has installed Lua 5.4.5 and
+LuaRocks 3.9.2 toolchains, and can reuse established PixelContainer, ZIP-owned
+raw RFC 1951/counting/CRC, and LZSS packages with BUILD front doors. Complete
+open-PR and no-PR ownership audits find no Lua PNG or prerequisite overlap.
+Rust remains deferred behind three live prerequisite overlaps, Haskell retains
+a quarantined stale ZIP/LZSS branch, and the clean Go paint adapter adds no
+parity slot or dependency unlock. This bounded tranche adds one native Lua IC18
+package, all 85 neutral cases through public APIs, focused binary-string,
+allocation, and precedence regressions, LuaRocks and BUILD metadata,
+documentation, changelog, and an empty capability manifest. It does not change
+IC18, the neutral corpus, adapters, or unrelated lanes.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
