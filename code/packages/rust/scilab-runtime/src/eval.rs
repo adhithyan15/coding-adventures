@@ -477,22 +477,11 @@ impl Interpreter {
         if parts.len() == 1 {
             return self.eval_node(parts[0]);
         }
-        let from_node;
-        let step_node;
-        let to_node;
-        match parts.as_slice() {
-            [a, b] => {
-                from_node = *a;
-                step_node = None;
-                to_node = *b;
-            }
-            [a, s, b] => {
-                from_node = *a;
-                step_node = Some(*s);
-                to_node = *b;
-            }
+        let (from_node, step_node, to_node) = match parts.as_slice() {
+            [a, b] => (*a, None, *b),
+            [a, s, b] => (*a, Some(*s), *b),
             _ => return Err("range: too many colons".to_string()),
-        }
+        };
         let from = self.eval_node(from_node)?;
         let from = scalar_of(&from, "range")?;
         let step = match step_node {

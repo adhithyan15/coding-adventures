@@ -108,7 +108,7 @@ fn run_native(src: &str, stem: &str) -> Option<i32> {
     #[cfg(not(any(target_os = "linux", target_os = "macos")))]
     {
         let _ = (src_path, exe);
-        return None;
+        None
     }
     #[cfg(any(target_os = "linux", target_os = "macos"))]
     Command::new(&exe).output().ok()?.status.code()

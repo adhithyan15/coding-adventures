@@ -154,7 +154,7 @@ fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
     }
     let bytes = s.as_bytes();
     let mut out = Vec::with_capacity(s.len() / 2);
-    for chunk in bytes.chunks_exact(2) {
+    for chunk in bytes.as_chunks::<2>().0 {
         let hi = hex_nibble(chunk[0])?;
         let lo = hex_nibble(chunk[1])?;
         out.push((hi << 4) | lo);
@@ -669,8 +669,10 @@ mod tests {
             _ => panic!("output not string"),
         };
         let floats: Vec<f32> = bytes
-            .chunks_exact(4)
-            .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]))
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .map(|c| f32::from_le_bytes(*c))
             .collect();
         assert_eq!(floats, vec![11.0, 22.0, 33.0]);
     }
