@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { loadTaskShapeInventory } from "../src/loader.js";
+import { loadTaskShapeInventory } from "../../src/loader.js";
 
 describe("Punjabi task-shape inventories", () => {
   it("makes the project-defined pre-A1 four-skill envelope executable", () => {
