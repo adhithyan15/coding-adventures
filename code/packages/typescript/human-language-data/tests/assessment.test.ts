@@ -1,7 +1,12 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { defaultCurriculumRoot, loadAssessmentPolicy, listAssessmentContracts } from "../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadAssessmentPolicy,
+  loadLanguageRegistry,
+  listAssessmentContracts,
+} from "../src/loader.js";
 import { parseAssessmentContract, parseAssessmentPolicy } from "../src/assessment.js";
 
 describe("assessment policy (HL16)", () => {
@@ -39,8 +44,14 @@ describe("assessment policy (HL16)", () => {
     })).toThrow(/maxLessonMinutes must be 5/);
   });
 
-  it("loads the complete French, Marathi, Marwadi, and Gujarati contracts and keeps the other tracks queued", () => {
-    expect(listAssessmentContracts()).toEqual(["french", "marathi", "marwadi", "gujarati"]);
+  it("discovers valid contracts in registry order without making every new track edit one exact list", () => {
+    const contracts = listAssessmentContracts();
+    const registryOrder = loadLanguageRegistry().languages.map((track) => track.id);
+    expect(contracts).toEqual(expect.arrayContaining(["french", "marathi", "marwadi", "punjabi", "gujarati"]));
+    expect(new Set(contracts).size).toBe(contracts.length);
+    expect(contracts).toEqual([...contracts].sort(
+      (left, right) => registryOrder.indexOf(left) - registryOrder.indexOf(right),
+    ));
   });
 });
 
@@ -66,6 +77,27 @@ describe("track assessment contracts", () => {
     ]);
     expect(marathi.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
     expect(marathi.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
+  });
+
+  it("loads Punjabi's seven-rung independent four-skill destination", () => {
+    const punjabi = parseAssessmentContract(
+      JSON.parse(readFileSync(join(defaultCurriculumRoot(), "punjabi", "assessment.json"), "utf8")),
+      "punjabi",
+      policy,
+    );
+    expect(punjabi.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(punjabi.levels.every((level) => level.target.basis === "project-defined")).toBe(true);
+    expect(punjabi.levels.every((level) =>
+      Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
+    )).toBe(true);
+    expect(punjabi.levels[0]?.writingStages).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(punjabi.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
+    expect(punjabi.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
   });
 
   it("accepts a complete seven-level contract with independent skills and full mocks", () => {
