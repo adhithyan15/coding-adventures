@@ -46,6 +46,28 @@
           "MW-COURTESY-AABHAAR-FORMAL-01"
         ]
       }
+    },
+    {
+      "chapter": 3,
+      "title": "Haan Sa: A Respectful Yes, Sign by Sign",
+      "label": "ch:mw-haan-saa",
+      "canDo": "I can recognise, hear, say, copy, and independently write हां सा as a respectful affirmative answer.",
+      "spineNodes": ["SPINE-RESPOND-BASIC"],
+      "payoff": {
+        "lesson": "MW-C03-practice",
+        "kind": "basic-response",
+        "summary": "A source-attested polite affirmative built from two tiny script steps and the already-known respect word सा, followed by independently scored four-skill retrieval.",
+        "assesses": [
+          "MW-SCRIPT-HA-01",
+          "MW-SCRIPT-AA-MATRA-01",
+          "MW-SCRIPT-ANUSVARA-01",
+          "MW-SCRIPT-SAA-01",
+          "MW-SCRIPT-HAAN-01",
+          "MW-LEX-HAAN-01",
+          "MW-RESPONSE-HAAN-SAA-POLITE-01",
+          "MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01"
+        ]
+      }
     }
   ]
 }

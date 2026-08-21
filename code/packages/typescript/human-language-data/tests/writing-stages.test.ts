@@ -105,7 +105,7 @@ Learner copy comes first.
       tracks: 23,
       tracksWithAnyEvidence: 9,
       tracksCompleteAtPreA1: 2,
-      evidenceBlocks: 27,
+      evidenceBlocks: 31, // Marwadi polite yes adds observe, guided, delayed, and dictation evidence.
       invalidEvidenceBlocks: 0,
       missingTrackLevelStages: 895,
       /* Superseded merge-side totals:
@@ -130,6 +130,10 @@ Learner copy comes first.
       "dictation-transcription",
       "observe-trace",
       "observe-trace",
+      "delayed-copy",
+      "dictation-transcription",
+      "observe-trace",
+      "guided-copy",
       "delayed-copy",
       "dictation-transcription",
     ]);

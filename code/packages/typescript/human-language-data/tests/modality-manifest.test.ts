@@ -957,7 +957,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 3416, // Marwadi formal thanks adds four bounded lessons.
+      totalLessons: 3421, // Marwadi polite yes adds five bounded lessons.
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -966,7 +966,7 @@ describe("corpus regression", () => {
       // All eight Chapter-17 lessons remain voice-first.
       // +6, and it is the same six lessons that leave `sight` below.
       // +8, the eight chapter 4-5 lessons that drop their inline script sections.
-      voice: 2461, // Marwadi's final four-skill courtesy checkpoint is voice-first.
+      voice: 2463, // Marwadi's two rehearsal/checkpoint lessons are voice-first.
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -1006,8 +1006,8 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 366, // Marwadi adds two writing lessons and one word lesson with a writing block.
-      drivableLessons: 2461, // Marwadi's final courtesy checkpoint is independently drivable.
+      pen: 369, // Marwadi adds two sign-writing lessons and one phrase lesson with a writing block.
+      drivableLessons: 2463, // Marwadi's final two affirmative checkpoints are independently drivable.
       /* Superseded merge-side totals:
       pen: 360, // +8: seven Arabic writing micro-lessons plus salām's one-shape opening trace. // +2: Italian's opener trace and guided copy.
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
@@ -1027,7 +1027,7 @@ describe("corpus regression", () => {
       drivablePercent: 72, // Urdu shukriya split crosses the rounding boundary after one pen lesson and two honest sight migrations. // telugu pre-A1 round 4: 72 -> 73, an IMPROVEMENT and a rounding boundary crossed: 2464/3392 is 72.6% against 2429/3357's 72.4%, because all 35 new lessons are drivable // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- 35 ear-only lessons lift the whole-corpus share by one point // HL-C194: +16 Spanish words, all drivable // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // marathi script tranche: +11 lessons, +1 chapter (ch14) -- ten pieces, one per lesson, plus one assembly -- three script tranches in a row have added pen-only lessons and nothing drivable, so the corpus share finally rounds down; that is the cost of teaching script and it is recorded, not hidden
       */
       trackCount: 23,
-      chapterCount: 1005, // +1: Marwadi Chapter 2
+      chapterCount: 1006, // +1: Marwadi Chapter 3
       // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
       // they sit behind a blocker in their own chapter and stay unreachable in the car
       // until HL-C17 reshapes the remaining wide tables.
@@ -1104,7 +1104,7 @@ describe("corpus regression", () => {
       // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
       // eyes; it now starts by ear. No other chapter moves.
       // -2 more: Tamil chapters 4 and 5 now start by ear as well.
-      unstartableChapters: 216, // Marwadi Chapter 2 honestly starts with pen.
+      unstartableChapters: 217, // Marwadi Chapter 3 honestly starts with pen.
       overriddenLessons: 0,
       lessonsWithoutChapter: 0,
     }); // hindi pre-A1 round 2: +35 lessons, +7 chapters (chapters 52-58)
