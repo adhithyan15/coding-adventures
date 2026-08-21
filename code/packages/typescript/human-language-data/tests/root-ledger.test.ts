@@ -189,9 +189,9 @@ describe("the committed corpus", () => {
 
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
-    expect(l.summary.roots).toBe(3083); // Italian, Persian, and Portuguese typed openers each record an etymon atom.
-    expect(l.summary.underspent).toBe(2968); // All three opener etymons begin below the reuse floor.
-    expect(l.summary.neverSpent).toBe(2036); // Persian's opener re-spends one previously stranded root.
+    expect(l.summary.roots).toBe(3085); // Persian's opener etymon combines with Arabic's two new roots and the Romance opener work.
+    expect(l.summary.underspent).toBe(2970); // The Persian etymon begins below the reuse floor.
+    expect(l.summary.neverSpent).toBe(2032); // Persian re-spends one root after Arabic re-spends four.
     expect(l.summary.underspentPercent).toBe(96); // -1: HL-C98
 
     // Both namespaces contribute. If the etymon-atom count ever returns to
@@ -202,7 +202,7 @@ describe("the committed corpus", () => {
     }, {});
     // +1 roots: latin-vos, from ES-C03-vos.
     // +53 roots, +25 etymon-atom: vocabulary wave 5.
-    expect(byNamespace).toEqual({ roots: 2194, "etymon-atom": 889 }); // +3: Italian, Persian, and Portuguese opener etymons.
+    expect(byNamespace).toEqual({ roots: 2196, "etymon-atom": 889 }); // Arabic contributes two roots; Persian and the Romance openers contribute etymons.
   });
 
   it("pins Spanish, the pilot track", () => {

@@ -21,7 +21,7 @@ as independent interoperability oracles.
   unknown ancillary chunks;
 - 16,384-pixel edge and 33,554,432-pixel product ceilings, with a caller limit
   that may only lower the product ceiling;
-- the closed 29-code `PngError` taxonomy from the shared 82-case corpus.
+- the closed 29-code `PngError` taxonomy from the shared 85-case corpus.
 
 Palette images, Adam7 interlacing, alternate bit depths, preset zlib
 dictionaries, unknown critical chunks, and APNG control/data chunks are refused

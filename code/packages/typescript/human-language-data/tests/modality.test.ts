@@ -973,7 +973,7 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(153); // Italian, Persian, and Portuguese each add two writing segments.
+    expect(summary.lessonsWithWritingSegments).toBe(159); // Persian adds two segments beside Arabic's six and the Romance opener work.
     // coreVoice NO LONGER equals voice, and that is the whole point of the split: 240
     // inline-letters sections detach, so the core of those lessons is listenable even
     // though the lesson as printed needs eyes.
