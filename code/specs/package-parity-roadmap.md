@@ -4420,6 +4420,37 @@ CodeQL checks are queued, so the JVM item is now `pr-open`, every other parity
 item remains pending, and auto-merge stays disabled until the exact-head checks
 are terminal acceptable and conflict status is clear.
 
+### Post-#12360 refresh and Dart PNG lane selection
+
+JVM PNG PR #12360 completed all 29 checks with 23 successes and six expected
+skips. Its first D18F attempt failed before repository tests when Hex setup lost
+its connection to builds.hex.pm; the unchanged rerun passed. Both CI gates and
+the Linux, macOS, and Windows builds succeeded. After the loop requested squash
+auto-merge, GitHub merged final reviewed head
+`0288bf4a878f7c45cd47ec3e0d43dd44d3158992` as
+`3cb13f2b8fb8a27c7c0bf3d6608bbc64aebc9273` at 2026-08-21T03:48:51Z and
+deleted the source branch.
+
+The refreshed collision-checked schema-3 inventory at that exact live main
+contains 15 established lanes, 1,368 canonical identities, and 4,557
+implementation slots. High-consensus coverage remains 174 packages with 271
+gaps; the 5-9 band contains 123 packages with 935 gaps; the 2-4 band contains
+166 packages with 2,087 gaps; and 905 singletons have 12,670 gaps, including
+716 Rust singletons. Canonical collisions and unknown language buckets remain
+zero. The only new roots are the reviewed Java and Kotlin PNG implementations;
+intervening human-language commits modify existing roots only, so no new
+classification owner is required.
+
+The Dart PNG child is selected next. Every remaining PNG lane child closes one
+umbrella slot, and Dart wins the safety and leverage tie-break: SDK 3.12.2 is
+installed, the established lane is comparatively thin, its pure PixelContainer
+and ZIP-owned raw RFC 1951/counting/CRC dependency chain already exists, and a
+fresh live ownership audit finds no competing Dart PNG or prerequisite work.
+The bounded tranche adds one native IC18 implementation, all 85 neutral cases
+through public APIs, focused allocation and precedence regressions, package and
+BUILD metadata, documentation, changelog, and an empty capability manifest.
+It does not change IC18, the neutral corpus, adapters, or unrelated lanes.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
