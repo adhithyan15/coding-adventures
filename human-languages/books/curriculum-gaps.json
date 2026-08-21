@@ -31,7 +31,7 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
     "lessonsWithoutSequence": 12,
-    "forwardReviews": 6,
+    "forwardReviews": 5,
     "atomsNeverRevisited": 632,
     "forwardReferences": 466,
     "chaptersWithoutCapability": 0,
@@ -6343,14 +6343,6 @@
         "kind": "forward-review",
         "other": "PT-C04-adeus",
         "detail": "reviews PT-C04-adeus, which the learner does not reach for another 5 lesson(s)"
-      },
-      {
-        "lessonId": "RU-C01-da",
-        "language": "russian",
-        "chapter": 1,
-        "kind": "forward-review",
-        "other": "RU-C01-spasibo",
-        "detail": "reviews RU-C01-spasibo, which the learner does not reach for another 2 lesson(s)"
       }
     ],
     "reinforcement": [
@@ -60528,7 +60520,7 @@
         "lessonCount": 84,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 1,
+        "forwardReviews": 0,
         "atomsTaught": 160,
         "atomsNeverRevisited": 22,
         "forwardReferences": 8
@@ -60588,7 +60580,7 @@
       "lessonsWithoutSequence": 12,
       "tracksWithUnorderedLessons": 2,
       "forwardPrerequisites": 6,
-      "forwardReviews": 6,
+      "forwardReviews": 5,
       "atomsTaught": 4720,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
@@ -71576,10 +71568,10 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 59,
         "neverTaughtGlyphs": 23,
-        "orderDefects": 1,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 1,
+        "forwardReviews": 0,
         "forwardReferences": 8,
         "atomsTaught": 160,
         "atomsNeverRevisited": 22,
@@ -71589,13 +71581,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "russian",
-            "kind": "order-integrity",
-            "count": 1,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
           {
             "language": "russian",
             "kind": "forward-language",
@@ -71648,10 +71633,10 @@
         ],
         "next": {
           "language": "russian",
-          "kind": "order-integrity",
-          "count": 1,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 8,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -72082,13 +72067,6 @@
         "language": "persian",
         "kind": "order-integrity",
         "count": 6,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
-        "language": "russian",
-        "kind": "order-integrity",
-        "count": 1,
         "unit": "order/dependency defect(s)",
         "detail": "declare a unique reading order and close every prerequisite and review before use"
       },
@@ -72995,7 +72973,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 492,
-      "findings": 131
+      "findings": 130
     }
   },
   "levelGate": {
