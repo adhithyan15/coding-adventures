@@ -37,8 +37,8 @@ describe("assessment policy (HL16)", () => {
     })).toThrow(/maxLessonMinutes must be 5/);
   });
 
-  it("loads Marwadi's complete project-defined contract and keeps the other tracks queued", () => {
-    expect(listAssessmentContracts()).toEqual(["marwadi"]);
+  it("loads the complete French and Marwadi contracts and keeps the other tracks queued", () => {
+    expect(listAssessmentContracts()).toEqual(["french", "marwadi"]);
   });
 });
 

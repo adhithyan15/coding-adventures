@@ -10,6 +10,16 @@ Grounding (per `HL00`): English + Latin roots, **plus its closest Romance
 sibling, Spanish** — both worn-down Latin — so the two daughters can be
 compared, every Spanish form supplied in full (no prior Spanish assumed).
 
+## Assessment destination
+
+The complete book must prepare a book-only learner for the official French
+diploma ladder: DILF A1.1 at the first runway, DELF *tout public* at A1–B2, and
+DALF at C1–C2. See [assessment-spec.md](assessment-spec.md) for the real external
+formats and scoring boundary and [assessment.json](assessment.json) for the
+seven-rung machine-readable contract. Lessons stay at five minutes or less and
+writing grows one action at a time; full mocks keep authentic continuous timing.
+The contract is a target, not present-tense readiness evidence.
+
 ## Authored
 
 - **Ch. 1 — Greetings**: salut → bien → bon/bonne → **le/la/les** (gender) →
