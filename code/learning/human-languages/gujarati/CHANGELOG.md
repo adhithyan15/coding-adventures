@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Added — pre-A1-to-C2 assessment contract (HL16)
+
+- Added a clearly labelled project-defined Gujarati assessment ladder at
+  pre-A1, A1, A2, B1, B2, C1, and C2 rather than implying an external
+  qualification exists.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes at 60%, with no stronger skill compensating for a weaker one.
+- The contract carries writing from observe/trace and copying through delayed
+  recall, dictation, connected composition, and timed exam production.
+- Two timed mocks, rubrics, answer keys, calibration, and book-only human
+  validation remain explicit dependencies, so the track cannot mistake a named
+  destination for pass-readiness evidence.
+
 ### Fixed — three false forward-review claims
 
 - `GU-C02-anand` now records the earlier name statement that its warm-up and
