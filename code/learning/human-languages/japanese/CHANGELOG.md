@@ -4,6 +4,18 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — one sound-first farewell (#12475)
+
+- Added six <=5-minute sessions for **さようなら**: sound and social job first,
+  then only the three new signs **よ**, **な**, and **ら**, a sign-by-sign
+  assembly, and a four-skill payoff.
+- Reused known **さ** and **う** instead of reteaching them, while preserving a
+  trace-copy-recall writing ramp for the genuinely new shapes.
+- Realized the shared `FAREWELL` function without pretending this one expression
+  covers every relationship or departure context.
+- Grounded the A1 headword and contextual warning in Japan Foundation Marugoto
+  and Irodori materials.
+
 ### Changed — script closure before decoding (#12471)
 
 - Reordered the 29 existing lessons so every hiragana writing step precedes the

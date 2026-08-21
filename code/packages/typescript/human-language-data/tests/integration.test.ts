@@ -302,14 +302,14 @@ describe("real curriculum", () => {
 
   it("keeps the Japanese script-before-decoding chain closed and under five minutes", () => {
     // Japanese needs three writing systems, but putting all three in Chapter 1 made
-    // the learner decode before the sign lessons. Pin the repaired structure: seven
+    // the learner decode before the sign lessons. Pin the repaired structure: eight
     // small chapters, one objective activity per lesson, and a final mixed-script
     // exchange only after the hiragana, kanji and katakana ramps.
     const report = buildCurriculumGapReport({ registry, lessons, books });
     const japanese = lessons.filter((lesson) => lesson.language === "japanese");
-    expect(japanese).toHaveLength(38);
+    expect(japanese).toHaveLength(44);
     expect(new Set(japanese.map((lesson) => lesson.realization.chapter))).toEqual(
-      new Set([1, 2, 3, 4, 5, 6, 7]),
+      new Set([1, 2, 3, 4, 5, 6, 7, 8]),
     );
     expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
     expect(japanese.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);

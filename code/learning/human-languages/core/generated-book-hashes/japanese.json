@@ -95,6 +95,20 @@
         "JA-C01-practice"
       ],
       "tex": "japanese/book/chapters/ch07-doorway-exchange.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:d64e918691ac117b",
+      "lessonIds": [
+        "JA-C08-hear-sayounara",
+        "JA-W08-yo",
+        "JA-W08-na",
+        "JA-W08-ra",
+        "JA-W08-sayounara-read",
+        "JA-C08-sayounara"
+      ],
+      "tex": "japanese/book/chapters/ch08-sayounara.tex"
     }
   ]
 }

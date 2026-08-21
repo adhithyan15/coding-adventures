@@ -1,7 +1,7 @@
 {
   "language": "japanese",
-  "lessonCount": 38,
-  "atomMeasurableLessons": 38,
+  "lessonCount": 44,
+  "atomMeasurableLessons": 44,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -16,7 +16,7 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 48,
+  "atomsTaught": 55,
   "atomsNeverRevisited": 1,
   "reinforcementWindowMisses": 0,
   "reinforcementMissesByWindow": {
@@ -26,7 +26,7 @@
     "R4": 0
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 37,
+  "writingPracticeLessons": 41,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [],
