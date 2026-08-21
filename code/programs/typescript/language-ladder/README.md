@@ -1214,6 +1214,10 @@ its rightward finish without lifting. The source's one-path order and variation
 warning remain visible. With the stale conventional duplicates of **ન** and
 **પ** removed, Gujarati now exposes one canonical row for each of its **44/44
 source-verified letters** and is marked complete.
+The Arabic **ث** filmstrip then opens the next maintenance tranche: it sweeps
+the shared independent bowl right-to-left and uses three lifted dot frames in
+the two-lower-and-one-centred-upper arrangement documented by the dedicated
+University of Oregon lesson video.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

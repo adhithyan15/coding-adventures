@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional bowl-and-dots summary with a cited path.
+- Show its right-to-left bowl followed by three separately lifted upper dots.
+
 ## Unreleased — canonical Gujarati inventory completion (HL-C09GY)
 
 - Remove duplicate conventional **ન** and **પ** rows from the learner inventory.
