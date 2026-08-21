@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-C01-iie
 spine_node: SPINE-RESPOND-BASIC
-sequence: 20
+sequence: 60
 chapter: 1
 type: word
 headword: いいえ
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH]
 practises:
-  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH]
+  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH, JA-LEX-HAI, JA-SCRIPT-I-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-C01-hai]
+reviews_of: [JA-W01-i, JA-W01-e, JA-C01-hai]
 ---
 
 # いいえ — no, and why the extra beat matters
@@ -65,6 +65,11 @@ daily speech, which is worth knowing before you meet it as an answer to
 - [YOU SAY: **いいえ** — *i-i-e*, three even beats] [REPEAT x2]
 - [YOU CONTRAST: **いえ** house, **いいえ** no]
 - [YOU CHOOSE: agree → **はい**; decline → **いいえ**]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-HAI, JA-SCRIPT-I-01] -->
+
+[PAUSE 15s] Say ??, then write ? once from memory before learning the contrasting answer.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-IIE, JA-SCRIPT-MORA-LENGTH] -->

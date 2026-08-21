@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W01-konnichiwa-read
 spine_node: SPINE-MEET-GREET
-sequence: 180
+sequence: 120
 delivery: script
 chapter: 2
 type: writing
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-KONNICHIWA-READ-01]
 practises:
-  knowledge: [JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-LEX-KONNICHIWA, JA-SCRIPT-HIRAGANA-MORA, JA-PARTICLE-WA-SPELLING]
+  knowledge: [JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-KO-01, JA-SCRIPT-N-01, JA-SCRIPT-NI-01, JA-SCRIPT-CHI-01, JA-SCRIPT-HA-01, JA-SCRIPT-HIRAGANA-MORA, JA-PARTICLE-WA-SPELLING, JA-SCRIPT-WA-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W01-wa, JA-W01-ko, JA-W01-n, JA-W01-ni, JA-W01-chi, JA-C01-konnichiwa]
+reviews_of: [JA-W01-wa, JA-W01-ko, JA-W01-n, JA-W01-ni, JA-W01-chi]
 ---
 
 # Five signs in a row — and the greeting is readable
@@ -51,26 +51,31 @@ greeting is on the page:
 tap and you will hear that the second beat, the one with no vowel, takes exactly
 as long as the four around it.
 
-**Nothing new was introduced in this lesson.** You have not learned a stroke, a
-sound or a word here. You have read a word you already knew how to say — from
-five pieces you can each write from memory, in order, including the one that
-sounds like something other than its name.
+No new stroke appears here. You have decoded five pieces you can each write from
+memory, in order, including the one that sounds like something other than its
+name. The next lesson attaches the daytime-greeting meaning to the line.
 
 ## What you've built
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01, JA-LEX-KONNICHIWA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01] -->
 
-Eight signs, taught one at a time, and with them you can now read three whole
-words off the page: the greeting, and both answers to a yes-or-no question.
+Eight signs, taught one at a time, and with them you can now decode three whole
+sequences off the page. Two already carry useful answers; the five-sign sequence
+gets its daytime-greeting job in the next lesson.
 
 Hiragana has forty-six basic signs. You hold **eight**. The rest arrive the same
 way, one per lesson, and the words they unlock arrive free — because a word in
 this script is never more than the signs you already own, in a row.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01, JA-LEX-KONNICHIWA] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01] -->
 
 - [YOU READ: **こんにちは** — sound each sign in turn; do not recall it whole]
 - [YOU WRITE: the greeting, then say it once at speaking pace]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01] -->
+
+[PAUSE 15s] Write ? once, then set it beside ? and name which one closes the greeting.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KONNICHIWA-READ-01, JA-SCRIPT-HIRAGANA-MORA] -->

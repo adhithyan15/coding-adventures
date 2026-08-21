@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W01-n
 spine_node: SPINE-MEET-GREET
-sequence: 140
+sequence: 80
 delivery: script
 chapter: 2
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-N-01]
 practises:
-  knowledge: [JA-SCRIPT-N-01, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-KO-01]
+  knowledge: [JA-SCRIPT-N-01, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-KO-01, JA-SCRIPT-HAI-READ-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -60,6 +60,11 @@ is.
 
 - [YOU WRITE: ん — one continuous stroke, no lifts]
 - [YOU SAY: hold it for a full beat, as long as any other sign takes]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HAI-READ-01] -->
+
+[PAUSE 15s] Cover the model and write ?? from its two known signs.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01, JA-SCRIPT-HIRAGANA-MORA] -->

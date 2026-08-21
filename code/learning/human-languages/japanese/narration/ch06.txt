@@ -1,0 +1,135 @@
+Japanese, chapter 6: Coffee in Katakana, Three Shapes.
+4 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+
+
+Lesson 1 of 4.
+コ (ko) — same sound, a new script.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two angular strokes and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Read 日本語 once. Now switch jobs: the next word came from abroad, so Japanese normally writes it in katakana.
+
+Script — two angular strokes.
+コ (ko).
+Write two strokes:
+top horizontal, then turn down at the right.
+bottom horizontal, left to right.
+Read it ko, the same mora as hiragana こ. The sound is not new. Only the script is new: katakana is angular and commonly marks borrowed words.
+
+Guided Practice.
+[once you have stopped driving — trace: コ (ko) — top-and-side, then bottom]
+[once you have stopped driving — write: コ (ko) once from memory]
+[your turn — contrast: こ is hiragana; コ is katakana; both say ko]
+[pause 8 seconds for the answer]
+
+Guided Practice — review pulse.
+[pause 15 seconds]
+Trace? once. Then recall why Japanese kanji readings connect to Chinese without giving each sign one fixed sound.
+
+Wrap-up Recall.
+Does コ (ko) introduce a new sound? (No — only a new written shape.)
+Source: Unicode Katakana chart.
+[question — say your answer, then pause 12 seconds]
+Write ko in katakana, the script used for the borrowed word coffee.
+
+
+Lesson 2 of 4.
+ー (chōonpu) — one line, one extra beat.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — length lives on the page and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write コ and say ko. Hold its vowel once: ko-o.
+
+Script — length lives on the page.
+コー.
+Write one horizontal stroke after the katakana sign. This mark is the chōonpu, the long-vowel mark. It does not have a sound by itself. It tells you to hold the vowel before it for one more mora.
+So コ is ko, while コー is kō: two beats, ko-o. Keep the line centred and about as wide as the sign before it.
+
+Guided Practice.
+[once you have stopped driving — write: コ (ko), then ー (chōonpu)]
+[your turn — tap: ko — one; hold o — two]
+[pause 8 seconds for the answer]
+[your turn — read: コー as kō, not ko]
+[pause 8 seconds for the answer]
+
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write? once from memory, then return to the one-stroke length mark.
+
+Wrap-up Recall.
+How many extra beats does ー (chōonpu) add? (One.)
+Source: Unicode Katakana chart.
+[question — say your answer, then pause 10 seconds]
+Add the katakana long-vowel mark to コ (ko) so it reads kō.
+
+
+Lesson 3 of 4.
+ヒ (hi) — two strokes complete the inventory.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the last new shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Write コー and tap its two beats: ko-o.
+
+Script — the last new shape.
+ヒ (hi).
+Write two strokes:
+a short stroke from right toward left.
+a longer vertical stroke that turns and sweeps right at the bottom.
+Read it hi, one mora. Japanese h is light; keep the vowel clean, like the ee in machine but short.
+Now every distinct sign in the word ahead is known: コ (ko), ー (chōonpu), and ヒ (hi).
+
+Guided Practice.
+[once you have stopped driving — trace: ヒ (hi) — short top, long bent body]
+[once you have stopped driving — write: ヒ (hi) once from memory]
+[your turn — build: コ (ko) + ー (chōonpu) + ヒ (hi) + ー (chōonpu)]
+[pause 8 seconds for the answer]
+
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write? once from memory before switching back to katakana.
+
+Wrap-up Recall.
+Which stroke bends to the right? (The second, longer stroke.)
+Source: Unicode Katakana chart.
+[question — say your answer, then pause 12 seconds]
+Write hi in katakana, then place it after コー.
+
+
+Lesson 4 of 4.
+コーヒー (kōhī) — the third system, and a word that really is a cousin.
+
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — katakana, the borrowed-word script and Guided Practice until you have stopped, and I will say so again when we reach it.
+
+Warm-up.
+[pause 2 seconds]
+Recall how hiragana writes a long vowel: it writes the vowel twice, as in いいえ. Katakana does it differently, and this word shows how.
+
+Script — katakana, the borrowed-word script.
+コーヒー (kōhī) — コ ko + ー (chōonpu) + ヒ hi + ー (chōonpu).
+This is katakana, the third system, and it is a full twin of hiragana: the same beats, the same five vowels, different shapes. Its job is different too. Katakana marks a word as coming from outside — borrowed vocabulary, foreign names, sound effects, scientific terms.
+The two scripts are siblings by origin as well as by sound. Hiragana came from whole Chinese characters written in flowing cursive; katakana came from fragments of characters, shorthand that monks scribbled beside a text to remember how to read it. こ and コ (ko) even trace back to the same character, which is why they still look alike.
+ー is the chōonpu, the long-vowel bar. It holds the previous vowel for one more beat, and it belongs to katakana almost exclusively. So コーヒー (kōhī) is four beats: ko-o-hi-i.
+
+The word, taken apart — a shared borrowing.
+コーヒー (kōhī) is coffee, and it entered Japanese from Dutch koffie through the Nagasaki trade. Dutch had it from Turkish kahve, and Turkish from Arabic qahwa — which is exactly where English coffee comes from as well.
+So this word genuinely is a cousin of one you already own. Notice what kind of cousin: not an inherited relative, but the same borrowed object arriving from the same Arabic source by two different roads. That is the honest shape of most Japanese–English overlap. Other passengers on those roads include pan, "bread," from Portuguese pão, and arubaito, "a part-time job," from German Arbeit. Their katakana signs can wait for their own one-sign lessons.
+
+Guided Practice.
+[your turn — say: コーヒー (kōhī) — ko-o-hi-i, four beats]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[once you have stopped driving — trace: Arabic qahwa becomes Turkish kahve becomes Dutch koffie becomes コーヒー (kōhī)]
+[your turn — decide: a borrowed word is written in katakana, not hiragana]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+Which script signals a borrowed word? (Katakana.) How many beats does コーヒー (kōhī) hold? (Four.)
+Source: Wiktionary: コーヒー (kōhī).
+[question — say your answer, then pause 10 seconds]
+What does the bar ー (chōonpu) do in コーヒー (kōhī)?

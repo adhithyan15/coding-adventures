@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W03-ri
 spine_node: SPINE-COURTESY-THANK
-sequence: 200
+sequence: 150
 delivery: script
 chapter: 3
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-RI-01]
 practises:
-  knowledge: [JA-SCRIPT-RI-01, JA-SCRIPT-A-01]
+  knowledge: [JA-SCRIPT-RI-01, JA-SCRIPT-A-01, JA-SCRIPT-CHI-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -64,6 +64,11 @@ in a way that one minute of practice fixes.
 - [YOU WRITE: り — short left stroke, then the long right descender. Leave the gap.]
 - [YOU SAY: **ri** — one tap, not an English r]
 - [YOU SAY: **a**, then **ri** — the first two signs of the word]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-CHI-01] -->
+
+[PAUSE 15s] Write ? from memory before tracing ?.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-RI-01] -->

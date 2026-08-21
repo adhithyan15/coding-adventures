@@ -300,18 +300,19 @@ describe("real curriculum", () => {
     expect(urduFarewell.frontmatter.headword).toBe("خدا حافظ");
   });
 
-  it("keeps the Japanese Chapter 1 mixed-script chain closed and under five minutes", () => {
-    // Japanese is the corpus's first track that needs more than one writing system
-    // at a time, so this asserts the property rather than only the counts: the same
-    // chapter must actually carry hiragana, katakana, and kanji headwords, and the
-    // closing exchange must still be reachable without an untaught atom.
+  it("keeps the Japanese script-before-decoding chain closed and under five minutes", () => {
+    // Japanese needs three writing systems, but putting all three in Chapter 1 made
+    // the learner decode before the sign lessons. Pin the repaired structure: seven
+    // small chapters, one objective activity per lesson, and a final mixed-script
+    // exchange only after the hiragana, kanji and katakana ramps.
     const report = buildCurriculumGapReport({ registry, lessons, books });
-    const chapter = lessons.filter(
-      (lesson) => lesson.language === "japanese" && lesson.realization.chapter === 1,
+    const japanese = lessons.filter((lesson) => lesson.language === "japanese");
+    expect(japanese).toHaveLength(38);
+    expect(new Set(japanese.map((lesson) => lesson.realization.chapter))).toEqual(
+      new Set([1, 2, 3, 4, 5, 6, 7]),
     );
-    expect(chapter).toHaveLength(8);
-    expect(chapter.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
-    expect(chapter.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
+    expect(japanese.every((lesson) => lesson.frontmatter.schema_version === "2")).toBe(true);
+    expect(japanese.every((lesson) => compileLessonActivities(lesson.blocks).length === 1)).toBe(true);
     expect(
       report.duration.violations.filter((lesson) => lesson.language === "japanese"),
     ).toEqual([]);
@@ -322,7 +323,7 @@ describe("real curriculum", () => {
     ).toEqual([]);
 
     const headwords = new Map(
-      chapter.map((lesson) => [lesson.realization.lessonId, lesson.realization.headword]),
+      japanese.map((lesson) => [lesson.realization.lessonId, lesson.realization.headword]),
     );
     expect(headwords.get("JA-C01-konnichiwa")).toBe("こんにちは"); // hiragana
     expect(headwords.get("JA-C01-nihongo")).toBe("日本語"); // kanji

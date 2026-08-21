@@ -1654,6 +1654,30 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 4,
+      "output": "japanese/book/chapters/ch04-polite-thanks.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 5,
+      "output": "japanese/book/chapters/ch05-nihongo-kanji.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 6,
+      "output": "japanese/book/chapters/ch06-koohii-katakana.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
+      "language": "japanese",
+      "chapter": 7,
+      "output": "japanese/book/chapters/ch07-doorway-exchange.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "marwadi",
       "chapter": 1,
       "output": "marwadi/book/chapters/ch01-ram-ram-sa.tex",

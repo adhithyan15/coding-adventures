@@ -337,12 +337,13 @@ describe("the script ramp against the real corpus", () => {
     expect(report.summary.lessonViolations).toBe(58); // Urdu shukriya split: -1 -- IMPROVEMENT, the new trace-only step introduces three shapes and the word lesson adds the remaining two before guided copying // Arabic harakat split: -1 -- IMPROVEMENT, the new four-minute middle step carries exactly sukūn, shadda, and fatḥatan, so no lesson introduces more than three of the marks // Urdu order recovery: +1, making UR-C01-shukriya's existing five-shape spike measurable instead of hiding it behind invalid alphabetical order; #12261 owns the real split // Arabic order recovery: +1, making AR-W06-harakat-and-hamza's existing four-mark spike measurable instead of hiding it behind invalid alphabetical order // Punjabi order recovery: -3 -- IMPROVEMENT, the authored order spreads first-seen Gurmukhi shapes more gently than filename order // HL-C259: -1 -- IMPROVEMENT, one fewer ramp violation once gujarati declares its atoms // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
 
     */
-    // All five are Japanese Chapter 1, which opens kanji beside hiragana in its very
-    // first lesson and adds katakana in its fifth.
+    // Japanese used to own all five violations: Chapter 1 opened kanji beside
+    // hiragana and then added katakana in its fifth lesson. The script-first rewrite
+    // now opens one system at a time, so no track crosses this ceiling.
     expect(report.summary.systemViolations).toBe(
       report.tracks.reduce((sum, track) => sum + track.systemViolations, 0),
     );
-    expect(new Set(report.systems.map((v) => v.language))).toEqual(new Set(["japanese"]));
+    expect(new Set(report.systems.map((v) => v.language))).toEqual(new Set());
 
     // The cousin layer's footprint. Not a violation — a reason to keep that layer
     // visually skippable, so a reader who knows no sister language can pass it by.

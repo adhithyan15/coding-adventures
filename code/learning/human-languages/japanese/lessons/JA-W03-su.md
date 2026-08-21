@@ -2,9 +2,9 @@
 schema_version: 2
 id: JA-W03-su
 spine_node: SPINE-COURTESY-THANK
-sequence: 280
+sequence: 240
 delivery: script
-chapter: 3
+chapter: 4
 type: writing
 headword: す
 romanization: su
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-SU-01]
 practises:
-  knowledge: [JA-SCRIPT-SU-01, JA-SCRIPT-MA-01]
+  knowledge: [JA-SCRIPT-SU-01, JA-SCRIPT-MA-01, JA-SCRIPT-U-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -70,6 +70,11 @@ The sign is still written. The beat is still counted. Only the voice drops out.
 
 - [YOU WRITE: す — horizontal, then the vertical with its closing loop]
 - [YOU SAY: **su**, then the same with the voice off — a whispered ending]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-U-01] -->
+
+[PAUSE 15s] Write ? from memory before tracing ?.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SU-01] -->

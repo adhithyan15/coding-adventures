@@ -2,31 +2,31 @@
 schema_version: 2
 id: JA-C01-nihongo
 spine_node: SPINE-MEET-GREET
-sequence: 40
-chapter: 1
+sequence: 330
+chapter: 5
 type: word
 headword: 日本語
 romanization: nihongo
 gloss: the Japanese language
 concept_tag: JA-WORD-NIHONGO
-prerequisites: [JA-C01-konnichiwa]
+prerequisites: [JA-W05-go-kanji]
 sounds: [mora, moraic-n]
 roots: [middle-chinese-nyit, middle-chinese-pwonx, middle-chinese-ngjoX]
 etymology_hook: 日 is nichi, jitsu, hi, bi, or ka — a kanji carries a set of readings, and the word picks one.
 duration:
   max_seconds: 220
 requires:
-  knowledge: [JA-LEX-KONNICHIWA, JA-SCRIPT-HIRAGANA-MORA]
+  knowledge: [JA-LEX-KONNICHIWA, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-KANJI-NICHI-01, JA-SCRIPT-KANJI-HON-01, JA-SCRIPT-KANJI-GO-01]
 introduces:
   knowledge: [JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS, JA-BRIDGE-SINO-JAPANESE]
 practises:
-  knowledge: [JA-LEX-KONNICHIWA, JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS, JA-BRIDGE-SINO-JAPANESE]
+  knowledge: [JA-LEX-KONNICHIWA, JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS, JA-BRIDGE-SINO-JAPANESE, JA-SCRIPT-KANJI-GO-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, mediation]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-C01-konnichiwa]
+reviews_of: [JA-W05-nichi-kanji, JA-W05-hon-kanji, JA-W05-go-kanji, JA-C01-konnichiwa]
 ---
 
 # 日本語 — three characters, and no single sound each
@@ -34,9 +34,8 @@ reviews_of: [JA-C01-konnichiwa]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA] -->
 
-[PAUSE 2s] Say **こんにちは** (*konnichiwa*). Its history hid two characters, 今日, that
-hiragana cannot show you. This lesson opens that second system by naming the
-language itself.
+[PAUSE 2s] Say **こんにちは** (*konnichiwa*). Now write 日, 本, and 語 once each.
+This lesson joins those three already-practised kanji to name the language.
 
 ## Script — kanji, and the readings problem
 <!-- hl-knowledge: introduces=[JA-SCRIPT-KANJI-READINGS]; assesses=[] -->
@@ -58,8 +57,9 @@ along with it.
 Two families of readings explain the spread. The **on** reading is Japan's
 version of the Chinese pronunciation, imported with the character. The **kun**
 reading is a native Japanese word written with a borrowed character that
-already meant the same thing. 日本語 is on-readings throughout; 今日 in the
-greeting is irregular even by those standards.
+already meant the same thing. 日本語 uses the imported reading family throughout.
+The older spelling behind the greeting is irregular even by those standards,
+so it remains postponed rather than becoming an unexplained decoding test.
 
 ## The word, taken apart — the real family
 <!-- hl-knowledge: introduces=[JA-LEX-NIHONGO, JA-BRIDGE-SINO-JAPANESE]; assesses=[] -->
@@ -79,6 +79,11 @@ that anchor a European language. English has no share in it.
 - [YOU SAY: **日本語** — *ni-ho-n-go*, four beats] [REPEAT x2]
 - [YOU NAME: 日 sun or day; 本 origin; 語 language]
 - [YOU CONNECT: Mandarin *Rìběnyǔ*, Korean *ilbon-eo*, same three characters]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KANJI-GO-01] -->
+
+[PAUSE 15s] Build ? once from ?, ?, and ? before joining the full word.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-NIHONGO, JA-SCRIPT-KANJI-READINGS] -->

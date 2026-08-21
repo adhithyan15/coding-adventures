@@ -2,9 +2,9 @@
 schema_version: 2
 id: JA-W01-ha
 spine_node: SPINE-RESPOND-BASIC
-sequence: 100
+sequence: 20
 delivery: script
-chapter: 2
+chapter: 1
 type: writing
 headword: は
 romanization: ha
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-HA-01]
 practises:
-  knowledge: [JA-SCRIPT-HA-01, JA-SCRIPT-I-01]
+  knowledge: [JA-SCRIPT-HA-01, JA-SCRIPT-I-01, JA-SCRIPT-HIRAGANA-MORA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -66,6 +66,11 @@ after you have met the sign it *sounds* like.
 
 Look back at the model between strokes if you need to. This is one guided copy,
 not a memory test.
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA] -->
+
+[PAUSE 15s] Say ? and tap its one mora before adding another sign.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01] -->

@@ -1,0 +1,645 @@
+{
+  "version": 1,
+  "language": "japanese",
+  "chapter": 6,
+  "title": "Coffee in Katakana, Three Shapes",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:3c3914237ff34f56",
+  "lessons": [
+    {
+      "id": "JA-W06-ko-katakana",
+      "sequence": 340,
+      "title": "コ (ko) — same sound, a new script",
+      "headword": "コ",
+      "romanization": "ko",
+      "gloss": "the two-stroke katakana sign for ko — the first sign in coffee",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:0837ed70d3aa6bef",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — two angular strokes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — two angular strokes and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read 日本語 once. Now switch jobs: the next word came from abroad, so Japanese normally writes it in katakana."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — two angular strokes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "コ (ko)."
+            },
+            {
+              "kind": "speech",
+              "text": "Write two strokes:"
+            },
+            {
+              "kind": "speech",
+              "text": "top horizontal, then turn down at the right."
+            },
+            {
+              "kind": "speech",
+              "text": "bottom horizontal, left to right."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it ko, the same mora as hiragana こ. The sound is not new. Only the script is new: katakana is angular and commonly marks borrowed words."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "コ (ko) — top-and-side, then bottom",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: コ — top-and-side, then bottom]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "コ (ko) once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: コ once from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "CONTRAST",
+              "instruction": "こ is hiragana; コ is katakana; both say ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU CONTRAST: こ is hiragana; コ is katakana; both say *ko*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Trace? once. Then recall why Japanese kanji readings connect to Chinese without giving each sign one fixed sound."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Does コ (ko) introduce a new sound? (No — only a new written shape.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Katakana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W06-ko-katakana-ko",
+              "prompt": "Write ko in katakana, the script used for the borrowed word coffee.",
+              "assesses": [
+                "JA-SCRIPT-KATAKANA-KO-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "コ",
+                "コ (ko)",
+                "katakana コ"
+              ],
+              "feedback": {
+                "correct": "Right: コ is katakana ko.",
+                "incorrect": "Use コ: top-and-right corner, then the bottom line."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W06-long-mark",
+      "sequence": 350,
+      "title": "ー (chōonpu) — one line, one extra beat",
+      "headword": "ー",
+      "romanization": "chōonpu",
+      "gloss": "the one-stroke katakana mark that holds the preceding vowel for another beat",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:aedcf8d8d8a26aee",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — length lives on the page",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — length lives on the page and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write コ and say ko. Hold its vowel once: ko-o."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — length lives on the page",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "コー."
+            },
+            {
+              "kind": "speech",
+              "text": "Write one horizontal stroke after the katakana sign. This mark is the chōonpu, the long-vowel mark. It does not have a sound by itself. It tells you to hold the vowel before it for one more mora."
+            },
+            {
+              "kind": "speech",
+              "text": "So コ is ko, while コー is kō: two beats, ko-o. Keep the line centred and about as wide as the sign before it."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "コ (ko), then ー (chōonpu)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: コ, then ー]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TAP",
+              "instruction": "ko — one; hold o — two",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TAP: *ko* — one; hold *o* — two]"
+            },
+            {
+              "kind": "prompt",
+              "action": "READ",
+              "instruction": "コー as kō, not ko",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU READ: コー as **kō**, not *ko*]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write? once from memory, then return to the one-stroke length mark."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "How many extra beats does ー (chōonpu) add? (One.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Katakana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W06-long-mark-beat",
+              "prompt": "Add the katakana long-vowel mark to コ (ko) so it reads kō.",
+              "assesses": [
+                "JA-SCRIPT-KATAKANA-LONG-MARK-01",
+                "JA-SCRIPT-CHOUON"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "コー",
+                "コ ー",
+                "kō",
+                "ko-o"
+              ],
+              "feedback": {
+                "correct": "Right: コー holds o for a second beat.",
+                "incorrect": "Write one horizontal mark after コ: コー."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-W06-hi-katakana",
+      "sequence": 360,
+      "title": "ヒ (hi) — two strokes complete the inventory",
+      "headword": "ヒ",
+      "romanization": "hi",
+      "gloss": "the two-stroke katakana sign for hi — the remaining sign in coffee",
+      "script": "japanese",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:73a7c60d0b4e494b",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — the last new shape",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the last new shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write コー and tap its two beats: ko-o."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — the last new shape",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ヒ (hi)."
+            },
+            {
+              "kind": "speech",
+              "text": "Write two strokes:"
+            },
+            {
+              "kind": "speech",
+              "text": "a short stroke from right toward left."
+            },
+            {
+              "kind": "speech",
+              "text": "a longer vertical stroke that turns and sweeps right at the bottom."
+            },
+            {
+              "kind": "speech",
+              "text": "Read it hi, one mora. Japanese h is light; keep the vowel clean, like the ee in machine but short."
+            },
+            {
+              "kind": "speech",
+              "text": "Now every distinct sign in the word ahead is known: コ (ko), ー (chōonpu), and ヒ (hi)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "ヒ (hi) — short top, long bent body",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: ヒ — short top, long bent body]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "ヒ (hi) once from memory",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: ヒ once from memory]"
+            },
+            {
+              "kind": "prompt",
+              "action": "BUILD",
+              "instruction": "コ (ko) + ー (chōonpu) + ヒ (hi) + ー (chōonpu)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU BUILD: コ + ー + ヒ + ー]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write? once from memory before switching back to katakana."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which stroke bends to the right? (The second, longer stroke.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Katakana chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-W06-hi-katakana-two-strokes",
+              "prompt": "Write hi in katakana, then place it after コー.",
+              "assesses": [
+                "JA-SCRIPT-KATAKANA-HI-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "コーヒ",
+                "ヒ",
+                "コー ヒ",
+                "katakana hi"
+              ],
+              "feedback": {
+                "correct": "Right: ヒ is the final distinct sign in the four-mora word ahead.",
+                "incorrect": "Use ヒ: short top stroke, then the longer bent body."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C01-koohii",
+      "sequence": 370,
+      "title": "コーヒー (kōhī) — the third system, and a word that really is a cousin",
+      "headword": "コーヒー",
+      "romanization": "kōhī",
+      "gloss": "coffee",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5fb6b46583ca9190",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — katakana, the borrowed-word script",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — katakana, the borrowed-word script and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Recall how hiragana writes a long vowel: it writes the vowel twice, as in いいえ. Katakana does it differently, and this word shows how."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — katakana, the borrowed-word script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "コーヒー (kōhī) — コ ko + ー (chōonpu) + ヒ hi + ー (chōonpu)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is katakana, the third system, and it is a full twin of hiragana: the same beats, the same five vowels, different shapes. Its job is different too. Katakana marks a word as coming from outside — borrowed vocabulary, foreign names, sound effects, scientific terms."
+            },
+            {
+              "kind": "speech",
+              "text": "The two scripts are siblings by origin as well as by sound. Hiragana came from whole Chinese characters written in flowing cursive; katakana came from fragments of characters, shorthand that monks scribbled beside a text to remember how to read it. こ and コ (ko) even trace back to the same character, which is why they still look alike."
+            },
+            {
+              "kind": "speech",
+              "text": "ー is the chōonpu, the long-vowel bar. It holds the previous vowel for one more beat, and it belongs to katakana almost exclusively. So コーヒー (kōhī) is four beats: ko-o-hi-i."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart — a shared borrowing",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "コーヒー (kōhī) is coffee, and it entered Japanese from Dutch koffie through the Nagasaki trade. Dutch had it from Turkish kahve, and Turkish from Arabic qahwa — which is exactly where English coffee comes from as well."
+            },
+            {
+              "kind": "speech",
+              "text": "So this word genuinely is a cousin of one you already own. Notice what kind of cousin: not an inherited relative, but the same borrowed object arriving from the same Arabic source by two different roads. That is the honest shape of most Japanese–English overlap. Other passengers on those roads include pan, \"bread,\" from Portuguese pão, and arubaito, \"a part-time job,\" from German Arbeit. Their katakana signs can wait for their own one-sign lessons."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "コーヒー (kōhī) — ko-o-hi-i, four beats",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **コーヒー** — *ko-o-hi-i*, four beats]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "prompt",
+              "action": "TRACE",
+              "instruction": "Arabic qahwa becomes Turkish kahve becomes Dutch koffie becomes コーヒー (kōhī)",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU TRACE: Arabic *qahwa* → Turkish *kahve* → Dutch *koffie* → **コーヒー**]"
+            },
+            {
+              "kind": "prompt",
+              "action": "DECIDE",
+              "instruction": "a borrowed word is written in katakana, not hiragana",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU DECIDE: a borrowed word is written in katakana, not hiragana]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which script signals a borrowed word? (Katakana.) How many beats does コーヒー (kōhī) hold? (Four.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Wiktionary: コーヒー (kōhī)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C01-koohii-bar",
+              "prompt": "What does the bar ー (chōonpu) do in コーヒー (kōhī)?",
+              "assesses": [
+                "JA-SCRIPT-CHOUON"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "it holds the vowel for one more beat",
+                "lengthens the vowel",
+                "long vowel",
+                "it lengthens the previous vowel",
+                "adds a beat to the vowel"
+              ],
+              "feedback": {
+                "correct": "Right: the chōonpu adds one more beat of the same vowel.",
+                "incorrect": "It lengthens the vowel before it by one beat — ko-o-hi-i."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

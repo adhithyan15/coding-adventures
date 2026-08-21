@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W03-ka
 spine_node: SPINE-COURTESY-THANK
-sequence: 210
+sequence: 160
 delivery: script
 chapter: 3
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-KA-01]
 practises:
-  knowledge: [JA-SCRIPT-KA-01, JA-SCRIPT-RI-01]
+  knowledge: [JA-SCRIPT-KA-01, JA-SCRIPT-RI-01, JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -59,6 +59,11 @@ between them is two small marks rather than a new character to learn.
 
 - [YOU WRITE: か — hooked stroke, vertical, then the dot at the right]
 - [YOU SAY: **ka**, one beat]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-WA-01, JA-PARTICLE-WA-SPELLING] -->
+
+[PAUSE 15s] Write ?, then write the different sign that closes ????? and explain its particle reading.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-KA-01] -->

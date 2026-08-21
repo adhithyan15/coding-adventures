@@ -2,17 +2,17 @@
 schema_version: 2
 id: JA-W03-a
 spine_node: SPINE-COURTESY-THANK
-sequence: 190
+sequence: 140
 delivery: script
 chapter: 3
 type: writing
 headword: あ
 romanization: a
 gloss: the hiragana sign for the mora a — three strokes, and the first sign of the thank-you
-prerequisites: [JA-W01-konnichiwa-read]
+prerequisites: [JA-C01-konnichiwa]
 sounds: [mora]
 roots: []
-etymology_hook: あ opens ありがとう, the longest word this book has given you and the one you cannot yet read.
+etymology_hook: あ opens the five-sign sequence that will become a plain thank-you.
 duration:
   max_seconds: 180
 requires:
@@ -20,13 +20,13 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-A-01]
 practises:
-  knowledge: [JA-SCRIPT-A-01, JA-SCRIPT-KONNICHIWA-READ-01]
+  knowledge: [JA-SCRIPT-A-01, JA-SCRIPT-KONNICHIWA-READ-01, JA-LEX-KONNICHIWA, JA-SCRIPT-NI-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W01-konnichiwa-read, JA-C01-arigatou]
+reviews_of: [JA-W01-konnichiwa-read, JA-C01-konnichiwa]
 ---
 
 # あ — three strokes, and the thank-you begins
@@ -36,9 +36,9 @@ reviews_of: [JA-W01-konnichiwa-read, JA-C01-arigatou]
 
 [PAUSE 2s] Write こんにちは from memory. Five signs, all yours.
 
-You have been saying **ありがとう** since Chapter 1 and reading it from the
-romanization. This chapter hands you the signs, one at a time, until the word is
-yours on the page as well as in the mouth.
+This chapter builds the five-sign plain thank-you from the page up. Its meaning
+arrives only after every sign is yours, so this first lesson asks for one shape:
+**あ**.
 
 ## Script — the shape
 <!-- hl-knowledge: introduces=[JA-SCRIPT-A-01]; assesses=[] -->
@@ -62,6 +62,11 @@ Read **a**: the *a* of English *father*, kept short. One beat.
 
 - [YOU WRITE: あ — horizontal, vertical, then the loop in one movement]
 - [YOU SAY: **a**, one beat, short]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA, JA-SCRIPT-NI-01] -->
+
+[PAUSE 15s] Give the daytime greeting, then write ? from memory.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-A-01] -->
