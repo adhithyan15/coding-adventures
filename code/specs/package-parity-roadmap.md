@@ -4480,6 +4480,17 @@ Canonical collisions and unknown language buckets remain zero. The branch
 rebased cleanly through `2e248b9070a4e7a89cea4bef83ad5caa5917148c` after two
 unrelated human-language-only main advances.
 
+### Dart PNG publication
+
+Ready-for-review PR #12376 was opened from clean validated head
+`63e5a7adbe3ea06ba3e732564dfe5136ec29b112` after a normal first push from
+exact `origin/main` `2e248b9070a4e7a89cea4bef83ad5caa5917148c`.
+Independent implementation, security, build, inventory, and live-ownership
+audits found no blocker. The exact 12-path diff is clean, mergeable, and has no
+open or stale ownership overlap. GitHub checks are queued, so the Dart item is
+now `pr-open` and auto-merge remains disabled until every required check is
+terminal acceptable and GitHub still reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
