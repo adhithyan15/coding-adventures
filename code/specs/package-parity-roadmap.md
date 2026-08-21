@@ -4451,6 +4451,35 @@ through public APIs, focused allocation and precedence regressions, package and
 BUILD metadata, documentation, changelog, and an empty capability manifest.
 It does not change IC18, the neutral corpus, adapters, or unrelated lanes.
 
+### Dart PNG implementation and validation
+
+The Dart child now implements the native IC18 encoder, decoder, and
+`ImageCodec` adapter over the established PixelContainer and ZIP-owned raw RFC
+1951/CRC substrate. Production remains pure and in-memory. The public fixture
+consumer executes all 85 schema-1 cases, pins the 29-code taxonomy and limits,
+and adds focused numeric-limit, malformed-container, nonzero-buffer-offset,
+APNG-precedence, and Adler-boundary regressions. Encoder output is inspected
+with the platform zlib decoder and decoded by the independent test-only
+`image` package.
+
+Dart 3.12.2 passes 93 tests, fatal-info analysis, the literal BUILD front door,
+and a 90% coverage gate at 286/288 production lines (99.31%) and 19/19
+functions. The established PixelContainer, LZSS, and ZIP prerequisites pass
+18, 54, and 66 tests. The Go build tool passes tests, vet, and trimpath build;
+its collision-checked 4,978-package plan selects and then builds exactly Dart
+PNG, PixelContainer, ZIP, and LZSS, with 4,974 packages skipped. Neutral
+fixture, capability-taxonomy, and parity-reporter suites pass 9, 7, and 10
+tests. Production dependencies are current, the empty capability profile is
+schema-valid, authority and credential scans are clean, and `git diff --check`
+passes.
+
+The prospective schema-3 inventory keeps 1,368 canonical identities and adds
+one reviewed slot for 4,558 total. `image-codec-png` now spans C#, Dart, F#,
+Go, Java, Kotlin, and TypeScript; the 5-9 band has 123 packages with 934 gaps.
+Canonical collisions and unknown language buckets remain zero. The branch
+rebased cleanly onto `f5971cbe2b1b1c0c3bd08f80606777a797b120a4` after an
+unrelated human-language-only main advance.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
