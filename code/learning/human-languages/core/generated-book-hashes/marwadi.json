@@ -89,6 +89,29 @@
         "MW-C05-practice"
       ],
       "tex": "marwadi/book/chapters/ch06-name-question.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:3ad5f180edf12c4d",
+      "lessonIds": [
+        "MW-C06-hear-question",
+        "MW-C06-question"
+      ],
+      "tex": "marwadi/book/chapters/ch07-wellbeing-question.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:eea0f7d4266d9e26",
+      "lessonIds": [
+        "MW-C06-hear-answer",
+        "MW-W06-uu-matra",
+        "MW-W06-ttha",
+        "MW-C06-answer",
+        "MW-C06-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch08-wellbeing-answer.tex"
     }
   ]
 }

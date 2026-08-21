@@ -46,6 +46,13 @@ memory demand at a time.
 | S38 | `MW-W05-ii-independent`: **ई** | distinguish independent **ई** from attached **ी** | guided copy of one vowel sign |
 | S39 | `MW-C05-kain`: **कांई** | assemble only known signs and give the meaning | delayed copy of one word |
 | S40 | `MW-C05-practice` | ask and answer one name in four separate skills | question dictation plus spoken answer |
+| S41 | `MW-C06-hear-question` | identify *āp kaiso ho?* as a polite wellbeing question | none; sound and meaning only |
+| S42 | `MW-C06-question` | read **आप कैसो हो?** from known signs | delayed copy of the question |
+| S43 | `MW-C06-hear-answer` | identify *hū̃ ṭhīk hū̃* as I am fine | none; sound and meaning only |
+| S44 | `MW-W06-uu-matra` | add **ू** to known **ह** | observe, trace, copy one vowel mark |
+| S45 | `MW-W06-ttha` | distinguish retroflex **ठ** from dental **थ** | observe, trace, copy one consonant |
+| S46 | `MW-C06-answer` | assemble **हूं | ठीक | हूं** | delayed copy of the answer |
+| S47 | `MW-C06-practice` | ask and answer about wellbeing in four separate skills | answer dictation plus spoken question |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

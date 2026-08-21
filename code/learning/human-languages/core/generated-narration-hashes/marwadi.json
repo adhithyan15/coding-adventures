@@ -120,6 +120,39 @@
       "json": "marwadi/narration/ch06.json",
       "textHash": "fnv1a64:2b329b7f39bbf9bb",
       "jsonHash": "fnv1a64:7e496b4ebee71aaf"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:83bef818d89813aa",
+      "lessonIds": [
+        "MW-C06-hear-question",
+        "MW-C06-question"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch07.txt",
+      "json": "marwadi/narration/ch07.json",
+      "textHash": "fnv1a64:a6b0626462b7a1a2",
+      "jsonHash": "fnv1a64:6dcb82878540b25a"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:662213f5ad3a5b77",
+      "lessonIds": [
+        "MW-C06-hear-answer",
+        "MW-W06-uu-matra",
+        "MW-W06-ttha",
+        "MW-C06-answer",
+        "MW-C06-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch08.txt",
+      "json": "marwadi/narration/ch08.json",
+      "textHash": "fnv1a64:fbe7aee098259530",
+      "jsonHash": "fnv1a64:51aebbc82dca9e75"
     }
   ],
   "findings": []

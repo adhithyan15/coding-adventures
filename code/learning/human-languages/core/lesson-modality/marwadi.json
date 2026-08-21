@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:016f79a807123102",
+  "sourceHash": "fnv1a64:a6103c888d014026",
   "summary": {
-    "totalLessons": 40,
-    "voice": 18,
-    "sight": 0,
-    "pen": 22,
-    "drivableLessons": 18,
+    "totalLessons": 47,
+    "voice": 21,
+    "sight": 2,
+    "pen": 24,
+    "drivableLessons": 21,
     "drivablePercent": 45,
     "trackCount": 1,
-    "chapterCount": 6,
-    "drivablePrefixTotal": 3,
+    "chapterCount": 8,
+    "drivablePrefixTotal": 5,
     "fullyDrivableChapters": 0,
     "unstartableChapters": 3,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "marwadi",
-      "lessonCount": 40,
-      "voice": 18,
-      "sight": 0,
-      "pen": 22,
+      "lessonCount": 47,
+      "voice": 21,
+      "sight": 2,
+      "pen": 24,
       "drivablePercent": 45,
-      "drivablePrefixTotal": 3,
+      "drivablePrefixTotal": 5,
       "modalities": [
         "voice",
         "sight",
@@ -138,6 +138,41 @@
           "drivable": false,
           "drivableLessonIds": [
             "MW-C05-hear-tharo"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "MW-C06-question",
+          "drivable": false,
+          "drivableLessonIds": [
+            "MW-C06-hear-question"
+          ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 5,
+          "voice": 2,
+          "sight": 1,
+          "pen": 2,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "MW-W06-uu-matra",
+          "drivable": false,
+          "drivableLessonIds": [
+            "MW-C06-hear-answer"
           ]
         }
       ]
@@ -996,6 +1031,148 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:9c47f3942c50897f"
+    },
+    {
+      "id": "MW-C06-hear-question",
+      "language": "marwadi",
+      "chapter": 7,
+      "sequence": 410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d7af2be142c8d046"
+    },
+    {
+      "id": "MW-C06-question",
+      "language": "marwadi",
+      "chapter": 7,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bf295d3bc8fa0fd7",
+      "detachableSegments": [
+        "Script — three known groups"
+      ]
+    },
+    {
+      "id": "MW-C06-hear-answer",
+      "language": "marwadi",
+      "chapter": 8,
+      "sequence": 430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a926370a2742eae6"
+    },
+    {
+      "id": "MW-W06-uu-matra",
+      "language": "marwadi",
+      "chapter": 8,
+      "sequence": 440,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5f227ede862c08b7",
+      "detachableSegments": [
+        "Script — one vowel mark"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-W06-ttha",
+      "language": "marwadi",
+      "chapter": 8,
+      "sequence": 450,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:10746a44f9d36211",
+      "detachableSegments": [
+        "Script — one consonant"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-C06-answer",
+      "language": "marwadi",
+      "chapter": 8,
+      "sequence": 460,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6df3a77f362e3fb2",
+      "detachableSegments": [
+        "Script — build three heard groups"
+      ]
+    },
+    {
+      "id": "MW-C06-practice",
+      "language": "marwadi",
+      "chapter": 8,
+      "sequence": 470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:920fdc110ecb88f1"
     }
   ],
   "findings": []

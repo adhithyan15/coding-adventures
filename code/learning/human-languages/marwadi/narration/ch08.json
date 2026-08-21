@@ -1,0 +1,548 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 8,
+  "title": "Thik Hoon: Answer in Two New Signs",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:662213f5ad3a5b77",
+  "lessons": [
+    {
+      "id": "MW-C06-hear-answer",
+      "sequence": 430,
+      "title": "Hear hū̃ ṭhīk hū̃ — I am fine",
+      "headword": "hū̃ ṭhīk hū̃",
+      "romanization": "hū̃ ṭhīk hū̃",
+      "gloss": "I am fine",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:a926370a2742eae6",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write independent ई, say that mhāro means my, then ask āp kaiso ho? once from memory. Keep the page closed."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "hū̃ ṭhīk hū̃ — I am fine."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear three groups: hū̃ | ṭhīk | hū̃. The first and last groups match. Hold the ū and let the ending nasal colour it; do not add a separate final syllable. The middle begins with a curled-back, breathed ṭh. Say the line once. Its two unfamiliar written shapes come later."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear the question, then answer hū̃ ṭhīk hū̃. Switch roles once. Keep this an ear-and-voice exercise."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the answer once without looking at any spelling."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 2."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C06-hear-answer-meaning",
+              "prompt": "You hear hū̃ ṭhīk hū̃. What does the speaker report?",
+              "assesses": [
+                "MW-ANSWER-WELLBEING-HEARD-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "i am fine.",
+                "i am well",
+                "i'm fine",
+                "i'm well"
+              ],
+              "feedback": {
+                "correct": "Right: the speaker says they are fine.",
+                "incorrect": "The answer means I am fine."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W06-uu-matra",
+      "sequence": 440,
+      "title": "ू (ū) — hold the vowel below a known sign",
+      "headword": "ू",
+      "romanization": "ū",
+      "gloss": "the dependent long-u vowel sign",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5f227ede862c08b7",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one vowel mark"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one vowel mark until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write कांई, then write म्हारो and point to the virāma. Say hū̃ ṭhīk hū̃, then write known ह once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one vowel mark",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ू (ū)."
+            },
+            {
+              "kind": "speech",
+              "text": "This is the dependent long-ū sign. It hangs below and to the right of a consonant. Add it to known ह: ह + ू = हू. Hold the vowel for one beat longer than a short u."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ू visible. Finger-trace the mark once, copy it once, then add it to ह twice. Say hū after the hand stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model and write हू once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W06-uu-matra-build",
+              "prompt": "Which vowel sign turns ह into हू?",
+              "assesses": [
+                "MW-SCRIPT-UU-MATRA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ू",
+                "long u matra",
+                "long ū sign"
+              ],
+              "feedback": {
+                "correct": "Right: ू hangs below to make हू.",
+                "incorrect": "Use the dependent long-ū sign: ू."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W06-ttha",
+      "sequence": 450,
+      "title": "ठ (ṭha) — curl back, then release breath",
+      "headword": "ठ",
+      "romanization": "ṭha",
+      "gloss": "the aspirated retroflex consonant ttha",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:10746a44f9d36211",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — one consonant"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — one consonant until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write रो and point to ो. Write हू, then say the middle sound group ṭhīk without spelling it."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one consonant",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ठ (ṭha)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ठ as ṭha. Curl the tongue tip back, release it, and let a small breath follow. Keep it distinct from dental थ, which your hand already knows."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ठ visible. Finger-trace once, copy once, then alternate ठ | थ while saying ṭha | tha."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model and write ठ (ṭha) once."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W06-ttha-read",
+              "prompt": "Read the new curled-back, breathed sign ठ (ṭha).",
+              "assesses": [
+                "MW-SCRIPT-TTHA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ṭha",
+                "ttha",
+                "ठ"
+              ],
+              "feedback": {
+                "correct": "Right: ठ is retroflex ṭha.",
+                "incorrect": "Curl the tongue back and release breath: ṭha."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C06-answer",
+      "sequence": 460,
+      "title": "हूं ठीक हूं. (hū̃ ṭhīk hū̃.) — two new signs complete the answer",
+      "headword": "हूं ठीक हूं.",
+      "romanization": "hū̃ ṭhīk hū̃.",
+      "gloss": "I am fine.",
+      "script": "devanagari",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:6df3a77f362e3fb2",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — build three heard groups"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — build three heard groups until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write म्हारो from memory. Say hū̃ ṭhīk hū̃, write ू, and write ठ (ṭha)."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — build three heard groups",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हूं | ठीक | हूं."
+            },
+            {
+              "kind": "speech",
+              "text": "Build हूं as ह + ू (ū) + ं. Build ठीक as ठ (ṭha) + ी + क. Every sign except the two from the last lessons was already secure. The repeated first and last group make the line easier to hold in memory."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read हूं | ठीक | हूं once."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover it for ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "Write all three groups, then say the answer."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the answer once from your own handwriting."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Marwari Pathshala, Lesson 2."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C06-answer-write",
+              "prompt": "From the sound hū̃ ṭhīk hū̃, write I am fine.",
+              "assesses": [
+                "MW-SCRIPT-HOON-01",
+                "MW-SCRIPT-THIK-01",
+                "MW-ANSWER-WELLBEING-01"
+              ],
+              "responseSeconds": 20,
+              "acceptedResponses": [
+                "हूं ठीक हूं.",
+                "हूं ठीक हूं",
+                "हूं ठीक हूं।"
+              ],
+              "feedback": {
+                "correct": "The repeated हूं holds the answer together.",
+                "incorrect": "Rebuild three groups: हूं | ठीक | हूं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C06-practice",
+      "sequence": 470,
+      "title": "Practice — ask how someone is and answer",
+      "headword": "आप कैसो हो? — हूं ठीक हूं.",
+      "romanization": "āp kaiso ho? — hū̃ ṭhīk hū̃.",
+      "gloss": "How are you? I am fine.",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:920fdc110ecb88f1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Ask and answer one name. Then change the topic: ask how the other person is."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "आप कैसो हो? हूं ठीक हूं. (hū̃ ṭhīk hū̃.)"
+            },
+            {
+              "kind": "speech",
+              "text": "The first line is polite/formal. The reply reports being fine. Other regions and relationships may choose another pronoun or question form; this chapter assesses the source-attested pair it has taught."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: hear one line and identify question or answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: hear the question and answer without notes."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: match the printed question to its answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: hear the answer, wait ten seconds, and write it with no model."
+            },
+            {
+              "kind": "speech",
+              "text": "Score all four separately. A correct reading does not replace missing writing; a correct written line does not replace the spoken reply."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one accurate exchange. Speed can wait."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Marwari Pathshala, Lesson 2 and SIL International, Marwari–English Dictionary archive."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C06-practice-wellbeing",
+              "prompt": "From sound alone, write I am fine, then ask the polite wellbeing question aloud.",
+              "assesses": [
+                "MW-SCRIPT-WELLBEING-QUESTION-01",
+                "MW-SCRIPT-HOON-01",
+                "MW-SCRIPT-THIK-01",
+                "MW-ANSWER-WELLBEING-01",
+                "MW-DIALOGUE-WELLBEING-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "हूं ठीक हूं. — आप कैसो हो?",
+                "हूं ठीक हूं",
+                "हूं ठीक हूं।"
+              ],
+              "feedback": {
+                "correct": "Writing and speech complete the two roles.",
+                "incorrect": "Repair the written answer as हूं | ठीक | हूं, then ask आप कैसो हो? aloud."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

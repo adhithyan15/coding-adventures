@@ -41,6 +41,14 @@
       "before": [],
       "inline": ["MW-EXT-009-HEAR-MHARO", "MW-EXT-010-WRITE-MHARO", "MW-EXT-011-NAME-ANSWER", "MW-EXT-012-HEAR-THARO", "MW-EXT-013-WRITE-NAME-QUESTION", "MW-EXT-014-EXCHANGE-NAMES"],
       "after": []
+    },
+    {
+      "id": "MW-PATH-006",
+      "spine_node": "SPINE-CHECK-WELLBEING",
+      "lessons": ["MW-C06-hear-question", "MW-C06-question", "MW-C06-hear-answer", "MW-W06-uu-matra", "MW-W06-ttha", "MW-C06-answer", "MW-C06-practice"],
+      "before": [],
+      "inline": ["MW-EXT-015-HEAR-WELLBEING-QUESTION", "MW-EXT-016-WRITE-WELLBEING-QUESTION", "MW-EXT-017-BUILD-WELLBEING-ANSWER", "MW-EXT-018-WELLBEING-EXCHANGE"],
+      "after": []
     }
   ],
   "spine": {
@@ -48,7 +56,7 @@
     "SPINE-COURTESY-THANK": { "segments": ["MW-PATH-002"], "omits": ["COURTESY-THANKS-CASUAL", "COURTESY-YOUREWELCOME"], "relocates": {} },
     "SPINE-RESPOND-BASIC": { "segments": ["MW-PATH-003"], "omits": ["RESPONSE-NO", "RESPONSE-YESNO", "RESPONSE-OKAY"], "relocates": {} },
     "SPINE-EXCHANGE-NAMES": { "segments": ["MW-PATH-005"], "omits": ["PRONOUN-I", "PRONOUN-ME", "PRONOUN-YOU", "WORD-IS", "INTRO-WHATS-YOUR-NAME", "INTRO-NICE-TO-MEET-YOU"], "relocates": {} },
-    "SPINE-CHECK-WELLBEING": { "segments": [], "omits": ["QUESTION-HOW", "STATE-HOW-ARE-YOU", "WORD-GOOD", "WORD-WELL", "WORD-SOSO"], "relocates": {} },
+    "SPINE-CHECK-WELLBEING": { "segments": ["MW-PATH-006"], "omits": ["QUESTION-HOW", "WORD-GOOD", "WORD-SOSO"], "relocates": {} },
     "SPINE-POLITE-REQUEST-REPAIR": { "segments": ["MW-PATH-004"], "omits": ["COURTESY-PLEASE", "COURTESY-SORRY"], "relocates": {} },
     "SPINE-TAKE-LEAVE": { "segments": [], "omits": ["FAREWELL", "FAREWELL-CASUAL", "FAREWELL-LATER", "FAREWELL-SOON", "FAREWELL-TOMORROW", "GREETING-GOODNIGHT"], "relocates": {} },
     "SPINE-TIME-OF-DAY": { "segments": [], "omits": ["TIME-DAY", "TIME-MORNING", "TIME-AFTERNOON", "TIME-EVENING", "TIME-NIGHT", "GREETING-DAY", "GREETING-MORNING", "GREETING-AFTERNOON", "GREETING-EVENING"], "relocates": {} },
@@ -204,6 +212,42 @@
       "canDo": "I can ask what another person's name is and answer with a chosen name in listening, speaking, reading, and independent writing tasks.",
       "prerequisites": ["MW-EXT-013-WRITE-NAME-QUESTION"],
       "lessons": ["MW-C05-practice"]
+    },
+    {
+      "id": "MW-EXT-015-HEAR-WELLBEING-QUESTION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "vocabulary",
+      "canDo": "I can recognise āp kaiso ho? by ear as a polite question about wellbeing and say its three sound groups.",
+      "prerequisites": ["MW-EXT-014-EXCHANGE-NAMES"],
+      "lessons": ["MW-C06-hear-question"]
+    },
+    {
+      "id": "MW-EXT-016-WRITE-WELLBEING-QUESTION",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can read and write आप कैसो हो? by reusing only signs taught in earlier chapters.",
+      "prerequisites": ["MW-EXT-015-HEAR-WELLBEING-QUESTION"],
+      "lessons": ["MW-C06-question"]
+    },
+    {
+      "id": "MW-EXT-017-BUILD-WELLBEING-ANSWER",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can hear hū̃ ṭhīk hū̃, isolate ू and ठ, and write हूं ठीक हूं after a short delay.",
+      "prerequisites": ["MW-EXT-016-WRITE-WELLBEING-QUESTION"],
+      "lessons": ["MW-C06-hear-answer", "MW-W06-uu-matra", "MW-W06-ttha", "MW-C06-answer"]
+    },
+    {
+      "id": "MW-EXT-018-WELLBEING-EXCHANGE",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "consolidation",
+      "canDo": "I can ask how a person is and answer that I am fine in independently scored listening, speaking, reading, and writing tasks.",
+      "prerequisites": ["MW-EXT-017-BUILD-WELLBEING-ANSWER"],
+      "lessons": ["MW-C06-practice"]
     }
   ]
 }
