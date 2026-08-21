@@ -4346,6 +4346,38 @@ checks are queued, so all other parity work remains pending and auto-merge is
 disabled until the required checks are terminal acceptable and conflict status
 is clear.
 
+### Post-#12341 refresh and JVM PNG lane selection
+
+.NET PNG PR #12341 completed all 29 required checks with 23 successes and six
+expected skips. Both CI gates and the Linux, macOS, and Windows builds
+succeeded, and GitHub reported final reviewed head
+`c89a92887db8a28d3cbf84db595dab6d72013eed` clean and mergeable. After the loop
+requested squash auto-merge, GitHub merged that head as
+`d58c4ee7ff81f6edccfcdb30d95d499007f17363` at 2026-08-21T01:37:45Z and
+deleted the source branch.
+
+The refreshed collision-checked schema-3 inventory at exact live main
+`4f15cd2aee15562bff204076608205b5d32f2c80` contains 15 established lanes,
+1,368 canonical identities, and 4,555 implementation slots. High-consensus
+coverage remains 174 packages with 271 gaps; the 2-4 band contains 167
+packages with 2,098 gaps; 905 singletons have 12,670 gaps, including 716 Rust
+singletons. Canonical collisions and unknown language buckets remain zero.
+The only new package roots since the prior inventory are the reviewed C# and
+F# PNG implementations, while later human-language commits modify existing
+roots only, so no new classification owner is required.
+
+The JVM PNG child is selected because it closes the only remaining two-slot
+PNG gap, Java and Kotlin, with one installed JDK 21 toolchain. Both lanes
+already provide passing PixelContainer and ZIP-owned raw RFC 1951,
+counted-inflate, and CRC-32 dependencies, BUILD and BUILD_windows front doors,
+and empty ZIP capability profiles; cached Gradle 8.11.1 runs all four
+prerequisite suites. The bounded tranche adds independent native IC18 packages
+in Java and Kotlin, complete 85-case public fixture consumers, direct resource
+and precedence tests, Gradle metadata, documentation, changelogs, cross-host
+BUILD front doors, and empty capability manifests. It does not change IC18,
+the neutral fixture, adapters, or any unrelated lane. The remaining
+single-slot PNG children and the Go paint reconciliation stay pending.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
