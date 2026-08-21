@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — cited Gujarati ળ ductus (HL-C09GT)
+
+- Replace Gujarati **ળ**'s conventional metadata with a cited one-run variant.
+- Show its left bowl flowing through the high arch into the tall right spine.
+
+## Unreleased — cited Gujarati લ ductus (HL-C09GS)
+
+- Replace Gujarati **લ**'s conventional metadata with a cited three-run variant.
+- Show its rounded body before the lifted shoulder and tall right spine.
+
 ## Unreleased — cited Gujarati ર ductus (HL-C09GR)
 
 - Replace Gujarati **ર**'s conventional metadata with a cited one-run variant.

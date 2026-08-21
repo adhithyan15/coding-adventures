@@ -1,0 +1,332 @@
+{
+  "version": 1,
+  "language": "french",
+  "level": "pre-A1",
+  "target": {
+    "name": "DILF A1.1",
+    "basis": "external"
+  },
+  "sources": [
+    {
+      "id": "fei-dilf-overview",
+      "title": "DILF",
+      "url": "https://www.france-education-international.fr/diplome/dilf?langue=en",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "fei-dilf-examples",
+      "title": "Exemples de sujets - DILF",
+      "url": "https://www.france-education-international.fr/diplome/dilf/exemples-sujets",
+      "published": "not stated",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 65,
+    "speakingMinutes": 10,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": null,
+    "deliveryModes": [
+      "paper and recorded audio at an approved examination centre",
+      "individual live speaking with assessors"
+    ]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 50,
+    "requiresEverySectionAttempted": false,
+    "independentSkillThresholds": {
+      "reading": null,
+      "listening": null,
+      "writing": null,
+      "speaking": null
+    },
+    "note": "France Education international requires at least 50/100 overall and at least 35/70 across the two oral tests together. It does not publish an independent floor for each of the four skills. Null thresholds preserve that boundary; the curriculum's separate two-mock readiness rule remains stricter at 60% per skill."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 25,
+      "parts": [
+        {
+          "id": "reading-understand-information",
+          "promptModes": ["written text", "image when supplied"],
+          "promptGenres": ["very short practical information"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "stimulus length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "reading-understand-simple-instructions",
+          "promptModes": ["written text", "image when supplied"],
+          "promptGenres": ["simple practical instruction"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "stimulus length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "reading-understand-basic-details",
+          "promptModes": ["written text", "image when supplied"],
+          "promptGenres": ["basic personal or practical details"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "stimulus length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "reading-understand-numerical-information",
+          "promptModes": ["written text", "image when supplied"],
+          "promptGenres": ["price", "date", "telephone number", "other numerical information"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "stimulus length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "reading-identify-text-purpose",
+          "promptModes": ["written text", "image when supplied"],
+          "promptGenres": ["simple everyday text with a practical purpose"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "stimulus length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 25,
+      "parts": [
+        {
+          "id": "listening-public-announcement",
+          "promptModes": ["recorded audio", "exam booklet", "image when supplied"],
+          "promptGenres": ["simple public announcement"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "clip duration", "speech rate", "response length", "replay count", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "listening-direction-and-instruction",
+          "promptModes": ["recorded audio", "exam booklet", "image when supplied"],
+          "promptGenres": ["simple direction", "simple practical instruction"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "clip duration", "speech rate", "response length", "replay count", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "listening-numerical-information",
+          "promptModes": ["recorded audio", "exam booklet", "image when supplied"],
+          "promptGenres": ["price", "date", "telephone number", "other numerical information"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "clip duration", "speech rate", "response length", "replay count", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "listening-time-information",
+          "promptModes": ["recorded audio", "exam booklet", "image when supplied"],
+          "promptGenres": ["time and schedule information"],
+          "responseModes": ["selected response", "matching", "short written response"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official answer-key match"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "clip duration", "speech rate", "response length", "replay count", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 15,
+      "parts": [
+        {
+          "id": "writing-copy-contact-detail",
+          "promptModes": ["written model in exam booklet"],
+          "promptGenres": ["address", "telephone number"],
+          "responseModes": ["handwritten copy"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-writing grid or answer key"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "model length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "writing-record-number-price-date",
+          "promptModes": ["exam booklet and supervisor instructions"],
+          "promptGenres": ["number", "price", "date"],
+          "responseModes": ["handwritten numerical information"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-writing grid or answer key"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["item count", "prompt mode within the live form", "stimulus length", "response length", "replay count", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "writing-complete-form",
+          "promptModes": ["written form in exam booklet"],
+          "promptGenres": ["simple practical form"],
+          "responseModes": ["handwritten form completion"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-writing grid"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["field count", "form length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "writing-leave-simple-message",
+          "promptModes": ["written situation and instruction in exam booklet"],
+          "promptGenres": ["simple practical or personal message"],
+          "responseModes": ["independent handwritten message"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-writing grid"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["prompt length", "response length", "part-level point allocation", "replay is not applicable to written input"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "speaking-price-transaction",
+          "promptModes": ["live assessor", "visual material when supplied"],
+          "promptGenres": ["ask for and give a price"],
+          "responseModes": ["short spoken transaction"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-speaking grid"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["turn count", "prompt length", "response length", "repetition policy", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "speaking-present-person-or-place",
+          "promptModes": ["live assessor", "visual material when supplied"],
+          "promptGenres": ["introduce people", "describe a place"],
+          "responseModes": ["short spoken presentation or description"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-speaking grid"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["turn count", "prompt length", "response length", "repetition policy", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "speaking-express-need-or-request-information",
+          "promptModes": ["live assessor", "visual material when supplied"],
+          "promptGenres": ["express a need", "make an appointment", "request information"],
+          "responseModes": ["short spoken request and interaction"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-speaking grid"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["turn count", "prompt length", "response length", "repetition policy", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        },
+        {
+          "id": "speaking-describe-health-problem",
+          "promptModes": ["live assessor", "visual material when supplied"],
+          "promptGenres": ["describe the nature of a health problem"],
+          "responseModes": ["short spoken description and interaction"],
+          "items": null,
+          "stimulusLength": null,
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": null, "criteria": ["official production-speaking grid"] },
+          "aids": { "allowed": [], "forbidden": [], "notPublished": ["complete aid policy"] },
+          "notPublished": ["turn count", "prompt length", "response length", "repetition policy", "part-level point allocation"],
+          "sourceIds": ["fei-dilf-overview", "fei-dilf-examples"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}

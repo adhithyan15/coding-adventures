@@ -1667,6 +1667,12 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 2,
+      "output": "marwadi/book/chapters/ch02-aabhaar.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
