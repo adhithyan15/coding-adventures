@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Pin the canonical and Windows BUILD environments to Python 3.13 so the
+  heap, Huffman Tree, and LZSS prerequisite closure is standalone-clean.
+
 ## 0.1.0 — 2026-04-12
 
 ### Added

@@ -7,7 +7,7 @@
       "chapter": 1,
       "title": "Greetings",
       "label": "ch:greetings",
-      "canDo": "I can greet someone in Gujarati, recognize the reply, and choose an appropriate response.",
+      "canDo": "I can greet someone in Gujarati, recognize the reply, choose an appropriate response, and write હા from a heard cue after learning its two pieces.",
       "spineNodes": [
         "SPINE-MEET-GREET",
         "SPINE-COURTESY-THANK",
@@ -17,14 +17,16 @@
       "payoff": {
         "lesson": "GU-C01-practice",
         "kind": "task",
-        "summary": "Complete GU-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Gujarati, recognize the reply, and choose an appropriate response.",
+        "summary": "Complete GU-C01-practice, greet someone in Gujarati, choose an appropriate response, and retrieve હા in writing from sound with no visible model.",
         "assesses": [
           "GU-CONCEPT-C01-AABHAAR-01",
           "GU-CONCEPT-C01-AAVJO-01",
           "GU-CONCEPT-C01-HAANAA-01",
           "GU-CONCEPT-C01-NAMASTE-01",
           "GU-CONCEPT-C01-PRACTICE-01",
-          "GU-CONCEPT-C01-SAARUN-01"
+          "GU-CONCEPT-C01-SAARUN-01",
+          "GU-SCRIPT-HA-01",
+          "GU-SCRIPT-AA-MATRA-01"
         ]
       }
     },
@@ -324,9 +326,9 @@
     },
     {
       "chapter": 13,
-      "title": "The Headless Script, One Piece at a Time",
+      "title": "The Headless Script, Piece by Piece",
       "label": "ch:gu-script-first",
-      "canDo": "I can write nine Gujarati pieces from memory — four consonants, two vowel signs, an independent vowel and the virama — and read the words for yes, no and the greeting by assembling them from those pieces rather than recalling the words whole.",
+      "canDo": "Building on હ and ા from Chapter 1, I can write all nine Gujarati pieces from memory and read no and the greeting by assembling them rather than recalling the words whole.",
       "spineNodes": [
         "SPINE-RESPOND-BASIC",
         "SPINE-MEET-GREET"
@@ -337,6 +339,8 @@
         "summary": "The greeting assembled from six pieces the reader can each write from memory, including the conjunct, and introducing nothing new at all.",
         "assesses": [
           "GU-SCRIPT-NAMASTE-READ-01",
+          "GU-SCRIPT-HA-01",
+          "GU-SCRIPT-AA-MATRA-01",
           "GU-SCRIPT-NA-01",
           "GU-SCRIPT-MA-01",
           "GU-SCRIPT-SA-01",

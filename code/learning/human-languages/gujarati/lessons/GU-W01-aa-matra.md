@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-W01-aa-matra
 spine_node: SPINE-MEET-GREET
-sequence: 710
+sequence: 42
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: ા
 romanization: "-ā"
@@ -14,7 +14,7 @@ sounds: []
 roots: []
 etymology_hook: "Gujarati is Devanagari with the head-line erased; the letters float free, which is the one difference visible at a glance."
 duration:
-  max_seconds: 200
+  max_seconds: 180
 requires:
   knowledge: [GU-SCRIPT-HA-01]
 introduces:
@@ -60,14 +60,17 @@ Take the measure of that. You learned one consonant and one mark, and a word you
 already knew how to say became a word you can **read**. Nothing was memorised as a
 picture.
 
-## Guided Practice
+## Writing — notice and trace one vowel sign
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: ા]
-- [YOU READ: every piece this chapter has given you so far, in order]
+Keep **ા** visible beside **હ**. Finger-trace the vowel sign once, then point to
+where it attaches on the consonant. Read **હા** as *hā*. You are not copying the
+whole word yet; today is only the second piece.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01] -->
+<!-- hl-activity: {"id":"GU-W01-aa-matra-observe-check","kind":"text","assesses":["GU-SCRIPT-HA-01","GU-SCRIPT-AA-MATRA-01"],"prompt":"Trace the visible long-aa sign once, attach it to હ with your finger, and read the result.","answer":"હ + ા = હા, hā","accepted":["હા","hā","ha"],"feedback":{"correct":"Yes: the attached ા replaces inherent a, giving હા hā.","incorrect":"Keep both pieces visible: હ plus attached ા makes હા."},"response_seconds":15} -->
 
 [PAUSE 3s] What does a mātrā do to the inherent vowel? (**Replaces** it.) What word did
 those two pieces make? (**હા** — *hā*, "yes".)
