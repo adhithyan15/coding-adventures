@@ -11,9 +11,9 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12334,
+  "active_pr": null,
   "last_inventory": {
-    "revision": "377e5add479229badcab758ee166d43edda782e7",
+    "revision": "7d640e6f77fa4b8905890dfc202cab485858fefb",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
@@ -3964,24 +3964,29 @@
     {
       "id": "image-codec-png-apng-neutral-rejection-conformance",
       "title": "Close APNG refusal in the IC18 neutral PNG contract",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-go-lane-parity"],
       "branch": "codex/png-apng-neutral-rejection",
       "pr_number": 12334,
       "selection_revision": "cbce24c513e02c4a3d41e3b1ca731240bbddd5a4",
       "selection_notes": "Selected immediately after Go PNG PR #12324 completed all 30 checks and merged through the GitHub auto-merge path. The collision-checked schema-3 inventory at exact merge main cbce24c513 remains 15 established lanes and 1,368 identities while advancing exactly one established Go slot to 4,553, with zero collisions and zero unknown buckets. The ready frontier contains this neutral APNG correction and the newly unblocked Go paint adapter reconciliation. This item is the dependency-critical choice because it repairs IC18, the TypeScript oracle, the Go consumer, and the deterministic shared corpus once, then unlocks all eleven not-yet-started PNG lane children; the paint adapter unlocks no lane child and remains pending. The bounded tranche adds valid-CRC acTL, fcTL, and fdAT rejection vectors using the existing unsupported-feature taxonomy, pins their independent validation and corpus summaries, updates both current public consumers plus tests/docs, and does not start another implementation lane.",
       "implementation_revision": "c5c5d81b3ddc08591f44d9aaad8d0031273c14a3",
+      "final_review_revision": "e8b61f8a108fcf42c07864aa10a637b401bfb781",
+      "merged_at": "2026-08-20T23:35:27Z",
+      "merge_revision": "7d640e6f77fa4b8905890dfc202cab485858fefb",
       "validation_notes": "The neutral corpus grows deterministically from 82 to 85 cases while retaining its schema version and ordered 29-error taxonomy. Three new independently parsed vectors prove valid framing and CRCs for acTL, fcTL, and fdAT and require unsupported-feature; the generator check and all nine fixture-validator tests pass. Before the TypeScript source change, the expanded portable suite failed exactly those three cases, proving the new vectors load-bearing. After the smallest named-chunk rejection was added behind existing type, CRC, and first-IHDR checks, all 145 TypeScript tests pass with 100% statement, branch, function, and line coverage; TypeScript build, literal BUILD, npm development and production audits, and the corrupt-APNG-CRC precedence regression pass. Go production already rejected all three names; its updated 85-case public-surface consumer passes race tests at 99.0% statement coverage plus vet, trimpath build, module verification/tidy, and formatting. A freshly compiled repository build tool discovers 4,973 packages and selects exactly eight affected nodes: TypeScript and Go image-codec-png plus their pixel-container, ZIP, and LZSS prerequisites. The Linux, Darwin, and Windows plans contain the same eight nodes, and the real Windows plan builds all eight with 4,965 unrelated packages skipped. Seven capability-taxonomy tests, ten parity-reporter tests, Ruff, format, strict MyPy, Bandit, strict JSON, the 412-item dependency DAG, diff checks, and production authority/credential scans pass. The post-rebase schema-3 inventory at exact origin/main 377e5add47 has 15 lanes, 1,368 identities, 4,553 slots, 716 Rust singletons, zero collisions, and zero unknown buckets; the intervening Gujarati and Italian curriculum commits add no package root or overlap.",
-      "publication_notes": "Opened ready-for-review PR #12334 from clean validated head e7bcb9026ef107d6409e1bb35502dfd290e0de7e after a normal first push from exact origin/main 377e5add479229badcab758ee166d43edda782e7. Three independent final audits found no code, security, build, CI-portability, classification, or ownership blocker. The live audit covered all 15 open PRs and 22 no-PR remote branches with zero exact diff overlap, confirmed no other active parity PR, and found no new package root. GitHub initially reported the new PR open and non-draft with seven CI checks queued; mergeability was still calculating, so auto-merge remains disabled until every required check is terminal acceptable and GitHub reports no conflict.",
+      "publication_notes": "Opened ready-for-review PR #12334 from clean validated head e7bcb9026ef107d6409e1bb35502dfd290e0de7e after a normal first push from exact origin/main 377e5add479229badcab758ee166d43edda782e7. Three independent final audits found no code, security, build, CI-portability, classification, or ownership blocker. The live audit covered all 15 open PRs and 22 no-PR remote branches with zero exact diff overlap, confirmed no other active parity PR, and found no new package root. All 30 final-head checks reached terminal acceptable conclusions with 25 successes, four expected skips, and one neutral CodeQL result; both CI gates and Linux, macOS, and Windows builds succeeded, and GitHub reported the branch clean and mergeable. After the loop requested squash auto-merge, GitHub immediately merged final reviewed head e8b61f8a108fcf42c07864aa10a637b401bfb781 as 7d640e6f77fa4b8905890dfc202cab485858fefb at 2026-08-20T23:35:27Z and deleted the source branch; the public timeline does not independently expose an AutoMergeEnabledEvent.",
       "notes": "Discovered during the Go PNG child security audit. IC18 says APNG is refused, but the merged TypeScript reference and 82-case neutral corpus treat acTL, fcTL, and fdAT as skippable ancillary chunks. Add valid-CRC neutral rejection vectors, make the TypeScript oracle reject all three as unsupported-feature, and update the corpus summary pins before the remaining lane ports start. The already-selected Go child carries a focused direct regression and explicit refusal so it does not reproduce the ambiguity."
     },
     {
       "id": "image-codec-png-dotnet-lane-parity",
       "title": "Port IC18 image-codec-png to C# and F#",
-      "status": "pending",
+      "status": "in-progress",
       "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
-      "branch": null,
+      "branch": "codex/image-codec-png-dotnet-lane-parity",
       "pr_number": null,
+      "selection_revision": "7d640e6f77fa4b8905890dfc202cab485858fefb",
+      "selection_notes": "Selected immediately after APNG correction PR #12334 completed all 30 checks and merged, unlocking every remaining PNG lane child. The collision-checked schema-3 inventory at exact merge main 7d640e6f77 remains 15 established lanes, 1,368 identities, and 4,553 slots with zero collisions and zero unknown buckets; five intervening commits added no package root. This .NET tranche is the highest-leverage ready child because one installed .NET 9 toolchain closes two established implementation slots, while both C# and F# already have tested pure PixelContainer and ZIP raw RFC 1951/CRC prerequisites with cross-platform BUILD front doors. The bounded work adds native C# and F# IC18 implementations, complete 85-case public fixture consumers, direct resource and precedence tests, docs, changelogs, project metadata, BUILD/BUILD_windows, and empty capabilities without changing IC18, the neutral corpus, adapters, or unrelated lanes.",
       "notes": "Toolchain-shaped .NET child. Consume the neutral PNG corpus and the established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
     },
     {

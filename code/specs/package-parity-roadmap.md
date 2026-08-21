@@ -4278,6 +4278,35 @@ its initial seven CI checks are queued, so all other parity work remains pending
 and auto-merge remains disabled until CI is terminal acceptable and conflict
 status is clear.
 
+### Post-#12334 refresh and .NET PNG lane selection
+
+APNG correction PR #12334 completed 30 terminal acceptable checks: 25
+successes, four expected skips, and one neutral CodeQL conclusion. Both CI
+gates and the Linux, macOS, and Windows builds succeeded, and GitHub reported
+the final reviewed head `e8b61f8a108fcf42c07864aa10a637b401bfb781`
+clean and mergeable. After the loop requested squash auto-merge, GitHub merged
+that head as `7d640e6f77fa4b8905890dfc202cab485858fefb` at
+2026-08-20T23:35:27Z and deleted the source branch. The public timeline records
+the merge but does not independently expose an auto-merge-enabled event.
+
+The exact-merge collision inventory remains at 15 established lanes, 1,368
+canonical identities, and 4,553 implementation slots, with zero collisions and
+zero unknown buckets. The five commits since the previous inventory modified
+only existing package roots, so no new or retired identity and no additional
+classification owner is required. The APNG merge makes all eleven remaining
+PNG lane children dependency-ready; the Go paint reconciliation also remains
+ready.
+
+The .NET PNG child is selected because it closes two established slots, C# and
+F#, with one installed .NET 9 toolchain. Both lanes already provide pure,
+tested PixelContainer and ZIP-owned raw RFC 1951, counted-inflate, and CRC-32
+surfaces with BUILD and BUILD_windows front doors. This tranche is bounded to
+native IC18 packages in those two lanes, complete 85-case public fixture
+consumers, focused allocation and error-precedence tests, project metadata,
+documentation, changelogs, and empty capability profiles. It does not change
+IC18, the neutral fixture, the TypeScript or Go references, paint adapters, or
+any other implementation lane.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
