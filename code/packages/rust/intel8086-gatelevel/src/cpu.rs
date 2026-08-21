@@ -82,9 +82,13 @@ pub struct Cpu8086 {
 impl Cpu8086 {
     /// Create a new CPU with zeroed registers and memory.
     pub fn new() -> Self {
+        let mem = vec![0u8; MEM_SIZE]
+            .into_boxed_slice()
+            .try_into()
+            .expect("MEM_SIZE fixes the boxed memory length");
         Cpu8086 {
             rf: RegisterFile8086::new(),
-            mem: Box::new([0u8; MEM_SIZE]),
+            mem,
             halted: false,
             input_ports: [0u8; PORT_SIZE],
             output_ports: [0u8; PORT_SIZE],

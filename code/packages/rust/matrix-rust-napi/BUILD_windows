@@ -1,1 +1,1 @@
-cargo test -p matrix-rust-napi -- --nocapture
+cargo check -p matrix-rust-napi

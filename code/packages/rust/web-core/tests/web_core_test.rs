@@ -4,7 +4,7 @@
 //! `HttpRequest` values. End-to-end tests spin up a real server on port 0.
 
 use std::collections::HashMap;
-use std::io::{BufRead, BufReader, Write};
+use std::io::{self, BufRead, BufReader, Write};
 use std::net::{SocketAddr, TcpStream};
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::{Arc, Mutex};
@@ -42,32 +42,32 @@ fn make_http_request(method: &str, target: &str) -> HttpRequest {
     }
 }
 
-fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
-    let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
-    stream.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
+fn try_http_request(port: u16, method: &str, path: &str, body: &str) -> io::Result<(u16, Vec<String>, String)> {
+    let mut stream = TcpStream::connect(("127.0.0.1", port))?;
+    stream.set_read_timeout(Some(Duration::from_secs(5)))?;
 
     let req_str = format!(
         "{method} {path} HTTP/1.1\r\nHost: localhost\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{body}",
         body.len()
     );
-    stream.write_all(req_str.as_bytes()).expect("write request");
+    stream.write_all(req_str.as_bytes())?;
 
     let mut reader = BufReader::new(&stream);
     let mut status_line = String::new();
-    reader.read_line(&mut status_line).expect("read status line");
+    reader.read_line(&mut status_line)?;
 
     let status: u16 = status_line
         .split_whitespace()
         .nth(1)
-        .expect("status code field")
+        .ok_or_else(|| io::Error::new(io::ErrorKind::InvalidData, "missing status code"))?
         .parse()
-        .expect("parse status code");
+        .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
 
     let mut content_length = 0usize;
     let mut response_headers: Vec<String> = Vec::new();
     loop {
         let mut line = String::new();
-        reader.read_line(&mut line).unwrap();
+        reader.read_line(&mut line)?;
         let trimmed = line.trim().to_string();
         if trimmed.is_empty() {
             break;
@@ -83,8 +83,27 @@ fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String
     }
 
     let mut body_buf = vec![0u8; content_length];
-    std::io::Read::read_exact(&mut reader, &mut body_buf).unwrap_or(());
-    (status, String::from_utf8_lossy(&body_buf).into_owned())
+    std::io::Read::read_exact(&mut reader, &mut body_buf)?;
+    Ok((status, response_headers, String::from_utf8_lossy(&body_buf).into_owned()))
+}
+
+fn http_request_with_headers(port: u16, method: &str, path: &str, body: &str) -> (u16, Vec<String>, String) {
+    let attempts = if cfg!(target_os = "windows") { 3 } else { 1 };
+    for attempt in 0..attempts {
+        match try_http_request(port, method, path, body) {
+            Ok(response) => return response,
+            Err(error) if cfg!(target_os = "windows")
+                && error.kind() == io::ErrorKind::ConnectionReset
+                && attempt + 1 < attempts => thread::sleep(Duration::from_millis(10)),
+            Err(error) => panic!("HTTP request failed: {error}"),
+        }
+    }
+    unreachable!("the request loop returns or panics on every attempt")
+}
+
+fn http_request(port: u16, method: &str, path: &str, body: &str) -> (u16, String) {
+    let (status, _, body) = http_request_with_headers(port, method, path, body);
+    (status, body)
 }
 
 fn http_get(port: u16, path: &str) -> (u16, String) {
@@ -442,34 +461,15 @@ fn e2e_after_handler_adds_header() {
     });
     let (port, stop) = start_server(app);
 
-    let mut stream = TcpStream::connect(("127.0.0.1", port)).expect("connect");
-    stream.set_read_timeout(Some(Duration::from_secs(5))).unwrap();
-    write!(stream, "GET /ping HTTP/1.1\r\nHost: localhost\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").unwrap();
-
-    let mut reader = BufReader::new(&stream);
-    let mut all_headers: Vec<String> = Vec::new();
-    let mut content_length = 0usize;
-    let mut first = true;
-    loop {
-        let mut line = String::new();
-        reader.read_line(&mut line).unwrap();
-        let trimmed = line.trim().to_string();
-        if first { first = false; continue; } // skip status line
-        if trimmed.is_empty() { break; }
-        if trimmed.to_ascii_lowercase().starts_with("content-length:") {
-            content_length = trimmed.split_once(':').map(|x| x.1).unwrap_or("").trim().parse().unwrap_or(0);
-        }
-        all_headers.push(trimmed);
-    }
-    let mut body_buf = vec![0u8; content_length];
-    std::io::Read::read_exact(&mut reader, &mut body_buf).unwrap_or(());
+    let (status, all_headers, body) = http_request_with_headers(port, "GET", "/ping", "");
     stop.stop();
 
+    assert_eq!(status, 200);
+    assert_eq!(body, "pong");
     assert!(
         all_headers.iter().any(|h| h.to_ascii_lowercase().starts_with("x-powered-by:")),
         "x-powered-by header missing; got: {all_headers:?}"
     );
-    assert_eq!(String::from_utf8_lossy(&body_buf), "pong");
 }
 
 #[test]
