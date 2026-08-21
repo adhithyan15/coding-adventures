@@ -7,13 +7,13 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:1c3ee9e17181a1d6",
+  "sourceHash": "fnv1a64:cd8f34429c23eeeb",
   "summary": {
     "totalLessons": 3416,
-    "voice": 2462,
-    "sight": 588,
+    "voice": 2463,
+    "sight": 587,
     "pen": 366,
-    "drivableLessons": 2462,
+    "drivableLessons": 2463,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1005,
@@ -3643,10 +3643,10 @@
     {
       "language": "italian",
       "lessonCount": 89,
-      "voice": 71,
-      "sight": 16,
+      "voice": 72,
+      "sight": 15,
       "pen": 2,
-      "drivablePercent": 80,
+      "drivablePercent": 81,
       "drivablePrefixTotal": 54,
       "modalities": [
         "voice",
@@ -3657,8 +3657,8 @@
         {
           "chapter": 1,
           "lessonCount": 10,
-          "voice": 7,
-          "sight": 1,
+          "voice": 8,
+          "sight": 0,
           "pen": 2,
           "modalities": [
             "voice",
@@ -33606,7 +33606,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8c20b66619135cdf",
+      "sourceHash": "fnv1a64:7bd946e9a0911e43",
       "detachableSegments": [
         "Writing — follow the greeting you can see"
       ]
@@ -33649,7 +33649,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:2db5c41d4c4ee96c"
+      "sourceHash": "fnv1a64:1a009286963919e4"
     },
     {
       "id": "IT-C01-il-la-lo",
@@ -33667,7 +33667,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4e47245ae0ffffe4"
+      "sourceHash": "fnv1a64:e2fe477a454e308a"
     },
     {
       "id": "IT-C01-giorno",
@@ -33703,7 +33703,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4d06591169ec14c8"
+      "sourceHash": "fnv1a64:f7d36199668fda70"
     },
     {
       "id": "IT-C01-sera",
@@ -33728,18 +33728,18 @@
       "language": "italian",
       "chapter": 1,
       "sequence": 70,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:80c32e88e71504c6"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6b3f034049e20398"
     },
     {
       "id": "IT-C01-grazie",
@@ -33757,7 +33757,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:45be76e3ae3aa5cf"
+      "sourceHash": "fnv1a64:9564370f405668b5"
     },
     {
       "id": "IT-C01-practice",
@@ -33775,7 +33775,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c887f7af7f33d4a4"
+      "sourceHash": "fnv1a64:30418fbe799afe68"
     },
     {
       "id": "IT-C02-prego",
