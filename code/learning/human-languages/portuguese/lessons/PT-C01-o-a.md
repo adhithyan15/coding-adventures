@@ -1,5 +1,6 @@
 ---
 id: PT-C01-o-a
+sequence: 30
 chapter: 1
 type: word
 headword: o / a
