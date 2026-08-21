@@ -2,6 +2,22 @@
 
 ## [Unreleased]
 
+### Added — Chapter 1 pre-A1 writing runway
+
+- Moved the existing **હ** and **ા** piece lessons from the late script chapter
+  into Chapter 1, immediately after spoken **હા / ના**. Each piece is traced
+  with the model visible before the whole word is written.
+- Added three bounded whole-word micro-lessons: one 90-second guided copy, one
+  120-second delayed copy, and one 120-second heard-word dictation. The chapter
+  payoff retrieves **હા** again without a visible model.
+- Gujarati now proves all four cumulative pre-A1 writing stages: observe/trace,
+  guided copy, delayed copy, and dictation/transcription. The track's writing
+  gap falls by 28 cumulative track-level-stage pairs without claiming mock or
+  exam readiness.
+- Moving the two script atoms forward and retrieving them repeatedly improves
+  the wider continuity-window debt by three. The three new whole-word steps
+  introduce no atoms; their job is deliberate practice, not disguised content.
+
 ### Added — project-defined pre-A1 four-skill task shapes (HL18)
 
 - Made the pre-A1 target executable as reading, listening, writing, and

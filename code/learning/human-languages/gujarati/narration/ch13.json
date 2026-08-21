@@ -2,264 +2,10 @@
   "version": 1,
   "language": "gujarati",
   "chapter": 13,
-  "title": "The Headless Script, One Piece at a Time",
+  "title": "The Headless Script, Piece by Piece",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:da47e3b137301490",
+  "sourceHash": "fnv1a64:c8aff7352808a4fa",
   "lessons": [
-    {
-      "id": "GU-W01-ha",
-      "sequence": 700,
-      "title": "હ — the consonant ha",
-      "headword": "હ",
-      "romanization": "ha",
-      "gloss": "the consonant ha — and the vowel you get for free with it",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:be2667df3c22b2c1",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing is assumed but the words you can already say. This chapter turns them into words you can read."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Gujarati is written with an abugida, and that word is doing a lot of work. It is not an alphabet, where each letter is one sound. It is a system where a consonant already carries a vowel, and you only write a vowel when you want a different one."
-            },
-            {
-              "kind": "speech",
-              "text": "Here is the first consonant:"
-            },
-            {
-              "kind": "speech",
-              "text": "હ (ha)."
-            },
-            {
-              "kind": "speech",
-              "text": "That is not h. It is ha — the consonant h with an a already inside it, the a of English about. Nobody wrote that vowel. It is there because a bare consonant in this script is understood to carry it, and this is called the inherent vowel."
-            },
-            {
-              "kind": "speech",
-              "text": "Look at the shape while you say it. Notice what is not there: no line across the top. Gujarati is Devanagari's sister and the two share most of their skeleton, but Devanagari hangs its letters from a horizontal bar and Gujarati has erased it. The letters float. That single missing line is how you tell the two scripts apart at a glance, and it is why Gujarati is sometimes called the headless script."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "હ (ha)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: હ]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What vowel does a bare consonant carry? (a — the inherent vowel, unwritten.) And what is the one visible difference from Devanagari? (No line across the top.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "GU-W01-aa-matra",
-      "sequence": 710,
-      "title": "ા (-ā) — the vowel sign that replaces the inherent a",
-      "headword": "ા",
-      "romanization": "-ā",
-      "gloss": "the vowel sign that replaces the inherent a — and your first readable word",
-      "script": "gujarati",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:69c52c248b41e2d4",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the piece from the previous lesson before adding another."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The inherent a is a default. To get a different vowel you replace it, and you replace it with a mark called a mātrā."
-            },
-            {
-              "kind": "speech",
-              "text": "Here is the first one:"
-            },
-            {
-              "kind": "speech",
-              "text": "ા (-ā)."
-            },
-            {
-              "kind": "speech",
-              "text": "On its own it is nothing — a vertical stroke you would never write alone. It only means anything attached to a consonant, where it swaps the inherent short a for a long ā, the a of English father."
-            },
-            {
-              "kind": "speech",
-              "text": "Put it on the consonant you just learned:"
-            },
-            {
-              "kind": "speech",
-              "text": "હ (ha) + ા (-ā) becomes હા."
-            },
-            {
-              "kind": "speech",
-              "text": "hā. And that is a word — it is yes, and you have been saying it since your first lesson in this language."
-            },
-            {
-              "kind": "speech",
-              "text": "Take the measure of that. You learned one consonant and one mark, and a word you already knew how to say became a word you can read. Nothing was memorised as a picture."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ા (-ā)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ા]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What does a mātrā do to the inherent vowel? (Replaces it.) What word did those two pieces make? (હા — hā, \"yes\".)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Gujarati chart."
-            }
-          ]
-        }
-      ]
-    },
     {
       "id": "GU-W01-aa",
       "sequence": 720,
@@ -344,7 +90,7 @@
             },
             {
               "kind": "speech",
-              "text": "ા (-ā) rides on a consonant."
+              "text": "ા rides on a consonant."
             },
             {
               "kind": "speech",
@@ -390,7 +136,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા (-ā), the mātrā.) And are they the same character? (No — two separate characters for one sound.)"
+              "text": "Which of the two starts a word? (આ, the independent vowel.) Which one attaches to a consonant? (ા, the mātrā.) And are they the same character? (No — two separate characters for one sound.)"
             },
             {
               "kind": "speech",
@@ -464,7 +210,7 @@
             },
             {
               "kind": "speech",
-              "text": "ન (na) + ા (-ā) becomes ના."
+              "text": "ન (na) + ા becomes ના."
             },
             {
               "kind": "speech",
@@ -716,7 +462,7 @@
             },
             {
               "kind": "speech",
-              "text": "હ (ha) ન (na) મ (ma) સ (sa)."
+              "text": "હ ન (na) મ (ma) સ (sa)."
             },
             {
               "kind": "speech",

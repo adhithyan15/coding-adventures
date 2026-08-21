@@ -40,8 +40,11 @@ validation remain explicit backlog.
 
 ## Progress
 
-- **Chapter 1 — Greetings** ([`lessons/GU-C01-*`](./lessons/)): namaste, ābhār,
-  hā/nā, sārũ, āvjo ("come again"), practice.
+- **Chapter 1 — Greetings and the first written answer**
+  ([`lessons/GU-C01-*`](./lessons/), [`lessons/GU-W01-*`](./lessons/)):
+  namaste, ābhār, āvjo, hā/nā, then a five-step handoff from tracing **હ** and
+  **ા** separately to copying, recalling, and writing **હા** from a heard cue;
+  sārũ and a four-skill chapter payoff follow.
 - **Chapter 2 — Introducing Yourself** ([`lessons/GU-C02-*`](./lessons/)): nām,
   mārũ, chhe, "my name is…", tũ / tame, shũ, "what's your name?", ānand.
 - **Chapter 3 — How Are You** ([`lessons/GU-C03-*`](./lessons/)): kem, "tame
@@ -99,6 +102,10 @@ validation remain explicit backlog.
   nasal shows the same mark doing a completely different, non-grammatical job.
 
 Chapters 1–12 are in the book.
+
+- **Chapter 13 — The headless script, continued**: resumes after Chapter 1's
+  **હ** and **ા**, adds the remaining seven pieces one at a time, and assembles
+  **ના** and **નમસ્તે** without introducing an unseen piece in either payoff.
 
 ---
 
