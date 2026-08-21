@@ -134,6 +134,27 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
   });
 
+  it("loads the project-defined Chinese pre-A1 HSK precursor with independent handwriting", () => {
+    const inventory = loadTaskShapeInventory("chinese", "pre-A1");
+    expect(inventory.target).toEqual({
+      name: "Coding Adventures Chinese pre-A1 Assessment — project-defined HSK precursor",
+      basis: "project-defined",
+    });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    expect(inventory.sections.find((section) => section.skill === "writing")?.parts.map((part) => part.id)).toEqual([
+      "prea1-writing-delayed-character-recall",
+      "prea1-writing-dictation-and-transcription",
+      "prea1-writing-bounded-production",
+    ]);
+    expect(inventory.passRule.note).toContain("not an official HSK level");
+  });
+
   it("loads the official Spanish A1 performance target and its grouped pass rule", () => {
     const inventory = loadTaskShapeInventory("spanish", "A1");
     expect(inventory.target).toEqual({ name: "DELE A1", basis: "external" });
@@ -302,9 +323,10 @@ describe("four-skill task-shape inventories (HL18)", () => {
       { language: "marwadi", level: "pre-A1" },
       { language: "marwadi", level: "A1" },
       { language: "gujarati", level: "pre-A1" },
+      { language: "chinese", level: "pre-A1" },
     ]);
-    expect(backlog).toHaveLength(registry.languages.length * 7 - 9);
-    expect(backlog.filter((item) => item.level === "pre-A1")).toHaveLength(registry.languages.length - 3);
+    expect(backlog).toHaveLength(registry.languages.length * 7 - 10);
+    expect(backlog.filter((item) => item.level === "pre-A1")).toHaveLength(registry.languages.length - 4);
     expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 6);
     expect(backlog.some((item) => item.id === "task-shape/marwadi/pre-A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/marwadi/A1")).toBe(false);
@@ -321,6 +343,8 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(backlog.some((item) => item.id === "task-shape/german/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/arabic/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/arabic/A2")).toBe(true);
+    expect(backlog.some((item) => item.id === "task-shape/chinese/pre-A1")).toBe(false);
+    expect(backlog.some((item) => item.id === "task-shape/chinese/A1")).toBe(true);
   });
 
   it("rejects a missing skill instead of treating it as exam-ready", () => {

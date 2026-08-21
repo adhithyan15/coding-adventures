@@ -5,6 +5,18 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Added — project-defined pre-A1 four-skill task shapes (#12369)
+
+- Turned the Chinese assessment contract's pre-A1 target into bounded reading,
+  listening, writing, and speaking tasks without inventing an official HSK
+  level below HSK 3.0 Level 1.
+- Made productive handwriting independently scorable through delayed character
+  recall, dictation/transcription, and a tiny cue-only response. Tracing and
+  visible copying remain teaching steps and cannot satisfy the pass.
+- Kept every response to one doorway-sized turn and every skill independently
+  passable, so future five-minute lessons can approach the mock one atom at a
+  time rather than jumping straight to an exam-length performance.
+
 ### Added — transitional HSK 3.0 four-skill assessment contract (#12367)
 
 - Replaced the stale pre-2021 six-band mapping with a dated GF0025-2021 /

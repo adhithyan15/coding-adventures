@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "language": "chinese",
+  "level": "pre-A1",
+  "target": {
+    "name": "Coding Adventures Chinese pre-A1 Assessment — project-defined HSK precursor",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "ca-chinese-assessment",
+      "title": "Coding Adventures Chinese Assessment Specification",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/chinese/assessment-spec.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-20"
+    },
+    {
+      "id": "cti-hsk3-syllabus",
+      "title": "Chinese Tests Service Website — HSK 3.0 examination syllabus",
+      "url": "https://www.chinesetest.cn/syllabus",
+      "published": "current web edition",
+      "accessed": "2026-08-20"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 20,
+    "speakingMinutes": 5,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 1,
+    "deliveryModes": ["paper", "recorded-audio", "live-interlocutor"]
+  },
+  "passRule": {
+    "maximumPoints": 100,
+    "passPoints": 60,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is worth 25 points and must independently reach 60%; the overall floor cannot compensate for a failed skill. This project-defined runway is below HSK 3.0 Level 1 and is not an official HSK level."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 5,
+      "parts": [
+        {
+          "id": "prea1-reading-pinyin-signs-and-doorway-words",
+          "promptModes": ["written-chinese-script", "written-pinyin"],
+          "promptGenres": ["single taught character", "known word", "memorized greeting", "classroom cue"],
+          "responseModes": ["selection", "word-to-meaning match"],
+          "items": 5,
+          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 4, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 25, "criteria": ["meaning selection", "taught-character recognition", "pinyin and tone-mark recognition"] },
+          "aids": { "allowed": [], "forbidden": ["dictionary", "translation tool", "pinyin over an assessed character"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk3-syllabus"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 5,
+      "parts": [
+        {
+          "id": "prea1-listening-tones-and-doorway-turns",
+          "promptModes": ["recorded-speech"],
+          "promptGenres": ["isolated taught syllable", "greeting exchange", "yes-no response", "one-step classroom cue"],
+          "responseModes": ["selection", "picture match", "appropriate-response match"],
+          "items": 5,
+          "stimulusLength": { "unit": "seconds", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 25, "criteria": ["tone and syllable recognition", "gist recognition", "detail recognition", "appropriate response selection"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "pinyin", "dictionary", "translation tool"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment", "cti-hsk3-syllabus"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "prea1-writing-delayed-character-recall",
+          "promptModes": ["briefly-visible-written-model"],
+          "promptGenres": ["single taught Chinese character"],
+          "responseModes": ["delayed handwritten recall"],
+          "items": 1,
+          "stimulusLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 5, "criteria": ["recognizable character", "component placement", "stroke direction", "legibility"] },
+          "aids": { "allowed": ["ten-second initial model view"], "forbidden": ["visible model during response", "pinyin", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        },
+        {
+          "id": "prea1-writing-dictation-and-transcription",
+          "promptModes": ["recorded-speech"],
+          "promptGenres": ["taught syllable", "known word", "memorized greeting"],
+          "responseModes": ["handwritten pinyin transcription", "handwritten Chinese-character dictation"],
+          "items": 2,
+          "stimulusLength": { "unit": "seconds", "minimum": 1, "maximum": 5, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 4, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 10, "criteria": ["sound-to-symbol mapping", "tone-mark placement when pinyin is requested", "character retrieval when hanzi is requested", "legibility"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "copyable model", "dictionary", "translation tool"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        },
+        {
+          "id": "prea1-writing-bounded-production",
+          "promptModes": ["written-icon-supported-instruction"],
+          "promptGenres": ["personal label", "greeting choice", "yes-no response"],
+          "responseModes": ["independent handwritten character, word, or memorized chunk"],
+          "items": 2,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 5, "approximate": false },
+          "responseLength": { "unit": "items", "minimum": 1, "maximum": 6, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 10, "criteria": ["task completion", "independent retrieval", "orthographic control", "legibility"] },
+          "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["copyable answer model", "pinyin answer bank", "dictionary", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 5,
+      "parts": [
+        {
+          "id": "prea1-speaking-tone-and-doorway-exchange",
+          "promptModes": ["live-speech", "picture cue"],
+          "promptGenres": ["taught tone contrast", "greeting exchange", "one-step identity prompt", "yes-no prompt"],
+          "responseModes": ["spoken syllable", "spoken memorized chunk", "short personal response"],
+          "items": 5,
+          "stimulusLength": { "unit": "seconds", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 1, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 25, "criteria": ["task completion", "intelligibility", "tone contrast", "appropriate greeting or response"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one slow repeat request"], "forbidden": ["written answer script", "pinyin answer prompt"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-chinese-assessment"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
