@@ -4248,7 +4248,89 @@
       "pr_number": null,
       "selection_revision": "a2855409cfa8ebd5923f76a8fb1a0dce8e6ac4b6",
       "selection_notes": "Selected immediately after Python Huffman compression PR #12440 completed all 30 checks and merged through the requested auto-merge path. The refreshed schema-3 inventory at exact live main a2855409cf remains 15 established lanes, 1,368 canonical identities, and 4,561 implementation slots with zero collisions and zero unknown buckets; the sole later human-language commit modifies an existing root only. Exact repository scanning finds 17 remaining Python BUILD_windows fronts that create .venv without --clear, sixteen declaring Python >=3.12 and ls00 declaring >=3.11. A representative caesar-cipher run selects unsupported Python 3.10, fails on immediate repeat because the environment already exists, and cannot install the package. Nine fronts install local siblings, so this bounded classification owner will exercise all 17 from clean disposable copies and decompose homogeneous dependency-shaped repairs without bulk-editing them. Exhaustive live audits across 16 open PRs and 24 no-PR remotes find zero exact overlap on the 17 package surfaces, state, or roadmap; PR #12162 touches different Python BUILD fronts and remains outside this tranche.",
+      "validation_notes": "The version-1 spec and deterministic reporter classify 481 Git-visible Python package roots and the exact 17-front non-idempotent corpus. All 17 canonical and Windows venv commands omit --clear and a Python pin; sixteen packages declare Python >=3.12, ls00 declares >=3.11, nine install local siblings, all sibling orders are platform-symmetric, and the corpus has eight weak dependency components. In a disposable clean worktree at exact selection revision a2855409cf, every literal BUILD_windows front ran twice under uv 0.11.28. Sixteen generated-pattern fronts selected Python 3.10.11 and failed their first run at command two with the stable requires-python class; ls00 discovered Python 3.13.14 and completed its first run. Every unchanged second run failed command one with exit 2 and the existing-environment class. The bounded receipt contains no host paths or payload logs. Nine machine-checked dependency-shaped backfill owners cover every front exactly once, separating the ls00 legacy shape, Caesar's unsplit Windows install, the quoted data-store recipes, dependency closures, and homogeneous leaf repairs. The audit changes no package BUILD file, production dependency, capability manifest, or privileged boundary.",
       "notes": "Discovered during the post-#12420 build-contract refresh. Seventeen additional Python BUILD_windows recipes still create .venv without --clear after the heap repair and need classification against that reference. Inventory the exact first-run and repeat-run behavior, Python-version constraints, platform symmetry, dependency ordering, and downstream impact; exercise every front twice in a disposable clean copy; and record dependency-shaped backfill owners. Do not silently widen this audit into bulk package changes."
+    },
+    {
+      "id": "python-hash-functions-build-front-idempotence",
+      "title": "Make the Python hash-functions BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Backfill owner from the version-1 uv idempotence audit. Repair python/hash-functions first because it is the leaf prerequisite for bloom-filter, hash-map, hyperloglog, and the in-memory data-store closure. Pin Python 3.13, recreate .venv, invoke the named interpreter, and prove both fronts twice plus the exact downstream plan."
+    },
+    {
+      "id": "python-hash-collections-build-front-idempotence",
+      "title": "Make the Python hash-dependent collection BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-functions-build-front-idempotence"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Homogeneous generated-pattern backfill for python/bloom-filter, python/hash-map, and python/hyperloglog after the shared hash-functions prerequisite is repaired. Preserve exact sibling dependency order and validate the three fronts twice before the data-store closure."
+    },
+    {
+      "id": "python-resp-tcp-build-front-idempotence",
+      "title": "Make the Python RESP and TCP BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Dependency-shaped generated-pattern backfill for python/resp-protocol followed by python/tcp-server. Pin and recreate both environments, preserve the RESP prerequisite order, and validate the exact dependent closure on immediate repeat."
+    },
+    {
+      "id": "python-data-store-build-front-idempotence",
+      "title": "Make the Python in-memory data-store BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit", "python-hash-collections-build-front-idempotence", "python-resp-tcp-build-front-idempotence"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Backfill for python/in-memory-data-store-engine followed by python/in-memory-data-store after their hash and RESP prerequisites land. In addition to pinning and clearing .venv, reconcile the Windows-invalid quoted editable requirement while preserving the complete local sibling closure."
+    },
+    {
+      "id": "python-graph-build-front-idempotence",
+      "title": "Make the Python graph BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Dependency-shaped generated-pattern backfill for python/graph followed by python/directed-graph. Validate both canonical and Windows fronts twice and preserve the graph prerequisite order."
+    },
+    {
+      "id": "python-trie-build-front-idempotence",
+      "title": "Make the Python trie BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Dependency-shaped generated-pattern backfill for python/trie followed by python/radix-tree. Pin Python 3.13, recreate the named environment, and prove both fronts and their dependency order on immediate repeat."
+    },
+    {
+      "id": "python-caesar-cipher-build-front-idempotence",
+      "title": "Make the Python Caesar cipher BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Separate leaf backfill because python/caesar-cipher retains the older unsplit Windows development install rather than the generated no-deps plus tool-install shape. Reconcile that recipe while pinning and clearing the environment, then validate both fronts twice."
+    },
+    {
+      "id": "python-standalone-structures-build-front-idempotence",
+      "title": "Make the standalone Python structure BUILD fronts repeatable",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Homogeneous leaf backfill for python/fenwick-tree, python/skip-list, and python/tree-set. All three share the generated no-local-dependency recipe and can be validated independently twice without widening into a dependency closure."
+    },
+    {
+      "id": "python-ls00-build-front-idempotence",
+      "title": "Reconcile the legacy Python ls00 BUILD fronts",
+      "status": "pending",
+      "depends_on": ["python-uv-build-front-idempotence-audit"],
+      "branch": null,
+      "pr_number": null,
+      "notes": "Separate legacy-profile backfill for python/ls00. Its fronts omit --no-project, use pip without --python .venv, declare Python >=3.11 rather than the common >=3.12 floor, and use different dev-install/test invocation shapes, so it must not be folded into a generated-pattern patch."
     },
     {
       "id": "wasm-wast-parser-language-neutral-conformance",

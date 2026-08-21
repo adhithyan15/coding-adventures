@@ -4956,6 +4956,35 @@ Required uv 0.11.28 and Python 3.13.14 toolchains are installed. Remaining PNG
 children retain compact-output, toolchain, or live Rust ownership blockers;
 the OCaml process-free build core overlaps current build-tool owners.
 
+### Python uv BUILD-front audit implementation and validation
+
+The version-1 audit specification now defines fail-closed Git-visible corpus
+discovery, deterministic JSON and Markdown records, stable issue classes,
+ordered local dependencies, weak dependency components, and a payload-bounded
+runtime observation protocol. The reporter scans 481 Python package roots and
+classifies the exact 17 non-idempotent fronts. Every canonical and Windows venv
+command omits both `--clear` and a Python pin; sixteen packages require Python
+>=3.12, `ls00` requires >=3.11, nine install local siblings, and all sibling
+orders are platform-symmetric. The corpus forms eight weak dependency
+components. No package recipe changes in this audit.
+
+Every literal `BUILD_windows` front ran twice in one disposable clean worktree
+at selection revision `a2855409cfa8ebd5923f76a8fb1a0dce8e6ac4b6` with uv
+0.11.28. Sixteen generated-pattern fronts selected Python 3.10.11 and failed
+their first run at command two because the interpreter did not satisfy the
+package floor. `ls00`, whose venv command omits `--no-project`, discovered
+Python 3.13.14 from project context and completed its first run. Every unchanged
+second run failed command one with exit 2 because `.venv` already existed. The
+versioned receipt records only command indexes, exit codes, stable diagnostic
+classes, and interpreter versions; it contains no host paths or payload logs.
+
+Nine machine-checked pending backfills cover all 17 fronts exactly once. They
+separate hash-functions from its dependents, RESP/TCP from the data-store
+closure, graph and trie closures, Caesar's unsplit Windows install, three
+homogeneous standalone structures, and the legacy `ls00` shape. The data-store
+owner also carries its Windows-invalid quoted editable requirement. This
+preserves dependency order while avoiding a 17-package bulk patch.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
