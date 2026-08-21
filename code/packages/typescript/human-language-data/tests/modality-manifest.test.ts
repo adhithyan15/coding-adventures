@@ -968,7 +968,9 @@ describe("corpus regression", () => {
       // +8, the eight chapter 4-5 lessons that drop their inline script sections.
       // +1 voice / -1 sight: GE-C01-guten-tag no longer prints an untaught fuller
       // German sentence. Its spoken greeting lesson is now honestly voice-first.
-      voice: 2462, // German's cleaned opener adds one voice-first lesson; Marwadi's final courtesy checkpoint is voice-first too.
+      // +1 voice / -1 sight: IT-C01-notte replaces its five-language comparison
+      // table with one spoken Latin-to-Italian change, making it voice-first too.
+      voice: 2463, // Italian adds one voice-first lesson after German; Marwadi's courtesy checkpoint remains voice-first too.
       /* Superseded merge-side totals:
       voice: 2463, // +2: Arabic marḥaban and the full greeting become genuinely voice-first. // Italian's legacy opener now exposes its pen dependency.
       voice: 2460, // Italian and Portuguese legacy openers now expose their pen dependencies.
@@ -992,7 +994,7 @@ describe("corpus regression", () => {
       // -poy-varugiren, -naalai, -mindum-sandippom and TA-C05-pesu, -velai-sey, -vaazh,
       // -naan-tamizh-pesugiren all flip ["script-block"] -> ["no-visual-dependency"]
       // with an empty detachableSegments, verified against the GENERATED manifest.
-      sight: 588, // German removes one visual dependency from the combined Urdu baseline.
+      sight: 587, // Italian removes one more visual dependency after German's opener cleanup.
       /* Historical cumulative sight ledger retained below.
       sight: 590, // HL-C259: +1 -- GU-C01-practice, see drivableLessons // HL-C251: +1 -- RU-C01-practice, see drivableLessons // merge with main (round 4): +4 -- HL-C231..C240 landed on main while this tranche was in flight // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C175: +5 -- chapter 272, reading between the lines // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C157 // +5: vocabulary wave 5's honest cousin-script citations in a handful of lessons // +1: HL-C88 slices 5-6 // +18: vocabulary wave 6 // HL-C113 step 7: +2 -- 214 (question marks) and 215 (the accent) cannot be taught by voice // HL-C128 step 2: +1 -- ch223 // HL-C128 step 3: +1 // HL-C128 step 5: +1 // HL-C127: +2 -- ch243 and ch244 turn on written accents, which cannot be heard // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: 35 lessons over 7 chapters -- voice +34 and sight +1 sum to 35; the prefix figures follow from the per-chapter walk // latin pre-A1 tranche: +20 lessons, +4 chapters (chapters 44-47)
       */
@@ -1013,7 +1015,7 @@ describe("corpus regression", () => {
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
       pen: 366, // Marwadi adds two writing lessons and one word lesson with a writing block.
-      drivableLessons: 2462, // German adds one hands-free opener; Marwadi's courtesy checkpoint remains drivable.
+      drivableLessons: 2463, // Italian adds one more hands-free opener after German; Marwadi's checkpoint remains drivable.
       /* Superseded merge-side totals:
       pen: 360, // +8: seven Arabic writing micro-lessons plus salām's one-shape opening trace. // +2: Italian's opener trace and guided copy.
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
