@@ -4818,7 +4818,7 @@ The validation gate runs each recipe twice in one checkout and then exercises
 the heap-dependent compression closure. Live audits across open PRs and remote
 branches find no heap, state, or roadmap owner.
 
-The same audit found 18 additional Python `BUILD_windows` recipes that create
+The same audit found 17 additional Python `BUILD_windows` recipes that create
 `.venv` without `--clear`. They are recorded separately as
 `python-uv-build-front-idempotence-audit`, dependent on this reference repair,
 so the present tranche does not silently expand into unrelated packages.
@@ -4861,10 +4861,34 @@ manifest or privileged production boundary changes.
 Ready-for-review PR #12425 was opened from clean validated head
 `882060f58f2d5013abbcd13a08781fd8b57f11b9` after a normal first push from
 exact `origin/main` `87b0df7caf6314bd2b9b4e887e35c39a2bad97b2`.
-The target branch and PR were absent before publication, all live ownership
-surfaces were disjoint, and GitHub reports the PR open, non-draft, and
-mergeable. Required CI, CodeQL, and human-language checks are queued, so this
-sole active parity PR is now monitor-only until every check is terminal.
+The target branch and PR were absent before publication, and all live ownership
+surfaces were disjoint. Final reviewed head
+`86501760d38cb31c8eb2f4ac4df0ecb1a0c18fad` completed all 30 checks with 24
+successes, five expected skips, one neutral CodeQL result, and no failures or
+pending work. GitHub reported the branch mergeable, and the loop requested
+squash auto-merge; GitHub merged PR #12425 as
+`51804cdf287b4085875c0113557600b20dd4d733` at 2026-08-21T13:19:22Z and
+deleted the source branch.
+
+### Post-#12425 refresh and Python Huffman compression BUILD-front selection
+
+The refreshed collision inventory at live main
+`4b36ac52276feb29355065e86ea0121e0b731c52` remains 15 established lanes,
+1,368 canonical identities, and 4,561 implementation slots. The Portuguese
+human-language commit after #12425 modifies existing roots only. Canonical
+collisions and unknown language buckets remain zero.
+
+`python-huffman-compression-build-front-python313` is the direct
+dependency-shaped successor to the heap repair. A clean Huffman Tree front
+selected Python 3.10 despite declaring Python >=3.12 and then could not install
+the repaired heap package. Brotli, Deflate, and Huffman Compression share the
+same unpinned uv recipe; their Windows fronts pass only when the caller supplies
+`UV_PYTHON=3.13`. This tranche pins Python 3.13 in both canonical and Windows
+fronts for those four packages, preserves their existing dependency order and
+quality gates, and adds a repository regression for the complete recipes.
+Live audits across 23 open PRs and 20 unowned remote branches find no overlap
+on the compression packages, parity state, or roadmap. The broader uv
+idempotence audit remains pending for classification of the 17 other fronts.
 
 ## Autonomous Loop Protocol
 
