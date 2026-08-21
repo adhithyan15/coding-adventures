@@ -22,6 +22,7 @@ REQUIRES_PYTHON = re.compile(
     r'^requires-python\s*=\s*(["\'])(?P<value>[^"\']+)\1\s*(?:#.*)?$',
     re.MULTILINE,
 )
+PACKAGE_NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]*$")
 
 
 class AuditError(ValueError):
@@ -135,9 +136,24 @@ def _package_paths(paths: list[str], filename: str) -> dict[str, str]:
         if not path.startswith(prefix):
             continue
         parts = path.split("/")
-        if len(parts) == 5 and parts[-1] == filename:
+        if (
+            len(parts) == 5
+            and parts[-1] == filename
+            and PACKAGE_NAME.fullmatch(parts[-2])
+        ):
             result[parts[-2]] = path
     return result
+
+
+def _read_repo_text(root: Path, relative_path: str) -> str:
+    python_root = (root / PYTHON_ROOT).resolve(strict=True)
+    candidate = root / relative_path
+    if candidate.is_symlink():
+        raise AuditError(f"symlink companion is not allowed: {relative_path}")
+    resolved = candidate.resolve(strict=True)
+    if not resolved.is_relative_to(python_root) or not resolved.is_file():
+        raise AuditError(f"companion escapes Python package root: {relative_path}")
+    return resolved.read_text(encoding="utf-8")
 
 
 def _requires_python(text: str, package: str) -> str:
@@ -208,7 +224,7 @@ def build_report(root: Path) -> dict[str, Any]:
     fronts: list[dict[str, Any]] = []
 
     for package in sorted(windows_paths):
-        windows_text = (root / windows_paths[package]).read_text(encoding="utf-8")
+        windows_text = _read_repo_text(root, windows_paths[package])
         venv_commands = [
             command
             for command in active_commands(windows_text)
@@ -222,12 +238,12 @@ def build_report(root: Path) -> dict[str, Any]:
             raise AuditError(f"{package}: missing BUILD or pyproject.toml companion")
 
         canonical = parse_front(
-            (root / canonical_paths[package]).read_text(encoding="utf-8"),
+            _read_repo_text(root, canonical_paths[package]),
             platform="canonical",
         )
         windows = parse_front(windows_text, platform="windows")
         requires_python = _requires_python(
-            (root / pyproject_paths[package]).read_text(encoding="utf-8"), package
+            _read_repo_text(root, pyproject_paths[package]), package
         )
         fronts.append(
             {

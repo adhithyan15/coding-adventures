@@ -107,6 +107,18 @@ class FrontParserTests(unittest.TestCase):
                 with self.assertRaisesRegex(audit.AuditError, "missing BUILD"):
                     audit.build_report(root)
 
+            outside = root / "code" / "packages" / "outside.txt"
+            outside.write_text("not a Python package companion", encoding="utf-8")
+            with self.assertRaisesRegex(audit.AuditError, "escapes"):
+                audit._read_repo_text(root, "code/packages/python/../outside.txt")
+
+        self.assertEqual(
+            audit._package_paths(
+                ["code/packages/python/../BUILD_windows"], "BUILD_windows"
+            ),
+            {},
+        )
+
 
 class RepositoryAuditTests(unittest.TestCase):
     report: dict[str, Any]

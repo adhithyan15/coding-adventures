@@ -39,6 +39,12 @@ active commands. Missing or duplicate venv commands, missing companion files,
 and an absent or non-string `[project].requires-python` value are hard errors;
 the reporter must not silently omit an ambiguous package.
 
+Package names must contain only ASCII letters, digits, `_`, and `-`, beginning
+with an alphanumeric character. Every companion must be a regular non-symlink
+file whose resolved path remains beneath `code/packages/python`; traversal or
+symlink escape is a hard error. Git is invoked without a shell and BUILD
+commands are parsed as data, never executed by the reporter.
+
 ## Per-front record
 
 The JSON report schema is version 1. Each `fronts` entry is ordered by package

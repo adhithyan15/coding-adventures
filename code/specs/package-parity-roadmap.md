@@ -4985,6 +4985,17 @@ homogeneous standalone structures, and the legacy `ls00` shape. The data-store
 owner also carries its Windows-invalid quoted editable requirement. This
 preserves dependency order while avoiding a 17-package bulk patch.
 
+The focused reporter suite passes 13 tests with 97% branch coverage for the
+reporter. Ruff format/lint and strict MyPy are clean on Python 3.13. Parity
+reporter and capability taxonomy suites pass 10 and 7 tests. The Go build tool
+passes all tests, vet, and trimpath compilation; its exact diff plan validates
+494 Python packages and skips all 494 because this audit changes no package
+recipe, while the forced Windows dry plan validates and selects all 494. The
+schema-3 inventory remains 15 lanes, 1,368 identities, and 4,561 slots with
+zero collisions or unknown buckets. The expanded 424-item state graph is
+unique, dependency-complete, and acyclic. Diff, credential, dependency, and
+production-authority scans are clean.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
