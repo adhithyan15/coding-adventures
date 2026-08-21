@@ -7,13 +7,13 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:c44af5b0af60d4ad",
+  "sourceHash": "fnv1a64:2bf66dc94998dd4c",
   "summary": {
     "totalLessons": 3412,
-    "voice": 2460,
-    "sight": 589,
+    "voice": 2461,
+    "sight": 588,
     "pen": 363,
-    "drivableLessons": 2460,
+    "drivableLessons": 2461,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1004,
@@ -1655,10 +1655,10 @@
     {
       "language": "german",
       "lessonCount": 107,
-      "voice": 94,
-      "sight": 8,
+      "voice": 95,
+      "sight": 7,
       "pen": 5,
-      "drivablePercent": 88,
+      "drivablePercent": 89,
       "drivablePrefixTotal": 81,
       "modalities": [
         "voice",
@@ -1669,8 +1669,8 @@
         {
           "chapter": 1,
           "lessonCount": 13,
-          "voice": 10,
-          "sight": 1,
+          "voice": 11,
+          "sight": 0,
           "pen": 2,
           "modalities": [
             "voice",
@@ -24970,7 +24970,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:998274caa94aeec3",
+      "sourceHash": "fnv1a64:d5fe472729a39be1",
       "detachableSegments": [
         "Writing — follow one word you can see"
       ]
@@ -25031,7 +25031,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6442b9425c44ff75"
+      "sourceHash": "fnv1a64:f73d112c1c82581d"
     },
     {
       "id": "GE-C01-tag",
@@ -25056,18 +25056,18 @@
       "language": "german",
       "chapter": 1,
       "sequence": 25,
-      "modality": "sight",
-      "derived": "sight",
-      "drivable": false,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
       "reasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreModality": "sight",
+      "coreModality": "voice",
       "coreReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "coreDrivable": false,
-      "sourceHash": "fnv1a64:5c29417226d35125"
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ba5164b4c43b07bb"
     },
     {
       "id": "GE-C01-morgen",
@@ -25085,7 +25085,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:dd3aadddd2d82dbc"
+      "sourceHash": "fnv1a64:593e968865a53508"
     },
     {
       "id": "GE-C01-guten-morgen",
@@ -25103,7 +25103,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:6670390c03e20b0f"
+      "sourceHash": "fnv1a64:9cd0b5cccd0c6367"
     },
     {
       "id": "GE-C01-abend",
@@ -25121,7 +25121,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:8e8a86c2d8f81402"
+      "sourceHash": "fnv1a64:200c3e27d69a0cda"
     },
     {
       "id": "GE-C01-guten-abend",
@@ -25193,7 +25193,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a70d2ffe19ee7038"
+      "sourceHash": "fnv1a64:1e71fbad53d81916"
     },
     {
       "id": "GE-C02-ich",
