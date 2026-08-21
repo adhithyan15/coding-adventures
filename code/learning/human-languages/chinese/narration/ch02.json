@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Reading the Greeting — One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:64ef4a9e6f25106d",
+  "sourceHash": "fnv1a64:f6536c2a08dff0b2",
   "lessons": [
     {
       "id": "ZH-W01-ren",
@@ -21,7 +21,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:d901b02da46ba1d0",
+      "sourceHash": "fnv1a64:61937c2eaec8d499",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -30,10 +30,9 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
+          "Script — the shape"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -103,25 +102,15 @@
         {
           "index": 2,
           "type": "guided-production",
-          "title": "Guided Practice",
+          "title": "Guided Practice — copy with the model visible",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "人 — left stroke first, then right. Say rén as you finish it.",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: 人 — left stroke first, then right. Say *rén* as you finish it.]"
+              "kind": "speech",
+              "text": "Keep 人 visible. Point to the left stroke, then the right. Copy the character once immediately below the model: left stroke first, then right. Say rén as you finish it, and compare the meeting point at the top before moving on."
             },
             {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "rén, rising",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **rén**, rising]"
+              "kind": "speech",
+              "text": "This is guided copy, not a memory test. One careful copy is enough."
             }
           ]
         },
@@ -471,7 +460,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:328329e181918529",
+      "sourceHash": "fnv1a64:f4f2811fa6744a06",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -480,10 +469,9 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script — the assembly",
-          "Guided Practice"
+          "Script — the assembly"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the assembly until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -576,25 +564,11 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice",
+          "title": "Guided Practice — look, cover, rebuild",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "你 (nǐ) — left half first, complete, then the right half",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: 你 — left half first, complete, then the right half]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "cover the right half. What does the left half alone tell you?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: cover the right half. What does the left half alone tell you?]"
+              "kind": "speech",
+              "text": "Copy 你 (nǐ) once while the model is visible: complete 亻 (rén (as a component)), then complete 尔 (ěr). Point to the meaning half and the sound half. Now cover every model, wait ten seconds, and rebuild the character from memory. Uncover and compare the two halves separately; correct only the half that stalled."
             }
           ]
         },
@@ -950,7 +924,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:05834146103e3854",
+      "sourceHash": "fnv1a64:2b4ee5a1c588bbd7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -958,10 +932,9 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script — the assembly",
-          "Guided Practice"
+          "Script — the assembly"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — the assembly until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1034,25 +1007,15 @@
         {
           "index": 3,
           "type": "guided-production",
-          "title": "Guided Practice",
+          "title": "Guided Practice — from the spoken word to the page",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "好 (hǎo) — the whole left half first, then the whole right half",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: 好 — the whole left half first, then the whole right half]"
+              "kind": "speech",
+              "text": "Copy 好 (hǎo) once while looking: finish 女 (nǚ), then 子 (zǐ). Notice that the crossing bar on the left stops before the right half."
             },
             {
-              "kind": "prompt",
-              "action": "NOTICE",
-              "instruction": "the crossing bar on the left half no longer sweeps all the way across. Why not?",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU NOTICE: the crossing bar on the left half no longer sweeps all the way across. Why not?]"
+              "kind": "speech",
+              "text": "Now close the page. Have a person or screen reader say hǎo with no character visible. Wait ten seconds, write 好 from the spoken cue, then uncover it. Compare the left half and right half separately. If one half stalled, revisit only its three-stroke lesson before trying the dictation again."
             }
           ]
         },

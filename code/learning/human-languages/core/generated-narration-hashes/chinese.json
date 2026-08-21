@@ -26,7 +26,7 @@
     {
       "language": "chinese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:64ef4a9e6f25106d",
+      "sourceHash": "fnv1a64:f6536c2a08dff0b2",
       "lessonIds": [
         "ZH-W01-ren",
         "ZH-W01-ren-radical",
@@ -40,8 +40,8 @@
       "drivablePrefix": 0,
       "text": "chinese/narration/ch02.txt",
       "json": "chinese/narration/ch02.json",
-      "textHash": "fnv1a64:7b28ae4919b294f2",
-      "jsonHash": "fnv1a64:57153004a2405256"
+      "textHash": "fnv1a64:7e9cb98a749101fa",
+      "jsonHash": "fnv1a64:93ca57d2525688df"
     },
     {
       "language": "chinese",

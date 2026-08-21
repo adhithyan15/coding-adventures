@@ -80,11 +80,14 @@ after that.** There are only a few hundred components in common use, and they
 recombine — which is what makes several thousand characters a climb rather than
 a cliff.
 
-## Guided Practice
+## Guided Practice — look, cover, rebuild
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NI-BUILD-01] -->
+<!-- hl-writing-stage: delayed-copy -->
 
-- [YOU WRITE: 你 — left half first, complete, then the right half]
-- [YOU READ: cover the right half. What does the left half alone tell you?]
+Copy **你** once while the model is visible: complete **亻**, then complete
+**尔**. Point to the meaning half and the sound half. Now cover every model,
+wait ten seconds, and rebuild the character from memory. Uncover and compare
+the two halves separately; correct only the half that stalled.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-NI-BUILD-01, ZH-SCRIPT-REN-RADICAL-01] -->

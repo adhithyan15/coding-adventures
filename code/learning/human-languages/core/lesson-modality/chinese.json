@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:f8e4fa839b4556ad",
+  "sourceHash": "fnv1a64:950b0fa38dcae706",
   "summary": {
     "totalLessons": 63,
     "voice": 30,
@@ -370,7 +370,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:d901b02da46ba1d0",
+      "sourceHash": "fnv1a64:61937c2eaec8d499",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -441,7 +441,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:328329e181918529",
+      "sourceHash": "fnv1a64:f4f2811fa6744a06",
       "detachableSegments": [
         "Script — the assembly"
       ],
@@ -510,7 +510,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:05834146103e3854",
+      "sourceHash": "fnv1a64:2b4ee5a1c588bbd7",
       "detachableSegments": [
         "Script — the assembly"
       ],
