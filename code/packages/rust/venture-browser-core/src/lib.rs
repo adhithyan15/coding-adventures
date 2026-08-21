@@ -1616,8 +1616,10 @@ mod tests {
         );
         assert!(pixels
             .data
-            .chunks_exact(4)
-            .any(|pixel| pixel != [192, 192, 192, 255]));
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .any(|pixel| *pixel != [192, 192, 192, 255]));
 
         let link = page.paint.links[0].clone();
         let mut viewport = BrowserViewport::new(page, 40.0);
