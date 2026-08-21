@@ -81,29 +81,30 @@ What Latin word is bom from, and why bom dia but boa tarde? (bonus; dia is mascu
 
 
 Lesson 4 of 10.
-bom dia — "good morning," assembled.
+o / a — "the," an article worn to a single letter.
 
 Warm-up.
 [pause 2 seconds]
-Put the pieces together into the polite morning hello.
+Before your first noun: "the." Portuguese wore it down further than any of its sisters.
 
-The phrase, assembled.
-bom ("good") + dia ("day").
-bom dia = "good day" becomes in practice, "good morning" (used until noon).
+The word, taken apart.
+o (masculine "the") and a (feminine) from Latin ille / illa ("that one"). Portuguese did something striking — it eroded the word further than any sibling:
+Latin ille becomes Italian il becomes Spanish el becomes Portuguese just o.
+The whole pointing-word has worn down to a single vowel. (English "the" is Germanic, unrelated.)
 
-Why it's said this way.
-bom dia is the polite, all-purpose morning hello — safe with anyone. After midday it gives way to boa tarde, and after dark to boa noite. (Spanish pluralises the blessing — buenos días — where Portuguese keeps it singular, bom dia.)
+Grammar Lens: two genders.
+Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: o dia ("the day") is masculine even though it ends in -a.
 
 Guided Practice.
 [pause 1 second]
-[your turn — say: "bom dia" (nasal bõ + dia)]
+[your turn — say: "o", "a"]
 [pause 8 seconds for the answer]
-[your turn — say: the day's arc — bom dia becomes boa tarde becomes boa noite]
+[your turn — say: the erosion — ille becomes il becomes el becomes o]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What two words make bom dia, and when is it used? (bom + dia; morning, until noon.)
+What Latin word gave Portuguese o, and how is it unusual among its sisters? (ille; Portuguese wore it down to a single letter, more than il/el.)
 
 
 Lesson 5 of 10.
@@ -132,6 +133,54 @@ What Latin word gave dia, and why is o dia a trap? (dies; it's masculine even th
 
 
 Lesson 6 of 10.
+bom dia — "good morning," assembled.
+
+Warm-up.
+[pause 2 seconds]
+Put the pieces together into the polite morning hello.
+
+The phrase, assembled.
+bom ("good") + dia ("day").
+bom dia = "good day" becomes in practice, "good morning" (used until noon).
+
+Why it's said this way.
+bom dia is the polite, all-purpose morning hello — safe with anyone. After midday it gives way to boa tarde, and after dark to boa noite. (Spanish pluralises the blessing — buenos días — where Portuguese keeps it singular, bom dia.)
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "bom dia" (nasal bõ + dia)]
+[pause 8 seconds for the answer]
+[your turn — say: the day's arc — bom dia becomes boa tarde becomes boa noite]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What two words make bom dia, and when is it used? (bom + dia; morning, until noon.)
+
+
+Lesson 7 of 10.
+tarde / boa tarde — "afternoon" and "good afternoon".
+
+Warm-up.
+[pause 2 seconds]
+The afternoon greeting — named, like its Spanish twin, after lateness.
+
+The word, taken apart.
+a tarde (fem.) from Latin tardus ("slow, late") — the same tardus behind English tardy and retard ("to slow"). Portuguese named the afternoon after its lateness, exactly as Spanish did with the identical tarde. boa tarde = "good afternoon" (boa, feminine, because tarde is feminine).
+
+Guided Practice.
+[pause 1 second]
+[your turn — say: "boa tarde"]
+[pause 8 seconds for the answer]
+[your turn — say: the cousin — English tardy (late)]
+[pause 8 seconds for the answer]
+
+Wrap-up Recall.
+[pause 3 seconds]
+What Latin word gave tarde, and what English word shares it? (tardus, "late"; tardy.)
+
+
+Lesson 8 of 10.
 noite / boa noite — "night," and the -ct- becomes -it- rule.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart until you have stopped, and I will say so again when we reach it.
@@ -157,34 +206,7 @@ Wrap-up Recall.
 What Latin word gave noite, and what sound-change does it show? (noctem; -ct- becomes -it-, like French nuit.)
 
 
-Lesson 7 of 10.
-o / a — "the," an article worn to a single letter.
-
-Warm-up.
-[pause 2 seconds]
-Before your first noun: "the." Portuguese wore it down further than any of its sisters.
-
-The word, taken apart.
-o (masculine "the") and a (feminine) from Latin ille / illa ("that one"). Portuguese did something striking — it eroded the word further than any sibling:
-Latin ille becomes Italian il becomes Spanish el becomes Portuguese just o.
-The whole pointing-word has worn down to a single vowel. (English "the" is Germanic, unrelated.)
-
-Grammar Lens: two genders.
-Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: o dia ("the day") is masculine even though it ends in -a.
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "o", "a"]
-[pause 8 seconds for the answer]
-[your turn — say: the erosion — ille becomes il becomes el becomes o]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Latin word gave Portuguese o, and how is it unusual among its sisters? (ille; Portuguese wore it down to a single letter, more than il/el.)
-
-
-Lesson 8 of 10.
+Lesson 9 of 10.
 obrigado / obrigada — "thank you," i.e. "[I am] obliged".
 
 Warm-up.
@@ -214,7 +236,7 @@ Wrap-up Recall.
 What does obrigado literally mean, and how does a woman say it? ("I am obliged" from obligātus; obrigada — it agrees with the speaker.)
 
 
-Lesson 9 of 10.
+Lesson 10 of 10.
 Chapter 1 — the day of greetings.
 
 The greetings.
@@ -245,25 +267,3 @@ Wrap-up Recall.
 [pause 3 seconds]
 Say all five greetings. Why does "thank you" have two forms? (It means "[I am] obliged," so it matches the speaker: obrigado / obrigada.) What did the Latin article ille erode to in Portuguese? (A single letter, o.)
 Next chapter: introducing yourself — o meu nome é… / chamo-me… — and Portuguese's tu vs. você (familiar / polite "you").
-
-
-Lesson 10 of 10.
-tarde / boa tarde — "afternoon" and "good afternoon".
-
-Warm-up.
-[pause 2 seconds]
-The afternoon greeting — named, like its Spanish twin, after lateness.
-
-The word, taken apart.
-a tarde (fem.) from Latin tardus ("slow, late") — the same tardus behind English tardy and retard ("to slow"). Portuguese named the afternoon after its lateness, exactly as Spanish did with the identical tarde. boa tarde = "good afternoon" (boa, feminine, because tarde is feminine).
-
-Guided Practice.
-[pause 1 second]
-[your turn — say: "boa tarde"]
-[pause 8 seconds for the answer]
-[your turn — say: the cousin — English tardy (late)]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-[pause 3 seconds]
-What Latin word gave tarde, and what English word shares it? (tardus, "late"; tardy.)

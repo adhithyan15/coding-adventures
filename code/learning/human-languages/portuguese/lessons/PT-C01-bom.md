@@ -1,5 +1,6 @@
 ---
 id: PT-C01-bom
+sequence: 20
 chapter: 1
 type: word
 headword: bom / boa

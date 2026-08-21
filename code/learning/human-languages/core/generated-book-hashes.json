@@ -4384,6 +4384,19 @@
       "tex": "marwadi/book/chapters/ch02-aabhaar.tex"
     },
     {
+      "language": "marwadi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:9cbafdaf8f3ee95e",
+      "lessonIds": [
+        "MW-W03-ha",
+        "MW-W03-anusvara",
+        "MW-C03-haan-saa",
+        "MW-C03-listen-say",
+        "MW-C03-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch03-haan-saa.tex"
+    },
+    {
       "language": "persian",
       "chapter": 2,
       "sourceHash": "fnv1a64:497f80f61dd5767f",
@@ -4545,7 +4558,7 @@
     {
       "language": "persian",
       "chapter": 15,
-      "sourceHash": "fnv1a64:d0838dab3dd89a51",
+      "sourceHash": "fnv1a64:cf8b20df6e196af2",
       "lessonIds": [
         "FA-W15-alef",
         "FA-W15-lam",
@@ -4579,7 +4592,7 @@
     {
       "language": "portuguese",
       "chapter": 3,
-      "sourceHash": "fnv1a64:f71e01087b79ffa7",
+      "sourceHash": "fnv1a64:76716b14eb7efa74",
       "lessonIds": [
         "PT-C03-eu",
         "PT-C03-me-chamo",

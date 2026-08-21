@@ -17,8 +17,7 @@ import random
 
 import pytest
 
-from heap import MaxHeap, MinHeap, heapify, heap_sort, nlargest, nsmallest
-
+from heap import MaxHeap, MinHeap, heap_sort, heapify, nlargest, nsmallest
 
 # ---------------------------------------------------------------------------
 # Heap-property validators

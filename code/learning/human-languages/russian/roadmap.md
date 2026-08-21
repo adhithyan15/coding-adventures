@@ -7,6 +7,17 @@
 > there is no gated reading course. A *chapter* is a themed cluster of many
 > small lessons, authored **lessons first, then the LaTeX chapter**.
 
+## Assessment destination
+
+The complete book must prepare a book-only learner for the project-defined
+pre-A1 bridge and the external TORFL/ТРКИ ladder at A1–C2. See
+[assessment-spec.md](assessment-spec.md) for official target names, the
+five-subtest readiness rule, source-drift boundary, and validation requirements,
+and [assessment.json](assessment.json) for the machine-readable seven-rung
+four-skill floor. Lessons remain five minutes or shorter and Cyrillic writing
+grows one action at a time; full mocks retain the live provider's continuous
+timing. The contract records a destination, not current pass-readiness evidence.
+
 ## Chapter 1 — Greetings & courtesy *(authored)*
 
 привет · здравствуйте · спасибо · да · нет · пожалуйста. Establishes the four

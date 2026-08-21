@@ -10,8 +10,8 @@ Public API::
     from heap import heapify, heap_sort, nlargest, nsmallest
 """
 
+from heap.functions import heap_sort, heapify, nlargest, nsmallest
 from heap.heap import MaxHeap, MinHeap
-from heap.functions import heapify, heap_sort, nlargest, nsmallest
 
 __version__ = "0.1.0"
 

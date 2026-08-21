@@ -30,12 +30,17 @@ destination; it does not claim that the current book is exam-ready. French now
 has sourced task-shape inventories for [DILF A1.1](task-shapes/pre-a1.json) and
 [DELF A1](task-shapes/a1.json). The later inventories, mocks, rubrics, answer
 keys, calibration, and book-only human validation remain explicit backlog.
+The opening *salut* sequence now proves the complete pre-A1 writing runway in
+four sub-two-minute steps: observe/trace, guided copy, delayed copy, and
+heard-word dictation. That is foundational handwriting evidence, not a claim
+that one word satisfies DILF's contact-detail, numerical, form, or message tasks.
 
 ## Progress
 
 - **Chapter 1 — Greetings**: authored ([`lessons/FR-C01-*`](./lessons/)) —
   salut, bien, bon/bonne, le/la/les (gender), jour, bonjour, soir, bonsoir,
-  nuit, bonne nuit, practice. In the book.
+  nuit, bonne nuit, practice, plus four gentle *salut* writing microsteps. In
+  the book.
 - **Chapter 2 — Introducing Yourself**: authored
   ([`lessons/FR-C02-*`](./lessons/)) — je, me, (s')appeler, **je m'appelle**
   ("my name is"), **tu / vous**, comment, **comment vous appelez-vous?**

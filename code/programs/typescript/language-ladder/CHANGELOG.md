@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — source-verified Arabic ن ductus
+
+- Replace Arabic **ن**'s conventional metadata with a cited two-run path.
+- Preserve the completed deep bowl while the upper dot is placed last.
+
+## Unreleased — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional metadata with a cited one-run path.
+- Show its closed head flowing into the down-left tail without a pen lift.
+
 ## Unreleased — source-verified Arabic ث ductus
 
 - Replace Arabic **ث**'s conventional bowl-and-dots summary with a cited path.

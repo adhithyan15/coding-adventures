@@ -22,6 +22,7 @@ import { CEFR_LEVELS, type CefrLevel } from "./levels.js";
 import {
   parseAssessmentContract,
   parseAssessmentPolicy,
+  type AssessmentContract,
   type AssessmentPolicy,
 } from "./assessment.js";
 import type { LedgerLetter, LetterLedger } from "./letter-ledger.js";
@@ -102,6 +103,50 @@ export function listAssessmentContracts(root = defaultCurriculumRoot()): string[
     if (!existsSync(path)) continue;
     parseAssessmentContract(JSON.parse(readFileSync(path, "utf8")), track.id, policy);
     out.push(track.id);
+  }
+  return out;
+}
+
+export interface ExternalExamCapstoneStatus {
+  language: string;
+  id: string;
+  requiredAfterLevel: CefrLevel;
+  name: string;
+  complete: boolean;
+  missingArtifacts: string[];
+}
+
+/** Declared non-CEFR-mapped external capstones and whether their artifacts exist. */
+export function listExternalExamCapstones(root = defaultCurriculumRoot()): ExternalExamCapstoneStatus[] {
+  const policy = loadAssessmentPolicy(root);
+  const registry = loadLanguageRegistry(root);
+  const out: ExternalExamCapstoneStatus[] = [];
+  for (const track of registry.languages) {
+    const contractPath = join(root, track.id, "assessment.json");
+    if (!existsSync(contractPath)) continue;
+    const contract: AssessmentContract = parseAssessmentContract(
+      JSON.parse(readFileSync(contractPath, "utf8")),
+      track.id,
+      policy,
+    );
+    for (const capstone of contract.externalCapstones) {
+      const references = [
+        ...Object.values(capstone.skills).flatMap((skill) => skill.taskInventory),
+        ...Object.values(capstone.additionalComponents).flatMap((component) => component.taskInventory),
+        ...capstone.fullMocks.flatMap((mock) => [mock.rubric, mock.answerKey]),
+      ];
+      const missingArtifacts = [...new Set(references
+        .map((reference) => reference.split("#", 1)[0]!)
+        .filter((reference) => !existsSync(join(root, track.id, reference))))];
+      out.push({
+        language: track.id,
+        id: capstone.id,
+        requiredAfterLevel: capstone.requiredAfterLevel,
+        name: capstone.target.name,
+        complete: missingArtifacts.length === 0,
+        missingArtifacts,
+      });
+    }
   }
   return out;
 }
