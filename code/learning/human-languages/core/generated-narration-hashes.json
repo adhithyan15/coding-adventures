@@ -5827,7 +5827,7 @@
     {
       "language": "malayalam",
       "chapter": 2,
-      "sourceHash": "fnv1a64:da4d2f30bce7d386",
+      "sourceHash": "fnv1a64:6928ba9fa0a57b17",
       "lessonIds": [
         "ML-C02-peru",
         "ML-C02-enre",
@@ -5837,33 +5837,35 @@
         "ML-C02-entu",
         "ML-C02-ninre-peru-entaanu",
         "ML-C02-santosham",
+        "ML-W02-santosham-guided-copy",
         "ML-C02-practice"
       ],
-      "voiceLessons": 4,
+      "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch02.txt",
       "json": "malayalam/narration/ch02.json",
-      "textHash": "fnv1a64:8556d0d39744d548",
-      "jsonHash": "fnv1a64:edbbe2b388e8c07b"
+      "textHash": "fnv1a64:fcac8a1bf395115a",
+      "jsonHash": "fnv1a64:5d8c0351fb248940"
     },
     {
       "language": "malayalam",
       "chapter": 3,
-      "sourceHash": "fnv1a64:5236bd3259a983df",
+      "sourceHash": "fnv1a64:c73a9560fa68161c",
       "lessonIds": [
         "ML-C03-engane",
         "ML-C03-sukhamaano",
         "ML-C03-njaan",
         "ML-C03-sukham",
         "ML-C03-saaramilla",
-        "ML-C03-practice"
+        "ML-C03-practice",
+        "ML-W03-santosham-delayed-copy"
       ],
       "voiceLessons": 1,
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch03.txt",
       "json": "malayalam/narration/ch03.json",
-      "textHash": "fnv1a64:19f0c90b6391e61a",
-      "jsonHash": "fnv1a64:77dad064c2d252c5"
+      "textHash": "fnv1a64:b762a40c6767a192",
+      "jsonHash": "fnv1a64:ec60b51d1ced9e15"
     },
     {
       "language": "malayalam",

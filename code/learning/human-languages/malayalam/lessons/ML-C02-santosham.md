@@ -20,10 +20,23 @@ reviews_of: [ML-C02-enre-peru-aanu, ML-C02-ninre-peru-entaanu]
 
 [PAUSE 2s] The warm close — a Sanskrit word even in native-loving Malayalam.
 
-## The phrase
+## The word you can use
 
-The full form is **നിങ്ങളെ കണ്ടതിൽ സന്തോഷം** (*niṅṅaḷe kaṇḍatil santōṣam*) —
-"joy at having seen you."
+**സന്തോഷം** (*santōṣam*) literally means "joy." At the end of a short
+introduction, it can stand by itself for "pleased to meet you." A fuller phrase
+exists, but it needs words and grammar you have not learned yet; the one-word
+version is complete and useful now.
+
+## Two new shapes to notice
+
+Keep **സന്തോഷം** visible. Most of its shapes have already appeared in this
+chapter. Point to just two new ones:
+
+- **ഷ** carries the *ṣa* sound near the end.
+- **ോ** is the long *ō* vowel sign attached to the consonant before it.
+
+Look, point, and say the whole word once. The next two-minute lesson will let
+your hand copy it with the model still present.
 
 ## The word, taken apart
 
