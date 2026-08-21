@@ -6612,6 +6612,24 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("મ"),
   },
+  // t30apps writes Gujarati ય as a joined rounded body and long shoulder
+  // followed by a separately descended right spine.
+  [ductusKey("gujarati", "ય")]: {
+    script: "gujarati", glyph: "ય",
+    strokes: [
+      { segments: [{ label: "circle the rounded upper turn and sweep around the broad lower body into the long right shoulder", path: [
+        { x: 35, y: 565 }, { x: 75, y: 575 }, { x: 120, y: 565 }, { x: 160, y: 540 }, { x: 190, y: 500 },
+        { x: 200, y: 455 }, { x: 195, y: 415 }, { x: 175, y: 380 }, { x: 145, y: 355 }, { x: 105, y: 335 },
+        { x: 75, y: 310 }, { x: 90, y: 275 }, { x: 120, y: 240 }, { x: 160, y: 210 }, { x: 205, y: 190 },
+        { x: 255, y: 180 }, { x: 305, y: 185 }, { x: 350, y: 205 }, { x: 385, y: 235 }, { x: 415, y: 270 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 459, y: 585 }, { x: 459, y: 500 }, { x: 459, y: 400 }, { x: 459, y: 300 },
+        { x: 459, y: 200 }, { x: 459, y: 125 }, { x: 467, y: 80 }, { x: 490, y: 55 },
+        { x: 525, y: 40 }, { x: 560, y: 38 }, { x: 578, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("ય"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

@@ -1178,6 +1178,11 @@ The verified two-frame Gujarati **મ** filmstrip curls through the left body an
 compact inner turn before exiting across the long shoulder; after one lift,
 the second frame descends the tall right spine into its foot. The source's
 two-path order and variation warning remain visible; conventional **ય** is next.
+The verified two-frame Gujarati **ય** filmstrip circles through the rounded
+upper turn, sweeps around the broad lower body, and exits across the long right
+shoulder; after one lift, the second frame descends the tall right spine into
+its foot. The source's two-path order and variation warning remain visible;
+conventional **ર** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
