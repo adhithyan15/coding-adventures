@@ -6,12 +6,19 @@
     {
       "language": "arabic",
       "chapter": 1,
-      "sourceHash": "fnv1a64:fe0cca28b9aa0782",
+      "sourceHash": "fnv1a64:1e2cf51768b44af2",
       "lessonIds": [
         "AR-C01-salam",
+        "AR-W00-sin-lam",
+        "AR-W00-alif-mim-salam",
         "AR-C01-marhaba",
+        "AR-W00-ra-ha",
+        "AR-W00-ba-family-marhaba",
         "AR-C01-al",
         "AR-C01-as-salamu-alaykum",
+        "AR-W00-ayn-ya",
+        "AR-W00-kaf-waw-alaykum",
+        "AR-W00-full-greeting-recall",
         "AR-C01-sabah-al-khayr",
         "AR-C01-masa-al-khayr",
         "AR-C01-shukran",
@@ -23,12 +30,12 @@
         "AR-W03-dots-mim-ba-salam",
         "AR-W03-write-salam"
       ],
-      "voiceLessons": 1,
+      "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "arabic/narration/ch01.txt",
       "json": "arabic/narration/ch01.json",
-      "textHash": "fnv1a64:389df15bb69d443d",
-      "jsonHash": "fnv1a64:3747da915f84866d"
+      "textHash": "fnv1a64:7bb61b2c461da3f0",
+      "jsonHash": "fnv1a64:3cee96adba00e407"
     },
     {
       "language": "arabic",
@@ -16186,19 +16193,19 @@
     {
       "language": "urdu",
       "chapter": 1,
-      "sourceHash": "fnv1a64:6f9688165869e235",
+      "sourceHash": "fnv1a64:6ce2489937b3a12a",
       "lessonIds": [
-        "UR-C01-ji-han",
-        "UR-C01-nahin",
         "UR-C01-salam",
-        "UR-C01-shukriya"
+        "UR-C01-shukriya",
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
       ],
       "voiceLessons": 4,
       "drivablePrefix": 4,
       "text": "urdu/narration/ch01.txt",
       "json": "urdu/narration/ch01.json",
-      "textHash": "fnv1a64:1eb4183348befa5d",
-      "jsonHash": "fnv1a64:2403ebd0c5fbf756"
+      "textHash": "fnv1a64:924e51dc3a336c5d",
+      "jsonHash": "fnv1a64:2ae1d7f98a2b635e"
     },
     {
       "language": "urdu",

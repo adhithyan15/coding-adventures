@@ -138,6 +138,44 @@ describe("the corpus-wide super-gentle ramp", () => {
         0,
       ),
       findings: snappedQueue.length,
+      /* Superseded pre-snapshot-sharding assertions:
+      tracks: 23,
+      tracksWithDetectedCliffs: 23,
+      tracksWithNoWritingPractice: 3,
+      tracksWhereWritingStartsLate: 7,
+      atomMeasurementBlindLessons: 497,
+      findings: 139,
+    });
+    expect(report.workQueue.slice(0, 3).map(({ language, kind, count }) => ({ language, kind, count }))).toEqual([
+      { language: "kannada", kind: "duration", count: 1 },
+      { language: "telugu", kind: "duration", count: 1 },
+      { language: "bengali", kind: "order-integrity", count: 3 },
+    ]);
+    expect(report.tracks.find((track) => track.language === "german")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    expect(report.tracks.find((track) => track.language === "french")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    expect(report.tracks.find((track) => track.language === "marathi")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    expect(report.tracks.find((track) => track.language === "punjabi")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    expect(report.tracks.find((track) => track.language === "arabic")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+      */
     });
 
     expect(report.tracks.find((track) => track.language === "italian")).toMatchObject({
@@ -152,6 +190,28 @@ describe("the corpus-wide super-gentle ramp", () => {
     expect(
       [...outputs.keys()].filter((path) => outputs.get(path) !== changedOutputs.get(path)),
     ).toEqual([`${GENTLE_RAMP_SNAPSHOT_DIR}/german.json`]);
+    /* Superseded assertions from order branches not yet on main:
+    expect(report.tracks.find((track) => track.language === "portuguese")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    expect(report.tracks.find((track) => track.language === "persian")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    expect(report.tracks.find((track) => track.language === "urdu")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
+    */
+    expect(report.tracks.find((track) => track.language === "urdu")).toMatchObject({
+      orderDefects: 0,
+      forwardPrerequisites: 0,
+      forwardReviews: 0,
+    });
     expect(report.tracks.every((track) => track.findings.length > 0)).toBe(true);
   }, 30_000);
 });

@@ -1,5 +1,6 @@
 ---
 id: UR-C01-shukriya
+sequence: 20
 chapter: 1
 type: word
 headword: شکریہ
