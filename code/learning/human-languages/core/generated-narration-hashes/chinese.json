@@ -1,0 +1,214 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "chinese",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:52ce5478da7f7681",
+      "lessonIds": [
+        "ZH-C01-tones",
+        "ZH-C01-ni",
+        "ZH-C01-hao",
+        "ZH-C01-nihao",
+        "ZH-C01-tone-sandhi",
+        "ZH-C01-hao-fond",
+        "ZH-C01-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch01.txt",
+      "json": "chinese/narration/ch01.json",
+      "textHash": "fnv1a64:5323bcdf35abbc86",
+      "jsonHash": "fnv1a64:0afb39a607d43c36"
+    },
+    {
+      "language": "chinese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:64ef4a9e6f25106d",
+      "lessonIds": [
+        "ZH-W01-ren",
+        "ZH-W01-ren-radical",
+        "ZH-W01-er",
+        "ZH-W01-ni-build",
+        "ZH-W01-nu",
+        "ZH-W01-zi",
+        "ZH-W01-hao-build"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch02.txt",
+      "json": "chinese/narration/ch02.json",
+      "textHash": "fnv1a64:7b28ae4919b294f2",
+      "jsonHash": "fnv1a64:57153004a2405256"
+    },
+    {
+      "language": "chinese",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:7b9e605a797cb959",
+      "lessonIds": [
+        "ZH-W03-yi",
+        "ZH-C03-yi",
+        "ZH-W03-er",
+        "ZH-C03-er",
+        "ZH-W03-san",
+        "ZH-C03-san",
+        "ZH-W03-si",
+        "ZH-C03-si",
+        "ZH-W03-wu",
+        "ZH-C03-wu",
+        "ZH-C03-practice"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch03.txt",
+      "json": "chinese/narration/ch03.json",
+      "textHash": "fnv1a64:a739df7c69498933",
+      "jsonHash": "fnv1a64:0753e9e369a88ebc"
+    },
+    {
+      "language": "chinese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:d45966cf46988112",
+      "lessonIds": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri",
+        "ZH-W04-bu",
+        "ZH-C04-bu",
+        "ZH-C04-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch04.txt",
+      "json": "chinese/narration/ch04.json",
+      "textHash": "fnv1a64:cb9aeabffe021265",
+      "jsonHash": "fnv1a64:94a24189944d033d"
+    },
+    {
+      "language": "chinese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:708538f4098aa533",
+      "lessonIds": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch05.txt",
+      "json": "chinese/narration/ch05.json",
+      "textHash": "fnv1a64:86e47e62d04a010b",
+      "jsonHash": "fnv1a64:0b738cd121d2d253"
+    },
+    {
+      "language": "chinese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:e13cc96d46eb5e01",
+      "lessonIds": [
+        "ZH-W06-zai",
+        "ZH-W06-jian",
+        "ZH-C06-zaijian",
+        "ZH-C06-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch06.txt",
+      "json": "chinese/narration/ch06.json",
+      "textHash": "fnv1a64:fb679382ec496d0f",
+      "jsonHash": "fnv1a64:ed373a3383bc170a"
+    },
+    {
+      "language": "chinese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:58f8967272263fe8",
+      "lessonIds": [
+        "ZH-W07-zao",
+        "ZH-W07-shang",
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch07.txt",
+      "json": "chinese/narration/ch07.json",
+      "textHash": "fnv1a64:a2e33151f6aeca02",
+      "jsonHash": "fnv1a64:ab55350196beaff9"
+    },
+    {
+      "language": "chinese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:74196f429addec86",
+      "lessonIds": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch08.txt",
+      "json": "chinese/narration/ch08.json",
+      "textHash": "fnv1a64:4a18175e16509cd1",
+      "jsonHash": "fnv1a64:6bbf81ce2f3baef5"
+    },
+    {
+      "language": "chinese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:6afc07226f1a9596",
+      "lessonIds": [
+        "ZH-W09-shen",
+        "ZH-W09-me",
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch09.txt",
+      "json": "chinese/narration/ch09.json",
+      "textHash": "fnv1a64:f179d1dd4a9d6d5f",
+      "jsonHash": "fnv1a64:423a29571793f8fc"
+    },
+    {
+      "language": "chinese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:973a39a8619cdb55",
+      "lessonIds": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch10.txt",
+      "json": "chinese/narration/ch10.json",
+      "textHash": "fnv1a64:bc4806b83508a7fb",
+      "jsonHash": "fnv1a64:3b71f2f96558b9da"
+    },
+    {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:395664a6a3b64bdd",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "chinese/narration/ch11.txt",
+      "json": "chinese/narration/ch11.json",
+      "textHash": "fnv1a64:debd1e52601ba7ff",
+      "jsonHash": "fnv1a64:343c4343076ee1e7"
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,183 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "persian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:497f80f61dd5767f",
+      "lessonIds": [
+        "FA-C02-esm-e-man"
+      ],
+      "tex": "persian/book/chapters/ch02-give-your-name.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:83038f638b3ba424",
+      "lessonIds": [
+        "FA-C03-shoma-to",
+        "FA-C03-chist",
+        "FA-C03-esm-e-shoma-chist",
+        "FA-C03-khoshvaghtam",
+        "FA-C03-practice"
+      ],
+      "tex": "persian/book/chapters/ch03-ask-and-answer-names.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:d3738d0ad5a5931b",
+      "lessonIds": [
+        "FA-C04-hal",
+        "FA-C04-chetor",
+        "FA-C04-hal-e-shoma-chetor-ast",
+        "FA-C04-khub",
+        "FA-C04-khubam",
+        "FA-C04-practice"
+      ],
+      "tex": "persian/book/chapters/ch04-how-are-you.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:697af1de4ee3a203",
+      "lessonIds": [
+        "FA-C05-khoda",
+        "FA-C05-hafez",
+        "FA-C05-khodahafez",
+        "FA-C05-practice"
+      ],
+      "tex": "persian/book/chapters/ch05-take-leave.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:176e4c965cf8e7b5",
+      "lessonIds": [
+        "FA-C06-budan",
+        "FA-C06-raftan",
+        "FA-C06-amadan",
+        "FA-C06-goftan",
+        "FA-C06-danestan"
+      ],
+      "tex": "persian/book/chapters/ch06-core-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:3b18c9a915370ad6",
+      "lessonIds": [
+        "FA-C07-fekr-kardan",
+        "FA-C07-fahmidan",
+        "FA-C07-khandan",
+        "FA-C07-neveshtan"
+      ],
+      "tex": "persian/book/chapters/ch07-mind-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:2b346bb5101e4422",
+      "lessonIds": [
+        "FA-C08-gereftan",
+        "FA-C08-porsidan",
+        "FA-C08-komak-kardan",
+        "FA-C08-dust-dashtan"
+      ],
+      "tex": "persian/book/chapters/ch08-doing-verbs.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:10653b6e52e9b4a8",
+      "lessonIds": [
+        "FA-C09-ab",
+        "FA-C09-nan",
+        "FA-C09-chay",
+        "FA-C09-kelid"
+      ],
+      "tex": "persian/book/chapters/ch09-please-requests.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:5dd2317b63b9a4cd",
+      "lessonIds": [
+        "FA-C10-madar",
+        "FA-C10-pedar",
+        "FA-C10-baradar",
+        "FA-C10-dokhtar"
+      ],
+      "tex": "persian/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:d4c57c48fbf24363",
+      "lessonIds": [
+        "FA-C11-cheshm",
+        "FA-C11-dast",
+        "FA-C11-pa",
+        "FA-C11-zaban"
+      ],
+      "tex": "persian/book/chapters/ch11-body.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:b7dc258c97b8921c",
+      "lessonIds": [
+        "FA-C12-nam",
+        "FA-C12-del",
+        "FA-C12-dar",
+        "FA-C12-ketab"
+      ],
+      "tex": "persian/book/chapters/ch12-name-heart-door-book.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:d4c64a5e309e20e0",
+      "lessonIds": [
+        "FA-C13-aseman",
+        "FA-C13-khorshid",
+        "FA-C13-mah",
+        "FA-C13-setare",
+        "FA-C13-baran"
+      ],
+      "tex": "persian/book/chapters/ch13-sky-words.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:ee36853a6bd77421",
+      "lessonIds": [
+        "FA-C14-khahar",
+        "FA-C14-pesar",
+        "FA-C14-mard",
+        "FA-C14-zan",
+        "FA-C14-dust"
+      ],
+      "tex": "persian/book/chapters/ch14-people-words.tex"
+    },
+    {
+      "language": "persian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:d0838dab3dd89a51",
+      "lessonIds": [
+        "FA-W15-alef",
+        "FA-W15-lam",
+        "FA-W15-sin",
+        "FA-W15-mim",
+        "FA-W15-joining",
+        "FA-W15-be",
+        "FA-W15-te-nun",
+        "FA-W15-he",
+        "FA-W15-vav",
+        "FA-C15-practice"
+      ],
+      "tex": "persian/book/chapters/ch15-script-nine.tex"
+    }
+  ]
+}

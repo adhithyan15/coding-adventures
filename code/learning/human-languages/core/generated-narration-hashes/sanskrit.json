@@ -1,0 +1,937 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "sanskrit",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:9c4899c747d7348b",
+      "lessonIds": [
+        "SA-C01-namaste",
+        "SA-C01-namaskara",
+        "SA-C01-dhanyavada",
+        "SA-C01-svagatam",
+        "SA-C01-am-na",
+        "SA-C01-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch01.txt",
+      "json": "sanskrit/narration/ch01.json",
+      "textHash": "fnv1a64:5a1cb6f4b3102852",
+      "jsonHash": "fnv1a64:23f4ed540e2efe92"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:b39cf9020dead40a",
+      "lessonIds": [
+        "SA-C02-nama",
+        "SA-C02-mama",
+        "SA-C02-asti",
+        "SA-C02-mama-nama-asti",
+        "SA-C02-bhavan-tvam",
+        "SA-C02-kim",
+        "SA-C02-tava-nama-kim",
+        "SA-C02-anandah"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch02.txt",
+      "json": "sanskrit/narration/ch02.json",
+      "textHash": "fnv1a64:48c14d654e33986e",
+      "jsonHash": "fnv1a64:56e36edcbbdd3c76"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:b089fe3d35ef4a66",
+      "lessonIds": [
+        "SA-C03-katham",
+        "SA-C03-bhavan-katham-asti",
+        "SA-C03-aham",
+        "SA-C03-kushalam",
+        "SA-C03-na-cinta",
+        "SA-C03-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch03.txt",
+      "json": "sanskrit/narration/ch03.json",
+      "textHash": "fnv1a64:683335a5f220ab55",
+      "jsonHash": "fnv1a64:26f4817ef2f4fa55"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:1c703f23366d237c",
+      "lessonIds": [
+        "SA-C04-gacchami",
+        "SA-C04-punah",
+        "SA-C04-punar-darshanaya",
+        "SA-C04-shvah",
+        "SA-C04-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch04.txt",
+      "json": "sanskrit/narration/ch04.json",
+      "textHash": "fnv1a64:a8c777357573cc97",
+      "jsonHash": "fnv1a64:f7e46563988f6adc"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:44514fd4a018fa24",
+      "lessonIds": [
+        "SA-C05-vadami",
+        "SA-C05-aham-samskritam-vadami",
+        "SA-C05-vasami",
+        "SA-C05-karomi",
+        "SA-C05-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch05.txt",
+      "json": "sanskrit/narration/ch05.json",
+      "textHash": "fnv1a64:e5fce21269521272",
+      "jsonHash": "fnv1a64:f3b628b80e167949"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:13ed263f4eceffa1",
+      "lessonIds": [
+        "SA-C06-numbers-1-5",
+        "SA-C06-number-cognates",
+        "SA-C06-pancha-travels"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch06.txt",
+      "json": "sanskrit/narration/ch06.json",
+      "textHash": "fnv1a64:228e07a40b686b75",
+      "jsonHash": "fnv1a64:2c9c89e62f05617b"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:ff231d44e04fb65e",
+      "lessonIds": [
+        "SA-C07-asti",
+        "SA-C07-gacchati",
+        "SA-C07-agacchati",
+        "SA-C07-khadati",
+        "SA-C07-pashyati",
+        "SA-C07-janati"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch07.txt",
+      "json": "sanskrit/narration/ch07.json",
+      "textHash": "fnv1a64:47301ded2c9a4c1a",
+      "jsonHash": "fnv1a64:6d5d1b5760b96037"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:8d76e533819aeb44",
+      "lessonIds": [
+        "SA-C08-cintayati",
+        "SA-C08-avagacchati",
+        "SA-C08-pathati",
+        "SA-C08-likhati",
+        "SA-S01-letter-ma",
+        "SA-S107-letter-ta"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch08.txt",
+      "json": "sanskrit/narration/ch08.json",
+      "textHash": "fnv1a64:8e67dce2a70d9cae",
+      "jsonHash": "fnv1a64:dfb0a0697de5bd0c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:f1b1bc0c5f5ad1c7",
+      "lessonIds": [
+        "SA-C09-grhnati",
+        "SA-C09-prcchati",
+        "SA-C09-sahayyam-karoti",
+        "SA-C09-snihyati",
+        "SA-S02-letter-na",
+        "SA-S108-letter-sa"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch09.txt",
+      "json": "sanskrit/narration/ch09.json",
+      "textHash": "fnv1a64:b3d646d7371bdaeb",
+      "jsonHash": "fnv1a64:674b029334ed0b64"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:662ec360d6e0d8c4",
+      "lessonIds": [
+        "SA-C10-paniyam",
+        "SA-C10-kshiram",
+        "SA-C10-annam",
+        "SA-S03-letter-a",
+        "SA-S109-vowel-sign-i"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch10.txt",
+      "json": "sanskrit/narration/ch10.json",
+      "textHash": "fnv1a64:1ac5450baf429503",
+      "jsonHash": "fnv1a64:8f78733f0d621b0c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:1a6c6c3f5058300d",
+      "lessonIds": [
+        "SA-C11-mitram",
+        "SA-C11-kutumbam",
+        "SA-C11-bhrata",
+        "SA-C11-bhagini",
+        "SA-S04-letter-aa",
+        "SA-S110-letter-ra"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch11.txt",
+      "json": "sanskrit/narration/ch11.json",
+      "textHash": "fnv1a64:dfe6a5fcdac1454d",
+      "jsonHash": "fnv1a64:c10a4ff4a1e3246f"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:71d9e91f007f92f2",
+      "lessonIds": [
+        "SA-C12-akshi",
+        "SA-C12-karnah",
+        "SA-C12-mukham",
+        "SA-S05-sign-virama",
+        "SA-S111-letter-ka"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch12.txt",
+      "json": "sanskrit/narration/ch12.json",
+      "textHash": "fnv1a64:5074a2fd286695b0",
+      "jsonHash": "fnv1a64:406dd6c1f765f6a6"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:53411835a80421db",
+      "lessonIds": [
+        "SA-C13-nasika",
+        "SA-C13-hridayam",
+        "SA-S06-vowel-sign-aa",
+        "SA-S112-vowel-sign-e"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "sanskrit/narration/ch13.txt",
+      "json": "sanskrit/narration/ch13.json",
+      "textHash": "fnv1a64:9889b96cf74971cb",
+      "jsonHash": "fnv1a64:2bd7e896f17b467c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:2a345cef402c9cc3",
+      "lessonIds": [
+        "SA-C14-this",
+        "SA-C14-that",
+        "SA-C14-here",
+        "SA-C14-there",
+        "SA-C14-who",
+        "SA-C14-where",
+        "SA-C14-deixis-system",
+        "SA-S113-letter-pa"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "sanskrit/narration/ch14.txt",
+      "json": "sanskrit/narration/ch14.json",
+      "textHash": "fnv1a64:cdc4b5bcfe1dd735",
+      "jsonHash": "fnv1a64:effd4f401930d0a3"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:b0eb647fc2ec725d",
+      "lessonIds": [
+        "SA-C15-big",
+        "SA-C15-small",
+        "SA-C15-good",
+        "SA-C15-new",
+        "SA-C15-old",
+        "SA-C15-adjective-system",
+        "SA-S114-letter-ha"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch15.txt",
+      "json": "sanskrit/narration/ch15.json",
+      "textHash": "fnv1a64:8a0598dda8bc6ca5",
+      "jsonHash": "fnv1a64:dd024ac5fa716aea"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:4efb7c6331b7c64c",
+      "lessonIds": [
+        "SA-C16-house",
+        "SA-C16-village",
+        "SA-C16-road",
+        "SA-C16-forest",
+        "SA-C16-city",
+        "SA-C16-noun-families"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch16.txt",
+      "json": "sanskrit/narration/ch16.json",
+      "textHash": "fnv1a64:b4fa92253aa8eb3c",
+      "jsonHash": "fnv1a64:bc2ec0dd1ac615ce"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:0074b178ebc6d4c1",
+      "lessonIds": [
+        "SA-C17-day",
+        "SA-C17-night",
+        "SA-C17-today",
+        "SA-C17-yesterday",
+        "SA-C17-always",
+        "SA-C17-time-words"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch17.txt",
+      "json": "sanskrit/narration/ch17.json",
+      "textHash": "fnv1a64:7b8ba6a1cc045fc9",
+      "jsonHash": "fnv1a64:2e63a7f7d9bebbd5"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:c34324b4e7d3ac5d",
+      "lessonIds": [
+        "SA-C18-when",
+        "SA-C18-why",
+        "SA-C18-how-many",
+        "SA-C18-from-where",
+        "SA-C18-k-words"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch18.txt",
+      "json": "sanskrit/narration/ch18.json",
+      "textHash": "fnv1a64:5997a514c0d67731",
+      "jsonHash": "fnv1a64:665b7a5a7a058ec8"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:2620d676e48678f8",
+      "lessonIds": [
+        "SA-C19-six",
+        "SA-C19-seven",
+        "SA-C19-eight",
+        "SA-C19-nine",
+        "SA-C19-ten",
+        "SA-C19-number-family"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "sanskrit/narration/ch19.txt",
+      "json": "sanskrit/narration/ch19.json",
+      "textHash": "fnv1a64:ab86acd57302e6e4",
+      "jsonHash": "fnv1a64:091d2c33c53f476a"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:370475346b7cdc30",
+      "lessonIds": [
+        "SA-C20-man",
+        "SA-C20-woman",
+        "SA-C20-child",
+        "SA-C20-old-person",
+        "SA-C20-people"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 1,
+      "text": "sanskrit/narration/ch20.txt",
+      "json": "sanskrit/narration/ch20.json",
+      "textHash": "fnv1a64:a162ff48ba68c86f",
+      "jsonHash": "fnv1a64:74652217bc880965"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:f4763804d02be7a6",
+      "lessonIds": [
+        "SA-C21-dance",
+        "SA-C21-laugh",
+        "SA-C21-stand",
+        "SA-C21-remember"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch21.txt",
+      "json": "sanskrit/narration/ch21.json",
+      "textHash": "fnv1a64:1274ab2c8e93c5bb",
+      "jsonHash": "fnv1a64:34d03d9533ef528a"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:80a1806eac2c723e",
+      "lessonIds": [
+        "SA-C22-hear",
+        "SA-C22-lead",
+        "SA-C22-play",
+        "SA-C22-burn"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch22.txt",
+      "json": "sanskrit/narration/ch22.json",
+      "textHash": "fnv1a64:7427cc6649dd2055",
+      "jsonHash": "fnv1a64:1dbaecb341507795"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:b4f4ad8cb69dc56a",
+      "lessonIds": [
+        "SA-C23-father",
+        "SA-C23-mother",
+        "SA-C23-son",
+        "SA-C23-daughter"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "sanskrit/narration/ch23.txt",
+      "json": "sanskrit/narration/ch23.json",
+      "textHash": "fnv1a64:d26c52856e9600b3",
+      "jsonHash": "fnv1a64:7c1d1f8b05e38342"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:e790e2f50b471093",
+      "lessonIds": [
+        "SA-C24-water",
+        "SA-C24-rice",
+        "SA-C24-fruit",
+        "SA-C24-cloth",
+        "SA-C24-lamp"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch24.txt",
+      "json": "sanskrit/narration/ch24.json",
+      "textHash": "fnv1a64:7a33293c789c6c05",
+      "jsonHash": "fnv1a64:61769c201ca1b522"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:68be4c4a02fc726e",
+      "lessonIds": [
+        "SA-C25-hand",
+        "SA-C25-foot",
+        "SA-C25-head",
+        "SA-C25-tooth",
+        "SA-C25-hair"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch25.txt",
+      "json": "sanskrit/narration/ch25.json",
+      "textHash": "fnv1a64:10e936a884296d74",
+      "jsonHash": "fnv1a64:37a045a8ef8e9efe"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:08a58d31fdb8bbeb",
+      "lessonIds": [
+        "SA-C26-teacher",
+        "SA-C26-student",
+        "SA-C26-king",
+        "SA-C26-guest",
+        "SA-C26-physician"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch26.txt",
+      "json": "sanskrit/narration/ch26.json",
+      "textHash": "fnv1a64:a1ddb9e70f5908ea",
+      "jsonHash": "fnv1a64:43063a3bfd46dfa4"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:5f9d309a5e7f4742",
+      "lessonIds": [
+        "SA-C27-so-be-it",
+        "SA-C27-well-done",
+        "SA-C27-enough",
+        "SA-C27-true",
+        "SA-C27-thus"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "sanskrit/narration/ch27.txt",
+      "json": "sanskrit/narration/ch27.json",
+      "textHash": "fnv1a64:6b343d1eabae5525",
+      "jsonHash": "fnv1a64:b7ec71a82b404aaf"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:f385601cf90448cb",
+      "lessonIds": [
+        "SA-C28-now",
+        "SA-C28-day-after",
+        "SA-C28-journey",
+        "SA-C28-auspicious",
+        "SA-C28-svasti"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch28.txt",
+      "json": "sanskrit/narration/ch28.json",
+      "textHash": "fnv1a64:82004849fe2d1724",
+      "jsonHash": "fnv1a64:dc70227beacce3f8"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:6efd7b2a99d209b5",
+      "lessonIds": [
+        "SA-C29-please",
+        "SA-C29-pardon",
+        "SA-C29-bow",
+        "SA-C29-favour",
+        "SA-C29-fortunate"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch29.txt",
+      "json": "sanskrit/narration/ch29.json",
+      "textHash": "fnv1a64:b983648aef9193d1",
+      "jsonHash": "fnv1a64:4192dd04d84386e5"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:37caf6316eb491f8",
+      "lessonIds": [
+        "SA-C30-door",
+        "SA-C30-seat",
+        "SA-C30-flower",
+        "SA-C30-garland",
+        "SA-C30-anjali"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch30.txt",
+      "json": "sanskrit/narration/ch30.json",
+      "textHash": "fnv1a64:3d47f78534d5f535",
+      "jsonHash": "fnv1a64:031e1ef5fb721ce0"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:53f2f918a9a9e5ab",
+      "lessonIds": [
+        "SA-C31-sky",
+        "SA-C31-moon",
+        "SA-C31-star",
+        "SA-C31-wind",
+        "SA-C31-snow"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch31.txt",
+      "json": "sanskrit/narration/ch31.json",
+      "textHash": "fnv1a64:12640e25e1d98a32",
+      "jsonHash": "fnv1a64:95dca8bd1243a44f"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:3beefa46ef3ec7e7",
+      "lessonIds": [
+        "SA-C32-tree",
+        "SA-C32-leaf",
+        "SA-C32-grass",
+        "SA-C32-vine",
+        "SA-C32-wood"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch32.txt",
+      "json": "sanskrit/narration/ch32.json",
+      "textHash": "fnv1a64:b172ea9f7244f99b",
+      "jsonHash": "fnv1a64:11a38616c123b705"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:80c59f8d2bc38a70",
+      "lessonIds": [
+        "SA-C33-river",
+        "SA-C33-bridge",
+        "SA-C33-mountain",
+        "SA-C33-town",
+        "SA-C33-sea"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch33.txt",
+      "json": "sanskrit/narration/ch33.json",
+      "textHash": "fnv1a64:8fe2525c5df363be",
+      "jsonHash": "fnv1a64:958b3036d67ff35e"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:e0cdf01f279990de",
+      "lessonIds": [
+        "SA-C34-arm",
+        "SA-C34-neck",
+        "SA-C34-bone",
+        "SA-C34-blood",
+        "SA-C34-body"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch34.txt",
+      "json": "sanskrit/narration/ch34.json",
+      "textHash": "fnv1a64:e7a51c08d91e466c",
+      "jsonHash": "fnv1a64:e9fb82235e3bee4c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:b3aa123df2611289",
+      "lessonIds": [
+        "SA-C35-milk",
+        "SA-C35-honey",
+        "SA-C35-salt",
+        "SA-C35-book",
+        "SA-C35-bed"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch35.txt",
+      "json": "sanskrit/narration/ch35.json",
+      "textHash": "fnv1a64:e1d6c58a853ebd08",
+      "jsonHash": "fnv1a64:b5f64cc33d27498d"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:f93a42631b63abcd",
+      "lessonIds": [
+        "SA-C36-also",
+        "SA-C36-all",
+        "SA-C36-likewise",
+        "SA-C36-slowly",
+        "SA-C36-rightly"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch36.txt",
+      "json": "sanskrit/narration/ch36.json",
+      "textHash": "fnv1a64:30d1346d9cef77ef",
+      "jsonHash": "fnv1a64:2b8b1f3fe542323c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:a2a5cda1a2c534a9",
+      "lessonIds": [
+        "SA-C37-peace",
+        "SA-C37-respectfully",
+        "SA-C37-gracious",
+        "SA-C37-congratulations",
+        "SA-C37-blessing"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch37.txt",
+      "json": "sanskrit/narration/ch37.json",
+      "textHash": "fnv1a64:6c39b317a03df6c4",
+      "jsonHash": "fnv1a64:76b892b03e3615c6"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:9cb75d5b51116e33",
+      "lessonIds": [
+        "SA-C38-fire",
+        "SA-C38-ash",
+        "SA-C38-stone",
+        "SA-C38-sand",
+        "SA-C38-soil"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch38.txt",
+      "json": "sanskrit/narration/ch38.json",
+      "textHash": "fnv1a64:b7be3d15efd79ec6",
+      "jsonHash": "fnv1a64:8cf3d50d33720609"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:9ddb135db7a4b884",
+      "lessonIds": [
+        "SA-C39-cow",
+        "SA-C39-bird",
+        "SA-C39-fish",
+        "SA-C39-dog",
+        "SA-C39-snake"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch39.txt",
+      "json": "sanskrit/narration/ch39.json",
+      "textHash": "fnv1a64:0de5ec6c55205e47",
+      "jsonHash": "fnv1a64:159737427184624f"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:18e3e724436b79dc",
+      "lessonIds": [
+        "SA-C40-curd",
+        "SA-C40-sugar",
+        "SA-C40-butter",
+        "SA-C40-vegetable",
+        "SA-C40-sweet"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch40.txt",
+      "json": "sanskrit/narration/ch40.json",
+      "textHash": "fnv1a64:59c7a7d98820d6c4",
+      "jsonHash": "fnv1a64:5db6074b30a051e7"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:81af0ba7ab38b05b",
+      "lessonIds": [
+        "SA-C41-wheel",
+        "SA-C41-pot",
+        "SA-C41-boat",
+        "SA-C41-mirror",
+        "SA-C41-parasol"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch41.txt",
+      "json": "sanskrit/narration/ch41.json",
+      "textHash": "fnv1a64:601f9b7f2fedfd06",
+      "jsonHash": "fnv1a64:1edb17b0e2cfca63"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:ee993f58cf13a210",
+      "lessonIds": [
+        "SA-C42-sometimes",
+        "SA-C42-suddenly",
+        "SA-C42-mostly",
+        "SA-C42-a-little",
+        "SA-C42-much"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch42.txt",
+      "json": "sanskrit/narration/ch42.json",
+      "textHash": "fnv1a64:07c8f038f60e94e5",
+      "jsonHash": "fnv1a64:ad95fdbeced99ab4"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:b47c87a5e8bee4b9",
+      "lessonIds": [
+        "SA-C43-hospitality",
+        "SA-C43-conduct",
+        "SA-C43-humility",
+        "SA-C43-trust",
+        "SA-C43-honest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch43.txt",
+      "json": "sanskrit/narration/ch43.json",
+      "textHash": "fnv1a64:881dec451883b1d1",
+      "jsonHash": "fnv1a64:0b3ba6da346e5ae7"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:6c286fb414b9813c",
+      "lessonIds": [
+        "SA-C44-white",
+        "SA-C44-dark",
+        "SA-C44-yellow",
+        "SA-C44-green",
+        "SA-C44-blue"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch44.txt",
+      "json": "sanskrit/narration/ch44.json",
+      "textHash": "fnv1a64:2ef4d97354c9491f",
+      "jsonHash": "fnv1a64:e047d7b81d4ae2e5"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:9c63c36b67ef7aaf",
+      "lessonIds": [
+        "SA-C45-morning",
+        "SA-C45-noon",
+        "SA-C45-evening",
+        "SA-C45-month",
+        "SA-C45-year"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch45.txt",
+      "json": "sanskrit/narration/ch45.json",
+      "textHash": "fnv1a64:4996be4294ec5669",
+      "jsonHash": "fnv1a64:fd16dce01d5e0b5c"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:4f0b0203af99c0ca",
+      "lessonIds": [
+        "SA-C46-sun",
+        "SA-C46-ray",
+        "SA-C46-light",
+        "SA-C46-shade",
+        "SA-C46-heat"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch46.txt",
+      "json": "sanskrit/narration/ch46.json",
+      "textHash": "fnv1a64:a7b3f0d02780e947",
+      "jsonHash": "fnv1a64:e11e7a12d04eaaea"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:9790d02972a27ea4",
+      "lessonIds": [
+        "SA-C47-wall",
+        "SA-C47-window",
+        "SA-C47-stair",
+        "SA-C47-pillar",
+        "SA-C47-floor"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch47.txt",
+      "json": "sanskrit/narration/ch47.json",
+      "textHash": "fnv1a64:845c6fb147bfd9f6",
+      "jsonHash": "fnv1a64:8308ba6b94b620b7"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:d811ed36294043c3",
+      "lessonIds": [
+        "SA-C48-lion",
+        "SA-C48-wolf",
+        "SA-C48-goat",
+        "SA-C48-monkey",
+        "SA-C48-goose"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch48.txt",
+      "json": "sanskrit/narration/ch48.json",
+      "textHash": "fnv1a64:3cde65d109429109",
+      "jsonHash": "fnv1a64:3b03e53623b76b64"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:940b3df78e87691b",
+      "lessonIds": [
+        "SA-C49-then",
+        "SA-C49-as",
+        "SA-C49-only",
+        "SA-C49-again-and-again",
+        "SA-C49-oh"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch49.txt",
+      "json": "sanskrit/narration/ch49.json",
+      "textHash": "fnv1a64:853a8983dfcf40ef",
+      "jsonHash": "fnv1a64:73d43616f91e9b69"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:771deca55754822c",
+      "lessonIds": [
+        "SA-C50-sound",
+        "SA-C50-question",
+        "SA-C50-voice",
+        "SA-C50-song",
+        "SA-C50-verse"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch50.txt",
+      "json": "sanskrit/narration/ch50.json",
+      "textHash": "fnv1a64:5e1e36a8c8bc293d",
+      "jsonHash": "fnv1a64:d1e41509e510ec9b"
+    },
+    {
+      "language": "sanskrit",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:a0be78232ec466ac",
+      "lessonIds": [
+        "SA-C51-husband",
+        "SA-C51-wife",
+        "SA-C51-grandfather",
+        "SA-C51-grandmother",
+        "SA-C51-uncle"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "sanskrit/narration/ch51.txt",
+      "json": "sanskrit/narration/ch51.json",
+      "textHash": "fnv1a64:b795c4044fa13ed4",
+      "jsonHash": "fnv1a64:74bd2d13905be8ae"
+    }
+  ],
+  "findings": []
+}

@@ -1,0 +1,263 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "marathi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:9a9585e9c49bbb0c",
+      "lessonIds": [
+        "MR-C01-namaskar",
+        "MR-C01-dhanyavad",
+        "MR-C01-ho",
+        "MR-C01-nahi",
+        "MR-C01-baram",
+        "MR-C01-yeto",
+        "MR-C01-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch01.txt",
+      "json": "marathi/narration/ch01.json",
+      "textHash": "fnv1a64:14a2a7d868662721",
+      "jsonHash": "fnv1a64:3d275476a49ecf38"
+    },
+    {
+      "language": "marathi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:ae19d5b77ccc9d3b",
+      "lessonIds": [
+        "MR-C02-naav",
+        "MR-C02-majhe",
+        "MR-C02-aahe",
+        "MR-C02-majhe-naav-aahe",
+        "MR-C02-tu-tumhi",
+        "MR-C02-kaay",
+        "MR-C02-tumche-naav-kaay-aahe",
+        "MR-C02-anand",
+        "MR-C02-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch02.txt",
+      "json": "marathi/narration/ch02.json",
+      "textHash": "fnv1a64:7410085bd5911328",
+      "jsonHash": "fnv1a64:bc6c03fcdb1195b2"
+    },
+    {
+      "language": "marathi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:6da0c00d4748ac86",
+      "lessonIds": [
+        "MR-C03-kasa",
+        "MR-C03-tumhi-kase-aahat",
+        "MR-C03-mi",
+        "MR-C03-mi-bara-aahe",
+        "MR-C03-kaahi-harkat-nahi",
+        "MR-C03-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch03.txt",
+      "json": "marathi/narration/ch03.json",
+      "textHash": "fnv1a64:2ec652bde66f59cf",
+      "jsonHash": "fnv1a64:642c2cbbda89a6ac"
+    },
+    {
+      "language": "marathi",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:541a7189fcb23297",
+      "lessonIds": [
+        "MR-C04-punha",
+        "MR-C04-bhetu",
+        "MR-C04-punha-bhetu",
+        "MR-C04-udya-bhetu",
+        "MR-C04-kalji-ghya",
+        "MR-C04-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch04.txt",
+      "json": "marathi/narration/ch04.json",
+      "textHash": "fnv1a64:cf72a56d16d67b43",
+      "jsonHash": "fnv1a64:34946c6420893aea"
+    },
+    {
+      "language": "marathi",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:61aba9778f8d7578",
+      "lessonIds": [
+        "MR-C05-bolne",
+        "MR-C05-mi-marathi-bolto",
+        "MR-C05-rahne",
+        "MR-C05-kaam-karne",
+        "MR-C05-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch05.txt",
+      "json": "marathi/narration/ch05.json",
+      "textHash": "fnv1a64:5059d625a977d4d9",
+      "jsonHash": "fnv1a64:8c41e457a6afbab0"
+    },
+    {
+      "language": "marathi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:4b1e1c620ea3aa6a",
+      "lessonIds": [
+        "MR-C06-numbers-1-5",
+        "MR-C06-number-differences"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "marathi/narration/ch06.txt",
+      "json": "marathi/narration/ch06.json",
+      "textHash": "fnv1a64:2e5591ef287faca2",
+      "jsonHash": "fnv1a64:2a6a0f899506091f"
+    },
+    {
+      "language": "marathi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:ff2ac4184c0d065b",
+      "lessonIds": [
+        "MR-C07-asne",
+        "MR-C07-jane",
+        "MR-C07-yene",
+        "MR-C07-khane",
+        "MR-C07-pahne",
+        "MR-C07-mahit-asne"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "marathi/narration/ch07.txt",
+      "json": "marathi/narration/ch07.json",
+      "textHash": "fnv1a64:c79dbda6cd55e4da",
+      "jsonHash": "fnv1a64:2fc9e11dcb4afe37"
+    },
+    {
+      "language": "marathi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:c7935a25fd2daf52",
+      "lessonIds": [
+        "MR-C08-vichar-karne",
+        "MR-C08-samajne",
+        "MR-C08-vachne",
+        "MR-C08-lihine"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch08.txt",
+      "json": "marathi/narration/ch08.json",
+      "textHash": "fnv1a64:1c553c88cec93321",
+      "jsonHash": "fnv1a64:9ac8c9c5e51ccff0"
+    },
+    {
+      "language": "marathi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:0d8a362e6a162877",
+      "lessonIds": [
+        "MR-C09-ghene",
+        "MR-C09-vicharne",
+        "MR-C09-madat-karne",
+        "MR-C09-avadne"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch09.txt",
+      "json": "marathi/narration/ch09.json",
+      "textHash": "fnv1a64:e7df235d7313dbff",
+      "jsonHash": "fnv1a64:9ad2a0f8b708dd7d"
+    },
+    {
+      "language": "marathi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:8f01d3226aec18e1",
+      "lessonIds": [
+        "MR-C10-paani",
+        "MR-C10-chaha",
+        "MR-C10-dudh",
+        "MR-C10-bhakari"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch10.txt",
+      "json": "marathi/narration/ch10.json",
+      "textHash": "fnv1a64:aa53fc4d4fab5ea1",
+      "jsonHash": "fnv1a64:f6c1e4a50ea95cff"
+    },
+    {
+      "language": "marathi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:610b366c32d81a38",
+      "lessonIds": [
+        "MR-C11-mitra",
+        "MR-C11-kutumb",
+        "MR-C11-bhau",
+        "MR-C11-bahin"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch11.txt",
+      "json": "marathi/narration/ch11.json",
+      "textHash": "fnv1a64:bf9df7a07b834741",
+      "jsonHash": "fnv1a64:47a7ceda76586f18"
+    },
+    {
+      "language": "marathi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:67dc331760170c58",
+      "lessonIds": [
+        "MR-C12-dola",
+        "MR-C12-kaan",
+        "MR-C12-tond",
+        "MR-C12-naak"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch12.txt",
+      "json": "marathi/narration/ch12.json",
+      "textHash": "fnv1a64:48c40512c0e05775",
+      "jsonHash": "fnv1a64:25435d54b06f316e"
+    },
+    {
+      "language": "marathi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:e9c69014bcab3516",
+      "lessonIds": [
+        "MR-C13-hrudaya"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch13.txt",
+      "json": "marathi/narration/ch13.json",
+      "textHash": "fnv1a64:5988d20e6b2bbcc9",
+      "jsonHash": "fnv1a64:9fccf6dfa1364ba9"
+    },
+    {
+      "language": "marathi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:da1616ad5a472c41",
+      "lessonIds": [
+        "MR-W01-ha",
+        "MR-W01-o-matra",
+        "MR-W01-na",
+        "MR-W01-aa-matra",
+        "MR-W01-ii-matra",
+        "MR-W01-ma",
+        "MR-W01-sa",
+        "MR-W01-ka",
+        "MR-W01-virama",
+        "MR-W01-ra",
+        "MR-W01-namaskar-read"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "marathi/narration/ch14.txt",
+      "json": "marathi/narration/ch14.json",
+      "textHash": "fnv1a64:887fa0efc572a4d2",
+      "jsonHash": "fnv1a64:038600c3072b41e7"
+    }
+  ],
+  "findings": []
+}

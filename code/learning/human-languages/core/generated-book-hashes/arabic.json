@@ -1,0 +1,352 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "arabic",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:6c8b8bdf2e102d1c",
+      "lessonIds": [
+        "AR-W07-hook-family-ha-kha",
+        "AR-W08-kaf-and-ra",
+        "AR-W09-khayr-bikhayr",
+        "AR-C03-kayfa",
+        "AR-C03-hal",
+        "AR-C03-kayfa-haluka",
+        "AR-C03-bi-khayr",
+        "AR-C03-al-hamdu-lillah",
+        "AR-C03-practice"
+      ],
+      "tex": "arabic/book/chapters/ch03-how-are-you.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:f8cee96db1f38174",
+      "lessonIds": [
+        "AR-W10-ayn",
+        "AR-W11-ha-and-ta-marbuta",
+        "AR-W12-maa-salama",
+        "AR-C04-maa-with",
+        "AR-C04-al-salama",
+        "AR-C04-maa-salama",
+        "AR-C04-ila-liqaa",
+        "AR-C04-practice"
+      ],
+      "tex": "arabic/book/chapters/ch04-farewells.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:fea7c1f1420ed47f",
+      "lessonIds": [
+        "AR-C05-naam",
+        "AR-C05-la"
+      ],
+      "tex": "arabic/book/chapters/ch05-yes-and-no.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:a4e1c57cc5301853",
+      "lessonIds": [
+        "AR-C06-min-fadlik"
+      ],
+      "tex": "arabic/book/chapters/ch06-please.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:c4e081f30289ec84",
+      "lessonIds": [
+        "AR-C07-asif"
+      ],
+      "tex": "arabic/book/chapters/ch07-sorry.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:7c4dbd3aea43fbae",
+      "lessonIds": [
+        "AR-C08-al-ahad-al-khamis",
+        "AR-C08-al-jumua-as-sabt"
+      ],
+      "tex": "arabic/book/chapters/ch08-days.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:f7ffa05f860657cc",
+      "lessonIds": [
+        "AR-C09-aswad-abyad",
+        "AR-C09-ahmar-azraq"
+      ],
+      "tex": "arabic/book/chapters/ch09-colours.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:58a6594ffe8c047d",
+      "lessonIds": [
+        "AR-C10-ab-umm",
+        "AR-C10-akh-ukht"
+      ],
+      "tex": "arabic/book/chapters/ch10-family.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:4dde69d597b4a460",
+      "lessonIds": [
+        "AR-C11-ras",
+        "AR-C11-yad"
+      ],
+      "tex": "arabic/book/chapters/ch11-head-and-hand.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:7303edb41a901707",
+      "lessonIds": [
+        "AR-C12-al-fusul"
+      ],
+      "tex": "arabic/book/chapters/ch12-seasons.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:2a9b22696acf89d6",
+      "lessonIds": [
+        "AR-C13-maa-khubz"
+      ],
+      "tex": "arabic/book/chapters/ch13-water-and-bread.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:9c41c25c611b7a3d",
+      "lessonIds": [
+        "AR-C14-ashhur"
+      ],
+      "tex": "arabic/book/chapters/ch14-months.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:44d8f455443c6c85",
+      "lessonIds": [
+        "AR-C15-ad-duhr-muntasaf-al-layl"
+      ],
+      "tex": "arabic/book/chapters/ch15-noon-and-midnight.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:cf98719829d4f23e",
+      "lessonIds": [
+        "AR-C16-al-saa"
+      ],
+      "tex": "arabic/book/chapters/ch16-telling-time.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:b03f89d282ef4d43",
+      "lessonIds": [
+        "AR-C17-kam-umruka"
+      ],
+      "tex": "arabic/book/chapters/ch17-age.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:15ae4bfc2e5cab37",
+      "lessonIds": [
+        "AR-C18-al-taqs"
+      ],
+      "tex": "arabic/book/chapters/ch18-weather.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:2f3d8c680ad0414d",
+      "lessonIds": [
+        "AR-C19-wahid-khamsa"
+      ],
+      "tex": "arabic/book/chapters/ch19-numbers-1-5.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:b013adc627683066",
+      "lessonIds": [
+        "AR-C20-ahada-ashar-ishrun"
+      ],
+      "tex": "arabic/book/chapters/ch20-numbers-11-20.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:e0adac08be4fcecf",
+      "lessonIds": [
+        "AR-C21-kalb-qitt"
+      ],
+      "tex": "arabic/book/chapters/ch21-dog-and-cat.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:7e9bf937528d9c87",
+      "lessonIds": [
+        "AR-C22-akhdar-asfar"
+      ],
+      "tex": "arabic/book/chapters/ch22-green-and-yellow.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:68078e2519bed6d0",
+      "lessonIds": [
+        "AR-C23-afwan"
+      ],
+      "tex": "arabic/book/chapters/ch23-youre-welcome.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:73d612792cd8c201",
+      "lessonIds": [
+        "AR-C24-ila-al-ghad"
+      ],
+      "tex": "arabic/book/chapters/ch24-see-you-tomorrow.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:f9e1e414d4fab4e3",
+      "lessonIds": [
+        "AR-C25-yawm"
+      ],
+      "tex": "arabic/book/chapters/ch25-day.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:d1264efe75f986b2",
+      "lessonIds": [
+        "AR-C26-layl"
+      ],
+      "tex": "arabic/book/chapters/ch26-night.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:62de5997151894eb",
+      "lessonIds": [
+        "AR-C27-tusbih-ala-khayr"
+      ],
+      "tex": "arabic/book/chapters/ch27-good-night.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:6cf4b40a23477ef9",
+      "lessonIds": [
+        "AR-C28-dhahaba",
+        "AR-C28-jaa"
+      ],
+      "tex": "arabic/book/chapters/ch28-going-and-coming.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:a725c3ac6949e347",
+      "lessonIds": [
+        "AR-C29-qala",
+        "AR-C29-raa"
+      ],
+      "tex": "arabic/book/chapters/ch29-saying-and-seeing.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:d20db8be1c593997",
+      "lessonIds": [
+        "AR-C30-arafa",
+        "AR-C30-akala"
+      ],
+      "tex": "arabic/book/chapters/ch30-knowing-and-eating.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:bd0511769c84fed9",
+      "lessonIds": [
+        "AR-C31-fahima",
+        "AR-C31-qaraa",
+        "AR-C31-saala",
+        "AR-C31-kataba"
+      ],
+      "tex": "arabic/book/chapters/ch31-understanding-reading-writing.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:04746d0625479d19",
+      "lessonIds": [
+        "AR-C32-akhadha",
+        "AR-C32-fakkara",
+        "AR-C32-saada",
+        "AR-C32-ahabba"
+      ],
+      "tex": "arabic/book/chapters/ch32-taking-thinking-helping-loving.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:a42c05efde3fc112",
+      "lessonIds": [
+        "AR-C33-shay",
+        "AR-C33-halib",
+        "AR-C33-sukkar",
+        "AR-C33-qahwa"
+      ],
+      "tex": "arabic/book/chapters/ch33-asking-for-a-drink.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:c5bf814ebdf52bdc",
+      "lessonIds": [
+        "AR-C34-milh",
+        "AR-C34-lahm",
+        "AR-C34-jubn",
+        "AR-C34-taam"
+      ],
+      "tex": "arabic/book/chapters/ch34-asking-for-food.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:c0bb5781a4d0742f",
+      "lessonIds": [
+        "AR-C35-jar",
+        "AR-C35-ibn-bint",
+        "AR-C35-sadiq"
+      ],
+      "tex": "arabic/book/chapters/ch35-people-you-introduce.tex"
+    },
+    {
+      "language": "arabic",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:a708491936a6ccb6",
+      "lessonIds": [
+        "AR-C36-zayt",
+        "AR-C36-kub",
+        "AR-C36-tabaq",
+        "AR-C36-milaqa"
+      ],
+      "tex": "arabic/book/chapters/ch36-cups-plates-and-more-than-one.tex"
+    }
+  ]
+}

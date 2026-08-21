@@ -55,6 +55,8 @@ core/languages.json             complete active-language registry and default mi
 core/spine.json                 ordered, language-independent can-do spine
 core/latex-warning-baseline.json  per-track LaTeX warning debt the book gate holds the line on
 core/lesson-modality/*.json     generated per-language voice/sight/pen and chapter prefixes
+core/generated-book-hashes/*.json generated per-language book source-hash ledgers
+core/generated-narration-hashes/*.json generated per-language narration source/output ledgers
 progress/*.md                   generated per-language progress cards for conflict-free authoring
 core/figure-generation.json     configured canonical-data SVG figures and safe book targets
 core/generated-figure-hashes.json generated: figure source/SVG drift fingerprints

@@ -17,7 +17,7 @@
 // mergeable per-language JSON shards, keyed by lesson, that any renderer can read and filter without importing
 // TypeScript, without a Markdown parser, and without re-deriving anything.
 //
-// It is a **derived artifact**, in exactly the sense `core/generated-book-hashes.json`
+// It is a **derived artifact**, in exactly the sense `core/generated-book-hashes/*.json`
 // is. Nobody edits it by hand. The alternative — adding `modality:` to 1,096
 // frontmatter files — was considered and deliberately rejected by HL08, because 1,096
 // authored copies of a computed fact are 1,096 places for it to go stale. Authored
@@ -526,7 +526,7 @@ export function buildModalityManifest(
 /**
  * The manifest's canonical on-disk bytes.
  *
- * Two-space indent and a trailing newline, matching `core/generated-book-hashes.json`
+ * Two-space indent and a trailing newline, matching `core/generated-book-hashes/*.json`
  * — a generated JSON file a human will nonetheless open in a diff, so it is formatted
  * for reading. Having exactly one definition of the bytes is what makes `--write` and
  * `--check` structurally incapable of disagreeing about formatting.
