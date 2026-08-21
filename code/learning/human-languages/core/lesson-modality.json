@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:cd8f34429c23eeeb",
+  "sourceHash": "fnv1a64:074f67025abdc686",
   "summary": {
     "totalLessons": 3416,
     "voice": 2463,
@@ -35970,7 +35970,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b336cceba80b40d1"
+      "sourceHash": "fnv1a64:b636e9a11d60267f"
     },
     {
       "id": "KA-C02-hesaru",
@@ -36009,7 +36009,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:87fa1eb4380ad2c5",
+      "sourceHash": "fnv1a64:63758b2ac00bd6df",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -42498,7 +42498,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:082eb704b9b04ef0",
+      "sourceHash": "fnv1a64:b63d31de2389c720",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -42540,7 +42540,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6f6ee9b070afef33"
+      "sourceHash": "fnv1a64:5a03202775f4a9a5"
     },
     {
       "id": "ML-C02-peru",
@@ -42579,7 +42579,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:17c41728004599b4",
+      "sourceHash": "fnv1a64:b47a8e77b0049d38",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -70785,7 +70785,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:b61caef2405d511a"
+      "sourceHash": "fnv1a64:aac58ccad5a75246"
     },
     {
       "id": "TA-C02-peyar",
@@ -70821,7 +70821,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:0d61bcef1c87749a"
+      "sourceHash": "fnv1a64:57800df36bdff6a2"
     },
     {
       "id": "TA-C02-en-peyar",
@@ -76226,7 +76226,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:72cfb8497206d816"
+      "sourceHash": "fnv1a64:c593b7c329fbf4cc"
     },
     {
       "id": "TE-C02-peru",
@@ -76265,7 +76265,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7d91f0d59b61c29c",
+      "sourceHash": "fnv1a64:affcd5254104a7fc",
       "detachableSegments": [
         "The letters in this word"
       ]

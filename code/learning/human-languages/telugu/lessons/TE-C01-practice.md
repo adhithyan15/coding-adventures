@@ -13,13 +13,13 @@ est_minutes: 4
 reviews_of: [TE-C01-namaskaram, TE-C01-dhanyavadamulu, TE-C01-avunu, TE-C01-ledu, TE-C01-sare]
 ---
 
-# Chapter 1 — recap, and how Telugu says goodbye
+# Chapter 1 — a five-word recap
 
 ## Warm-up
 
 [PAUSE 2s] Five words, and a first handful of Telugu letters read straight off
-the page. Let's gather them — and add the farewell, which shares its logic with
-the rest of the family.
+the page. Let's gather only what you have already learned and make it feel
+easy.
 
 ## Read them back
 
@@ -43,41 +43,23 @@ The now-familiar pattern: the two **greeting/politeness** words are Sanskrit;
 the three **everyday grammar** words are native — though Telugu's "no" (*lēdu*)
 takes a *different* native root from its sisters' *il-*.
 
-## The farewell — the same "go and come back"
+## A promise for later
 
-Telugu, too, avoids a bare "I'm leaving." The everyday goodbye is:
-
-> **వెళ్ళి వస్తాను** (*veḷḷi vastānu*) — literally **"having gone, I [will]
-> come [back]."**
-
-and the reply is **వెళ్ళి రండి** (*veḷḷi raṇḍi*) — **"go, and come [back]."**
-The same worldview inside Tamil's *pōy varugiṟēṉ* and Kannada's *hōgi
-baruttēne*: never simply depart — promise a return. (Casually, Telugu also
-just says *veḷtānu*, "I'll go," or re-uses *namaskāram*.)
-
-## Why it's said this way
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
-
-**The same “go and come back.”** Telugu, too, avoids a bare “I'm
-leaving.” The everyday goodbye is వెళ్ళి వస్తాను (*veḷḷi vastānu*),
-“having gone, I [will] come [back],” with the reply వెళ్ళి రండి
-(*veḷḷi raṇḍi*), “go, and come back” — the worldview inside Tamil's
-*pōy varugiṟēṉ* and Kannada's *hōgi baruttēne*.
+Telugu has a warm departure exchange built around going and coming back. It
+belongs in the later chapter where you learn those actions one at a time. For
+now, repeating the greeting is enough when you part.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: all five — namaskāram · dhanyavādamulu · avunu · lēdu · sarē]
 - [YOU SAY: greet and thank — "namaskāram!" … "dhanyavādamulu."]
-- [YOU SAY: the farewell exchange — "veḷḷi vastānu" / "veḷḷi raṇḍi"]
 
 ## Wrap-up Recall
 
 [PAUSE 3s] Read all five aloud. Which two are Sanskrit, which three native?
 (Sanskrit: *namaskāram*, *dhanyavādamulu*. Native: *avunu*, *lēdu*, *sarē*.)
 How does Telugu's "no" differ from its sisters'? (Different root — *lē-* /
-*kā-*, not *il-*.) What does the Telugu goodbye literally mean? ("Having gone,
-I'll come back.")
+*kā-*, not *il-*.) Which word means "okay"? (*sarē*.)
 
-Next chapter: introducing yourself — *nā pēru…* ("my name…") — and Telugu's
-*nuvvu* / *mīru* (familiar / respectful "you").
+Next chapter starts introducing yourself, one short possession form at a time.

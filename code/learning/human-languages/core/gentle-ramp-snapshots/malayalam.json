@@ -6,15 +6,15 @@
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 0,
-  "glyphLessonSpikes": 6,
+  "glyphLessonSpikes": 4,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 43,
+  "scriptClosureViolations": 42,
   "neverTaughtGlyphs": 18,
   "orderDefects": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 20,
+  "forwardReferences": 17,
   "atomsTaught": 281,
   "atomsNeverRevisited": 51,
   "reinforcementWindowMisses": 789,
@@ -26,7 +26,7 @@
     {
       "language": "malayalam",
       "kind": "forward-language",
-      "count": 20,
+      "count": 17,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -47,7 +47,7 @@
     {
       "language": "malayalam",
       "kind": "glyph-step",
-      "count": 6,
+      "count": 4,
       "unit": "lesson/system spike(s)",
       "detail": "split new glyphs and writing systems across gentler steps"
     },
@@ -76,7 +76,7 @@
   "next": {
     "language": "malayalam",
     "kind": "forward-language",
-    "count": 20,
+    "count": 17,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }
