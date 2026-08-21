@@ -868,8 +868,10 @@ mod tests {
         assert_eq!(pixels.height, 180);
         assert!(pixels
             .data
-            .chunks_exact(4)
-            .any(|pixel| pixel != [192, 192, 192, 255]));
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .any(|pixel| *pixel != [192, 192, 192, 255]));
     }
 
     #[cfg(target_vendor = "apple")]
@@ -1242,8 +1244,10 @@ mod tests {
         let pixels = paint_metal::render(&scene);
         assert!(pixels
             .data
-            .chunks_exact(4)
-            .any(|pixel| pixel != [192, 192, 192, 255]));
+            .as_chunks::<4>()
+            .0
+            .iter()
+            .any(|pixel| *pixel != [192, 192, 192, 255]));
     }
 
     #[cfg(target_vendor = "apple")]
