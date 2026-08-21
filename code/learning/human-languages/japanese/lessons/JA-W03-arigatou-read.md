@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W03-arigatou-read
 spine_node: SPINE-COURTESY-THANK
-sequence: 250
+sequence: 200
 delivery: script
 chapter: 3
 type: writing
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-W03-a, JA-W03-ri, JA-W03-ka, JA-W03-dakuten, JA-W03-to, JA-W03-u, JA-C01-arigatou]
+reviews_of: [JA-W03-a, JA-W03-ri, JA-W03-ka, JA-W03-dakuten, JA-W03-to, JA-W03-u]
 ---
 
 # ありがとう — no new sign, and a whole word

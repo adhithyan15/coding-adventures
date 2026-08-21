@@ -6,51 +6,46 @@
     {
       "language": "japanese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:9927b0eced7c6fcf",
-      "lessonIds": [
-        "JA-C01-hai",
-        "JA-C01-iie",
-        "JA-C01-konnichiwa",
-        "JA-C01-nihongo",
-        "JA-C01-koohii",
-        "JA-C01-arigatou",
-        "JA-C01-gozaimasu",
-        "JA-C01-practice"
-      ],
-      "voiceLessons": 1,
-      "drivablePrefix": 0,
-      "text": "japanese/narration/ch01.txt",
-      "json": "japanese/narration/ch01.json",
-      "textHash": "fnv1a64:e9d826f7652f1fcf",
-      "jsonHash": "fnv1a64:3425b1b2b383325f"
-    },
-    {
-      "language": "japanese",
-      "chapter": 2,
-      "sourceHash": "fnv1a64:44f1c780f26d205d",
+      "sourceHash": "fnv1a64:fe825b2ffb8c58cd",
       "lessonIds": [
         "JA-W01-i",
         "JA-W01-ha",
         "JA-W01-hai-read",
         "JA-W01-e",
+        "JA-C01-hai",
+        "JA-C01-iie"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch01.txt",
+      "json": "japanese/narration/ch01.json",
+      "textHash": "fnv1a64:b79eb2bcfd6985eb",
+      "jsonHash": "fnv1a64:b87a15a3db84b7ce"
+    },
+    {
+      "language": "japanese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:4738d9e25fd92f72",
+      "lessonIds": [
         "JA-W01-ko",
         "JA-W01-n",
         "JA-W01-ni",
         "JA-W01-chi",
         "JA-W01-wa",
-        "JA-W01-konnichiwa-read"
+        "JA-W01-konnichiwa-read",
+        "JA-C01-konnichiwa"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "japanese/narration/ch02.txt",
       "json": "japanese/narration/ch02.json",
-      "textHash": "fnv1a64:e272464eb26f742b",
-      "jsonHash": "fnv1a64:17ec0ae9d3a112d6"
+      "textHash": "fnv1a64:419b22b6c702c57e",
+      "jsonHash": "fnv1a64:21da5d2733fdc42c"
     },
     {
       "language": "japanese",
       "chapter": 3,
-      "sourceHash": "fnv1a64:1a25d37b069264b0",
+      "sourceHash": "fnv1a64:7832024c6b7ac24d",
       "lessonIds": [
         "JA-W03-a",
         "JA-W03-ri",
@@ -59,17 +54,83 @@
         "JA-W03-to",
         "JA-W03-u",
         "JA-W03-arigatou-read",
-        "JA-W03-sa",
-        "JA-W03-ma",
-        "JA-W03-su",
-        "JA-C03-practice"
+        "JA-C01-arigatou"
       ],
       "voiceLessons": 0,
       "drivablePrefix": 0,
       "text": "japanese/narration/ch03.txt",
       "json": "japanese/narration/ch03.json",
-      "textHash": "fnv1a64:cfe27fe655c7819d",
-      "jsonHash": "fnv1a64:a37a70fe9ab1f01d"
+      "textHash": "fnv1a64:0a64d358416e6526",
+      "jsonHash": "fnv1a64:e8dcc423abb08498"
+    },
+    {
+      "language": "japanese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:600d2c132460deff",
+      "lessonIds": [
+        "JA-W03-sa",
+        "JA-W03-ma",
+        "JA-W03-su",
+        "JA-C01-gozaimasu",
+        "JA-C03-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch04.txt",
+      "json": "japanese/narration/ch04.json",
+      "textHash": "fnv1a64:2ea24f5b24b362ef",
+      "jsonHash": "fnv1a64:eb9d4dec825afd24"
+    },
+    {
+      "language": "japanese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:0e00d97dd15baa40",
+      "lessonIds": [
+        "JA-W05-nichi-kanji",
+        "JA-W05-hon-kanji",
+        "JA-W05-gen-component",
+        "JA-W05-five-component",
+        "JA-W05-mouth-component",
+        "JA-W05-go-kanji",
+        "JA-C01-nihongo"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch05.txt",
+      "json": "japanese/narration/ch05.json",
+      "textHash": "fnv1a64:7a1c67660ee7b849",
+      "jsonHash": "fnv1a64:ccecbd4aab2688d9"
+    },
+    {
+      "language": "japanese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:3c3914237ff34f56",
+      "lessonIds": [
+        "JA-W06-ko-katakana",
+        "JA-W06-long-mark",
+        "JA-W06-hi-katakana",
+        "JA-C01-koohii"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "japanese/narration/ch06.txt",
+      "json": "japanese/narration/ch06.json",
+      "textHash": "fnv1a64:209fe8f245728883",
+      "jsonHash": "fnv1a64:2190ee436a8e68c3"
+    },
+    {
+      "language": "japanese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:0ab64e4757ca41cb",
+      "lessonIds": [
+        "JA-C01-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "japanese/narration/ch07.txt",
+      "json": "japanese/narration/ch07.json",
+      "textHash": "fnv1a64:1fea9cd630477599",
+      "jsonHash": "fnv1a64:7baffa779244b379"
     }
   ],
   "findings": []

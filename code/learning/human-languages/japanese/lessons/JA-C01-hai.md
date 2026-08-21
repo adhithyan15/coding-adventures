@@ -2,31 +2,31 @@
 schema_version: 2
 id: JA-C01-hai
 spine_node: SPINE-RESPOND-BASIC
-sequence: 10
+sequence: 50
 chapter: 1
 type: word
 headword: はい
 romanization: hai
 gloss: yes
 concept_tag: RESPONSE-YES
-prerequisites: []
+prerequisites: [JA-W01-e]
 sounds: [mora, pure-vowels]
 roots: []
 etymology_hook: Two hiragana signs, two equal beats — Japanese counts morae, not syllables.
 duration:
   max_seconds: 180
 requires:
-  knowledge: []
+  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-HAI-READ-01]
 introduces:
-  knowledge: [JA-LEX-HAI, JA-SCRIPT-HIRAGANA-MORA]
+  knowledge: [JA-LEX-HAI]
 practises:
-  knowledge: [JA-LEX-HAI, JA-SCRIPT-HIRAGANA-MORA]
+  knowledge: [JA-LEX-HAI, JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-HAI-READ-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: []
+reviews_of: [JA-W01-ha, JA-W01-i, JA-W01-hai-read]
 ---
 
 # はい — yes, in two equal beats
@@ -38,7 +38,7 @@ reviews_of: []
 language, and with the first of its three writing systems.
 
 ## Script — two signs, two beats
-<!-- hl-knowledge: introduces=[JA-SCRIPT-HIRAGANA-MORA]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-HAI-READ-01] -->
 
 > **はい** — **は** *ha* + **い** *i*
 
@@ -55,9 +55,10 @@ single gliding sound of English "high."
 <!-- hl-knowledge: introduces=[JA-LEX-HAI]; assesses=[] -->
 
 **はい** means **yes**, and also "here you are," "I am listening," and
-"present." Its origin is genuinely unsettled: some accounts tie it to 拝 *hai*,
-"a bow"; others treat it as an old interjection. Neither is proven, so hold it
-as an open question rather than a fact.
+"present." Its origin is genuinely unsettled: some accounts tie it to an older
+word *hai*, "a bow"; others treat it as an old interjection. Neither is proven,
+so hold it as an open question rather than a fact. The rare kanji sometimes used
+in that proposal can wait until a later reading chapter.
 
 Say plainly what is true here. Japanese shares no ancestor with English, so no
 cousin word is waiting in your vocabulary to hold **はい** in place. What this

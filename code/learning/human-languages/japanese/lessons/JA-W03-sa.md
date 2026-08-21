@@ -2,17 +2,17 @@
 schema_version: 2
 id: JA-W03-sa
 spine_node: SPINE-COURTESY-THANK
-sequence: 260
+sequence: 220
 delivery: script
-chapter: 3
+chapter: 4
 type: writing
 headword: さ
 romanization: sa
 gloss: the hiragana sign for the mora sa — two strokes, and the base of za
-prerequisites: [JA-W03-arigatou-read]
+prerequisites: [JA-C01-arigatou]
 sounds: [mora]
 roots: []
-etymology_hook: さ takes the dakuten too, and ざ is the second sign of ございます.
+etymology_hook: さ takes the dakuten too, and ざ will return in the polite ending ahead.
 duration:
   max_seconds: 180
 requires:
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-SA-01]
 practises:
-  knowledge: [JA-SCRIPT-SA-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-ARIGATOU-READ-01]
+  knowledge: [JA-SCRIPT-SA-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-ARIGATOU-READ-01, JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -50,8 +50,8 @@ Three strokes:
 
 Watch that gap. Most printed fonts join the second and third strokes into one
 continuous descender, so the さ you see on a screen looks like two strokes. By
-hand it is three, and the break is real. The same split makes き four strokes by
-hand and three in print.
+hand it is three, and the break is real. Keep the handwritten gap even when a
+printed font closes it.
 
 Read **sa**: a clean *s*, then the short *a*. One beat.
 
@@ -60,7 +60,7 @@ And now the bargain again — さ takes the dakuten:
 > さ *sa* → **ざ** *za*
 
 Same mouth, voice switched on, two ticks at the upper right. That is the third
-sign you have got for free, and it is the second sign of ございます.
+voiced sign you have got for free. It will return in the polite ending ahead.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SA-01] -->
@@ -68,6 +68,11 @@ sign you have got for free, and it is the second sign of ございます.
 - [YOU WRITE: さ — horizontal, the short curve, then the detached foot curve]
 - [YOU WRITE: ざ — the same, with two ticks]
 - [YOU SAY: **sa / za**]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN] -->
+
+[PAUSE 15s] Say ?????, add the dakuten to ?, and recall how ?hard to exist? became thanks.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-SA-01] -->

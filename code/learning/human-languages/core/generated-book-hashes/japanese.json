@@ -5,41 +5,36 @@
     {
       "language": "japanese",
       "chapter": 1,
-      "sourceHash": "fnv1a64:76726ad2b2b0b3b1",
+      "sourceHash": "fnv1a64:72fc5234b7dceb5b",
       "lessonIds": [
+        "JA-W01-i",
+        "JA-W01-ha",
+        "JA-W01-hai-read",
+        "JA-W01-e",
         "JA-C01-hai",
-        "JA-C01-iie",
-        "JA-C01-konnichiwa",
-        "JA-C01-nihongo",
-        "JA-C01-koohii",
-        "JA-C01-arigatou",
-        "JA-C01-gozaimasu",
-        "JA-C01-practice"
+        "JA-C01-iie"
       ],
       "tex": "japanese/book/chapters/ch01-three-scripts.tex"
     },
     {
       "language": "japanese",
       "chapter": 2,
-      "sourceHash": "fnv1a64:958b71163f0094dc",
+      "sourceHash": "fnv1a64:3ea6a6cad1cc95e9",
       "lessonIds": [
-        "JA-W01-i",
-        "JA-W01-ha",
-        "JA-W01-hai-read",
-        "JA-W01-e",
         "JA-W01-ko",
         "JA-W01-n",
         "JA-W01-ni",
         "JA-W01-chi",
         "JA-W01-wa",
-        "JA-W01-konnichiwa-read"
+        "JA-W01-konnichiwa-read",
+        "JA-C01-konnichiwa"
       ],
       "tex": "japanese/book/chapters/ch02-hiragana-eight.tex"
     },
     {
       "language": "japanese",
       "chapter": 3,
-      "sourceHash": "fnv1a64:3ff7e4c4a4bc5425",
+      "sourceHash": "fnv1a64:263995256f27b91e",
       "lessonIds": [
         "JA-W03-a",
         "JA-W03-ri",
@@ -48,12 +43,58 @@
         "JA-W03-to",
         "JA-W03-u",
         "JA-W03-arigatou-read",
+        "JA-C01-arigatou"
+      ],
+      "tex": "japanese/book/chapters/ch03-thanks.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:9265f112fa74be49",
+      "lessonIds": [
         "JA-W03-sa",
         "JA-W03-ma",
         "JA-W03-su",
+        "JA-C01-gozaimasu",
         "JA-C03-practice"
       ],
-      "tex": "japanese/book/chapters/ch03-thanks.tex"
+      "tex": "japanese/book/chapters/ch04-polite-thanks.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:2211c70d67acf7a1",
+      "lessonIds": [
+        "JA-W05-nichi-kanji",
+        "JA-W05-hon-kanji",
+        "JA-W05-gen-component",
+        "JA-W05-five-component",
+        "JA-W05-mouth-component",
+        "JA-W05-go-kanji",
+        "JA-C01-nihongo"
+      ],
+      "tex": "japanese/book/chapters/ch05-nihongo-kanji.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:7adbd5a272c5dded",
+      "lessonIds": [
+        "JA-W06-ko-katakana",
+        "JA-W06-long-mark",
+        "JA-W06-hi-katakana",
+        "JA-C01-koohii"
+      ],
+      "tex": "japanese/book/chapters/ch06-koohii-katakana.tex"
+    },
+    {
+      "language": "japanese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:c6bb3d2770dc4aaa",
+      "lessonIds": [
+        "JA-C01-practice"
+      ],
+      "tex": "japanese/book/chapters/ch07-doorway-exchange.tex"
     }
   ]
 }

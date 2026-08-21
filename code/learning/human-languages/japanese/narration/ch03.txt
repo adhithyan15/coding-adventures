@@ -1,8 +1,8 @@
-Japanese, chapter 3: Eight Signs, One Mark, and the Longest Word You Know.
-11 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+Japanese, chapter 3: Plain Thanks, One Sign at a Time.
+8 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 11.
+Lesson 1 of 8.
 あ — three strokes, and the thank-you begins.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -10,7 +10,7 @@ Before we start: this one needs your hands, so it is not a driving lesson. You w
 Warm-up.
 [pause 2 seconds]
 Write こんにちは from memory. Five signs, all yours.
-You have been saying ありがとう (arigatou) since Chapter 1 and reading it from the romanization. This chapter hands you the signs, one at a time, until the word is yours on the page as well as in the mouth.
+This chapter builds the five-sign plain thank-you from the page up. Its meaning arrives only after every sign is yours, so this first lesson asks for one shape: あ.
 
 Script — the shape.
 あ (a).
@@ -26,6 +26,10 @@ Guided Practice.
 [your turn — say: a, one beat, short]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Give the daytime greeting, then write? from memory.
+
 Wrap-up Recall.
 Is the loop drawn as a separate circle, or in one movement? (One movement, crossing what you have already written.)
 Source: Unicode Hiragana chart.
@@ -33,7 +37,7 @@ Source: Unicode Hiragana chart.
 How many strokes does the hiragana sign read 'a' have?
 
 
-Lesson 2 of 11.
+Lesson 2 of 8.
 り (ri) — two strokes, and a tap rather than an r.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -58,6 +62,10 @@ Guided Practice.
 [your turn — say: a, then ri — the first two signs of the word]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write? from memory before tracing?.
+
 Wrap-up Recall.
 Which of り's two strokes falls further? (The right one, by about double.)
 Source: Unicode Hiragana chart.
@@ -65,7 +73,7 @@ Source: Unicode Hiragana chart.
 Is the Japanese r in 'ri' closer to an English r or to a single tap of the tongue?
 
 
-Lesson 3 of 11.
+Lesson 3 of 8.
 か (ka) — three strokes, and a shape you will reuse.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -88,6 +96,10 @@ Guided Practice.
 [your turn — say: ka, one beat]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write?, then write the different sign that closes????? and explain its particle reading.
+
 Wrap-up Recall.
 Which stroke is written last? (The dot, at the upper right.)
 Source: Unicode Hiragana chart.
@@ -95,7 +107,7 @@ Source: Unicode Hiragana chart.
 How many strokes does the hiragana sign read 'ka' have?
 
 
-Lesson 4 of 11.
+Lesson 4 of 8.
 ゛ (dakuten)— two ticks, and every sign you know doubles.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the mark and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -121,6 +133,10 @@ Guided Practice.
 [your turn — say: ka / ga, then ko / go — the same mouth, voice off and on]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write????? from its five signs before adding any voice marks.
+
 Wrap-up Recall.
 Does が need a new shape learned? (No — it is か (ka) plus two ticks.)
 Source: Unicode Hiragana chart.
@@ -128,7 +144,7 @@ Source: Unicode Hiragana chart.
 What do the two small marks of the dakuten do to a hiragana sign?
 
 
-Lesson 5 of 11.
+Lesson 5 of 8.
 と (to) — two strokes, and they never meet.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -150,6 +166,10 @@ Guided Practice.
 [your turn — say: a, ri, ga, to — four beats, and the word is nearly yours]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Say the daytime greeting once without looking.
+
 Wrap-up Recall.
 Which stroke is longer? (The second, the sweep.)
 Source: Unicode Hiragana chart.
@@ -157,7 +177,7 @@ Source: Unicode Hiragana chart.
 Do the two strokes of the sign read 'to' touch each other?
 
 
-Lesson 6 of 11.
+Lesson 6 of 8.
 う (u) — two strokes, and a vowel that stretches.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -175,10 +195,10 @@ Read u: close to the oo of food but shorter, and with the lips much less rounded
 
 What you've built — and what this sign does after と.
 Something happens when う (u) follows と (to), and it is the reason the written word and the spoken word look like they disagree.
-Written out, ありがとう (arigatou) ends と + う — to then u, which reads as five beats. But nobody says a-ri-ga-to-u. What you hear is a long o:
+The five-sign sequence you are building ends と + う — to then u, which reads as five beats. But the final two signs are heard as a long o:
 written: a-ri-ga-to-u spoken: a-ri-ga-too.
 う after an o-sound does not add a syllable. It holds the one before it for a second beat. The beat is still there — Japanese counts it, and dropping it makes the word sound clipped and wrong — but it is the same vowel continuing, not a new one.
-You met this once already without being told: the katakana word コーヒー uses a long bar for the same job. Hiragana uses う.
+Katakana will later receive a separate one-stroke length mark for the same job. Here the only written cue is the う you have just learned.
 
 Guided Practice.
 [once you have stopped driving — write: う — the tick, then the wide curve]
@@ -192,8 +212,8 @@ Source: Unicode Hiragana chart.
 When u follows an o-sound in hiragana, what does it do?
 
 
-Lesson 7 of 11.
-ありがとう (arigatou) — no new sign, and a whole word.
+Lesson 7 of 8.
+ありがとう (arigatou) (arigatō) — no new sign, and a whole word.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the assembly and Guided Practice until you have stopped, and I will say so again when we reach it.
 
@@ -203,7 +223,7 @@ Write あ, り and か (ka) in a row. Then add the two ticks to the last one.
 
 Script — the assembly.
 Here is the word you have been saying since Chapter 1:
-ありがとう (arigatou).
+ありがとう (arigatou) (arigatō).
 Nothing in it is new. Take it sign by sign:
 あ — a, the three-stroke sign with the loop.
 り — ri, short left, long right, tapped.
@@ -215,9 +235,9 @@ That is the whole point of the last five lessons. In Chapter 1 this word was a s
 Read it slowly, once per sign, then at speed: a-ri-ga-to-o.
 
 Guided Practice.
-[your turn — read: ありがとう (arigatou) — name each sign before you say the word]
+[your turn — read: ありがとう (arigatou) (arigatō) — name each sign before you say the word]
 [pause 8 seconds for the answer]
-[once you have stopped driving — write: ありがとう (arigatou) — all five, in order, without looking above]
+[once you have stopped driving — write: ありがとう (arigatou) (arigatō) — all five, in order, without looking above]
 [your turn — say: arigatou — five beats, the last two one long o]
 [pause 8 seconds for the answer]
 
@@ -225,150 +245,42 @@ Wrap-up Recall.
 How many signs did you have to learn for this word? (Five — but one of them was free, because が is か (ka) with two ticks.)
 Source: Unicode Hiragana chart.
 [question — say your answer, then pause 12 seconds]
-Which sign in ありがとう (arigatou) is another sign plus the dakuten, and what is underneath it?
+Which sign in ありがとう (arigatou) (arigatō) is another sign plus the dakuten, and what is underneath it?
 
 
-Lesson 8 of 11.
-さ (sa) — two strokes, and the ticks work here too.
+Lesson 8 of 8.
+ありがとう (arigatou) (arigatō) — thanks, from “this hardly ever happens”.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five signs and two small strokes until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Write ありがとう (arigatou). All five signs, no help.
+Back to hiragana. Five signs are coming, and one small mark that unlocks a whole second row of sounds.
 
-Script — the shape.
-さ (sa).
-Three strokes:
-a short horizontal, near the top.
-a short curving stroke below it, falling down and left.
-a separate small curve at the foot, opening left — not joined to the stroke above it.
-Watch that gap. Most printed fonts join the second and third strokes into one continuous descender, so the さ you see on a screen looks like two strokes. By hand it is three, and the break is real. The same split makes き four strokes by hand and three in print.
-Read sa: a clean s, then the short a. One beat.
-And now the bargain again — さ (sa) takes the dakuten:
-さ sa becomes ざ za.
-Same mouth, voice switched on, two ticks at the upper right. That is the third sign you have got for free, and it is the second sign of ございます.
+Script — five signs and two small strokes.
+ありがとう (arigatou) (arigatō) — あ a + り ri + が ga + と to + う.
+あ a, り ri, と to and う u are ordinary hiragana. が is the new idea: it is the sign か ka with two short strokes added at the top right. That mark is the dakuten, and it voices the consonant — the same two strokes turn ka into ga, sa into za, ta into da, ha into ba. One mark, learned once, doubles how much of the script you can read.
+The final う does not sound like u here. After と it stretches the o, so the word ends -tō and holds five beats: a-ri-ga-to-o. Hiragana lengthens a vowel here by writing another vowel sign. Katakana will get its own tiny length lesson later.
+
+The word, taken apart — arigatashi.
+The older form combines aru, "to exist," with katashi, "difficult." Arigatashi therefore meant literally "hard to exist" — that is, rare. Rare became precious, precious became grateful, and by the Edo period the word had settled into plain thanks. The k of katashi softened to g inside the compound, which is the same voicing the dakuten writes. Its historical kanji spelling can wait until those signs receive their own lessons.
+So the memory hook is inside the word, not inside English: saying ありがとう (arigatou) (arigatō) is saying this was not a thing that had to happen. No English cousin exists, and inventing one would be worse than admitting that.
 
 Guided Practice.
-[once you have stopped driving — write: さ (sa) — horizontal, the short curve, then the detached foot curve]
-[once you have stopped driving — write: ざ — the same, with two ticks]
-[your turn — say: sa / za]
+[your turn — say: ありがとう (arigatou) (arigatō) — a-ri-ga-to-o, five beats]
+[pause 8 seconds for the answer]
+[repeat that twice]
+[your turn — build: か (ka) plus the dakuten becomes が]
+[pause 8 seconds for the answer]
+[your turn — connect: arigatashi "hard to exist" becomes rare becomes precious becomes thanks]
 [pause 8 seconds for the answer]
 
+Guided Practice — review pulse.
+[pause 15 seconds]
+Write? once from memory, then add the two dakuten strokes.
+
 Wrap-up Recall.
-How many signs have the two ticks given you so far? (Three — が, ご and ざ.)
-Source: Unicode Hiragana chart.
+What did arigatashi mean literally? (Hard to exist.) What does the last う (u) do? (It lengthens the o.)
+Source: Wiktionary: ありがとう (arigatou) (arigatō).
 [question — say your answer, then pause 8 seconds]
-What does the sign read 'sa' become when the dakuten is added?
-
-
-Lesson 9 of 11.
-ま (ma) — three strokes, and a loop you have drawn before.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write さ (sa), then ざ.
-
-Script — the shape.
-ま (ma).
-Three strokes, and the order is top-down as always:
-an upper horizontal, short.
-a lower horizontal, a little wider, below and parallel to it.
-a looping vertical that crosses both, falls, and curls left at the bottom.
-The third stroke is the same movement you learned on あ — down through what you have written, then a small loop at the foot. If あ's loop is comfortable, this one is already yours.
-Read ma: as in English mother, shortened. One beat.
-
-Guided Practice.
-[once you have stopped driving — write: ま (ma) — two horizontals, then the looping vertical through them]
-[your turn — say: ma, one beat]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Which earlier sign uses the same looping last stroke? (あ.)
-Source: Unicode Hiragana chart.
-[question — say your answer, then pause 8 seconds]
-How many strokes does the hiragana sign read 'ma' have?
-
-
-Lesson 10 of 11.
-す (su) — two strokes, and a vowel you barely hear.
-
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write ま (ma). Two horizontals, then the loop.
-
-Script — the shape.
-す (su).
-Two strokes:
-a short horizontal, near the top.
-a vertical crossing it, falling, and finishing in a loop that closes back on itself before tailing away.
-The loop in す (su) is tighter than ま (ma)'s — it comes back and crosses its own line.
-Read su: an s, then the u you met in う.
-
-Why it's said this way — the vowel that goes quiet.
-At the end of a word, and especially in ございます, that final u is usually devoiced — the mouth makes the shape, the beat is counted, but the vocal cords never switch on. What a listener hears is closer to -mass than -masu.
-This is not sloppiness or fast speech. It is what standard Tokyo Japanese does, and saying a full clear u there is one of the most recognisable marks of a learner reading off a page.
-The sign is still written. The beat is still counted. Only the voice drops out.
-
-Guided Practice.
-[once you have stopped driving — write: す (su) — horizontal, then the vertical with its closing loop]
-[your turn — say: su, then the same with the voice off — a whispered ending]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Is the beat dropped along with the voice? (No — the beat is still counted.)
-Source: Unicode Hiragana chart.
-[question — say your answer, then pause 12 seconds]
-At the end of gozaimasu, what happens to the final u?
-
-
-Lesson 11 of 11.
-Practice — the whole thank-you, off the page.
-
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the second half and Guided Practice until you have stopped, and I will say so again when we reach it.
-
-Warm-up.
-[pause 2 seconds]
-Write ありがとう (arigatou). Five signs, no help.
-
-Script — the second half.
-ございます.
-Five more signs, and again nothing here is new:
-ご — こ from Chapter 2, with the dakuten.
-ざ — さ (sa) from this chapter, with the dakuten.
-い — from Chapter 2.
-ま (ma) — from this chapter.
-す (su) — from this chapter, its u devoiced.
-Two of the five are signs you already had, wearing two ticks.
-
-Why it's said this way — what the long form is doing.
-ありがとう on its own is warm and ordinary — friends, family, a shopkeeper you know. ありがとうございます (arigatou gozaimasu) is the same thanks in polite form, and it is what you want for a stranger, a colleague, anyone serving you.
-The difference is not strength. Adding ございます does not mean you are more grateful; it means you are being more formal about it. Getting that wrong in either direction is the commonest register mistake a beginner makes.
-If you are unsure which to use, use the long one. Being slightly too polite in Japanese costs you nothing.
-
-The exchange.
-Two voices, and every sign on the page is one you can write:
-A: こんにちは B: こんにちは A: ありがとうございます (arigatou gozaimasu) B: はい.
-
-What you've built this chapter.
-Eight new signs and one mark. The mark is the part worth remembering:
-eight shapes — あ り (ri) か (ka) と (to) う さ (sa) ま (ma) す (su).
-one mark — ゛ (dakuten), which turned か (ka) into が, こ into ご, さ (sa) into ざ.
-Ten signs in ありがとうございます (arigatou gozaimasu), and only eight of them cost you a shape. The dakuten is the first thing in this book that made the job smaller the further you went into it, and it keeps doing that: every k, s, t and h sign you ever learn arrives with a voiced twin already attached.
-
-Guided Practice.
-[your turn — read: ありがとうございます (arigatou gozaimasu) — name each of the ten signs, then say it]
-[pause 8 seconds for the answer]
-[once you have stopped driving — write: ございます — five signs, two of them with ticks]
-[your turn — say: arigatou gozaimasu — and let the final u go quiet]
-[pause 8 seconds for the answer]
-
-Wrap-up Recall.
-Which form would you use with a stranger — the short one or the long one? (The long one; being slightly too polite costs nothing.)
-Source: Unicode Hiragana chart.
-[question — say your answer, then pause 12 seconds]
-In ありがとうございます (arigatou gozaimasu), how many signs are an earlier sign plus the dakuten?
+Which hiragana sign becomes が when the dakuten is added?

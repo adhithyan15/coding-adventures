@@ -217,6 +217,6 @@ describe("the corpus-wide super-gentle ramp", () => {
     });
     expect(
       report.tracks.filter((track) => track.findings.length === 0).map((track) => track.language),
-    ).toEqual(["marwadi"]);
+    ).toEqual(["japanese", "marwadi"]);
   }, 30_000);
 });

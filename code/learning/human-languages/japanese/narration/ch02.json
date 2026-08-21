@@ -2,615 +2,13 @@
   "version": 1,
   "language": "japanese",
   "chapter": 2,
-  "title": "Eight Signs, and Three Words You Can Read",
+  "title": "A Daytime Greeting, One Sign at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:44f1c780f26d205d",
+  "sourceHash": "fnv1a64:4738d9e25fd92f72",
   "lessons": [
     {
-      "id": "JA-W01-i",
-      "sequence": 90,
-      "title": "い (i) — two strokes, one beat",
-      "headword": "い",
-      "romanization": "i",
-      "gloss": "the hiragana sign for the mora i — two strokes, and the first sign you can write",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:536c9f5fc624cc79",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "You already know the rule that makes this writing system easy: one sign, one beat. Not one letter one sound, and not one sign one word — one sign, one mora, the even beat Japanese counts time in."
-            },
-            {
-              "kind": "speech",
-              "text": "What you have not had yet is a single sign taught on its own. Here is the first."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "い (i)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two strokes, both falling, the left one long and the right one short:"
-            },
-            {
-              "kind": "speech",
-              "text": "the left stroke — start high, come down, and hook gently to the right at the bottom."
-            },
-            {
-              "kind": "speech",
-              "text": "the right stroke — a short downward tick, higher up and clear of the first."
-            },
-            {
-              "kind": "speech",
-              "text": "It is read i, the vowel of English machine — short, tight, never the eye of English bite."
-            },
-            {
-              "kind": "speech",
-              "text": "Where the shape came from, and why it does not help you. Every hiragana sign began as a Chinese character written fast and cursively until it wore smooth. But those characters were chosen for their sound, not their meaning, so unlike a Chinese component there is nothing inside い to decode. The shape is a signature you learn, not a structure you read. This book will tell you when a shape carries information and when it does not, and this is the second kind."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "TRACE",
-              "instruction": "follow the visible い once — long stroke first, then the short tick",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU TRACE: follow the visible い once — long stroke first, then the short tick]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "i, one clean beat",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **i**, one clean beat]"
-            },
-            {
-              "kind": "speech",
-              "text": "Keep the model visible and stop after one traced sign. Copying without the model comes later; today your hand is only learning the direction of two strokes."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "How many beats does one hiragana sign take? (One.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W01-i-strokes",
-              "prompt": "How many strokes does the hiragana sign for 'i' have?",
-              "assesses": [
-                "JA-SCRIPT-I-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "2",
-                "two",
-                "2 strokes",
-                "two strokes"
-              ],
-              "feedback": {
-                "correct": "Two — a long falling stroke, then a short tick.",
-                "incorrect": "Two: the long left stroke, then the short right one."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "JA-W01-ha",
-      "sequence": 100,
-      "title": "は (ha) — three strokes",
-      "headword": "は",
-      "romanization": "ha",
-      "gloss": "the hiragana sign for the mora ha — three strokes, and the second half of a word you already say",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:319589a1fed4234f",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Write the two-stroke sign you met a moment ago. Long stroke, short tick."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "は (ha)."
-            },
-            {
-              "kind": "speech",
-              "text": "Three strokes. Look at it as a tall left post with a loop tied on its right."
-            },
-            {
-              "kind": "speech",
-              "text": "the vertical, down the left side, with the smallest flick left at the foot."
-            },
-            {
-              "kind": "speech",
-              "text": "a short horizontal crossing that vertical near the top, on its right."
-            },
-            {
-              "kind": "speech",
-              "text": "the loop — down from the right of that crossbar, round to the left, and back up to close."
-            },
-            {
-              "kind": "speech",
-              "text": "Read ha, breathed rather than hard: the h of English hat, then the open a of father."
-            },
-            {
-              "kind": "speech",
-              "text": "It has a second reading, and you have already used it. Keep that in your pocket for now — this sign is doing two jobs in Japanese, and the second one is what makes the greeting look misspelled to a beginner. It gets its own lesson, after you have met the sign it sounds like."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "COPY",
-              "instruction": "keep は (ha) visible and write it once — vertical, crossbar, loop",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU COPY: keep は visible and write it once — vertical, crossbar, loop]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "ha, one beat, breath not force",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: **ha**, one beat, breath not force]"
-            },
-            {
-              "kind": "speech",
-              "text": "Look back at the model between strokes if you need to. This is one guided copy, not a memory test."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Which stroke of は (ha) is written first? (The vertical on the left.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W01-ha-strokes",
-              "prompt": "How many strokes does the hiragana sign read 'ha' have?",
-              "assesses": [
-                "JA-SCRIPT-HA-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "3",
-                "three",
-                "3 strokes",
-                "three strokes"
-              ],
-              "feedback": {
-                "correct": "Three — vertical, crossbar, loop.",
-                "incorrect": "Three: the left vertical, the short crossbar, then the loop."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "JA-W01-hai-read",
-      "sequence": 110,
-      "title": "Two signs, side by side — and a word appears",
-      "headword": "はい",
-      "romanization": "hai",
-      "gloss": "the first word you can read rather than recall — two signs, both already yours",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block",
-        "sight-cue"
-      ],
-      "sourceHash": "fnv1a64:66f8ba352205ee5c",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page",
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [
-          "Script — no new sign at all",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Both signs are yours. Look at them for five seconds:"
-            },
-            {
-              "kind": "speech",
-              "text": "は (ha) い (i)."
-            },
-            {
-              "kind": "speech",
-              "text": "Cover the model. Write the two signs in that order and say each beat as you finish it. Uncover the model, compare once, and repair at most one stroke. This short look-hide-write-check cycle is the whole delayed-copy step."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — no new sign at all",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Now write them touching:"
-            },
-            {
-              "kind": "speech",
-              "text": "は + い becomes はい (hai)."
-            },
-            {
-              "kind": "speech",
-              "text": "ha then i. Two beats, even, neither one stressed. That is the word for yes, and it is the one you have been saying since your first minute in this language."
-            },
-            {
-              "kind": "speech",
-              "text": "Nothing new was introduced in this lesson. No stroke, no sound, no word. What changed is where the word now lives: you are no longer recalling a shape you were shown, you are reading it — assembling it out of two pieces you can write from memory and sound out in order."
-            },
-            {
-              "kind": "speech",
-              "text": "That is the whole method for this writing system, and it does not get harder. It gets longer. A word of five signs is five signs you already own, in a row."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "はい (hai) — sound each sign in turn, do not recall the word whole",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: **はい** — sound each sign in turn, do not recall the word whole]"
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "はい (hai) — five strokes in total, three then two",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: はい — five strokes in total, three then two]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "How many new strokes did you have to learn in this lesson? (None.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W01-hai-read-beats",
-              "prompt": "How many beats (morae) does the written word for 'yes' take?",
-              "assesses": [
-                "JA-SCRIPT-HAI-READ-01"
-              ],
-              "responseSeconds": 8,
-              "acceptedResponses": [
-                "2",
-                "two",
-                "2 beats",
-                "two beats"
-              ],
-              "feedback": {
-                "correct": "Two — one per sign, evenly.",
-                "incorrect": "Two: one beat per hiragana sign."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "JA-W01-e",
-      "sequence": 120,
-      "title": "え — two strokes, and a second word for free",
-      "headword": "え",
-      "romanization": "e",
-      "gloss": "the hiragana sign for the mora e — two strokes, and the one that finishes the word for no",
-      "script": "japanese",
-      "modality": "pen",
-      "derivedModality": "pen",
-      "modalityReasons": [
-        "writing-type",
-        "script-block"
-      ],
-      "sourceHash": "fnv1a64:3794174c4b117901",
-      "notice": {
-        "modality": "pen",
-        "needs": [
-          "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
-        ],
-        "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
-        ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
-      },
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Read the word for yes off the page, sign by sign, out loud."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "script",
-          "title": "Script — the shape",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "え (e)."
-            },
-            {
-              "kind": "speech",
-              "text": "Two strokes, and the second one does most of the work:"
-            },
-            {
-              "kind": "speech",
-              "text": "a short tick at the top, on its own, clear of everything below."
-            },
-            {
-              "kind": "speech",
-              "text": "the body — across to the right, back down and left in a flat zigzag, then out to the lower right in one continuous movement."
-            },
-            {
-              "kind": "speech",
-              "text": "Read e, the vowel of English bed — short, and never the ay of day."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "notice",
-          "title": "What you've built",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Three signs are now yours, and they spell more than one word. Put two of them together with the one you just learned:"
-            },
-            {
-              "kind": "speech",
-              "text": "い (i) + い (i) + え becomes いいえ."
-            },
-            {
-              "kind": "speech",
-              "text": "i-i-e. Three beats — and note that the first sign is written twice, because Japanese counts two full beats there. That is the word for no."
-            },
-            {
-              "kind": "speech",
-              "text": "You have now read both answers to a yes-or-no question, from the signs up. Neither of them was memorised as a picture."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Cover the printed え. Have a partner or recording say e once. If you are working alone, read the romanized cue e, cover it, and continue."
-            },
-            {
-              "kind": "prompt",
-              "action": "WRITE FROM THE HEARD OR ROMANIZED CUE",
-              "instruction": "え — tick first, then the body in one movement",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE FROM THE HEARD OR ROMANIZED CUE: え — tick first, then the body in one movement]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "いいえ — three beats, and do not shorten the doubled sign",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: いいえ — three beats, and do not shorten the doubled sign]"
-            },
-            {
-              "kind": "speech",
-              "text": "Uncover the model only after your one transcription attempt. Compare, repair one stroke if needed, and stop."
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Why is the first sign of that word written twice? (Because it is two beats, not one held longer.)"
-            },
-            {
-              "kind": "speech",
-              "text": "Source: Unicode Hiragana chart; stroke order per Hitsujun Shido no Tebiki (Japanese Ministry of Education, 1958)."
-            },
-            {
-              "kind": "activity",
-              "scored": true,
-              "id": "JA-W01-e-beats",
-              "prompt": "How many beats (morae) does the written word for 'no' take?",
-              "assesses": [
-                "JA-LEX-IIE"
-              ],
-              "responseSeconds": 10,
-              "acceptedResponses": [
-                "3",
-                "three",
-                "3 beats",
-                "three beats"
-              ],
-              "feedback": {
-                "correct": "Three — the first sign is written twice and gets two full beats.",
-                "incorrect": "Three: the doubled sign carries two beats, not one long one."
-              }
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "JA-W01-ko",
-      "sequence": 130,
+      "sequence": 70,
       "title": "こ (ko) — two strokes, and the greeting begins",
       "headword": "こ",
       "romanization": "ko",
@@ -622,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:149060678bc7599f",
+      "sourceHash": "fnv1a64:b3833ba98c8971d6",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -711,6 +109,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say??? and tap all three morae before writing the new sign."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -748,7 +163,7 @@
     },
     {
       "id": "JA-W01-n",
-      "sequence": 140,
+      "sequence": 80,
       "title": "ん — one stroke, one beat, no vowel",
       "headword": "ん",
       "romanization": "n",
@@ -760,7 +175,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f5495df027a5bdc1",
+      "sourceHash": "fnv1a64:88cd192cbab594e7",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -841,6 +256,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the model and write?? from its two known signs."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -879,7 +311,7 @@
     },
     {
       "id": "JA-W01-ni",
-      "sequence": 150,
+      "sequence": 90,
       "title": "に (ni) — three strokes, and a shape you half know",
       "headword": "に",
       "romanization": "ni",
@@ -891,7 +323,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:07a76c17b5fc2d4d",
+      "sourceHash": "fnv1a64:f9dc84723290cf6f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -974,7 +406,7 @@
             {
               "kind": "prompt",
               "action": "NOTICE",
-              "instruction": "write it beside は (ha) and compare only the left post",
+              "instruction": "write it beside は and compare only the left post",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
@@ -984,6 +416,23 @@
         },
         {
           "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before the new sign, write? once and then? once from memory."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1022,7 +471,7 @@
     },
     {
       "id": "JA-W01-chi",
-      "sequence": 160,
+      "sequence": 100,
       "title": "ち (chi) — two strokes, four roman letters, one beat",
       "headword": "ち",
       "romanization": "chi",
@@ -1034,7 +483,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:35697da6506e00f6",
+      "sourceHash": "fnv1a64:34105778555f9a1c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1164,7 +613,7 @@
     },
     {
       "id": "JA-W01-wa",
-      "sequence": 170,
+      "sequence": 110,
       "title": "わ — the sign for wa, and the trap beside it",
       "headword": "わ",
       "romanization": "wa",
@@ -1176,7 +625,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:20c37ccc88f42958",
+      "sourceHash": "fnv1a64:804f900a0f4a5619",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1296,6 +745,23 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say??? again, keeping the two opening morae distinct."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1333,7 +799,7 @@
     },
     {
       "id": "JA-W01-konnichiwa-read",
-      "sequence": 180,
+      "sequence": 120,
       "title": "Five signs in a row — and the greeting is readable",
       "headword": "こんにちは",
       "romanization": "konnichiwa",
@@ -1345,7 +811,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:a793162b6bbde88b",
+      "sourceHash": "fnv1a64:1ec9c3e62e816050",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -1391,7 +857,7 @@
             },
             {
               "kind": "speech",
-              "text": "こ + ん + に + ち + は (ha) becomes こんにちは (konnichiwa)."
+              "text": "こ + ん + に + ち + は becomes こんにちは (konnichiwa)."
             },
             {
               "kind": "speech",
@@ -1399,7 +865,7 @@
             },
             {
               "kind": "speech",
-              "text": "Nothing new was introduced in this lesson. You have not learned a stroke, a sound or a word here. You have read a word you already knew how to say — from five pieces you can each write from memory, in order, including the one that sounds like something other than its name."
+              "text": "No new stroke appears here. You have decoded five pieces you can each write from memory, in order, including the one that sounds like something other than its name. The next lesson attaches the daytime-greeting meaning to the line."
             }
           ]
         },
@@ -1410,7 +876,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Eight signs, taught one at a time, and with them you can now read three whole words off the page: the greeting, and both answers to a yes-or-no question."
+              "text": "Eight signs, taught one at a time, and with them you can now decode three whole sequences off the page. Two already carry useful answers; the five-sign sequence gets its daytime-greeting job in the next lesson."
             },
             {
               "kind": "speech",
@@ -1445,6 +911,23 @@
         },
         {
           "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write? once, then set it beside? and name which one closes the greeting."
+            }
+          ]
+        },
+        {
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1474,6 +957,186 @@
               "feedback": {
                 "correct": "Five — one per sign, and the vowel-less one counts fully.",
                 "incorrect": "Five: one beat per sign, including the one with no vowel."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "JA-C01-konnichiwa",
+      "sequence": 130,
+      "title": "こんにちは (konnichiwa) — hello, and a sign that lies about its sound",
+      "headword": "こんにちは",
+      "romanization": "konnichiwa",
+      "gloss": "hello (daytime greeting)",
+      "script": "japanese",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:e055b19edfbe2dd0",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — five familiar signs"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — five familiar signs until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve はい and the sign は. You are about to meet は again in the daytime greeting — where it is not pronounced ha."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — five familiar signs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんにちは (konnichiwa) — こ ko + ん n + に ni + ち chi + は."
+            },
+            {
+              "kind": "speech",
+              "text": "You have written every sign separately. こ, に, and ち each carry a consonant and vowel. ん is the exception: a bare consonant with a full beat of its own. Read five signs in five beats: ko-n-ni-chi-wa. Do not swallow ん."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens — the sign は, read wa",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The last sign is は, which you learned as ha. Here it is read wa."
+            },
+            {
+              "kind": "speech",
+              "text": "Here は is the topic particle, roughly \"as for ___.\" It keeps an older spelling. Carry one small rule forward: read は as ha inside a word and as wa when it is the particle."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "culture-pragmatics",
+          "title": "Why it's said this way",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "こんにちは (konnichiwa) is the daytime greeting. It began as an unfinished sentence: konnichi wa…, \"as for today …\" The rest fell away and the topic marker stayed."
+            },
+            {
+              "kind": "speech",
+              "text": "The older phrase is often written with two kanji for \"this day.\" You do not need to decode those yet. This chapter keeps the whole greeting in the hiragana signs you have already learned."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "こんにちは (konnichiwa) — ko-n-ni-chi-wa, five beats",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **こんにちは** — *ko-n-ni-chi-wa*, five beats]"
+            },
+            {
+              "kind": "repeat",
+              "times": 2,
+              "source": "[REPEAT x2]"
+            },
+            {
+              "kind": "prompt",
+              "action": "DECIDE",
+              "instruction": "は in はい becomes ha; は ending the greeting becomes wa",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU DECIDE: **は** in **はい** → *ha*; **は** ending the greeting → *wa*]"
+            },
+            {
+              "kind": "prompt",
+              "action": "GREET",
+              "instruction": "someone at midday becomes こんにちは (konnichiwa)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU GREET: someone at midday → **こんにちは**]"
+            }
+          ]
+        },
+        {
+          "index": 5,
+          "type": "guided-production",
+          "title": "Guided Practice — review pulse",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write? from memory and give it one full mora."
+            }
+          ]
+        },
+        {
+          "index": 6,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which sign takes a beat without a vowel? (ん.) Why does the greeting end in a particle? (It is the opening of a sentence nobody finishes any more.)"
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Wiktionary: こんにちは (konnichiwa)."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "JA-C01-konnichiwa-particle",
+              "prompt": "The greeting ends in the sign は. How is it pronounced there?",
+              "assesses": [
+                "JA-PARTICLE-WA-SPELLING"
+              ],
+              "responseSeconds": 9,
+              "acceptedResponses": [
+                "wa",
+                "as wa",
+                "わ",
+                "the topic particle wa"
+              ],
+              "feedback": {
+                "correct": "Right: は is read wa when it works as the topic particle.",
+                "incorrect": "It is read wa — は is the topic particle here, not the sound ha."
               }
             }
           ]

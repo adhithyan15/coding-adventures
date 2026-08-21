@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W01-ni
 spine_node: SPINE-MEET-GREET
-sequence: 150
+sequence: 90
 delivery: script
 chapter: 2
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-NI-01]
 practises:
-  knowledge: [JA-SCRIPT-NI-01, JA-SCRIPT-HA-01]
+  knowledge: [JA-SCRIPT-NI-01, JA-SCRIPT-HA-01, JA-SCRIPT-N-01, JA-SCRIPT-E-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -62,6 +62,11 @@ into it is the mistake this book keeps warning you off.
 
 - [YOU WRITE: に — vertical, short bar, long bar]
 - [YOU NOTICE: write it beside は and compare only the left post]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-N-01, JA-SCRIPT-E-01] -->
+
+[PAUSE 15s] Before the new sign, write ? once and then ? once from memory.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-NI-01] -->

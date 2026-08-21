@@ -4,6 +4,20 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Changed — script closure before decoding (#12471)
+
+- Reordered the 29 existing lessons so every hiragana writing step precedes the
+  word that asks the learner to decode it; the old content-first order is gone.
+- Split the starter into seven small chapters, keeping hiragana, kanji, and
+  katakana arrivals separate and moving the four-skill doorway exchange to the
+  end of the runway.
+- Added nine <=5-minute writing lessons: `日`, `本`, three components and the
+  assembled `語`, followed by `コ`, the long-vowel mark `ー`, and `ヒ`.
+- Rewrote advanced etymology and keigo examples in romanization so fifteen rare
+  or unrelated signs no longer become accidental pre-A1 decoding tests.
+- Replaced the stale eight-session map with the complete 38-session authored
+  order and its machine-checked review rule.
+
 ### Added — cumulative pre-A1 writing evidence (#12365)
 
 - Turned four already gentle Chapter 2 lessons into an explicit cumulative

@@ -2,14 +2,14 @@
 schema_version: 2
 id: JA-C03-practice
 spine_node: SPINE-COURTESY-THANK
-sequence: 290
-chapter: 3
+sequence: 260
+chapter: 4
 type: practice-mix
 headword: ありがとうございます
 romanization: arigatou gozaimasu
 gloss: ten signs, every one of them yours — the polite thank-you read off the page
 concept_tag: JA-C03-PRACTICE
-prerequisites: [JA-W03-su]
+prerequisites: [JA-C01-gozaimasu]
 sounds: [mora]
 roots: []
 etymology_hook: The longest word in the book, and by the end of this chapter there is nothing in it you have not written yourself.
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-GOZAIMASU-READ-01]
 practises:
-  knowledge: [JA-SCRIPT-GOZAIMASU-READ-01, JA-SCRIPT-ARIGATOU-READ-01, JA-SCRIPT-SA-01, JA-SCRIPT-MA-01, JA-SCRIPT-SU-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-KO-01, JA-SCRIPT-I-01]
+  knowledge: [JA-SCRIPT-GOZAIMASU-READ-01, JA-SCRIPT-ARIGATOU-READ-01, JA-SCRIPT-SA-01, JA-SCRIPT-MA-01, JA-SCRIPT-SU-01, JA-SCRIPT-DAKUTEN-01, JA-SCRIPT-KO-01, JA-SCRIPT-I-01, JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO]
 skills: [reading, speaking, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, fluency]
@@ -97,6 +97,11 @@ ever learn arrives with a voiced twin already attached.
 - [YOU READ: ありがとうございます — name each of the ten signs, then say it]
 - [YOU WRITE: ございます — five signs, two of them with ticks]
 - [YOU SAY: **arigatou gozaimasu** — and let the final u go quiet]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-ETYMON-ARIGATASHI, JA-LEX-ARIGATOU, JA-SCRIPT-DAKUTEN, JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->
+
+[PAUSE 15s] Give plain thanks, then polite thanks. Name the dakuten and the ?hard to exist? memory hook.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-GOZAIMASU-READ-01] -->

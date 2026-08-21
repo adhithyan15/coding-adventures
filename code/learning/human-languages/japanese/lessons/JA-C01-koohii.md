@@ -2,31 +2,31 @@
 schema_version: 2
 id: JA-C01-koohii
 spine_node: SPINE-MEET-GREET
-sequence: 50
-chapter: 1
+sequence: 370
+chapter: 6
 type: word
 headword: コーヒー
 romanization: kōhī
 gloss: coffee
 concept_tag: JA-WORD-KOOHII
-prerequisites: [JA-C01-nihongo]
+prerequisites: [JA-W06-hi-katakana]
 sounds: [mora, mora-length, chouon]
 roots: [dutch-koffie, arabic-qahwa]
 etymology_hook: コーヒー came from Dutch koffie, and Dutch got it from Arabic qahwa — the same source as English coffee.
 duration:
   max_seconds: 215
 requires:
-  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-MORA-LENGTH, JA-SCRIPT-KANJI-READINGS]
+  knowledge: [JA-SCRIPT-HIRAGANA-MORA, JA-SCRIPT-MORA-LENGTH, JA-SCRIPT-KATAKANA-KO-01, JA-SCRIPT-KATAKANA-LONG-MARK-01, JA-SCRIPT-KATAKANA-HI-01, JA-SCRIPT-CHOUON]
 introduces:
-  knowledge: [JA-LEX-KOOHII, JA-SCRIPT-KATAKANA-LOANWORDS, JA-SCRIPT-CHOUON]
+  knowledge: [JA-LEX-KOOHII, JA-SCRIPT-KATAKANA-LOANWORDS]
 practises:
-  knowledge: [JA-SCRIPT-MORA-LENGTH, JA-LEX-KOOHII, JA-SCRIPT-KATAKANA-LOANWORDS, JA-SCRIPT-CHOUON]
+  knowledge: [JA-SCRIPT-MORA-LENGTH, JA-LEX-KOOHII, JA-SCRIPT-KATAKANA-LOANWORDS, JA-SCRIPT-CHOUON, JA-SCRIPT-KATAKANA-KO-01, JA-SCRIPT-KATAKANA-LONG-MARK-01, JA-SCRIPT-KATAKANA-HI-01]
 skills: [listening, speaking, reading]
 modes: [interpretive, mediation]
 strands: [meaning-input, language-focus]
 register: neutral-across-levels
 variety: standard-japanese-tokyo
-reviews_of: [JA-C01-iie]
+reviews_of: [JA-W06-ko-katakana, JA-W06-long-mark, JA-W06-hi-katakana, JA-C01-nihongo]
 ---
 
 # コーヒー — the third system, and a word that really is a cousin
@@ -38,7 +38,7 @@ reviews_of: [JA-C01-iie]
 as in **いいえ**. Katakana does it differently, and this word shows how.
 
 ## Script — katakana, the borrowed-word script
-<!-- hl-knowledge: introduces=[JA-SCRIPT-KATAKANA-LOANWORDS, JA-SCRIPT-CHOUON]; assesses=[] -->
+<!-- hl-knowledge: introduces=[JA-SCRIPT-KATAKANA-LOANWORDS]; assesses=[JA-SCRIPT-CHOUON, JA-SCRIPT-KATAKANA-KO-01, JA-SCRIPT-KATAKANA-LONG-MARK-01, JA-SCRIPT-KATAKANA-HI-01] -->
 
 > **コーヒー** — **コ** *ko* + **ー** + **ヒ** *hi* + **ー**
 
@@ -67,8 +67,9 @@ the Nagasaki trade. Dutch had it from Turkish *kahve*, and Turkish from Arabic
 So this word genuinely is a cousin of one you already own. Notice what kind of
 cousin: not an inherited relative, but the same borrowed object arriving from
 the same Arabic source by two different roads. That is the honest shape of most
-Japanese–English overlap. Other passengers on those roads: **パン** bread, from
-Portuguese *pão*, and **アルバイト** a part-time job, from German *Arbeit*.
+Japanese–English overlap. Other passengers on those roads include *pan*,
+"bread," from Portuguese *pão*, and *arubaito*, "a part-time job," from German
+*Arbeit*. Their katakana signs can wait for their own one-sign lessons.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KOOHII, JA-SCRIPT-CHOUON, JA-SCRIPT-KATAKANA-LOANWORDS] -->

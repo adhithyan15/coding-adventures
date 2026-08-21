@@ -2,9 +2,9 @@
 schema_version: 2
 id: JA-W03-ma
 spine_node: SPINE-COURTESY-THANK
-sequence: 270
+sequence: 230
 delivery: script
-chapter: 3
+chapter: 4
 type: writing
 headword: ま
 romanization: ma
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-MA-01]
 practises:
-  knowledge: [JA-SCRIPT-MA-01, JA-SCRIPT-SA-01]
+  knowledge: [JA-SCRIPT-MA-01, JA-SCRIPT-SA-01, JA-SCRIPT-TO-01]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -58,6 +58,11 @@ Read **ma**: as in English *mother*, shortened. One beat.
 
 - [YOU WRITE: ま — two horizontals, then the looping vertical through them]
 - [YOU SAY: **ma**, one beat]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01] -->
+
+[PAUSE 15s] Write ? from memory before tracing ?.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-MA-01] -->

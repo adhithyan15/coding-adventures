@@ -2,7 +2,7 @@
 schema_version: 2
 id: JA-W03-to
 spine_node: SPINE-COURTESY-THANK
-sequence: 230
+sequence: 180
 delivery: script
 chapter: 3
 type: writing
@@ -20,7 +20,7 @@ requires:
 introduces:
   knowledge: [JA-SCRIPT-TO-01]
 practises:
-  knowledge: [JA-SCRIPT-TO-01, JA-SCRIPT-DAKUTEN-01]
+  knowledge: [JA-SCRIPT-TO-01, JA-SCRIPT-DAKUTEN-01, JA-LEX-KONNICHIWA]
 skills: [reading, writing]
 modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
@@ -58,6 +58,11 @@ Read **to**: a clean *t*, then the *o* of *more*, shortened. One beat.
 
 - [YOU WRITE: と — the small tick, then the long sweep. Do not join them.]
 - [YOU SAY: **a, ri, ga, to** — four beats, and the word is nearly yours]
+
+## Guided Practice — review pulse
+<!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-KONNICHIWA] -->
+
+[PAUSE 15s] Say the daytime greeting once without looking.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-TO-01] -->

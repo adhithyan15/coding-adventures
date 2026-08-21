@@ -2,14 +2,14 @@
 schema_version: 2
 id: JA-C01-gozaimasu
 spine_node: SPINE-COURTESY-THANK
-sequence: 70
-chapter: 1
+sequence: 250
+chapter: 4
 type: word
 headword: ありがとうございます
 romanization: arigatō gozaimasu
 gloss: thank you (polite)
 concept_tag: JA-WORD-ARIGATOU-GOZAIMASU
-prerequisites: [JA-C01-arigatou]
+prerequisites: [JA-W03-su]
 sounds: [mora, dakuten, long-o]
 roots: [gozaru]
 etymology_hook: Politeness in Japanese is not a different word but a different verb ending — and sometimes a different verb.
@@ -52,10 +52,10 @@ The whole phrase is ten beats — *a-ri-ga-to-o go-za-i-ma-su* — and the final
 ## Grammar Lens — politeness is grammar here, not word choice
 <!-- hl-knowledge: introduces=[JA-REGISTER-TEINEIGO, JA-LEX-ARIGATOU-GOZAIMASU]; assesses=[] -->
 
-**ございます** is a verb. It is the polite form of ある *aru*, "to be" — the same
-verb that sits inside **ありがとう**. The route runs ある → ござる → **ございます**,
-where the ending **-ます** is the general politeness marker Japanese attaches to
-verbs.
+**ございます** is a verb. It is the polite descendant of *aru*, "to be" — the
+same verb that sits inside **ありがとう**. The historical route runs *aru* to
+*gozaru* to **ございます**, where the ending **-ます** is the general politeness
+marker Japanese attaches to verbs.
 
 That is the difference this chapter has to name. In many languages politeness is
 a choice between two words for "you." Japanese instead marks it on the
@@ -64,10 +64,11 @@ no neutral setting: **ありがとう** to a friend and **ありがとうござ�
 stranger are not two styles of the same form, they are two different grammatical
 levels, and choosing wrongly is heard immediately.
 
-At the far end of the system, the verb itself is replaced. 言う *iu* "to say"
-becomes おっしゃる when the speaker is honouring someone else and 申す when
-humbling themselves. Same act, three verbs, chosen by who is doing what to whom.
-That is **keigo**, and this lesson is only its front door.
+At the far end of the system, even the verb can be replaced: ordinary *iu*, "to
+say," has the respectful form *ossharu* and the humble form *mōsu*. Same act,
+three verbs, chosen by who is doing what to whom. That is **keigo**, and this
+lesson is only its front door. Their spellings belong in later, separately
+taught script lessons.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO] -->
@@ -80,7 +81,7 @@ That is **keigo**, and this lesson is only its front door.
 <!-- hl-knowledge: introduces=[]; assesses=[JA-LEX-ARIGATOU-GOZAIMASU, JA-REGISTER-TEINEIGO, JA-LEX-ARIGATOU] -->
 <!-- hl-activity: {"id":"JA-C01-gozaimasu-level","kind":"text","assesses":["JA-REGISTER-TEINEIGO"],"prompt":"You are thanking a shop assistant you have never met. Which form do you use?","answer":"ありがとうございます","accepted":["arigato gozaimasu","arigatou gozaimasu","arigatō gozaimasu","the polite one"],"feedback":{"correct":"Right: the polite -masu form is the default with someone outside your circle.","incorrect":"Use ありがとうございます — the plain ありがとう is for people close to you."},"response_seconds":10} -->
 
-Which verb hides inside **ございます**? (ある, "to be.") Can a Japanese sentence
+Which verb hides inside **ございます**? (*aru*, "to be.") Can a Japanese sentence
 avoid marking politeness? (No — the predicate always carries a level.)
 
 Source: [Wiktionary: ございます](https://en.wiktionary.org/wiki/%E3%81%94%E3%81%96%E3%81%84%E3%81%BE%E3%81%99).
