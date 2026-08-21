@@ -32,7 +32,7 @@ describe("four-skill task-shape inventories (HL18)", () => {
     ]);
   });
 
-  it("loads the project-defined Marwadi pre-A1 floor with independent productive writing", () => {
+  it("loads the project-defined Marwadi pre-A1 floor as four separate 100-point papers", () => {
     const inventory = loadTaskShapeInventory("marwadi", "pre-A1");
     expect(inventory.target).toEqual({
       name: "Coding Adventures Marwadi pre-A1 Assessment — project-defined equivalent",
@@ -45,6 +45,12 @@ describe("four-skill task-shape inventories (HL18)", () => {
       "speaking",
     ]);
     expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
+    const paperPoints = inventory.sections.map((section) =>
+      section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
+    );
+    expect(paperPoints).toEqual([100, 100, 100, 100]);
+    expect(paperPoints.reduce((sum, points) => sum + points, 0)).toBe(inventory.passRule.maximumPoints);
+    expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
     expect(inventory.sections.find((section) => section.skill === "writing")?.parts.map((part) => part.id)).toEqual([
       "prea1-writing-delayed-recall",
       "prea1-writing-dictation",
@@ -249,6 +255,14 @@ describe("four-skill task-shape inventories (HL18)", () => {
     const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("marwadi", "pre-A1")));
     value.sections = value.sections.filter((section: { skill: string }) => section.skill === "reading");
     expect(() => parseTaskShapeInventory(value, "marwadi")).toThrow(/missing listening section/);
+  });
+
+  it("rejects a fully scored administration whose part ceilings do not reach its declared scale", () => {
+    const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("marwadi", "pre-A1")));
+    value.sections[0].parts[0].scoring.maxRawPoints = 99;
+    expect(() => parseTaskShapeInventory(value, "marwadi")).toThrow(
+      /part maxRawPoints sum to 399, not passRule.maximumPoints 400/,
+    );
   });
 
   it("rejects invented-looking null measurements without an explicit source gap", () => {
