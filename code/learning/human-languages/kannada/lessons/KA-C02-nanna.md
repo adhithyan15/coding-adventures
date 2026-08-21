@@ -27,10 +27,10 @@ reviews_of: [KA-C02-hesaru]
 
 ## The word, taken apart
 
-**ನನ್ನ** (*nanna*, "my") is the possessive of **ನಾನು** (*nānu*, "I") — native
-Dravidian, on the pronoun stem **\*nān**, the same one behind Tamil *nāṉ / eṉ*.
-It has no Indo-European cousin: the Dravidian "I/my" is a different word from
-the European *I/my*.
+**ನನ್ನ** (*nanna*) means "my." It belongs to Kannada's native Dravidian
+first-person family, not to the Indo-European family behind English *I/my*.
+You will meet the related word for "I" in its own lesson; today you only need
+*nanna*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -42,9 +42,9 @@ a doubled, held *nn*.
 
 [PAUSE 1s]
 - [YOU SAY: "nanna"]
-- [YOU SAY: its source — *nānu* ("I") → *nanna* ("my")]
+- [YOU SAY: *nanna* once with its meaning, "my"]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] What word is **ನನ್ನ** the possessive of? (*nānu*, "I".) Which Tamil
-pronoun shares its root? (*nāṉ*.)
+[PAUSE 3s] What does **ನನ್ನ** mean? ("My.") Is it native Dravidian or an
+Indo-European loan? (Native Dravidian.)

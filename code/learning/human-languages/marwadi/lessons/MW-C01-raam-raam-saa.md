@@ -16,11 +16,11 @@ etymology_hook: The greeting repeats राम and adds respectful सा; an of
 duration:
   max_seconds: 210
 requires:
-  knowledge: [MW-SCRIPT-RAAM-01, MW-SCRIPT-SAA-01]
+  knowledge: [MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01]
 introduces:
   knowledge: [MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
 practises:
-  knowledge: [MW-SCRIPT-RAAM-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
+  knowledge: [MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01, MW-LEX-RAAM-RAAM-SAA, MW-REGISTER-SAA]
 skills: [listening, speaking, reading, writing]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: [MW-W01-raam, MW-W01-saa]
 # राम-राम सा — your first complete Marwadi greeting
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01, MW-SCRIPT-SAA-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01, MW-SCRIPT-SAA-01] -->
 
 [PAUSE 3s] Read **राम** and **सा** separately. You already own every sign in
 today's line.

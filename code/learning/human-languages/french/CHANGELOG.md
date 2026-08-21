@@ -13,6 +13,33 @@
 
 ## [Unreleased]
 
+### Added — sourced DILF A1.1 four-skill task shapes (HL18)
+
+- Inventory the official 25-minute listening, 25-minute reading, 10-minute
+  individual speaking, and 15-minute writing sections, including all seventeen
+  activity families published by France Éducation international.
+- Preserve the real 35/15/35/15 weighting and the grouped pass rule: 50/100
+  overall plus 35/70 across the two oral tests. DILF publishes no independent
+  four-skill floors, so the inventory records them as unknown rather than
+  manufacturing four tidy percentages.
+- Record item counts, text and response lengths, audio speed and length, replay
+  counts, aids, and part-level score allocations as explicitly unpublished.
+  The separate assessment contract keeps the book's stricter 60%-per-skill
+  two-mock readiness margin.
+
+### Added — DILF/DELF/DALF assessment contract through C2 (HL16)
+
+- Name the official external target at every rung: DILF A1.1 as the closest
+  pre-A1 runway, DELF *tout public* at A1–B2, and DALF at C1–C2.
+- Preserve the awarding body's real aggregate and eliminatory score rules while
+  requiring a safer local 60% in reading, listening, writing, and speaking on
+  both timed mocks. A strong receptive score may not hide weak writing.
+- Require the complete gentle writing sequence from tracing through timed
+  independent production, without lengthening any lesson beyond five minutes.
+- Keep readiness honest: only French pre-A1 and A1 have task-shape inventories
+  today; later inventories, mocks, rubrics, answer keys, calibration, and
+  book-only human validation remain named dependencies.
+
 ### Added — Chapter 32, asking a question (HL-C229)
 
 Nine lessons. **L'interrogation 0/5 → 5/5**; French A1 exam coverage **27% → 34%**.

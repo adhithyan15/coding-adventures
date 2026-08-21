@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "coding-adventures-zip"
-version = "0.2.0"
+version = "0.2.1"
 description = "ZIP archive format (CMP09) from scratch — PKZIP-compatible .zip read/write"
 readme = "README.md"
 requires-python = ">=3.12"

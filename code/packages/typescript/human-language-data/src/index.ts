@@ -142,9 +142,11 @@ export {
   loadScripts,
   loadLetterLedgers,
   loadEverything,
+  loadTrackLessons,
 } from "./loader.js";
 export {
   buildTrackProgress,
+  renderTrackProgressCard,
   renderTrackProgressTable,
   type GeneratedBookChapterRef,
   type TrackProgress,
@@ -225,10 +227,11 @@ export {
   type ChapterNarration,
 } from "./narration.js";
 export {
-  MODALITY_MANIFEST_PATH,
+  MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
   modalityCorpusHash,
   buildModalityManifest,
+  mergeModalityManifests,
   serializeModalityManifest,
   type ModalityManifest,
   type ModalityManifestFeatures,
@@ -356,7 +359,11 @@ export {
   generatedFigureOutputs,
   runFigureGeneration,
 } from "./figure-cli.js";
-export { generatedModalityOutputs, runModalityManifest } from "./modality-cli.js";
+export {
+  generatedModalityOutputs,
+  generatedModalityOutputsFromLessons,
+  runModalityManifest,
+} from "./modality-cli.js";
 
 export {
   validateLetterLedger,

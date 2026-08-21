@@ -13,6 +13,10 @@ memory demand at a time.
 | S5 | `MW-W01-saa`: **सा** | read **राम सा** | delayed copy of **सा** |
 | S6 | `MW-C01-raam-raam-saa` | say the respectful greeting from a situation cue | copy the full greeting |
 | S7 | `MW-C01-practice` | hear/read one side and supply the other | write the greeting from memory |
+| S8 | `MW-W02-aa-independent`: **आ** | distinguish independent **आ** from attached **ा** | observe, trace, copy one sign |
+| S9 | `MW-W02-bha`: **भ** | read **भ** as *bha* with a breath | observe, trace, copy one sign |
+| S10 | `MW-C02-aabhaar`: **आभार** | build it from **आ + भ + ा + र** | delayed copy of one word |
+| S11 | `MW-C02-practice` | hear/read a formal-gratitude cue and supply **आभार** | dictation and independent recall |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

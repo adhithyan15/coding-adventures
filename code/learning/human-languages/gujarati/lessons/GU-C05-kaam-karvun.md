@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-gujarati
-reviews_of: [GU-C05-bolvun, GU-C05-rahevun]
+reviews_of: [GU-C05-bolvun]
 ---
 
 # કામ કરવું (kām karvũ) — "to work"

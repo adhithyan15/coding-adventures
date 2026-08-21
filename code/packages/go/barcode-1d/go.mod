@@ -19,17 +19,42 @@ require (
 	github.com/adhithyan15/coding-adventures/code/packages/go/upc-a v0.0.0
 )
 
+require (
+	github.com/adhithyan15/coding-adventures/code/packages/go/image-codec-png v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/lzss v0.0.0 // indirect
+	github.com/adhithyan15/coding-adventures/code/packages/go/zip v0.0.0 // indirect
+)
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/barcode-layout-1d => ../barcode-layout-1d
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/codabar => ../codabar
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/code128 => ../code128
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/code39 => ../code39
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/ean-13 => ../ean-13
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/itf => ../itf
+
+replace github.com/adhithyan15/coding-adventures/code/packages/go/image-codec-png => ../image-codec-png
+
+replace github.com/adhithyan15/coding-adventures/code/packages/go/lzss => ../lzss
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-codec-png => ../paint-codec-png
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-codec-png-native => ../paint-codec-png-native
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-instructions => ../paint-instructions
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-vm-gdi-direct => ../paint-vm-gdi-direct
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-vm-metal-native => ../paint-vm-metal-native
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/paint-vm-raster => ../paint-vm-raster
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/pixel-container => ../pixel-container
+
 replace github.com/adhithyan15/coding-adventures/code/packages/go/upc-a => ../upc-a
+
+replace github.com/adhithyan15/coding-adventures/code/packages/go/zip => ../zip
