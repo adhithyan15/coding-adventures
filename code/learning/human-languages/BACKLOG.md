@@ -5,6 +5,18 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09GS — Gujarati લ separates its rounded body, shoulder, and spine
+
+The source-and-font audit replaced **લ**'s conventional placeholder. The
+t30apps.com animation gives it three populated SVG paths: the broad rounded
+left body is drawn first, the separate middle shoulder follows after one lift,
+and the tall right spine descends into its foot after a second lift. The fitted
+Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **39/46 verified, 7 remaining**. Continue in source order with
+**ળ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **244.77 kB**, below its 250 kB target.
+
 ## HL-C09GR — Gujarati ર keeps its upper body, loop, and tail continuous
 
 The source-and-font audit replaced **ર**'s conventional placeholder. The
