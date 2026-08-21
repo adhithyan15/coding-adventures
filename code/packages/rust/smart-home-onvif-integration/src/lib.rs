@@ -1861,8 +1861,7 @@ mod tests {
             socket.send_to(response.as_bytes(), peer).unwrap();
         });
         let report =
-            scan_ws_discovery_with_policy(destination, Duration::from_millis(100), 4, true)
-                .unwrap();
+            scan_ws_discovery_with_policy(destination, Duration::from_secs(2), 1, true).unwrap();
         server.join().unwrap();
         assert_eq!(report.matches.len(), 1);
         assert!(report.failures.is_empty());

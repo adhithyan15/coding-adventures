@@ -14627,10 +14627,14 @@ mod tests {
         let exact = StorageLocation::new(real.to_str().unwrap()).unwrap();
         assert!(same_local_directory(&exact, &exact));
 
-        // A relative-looking (but still absolute-rooted) alternate spelling
-        // of the exact same directory, reached through `.`.
-        let via_dot = real.join(".");
-        let alternate_spelling = StorageLocation::new(via_dot.to_str().unwrap()).unwrap();
+        // An absolute alternate spelling of the exact same directory. The
+        // intermediate directory must exist so Windows can canonicalize the
+        // path through `..`; unlike joining `.`, this also remains a distinct
+        // raw spelling on every supported platform.
+        let traversal_anchor = root.child("traversal-anchor");
+        fs::create_dir_all(&traversal_anchor).unwrap();
+        let via_parent = traversal_anchor.join("..").join(real.file_name().unwrap());
+        let alternate_spelling = StorageLocation::new(via_parent.to_str().unwrap()).unwrap();
         assert_ne!(exact.as_str(), alternate_spelling.as_str());
         assert!(same_local_directory(&exact, &alternate_spelling));
 
