@@ -4336,6 +4336,16 @@ found that Coverlet's include property needed the repository-standard quoting;
 after that focused BUILD fix, all eight nodes built successfully through their
 real Windows front doors.
 
+Ready-for-review PR #12341 was opened from clean validated head
+`a69cbe67ce0c967321e772e9e25dbfa615f3c462` after a normal first push from exact
+main `c8d204fc58bffd25a7059cbff157e9dbaaa0f5fa`. Independent ownership and
+security audits found no scope, topology, authority, or publication blocker.
+The .NET item is now `pr-open` and PR #12341 is the loop's sole active parity
+publication. GitHub reports the head mergeable while its initial CI and CodeQL
+checks are queued, so all other parity work remains pending and auto-merge is
+disabled until the required checks are terminal acceptable and conflict status
+is clear.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

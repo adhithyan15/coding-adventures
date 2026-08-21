@@ -11,7 +11,7 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": null,
+  "active_pr": 12341,
   "last_inventory": {
     "revision": "c8d204fc58bffd25a7059cbff157e9dbaaa0f5fa",
     "schema_version": 3,
@@ -3981,14 +3981,17 @@
     {
       "id": "image-codec-png-dotnet-lane-parity",
       "title": "Port IC18 image-codec-png to C# and F#",
-      "status": "in-progress",
+      "status": "pr-open",
       "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": "codex/image-codec-png-dotnet-lane-parity",
-      "pr_number": null,
+      "pr_number": 12341,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12341",
+      "opened_at": "2026-08-21T00:24:37Z",
       "selection_revision": "7d640e6f77fa4b8905890dfc202cab485858fefb",
       "selection_notes": "Selected immediately after APNG correction PR #12334 completed all 30 checks and merged, unlocking every remaining PNG lane child. The collision-checked schema-3 inventory at exact merge main 7d640e6f77 remains 15 established lanes, 1,368 identities, and 4,553 slots with zero collisions and zero unknown buckets; five intervening commits added no package root. This .NET tranche is the highest-leverage ready child because one installed .NET 9 toolchain closes two established implementation slots, while both C# and F# already have tested pure PixelContainer and ZIP raw RFC 1951/CRC prerequisites with cross-platform BUILD front doors. The bounded work adds native C# and F# IC18 implementations, complete 85-case public fixture consumers, direct resource and precedence tests, docs, changelogs, project metadata, BUILD/BUILD_windows, and empty capabilities without changing IC18, the neutral corpus, adapters, or unrelated lanes.",
       "implementation_revision": "f25648090a071093bd9273ca2b620fd088b1f53a",
       "validation_notes": "Implemented native pure in-memory C# and F# PNG codecs over each lane's PixelContainer and ZIP-owned raw RFC 1951/CRC surfaces. Both consume all 85 neutral cases through public APIs, enforce the 29 stable errors, all five encoder filters, PLTE/tRNS semantics, APNG refusal after CRC, exact counted inflate and Adler validation, checked edge/product/allocation limits, and empty authority profiles. Fresh Release coverage passed C# 13/13 at 98.47% line and 98.94% branch and F# 7/7 at 98.99% line and 91.44% branch; C# format verification, strict JSON, the 9-test neutral validator, 7 capability tests, 10 parity-reporter tests, state uniqueness/dependency/cycle checks, collision inventory, production-authority grep, and diff checks passed. The repository Go build tool passed tests and vet, discovered 4,975 packages, selected exactly the eight C#/F# PNG, PixelContainer, ZIP, and LZSS nodes, and built all eight through their Windows front doors after quoting the Coverlet include property exposed by the first full executor run. The branch rebased conflict-free onto exact main c8d204fc58bffd25a7059cbff157e9dbaaa0f5fa; that main delta added no package root. Prospective inventory is 1,368 identities and 4,555 slots with zero collisions or unknown buckets.",
+      "publication_notes": "Opened ready-for-review PR #12341 from clean validated head a69cbe67ce0c967321e772e9e25dbfa615f3c462 after a normal first push from exact origin/main c8d204fc58bffd25a7059cbff157e9dbaaa0f5fa. Independent ownership and security audits found no scope, authority, topology, or live-branch blocker. GitHub reports the head mergeable with the initial CI and CodeQL checks queued, so this remains the loop's sole active parity PR and auto-merge is intentionally not enabled until every required check is terminal acceptable and conflict status is clear.",
       "notes": "Toolchain-shaped .NET child. Consume the neutral PNG corpus and the established ZIP raw/CRC surface in both lanes without duplicating DEFLATE."
     },
     {
