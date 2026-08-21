@@ -6630,6 +6630,21 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("ય"),
   },
+  // t30apps writes Gujarati ર in one run through the rounded upper body,
+  // middle loop, and descending tail.
+  [ductusKey("gujarati", "ર")]: {
+    script: "gujarati", glyph: "ર",
+    strokes: [
+      { segments: [{ label: "circle the rounded upper body, curl through the middle loop, and descend into the lower-right tail", path: [
+        { x: 45, y: 555 }, { x: 90, y: 575 }, { x: 145, y: 580 }, { x: 200, y: 570 }, { x: 250, y: 545 },
+        { x: 295, y: 510 }, { x: 325, y: 465 }, { x: 340, y: 415 }, { x: 335, y: 365 }, { x: 315, y: 320 },
+        { x: 280, y: 285 }, { x: 235, y: 260 }, { x: 190, y: 245 }, { x: 150, y: 240 }, { x: 120, y: 250 },
+        { x: 95, y: 265 }, { x: 75, y: 250 }, { x: 85, y: 225 }, { x: 120, y: 215 }, { x: 150, y: 220 },
+        { x: 165, y: 185 }, { x: 185, y: 145 }, { x: 215, y: 105 }, { x: 250, y: 72 }, { x: 295, y: 50 },
+        { x: 345, y: 38 }, { x: 395, y: 38 }, { x: 420, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("ર"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
