@@ -31,7 +31,7 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
     "lessonsWithoutSequence": 12,
-    "forwardReviews": 10,
+    "forwardReviews": 7,
     "atomsNeverRevisited": 632,
     "forwardReferences": 466,
     "chaptersWithoutCapability": 0,
@@ -6170,30 +6170,6 @@
       }
     ],
     "order": [
-      {
-        "lessonId": "GU-C02-anand",
-        "language": "gujarati",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "GU-C02-tamarun-naam-shun-chhe",
-        "detail": "reviews GU-C02-tamarun-naam-shun-chhe, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C04-kaale",
-        "language": "gujarati",
-        "chapter": 4,
-        "kind": "forward-review",
-        "other": "GU-C04-pachha-malishun",
-        "detail": "reviews GU-C04-pachha-malishun, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "GU-C05-kaam-karvun",
-        "language": "gujarati",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "GU-C05-rahevun",
-        "detail": "reviews GU-C05-rahevun, which the learner does not reach for another 1 lesson(s)"
-      },
       {
         "lessonId": "HI-C05-rahna",
         "language": "hindi",
@@ -60438,7 +60414,7 @@
         "lessonCount": 69,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 3,
+        "forwardReviews": 0,
         "atomsTaught": 115,
         "atomsNeverRevisited": 10,
         "forwardReferences": 8
@@ -60618,7 +60594,7 @@
       "lessonsWithoutSequence": 12,
       "tracksWithUnorderedLessons": 2,
       "forwardPrerequisites": 6,
-      "forwardReviews": 10,
+      "forwardReviews": 7,
       "atomsTaught": 4715,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
@@ -70692,10 +70668,10 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 50,
         "neverTaughtGlyphs": 32,
-        "orderDefects": 3,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 3,
+        "forwardReviews": 0,
         "forwardReferences": 8,
         "atomsTaught": 115,
         "atomsNeverRevisited": 10,
@@ -70705,13 +70681,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "gujarati",
-            "kind": "order-integrity",
-            "count": 3,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
           {
             "language": "gujarati",
             "kind": "forward-language",
@@ -70750,10 +70719,10 @@
         ],
         "next": {
           "language": "gujarati",
-          "kind": "order-integrity",
-          "count": 3,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 8,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -72065,13 +72034,6 @@
         "detail": "declare a unique reading order and close every prerequisite and review before use"
       },
       {
-        "language": "gujarati",
-        "kind": "order-integrity",
-        "count": 3,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
         "language": "hindi",
         "kind": "order-integrity",
         "count": 1,
@@ -72988,7 +72950,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 492,
-      "findings": 133
+      "findings": 132
     }
   },
   "levelGate": {
