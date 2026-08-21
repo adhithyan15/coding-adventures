@@ -3,13 +3,20 @@ import { resolve } from "node:path";
 import { expect } from "vitest";
 import { measureContinuity, REINFORCEMENT_WINDOWS } from "../../src/continuity.js";
 import type { TrackGentleRamp } from "../../src/gentle-ramp.js";
-import { defaultCurriculumRoot, loadChapterPolicy, loadTrackLessons } from "../../src/loader.js";
+import {
+  defaultCurriculumRoot,
+  loadAssessmentPolicy,
+  loadChapterPolicy,
+  loadEverything,
+  loadTrackLessons,
+} from "../../src/loader.js";
 import {
   MODALITY_MANIFEST_DIR,
   buildModalityManifest,
   serializeModalityManifest,
 } from "../../src/modality-manifest.js";
 import { measureRamp } from "../../src/ramp.js";
+import { measureWritingStages, type TrackWritingStageCoverage } from "../../src/writing-stages.js";
 
 export function expectLanguageContinuity(language: string): void {
   const root = defaultCurriculumRoot();
@@ -74,4 +81,15 @@ export function expectLanguageModality(language: string): void {
   const expected = serializeModalityManifest(buildModalityManifest(loadTrackLessons(language, root)));
   const actual = readFileSync(resolve(root, MODALITY_MANIFEST_DIR, `${language}.json`), "utf8");
   expect(actual, `${language} modality manifest`).toBe(expected);
+}
+
+export function languageWritingStages(language: string): TrackWritingStageCoverage {
+  const { lessons, curricula, spine } = loadEverything();
+  return measureWritingStages(
+    loadAssessmentPolicy(),
+    [language],
+    lessons,
+    curricula.filter((curriculum) => curriculum.language === language),
+    spine,
+  ).tracks[0]!;
 }

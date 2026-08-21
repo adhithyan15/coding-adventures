@@ -1,5 +1,6 @@
 ---
 id: FA-C01-na
+sequence: 40
 chapter: 1
 type: word
 headword: نه

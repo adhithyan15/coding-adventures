@@ -1,5 +1,6 @@
 ---
 id: FA-C01-mamnoon
+sequence: 20
 chapter: 1
 type: word
 headword: ممنون

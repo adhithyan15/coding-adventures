@@ -4,7 +4,7 @@
   "chapter": 15,
   "title": "Nine Letters, and the Words You Already Knew",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:f4cc4631133ae7af",
+  "sourceHash": "fnv1a64:6afd3f52e8e8f90d",
   "lessons": [
     {
       "id": "FA-W15-alef",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:6eb5695e68168b06",
+      "sourceHash": "fnv1a64:8e5eafc35a772d1a",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -48,7 +48,7 @@
             },
             {
               "kind": "speech",
-              "text": "You have been reading Persian words in this book for a long time and taking their shapes on trust. That stops here. From now on you build them."
+              "text": "Return to the right-to-left direction and the one alef stroke you first copied beside salâm. Now make both durable before adding a second letter."
             }
           ]
         },
