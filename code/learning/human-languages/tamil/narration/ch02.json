@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 2,
-  "sourceHash": "fnv1a64:82987c003edaf36b",
+  "sourceHash": "fnv1a64:b55db3804a8a541e",
   "lessons": [
     {
       "id": "TA-C02-peyar",
@@ -126,7 +126,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:0d61bcef1c87749a",
+      "sourceHash": "fnv1a64:57800df36bdff6a2",
       "notice": null,
       "blocks": [
         {
@@ -153,7 +153,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "என் (eṉ, \"my\") is the possessive of நான் (nāṉ, \"I\") — native Dravidian, from the pronoun stem yān / nān. It has no Indo-European cousin: the Tamil \"I/my\" is built on a different root from English I/my (which go back to eǵ and me-). Two families, two entirely separate words for the self."
+              "text": "என் (eṉ) means \"my.\" It belongs to Tamil's native Dravidian first-person family, not to the Indo-European family behind English I/my. You will meet the related word for \"I\" in its own lesson; today you only need eṉ."
             }
           ]
         },
@@ -180,11 +180,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "its source — nāṉ (\"I\") becomes eṉ (\"my\")",
+              "instruction": "eṉ once with its meaning, \"my\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: its source — *nāṉ* (\"I\") → *eṉ* (\"my\")]"
+              "source": "[YOU SAY: *eṉ* once with its meaning, \"my\"]"
             }
           ]
         },
@@ -201,7 +201,7 @@
             },
             {
               "kind": "speech",
-              "text": "What word is என் (eṉ) the possessive of, and does it share a root with English my? (nāṉ, \"I\"; no — different family entirely.)"
+              "text": "What does என் (eṉ) mean? (\"My.\") Does it share a root with English my? (No — it is native Dravidian.)"
             }
           ]
         }

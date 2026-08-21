@@ -1033,6 +1033,32 @@ describe("the real corpus", () => {
     expect(italian.filter((reference) => reference.lessonId.startsWith("IT-C01-"))).toEqual([]);
   });
 
+  it("keeps the four Dravidian openings free of genuine future farewells and pronouns", () => {
+    const { lessons } = loadEverything();
+    const found = measureContinuity(lessons).forwardReferences;
+    const ceilings = new Map([
+      ["malayalam", 17],
+      ["kannada", 15],
+      ["tamil", 13],
+      ["telugu", 12],
+    ]);
+
+    // #12355 defers the Chapter 1 departure phrases and the Chapter 2
+    // first-person forms to their owning lessons. Malayalam's athe/അത് item is
+    // a known substring false positive tracked in #12354, so it is named and
+    // excluded rather than "fixed" by damaging correct Malayalam.
+    for (const [language, ceiling] of ceilings) {
+      const references = found.filter((reference) => reference.language === language);
+      expect(references.length).toBeLessThanOrEqual(ceiling);
+      const genuineOpeningReferences = references.filter(
+        (reference) =>
+          /-C0[12]-/.test(reference.lessonId) &&
+          !(reference.lessonId === "ML-C01-athe" && reference.word === "അത്"),
+      );
+      expect(genuineOpeningReferences).toEqual([]);
+    }
+  });
+
   it("keeps the windows expanding, which is the whole point", () => {
     let previous = 0;
     for (const window of REINFORCEMENT_WINDOWS) {

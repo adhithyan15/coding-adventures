@@ -26,10 +26,9 @@ reviews_of: [TE-C02-peru]
 
 ## The word, taken apart
 
-**నా** (*nā*, "my") is the possessive of **నేను** (*nēnu*, "I") — native
-Dravidian, on the pronoun stem **\*nān/\*yān** behind Tamil *nāṉ* and Kannada
-*nānu*. No Indo-European cousin: the Dravidian "I/my" is a wholly different word
-from the European *I/my*.
+**నా** (*nā*) means "my." It belongs to Telugu's native Dravidian first-person
+family, not to the Indo-European family behind English *I/my*. You will meet
+the related word for "I" in its own lesson; today you only need *nā*.
 
 ## Sounds you'll need
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
@@ -40,9 +39,9 @@ from the European *I/my*.
 
 [PAUSE 1s]
 - [YOU SAY: "nā"]
-- [YOU SAY: its source — *nēnu* ("I") → *nā* ("my")]
+- [YOU SAY: *nā* once with its meaning, "my"]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] What word is **నా** the possessive of, and which Tamil/Kannada
-pronouns share its root? (*nēnu*, "I"; Tamil *nāṉ*, Kannada *nānu*.)
+[PAUSE 3s] What does **నా** mean? ("My.") Is it native Dravidian or an
+Indo-European loan? (Native Dravidian.)

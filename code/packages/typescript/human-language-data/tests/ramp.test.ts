@@ -318,7 +318,13 @@ describe("the script ramp against the real corpus", () => {
     // rule for a track that teaches script alongside speech and the wrong one for a
     // track that deliberately shows before it teaches. The exposure is intended; the
     // count is honest; what it measures is no longer quite what Tamil is doing.
-    expect(report.summary.lessonViolations).toBe(56); // Urdu splits the shukriya cliff exposed by authored order after Arabic removes three greeting cliffs.
+    // #12355: 56 -> 51, a net movement traced lesson by lesson. Six violations
+    // leave: the four Dravidian Chapter 1 recaps stop printing their future
+    // departure phrases, while ML-C01-illa and ML-C02-enre stop printing future
+    // existence/first-person forms. One joins: without those Malayalam leaks,
+    // ML-C02-santosham honestly becomes the first appearance of five glyphs.
+    // That newly exposed split is tracked separately; it is not hidden here.
+    expect(report.summary.lessonViolations).toBe(51); // Arabic's six shape steps plus immediate recall remove all three chapter-1 glyph cliffs; only the separately queued harakat step remains.
     /* Historical cumulative script-ramp ledger retained below.
     expect(report.summary.lessonViolations).toBe(59); // Punjabi's authored order removes two alphabetical-fallback artifacts. // Marathi's authored order: -1, because the walk no longer mistakes filename order for lesson order. // HL-C259: -1 -- IMPROVEMENT, one fewer ramp violation once gujarati declares its atoms // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
     expect(report.summary.lessonViolations).toBe(60); // Urdu order recovery: +1, making UR-C01-shukriya's existing five-shape spike measurable instead of hiding it behind invalid alphabetical order; #12261 owns the real split // Arabic order recovery: +1, making AR-W06-harakat-and-hamza's existing four-mark spike measurable instead of hiding it behind invalid alphabetical order; #12256 owns the real split // Punjabi order recovery: -3 -- IMPROVEMENT, the authored order spreads first-seen Gurmukhi shapes more gently than filename order // HL-C259: -1 -- IMPROVEMENT, one fewer ramp violation once gujarati declares its atoms // HL-C134: the hand-written prose carried back into the lessons is now visible to this measurement — the words were always on the page, only the markdown had not seen them
