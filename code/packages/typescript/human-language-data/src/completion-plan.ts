@@ -38,9 +38,10 @@ import { LEVEL_VOCABULARY, type LevelGateReport } from "./level-gate.js";
 import type { ScriptClosureReport } from "./script-closure.js";
 import type { WritingStageReport } from "./writing-stages.js";
 
-/** The ten families of work. Every item belongs to exactly one. */
+/** The eleven families of work. Every item belongs to exactly one. */
 export type WorkKind =
   | "assessment-contract"
+  | "external-capstone"
   | "task-shape"
   | "writing-stage"
   | "exam-inventory"
@@ -89,15 +90,16 @@ export type WorkKind =
  */
 export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
-  "task-shape": 2,
-  "writing-stage": 3,
-  "exam-inventory": 4,
-  "script-closure": 5,
-  "exam-point": 6,
-  vocabulary: 7,
-  reinforcement: 8,
-  "atom-budget": 9,
-  "spine-nodes": 10,
+  "external-capstone": 2,
+  "task-shape": 3,
+  "writing-stage": 4,
+  "exam-inventory": 5,
+  "script-closure": 6,
+  "exam-point": 7,
+  vocabulary: 8,
+  reinforcement: 9,
+  "atom-budget": 10,
+  "spine-nodes": 11,
 });
 
 /**
@@ -111,6 +113,7 @@ export const KIND_PRIORITY: Readonly<Record<WorkKind, number>> = Object.freeze({
  */
 export const TRANCHE_SIZE: Readonly<Record<WorkKind, number>> = Object.freeze({
   "assessment-contract": 1,
+  "external-capstone": 1,
   "task-shape": 1,
   "writing-stage": 1,
   "exam-inventory": 1,
@@ -200,6 +203,15 @@ export interface CompletionPlanInput {
   writingStages?: WritingStageReport;
   /** Tracks with a validated `<track>/assessment.json` covering the whole ladder. */
   assessmentContracts?: readonly string[];
+  /** Declared external exams that intentionally have no CEFR equivalence. */
+  externalCapstones?: ReadonlyArray<{
+    language: string;
+    id: string;
+    requiredAfterLevel: CefrLevel;
+    name: string;
+    complete: boolean;
+    missingArtifacts: readonly string[];
+  }>;
   /** Which target inventories are complete. Every other rung becomes an `exam-inventory` item. */
   inventories: readonly InventoryPresence[];
   /** Valid but incomplete source inventories. Their points count; their presence does not close the item. */
@@ -312,6 +324,23 @@ export function buildCompletionPlan(input: CompletionPlanInput): CompletionPlan 
           `the gentle writing stages, scored tasks, rubrics, answer keys and timed full mocks`,
         outstanding: 1,
         tranches: 1,
+      });
+    }
+
+    for (const capstone of input.externalCapstones ?? []) {
+      if (capstone.language !== track.language || capstone.complete) continue;
+      if (levelRank(capstone.requiredAfterLevel) > levelRank(ceiling)) continue;
+      mine.push({
+        id: `external-capstone/${track.language}/${capstone.id}`,
+        kind: "external-capstone",
+        language: track.language,
+        level: capstone.requiredAfterLevel,
+        goal:
+          `complete the non-CEFR-mapped external capstone '${capstone.name}' after ` +
+          `${capstone.requiredAfterLevel}: add ${capstone.missingArtifacts.length} missing task, rubric, or answer-key ` +
+          `artifact(s) without inventing a CEFR equivalence`,
+        outstanding: capstone.missingArtifacts.length,
+        tranches: Math.max(1, capstone.missingArtifacts.length),
       });
     }
 
@@ -575,6 +604,12 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
     (input.assessmentContracts ?? []).filter((language) => trackNames.has(language)),
   );
   const assessmentItems = Math.max(0, input.levelGate.tracks.length - validAssessmentContracts.size);
+  const relevantCapstones = (input.externalCapstones ?? []).filter(
+    (capstone) =>
+      trackNames.has(capstone.language)
+      && levelRank(capstone.requiredAfterLevel) <= levelRank(ceiling),
+  );
+  const incompleteCapstones = relevantCapstones.filter((capstone) => !capstone.complete);
 
   const glyphs = input.scriptClosure.tracks.reduce((sum, track) => sum + track.neverTaughtGlyphs, 0);
   const writingStagePairs = input.writingStages
@@ -610,6 +645,13 @@ function project(input: CompletionPlanInput, ceiling: CefrLevel, items: readonly
       detail:
         `${validAssessmentContracts.size} of ${input.levelGate.tracks.length} track(s) have a validated ` +
         `four-skill, writing-ramp and timed-mock contract`,
+    },
+    {
+      kind: "external-capstone",
+      items: incompleteCapstones.length,
+      detail:
+        `${relevantCapstones.length - incompleteCapstones.length} of ${relevantCapstones.length} declared ` +
+        `non-CEFR-mapped external capstone(s) have every task, rubric and answer-key artifact`,
     },
     {
       kind: "task-shape",

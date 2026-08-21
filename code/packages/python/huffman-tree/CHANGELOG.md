@@ -1,5 +1,12 @@
 # Changelog — huffman-tree (Python)
 
+## Unreleased
+
+### Changed
+
+- Pin the canonical and Windows BUILD environments to Python 3.13 so the
+  standalone recipe can install the Python >=3.12 heap prerequisite.
+
 ## 0.1.0 — 2026-04-11
 
 ### Added

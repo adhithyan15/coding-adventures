@@ -3,6 +3,13 @@
 All notable changes to this package are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Pin the canonical and Windows BUILD environments to Python 3.13 so the
+  heap and Huffman Tree prerequisite closure is standalone-clean.
+
 ## [0.1.0] — 2026-04-13
 
 ### Added
