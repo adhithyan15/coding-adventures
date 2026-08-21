@@ -1,2 +1,2 @@
 luarocks make --local --deps-mode=none coding-adventures-heap-0.1.0-1.rockspec
-cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua -e "arg={'.','--verbose','--pattern=test_'}; require('busted.runner')({ standalone = false })"
+cd tests && set LUA_PATH=../src/?.lua;../src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;&& set LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;&& lua -e arg={'.','--verbose','--pattern=test_'};require('busted.runner')({standalone=false})
