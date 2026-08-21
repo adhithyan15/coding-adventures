@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
-  "lessonCount": 40,
-  "atomMeasurableLessons": 40,
+  "lessonCount": 47,
+  "atomMeasurableLessons": 47,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -16,8 +16,8 @@
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
   "forwardReferences": 0,
-  "atomsTaught": 47,
-  "atomsNeverRevisited": 2,
+  "atomsTaught": 60,
+  "atomsNeverRevisited": 1,
   "reinforcementWindowMisses": 0,
   "reinforcementMissesByWindow": {
     "R1": 0,
@@ -26,7 +26,7 @@
     "R4": 0
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 22,
+  "writingPracticeLessons": 26,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [],

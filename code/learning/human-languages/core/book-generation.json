@@ -1714,6 +1714,18 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 7,
+      "output": "marwadi/book/chapters/ch07-wellbeing-question.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 8,
+      "output": "marwadi/book/chapters/ch08-wellbeing-answer.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
