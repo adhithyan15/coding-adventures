@@ -4796,9 +4796,11 @@ deleted the source branch.
 
 ### Post-#12420 refresh and Python heap BUILD-front selection
 
-The exact merged-main collision inventory at
-`43b52d3b5ba230dd55a4fae35d0bee746b4a7d94` remains 15 established lanes and
-1,368 canonical identities while advancing to 4,561 implementation slots.
+The collision inventory selected at merge
+`43b52d3b5ba230dd55a4fae35d0bee746b4a7d94` and revalidated after rebasing on
+`87b0df7caf6314bd2b9b4e887e35c39a2bad97b2` remains 15 established lanes and
+1,368 canonical identities with 4,561 implementation slots. The intervening
+Chinese and Marwadi human-language commits modify existing package roots only.
 `image-codec-png` now spans ten lanes. The high-consensus band contains 175
 packages with 276 gaps; the 5-9 band contains 122 packages with 926 gaps; the
 2-4 band remains 166 packages with 2,087 gaps; and 905 singletons have 12,670

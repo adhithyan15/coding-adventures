@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "43b52d3b5ba230dd55a4fae35d0bee746b4a7d94",
+    "revision": "87b0df7caf6314bd2b9b4e887e35c39a2bad97b2",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
@@ -4209,7 +4209,7 @@
       "branch": "codex/python-heap-build-front-idempotence",
       "pr_number": null,
       "selection_revision": "43b52d3b5ba230dd55a4fae35d0bee746b4a7d94",
-      "implementation_revision": "6f7cf5d671b5d1f4ec31b08a13b6ba443bf68ee1",
+      "implementation_revision": "93097ea1d153b4706d3b74cbb372d966a1406fa9",
       "selection_notes": "Selected after Python PNG PR #12420 completed all 30 checks and merged through the requested auto-merge path. The refreshed schema-3 inventory at exact main 43b52d3b5b contains 15 established lanes, 1,368 canonical identities, and 4,561 implementation slots with zero collisions and zero unknown buckets. The exact Python PNG downstream execution exposed a deterministic build-contract failure: heap's first Windows BUILD invocation passes, while an immediate second invocation fails because uv refuses to overwrite the existing .venv; the unpinned front also selected unsupported Python 3.10 despite Python 3.13 being installed. Live ownership audits find no heap, state, or roadmap overlap. This bounded repair is safer than the remaining PNG children, which are blocked by boxed-byte resource prerequisites, absent toolchains, or live Rust prerequisite owners.",
       "validation_notes": "Both BUILD fronts now recreate .venv with --clear, pin Python 3.13, and invoke the environment's interpreter explicitly for Ruff, format, MyPy, and pytest. A repository regression pins both complete recipes. The exact Windows front passes twice consecutively in one checkout with all lint, format, and type gates clean and 52 tests at 99.12% coverage each time; the canonical Unix recipe is structurally pinned for Linux/macOS CI. Direct downstream Windows fronts pass with explicit UV_PYTHON=3.13: huffman-tree 36 tests at 98.62%, Brotli 75 at 97.70%, Deflate 20 at 98.14%, and Huffman Compression 35 at 97.44%. That environment override applies only to the separately recorded pre-existing downstream pinning gap. The Go build tool passes all tests, vet, and trimpath compilation; its exact Windows diff plan discovers 494 Python packages, selects one changed and six affected nodes, and a real run builds heap, lzss, huffman-tree, Brotli, Deflate, and Huffman Compression with 488 skipped. The build-front regression, parity reporter, and capability taxonomy pass 2, 10, and 7 tests. Schema-3 inventory remains 15 lanes, 1,368 identities, and 4,561 slots with zero collisions or unknown buckets; state is unique, dependency-complete, and acyclic across 415 items. Diff, credential, dependency, and production-authority scans are clean; the tranche changes no capability manifest or privileged production boundary.",
       "notes": "Recreate heap's local virtual environment with --clear, pin Python 3.13, invoke that environment explicitly for lint, format, MyPy, and pytest on Unix and Windows, and prove the Windows recipe passes twice plus its compression dependents. Correct the prior Python PNG build-plan receipt from four nodes to the exact three-changed/eight-affected execution."
