@@ -10,10 +10,10 @@
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 59,
   "neverTaughtGlyphs": 23,
-  "orderDefects": 1,
+  "orderDefects": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
-  "forwardReviews": 1,
+  "forwardReviews": 0,
   "forwardReferences": 8,
   "atomsTaught": 160,
   "atomsNeverRevisited": 22,
@@ -23,13 +23,6 @@
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
-    {
-      "language": "russian",
-      "kind": "order-integrity",
-      "count": 1,
-      "unit": "order/dependency defect(s)",
-      "detail": "declare a unique reading order and close every prerequisite and review before use"
-    },
     {
       "language": "russian",
       "kind": "forward-language",
@@ -82,9 +75,9 @@
   ],
   "next": {
     "language": "russian",
-    "kind": "order-integrity",
-    "count": 1,
-    "unit": "order/dependency defect(s)",
-    "detail": "declare a unique reading order and close every prerequisite and review before use"
+    "kind": "forward-language",
+    "count": 8,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }
