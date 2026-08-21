@@ -2,6 +2,18 @@
 
 ## [Unreleased]
 
+### Fixed — three false forward-review claims
+
+- `GU-C02-anand` now records the earlier name statement that its warm-up and
+  knowledge directives actually rehearse.
+- `GU-C04-kaale` now records its real `malishun` review instead of pointing
+  ahead to the chapter's later assembled farewell.
+- `GU-C05-kaam-karvun` no longer claims to review the following `rahevun`
+  lesson; its exercises revisit `GU-C05-bolvun`.
+
+The authored order and lesson durations do not change. Gujarati's three
+order-integrity defects are now zero.
+
 ### Added — Chapter 13, the first nine pieces of the script (HL-C215)
 
 Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles

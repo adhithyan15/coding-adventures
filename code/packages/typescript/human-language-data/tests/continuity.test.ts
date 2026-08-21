@@ -504,7 +504,7 @@ describe("the real corpus", () => {
     // reviewed TA-C04-naalai, both before those lessons existed. Both were forward
     // under the old alphabetical fallback too; the hand-authored book runs them the
     // other way round, so the sequences now follow the book. Tamil forward reviews: 0.
-    expect(report.summary.forwardReviews).toBeLessThanOrEqual(42) // Bengali repairs three false future-review claims; Italian order recovery: -7, including one stray claim to review a future Chapter 4 lesson; CEILING — this is debt; it may fall, never grow; // HL11: -99, same cause as forwardPrerequisites above. With five tracks carrying no declared order, a lesson reviewing an earlier one looked like it reviewed a later one. Recovering the order from their books turned most of these back into what they always were: ordinary backward references
+    expect(report.summary.forwardReviews).toBeLessThanOrEqual(39) // Gujarati and Bengali each repair three false future-review claims; Italian order recovery: -7, including one stray claim to review a future Chapter 4 lesson; CEILING — this is debt; it may fall, never grow; // HL11: -99, same cause as forwardPrerequisites above. With five tracks carrying no declared order, a lesson reviewing an earlier one looked like it reviewed a later one. Recovering the order from their books turned most of these back into what they always were: ordinary backward references
 
     // REINFORCEMENT. The founding promise is that the course "constantly
     // re-emphasizes what was learnt previously". It shipped with HALF taught once.

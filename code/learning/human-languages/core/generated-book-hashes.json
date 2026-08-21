@@ -1074,7 +1074,7 @@
     {
       "language": "gujarati",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d5b0e868e7ad8b29",
+      "sourceHash": "fnv1a64:a3d95b6d78b1c688",
       "lessonIds": [
         "GU-C02-naam",
         "GU-C02-maarun",
@@ -1105,7 +1105,7 @@
     {
       "language": "gujarati",
       "chapter": 4,
-      "sourceHash": "fnv1a64:e9c89a04a63fdf2c",
+      "sourceHash": "fnv1a64:ece16679fa29a79e",
       "lessonIds": [
         "GU-C04-malishun",
         "GU-C04-kaale",
@@ -1118,7 +1118,7 @@
     {
       "language": "gujarati",
       "chapter": 5,
-      "sourceHash": "fnv1a64:85cfbdfb2d1b62c4",
+      "sourceHash": "fnv1a64:60a19d30501cd678",
       "lessonIds": [
         "GU-C05-bolvun",
         "GU-C05-hun-gujarati-bolun-chhun",
