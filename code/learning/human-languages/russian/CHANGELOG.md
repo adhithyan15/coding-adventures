@@ -2,6 +2,19 @@
 
 ## Unreleased
 
+### Added — pre-A1 bridge and A1-to-C2 TORFL contract (HL16)
+
+- Added a non-accredited project-defined pre-A1 checkpoint followed by the real
+  TORFL/ТРКИ destinations: ТЭУ/A1, ТБУ/A2, and ТРКИ-I through IV at B1–C2.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes. A1–C2 readiness also requires TORFL's fifth Lexis/Grammar subtest at
+  66%, even though the universal HL16 schema cannot yet encode that extra part.
+- Cyrillic writing grows cumulatively from trace and guided copy through delayed
+  recall, dictation, connected composition, and timed exam production.
+- Two complete mocks, current official task inventories, provider-drift review,
+  rubrics, keys, calibration, and book-only human validation remain explicit
+  dependencies rather than implied completion.
+
 ### Fixed — the final false forward-review claim
 
 `RU-C01-da` now reviews the two greetings its warm-up actually recalls:
