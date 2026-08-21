@@ -1006,6 +1006,33 @@ describe("the real corpus", () => {
     expect(of("veinte")).toBeUndefined();
   });
 
+  it("keeps German Chapter 1 free of untaught target-language previews", () => {
+    const { lessons } = loadEverything();
+    const german = measureContinuity(lessons).forwardReferences.filter(
+      (reference) => reference.language === "german",
+    );
+
+    // #12350 removes ten previews from the opening chapter. The learner now
+    // meets each German form in its owning lesson instead of seeing evening,
+    // night, farewell, and Chapter 2 pronoun vocabulary early. The remaining
+    // track-wide debt is explicit and may fall, never grow.
+    expect(german.length).toBeLessThanOrEqual(45);
+    expect(german.filter((reference) => reference.lessonId.startsWith("GE-C01-"))).toEqual([]);
+  });
+
+  it("keeps Italian Chapter 1 free of untaught target-language previews", () => {
+    const { lessons } = loadEverything();
+    const italian = measureContinuity(lessons).forwardReferences.filter(
+      (reference) => reference.language === "italian",
+    );
+
+    // #12352 removes ten previews from the opening chapter, including a food
+    // word 69 lessons early and an introduction phrase ten lessons early. The
+    // remaining track-wide debt is explicit and may fall, never grow.
+    expect(italian.length).toBeLessThanOrEqual(34);
+    expect(italian.filter((reference) => reference.lessonId.startsWith("IT-C01-"))).toEqual([]);
+  });
+
   it("keeps the windows expanding, which is the whole point", () => {
     let previous = 0;
     for (const window of REINFORCEMENT_WINDOWS) {

@@ -5,6 +5,43 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09GX — Gujarati હ flows from its upper loop around the lower bowl
+
+The source-and-font audit replaced **હ**'s conventional placeholder. The
+t30apps.com animation gives it one populated SVG path: a continuous run circles
+the compact upper loop, threads through the middle turn, and continues around
+the broad lower bowl into its rightward finish. Noto Sans Gujarati prints those
+features as two disconnected contours, so the fitted learner median uses the
+source-backed connecting bridge to preserve that zero-lift order.
+
+Gujarati is now **44/46 verified, 2 remaining**. Return to source order with
+**ન** next, the earliest remaining conventional placeholder. The Gujarati-
+bearing `script-data` batch measures **82.36 kB**, below its 250 kB target.
+
+## HL-C09GW — Gujarati સ carries its looped body into the long shoulder
+
+The source-and-font audit replaced **સ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run circles the
+rounded upper loop, descends through the left body, and sweeps across the long
+right shoulder; after one lift, the tall right spine descends into its lower
+foot. The fitted Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **43/46 verified, 3 remaining**. Continue in source order with
+**હ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **80.92 kB**, below its 250 kB target.
+
+## HL-C09GV — Gujarati શ joins its upper loop to the lower body before the spine
+
+The source-and-font audit replaced **શ**'s conventional placeholder. The
+t30apps.com animation gives it two populated SVG paths: one run circles the
+small upper loop and continues through the broad lower body into its tail;
+after one lift, the tall right spine descends into its lower foot. The fitted
+Noto Sans Gujarati medians preserve that order.
+
+Gujarati is now **42/46 verified, 4 remaining**. Continue in source order with
+**સ** next, the next conventional placeholder. The Gujarati-bearing
+`script-data` batch measures **79.30 kB**, below its 250 kB target.
+
 ## HL-C09GU — Gujarati વ completes its rounded body before the right spine
 
 The source-and-font audit replaced **વ**'s conventional placeholder. The

@@ -4558,6 +4558,158 @@ blocker. The exact 11-path diff is clean, GitHub reports the branch mergeable,
 and required checks queued immediately after publication. The loop remains in
 monitor-only mode until the exact lifecycle-update head is terminal.
 
+### Post-#12383 refresh and Lua PNG lane selection
+
+Final reviewed Swift head `5e4de3817ca0089978d4b23ac83bb481934e5e2b`
+completed all 30 checks with 24 successes, five expected skips, and one neutral
+CodeQL result. Both CI gates and the Linux, macOS, and Windows builds succeeded.
+After the loop requested squash auto-merge, GitHub merged PR #12383 as
+`a81801eb17fd3f980f23211522011cb69de2d005` at 2026-08-21T06:25:58Z and
+deleted the source branch.
+
+The refreshed collision-checked schema-3 inventory at that exact merge main
+contains 15 established lanes, 1,368 canonical identities, and 4,559
+implementation slots. High-consensus coverage remains 174 packages with 271
+gaps; the 5-9 band contains 123 packages with 933 gaps; the 2-4 band contains
+166 packages with 2,087 gaps; and 905 singletons have 12,670 gaps, including
+716 Rust singletons. `image-codec-png` now spans eight lanes. Canonical
+collisions and unknown language buckets remain zero, and the reviewed Swift
+package is the only new root.
+
+The Lua PNG child is selected next. It closes another umbrella slot, is tied
+for the thinnest collision-free established lane, has installed Lua 5.4.5 and
+LuaRocks 3.9.2 toolchains, and can reuse established PixelContainer, ZIP-owned
+raw RFC 1951/counting/CRC, and LZSS packages with BUILD front doors. Complete
+open-PR and no-PR ownership audits find no Lua PNG or prerequisite overlap.
+Rust remains deferred behind three live prerequisite overlaps, Haskell retains
+a quarantined stale ZIP/LZSS branch, and the clean Go paint adapter adds no
+parity slot or dependency unlock. This bounded tranche adds one native Lua IC18
+package, all 85 neutral cases through public APIs, focused binary-string,
+allocation, and precedence regressions, LuaRocks and BUILD metadata,
+documentation, changelog, and an empty capability manifest. It does not change
+IC18, the neutral corpus, adapters, or unrelated lanes.
+
+### Lua PNG implementation and allocation hardening
+
+Tests-first implementation exposed a Lua-specific allocation hazard that the
+small neutral vectors alone could not reveal. Both PixelContainer RGBA storage
+and ZIP counted inflate previously retained one boxed Lua number per byte. At
+the normative 33,554,432-pixel ceiling those two buffers could exceed 4 GiB
+before PNG decoder overhead, contradicting IC18's bounded-resource contract.
+The selected dependency-shaped tranche therefore hardens both prerequisites:
+PixelContainer preserves its mutable 1-indexed `data` table interface over
+compact 4 KiB byte strings, while ZIP retains completed inflate output as byte
+strings plus only one bounded numeric tail. Focused compact-storage and
+multi-megabyte overlapping-back-reference regressions keep that boundary
+load-bearing. The Windows PixelContainer and LZSS BUILD fronts are also made
+directly executable through LuaRocks' extensionless Busted wrapper.
+
+The native Lua PNG package now passes 94 Busted tests: all 85 neutral cases
+through public APIs plus focused max-pixel, malformed/sparse buffer, unsigned
+chunk-length, APNG precedence, compact output, taxonomy, and Adler-boundary
+regressions. Test-only LibDeflate independently inflates encoder output and
+Windows System.Drawing accepts each encoded PNG and recovers exact RGBA bytes.
+Production line coverage is 98.58%. PixelContainer passes 36 tests; ZIP passes
+69 full tests and 40 focused portable coverage cases at 90.44%; BMP, PPM, QOI,
+point-operation, and geometric-transform downstream suites pass 31, 28, 33,
+28, and 41 tests respectively. Syntax and LuaCheck gates report zero warnings.
+
+The prospective collision-checked schema-3 inventory contains 15 established
+lanes, 1,368 identities, and 4,560 implementation slots. `image-codec-png`
+spans nine lanes, the 5-9 band remains 123 packages with 932 gaps, and
+collisions and unknown buckets remain zero. The neutral PNG and capability
+taxonomy suites pass 9 and 7 tests. Production imports only repository
+PixelContainer and ZIP; all filesystem, LibDeflate, process, and real-image
+tool authority is confined to tests and the empty production capability
+manifest remains valid.
+
+The repository Go build tool passes tests, vet, and trimpath compilation. Its
+real parallel Windows plan evaluates 45 Starlark files, discovers 259 Lua
+packages, and builds all 15 affected prerequisite, codec, compression, and
+image-downstream nodes with 244 unrelated packages skipped. That first full
+execution exposed extensionless LuaRocks launchers and repeated test-tool
+installation as parallel Windows hazards. BUILD front doors now invoke the
+Lua modules directly without quoted wrapper paths, CI installs shared Lua test
+tools once during toolchain setup, and the complete rerun passes.
+
+Ready-for-review PR #12396 was opened from validated implementation head
+`f1a2c61e7aec307b76cd292d9e8f4f0312ced003` after a clean rebase onto exact
+`origin/main` `5eb6fc0589a08d53c4db3fe7f6c9e2e23d0d897c`. The intervening
+human-language-only commits were disjoint from this tranche, the source branch
+had no prior remote or PR owner, and the complete post-rebase validation above
+was repeated before the normal first push. Final reviewed head
+`e02e491307a510b4783e8a6e4dd7e3106a5187f8` completed all 29 checks with 23
+successes and six expected skips; both CI gates and every operating-system
+build succeeded. After the loop requested squash auto-merge, GitHub merged the
+PR as `20c704d960e3d62e81571f8834ea1bdeabb33621` at
+2026-08-21T08:15:48Z and deleted the source branch.
+
+### Post-#12396 refresh and Go paint PNG reconciliation
+
+The exact live-main inventory at `f6ef9169c3d5a89da0e1e65b18f0811a8b46f194`
+contains 15 established lanes, 1,368 canonical identities, and 4,560
+implementation slots. High-consensus coverage remains 174 packages with 271
+gaps; the 5-9 band contains 123 packages with 932 gaps; the 2-4 band contains
+166 packages with 2,087 gaps; and 905 singletons have 12,670 gaps, including
+716 Rust singletons. `image-codec-png` now spans nine lanes. Canonical
+collisions and unknown language buckets remain zero. The reviewed Lua package
+is the only new root since the prior inventory; two later Gujarati
+human-language commits modify established TypeScript roots only.
+
+The Go paint PNG reconciliation is selected next. The existing adapter still
+delegates to the standard-library PNG decoder, bypassing IC18's 16,384-edge,
+33,554,432-pixel, bounded-inflate, exact-consumption, and APNG-refusal
+contracts even though the repository Go IC18 core is merged. This is the
+highest immediate security and downstream leverage among ready unowned work:
+Go 1.26.4 and the compact byte-backed PixelContainer, ZIP, and LZSS chain are
+installed, open-PR and no-PR audits find no overlap, and `barcode-1d` is a real
+downstream. The bounded tranche preserves the adapter's public aliases and
+panic/error compatibility while delegating production behavior to
+`image-codec-png`, adding typed-error and portable regression evidence,
+raising coverage, and validating the downstream. It adds no package slot, but
+closes an eligible owned security gap before more resource-sensitive lane
+ports. Rust remains deferred behind live prerequisite overlap, Haskell retains
+a quarantined stale ZIP/LZSS owner, Elixir and Perl lack complete local
+toolchains, and boxed-byte Ruby, Perl, and Haskell paths need allocation-safe
+prerequisite decisions before claiming IC18's ceiling.
+
+### Go paint PNG implementation and validation
+
+The paint adapter is now a thin API-compatible delegate to the repository Go
+`image-codec-png` package. Production no longer imports `image/png`, `image`,
+`image/color`, `bytes`, or standard-library compression. `PngCodec`, `Codec`,
+`Encode`, `EncodePNG`, `Decode`, and `DecodePNG` remain intact; deterministic
+output matches the canonical encoder byte-for-byte, the test-only standard
+library accepts it, typed `*PngError` values propagate through every decode
+alias, and the nonthrowing ImageCodec encode path preserves its typed panic.
+
+The adapter test reads the schema-1 `image-codec-png-v1` corpus directly and
+makes representative edge-limit, pixel-limit, valid-CRC APNG, IDAT-cavity, and
+invalid-filter cases load-bearing through paint's public APIs. Race-enabled
+tests pass at 100.0% statement coverage, followed by `go vet`, trimpath build,
+module verification, and dependency listing. `barcode-1d` carries the local
+image-codec-png, ZIP, and LZSS replacements that Go modules do not propagate
+from dependencies; its race-enabled tests, vet, trimpath build, and module
+verification pass.
+
+The repository Go build tool passes all tests, vet, and trimpath compilation.
+Its collision-checked Windows plan discovers 306 Go packages, selects exactly
+18 changed, prerequisite, and downstream nodes, and builds all 18 with 288
+unrelated packages skipped. Neutral PNG fixture, capability taxonomy, and
+parity reporter suites pass 9, 7, and 10 tests. The exact inventory remains 15
+lanes, 1,368 identities, and 4,560 slots with zero collisions and zero unknown
+buckets. JSON/state-graph, diff, dependency, production-authority, and
+credential scans are clean, and the empty production capability manifest
+remains truthful.
+
+Ready-for-review PR #12403 was opened from clean validated head
+`20149865d2825d8746c2d1bfdbb5f6c4b2874db1` after a normal first push from
+exact `origin/main` `f6ef9169c3d5a89da0e1e65b18f0811a8b46f194`.
+The source branch had no prior remote or PR owner, all live ownership surfaces
+were disjoint, and GitHub reports the PR open, non-draft, and mergeable while
+required CI and CodeQL checks are queued. It is the loop's sole active parity
+publication, so the loop remains monitor-only while those checks are pending.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

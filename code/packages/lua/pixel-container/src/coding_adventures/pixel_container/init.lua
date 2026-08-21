@@ -52,6 +52,166 @@ local M = {}
 
 M.VERSION = "0.1.0"
 
+-- Lua numbers stored one-per-table-slot are far larger than bytes.  A
+-- 32-megapixel RGBA image would therefore consume multiple gigabytes if data
+-- were a conventional dense table.  Keep the public table indexing contract,
+-- but back it with immutable 4 KiB byte strings and a tiny proxy metatable.
+local BYTE_CHUNK_SIZE = 4096
+local ZERO_CHUNK = string.rep("\0", BYTE_CHUNK_SIZE)
+local BUFFER_STATES = setmetatable({}, {__mode = "k"})
+local NIL_VALUE = {}
+
+local function validate_dimensions(width, height, caller)
+    if type(width) ~= "number" or width < 1 or math.floor(width) ~= width then
+        error(caller .. ": width must be a positive integer, got " .. tostring(width))
+    end
+    if type(height) ~= "number" or height < 1 or math.floor(height) ~= height then
+        error(caller .. ": height must be a positive integer, got " .. tostring(height))
+    end
+    if width > math.maxinteger // 4 // height then
+        error(caller .. ": dimensions exceed the addressable byte length")
+    end
+    return width * height * 4
+end
+
+local function read_buffer_byte(state, index)
+    local override = state.overrides[index]
+    if override ~= nil then
+        if override == NIL_VALUE then return nil end
+        return override
+    end
+    local chunk_index = ((index - 1) // BYTE_CHUNK_SIZE) + 1
+    local chunk_offset = ((index - 1) % BYTE_CHUNK_SIZE) + 1
+    return state.chunks[chunk_index]:byte(chunk_offset)
+end
+
+local function write_buffer_byte(state, index, value)
+    if type(index) ~= "number" or math.floor(index) ~= index
+        or index < 1 or index > state.length
+    then
+        error("pixel byte index out of bounds: " .. tostring(index))
+    end
+    if type(value) ~= "number" or math.floor(value) ~= value
+        or value < 0 or value > 255
+    then
+        state.overrides[index] = value == nil and NIL_VALUE or value
+        return
+    end
+    state.overrides[index] = nil
+    local chunk_index = ((index - 1) // BYTE_CHUNK_SIZE) + 1
+    local chunk_offset = ((index - 1) % BYTE_CHUNK_SIZE) + 1
+    local chunk = state.chunks[chunk_index]
+    state.chunks[chunk_index] = chunk:sub(1, chunk_offset - 1)
+        .. string.char(value) .. chunk:sub(chunk_offset + 1)
+end
+
+local function proxy_for_state(state)
+    local proxy = {}
+    local function iterator(_, previous)
+        local index = previous + 1
+        if index > state.length then return nil end
+        return index, read_buffer_byte(state, index)
+    end
+    setmetatable(proxy, {
+        __len = function() return state.length end,
+        __index = function(_, index)
+            if type(index) ~= "number" or math.floor(index) ~= index
+                or index < 1 or index > state.length
+            then
+                return nil
+            end
+            return read_buffer_byte(state, index)
+        end,
+        __newindex = function(_, index, value)
+            write_buffer_byte(state, index, value)
+        end,
+        __pairs = function() return iterator, proxy, 0 end,
+        __metatable = "pixel-byte-buffer",
+    })
+    BUFFER_STATES[proxy] = state
+    return proxy
+end
+
+local function make_buffer(length, bytes)
+    local state = {length = length, chunks = {}, overrides = {}}
+    local chunk_count = (length + BYTE_CHUNK_SIZE - 1) // BYTE_CHUNK_SIZE
+    for chunk_index = 1, chunk_count do
+        local first = (chunk_index - 1) * BYTE_CHUNK_SIZE + 1
+        local size = math.min(BYTE_CHUNK_SIZE, length - first + 1)
+        if bytes == nil then
+            state.chunks[chunk_index] = size == BYTE_CHUNK_SIZE
+                and ZERO_CHUNK or string.rep("\0", size)
+        else
+            state.chunks[chunk_index] = bytes:sub(first, first + size - 1)
+        end
+    end
+    return proxy_for_state(state)
+end
+
+local function make_buffer_from_parts(length, parts)
+    local state = {length = length, chunks = {}, overrides = {}}
+    local pending = ""
+    local total = 0
+    for _, part in ipairs(parts) do
+        if type(part) ~= "string" then
+            error("pixel_container.from_byte_chunks: every part must be a string")
+        end
+        total = total + #part
+        if total > length then
+            error("pixel_container.from_byte_chunks: byte length must equal width * height * 4")
+        end
+        local cursor = 1
+        while cursor <= #part do
+            local needed = BYTE_CHUNK_SIZE - #pending
+            local count = math.min(needed, #part - cursor + 1)
+            pending = pending .. part:sub(cursor, cursor + count - 1)
+            cursor = cursor + count
+            if #pending == BYTE_CHUNK_SIZE then
+                state.chunks[#state.chunks + 1] = pending
+                pending = ""
+            end
+        end
+    end
+    if total ~= length then
+        error("pixel_container.from_byte_chunks: byte length must equal width * height * 4")
+    end
+    if #pending > 0 then state.chunks[#state.chunks + 1] = pending end
+
+    return proxy_for_state(state)
+end
+
+local function write_pixel_bytes(data, index, r, g, b, a)
+    local state = BUFFER_STATES[data]
+    local function is_byte(value)
+        return type(value) == "number" and math.floor(value) == value
+            and value >= 0 and value <= 255
+    end
+    if state ~= nil then
+        local all_bytes = is_byte(r) and is_byte(g) and is_byte(b) and is_byte(a)
+        if all_bytes then
+            local remaining = string.char(r, g, b, a)
+            local cursor = index
+            while #remaining > 0 do
+                local chunk_index = ((cursor - 1) // BYTE_CHUNK_SIZE) + 1
+                local chunk_offset = ((cursor - 1) % BYTE_CHUNK_SIZE) + 1
+                local chunk = state.chunks[chunk_index]
+                local count = math.min(#remaining, #chunk - chunk_offset + 1)
+                state.chunks[chunk_index] = chunk:sub(1, chunk_offset - 1)
+                    .. remaining:sub(1, count)
+                    .. chunk:sub(chunk_offset + count)
+                for offset = 0, count - 1 do state.overrides[cursor + offset] = nil end
+                cursor = cursor + count
+                remaining = remaining:sub(count + 1)
+            end
+            return
+        end
+    end
+    data[index] = r
+    data[index + 1] = g
+    data[index + 2] = b
+    data[index + 3] = a
+end
+
 -- ---------------------------------------------------------------------------
 -- Constructor
 -- ---------------------------------------------------------------------------
@@ -67,22 +227,28 @@ M.VERSION = "0.1.0"
 -- @return table  { width=number, height=number, data=table }
 -- @error  string if width or height is not a positive integer
 function M.new(width, height)
-    if type(width)  ~= "number" or width  < 1 or math.floor(width)  ~= width then
-        error("pixel_container.new: width must be a positive integer, got " .. tostring(width))
-    end
-    if type(height) ~= "number" or height < 1 or math.floor(height) ~= height then
-        error("pixel_container.new: height must be a positive integer, got " .. tostring(height))
-    end
+    local length = validate_dimensions(width, height, "pixel_container.new")
+    return {width = width, height = height, data = make_buffer(length)}
+end
 
-    -- Allocate width * height * 4 bytes, all zero.
-    -- In Lua, tables are 1-indexed, so data[1] is the Red channel of pixel (0,0).
-    local n = width * height * 4
-    local data = {}
-    for i = 1, n do
-        data[i] = 0
+--- Create a PixelContainer from an exact binary RGBA8 byte string.
+-- The returned `data` value is still a mutable, 1-indexed Lua table interface,
+-- but it keeps a compact byte-string backing instead of boxed numeric entries.
+function M.from_bytes(width, height, bytes)
+    local length = validate_dimensions(width, height, "pixel_container.from_bytes")
+    if type(bytes) ~= "string" or #bytes ~= length then
+        error("pixel_container.from_bytes: byte length must equal width * height * 4")
     end
+    return {width = width, height = height, data = make_buffer(length, bytes)}
+end
 
-    return { width = width, height = height, data = data }
+--- Create a compact container from binary chunks without one full-size join.
+function M.from_byte_chunks(width, height, parts)
+    local length = validate_dimensions(width, height, "pixel_container.from_byte_chunks")
+    if type(parts) ~= "table" then
+        error("pixel_container.from_byte_chunks: parts must be a table")
+    end
+    return {width = width, height = height, data = make_buffer_from_parts(length, parts)}
 end
 
 -- ---------------------------------------------------------------------------
@@ -157,10 +323,7 @@ function M.set_pixel(c, x, y, r, g, b, a)
     if i == nil then
         return  -- out-of-bounds: silently ignore
     end
-    c.data[i]   = r
-    c.data[i+1] = g
-    c.data[i+2] = b
-    c.data[i+3] = a
+    write_pixel_bytes(c.data, i, r, g, b, a)
 end
 
 --- Fill every pixel in the container with the given RGBA values.
@@ -177,13 +340,28 @@ end
 -- @param b  number  Blue  channel (0–255)
 -- @param a  number  Alpha channel (0–255)
 function M.fill_pixels(c, r, g, b, a)
+    local state = BUFFER_STATES[c.data]
+    local function is_byte(value)
+        return type(value) == "number" and math.floor(value) == value
+            and value >= 0 and value <= 255
+    end
+    local all_bytes = state ~= nil and is_byte(r) and is_byte(g)
+        and is_byte(b) and is_byte(a)
+    if all_bytes then
+        local pixel = string.char(r, g, b, a)
+        local full_chunk = pixel:rep(BYTE_CHUNK_SIZE // 4)
+        for chunk_index = 1, #state.chunks do
+            local size = #state.chunks[chunk_index]
+            state.chunks[chunk_index] = size == BYTE_CHUNK_SIZE
+                and full_chunk or pixel:rep(size // 4)
+        end
+        state.overrides = {}
+        return
+    end
     local n = c.width * c.height
     for px = 0, n - 1 do
         local i = px * 4 + 1
-        c.data[i]   = r
-        c.data[i+1] = g
-        c.data[i+2] = b
-        c.data[i+3] = a
+        write_pixel_bytes(c.data, i, r, g, b, a)
     end
 end
 
@@ -200,6 +378,18 @@ end
 -- @return table  new pixel container with identical pixels
 function M.clone(c)
     local n = c.width * c.height * 4
+    local source_state = BUFFER_STATES[c.data]
+    if source_state ~= nil then
+        local data = make_buffer(n)
+        local target_state = BUFFER_STATES[data]
+        for index, chunk in ipairs(source_state.chunks) do
+            target_state.chunks[index] = chunk
+        end
+        for index, value in pairs(source_state.overrides) do
+            target_state.overrides[index] = value
+        end
+        return {width = c.width, height = c.height, data = data}
+    end
     local data = {}
     for i = 1, n do
         data[i] = c.data[i]

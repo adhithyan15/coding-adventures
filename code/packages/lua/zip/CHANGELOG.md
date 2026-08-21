@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+
+- Store counted raw-inflate output in completed 4 KiB byte strings plus one
+  bounded numeric tail. This preserves overlapping back-references and exact
+  consumption while preventing multi-gigabyte table amplification near the
+  256 MiB output ceiling.
+
 ## [0.2.0] - 2026-08-14
 
 ### Added

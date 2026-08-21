@@ -1622,7 +1622,7 @@
     {
       "language": "german",
       "chapter": 1,
-      "sourceHash": "fnv1a64:ca5f3cc4bc7edc73",
+      "sourceHash": "fnv1a64:fbdf9f56aa0bf130",
       "lessonIds": [
         "GE-C01-hallo",
         "GE-W01-hallo-guided-copy",
@@ -1638,12 +1638,12 @@
         "GE-C01-gute-nacht",
         "GE-C01-practice"
       ],
-      "voiceLessons": 10,
+      "voiceLessons": 11,
       "drivablePrefix": 0,
       "text": "german/narration/ch01.txt",
       "json": "german/narration/ch01.json",
-      "textHash": "fnv1a64:7712e130236f9460",
-      "jsonHash": "fnv1a64:be027de48acae907"
+      "textHash": "fnv1a64:f37ed25e0596bf8f",
+      "jsonHash": "fnv1a64:e29da4d8c2238dd9"
     },
     {
       "language": "german",
@@ -3501,7 +3501,7 @@
     {
       "language": "italian",
       "chapter": 1,
-      "sourceHash": "fnv1a64:6585a6b1e8e15fe7",
+      "sourceHash": "fnv1a64:f62735b515d964a2",
       "lessonIds": [
         "IT-C01-ciao",
         "IT-W01-ciao-guided-copy",
@@ -3514,12 +3514,12 @@
         "IT-C01-grazie",
         "IT-C01-practice"
       ],
-      "voiceLessons": 7,
+      "voiceLessons": 8,
       "drivablePrefix": 0,
       "text": "italian/narration/ch01.txt",
       "json": "italian/narration/ch01.json",
-      "textHash": "fnv1a64:a3cab2a642418c39",
-      "jsonHash": "fnv1a64:b8705170264b838d"
+      "textHash": "fnv1a64:bb656ecf5aad27da",
+      "jsonHash": "fnv1a64:08fe26246dcc6010"
     },
     {
       "language": "italian",

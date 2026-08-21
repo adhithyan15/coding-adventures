@@ -1199,6 +1199,19 @@ The verified two-frame Gujarati **વ** filmstrip circles the broad rounded left
 body and returns into the right shoulder; after one lift, the second frame
 descends the tall right spine into its foot. The source's two-path order and
 variation warning remain visible; conventional **શ** is next.
+The verified two-frame Gujarati **શ** filmstrip circles the small upper loop
+and continues through the broad lower body into its tail; after one lift, the
+second frame descends the tall right spine into its foot. The source's two-path
+order and variation warning remain visible; conventional **સ** is next.
+The verified two-frame Gujarati **સ** filmstrip circles the rounded upper loop,
+descends through the left body, and sweeps into the long right shoulder; after
+one lift, the second frame descends the tall right spine into its foot. The
+source's two-path order and variation warning remain visible; conventional
+**હ** is next.
+The verified one-frame Gujarati **હ** filmstrip circles the compact upper loop,
+threads through the middle turn, and continues around the broad lower bowl into
+its rightward finish without lifting. The source's one-path order and variation
+warning remain visible; conventional **ન** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

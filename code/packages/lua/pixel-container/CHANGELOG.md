@@ -2,6 +2,16 @@
 
 All notable changes to the Lua `pixel-container` package are documented here.
 
+## Unreleased
+
+### Changed
+
+- Replace the dense boxed-number byte array with a compact chunked byte backing
+  while preserving mutable 1-indexed `data` access and length semantics.
+- Add `from_bytes` and `from_byte_chunks` constructors so bounded image decoders
+  can return large RGBA buffers without multi-gigabyte Lua-table amplification
+  or a second full-size join.
+
 ## [0.1.0] — 2026-04-05
 
 ### Added

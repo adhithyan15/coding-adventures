@@ -30,8 +30,8 @@ morning." *Morgen* is masculine, exactly like *Tag*, so *gut* takes the same
 **-en**: *guten* — no new agreement to learn. Said *GOO-ten MOR-gen*.
 
 Used in the morning (roughly until midday); after that, German switches to
-*Guten Tag*, then *Guten Abend* in the evening — the same day-parts you're
-building.
+*Guten Tag*. You will build the evening greeting next, from the same familiar
+pattern.
 
 ## Guided Practice
 

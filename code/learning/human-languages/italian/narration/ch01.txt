@@ -18,7 +18,7 @@ The word, taken apart.
 ciao began as the Venetian greeting s-ciào (vostro) — "[I am your] slave / servant," a humble "at your service." That s-ciào is Venetian for schiavo ("slave") from Medieval Latin sclavus. The very same word is English slave — and, astonishingly, Slav: medieval slaves were so often Slavic captives that the ethnic name became the word for "slave" across Europe. So every casual ciao is a fossil of "I am your servant."
 
 Why it's said this way.
-ciao is informal, and works both coming and going ("hi" and "bye") — for friends, family, peers. To someone you'd show respect, or on a first meeting, you reach for buongiorno (coming soon). Doubled, ciao ciao, it's a breezy "bye-bye."
+ciao is informal, and works both coming and going ("hi" and "bye") — for friends, family, peers. To someone you'd show respect, or on a first meeting, you reach for a polite daytime greeting instead. You will build that greeting from two small pieces later in this chapter. Doubled, ciao ciao, it's a breezy "bye-bye."
 
 Writing — follow the greeting you can see.
 Keep ciao visible. Point to ci, the two letters that begin the ch sound, then slide your finger through ao. Trace the whole word once from c to o, and say CHOW.
@@ -59,16 +59,16 @@ buono / buon — "good".
 
 Warm-up.
 [pause 2 seconds]
-The word that starts buongiorno, buonasera, buonanotte. Learn it alone first.
+One small word meaning "good." Learn it alone first; later lessons will show how it helps build several greetings.
 
 Sounds you'll need.
-buono = BWOH-no (the uo is a glide). Before a masculine noun it clips to buon (bwon) — buon giorno.
+buono = BWOH-no (the uo is a glide). Before a masculine noun it clips to buon (bwon).
 
 The word, taken apart.
 buono ("good") from Latin bonus becomes English bonus, bonanza, bonbon, and (via French) bounty. Spanish, another daughter of Latin, made bonus into bueno; Italian kept it closer, buono.
 
 Grammar Lens: it agrees with the noun.
-buono changes to match its noun's gender and number: buono (m.), buona (f.), buoni / buone (pl.) — Latin's legacy across the Romance family. Before a masculine noun it drops the -o to buon (buon giorno).
+buono changes to match its noun's gender and number: buono (m.), buona (f.), buoni / buone (pl.) — Latin's legacy across the Romance family. Before a masculine noun it can drop the -o to buon. For now, just hear and say that small change; the next nouns will give it a job.
 
 Guided Practice.
 [pause 1 second]
@@ -79,7 +79,7 @@ Guided Practice.
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word is buono from, and why does it become buon in buon giorno? (bonus; it drops -o before a masculine noun.)
+What Latin word is buono from, and what short form can it take before a masculine noun? (bonus; buon, with the final -o dropped.)
 
 
 Lesson 4 of 10.
@@ -90,10 +90,10 @@ Warm-up.
 Before your first noun: the words for "the." Italian splits "the" by gender — a habit inherited from Latin.
 
 The word, taken apart.
-il and lo (masculine "the") and la (feminine) from Latin ille / illa ("that one"), the pointing word worn down to "the." The same ille/illa gave Spanish el/la and French le/la — and also Italian lui / lei ("he/she"). (English "the" is Germanic, unrelated.)
+il and lo (masculine "the") and la (feminine) from Latin ille / illa ("that one"), the pointing word worn down to "the." The same ille/illa gave Spanish el/la and French le/la. English "the" is Germanic and unrelated.
 
 Grammar Lens: gender, and two masculine "the"s.
-Every Italian noun is masculine or feminine — Latin's three genders (the neuter folding into the masculine) collapsed to two. Learn each noun with its article. Italian has two masculine articles: lo before tricky clusters (lo studente, lo zio), il everywhere else (il giorno); feminine is always la. Meet il at your first noun, next.
+Every Italian noun is masculine or feminine — Latin's three genders (the neuter folding into the masculine) collapsed to two. Learn each noun with its article. Italian has two masculine articles: lo before tricky clusters at the start of a noun, il in the ordinary pattern; feminine is always la. Your first noun comes next, so you can practise one real pairing then.
 
 Guided Practice.
 [pause 1 second]
@@ -150,7 +150,7 @@ buon ("good") + giorno ("day").
 buongiorno = "good day," one word.
 
 Why it's said this way.
-Where the casual ciao says "I'm your servant," buongiorno simply wishes you a good day — and it's the safe, respectful choice with anyone: shopkeepers, strangers, elders. Used through the day until late afternoon, when it gives way to buonasera.
+Where the casual ciao says "I'm your servant," buongiorno simply wishes you a good day — and it's the safe, respectful choice with anyone: shopkeepers, strangers, elders. Use it through the day until late afternoon. A later lesson will build the corresponding evening greeting.
 
 Guided Practice.
 [pause 1 second]
@@ -192,28 +192,24 @@ What Latin word gave sera, and why is it buonasera but buon giorno? (sera from s
 Lesson 8 of 10.
 notte / buonanotte — "night," and the -ct- becomes -tt- rule.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart until you have stopped, and I will say so again when we reach it.
-
 Warm-up.
 [pause 2 seconds]
 "Night" — and a sound-rule that decodes dozens of Italian words at once.
 
 The word, taken apart.
-la notte (fem.) from Latin noctem (noct-) becomes English nocturnal, equinox. The change is a rule: Latin -ct- became Italian -tt- (notte), where Spanish softened it to -ch- (noche) and French to -it- (nuit):
-There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Latin, Italian, Spanish, French, English. Come back and look at it when you have stopped.
-Learn the rule once and Italian's double tt words light up.
-buonanotte = buona + notte, "good night" — the farewell for bed (not an evening hello; that's buonasera).
+la notte (fem.) from Latin noctem (noct-) becomes English nocturnal, equinox. Watch just one change today: Latin -ct- became Italian -tt-, so noctem became notte. Spanish and French reshaped that same root in their own ways. Later words will let you see whether this pattern repeats; there is no list to memorize now.
+buonanotte = buona + notte, "good night" — the farewell for bed (not an evening hello; use the evening greeting you already learned for that).
 
 Guided Practice.
 [pause 1 second]
 [your turn — say: "buonanotte"]
 [pause 8 seconds for the answer]
-[your turn — say: the rule — Latin -ct- becomes Italian -tt- (notte, latte, fatto)]
+[your turn — say: the one change you saw — Latin noctem becomes Italian notte]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word gave notte, and what regular sound-change does it show? (noctem; Latin -ct- becomes Italian -tt-.) When is buonanotte used vs. buonasera? (Bedtime farewell vs. evening greeting.)
+What Latin word gave notte, and what regular sound-change does it show? (noctem; Latin -ct- becomes Italian -tt-.) When is buonanotte used? (As a bedtime farewell.)
 
 
 Lesson 9 of 10.
@@ -230,7 +226,7 @@ The word, taken apart.
 grazie ("thanks") from Latin gratiae, plural of gratia ("favour, thanks, grace"). It's the same gratia behind English grace, gratitude, grateful, gratis ("free"), congratulate, and ingratiate. So grazie literally wishes someone grace.
 
 Why it's said this way.
-The reply is prego ("you're welcome") — literally "I pray [it's nothing]," from Latin precari ("to pray," becomes English pray, precarious). You give thanks/grace; they wave it off with a prayer.
+Think of grazie as offering someone "graces" for what they did. In the next chapter, you will learn the short reply people use after hearing it.
 
 Guided Practice.
 [pause 1 second]
@@ -238,12 +234,10 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: the cousins — grace, gratitude, gratis]
 [pause 8 seconds for the answer]
-[your turn — say: the reply — "prego"]
-[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-What Latin word is grazie from, and three English cousins? (gratia, "grace"; grace, gratitude, gratis.) The reply to grazie? (prego.)
+What Latin word is grazie from, and three English cousins? (gratia, "grace"; grace, gratitude, gratis.)
 
 
 Lesson 10 of 10.
@@ -276,4 +270,4 @@ Guided Practice.
 Wrap-up Recall.
 [pause 3 seconds]
 Say all five greetings. Which one once meant "I am your slave"? (ciao.) What sound-rule turns Latin noctem into Italian notte? (-ct- becomes -tt-.)
-Next chapter: introducing yourself — mi chiamo… ("my name is…") — and Italian's tu vs. Lei (familiar / formal "you").
+Next chapter, you will learn how to introduce yourself and how to address someone in a familiar or respectful way. Those new Italian forms can wait for their own small lessons.
