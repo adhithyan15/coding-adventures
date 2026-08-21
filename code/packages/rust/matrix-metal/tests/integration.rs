@@ -59,7 +59,7 @@ fn from_f32(bytes: &[u8]) -> Vec<f32> {
         .as_chunks::<4>()
         .0
         .iter()
-        .map(|c| f32::from_le_bytes(c.try_into().unwrap()))
+        .map(|c| f32::from_le_bytes(*c))
         .collect()
 }
 
