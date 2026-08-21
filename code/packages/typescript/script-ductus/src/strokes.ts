@@ -6681,6 +6681,24 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("ળ"),
   },
+  // t30apps writes Gujarati વ as the rounded left body and shoulder followed
+  // by the separately descended right spine.
+  [ductusKey("gujarati", "વ")]: {
+    script: "gujarati", glyph: "વ",
+    strokes: [
+      { segments: [{ label: "circle counterclockwise around the rounded left body and return into the right shoulder", path: [
+        { x: 340, y: 500 }, { x: 300, y: 505 }, { x: 255, y: 505 }, { x: 210, y: 495 }, { x: 170, y: 475 },
+        { x: 135, y: 445 }, { x: 110, y: 405 }, { x: 95, y: 360 }, { x: 95, y: 315 }, { x: 115, y: 275 },
+        { x: 150, y: 235 }, { x: 195, y: 205 }, { x: 245, y: 190 }, { x: 295, y: 195 }, { x: 340, y: 215 },
+        { x: 375, y: 245 }, { x: 400, y: 275 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 443, y: 585 }, { x: 443, y: 500 }, { x: 443, y: 400 }, { x: 443, y: 300 },
+        { x: 443, y: 200 }, { x: 443, y: 125 }, { x: 451, y: 80 }, { x: 475, y: 55 },
+        { x: 510, y: 40 }, { x: 545, y: 38 }, { x: 560, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("વ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

@@ -24,6 +24,17 @@ you can read straight through.
 - The language of **Gandhi**, grounded throughout against English + Sanskrit +
   the other Indo-Aryan tracks.
 
+## Assessment destination
+
+The complete book targets the project-defined [Coding Adventures Gujarati
+Assessment](assessment-spec.md) from pre-A1 through C2. Its machine-readable
+[contract](assessment.json) requires separate passes in reading, listening,
+writing, and speaking, the full gentle writing ladder, and two timed mocks at
+every rung. This names the destination; it does not claim that the current book
+or the future certificate is externally accredited. Task inventories, mocks,
+rubrics, answer keys, calibration, and book-only human validation remain
+explicit backlog.
+
 ## Progress
 
 - **Chapter 1 — Greetings** ([`lessons/GU-C01-*`](./lessons/)): namaste, ābhār,

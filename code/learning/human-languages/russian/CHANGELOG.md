@@ -1,5 +1,14 @@
 # Changelog — Russian track
 
+## Unreleased
+
+### Fixed — the final false forward-review claim
+
+`RU-C01-da` now reviews the two greetings its warm-up actually recalls:
+`RU-C01-privet` and the earlier formal `RU-C01-zdravstvuyte`. The removed
+`RU-C01-spasibo` claim pointed two lessons into the future. Authored order and
+the 180-second cap remain unchanged; Russian's order-integrity debt is now zero.
+
 ## 0.11.0 — 2026-08-12
 
 Pre-A1 vocabulary tranche, round 2 (wave 6 of the cross-track vocabulary
