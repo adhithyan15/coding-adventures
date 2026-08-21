@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-bengali
-reviews_of: [BN-C02-tomar-naam-ki]
+reviews_of: [BN-C02-amar-naam]
 ---
 
 # আলাপ করে ভালো লাগলো (ālāp kore bhālo lāglo) — "pleased to meet you"

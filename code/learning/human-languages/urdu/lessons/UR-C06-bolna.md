@@ -16,11 +16,11 @@ etymology_hook: bolnā traces only as far back as Prakrit bollaï; the Sanskrit 
 duration:
   max_seconds: 275
 requires:
-  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS]
+  knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS]
 introduces:
   knowledge: [UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE]
 practises:
-  knowledge: [UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE]
+  knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-GRAMMAR-NA-INFINITIVE, UR-GRAMMAR-PRESENT-TWO-AGREEMENTS, UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER, UR-REGISTER-INDO-ARYAN-CORE]
 skills: [listening, speaking, reading]
 modes: [interpretive, presentational, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,12 @@ reviews_of: [UR-C06-ana, UR-C05-khuda]
 # بولنا — “to speak,” and the two layers of Urdu
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[UR-GRAMMAR-NA-INFINITIVE] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-GRAMMAR-NA-INFINITIVE] -->
 
-[PAUSE 2s] Three verbs so far, three stems pulled off the same ending. Here
-is a fourth, and it brings one new letter with it.
+[PAUSE 2s] Retrieve the opening without looking: **shukriyā — jī hā̃ — nahī̃**.
+Air-trace the five shapes of the thank-you word once. Then return to the three
+verbs whose stems you pulled from the same ending. Here is a fourth, with one
+new letter.
 
 ## You'll want to know first — one word
 <!-- hl-knowledge: introduces=[UR-LEX-BOLNA, UR-SCRIPT-BE-LETTER]; assesses=[] -->

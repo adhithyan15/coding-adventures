@@ -6571,6 +6571,80 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("બ"),
   },
+  // t30apps writes Gujarati ભ as a joined loop and inner turn followed by a
+  // separately descended right spine.
+  [ductusKey("gujarati", "ભ")]: {
+    script: "gujarati", glyph: "ભ",
+    strokes: [
+      { segments: [{ label: "circle the broad loop, wind through the inner turn, and exit across the long right shoulder", path: [
+        { x: 270, y: 75 }, { x: 220, y: 120 }, { x: 170, y: 175 }, { x: 125, y: 240 },
+        { x: 90, y: 310 }, { x: 85, y: 385 }, { x: 105, y: 455 }, { x: 145, y: 520 },
+        { x: 195, y: 555 }, { x: 255, y: 565 }, { x: 315, y: 550 }, { x: 365, y: 510 },
+        { x: 400, y: 455 }, { x: 410, y: 390 }, { x: 410, y: 330 }, { x: 405, y: 275 },
+        { x: 390, y: 240 }, { x: 370, y: 240 }, { x: 340, y: 260 }, { x: 320, y: 290 },
+        { x: 320, y: 325 }, { x: 340, y: 330 }, { x: 390, y: 329 }, { x: 450, y: 329 },
+        { x: 520, y: 329 }, { x: 580, y: 329 }, { x: 634, y: 329 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 674, y: 585 }, { x: 674, y: 500 }, { x: 674, y: 400 }, { x: 674, y: 300 },
+        { x: 674, y: 200 }, { x: 674, y: 125 }, { x: 680, y: 85 }, { x: 700, y: 60 },
+        { x: 735, y: 42 }, { x: 775, y: 38 }, { x: 795, y: 38 },
+      ] }] },
+    ],
+    source: gujaratiAlphabetSource("ભ"),
+  },
+  // t30apps writes Gujarati મ as a joined left body and shoulder followed by
+  // a separately descended right spine.
+  [ductusKey("gujarati", "મ")]: {
+    script: "gujarati", glyph: "મ",
+    strokes: [
+      { segments: [{ label: "curl through the left body and inner turn, then exit across the long right shoulder", path: [
+        { x: 50, y: 556 }, { x: 90, y: 560 }, { x: 130, y: 550 }, { x: 165, y: 520 },
+        { x: 170, y: 480 }, { x: 170, y: 430 }, { x: 170, y: 380 }, { x: 170, y: 330 },
+        { x: 170, y: 280 }, { x: 165, y: 230 }, { x: 150, y: 195 }, { x: 130, y: 190 },
+        { x: 100, y: 210 }, { x: 80, y: 240 }, { x: 80, y: 275 }, { x: 105, y: 280 },
+        { x: 150, y: 280 }, { x: 210, y: 280 }, { x: 280, y: 280 }, { x: 350, y: 280 }, { x: 420, y: 280 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 460, y: 585 }, { x: 460, y: 500 }, { x: 460, y: 400 }, { x: 460, y: 300 },
+        { x: 460, y: 200 }, { x: 460, y: 125 }, { x: 468, y: 80 }, { x: 490, y: 55 },
+        { x: 530, y: 40 }, { x: 570, y: 38 }, { x: 582, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("મ"),
+  },
+  // t30apps writes Gujarati ય as a joined rounded body and long shoulder
+  // followed by a separately descended right spine.
+  [ductusKey("gujarati", "ય")]: {
+    script: "gujarati", glyph: "ય",
+    strokes: [
+      { segments: [{ label: "circle the rounded upper turn and sweep around the broad lower body into the long right shoulder", path: [
+        { x: 35, y: 565 }, { x: 75, y: 575 }, { x: 120, y: 565 }, { x: 160, y: 540 }, { x: 190, y: 500 },
+        { x: 200, y: 455 }, { x: 195, y: 415 }, { x: 175, y: 380 }, { x: 145, y: 355 }, { x: 105, y: 335 },
+        { x: 75, y: 310 }, { x: 90, y: 275 }, { x: 120, y: 240 }, { x: 160, y: 210 }, { x: 205, y: 190 },
+        { x: 255, y: 180 }, { x: 305, y: 185 }, { x: 350, y: 205 }, { x: 385, y: 235 }, { x: 415, y: 270 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 459, y: 585 }, { x: 459, y: 500 }, { x: 459, y: 400 }, { x: 459, y: 300 },
+        { x: 459, y: 200 }, { x: 459, y: 125 }, { x: 467, y: 80 }, { x: 490, y: 55 },
+        { x: 525, y: 40 }, { x: 560, y: 38 }, { x: 578, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("ય"),
+  },
+  // t30apps writes Gujarati ર in one run through the rounded upper body,
+  // middle loop, and descending tail.
+  [ductusKey("gujarati", "ર")]: {
+    script: "gujarati", glyph: "ર",
+    strokes: [
+      { segments: [{ label: "circle the rounded upper body, curl through the middle loop, and descend into the lower-right tail", path: [
+        { x: 45, y: 555 }, { x: 90, y: 575 }, { x: 145, y: 580 }, { x: 200, y: 570 }, { x: 250, y: 545 },
+        { x: 295, y: 510 }, { x: 325, y: 465 }, { x: 340, y: 415 }, { x: 335, y: 365 }, { x: 315, y: 320 },
+        { x: 280, y: 285 }, { x: 235, y: 260 }, { x: 190, y: 245 }, { x: 150, y: 240 }, { x: 120, y: 250 },
+        { x: 95, y: 265 }, { x: 75, y: 250 }, { x: 85, y: 225 }, { x: 120, y: 215 }, { x: 150, y: 220 },
+        { x: 165, y: 185 }, { x: 185, y: 145 }, { x: 215, y: 105 }, { x: 250, y: 72 }, { x: 295, y: 50 },
+        { x: 345, y: 38 }, { x: 395, y: 38 }, { x: 420, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("ર"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

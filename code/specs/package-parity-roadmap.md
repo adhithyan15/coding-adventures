@@ -4346,6 +4346,151 @@ checks are queued, so all other parity work remains pending and auto-merge is
 disabled until the required checks are terminal acceptable and conflict status
 is clear.
 
+### Post-#12341 refresh and JVM PNG lane selection
+
+.NET PNG PR #12341 completed all 29 required checks with 23 successes and six
+expected skips. Both CI gates and the Linux, macOS, and Windows builds
+succeeded, and GitHub reported final reviewed head
+`c89a92887db8a28d3cbf84db595dab6d72013eed` clean and mergeable. After the loop
+requested squash auto-merge, GitHub merged that head as
+`d58c4ee7ff81f6edccfcdb30d95d499007f17363` at 2026-08-21T01:37:45Z and
+deleted the source branch.
+
+The refreshed collision-checked schema-3 inventory at exact live main
+`4f15cd2aee15562bff204076608205b5d32f2c80` contains 15 established lanes,
+1,368 canonical identities, and 4,555 implementation slots. High-consensus
+coverage remains 174 packages with 271 gaps; the 2-4 band contains 167
+packages with 2,098 gaps; 905 singletons have 12,670 gaps, including 716 Rust
+singletons. Canonical collisions and unknown language buckets remain zero.
+The only new package roots since the prior inventory are the reviewed C# and
+F# PNG implementations, while later human-language commits modify existing
+roots only, so no new classification owner is required.
+
+The JVM PNG child is selected because it closes the only remaining two-slot
+PNG gap, Java and Kotlin, with one installed JDK 21 toolchain. Both lanes
+already provide passing PixelContainer and ZIP-owned raw RFC 1951,
+counted-inflate, and CRC-32 dependencies, BUILD and BUILD_windows front doors,
+and empty ZIP capability profiles; cached Gradle 8.11.1 runs all four
+prerequisite suites. The bounded tranche adds independent native IC18 packages
+in Java and Kotlin, complete 85-case public fixture consumers, direct resource
+and precedence tests, Gradle metadata, documentation, changelogs, cross-host
+BUILD front doors, and empty capability manifests. It does not change IC18,
+the neutral fixture, adapters, or any unrelated lane. The remaining
+single-slot PNG children and the Go paint reconciliation stay pending.
+
+### JVM PNG implementation and validation
+
+Implementation commit `b881d8119c` adds independent native Java and Kotlin
+PNG codecs. Both packages expose IC18's stable limits, ordered 29-code error
+taxonomy, direct encode/decode helpers, and the lane ImageCodec adapter. Their
+production code uses only in-memory PixelContainer and ZIP-owned raw RFC 1951,
+counted-inflate, and CRC-32 surfaces; JDK ImageIO, zlib, and fixture filesystem
+access remain test-only. Checked long arithmetic, exact inflate consumption,
+Adler and CRC checks, chunk and APNG precedence, palette/transparency rules,
+and deterministic best-of-five filtering are enforced before untrusted-size
+allocations.
+
+Each public fixture adapter passes all 85 language-neutral cases. Focused
+tests additionally exercise non-finite, non-positive, fractional, and raised
+pixel limits, malformed explicitly supplied PixelContainers, APNG precedence,
+foreign ImageIO decoding, and independent JDK inflate inspection of emitted
+filter rows. Java reaches 98.53% line and 93.95% branch coverage; Kotlin
+reaches 96.28% line and 82.51% branch coverage. Both literal `BUILD` and
+`BUILD_windows` entry points pass with JDK 21 and Gradle 8.11.1. The shared
+fixture generator and nine validator tests, seven capability-taxonomy tests,
+ten parity reporter tests, diff checks, and independent authority/security
+review are green.
+
+The prospective collision-checked schema-3 inventory remains 1,368 canonical
+identities and advances from 4,555 to 4,557 slots with no collisions or unknown
+buckets. `image-codec-png` moves from four to six established lanes, shifting
+from the 2-4 to the 5-9 completion band, without creating a new identity or
+classification owner. Exact repository build-resolver validation remains the
+final local gate before publication. That gate now passes: the Go build tool's
+tests and vet are green, its dry run selects exactly PNG, PixelContainer, ZIP,
+and LZSS in each JVM lane, and its real Windows executor builds all eight
+affected nodes successfully.
+
+Ready-for-review PR #12360 was opened from clean validated head
+`4f4b60bd701bcab5933d529b5917891962856503` after a normal first push from exact
+main `4f15cd2aee15562bff204076608205b5d32f2c80`. Independent implementation,
+security, build, inventory, and live-ownership audits found no blocker or
+competing owner. GitHub reports the PR mergeable while its initial CI and
+CodeQL checks are queued, so the JVM item is now `pr-open`, every other parity
+item remains pending, and auto-merge stays disabled until the exact-head checks
+are terminal acceptable and conflict status is clear.
+
+### Post-#12360 refresh and Dart PNG lane selection
+
+JVM PNG PR #12360 completed all 29 checks with 23 successes and six expected
+skips. Its first D18F attempt failed before repository tests when Hex setup lost
+its connection to builds.hex.pm; the unchanged rerun passed. Both CI gates and
+the Linux, macOS, and Windows builds succeeded. After the loop requested squash
+auto-merge, GitHub merged final reviewed head
+`0288bf4a878f7c45cd47ec3e0d43dd44d3158992` as
+`3cb13f2b8fb8a27c7c0bf3d6608bbc64aebc9273` at 2026-08-21T03:48:51Z and
+deleted the source branch.
+
+The refreshed collision-checked schema-3 inventory at that exact live main
+contains 15 established lanes, 1,368 canonical identities, and 4,557
+implementation slots. High-consensus coverage remains 174 packages with 271
+gaps; the 5-9 band contains 123 packages with 935 gaps; the 2-4 band contains
+166 packages with 2,087 gaps; and 905 singletons have 12,670 gaps, including
+716 Rust singletons. Canonical collisions and unknown language buckets remain
+zero. The only new roots are the reviewed Java and Kotlin PNG implementations;
+intervening human-language commits modify existing roots only, so no new
+classification owner is required.
+
+The Dart PNG child is selected next. Every remaining PNG lane child closes one
+umbrella slot, and Dart wins the safety and leverage tie-break: SDK 3.12.2 is
+installed, the established lane is comparatively thin, its pure PixelContainer
+and ZIP-owned raw RFC 1951/counting/CRC dependency chain already exists, and a
+fresh live ownership audit finds no competing Dart PNG or prerequisite work.
+The bounded tranche adds one native IC18 implementation, all 85 neutral cases
+through public APIs, focused allocation and precedence regressions, package and
+BUILD metadata, documentation, changelog, and an empty capability manifest.
+It does not change IC18, the neutral corpus, adapters, or unrelated lanes.
+
+### Dart PNG implementation and validation
+
+The Dart child now implements the native IC18 encoder, decoder, and
+`ImageCodec` adapter over the established PixelContainer and ZIP-owned raw RFC
+1951/CRC substrate. Production remains pure and in-memory. The public fixture
+consumer executes all 85 schema-1 cases, pins the 29-code taxonomy and limits,
+and adds focused numeric-limit, malformed-container, nonzero-buffer-offset,
+APNG-precedence, and Adler-boundary regressions. Encoder output is inspected
+with the platform zlib decoder and decoded by the independent test-only
+`image` package.
+
+Dart 3.12.2 passes 93 tests, fatal-info analysis, the literal BUILD front door,
+and a 90% coverage gate at 285/287 production lines (99.30%) and 19/19
+functions. The established PixelContainer, LZSS, and ZIP prerequisites pass
+18, 54, and 66 tests. The Go build tool passes tests, vet, and trimpath build;
+its collision-checked 4,978-package plan selects and then builds exactly Dart
+PNG, PixelContainer, ZIP, and LZSS, with 4,974 packages skipped. Neutral
+fixture, capability-taxonomy, and parity-reporter suites pass 9, 7, and 10
+tests. Production dependencies are current, the empty capability profile is
+schema-valid, authority and credential scans are clean, and `git diff --check`
+passes.
+
+The prospective schema-3 inventory keeps 1,368 canonical identities and adds
+one reviewed slot for 4,558 total. `image-codec-png` now spans C#, Dart, F#,
+Go, Java, Kotlin, and TypeScript; the 5-9 band has 123 packages with 934 gaps.
+Canonical collisions and unknown language buckets remain zero. The branch
+rebased cleanly through `2e248b9070a4e7a89cea4bef83ad5caa5917148c` after two
+unrelated human-language-only main advances.
+
+### Dart PNG publication
+
+Ready-for-review PR #12376 was opened from clean validated head
+`63e5a7adbe3ea06ba3e732564dfe5136ec29b112` after a normal first push from
+exact `origin/main` `2e248b9070a4e7a89cea4bef83ad5caa5917148c`.
+Independent implementation, security, build, inventory, and live-ownership
+audits found no blocker. The exact 12-path diff is clean, mergeable, and has no
+open or stale ownership overlap. GitHub checks are queued, so the Dart item is
+now `pr-open` and auto-merge remains disabled until every required check is
+terminal acceptable and GitHub still reports no conflict.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

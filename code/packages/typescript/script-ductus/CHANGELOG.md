@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+### Added — cited Gujarati ર ductus (HL-C09GR)
+
+- Replace Gujarati **ર**'s conventional placeholder with a cited one-run variant.
+- Render its rounded upper body, middle loop, and lower-right tail continuously.
+- Cover provenance and exact-outline rendering while queuing **લ** next.
+
+### Added — cited Gujarati ય ductus (HL-C09GQ)
+
+- Replace Gujarati **ય**'s conventional placeholder with a cited two-run variant.
+- Render its rounded body and long shoulder before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **ર** next.
+
+### Added — cited Gujarati મ ductus (HL-C09GP)
+
+- Replace Gujarati **મ**'s conventional placeholder with a cited two-run variant.
+- Render its left body and inner turn before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **ય** next.
+
+### Added — cited Gujarati ભ ductus (HL-C09GO)
+
+- Replace Gujarati **ભ**'s conventional placeholder with a cited two-run variant.
+- Render the broad loop and inner turn before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **મ** next.
+
 ### Added — cited Gujarati બ ductus (HL-C09GN)
 
 - Replace Gujarati **બ**'s conventional placeholder and render its rounded body and inner turn before the separate tall right spine.

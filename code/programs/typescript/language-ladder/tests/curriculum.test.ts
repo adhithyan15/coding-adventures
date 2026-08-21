@@ -91,6 +91,7 @@ describe("per-language shared-spine maps", () => {
       "FA-C05-khodahafez",
       "FA-C05-practice",
       "UR-C01-salam",
+      "UR-W01-shukriya-first-three",
       "UR-C01-shukriya",
       "UR-C01-ji-han",
       "UR-C01-nahin",
