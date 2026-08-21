@@ -3,8 +3,8 @@
   "language": "spanish",
   "chapter": 5,
   "title": "The Three Words for You",
-  "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:6273018aad9aac02",
+  "drivablePrefix": 6,
+  "sourceHash": "fnv1a64:a99e6ab515b95526",
   "lessons": [
     {
       "id": "ES-C03-tu-usted",
@@ -559,19 +559,19 @@
       ]
     },
     {
-      "id": "ES-C03-repaso-tu-usted",
-      "sequence": 185,
-      "title": "Choosing your \"you\" — putting it together",
-      "headword": "(practice)",
-      "romanization": "(practice)",
-      "gloss": "Choosing your \"you\" — putting the chapter together",
+      "id": "ES-C03-quien",
+      "sequence": 183,
+      "title": "quién — “who?” in one gentle step",
+      "headword": "quién",
+      "romanization": "quién",
+      "gloss": "who? — one tiny people-question before the writing marks are explained",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dafb0a60f912c355",
+      "sourceHash": "fnv1a64:6a5cd1a3ddc3f199",
       "notice": null,
       "blocks": [
         {
@@ -587,7 +587,109 @@
             },
             {
               "kind": "speech",
-              "text": "Three words, one choice, and it is social rather than grammatical. Nothing new in this lesson — only what you already have."
+              "text": "You can choose tú or usted for the person in front of you. Now add one tiny question about a person: ¿Quién? — “Who?”"
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say quién like kyen, one smooth beat. It asks for a person:"
+            },
+            {
+              "kind": "speech",
+              "text": "— ¿Quién? — Who? — Ana."
+            },
+            {
+              "kind": "speech",
+              "text": "Hear the word as one piece for now. The next micro-lesson slows down and explains the written accent that Spanish question words carry."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "¿Quién? — then answer with one name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **¿Quién?** — then answer with one name]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "tú, usted — you; ¿Quién? — who",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **tú**, **usted** — you; **¿Quién?** — who]"
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Which two words mean “you”? (Tú, usted.) Which word asks “who”? (Quién.) Say it once more, slowly. Stop there."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ES-C03-repaso-tu-usted",
+      "sequence": 185,
+      "title": "Choosing your \"you\" — putting it together",
+      "headword": "(practice)",
+      "romanization": "(practice)",
+      "gloss": "Choosing your \"you\" — putting the chapter together",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4b4ce599da6dabd1",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Three words for “you,” plus quién for “who.” Nothing new in this lesson — only what you already have."
             }
           ]
         },
@@ -632,6 +734,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the whole exchange, both parts, without stopping]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "point to one person, ask ¿Quién?, and answer with a name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: point to one person, ask **¿Quién?**, and answer with a name]"
             },
             {
               "kind": "prompt",

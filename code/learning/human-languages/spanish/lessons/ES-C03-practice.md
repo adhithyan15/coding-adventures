@@ -14,11 +14,11 @@ roots: []
 duration:
   max_seconds: 240
 requires:
-  knowledge: [ES-LEX-ME-LLAMO, ES-REGISTER-TU-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO]
+  knowledge: [ES-LEX-ME-LLAMO, ES-REGISTER-TU-USTED, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO, ES-LEX-QUIEN]
 introduces:
   knowledge: []
 practises:
-  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
+  knowledge: [ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO, ES-LEX-QUIEN, ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus, fluency]
@@ -64,7 +64,7 @@ And one from two chapters back, because it is worth keeping warm: *buenos días*
 but *buenas tardes* — the describing word copies its noun.
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO, ES-LEX-QUIEN] -->
 
 [PAUSE 1s]
 - [YOU SAY: the full *formal* exchange, both parts]
@@ -72,11 +72,12 @@ but *buenas tardes* — the describing word copies its noun.
   *te llamas*]
 - [YOU SAY: for a police officer, then your best friend — which "you" for
   each, and why?]
+- [YOU SAY: point to either speaker and ask **¿Quién?** — answer with the name]
 
 [REPEAT x2] Run the formal version start to finish without stopping.
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-GRAMMAR-AGREEMENT-MASCULINE-PLURAL, ES-GRAMMAR-AGREEMENT-FEMININE-PLURAL, ES-LEX-HOLA, ES-LEX-BUENOS-DIAS, ES-LEX-ME-LLAMO, ES-LEX-TU, ES-LEX-USTED, ES-LEX-VOS-01, ES-CULTURE-VOSEO-02, ES-ETYMON-VOS-03, ES-LEX-COMO-SE-LLAMA, ES-LEX-TE-LLAMAS, ES-LEX-MUCHO-GUSTO, ES-LEX-QUIEN] -->
 
 [PAUSE 3s] Which two words change between the formal and informal
 introduction? (*se llama usted* → *te llamas*.) Next chapter, you will learn

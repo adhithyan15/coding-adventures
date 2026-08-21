@@ -329,6 +329,20 @@ describe("handwriting ductus", () => {
     expect(letters.length).toBeGreaterThan(0);
   });
 
+  it("keeps every canonical script inventory free of duplicate glyph rows", () => {
+    for (const script of SCRIPTS) {
+      const glyphs = script.letters.map((letter) => letter.glyph);
+      expect(new Set(glyphs).size, `${script.script} repeats a canonical glyph`).toBe(glyphs.length);
+    }
+  });
+
+  it("marks Gujarati complete only with all 44 unique letters source-verified", () => {
+    const gujarati = SCRIPTS.find((script) => script.script === "gujarati")!;
+    expect(gujarati.complete).toBe(true);
+    expect(gujarati.letters).toHaveLength(44);
+    expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+  });
+
   for (const letter of letters) {
     describe(`${letter.glyph}`, () => {
       const glyph = () => fontForDuctus(letter).glyphFor(letter.glyph)!;

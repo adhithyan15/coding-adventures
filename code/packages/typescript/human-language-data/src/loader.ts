@@ -6,7 +6,8 @@ import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { join, dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  MODALITY_MANIFEST_PATH,
+  MODALITY_MANIFEST_DIR,
+  mergeModalityManifests,
   type ModalityManifest,
   type ModalityManifestLesson,
 } from "./modality-manifest.js";
@@ -340,18 +341,25 @@ export function trackScript(root: string, trackName: string): Script | undefined
 }
 
 /** Read every track's lessons/*.md into parsed lessons. */
+export function loadTrackLessons(
+  language: string,
+  root = defaultCurriculumRoot(),
+): ParsedLesson[] {
+  const lessonsDir = join(root, language, "lessons");
+  if (!existsSync(lessonsDir)) return [];
+  if (!/^[a-z0-9-]+$/.test(language)) throw new Error(`unsafe language id '${language}'`);
+  const script = trackScript(root, language);
+  return readdirSync(lessonsDir)
+    .sort()
+    .filter((file) => file.endsWith(".md"))
+    .map((file) => parseLesson(readFileSync(join(lessonsDir, file), "utf8"), language, script));
+}
+
 export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
   const out: ParsedLesson[] = [];
   for (const track of sortedEntries(root)) {
     if (!track.isDirectory()) continue;
-    const lessonsDir = join(root, track.name, "lessons");
-    if (!existsSync(lessonsDir)) continue;
-    const script = trackScript(root, track.name);
-    for (const file of readdirSync(lessonsDir).sort()) {
-      if (!file.endsWith(".md")) continue;
-      const source = readFileSync(join(lessonsDir, file), "utf8");
-      out.push(parseLesson(source, track.name, script));
-    }
+    out.push(...loadTrackLessons(track.name, root));
   }
   return out;
 }
@@ -370,7 +378,15 @@ export function loadLessons(root = defaultCurriculumRoot()): ParsedLesson[] {
  * and current, so the throw is unreachable in a healthy checkout.
  */
 export function loadModalityManifest(root = defaultCurriculumRoot()): ModalityManifest {
-  return JSON.parse(readFileSync(join(root, MODALITY_MANIFEST_PATH), "utf8")) as ModalityManifest;
+  const directory = join(root, MODALITY_MANIFEST_DIR);
+  const manifests = readdirSync(directory)
+    .filter((name) => name.endsWith(".json"))
+    .sort()
+    .map(
+      (name) =>
+        JSON.parse(readFileSync(join(directory, name), "utf8")) as ModalityManifest,
+    );
+  return mergeModalityManifests(manifests);
 }
 
 /**

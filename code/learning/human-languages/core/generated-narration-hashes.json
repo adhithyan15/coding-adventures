@@ -9432,25 +9432,26 @@
     {
       "language": "spanish",
       "chapter": 5,
-      "sourceHash": "fnv1a64:6273018aad9aac02",
+      "sourceHash": "fnv1a64:a99e6ab515b95526",
       "lessonIds": [
         "ES-C03-tu-usted",
         "ES-C03-tu-usted-register",
         "ES-C03-vos",
         "ES-C03-usted-origin",
+        "ES-C03-quien",
         "ES-C03-repaso-tu-usted"
       ],
-      "voiceLessons": 5,
-      "drivablePrefix": 5,
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
       "text": "spanish/narration/ch05.txt",
       "json": "spanish/narration/ch05.json",
-      "textHash": "fnv1a64:5ab0d546d806b5e6",
-      "jsonHash": "fnv1a64:666482775d0bc25f"
+      "textHash": "fnv1a64:622bc4f52afc0bc4",
+      "jsonHash": "fnv1a64:6e4fe58f80a432da"
     },
     {
       "language": "spanish",
       "chapter": 6,
-      "sourceHash": "fnv1a64:b955c62581839ba5",
+      "sourceHash": "fnv1a64:eb8dfddd45c9d1a1",
       "lessonIds": [
         "ES-C03-como",
         "ES-C03-como-acento",
@@ -9465,8 +9466,8 @@
       "drivablePrefix": 1,
       "text": "spanish/narration/ch06.txt",
       "json": "spanish/narration/ch06.json",
-      "textHash": "fnv1a64:0535c757a0c9e209",
-      "jsonHash": "fnv1a64:e9ba39dae20d35f4"
+      "textHash": "fnv1a64:ce1fb7f0c2030b26",
+      "jsonHash": "fnv1a64:968067a2fece9d60"
     },
     {
       "language": "spanish",
@@ -12743,7 +12744,7 @@
     {
       "language": "spanish",
       "chapter": 232,
-      "sourceHash": "fnv1a64:15565afa851e3c2b",
+      "sourceHash": "fnv1a64:649b5838fe7a0bbc",
       "lessonIds": [
         "ES-C61-quien"
       ],
@@ -12752,7 +12753,7 @@
       "text": "spanish/narration/ch232.txt",
       "json": "spanish/narration/ch232.json",
       "textHash": "fnv1a64:6bd79f787562e6b2",
-      "jsonHash": "fnv1a64:ea272a87ce536cf8"
+      "jsonHash": "fnv1a64:ba15ff4235cb3b3d"
     },
     {
       "language": "spanish",
