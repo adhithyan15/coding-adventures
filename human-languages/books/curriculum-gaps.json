@@ -33,14 +33,14 @@
     "lessonsWithoutSequence": 12,
     "forwardReviews": 5,
     "atomsNeverRevisited": 632,
-    "forwardReferences": 456,
+    "forwardReferences": 446,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 82,
     "chapterGateCleanTracks": 9,
     "tracksWithoutWritingStageEvidence": 14,
     "missingWritingStagePairs": 895,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 2913,
+    "drivableLessons": 2914,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 104,
     "unexplainedModalityOverrides": 0
@@ -57040,14 +57040,6 @@
         "lessonsEarly": 69
       },
       {
-        "lessonId": "IT-C01-notte",
-        "language": "italian",
-        "position": 7,
-        "word": "latte",
-        "taughtBy": "IT-C22-latte",
-        "lessonsEarly": 69
-      },
-      {
         "lessonId": "ML-C04-naale-kaanaam",
         "language": "malayalam",
         "position": 23,
@@ -58088,14 +58080,6 @@
         "lessonsEarly": 10
       },
       {
-        "lessonId": "IT-C01-practice",
-        "language": "italian",
-        "position": 9,
-        "word": "mi chiamo",
-        "taughtBy": "IT-C03-mi-chiamo",
-        "lessonsEarly": 10
-      },
-      {
         "lessonId": "LA-C19-practice",
         "language": "latin",
         "position": 33,
@@ -58496,22 +58480,6 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "position": 2,
-        "word": "buonanotte",
-        "taughtBy": "IT-C01-notte",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "IT-C01-ciao",
-        "language": "italian",
-        "position": 0,
-        "word": "buongiorno",
-        "taughtBy": "IT-C01-buongiorno",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "UR-C13-kala",
         "language": "urdu",
         "position": 49,
@@ -58605,14 +58573,6 @@
         "position": 12,
         "word": "કેમ",
         "taughtBy": "GU-C03-kem",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "position": 2,
-        "word": "buonasera",
-        "taughtBy": "IT-C01-sera",
         "lessonsEarly": 4
       },
       {
@@ -58781,14 +58741,6 @@
         "position": 8,
         "word": "તમે",
         "taughtBy": "GU-C02-tu-tame",
-        "lessonsEarly": 3
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "position": 2,
-        "word": "buongiorno",
-        "taughtBy": "IT-C01-buongiorno",
         "lessonsEarly": 3
       },
       {
@@ -58989,22 +58941,6 @@
         "position": 103,
         "word": "fuß",
         "taughtBy": "GE-C31-fuss",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "IT-C01-buono",
-        "language": "italian",
-        "position": 2,
-        "word": "giorno",
-        "taughtBy": "IT-C01-giorno",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "IT-C01-grazie",
-        "language": "italian",
-        "position": 8,
-        "word": "prego",
-        "taughtBy": "IT-C02-prego",
         "lessonsEarly": 2
       },
       {
@@ -59661,22 +59597,6 @@
         "position": 136,
         "word": "कहाँ",
         "taughtBy": "HI-C40-where",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C01-buongiorno",
-        "language": "italian",
-        "position": 5,
-        "word": "buonasera",
-        "taughtBy": "IT-C01-sera",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "IT-C01-il-la-lo",
-        "language": "italian",
-        "position": 3,
-        "word": "giorno",
-        "taughtBy": "IT-C01-giorno",
         "lessonsEarly": 1
       },
       {
@@ -60343,7 +60263,7 @@
         "forwardReviews": 0,
         "atomsTaught": 200,
         "atomsNeverRevisited": 19,
-        "forwardReferences": 44
+        "forwardReferences": 34
       },
       {
         "language": "japanese",
@@ -60510,7 +60430,7 @@
         "R3": 3558,
         "R4": 2075
       },
-      "forwardReferences": 456
+      "forwardReferences": 446
     }
   },
   "scriptClosure": {
@@ -70788,7 +70708,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 44,
+        "forwardReferences": 34,
         "atomsTaught": 200,
         "atomsNeverRevisited": 19,
         "reinforcementWindowMisses": 282,
@@ -70800,7 +70720,7 @@
           {
             "language": "italian",
             "kind": "forward-language",
-            "count": 44,
+            "count": 34,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -70836,7 +70756,7 @@
         "next": {
           "language": "italian",
           "kind": "forward-language",
-          "count": 44,
+          "count": 34,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -72021,7 +71941,7 @@
       {
         "language": "italian",
         "kind": "forward-language",
-        "count": 44,
+        "count": 34,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -73532,10 +73452,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 3416,
-    "voice": 2462,
-    "sight": 588,
+    "voice": 2463,
+    "sight": 587,
     "pen": 366,
-    "coreVoice": 2913,
+    "coreVoice": 2914,
     "lessonsWithWritingSegments": 161,
     "drivablePercent": 85,
     "tracks": [
@@ -76610,21 +76530,21 @@
       {
         "language": "italian",
         "lessonCount": 89,
-        "voice": 71,
-        "sight": 16,
+        "voice": 72,
+        "sight": 15,
         "pen": 2,
-        "coreVoice": 72,
-        "drivablePercent": 81,
+        "coreVoice": 73,
+        "drivablePercent": 82,
         "drivablePrefixTotal": 55,
         "chapters": [
           {
             "language": "italian",
             "chapter": 1,
             "lessonCount": 10,
-            "voice": 7,
-            "sight": 1,
+            "voice": 8,
+            "sight": 0,
             "pen": 2,
-            "coreVoice": 8,
+            "coreVoice": 9,
             "modalities": [
               "voice",
               "sight",
