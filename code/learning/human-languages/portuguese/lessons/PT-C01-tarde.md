@@ -1,5 +1,6 @@
 ---
 id: PT-C01-tarde
+sequence: 60
 chapter: 1
 type: word
 headword: tarde / boa tarde

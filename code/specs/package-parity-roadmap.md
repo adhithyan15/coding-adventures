@@ -4775,16 +4775,96 @@ the existing 100 KiB repetitive regression keeps compression load-bearing.
 LZSS's BUILD fronts now pin Python 3.13 instead of resolving an unsupported
 host default.
 
-The Go build tool passes its tests, vet, and trimpath build. Its Windows diff
-plan discovers 494 Python packages, selects and builds exactly
-`image_codec_png`, `pixel_container`, `zip`, and `lzss`, and skips 490. Neutral
-PNG fixture, capability taxonomy, and parity reporter suites pass 9, 7, and 10
+The Go build tool passes its tests, vet, and trimpath build. The exact Windows
+diff has three changed packages and selects eight affected nodes: `deflate`,
+`heap`, `huffman-tree`, `image_codec_png`, `lzss`, `pixel_container`, `zip`,
+and `zstd`. A clean execution builds all eight and skips 4,973. Neutral PNG
+fixture, capability taxonomy, and parity reporter suites pass 9, 7, and 10
 tests. The prospective collision-checked inventory is 15 lanes, 1,368
 identities, 4,561 slots, and zero collisions or unknown buckets;
 `image-codec-png` reaches ten lanes, moving the high-consensus band to 175
 packages with 276 gaps and the 5-9 band to 122 packages with 926 gaps.
 Production authority, state graph, diff, dependency, and credential audits are
 clean, and the empty capability manifest remains truthful.
+
+Final reviewed head `f600037fe3631ddccd8e3c18452f8db96bbf52df`
+completed all 30 checks with 24 successes, five expected skips, one neutral
+CodeQL result, and no failures or pending work. After the loop requested squash
+auto-merge, GitHub merged PR #12420 as
+`43b52d3b5ba230dd55a4fae35d0bee746b4a7d94` at 2026-08-21T11:37:49Z and
+deleted the source branch.
+
+### Post-#12420 refresh and Python heap BUILD-front selection
+
+The collision inventory selected at merge
+`43b52d3b5ba230dd55a4fae35d0bee746b4a7d94` and revalidated after rebasing on
+`87b0df7caf6314bd2b9b4e887e35c39a2bad97b2` remains 15 established lanes and
+1,368 canonical identities with 4,561 implementation slots. The intervening
+Chinese and Marwadi human-language commits modify existing package roots only.
+`image-codec-png` now spans ten lanes. The high-consensus band contains 175
+packages with 276 gaps; the 5-9 band contains 122 packages with 926 gaps; the
+2-4 band remains 166 packages with 2,087 gaps; and 905 singletons have 12,670
+gaps, including 716 Rust singletons. Canonical collisions and unknown language
+buckets remain zero.
+
+The Python PNG downstream run discovered a concrete build-front contract gap.
+`python/heap` creates `.venv` without `--clear` or a Python pin: the first
+Windows invocation selected unsupported Python 3.10 on this host, and the
+immediate second invocation deterministically failed because the environment
+already existed. `python-heap-build-front-idempotence` is selected as the next
+bounded item. Both BUILD fronts will recreate the environment, pin Python 3.13,
+and invoke that environment explicitly for Ruff, formatting, MyPy, and pytest.
+The validation gate runs each recipe twice in one checkout and then exercises
+the heap-dependent compression closure. Live audits across open PRs and remote
+branches find no heap, state, or roadmap owner.
+
+The same audit found 18 additional Python `BUILD_windows` recipes that create
+`.venv` without `--clear`. They are recorded separately as
+`python-uv-build-front-idempotence-audit`, dependent on this reference repair,
+so the present tranche does not silently expand into unrelated packages.
+Direct clean-tree validation also found that `huffman-tree` creates Python
+3.10 despite declaring Python >=3.12, then cannot install `heap`; its Brotli,
+Deflate, Huffman Compression, and related compression fronts share the
+unpinned uv pattern. That dependency-shaped follow-up is recorded separately
+as `python-huffman-compression-build-front-python313`. Until it lands, local
+downstream validation supplies `UV_PYTHON=3.13` explicitly and does not claim
+that the existing dependent fronts are standalone-clean.
+Remaining PNG lanes stay deferred: Haskell, Ruby, Perl, and Elixir still need
+compact-output prerequisite decisions, Elixir and complete Perl tooling are
+absent locally, and Rust has live PixelContainer/ZIP ownership plus a legacy
+filesystem-authority reconciliation.
+
+### Python heap BUILD-front implementation and validation
+
+Both heap front doors now recreate `.venv` with `--clear`, pin Python 3.13,
+and invoke the environment's interpreter explicitly for Ruff, format, MyPy,
+and pytest. A repository regression pins the complete Unix and Windows recipes.
+The exact Windows front passes twice consecutively in one checkout: every
+quality gate is clean and all 52 tests pass at 99.12% coverage on both runs.
+The canonical Unix recipe is structurally pinned for Linux and macOS CI.
+
+Direct Windows downstream validation passes when supplying the separately
+recorded pre-existing `UV_PYTHON=3.13` requirement: Huffman Tree passes 36 tests
+at 98.62% coverage, Brotli 75 at 97.70%, Deflate 20 at 98.14%, and Huffman
+Compression 35 at 97.44%. The Go build tool passes all tests, vet, and trimpath
+compilation. Its exact Windows diff plan discovers 494 Python packages, selects
+one changed and six affected nodes, and a real run builds heap, LZSS, Huffman
+Tree, Brotli, Deflate, and Huffman Compression while skipping 488 packages.
+
+The focused build-front regression, parity reporter, and capability taxonomy
+pass 2, 10, and 7 tests. The schema-3 inventory remains 15 lanes, 1,368
+identities, and 4,561 slots with zero collisions or unknown buckets. The state
+graph is unique, dependency-complete, and acyclic across 415 items. Diff,
+credential, dependency, and production-authority scans are clean; no capability
+manifest or privileged production boundary changes.
+
+Ready-for-review PR #12425 was opened from clean validated head
+`882060f58f2d5013abbcd13a08781fd8b57f11b9` after a normal first push from
+exact `origin/main` `87b0df7caf6314bd2b9b4e887e35c39a2bad97b2`.
+The target branch and PR were absent before publication, all live ownership
+surfaces were disjoint, and GitHub reports the PR open, non-draft, and
+mergeable. Required CI, CodeQL, and human-language checks are queued, so this
+sole active parity PR is now monitor-only until every check is terminal.
 
 ## Autonomous Loop Protocol
 

@@ -1,5 +1,6 @@
 ---
 id: PT-C01-dia
+sequence: 40
 chapter: 1
 type: word
 headword: dia

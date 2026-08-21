@@ -1,5 +1,6 @@
 ---
 id: PT-C01-noite
+sequence: 70
 chapter: 1
 type: word
 headword: noite / boa noite

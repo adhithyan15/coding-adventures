@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "language": "latin",
+  "levels": [
+    {
+      "level": "pre-A1",
+      "target": { "name": "Coding Adventures Latin pre-A1 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#pre-a1" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/pre-a1.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/pre-a1.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/pre-a1.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/pre-a1.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription"],
+      "fullMocks": [
+        { "id": "pre-a1-mock-1", "timed": true, "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-1-answer-key.md" },
+        { "id": "pre-a1-mock-2", "timed": true, "rubric": "mocks/pre-a1/rubric.md", "answerKey": "mocks/pre-a1/mock-2-answer-key.md" }
+      ]
+    },
+    {
+      "level": "A1",
+      "target": { "name": "Coding Adventures Latin A1 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#a1" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/a1.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/a1.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/a1.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/a1.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "timed-assessment-production"],
+      "fullMocks": [
+        { "id": "a1-mock-1", "timed": true, "rubric": "mocks/a1/rubric.md", "answerKey": "mocks/a1/mock-1-answer-key.md" },
+        { "id": "a1-mock-2", "timed": true, "rubric": "mocks/a1/rubric.md", "answerKey": "mocks/a1/mock-2-answer-key.md" }
+      ]
+    },
+    {
+      "level": "A2",
+      "target": { "name": "Coding Adventures Latin A2 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#a2" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/a2.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/a2.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/a2.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/a2.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
+      "fullMocks": [
+        { "id": "a2-mock-1", "timed": true, "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-1-answer-key.md" },
+        { "id": "a2-mock-2", "timed": true, "rubric": "mocks/a2/rubric.md", "answerKey": "mocks/a2/mock-2-answer-key.md" }
+      ]
+    },
+    {
+      "level": "B1",
+      "target": { "name": "Coding Adventures Latin B1 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#b1" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/b1.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/b1.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/b1.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/b1.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
+      "fullMocks": [
+        { "id": "b1-mock-1", "timed": true, "rubric": "mocks/b1/rubric.md", "answerKey": "mocks/b1/mock-1-answer-key.md" },
+        { "id": "b1-mock-2", "timed": true, "rubric": "mocks/b1/rubric.md", "answerKey": "mocks/b1/mock-2-answer-key.md" }
+      ]
+    },
+    {
+      "level": "B2",
+      "target": { "name": "Coding Adventures Latin B2 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#b2" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/b2.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/b2.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/b2.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/b2.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
+      "fullMocks": [
+        { "id": "b2-mock-1", "timed": true, "rubric": "mocks/b2/rubric.md", "answerKey": "mocks/b2/mock-1-answer-key.md" },
+        { "id": "b2-mock-2", "timed": true, "rubric": "mocks/b2/rubric.md", "answerKey": "mocks/b2/mock-2-answer-key.md" }
+      ]
+    },
+    {
+      "level": "C1",
+      "target": { "name": "Coding Adventures Latin C1 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#c1" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/c1.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/c1.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/c1.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/c1.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
+      "fullMocks": [
+        { "id": "c1-mock-1", "timed": true, "rubric": "mocks/c1/rubric.md", "answerKey": "mocks/c1/mock-1-answer-key.md" },
+        { "id": "c1-mock-2", "timed": true, "rubric": "mocks/c1/rubric.md", "answerKey": "mocks/c1/mock-2-answer-key.md" }
+      ]
+    },
+    {
+      "level": "C2",
+      "target": { "name": "Coding Adventures Latin C2 Assessment — project-defined equivalent", "basis": "project-defined", "source": "assessment-spec.md#c2" },
+      "skills": {
+        "reading": { "taskInventory": ["task-shapes/c2.json#reading"], "passThreshold": 0.6 },
+        "listening": { "taskInventory": ["task-shapes/c2.json#listening"], "passThreshold": 0.6 },
+        "writing": { "taskInventory": ["task-shapes/c2.json#writing"], "passThreshold": 0.6 },
+        "speaking": { "taskInventory": ["task-shapes/c2.json#speaking"], "passThreshold": 0.6 }
+      },
+      "writingStages": ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription", "controlled-composition", "connected-composition", "timed-assessment-production"],
+      "fullMocks": [
+        { "id": "c2-mock-1", "timed": true, "rubric": "mocks/c2/rubric.md", "answerKey": "mocks/c2/mock-1-answer-key.md" },
+        { "id": "c2-mock-2", "timed": true, "rubric": "mocks/c2/rubric.md", "answerKey": "mocks/c2/mock-2-answer-key.md" }
+      ]
+    }
+  ]
+}
