@@ -146,6 +146,7 @@ const GUJARATI_BA = DUCTUS[ductusKey("gujarati", "બ")];
 const GUJARATI_BHA = DUCTUS[ductusKey("gujarati", "ભ")];
 const GUJARATI_MA = DUCTUS[ductusKey("gujarati", "મ")];
 const GUJARATI_YA = DUCTUS[ductusKey("gujarati", "ય")];
+const GUJARATI_RA = DUCTUS[ductusKey("gujarati", "ર")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2246,6 +2247,12 @@ describe("handwriting ductus", () => {
     expect(GUJARATI_YA.script).toBe("gujarati");
     expect(penLifts(GUJARATI_YA)).toBe(1);
     expect(GUJARATI_YA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati ર keeps its upper body, middle loop, and tail continuous", () => {
+    expect(GUJARATI_RA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_RA)).toBe(0);
+    expect(GUJARATI_RA.strokes).toHaveLength(1);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4790,6 +4797,12 @@ describe("handwriting ductus", () => {
     const src = GUJARATI_YA.source;
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ય animation.*first and second SVG paths/i);
     expect(src.variation).toMatch(/two ordered pen-down runs.*upper left.*rounded upper turn.*broad lower body.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati ર traces its upper body, middle loop, and tail to one path", () => {
+    const src = GUJARATI_RA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ર animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*rounded upper body.*small middle loop.*lower-right tail.*without lifting.*one variant.*upper-body-to-middle-loop-to-lower-tail order.*zero-lift evidence/i);
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {

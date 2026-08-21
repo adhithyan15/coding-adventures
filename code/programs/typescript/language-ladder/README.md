@@ -1183,6 +1183,10 @@ upper turn, sweeps around the broad lower body, and exits across the long right
 shoulder; after one lift, the second frame descends the tall right spine into
 its foot. The source's two-path order and variation warning remain visible;
 conventional **ર** is next.
+The verified one-frame Gujarati **ર** filmstrip circles the rounded upper body,
+curls through the small middle loop, and descends into the lower-right tail
+without lifting. The source's one-path order and variation warning remain
+visible; conventional **લ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
