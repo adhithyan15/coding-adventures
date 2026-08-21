@@ -4673,6 +4673,35 @@ a quarantined stale ZIP/LZSS owner, Elixir and Perl lack complete local
 toolchains, and boxed-byte Ruby, Perl, and Haskell paths need allocation-safe
 prerequisite decisions before claiming IC18's ceiling.
 
+### Go paint PNG implementation and validation
+
+The paint adapter is now a thin API-compatible delegate to the repository Go
+`image-codec-png` package. Production no longer imports `image/png`, `image`,
+`image/color`, `bytes`, or standard-library compression. `PngCodec`, `Codec`,
+`Encode`, `EncodePNG`, `Decode`, and `DecodePNG` remain intact; deterministic
+output matches the canonical encoder byte-for-byte, the test-only standard
+library accepts it, typed `*PngError` values propagate through every decode
+alias, and the nonthrowing ImageCodec encode path preserves its typed panic.
+
+The adapter test reads the schema-1 `image-codec-png-v1` corpus directly and
+makes representative edge-limit, pixel-limit, valid-CRC APNG, IDAT-cavity, and
+invalid-filter cases load-bearing through paint's public APIs. Race-enabled
+tests pass at 100.0% statement coverage, followed by `go vet`, trimpath build,
+module verification, and dependency listing. `barcode-1d` carries the local
+image-codec-png, ZIP, and LZSS replacements that Go modules do not propagate
+from dependencies; its race-enabled tests, vet, trimpath build, and module
+verification pass.
+
+The repository Go build tool passes all tests, vet, and trimpath compilation.
+Its collision-checked Windows plan discovers 306 Go packages, selects exactly
+18 changed, prerequisite, and downstream nodes, and builds all 18 with 288
+unrelated packages skipped. Neutral PNG fixture, capability taxonomy, and
+parity reporter suites pass 9, 7, and 10 tests. The exact inventory remains 15
+lanes, 1,368 identities, and 4,560 slots with zero collisions and zero unknown
+buckets. JSON/state-graph, diff, dependency, production-authority, and
+credential scans are clean, and the empty production capability manifest
+remains truthful.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
