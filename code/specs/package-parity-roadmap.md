@@ -4623,6 +4623,15 @@ PixelContainer and ZIP; all filesystem, LibDeflate, process, and real-image
 tool authority is confined to tests and the empty production capability
 manifest remains valid.
 
+The repository Go build tool passes tests, vet, and trimpath compilation. Its
+real parallel Windows plan evaluates 45 Starlark files, discovers 259 Lua
+packages, and builds all 15 affected prerequisite, codec, compression, and
+image-downstream nodes with 244 unrelated packages skipped. That first full
+execution exposed extensionless LuaRocks launchers and repeated test-tool
+installation as parallel Windows hazards. BUILD front doors now invoke the
+Lua modules directly without quoted wrapper paths, CI installs shared Lua test
+tools once during toolchain setup, and the complete rerun passes.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
