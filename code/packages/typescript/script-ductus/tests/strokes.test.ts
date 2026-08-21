@@ -144,6 +144,7 @@ const GUJARATI_PA = DUCTUS[ductusKey("gujarati", "પ")];
 const GUJARATI_PHA = DUCTUS[ductusKey("gujarati", "ફ")];
 const GUJARATI_BA = DUCTUS[ductusKey("gujarati", "બ")];
 const GUJARATI_BHA = DUCTUS[ductusKey("gujarati", "ભ")];
+const GUJARATI_MA = DUCTUS[ductusKey("gujarati", "મ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2232,6 +2233,12 @@ describe("handwriting ductus", () => {
     expect(GUJARATI_BHA.script).toBe("gujarati");
     expect(penLifts(GUJARATI_BHA)).toBe(1);
     expect(GUJARATI_BHA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati મ completes its left body before the right spine", () => {
+    expect(GUJARATI_MA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_MA)).toBe(1);
+    expect(GUJARATI_MA.strokes).toHaveLength(2);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4764,6 +4771,12 @@ describe("handwriting ductus", () => {
     const src = GUJARATI_BHA.source;
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ભ animation.*first and second SVG paths/i);
     expect(src.variation).toMatch(/two ordered pen-down runs.*broad left loop.*compact middle turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati મ traces its left body and right spine to two paths", () => {
+    const src = GUJARATI_MA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*મ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*upper left.*compact inner turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*left-body-before-right-spine order.*one-lift evidence/i);
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {

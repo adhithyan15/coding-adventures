@@ -6593,6 +6593,25 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: gujaratiAlphabetSource("ભ"),
   },
+  // t30apps writes Gujarati મ as a joined left body and shoulder followed by
+  // a separately descended right spine.
+  [ductusKey("gujarati", "મ")]: {
+    script: "gujarati", glyph: "મ",
+    strokes: [
+      { segments: [{ label: "curl through the left body and inner turn, then exit across the long right shoulder", path: [
+        { x: 50, y: 556 }, { x: 90, y: 560 }, { x: 130, y: 550 }, { x: 165, y: 520 },
+        { x: 170, y: 480 }, { x: 170, y: 430 }, { x: 170, y: 380 }, { x: 170, y: 330 },
+        { x: 170, y: 280 }, { x: 165, y: 230 }, { x: 150, y: 195 }, { x: 130, y: 190 },
+        { x: 100, y: 210 }, { x: 80, y: 240 }, { x: 80, y: 275 }, { x: 105, y: 280 },
+        { x: 150, y: 280 }, { x: 210, y: 280 }, { x: 280, y: 280 }, { x: 350, y: 280 }, { x: 420, y: 280 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 460, y: 585 }, { x: 460, y: 500 }, { x: 460, y: 400 }, { x: 460, y: 300 },
+        { x: 460, y: 200 }, { x: 460, y: 125 }, { x: 468, y: 80 }, { x: 490, y: 55 },
+        { x: 530, y: 40 }, { x: 570, y: 38 }, { x: 582, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("મ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
