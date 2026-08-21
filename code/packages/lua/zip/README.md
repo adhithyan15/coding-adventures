@@ -74,7 +74,9 @@ print(counted.output, counted.bytes_consumed)
 
 The decoder accepts stored, fixed-Huffman, dynamic-Huffman, and multi-block
 streams. `raw_inflate_counted` reports the exact number of compressed bytes
-consumed, allowing ZIP readers to reject hidden suffix cavities.
+consumed, allowing ZIP readers to reject hidden suffix cavities. Completed
+output is retained in compact byte-string chunks with only one 4 KiB numeric
+tail, avoiding boxed-number amplification at the public output ceiling.
 
 ## API
 

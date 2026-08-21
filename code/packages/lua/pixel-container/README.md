@@ -53,6 +53,8 @@ print(pc.equals(img, copy))  -- true
 | Function | Description |
 |----------|-------------|
 | `new(width, height)` | Create blank RGBA8 container (all zeros) |
+| `from_bytes(width, height, bytes)` | Create from an exact binary RGBA8 string |
+| `from_byte_chunks(width, height, parts)` | Create from binary chunks without a full-size join |
 | `pixel_at(c, x, y)` | Read pixel → `r, g, b, a`; returns 0s if OOB |
 | `set_pixel(c, x, y, r, g, b, a)` | Write pixel; no-op if OOB |
 | `fill_pixels(c, r, g, b, a)` | Fill every pixel with one RGBA value |
@@ -69,8 +71,10 @@ Pixel (x, y) starts at data index:  (y * width + x) * 4 + 1
   data[i+3] = Alpha
 ```
 
-The `+1` is the Lua 1-indexing adjustment. All codecs (BMP, PPM, QOI) build
-on this layout.
+The `+1` is the Lua 1-indexing adjustment. `data` remains a mutable, 1-indexed
+Lua table interface, but compact 4 KiB byte-string chunks back it so a byte does
+not cost one boxed Lua number. Direct reads, writes, `#data`, `ipairs`, and the
+pixel helpers retain their existing behavior. All codecs build on this layout.
 
 ## ImageCodec Interface Convention
 
