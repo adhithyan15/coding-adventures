@@ -7,4 +7,3 @@ uv pip install --python .venv -e .[dev] --quiet
 .venv/bin/python -m ruff format --check src tests
 .venv/bin/python -m mypy src tests
 .venv/bin/python -m pytest tests -v
-

@@ -5,4 +5,3 @@
   "capabilities": [],
   "justification": "Pure in-memory bounded parsing and byte transforms over caller-provided data. Production code requires no filesystem, network, process, environment, clock, entropy, console, native, or credential access."
 }
-
