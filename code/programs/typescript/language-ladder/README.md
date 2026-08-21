@@ -1195,6 +1195,10 @@ The verified one-frame Gujarati **ળ** filmstrip circles the broad left bowl,
 rises through the narrow middle turn, crosses the high right arch, and descends
 the tall spine into its foot without lifting. The source's one-path order and
 variation warning remain visible; conventional **વ** is next.
+The verified two-frame Gujarati **વ** filmstrip circles the broad rounded left
+body and returns into the right shoulder; after one lift, the second frame
+descends the tall right spine into its foot. The source's two-path order and
+variation warning remain visible; conventional **શ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
