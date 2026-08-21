@@ -16,10 +16,17 @@
       "mapping": { "A1": "TEU/A1", "A2": "TBU/A2", "B1": "TRKI-1", "B2": "TRKI-2", "C1": "TRKI-3", "C2": "TRKI-4" }
     },
     "japanese": {
-      "exam": "JLPT",
-      "basis": "research",
-      "mapping": { "A1": "N5", "A2": "N4", "B1": "N3", "B2": "N2", "C1": "N1", "C2": "beyond N1" },
-      "caveat": "The Japan Foundation publishes no official CEFR alignment and has said the two measure different things. These are the widely-used research correspondences; N1 is often argued to reach C1 rather than sit at it, and nothing in JLPT tests production, so a JLPT level and a CEFR level are not interchangeable claims."
+      "exam": "JLPT plus Coding Adventures Japanese production companion",
+      "basis": "published",
+      "mapping": {
+        "A1": "JLPT N5 pass with total 80+",
+        "A2": "JLPT N4 pass with total 90+, or N3 pass with total 95-103",
+        "B1": "JLPT N3 pass with total 104+, or N2 pass with total 90-111",
+        "B2": "JLPT N2 pass with total 112+, or N1 pass with total 100-141",
+        "C1": "JLPT N1 pass with total 142+",
+        "C2": "beyond the official JLPT CEFR reference range"
+      },
+      "caveat": "Official JLPT score reports add these CEFR reference indications from the December 2025 test, but only for candidates who pass the named JLPT level and only for the language knowledge, reading, and listening competence JLPT tests. JLPT does not test production (speaking and writing) or interaction. The complete four-skill destination therefore pairs the published receptive anchor with a project-defined JF Standard/CEFR-aligned production companion; pre-A1 and C2 are wholly project-defined."
     },
     "chinese": {
       "exam": "HSK (six-band, pre-2021)",

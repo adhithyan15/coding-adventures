@@ -1,7 +1,7 @@
 {
   "language": "marwadi",
-  "lessonCount": 7,
-  "atomMeasurableLessons": 7,
+  "lessonCount": 11,
+  "atomMeasurableLessons": 11,
   "atomMeasurementBlindLessons": 0,
   "durationViolations": 0,
   "atomLessonSpikes": 0,
@@ -11,38 +11,24 @@
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
   "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 3,
-  "atomsTaught": 9,
+  "forwardReferences": 0,
+  "atomsTaught": 15,
   "atomsNeverRevisited": 1,
-  "reinforcementWindowMisses": 1,
+  "reinforcementWindowMisses": 0,
+  "reinforcementMissesByWindow": {
+    "R1": 0,
+    "R2": 0,
+    "R3": 0,
+    "R4": 0
+  },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 5,
+  "writingPracticeLessons": 8,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
-  "findings": [
-    {
-      "language": "marwadi",
-      "kind": "forward-language",
-      "count": 3,
-      "unit": "use(s)",
-      "detail": "teach target-language material before load-bearing use"
-    },
-    {
-      "language": "marwadi",
-      "kind": "reinforcement",
-      "count": 1,
-      "unit": "missed window(s)",
-      "detail": "add retrieval at the expanding R1-R4 intervals"
-    }
-  ],
-  "next": {
-    "language": "marwadi",
-    "kind": "forward-language",
-    "count": 3,
-    "unit": "use(s)",
-    "detail": "teach target-language material before load-bearing use"
-  }
+  "findings": [],
+  "next": null
 }

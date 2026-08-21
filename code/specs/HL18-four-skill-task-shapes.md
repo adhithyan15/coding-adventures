@@ -83,6 +83,13 @@ independent internal thresholds so a strong reading score cannot hide an
 untaught speaking or writing strand. The source-backed external rule and the
 project's stronger readiness claim remain distinguishable.
 
+When every task part publishes a numeric `maxRawPoints` and the inventory has no
+alternate-form variants, those part ceilings must sum exactly to
+`passRule.maximumPoints`. Four separate 100-point papers therefore declare 400,
+not a fictional 100-point administration with four 25-point sections. The
+headline `passPoints` remains bookkeeping only when independent thresholds are
+present: reaching the sum never compensates for a failed required skill.
+
 ## 5. From exam task to five-minute lessons
 
 A task shape is decomposed backward into microsteps. A 30-word message is not

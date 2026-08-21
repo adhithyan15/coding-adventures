@@ -16,11 +16,11 @@ etymology_hook: Tum and tū continue the ancient tvam-tu familiar-you family beh
 duration:
   max_seconds: 240
 requires:
-  knowledge: [UR-LEX-MERA-NAAM-HAI]
+  knowledge: [UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
 introduces:
   knowledge: [UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU]
 practises:
-  knowledge: [UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU]
+  knowledge: [UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU, UR-PRAGMATICS-YOU-REGISTER, UR-ETYMON-TUM-THOU]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,10 @@ reviews_of: [UR-C02-mera-naam]
 # آپ / تم / تو — three relationships inside “you”
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MERA-NAAM-HAI] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-MERA-NAAM-HAI, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01] -->
 
-[PAUSE 2s] Say **merā nām ... hai** with your own name. To ask the other
-person's name, begin with the respectful form.
+[PAUSE 2s] Say **nahī̃** once, then **merā nām ... hai** with your own name.
+To ask the other person's name, begin with the respectful form.
 
 ## You'll want to know first — three forms
 <!-- hl-knowledge: introduces=[UR-LEX-AAP-TUM-TU, UR-SCRIPT-AAP-TUM-TU]; assesses=[] -->

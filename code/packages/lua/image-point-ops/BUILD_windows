@@ -1,0 +1,1 @@
+cd tests && set LUA_PATH=../src/?.lua;../src/?/init.lua;../../pixel-container/src/?.lua;../../pixel-container/src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;&& set LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;&& lua -e arg={'.','--verbose','--pattern=test_'};require('busted.runner')({standalone=false})

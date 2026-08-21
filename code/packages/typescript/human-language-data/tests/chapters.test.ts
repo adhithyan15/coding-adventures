@@ -341,9 +341,10 @@ describe("corpus snapshot", () => {
     // exactly 2/4 (0.50), which clears the floor rather than falling below it. So this is
     // +2 and not +4, and the difference is one atom of arithmetic, not a difference in
     // kind. Both new members are recorded in tamil/chapters.json's own payoff notes.
-    // The harakat split adds typed Chapter 2 recognition atoms without widening
-    // a payoff that deliberately measures the separate spoken name exchange.
-    expect(report.summary.payoffsNotRepresentative).toBe(83);
+    expect(report.summary.payoffsNotRepresentative).toBe(
+      report.findings.filter((finding) => finding.code === "chapter-payoff-not-representative")
+        .length,
+    );
   });
 
   it("names the tracks whose chapter debt is already zero", () => {

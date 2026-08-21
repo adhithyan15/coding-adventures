@@ -13,11 +13,11 @@ roots: [quomodo, quid, quem, qualis, quando, quantus]
 duration:
   max_seconds: 180
 requires:
-  knowledge: [ES-LEX-COMO, ES-ETYMON-QUOMODO, ES-GRAMMAR-QUESTION-ACCENT]
+  knowledge: [ES-LEX-COMO, ES-LEX-QUIEN, ES-ETYMON-QUOMODO, ES-GRAMMAR-QUESTION-ACCENT]
 introduces:
   knowledge: [ES-ETYMON-QUESTION-QU]
 practises:
-  knowledge: [ES-LEX-COMO, ES-ETYMON-QUOMODO, ES-ETYMON-QUESTION-QU]
+  knowledge: [ES-LEX-COMO, ES-LEX-QUIEN, ES-ETYMON-QUOMODO, ES-ETYMON-QUESTION-QU]
 skills: [listening, speaking, reading]
 modes: [interpretive]
 strands: [meaning-input, language-focus]
@@ -60,11 +60,12 @@ continue the same Latin pattern. *Dónde*, "where," is an exception from Latin
 *de unde*, "from where."
 
 ## Guided Practice
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-ETYMON-QUOMODO, ES-ETYMON-QUESTION-QU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-LEX-QUIEN, ES-ETYMON-QUOMODO, ES-ETYMON-QUESTION-QU] -->
 
 [PAUSE 1s]
 - [YOU SAY: the Latin source of *cómo*]
 - [YOU SAY: the recurring Latin question stem]
+- [YOU SAY: which word in the family asks for a person]
 - [YOU SAY: whether the table is today's production list or a preview]
 
 ## Wrap-up Recall

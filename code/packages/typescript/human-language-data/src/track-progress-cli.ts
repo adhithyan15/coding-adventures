@@ -1,5 +1,5 @@
-import { existsSync, readFileSync, writeFileSync } from "node:fs";
-import { join, resolve } from "node:path";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { dirname, join, normalize, relative as pathRelative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import {
   defaultCurriculumRoot,
@@ -10,34 +10,15 @@ import {
 } from "./loader.js";
 import {
   buildTrackProgress,
-  renderTrackProgressTable,
+  renderTrackProgressCard,
   type GeneratedBookChapterRef,
 } from "./track-progress.js";
 
-export const TRACK_PROGRESS_START = "<!-- BEGIN GENERATED TRACK PROGRESS -->";
-export const TRACK_PROGRESS_END = "<!-- END GENERATED TRACK PROGRESS -->";
+export const TRACK_PROGRESS_DIR = "progress";
 
 interface GeneratedBookManifest {
   version: number;
   chapters: GeneratedBookChapterRef[];
-}
-
-/** Replace exactly one marked section while preserving the file's newline style. */
-export function replaceTrackProgressSection(source: string, table: string): string {
-  const start = source.indexOf(TRACK_PROGRESS_START);
-  const end = source.indexOf(TRACK_PROGRESS_END);
-  if (
-    start < 0 ||
-    end < 0 ||
-    end <= start ||
-    source.lastIndexOf(TRACK_PROGRESS_START) !== start ||
-    source.lastIndexOf(TRACK_PROGRESS_END) !== end
-  ) {
-    throw new Error("README.md must contain exactly one ordered track-progress marker pair");
-  }
-  const newline = source.includes("\r\n") ? "\r\n" : "\n";
-  const rendered = table.replaceAll("\n", newline);
-  return `${source.slice(0, start + TRACK_PROGRESS_START.length)}${newline}${rendered}${newline}${source.slice(end)}`;
 }
 
 function loadGeneratedBookChapters(root: string): GeneratedBookChapterRef[] {
@@ -49,10 +30,25 @@ function loadGeneratedBookChapters(root: string): GeneratedBookChapterRef[] {
   return manifest.chapters;
 }
 
-/** Produce the complete expected README without mutating the filesystem. */
-export function generatedTrackProgressReadme(root = defaultCurriculumRoot()): string {
-  const readmePath = join(root, "README.md");
-  const source = readFileSync(readmePath, "utf8");
+function safeProgressOutput(root: string, relative: string): string {
+  const output = resolve(root, relative);
+  const fromRoot = normalize(pathRelative(resolve(root), output)).replaceAll("\\", "/");
+  if (
+    fromRoot === "" ||
+    fromRoot === ".." ||
+    fromRoot.startsWith("../") ||
+    !fromRoot.startsWith(`${TRACK_PROGRESS_DIR}/`) ||
+    !fromRoot.endsWith(".md")
+  ) {
+    throw new Error(`unsafe track progress output '${relative}'`);
+  }
+  return output;
+}
+
+/** Produce one deterministic progress card per language. */
+export function generatedTrackProgressOutputs(
+  root = defaultCurriculumRoot(),
+): Map<string, string> {
   const tracks = buildTrackProgress(
     loadLanguageRegistry(root),
     loadLessons(root),
@@ -60,7 +56,16 @@ export function generatedTrackProgressReadme(root = defaultCurriculumRoot()): st
     loadBookCorpus(root),
     loadGeneratedBookChapters(root),
   );
-  return replaceTrackProgressSection(source, renderTrackProgressTable(tracks));
+  return new Map(
+    tracks.map((track) => {
+      if (!/^[a-z0-9-]+$/.test(track.id)) {
+        throw new Error(`unsafe language id '${track.id}' for progress card`);
+      }
+      const relative = `${TRACK_PROGRESS_DIR}/${track.id}.md`;
+      safeProgressOutput(root, relative);
+      return [relative, renderTrackProgressCard(track)];
+    }),
+  );
 }
 
 export function runTrackProgress(
@@ -72,19 +77,38 @@ export function runTrackProgress(
     process.stderr.write("usage: track-progress-cli (--check | --write)\n");
     return 2;
   }
-  const output = join(root, "README.md");
-  const expected = generatedTrackProgressReadme(root);
-  if (mode === "--write") {
-    writeFileSync(output, expected, "utf8");
-    process.stdout.write("generated README.md track progress\n");
-    return 0;
+
+  const outputs = generatedTrackProgressOutputs(root);
+  let mismatch = false;
+  for (const [relative, expected] of outputs) {
+    const output = safeProgressOutput(root, relative);
+    if (mode === "--write") {
+      mkdirSync(dirname(output), { recursive: true });
+      writeFileSync(output, expected, "utf8");
+      process.stdout.write(`generated ${relative}\n`);
+      continue;
+    }
+    const actual = existsSync(output) ? readFileSync(output, "utf8") : undefined;
+    if (actual !== expected) {
+      process.stderr.write(`${relative}: generated track progress is missing or stale\n`);
+      mismatch = true;
+    }
   }
-  const actual = existsSync(output) ? readFileSync(output, "utf8") : undefined;
-  if (actual !== expected) {
-    process.stderr.write("README.md: generated track progress is stale\n");
-    return 1;
+
+  if (mode === "--check") {
+    const directory = resolve(root, TRACK_PROGRESS_DIR);
+    const expectedNames = new Set([...outputs.keys()].map((path) => path.split("/").at(-1)!));
+    const actualNames = existsSync(directory)
+      ? readdirSync(directory).filter((name) => name.endsWith(".md"))
+      : [];
+    for (const name of actualNames) {
+      if (!expectedNames.has(name)) {
+        process.stderr.write(`${TRACK_PROGRESS_DIR}/${name}: unexpected stale progress card\n`);
+        mismatch = true;
+      }
+    }
   }
-  return 0;
+  return mismatch ? 1 : 0;
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(resolve(process.argv[1])).href) {

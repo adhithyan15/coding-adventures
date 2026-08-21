@@ -22,19 +22,17 @@ reviews_of: [TA-C02-peyar]
 
 ## The word, taken apart
 
-**என்** (*eṉ*, "my") is the possessive of **நான்** (*nāṉ*, "I") — native
-Dravidian, from the pronoun stem **\*yān / \*nān**. It has *no* Indo-European
-cousin: the Tamil "I/my" is built on a different root from English *I/my* (which
-go back to *\*eǵ* and *\*me-*). Two families, two entirely separate words for
-the self.
+**என்** (*eṉ*) means "my." It belongs to Tamil's native Dravidian first-person
+family, not to the Indo-European family behind English *I/my*. You will meet
+the related word for "I" in its own lesson; today you only need *eṉ*.
 
 ## Guided Practice
 
 [PAUSE 1s]
 - [YOU SAY: "eṉ"]
-- [YOU SAY: its source — *nāṉ* ("I") → *eṉ* ("my")]
+- [YOU SAY: *eṉ* once with its meaning, "my"]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] What word is **என்** the possessive of, and does it share a root with
-English *my*? (*nāṉ*, "I"; no — different family entirely.)
+[PAUSE 3s] What does **என்** mean? ("My.") Does it share a root with English
+*my*? (No — it is native Dravidian.)

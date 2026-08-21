@@ -2,6 +2,45 @@
 
 ## [Unreleased]
 
+### Added — project-defined pre-A1 four-skill task shapes (HL18)
+
+- Made the pre-A1 target executable as reading, listening, writing, and
+  speaking papers with exact prompts, responses, timing, replay, aids, and
+  scoring boundaries.
+- Kept the assessment contract's point model literal: four separate 100-point
+  papers, a 60-point floor on each, and no aggregate compensation.
+- Writing assesses delayed recall, dictation/transcription, and bounded
+  independent production. Tracing and visible copying remain gentle lesson
+  supports and cannot earn exam credit.
+- The inventory is not a readiness claim. Curriculum task coverage, two full
+  mocks, rubrics, answer keys, calibration, and book-only human validation are
+  still required.
+
+### Added — pre-A1-to-C2 assessment contract (HL16)
+
+- Added a clearly labelled project-defined Gujarati assessment ladder at
+  pre-A1, A1, A2, B1, B2, C1, and C2 rather than implying an external
+  qualification exists.
+- Every rung requires independent reading, listening, writing, and speaking
+  passes at 60%, with no stronger skill compensating for a weaker one.
+- The contract carries writing from observe/trace and copying through delayed
+  recall, dictation, connected composition, and timed exam production.
+- Two timed mocks, rubrics, answer keys, calibration, and book-only human
+  validation remain explicit dependencies, so the track cannot mistake a named
+  destination for pass-readiness evidence.
+
+### Fixed — three false forward-review claims
+
+- `GU-C02-anand` now records the earlier name statement that its warm-up and
+  knowledge directives actually rehearse.
+- `GU-C04-kaale` now records its real `malishun` review instead of pointing
+  ahead to the chapter's later assembled farewell.
+- `GU-C05-kaam-karvun` no longer claims to review the following `rahevun`
+  lesson; its exercises revisit `GU-C05-bolvun`.
+
+The authored order and lesson durations do not change. Gujarati's three
+order-integrity defects are now zero.
+
 ### Added — Chapter 13, the first nine pieces of the script (HL-C215)
 
 Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles

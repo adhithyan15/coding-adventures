@@ -1,7 +1,7 @@
 {
   "language": "spanish",
-  "lessonCount": 584,
-  "atomMeasurableLessons": 488,
+  "lessonCount": 585,
+  "atomMeasurableLessons": 489,
   "atomMeasurementBlindLessons": 96,
   "durationViolations": 0,
   "atomLessonSpikes": 6,
@@ -11,29 +11,36 @@
   "scriptClosureViolations": 0,
   "neverTaughtGlyphs": 0,
   "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 91,
+  "forwardReferences": 86,
   "atomsTaught": 876,
   "atomsNeverRevisited": 128,
-  "reinforcementWindowMisses": 2326,
+  "reinforcementWindowMisses": 2324,
+  "reinforcementMissesByWindow": {
+    "R1": 221,
+    "R2": 708,
+    "R3": 735,
+    "R4": 660
+  },
   "payoffSurprises": 26,
   "writingPracticeLessons": 7,
-  "firstWritingPracticeAt": 26,
-  "lessonsBeforeWritingPractice": 26,
+  "firstWritingPracticeAt": 27,
+  "lessonsBeforeWritingPractice": 27,
   "findings": [
     {
       "language": "spanish",
       "kind": "forward-language",
-      "count": 91,
+      "count": 86,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
     {
       "language": "spanish",
       "kind": "writing-ramp",
-      "count": 26,
+      "count": 27,
       "unit": "opening lesson(s)",
       "detail": "move the first gentle writing microstep to lesson one"
     },
@@ -47,7 +54,7 @@
     {
       "language": "spanish",
       "kind": "reinforcement",
-      "count": 2326,
+      "count": 2324,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
@@ -69,7 +76,7 @@
   "next": {
     "language": "spanish",
     "kind": "forward-language",
-    "count": 91,
+    "count": 86,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

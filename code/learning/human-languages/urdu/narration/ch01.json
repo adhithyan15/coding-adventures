@@ -3,164 +3,12 @@
   "language": "urdu",
   "chapter": 1,
   "title": "Greetings and responses",
-  "drivablePrefix": 4,
-  "sourceHash": "fnv1a64:6f9688165869e235",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:98b8d72bdfe4dab5",
   "lessons": [
     {
-      "id": "UR-C01-ji-han",
-      "sequence": null,
-      "title": "جی ہاں (jī hā̃) — yes, respectfully",
-      "headword": "جی ہاں",
-      "romanization": "jī hā̃",
-      "gloss": "yes",
-      "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a50644718ff79815",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "Two small words",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "The phrase is written right to left, so جی is the word on the right:"
-            },
-            {
-              "kind": "speech",
-              "text": "جی jī + ہاں hā̃ becomes jī hā̃ becomes yes."
-            },
-            {
-              "kind": "speech",
-              "text": "In جی, ج gives j and ی stretches the vowel to ī. In ہاں, the final sign ں marks a nasal vowel: let some air pass through your nose as you say ā. It is not a full English n at the end."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "Why two words?",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "ہاں alone means “yes.” جی adds respect and attentive warmth; it can also be used by itself as a polite response. Learning jī hā̃ first gives you a safe answer for many situations."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Use it",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "“Do you understand?” — جی ہاں۔ — jī hā̃."
-            },
-            {
-              "kind": "speech",
-              "text": "“Would you like to continue?” — جی ہاں (jī hā̃)، شکریہ (shukriyā)۔ — Yes, thank you."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Quick recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Which mark makes the vowel nasal? Final ں. Answer politely: jī hā̃."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "UR-C01-nahin",
-      "sequence": null,
-      "title": "نہیں (nahī̃) — no, and later “not”",
-      "headword": "نہیں",
-      "romanization": "nahī̃",
-      "gloss": "no / not",
-      "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:62f6a8f345192f8a",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "unknown",
-          "title": "Recombine known shapes",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "You have seen ہ, ی, and nasal ں. Add ن n at the right:"
-            },
-            {
-              "kind": "speech",
-              "text": "ن, ہ, ی, ں becomes nahī̃."
-            },
-            {
-              "kind": "speech",
-              "text": "Stretch ī slightly and nasalize it. The final ں does not add a strong separate n sound."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "unknown",
-          "title": "One word, two future jobs",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "As a complete answer, nahī̃ means “no.” Inside a sentence it commonly means “not.” That second job will matter when the track introduces verbs. Today you only need the complete answer."
-            },
-            {
-              "kind": "speech",
-              "text": "This is inherited Indo-Aryan vocabulary and is shared with Hindi नहीं nahī̃. The scripts differ, but the spoken word and grammar align closely."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "unknown",
-          "title": "Contrast",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "جی ہاں — jī hā̃ — yes."
-            },
-            {
-              "kind": "speech",
-              "text": "نہیں — nahī̃ — no."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "unknown",
-          "title": "Quick recall",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "What does final ں do? It nasalizes the vowel. Answer “no”: nahī̃."
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "UR-C01-salam",
-      "sequence": null,
+      "sequence": 10,
       "title": "سلام (salām) — hello across a family of languages",
       "headword": "سلام",
       "romanization": "salām",
@@ -171,7 +19,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:56bcf932b70c0520",
+      "sourceHash": "fnv1a64:22f7084edd86a5e8",
       "notice": null,
       "blocks": [
         {
@@ -248,25 +96,179 @@
       ]
     },
     {
+      "id": "UR-W01-shukriya-first-three",
+      "sequence": 15,
+      "title": "ش ک ر (shīn, kāf, re) — three shapes, then stop",
+      "headword": "ش ک ر",
+      "romanization": "shīn, kāf, re",
+      "gloss": "the first three shapes inside shukriyā",
+      "script": "urdu-nastaliq",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:8b824c91bfbd154a",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — recognize three shapes",
+          "Writing — trace before you copy"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — recognize three shapes and Writing — trace before you copy until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Urdu runs from right to left. Point to the right-hand edge of your page. Today you will meet only three shapes from the spoken word shukriyā. The complete joined word waits for the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — recognize three shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Take one shape at a time:"
+            },
+            {
+              "kind": "table",
+              "headers": [
+                "shape",
+                "sound",
+                "one thing to notice"
+              ],
+              "columns": 3,
+              "rowCount": 3,
+              "utterances": [
+                "shape: ش. sound: sh. one thing to notice: three dots above.",
+                "shape: ک. sound: k. one thing to notice: a long slash inside the upper shape.",
+                "shape: ر. sound: r. one thing to notice: a simple falling curve."
+              ]
+            },
+            {
+              "kind": "speech",
+              "text": "Read them from right to left once: ش, ک, ر — sh, k, r."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — trace before you copy",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "trace ش once; pause before adding its three dots",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: trace **ش** once; pause before adding its three dots]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "trace ک once; notice the separate slash",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: trace **ک** once; notice the separate slash]"
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "trace ر once; let the curve fall",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: trace **ر** once; let the curve fall]"
+            },
+            {
+              "kind": "speech",
+              "text": "Tracing is enough. Do not join the shapes or write from memory yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point in this order: sh, k, r. Stop after three. The next short lesson adds the final two shapes and only then lets you copy the whole word."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "UR-C01-shukriya",
-      "sequence": null,
+      "sequence": 20,
       "title": "شکریہ (shukriyā) — thank you",
       "headword": "شکریہ",
       "romanization": "shukriyā",
       "gloss": "thank you",
       "script": "urdu-nastaliq",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "sight",
+      "derivedModality": "sight",
       "modalityReasons": [
-        "no-visual-dependency"
+        "script-block"
       ],
-      "sourceHash": "fnv1a64:c9d290fdc45f48d1",
-      "notice": null,
+      "sourceHash": "fnv1a64:7cfa9c64efe1c04d",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — add two shapes",
+          "Guided Practice"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — add two shapes and Guided Practice until you have stopped, and I will say so again when we reach it."
+      },
       "blocks": [
         {
           "index": 0,
-          "type": "unknown",
-          "title": "Read only what you need",
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Point to ش, ک, ر and say sh, k, r. You traced those three shapes already. Keep your pen down while you meet only two more."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — add two shapes",
           "segments": [
             {
               "kind": "speech",
@@ -278,14 +280,14 @@
             },
             {
               "kind": "speech",
-              "text": "Meet ش sh, ک k, ر r, ی y/i, and final ہ. The final vowel is pronounced long ā in this familiar expression. Treat the joined shape as one word before worrying about every possible letter form."
+              "text": "You already know ش sh, ک k, and ر r. Add ی y/i and final ہ. That is two new shapes, not five. The final vowel is pronounced long ā in this familiar expression."
             }
           ]
         },
         {
-          "index": 1,
-          "type": "unknown",
-          "title": "Meaning and history",
+          "index": 2,
+          "type": "etymology",
+          "title": "The word, taken apart",
           "segments": [
             {
               "kind": "speech",
@@ -294,9 +296,9 @@
           ]
         },
         {
-          "index": 2,
-          "type": "unknown",
-          "title": "Build the exchange",
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "speech",
@@ -309,17 +311,230 @@
             {
               "kind": "speech",
               "text": "Say the second word slowly once, then at a natural pace. Keep shuk-ri-yā as three light beats."
+            },
+            {
+              "kind": "prompt",
+              "action": "WRITE",
+              "instruction": "copy شکریہ (shukriyā) once while looking at the model; do not write it from memory yet",
+              "spoken": false,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU WRITE: copy **شکریہ** once while looking at the model; do not write it from memory yet]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "shukriyā once after the pen stops",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: **shukriyā** once after the pen stops]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which two shapes did this lesson add? ی and final ہ. Greet, then thank: salām — shukriyā. Copying with a model is enough for today."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C01-ji-han",
+      "sequence": 30,
+      "title": "جی ہاں (jī hā̃) — yes, respectfully",
+      "headword": "جی ہاں",
+      "romanization": "jī hā̃",
+      "gloss": "yes",
+      "script": "urdu-nastaliq",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:3904dfda58e09766",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say شکریہ (shukriyā) once. Point to its first three shapes, then its final two. Your pen can rest; this lesson is for a spoken respectful answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The two words",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "The phrase is written right to left, so جی is the word on the right:"
+            },
+            {
+              "kind": "speech",
+              "text": "جی jī + ہاں hā̃ becomes jī hā̃ becomes yes."
+            },
+            {
+              "kind": "speech",
+              "text": "In جی, ج gives j and ی stretches the vowel to ī. In ہاں, the final sign ں marks a nasal vowel: let some air pass through your nose as you say ā. It is not a full English n at the end."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: respect inside “yes”",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ہاں alone means “yes.” جی adds respect and attentive warmth; it can also be used by itself as a polite response. Learning jī hā̃ first gives you a safe answer for many situations."
             }
           ]
         },
         {
           "index": 3,
-          "type": "unknown",
-          "title": "Quick recall",
+          "type": "guided-production",
+          "title": "Guided Practice",
           "segments": [
             {
               "kind": "speech",
-              "text": "Which new letter begins the word? ش, sh. Greet, then thank: salām — shukriyā."
+              "text": "“Do you understand?” — جی ہاں۔ — jī hā̃."
+            },
+            {
+              "kind": "speech",
+              "text": "“Would you like to continue?” — جی ہاں (jī hā̃)، شکریہ (shukriyā)۔ — Yes, thank you."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Which mark makes the vowel nasal? Final ں. Answer politely: jī hā̃."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "UR-C01-nahin",
+      "sequence": 40,
+      "title": "نہیں (nahī̃) — no, and later “not”",
+      "headword": "نہیں",
+      "romanization": "nahī̃",
+      "gloss": "no / not",
+      "script": "urdu-nastaliq",
+      "modality": "sight",
+      "derivedModality": "sight",
+      "modalityReasons": [
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:ed7a2d49521a159b",
+      "notice": {
+        "modality": "sight",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — recombine known shapes"
+        ],
+        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — recombine known shapes until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say جی ہاں (jī hā̃)، شکریہ (shukriyā) — “yes, thank you.” Now learn the answer that contrasts with yes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — recombine known shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You have seen ہ, ی, and nasal ں. Add ن n at the right:"
+            },
+            {
+              "kind": "speech",
+              "text": "ن, ہ, ی, ں becomes nahī̃."
+            },
+            {
+              "kind": "speech",
+              "text": "Stretch ī slightly and nasalize it. The final ں does not add a strong separate n sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: one word, two future jobs",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "As a complete answer, nahī̃ means “no.” Inside a sentence it commonly means “not.” That second job will matter when the track introduces verbs. Today you only need the complete answer."
+            },
+            {
+              "kind": "speech",
+              "text": "This is inherited Indo-Aryan vocabulary and is shared with Hindi नहीं nahī̃. The scripts differ, but the spoken word and grammar align closely."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "جی ہاں — jī hā̃ — yes."
+            },
+            {
+              "kind": "speech",
+              "text": "نہیں — nahī̃ — no."
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "What does final ں do? It nasalizes the vowel. Answer “no”: nahī̃."
             }
           ]
         }

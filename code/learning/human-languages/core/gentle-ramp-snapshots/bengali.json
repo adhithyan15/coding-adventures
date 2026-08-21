@@ -10,26 +10,26 @@
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 65,
   "neverTaughtGlyphs": 39,
-  "orderDefects": 3,
+  "orderDefects": 0,
+  "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
-  "forwardReviews": 3,
+  "forwardReviews": 0,
   "forwardReferences": 6,
   "atomsTaught": 104,
   "atomsNeverRevisited": 7,
   "reinforcementWindowMisses": 152,
+  "reinforcementMissesByWindow": {
+    "R1": 22,
+    "R2": 56,
+    "R3": 74,
+    "R4": 0
+  },
   "payoffSurprises": 0,
   "writingPracticeLessons": 65,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
-    {
-      "language": "bengali",
-      "kind": "order-integrity",
-      "count": 3,
-      "unit": "order/dependency defect(s)",
-      "detail": "declare a unique reading order and close every prerequisite and review before use"
-    },
     {
       "language": "bengali",
       "kind": "forward-language",
@@ -68,9 +68,9 @@
   ],
   "next": {
     "language": "bengali",
-    "kind": "order-integrity",
-    "count": 3,
-    "unit": "order/dependency defect(s)",
-    "detail": "declare a unique reading order and close every prerequisite and review before use"
+    "kind": "forward-language",
+    "count": 6,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }

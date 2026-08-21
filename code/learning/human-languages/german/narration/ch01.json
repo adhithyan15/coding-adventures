@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:ca5f3cc4bc7edc73",
+  "sourceHash": "fnv1a64:fbdf9f56aa0bf130",
   "lessons": [
     {
       "id": "GE-C01-hallo",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:998274caa94aeec3",
+      "sourceHash": "fnv1a64:d5fe472729a39be1",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -81,7 +81,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "hallo is informal-to-neutral — fine among friends, and increasingly common generally, but for polite or first meetings German reaches for Guten Tag (\"good day\"), which you'll build over the next few lessons."
+              "text": "hallo is informal-to-neutral — fine among friends, and increasingly common generally. Polite or first meetings often use a daytime greeting instead. You will build that greeting one familiar piece at a time over the next few lessons."
             }
           ]
         },
@@ -378,7 +378,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6442b9425c44ff75",
+      "sourceHash": "fnv1a64:f73d112c1c82581d",
       "notice": null,
       "blocks": [
         {
@@ -439,7 +439,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun (der Tag, die Nacht, das Kind \"the child\"). English, meanwhile, threw gender out entirely and kept a single \"the\" — the opposite extreme."
+              "text": "Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun and its article. English, meanwhile, threw gender out entirely and kept a single \"the\" — the opposite extreme. Your next nouns will let you practise that pairing."
             },
             {
               "kind": "speech",
@@ -479,11 +479,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"der Tag\" (masc.), \"die Nacht\" (fem.) — the nouns are coming",
+              "instruction": "\"der\" for masculine, \"die\" for feminine, \"das\" for neuter",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"der Tag\" (masc.), \"die Nacht\" (fem.) — the nouns are coming]"
+              "source": "[YOU SAY: \"der\" for masculine, \"die\" for feminine, \"das\" for neuter]"
             }
           ]
         },
@@ -645,20 +645,13 @@
       "romanization": "Guten Tag",
       "gloss": "hello / good day (polite)",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "sight-cue"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5c29417226d35125",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes, because the lesson points at something written down"
-        ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
-      },
+      "sourceHash": "fnv1a64:ba5164b4c43b07bb",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -706,11 +699,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen leftover of a fuller phrase — \"[ich wünsche Ihnen einen] guten Tag,\" \"[I wish you a] good day\" — where \"a good day\" is the object of the wish (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten."
+              "text": "Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a fuller phrase meaning \"I wish you a good day.\" In that fuller thought, \"a good day\" is the object of the wish (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten."
             },
             {
               "kind": "speech",
-              "text": "Don't try to master German's ending system now — it's a later chapter. Just bank two things: (1) German adjectives take endings that shift with gender, number, and case; (2) the greeting is really \"(I wish you a) good day,\" which is why it's guten. You'll see the contrast next: Gute Nacht, with a different ending, because Nacht is feminine."
+              "text": "Don't try to master German's ending system now — it's a later chapter. Just bank two things: (1) German adjectives take endings that shift with gender, number, and case; (2) the greeting is really \"(I wish you a) good day,\" which is why it's guten. A later bedtime greeting will give you a gentle contrast with a feminine noun and a different ending."
             }
           ]
         },
@@ -777,7 +770,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:dd3aadddd2d82dbc",
+      "sourceHash": "fnv1a64:593e968865a53508",
       "notice": null,
       "blocks": [
         {
@@ -830,7 +823,7 @@
             },
             {
               "kind": "speech",
-              "text": "A small false-friend warning for later: German Morgen also means \"tomorrow\" on its own (bis morgen = \"until tomorrow\"). Context tells them apart. English kept the two senses in separate words (morning vs tomorrow); German lets Morgen do both."
+              "text": "A small false-friend warning for later: German Morgen can also mean \"tomorrow.\" A later farewell will reuse it with that meaning. Context tells the two senses apart; English keeps them in separate words (morning vs tomorrow), while German lets Morgen do both jobs."
             }
           ]
         },
@@ -908,7 +901,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:6670390c03e20b0f",
+      "sourceHash": "fnv1a64:9cd0b5cccd0c6367",
       "notice": null,
       "blocks": [
         {
@@ -950,7 +943,7 @@
             },
             {
               "kind": "speech",
-              "text": "Used in the morning (roughly until midday); after that, German switches to Guten Tag, then Guten Abend in the evening — the same day-parts you're building."
+              "text": "Used in the morning (roughly until midday); after that, German switches to Guten Tag. You will build the evening greeting next, from the same familiar pattern."
             }
           ]
         },
@@ -1017,7 +1010,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8e8a86c2d8f81402",
+      "sourceHash": "fnv1a64:200c3e27d69a0cda",
       "notice": null,
       "blocks": [
         {
@@ -1081,7 +1074,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Abend is masculine (der Abend) — so, again, guten in the greeting. Three masculine day-parts in a row (Tag, Morgen, Abend) all take guten; the feminine Nacht, next, will break the streak."
+              "text": "Abend is masculine (der Abend) — so, again, guten in the greeting. Three masculine day-parts in a row (Tag, Morgen, Abend) all take guten. The next day-part is feminine, so it will gently show you a different ending without adding a new rule to memorize now."
             }
           ]
         },
@@ -1543,7 +1536,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:a70d2ffe19ee7038",
+      "sourceHash": "fnv1a64:1e71fbad53d81916",
       "notice": null,
       "blocks": [
         {
@@ -1665,7 +1658,7 @@
             },
             {
               "kind": "speech",
-              "text": "Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Next chapter: introducing yourself — ich heiße… — and German's formal/informal \"you,\" du vs Sie."
+              "text": "Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Next chapter, you will learn to introduce yourself and then build the friendly and respectful ways to address someone."
             }
           ]
         }

@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Fixed — three false forward-review claims
+
+- `BN-C02-alaap` now records the earlier `BN-C02-amar-naam` lesson that its
+  warm-up and knowledge directives actually rehearse.
+- `BN-C02-ki` now records its real name-word review instead of pointing ahead
+  to the not-yet-taught pronoun lesson.
+- `BN-C05-kaj-kora` no longer claims to review the following `thaka` lesson;
+  its exercises revisit `BN-C05-bola` exactly as the knowledge ledger says.
+
+The authored reading order does not change. Bengali's order-integrity debt
+falls from three false forward reviews to zero, so the five-minute ramp now
+describes what the learner actually encounters.
+
 ### Added — Chapter 16, the first nine pieces of the script (HL-C222)
 
 Ten lessons. **Nine teach one piece each; one introduces nothing** and assembles

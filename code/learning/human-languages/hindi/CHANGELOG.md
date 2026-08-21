@@ -2,6 +2,14 @@
 
 ## [Unreleased]
 
+### Fixed — one false forward-review claim
+
+`HI-C05-rahna` now records only the earlier `HI-C05-bolna` lesson that its
+warm-up, knowledge ledger, and practice actually rehearse. The removed
+`HI-C05-main-hindi-bolta-hun` claim pointed three lessons into the future.
+Hindi's authored order and the lesson's 240-second cap do not change; its
+order-integrity debt falls from one to zero.
+
 ### Added — Chapters 60-66: Thirty-five more everyday words, round three
 
 The third HL-C198 tranche for Hindi. The track stood at **120** distinct pre-A1
