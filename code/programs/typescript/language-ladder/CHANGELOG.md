@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional metadata with a cited one-run path.
+- Show its closed head flowing into the down-left tail without a pen lift.
+
+## Unreleased — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional bowl-and-dots summary with a cited path.
+- Show its right-to-left bowl followed by three separately lifted upper dots.
+
 ## Unreleased — canonical Gujarati inventory completion (HL-C09GY)
 
 - Remove duplicate conventional **ન** and **પ** rows from the learner inventory.

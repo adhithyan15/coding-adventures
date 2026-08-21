@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import random
 import struct
 import zlib
 from pathlib import Path
@@ -10,6 +11,7 @@ from typing import Any, cast
 
 import pytest
 
+import coding_adventures_zip as zip_module
 from coding_adventures_zip import (
     RAW_INFLATE_ERROR_CODES,
     RAW_INFLATE_MAX_OUTPUT,
@@ -199,6 +201,20 @@ def test_full_32k_window_foreign_stream() -> None:
     compressor = zlib.compressobj(level=9, wbits=-zlib.MAX_WBITS)
     compressed = compressor.compress(expected) + compressor.flush()
     assert raw_inflate(compressed, max_output=len(expected)) == expected
+
+
+def test_multi_megabyte_incompressible_deflate_uses_bounded_storage(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def reject_boxed_tokens(*args: object, **kwargs: object) -> None:
+        raise AssertionError("large raw_deflate must not materialize LZSS tokens")
+
+    monkeypatch.setattr(zip_module, "lzss_encode", reject_boxed_tokens)
+    data = random.Random(0xC0DEC0DE).randbytes(2 * 1024 * 1024)
+    compressed = raw_deflate(data)
+    block_overhead = 5 * ((len(data) + 65_534) // 65_535)
+    assert len(compressed) <= len(data) + block_overhead
+    assert zlib.decompress(compressed, wbits=-zlib.MAX_WBITS) == data
 
 
 @pytest.mark.parametrize("limit", [-1, RAW_INFLATE_MAX_OUTPUT + 1, 1.5, True])

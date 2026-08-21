@@ -6,16 +6,16 @@
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 0,
-  "glyphLessonSpikes": 7,
+  "glyphLessonSpikes": 6,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 37,
+  "scriptClosureViolations": 36,
   "neverTaughtGlyphs": 18,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 17,
+  "forwardReferences": 15,
   "atomsTaught": 282,
   "atomsNeverRevisited": 8,
   "reinforcementWindowMisses": 727,
@@ -33,7 +33,7 @@
     {
       "language": "kannada",
       "kind": "forward-language",
-      "count": 17,
+      "count": 15,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -54,7 +54,7 @@
     {
       "language": "kannada",
       "kind": "glyph-step",
-      "count": 7,
+      "count": 6,
       "unit": "lesson/system spike(s)",
       "detail": "split new glyphs and writing systems across gentler steps"
     },
@@ -83,7 +83,7 @@
   "next": {
     "language": "kannada",
     "kind": "forward-language",
-    "count": 17,
+    "count": 15,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }

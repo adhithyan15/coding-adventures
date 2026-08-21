@@ -222,13 +222,13 @@ Read ಸರಿ (sari). What does it literally mean, and what does it do in conve
 
 
 Lesson 6 of 6.
-Chapter 1 — recap, and how Kannada says goodbye.
+Chapter 1 — a five-word recap.
 
 Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called Read them back until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
-Five words, and with them a first handful of Kannada letters read straight off the page. Let's gather them — and add the farewell, which turns out to share its very logic with Tamil.
+Five words, and with them a first handful of Kannada letters read straight off the page. Let's gather only what you have already learned and make it feel easy.
 
 Read them back.
 Sound each out, left to right, before checking:
@@ -236,10 +236,8 @@ There is a table here I cannot read to you — 4 columns and 5 rows, and it has 
 The letters that did it: consonants carry a built-in "a"; a vowel sign swaps that vowel (ಾ for "ā," ಿ for "i," ು for "u," ೌ for "au"); a virama strips the vowel so a consonant can stack under the next as a conjunct (ottakṣara — ಸ್ಕ, ನ್ಯ, ಲ್ಲ); and a word-initial vowel gets a full letter (ಇ).
 Notice the pattern already: the two greeting/politeness words are Sanskrit loans; the three everyday grammar words are native Dravidian — and two of them (illa, sari) are shared almost unchanged with Tamil.
 
-The farewell — the same "go and come back" as Tamil.
-Kannada, like Tamil, avoids a bare "I'm leaving." The everyday goodbye is:
-ಹೋಗಿ ಬರುತ್ತೇನೆ (hōgi baruttēne) — literally "having gone, I [will] come [back]."
-and the reply is ಹೋಗಿ ಬನ್ನಿ (hōgi banni) — "go, and come [back]." The very same worldview inside Tamil's pōy varugiṟēṉ: you never simply depart, you promise a return. (Casually, Kannada also just re-uses namaskāra to part.)
+A promise for later.
+Kannada has a warm departure exchange built around going and coming back. It belongs in the later chapter where you learn those actions one at a time. For now, repeating the greeting is enough when you part.
 
 Guided Practice.
 [pause 1 second]
@@ -247,10 +245,8 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: greet and thank — "namaskāra!" … "dhanyavāda."]
 [pause 8 seconds for the answer]
-[your turn — say: the farewell exchange — "hōgi baruttēne" / "hōgi banni"]
-[pause 8 seconds for the answer]
 
 Wrap-up Recall.
 [pause 3 seconds]
-Read all five words aloud. Which two are Sanskrit loans, and which three are native Dravidian? (Loans: namaskāra, dhanyavāda. Native: haudu, illa, sari.) What does the Kannada goodbye literally mean, and which Tamil farewell does it echo? ("Having gone, I'll come back" — Tamil pōy varugiṟēṉ.)
-Next chapter: introducing yourself — nanna hesaru… ("my name…") — and Kannada's nīnu / nīvu (familiar / respectful "you").
+Read all five words aloud. Which two are Sanskrit loans, and which three are native Dravidian? (Loans: namaskāra, dhanyavāda. Native: haudu, illa, sari.) Which one means "okay / correct"? (sari.)
+Next chapter starts introducing yourself, one short possession form at a time.

@@ -4,6 +4,17 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — pre-A1-to-C2 four-skill assessment contract (#12361)
+
+- Replaced the old unofficial one-level-per-JLPT mapping with the official CEFR
+  reference score bands introduced on JLPT score reports in December 2025.
+- Added a seven-rung assessment target that preserves the official JLPT
+  language-knowledge, reading, and listening pass conditions where they apply,
+  then adds independently scored JF Standard/CEFR-aligned writing and speaking.
+- Kept pre-A1 and C2 explicitly project-defined: JLPT's official CEFR reference
+  range begins at A1 and ends at C1, and JLPT itself tests no production or
+  interaction at any level.
+
 ### Added — Chapter 2, eight hiragana signs, one per lesson (HL-C211)
 
 Ten lessons. **Eight teach one sign each; two introduce nothing at all** and

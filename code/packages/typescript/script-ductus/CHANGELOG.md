@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional head-and-tail summary with a cited path.
+- Keep its small closed head and below-baseline tail in one continuous run.
+- Cover the Arabic-scoped path independently from Persian and Urdu **م**.
+
+### Added — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional placeholder with the dedicated Oregon video.
+- Reuse the verified right-to-left bowl, then place its three upper dots separately.
+- Cover the four-run, three-lift path with font-fit and provenance gates.
+
 ### Fixed — canonical Gujarati inventory completion (HL-C09GY)
 
 - Remove stale conventional duplicates of already verified **ન** and **પ**.
