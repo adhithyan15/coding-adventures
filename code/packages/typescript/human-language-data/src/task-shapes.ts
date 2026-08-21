@@ -404,6 +404,18 @@ export function parseTaskShapeInventory(value: unknown, expectedLanguage: string
   if (speakingSectionMinutes === undefined || !sameMinutes(speakingSectionMinutes, speakingMinutes)) {
     throw new Error(`task shapes: speaking minutes do not match administration.speakingMinutes`);
   }
+  const hasExplicitVariants = sections.some((section) => section.variants.length > 0);
+  const rawPointCeilings = sections.flatMap((section) =>
+    section.parts.map((part) => part.scoring.maxRawPoints)
+  );
+  if (!hasExplicitVariants && rawPointCeilings.every((points) => points !== null)) {
+    const rawPointTotal = rawPointCeilings.reduce((sum, points) => sum + points, 0);
+    if (rawPointTotal !== maximumPoints) {
+      throw new Error(
+        `task shapes: part maxRawPoints sum to ${rawPointTotal}, not passRule.maximumPoints ${maximumPoints}`,
+      );
+    }
+  }
 
   return {
     version: 1,
