@@ -56,8 +56,9 @@ casual *ciao* is a fossil of "I am your servant."
 
 *ciao* is **informal**, and works both coming and going ("hi" and "bye") — for
 friends, family, peers. To someone you'd show respect, or on a first meeting,
-you reach for *buongiorno* (coming soon). Doubled, *ciao ciao*, it's a breezy
-"bye-bye."
+you reach for a polite daytime greeting instead. You will build that greeting
+from two small pieces later in this chapter. Doubled, *ciao ciao*, it's a
+breezy "bye-bye."
 
 ## Writing — follow the greeting you can see
 <!-- hl-knowledge: introduces=[]; assesses=[IT-PHONO-CIAO-01, IT-PRAGMATIC-CIAO-03] -->
