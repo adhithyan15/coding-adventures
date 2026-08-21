@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3440,
+    "totalLessons": 3442,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -37,8 +37,8 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 83,
     "chapterGateCleanTracks": 9,
-    "tracksWithoutWritingStageEvidence": 9,
-    "missingWritingStagePairs": 755,
+    "tracksWithoutWritingStageEvidence": 8,
+    "missingWritingStagePairs": 727,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2923,
     "drivablePercent": 85,
@@ -3289,10 +3289,10 @@
       {
         "language": "marathi",
         "status": "mixed",
-        "lessonCount": 73,
+        "lessonCount": 75,
         "versions": {
           "1": 33,
-          "2": 40
+          "2": 42
         }
       },
       {
@@ -4165,9 +4165,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3440,
+    "totalLessons": 3442,
     "byLevel": {
-      "pre-A1": 2170,
+      "pre-A1": 2172,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4360,9 +4360,9 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 73,
+        "lessonCount": 75,
         "byLevel": {
-          "pre-A1": 47,
+          "pre-A1": 49,
           "A1": 2,
           "A2": 19,
           "B1": 0,
@@ -5130,9 +5130,9 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 73,
+        "lessonCount": 75,
         "measurable": 40,
-        "unmeasurable": 33,
+        "unmeasurable": 35,
         "lessonViolations": 1,
         "chapterViolations": 0
       },
@@ -5944,7 +5944,7 @@
           "language": "marathi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 73,
+          "lessonCount": 75,
           "totalGlyphs": 46,
           "lessonViolations": 2,
           "systemViolations": 0,
@@ -6072,7 +6072,7 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 25,
-      "unmeasurableLessons": 500,
+      "unmeasurableLessons": 502,
       "measurablePercent": 85,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
@@ -41089,6 +41089,17 @@
         "revisits": 1
       },
       {
+        "atom": "MR-ETYMON-MITRA-BIND",
+        "language": "marathi",
+        "introducedBy": "MR-C11-mitra",
+        "introducedAt": 53,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 1
+      },
+      {
         "atom": "MR-ETYMON-PAACH-NASAL-RETENTION",
         "language": "marathi",
         "introducedBy": "MR-C06-number-differences",
@@ -41153,6 +41164,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "MR-GRAMMAR-KUTUMB-NEUTER",
+        "language": "marathi",
+        "introducedBy": "MR-C11-kutumb",
+        "introducedAt": 54,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "MR-GRAMMAR-THREE-GENDERS-ONE-CHAPTER",
@@ -41254,6 +41276,17 @@
         "revisits": 3
       },
       {
+        "atom": "MR-LEX-KUTUMB",
+        "language": "marathi",
+        "introducedBy": "MR-C11-kutumb",
+        "introducedAt": 54,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 2
+      },
+      {
         "atom": "MR-LEX-LIHINE",
         "language": "marathi",
         "introducedBy": "MR-C08-lihine",
@@ -41274,6 +41307,17 @@
           "R3"
         ],
         "revisits": 1
+      },
+      {
+        "atom": "MR-LEX-MITRA",
+        "language": "marathi",
+        "introducedBy": "MR-C11-mitra",
+        "introducedAt": 53,
+        "missed": [
+          "R2",
+          "R3"
+        ],
+        "revisits": 3
       },
       {
         "atom": "MR-LEX-PAANI",
@@ -53362,16 +53406,6 @@
         "revisits": 1
       },
       {
-        "atom": "MR-ETYMON-MITRA-BIND",
-        "language": "marathi",
-        "introducedBy": "MR-C11-mitra",
-        "introducedAt": 53,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "MR-ETYMON-NAAK-NOSE",
         "language": "marathi",
         "introducedBy": "MR-C12-naak",
@@ -53412,16 +53446,6 @@
         "revisits": 2
       },
       {
-        "atom": "MR-GRAMMAR-KUTUMB-NEUTER",
-        "language": "marathi",
-        "introducedBy": "MR-C11-kutumb",
-        "introducedAt": 54,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "MR-GRAMMAR-NE-NEUTER-NOUN",
         "language": "marathi",
         "introducedBy": "MR-C07-khane",
@@ -53440,6 +53464,16 @@
           "R3"
         ],
         "revisits": 10
+      },
+      {
+        "atom": "MR-GRAMMAR-TATSAMA-BORROWING",
+        "language": "marathi",
+        "introducedBy": "MR-C11-mitra",
+        "introducedAt": 53,
+        "missed": [
+          "R3"
+        ],
+        "revisits": 2
       },
       {
         "atom": "MR-GRAMMAR-TATSAMA-TADBHAVA-SPLIT",
@@ -53522,16 +53556,6 @@
         "revisits": 2
       },
       {
-        "atom": "MR-LEX-KUTUMB",
-        "language": "marathi",
-        "introducedBy": "MR-C11-kutumb",
-        "introducedAt": 54,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
         "atom": "MR-LEX-MAHIT-JANNE",
         "language": "marathi",
         "introducedBy": "MR-C07-mahit-asne",
@@ -53540,16 +53564,6 @@
           "R3"
         ],
         "revisits": 2
-      },
-      {
-        "atom": "MR-LEX-MITRA",
-        "language": "marathi",
-        "introducedBy": "MR-C11-mitra",
-        "introducedAt": 53,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 3
       },
       {
         "atom": "MR-LEX-NAAK",
@@ -59961,7 +59975,7 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 73,
+        "lessonCount": 75,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
@@ -60081,7 +60095,7 @@
       "missedByWindow": {
         "R1": 1194,
         "R2": 3679,
-        "R3": 3550,
+        "R3": 3555,
         "R4": 2078
       },
       "forwardReferences": 428
@@ -60196,8 +60210,8 @@
       {
         "language": "marathi",
         "script": "devanagari",
-        "lessonCount": 73,
-        "scriptLessons": 11,
+        "lessonCount": 75,
+        "scriptLessons": 13,
         "taughtGlyphs": 10,
         "shownGlyphs": 46,
         "neverTaughtGlyphs": 36,
@@ -68233,8 +68247,82 @@
       },
       {
         "language": "marathi",
-        "evidence": [],
-        "validEvidence": [],
+        "evidence": [
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-ha",
+            "blockIndex": 2,
+            "blockTitle": "Writing — notice and trace one consonant",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 800
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-o-matra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — one supported copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 810
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-ho-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 815
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-ho-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — short dictation",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 817
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-ha",
+            "blockIndex": 2,
+            "blockTitle": "Writing — notice and trace one consonant",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 800
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-o-matra",
+            "blockIndex": 2,
+            "blockTitle": "Writing — one supported copy",
+            "stage": "guided-copy",
+            "level": "pre-A1",
+            "sequence": 810
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-ho-delayed-copy",
+            "blockIndex": 1,
+            "blockTitle": "Writing — delayed copy",
+            "stage": "delayed-copy",
+            "level": "pre-A1",
+            "sequence": 815
+          },
+          {
+            "language": "marathi",
+            "lessonId": "MR-W01-ho-dictation",
+            "blockIndex": 1,
+            "blockTitle": "Writing — short dictation",
+            "stage": "dictation-transcription",
+            "level": "pre-A1",
+            "sequence": 817
+          }
+        ],
         "defects": [],
         "levels": [
           {
@@ -68245,14 +68333,14 @@
               "delayed-copy",
               "dictation-transcription"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription"
             ],
-            "complete": false
+            "missingStages": [],
+            "complete": true
           },
           {
             "level": "A1",
@@ -68264,12 +68352,13 @@
               "controlled-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "timed-assessment-production"
             ],
@@ -68286,12 +68375,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -68309,12 +68399,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -68332,12 +68423,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -68355,12 +68447,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -68378,12 +68471,13 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
-            "missingStages": [
+            "evidencedStages": [
               "observe-trace",
               "guided-copy",
               "delayed-copy",
-              "dictation-transcription",
+              "dictation-transcription"
+            ],
+            "missingStages": [
               "controlled-composition",
               "connected-composition",
               "timed-assessment-production"
@@ -70481,11 +70575,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithAnyEvidence": 14,
-      "tracksCompleteAtPreA1": 6,
-      "evidenceBlocks": 65,
+      "tracksWithAnyEvidence": 15,
+      "tracksCompleteAtPreA1": 7,
+      "evidenceBlocks": 69,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 755
+      "missingTrackLevelStages": 727
     }
   },
   "gentleRamp": {
@@ -71432,9 +71526,9 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 73,
+        "lessonCount": 75,
         "atomMeasurableLessons": 40,
-        "atomMeasurementBlindLessons": 33,
+        "atomMeasurementBlindLessons": 35,
         "durationViolations": 0,
         "atomLessonSpikes": 1,
         "atomChapterSpikes": 0,
@@ -71450,15 +71544,15 @@
         "forwardReferences": 3,
         "atomsTaught": 79,
         "atomsNeverRevisited": 3,
-        "reinforcementWindowMisses": 98,
+        "reinforcementWindowMisses": 103,
         "reinforcementMissesByWindow": {
           "R1": 6,
           "R2": 48,
-          "R3": 44,
+          "R3": 49,
           "R4": 0
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 52,
+        "writingPracticeLessons": 54,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
@@ -71493,14 +71587,14 @@
           {
             "language": "marathi",
             "kind": "reinforcement",
-            "count": 98,
+            "count": 103,
             "unit": "missed window(s)",
             "detail": "add retrieval at the expanding R1-R4 intervals"
           },
           {
             "language": "marathi",
             "kind": "measurement-blind",
-            "count": 33,
+            "count": 35,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -72983,14 +73077,14 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "chinese",
+        "language": "marathi",
         "kind": "reinforcement",
-        "count": 98,
+        "count": 103,
         "unit": "missed window(s)",
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "marathi",
+        "language": "chinese",
         "kind": "reinforcement",
         "count": 98,
         "unit": "missed window(s)",
@@ -73125,7 +73219,7 @@
       {
         "language": "marathi",
         "kind": "measurement-blind",
-        "count": 33,
+        "count": 35,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
@@ -73233,7 +73327,7 @@
       "tracksWithDetectedCliffs": 22,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
-      "atomMeasurementBlindLessons": 500,
+      "atomMeasurementBlindLessons": 502,
       "findings": 128
     }
   },
@@ -73558,11 +73652,6 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "writing-stage",
-            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
-            "shortfall": 4
-          },
-          {
             "criterion": "vocabulary",
             "detail": "teaches 36 distinct headwords at or below pre-A1, against 300",
             "shortfall": 264
@@ -73852,12 +73941,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3440,
+    "totalLessons": 3442,
     "voice": 2467,
     "sight": 585,
-    "pen": 388,
+    "pen": 390,
     "coreVoice": 2923,
-    "lessonsWithWritingSegments": 184,
+    "lessonsWithWritingSegments": 188,
     "drivablePercent": 85,
     "tracks": [
       {
@@ -79968,12 +80057,12 @@
       },
       {
         "language": "marathi",
-        "lessonCount": 73,
+        "lessonCount": 75,
         "voice": 21,
         "sight": 41,
-        "pen": 11,
+        "pen": 13,
         "coreVoice": 61,
-        "drivablePercent": 84,
+        "drivablePercent": 81,
         "drivablePrefixTotal": 59,
         "chapters": [
           {
@@ -80166,10 +80255,10 @@
           {
             "language": "marathi",
             "chapter": 14,
-            "lessonCount": 11,
+            "lessonCount": 13,
             "voice": 0,
             "sight": 0,
-            "pen": 11,
+            "pen": 13,
             "coreVoice": 0,
             "modalities": [
               "sight",
@@ -89092,7 +89181,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3440,
+    "lessons": 3442,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -89102,8 +89191,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3329,
-    "usesBeforeIntroduction": 12094,
+    "lessonsUsingTerms": 3331,
+    "usesBeforeIntroduction": 12097,
     "technicalUsesBeforeIntroduction": 3175,
     "technicalLessons": 1651,
     "worstTerms": [
@@ -89134,7 +89223,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3440,
+    "lessonsScanned": 3442,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
