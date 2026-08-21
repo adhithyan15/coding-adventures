@@ -332,6 +332,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // closed head first, then continue down-left through the below-baseline tail in
 // the same pen-down run. Its Arabic source stays distinct from the Persian and
 // Urdu records even though all three paths fit the same vendored Noto outline.
+// Arabic ن follows the adjacent Waraqa beginner lesson: sweep the deep bowl
+// from its upper-right tip down and around, then lift once to place the centered
+// dot last. Its Arabic provenance remains separate from Persian and Urdu ن.
 // The later Arabic ه clip starts at the independent form's upper right, closes
 // its lower counter, threads through the centre into the upper-right counter,
 // then sweeps left along the baseline without lifting. The compact handwritten
@@ -8794,6 +8797,49 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("م"),
+  },
+  [ductusKey("arabic", "ن")]: {
+    script: "arabic",
+    glyph: "ن",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep down and around the deep bowl from right to left",
+            path: [
+              { x: 495, y: 210 },
+              { x: 475, y: 160 },
+              { x: 480, y: 100 },
+              { x: 500, y: 40 },
+              { x: 510, y: -20 },
+              { x: 485, y: -80 },
+              { x: 430, y: -140 },
+              { x: 360, y: -190 },
+              { x: 280, y: -220 },
+              { x: 210, y: -215 },
+              { x: 150, y: -170 },
+              { x: 105, y: -110 },
+              { x: 90, y: -60 },
+              { x: 95, y: 0 },
+              { x: 105, y: 45 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift, then place the dot above the bowl's midpoint",
+            path: [
+              { x: 235, y: 305 },
+              { x: 275, y: 345 },
+              { x: 315, y: 305 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ن"),
   },
   [ductusKey("arabic", "ه")]: {
     script: "arabic",
