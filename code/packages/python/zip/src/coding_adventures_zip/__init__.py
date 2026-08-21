@@ -257,6 +257,12 @@ class _BitWriter:
             self._buf = 0
             self._bits = 0
 
+    def write_bytes(self, data: bytes | bytearray | memoryview) -> None:
+        """Append bytes after the caller has aligned the stream."""
+        if self._bits != 0:
+            raise ValueError("byte write requires aligned bit stream")
+        self._out.extend(data)
+
     def finish(self) -> bytes:
         """Flush and return the accumulated bytes."""
         self.align()
@@ -437,14 +443,123 @@ def _encode_dist(offset: int) -> tuple[int, int, int]:
 #   5. End-of-block symbol (256) → fixed LL Huffman code.
 
 
-def _deflate_compress(data: bytes) -> bytes:
+_BOUNDED_DEFLATE_THRESHOLD = 4096
+_DEFLATE_STORED_BLOCK_MAX = 65_535
+_DEFLATE_HASH_SIZE = 1 << 16
+
+
+def _triplet_key(data: memoryview, position: int) -> int:
+    return (data[position] << 16) | (data[position + 1] << 8) | data[position + 2]
+
+
+def _likely_repetitive(data: memoryview) -> bool:
+    """Use a bounded prefix probe to choose fixed Huffman or stored framing."""
+    end = min(max(0, len(data) - 2), _BOUNDED_DEFLATE_THRESHOLD)
+    seen: set[int] = set()
+    repeats = 0
+    for position in range(end):
+        key = _triplet_key(data, position)
+        if key in seen:
+            repeats += 1
+            if repeats >= 64:
+                return True
+        else:
+            seen.add(key)
+    return False
+
+
+def _write_fixed_match(bw: _BitWriter, offset: int, length: int) -> None:
+    symbol, base_length, extra_length_bits = _encode_length(length)
+    code, code_bits = _fixed_ll_encode(symbol)
+    bw.write_huffman(code, code_bits)
+    if extra_length_bits > 0:
+        bw.write_lsb(length - base_length, extra_length_bits)
+    distance_code, base_distance, extra_distance_bits = _encode_dist(offset)
+    bw.write_huffman(distance_code, 5)
+    if extra_distance_bits > 0:
+        bw.write_lsb(offset - base_distance, extra_distance_bits)
+
+
+def _write_fixed_streaming_block(bw: _BitWriter, data: memoryview, final: bool) -> None:
+    """Emit one fixed-Huffman block with fixed-memory, linear match lookup."""
+    bw.write_lsb(1 if final else 0, 1)
+    bw.write_lsb(1, 1)
+    bw.write_lsb(0, 1)
+    positions = [-1] * _DEFLATE_HASH_SIZE
+    cursor = 0
+    while cursor < len(data):
+        match_length = 0
+        distance = 0
+        if cursor + 2 < len(data):
+            key = _triplet_key(data, cursor)
+            slot = ((key * 2_654_435_761) & 0xFFFF_FFFF) & (_DEFLATE_HASH_SIZE - 1)
+            candidate = positions[slot]
+            positions[slot] = cursor
+            distance = cursor - candidate
+            if (
+                candidate >= 0
+                and distance <= 32_768
+                and data[candidate] == data[cursor]
+                and data[candidate + 1] == data[cursor + 1]
+                and data[candidate + 2] == data[cursor + 2]
+            ):
+                match_length = 3
+                limit = min(258, len(data) - cursor)
+                while (
+                    match_length < limit
+                    and data[candidate + match_length] == data[cursor + match_length]
+                ):
+                    match_length += 1
+        if match_length >= 3:
+            _write_fixed_match(bw, distance, match_length)
+            match_end = cursor + match_length
+            for position in range(cursor + 1, match_end):
+                if position + 2 < len(data):
+                    key = _triplet_key(data, position)
+                    slot = ((key * 2_654_435_761) & 0xFFFF_FFFF) & (
+                        _DEFLATE_HASH_SIZE - 1
+                    )
+                    positions[slot] = position
+            cursor = match_end
+        else:
+            code, code_bits = _fixed_ll_encode(data[cursor])
+            bw.write_huffman(code, code_bits)
+            cursor += 1
+    end_code, end_bits = _fixed_ll_encode(256)
+    bw.write_huffman(end_code, end_bits)
+
+
+def _write_stored_block(bw: _BitWriter, data: memoryview, final: bool) -> None:
+    bw.write_lsb(1 if final else 0, 1)
+    bw.write_lsb(0, 2)
+    bw.align()
+    bw.write_lsb(len(data), 16)
+    bw.write_lsb(len(data) ^ 0xFFFF, 16)
+    bw.write_bytes(data)
+
+
+def _deflate_compress_bounded(data: memoryview) -> bytes:
+    """Encode large input without boxed LZSS tokens or unbounded match scans."""
+    bw = _BitWriter()
+    for start in range(0, len(data), _DEFLATE_STORED_BLOCK_MAX):
+        block = data[start : start + _DEFLATE_STORED_BLOCK_MAX]
+        final = start + len(block) == len(data)
+        if _likely_repetitive(block):
+            _write_fixed_streaming_block(bw, block, final)
+        else:
+            _write_stored_block(bw, block, final)
+    return bw.finish()
+
+
+def _deflate_compress(data: bytes | bytearray | memoryview) -> bytes:
     """Compress ``data`` to a raw RFC 1951 DEFLATE bit-stream (fixed Huffman).
 
     The output starts directly with the 3-bit block header — no zlib wrapper.
     """
+    view = memoryview(data).cast("B")
     bw = _BitWriter()
 
-    if not data:
+    if not view:
         # Empty stored block: BFINAL=1 BTYPE=00 + LEN=0 + NLEN=0xFFFF.
         bw.write_lsb(1, 1)  # BFINAL=1
         bw.write_lsb(0, 2)  # BTYPE=00 (stored)
@@ -453,8 +568,11 @@ def _deflate_compress(data: bytes) -> bytes:
         bw.write_lsb(0xFFFF, 16)  # NLEN=~0
         return bw.finish()
 
+    if len(view) > _BOUNDED_DEFLATE_THRESHOLD:
+        return _deflate_compress_bounded(view)
+
     # Run LZ77/LZSS tokenizer. Window=32768 covers the full RFC 1951 distance range.
-    tokens = lzss_encode(data, window_size=32768, max_match=255, min_match=3)
+    tokens = lzss_encode(bytes(view), window_size=32768, max_match=255, min_match=3)
 
     # Block header: BFINAL=1 (last block), BTYPE=01 (fixed Huffman).
     bw.write_lsb(1, 1)  # BFINAL
@@ -466,18 +584,7 @@ def _deflate_compress(data: bytes) -> bytes:
             code, nbits = _fixed_ll_encode(tok.byte)
             bw.write_huffman(code, nbits)
         elif isinstance(tok, LzssMatch):
-            # --- Length ---
-            sym, base_len, extra_len_bits = _encode_length(tok.length)
-            code, nbits = _fixed_ll_encode(sym)
-            bw.write_huffman(code, nbits)
-            if extra_len_bits > 0:
-                bw.write_lsb(tok.length - base_len, extra_len_bits)
-            # --- Distance ---
-            dist_code, base_dist, extra_dist_bits = _encode_dist(tok.offset)
-            # Distance codes are 5-bit fixed codes equal to the code number.
-            bw.write_huffman(dist_code, 5)
-            if extra_dist_bits > 0:
-                bw.write_lsb(tok.offset - base_dist, extra_dist_bits)
+            _write_fixed_match(bw, tok.offset, tok.length)
 
     # End-of-block symbol (256).
     eob_code, eob_bits = _fixed_ll_encode(256)
@@ -652,7 +759,7 @@ def _decode_compressed_block(
             _copy_back_reference(out, back_distance, length, max_output)
 
 
-def raw_deflate(data: bytes) -> bytes:
+def raw_deflate(data: bytes | bytearray | memoryview) -> bytes:
     """Compress bytes as a raw RFC 1951 stream without container framing."""
     return _deflate_compress(data)
 

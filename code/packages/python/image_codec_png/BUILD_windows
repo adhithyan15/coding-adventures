@@ -1,0 +1,10 @@
+uv venv .venv --quiet --no-project --clear --python 3.13
+uv pip install --python .venv ..\pixel_container --quiet
+uv pip install --python .venv ..\lzss --quiet
+uv pip install --python .venv ..\zip --quiet
+uv pip install --python .venv -e .[dev] --quiet
+.venv\Scripts\python.exe -m ruff check src tests
+.venv\Scripts\python.exe -m ruff format --check src tests
+.venv\Scripts\python.exe -m mypy src tests
+.venv\Scripts\python.exe -m pytest tests -v
+

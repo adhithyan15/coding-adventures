@@ -4747,6 +4747,16 @@ separate compact-output hardening before their ceilings are credible; Rust
 remains deferred behind live prerequisite ownership and legacy filesystem
 authority.
 
+The tests-first security review found one Python prerequisite gap before the
+PNG ceiling could be treated as load-bearing: ZIP's educational `raw_deflate`
+path materialized boxed LZSS tokens and exhaustively searched a 32 KiB window,
+so a legal noisy 128 MiB scanline stream could amplify into multiple gigabytes
+and impractical match work. This dependency-shaped tranche therefore hardens
+large raw-DEFLATE input in ZIP itself. Stored blocks cover incompressible data,
+fixed-Huffman blocks use constant-size streaming match state for repetitive
+data, and a foreign-zlib 2 MiB noisy-input regression forbids the boxed token
+path. Small inputs retain the educational tokenizer.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
