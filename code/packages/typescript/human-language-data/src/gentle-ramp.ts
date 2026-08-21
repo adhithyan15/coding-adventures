@@ -15,7 +15,7 @@
 // a fixed learner-first priority orders the work queue.
 
 import type { ChapterGateReport } from "./chapters.js";
-import type { ContinuityReport } from "./continuity.js";
+import { REINFORCEMENT_WINDOWS, type ContinuityReport, type WindowName } from "./continuity.js";
 import type { ModalitySummary } from "./modality.js";
 import type { ParsedLesson } from "./parse.js";
 import { readingOrder } from "./ramp.js";
@@ -61,6 +61,7 @@ export interface TrackGentleRamp {
   scriptClosureViolations: number;
   neverTaughtGlyphs: number;
   orderDefects: number;
+  lessonsWithoutSequence: number;
   unknownPrerequisites: number;
   forwardPrerequisites: number;
   forwardReviews: number;
@@ -68,6 +69,7 @@ export interface TrackGentleRamp {
   atomsTaught: number;
   atomsNeverRevisited: number;
   reinforcementWindowMisses: number;
+  reinforcementMissesByWindow: Record<WindowName, number>;
   payoffSurprises: number;
   writingPracticeLessons: number;
   /** Zero-based reading position, or null when the track never asks for a pen. */
@@ -179,6 +181,13 @@ export function summarizeGentleRamp(input: GentleRampInput): GentleRampReport {
       (sum, entry) => sum + entry.missed.length,
       0,
     );
+    const reinforcementMissesByWindow = Object.fromEntries(
+      REINFORCEMENT_WINDOWS.map((window) => [
+        window.name,
+        (reinforcement.get(language) ?? []).filter((entry) => entry.missed.includes(window.name))
+          .length,
+      ]),
+    ) as Record<WindowName, number>;
 
     const findings = [
       finding(
@@ -271,6 +280,7 @@ export function summarizeGentleRamp(input: GentleRampInput): GentleRampReport {
       scriptClosureViolations: closure?.violations ?? 0,
       neverTaughtGlyphs: closure?.neverTaughtGlyphs ?? 0,
       orderDefects,
+      lessonsWithoutSequence: continuity?.lessonsWithoutSequence ?? 0,
       unknownPrerequisites: unknownPrerequisites.get(language)?.length ?? 0,
       forwardPrerequisites,
       forwardReviews,
@@ -278,6 +288,7 @@ export function summarizeGentleRamp(input: GentleRampInput): GentleRampReport {
       atomsTaught: continuity?.atomsTaught ?? 0,
       atomsNeverRevisited: continuity?.atomsNeverRevisited ?? 0,
       reinforcementWindowMisses,
+      reinforcementMissesByWindow,
       payoffSurprises: payoff.get(language)?.length ?? 0,
       writingPracticeLessons: writingPositions.length,
       firstWritingPracticeAt,

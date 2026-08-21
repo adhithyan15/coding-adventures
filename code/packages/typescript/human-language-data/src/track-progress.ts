@@ -105,6 +105,22 @@ function bookProgress(track: TrackProgress): string {
   return `${track.bookChapters} ${chapterWord}; through Ch. ${track.latestBookChapter}; ${track.generatedBookChapters} generated`;
 }
 
+/** One independently mergeable Markdown progress card. */
+export function renderTrackProgressCard(track: TrackProgress): string {
+  return [
+    `# ${track.name} progress`,
+    "",
+    `- Track: [${track.name}](../${track.id}/README.md)`,
+    `- Family / script: ${track.family} / ${titleCaseScript(track.script)}`,
+    `- Canonical lessons: ${track.canonicalLessons}`,
+    `- Mapped lessons: ${track.mappedLessons}`,
+    `- Book progress: ${bookProgress(track)}`,
+    "",
+    "This file is generated from canonical curriculum data. Do not edit it by hand.",
+    "",
+  ].join("\n");
+}
+
 /** Render only facts that can be recomputed; prose distinctions belong below the table. */
 export function renderTrackProgressTable(tracks: TrackProgress[]): string {
   const lines = [

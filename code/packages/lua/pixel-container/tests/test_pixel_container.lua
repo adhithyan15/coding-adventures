@@ -63,6 +63,39 @@ describe("new", function()
         assert.is_string(pc.VERSION)
     end)
 
+    it("uses compact logical byte storage instead of one boxed number per byte", function()
+        local c = pc.new(512, 512)
+        assert.are.equal(512 * 512 * 4, #c.data)
+        assert.is_nil(next(c.data))
+        assert.are.equal(0, c.data[1])
+        assert.are.equal(0, c.data[#c.data])
+    end)
+
+    it("constructs compact storage from an exact binary byte string", function()
+        local c = pc.from_bytes(2, 1, string.char(1, 2, 3, 4, 5, 6, 7, 8))
+        assert.are.equal(8, #c.data)
+        assert.is_nil(next(c.data))
+        assert.are.same({1, 2, 3, 4}, {pc.pixel_at(c, 0, 0)})
+        assert.are.same({5, 6, 7, 8}, {pc.pixel_at(c, 1, 0)})
+        c.data[8] = 99
+        assert.are.equal(99, select(4, pc.pixel_at(c, 1, 0)))
+    end)
+
+    it("rejects binary storage whose byte length does not match dimensions", function()
+        assert.has_error(function() pc.from_bytes(1, 1, "\0\0\0") end)
+    end)
+
+    it("constructs compact storage from byte chunks without a full join", function()
+        local c = pc.from_byte_chunks(2, 1, {
+            string.char(1, 2, 3),
+            string.char(4, 5),
+            string.char(6, 7, 8),
+        })
+        assert.are.equal(8, #c.data)
+        assert.are.same({1, 2, 3, 4}, {pc.pixel_at(c, 0, 0)})
+        assert.are.same({5, 6, 7, 8}, {pc.pixel_at(c, 1, 0)})
+    end)
+
 end)
 
 -- ============================================================================
@@ -146,12 +179,12 @@ describe("set_pixel", function()
         local c = pc.new(3, 3)
         pc.set_pixel(c, 1, 1, 100, 101, 102, 103)
         -- Adjacent pixels should still be 0
-        local r0, g0, b0, a0 = pc.pixel_at(c, 0, 1)
+        local r0 = pc.pixel_at(c, 0, 1)
         assert.are.equal(0, r0)
-        local r2, g2, b2, a2 = pc.pixel_at(c, 2, 1)
+        local r2 = pc.pixel_at(c, 2, 1)
         assert.are.equal(0, r2)
         -- Centre pixel should have the set value
-        local r, g, b, a = pc.pixel_at(c, 1, 1)
+        local r, _, _, a = pc.pixel_at(c, 1, 1)
         assert.are.equal(100, r)
         assert.are.equal(103, a)
     end)
@@ -160,7 +193,7 @@ describe("set_pixel", function()
         local c = pc.new(4, 4)
         -- Should not error and should not corrupt any data
         pc.set_pixel(c, 4, 0, 255, 255, 255, 255)
-        local r, g, b, a = pc.pixel_at(c, 3, 0)
+        local r = pc.pixel_at(c, 3, 0)
         assert.are.equal(0, r)
     end)
 

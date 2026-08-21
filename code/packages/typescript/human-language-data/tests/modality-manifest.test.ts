@@ -3,9 +3,14 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { loadEverything, loadModalityManifest, modalityManifestById } from "../src/loader.js";
-import { generatedModalityOutputs, runModalityManifest, safeOutput } from "../src/modality-cli.js";
 import {
-  MODALITY_MANIFEST_PATH,
+  generatedModalityOutputs,
+  generatedModalityOutputsFromLessons,
+  runModalityManifest,
+  safeOutput,
+} from "../src/modality-cli.js";
+import {
+  MODALITY_MANIFEST_DIR,
   MODALITY_MANIFEST_VERSION,
   buildModalityManifest,
   modalityCorpusHash,
@@ -477,9 +482,11 @@ describe("the modality manifest CLI", () => {
     vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     expect(runModalityManifest(["--write"], root)).toBe(0);
-    const output = join(root, "core", "lesson-modality.json");
+    const output = join(root, "core", "lesson-modality", "spanish.json");
     expect(existsSync(output)).toBe(true);
-    expect(process.stdout.write).toHaveBeenCalledWith("generated core/lesson-modality.json\n");
+    expect(process.stdout.write).toHaveBeenCalledWith(
+      "generated core/lesson-modality/spanish.json\n",
+    );
 
     const manifest = JSON.parse(readFileSync(output, "utf8")) as ModalityManifest;
     expect(manifest.summary).toMatchObject({ totalLessons: 2, voice: 1, sight: 1 });
@@ -500,7 +507,7 @@ describe("the modality manifest CLI", () => {
 
     expect(runModalityManifest(["--check"], root)).toBe(1);
     expect(process.stderr.write).toHaveBeenCalledWith(
-      "core/lesson-modality.json: generated output is missing or stale\n",
+      "core/lesson-modality/spanish.json: generated output is missing or stale\n",
     );
   });
 
@@ -516,7 +523,7 @@ describe("the modality manifest CLI", () => {
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runModalityManifest(["--write"], root)).toBe(0);
 
-    const output = join(root, "core", "lesson-modality.json");
+    const output = join(root, "core", "lesson-modality", "spanish.json");
     const compacted = JSON.stringify(JSON.parse(readFileSync(output, "utf8")));
     writeFileSync(output, compacted, "utf8");
     expect(runModalityManifest(["--check"], root)).toBe(1);
@@ -534,8 +541,25 @@ describe("the modality manifest CLI", () => {
   it("exposes the bytes as a path -> content map so write and check cannot diverge", () => {
     const root = simpleRoot();
     const outputs = generatedModalityOutputs(root);
-    expect([...outputs.keys()]).toEqual([MODALITY_MANIFEST_PATH]);
-    expect(outputs.get(MODALITY_MANIFEST_PATH)).toContain('"algorithm": "fnv1a64"');
+    expect([...outputs.keys()]).toEqual([`${MODALITY_MANIFEST_DIR}/spanish.json`]);
+    expect(outputs.get(`${MODALITY_MANIFEST_DIR}/spanish.json`)).toContain(
+      '"algorithm": "fnv1a64"',
+    );
+  });
+
+  it("changes exactly one shard for a one-language lesson change", () => {
+    const base = [
+      lesson({ id: "ES-C01-a", language: "spanish" }),
+      lesson({ id: "FR-C01-a", language: "french" }),
+    ];
+    const before = generatedModalityOutputsFromLessons(base);
+    const after = generatedModalityOutputsFromLessons([
+      ...base,
+      lesson({ id: "ES-C01-b", language: "spanish", sequence: 20 }),
+    ]);
+    expect([...before.keys()].filter((path) => before.get(path) !== after.get(path))).toEqual([
+      `${MODALITY_MANIFEST_DIR}/spanish.json`,
+    ]);
   });
 });
 
@@ -578,8 +602,10 @@ describe("the output path guard", () => {
 
   it("accepts a contained JSON path", () => {
     const root = simpleRoot();
-    expect(safeOutput(root, MODALITY_MANIFEST_PATH)).toBe(join(root, "core", "lesson-modality.json"));
-    expect(generatedModalityOutputs(root, "core/driving-edition.json").has("core/driving-edition.json")).toBe(
+    expect(safeOutput(root, `${MODALITY_MANIFEST_DIR}/spanish.json`)).toBe(
+      join(root, "core", "lesson-modality", "spanish.json"),
+    );
+    expect(generatedModalityOutputs(root, "core/driving-edition").has("core/driving-edition/spanish.json")).toBe(
       true,
     );
   });
@@ -698,401 +724,8 @@ describe("the script strand is declared, not inferred", () => {
 });
 
 describe("corpus regression", () => {
-  // A pinned measurement, not a taste test. Everything upstream — the Markdown parser,
-  // the table detector, the cue list, the chapter grouping — feeds these numbers, so a
-  // silent change in any of them (most dangerously a block field rename that makes
-  // every lesson look clean) moves them and fails here rather than shipping a
-  // curriculum falsely advertised as drivable.
-  //
-  // This is now the ONLY place the corpus totals are pinned absolutely. `modality.test.ts`
-  // used to carry a mirror of them and no longer does — it was rewritten to assert
-  // size-independent invariants precisely because every content branch had to edit the
-  // same three lines and collided there. Drift protection lives here and in the generated
-  // `core/lesson-modality.json`, which `check:modality` compares byte for byte.
-  //
-  // The post-HL-C32 baseline was 1,096 lessons: 51 `pen`, 708 `voice`, 337 `sight`, 65%
-  // drivable, 551 reachable in prerequisite order. HL-C24 then added four Latin
-  // chapter-payoff lessons (ch19, ch21, ch33, ch36). All four are terminal consolidation
-  // lessons built only from already-taught material — no table, no sight cue, no pen — so
-  // they land as `voice` and move exactly four counters by exactly four:
-  //
-  //   totalLessons  1096 -> 1100      sight   337 -> 337  (unchanged)
-  //   voice          708 ->  712      pen      51 ->  51  (unchanged)
-  //   drivableLessons 708 -> 712      chapters 375 -> 375 (unchanged — no new chapters)
-  //   drivablePrefixTotal 551 -> 555
-  //
-  // `drivablePrefixTotal` moves with them because each payoff is appended to a chapter
-  // whose prefix already ran to its end, so each extends by one. `fullyDrivableChapters`
-  // holds at 199 for the same reason: appending a `voice` lesson cannot make a chapter
-  // stop being fully drivable, nor make a blocked one start.
-  //
-  // HL-C18A then split the fifteen over-budget Spanish lessons into thirty-three
-  // prerequisite-ordered micro-lessons, a net +18 (two of them `writing`):
-  //
-  //   totalLessons  1100 -> 1118      voice   712 -> 719  (+7)
-  //   sight          337 ->  346      pen      51 ->  53  (+2, the two `writing` splits)
-  //   drivablePercent 65 ->   64      drivablePrefixTotal 555 -> 557
-  //   fullyDrivableChapters 199 -> 195
-  //
-  // TWO COUNTERS MOVE THE WRONG WAY, AND THAT IS THE HONEST RESULT, NOT A REGRESSION TO
-  // PAPER OVER. Splitting a table-bearing lesson does not delete its table — it copies the
-  // relevant rows into several of the micro-lessons, so one `sight` lesson becomes several.
-  // That is why `sight` takes +9 of the +18 while `voice` takes only +7, why the drivable
-  // share rounds down from 65% to 64%, and why four chapters that were fully drivable no
-  // longer are. The gentle-ramp goal (zero over-budget Spanish lessons) is met; the tables
-  // those splits inherited belong to HL-C17, which linearises or honestly reclassifies
-  // them. Tuning the splits to protect this percentage would mean writing steeper lessons
-  // to flatter a metric, which is the exact trade the ramp budget exists to refuse.
-  // HL-C39 then added Mandarin Chinese as the 21st track, +7 Chapter 1 lessons:
-  //
-  //   totalLessons  1118 -> 1125      voice   719 -> 724  (+5)
-  //   sight          346 ->  348      pen      53 ->  53  (unchanged)
-  //   trackCount      20 ->   21      chapterCount 375 -> 376  (+1)
-  //   drivablePrefixTotal 557 -> 558
-  //
-  // The two `sight` lessons are `ZH-C01-ni` and `ZH-C01-hao`, which each carry a `script`
-  // block teaching a character's components — a shape cannot be read aloud. No Chinese
-  // lesson needs a pen and none carries a table, so `pen` holds and the drivable share
-  // stays at 64%. `drivablePrefixTotal` gains only 1 because Chinese ch1 opens with one
-  // `voice` lesson before its first character-composition lesson blocks the prefix.
-  // HL-C40 then added Japanese as the 22nd track, +8 Chapter 1 lessons — and its shape
-  // is the inverse of Chinese's, which is the finding worth keeping:
-  //
-  //   totalLessons  1125 -> 1133      voice   724 -> 725  (+1 only)
-  //   sight          348 ->  355      pen      53 ->  53  (unchanged)
-  //   trackCount      21 ->   22      chapterCount 376 -> 377  (+1)
-  //   drivablePrefixTotal 558 -> 558  unstartableChapters 121 -> 122  (+1)
-  //
-  // Seven of the eight Japanese lessons carry a `script` block and therefore derive as
-  // `sight`: a kana or kanji shape cannot be read aloud. Only the practice lesson is
-  // `voice`. Because the very first lesson of Japanese ch1 is one of the seven, the
-  // chapter's drivable prefix is 0 — which is why `drivablePrefixTotal` does not move at
-  // all and `unstartableChapters` gains one. Routing that content through `input` blocks
-  // would have held the drivable share flat by mislabelling it; the honest classification
-  // is the one that costs the metric.
-  //
-  // HL-C05-bolta-hun (the Hindi present-habitual paradigm, split out of the assembly
-  // lesson) then added one `voice` lesson: 1133 -> 1134, voice 956 -> 957. It is `voice`
-  // deliberately — its paradigm grid was narrowed from four columns to three so the
-  // narration lineariser can read it, and a \"once you see them as\" aside was reworded,
-  // because a lesson teaching the engine of the present tense is exactly the kind a
-  // commuter should not be locked out of.
-  // HL-C16 then built the narration lineariser and moved the shipped table width from
-  // 0 to 3. This is the largest single move the corpus has ever taken, and none of it
-  // is new content — it is the same 1,133 lessons, re-judged by a detector that can now
-  // actually say what it means to speak a table aloud:
-  //
-  //   voice   725 -> 956  (+231)      sight  355 -> 124  (-231)
-  //   pen      53 ->  53  (unchanged) totalLessons 1133 (unchanged)
-  //   drivablePercent 64 -> 84
-  //   drivablePrefixTotal   558 -> 824
-  //   fullyDrivableChapters 195 -> 284
-  //   unstartableChapters   122 ->  44
-  //
-  // Every lesson that moved went `sight` -> `voice` and nothing else changed: the +231
-  // on `voice` is exactly the -231 on `sight`, `pen` is untouched, and no lesson was
-  // created or lost. `modality.test.ts` asserts that equality directly, at both widths,
-  // so this snapshot is corroborated by a size-independent control rather than standing
-  // alone. The prefix and chapter rollups move much further than the raw counts because
-  // a single unspeakable table near the front of a chapter used to block everything
-  // behind it — which is why unstartable chapters fall by nearly two thirds.
-  //
-  // The Latin core-verb chapter (chapter 37: sum, habeō, eō, veniō, dīcō, videō, sciō,
-  // dō) then added eight lessons, and every one of them is `voice`:
-  //
-  //   totalLessons  1134 -> 1142      voice   957 -> 965  (+8)
-  //   sight          124 ->  124      pen      53 ->  53  (both unchanged)
-  //   drivableLessons 957 ->  965     drivablePercent 84 -> 85
-  //   chapterCount    377 ->  378     fullyDrivableChapters 284 -> 285
-  //   drivablePrefixTotal 825 -> 833  unstartableChapters 44 -> 44 (unchanged)
-  //
-  // All eight counters that move, move together and by the same eight, which is the
-  // signature of a chapter that needs no eyes at all: each lesson teaches one verb, its
-  // six present-tense forms as a bullet list rather than a paradigm grid, and its English
-  // cousins in prose. No table, no script block, no pen. Because the whole chapter is
-  // `voice` and it is a NEW chapter, its drivable prefix runs to its full length — so
-  // `drivablePrefixTotal` gains the full 8 and `fullyDrivableChapters` gains the one new
-  // chapter, while `unstartableChapters` cannot move: an all-voice chapter is startable
-  // by definition. The drivable share crossing from 84% to 85% is a real ratchet, not a
-  // rounding accident — 965/1142 is 84.5%, which rounds up.
-  // The whole-lesson figures fell when the inline-letters section became the `script`
-  // block it always was (231 lessons across 12 tracks): voice 1011 -> 780, sight 124 ->
-  // 355. THE BOOK IS NOW HONEST AND THE DRIVER LOST NOTHING — `coreModality` sets those
-  // detachable sections aside, so the driving edition reads 1,026 lessons (86%), above
-  // the 84% that stood before the reclassification. This snapshot is the book's number;
-  // `modality.test.ts` asserts the core relationship.
-  // Sight cues then moved to word-boundary matching: voice 798 -> 805, sight 355 -> 348.
-  // Seven lessons had been marked `sight` by a cue matching INSIDE a longer word
-  // (`columns` matching `column`). No lesson lost a real cue — the control assertions in
-  // `modality.test.ts` pin that instructions still fire.
-  it("pins the corpus summary the manifest publishes", () => {
-    const { lessons } = loadEverything();
-    const manifest = buildModalityManifest(lessons);
-    // The second verb tranche then added 24 lessons — the same eight verbs (THINK,
-    // UNDERSTAND, READ, WRITE, TAKE, ASK, HELP, LIKE-LOVE) in Spanish, Latin and
-    // Portuguese, authored in parallel. All 24 derive `voice`, so `sight` and `pen` do
-    // not move at all and the drivable share ratchets 67% -> 68%. Six chapters, not
-    // three: eight one-verb-per-lesson lessons introduce ~17 atoms against
-    // `maxNewAtomsPerChapter: 12`, so each track ships the tranche as a PAIR of
-    // four-lesson chapters. That is the budget working as intended — it was fitted to
-    // chapters that teach a topic, and a verb tranche is a denser shape — and splitting
-    // is the honest fix rather than raising the threshold. Page count is never a cost.
-    // Wave 7 then took the same eight verbs to French, German, Italian and Hindi — 32
-    // lessons, eight chapters, so all eight concepts are now SEVEN-way cross-language
-    // joins. `sight` moves for the first time in these tranches (348 -> 352): four Hindi
-    // lessons genuinely teach a Devanagari letter (झ, ढ़ with nuqtā, the preposed ि,
-    // छ/ू) under the canonical `## The letters in this word` heading. Those blocks are
-    // DETACHABLE, so `coreModality` stays `voice` and both Hindi chapters remain 4-of-4
-    // drivable — the book is honest and the driver loses nothing, which is exactly the
-    // arrangement #10011/#10012 were built to make possible.
-    // Wave 8 (Arabic, Russian, Tamil, Bengali) then took the eight to ELEVEN tracks.
-    //
-    // `sight` jumps 352 -> 376 and `unstartableChapters` 90 -> 96, and this is the
-    // `sight`-penalty seam, not a regression. Three of these four tracks are non-Latin,
-    // so their lessons carry a `## The letters in this word` block; those blocks are
-    // DETACHABLE, so every one of the 32 keeps `coreModality: voice` and the driving
-    // edition is untouched — core drivability actually ROSE in each track (Bengali
-    // 97->98%, Tamil 84->86%, Russian 79->83%, Arabic 73->75%).
-    //
-    // The two counters genuinely disagree by design, which is worth knowing before
-    // reading either: `modality-manifest.ts` computes `unstartableChapters` from FULL
-    // modality, while `modality.ts`'s `drivablePrefix` — what the gap report publishes —
-    // uses CORE. Script blocks land exactly on that seam. Publishing `coreVoice` as the
-    // headline per-track number is the standing recommendation; until then, expect this
-    // figure to rise whenever a non-Latin track authors honestly.
-    // +1 lesson and +1 `pen`: TA-W19-read-muunru. It carries `type: writing`, so it
-    // derives `pen` from `writing-type` before its script block is even considered —
-    // the same `["writing-type","script-block"]` pair that, counted in
-    // `core/lesson-modality.json`, 20 other Tamil lessons already carry. No other
-    // counter moves, so the sight seam above is untouched by this lesson.
-    // Chapter 39 moves five counters and no others. +4 `totalLessons` and +1
-    // `chapterCount` are the chapter itself. `pen` +1 is TA-W20-read-onru, from
-    // `writing-type`. `sight` +3 is the three speaking lessons, each carrying a
-    // detachable `## The letters in this word` block — so `coreDrivable` is untouched
-    // and the chapter opening still reads "first 3 of 4 lessons".
-    // `unstartableChapters` +1 is the same seam described above: that counter is
-    // computed from FULL modality, where the chapter's first lesson is already
-    // sight-dependent. The CORE prefix, which the driving edition actually uses, is 3.
-    // HL11 moved exactly TWO of these, and the ones that did NOT move are the
-    // point. Tamil's nine drizzled letter segments are pen lessons -- you cannot
-    // learn a letter's shape by ear -- so `totalLessons` and `pen` each rise by
-    // nine.
-    //
-    // `drivableLessons`, `drivablePercent`, `drivablePrefixTotal`,
-    // `fullyDrivableChapters` and `unstartableChapters` are ALL unchanged. Not
-    // one existing lesson became undrivable, no chapter lost a lesson from the
-    // prefix a commuter can do before hitting something that needs eyes, and no
-    // chapter became impossible to start. That is HL11's own falsification test
-    // and it passes exactly.
-    //
-    // It passes because of WHERE the segments sit, and an earlier revision
-    // proved that the hard way. Placed in chapters 1-3 they cost 13 prefix
-    // lessons and two fully-drivable chapters, and one landed at sequence 175 --
-    // making it the first lesson of chapter 3 and leaving that chapter
-    // impossible to begin in the car, which `unstartableChapters` caught at 174.
-    // Each now sits immediately before the word-writing lesson that uses its
-    // letter, inside a chapter whose prefix a writing lesson had already ended.
-    //
-    // HL12 then added 30 recognition segments to Telugu, Kannada, Malayalam and
-    // Sanskrit, and the same falsification test still passes on the number that
-    // matters: `drivablePrefixTotal` is UNCHANGED at 1136. Not one existing
-    // lesson fell out of the run a commuter can do before hitting something that
-    // needs eyes, and `unstartableChapters` holds at 173 -- no segment opens a
-    // chapter.
-    //
-    // Two numbers do move, and both are the honest cost rather than a
-    // regression. `pen` rises by exactly the 30 new segments, taking
-    // `drivablePercent` from 68 to 67 -- a larger denominator, not fewer
-    // drivable lessons, which is why `drivableLessons` is unchanged at 1336. And
-    // `fullyDrivableChapters` falls 489 -> 472, because a chapter that teaches a
-    // letter now contains something that cannot be done at the wheel. It is
-    // 17 rather than 30 because 13 of those chapters already held a sight lesson.
-    //
-    // Placing each segment LAST in its chapter is what buys the unchanged
-    // prefix. Second-in-chapter was measured too and cost 11 prefix lessons: the
-    // prefix ends at the first lesson needing eyes, so a segment at the front
-    // truncates its whole chapter and one at the back truncates nothing.
-    //
-    // HL12 payment two adds Hindi's eight, and the shape repeats exactly:
-    // `drivablePrefixTotal` still 1136, `unstartableChapters` still 173,
-    // `drivableLessons` still 1336. `pen` takes the eight new segments 108 -> 116,
-    // carrying `drivablePercent` 67 -> 66 on the denominator alone, and
-    // `fullyDrivableChapters` falls 472 -> 465 for the seven Hindi chapters that
-    // now contain something a commuter cannot do.
-    // German's recovered authored order lowers the drivable-prefix total 2216 ->
-    // 2211 and raises unstartable chapters 204 -> 206. Chapter 1 reaches four
-    // voice lessons before its sight blocker, not the six alphabetical fallback
-    // claimed; regeneration also exposes the already-sequenced sight-first starts
-    // of Chapters 14 and 16. The manifest became honest; lessons did not regress.
-    // French's recovered order continues the same measurement correction. On
-    // current main the combined order is 2206 prefix lessons and 209 chapters
-    // that start with a sight or pen dependency; Marathi's recovery preserves
-    // those totals while removing its provisional filename order.
-    expect(manifest.summary).toEqual({
-      // Both Spanish B1 chapters, 38 and 41, are entirely ear-only, so each is fully
-      // drivable. They moved the whole-corpus figure from 66% to 67% — then the
-      // pre-A1 vocabulary probe (hindi/arabic/tamil) added honest script sections
-      // under the canonical heading, and the whole-lesson figure fell back to 66%.
-      // `coreDrivable` is unaffected: those blocks are detachable, so the driving
-      // edition itself lost nothing. This is the sight-share seam, not a regression.
-      // Vocabulary wave 4 (marathi/punjabi/sanskrit/urdu, 51 pre-A1 nouns) is the same
-      // seam again, and it is why voice, sight AND drivablePercent all move together:
-      // most of the wave is ear-only `voice`, but Sanskrit's Devanagari citations and
-      // several tracks' honest `## The letters in this word` blocks add `sight`, so
-      // the whole-lesson share dips 66% -> 65% even though every one of these blocks
-      // is detachable and `coreDrivable` again loses nothing.
-      // Chapter 15 splits two legacy teaching lessons into five bounded teaching
-      // steps. All five remain voice-first; only the mapped terminal comparison is
-      // sight-dependent, so the split adds three lessons without widening the seam.
-      // Chapter 16 replaces three legacy lessons with eight bounded steps.
-      // Chapter 17 replaces four legacy lessons with eight bounded steps.
-      // Chapter 18 replaces ten legacy lessons with nine bounded steps.
-      // +4: TA-W10-read-naan, TA-W11-read-niingal, TA-W12-read-eppadi and
-      // TA-W13-read-irukkirirgal extend the writing strand over chapters 2-3's glyphs.
-      // +3: TA-W14-read-pesu, TA-W15-read-po and TA-W16-read-tamizh close chapters 4-5.
-      // +2: TA-W17-read-unavu and TA-W18-read-uur close the last two glyphs untaught
-      // in the chapter 33-38 sections — NOT in the corpus, which this entry originally
-      // failed to qualify. FOURTEEN chapter-7 glyphs are still untaught after them.
-      // +1: TA-W19-read-muunru teaches one of the fourteen, ூ, leaving thirteen at
-      // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
-      // existed after it. Chapter 39 below then extends the track and teaches ஒ,
-      // leaving twelve.
-      totalLessons: 3412, // Spanish's voice practice combines with Arabic's greeting-script ramp and the Romance writing openers.
-      // Chapters 10 and 13 replace wide legacy tables with small singular-only
-      // comparisons, so three more lessons move from sight to voice.
-      // All seven Chapter-16 teaching steps are voice-first. Generating the book
-      // exposed the terminal Chapter-15 and Chapter-16 recap tables as too wide,
-      // so their same person-by-person comparisons now use speakable bullet rows.
-      // All eight Chapter-17 lessons remain voice-first.
-      // +6, and it is the same six lessons that leave `sight` below.
-      // +8, the eight chapter 4-5 lessons that drop their inline script sections.
-      voice: 2463, // Spanish adds one voice practice after Arabic adds two voice-first greetings.
-      // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
-      // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
-      // strand. Verified against the GENERATED manifest, not the source — all three now
-      // record reasons ["no-visual-dependency"], so the script teaching genuinely left
-      // the lesson rather than a heading being renamed out from under the classifier.
-      // Chapter 18 removes its one remaining sight-only lesson. Publishing
-      // Chapters 7-18 from the AST moves the Chapter-15 and Chapter-16 terminal
-      // recaps from sight to voice without changing what either checkpoint asks.
-      // -6 sight / +6 voice, the ch02/ch03 repeat of the TA-C02 move above: once
-      // TA-W10..TA-W13 gave chapters 2-3's glyphs a home, TA-C02-nii-niingal and all
-      // five ch3 lessons (eppadi, eppadi-irukkirirgal, naan, nalam, paravayillai)
-      // dropped their "The letters in this word" sections. Verified against the
-      // GENERATED manifest: every one flips reasons ["script-block"] ->
-      // ["no-visual-dependency"] and its detachableSegments list empties, so the
-      // script teaching genuinely left the lesson rather than a heading being renamed.
-      // -8 sight / +8 voice, the ch04/ch05 repeat of the same move: TA-C04-po,
-      // -poy-varugiren, -naalai, -mindum-sandippom and TA-C05-pesu, -velai-sey, -vaazh,
-      // -naan-tamizh-pesugiren all flip ["script-block"] -> ["no-visual-dependency"]
-      // with an empty detachableSegments, verified against the GENERATED manifest.
-      sight: 587, // -3: Arabic moves three whole-form script blocks out of the spoken greeting lessons.
-      /* Historical cumulative sight ledger retained below.
-      sight: 590, // HL-C259: +1 -- GU-C01-practice, see drivableLessons // HL-C251: +1 -- RU-C01-practice, see drivableLessons // merge with main (round 4): +4 -- HL-C231..C240 landed on main while this tranche was in flight // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C175: +5 -- chapter 272, reading between the lines // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C157 // +5: vocabulary wave 5's honest cousin-script citations in a handful of lessons // +1: HL-C88 slices 5-6 // +18: vocabulary wave 6 // HL-C113 step 7: +2 -- 214 (question marks) and 215 (the accent) cannot be taught by voice // HL-C128 step 2: +1 -- ch223 // HL-C128 step 3: +1 // HL-C128 step 5: +1 // HL-C127: +2 -- ch243 and ch244 turn on written accents, which cannot be heard // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: 35 lessons over 7 chapters -- voice +34 and sight +1 sum to 35; the prefix figures follow from the per-chapter walk // latin pre-A1 tranche: +20 lessons, +4 chapters (chapters 44-47)
-      */
-      // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
-      // this from the lesson TYPE alone — it says outright that it does not look at
-      // the body — so all three record reasons ["writing-type","script-block"], and
-      // TA-W07 is pen even though it deliberately gives no stroke instructions.
-      // voice and drivable are unchanged, which is what a writing lesson should do
-      // to this table.
-      // +2: both new lessons are writing lessons.
-      // +4: TA-W10..TA-W13 are `type: writing` too, so rule 1 makes them pen even
-      // though all four are reading-only and give no stroke order.
-      // +3: TA-W14/15/16 are `type: writing` too.
-      // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
-      // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
-      // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 362, // Arabic's eight writing segments combine with the two Portuguese additions.
-      drivableLessons: 2463, // Spanish adds one hands-free practice after Arabic's two gains and the Romance opener losses.
-      /* Superseded merge-side totals:
-      pen: 360, // +8: seven Arabic writing micro-lessons plus salām's one-shape opening trace. // +2: Italian's opener trace and guided copy.
-      // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
-      // +8: exactly the eight lessons that moved sight -> voice.
-      drivableLessons: 2463, // +2: Arabic marḥaban and as-salāmu ʿalaykum are now hands-free. // Italian's opener leaves the hands-free set.
-      pen: 354, // +4: Italian and Portuguese each add an opener trace and guided copy.
-      // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
-      // +8: exactly the eight lessons that moved sight -> voice.
-      drivableLessons: 2461, // Spanish adds one hands-free practice while Portuguese's opener leaves the set.
-      drivableLessons: 2460, // Both Romance openers leave the hands-free set.
-      */
-      drivablePercent: 72, // Chinese crosses the rounding boundary after its opener becomes pen. // telugu pre-A1 round 4: 72 -> 73, an IMPROVEMENT and a rounding boundary crossed: 2464/3392 is 72.6% against 2429/3357's 72.4%, because all 35 new lessons are drivable // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- 35 ear-only lessons lift the whole-corpus share by one point // HL-C194: +16 Spanish words, all drivable // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // marathi script tranche: +11 lessons, +1 chapter (ch14) -- ten pieces, one per lesson, plus one assembly -- three script tranches in a row have added pen-only lessons and nothing drivable, so the corpus share finally rounds down; that is the cost of teaching script and it is recorded, not hidden
-      trackCount: 23,
-      chapterCount: 1004, // +1: Marwadi Chapter 1
-      // Prerequisite order still costs a commuter 132 of the 965 ear-only lessons:
-      // they sit behind a blocker in their own chapter and stay unreachable in the car
-      // until HL-C17 reshapes the remaining wide tables.
-      // A chapter's drivable prefix is "how far you get by ear from its START", so it
-      // depends on ORDER. HL09 step 2 gave 50 Spanish lessons a declared `sequence`,
-      // and the alphabetical fallback it replaced had been flattering this number by
-      // putting eyes-needed lessons later than they really come. The real order is
-      // worse, which is the measurement becoming honest, not the corpus regressing.
-      // Two independent changes land on these three numbers in the same merge:
-      // vocabulary wave 4 (16 new chapters, several needing eyes from their own first
-      // lesson: 870 -> 873, 327 -> 328, 129 -> 142 claimed in isolation) and Tamil's
-      // script-interleaving restructure (chapter 1 becomes fully drivable for the first
-      // time; six other Tamil chapters each pick up one writing lesson: 870 -> 873,
-      // 327 -> 322, 129 -> 129 claimed in isolation). Re-measured against the merged
-      // corpus: drivablePrefixTotal 876 (both gains add), fullyDrivableChapters 323
-      // (wave 4's +1 and Tamil's net -5 combine), unstartableChapters 142 (wave 4's
-      // rise; Tamil's restructure did not touch this count in the merged state).
-      // +2, and Tamil chapter 2 is the only chapter in the corpus that moves: 0 -> 2.
-      // Measured, not reasoned — ch2 runs peyar(100), en(110), en-peyar(120), so
-      // freeing the first two extends the ear-only run until en-peyar, which is still
-      // sight and stops it. TA-C02-enna sits behind that blocker and became drivable
-      // without adding to any prefix.
-      // Chapter 7's real order begins with comer's four-column comparison rather
-      // than the old alphabetical fallback's ear-only beber lesson.
-      // Chapter 9 replaces three wide-table sight lessons with voice-first
-      // micro-lessons and extends the Spanish chapter prefix through all five steps.
-      // The Chapter-10 migration extends the safe prefix by two lessons; Chapter 13
-      // adds four more reachable lessons by migrating its full terminal checkpoint.
-      // Spanish Chapter 15 now offers five consecutive voice lessons before its
-      // sight checkpoint, raising the useful prefix by four.
-      // Chapter 16's reachable voice-first prefix grows by six.
-      // Chapter 17's reachable voice-first prefix grows by five.
-      // All nine redesigned Chapter-18 steps are reachable by ear. The terminal
-      // Chapter-15 and Chapter-16 recaps now extend both prefixes by one.
-      // +5 net, and TWO chapters move, in opposite directions. Tamil chapter 3 gains 6:
-      // its first lesson was sight, so nothing after it counted; with all six now voice
-      // the whole chapter is one ear-only run. Tamil chapter 25 LOSES 1 (2 -> 1), because
-      // the 3:1 cadence puts TA-W10 between its two speaking lessons rather than after
-      // them — the same mid-chapter placement TA-W06 already has in chapter 18. Chapters
-      // 27/29/31 take their writing lesson after the prefix, so they hold at 1/1/2.
-      // Italian Chapter 1 now begins with pen, so its former six-lesson voice
-      // prefix becomes intentionally unavailable in the hands-free view.
-      // +6, and only two chapters move, both upward this time: Tamil chapter 4 gains 4
-      // and chapter 5 gains 2. Nothing is lost, because TA-W14/15/16 are placed to skip
-      // chapter 32 — see the ramp test for why — so no chapter's prefix is cut short.
-      drivablePrefixTotal: 2178, // Spanish adds one terminal voice step after Portuguese removes three opener steps.
-      /* Historical cumulative prefix ledger retained below.
-      drivablePrefixTotal: 2180, // Chinese chapter 1 now begins with pen. // French and Marathi recovered order on current main: measured together. // telugu pre-A1 round 4: +35 lessons, +7 chapters (chapters 67-73) // -- every one of the seven chapters is drivable end to end, so each contributes its whole 5-lesson prefix // malayalam pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // kannada pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // merge with main: +9 -- HL-C229 French question tranche landed on main while this tranche was in flight; the new chapter is drivable end to end // tamil pre-A1 tranche: +35 lessons, +7 chapters (chapters 44-50) // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C194: +16 Spanish words // HL-C192: +24 family words // HL-C190: see/say verbs across four tracks // HL-C189: +8 -- Tamil and Sanskrit verb tranche // HL-C187: +20 -- verb tranche across the five behind tracks // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C175: +5 -- chapter 272, reading between the lines // HL-C173: +3 -- B2 closes (chapter 271) // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C157: the future-tense conjugation table is sight so ch49 leaves the drivable prefix, // +32: vocabulary wave 5's new chapters, mostly ear-only from their own start // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +26: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +3 // HL-C128 step 2: +4 // HL-C128 step 3: +3 // HL-C128 step 4: +6 // HL-C128 step 5: +4 // HL-C127: +3 // HL-C128 step 7: +3 // HL-C128 step 8: +6 // HL-C128 step 9: +5 // HL-C128 step 10: +5 // HL-C136 wave I: +42 -- each of the six chapters is drivable from its own first lesson to its last, so the prefix is the whole chapter // HL-C137 wave II: +36 adjective lessons, +6 chapters, and drivablePercent rises AGAIN // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C160: +1 -- depende closes SPINE-EXPRESS-CONDITION, and B1 // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: 35 lessons over 7 chapters -- voice +34 and sight +1 sum to 35; the prefix figures follow from the per-chapter walk // hindi pre-A1 tranche: +35 lessons, +7 chapters (chapters 45-51) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // telugu pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // kannada pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // latin pre-A1 tranche: +20 lessons, +4 chapters (chapters 44-47) // malayalam pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) -- each new chapter is drivable end to end, so the prefix is the whole chapter // tamil pre-A1 round 2: +35 lessons, +7 chapters (chapters 51-57) // sanskrit pre-A1 round 3: +35 lessons, +7 chapters (chapters 38-44) -- each new chapter is drivable end to end, so the prefix is the whole chapter // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // hindi pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- each new chapter is drivable end to end, so the prefix is the whole chapter // sanskrit pre-A1 round 4: +35 lessons, +7 chapters (chapters 45-51) -- each of the seven new chapters is drivable end to end
-      */
-      // Superseded merge-side total: 2177 before the Spanish terminal practice.
-      // -2: chapters 21 and 23 each take a writing lesson and stop being ear-only.
-      // Spreading the strand cannot happen without landing a pen lesson somewhere.
-      // Spanish Chapters 10 and 13 are now fully drivable from their canonical ASTs.
-      // Spanish Chapter 18 also becomes fully drivable. Replacing the two wide
-      // terminal recap tables makes Spanish Chapters 15 and 16 fully drivable too.
-      // -3, and it goes the WRONG way, which is worth stating plainly. Four Tamil
-      // chapters (25, 27, 29, 31) each gain one writing lesson and stop being fully
-      // drivable: -4. Tamil chapter 3 becomes fully drivable for the first time: +1.
-      // Net -3. That is the honest cost of paying the script debt where it belongs.
-      // Corpus `coreDrivable` does not move, but NOT because these blocks detach: rule 1
-      // classifies a `type: writing` lesson as pen without reading its body, so all four
-      // record `coreDrivable: false`. It holds because the six lessons that flipped were
-      // already core-drivable and the four new ones were never counted.
-      fullyDrivableChapters: 667, // telugu pre-A1 round 4: +35 lessons, +7 chapters (chapters 67-73) // malayalam pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // kannada pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- all seven new chapters are fully drivable // merge with main: +1 -- HL-C229 French question tranche landed on main while this tranche was in flight; the new chapter is fully drivable // tamil pre-A1 tranche: +35 lessons, +7 chapters (chapters 44-50) // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C194: +16 Spanish words // HL-C192: +24 family words // HL-C190: see/say verbs across four tracks // HL-C189: +8 -- Tamil and Sanskrit verb tranche // HL-C187: +20 -- verb tranche across the five behind tracks // HL-C180: +4 -- chapter 276; ARCHAIC-FORM was already taught at chapter 3 // HL-C179: +5 -- chapter 275, fine shades // HL-C178: +5 -- chapter 274, C2 opens // HL-C177: +5 -- chapter 273, C1 closes // HL-C173: +2 -- B2 closes (chapter 271) // HL-C172: +4 -- the B2 argue rung (chapter 270) // HL-C168: +1 -- Kannada's ledger closes at 24 of 24 // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C157: same table same chapter, // +6: shorter chapters are more often drivable end to end // +10: vocabulary wave 5's new chapters // +3: HL-C88 slices 5-6 // +1: HL-C88 slice 7 (ES-C09-ncia) // +3: HL-C88 slice 8 (-ario, review, synthesis) // +5: vocabulary wave 6 // +1: HL-C88 slice 9 (falsos amigos) // +3: B1 si-condition rung // +3: HL-C113 preterite plural // +4: HL-C113 preterite close (strong plurals, review, synthesis) // +2: HL-C113 imperfect subjunctive // +3: HL-C113 unreal condition // HL-C113 step 7: +2 // HL-C113 step 8: +3 // HL-C128 step 2: +4 // HL-C128 step 3: +3 // HL-C128 step 4: +6 // HL-C128 step 5: +4 // HL-C127: +3 // HL-C128 step 7: +3 // HL-C128 step 8: +6 // HL-C128 step 9: +5 // HL-C128 step 10: +5 // HL-C136 wave I: +6 -- all six new chapters end to end, which is what a wave with no script section looks like // HL-C137 wave II: +36 adjective lessons, +6 chapters, and drivablePercent rises AGAIN // HL-C152: Spanish realizes SPINE-NEGATE-AND-ASK — five lessons, one chapter, A2 complete at 5/5 // HL-C156: 85 script segments across the six Indic tracks // HL-C158: +4 -- the B1 travel rung (chapter 268) // HL-C159: +4 -- the B1 describe-experience rung (chapter 269) // HL-C163: +6 -- Sanskrit chapter 16 // HL-C165: +11 -- Sanskrit chapters 17 and 18 // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: 35 lessons over 7 chapters -- voice +34 and sight +1 sum to 35; the prefix figures follow from the per-chapter walk // hindi pre-A1 tranche: +35 lessons, +7 chapters (chapters 45-51) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // telugu pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // kannada pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // latin pre-A1 tranche: +20 lessons, +4 chapters (chapters 44-47) // malayalam pre-A1 round 2: +35 lessons, +7 chapters (chapters 53-59) // tamil pre-A1 round 2: +35 lessons, +7 chapters (chapters 51-57) // sanskrit pre-A1 round 3: +35 lessons, +7 chapters (chapters 38-44) // spanish pre-A1 round 3: +35 lessons, +7 chapters (chapters 296-302) // hindi pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- all seven new chapters are fully drivable // sanskrit pre-A1 round 4: +35 lessons, +7 chapters (chapters 45-51) -- all seven new chapters are fully drivable
-      // Tamil chapter 2, Spanish chapter 13, and Spanish chapter 18 can now start by ear.
-      // -1: Tamil chapter 3 alone. It was unstartable because its first lesson needed
-      // eyes; it now starts by ear. No other chapter moves.
-      // -2 more: Tamil chapters 4 and 5 now start by ear as well.
-      unstartableChapters: 215, // Italian and Portuguese Chapter 1 now honestly start with pen.
-      overriddenLessons: 0,
-      lessonsWithoutChapter: 0,
-    }); // hindi pre-A1 round 2: +35 lessons, +7 chapters (chapters 52-58)
-  });
-
+  // Exact corpus state is checked per language in tests/corpus/*.test.ts.
+  // This shared file keeps only size-independent manifest invariants.
   it("keeps every rollup internally consistent", () => {
     const { lessons } = loadEverything();
     const manifest = buildModalityManifest(lessons);
@@ -1122,6 +755,8 @@ describe("corpus regression", () => {
     // `npm run generate:modality` and commit the result — exactly what CI will say.
     vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     expect(runModalityManifest(["--check"])).toBe(0);
+    const { lessons } = loadEverything();
+    expect(loadModalityManifest()).toEqual(buildModalityManifest(lessons));
   });
 
   it("carries no unexplained overrides", () => {

@@ -1,0 +1,21 @@
+name: coding_adventures_image_codec_png
+description: >
+  Bounded, deterministic IC18 PNG codec backed by repository PixelContainer
+  and ZIP primitives.
+version: 0.1.0
+repository: https://github.com/adhithyan15/coding-adventures
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+
+dependencies:
+  coding_adventures_pixel_container:
+    path: ../pixel-container
+  coding_adventures_zip:
+    path: ../zip
+
+dev_dependencies:
+  coverage: ^1.15.0
+  image: ^4.5.4
+  test: ^1.25.0

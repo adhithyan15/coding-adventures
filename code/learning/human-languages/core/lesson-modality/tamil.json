@@ -1,0 +1,6735 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "features": {
+    "blockModality": true
+  },
+  "policy": {
+    "maxLinearisableTableColumns": 3
+  },
+  "sourceHash": "fnv1a64:a745765bb632ece5",
+  "summary": {
+    "totalLessons": 283,
+    "voice": 201,
+    "sight": 32,
+    "pen": 50,
+    "drivableLessons": 201,
+    "drivablePercent": 71,
+    "trackCount": 1,
+    "chapterCount": 64,
+    "drivablePrefixTotal": 177,
+    "fullyDrivableChapters": 32,
+    "unstartableChapters": 10,
+    "overriddenLessons": 0,
+    "lessonsWithoutChapter": 0
+  },
+  "tracks": [
+    {
+      "language": "tamil",
+      "lessonCount": 283,
+      "voice": 201,
+      "sight": 32,
+      "pen": 50,
+      "drivablePercent": 71,
+      "drivablePrefixTotal": 177,
+      "modalities": [
+        "voice",
+        "sight",
+        "pen"
+      ],
+      "chapters": [
+        {
+          "chapter": 1,
+          "lessonCount": 10,
+          "voice": 8,
+          "sight": 0,
+          "pen": 2,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C01-vanakkam",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 2,
+          "lessonCount": 8,
+          "voice": 7,
+          "sight": 1,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-C02-en-peyar",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C02-peyar",
+            "TA-C02-en"
+          ]
+        },
+        {
+          "chapter": 3,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C03-eppadi",
+            "TA-C03-eppadi-irukkirirgal",
+            "TA-C03-naan",
+            "TA-C03-nalam",
+            "TA-C03-paravayillai",
+            "TA-C03-practice"
+          ]
+        },
+        {
+          "chapter": 4,
+          "lessonCount": 6,
+          "voice": 5,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": "TA-W01-curves-va-ka",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C04-po",
+            "TA-C04-poy-varugiren",
+            "TA-C04-naalai",
+            "TA-C04-mindum-sandippom"
+          ]
+        },
+        {
+          "chapter": 5,
+          "lessonCount": 6,
+          "voice": 5,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-W01-abugida-va-ka",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C05-pesu",
+            "TA-C05-naan-tamizh-pesugiren"
+          ]
+        },
+        {
+          "chapter": 6,
+          "lessonCount": 9,
+          "voice": 4,
+          "sight": 0,
+          "pen": 5,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S01-va",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C06-dative-ukku"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 7,
+          "voice": 1,
+          "sight": 3,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C07-numbers-1-5",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 5,
+          "voice": 1,
+          "sight": 1,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-C08-please-register",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C08-tayavuseytu"
+          ]
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 3,
+          "voice": 1,
+          "sight": 1,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-C09-sorry-register",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C09-mannikkavum"
+          ]
+        },
+        {
+          "chapter": 10,
+          "lessonCount": 4,
+          "voice": 1,
+          "sight": 0,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S05-rra",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C10-vaara-kizhamai"
+          ]
+        },
+        {
+          "chapter": 11,
+          "lessonCount": 2,
+          "voice": 0,
+          "sight": 1,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C11-nirangal",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 12,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S116-letter-ca",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C12-kudumbam"
+          ]
+        },
+        {
+          "chapter": 13,
+          "lessonCount": 4,
+          "voice": 1,
+          "sight": 0,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S06-ka",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C13-udal-uruppugal"
+          ]
+        },
+        {
+          "chapter": 14,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S118-letter-tta",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C14-kaalangal"
+          ]
+        },
+        {
+          "chapter": 15,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S119-letter-a",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C15-thanneer-arisi"
+          ]
+        },
+        {
+          "chapter": 16,
+          "lessonCount": 4,
+          "voice": 1,
+          "sight": 0,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S07-ma",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C16-thamizh-maadangal"
+          ]
+        },
+        {
+          "chapter": 17,
+          "lessonCount": 3,
+          "voice": 2,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-S121-vowel-sign-u",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C17-nanpakal-nalliravu",
+            "TA-C17-transparent-middle-synonyms"
+          ]
+        },
+        {
+          "chapter": 18,
+          "lessonCount": 5,
+          "voice": 2,
+          "sight": 0,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-S08-pulli",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C18-mani"
+          ]
+        },
+        {
+          "chapter": 19,
+          "lessonCount": 5,
+          "voice": 2,
+          "sight": 0,
+          "pen": 3,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-S09-i-sign",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C19-vayathu",
+            "TA-C19-age-register-grammar"
+          ]
+        },
+        {
+          "chapter": 20,
+          "lessonCount": 3,
+          "voice": 2,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-S124-letter-ya",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C20-pathinondru-irupathu",
+            "TA-C20-vaanilai"
+          ]
+        },
+        {
+          "chapter": 21,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-W08-read-en",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C21-naay-poonai"
+          ]
+        },
+        {
+          "chapter": 22,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C22-paccai-manjal"
+          ]
+        },
+        {
+          "chapter": 23,
+          "lessonCount": 3,
+          "voice": 2,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-W09-read-peyar",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C23-naal",
+            "TA-C23-day-family-register"
+          ]
+        },
+        {
+          "chapter": 24,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C24-iravu",
+            "TA-C24-night-register-darkness"
+          ]
+        },
+        {
+          "chapter": 25,
+          "lessonCount": 3,
+          "voice": 2,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-W10-read-naan",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C25-iniya-iravu"
+          ]
+        },
+        {
+          "chapter": 26,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C26-kaalai"
+          ]
+        },
+        {
+          "chapter": 27,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-W11-read-niingal",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C27-maalai"
+          ]
+        },
+        {
+          "chapter": 28,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C28-pirpakal",
+            "TA-C28-afternoon-boundary"
+          ]
+        },
+        {
+          "chapter": 29,
+          "lessonCount": 2,
+          "voice": 1,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "TA-W12-read-eppadi",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C29-kaalai-vanakkam"
+          ]
+        },
+        {
+          "chapter": 30,
+          "lessonCount": 1,
+          "voice": 1,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C30-maalai-vanakkam"
+          ]
+        },
+        {
+          "chapter": 31,
+          "lessonCount": 3,
+          "voice": 2,
+          "sight": 0,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": "TA-W13-read-irukkirirgal",
+          "drivable": false,
+          "drivableLessonIds": [
+            "TA-C31-matiya-vanakkam",
+            "TA-C31-afternoon-greeting-root"
+          ]
+        },
+        {
+          "chapter": 32,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C32-iru",
+            "TA-C32-po",
+            "TA-C32-vaa",
+            "TA-C32-saappidu",
+            "TA-C32-paar",
+            "TA-C32-teri"
+          ]
+        },
+        {
+          "chapter": 33,
+          "lessonCount": 5,
+          "voice": 0,
+          "sight": 4,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C33-ninai",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 34,
+          "lessonCount": 5,
+          "voice": 1,
+          "sight": 3,
+          "pen": 1,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C34-edu",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 35,
+          "lessonCount": 5,
+          "voice": 0,
+          "sight": 4,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C35-veedu",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 36,
+          "lessonCount": 5,
+          "voice": 0,
+          "sight": 4,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C36-teneer",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 37,
+          "lessonCount": 5,
+          "voice": 0,
+          "sight": 4,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C37-uur",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 38,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 3,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C38-udambu",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 39,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 3,
+          "pen": 1,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "TA-C39-vendum",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 40,
+          "lessonCount": 7,
+          "voice": 7,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 7,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C40-this",
+            "TA-C40-that",
+            "TA-C40-here",
+            "TA-C40-there",
+            "TA-C40-who",
+            "TA-C40-where",
+            "TA-C40-deixis-system"
+          ]
+        },
+        {
+          "chapter": 41,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C41-big",
+            "TA-C41-small",
+            "TA-C41-good",
+            "TA-C41-new",
+            "TA-C41-old",
+            "TA-C41-adjective-system"
+          ]
+        },
+        {
+          "chapter": 42,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C42-come",
+            "TA-C42-sit",
+            "TA-C42-read",
+            "TA-C42-give"
+          ]
+        },
+        {
+          "chapter": 43,
+          "lessonCount": 4,
+          "voice": 4,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 4,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C43-child",
+            "TA-C43-son",
+            "TA-C43-daughter",
+            "TA-C43-family"
+          ]
+        },
+        {
+          "chapter": 44,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C44-fruit",
+            "TA-C44-cloth",
+            "TA-C44-lamp",
+            "TA-C44-salt",
+            "TA-C44-book"
+          ]
+        },
+        {
+          "chapter": 45,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C45-eye",
+            "TA-C45-ear",
+            "TA-C45-nose",
+            "TA-C45-tooth",
+            "TA-C45-stomach"
+          ]
+        },
+        {
+          "chapter": 46,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C46-teacher",
+            "TA-C46-student",
+            "TA-C46-doctor",
+            "TA-C46-farmer",
+            "TA-C46-guest"
+          ]
+        },
+        {
+          "chapter": 47,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C47-true",
+            "TA-C47-enough",
+            "TA-C47-certainly",
+            "TA-C47-perhaps",
+            "TA-C47-just-so"
+          ]
+        },
+        {
+          "chapter": 48,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C48-now",
+            "TA-C48-time",
+            "TA-C48-journey",
+            "TA-C48-later",
+            "TA-C48-set-out"
+          ]
+        },
+        {
+          "chapter": 49,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C49-affection",
+            "TA-C49-respect",
+            "TA-C49-gladness",
+            "TA-C49-good-wish",
+            "TA-C49-many-thanks"
+          ]
+        },
+        {
+          "chapter": 50,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C50-threshold",
+            "TA-C50-kolam",
+            "TA-C50-flower",
+            "TA-C50-betel-leaf",
+            "TA-C50-welcome"
+          ]
+        },
+        {
+          "chapter": 51,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C51-sky",
+            "TA-C51-sun",
+            "TA-C51-moon",
+            "TA-C51-star",
+            "TA-C51-cloud"
+          ]
+        },
+        {
+          "chapter": 52,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C52-tree",
+            "TA-C52-branch",
+            "TA-C52-shoot",
+            "TA-C52-root",
+            "TA-C52-seed"
+          ]
+        },
+        {
+          "chapter": 53,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C53-river",
+            "TA-C53-hill",
+            "TA-C53-field",
+            "TA-C53-path",
+            "TA-C53-village"
+          ]
+        },
+        {
+          "chapter": 54,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C54-mat",
+            "TA-C54-basket",
+            "TA-C54-knife",
+            "TA-C54-bowl",
+            "TA-C54-box"
+          ]
+        },
+        {
+          "chapter": 55,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C55-neck",
+            "TA-C55-back",
+            "TA-C55-lip",
+            "TA-C55-nail",
+            "TA-C55-bone"
+          ]
+        },
+        {
+          "chapter": 56,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C56-a-little",
+            "TA-C56-a-lot",
+            "TA-C56-less",
+            "TA-C56-no-need",
+            "TA-C56-let-it-be"
+          ]
+        },
+        {
+          "chapter": 57,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C57-wind",
+            "TA-C57-sand",
+            "TA-C57-mud",
+            "TA-C57-smoke",
+            "TA-C57-ember"
+          ]
+        },
+        {
+          "chapter": 58,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C58-cow",
+            "TA-C58-goat",
+            "TA-C58-hen",
+            "TA-C58-crow",
+            "TA-C58-bird"
+          ]
+        },
+        {
+          "chapter": 59,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C59-curd",
+            "TA-C59-ghee",
+            "TA-C59-oil",
+            "TA-C59-jaggery",
+            "TA-C59-sugar"
+          ]
+        },
+        {
+          "chapter": 60,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C60-needle",
+            "TA-C60-rope",
+            "TA-C60-umbrella",
+            "TA-C60-broom",
+            "TA-C60-comb"
+          ]
+        },
+        {
+          "chapter": 61,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C61-hunger",
+            "TA-C61-thirst",
+            "TA-C61-sleep",
+            "TA-C61-fever",
+            "TA-C61-pain"
+          ]
+        },
+        {
+          "chapter": 62,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C62-only",
+            "TA-C62-still",
+            "TA-C62-soon",
+            "TA-C62-at-once",
+            "TA-C62-first-of-all"
+          ]
+        },
+        {
+          "chapter": 63,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C63-request",
+            "TA-C63-permission",
+            "TA-C63-hesitancy",
+            "TA-C63-trust",
+            "TA-C63-humility"
+          ]
+        },
+        {
+          "chapter": 64,
+          "lessonCount": 5,
+          "voice": 5,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 5,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "TA-C64-paddy",
+            "TA-C64-grass",
+            "TA-C64-crop",
+            "TA-C64-threshing-floor",
+            "TA-C64-harvest"
+          ]
+        }
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "id": "TA-C01-vanakkam",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 10,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b55f10876077d66f",
+      "detachableSegments": [
+        "Writing — let your finger meet one shape"
+      ]
+    },
+    {
+      "id": "TA-W00-va-guided-copy",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 15,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3fd7da2bd03a3964",
+      "detachableSegments": [
+        "Writing — one supported copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C01-vanakkam-family-register",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 20,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f7b2bbc20662a036"
+    },
+    {
+      "id": "TA-C01-aam",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9d57ca2cbb43325a"
+    },
+    {
+      "id": "TA-C01-illai",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9a94793df014883b"
+    },
+    {
+      "id": "TA-C01-nandri",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6865a826571e7c10"
+    },
+    {
+      "id": "TA-C01-nandri-family-register",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:60338f1932bc98d3"
+    },
+    {
+      "id": "TA-C01-sari",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 70,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:db956268e9eac39c"
+    },
+    {
+      "id": "TA-C01-answering",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 80,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d8b47a2a83f2b182"
+    },
+    {
+      "id": "TA-C01-practice",
+      "language": "tamil",
+      "chapter": 1,
+      "sequence": 90,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b61caef2405d511a"
+    },
+    {
+      "id": "TA-C02-peyar",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8cfd51ec9c416d3f"
+    },
+    {
+      "id": "TA-C02-en",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 110,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0d61bcef1c87749a"
+    },
+    {
+      "id": "TA-C02-en-peyar",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 120,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:509c10f2dfb45a9a"
+    },
+    {
+      "id": "TA-C02-nii-niingal",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:98e137452fb83731"
+    },
+    {
+      "id": "TA-C02-enna",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:062d05f9bb347ae1"
+    },
+    {
+      "id": "TA-C02-ungal-peyar-enna",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f8ac64f1e7a0c725"
+    },
+    {
+      "id": "TA-C02-magizhcci",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 165,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5519f38ad4330a86"
+    },
+    {
+      "id": "TA-C02-practice",
+      "language": "tamil",
+      "chapter": 2,
+      "sequence": 170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:10c4d0f86990f82a"
+    },
+    {
+      "id": "TA-C03-eppadi",
+      "language": "tamil",
+      "chapter": 3,
+      "sequence": 180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:721cce0594f7e7f7"
+    },
+    {
+      "id": "TA-C03-eppadi-irukkirirgal",
+      "language": "tamil",
+      "chapter": 3,
+      "sequence": 190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b0842834ee732703"
+    },
+    {
+      "id": "TA-C03-naan",
+      "language": "tamil",
+      "chapter": 3,
+      "sequence": 200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:26dddc33f0b1f1f0"
+    },
+    {
+      "id": "TA-C03-nalam",
+      "language": "tamil",
+      "chapter": 3,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e307ac13eeeb378e"
+    },
+    {
+      "id": "TA-C03-paravayillai",
+      "language": "tamil",
+      "chapter": 3,
+      "sequence": 220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:254f875eb66ed2a8"
+    },
+    {
+      "id": "TA-C03-practice",
+      "language": "tamil",
+      "chapter": 3,
+      "sequence": 230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:61cfedde655dc9d7"
+    },
+    {
+      "id": "TA-C04-po",
+      "language": "tamil",
+      "chapter": 4,
+      "sequence": 240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e25cd027a196bbec"
+    },
+    {
+      "id": "TA-C04-poy-varugiren",
+      "language": "tamil",
+      "chapter": 4,
+      "sequence": 250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fa80fb4061e562bd"
+    },
+    {
+      "id": "TA-C04-naalai",
+      "language": "tamil",
+      "chapter": 4,
+      "sequence": 255,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c0ddfaffb73c6c16"
+    },
+    {
+      "id": "TA-C04-mindum-sandippom",
+      "language": "tamil",
+      "chapter": 4,
+      "sequence": 260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7f127eeb921f458c"
+    },
+    {
+      "id": "TA-W01-curves-va-ka",
+      "language": "tamil",
+      "chapter": 4,
+      "sequence": 270,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2c2e171ca2be012a",
+      "detachableSegments": [
+        "Script you'll notice: The script is the shape of its writing surface"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C04-practice",
+      "language": "tamil",
+      "chapter": 4,
+      "sequence": 290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:849cf4a2e960db6a"
+    },
+    {
+      "id": "TA-C05-pesu",
+      "language": "tamil",
+      "chapter": 5,
+      "sequence": 300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8cffed7ec5dda841"
+    },
+    {
+      "id": "TA-C05-naan-tamizh-pesugiren",
+      "language": "tamil",
+      "chapter": 5,
+      "sequence": 310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0cce51304bfb7ef8"
+    },
+    {
+      "id": "TA-W01-abugida-va-ka",
+      "language": "tamil",
+      "chapter": 5,
+      "sequence": 320,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e5aa86b1748302a8",
+      "detachableSegments": [
+        "Script you'll notice: The vowel you get for free",
+        "Script you'll notice: வ — \"va\"",
+        "Script you'll notice: க — \"ka\""
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C05-vaazh",
+      "language": "tamil",
+      "chapter": 5,
+      "sequence": 330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9b65e09a8722fe40"
+    },
+    {
+      "id": "TA-C05-velai-sey",
+      "language": "tamil",
+      "chapter": 5,
+      "sequence": 340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f253c9fea41fd91d"
+    },
+    {
+      "id": "TA-C05-practice",
+      "language": "tamil",
+      "chapter": 5,
+      "sequence": 350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7672680a71915ae9"
+    },
+    {
+      "id": "TA-C06-dative-ukku",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fefd6585b85ebcb8"
+    },
+    {
+      "id": "TA-S01-va",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 365,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:af5549a6703340c5",
+      "detachableSegments": [
+        "Script you'll notice: வ",
+        "Writing: வ"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W02-ma-retroflex-na",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 370,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3dac8aa75e4a6c93",
+      "detachableSegments": [
+        "Script you'll notice: ம",
+        "Script you'll notice: ண"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C06-dative-stacking",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b6735982d308a9b7"
+    },
+    {
+      "id": "TA-C06-dative-subject",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f2af170cba5d5680"
+    },
+    {
+      "id": "TA-C06-dative-subject-family",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:15d841e1d8f9bd2f"
+    },
+    {
+      "id": "TA-S02-nna",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 405,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2a1e1f702ce9cc6c",
+      "detachableSegments": [
+        "Script you'll notice: ண",
+        "Writing: ண"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W02-three-ns",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 410,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ab29843a61b3d47c",
+      "detachableSegments": [
+        "Script you'll notice: The backward walk"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-S101-letter-pa",
+      "language": "tamil",
+      "chapter": 6,
+      "sequence": 411,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a4d9457530695d57",
+      "detachableSegments": [
+        "Script you'll notice: ப",
+        "Writing: ப — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C07-numbers-1-5",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "wide-table"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "wide-table"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7f1fe2cf223f2795"
+    },
+    {
+      "id": "TA-C07-numbers-1-5-family",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 430,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "wide-table"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "wide-table"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1a1d31d055362221"
+    },
+    {
+      "id": "TA-C07-numbers-6-10",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue",
+        "wide-table"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue",
+        "wide-table"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:401209a5981f3533"
+    },
+    {
+      "id": "TA-S03-nnna",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 445,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:68cb16365e7b3e60",
+      "detachableSegments": [
+        "Script you'll notice: ன",
+        "Writing: ன"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W03-pulli-vanakkam",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 450,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:64efe447e0048de5",
+      "detachableSegments": [
+        "Script you'll notice: The puḷḷi",
+        "Script you'll notice: What Tamil does *not* do"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C07-numbers-6-10-family",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7cd6282c54e9b939"
+    },
+    {
+      "id": "TA-S102-vowel-sign-oo",
+      "language": "tamil",
+      "chapter": 7,
+      "sequence": 461,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d9f6b2cd1c972f1b",
+      "detachableSegments": [
+        "Script you'll notice: ◌ோ",
+        "Writing: ◌ோ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C08-tayavuseytu",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f617ae89e5cbc693"
+    },
+    {
+      "id": "TA-C08-please-register",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 480,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7f8aae22027949eb",
+      "detachableSegments": [
+        "Script you'll notice: Read the join in செய்து"
+      ]
+    },
+    {
+      "id": "TA-S04-na",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 485,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:78499275c22a8e65",
+      "detachableSegments": [
+        "Script you'll notice: ந",
+        "Writing: ந"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W03-write-vanakkam",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 490,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fda8442069111930",
+      "detachableSegments": [
+        "Script you'll notice: Build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-S112-letter-e",
+      "language": "tamil",
+      "chapter": 8,
+      "sequence": 491,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:50944e3bc120df71",
+      "detachableSegments": [
+        "Script you'll notice: எ",
+        "Writing: எ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C09-mannikkavum",
+      "language": "tamil",
+      "chapter": 9,
+      "sequence": 500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2ca552bc0eb5b07e"
+    },
+    {
+      "id": "TA-C09-sorry-register",
+      "language": "tamil",
+      "chapter": 9,
+      "sequence": 510,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7599bd315f961f82",
+      "detachableSegments": [
+        "Script you'll notice: Read ன்னி"
+      ]
+    },
+    {
+      "id": "TA-S113-letter-la",
+      "language": "tamil",
+      "chapter": 9,
+      "sequence": 511,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d76ec2092aa01b7c",
+      "detachableSegments": [
+        "Script you'll notice: ல",
+        "Writing: ல"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C10-vaara-kizhamai",
+      "language": "tamil",
+      "chapter": 10,
+      "sequence": 520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ff31b17db43deacb"
+    },
+    {
+      "id": "TA-S05-rra",
+      "language": "tamil",
+      "chapter": 10,
+      "sequence": 525,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:440ab96ba5c13ab1",
+      "detachableSegments": [
+        "Script you'll notice: ற",
+        "Writing: ற"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W04-vowel-signs-nandri",
+      "language": "tamil",
+      "chapter": 10,
+      "sequence": 530,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b1f78acfb57601f8",
+      "detachableSegments": [
+        "Script you'll notice: The two remaining n's",
+        "Script you'll notice: ற — \"ṟa\", the hard r"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-S114-vowel-sign-aa",
+      "language": "tamil",
+      "chapter": 10,
+      "sequence": 531,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:45ff00e0a58fd159",
+      "detachableSegments": [
+        "Script you'll notice: ◌ா",
+        "Writing: ◌ா — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C11-nirangal",
+      "language": "tamil",
+      "chapter": 11,
+      "sequence": 540,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4b1ab1ec3abd07dd"
+    },
+    {
+      "id": "TA-S115-letter-llla",
+      "language": "tamil",
+      "chapter": 11,
+      "sequence": 541,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:36b3c2c168084900",
+      "detachableSegments": [
+        "Script you'll notice: ழ",
+        "Writing: ழ — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C12-kudumbam",
+      "language": "tamil",
+      "chapter": 12,
+      "sequence": 550,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:418d1b0b702acbe3"
+    },
+    {
+      "id": "TA-S116-letter-ca",
+      "language": "tamil",
+      "chapter": 12,
+      "sequence": 551,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a58b2603cca27bdb",
+      "detachableSegments": [
+        "Script you'll notice: ச",
+        "Writing: ச — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C13-udal-uruppugal",
+      "language": "tamil",
+      "chapter": 13,
+      "sequence": 560,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:667b2e88be342205"
+    },
+    {
+      "id": "TA-S06-ka",
+      "language": "tamil",
+      "chapter": 13,
+      "sequence": 565,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c397b1492a77fc20",
+      "detachableSegments": [
+        "Script you'll notice: க",
+        "Writing: க"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W04-i-sign-write-nandri",
+      "language": "tamil",
+      "chapter": 13,
+      "sequence": 570,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3418015b917f2833",
+      "detachableSegments": [
+        "Script you'll notice: The first vowel sign",
+        "Script you'll notice: Assemble நன்றி"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-S117-letter-ra",
+      "language": "tamil",
+      "chapter": 13,
+      "sequence": 571,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:56fff8d4231254af",
+      "detachableSegments": [
+        "Script you'll notice: ர",
+        "Writing: ர — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C14-kaalangal",
+      "language": "tamil",
+      "chapter": 14,
+      "sequence": 580,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3c8ce6fb6a613930"
+    },
+    {
+      "id": "TA-S118-letter-tta",
+      "language": "tamil",
+      "chapter": 14,
+      "sequence": 581,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9aaa24dd68ca1336",
+      "detachableSegments": [
+        "Script you'll notice: ட",
+        "Writing: ட — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C15-thanneer-arisi",
+      "language": "tamil",
+      "chapter": 15,
+      "sequence": 590,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1a1b674fcef23d70"
+    },
+    {
+      "id": "TA-S119-letter-a",
+      "language": "tamil",
+      "chapter": 15,
+      "sequence": 591,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3e69bb4e88a98ccf",
+      "detachableSegments": [
+        "Script you'll notice: அ",
+        "Writing: அ"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C16-thamizh-maadangal",
+      "language": "tamil",
+      "chapter": 16,
+      "sequence": 600,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14dab8c9cd8fec07"
+    },
+    {
+      "id": "TA-S07-ma",
+      "language": "tamil",
+      "chapter": 16,
+      "sequence": 605,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:119ab23920501a81",
+      "detachableSegments": [
+        "Script you'll notice: ம",
+        "Writing: ம"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W05-write-aam",
+      "language": "tamil",
+      "chapter": 16,
+      "sequence": 610,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:2806a117ad48f726",
+      "detachableSegments": [
+        "Script you'll notice: a vowel standing alone",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-S120-letter-aa",
+      "language": "tamil",
+      "chapter": 16,
+      "sequence": 611,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:afef584f473b9034",
+      "detachableSegments": [
+        "Script you'll notice: ஆ",
+        "Writing: ஆ"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C17-nanpakal-nalliravu",
+      "language": "tamil",
+      "chapter": 17,
+      "sequence": 620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f54b98fb24a35ebe"
+    },
+    {
+      "id": "TA-C17-transparent-middle-synonyms",
+      "language": "tamil",
+      "chapter": 17,
+      "sequence": 630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1a6961f763d05fc1"
+    },
+    {
+      "id": "TA-S121-vowel-sign-u",
+      "language": "tamil",
+      "chapter": 17,
+      "sequence": 631,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a4eaea2ef39524b0",
+      "detachableSegments": [
+        "Script you'll notice: ◌ு",
+        "Writing: ◌ு — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C18-mani",
+      "language": "tamil",
+      "chapter": 18,
+      "sequence": 640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d305720b49f4f434"
+    },
+    {
+      "id": "TA-S08-pulli",
+      "language": "tamil",
+      "chapter": 18,
+      "sequence": 645,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a586475de0c005cb",
+      "detachableSegments": [
+        "Script you'll notice: ்",
+        "Writing: ்"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W06-write-illai",
+      "language": "tamil",
+      "chapter": 18,
+      "sequence": 650,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8ac490a17d82b53a",
+      "detachableSegments": [
+        "Script you'll notice: இ and ல",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C18-mani-homophone-time",
+      "language": "tamil",
+      "chapter": 18,
+      "sequence": 660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:039a838086a43398"
+    },
+    {
+      "id": "TA-S122-letter-ta",
+      "language": "tamil",
+      "chapter": 18,
+      "sequence": 661,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8ab5ce68888b9fbc",
+      "detachableSegments": [
+        "Script you'll notice: த",
+        "Writing: த — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C19-vayathu",
+      "language": "tamil",
+      "chapter": 19,
+      "sequence": 670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e7a729c0a3693e61"
+    },
+    {
+      "id": "TA-C19-age-register-grammar",
+      "language": "tamil",
+      "chapter": 19,
+      "sequence": 680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e56e7a5816e08838"
+    },
+    {
+      "id": "TA-S09-i-sign",
+      "language": "tamil",
+      "chapter": 19,
+      "sequence": 685,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:f7cee15ff2197e76",
+      "detachableSegments": [
+        "Script you'll notice: ி",
+        "Writing: ி"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-W07-write-sari",
+      "language": "tamil",
+      "chapter": 19,
+      "sequence": 690,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:e901b4d9eeba8fde",
+      "detachableSegments": [
+        "Script you'll notice: ச and ர",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-S123-vowel-sign-ee",
+      "language": "tamil",
+      "chapter": 19,
+      "sequence": 691,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ff9f282f0d7c5fe5",
+      "detachableSegments": [
+        "Script you'll notice: ◌ே",
+        "Writing: ◌ே — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C20-pathinondru-irupathu",
+      "language": "tamil",
+      "chapter": 20,
+      "sequence": 700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:31182bc6d2e785e6"
+    },
+    {
+      "id": "TA-C20-vaanilai",
+      "language": "tamil",
+      "chapter": 20,
+      "sequence": 710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c3eab369514507a8"
+    },
+    {
+      "id": "TA-S124-letter-ya",
+      "language": "tamil",
+      "chapter": 20,
+      "sequence": 711,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:adac2cf3b38aebe3",
+      "detachableSegments": [
+        "Script you'll notice: ய",
+        "Writing: ய — copy what you see"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C21-naay-poonai",
+      "language": "tamil",
+      "chapter": 21,
+      "sequence": 720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a2f119fd5362a2d8"
+    },
+    {
+      "id": "TA-W08-read-en",
+      "language": "tamil",
+      "chapter": 21,
+      "sequence": 725,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0eab9a657dd7d20f",
+      "detachableSegments": [
+        "Script you'll notice: எ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C22-paccai-manjal",
+      "language": "tamil",
+      "chapter": 22,
+      "sequence": 730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:315090b4ab998a0e"
+    },
+    {
+      "id": "TA-C23-naal",
+      "language": "tamil",
+      "chapter": 23,
+      "sequence": 740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5555c918817436eb"
+    },
+    {
+      "id": "TA-C23-day-family-register",
+      "language": "tamil",
+      "chapter": 23,
+      "sequence": 750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:66f11d4091607d07"
+    },
+    {
+      "id": "TA-W09-read-peyar",
+      "language": "tamil",
+      "chapter": 23,
+      "sequence": 755,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:c0ecc7c2b714e39e",
+      "detachableSegments": [
+        "Script you'll notice: ப and ய",
+        "Script you'll notice: the ெ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C24-iravu",
+      "language": "tamil",
+      "chapter": 24,
+      "sequence": 760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:796ac5d8129c3245"
+    },
+    {
+      "id": "TA-C24-night-register-darkness",
+      "language": "tamil",
+      "chapter": 24,
+      "sequence": 770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:39c3cb1f85922cf4"
+    },
+    {
+      "id": "TA-C25-iniya-iravu",
+      "language": "tamil",
+      "chapter": 25,
+      "sequence": 780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:19dca1cf614ebed8"
+    },
+    {
+      "id": "TA-W10-read-naan",
+      "language": "tamil",
+      "chapter": 25,
+      "sequence": 785,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4cd4df8950c7367a",
+      "detachableSegments": [
+        "Script you'll notice: the ா sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C25-goodnight-alternatives",
+      "language": "tamil",
+      "chapter": 25,
+      "sequence": 790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:614ee145f16a1bf3"
+    },
+    {
+      "id": "TA-C26-kaalai",
+      "language": "tamil",
+      "chapter": 26,
+      "sequence": 800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c834ecb13aab21f5"
+    },
+    {
+      "id": "TA-C27-maalai",
+      "language": "tamil",
+      "chapter": 27,
+      "sequence": 810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:41db8c56f6ad2596"
+    },
+    {
+      "id": "TA-W11-read-niingal",
+      "language": "tamil",
+      "chapter": 27,
+      "sequence": 815,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:32cfc1fb13f08bef",
+      "detachableSegments": [
+        "Script you'll notice: ங and ள",
+        "Script you'll notice: the ீ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C28-pirpakal",
+      "language": "tamil",
+      "chapter": 28,
+      "sequence": 820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d173c96694749db6"
+    },
+    {
+      "id": "TA-C28-afternoon-boundary",
+      "language": "tamil",
+      "chapter": 28,
+      "sequence": 830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:df550d5209024319"
+    },
+    {
+      "id": "TA-C29-kaalai-vanakkam",
+      "language": "tamil",
+      "chapter": 29,
+      "sequence": 840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ec2aada931263b05"
+    },
+    {
+      "id": "TA-W12-read-eppadi",
+      "language": "tamil",
+      "chapter": 29,
+      "sequence": 845,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:4f8ae089758b39e5",
+      "detachableSegments": [
+        "Script you'll notice: ட",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C30-maalai-vanakkam",
+      "language": "tamil",
+      "chapter": 30,
+      "sequence": 850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9ec726b7fe435a3e"
+    },
+    {
+      "id": "TA-C31-matiya-vanakkam",
+      "language": "tamil",
+      "chapter": 31,
+      "sequence": 860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e0fc68ea0a96a97e"
+    },
+    {
+      "id": "TA-C31-afternoon-greeting-root",
+      "language": "tamil",
+      "chapter": 31,
+      "sequence": 870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bd3bfbc73f95cbb9"
+    },
+    {
+      "id": "TA-W13-read-irukkirirgal",
+      "language": "tamil",
+      "chapter": 31,
+      "sequence": 875,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:23241669861ea8d8",
+      "detachableSegments": [
+        "Script you'll notice: the ு sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C32-iru",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:23936f7a7029f5e4"
+    },
+    {
+      "id": "TA-C32-po",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9895466949df9e89"
+    },
+    {
+      "id": "TA-C32-vaa",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 900,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b8b7f1f6cbee9bd4"
+    },
+    {
+      "id": "TA-C32-saappidu",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 910,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:484b58557e1ab908"
+    },
+    {
+      "id": "TA-C32-paar",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 920,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7c0c7b2534e55fb3"
+    },
+    {
+      "id": "TA-C32-teri",
+      "language": "tamil",
+      "chapter": 32,
+      "sequence": 930,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5c10a4213db12268"
+    },
+    {
+      "id": "TA-C33-ninai",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 940,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:df3eb8d967d164b5",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C33-puri",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 950,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f02f6b37ae1e15ce",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C33-padi",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 960,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:36ae56781169eff6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W16-read-tamizh",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 965,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:cd982d731316d61c",
+      "detachableSegments": [
+        "Script you'll notice: த and ழ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C33-ezhutu",
+      "language": "tamil",
+      "chapter": 33,
+      "sequence": 970,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bdda9249c003f94c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C34-edu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 980,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5d6ea6f315808c33",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C34-kel",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 990,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f5e3b74b5b3bf025",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W14-read-pesu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 995,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:20e9fcd487bbd15c",
+      "detachableSegments": [
+        "Script you'll notice: the ே sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C34-utavu",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 1000,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:39f1276ff0515dcc",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C34-pidi",
+      "language": "tamil",
+      "chapter": 34,
+      "sequence": 1010,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d9826b5358141478"
+    },
+    {
+      "id": "TA-C35-veedu",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 1020,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:02cdeb414fe5f151",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W15-read-po",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 1025,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7b8a45f2c391781b",
+      "detachableSegments": [
+        "Script you'll notice: the ோ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C35-kadavu",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 1030,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:939efbe63d9682c4",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C35-arai",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 1040,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:52db51b4d7161024",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C35-naarkaali",
+      "language": "tamil",
+      "chapter": 35,
+      "sequence": 1050,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cd96726728bb3047",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-teneer",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 1060,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a16ff2a5db8e0872",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-paal",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 1070,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fdcb199d987a2bd6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C36-unavu",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 1080,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e042fc7d55223d2d",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W17-read-unavu",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 1085,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:695185032432fcaf",
+      "detachableSegments": [
+        "Script you'll notice: உ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C36-tavaru",
+      "language": "tamil",
+      "chapter": 36,
+      "sequence": 1090,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:28d405c93048afda",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-uur",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 1100,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e9126594107cd522",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-nanban",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 1110,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3b1e135aa5ebe420",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W18-read-uur",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 1115,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:a4d00dabaf8d79bf",
+      "detachableSegments": [
+        "Script you'll notice: ஊ",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C37-ivar",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 1120,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:86cddb2e115cba53",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C37-ivar-en-nanbar",
+      "language": "tamil",
+      "chapter": 37,
+      "sequence": 1130,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:30fc8c871f6986df",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C38-udambu",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 1140,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fb6e418ebdb8be6c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C38-sugam",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 1150,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:00918ca7669305da",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C38-vidai",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 1160,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9e168048336c9617",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W19-read-muunru",
+      "language": "tamil",
+      "chapter": 38,
+      "sequence": 1165,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fe1014ace1a33e35",
+      "detachableSegments": [
+        "Script you'll notice: the ூ sign",
+        "Script you'll notice: build the word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C39-vendum",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1170,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d7f91d1c50b0387b",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C39-evvalavu",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1180,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:99891ce4af69b90a",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-C39-oru",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1190,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e44d69fb4d5bfdf6",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "TA-W20-read-onru",
+      "language": "tamil",
+      "chapter": 39,
+      "sequence": 1195,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:350b118dee1fea76",
+      "detachableSegments": [
+        "Script you'll notice: ஒ",
+        "Script you'll notice: build the word",
+        "Script you'll notice: the same letter, the shorter word"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "TA-C40-this",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:49fa0f4b7912c830"
+    },
+    {
+      "id": "TA-C40-that",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:25ab7cf0ed6f2a86"
+    },
+    {
+      "id": "TA-C40-here",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e4bd073ae46d486b"
+    },
+    {
+      "id": "TA-C40-there",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bf9bc7d159803fd5"
+    },
+    {
+      "id": "TA-C40-who",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:342e5eb5bbee5048"
+    },
+    {
+      "id": "TA-C40-where",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7d8e62523593dead"
+    },
+    {
+      "id": "TA-C40-deixis-system",
+      "language": "tamil",
+      "chapter": 40,
+      "sequence": 1260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f3016ecfc5a56a23"
+    },
+    {
+      "id": "TA-C41-big",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b172d44794aaf9b1"
+    },
+    {
+      "id": "TA-C41-small",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4e0b77db2b2bd740"
+    },
+    {
+      "id": "TA-C41-good",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:14b6ac8d32b13a37"
+    },
+    {
+      "id": "TA-C41-new",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8d1e8a5a7a5e2548"
+    },
+    {
+      "id": "TA-C41-old",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:10ef1e9ca946eda9"
+    },
+    {
+      "id": "TA-C41-adjective-system",
+      "language": "tamil",
+      "chapter": 41,
+      "sequence": 1320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f8ba52ec7ed7337c"
+    },
+    {
+      "id": "TA-C42-come",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bd59009caae535c7"
+    },
+    {
+      "id": "TA-C42-sit",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:07f019b07767cc89"
+    },
+    {
+      "id": "TA-C42-read",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a0c940d4cd8afbc8"
+    },
+    {
+      "id": "TA-C42-give",
+      "language": "tamil",
+      "chapter": 42,
+      "sequence": 1360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:00474ac7e02b6ef0"
+    },
+    {
+      "id": "TA-C43-child",
+      "language": "tamil",
+      "chapter": 43,
+      "sequence": 1370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7ebe1f3123382f17"
+    },
+    {
+      "id": "TA-C43-son",
+      "language": "tamil",
+      "chapter": 43,
+      "sequence": 1380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2d95a1a8fbff242c"
+    },
+    {
+      "id": "TA-C43-daughter",
+      "language": "tamil",
+      "chapter": 43,
+      "sequence": 1390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2db4c20c4e777e1e"
+    },
+    {
+      "id": "TA-C43-family",
+      "language": "tamil",
+      "chapter": 43,
+      "sequence": 1400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1a26b66c8899f0f3"
+    },
+    {
+      "id": "TA-C44-fruit",
+      "language": "tamil",
+      "chapter": 44,
+      "sequence": 1410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d37ebae1c36d4caa"
+    },
+    {
+      "id": "TA-C44-cloth",
+      "language": "tamil",
+      "chapter": 44,
+      "sequence": 1420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0efeaec7b1b21b80"
+    },
+    {
+      "id": "TA-C44-lamp",
+      "language": "tamil",
+      "chapter": 44,
+      "sequence": 1430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:48c96f721f2deee2"
+    },
+    {
+      "id": "TA-C44-salt",
+      "language": "tamil",
+      "chapter": 44,
+      "sequence": 1440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:10674da6cdaaadb5"
+    },
+    {
+      "id": "TA-C44-book",
+      "language": "tamil",
+      "chapter": 44,
+      "sequence": 1450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:733ec5732a12c7d6"
+    },
+    {
+      "id": "TA-C45-eye",
+      "language": "tamil",
+      "chapter": 45,
+      "sequence": 1460,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e00f4fa3acc5ca7d"
+    },
+    {
+      "id": "TA-C45-ear",
+      "language": "tamil",
+      "chapter": 45,
+      "sequence": 1470,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b30e0f76c20f5c19"
+    },
+    {
+      "id": "TA-C45-nose",
+      "language": "tamil",
+      "chapter": 45,
+      "sequence": 1480,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7acb72201fe16e82"
+    },
+    {
+      "id": "TA-C45-tooth",
+      "language": "tamil",
+      "chapter": 45,
+      "sequence": 1490,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2964ebbccad74fac"
+    },
+    {
+      "id": "TA-C45-stomach",
+      "language": "tamil",
+      "chapter": 45,
+      "sequence": 1500,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:df29cdc934af2306"
+    },
+    {
+      "id": "TA-C46-teacher",
+      "language": "tamil",
+      "chapter": 46,
+      "sequence": 1510,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:053bb51c93fef3d8"
+    },
+    {
+      "id": "TA-C46-student",
+      "language": "tamil",
+      "chapter": 46,
+      "sequence": 1520,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2f92d66633526e21"
+    },
+    {
+      "id": "TA-C46-doctor",
+      "language": "tamil",
+      "chapter": 46,
+      "sequence": 1530,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ae4f949d1e2d390e"
+    },
+    {
+      "id": "TA-C46-farmer",
+      "language": "tamil",
+      "chapter": 46,
+      "sequence": 1540,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:33db7ab32821091d"
+    },
+    {
+      "id": "TA-C46-guest",
+      "language": "tamil",
+      "chapter": 46,
+      "sequence": 1550,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8c547d098d22d152"
+    },
+    {
+      "id": "TA-C47-true",
+      "language": "tamil",
+      "chapter": 47,
+      "sequence": 1560,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:764f67fa451f6760"
+    },
+    {
+      "id": "TA-C47-enough",
+      "language": "tamil",
+      "chapter": 47,
+      "sequence": 1570,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ab689e556f0b7e7b"
+    },
+    {
+      "id": "TA-C47-certainly",
+      "language": "tamil",
+      "chapter": 47,
+      "sequence": 1580,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8e99e5e4a08e7f24"
+    },
+    {
+      "id": "TA-C47-perhaps",
+      "language": "tamil",
+      "chapter": 47,
+      "sequence": 1590,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f1653d7cee3bf05c"
+    },
+    {
+      "id": "TA-C47-just-so",
+      "language": "tamil",
+      "chapter": 47,
+      "sequence": 1600,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2af4bdf191e17957"
+    },
+    {
+      "id": "TA-C48-now",
+      "language": "tamil",
+      "chapter": 48,
+      "sequence": 1610,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2de003261cf5d342"
+    },
+    {
+      "id": "TA-C48-time",
+      "language": "tamil",
+      "chapter": 48,
+      "sequence": 1620,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:34a846bc8793408d"
+    },
+    {
+      "id": "TA-C48-journey",
+      "language": "tamil",
+      "chapter": 48,
+      "sequence": 1630,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:04ea28fe9dc89cff"
+    },
+    {
+      "id": "TA-C48-later",
+      "language": "tamil",
+      "chapter": 48,
+      "sequence": 1640,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ea8ead94bdb35572"
+    },
+    {
+      "id": "TA-C48-set-out",
+      "language": "tamil",
+      "chapter": 48,
+      "sequence": 1650,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2a9c98fa0ea6e4f7"
+    },
+    {
+      "id": "TA-C49-affection",
+      "language": "tamil",
+      "chapter": 49,
+      "sequence": 1660,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5e730f0209ceceb3"
+    },
+    {
+      "id": "TA-C49-respect",
+      "language": "tamil",
+      "chapter": 49,
+      "sequence": 1670,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8af2628847a01fdf"
+    },
+    {
+      "id": "TA-C49-gladness",
+      "language": "tamil",
+      "chapter": 49,
+      "sequence": 1680,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ea639e76252e86ef"
+    },
+    {
+      "id": "TA-C49-good-wish",
+      "language": "tamil",
+      "chapter": 49,
+      "sequence": 1690,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dc7b0e274f1cd8b3"
+    },
+    {
+      "id": "TA-C49-many-thanks",
+      "language": "tamil",
+      "chapter": 49,
+      "sequence": 1700,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9c04219fe4af37ab"
+    },
+    {
+      "id": "TA-C50-threshold",
+      "language": "tamil",
+      "chapter": 50,
+      "sequence": 1710,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a9a04ead13b84967"
+    },
+    {
+      "id": "TA-C50-kolam",
+      "language": "tamil",
+      "chapter": 50,
+      "sequence": 1720,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3a62f8f131e3e915"
+    },
+    {
+      "id": "TA-C50-flower",
+      "language": "tamil",
+      "chapter": 50,
+      "sequence": 1730,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9c5d385d215dfc33"
+    },
+    {
+      "id": "TA-C50-betel-leaf",
+      "language": "tamil",
+      "chapter": 50,
+      "sequence": 1740,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:53b700951eb2b5eb"
+    },
+    {
+      "id": "TA-C50-welcome",
+      "language": "tamil",
+      "chapter": 50,
+      "sequence": 1750,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c1ca13a4a05a282e"
+    },
+    {
+      "id": "TA-C51-sky",
+      "language": "tamil",
+      "chapter": 51,
+      "sequence": 1760,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5f33f88ba8ca7722"
+    },
+    {
+      "id": "TA-C51-sun",
+      "language": "tamil",
+      "chapter": 51,
+      "sequence": 1770,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:bb69fb5562a91c2e"
+    },
+    {
+      "id": "TA-C51-moon",
+      "language": "tamil",
+      "chapter": 51,
+      "sequence": 1780,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cf6f82c652fa6be8"
+    },
+    {
+      "id": "TA-C51-star",
+      "language": "tamil",
+      "chapter": 51,
+      "sequence": 1790,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:aac55c323316a5c7"
+    },
+    {
+      "id": "TA-C51-cloud",
+      "language": "tamil",
+      "chapter": 51,
+      "sequence": 1800,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:642ddc1bd7deba8b"
+    },
+    {
+      "id": "TA-C52-tree",
+      "language": "tamil",
+      "chapter": 52,
+      "sequence": 1810,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4111f26163d761c8"
+    },
+    {
+      "id": "TA-C52-branch",
+      "language": "tamil",
+      "chapter": 52,
+      "sequence": 1820,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:416603282f2c14c6"
+    },
+    {
+      "id": "TA-C52-shoot",
+      "language": "tamil",
+      "chapter": 52,
+      "sequence": 1830,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f33d28b86db8abec"
+    },
+    {
+      "id": "TA-C52-root",
+      "language": "tamil",
+      "chapter": 52,
+      "sequence": 1840,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c31c7437e7ff6d6a"
+    },
+    {
+      "id": "TA-C52-seed",
+      "language": "tamil",
+      "chapter": 52,
+      "sequence": 1850,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c8898c71bd7ef14f"
+    },
+    {
+      "id": "TA-C53-river",
+      "language": "tamil",
+      "chapter": 53,
+      "sequence": 1860,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0e1bda3d4093a56d"
+    },
+    {
+      "id": "TA-C53-hill",
+      "language": "tamil",
+      "chapter": 53,
+      "sequence": 1870,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7f2481a971386528"
+    },
+    {
+      "id": "TA-C53-field",
+      "language": "tamil",
+      "chapter": 53,
+      "sequence": 1880,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:54e6a50d4df88b3a"
+    },
+    {
+      "id": "TA-C53-path",
+      "language": "tamil",
+      "chapter": 53,
+      "sequence": 1890,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1b2144a24242f821"
+    },
+    {
+      "id": "TA-C53-village",
+      "language": "tamil",
+      "chapter": 53,
+      "sequence": 1900,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:31f990c154c3fd37"
+    },
+    {
+      "id": "TA-C54-mat",
+      "language": "tamil",
+      "chapter": 54,
+      "sequence": 1910,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ee1a5daf248e8a0b"
+    },
+    {
+      "id": "TA-C54-basket",
+      "language": "tamil",
+      "chapter": 54,
+      "sequence": 1920,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d57d933671d023c8"
+    },
+    {
+      "id": "TA-C54-knife",
+      "language": "tamil",
+      "chapter": 54,
+      "sequence": 1930,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1562842f06245807"
+    },
+    {
+      "id": "TA-C54-bowl",
+      "language": "tamil",
+      "chapter": 54,
+      "sequence": 1940,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8216114d72acfe8e"
+    },
+    {
+      "id": "TA-C54-box",
+      "language": "tamil",
+      "chapter": 54,
+      "sequence": 1950,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:049f08e20934af01"
+    },
+    {
+      "id": "TA-C55-neck",
+      "language": "tamil",
+      "chapter": 55,
+      "sequence": 1960,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:de253ae0714f536c"
+    },
+    {
+      "id": "TA-C55-back",
+      "language": "tamil",
+      "chapter": 55,
+      "sequence": 1970,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d2d541ee587c5739"
+    },
+    {
+      "id": "TA-C55-lip",
+      "language": "tamil",
+      "chapter": 55,
+      "sequence": 1980,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ce5043b6602cb0eb"
+    },
+    {
+      "id": "TA-C55-nail",
+      "language": "tamil",
+      "chapter": 55,
+      "sequence": 1990,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:61fb26330d91ecb9"
+    },
+    {
+      "id": "TA-C55-bone",
+      "language": "tamil",
+      "chapter": 55,
+      "sequence": 2000,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b2ee4149f75b35b3"
+    },
+    {
+      "id": "TA-C56-a-little",
+      "language": "tamil",
+      "chapter": 56,
+      "sequence": 2010,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:055508c53aafc004"
+    },
+    {
+      "id": "TA-C56-a-lot",
+      "language": "tamil",
+      "chapter": 56,
+      "sequence": 2020,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c06fb61a6ba6e95d"
+    },
+    {
+      "id": "TA-C56-less",
+      "language": "tamil",
+      "chapter": 56,
+      "sequence": 2030,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ba7a90842bfc26d7"
+    },
+    {
+      "id": "TA-C56-no-need",
+      "language": "tamil",
+      "chapter": 56,
+      "sequence": 2040,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f1444d1ed3e8dbdb"
+    },
+    {
+      "id": "TA-C56-let-it-be",
+      "language": "tamil",
+      "chapter": 56,
+      "sequence": 2050,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:565f96c0906be523"
+    },
+    {
+      "id": "TA-C57-wind",
+      "language": "tamil",
+      "chapter": 57,
+      "sequence": 2060,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:12ff3eeb2bc14225"
+    },
+    {
+      "id": "TA-C57-sand",
+      "language": "tamil",
+      "chapter": 57,
+      "sequence": 2070,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e53879f031b5d783"
+    },
+    {
+      "id": "TA-C57-mud",
+      "language": "tamil",
+      "chapter": 57,
+      "sequence": 2080,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7b6609faf57b1ddf"
+    },
+    {
+      "id": "TA-C57-smoke",
+      "language": "tamil",
+      "chapter": 57,
+      "sequence": 2090,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:014b8d0f69edb537"
+    },
+    {
+      "id": "TA-C57-ember",
+      "language": "tamil",
+      "chapter": 57,
+      "sequence": 2100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:59b7d9ba67e54bae"
+    },
+    {
+      "id": "TA-C58-cow",
+      "language": "tamil",
+      "chapter": 58,
+      "sequence": 2110,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c73907e1022a429c"
+    },
+    {
+      "id": "TA-C58-goat",
+      "language": "tamil",
+      "chapter": 58,
+      "sequence": 2120,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:de8f8201798227b5"
+    },
+    {
+      "id": "TA-C58-hen",
+      "language": "tamil",
+      "chapter": 58,
+      "sequence": 2130,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8c917ae1b934eabf"
+    },
+    {
+      "id": "TA-C58-crow",
+      "language": "tamil",
+      "chapter": 58,
+      "sequence": 2140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ba433f924df7df2a"
+    },
+    {
+      "id": "TA-C58-bird",
+      "language": "tamil",
+      "chapter": 58,
+      "sequence": 2150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e1e1b5d5d133bd7c"
+    },
+    {
+      "id": "TA-C59-curd",
+      "language": "tamil",
+      "chapter": 59,
+      "sequence": 2160,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:32ff839f5042e02f"
+    },
+    {
+      "id": "TA-C59-ghee",
+      "language": "tamil",
+      "chapter": 59,
+      "sequence": 2170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:36ffd81192107d1d"
+    },
+    {
+      "id": "TA-C59-oil",
+      "language": "tamil",
+      "chapter": 59,
+      "sequence": 2180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:97c5697ce1896d19"
+    },
+    {
+      "id": "TA-C59-jaggery",
+      "language": "tamil",
+      "chapter": 59,
+      "sequence": 2190,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9e52f7500837f908"
+    },
+    {
+      "id": "TA-C59-sugar",
+      "language": "tamil",
+      "chapter": 59,
+      "sequence": 2200,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:69d4e6af54605240"
+    },
+    {
+      "id": "TA-C60-needle",
+      "language": "tamil",
+      "chapter": 60,
+      "sequence": 2210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:c7f36b58a7006fef"
+    },
+    {
+      "id": "TA-C60-rope",
+      "language": "tamil",
+      "chapter": 60,
+      "sequence": 2220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a1ea4deb7242fcdd"
+    },
+    {
+      "id": "TA-C60-umbrella",
+      "language": "tamil",
+      "chapter": 60,
+      "sequence": 2230,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:315f7ce5fcb90fef"
+    },
+    {
+      "id": "TA-C60-broom",
+      "language": "tamil",
+      "chapter": 60,
+      "sequence": 2240,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a3b8d4c9c804c9c9"
+    },
+    {
+      "id": "TA-C60-comb",
+      "language": "tamil",
+      "chapter": 60,
+      "sequence": 2250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:97bed831db5aaa4b"
+    },
+    {
+      "id": "TA-C61-hunger",
+      "language": "tamil",
+      "chapter": 61,
+      "sequence": 2260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:45afe9eae6a86b30"
+    },
+    {
+      "id": "TA-C61-thirst",
+      "language": "tamil",
+      "chapter": 61,
+      "sequence": 2270,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e3e919b230092afa"
+    },
+    {
+      "id": "TA-C61-sleep",
+      "language": "tamil",
+      "chapter": 61,
+      "sequence": 2280,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0e37d770fbc7d7a2"
+    },
+    {
+      "id": "TA-C61-fever",
+      "language": "tamil",
+      "chapter": 61,
+      "sequence": 2290,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ac2429be429b36d4"
+    },
+    {
+      "id": "TA-C61-pain",
+      "language": "tamil",
+      "chapter": 61,
+      "sequence": 2300,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3cfd5a9ec8fcf3d6"
+    },
+    {
+      "id": "TA-C62-only",
+      "language": "tamil",
+      "chapter": 62,
+      "sequence": 2310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a5754c28e75799ed"
+    },
+    {
+      "id": "TA-C62-still",
+      "language": "tamil",
+      "chapter": 62,
+      "sequence": 2320,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d1ab042c00b21e99"
+    },
+    {
+      "id": "TA-C62-soon",
+      "language": "tamil",
+      "chapter": 62,
+      "sequence": 2330,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:350c2f93c3f9c11b"
+    },
+    {
+      "id": "TA-C62-at-once",
+      "language": "tamil",
+      "chapter": 62,
+      "sequence": 2340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:71feed456d8fd5a1"
+    },
+    {
+      "id": "TA-C62-first-of-all",
+      "language": "tamil",
+      "chapter": 62,
+      "sequence": 2350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e04f07e0e08697df"
+    },
+    {
+      "id": "TA-C63-request",
+      "language": "tamil",
+      "chapter": 63,
+      "sequence": 2360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f7d04850f5336b7b"
+    },
+    {
+      "id": "TA-C63-permission",
+      "language": "tamil",
+      "chapter": 63,
+      "sequence": 2370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b9a97a990743b936"
+    },
+    {
+      "id": "TA-C63-hesitancy",
+      "language": "tamil",
+      "chapter": 63,
+      "sequence": 2380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d788a01a5be5bf3c"
+    },
+    {
+      "id": "TA-C63-trust",
+      "language": "tamil",
+      "chapter": 63,
+      "sequence": 2390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0bee5bfbb5594734"
+    },
+    {
+      "id": "TA-C63-humility",
+      "language": "tamil",
+      "chapter": 63,
+      "sequence": 2400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4bfa453b989df34c"
+    },
+    {
+      "id": "TA-C64-paddy",
+      "language": "tamil",
+      "chapter": 64,
+      "sequence": 2410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:11cc19499abaf6db"
+    },
+    {
+      "id": "TA-C64-grass",
+      "language": "tamil",
+      "chapter": 64,
+      "sequence": 2420,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:30f78d3985e63e3c"
+    },
+    {
+      "id": "TA-C64-crop",
+      "language": "tamil",
+      "chapter": 64,
+      "sequence": 2430,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:16434aea9792ce6e"
+    },
+    {
+      "id": "TA-C64-threshing-floor",
+      "language": "tamil",
+      "chapter": 64,
+      "sequence": 2440,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:897f2cdbf0977dfa"
+    },
+    {
+      "id": "TA-C64-harvest",
+      "language": "tamil",
+      "chapter": 64,
+      "sequence": 2450,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a87066fbc9f12aa1"
+    }
+  ],
+  "findings": []
+}

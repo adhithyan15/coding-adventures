@@ -143,6 +143,15 @@ const GUJARATI_NA = DUCTUS[ductusKey("gujarati", "ન")];
 const GUJARATI_PA = DUCTUS[ductusKey("gujarati", "પ")];
 const GUJARATI_PHA = DUCTUS[ductusKey("gujarati", "ફ")];
 const GUJARATI_BA = DUCTUS[ductusKey("gujarati", "બ")];
+const GUJARATI_BHA = DUCTUS[ductusKey("gujarati", "ભ")];
+const GUJARATI_MA = DUCTUS[ductusKey("gujarati", "મ")];
+const GUJARATI_YA = DUCTUS[ductusKey("gujarati", "ય")];
+const GUJARATI_RA = DUCTUS[ductusKey("gujarati", "ર")];
+const GUJARATI_LA = DUCTUS[ductusKey("gujarati", "લ")];
+const GUJARATI_LLA = DUCTUS[ductusKey("gujarati", "ળ")];
+const GUJARATI_VA = DUCTUS[ductusKey("gujarati", "વ")];
+const GUJARATI_SHA = DUCTUS[ductusKey("gujarati", "શ")];
+const GUJARATI_SA = DUCTUS[ductusKey("gujarati", "સ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2225,6 +2234,60 @@ describe("handwriting ductus", () => {
     const spine = GUJARATI_BA.strokes[1].segments[0].path;
     expect(Math.max(...body.map((point) => point.y))).toBeGreaterThan(550);
     expect(spine.at(-1)!.y).toBeLessThan(spine[0].y);
+  });
+
+  it("Gujarati ભ completes its loop before the right spine", () => {
+    expect(GUJARATI_BHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_BHA)).toBe(1);
+    expect(GUJARATI_BHA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati મ completes its left body before the right spine", () => {
+    expect(GUJARATI_MA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_MA)).toBe(1);
+    expect(GUJARATI_MA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati ય completes its rounded body before the right spine", () => {
+    expect(GUJARATI_YA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_YA)).toBe(1);
+    expect(GUJARATI_YA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati ર keeps its upper body, middle loop, and tail continuous", () => {
+    expect(GUJARATI_RA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_RA)).toBe(0);
+    expect(GUJARATI_RA.strokes).toHaveLength(1);
+  });
+
+  it("Gujarati લ completes its body and shoulder before the right spine", () => {
+    expect(GUJARATI_LA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_LA)).toBe(2);
+    expect(GUJARATI_LA.strokes).toHaveLength(3);
+  });
+
+  it("Gujarati ળ keeps its bowl, turn, arch, and spine continuous", () => {
+    expect(GUJARATI_LLA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_LLA)).toBe(0);
+    expect(GUJARATI_LLA.strokes).toHaveLength(1);
+  });
+
+  it("Gujarati વ completes its rounded body before the right spine", () => {
+    expect(GUJARATI_VA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_VA)).toBe(1);
+    expect(GUJARATI_VA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati શ completes its looped body before the right spine", () => {
+    expect(GUJARATI_SHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_SHA)).toBe(1);
+    expect(GUJARATI_SHA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati સ completes its looped body and shoulder before the right spine", () => {
+    expect(GUJARATI_SA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_SA)).toBe(1);
+    expect(GUJARATI_SA.strokes).toHaveLength(2);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4751,6 +4814,60 @@ describe("handwriting ductus", () => {
     expect(src.variation).toMatch(
       /two ordered pen-down runs.*first SVG path.*upper left.*rounded left body.*compact middle turn.*right.*shoulder.*lifts once.*second SVG path.*tall right spine.*lower-right foot.*remaining path slots are empty.*one variant.*not a universal standard.*bundled Noto Sans Gujarati.*rounded-body-before-right-spine order.*one-lift evidence/i,
     );
+  });
+
+  it("Gujarati ભ traces its loop and right spine to two paths", () => {
+    const src = GUJARATI_BHA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ભ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*broad left loop.*compact middle turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati મ traces its left body and right spine to two paths", () => {
+    const src = GUJARATI_MA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*મ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*upper left.*compact inner turn.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*left-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati ય traces its rounded body and right spine to two paths", () => {
+    const src = GUJARATI_YA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ય animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*upper left.*rounded upper turn.*broad lower body.*long shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati ર traces its upper body, middle loop, and tail to one path", () => {
+    const src = GUJARATI_RA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ર animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*rounded upper body.*small middle loop.*lower-right tail.*without lifting.*one variant.*upper-body-to-middle-loop-to-lower-tail order.*zero-lift evidence/i);
+  });
+
+  it("Gujarati લ traces its body, shoulder, and spine to three paths", () => {
+    const src = GUJARATI_LA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*લ animation.*first through third SVG paths/i);
+    expect(src.variation).toMatch(/three ordered pen-down runs.*first SVG path.*upper right.*broad rounded left body.*lower-right terminal.*lifts once.*second SVG path.*middle shoulder.*left to right.*lifts again.*third SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-middle-shoulder-before-right-spine order.*two-lift evidence/i);
+  });
+
+  it("Gujarati ળ traces its bowl, turn, arch, and spine to one path", () => {
+    const src = GUJARATI_LLA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ળ animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*broad left bowl.*narrow middle turn.*high right arch.*tall right spine.*without lifting.*one variant.*left-bowl-to-middle-turn-to-right-spine order.*zero-lift evidence/i);
+  });
+
+  it("Gujarati વ traces its rounded body and spine to two paths", () => {
+    const src = GUJARATI_VA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*વ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*broad rounded left body.*right shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati શ traces its looped body and spine to two paths", () => {
+    const src = GUJARATI_SHA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*શ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*small upper loop.*broad lower body.*lower-right tail.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-and-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati સ traces its looped body, shoulder, and spine to two paths", () => {
+    const src = GUJARATI_SA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*સ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*rounded upper loop.*left body.*long right shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-and-body-before-right-spine order.*one-lift evidence/i);
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {

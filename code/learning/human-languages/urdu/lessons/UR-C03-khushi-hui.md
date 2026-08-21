@@ -16,11 +16,11 @@ etymology_hook: Urdu pairs Persian khush happiness vocabulary with inherited Ind
 duration:
   max_seconds: 240
 requires:
-  knowledge: [UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU]
+  knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU]
 introduces:
   knowledge: [UR-LEX-NICE-TO-MEET, UR-CHUNK-AAP-SE-MIL-KAR, UR-ETYMON-KHUSH-PERSIAN]
 practises:
-  knowledge: [UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU, UR-LEX-NICE-TO-MEET, UR-CHUNK-AAP-SE-MIL-KAR, UR-ETYMON-KHUSH-PERSIAN]
+  knowledge: [UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU, UR-LEX-NICE-TO-MEET, UR-CHUNK-AAP-SE-MIL-KAR, UR-ETYMON-KHUSH-PERSIAN]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, mediation]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,10 +32,11 @@ reviews_of: [UR-C03-aap-ka-naam-kya-hai, UR-C02-mera-naam]
 # آپ سے مل کر خوشی ہوئی — pleased to meet you
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-SCRIPT-SHIN-RECOGNITION-01, UR-SCRIPT-KAF-RECOGNITION-01, UR-SCRIPT-RE-RECOGNITION-01, UR-SCRIPT-YE-RECOGNITION-01, UR-SCRIPT-HE-RECOGNITION-01, UR-LEX-SHUKRIYA, UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-NAME-QUESTION, UR-LEX-MERA-NAAM-HAI, UR-LEX-AAP-TUM-TU] -->
 
-[PAUSE 2s] Ask **āp kā nām kyā hai?** and answer **merā nām ... hai**. This
-fixed response now closes the meeting.
+[PAUSE 2s] Say the opening ladder once: **shukriyā — jī hā̃ — nahī̃**. Point
+to the three shapes you traced before the joined thank-you word. Then ask
+**āp kā nām kyā hai?** and answer **merā nām ... hai**.
 
 ## The exchange
 <!-- hl-knowledge: introduces=[UR-LEX-NICE-TO-MEET, UR-CHUNK-AAP-SE-MIL-KAR]; assesses=[] -->

@@ -1169,6 +1169,45 @@ ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
 tracing a wider, more angular printed body and a straighter spine. The source's
 variation warning continues to qualify the demonstrated school-hand form;
 conventional **ભ** is next.
+The verified two-frame Gujarati **ભ** filmstrip circles the broad left loop,
+winds through its compact inner turn, and exits across the long right shoulder;
+after one lift, the second frame descends the separate tall right spine into
+its foot. The source's two-path order and variation warning remain visible;
+conventional **મ** is next.
+The verified two-frame Gujarati **મ** filmstrip curls through the left body and
+compact inner turn before exiting across the long shoulder; after one lift,
+the second frame descends the tall right spine into its foot. The source's
+two-path order and variation warning remain visible; conventional **ય** is next.
+The verified two-frame Gujarati **ય** filmstrip circles through the rounded
+upper turn, sweeps around the broad lower body, and exits across the long right
+shoulder; after one lift, the second frame descends the tall right spine into
+its foot. The source's two-path order and variation warning remain visible;
+conventional **ર** is next.
+The verified one-frame Gujarati **ર** filmstrip circles the rounded upper body,
+curls through the small middle loop, and descends into the lower-right tail
+without lifting. The source's one-path order and variation warning remain
+visible; conventional **લ** is next.
+The verified three-frame Gujarati **લ** filmstrip circles the broad rounded
+left body, lifts to sweep the middle shoulder from left to right, then lifts
+again to descend the tall right spine into its foot. The source's three-path
+order and variation warning remain visible; conventional **ળ** is next.
+The verified one-frame Gujarati **ળ** filmstrip circles the broad left bowl,
+rises through the narrow middle turn, crosses the high right arch, and descends
+the tall spine into its foot without lifting. The source's one-path order and
+variation warning remain visible; conventional **વ** is next.
+The verified two-frame Gujarati **વ** filmstrip circles the broad rounded left
+body and returns into the right shoulder; after one lift, the second frame
+descends the tall right spine into its foot. The source's two-path order and
+variation warning remain visible; conventional **શ** is next.
+The verified two-frame Gujarati **શ** filmstrip circles the small upper loop
+and continues through the broad lower body into its tail; after one lift, the
+second frame descends the tall right spine into its foot. The source's two-path
+order and variation warning remain visible; conventional **સ** is next.
+The verified two-frame Gujarati **સ** filmstrip circles the rounded upper loop,
+descends through the left body, and sweeps into the long right shoulder; after
+one lift, the second frame descends the tall right spine into its foot. The
+source's two-path order and variation warning remain visible; conventional
+**હ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

@@ -62,8 +62,9 @@ even shaped partly by German *hallo*.
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HALLO-01] -->
 
 *hallo* is informal-to-neutral — fine among friends, and increasingly common
-generally, but for polite or first meetings German reaches for *Guten Tag*
-("good day"), which you'll build over the next few lessons.
+generally. Polite or first meetings often use a daytime greeting instead. You
+will build that greeting one familiar piece at a time over the next few
+lessons.
 
 ## Writing — follow one word you can see
 <!-- hl-knowledge: introduces=[]; assesses=[GE-LEX-HALLO-01] -->
