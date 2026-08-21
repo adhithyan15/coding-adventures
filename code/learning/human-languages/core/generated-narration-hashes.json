@@ -600,7 +600,7 @@
     {
       "language": "bengali",
       "chapter": 2,
-      "sourceHash": "fnv1a64:e32fde4e95bc490f",
+      "sourceHash": "fnv1a64:4f0af9de6c0a13b5",
       "lessonIds": [
         "BN-C02-naam",
         "BN-C02-amar",
@@ -616,7 +616,7 @@
       "text": "bengali/narration/ch02.txt",
       "json": "bengali/narration/ch02.json",
       "textHash": "fnv1a64:90786881b184ce52",
-      "jsonHash": "fnv1a64:d9a20b61ddbf95a3"
+      "jsonHash": "fnv1a64:5a338a6dc643b9e7"
     },
     {
       "language": "bengali",
@@ -658,7 +658,7 @@
     {
       "language": "bengali",
       "chapter": 5,
-      "sourceHash": "fnv1a64:e0481b47dd26e085",
+      "sourceHash": "fnv1a64:15618e854fd87ec4",
       "lessonIds": [
         "BN-C05-bola",
         "BN-C05-ami-bangla-boli",
@@ -671,7 +671,7 @@
       "text": "bengali/narration/ch05.txt",
       "json": "bengali/narration/ch05.json",
       "textHash": "fnv1a64:d4cd887f96d2eb89",
-      "jsonHash": "fnv1a64:3a6f3bad75597f39"
+      "jsonHash": "fnv1a64:16945b88291e7cc9"
     },
     {
       "language": "bengali",
