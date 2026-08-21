@@ -844,10 +844,14 @@ mod tests {
             pixels.data.len(),
             pixels.width as usize * pixels.height as usize * 4
         );
-        assert!(pixels
-            .data
-            .chunks_exact(4)
-            .any(|pixel| pixel != [192, 192, 192, 255]));
+        assert!(
+            pixels
+                .data
+                .as_chunks::<4>()
+                .0
+                .iter()
+                .any(|pixel| pixel != &[192, 192, 192, 255])
+        );
     }
 
     #[test]

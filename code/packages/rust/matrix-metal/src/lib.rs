@@ -263,7 +263,7 @@ impl MetalExecutor {
     /// **MX05 Phase 4.2.**  Compile an emitted MSL kernel and install
     /// the dispatching closure under the given handle.
     ///
-    /// This is the convenience layer over [`install_specialised`] that
+    /// This is the convenience layer over [`Self::install_specialised`] that
     /// closes the loop with the [`msl_emitter`] module: caller emits a
     /// kernel string with [`emit_specialised_kernel`], hands it to this
     /// method, and the executor:

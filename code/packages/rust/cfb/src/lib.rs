@@ -282,7 +282,7 @@ impl CompoundFile {
         } else {
             let raw = cf.read_fat_chain(first_minifat_sector, None)?;
             let mut mf = Vec::with_capacity(raw.len() / 4);
-            for chunk in raw.chunks_exact(4) {
+            for chunk in raw.as_chunks::<4>().0 {
                 mf.push(u32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]));
             }
             mf
