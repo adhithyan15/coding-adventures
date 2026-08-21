@@ -4486,10 +4486,39 @@ Ready-for-review PR #12376 was opened from clean validated head
 `63e5a7adbe3ea06ba3e732564dfe5136ec29b112` after a normal first push from
 exact `origin/main` `2e248b9070a4e7a89cea4bef83ad5caa5917148c`.
 Independent implementation, security, build, inventory, and live-ownership
-audits found no blocker. The exact 12-path diff is clean, mergeable, and has no
-open or stale ownership overlap. GitHub checks are queued, so the Dart item is
-now `pr-open` and auto-merge remains disabled until every required check is
-terminal acceptable and GitHub still reports no conflict.
+audits found no blocker. The exact 12-path diff was clean, mergeable, and had no
+open or stale ownership overlap. Final reviewed head
+`283ebd81b8a533b4ceb7a5a0055d09d0e5940477` completed all 29 checks with 23
+successes and six expected skips; both CI gates and the Linux, macOS, and
+Windows builds succeeded. After the loop requested squash auto-merge, GitHub
+merged it as `49cfa0700c29fa434fdce3e26cc237ccfcf5a3ce` at
+2026-08-21T05:04:51Z and deleted the source branch.
+
+### Post-#12376 refresh and Swift PNG lane selection
+
+The refreshed collision-checked schema-3 inventory at exact live main
+`12dbe729e721280d38b4522aa6ea66890d10541b` contains 15 established lanes,
+1,368 canonical identities, and 4,558 implementation slots. High-consensus
+coverage remains 174 packages with 271 gaps; the 5-9 band contains 123
+packages with 934 gaps; the 2-4 band contains 166 packages with 2,087 gaps;
+and 905 singletons have 12,670 gaps, including 716 Rust singletons. Canonical
+collisions and unknown language buckets remain zero. The only new root since
+the prior inventory is the reviewed Dart image-codec-png package. Two later
+Gujarati human-language commits modify existing TypeScript roots only, so no
+new classification owner is required.
+
+The Swift PNG child is selected next. Each remaining clean PNG child closes
+one umbrella slot; Swift wins the safety and dependency-critical tie-break
+because Swift 6.3.3 is installed, the lane already has PixelContainer,
+ZIP-owned raw RFC 1951/counting/CRC, and LZSS prerequisites with cross-platform
+BUILD front doors, and complete live open-PR and no-PR branch audits find no
+Swift PNG or prerequisite overlap. Rust is deferred while three live PRs touch
+its PixelContainer or ZIP conformance surfaces, Haskell retains a quarantined
+stale ZIP/LZSS branch, and the Go paint adapter unlocks no parity child. The
+bounded tranche adds one native Swift IC18 package, all 85 neutral cases
+through public APIs, focused resource and precedence regressions, SwiftPM and
+BUILD metadata, documentation, changelog, and an empty capability manifest.
+It does not change IC18, the neutral corpus, adapters, or unrelated lanes.
 
 ## Autonomous Loop Protocol
 
