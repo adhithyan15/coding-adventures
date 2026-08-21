@@ -1,0 +1,124 @@
+import{t as e}from"./rolldown-runtime-DK3Fl9T5.js";var t=e({default:()=>n}),n=`---
+schema_version: 2
+id: ML-W02-santosham-guided-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 145
+delivery: script
+chapter: 2
+type: writing
+headword: "സന്തോഷം"
+gloss: copy the known word for joy once with the model visible
+romanization: "santōṣam"
+prerequisites: [ML-C02-santosham]
+sounds: [anusvara]
+roots: [santosha-sanskrit]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: []
+introduces:
+  knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
+practises:
+  knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C02-santosham]
+---
+
+# സന്തോഷം — copy one known word with help
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[] -->
+
+Point to **സന്തോഷം** and say *santōṣam* once. Keep the model on the page.
+Find **ഷ** near the end, then find the long *ō* sign **ോ** on the consonant
+before it. Those are the two shapes you will work with.
+
+## Script — notice before moving
+<!-- hl-knowledge: introduces=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02]; assesses=[] -->
+
+Look at **ഷ** and **ോ** without writing. Say *ṣa* and *ō*. The first action is
+observe and trace: your finger follows a visible model, so memory is not yet
+doing the work.
+
+## Writing — trace two visible shapes
+<!-- hl-knowledge: introduces=[ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02] -->
+<!-- hl-writing-stage: observe-trace -->
+
+Trace **ഷ** once and **ോ** once with your finger while both models remain
+visible. Stop after those two shapes. The next action is a guided copy: the
+whole word stays in view while your hand makes its own copy.
+
+## Writing — one guided copy
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
+<!-- hl-writing-stage: guided-copy -->
+
+Follow **സന്തോഷം** from left to right with your finger. Then copy the whole
+word once directly below the visible model. Look back as often as you need.
+
+This is shape familiarity, not a stroke-order test. Write large and slowly. Do
+not hide the model, do not spell from memory, and do not add a second word.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
+
+Compare your copy with **സന്തോഷം** while both remain visible. Check only the
+two shapes you noticed: **ഷ** and **ോ**. Repair one shape if you want, then
+stop and say *santōṣam* once more.
+`,r=e({default:()=>i}),i=`---
+schema_version: 2
+id: ML-W03-santosham-delayed-copy
+spine_node: SPINE-EXCHANGE-NAMES
+sequence: 215
+delivery: script
+chapter: 3
+type: writing
+headword: "സന്തോഷം"
+gloss: write the known word for joy once after a short delay
+romanization: "santōṣam"
+prerequisites: [ML-W02-santosham-guided-copy]
+sounds: [anusvara]
+roots: [santosha-sanskrit]
+duration:
+  max_seconds: 120
+requires:
+  knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
+introduces:
+  knowledge: []
+practises:
+  knowledge: [ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02]
+skills: [reading, writing]
+modes: [interpretive, presentational]
+strands: [meaning-input, language-focus]
+register: neutral
+variety: standard-colloquial
+reviews_of: [ML-C02-santosham, ML-W02-santosham-guided-copy]
+---
+
+# സന്തോഷം — one delayed copy
+
+## Warm-up
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
+
+Look at **സന്തോഷം** for five seconds and say *santōṣam*. Find **ഷ** and the
+long *ō* sign **ോ** once more. Then cover the model with your hand or a small
+piece of paper.
+
+## Writing — one try after a delay
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
+<!-- hl-writing-stage: delayed-copy -->
+
+Write **സന്തോഷം** once while the model is covered. This is a gentle retrieval,
+not a speed test. If one shape will not come, uncover the model, look, cover it
+again, and finish.
+
+## Wrap-up recall
+<!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
+
+Uncover **സന്തോഷം** and compare it with your copy. Repair only one shape if
+needed. Say *santōṣam* once, then stop: one known word, one spaced writing
+revisit.
+`;export{t as n,r as t};
