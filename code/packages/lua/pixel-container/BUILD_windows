@@ -1,5 +1,3 @@
-luarocks install --local busted
-luarocks install --local luacheck
 luac -p src/coding_adventures/pixel_container/init.lua tests/test_pixel_container.lua
 set "LUA_PATH=%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua "%APPDATA%\luarocks\bin\luacheck" src tests --std lua54+busted
 cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua "%APPDATA%\luarocks\bin\busted" . --verbose --pattern=test_
