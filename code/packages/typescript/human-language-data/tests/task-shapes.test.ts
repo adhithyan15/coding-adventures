@@ -44,6 +44,40 @@ describe("four-skill task-shape inventories (HL18)", () => {
       "writing",
       "speaking",
     ]);
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 32,
+      speakingMinutes: 8,
+      speakingPreparationMinutes: 0,
+    });
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([10, 10, 12, 8]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.id))).toEqual([
+      [
+        "prea1-reading-signs-and-words",
+        "prea1-reading-phrases-and-notices",
+        "prea1-reading-personal-details",
+      ],
+      [
+        "prea1-listening-sounds-and-words",
+        "prea1-listening-greeting-responses",
+        "prea1-listening-personal-details",
+      ],
+      [
+        "prea1-writing-delayed-recall",
+        "prea1-writing-dictation",
+        "prea1-writing-bounded-production",
+      ],
+      [
+        "prea1-speaking-greeting-and-identity",
+        "prea1-speaking-familiar-questions",
+        "prea1-speaking-short-request",
+      ],
+    ]);
+    expect(inventory.sections.map((section) => section.parts.map((part) => part.items))).toEqual([
+      [6, 4, 4],
+      [6, 4, 4],
+      [2, 4, 2],
+      [2, 3, 1],
+    ]);
     expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([0.6, 0.6, 0.6, 0.6]);
     const paperPoints = inventory.sections.map((section) =>
       section.parts.reduce((sum, part) => sum + (part.scoring.maxRawPoints ?? 0), 0)
@@ -51,11 +85,6 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(paperPoints).toEqual([100, 100, 100, 100]);
     expect(paperPoints.reduce((sum, points) => sum + points, 0)).toBe(inventory.passRule.maximumPoints);
     expect(inventory.passRule).toMatchObject({ maximumPoints: 400, passPoints: 240 });
-    expect(inventory.sections.find((section) => section.skill === "writing")?.parts.map((part) => part.id)).toEqual([
-      "prea1-writing-delayed-recall",
-      "prea1-writing-dictation",
-      "prea1-writing-bounded-production",
-    ]);
   });
 
   it("loads the official Spanish A1 performance target and its grouped pass rule", () => {
@@ -259,7 +288,7 @@ describe("four-skill task-shape inventories (HL18)", () => {
 
   it("rejects a fully scored administration whose part ceilings do not reach its declared scale", () => {
     const value = JSON.parse(JSON.stringify(loadTaskShapeInventory("marwadi", "pre-A1")));
-    value.sections[0].parts[0].scoring.maxRawPoints = 99;
+    value.sections[0].parts[0].scoring.maxRawPoints = 39;
     expect(() => parseTaskShapeInventory(value, "marwadi")).toThrow(
       /part maxRawPoints sum to 399, not passRule.maximumPoints 400/,
     );
