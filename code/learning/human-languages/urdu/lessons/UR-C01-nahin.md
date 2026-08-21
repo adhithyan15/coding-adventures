@@ -1,5 +1,6 @@
 ---
 id: UR-C01-nahin
+sequence: 40
 chapter: 1
 type: word
 headword: نہیں
