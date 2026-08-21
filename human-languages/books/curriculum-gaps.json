@@ -33,14 +33,14 @@
     "lessonsWithoutSequence": 12,
     "forwardReviews": 5,
     "atomsNeverRevisited": 632,
-    "forwardReferences": 466,
+    "forwardReferences": 456,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 82,
     "chapterGateCleanTracks": 9,
     "tracksWithoutWritingStageEvidence": 14,
     "missingWritingStagePairs": 895,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 2912,
+    "drivableLessons": 2913,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 104,
     "unexplainedModalityOverrides": 0
@@ -57528,14 +57528,6 @@
         "lessonsEarly": 27
       },
       {
-        "lessonId": "GE-C01-morgen",
-        "language": "german",
-        "position": 6,
-        "word": "bis morgen",
-        "taughtBy": "GE-C04-bis-morgen",
-        "lessonsEarly": 26
-      },
-      {
         "lessonId": "LA-C19-valeo-family",
         "language": "latin",
         "position": 32,
@@ -58304,14 +58296,6 @@
         "lessonsEarly": 7
       },
       {
-        "lessonId": "GE-C01-der-die-das",
-        "language": "german",
-        "position": 3,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
-        "lessonsEarly": 7
-      },
-      {
         "lessonId": "GU-C02-chhe",
         "language": "gujarati",
         "position": 8,
@@ -58381,14 +58365,6 @@
         "position": 2,
         "word": "nuit",
         "taughtBy": "FR-C01-nuit",
-        "lessonsEarly": 6
-      },
-      {
-        "lessonId": "GE-C01-guten-tag",
-        "language": "german",
-        "position": 5,
-        "word": "gute nacht",
-        "taughtBy": "GE-C01-gute-nacht",
         "lessonsEarly": 6
       },
       {
@@ -58504,22 +58480,6 @@
         "lessonsEarly": 5
       },
       {
-        "lessonId": "GE-C01-guten-tag",
-        "language": "german",
-        "position": 5,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
-        "lessonsEarly": 5
-      },
-      {
-        "lessonId": "GE-C01-hallo",
-        "language": "german",
-        "position": 0,
-        "word": "guten tag",
-        "taughtBy": "GE-C01-guten-tag",
-        "lessonsEarly": 5
-      },
-      {
         "lessonId": "GE-C03-es-geht",
         "language": "german",
         "position": 26,
@@ -58621,22 +58581,6 @@
         "position": 12,
         "word": "comment",
         "taughtBy": "FR-C02-comment",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "GE-C01-practice",
-        "language": "german",
-        "position": 12,
-        "word": "du",
-        "taughtBy": "GE-C02-du-sie",
-        "lessonsEarly": 4
-      },
-      {
-        "lessonId": "GE-C01-practice",
-        "language": "german",
-        "position": 12,
-        "word": "sie",
-        "taughtBy": "GE-C02-du-sie",
         "lessonsEarly": 4
       },
       {
@@ -59013,22 +58957,6 @@
         "position": 28,
         "word": "à demain",
         "taughtBy": "FR-C04-a-demain",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "GE-C01-abend",
-        "language": "german",
-        "position": 8,
-        "word": "nacht",
-        "taughtBy": "GE-C01-nacht",
-        "lessonsEarly": 2
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "position": 7,
-        "word": "guten abend",
-        "taughtBy": "GE-C01-guten-abend",
         "lessonsEarly": 2
       },
       {
@@ -59549,14 +59477,6 @@
         "position": 54,
         "word": "rouge",
         "taughtBy": "FR-C13-rouge-bleu",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "GE-C01-guten-morgen",
-        "language": "german",
-        "position": 7,
-        "word": "abend",
-        "taughtBy": "GE-C01-abend",
         "lessonsEarly": 1
       },
       {
@@ -60393,7 +60313,7 @@
         "forwardReviews": 0,
         "atomsTaught": 126,
         "atomsNeverRevisited": 32,
-        "forwardReferences": 55
+        "forwardReferences": 45
       },
       {
         "language": "gujarati",
@@ -60590,7 +60510,7 @@
         "R3": 3558,
         "R4": 2075
       },
-      "forwardReferences": 466
+      "forwardReferences": 456
     }
   },
   "scriptClosure": {
@@ -70654,7 +70574,7 @@
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 55,
+        "forwardReferences": 45,
         "atomsTaught": 126,
         "atomsNeverRevisited": 32,
         "reinforcementWindowMisses": 190,
@@ -70666,7 +70586,7 @@
           {
             "language": "german",
             "kind": "forward-language",
-            "count": 55,
+            "count": 45,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -70702,7 +70622,7 @@
         "next": {
           "language": "german",
           "kind": "forward-language",
-          "count": 55,
+          "count": 45,
           "unit": "use(s)",
           "detail": "teach target-language material before load-bearing use"
         }
@@ -72085,16 +72005,16 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "german",
+        "language": "french",
         "kind": "forward-language",
-        "count": 55,
+        "count": 52,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "french",
+        "language": "german",
         "kind": "forward-language",
-        "count": 52,
+        "count": 45,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
@@ -73612,10 +73532,10 @@
   "modality": {
     "maxLinearisableTableColumns": 3,
     "totalLessons": 3416,
-    "voice": 2461,
-    "sight": 589,
+    "voice": 2462,
+    "sight": 588,
     "pen": 366,
-    "coreVoice": 2912,
+    "coreVoice": 2913,
     "lessonsWithWritingSegments": 161,
     "drivablePercent": 85,
     "tracks": [
@@ -75059,21 +74979,21 @@
       {
         "language": "german",
         "lessonCount": 107,
-        "voice": 94,
-        "sight": 8,
+        "voice": 95,
+        "sight": 7,
         "pen": 5,
-        "coreVoice": 95,
-        "drivablePercent": 89,
+        "coreVoice": 96,
+        "drivablePercent": 90,
         "drivablePrefixTotal": 82,
         "chapters": [
           {
             "language": "german",
             "chapter": 1,
             "lessonCount": 13,
-            "voice": 10,
-            "sight": 1,
+            "voice": 11,
+            "sight": 0,
             "pen": 2,
-            "coreVoice": 11,
+            "coreVoice": 12,
             "modalities": [
               "voice",
               "sight",
@@ -88838,7 +88758,7 @@
     "terms": 54,
     "termsUsed": 53,
     "lessonsUsingTerms": 3306,
-    "usesBeforeIntroduction": 12038,
+    "usesBeforeIntroduction": 12039,
     "technicalUsesBeforeIntroduction": 3171,
     "technicalLessons": 1648,
     "worstTerms": [

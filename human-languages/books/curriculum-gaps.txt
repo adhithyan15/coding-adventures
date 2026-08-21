@@ -5,7 +5,7 @@ Human Languages curriculum gap report
 0 unknown prerequisites; 74 later-chapter lessons without prerequisites
 0 tracks without books; 0 lesson chapters without book chapters
 0 legacy, 14 mixed, 9 version-2 schema tracks
-2912 drivable lessons (85% of the corpus)
+2913 drivable lessons (85% of the corpus)
 levels: 2146 pre-A1, 573 A1, 549 A2, 40 B1, 17 B2, 10 C1, 18 C2; 63 unmapped (98% placed)
 ramp: 46 lessons above 3 new atoms (492 unmeasurable, 86% measurable); 24 chapters above 12
 script ramp: 56 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
@@ -14,7 +14,7 @@ script closure: 741 lessons ask the reader to decode a glyph nobody taught them,
 exposure: 303 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2156 glyphs and makes 181 lessons clean on its own
 order: 12 lessons with no declared sequence across 2 tracks; 6 prerequisites and 5 reviews pointing forward
 reinforcement: 632 of 4720 atoms never revisited (13%); missed windows R1 1191, R2 3690, R3 3558, R4 2075
-forward references: 466 uses of material a later lesson teaches
+forward references: 456 uses of material a later lesson teaches
 writing stages: 2/23 tracks prove the cumulative pre-A1 ladder; 27 evidence blocks, 0 invalid; 895 missing (track, level, stage) pairs
 super-gentle ramp: 22/23 tracks carry detected or unmeasured debt; 130 named track/debt items
 writing ramp: 0 track(s) never practise writing; 4 start after lesson one
@@ -26,14 +26,14 @@ levels ATTAINED (HL09 §3.1): none; 23 track(s) touch a level they have not atta
 Longest effective lessons:
 
 Modality (HL08) — derived from lesson type and block structure, never from `skills`:
-  2461 voice, 589 sight, 366 pen of 3416 lessons; 85% drivable
+  2462 voice, 588 sight, 366 pen of 3416 lessons; 85% drivable
   tables of more than 3 column(s) count as sight
-  2912 lessons have a voice CORE; 161 carry a detachable writing segment (451 rescued for the hands-free view)
+  2913 lessons have a voice CORE; 161 carry a detachable writing segment (451 rescued for the hands-free view)
   arabic: 46 voice, 37 sight, 24 pen; 74% drivable; 36 chapters, 64 lessons reachable in chapter-prefix order; 33 rescued by a detachable writing segment
   bengali: 14 voice, 56 sight, 10 pen; 86% drivable; 16 chapters, 64 lessons reachable in chapter-prefix order; 55 rescued by a detachable writing segment
   chinese: 30 voice, 4 sight, 29 pen; 54% drivable; 11 chapters, 7 lessons reachable in chapter-prefix order; 4 rescued by a detachable writing segment
   french: 103 voice, 12 sight, 3 pen; 87% drivable; 33 chapters, 83 lessons reachable in chapter-prefix order
-  german: 94 voice, 8 sight, 5 pen; 89% drivable; 31 chapters, 82 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
+  german: 95 voice, 7 sight, 5 pen; 90% drivable; 31 chapters, 82 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
   gujarati: 16 voice, 43 sight, 10 pen; 83% drivable; 13 chapters, 53 lessons reachable in chapter-prefix order; 41 rescued by a detachable writing segment
   hindi: 189 voice, 39 sight, 45 pen; 83% drivable; 66 chapters, 219 lessons reachable in chapter-prefix order; 37 rescued by a detachable writing segment
   italian: 71 voice, 16 sight, 2 pen; 81% drivable; 25 chapters, 55 lessons reachable in chapter-prefix order; 1 rescued by a detachable writing segment
@@ -99,7 +99,7 @@ root ledger: 3084 roots, 2969 spent fewer than 3 times (96%), 2032 never spent a
 info dump (report-only): 121 of 3416 lessons -- 30 rule statements, 95 paradigm tables (22 full grids)
   complete paradigms presented at once: FR-C05-parler (7-row table with 6 person rows), FR-C16-passe-compose-etre (5-row table with 5 person rows), GE-C05-wohnen (7-row table with 6 person rows)
 
-metalanguage: 53 of 54 grammar terms appear in 3306 lessons; 12038 uses come before introduction, of which 3171 are technical terms across 1648 lessons
+metalanguage: 53 of 54 grammar terms appear in 3306 lessons; 12039 uses come before introduction, of which 3171 are technical terms across 1648 lessons
   most-used-before-introduction: verb (1011 lessons), noun (528 lessons), tense (157 lessons), regular (151 lessons), adjective (145 lessons), pronoun (144 lessons)
 literal markup: none in 3416 lessons or any generated book
 glyph coverage: every character renders -- 126 main-font and 693 script characters across 1143 generated files
