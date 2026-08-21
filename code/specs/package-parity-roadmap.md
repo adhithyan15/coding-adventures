@@ -4818,7 +4818,7 @@ The validation gate runs each recipe twice in one checkout and then exercises
 the heap-dependent compression closure. Live audits across open PRs and remote
 branches find no heap, state, or roadmap owner.
 
-The same audit found 18 additional Python `BUILD_windows` recipes that create
+The same audit found 17 additional Python `BUILD_windows` recipes that create
 `.venv` without `--clear`. They are recorded separately as
 `python-uv-build-front-idempotence-audit`, dependent on this reference repair,
 so the present tranche does not silently expand into unrelated packages.
@@ -4861,10 +4861,68 @@ manifest or privileged production boundary changes.
 Ready-for-review PR #12425 was opened from clean validated head
 `882060f58f2d5013abbcd13a08781fd8b57f11b9` after a normal first push from
 exact `origin/main` `87b0df7caf6314bd2b9b4e887e35c39a2bad97b2`.
-The target branch and PR were absent before publication, all live ownership
-surfaces were disjoint, and GitHub reports the PR open, non-draft, and
-mergeable. Required CI, CodeQL, and human-language checks are queued, so this
-sole active parity PR is now monitor-only until every check is terminal.
+The target branch and PR were absent before publication, and all live ownership
+surfaces were disjoint. Final reviewed head
+`86501760d38cb31c8eb2f4ac4df0ecb1a0c18fad` completed all 30 checks with 24
+successes, five expected skips, one neutral CodeQL result, and no failures or
+pending work. GitHub reported the branch mergeable, and the loop requested
+squash auto-merge; GitHub merged PR #12425 as
+`51804cdf287b4085875c0113557600b20dd4d733` at 2026-08-21T13:19:22Z and
+deleted the source branch.
+
+### Post-#12425 refresh and Python Huffman compression BUILD-front selection
+
+The refreshed collision inventory at live main
+`4b36ac52276feb29355065e86ea0121e0b731c52` remains 15 established lanes,
+1,368 canonical identities, and 4,561 implementation slots. The Portuguese
+human-language commit after #12425 modifies existing roots only. Canonical
+collisions and unknown language buckets remain zero.
+
+`python-huffman-compression-build-front-python313` is the direct
+dependency-shaped successor to the heap repair. A clean Huffman Tree front
+selected Python 3.10 despite declaring Python >=3.12 and then could not install
+the repaired heap package. Brotli, Deflate, and Huffman Compression share the
+same unpinned uv recipe; their Windows fronts pass only when the caller supplies
+`UV_PYTHON=3.13`. This tranche pins Python 3.13 in both canonical and Windows
+fronts for those four packages, preserves their existing dependency order and
+quality gates, and adds a repository regression for the complete recipes.
+Live audits across 23 open PRs and 20 unowned remote branches find no overlap
+on the compression packages, parity state, or roadmap. The broader uv
+idempotence audit remains pending for classification of the 17 other fronts.
+
+### Python Huffman compression BUILD-front implementation and validation
+
+The canonical and Windows recipes for Huffman Tree, Brotli, Deflate, and
+Huffman Compression now pin Python 3.13 while preserving `--clear`, exact
+repository-local prerequisite order, editable development installation, and
+their existing pytest gate. A focused repository regression pins all eight
+complete recipes and passes alongside the heap reference regression.
+
+Exact Windows fronts run on Python 3.13.14 and pass Huffman Tree's 36 tests at
+98.62% coverage, Brotli's 75 at 97.70%, Deflate's 20 at 98.14%, and Huffman
+Compression's 35 at 97.44%. The Go build tool passes tests, vet, and trimpath
+compilation. Its exact Windows diff plan evaluates 45 Starlark files,
+discovers 494 Python packages, selects four changed and six affected nodes,
+and a real run builds heap, LZSS, Huffman Tree, Brotli, Deflate, and Huffman
+Compression with 488 skipped. No `UV_PYTHON` override is required.
+
+Parity reporter and capability taxonomy suites pass 10 and 7 tests. After a
+clean rebase on latest human-language main
+`4bf6d6253a76ade124348248830ff58406a08be5`, the schema-3 inventory remains
+15 lanes, 1,368 identities, and 4,561 slots with zero collisions or unknown
+buckets. The 415-item state graph is unique, dependency-complete, and acyclic.
+Diff, dependency, credential, and production-authority scans are clean; this
+tranche changes no production source, dependency metadata, capability
+manifest, or privileged boundary.
+
+Ready-for-review PR #12440 was opened from clean validated head
+`aea1d5bf9d8abc7d361fb209bf0af481de9a97e7` after a normal first push from
+exact `origin/main` `4bf6d6253a76ade124348248830ff58406a08be5`.
+The target branch and PR were absent before publication, and exact live audits
+found zero overlap across 22 open PRs and 20 no-PR remotes. GitHub reports the
+PR open, non-draft, and mergeable. Required CI, CodeQL, and human-language
+checks are queued, so this sole active parity PR is monitor-only until every
+check is terminal.
 
 ## Autonomous Loop Protocol
 
