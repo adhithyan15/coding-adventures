@@ -1211,7 +1211,9 @@ source's two-path order and variation warning remain visible; conventional
 The verified one-frame Gujarati **હ** filmstrip circles the compact upper loop,
 threads through the middle turn, and continues around the broad lower bowl into
 its rightward finish without lifting. The source's one-path order and variation
-warning remain visible; conventional **ન** is next.
+warning remain visible. With the stale conventional duplicates of **ન** and
+**પ** removed, Gujarati now exposes one canonical row for each of its **44/44
+source-verified letters** and is marked complete.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
