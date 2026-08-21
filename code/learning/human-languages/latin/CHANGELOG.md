@@ -2,6 +2,19 @@
 
 ## [Unreleased]
 
+### Added — project-defined pre-A1 four-skill task shapes
+
+- Made the Latin pre-A1 bridge executable as independently scored reading,
+  listening, writing, and speaking papers with exact timing, item counts,
+  replay, aids, and a 60/100 floor on every skill.
+- Kept scored writing productive: delayed recall, short dictation, and bounded
+  independent Latin responses count; tracing and visible copying remain gentle
+  lesson supports. Consistent `u/v` and `i/j` conventions receive credit, and
+  macrons are required only when a prompt explicitly tests quantity.
+- This inventory is project-defined and does not imply ELEX equivalence. Mocks,
+  rubrics, keys, calibration, curriculum coverage, and book-only human
+  validation remain required before readiness can be claimed.
+
 ### Added — pre-A1-to-C2 four-skill assessment contract (#12435)
 
 - Defined seven project-owned Latin assessment rungs with independently passed

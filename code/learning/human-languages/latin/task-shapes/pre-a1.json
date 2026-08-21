@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "language": "latin",
+  "level": "pre-A1",
+  "target": {
+    "name": "Coding Adventures Latin pre-A1 Assessment — project-defined equivalent",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-latin-assessment",
+      "title": "Coding Adventures Latin Assessment Specification",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/latin/assessment-spec.md",
+      "published": "2026-08-21",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-latin-pronunciation",
+      "title": "Coding Adventures Latin Pronunciation Reference",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/latin/pronunciation-reference.md",
+      "published": "not stated",
+      "accessed": "2026-08-21"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 35,
+    "speakingMinutes": 8,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 0,
+    "deliveryModes": ["paper or equivalent locked digital form", "recorded-audio", "live-interlocutor"]
+  },
+  "passRule": {
+    "maximumPoints": 400,
+    "passPoints": 240,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is a separate 100-point paper and must independently reach 60/100; the 240-point headline sum cannot compensate for a failed paper. This is a project-defined bridge, not an ELEX certificate or equivalence claim."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 15,
+      "parts": [
+        {
+          "id": "prea1-reading-familiar-words-and-labels",
+          "promptModes": ["short written Latin", "optional nonverbal picture cue"],
+          "promptGenres": ["familiar word", "single-word label"],
+          "responseModes": ["selection", "word-to-meaning match", "label-to-picture match"],
+          "items": 8,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 55, "criteria": ["answer-key match", "familiar-word recognition"] },
+          "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["dictionary", "grammar reference", "translation tool"], "notPublished": [] },
+          "notPublished": ["replay is not applicable to written input", "response length is not applicable to selection and matching"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment"]
+        },
+        {
+          "id": "prea1-reading-memorized-phrases",
+          "promptModes": ["short written Latin", "optional nonverbal situation cue"],
+          "promptGenres": ["memorized phrase", "greeting exchange", "micro-dialogue"],
+          "responseModes": ["selection", "phrase-to-situation match", "choose the next turn"],
+          "items": 6,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": null,
+          "scoring": { "maxRawPoints": 45, "criteria": ["answer-key match", "communicative-function recognition"] },
+          "aids": { "allowed": ["nonverbal situation cue"], "forbidden": ["dictionary", "grammar reference", "translation tool"], "notPublished": [] },
+          "notPublished": ["replay is not applicable to written input", "response length is not applicable to selection and matching"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "prea1-listening-sounds-words-and-greetings",
+          "promptModes": ["recorded Latin at 45-65 words per minute", "eight-second inter-item pause", "written or nonverbal answer options"],
+          "promptGenres": ["familiar sound contrast", "known word", "greeting and response"],
+          "responseModes": ["selection", "picture match", "appropriate-response match"],
+          "items": 8,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 100, "criteria": ["answer-key match", "sound and word recognition", "appropriate greeting response"] },
+          "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["transcript", "dictionary", "grammar reference", "translation tool"], "notPublished": [] },
+          "notPublished": ["response length is not applicable to selection and matching"],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment", "ca-latin-pronunciation"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "prea1-writing-delayed-recall",
+          "promptModes": ["briefly-visible-written-model"],
+          "promptGenres": ["known Latin word"],
+          "responseModes": ["delayed handwritten recall"],
+          "items": 2,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 20, "criteria": ["recognizable letter sequence", "consistent u/v and i/j convention", "legibility"] },
+          "aids": { "allowed": ["ten-second initial model view"], "forbidden": ["visible model during response", "dictionary", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment"]
+        },
+        {
+          "id": "prea1-writing-dictation",
+          "promptModes": ["recorded Latin at 45-65 words per minute"],
+          "promptGenres": ["known one- to three-word item"],
+          "responseModes": ["handwritten dictation", "Latin transcription"],
+          "items": 3,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 3, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 1, "maximum": 3, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 40, "criteria": ["sound-to-letter mapping", "word boundary", "consistent orthographic convention", "macrons only when explicitly tested"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "dictionary", "copyable model", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment", "ca-latin-pronunciation"]
+        },
+        {
+          "id": "prea1-writing-bounded-production",
+          "promptModes": ["written support-language or nonverbal instruction"],
+          "promptGenres": ["personal label", "greeting response"],
+          "responseModes": ["independent handwritten label or memorized Latin chunk"],
+          "items": 2,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 1, "maximum": 5, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 40, "criteria": ["task fulfilment", "independent retrieval", "comprehensibility", "consistent orthographic convention"] },
+          "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["copyable answer model", "dictionary", "grammar reference", "translation tool", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 8,
+      "parts": [
+        {
+          "id": "prea1-speaking-greeting-and-identity",
+          "promptModes": ["trained live interlocutor"],
+          "promptGenres": ["greeting exchange", "identity prompt"],
+          "responseModes": ["spoken memorized Latin chunk", "short identity response"],
+          "items": 2,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 30, "criteria": ["task fulfilment", "intelligibility", "appropriate greeting response", "identity supplied"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one repeat request"], "forbidden": ["written answer script", "dictionary", "translation"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment", "ca-latin-pronunciation"]
+        },
+        {
+          "id": "prea1-speaking-familiar-questions",
+          "promptModes": ["trained live interlocutor", "optional picture cue"],
+          "promptGenres": ["familiar one-turn question", "personal prompt"],
+          "responseModes": ["short personal Latin response"],
+          "items": 3,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 40, "criteria": ["question recognition", "relevant Latin response", "intelligibility", "consistent pronunciation model"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one slow repetition"], "forbidden": ["written answer script", "dictionary", "translation"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment", "ca-latin-pronunciation"]
+        },
+        {
+          "id": "prea1-speaking-short-request",
+          "promptModes": ["trained live interlocutor", "nonverbal situation cue"],
+          "promptGenres": ["familiar request situation"],
+          "responseModes": ["short spoken Latin request"],
+          "items": 1,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 30, "criteria": ["request completed", "appropriate courtesy", "intelligibility", "documented consistent pronunciation model accepted"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one slow repetition"], "forbidden": ["written answer script", "dictionary", "translation"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-latin-assessment", "ca-latin-pronunciation"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
