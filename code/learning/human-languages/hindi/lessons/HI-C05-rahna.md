@@ -24,7 +24,7 @@ modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: standard-hindi
-reviews_of: [HI-C05-bolna, HI-C05-main-hindi-bolta-hun]
+reviews_of: [HI-C05-bolna]
 ---
 
 # रहना (rahnā) — "to live, to stay"

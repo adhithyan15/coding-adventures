@@ -10,10 +10,10 @@
   "scriptSystemSpikes": 0,
   "scriptClosureViolations": 72,
   "neverTaughtGlyphs": 12,
-  "orderDefects": 1,
+  "orderDefects": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
-  "forwardReviews": 1,
+  "forwardReviews": 0,
   "forwardReferences": 10,
   "atomsTaught": 350,
   "atomsNeverRevisited": 76,
@@ -23,13 +23,6 @@
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
-    {
-      "language": "hindi",
-      "kind": "order-integrity",
-      "count": 1,
-      "unit": "order/dependency defect(s)",
-      "detail": "declare a unique reading order and close every prerequisite and review before use"
-    },
     {
       "language": "hindi",
       "kind": "forward-language",
@@ -75,9 +68,9 @@
   ],
   "next": {
     "language": "hindi",
-    "kind": "order-integrity",
-    "count": 1,
-    "unit": "order/dependency defect(s)",
-    "detail": "declare a unique reading order and close every prerequisite and review before use"
+    "kind": "forward-language",
+    "count": 10,
+    "unit": "use(s)",
+    "detail": "teach target-language material before load-bearing use"
   }
 }
