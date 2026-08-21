@@ -1679,6 +1679,12 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 4,
+      "output": "marwadi/book/chapters/ch04-paani.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",

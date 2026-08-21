@@ -68,6 +68,27 @@
           "MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01"
         ]
       }
+    },
+    {
+      "chapter": 4,
+      "title": "Paani: Hear Water, Then Write It Sign by Sign",
+      "label": "ch:mw-paani",
+      "canDo": "I can recognise, hear, say, read, and independently write पाणी as the Marwadi word for water.",
+      "spineNodes": ["SPINE-POLITE-REQUEST-REPAIR"],
+      "payoff": {
+        "lesson": "MW-C04-practice",
+        "kind": "survival-vocabulary",
+        "summary": "A source-attested everyday noun secured by ear before three new signs are isolated, assembled, and retrieved independently in all four skills.",
+        "assesses": [
+          "MW-LEX-PAANI-01",
+          "MW-SCRIPT-PA-01",
+          "MW-SCRIPT-AA-MATRA-01",
+          "MW-SCRIPT-NNA-01",
+          "MW-SCRIPT-II-MATRA-01",
+          "MW-SCRIPT-PAANI-01",
+          "MW-PERFORMANCE-PAANI-FOUR-SKILL-01"
+        ]
+      }
     }
   ]
 }

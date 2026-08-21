@@ -29,6 +29,9 @@ Chapter 1 teaches **राम-राम सा** through seven lessons. Chapter 
 **आभार** through four more sessions: independent **आ**, then **भ**, then the
 whole word, then a hidden-model four-skill response. Chapter 3 adds polite
 **हां सा** through two sign-sized steps, assembly, ear/voice retrieval, and an
-independent four-skill check. The next independent content tranche should add
-the contrasting no response before a complete yes/no exchange; okay, casual
-gratitude, and a you're-welcome response remain explicit debt.
+independent four-skill check. Chapter 4 adds **पाणी**, "water": meaning is
+secured by ear first, then **प**, **ण**, and **ी** arrive one at a time before
+delayed copy and dictation. The next independent content tranche should add the
+contrasting no response before a complete yes/no exchange; okay, casual
+gratitude, a you're-welcome response, and a full request for water remain
+explicit debt.

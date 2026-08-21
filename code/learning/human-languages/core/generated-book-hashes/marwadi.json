@@ -41,6 +41,20 @@
         "MW-C03-practice"
       ],
       "tex": "marwadi/book/chapters/ch03-haan-saa.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:8189dbd0f7189ffa",
+      "lessonIds": [
+        "MW-C04-hear-paani",
+        "MW-W04-pa",
+        "MW-W04-nna",
+        "MW-W04-ii-matra",
+        "MW-C04-paani",
+        "MW-C04-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch04-paani.tex"
     }
   ]
 }
