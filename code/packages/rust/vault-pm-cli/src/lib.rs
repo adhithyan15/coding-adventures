@@ -6295,6 +6295,7 @@ enum CliFailure {
     /// dependency was unavailable" failure, but its own message: "storage
     /// unavailable" would misdescribe a socket problem that has nothing to do
     /// with the object store.
+    #[cfg(unix)]
     AgentUnavailable,
 }
 
@@ -6311,6 +6312,7 @@ impl CliFailure {
             Self::Provider => ExitCode::Provider,
             Self::Unsupported => ExitCode::Unsupported,
             Self::Internal => ExitCode::Internal,
+            #[cfg(unix)]
             Self::AgentUnavailable => ExitCode::Provider,
         }
     }
@@ -6327,6 +6329,7 @@ impl CliFailure {
             Self::Provider => "vault-pm: storage unavailable",
             Self::Unsupported => "vault-pm: unsupported capability",
             Self::Internal => "vault-pm: internal invariant failed",
+            #[cfg(unix)]
             Self::AgentUnavailable => "vault-pm: agent unavailable",
         }
     }

@@ -1839,9 +1839,6 @@ pub fn compile_module_to_windows_executable(
     link_windows_x86_64_executable(&obj_bytes, stem, out)
 }
 
-/// Link a Windows x86-64 PE/COFF object file into a runnable `.exe` via
-/// the first system linker found on `PATH` (`link.exe` → `lld-link.exe`
-/// → `gcc.exe`).  Embeds the twig-aot runtime archive.
 #[cfg(any(target_os = "windows", test))]
 const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 4] = [
     "msvcrt.lib",
@@ -1850,6 +1847,9 @@ const MSVC_DYNAMIC_CRT_LIBRARIES: [&str; 4] = [
     "legacy_stdio_definitions.lib",
 ];
 
+/// Link a Windows x86-64 PE/COFF object file into a runnable `.exe` via
+/// the first system linker found on `PATH` (`link.exe` → `lld-link.exe`
+/// → `gcc.exe`). Embeds the twig-aot runtime archive.
 #[cfg(target_os = "windows")]
 pub fn link_windows_x86_64_executable(
     obj_bytes: &[u8],

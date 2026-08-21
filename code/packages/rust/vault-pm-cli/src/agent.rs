@@ -25,12 +25,7 @@
 //! function below has a `cfg(not(unix))` twin that reports
 //! [`CliFailure::Unsupported`] without referencing them.
 
-use crate::{
-    application_locator, application_store, configured_repository_factory, configured_vault,
-    decode_config, map_application, map_host, map_local_host, CliFailure, CliHost, CliOutput,
-    HostError,
-};
-use coding_adventures_vault_pm_application::VaultAccessV1;
+use crate::{CliFailure, CliHost, CliOutput, HostError};
 use coding_adventures_vault_pm_config::ConfigName;
 use coding_adventures_vault_pm_local_host::{LocalVaultPaths, LocalWriterGuard};
 use coding_adventures_zeroize::Zeroizing;
@@ -41,15 +36,21 @@ use coding_adventures_zeroize::Zeroizing;
 /// Mirrors `CLIPBOARD_CLEAR_ARGUMENTS`'s reasoning one module up: the
 /// detached agent process takes no caller-supplied data on its argument
 /// vector, only on the socket it later binds.
+#[cfg(unix)]
 const AGENT_RUN_FOREGROUND_ARGUMENTS: &[&str] = &["agent", "run-foreground"];
 
 #[cfg(unix)]
 mod imp {
     use super::*;
+    use crate::{
+        application_locator, application_store, configured_repository_factory, configured_vault,
+        decode_config, map_application, map_host, map_local_host,
+    };
     use coding_adventures_vault_pm_agent_host::state::VaultStatus;
     use coding_adventures_vault_pm_agent_host::{
         client, lifecycle, server::AgentServer, AgentHostError,
     };
+    use coding_adventures_vault_pm_application::VaultAccessV1;
     use std::sync::atomic::AtomicBool;
     use std::time::Duration;
 
