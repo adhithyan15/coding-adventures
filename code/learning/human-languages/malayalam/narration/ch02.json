@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:d460273f3fa4e9dc",
+  "sourceHash": "fnv1a64:6928ba9fa0a57b17",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -1018,16 +1018,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "script-block",
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:463d4be823a7ddf3",
+      "sourceHash": "fnv1a64:302aa3f33ad582a2",
       "notice": {
         "modality": "pen",
         "needs": [
-          "a pen and something to write on"
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
         ],
-        "waitUntilStopped": [],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+        "waitUntilStopped": [
+          "Script — notice before moving"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — notice before moving until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -1037,12 +1043,34 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Point to സന്തോഷം and say santōṣam once. Keep the model on the page. Find ഷ near the end, then find the long ō sign ോ on the consonant before it. Those are the two shapes you just noticed. Trace each printed shape once with your finger while the model remains visible."
+              "text": "Point to സന്തോഷം and say santōṣam once. Keep the model on the page. Find ഷ near the end, then find the long ō sign ോ on the consonant before it. Those are the two shapes you will work with."
             }
           ]
         },
         {
           "index": 1,
+          "type": "script",
+          "title": "Script — notice before moving",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at ഷ and ോ without writing. Say ṣa and ō. The first action is observe and trace: your finger follows a visible model, so memory is not yet doing the work."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — trace two visible shapes",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Trace ഷ once and ോ once with your finger while both models remain visible. Stop after those two shapes. The next action is a guided copy: the whole word stays in view while your hand makes its own copy."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "writing",
           "title": "Writing — one guided copy",
           "segments": [
@@ -1057,7 +1085,7 @@
           ]
         },
         {
-          "index": 2,
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up recall",
           "segments": [

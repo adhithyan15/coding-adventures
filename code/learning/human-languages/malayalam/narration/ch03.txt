@@ -214,5 +214,5 @@ Look at സന്തോഷം for five seconds and say santōṣam. Find ഷ and
 Writing — one try after a delay.
 Write സന്തോഷം (santōṣam) once while the model is covered. This is a gentle retrieval, not a speed test. If one shape will not come, uncover the model, look, cover it again, and finish.
 
-Check and stop.
+Wrap-up recall.
 Uncover സന്തോഷം and compare it with your copy. Repair only one shape if needed. Say santōṣam once, then stop: one known word, one spaced writing revisit.

@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:c3e9b93ecc3b435a",
+  "sourceHash": "fnv1a64:c73a9560fa68161c",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -866,7 +866,7 @@
         "writing-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:9af9f54c860a3beb",
+      "sourceHash": "fnv1a64:388046eca08ab1d4",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -901,8 +901,8 @@
         },
         {
           "index": 2,
-          "type": "unknown",
-          "title": "Check and stop",
+          "type": "recall",
+          "title": "Wrap-up recall",
           "segments": [
             {
               "kind": "speech",

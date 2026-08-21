@@ -5822,7 +5822,7 @@
     {
       "language": "malayalam",
       "chapter": 2,
-      "sourceHash": "fnv1a64:d460273f3fa4e9dc",
+      "sourceHash": "fnv1a64:6928ba9fa0a57b17",
       "lessonIds": [
         "ML-C02-peru",
         "ML-C02-enre",
@@ -5839,13 +5839,13 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch02.txt",
       "json": "malayalam/narration/ch02.json",
-      "textHash": "fnv1a64:0859c79842ad24b4",
-      "jsonHash": "fnv1a64:cb2b86abf5916b81"
+      "textHash": "fnv1a64:fcac8a1bf395115a",
+      "jsonHash": "fnv1a64:5d8c0351fb248940"
     },
     {
       "language": "malayalam",
       "chapter": 3,
-      "sourceHash": "fnv1a64:c3e9b93ecc3b435a",
+      "sourceHash": "fnv1a64:c73a9560fa68161c",
       "lessonIds": [
         "ML-C03-engane",
         "ML-C03-sukhamaano",
@@ -5859,8 +5859,8 @@
       "drivablePrefix": 0,
       "text": "malayalam/narration/ch03.txt",
       "json": "malayalam/narration/ch03.json",
-      "textHash": "fnv1a64:ebe2dd67e2cd2e36",
-      "jsonHash": "fnv1a64:bff26f8d2e65345f"
+      "textHash": "fnv1a64:b762a40c6767a192",
+      "jsonHash": "fnv1a64:ec60b51d1ced9e15"
     },
     {
       "language": "malayalam",

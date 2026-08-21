@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:9ee2db46221d44f9",
+  "sourceHash": "fnv1a64:9097a0cad6ca997a",
   "summary": {
     "totalLessons": 3414,
     "voice": 2461,
@@ -42697,15 +42697,19 @@
       "drivable": false,
       "reasons": [
         "writing-type",
-        "writing-block"
+        "writing-block",
+        "script-block",
+        "sight-cue"
       ],
       "coreModality": "pen",
       "coreReasons": [
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:463d4be823a7ddf3",
+      "sourceHash": "fnv1a64:302aa3f33ad582a2",
       "detachableSegments": [
+        "Script — notice before moving",
+        "Writing — trace two visible shapes",
         "Writing — one guided copy"
       ],
       "delivery": "script"
@@ -42873,7 +42877,7 @@
         "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9af9f54c860a3beb",
+      "sourceHash": "fnv1a64:388046eca08ab1d4",
       "detachableSegments": [
         "Writing — one try after a delay"
       ],

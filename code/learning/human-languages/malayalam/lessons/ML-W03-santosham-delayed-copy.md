@@ -9,7 +9,7 @@ type: writing
 headword: "സന്തോഷം"
 gloss: write the known word for joy once after a short delay
 romanization: "santōṣam"
-prerequisites: [ML-W02-santosham-guided-copy, ML-C03-practice]
+prerequisites: [ML-W02-santosham-guided-copy]
 sounds: [anusvara]
 roots: [santosha-sanskrit]
 duration:
@@ -45,7 +45,7 @@ Write **സന്തോഷം** once while the model is covered. This is a gentl
 not a speed test. If one shape will not come, uncover the model, look, cover it
 again, and finish.
 
-## Check and stop
+## Wrap-up recall
 <!-- hl-knowledge: introduces=[]; assesses=[ML-SCRIPT-OBSERVE-TRACE-SANTOSHAM-02, ML-SCRIPT-GUIDED-COPY-SANTOSHAM-02] -->
 
 Uncover **സന്തോഷം** and compare it with your copy. Repair only one shape if
