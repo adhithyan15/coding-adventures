@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Five Verbs at the Core",
   "drivablePrefix": 5,
-  "sourceHash": "fnv1a64:a64f60f1bf438db1",
+  "sourceHash": "fnv1a64:94e111bc86ef5d38",
   "lessons": [
     {
       "id": "UR-C06-hona",
@@ -448,7 +448,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:581ece084faa7e89",
+      "sourceHash": "fnv1a64:5737322f1a16dce1",
       "notice": null,
       "blocks": [
         {
@@ -464,7 +464,7 @@
             },
             {
               "kind": "speech",
-              "text": "Three verbs so far, three stems pulled off the same ending. Here is a fourth, and it brings one new letter with it."
+              "text": "Retrieve the opening without looking: shukriyā — jī hā̃ — nahī̃. Air-trace the five shapes of the thank-you word once. Then return to the three verbs whose stems you pulled from the same ending. Here is a fourth, with one new letter."
             }
           ]
         },

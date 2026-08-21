@@ -17,8 +17,15 @@
         "lesson": "UR-C01-nahin",
         "kind": "task",
         "summary": "Complete UR-C01-nahin, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in Urdu, respond courteously, and close the exchange naturally.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "assesses": [
+          "UR-LEX-JI-HAN",
+          "UR-REGISTER-JI-RESPECT",
+          "UR-LEX-SHUKRIYA",
+          "UR-LEX-NAHIN",
+          "UR-GRAMMAR-NAHIN-NEGATION",
+          "UR-SCRIPT-NUN-RECOGNITION-01"
+        ],
+        "note": "The terminal lesson retrieves the courteous yes-and-thank-you exchange before contrasting it with nahin, then closes by recalling the new word, its negating job, and its opening nun."
       }
     },
     {

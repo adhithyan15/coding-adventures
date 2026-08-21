@@ -16,11 +16,11 @@ etymology_hook: Mera and hai expose Urdu's Indo-Aryan grammar, while nām belong
 duration:
   max_seconds: 240
 requires:
-  knowledge: []
+  knowledge: [UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01]
 introduces:
   knowledge: [UR-LEX-MERA-NAAM-HAI, UR-SCRIPT-MERA-NAAM-HAI, UR-GRAMMAR-COPULA-FINAL]
 practises:
-  knowledge: [UR-LEX-MERA-NAAM-HAI, UR-SCRIPT-MERA-NAAM-HAI, UR-GRAMMAR-COPULA-FINAL]
+  knowledge: [UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01, UR-LEX-MERA-NAAM-HAI, UR-SCRIPT-MERA-NAAM-HAI, UR-GRAMMAR-COPULA-FINAL]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal, presentational]
 strands: [meaning-input, meaning-output, language-focus]
@@ -32,7 +32,7 @@ reviews_of: []
 # میرا نام ... ہے — my name is ...
 
 ## Warm-up
-<!-- hl-knowledge: introduces=[]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[UR-LEX-JI-HAN, UR-REGISTER-JI-RESPECT, UR-SCRIPT-NUN-GHUNNA-01, UR-LEX-NAHIN, UR-GRAMMAR-NAHIN-NEGATION, UR-SCRIPT-NUN-RECOGNITION-01] -->
 
 [PAUSE 2s] Greet once, then answer yes and no. The next line gives you one
 reliable Urdu sentence for your own name.
