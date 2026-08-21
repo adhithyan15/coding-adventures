@@ -47,7 +47,14 @@ describe("assessment policy (HL16)", () => {
   it("discovers valid contracts in registry order without making every new track edit one exact list", () => {
     const contracts = listAssessmentContracts();
     const registryOrder = loadLanguageRegistry().languages.map((track) => track.id);
-    expect(contracts).toEqual(expect.arrayContaining(["french", "marathi", "marwadi", "punjabi", "gujarati"]));
+    expect(contracts).toEqual(expect.arrayContaining([
+      "french",
+      "marathi",
+      "marwadi",
+      "punjabi",
+      "gujarati",
+      "japanese",
+    ]));
     expect(new Set(contracts).size).toBe(contracts.length);
     expect(contracts).toEqual([...contracts].sort(
       (left, right) => registryOrder.indexOf(left) - registryOrder.indexOf(right),
@@ -98,6 +105,27 @@ describe("track assessment contracts", () => {
     ]);
     expect(punjabi.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
     expect(punjabi.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
+  });
+
+  it("loads Japanese's seven-rung independent four-skill destination", () => {
+    const japanese = parseAssessmentContract(
+      JSON.parse(readFileSync(join(defaultCurriculumRoot(), "japanese", "assessment.json"), "utf8")),
+      "japanese",
+      policy,
+    );
+    expect(japanese.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(japanese.levels.every((level) => level.target.basis === "project-defined")).toBe(true);
+    expect(japanese.levels.every((level) =>
+      Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
+    )).toBe(true);
+    expect(japanese.levels[0]?.writingStages).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(japanese.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
+    expect(japanese.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
   });
 
   it("accepts a complete seven-level contract with independent skills and full mocks", () => {
