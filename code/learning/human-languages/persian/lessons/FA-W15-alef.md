@@ -9,16 +9,16 @@ type: writing
 headword: "ا"
 romanization: "alef"
 gloss: "the first letter, one downstroke — and the direction the whole page runs in"
-prerequisites: [FA-C14-dust]
+prerequisites: [FA-C14-dust, FA-W00-alef-guided-copy]
 sounds: [rtl]
 roots: []
 etymology_hook: "Persian runs right to left, and alef is one clean stroke: the gentlest possible place to start writing it."
 duration:
   max_seconds: 230
 requires:
-  knowledge: []
-introduces:
   knowledge: [FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
+introduces:
+  knowledge: []
 practises:
   knowledge: [FA-SCRIPT-RTL-01, FA-SCRIPT-ALEF-01]
 skills: [reading, writing]
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard-persian-tehrani
-reviews_of: [FA-C14-dust]
+reviews_of: [FA-C14-dust, FA-W00-alef-guided-copy]
 ---
 
 # ا — one stroke, and the direction of the page
@@ -34,11 +34,11 @@ reviews_of: [FA-C14-dust]
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] You have been reading Persian words in this book for a long time and
-taking their shapes on trust. That stops here. From now on you build them.
+[PAUSE 2s] Return to the right-to-left direction and the one alef stroke you
+first copied beside *salâm*. Now make both durable before adding a second letter.
 
 ## Script — first, which way the page runs
-<!-- hl-knowledge: introduces=[FA-SCRIPT-RTL-01]; assesses=[] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-RTL-01] -->
 
 English marches **left to right**. Persian marches **right to left**.
 
@@ -52,7 +52,7 @@ entirely. Numbers, incidentally, still run left to right, which surprises people
 more than the letters do.
 
 ## Script — the letter itself
-<!-- hl-knowledge: introduces=[FA-SCRIPT-ALEF-01]; assesses=[FA-SCRIPT-RTL-01] -->
+<!-- hl-knowledge: introduces=[]; assesses=[FA-SCRIPT-ALEF-01, FA-SCRIPT-RTL-01] -->
 
 > ا
 
