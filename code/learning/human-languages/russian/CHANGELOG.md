@@ -530,6 +530,18 @@ Ch. 2 plan the roadmap already set out.
 
 ## [Unreleased]
 
+### Added — project-defined pre-A1 four-skill task shapes
+
+- Made the Russian pre-A1 bridge executable as separate reading, listening,
+  writing, and speaking papers with exact items, timing, replay, aids, scoring,
+  and an independent 60/100 floor for every skill.
+- Kept the writing evidence honest: delayed recall, heard-word Cyrillic
+  transcription, and bounded independent production are scored; visible
+  tracing and copying remain lesson supports and cannot earn exam credit.
+- This inventory is not a readiness claim. Two full mocks, rubrics, answer
+  keys, calibration, curriculum task coverage, and book-only human validation
+  remain required before even project pre-A1 readiness can be claimed.
+
 ### Added — Chapter 14, eleven letters sorted into three kinds (HL-C219)
 
 `scriptLessons` 5 → 16, `taughtGlyphs` 18 → 30, `neverTaughtGlyphs` **37 → 25**.
