@@ -30,6 +30,8 @@ class PortableConformanceTest {
         val document = json.readTree(Files.readString(fixturePath()))
         val cases = document.required("cases")
 
+        assertEquals(1, document.required("schema_version").intValue())
+        assertEquals("image-codec-png-v1", document.required("profile").textValue())
         assertEquals(85, cases.size())
         assertEquals(MAX_DIMENSION, document.at("/limits/max_dimension").intValue())
         assertEquals(DEFAULT_MAX_PIXELS, document.at("/limits/default_max_pixels").longValue())

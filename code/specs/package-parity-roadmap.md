@@ -4378,6 +4378,39 @@ BUILD front doors, and empty capability manifests. It does not change IC18,
 the neutral fixture, adapters, or any unrelated lane. The remaining
 single-slot PNG children and the Go paint reconciliation stay pending.
 
+### JVM PNG implementation and validation
+
+Implementation commit `b881d8119c` adds independent native Java and Kotlin
+PNG codecs. Both packages expose IC18's stable limits, ordered 29-code error
+taxonomy, direct encode/decode helpers, and the lane ImageCodec adapter. Their
+production code uses only in-memory PixelContainer and ZIP-owned raw RFC 1951,
+counted-inflate, and CRC-32 surfaces; JDK ImageIO, zlib, and fixture filesystem
+access remain test-only. Checked long arithmetic, exact inflate consumption,
+Adler and CRC checks, chunk and APNG precedence, palette/transparency rules,
+and deterministic best-of-five filtering are enforced before untrusted-size
+allocations.
+
+Each public fixture adapter passes all 85 language-neutral cases. Focused
+tests additionally exercise non-finite, non-positive, fractional, and raised
+pixel limits, malformed explicitly supplied PixelContainers, APNG precedence,
+foreign ImageIO decoding, and independent JDK inflate inspection of emitted
+filter rows. Java reaches 98.53% line and 93.95% branch coverage; Kotlin
+reaches 96.28% line and 82.51% branch coverage. Both literal `BUILD` and
+`BUILD_windows` entry points pass with JDK 21 and Gradle 8.11.1. The shared
+fixture generator and nine validator tests, seven capability-taxonomy tests,
+ten parity reporter tests, diff checks, and independent authority/security
+review are green.
+
+The prospective collision-checked schema-3 inventory remains 1,368 canonical
+identities and advances from 4,555 to 4,557 slots with no collisions or unknown
+buckets. `image-codec-png` moves from four to six established lanes, shifting
+from the 2-4 to the 5-9 completion band, without creating a new identity or
+classification owner. Exact repository build-resolver validation remains the
+final local gate before publication. That gate now passes: the Go build tool's
+tests and vet are green, its dry run selects exactly PNG, PixelContainer, ZIP,
+and LZSS in each JVM lane, and its real Windows executor builds all eight
+affected nodes successfully.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
