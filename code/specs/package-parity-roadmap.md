@@ -4307,6 +4307,35 @@ documentation, changelogs, and empty capability profiles. It does not change
 IC18, the neutral fixture, the TypeScript or Go references, paint adapters, or
 any other implementation lane.
 
+### .NET PNG implementation and validation
+
+The selected tranche now provides native, pure in-memory IC18 codecs in both
+C# and F#. Each implementation consumes its own lane's PixelContainer and
+ZIP-owned raw RFC 1951, counted-inflate, and CRC-32 APIs; neither duplicates
+the compression substrate or acquires filesystem, process, network,
+environment, FFI, or credential authority. Public fixture consumers exercise
+all 85 neutral cases, while focused tests load-bear allocation limits, APNG
+CRC precedence, exact DEFLATE consumption, Adler-32 validation, filter choice,
+the typed PixelContainer boundary, and the stable 29-error taxonomy.
+
+After a conflict-free rebase, exact main is
+`c8d204fc58bffd25a7059cbff157e9dbaaa0f5fa`. Its intervening Arabic curriculum
+commit adds no package root, so the stored main inventory remains 15 lanes,
+1,368 identities, and 4,553 slots. The prospective tree adds exactly the two
+selected implementation slots, reaching 4,555 slots with zero canonical
+collisions and zero unknown buckets.
+
+Fresh Release tests pass 13/13 in C# at 98.47% line and 98.94% branch coverage,
+and 7/7 in F# at 98.99% line and 91.44% branch coverage. C# format verification,
+strict JSON, the nine neutral-fixture tests, seven capability-taxonomy tests,
+ten parity-reporter tests, state uniqueness/dependency/cycle validation,
+production-authority scans, and diff checks pass. The Go build tool's own tests
+and vet pass; repository discovery finds 4,975 packages and selects exactly the
+eight C#/F# PNG, PixelContainer, ZIP, and LZSS nodes. Its first full Windows run
+found that Coverlet's include property needed the repository-standard quoting;
+after that focused BUILD fix, all eight nodes built successfully through their
+real Windows front doors.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
