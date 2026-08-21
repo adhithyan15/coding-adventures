@@ -4,7 +4,7 @@
   "chapter": 6,
   "title": "Asking Someone's Name",
   "drivablePrefix": 1,
-  "sourceHash": "fnv1a64:b955c62581839ba5",
+  "sourceHash": "fnv1a64:eb8dfddd45c9d1a1",
   "lessons": [
     {
       "id": "ES-C03-como",
@@ -147,7 +147,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:045f46f9d26ad328",
+      "sourceHash": "fnv1a64:182383cc4cfb6072",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -287,7 +287,7 @@
             },
             {
               "kind": "speech",
-              "text": "Why does Spanish open a question with ¿? (Word order often does not change, so the reader needs the warning before the sentence, not after.) What changes when the accent disappears from cómo? (It stops being the question word — como means \"like / as,\" or \"I eat.\")"
+              "text": "Why does Spanish open a question with ¿? (Word order often does not change, so the reader needs the warning before the sentence, not after.) What changes when the accent disappears from cómo? (It stops being the question word — como means \"like / as,\" or \"I eat.\") Which word asks for a person? (Quién.)"
             }
           ]
         }
@@ -306,7 +306,7 @@
       "modalityReasons": [
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:590e6bda98194f56",
+      "sourceHash": "fnv1a64:4f96f90fe4b39680",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -405,6 +405,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the recurring Latin question stem]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "which word in the family asks for a person",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: which word in the family asks for a person]"
             },
             {
               "kind": "prompt",
@@ -1021,7 +1030,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:14f2dbd042b4ff42",
+      "sourceHash": "fnv1a64:ad563f20c2908f86",
       "notice": null,
       "blocks": [
         {
@@ -1128,6 +1137,15 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: for a police officer, then your best friend — which \"you\" for each, and why?]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "point to either speaker and ask ¿Quién? — answer with the name",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: point to either speaker and ask **¿Quién?** — answer with the name]"
             },
             {
               "kind": "repeat",

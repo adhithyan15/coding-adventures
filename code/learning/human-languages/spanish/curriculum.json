@@ -94,6 +94,7 @@
         "ES-C03-vos",
         "ES-C03-usted-origin",
         "ES-C03-repaso-nombre",
+        "ES-C03-quien",
         "ES-C03-repaso-tu-usted"
       ],
       "before": [],
@@ -4395,7 +4396,8 @@
       "canDo": "I can use the additional Spanish material required at this point in the path.",
       "prerequisites": [],
       "lessons": [
-        "ES-C03-llamar"
+        "ES-C03-llamar",
+        "ES-C03-quien"
       ]
     },
     {

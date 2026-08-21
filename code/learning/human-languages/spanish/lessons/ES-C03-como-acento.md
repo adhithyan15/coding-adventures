@@ -8,23 +8,23 @@ type: writing
 headword: ¿cómo?
 gloss: the two marks Spanish puts on a question — the opening ¿ and the accent that turns como into cómo
 concept_tag: ES-QUESTION-MARKING
-prerequisites: [ES-C03-como]
+prerequisites: [ES-C03-como, ES-C03-quien]
 sounds: [accent-mark, inverted-marks]
 roots: [quomodo]
 duration:
   max_seconds: 280
 requires:
-  knowledge: [ES-LEX-COMO, ES-SOUND-WRITTEN-ACCENT]
+  knowledge: [ES-LEX-COMO, ES-LEX-QUIEN, ES-SOUND-WRITTEN-ACCENT]
 introduces:
   knowledge: [ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT]
 practises:
-  knowledge: [ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT]
+  knowledge: [ES-LEX-COMO, ES-LEX-QUIEN, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT]
 skills: [listening, speaking, reading]
 modes: [interpretive, interpersonal]
 strands: [meaning-input, meaning-output, language-focus]
 register: neutral
 variety: general
-reviews_of: [ES-C03-como]
+reviews_of: [ES-C03-como, ES-C03-quien]
 ---
 
 # ¿cómo? — the two marks that say "this is a question"
@@ -82,9 +82,10 @@ the same either way); it is a flag that says **"asking."**
 - [YOU SAY: the pair — "cómo" (how?) then "como" (like / I eat)]
 
 ## Wrap-up Recall
-<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT] -->
+<!-- hl-knowledge: introduces=[]; assesses=[ES-LEX-COMO, ES-LEX-QUIEN, ES-SCRIPT-INVERTED-QUESTION, ES-GRAMMAR-QUESTION-ACCENT] -->
 
 [PAUSE 3s] Why does Spanish open a question with **¿**? (Word order often
 does not change, so the reader needs the warning **before** the sentence,
 not after.) What changes when the accent disappears from *cómo*? (It stops
-being the question word — *como* means "like / as," or "I eat.")
+being the question word — *como* means "like / as," or "I eat.") Which word
+asks for a person? (*Quién*.)
