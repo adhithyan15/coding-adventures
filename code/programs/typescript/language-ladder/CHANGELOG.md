@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased — cited Gujarati સ ductus (HL-C09GW)
+
+- Replace Gujarati **સ**'s conventional metadata with a cited two-run variant.
+- Show its rounded loop and shoulder before the lifted tall right spine.
+
 ## Unreleased — cited Gujarati શ ductus (HL-C09GV)
 
 - Replace Gujarati **શ**'s conventional metadata with a cited two-run variant.

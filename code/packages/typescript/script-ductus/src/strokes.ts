@@ -6720,6 +6720,32 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("શ"),
   },
+  // t30apps writes Gujarati સ as a joined upper loop, left body, and long
+  // right shoulder followed by the separately descended right spine.
+  [ductusKey("gujarati", "સ")]: {
+    script: "gujarati", glyph: "સ",
+    strokes: [
+      { segments: [{ label: "circle the rounded upper loop and continue through the left body into the long right shoulder", path: [
+        { x: 45, y: 500 }, { x: 45, y: 530 }, { x: 60, y: 555 }, { x: 90, y: 565 },
+        { x: 120, y: 560 }, { x: 150, y: 550 }, { x: 195, y: 575 },
+        { x: 245, y: 580 }, { x: 295, y: 565 }, { x: 335, y: 530 }, { x: 355, y: 485 },
+        { x: 355, y: 430 }, { x: 365, y: 380 }, { x: 350, y: 340 }, { x: 320, y: 305 },
+        { x: 280, y: 275 }, { x: 235, y: 245 }, { x: 185, y: 225 }, { x: 135, y: 215 },
+        { x: 95, y: 225 }, { x: 70, y: 250 }, { x: 90, y: 275 }, { x: 130, y: 275 },
+        { x: 170, y: 260 }, { x: 215, y: 275 }, { x: 260, y: 300 }, { x: 305, y: 325 },
+        { x: 355, y: 330 }, { x: 405, y: 320 }, { x: 455, y: 320 }, { x: 500, y: 335 },
+        { x: 535, y: 360 }, { x: 500, y: 335 }, { x: 455, y: 320 }, { x: 405, y: 320 },
+        { x: 355, y: 330 }, { x: 305, y: 325 }, { x: 260, y: 300 }, { x: 215, y: 275 },
+        { x: 200, y: 225 }, { x: 220, y: 180 }, { x: 250, y: 140 }, { x: 290, y: 100 },
+        { x: 340, y: 65 }, { x: 390, y: 40 }, { x: 425, y: 38 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 577, y: 585 }, { x: 577, y: 500 }, { x: 577, y: 400 }, { x: 577, y: 300 },
+        { x: 577, y: 200 }, { x: 577, y: 125 }, { x: 585, y: 80 }, { x: 610, y: 55 },
+        { x: 650, y: 40 }, { x: 685, y: 38 }, { x: 700, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("સ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
