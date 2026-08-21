@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:997f89b3166db51b",
+  "sourceHash": "fnv1a64:fb35a9ffdc62b30e",
   "summary": {
     "totalLessons": 29,
     "voice": 1,
@@ -269,7 +269,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:26298eeb3f317c1e",
+      "sourceHash": "fnv1a64:536c9f5fc624cc79",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -293,7 +293,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:ffb69730dd67576c",
+      "sourceHash": "fnv1a64:319589a1fed4234f",
       "detachableSegments": [
         "Script — the shape"
       ],
@@ -309,14 +309,16 @@
       "drivable": false,
       "reasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "sight-cue"
       ],
       "coreModality": "pen",
       "coreReasons": [
-        "writing-type"
+        "writing-type",
+        "sight-cue"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:62d719b3344477a5",
+      "sourceHash": "fnv1a64:66f8ba352205ee5c",
       "detachableSegments": [
         "Script — no new sign at all"
       ],
@@ -339,7 +341,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:9be9028fc8bdc7fa",
+      "sourceHash": "fnv1a64:3794174c4b117901",
       "detachableSegments": [
         "Script — the shape"
       ],

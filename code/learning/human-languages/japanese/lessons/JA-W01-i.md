@@ -63,9 +63,13 @@ information and when it does not, and this is the second kind.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-I-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: い — long stroke first, then the short tick]
+- [YOU TRACE: follow the visible い once — long stroke first, then the short tick]
 - [YOU SAY: **i**, one clean beat]
+
+Keep the model visible and stop after one traced sign. Copying without the model
+comes later; today your hand is only learning the direction of two strokes.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-I-01, JA-SCRIPT-HIRAGANA-MORA] -->
