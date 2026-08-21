@@ -1678,6 +1678,12 @@
       "scriptSet": "japanese-main"
     },
     {
+      "language": "japanese",
+      "chapter": 8,
+      "output": "japanese/book/chapters/ch08-sayounara.tex",
+      "scriptSet": "japanese-main"
+    },
+    {
       "language": "marwadi",
       "chapter": 1,
       "output": "marwadi/book/chapters/ch01-ram-ram-sa.tex",

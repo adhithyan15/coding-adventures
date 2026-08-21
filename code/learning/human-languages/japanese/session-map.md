@@ -51,6 +51,12 @@ given in romanization and postponed.
 | **S36** | 6 | [`JA-W06-hi-katakana`](./lessons/JA-W06-hi-katakana.md) | write katakana **ヒ** |
 | **S37** | 6 | [`JA-C01-koohii`](./lessons/JA-C01-koohii.md) | read **コーヒー** as four morae |
 | **S38** | 7 | [`JA-C01-practice`](./lessons/JA-C01-practice.md) | run the complete doorway exchange |
+| **S39** | 8 | [`JA-C08-hear-sayounara`](./lessons/JA-C08-hear-sayounara.md) | hear and say one farewell before seeing it |
+| **S40** | 8 | [`JA-W08-yo`](./lessons/JA-W08-yo.md) | trace and write **よ** |
+| **S41** | 8 | [`JA-W08-na`](./lessons/JA-W08-na.md) | copy and recall **な** |
+| **S42** | 8 | [`JA-W08-ra`](./lessons/JA-W08-ra.md) | recall and write **ら** |
+| **S43** | 8 | [`JA-W08-sayounara-read`](./lessons/JA-W08-sayounara-read.md) | assemble **さようなら** from known signs |
+| **S44** | 8 | [`JA-C08-sayounara`](./lessons/JA-C08-sayounara.md) | pass the farewell in all four skills |
 
 ## Review rule
 
@@ -63,4 +69,6 @@ new-sign lesson to grow beyond five minutes.
 
 The six chapter payoffs at S6, S13, S21, S26, S33 and S37 are cumulative review
 points. S38 checks listening, speaking, reading and writing separately rather
-than letting recognition stand in for production.
+than letting recognition stand in for production. S39--S44 extend the same rule:
+sound and social meaning first, three new signs one at a time, then a separately
+scored four-skill farewell.

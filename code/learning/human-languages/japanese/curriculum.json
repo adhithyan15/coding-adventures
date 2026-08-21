@@ -125,6 +125,23 @@
         "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
       ],
       "after": []
+    },
+    {
+      "id": "JA-PATH-008",
+      "spine_node": "SPINE-TAKE-LEAVE",
+      "lessons": [
+        "JA-C08-hear-sayounara",
+        "JA-W08-yo",
+        "JA-W08-na",
+        "JA-W08-ra",
+        "JA-W08-sayounara-read",
+        "JA-C08-sayounara"
+      ],
+      "before": [],
+      "inline": [
+        "JA-EXT-015-SAYOUNARA-FAREWELL"
+      ],
+      "after": []
     }
   ],
   "spine": {
@@ -199,7 +216,9 @@
       "relocates": {}
     },
     "SPINE-TAKE-LEAVE": {
-      "segments": [],
+      "segments": [
+        "JA-PATH-008"
+      ],
       "omits": [
         "FAREWELL",
         "FAREWELL-CASUAL",
@@ -699,6 +718,24 @@
         "JA-W06-ko-katakana",
         "JA-W06-long-mark",
         "JA-W06-hi-katakana"
+      ]
+    },
+    {
+      "id": "JA-EXT-015-SAYOUNARA-FAREWELL",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "communication",
+      "canDo": "I can hear and say one context-dependent farewell, write its three new hiragana signs after a gentle trace-copy-recall ramp, and read and write the complete five-sign word independently.",
+      "prerequisites": [
+        "JA-EXT-007-MIXED-SCRIPT-CONSOLIDATION"
+      ],
+      "lessons": [
+        "JA-C08-hear-sayounara",
+        "JA-W08-yo",
+        "JA-W08-na",
+        "JA-W08-ra",
+        "JA-W08-sayounara-read",
+        "JA-C08-sayounara"
       ]
     }
   ]
