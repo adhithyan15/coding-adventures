@@ -197,9 +197,8 @@ void _undoFilter(
     case 4:
       for (var index = 0; index < row.length; index++) {
         final left = index >= bytesPerPixel ? row[index - bytesPerPixel] : 0;
-        final aboveLeft = index >= bytesPerPixel
-            ? prior[index - bytesPerPixel]
-            : 0;
+        final aboveLeft =
+            index >= bytesPerPixel ? prior[index - bytesPerPixel] : 0;
         row[index] =
             (row[index] + _paeth(left, prior[index], aboveLeft)) & 0xff;
       }
@@ -517,8 +516,7 @@ PixelContainer _decodePngWithLimit(Uint8List data, int limit) {
           final red = row[source];
           final green = row[source + 1];
           final blue = row[source + 2];
-          final transparent =
-              transparentRgb != null &&
+          final transparent = transparentRgb != null &&
               transparentRgb[0] == red &&
               transparentRgb[1] == green &&
               transparentRgb[2] == blue;

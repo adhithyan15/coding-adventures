@@ -129,11 +129,11 @@ Uint8List _insert(Uint8List original, int offset, Uint8List inserted) =>
         .takeBytes();
 
 Uint8List _u32(int value) => Uint8List.fromList([
-  (value >> 24) & 0xff,
-  (value >> 16) & 0xff,
-  (value >> 8) & 0xff,
-  value & 0xff,
-]);
+      (value >> 24) & 0xff,
+      (value >> 16) & 0xff,
+      (value >> 8) & 0xff,
+      value & 0xff,
+    ]);
 
 final class _MalformedPixelContainer extends PixelContainer {
   _MalformedPixelContainer(this._width, this._height, this._data) : super(0, 0);
