@@ -150,6 +150,7 @@ const GUJARATI_RA = DUCTUS[ductusKey("gujarati", "ર")];
 const GUJARATI_LA = DUCTUS[ductusKey("gujarati", "લ")];
 const GUJARATI_LLA = DUCTUS[ductusKey("gujarati", "ળ")];
 const GUJARATI_VA = DUCTUS[ductusKey("gujarati", "વ")];
+const GUJARATI_SHA = DUCTUS[ductusKey("gujarati", "શ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2274,6 +2275,12 @@ describe("handwriting ductus", () => {
     expect(GUJARATI_VA.script).toBe("gujarati");
     expect(penLifts(GUJARATI_VA)).toBe(1);
     expect(GUJARATI_VA.strokes).toHaveLength(2);
+  });
+
+  it("Gujarati શ completes its looped body before the right spine", () => {
+    expect(GUJARATI_SHA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_SHA)).toBe(1);
+    expect(GUJARATI_SHA.strokes).toHaveLength(2);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4842,6 +4849,12 @@ describe("handwriting ductus", () => {
     const src = GUJARATI_VA.source;
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*વ animation.*first and second SVG paths/i);
     expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*broad rounded left body.*right shoulder.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-right-spine order.*one-lift evidence/i);
+  });
+
+  it("Gujarati શ traces its looped body and spine to two paths", () => {
+    const src = GUJARATI_SHA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*શ animation.*first and second SVG paths/i);
+    expect(src.variation).toMatch(/two ordered pen-down runs.*first SVG path.*upper right.*small upper loop.*broad lower body.*lower-right tail.*lifts once.*second SVG path.*tall right spine.*remaining path slots are empty.*one variant.*loop-and-body-before-right-spine order.*one-lift evidence/i);
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
