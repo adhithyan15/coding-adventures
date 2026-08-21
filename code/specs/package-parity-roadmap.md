@@ -4710,6 +4710,43 @@ were disjoint, and GitHub reports the PR open, non-draft, and mergeable while
 required CI and CodeQL checks are queued. It is the loop's sole active parity
 publication, so the loop remains monitor-only while those checks are pending.
 
+Final reviewed head `73398d3178ae9bdd8ca0f9fc365e37daced0cba5`
+completed all 30 checks with 24 successes, five expected skips, and one neutral
+CodeQL result. Both CI gates and every operating-system build succeeded. After
+the loop requested squash auto-merge, GitHub merged PR #12403 as
+`66b4424e8976369519a5a394f6ef579d1844565f` at 2026-08-21T09:51:46Z and
+deleted the source branch.
+
+### Post-#12403 refresh and Python PNG selection
+
+The exact live-main collision inventory at
+`5a52987627bc17f4bf21144cfab3aca72181f432` remains 15 established lanes,
+1,368 canonical identities, and 4,560 implementation slots. High-consensus
+coverage is 174 packages with 271 gaps; the 5-9 band contains 123 packages
+with 932 gaps; the 2-4 band contains 166 packages with 2,087 gaps; and 905
+singletons have 12,670 gaps, including 716 Rust singletons. Canonical
+collisions and unknown language buckets remain zero. The Go reconciliation
+changed an existing root, and the later Italian human-language merge adds no
+package root.
+
+The Python PNG child is selected next. Python 3.13.14 and uv 0.11.28 are
+installed, and its established PixelContainer and counted ZIP inflater both
+use compact byte-backed storage, keeping IC18's 33,554,432-pixel ceiling
+honest. Exact Windows prerequisite fronts pass 23 PixelContainer tests at
+100.0% coverage, 51 LZSS tests at 97.89%, and 76 ZIP tests at 93.40% branch
+coverage with Ruff, formatting, and strict MyPy clean. Live open-PR and stale
+remote audits find no Python PNG or prerequisite overlap. The bounded child
+will consume all 85 neutral cases through public APIs, reuse repository ZIP
+raw inflate/deflate and CRC, add focused allocation and precedence evidence,
+and carry empty production capabilities. Its four-node build graph is
+`image-codec-png -> {pixel-container, zip -> lzss}`. The prospective inventory
+adds one slot, moves `image-codec-png` to ten lanes, and therefore yields 175
+high-consensus packages with 276 gaps and 122 packages with 926 gaps in the
+5-9 band. Boxed-byte Haskell, Ruby, Perl, and Elixir prerequisites need
+separate compact-output hardening before their ceilings are credible; Rust
+remains deferred behind live prerequisite ownership and legacy filesystem
+authority.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
