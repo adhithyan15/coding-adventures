@@ -53,6 +53,7 @@ describe("assessment policy (HL16)", () => {
       "marwadi",
       "punjabi",
       "gujarati",
+      "chinese",
       "japanese",
     ]));
     expect(new Set(contracts).size).toBe(contracts.length);
@@ -126,6 +127,27 @@ describe("track assessment contracts", () => {
     ]);
     expect(japanese.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
     expect(japanese.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
+  });
+
+  it("loads Chinese's seven-rung independent four-skill destination", () => {
+    const chinese = parseAssessmentContract(
+      JSON.parse(readFileSync(join(defaultCurriculumRoot(), "chinese", "assessment.json"), "utf8")),
+      "chinese",
+      policy,
+    );
+    expect(chinese.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(chinese.levels.every((level) => level.target.basis === "project-defined")).toBe(true);
+    expect(chinese.levels.every((level) =>
+      Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
+    )).toBe(true);
+    expect(chinese.levels[0]?.writingStages).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(chinese.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
+    expect(chinese.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
   });
 
   it("accepts a complete seven-level contract with independent skills and full mocks", () => {
