@@ -1,0 +1,571 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 3,
+  "title": "Haan Sa: A Respectful Yes, Sign by Sign",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:ab063e492a0daec8",
+  "lessons": [
+    {
+      "id": "MW-W03-ha",
+      "sequence": 120,
+      "title": "ह — ha, one new sign",
+      "headword": "ह",
+      "romanization": "ha",
+      "gloss": "the Devanagari consonant ha",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:d46f24e6493198a2",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one sign and one sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one sign and one sound until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the Chapter 1 greeting reply from memory. Then, with आभार covered, say it as formal thanks and write it once. Uncover only long enough to check each sign."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one sign and one sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ह — ha."
+            },
+            {
+              "kind": "speech",
+              "text": "Let the air pass freely as you say ha. Do not add the rest of the coming word yet; today the eye, ear, voice, and hand meet only ह."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe, trace, copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "look at ह (ha) for three seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "finger-trace its lower curve and upright line."
+            },
+            {
+              "kind": "speech",
+              "text": "copy ह (ha) twice."
+            },
+            {
+              "kind": "speech",
+              "text": "say ha after each copy."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model for five seconds. Write ह (ha), uncover, and compare."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W03-ha-read",
+              "prompt": "Read the one new sign ह (ha) and name its sound.",
+              "assesses": [
+                "MW-SCRIPT-HA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ha",
+                "ह"
+              ],
+              "feedback": {
+                "correct": "Right: ह is ha.",
+                "incorrect": "Let air pass freely: ह is ha."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W03-anusvara",
+      "sequence": 130,
+      "title": "ं (nasal mark) — a small dot for the nasal ending",
+      "headword": "ं",
+      "romanization": "nasal mark",
+      "gloss": "the dot above used for the nasal ending in हां",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:88a1616289b3defe",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one small new mark"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one small new mark until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write ह (ha), then भ, from memory. Add the familiar long-ā mark to ह (ha): हा. Read it once."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one small new mark",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ं (nasal mark) — a dot above."
+            },
+            {
+              "kind": "speech",
+              "text": "In the source spelling हां, this dot cues the nasal ending. Say hā(n) slowly: the vowel is long and the ending resonates through the nose. Speakers vary, so listen for the whole word rather than forcing one exaggerated sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — add only the mark",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copy हा once."
+            },
+            {
+              "kind": "speech",
+              "text": "look at हां."
+            },
+            {
+              "kind": "speech",
+              "text": "add ं (nasal mark) above the end of your copy."
+            },
+            {
+              "kind": "speech",
+              "text": "compare the dot's position, then say hā(n)."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hide हां for five seconds. Write it once, then uncover and compare."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W03-anusvara-add",
+              "prompt": "Which small mark completes the attested spelling हां?",
+              "assesses": [
+                "MW-SCRIPT-ANUSVARA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ं",
+                "anusvara",
+                "dot above",
+                "nasal mark"
+              ],
+              "feedback": {
+                "correct": "Yes: add ं above to complete हां.",
+                "incorrect": "Add the small dot above: ं."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C03-haan-saa",
+      "sequence": 140,
+      "title": "हां सा (hā(n) sā) — a respectful yes",
+      "headword": "हां सा",
+      "romanization": "hā(n) sā",
+      "gloss": "yes, respectfully",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:07c169b446527df8",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the Chapter 1 greeting from memory. Write हां, then सा, as two separate known pieces."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — join the two pieces",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "हां सा (hā(n) sā)। — Hā(n) sā. — Yes, respectfully."
+            },
+            {
+              "kind": "speech",
+              "text": "The first word answers yes. Familiar सा keeps the answer respectful. A scholarly Marwari text edition identifies hā(n)-sā as the polite affirmative, and a Rajasthan Sahitya Akademi dialogue writes हां सा (hā(n) sā) in context."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — guided, then delayed",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copy हां सा (hā(n) sā) once while looking."
+            },
+            {
+              "kind": "speech",
+              "text": "point to the space between the answer and the respect word."
+            },
+            {
+              "kind": "speech",
+              "text": "hide the phrase for ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write हां सा (hā(n) sā) from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "compare हां, the space, and सा separately."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say हां सा (hā(n) sā) once without looking, then write it once with the model covered."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Hess, Texts and Translations and Rajasthan Sahitya Akademi, Jāgtī Jot, April–May 2019."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C03-haan-saa-build",
+              "prompt": "Write the respectful Marwadi yes from ह (ha) + ा + ं (nasal mark), followed by the respect word सा.",
+              "assesses": [
+                "MW-SCRIPT-HAAN-01",
+                "MW-LEX-HAAN-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "हां सा",
+                "हां सा।",
+                "haan sa",
+                "hā(n) sā"
+              ],
+              "feedback": {
+                "correct": "Yes: हां answers affirmatively and सा keeps it respectful.",
+                "incorrect": "Build हां, leave a space, then add the familiar respect word सा."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C03-listen-say",
+      "sequence": 150,
+      "title": "Listen and answer — yes without the page",
+      "headword": "हां सा",
+      "romanization": "hā(n) sā",
+      "gloss": "yes, respectfully",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:8aed844325e20928",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the first sign of आभार, then the first sign of हां सा (hā(n) sā). Say which belongs to formal thanks and which begins a yes answer."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know: answer by ear",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Have someone or a screen reader say these in either order: ābhār and hā(n) sā. Without looking, point left for formal thanks and right for respectful yes. Then say हां सा as the answer to a question you accept."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — four tiny skills",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: identify hā(n) sā without seeing it."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: answer yes respectfully without reading."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: choose हां सा (hā(n) sā) from आभार, हां सा (hā(n) sā), राम."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: cover all models and write only हां."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Close the page. Say हां सा (hā(n) sā), then write हां from memory."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C03-listen-say-choice",
+              "prompt": "You hear hā(n) sā. What social move did the speaker make?",
+              "assesses": [
+                "MW-LEX-HAAN-01",
+                "MW-RESPONSE-HAAN-SAA-POLITE-01"
+              ],
+              "responseSeconds": 10,
+              "acceptedResponses": [
+                "they answered yes respectfully.",
+                "respectful yes",
+                "yes politely",
+                "yes"
+              ],
+              "feedback": {
+                "correct": "Right: हां सा is a respectful affirmative answer.",
+                "incorrect": "It is the polite affirmative: a respectful yes."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C03-practice",
+      "sequence": 160,
+      "title": "Practice — hear a yes, give a yes",
+      "headword": "हां सा",
+      "romanization": "hā(n) sā",
+      "gloss": "yes, respectfully",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:83c3d94261a645d9",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 7,
+              "perItem": false,
+              "source": "[PAUSE 7s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With the page covered, write भ, then हां. Say आभार for formal thanks; say हां सा (hā(n) sā) for a respectful yes."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "guided-production",
+          "title": "Guided Practice — independent four-skill check",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: hear hā(n) sā and identify an affirmative answer, without text."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: hear “Will you come?” and answer yes respectfully, without notes."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: cover the English and explain हां सा (hā(n) sā)."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: hear hā(n) sā, wait fifteen seconds, then write the complete phrase."
+            },
+            {
+              "kind": "speech",
+              "text": "Score each line separately. A missed line is the one to repeat; three stronger skills do not erase a writing or listening miss."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "notice",
+          "title": "What you've built — and what remains",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "You can now give one respectful affirmative. You have not yet learnt the Marwadi responses for no or okay, and you have not completed a yes/no exchange. Those remain separate tiny steps."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If the dot or ह (ha) stalled, return only to its two-minute sign lesson before trying the complete dictation again."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C03-practice-yes",
+              "prompt": "From the spoken cue hā(n) sā alone, write the respectful affirmative.",
+              "assesses": [
+                "MW-SCRIPT-HAAN-01",
+                "MW-LEX-HAAN-01",
+                "MW-RESPONSE-HAAN-SAA-POLITE-01",
+                "MW-PERFORMANCE-HAAN-SAA-FOUR-SKILL-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "हां सा",
+                "हां सा।",
+                "haan sa",
+                "hā(n) sā"
+              ],
+              "feedback": {
+                "correct": "हां सा — the respectful yes, recalled without a visible model.",
+                "incorrect": "Write हां, leave a space, then write the familiar respect word सा."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

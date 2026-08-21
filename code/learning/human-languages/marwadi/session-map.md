@@ -17,6 +17,11 @@ memory demand at a time.
 | S9 | `MW-W02-bha`: **भ** | read **भ** as *bha* with a breath | observe, trace, copy one sign |
 | S10 | `MW-C02-aabhaar`: **आभार** | build it from **आ + भ + ा + र** | delayed copy of one word |
 | S11 | `MW-C02-practice` | hear/read a formal-gratitude cue and supply **आभार** | dictation and independent recall |
+| S12 | `MW-W03-ha`: **ह** | distinguish **ह** from **भ** | observe, trace, copy one sign |
+| S13 | `MW-W03-anusvara`: **ं** | add the nasal mark to known **हा** | guided copy of one small mark |
+| S14 | `MW-C03-haan-saa`: **हां सा** | build it from **ह + ा + ं**, then known **सा** | delayed copy of one response |
+| S15 | `MW-C03-listen-say` | distinguish *hā(n) sā* from *ābhār* by ear | hidden-model recall of **हां** |
+| S16 | `MW-C03-practice` | hear/read a yes cue and answer respectfully | dictation and independent phrase recall |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

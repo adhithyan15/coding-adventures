@@ -7199,6 +7199,24 @@
       "jsonHash": "fnv1a64:5b00e74e60f6c24d"
     },
     {
+      "language": "marwadi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:ab063e492a0daec8",
+      "lessonIds": [
+        "MW-W03-ha",
+        "MW-W03-anusvara",
+        "MW-C03-haan-saa",
+        "MW-C03-listen-say",
+        "MW-C03-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "marwadi/narration/ch03.txt",
+      "json": "marwadi/narration/ch03.json",
+      "textHash": "fnv1a64:94c8ba5505ec69f1",
+      "jsonHash": "fnv1a64:5b908f221596e8a3"
+    },
+    {
       "language": "persian",
       "chapter": 1,
       "sourceHash": "fnv1a64:71ff8595e75605b5",

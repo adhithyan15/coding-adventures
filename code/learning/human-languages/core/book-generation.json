@@ -1673,6 +1673,12 @@
       "scriptSet": "marwadi-main"
     },
     {
+      "language": "marwadi",
+      "chapter": 3,
+      "output": "marwadi/book/chapters/ch03-haan-saa.tex",
+      "scriptSet": "marwadi-main"
+    },
+    {
       "language": "kannada",
       "chapter": 6,
       "output": "kannada/book/chapters/ch06-dative-case.tex",
