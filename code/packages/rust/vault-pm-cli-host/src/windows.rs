@@ -128,18 +128,18 @@ fn verify_console(handle: &OwnedHandle) -> Result<CONSOLE_MODE, CliHostError> {
 }
 
 fn write_console(handle: &OwnedHandle, value: &str) -> Result<(), CliHostError> {
-    let value = Zeroizing::new(value.encode_utf16().collect::<Vec<u16>>());
+    let value = WideSecret(value.encode_utf16().collect());
     let mut written = 0;
     let succeeded = unsafe {
         WriteConsoleW(
             raw_handle(handle),
-            value.as_ptr().cast::<c_void>(),
-            value.len() as u32,
+            value.0.as_ptr().cast::<c_void>(),
+            value.0.len() as u32,
             &mut written,
             null(),
         )
     };
-    if succeeded == 0 || written as usize != value.len() {
+    if succeeded == 0 || written as usize != value.0.len() {
         Err(CliHostError::TerminalAccessFailed)
     } else {
         Ok(())
