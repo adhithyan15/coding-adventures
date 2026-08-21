@@ -99,6 +99,13 @@ All four chunk-type bytes MUST be ASCII letters. The third letter's bit 5 is
 reserved by PNG and MUST be zero, so the third letter MUST be uppercase. Reject
 an invalid type before interpreting its critical/ancillary flag.
 
+`acTL`, `fcTL`, and `fdAT` are ancillary in spelling but are the semantic
+control and frame-data chunks of APNG. A decoder implementing this profile MUST
+refuse each exact name as `unsupported-feature` after the ordinary chunk-type
+and CRC checks and the existing first-chunk IHDR rule, regardless of its payload
+or later position. It MUST NOT parse APNG state and MUST NOT let the generic
+unknown-ancillary rule skip these chunks.
+
 `PLTE` is a known critical chunk even when palette images are out of scope.
 For truecolour types 2 and 6 it is an optional suggested palette: a decoder
 MUST accept and ignore one well-formed table before `tRNS` and `IDAT`. It MUST reject a
@@ -278,6 +285,7 @@ the round trip is lossless by construction rather than by luck.
      - IHDR: parse and validate; reject a second IHDR
      - PLTE: validate one optional suggested palette for types 2/6 before IDAT
      - tRNS: validate one optional transparency key for types 0/2 before IDAT
+     - acTL, fcTL, fdAT: reject as the named unsupported APNG feature
      - IDAT: collect (must follow IHDR)
      - IEND: stop
      - otherwise: skip if ancillary (lowercase first letter), reject if critical
@@ -309,7 +317,7 @@ mis-reads a palette image is worse than one that says it cannot read it:
 - palette images (colour type 3)
 - bit depths other than 8
 - Adam7 interlacing
-- `APNG` animation
+- `APNG` animation (`acTL`, `fcTL`, and `fdAT`)
 
 ---
 
@@ -417,6 +425,7 @@ the message.
 | second IHDR | error |
 | IDAT before IHDR | error |
 | colour type 3, depth != 8, interlace 1 | error naming the unsupported feature |
+| `acTL`, `fcTL`, or `fdAT` | `unsupported-feature`, after type and CRC validation |
 | invalid, repeated, misplaced, or forbidden `PLTE` / `tRNS` | stable typed error |
 | dimension 0, or above the cap | error |
 | zlib header not method 8, or failing mod 31 | error |

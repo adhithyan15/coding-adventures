@@ -124,8 +124,11 @@ Encoding always writes colour type 6, because that is exactly what a
 the round trip is lossless by construction rather than by luck.
 
 **Refused by name, never half-supported:** palette images (type 3), bit depths
-other than 8, Adam7 interlacing, APNG animation. A decoder that silently
-mis-reads a palette image is worse than one that says it cannot read it.
+other than 8, Adam7 interlacing, and APNG animation (`acTL`, `fcTL`, and
+`fdAT`). APNG's chunks are ancillary by letter case but semantic, so they are
+refused only after their ordinary type and CRC checks instead of being skipped.
+A decoder that silently mis-reads a palette image is worse than one that says it
+cannot read it.
 
 ## Reading bytes you did not write
 
@@ -174,7 +177,7 @@ round-trip perfectly. So the suite also:
   covering all five filter types in one image and each supported colour type;
 - checks `adler32` against the RFC's worked example and against the trailer zlib
   itself writes, including across the 5552-byte chunking boundary.
-- consumes all 82 cases in the
+- consumes all 85 cases in the
   [`image-codec-png-v1`](../../../specs/fixtures/image-codec-png-v1/README.md)
   language-neutral corpus through the public API, including every stable error
   code, all supported colour forms and filters, and stored/fixed/dynamic

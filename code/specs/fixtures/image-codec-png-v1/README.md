@@ -8,7 +8,7 @@ encoder/decoder round trip.
 
 - `schema.json` closes the profile, limits, operations, expected results, and
   29 stable error identifiers.
-- `cases.json` contains 82 deterministic vectors: valid decoding, foreign
+- `cases.json` contains 85 deterministic vectors: valid decoding, foreign
   encoder interoperability, Adler-32, malformed input, and resource limits.
 - `generate_cases.py` constructs stable stored/fixed streams, wraps a checked
   dynamic-Huffman vector, and reproduces `cases.json` exactly across zlib
@@ -28,7 +28,8 @@ encoder/decoder round trip.
 Hex is lowercase and byte-aligned. Valid vectors cover colour types 0, 2, 4,
 and 6; all five filters; stored, fixed, and dynamic DEFLATE blocks; split IDAT;
 Paeth predictor branches and ties; suggested `PLTE`; `tRNS` transparency; and
-an unknown ancillary chunk. Rejection vectors cover every IC18 framing,
+an unknown ancillary chunk. Valid-CRC rejection vectors name APNG's `acTL`,
+`fcTL`, and `fdAT` chunks. Rejection vectors cover every IC18 framing,
 checksum, zlib, filter, exact-consumption, and caller-lowerable allocation
 boundary.
 
