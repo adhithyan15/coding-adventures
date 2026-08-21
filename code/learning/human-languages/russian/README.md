@@ -48,6 +48,17 @@ inside the words that need it; grammar introduced only when a word needs it.
   whole sentence is deferred to a chapter of its own, because it is the hardest
   thing about Russian verbs and cannot be done in a footnote.
 
+## Assessment destination
+
+The complete book targets a project-defined [pre-A1 bridge followed by the
+external TORFL/ТРКИ ladder](assessment-spec.md) from A1 through C2. Its
+machine-readable [contract](assessment.json) requires independent reading,
+listening, writing, and speaking passes, the complete gentle Cyrillic writing
+ramp, and two full timed mocks at every rung. External-format mocks must also
+include TORFL's compulsory Lexis/Grammar subtest. This names the destination; it
+does not claim that the current book is exam-ready or that pre-A1 is an official
+TORFL certificate.
+
 ## Progress
 
 - **Chapter 1 — Greetings & courtesy** ([`lessons/RU-C01-*`](./lessons/)):

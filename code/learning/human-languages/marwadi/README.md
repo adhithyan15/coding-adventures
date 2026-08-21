@@ -12,15 +12,18 @@ notices and copies one Devanagari sign, then a vowel mark, then a whole word.
 Only after the hand can make **राम** does the book add **स**, build **सा**, and
 ask for the complete greeting from memory. Four more lessons then isolate **आ**
 and **भ**, assemble formal **आभार** (*ābhār*, "thanks; gratitude"), and retrieve
-it without a visible model. Every lesson is at most five minutes.
+it without a visible model. Five more isolate **ह** and **ं**, build respectful
+**हां सा** (*hā(n) sā*, "yes"), and retrieve it independently by ear, voice, eye,
+and hand. Every lesson is at most five minutes.
 
 ## What this starter edition can honestly claim
 
-After Chapter 2, a learner can recognise, read, say, copy, and write the polite
+After Chapter 3, a learner can recognise, read, say, copy, and write the polite
 greeting **राम-राम सा**, answer it, and offer formal **आभार** after a kindness.
-That is a small pre-A1 capability, not completion of pre-A1 and not exam
-readiness. The curriculum map records every untouched spine concept explicitly
-so the remaining work stays measurable.
+They can also answer yes respectfully with **हां सा**. That is a small pre-A1
+capability, not completion of pre-A1 and not exam readiness. The curriculum map
+records every untouched spine concept explicitly so the remaining work stays
+measurable.
 
 Marwadi has no single external pre-A1-to-C2 examination ladder suitable for the
 book's completion contract. The project therefore maps it to CEFR through its
@@ -37,12 +40,16 @@ of Rajasthani, and the Rajasthan State Archives publishes Rajasthani/Marwari
 learning material. The opening exchange is attested in the Rajasthan Sahitya
 Akademi magazine *Jāgtī Jot* as **राम-राम सा। — राम-राम सा, राम-राम।** Its
 April 2004 issue uses **आभार** in an expression of gratitude, anchoring Chapter
-2's formal word.
+2's formal word. A scholarly edition identifies *hā(n)-sā* as the polite Marwari
+affirmative, and an April–May 2019 *Jāgtī Jot* dialogue uses **हां सा** in
+context, anchoring Chapter 3 without flattening regional alternatives.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)
 - [Rajasthan Sahitya Akademi, *Jāgtī Jot*, August–September 2018](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/jjpdf/JJ_All_Pdf/August-September%202018%20E-Ank.pdf)
 - [Rajasthan Sahitya Akademi, *Jāgtī Jot*, April 2004](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_33_01_01_April_to_April_2004.pdf)
+- [Hess, *Texts and Translations*](https://hasp.ub.uni-heidelberg.de/catalog/view/1151/2059/103085)
+- [Rajasthan Sahitya Akademi, *Jāgtī Jot*, April–May 2019](https://rbssa.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_47_01_02_April_to_May_2019.pdf)
 
 The language-specific path is in [`curriculum.json`](./curriculum.json), the
 five-minute sequence in [`session-map.md`](./session-map.md), and the long-range

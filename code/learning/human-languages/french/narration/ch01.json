@@ -3,8 +3,8 @@
   "language": "french",
   "chapter": 1,
   "title": "Greetings",
-  "drivablePrefix": 8,
-  "sourceHash": "fnv1a64:75a7d74a39e7efd4",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:a89a44581b617bf4",
   "lessons": [
     {
       "id": "FR-C01-salut",
@@ -137,6 +137,375 @@
             {
               "kind": "speech",
               "text": "What does salut literally wish someone? (Health — from Latin salus.) What happens to its final t? (Silent.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-W01-salut-observe",
+      "sequence": 6,
+      "title": "salut — let your eye and hand meet one known word",
+      "headword": "salut",
+      "romanization": "salut",
+      "gloss": "notice and trace the spelling of the first familiar greeting",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:640b9da0b3095721",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the casual greeting you just learned: salut, sa-LU. Today adds no new French. You will only notice how that familiar word sits on a page."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "notice",
+          "title": "What you've built — one spelling",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "s a l u t becomes salut."
+            },
+            {
+              "kind": "speech",
+              "text": "The word has five written letters. Your voice finishes on u; the final t stays visible and silent. Point to each letter from left to right once."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — trace with the model visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep salut visible. Slowly finger-trace the five letters once, left to right. Then trace the word once in the air. Say sa-LU only after your finger reaches the silent t."
+            },
+            {
+              "kind": "speech",
+              "text": "This is noticing, not a handwriting test. Use the letter forms you normally write; there is no new alphabet and no demand for perfect penmanship."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the silent letter. Stop here; copying comes in the next tiny lesson."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-W01-salut-observe-final",
+              "prompt": "Which written letter stays silent at the end of salut?",
+              "assesses": [
+                "FR-ORTHO-SALUT-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "t",
+                "the final t",
+                "final t"
+              ],
+              "feedback": {
+                "correct": "Right: salut keeps a written final t, but your voice stops on u.",
+                "incorrect": "Look at the last of the five letters: the written t is silent."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-W01-salut-guided-copy",
+      "sequence": 7,
+      "title": "salut — one supported copy",
+      "headword": "salut",
+      "romanization": "salut",
+      "gloss": "copy the first familiar greeting once with the model visible",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:8c8cde1a6eb80361",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to the last letter in salut. It is written t and said as silence. Keep the model on the page for the whole lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Copy salut once. You may look back after every letter."
+            },
+            {
+              "kind": "speech",
+              "text": "When you finish, touch s-a-l-u-t in your copy and say sa-LU. The eye checks five letters; the voice does not add a final t sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare only the order and presence of the five letters. Repair one letter if needed, then stop. The model stays visible today."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-W01-salut-guided-copy-check",
+              "prompt": "Copy the visible word salut once, then report how many letters you wrote.",
+              "assesses": [
+                "FR-ORTHO-SALUT-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "salut — five letters",
+                "salut",
+                "5",
+                "five"
+              ],
+              "feedback": {
+                "correct": "Good: one supported five-letter copy is enough today.",
+                "incorrect": "Look back at the model and copy s-a-l-u-t once."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-W01-salut-delayed-copy",
+      "sequence": 8,
+      "title": "salut — look, hide, write, compare",
+      "headword": "salut",
+      "romanization": "salut",
+      "gloss": "look, hide, write, compare, and repair the first greeting",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:11f19996e83bf254",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at salut for five seconds. Touch the final silent t. Do not copy it yet."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cover salut."
+            },
+            {
+              "kind": "speech",
+              "text": "wait five seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write the word once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover the model and compare s-a-l-u-t."
+            },
+            {
+              "kind": "speech",
+              "text": "If one letter differs, circle that place and repair only that letter. A repair is part of the exercise, not a failure."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read your repaired word as sa-LU. Stop after one memory attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-W01-salut-delayed-copy-check",
+              "prompt": "After hiding the model for five seconds, write the casual greeting and then compare it.",
+              "assesses": [
+                "FR-ORTHO-SALUT-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "salut"
+              ],
+              "feedback": {
+                "correct": "Yes: salut, including its written silent t.",
+                "incorrect": "Uncover the model, repair only the differing letter, and try once more tomorrow."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "FR-W01-salut-dictation",
+      "sequence": 9,
+      "title": "One heard greeting — write what you know",
+      "headword": "salut",
+      "romanization": "salut",
+      "gloss": "write the first familiar greeting from a heard cue with no visible model",
+      "script": "latin",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:b0497135d19b0a65",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer line lower on this page. You will hear one familiar casual greeting. No new vocabulary is hiding in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "sa-LU",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *sa-LU*]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the French greeting from the sound alone. Remember that your pen records one final letter that your voice does not pronounce."
+            },
+            {
+              "kind": "speech",
+              "text": "Now uncover and compare: salut. Check only the five letters and the silent final t. Repair one place if needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Writing from sound is the endpoint of this four-step runway. It is not yet a DILF mock; later lessons will grow from one known word to contact details, numbers, forms, and short practical messages."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "FR-W01-salut-dictation-answer",
+              "prompt": "From the heard cue sa-LU alone, write the known casual greeting.",
+              "assesses": [
+                "FR-ORTHO-SALUT-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "salut"
+              ],
+              "feedback": {
+                "correct": "salut — five written letters, with the final t silent.",
+                "incorrect": "The sound ends on u, but the spelling ends in silent t: salut."
+              }
             }
           ]
         }
@@ -1404,13 +1773,18 @@
       "romanization": "(practice)",
       "gloss": "the French greetings, all together",
       "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:29b8a7672a93879e",
-      "notice": null,
+      "sourceHash": "fnv1a64:7499253fe8acbabe",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1528,6 +1902,17 @@
         },
         {
           "index": 3,
+          "type": "writing",
+          "title": "Writing — close the first runway",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the word salut elsewhere in this chapter. Write the casual greeting once from memory, then uncover it and check the silent final t. This is a chapter-level retrieval of the tiny trace-to-dictation runway, not a new word."
+            }
+          ]
+        },
+        {
+          "index": 4,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
