@@ -973,7 +973,10 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(158); // Urdu adds one trace segment after Arabic's six and the Romance opener work.
+    // #12356 adds Malayalam's model-visible guided copy, the Chapter 2 payoff's
+    // supported writing check, and a spaced delayed copy. All three are genuine
+    // hand-work segments, so this exact pin moves +3.
+    expect(summary.lessonsWithWritingSegments).toBe(161); // Malayalam adds three segments to the combined Urdu stack.
     /* Superseded merge-side totals:
     expect(summary.lessonsWithWritingSegments).toBe(155); // +6: Arabic adds opening trace, guided-copy, delayed-copy, and dictation blocks. // +2: Italian adds observe-trace and guided-copy evidence.
     expect(summary.lessonsWithWritingSegments).toBe(151); // +4: Italian and Portuguese each add observe-trace and guided-copy evidence.

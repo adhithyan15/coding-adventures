@@ -191,7 +191,7 @@ describe("the committed corpus", () => {
     const l = buildRootLedger(lessons, minReuse);
     expect(l.summary.roots).toBe(3084); // Arabic adds two roots and Portuguese adds one opener etymon.
     expect(l.summary.underspent).toBe(2969); // All three combined entries begin below the reuse floor.
-    expect(l.summary.neverSpent).toBe(2032); // Urdu now declares sh-k-r in the new trace lesson and spends it again in shukriya.
+    expect(l.summary.neverSpent).toBe(2031); // Urdu spends sh-k-r again, and Malayalam's two writing revisits spend santosham after its phrase lesson.
     /* Superseded Arabic-only totals:
     expect(l.summary.roots).toBe(3083); // Arabic's greeting ramp records two previously unledgered roots.
     expect(l.summary.underspent).toBe(2968); // Both new roots begin below the reuse floor.

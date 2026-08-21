@@ -91,7 +91,9 @@
         "ML-C02-nii-ningal",
         "ML-C02-entu",
         "ML-C02-ninre-peru-entaanu",
-        "ML-C02-santosham"
+        "ML-C02-santosham",
+        "ML-W02-santosham-guided-copy",
+        "ML-W03-santosham-delayed-copy"
       ],
       "before": [],
       "inline": [],

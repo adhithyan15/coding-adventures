@@ -7,13 +7,13 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:bb58041c07986738",
+  "sourceHash": "fnv1a64:9ee2db46221d44f9",
   "summary": {
-    "totalLessons": 3412,
-    "voice": 2462,
+    "totalLessons": 3414,
+    "voice": 2461,
     "sight": 587,
-    "pen": 363,
-    "drivableLessons": 2462,
+    "pen": 366,
+    "drivableLessons": 2461,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1004,
@@ -6173,11 +6173,11 @@
     },
     {
       "language": "malayalam",
-      "lessonCount": 247,
-      "voice": 182,
+      "lessonCount": 249,
+      "voice": 181,
       "sight": 41,
-      "pen": 24,
-      "drivablePercent": 74,
+      "pen": 27,
+      "drivablePercent": 73,
       "drivablePrefixTotal": 172,
       "modalities": [
         "voice",
@@ -6201,13 +6201,14 @@
         },
         {
           "chapter": 2,
-          "lessonCount": 9,
-          "voice": 4,
+          "lessonCount": 10,
+          "voice": 3,
           "sight": 5,
-          "pen": 0,
+          "pen": 2,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C02-peru",
@@ -6216,13 +6217,14 @@
         },
         {
           "chapter": 3,
-          "lessonCount": 6,
+          "lessonCount": 7,
           "voice": 1,
           "sight": 5,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C03-engane",
@@ -42683,25 +42685,51 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4a79c6125d8f596e"
+      "sourceHash": "fnv1a64:e9d348626eb61ca9"
+    },
+    {
+      "id": "ML-W02-santosham-guided-copy",
+      "language": "malayalam",
+      "chapter": 2,
+      "sequence": 145,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:463d4be823a7ddf3",
+      "detachableSegments": [
+        "Writing — one guided copy"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C02-practice",
       "language": "malayalam",
       "chapter": 2,
       "sequence": 150,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a842043a35b2edf7"
+      "sourceHash": "fnv1a64:114795962eddf610",
+      "detachableSegments": [
+        "Writing check — keep the model visible"
+      ]
     },
     {
       "id": "ML-C03-engane",
@@ -42825,6 +42853,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:50faef297aa213bd"
+    },
+    {
+      "id": "ML-W03-santosham-delayed-copy",
+      "language": "malayalam",
+      "chapter": 3,
+      "sequence": 215,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:9af9f54c860a3beb",
+      "detachableSegments": [
+        "Writing — one try after a delay"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C04-pokuka",

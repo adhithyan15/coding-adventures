@@ -4,7 +4,7 @@
   "chapter": 3,
   "title": "How Are You?",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:5236bd3259a983df",
+  "sourceHash": "fnv1a64:c3e9b93ecc3b435a",
   "lessons": [
     {
       "id": "ML-C03-engane",
@@ -846,6 +846,67 @@
             {
               "kind": "speech",
               "text": "A friend asks sukhamāṇō? — give a full, polite reply, and answer their thanks. (Sukhamāṇŭ, nandi — and to thanks, sāramilla.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ML-W03-santosham-delayed-copy",
+      "sequence": 215,
+      "title": "സന്തോഷം (santōṣam) — one delayed copy",
+      "headword": "സന്തോഷം",
+      "romanization": "santōṣam",
+      "gloss": "write the known word for joy once after a short delay",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:9af9f54c860a3beb",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at സന്തോഷം for five seconds and say santōṣam. Find ഷ and the long ō sign ോ once more. Then cover the model with your hand or a small piece of paper."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one try after a delay",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Write സന്തോഷം (santōṣam) once while the model is covered. This is a gentle retrieval, not a speed test. If one shape will not come, uncover the model, look, cover it again, and finish."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "unknown",
+          "title": "Check and stop",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Uncover സന്തോഷം and compare it with your copy. Repair only one shape if needed. Say santōṣam once, then stop: one known word, one spaced writing revisit."
             }
           ]
         }

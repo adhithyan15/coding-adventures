@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Introducing Yourself",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:da4d2f30bce7d386",
+  "sourceHash": "fnv1a64:d460273f3fa4e9dc",
   "lessons": [
     {
       "id": "ML-C02-peru",
@@ -891,7 +891,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4a79c6125d8f596e",
+      "sourceHash": "fnv1a64:e9d348626eb61ca9",
       "notice": null,
       "blocks": [
         {
@@ -914,16 +914,39 @@
         {
           "index": 1,
           "type": "unknown",
-          "title": "The phrase",
+          "title": "The word you can use",
           "segments": [
             {
               "kind": "speech",
-              "text": "The full form is നിങ്ങളെ കണ്ടതിൽ സന്തോഷം (niṅṅaḷe kaṇḍatil santōṣam) — \"joy at having seen you.\""
+              "text": "സന്തോഷം (santōṣam) literally means \"joy.\" At the end of a short introduction, it can stand by itself for \"pleased to meet you.\" A fuller phrase exists, but it needs words and grammar you have not learned yet; the one-word version is complete and useful now."
             }
           ]
         },
         {
           "index": 2,
+          "type": "unknown",
+          "title": "Two new shapes to notice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep സന്തോഷം (santōṣam) visible. Most of its shapes have already appeared in this chapter. Point to just two new ones:"
+            },
+            {
+              "kind": "speech",
+              "text": "ഷ carries the ṣa sound near the end."
+            },
+            {
+              "kind": "speech",
+              "text": "ോ is the long ō vowel sign attached to the consonant before it."
+            },
+            {
+              "kind": "speech",
+              "text": "Look, point, and say the whole word once. The next two-minute lesson will let your hand copy it with the model still present."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "etymology",
           "title": "The word, taken apart",
           "segments": [
@@ -934,7 +957,7 @@
           ]
         },
         {
-          "index": 3,
+          "index": 4,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -965,7 +988,7 @@
           ]
         },
         {
-          "index": 4,
+          "index": 5,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -984,6 +1007,69 @@
       ]
     },
     {
+      "id": "ML-W02-santosham-guided-copy",
+      "sequence": 145,
+      "title": "സന്തോഷം (santōṣam) — copy one known word with help",
+      "headword": "സന്തോഷം",
+      "romanization": "santōṣam",
+      "gloss": "copy the known word for joy once with the model visible",
+      "script": "malayalam",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:463d4be823a7ddf3",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Point to സന്തോഷം and say santōṣam once. Keep the model on the page. Find ഷ near the end, then find the long ō sign ോ on the consonant before it. Those are the two shapes you just noticed. Trace each printed shape once with your finger while the model remains visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — one guided copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Follow സന്തോഷം (santōṣam) from left to right with your finger. Then copy the whole word once directly below the visible model. Look back as often as you need."
+            },
+            {
+              "kind": "speech",
+              "text": "This is shape familiarity, not a stroke-order test. Write large and slowly. Do not hide the model, do not spell from memory, and do not add a second word."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Compare your copy with സന്തോഷം while both remain visible. Check only the two shapes you noticed: ഷ and ോ. Repair one shape if you want, then stop and say santōṣam once more."
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "ML-C02-practice",
       "sequence": 150,
       "title": "Chapter 2 — the introduction, whole",
@@ -991,13 +1077,18 @@
       "romanization": "",
       "gloss": "Chapter 2 recap — the introduction exchange",
       "script": "malayalam",
-      "modality": "voice",
-      "derivedModality": "voice",
+      "modality": "pen",
+      "derivedModality": "pen",
       "modalityReasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
-      "sourceHash": "fnv1a64:a842043a35b2edf7",
-      "notice": null,
+      "sourceHash": "fnv1a64:114795962eddf610",
+      "notice": {
+        "modality": "pen",
+        "needs": [],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
       "blocks": [
         {
           "index": 0,
@@ -1029,7 +1120,7 @@
             },
             {
               "kind": "speech",
-              "text": "enṟe from ñāṉ (\"I\")."
+              "text": "enṟe — the native Dravidian possessive \"my\"."
             },
             {
               "kind": "speech",
@@ -1091,6 +1182,17 @@
         },
         {
           "index": 2,
+          "type": "writing",
+          "title": "Writing check — keep the model visible",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep the dialogue table open. Copy സന്തോഷം (santōṣam) once from its visible row, then compare your two new shapes, ഷ and ോ, with the model. This is supported checkpoint writing, not spelling from memory."
+            }
+          ]
+        },
+        {
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -1106,7 +1208,7 @@
             },
             {
               "kind": "speech",
-              "text": "Next chapter: sukhamāṇō? (\"are you well?\") — the responding cycle."
+              "text": "Next chapter begins the responding cycle, one short question and answer at a time."
             }
           ]
         }

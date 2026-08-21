@@ -957,7 +957,13 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 3412, // Urdu adds one trace-only micro-lesson after Arabic's greeting-script ramp.
+      // #12356 adds two bounded Malayalam writing lessons: guided copy after
+      // recognition, then delayed copy eight lessons later.
+      totalLessons: 3414, // Malayalam adds two writing lessons to the combined Urdu stack.
+      /* Superseded merge-side totals:
+      totalLessons: 3410, // +7: Arabic's interleaved greeting-script ramp. // +1: Italian's guided-copy bridge on the Tamil baseline.
+      totalLessons: 3404, // +2: Italian and Portuguese guided-copy bridges on the Tamil baseline.
+      */
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -970,7 +976,9 @@ describe("corpus regression", () => {
       // German sentence. Its spoken greeting lesson is now honestly voice-first.
       // +1 voice / -1 sight: IT-C01-notte replaces its five-language comparison
       // table with one spoken Latin-to-Italian change, making it voice-first too.
-      voice: 2462, // Italian adds one voice-first lesson after German's cleaned opener.
+      // -1 voice: Malayalam's Chapter 2 checkpoint now really checks one
+      // model-visible copy instead of claiming a writing payoff by metadata.
+      voice: 2461, // Malayalam moves the checkpoint out of the combined voice-first set.
       /* Superseded merge-side totals:
       voice: 2463, // +2: Arabic marḥaban and the full greeting become genuinely voice-first. // Italian's legacy opener now exposes its pen dependency.
       voice: 2460, // Italian and Portuguese legacy openers now expose their pen dependencies.
@@ -1014,8 +1022,10 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
-      pen: 363, // Urdu adds one trace-only writing lesson after Arabic's eight writing segments.
-      drivableLessons: 2462, // Italian adds one more hands-free opener after German.
+      // +3 pen: two new Malayalam writing lessons plus the existing Chapter 2
+      // checkpoint, which now performs the supported copy it assesses.
+      pen: 366, // Malayalam adds three pen lessons to the combined Urdu stack.
+      drivableLessons: 2461, // The model-visible checkpoint leaves the hands-free set.
       /* Superseded merge-side totals:
       pen: 360, // +8: seven Arabic writing micro-lessons plus salām's one-shape opening trace. // +2: Italian's opener trace and guided copy.
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.

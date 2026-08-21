@@ -103,11 +103,11 @@ Learner copy comes first.
     );
     expect(report.summary).toEqual({
       tracks: 23,
-      tracksWithAnyEvidence: 9,
+      tracksWithAnyEvidence: 10,
       tracksCompleteAtPreA1: 2,
-      evidenceBlocks: 23,
+      evidenceBlocks: 26,
       invalidEvidenceBlocks: 0,
-      missingTrackLevelStages: 895,
+      missingTrackLevelStages: 874,
       /* Superseded merge-side totals:
       tracksWithAnyEvidence: 7,
       tracksCompleteAtPreA1: 2,
