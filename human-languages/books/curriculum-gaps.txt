@@ -8,15 +8,15 @@ Human Languages curriculum gap report
 2909 drivable lessons (85% of the corpus)
 levels: 2141 pre-A1, 573 A1, 549 A2, 40 B1, 17 B2, 10 C1, 18 C2; 63 unmapped (98% placed)
 ramp: 46 lessons above 3 new atoms (495 unmeasurable, 85% measurable); 24 chapters above 12
-script ramp: 56 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
+script ramp: 57 lessons above 3 new glyphs; 5 opening more than 1 writing system at once; steepest RU-C01-privet at 14
 cousin layer: 219 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 742 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 303 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2188 glyphs and makes 179 lessons clean on its own
-order: 16 lessons with no declared sequence across 3 tracks; 7 prerequisites and 13 reviews pointing forward
+order: 12 lessons with no declared sequence across 2 tracks; 6 prerequisites and 13 reviews pointing forward
 reinforcement: 632 of 4702 atoms never revisited (13%); missed windows R1 1192, R2 3690, R3 3558, R4 2075
-forward references: 470 uses of material a later lesson teaches
+forward references: 469 uses of material a later lesson teaches
 writing stages: 2/23 tracks prove the cumulative pre-A1 ladder; 22 evidence blocks, 0 invalid; 902 missing (track, level, stage) pairs
-super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 137 named track/debt items
+super-gentle ramp: 23/23 tracks carry detected or unmeasured debt; 136 named track/debt items
 writing ramp: 0 track(s) never practise writing; 4 start after lesson one
 gentleness measurement: 495 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 153/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on

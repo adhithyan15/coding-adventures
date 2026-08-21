@@ -24,16 +24,16 @@
     "version2SchemaTracks": 9,
     "lessonsWithoutLevel": 63,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 56,
+    "scriptRampOverBudgetLessons": 57,
     "lessonsOpeningMultipleScripts": 5,
     "scriptClosureViolations": 742,
     "scriptExposureExemptedGlyphs": 2188,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
-    "lessonsWithoutSequence": 16,
+    "lessonsWithoutSequence": 12,
     "forwardReviews": 13,
     "atomsNeverRevisited": 632,
-    "forwardReferences": 470,
+    "forwardReferences": 469,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 82,
     "chapterGateCleanTracks": 9,
@@ -5363,17 +5363,6 @@
           "budget": 3
         },
         {
-          "lessonId": "UR-C01-ji-han",
-          "language": "urdu",
-          "chapter": 1,
-          "glyphs": 8,
-          "sample": "اجرشکںہی",
-          "systems": [
-            "Arabic"
-          ],
-          "budget": 3
-        },
-        {
           "lessonId": "BN-C01-nomoshkar",
           "language": "bengali",
           "chapter": 1,
@@ -5617,6 +5606,17 @@
           "budget": 3
         },
         {
+          "lessonId": "UR-C01-shukriya",
+          "language": "urdu",
+          "chapter": 1,
+          "glyphs": 5,
+          "sample": "رشکہی",
+          "systems": [
+            "Arabic"
+          ],
+          "budget": 3
+        },
+        {
           "lessonId": "AR-W06-harakat-and-hamza",
           "language": "arabic",
           "chapter": 2,
@@ -5800,6 +5800,17 @@
           "sample": "డతళె",
           "systems": [
             "Telugu"
+          ],
+          "budget": 3
+        },
+        {
+          "lessonId": "UR-C01-salam",
+          "language": "urdu",
+          "chapter": 1,
+          "glyphs": 4,
+          "sample": "اسلم",
+          "systems": [
+            "Arabic"
           ],
           "budget": 3
         },
@@ -6105,13 +6116,13 @@
           "latinScript": false,
           "lessonCount": 68,
           "totalGlyphs": 37,
-          "lessonViolations": 2,
+          "lessonViolations": 3,
           "systemViolations": 0,
           "lessonsWithForeignScript": 2
         }
       ],
       "summary": {
-        "lessonViolations": 56,
+        "lessonViolations": 57,
         "systemViolations": 5,
         "lessonsWithForeignScript": 219,
         "maxForeignGlyphsInALesson": 26,
@@ -6405,42 +6416,6 @@
         "kind": "forward-review",
         "other": "RU-C01-spasibo",
         "detail": "reviews RU-C01-spasibo, which the learner does not reach for another 2 lesson(s)"
-      },
-      {
-        "lessonId": "UR-C01-ji-han",
-        "language": "urdu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "UR-C01-ji-han",
-        "language": "urdu",
-        "chapter": 1,
-        "kind": "forward-prerequisite",
-        "other": "UR-C01-shukriya",
-        "detail": "requires UR-C01-shukriya, which comes 3 lesson(s) later"
-      },
-      {
-        "lessonId": "UR-C01-nahin",
-        "language": "urdu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "UR-C01-salam",
-        "language": "urdu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
-      },
-      {
-        "lessonId": "UR-C01-shukriya",
-        "language": "urdu",
-        "chapter": 1,
-        "kind": "no-sequence",
-        "detail": "no declared reading order; position is a fallback, not a fact"
       }
     ],
     "reinforcement": [
@@ -59012,14 +58987,6 @@
         "lessonsEarly": 3
       },
       {
-        "lessonId": "UR-C01-ji-han",
-        "language": "urdu",
-        "position": 0,
-        "word": "شکریہ",
-        "taughtBy": "UR-C01-shukriya",
-        "lessonsEarly": 3
-      },
-      {
         "lessonId": "UR-C13-nila",
         "language": "urdu",
         "position": 49,
@@ -60708,18 +60675,18 @@
       {
         "language": "urdu",
         "lessonCount": 68,
-        "lessonsWithoutSequence": 4,
-        "forwardPrerequisites": 1,
+        "lessonsWithoutSequence": 0,
+        "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "atomsTaught": 151,
         "atomsNeverRevisited": 8,
-        "forwardReferences": 7
+        "forwardReferences": 6
       }
     ],
     "summary": {
-      "lessonsWithoutSequence": 16,
-      "tracksWithUnorderedLessons": 3,
-      "forwardPrerequisites": 7,
+      "lessonsWithoutSequence": 12,
+      "tracksWithUnorderedLessons": 2,
+      "forwardPrerequisites": 6,
       "forwardReviews": 13,
       "atomsTaught": 4702,
       "atomsNeverRevisited": 632,
@@ -60730,7 +60697,7 @@
         "R3": 3558,
         "R4": 2075
       },
-      "forwardReferences": 470
+      "forwardReferences": 469
     }
   },
   "scriptClosure": {
@@ -72069,15 +72036,15 @@
         "durationViolations": 0,
         "atomLessonSpikes": 3,
         "atomChapterSpikes": 3,
-        "glyphLessonSpikes": 2,
+        "glyphLessonSpikes": 3,
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 47,
         "neverTaughtGlyphs": 30,
-        "orderDefects": 5,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
-        "forwardPrerequisites": 1,
+        "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 7,
+        "forwardReferences": 6,
         "atomsTaught": 151,
         "atomsNeverRevisited": 8,
         "reinforcementWindowMisses": 214,
@@ -72088,15 +72055,8 @@
         "findings": [
           {
             "language": "urdu",
-            "kind": "order-integrity",
-            "count": 5,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
-          {
-            "language": "urdu",
             "kind": "forward-language",
-            "count": 7,
+            "count": 6,
             "unit": "use(s)",
             "detail": "teach target-language material before load-bearing use"
           },
@@ -72124,7 +72084,7 @@
           {
             "language": "urdu",
             "kind": "glyph-step",
-            "count": 2,
+            "count": 3,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -72152,10 +72112,10 @@
         ],
         "next": {
           "language": "urdu",
-          "kind": "order-integrity",
-          "count": 5,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 6,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       }
     ],
@@ -72171,13 +72131,6 @@
         "language": "persian",
         "kind": "order-integrity",
         "count": 6,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
-        "language": "urdu",
-        "kind": "order-integrity",
-        "count": 5,
         "unit": "order/dependency defect(s)",
         "detail": "declare a unique reading order and close every prerequisite and review before use"
       },
@@ -72315,14 +72268,14 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "urdu",
+        "language": "bengali",
         "kind": "forward-language",
-        "count": 7,
+        "count": 6,
         "unit": "use(s)",
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "bengali",
+        "language": "urdu",
         "kind": "forward-language",
         "count": 6,
         "unit": "use(s)",
@@ -72693,6 +72646,13 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
+        "language": "urdu",
+        "kind": "glyph-step",
+        "count": 3,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
         "language": "gujarati",
         "kind": "glyph-step",
         "count": 2,
@@ -72708,13 +72668,6 @@
       },
       {
         "language": "punjabi",
-        "kind": "glyph-step",
-        "count": 2,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
-        "language": "urdu",
         "kind": "glyph-step",
         "count": 2,
         "unit": "lesson/system spike(s)",
@@ -73126,7 +73079,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 495,
-      "findings": 137
+      "findings": 136
     }
   },
   "levelGate": {
