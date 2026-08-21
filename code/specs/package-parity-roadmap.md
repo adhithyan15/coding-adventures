@@ -4832,6 +4832,30 @@ compact-output prerequisite decisions, Elixir and complete Perl tooling are
 absent locally, and Rust has live PixelContainer/ZIP ownership plus a legacy
 filesystem-authority reconciliation.
 
+### Python heap BUILD-front implementation and validation
+
+Both heap front doors now recreate `.venv` with `--clear`, pin Python 3.13,
+and invoke the environment's interpreter explicitly for Ruff, format, MyPy,
+and pytest. A repository regression pins the complete Unix and Windows recipes.
+The exact Windows front passes twice consecutively in one checkout: every
+quality gate is clean and all 52 tests pass at 99.12% coverage on both runs.
+The canonical Unix recipe is structurally pinned for Linux and macOS CI.
+
+Direct Windows downstream validation passes when supplying the separately
+recorded pre-existing `UV_PYTHON=3.13` requirement: Huffman Tree passes 36 tests
+at 98.62% coverage, Brotli 75 at 97.70%, Deflate 20 at 98.14%, and Huffman
+Compression 35 at 97.44%. The Go build tool passes all tests, vet, and trimpath
+compilation. Its exact Windows diff plan discovers 494 Python packages, selects
+one changed and six affected nodes, and a real run builds heap, LZSS, Huffman
+Tree, Brotli, Deflate, and Huffman Compression while skipping 488 packages.
+
+The focused build-front regression, parity reporter, and capability taxonomy
+pass 2, 10, and 7 tests. The schema-3 inventory remains 15 lanes, 1,368
+identities, and 4,561 slots with zero collisions or unknown buckets. The state
+graph is unique, dependency-complete, and acyclic across 415 items. Diff,
+credential, dependency, and production-authority scans are clean; no capability
+manifest or privileged production boundary changes.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
