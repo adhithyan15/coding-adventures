@@ -1622,7 +1622,7 @@
     {
       "language": "german",
       "chapter": 1,
-      "sourceHash": "fnv1a64:ca5f3cc4bc7edc73",
+      "sourceHash": "fnv1a64:fbdf9f56aa0bf130",
       "lessonIds": [
         "GE-C01-hallo",
         "GE-W01-hallo-guided-copy",
@@ -1638,12 +1638,12 @@
         "GE-C01-gute-nacht",
         "GE-C01-practice"
       ],
-      "voiceLessons": 10,
+      "voiceLessons": 11,
       "drivablePrefix": 0,
       "text": "german/narration/ch01.txt",
       "json": "german/narration/ch01.json",
-      "textHash": "fnv1a64:7712e130236f9460",
-      "jsonHash": "fnv1a64:be027de48acae907"
+      "textHash": "fnv1a64:f37ed25e0596bf8f",
+      "jsonHash": "fnv1a64:e29da4d8c2238dd9"
     },
     {
       "language": "german",
