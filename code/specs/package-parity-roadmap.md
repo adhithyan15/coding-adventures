@@ -4463,7 +4463,7 @@ with the platform zlib decoder and decoded by the independent test-only
 `image` package.
 
 Dart 3.12.2 passes 93 tests, fatal-info analysis, the literal BUILD front door,
-and a 90% coverage gate at 286/288 production lines (99.31%) and 19/19
+and a 90% coverage gate at 285/287 production lines (99.30%) and 19/19
 functions. The established PixelContainer, LZSS, and ZIP prerequisites pass
 18, 54, and 66 tests. The Go build tool passes tests, vet, and trimpath build;
 its collision-checked 4,978-package plan selects and then builds exactly Dart
