@@ -4632,6 +4632,14 @@ installation as parallel Windows hazards. BUILD front doors now invoke the
 Lua modules directly without quoted wrapper paths, CI installs shared Lua test
 tools once during toolchain setup, and the complete rerun passes.
 
+Ready-for-review PR #12396 was opened from validated implementation head
+`f1a2c61e7aec307b76cd292d9e8f4f0312ced003` after a clean rebase onto exact
+`origin/main` `5eb6fc0589a08d53c4db3fe7f6c9e2e23d0d897c`. The intervening
+human-language-only commits were disjoint from this tranche, the source branch
+had no prior remote or PR owner, and the complete post-rebase validation above
+was repeated before the normal first push. Lua PNG is now the loop's sole
+`pr-open` item and PR #12396 is the sole active parity PR.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
