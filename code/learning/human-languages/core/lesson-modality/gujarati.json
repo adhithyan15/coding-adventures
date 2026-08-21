@@ -1,0 +1,1668 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "features": {
+    "blockModality": true
+  },
+  "policy": {
+    "maxLinearisableTableColumns": 3
+  },
+  "sourceHash": "fnv1a64:e73e37253554b4fe",
+  "summary": {
+    "totalLessons": 69,
+    "voice": 16,
+    "sight": 43,
+    "pen": 10,
+    "drivableLessons": 16,
+    "drivablePercent": 23,
+    "trackCount": 1,
+    "chapterCount": 13,
+    "drivablePrefixTotal": 8,
+    "fullyDrivableChapters": 2,
+    "unstartableChapters": 11,
+    "overriddenLessons": 0,
+    "lessonsWithoutChapter": 0
+  },
+  "tracks": [
+    {
+      "language": "gujarati",
+      "lessonCount": 69,
+      "voice": 16,
+      "sight": 43,
+      "pen": 10,
+      "drivablePercent": 23,
+      "drivablePrefixTotal": 8,
+      "modalities": [
+        "voice",
+        "sight",
+        "pen"
+      ],
+      "chapters": [
+        {
+          "chapter": 1,
+          "lessonCount": 6,
+          "voice": 0,
+          "sight": 6,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C01-namaste",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 2,
+          "lessonCount": 9,
+          "voice": 3,
+          "sight": 6,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C02-naam",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 3,
+          "lessonCount": 6,
+          "voice": 2,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C03-hun",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 4,
+          "lessonCount": 5,
+          "voice": 2,
+          "sight": 3,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C04-malishun",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 5,
+          "lessonCount": 5,
+          "voice": 1,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "voice",
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C05-bolvun",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 6,
+          "lessonCount": 2,
+          "voice": 2,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 2,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GU-C06-numbers-1-5",
+            "GU-C06-number-histories"
+          ]
+        },
+        {
+          "chapter": 7,
+          "lessonCount": 6,
+          "voice": 6,
+          "sight": 0,
+          "pen": 0,
+          "modalities": [
+            "voice"
+          ],
+          "drivablePrefix": 6,
+          "firstNonVoiceLesson": null,
+          "drivable": true,
+          "drivableLessonIds": [
+            "GU-C07-hovun",
+            "GU-C07-javun",
+            "GU-C07-aavvun",
+            "GU-C07-khaavun",
+            "GU-C07-jovun",
+            "GU-C07-jaanvun"
+          ]
+        },
+        {
+          "chapter": 8,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C08-vicharvun",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 9,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C09-levun",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 10,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C10-paani",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 11,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C11-mitra",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 12,
+          "lessonCount": 4,
+          "voice": 0,
+          "sight": 4,
+          "pen": 0,
+          "modalities": [
+            "sight"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-C12-aankh",
+          "drivable": false,
+          "drivableLessonIds": []
+        },
+        {
+          "chapter": 13,
+          "lessonCount": 10,
+          "voice": 0,
+          "sight": 0,
+          "pen": 10,
+          "modalities": [
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 0,
+          "firstNonVoiceLesson": "GU-W01-ha",
+          "drivable": false,
+          "drivableLessonIds": []
+        }
+      ]
+    }
+  ],
+  "lessons": [
+    {
+      "id": "GU-C01-namaste",
+      "language": "gujarati",
+      "chapter": 1,
+      "sequence": 10,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b4b3a2df069f8fbd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C01-aabhaar",
+      "language": "gujarati",
+      "chapter": 1,
+      "sequence": 20,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9663619daed64a01",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C01-aavjo",
+      "language": "gujarati",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:462c30f8319f7699",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C01-haa-naa",
+      "language": "gujarati",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:57b1e461664548f0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C01-saarun",
+      "language": "gujarati",
+      "chapter": 1,
+      "sequence": 50,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "sight",
+      "coreReasons": [
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:0602a0482cdda44b",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C01-practice",
+      "language": "gujarati",
+      "chapter": 1,
+      "sequence": 60,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:a48cc8dab3ef6975",
+      "detachableSegments": [
+        "Script — the script and the language"
+      ]
+    },
+    {
+      "id": "GU-C02-naam",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 70,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:004b2558823f74ab",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C02-maarun",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 80,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4f51718d2f91f54d",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C02-chhe",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 90,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e529d4f231eec687",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C02-maarun-naam-chhe",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 100,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:22b5f4432c3c38b7"
+    },
+    {
+      "id": "GU-C02-anand",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 110,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d746ad709dd088aa",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C02-tu-tame",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 120,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3640c748412afb4d",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C02-shun",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 130,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:3813931c6e6248c7",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C02-tamarun-naam-shun-chhe",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 140,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8f177705908560df"
+    },
+    {
+      "id": "GU-C02-practice",
+      "language": "gujarati",
+      "chapter": 2,
+      "sequence": 150,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:1c7f6bff27a1eef7"
+    },
+    {
+      "id": "GU-C03-hun",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 160,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:67be20d0fd32bf19",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C03-kem",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 170,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6043558b512b105c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C03-tame-kem-chho",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 180,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ba6d1156668fc552"
+    },
+    {
+      "id": "GU-C03-majaa",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 190,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:864f25d192a091ed",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C03-vandho-nahi",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 200,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:7be03f1fc69c0369",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C03-practice",
+      "language": "gujarati",
+      "chapter": 3,
+      "sequence": 210,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8864bcf8b507d9d1"
+    },
+    {
+      "id": "GU-C04-malishun",
+      "language": "gujarati",
+      "chapter": 4,
+      "sequence": 220,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b7ae18860fe57ac0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C04-kaale",
+      "language": "gujarati",
+      "chapter": 4,
+      "sequence": 230,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d762ef2a619956f7",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C04-pachha",
+      "language": "gujarati",
+      "chapter": 4,
+      "sequence": 240,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:26baec6556e78839",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C04-pachha-malishun",
+      "language": "gujarati",
+      "chapter": 4,
+      "sequence": 250,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2c91bb7837b60432"
+    },
+    {
+      "id": "GU-C04-practice",
+      "language": "gujarati",
+      "chapter": 4,
+      "sequence": 260,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:5d84795dc2a058b6"
+    },
+    {
+      "id": "GU-C05-bolvun",
+      "language": "gujarati",
+      "chapter": 5,
+      "sequence": 270,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ed5c4a4863bdf2e0",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C05-hun-gujarati-bolun-chhun",
+      "language": "gujarati",
+      "chapter": 5,
+      "sequence": 280,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6f9054bd49fafb01",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C05-kaam-karvun",
+      "language": "gujarati",
+      "chapter": 5,
+      "sequence": 290,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:912370b82cc95378",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C05-rahevun",
+      "language": "gujarati",
+      "chapter": 5,
+      "sequence": 300,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:71647a29d0ea6761",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C05-practice",
+      "language": "gujarati",
+      "chapter": 5,
+      "sequence": 310,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d630b5cacff5ba8f"
+    },
+    {
+      "id": "GU-C06-numbers-1-5",
+      "language": "gujarati",
+      "chapter": 6,
+      "sequence": 340,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:efa63868bdf27365"
+    },
+    {
+      "id": "GU-C06-number-histories",
+      "language": "gujarati",
+      "chapter": 6,
+      "sequence": 350,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:01b835a278e4ed28"
+    },
+    {
+      "id": "GU-C07-hovun",
+      "language": "gujarati",
+      "chapter": 7,
+      "sequence": 360,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:074c898a263805b4"
+    },
+    {
+      "id": "GU-C07-javun",
+      "language": "gujarati",
+      "chapter": 7,
+      "sequence": 370,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ac22a70b3f014c43"
+    },
+    {
+      "id": "GU-C07-aavvun",
+      "language": "gujarati",
+      "chapter": 7,
+      "sequence": 380,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0a598e9332487ff5"
+    },
+    {
+      "id": "GU-C07-khaavun",
+      "language": "gujarati",
+      "chapter": 7,
+      "sequence": 390,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b4e5c4ae025d4ddb"
+    },
+    {
+      "id": "GU-C07-jovun",
+      "language": "gujarati",
+      "chapter": 7,
+      "sequence": 400,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:123451e5d601e80a"
+    },
+    {
+      "id": "GU-C07-jaanvun",
+      "language": "gujarati",
+      "chapter": 7,
+      "sequence": 410,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0a53c84fae291b0a"
+    },
+    {
+      "id": "GU-C08-vicharvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 420,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:ab9bbe40fe19ee9e",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C08-samajvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 430,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e619706cc4866b8e",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C08-vanchvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 440,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6a213e7937e89b80",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C08-lakhvun",
+      "language": "gujarati",
+      "chapter": 8,
+      "sequence": 450,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:cb81bfc0db3e69fa",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C09-levun",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 460,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:0b5eb0b51653ba96",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C09-puchhvun",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 470,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b616a00d37b78087",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C09-madad-karvi",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 480,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:9b33f51af27e06a4",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C09-gamvun",
+      "language": "gujarati",
+      "chapter": 9,
+      "sequence": 490,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:e9696c743f91f3a9",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C10-paani",
+      "language": "gujarati",
+      "chapter": 10,
+      "sequence": 500,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:81fc00e8c42cce7c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C10-chaa",
+      "language": "gujarati",
+      "chapter": 10,
+      "sequence": 510,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8412e5898c1abfdd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C10-dudh",
+      "language": "gujarati",
+      "chapter": 10,
+      "sequence": 520,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d0197d792d790205",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C10-rotli",
+      "language": "gujarati",
+      "chapter": 10,
+      "sequence": 530,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:fe8f18d2824ac928",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C11-mitra",
+      "language": "gujarati",
+      "chapter": 11,
+      "sequence": 540,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:510109a8b8bddacd",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C11-kutumb",
+      "language": "gujarati",
+      "chapter": 11,
+      "sequence": 550,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:f359800e0ad34bc1",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C11-bhai",
+      "language": "gujarati",
+      "chapter": 11,
+      "sequence": 560,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:4704038cd28045da",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C11-bahen",
+      "language": "gujarati",
+      "chapter": 11,
+      "sequence": 570,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:2c3f1494bcb283fb",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C12-aankh",
+      "language": "gujarati",
+      "chapter": 12,
+      "sequence": 580,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:908a428d5d9ba832",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C12-kaan",
+      "language": "gujarati",
+      "chapter": 12,
+      "sequence": 590,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:87ee6294531dd00c",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C12-modhu",
+      "language": "gujarati",
+      "chapter": 12,
+      "sequence": 600,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:d21dd2c664d5e91f",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-C12-naak",
+      "language": "gujarati",
+      "chapter": 12,
+      "sequence": 610,
+      "modality": "sight",
+      "derived": "sight",
+      "drivable": false,
+      "reasons": [
+        "script-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:b8bc753f46dc0005",
+      "detachableSegments": [
+        "The letters in this word"
+      ]
+    },
+    {
+      "id": "GU-W01-ha",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 700,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:be2667df3c22b2c1",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-aa-matra",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 710,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:69c52c248b41e2d4",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-aa",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 720,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3fb042e70dbca6f9",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-na",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 730,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:fa3d353a1b98bf38",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-ma",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 740,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:ac40c8630452d762",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-sa",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 750,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:698b5fc32936bf3c",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-ta",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 760,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:5f24fa19090991da",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-e-matra",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 770,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7f1e7ffa8c412439",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-virama",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 780,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:d0039eb10d908271",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "GU-W01-namaste-read",
+      "language": "gujarati",
+      "chapter": 13,
+      "sequence": 790,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:df2ae56ded388fa2",
+      "detachableSegments": [
+        "Script"
+      ],
+      "delivery": "script"
+    }
+  ],
+  "findings": []
+}

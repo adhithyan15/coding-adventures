@@ -21,6 +21,17 @@ pieces taught before the whole; and a book you can read straight through.
 - **Grounded against English + Sanskrit**, with the wider Indo-European family
   drawn in where it reaches (*nāhī* ← PIE *\*ne*, English *no*).
 
+## Assessment destination
+
+The complete book targets the project-defined [Coding Adventures Marathi
+Assessment](assessment-spec.md) from pre-A1 through C2. Its machine-readable
+[contract](assessment.json) requires separate passes in reading, listening,
+writing, and speaking, the full gentle writing ladder, and two timed mocks at
+every rung. This names the destination; it does not claim that the current book
+is exam-ready or that the future certificate is externally accredited. Task
+inventories, mocks, rubrics, answer keys, calibration, and book-only human
+validation remain explicit backlog.
+
 ## Progress
 
 - **Chapter 1 — Greetings** ([`lessons/MR-C01-*`](./lessons/)): namaskār,

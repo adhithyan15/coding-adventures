@@ -20,6 +20,10 @@ four-skill pass rule, and validation boundary, and [assessment.json](assessment.
 for the machine-readable seven-rung contract. Lessons stay at five minutes or
 less and writing grows one action at a time; full mocks keep continuous target
 timing. The contract records a target, not present-tense readiness evidence.
+The project-defined pre-A1 [task-shape inventory](task-shapes/pre-a1.json)
+specifies the first executable reading, listening, writing, and speaking papers.
+Its presence closes inventory debt only: curriculum coverage, mocks, scoring
+materials, and human pass evidence remain separate gates.
 
 ## Authored
 

@@ -13,13 +13,12 @@ est_minutes: 4
 reviews_of: [TA-C01-answering, TA-C01-vanakkam-family-register, TA-C01-nandri-family-register, TA-C01-vanakkam, TA-C01-nandri, TA-C01-aam, TA-C01-illai, TA-C01-sari, TA-W00-va-guided-copy]
 ---
 
-# Chapter 1 — recap, and how Tamil says goodbye
+# Chapter 1 — a five-word recap
 
 ## Warm-up
 
 [PAUSE 2s] Five spoken words, plus the one visible shape your hand has copied.
-Let's gather them — and add the farewell, which carries a small piece of Tamil
-culture.
+Let's gather only what you have already learned and make it feel easy.
 
 ## Say them back
 
@@ -39,17 +38,11 @@ you copy it below. Nothing asks you to read or write the other shapes. Formal
 letter construction still begins later, when every shape will spell a word you
 already say.
 
-## The farewell — why Tamil won't just say "I'm leaving"
+## A promise for later
 
-Tamil has no casual "bye." The everyday goodbye is:
-
-> **போய் வருகிறேன்** (*pōy varugiṟēṉ*) — literally **"I'll go and come [back]."**
-
-And the reply is **போய் வா** (*pōy vā*) — **"go, and come [back]."** You never
-sign off with a bare "I am going": saying only *"I go"* sounds ominous, like a
-final departure. So you promise a return — *go and come back* — every single
-time. It's a whole worldview folded into a goodbye. (You can also simply repeat
-**வணக்கம்**, which works to part as well as to meet.)
+Tamil has a warm departure exchange built around going and coming back. It
+belongs in the later chapter where you learn those actions one at a time. For
+now, repeating **வணக்கம்** is enough when you part.
 
 ## Guided Practice
 
@@ -57,15 +50,11 @@ time. It's a whole worldview folded into a goodbye. (You can also simply repeat
 - [YOU SAY: all five — vaṇakkam · naṉṟi · ām · illai · sari]
 - [YOU SAY: greet and thank — "vaṇakkam!" … "naṉṟi."]
 - [YOU COPY: **வ** once beside the visible model, large and slowly]
-- [YOU SAY: the farewell exchange — "pōy varugiṟēṉ" / "pōy vā"]
 
 ## Wrap-up Recall
 
-[PAUSE 3s] Say all five words aloud. What does the everyday Tamil goodbye
-literally mean, and why isn't it just "I'm leaving"? ("I'll go and come back" —
-a bare "I go" sounds like a final parting, so you promise a return.) Which of
-the five works both to meet someone and to part from them? (**வணக்கம்**.) Compare
+[PAUSE 3s] Say all five words aloud. Which one works both to meet someone and
+to part from them? (**வணக்கம்**.) Compare
 your one copied **வ** with the model. Repair one curve if you want, then stop.
 
-Next chapter: introducing yourself — *en peyar…* ("my name…"), and Tamil's
-**nī / nīṅgaḷ** (familiar / respectful "you").
+Next chapter starts introducing yourself, one short possession form at a time.

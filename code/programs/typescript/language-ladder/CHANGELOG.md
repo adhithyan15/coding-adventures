@@ -1,5 +1,40 @@
 # Changelog
 
+## Unreleased — source-verified Arabic ن ductus
+
+- Replace Arabic **ن**'s conventional metadata with a cited two-run path.
+- Preserve the completed deep bowl while the upper dot is placed last.
+
+## Unreleased — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional metadata with a cited one-run path.
+- Show its closed head flowing into the down-left tail without a pen lift.
+
+## Unreleased — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional bowl-and-dots summary with a cited path.
+- Show its right-to-left bowl followed by three separately lifted upper dots.
+
+## Unreleased — canonical Gujarati inventory completion (HL-C09GY)
+
+- Remove duplicate conventional **ન** and **પ** rows from the learner inventory.
+- Present Gujarati as a complete 44-letter source-verified teaching sequence.
+
+## Unreleased — cited Gujarati હ ductus (HL-C09GX)
+
+- Replace Gujarati **હ**'s conventional metadata with a cited one-run variant.
+- Show its upper loop flowing through the broad lower bowl without a lift.
+
+## Unreleased — cited Gujarati સ ductus (HL-C09GW)
+
+- Replace Gujarati **સ**'s conventional metadata with a cited two-run variant.
+- Show its rounded loop and shoulder before the lifted tall right spine.
+
+## Unreleased — cited Gujarati શ ductus (HL-C09GV)
+
+- Replace Gujarati **શ**'s conventional metadata with a cited two-run variant.
+- Show its upper loop and lower body before the lifted tall right spine.
+
 ## Unreleased — cited Gujarati વ ductus (HL-C09GU)
 
 - Replace Gujarati **વ**'s conventional metadata with a cited two-run variant.

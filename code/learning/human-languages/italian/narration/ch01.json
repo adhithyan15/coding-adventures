@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6585a6b1e8e15fe7",
+  "sourceHash": "fnv1a64:f62735b515d964a2",
   "lessons": [
     {
       "id": "IT-C01-ciao",
@@ -19,7 +19,7 @@
       "modalityReasons": [
         "writing-block"
       ],
-      "sourceHash": "fnv1a64:8c20b66619135cdf",
+      "sourceHash": "fnv1a64:7bd946e9a0911e43",
       "notice": {
         "modality": "pen",
         "needs": [],
@@ -73,7 +73,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "ciao is informal, and works both coming and going (\"hi\" and \"bye\") — for friends, family, peers. To someone you'd show respect, or on a first meeting, you reach for buongiorno (coming soon). Doubled, ciao ciao, it's a breezy \"bye-bye.\""
+              "text": "ciao is informal, and works both coming and going (\"hi\" and \"bye\") — for friends, family, peers. To someone you'd show respect, or on a first meeting, you reach for a polite daytime greeting instead. You will build that greeting from two small pieces later in this chapter. Doubled, ciao ciao, it's a breezy \"bye-bye.\""
             }
           ]
         },
@@ -227,7 +227,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:2db5c41d4c4ee96c",
+      "sourceHash": "fnv1a64:1a009286963919e4",
       "notice": null,
       "blocks": [
         {
@@ -243,7 +243,7 @@
             },
             {
               "kind": "speech",
-              "text": "The word that starts buongiorno, buonasera, buonanotte. Learn it alone first."
+              "text": "One small word meaning \"good.\" Learn it alone first; later lessons will show how it helps build several greetings."
             }
           ]
         },
@@ -254,7 +254,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "buono = BWOH-no (the uo is a glide). Before a masculine noun it clips to buon (bwon) — buon giorno."
+              "text": "buono = BWOH-no (the uo is a glide). Before a masculine noun it clips to buon (bwon)."
             }
           ]
         },
@@ -276,7 +276,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "buono changes to match its noun's gender and number: buono (m.), buona (f.), buoni / buone (pl.) — Latin's legacy across the Romance family. Before a masculine noun it drops the -o to buon (buon giorno)."
+              "text": "buono changes to match its noun's gender and number: buono (m.), buona (f.), buoni / buone (pl.) — Latin's legacy across the Romance family. Before a masculine noun it can drop the -o to buon. For now, just hear and say that small change; the next nouns will give it a job."
             }
           ]
         },
@@ -324,7 +324,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is buono from, and why does it become buon in buon giorno? (bonus; it drops -o before a masculine noun.)"
+              "text": "What Latin word is buono from, and what short form can it take before a masculine noun? (bonus; buon, with the final -o dropped.)"
             }
           ]
         }
@@ -343,7 +343,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4e47245ae0ffffe4",
+      "sourceHash": "fnv1a64:e2fe477a454e308a",
       "notice": null,
       "blocks": [
         {
@@ -370,7 +370,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "il and lo (masculine \"the\") and la (feminine) from Latin ille / illa (\"that one\"), the pointing word worn down to \"the.\" The same ille/illa gave Spanish el/la and French le/la — and also Italian lui / lei (\"he/she\"). (English \"the\" is Germanic, unrelated.)"
+              "text": "il and lo (masculine \"the\") and la (feminine) from Latin ille / illa (\"that one\"), the pointing word worn down to \"the.\" The same ille/illa gave Spanish el/la and French le/la. English \"the\" is Germanic and unrelated."
             }
           ]
         },
@@ -381,7 +381,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Every Italian noun is masculine or feminine — Latin's three genders (the neuter folding into the masculine) collapsed to two. Learn each noun with its article. Italian has two masculine articles: lo before tricky clusters (lo studente, lo zio), il everywhere else (il giorno); feminine is always la. Meet il at your first noun, next."
+              "text": "Every Italian noun is masculine or feminine — Latin's three genders (the neuter folding into the masculine) collapsed to two. Learn each noun with its article. Italian has two masculine articles: lo before tricky clusters at the start of a noun, il in the ordinary pattern; feminine is always la. Your first noun comes next, so you can practise one real pairing then."
             }
           ]
         },
@@ -576,7 +576,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:4d06591169ec14c8",
+      "sourceHash": "fnv1a64:f7d36199668fda70",
       "notice": null,
       "blocks": [
         {
@@ -618,7 +618,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "Where the casual ciao says \"I'm your servant,\" buongiorno simply wishes you a good day — and it's the safe, respectful choice with anyone: shopkeepers, strangers, elders. Used through the day until late afternoon, when it gives way to buonasera."
+              "text": "Where the casual ciao says \"I'm your servant,\" buongiorno simply wishes you a good day — and it's the safe, respectful choice with anyone: shopkeepers, strangers, elders. Use it through the day until late afternoon. A later lesson will build the corresponding evening greeting."
             }
           ]
         },
@@ -785,22 +785,13 @@
       "romanization": "notte / buonanotte",
       "gloss": "night / good night",
       "script": "latin",
-      "modality": "sight",
-      "derivedModality": "sight",
+      "modality": "voice",
+      "derivedModality": "voice",
       "modalityReasons": [
-        "wide-table"
+        "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:80c32e88e71504c6",
-      "notice": {
-        "modality": "sight",
-        "needs": [
-          "your eyes for one table that cannot be read aloud"
-        ],
-        "waitUntilStopped": [
-          "The word, taken apart"
-        ],
-        "text": "Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes for one table that cannot be read aloud. You can listen to everything else now — leave the section called The word, taken apart until you have stopped, and I will say so again when we reach it."
-      },
+      "sourceHash": "fnv1a64:6b3f034049e20398",
+      "notice": null,
       "blocks": [
         {
           "index": 0,
@@ -826,29 +817,11 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "la notte (fem.) from Latin noctem (noct-) becomes English nocturnal, equinox. The change is a rule: Latin -ct- became Italian -tt- (notte), where Spanish softened it to -ch- (noche) and French to -it- (nuit):"
-            },
-            {
-              "kind": "table-skipped",
-              "reason": "too-wide",
-              "columns": 5,
-              "rowCount": 3,
-              "headers": [
-                "Latin",
-                "Italian",
-                "Spanish",
-                "French",
-                "English"
-              ],
-              "text": "There is a table here I cannot read to you — 5 columns and 3 rows, and it has more columns than can be held in the ear at once. Its columns are: Latin, Italian, Spanish, French, English. Come back and look at it when you have stopped."
+              "text": "la notte (fem.) from Latin noctem (noct-) becomes English nocturnal, equinox. Watch just one change today: Latin -ct- became Italian -tt-, so noctem became notte. Spanish and French reshaped that same root in their own ways. Later words will let you see whether this pattern repeats; there is no list to memorize now."
             },
             {
               "kind": "speech",
-              "text": "Learn the rule once and Italian's double tt words light up."
-            },
-            {
-              "kind": "speech",
-              "text": "buonanotte = buona + notte, \"good night\" — the farewell for bed (not an evening hello; that's buonasera)."
+              "text": "buonanotte = buona + notte, \"good night\" — the farewell for bed (not an evening hello; use the evening greeting you already learned for that)."
             }
           ]
         },
@@ -875,11 +848,11 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "the rule — Latin -ct- becomes Italian -tt- (notte, latte, fatto)",
+              "instruction": "the one change you saw — Latin noctem becomes Italian notte",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: the rule — Latin *-ct-* → Italian *-tt-* (*notte*, *latte*, *fatto*)]"
+              "source": "[YOU SAY: the one change you saw — Latin *noctem* → Italian *notte*]"
             }
           ]
         },
@@ -896,7 +869,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gave notte, and what regular sound-change does it show? (noctem; Latin -ct- becomes Italian -tt-.) When is buonanotte used vs. buonasera? (Bedtime farewell vs. evening greeting.)"
+              "text": "What Latin word gave notte, and what regular sound-change does it show? (noctem; Latin -ct- becomes Italian -tt-.) When is buonanotte used? (As a bedtime farewell.)"
             }
           ]
         }
@@ -915,7 +888,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:45be76e3ae3aa5cf",
+      "sourceHash": "fnv1a64:9564370f405668b5",
       "notice": null,
       "blocks": [
         {
@@ -964,7 +937,7 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "The reply is prego (\"you're welcome\") — literally \"I pray [it's nothing],\" from Latin precari (\"to pray,\" becomes English pray, precarious). You give thanks/grace; they wave it off with a prayer."
+              "text": "Think of grazie as offering someone \"graces\" for what they did. In the next chapter, you will learn the short reply people use after hearing it."
             }
           ]
         },
@@ -996,15 +969,6 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: the cousins — *grace*, *gratitude*, *gratis*]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the reply — \"prego\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the reply — \"prego\"]"
             }
           ]
         },
@@ -1021,7 +985,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word is grazie from, and three English cousins? (gratia, \"grace\"; grace, gratitude, gratis.) The reply to grazie? (prego.)"
+              "text": "What Latin word is grazie from, and three English cousins? (gratia, \"grace\"; grace, gratitude, gratis.)"
             }
           ]
         }
@@ -1040,7 +1004,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:c887f7af7f33d4a4",
+      "sourceHash": "fnv1a64:30418fbe799afe68",
       "notice": null,
       "blocks": [
         {
@@ -1151,7 +1115,7 @@
             },
             {
               "kind": "speech",
-              "text": "Next chapter: introducing yourself — mi chiamo… (\"my name is…\") — and Italian's tu vs. Lei (familiar / formal \"you\")."
+              "text": "Next chapter, you will learn how to introduce yourself and how to address someone in a familiar or respectful way. Those new Italian forms can wait for their own small lessons."
             }
           ]
         }

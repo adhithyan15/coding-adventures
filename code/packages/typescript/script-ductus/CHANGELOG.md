@@ -2,6 +2,48 @@
 
 ## Unreleased
 
+### Added — source-verified Arabic ن ductus
+
+- Replace Arabic **ن**'s conventional bowl-and-dot summary with a cited path.
+- Sweep the deep below-baseline bowl before lifting once for its centred dot.
+- Keep the Arabic source independent from Persian and Urdu **ن**.
+
+### Added — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional head-and-tail summary with a cited path.
+- Keep its small closed head and below-baseline tail in one continuous run.
+- Cover the Arabic-scoped path independently from Persian and Urdu **م**.
+
+### Added — source-verified Arabic ث ductus
+
+- Replace Arabic **ث**'s conventional placeholder with the dedicated Oregon video.
+- Reuse the verified right-to-left bowl, then place its three upper dots separately.
+- Cover the four-run, three-lift path with font-fit and provenance gates.
+
+### Fixed — canonical Gujarati inventory completion (HL-C09GY)
+
+- Remove stale conventional duplicates of already verified **ન** and **પ**.
+- Mark the 44-letter Gujarati teaching sequence complete and source-verified.
+- Reject duplicate glyph rows across every canonical script inventory.
+
+### Added — cited Gujarati હ ductus (HL-C09GX)
+
+- Replace Gujarati **હ**'s conventional placeholder with a cited one-run variant.
+- Render its upper loop, middle turn, and broad lower bowl continuously.
+- Cover provenance and exact-outline rendering while returning to **ન** next.
+
+### Added — cited Gujarati સ ductus (HL-C09GW)
+
+- Replace Gujarati **સ**'s conventional placeholder with a cited two-run variant.
+- Render its rounded loop, left body, and shoulder before the tall right spine.
+- Cover provenance and exact-outline rendering while queuing **હ** next.
+
+### Added — cited Gujarati શ ductus (HL-C09GV)
+
+- Replace Gujarati **શ**'s conventional placeholder with a cited two-run variant.
+- Render its upper loop and lower body before the separate tall right spine.
+- Cover provenance and exact-outline rendering while queuing **સ** next.
+
 ### Added — cited Gujarati વ ductus (HL-C09GU)
 
 - Replace Gujarati **વ**'s conventional placeholder with a cited two-run variant.

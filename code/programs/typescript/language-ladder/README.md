@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-all eighteen Arabic starter letters — ا, ب, ت, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, ه, و, and ي —,
+all twenty-one Arabic starter letters — ا, ب, ت, ث, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, م, ن, ه, و, and ي —,
 all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
 מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, all twenty-four Chinese starter entries 人, 亻, 口, 女, 子, 日, 讠, 氵, 宀, 你, 好, 我, 是, 不, 名, 字, 谢, 请, 再, 见, 什, 么, 早, and 上,
 and Devanagari अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, औ, and क
@@ -1199,6 +1199,35 @@ The verified two-frame Gujarati **વ** filmstrip circles the broad rounded left
 body and returns into the right shoulder; after one lift, the second frame
 descends the tall right spine into its foot. The source's two-path order and
 variation warning remain visible; conventional **શ** is next.
+The verified two-frame Gujarati **શ** filmstrip circles the small upper loop
+and continues through the broad lower body into its tail; after one lift, the
+second frame descends the tall right spine into its foot. The source's two-path
+order and variation warning remain visible; conventional **સ** is next.
+The verified two-frame Gujarati **સ** filmstrip circles the rounded upper loop,
+descends through the left body, and sweeps into the long right shoulder; after
+one lift, the second frame descends the tall right spine into its foot. The
+source's two-path order and variation warning remain visible; conventional
+**હ** is next.
+The verified one-frame Gujarati **હ** filmstrip circles the compact upper loop,
+threads through the middle turn, and continues around the broad lower bowl into
+its rightward finish without lifting. The source's one-path order and variation
+warning remain visible. With the stale conventional duplicates of **ન** and
+**પ** removed, Gujarati now exposes one canonical row for each of its **44/44
+source-verified letters** and is marked complete.
+The Arabic **ث** filmstrip then opens the next maintenance tranche: it sweeps
+the shared independent bowl right-to-left and uses three lifted dot frames in
+the two-lower-and-one-centred-upper arrangement documented by the dedicated
+University of Oregon lesson video.
+Arabic **م** follows with a two-frame, zero-lift filmstrip from Waraqa
+Institute's beginner writing lesson: the first movement forms the small closed
+head, and the second continues down-left through the below-baseline tail in the
+same pen-down run. Script-aware lookup keeps this Arabic source independently
+addressable from Persian and Urdu **م** despite their shared Unicode glyph and
+Noto Naskh outline.
+Arabic **ن** then adds a two-frame Waraqa filmstrip: the first run starts at the
+upper-right tip and sweeps down and around the deep below-baseline bowl; after
+one lift, the second frame places the centred upper dot last. Its script-scoped
+source remains separate from Persian and Urdu **ن**.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.

@@ -129,7 +129,7 @@ class Heap:
     # ------------------------------------------------------------------
 
     @classmethod
-    def from_iterable(cls, items: Iterable[Any]) -> "Heap":
+    def from_iterable(cls, items: Iterable[Any]) -> Heap:
         """Build a heap from any iterable in O(n) using Floyd's algorithm.
 
         Floyd's algorithm is TWICE as fast as pushing elements one by one
@@ -222,9 +222,7 @@ class Heap:
             right = 2 * i + 2
             if left < n and self._higher_priority(self._data[left], self._data[best]):
                 best = left
-            if right < n and self._higher_priority(
-                self._data[right], self._data[best]
-            ):
+            if right < n and self._higher_priority(self._data[right], self._data[best]):
                 best = right
             if best == i:
                 break  # Heap property satisfied at this node.

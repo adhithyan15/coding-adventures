@@ -20,7 +20,7 @@ hallo — informal "hello / hi." Unlike Spanish hola (which only looks like "hel
 The pattern to carry through this whole book: because English is a Germanic language, German words are often direct cousins of English words — same family, no Latin middleman. (The Romance languages like Spanish and French reach English mostly through Latin; German reaches it directly.)
 
 Why it's said this way.
-hallo is informal-to-neutral — fine among friends, and increasingly common generally, but for polite or first meetings German reaches for Guten Tag ("good day"), which you'll build over the next few lessons.
+hallo is informal-to-neutral — fine among friends, and increasingly common generally. Polite or first meetings often use a daytime greeting instead. You will build that greeting one familiar piece at a time over the next few lessons.
 
 Writing — follow one word you can see.
 Keep Hallo visible. Trace directly over it, then copy it once in large, slow letters. Say HA-lo while your hand moves. Stop there.
@@ -109,7 +109,7 @@ die corresponds to the -y of English the/they.
 Unlike Spanish el/la (from Latin ille/illa), German's articles are cousins of English's own "the" — Germanic all the way.
 
 Grammar Lens: German kept THREE genders.
-Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun (der Tag, die Nacht, das Kind "the child"). English, meanwhile, threw gender out entirely and kept a single "the" — the opposite extreme.
+Here's the twist. Latin had three genders (masculine, feminine, neuter); Spanish and French collapsed to two, folding neuter into masculine. German kept all three: der (masc.), die (fem.), das (neut.). So a German noun is one of three classes, not two — and, as everywhere, the gender is unpredictable and must be learned with the noun and its article. English, meanwhile, threw gender out entirely and kept a single "the" — the opposite extreme. Your next nouns will let you practise that pairing.
 One more thing coming later: German articles also change by case (their job in the sentence), so der has other forms (den, dem, des). Ignore that for now; just learn der / die / das as the three "the"s.
 
 Guided Practice.
@@ -118,7 +118,7 @@ Guided Practice.
 [pause 8 seconds for the answer]
 [your turn — say: "das" then English "that" — the t becomes s shift]
 [pause 8 seconds for the answer]
-[your turn — say: "der Tag" (masc.), "die Nacht" (fem.) — the nouns are coming]
+[your turn — say: "der" for masculine, "die" for feminine, "das" for neuter]
 [pause 8 seconds for the answer]
 
 Wrap-up Recall.
@@ -161,8 +161,6 @@ Tag and English day share a Germanic root; the shift is which consonant change? 
 Lesson 6 of 13.
 Guten Tag — assembled, and a first taste of German endings.
 
-Before we start: this one needs your eyes, so it is not fully a driving lesson. You will want your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
-
 Warm-up.
 [pause 2 seconds]
 Snap gut and Tag together for the standard polite greeting. But notice — gut shows up as guten, and that extra -en is your first glimpse of how German adjectives work.
@@ -174,8 +172,8 @@ The word, taken apart — by assembling it.
 Guten Tag = gut ("good") + Tag ("day") = "good day," the neutral polite "hello" for daytime. Said GOO-ten tahk.
 
 Grammar Lens: why guten, not gut?
-Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen leftover of a fuller phrase — "[ich wünsche Ihnen einen] guten Tag," "[I wish you a] good day" — where "a good day" is the object of the wish (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten.
-Don't try to master German's ending system now — it's a later chapter. Just bank two things: (1) German adjectives take endings that shift with gender, number, and case; (2) the greeting is really "(I wish you a) good day," which is why it's guten. You'll see the contrast next: Gute Nacht, with a different ending, because Nacht is feminine.
+Like every Germanic and Romance adjective, German gut agrees with its noun — but German adjectives agree in more dimensions than Spanish or French: not just gender and number, but case (the noun's job in the sentence). Guten Tag is a frozen piece of a fuller phrase meaning "I wish you a good day." In that fuller thought, "a good day" is the object of the wish (the accusative case). For a masculine noun in that role, gut takes the ending -en: guten.
+Don't try to master German's ending system now — it's a later chapter. Just bank two things: (1) German adjectives take endings that shift with gender, number, and case; (2) the greeting is really "(I wish you a) good day," which is why it's guten. A later bedtime greeting will give you a gentle contrast with a feminine noun and a different ending.
 
 Guided Practice.
 [pause 1 second]
@@ -204,7 +202,7 @@ Morgen = MOR-gen — the g is a hard g; the German r is soft and guttural.
 
 The word, taken apart.
 der Morgen — "the morning" (masculine). Root: Proto-Germanic murganaz — the same root as English morning, morn, and the -morrow in tomorrow ("to-morrow" = "at [the] morning [to come]"). No Latin detour; German Morgen and English morning are the same Germanic word, barely changed.
-A small false-friend warning for later: German Morgen also means "tomorrow" on its own (bis morgen = "until tomorrow"). Context tells them apart. English kept the two senses in separate words (morning vs tomorrow); German lets Morgen do both.
+A small false-friend warning for later: German Morgen can also mean "tomorrow." A later farewell will reuse it with that meaning. Context tells the two senses apart; English keeps them in separate words (morning vs tomorrow), while German lets Morgen do both jobs.
 
 Grammar Lens.
 Morgen is masculine (der Morgen) — so, like Tag, it will take guten in the greeting.
@@ -233,7 +231,7 @@ Guten Tag, Morgen.
 
 The word, taken apart — by assembling it.
 Guten Morgen = gut ("good") + Morgen ("morning") = "good morning." Morgen is masculine, exactly like Tag, so gut takes the same -en: guten — no new agreement to learn. Said GOO-ten MOR-gen.
-Used in the morning (roughly until midday); after that, German switches to Guten Tag, then Guten Abend in the evening — the same day-parts you're building.
+Used in the morning (roughly until midday); after that, German switches to Guten Tag. You will build the evening greeting next, from the same familiar pattern.
 
 Guided Practice.
 [pause 1 second]
@@ -265,7 +263,7 @@ der Abend — "the evening" (masculine). Root: Proto-Germanic ābanþs — the s
 Contrast worth banking across all four languages: "evening" has a different root in each branch — Germanic ābanþs (German Abend, English eve), vs Latin sērus "late" (French soir) and Latin tardus "late" (Spanish tarde). The Romance pair named it after lateness; the Germanic pair named it after the evening-down of the day.
 
 Grammar Lens.
-Abend is masculine (der Abend) — so, again, guten in the greeting. Three masculine day-parts in a row (Tag, Morgen, Abend) all take guten; the feminine Nacht, next, will break the streak.
+Abend is masculine (der Abend) — so, again, guten in the greeting. Three masculine day-parts in a row (Tag, Morgen, Abend) all take guten. The next day-part is feminine, so it will gently show you a different ending without adding a new rule to memorize now.
 
 Guided Practice.
 [pause 1 second]
@@ -407,4 +405,4 @@ Run Guten Morgen becomes Guten Tag becomes Guten Abend becomes Gute Nacht withou
 
 Wrap-up Recall.
 [pause 3 seconds]
-Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Next chapter: introducing yourself — ich heiße… — and German's formal/informal "you," du vs Sie.
+Which German greeting uses gute, not guten, and why? (Gute Nacht — Nacht is feminine.) Next chapter, you will learn to introduce yourself and then build the friendly and respectful ways to address someone.
