@@ -14,7 +14,7 @@ sounds: []
 roots: []
 etymology_hook: "Devanagari hangs its letters from a head-line, the shirorekha; Gujarati is the same script with that line erased."
 duration:
-  max_seconds: 200
+  max_seconds: 180
 requires:
   knowledge: []
 introduces:
@@ -59,14 +59,17 @@ Devanagari it joins up across a whole word so the writing appears to hang from a
 washing line. It is the single most recognisable thing about this script — and
 Gujarati, its sister, is written by **erasing** exactly this line.
 
-## Guided Practice
+## Writing — notice and trace one consonant
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: ह]
-- [YOU READ: every piece this chapter has given you so far, in order]
+Keep **ह** visible. Finger-trace it once, then trace one printed model once
+with a pencil. Say *ha* only after your hand stops. Do not copy the word for
+"yes" yet; its vowel sign comes next.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01] -->
+<!-- hl-activity: {"id":"MR-W01-ha-observe-check","kind":"text","assesses":["MR-SCRIPT-HA-01"],"prompt":"Trace the visible Devanagari consonant once, then name its built-in vowel.","answer":"ह — ha, with inherent a","accepted":["ह","ha","a","inherent a"],"feedback":{"correct":"Right: ह is ha; the a is already present.","incorrect":"Keep ह visible, trace it once, and remember that a bare Devanagari consonant carries a."},"response_seconds":15} -->
 
 [PAUSE 3s] What vowel does a bare consonant carry? (**a** — the inherent vowel, and nobody
 writes it.) What is the bar across the top called, and what does it do in a whole

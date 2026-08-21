@@ -9,7 +9,7 @@ type: writing
 headword: न
 romanization: "na"
 gloss: "the consonant na"
-prerequisites: [MR-W01-o-matra]
+prerequisites: [MR-W01-ho-dictation]
 sounds: []
 roots: []
 etymology_hook: "Devanagari hangs its letters from a head-line, the shirorekha; Gujarati is the same script with that line erased."
@@ -26,7 +26,7 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [MR-W01-o-matra]
+reviews_of: [MR-W01-ho-dictation]
 ---
 # न — the consonant na
 

@@ -14,7 +14,7 @@ sounds: []
 roots: []
 etymology_hook: "Devanagari hangs its letters from a head-line, the shirorekha; Gujarati is the same script with that line erased."
 duration:
-  max_seconds: 200
+  max_seconds: 180
 requires:
   knowledge: [MR-SCRIPT-HA-01]
 introduces:
@@ -57,14 +57,17 @@ lesson in Marathi.
 One consonant and one mark, and a word you could already say became a word you can
 **read**. Nothing was memorised as a picture.
 
-## Guided Practice
+## Writing — one supported copy
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01] -->
+<!-- hl-writing-stage: guided-copy -->
 
-- [YOU WRITE: ो]
-- [YOU READ: every piece this chapter has given you so far, in order]
+Keep **हो** visible. Copy it once: first **ह**, then its attached **ो** sign.
+Point to both pieces in your copy and read *ho*. You may look back after each
+piece; memory is not the task yet.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[MR-SCRIPT-HA-01, MR-SCRIPT-O-MATRA-01] -->
+<!-- hl-activity: {"id":"MR-W01-o-matra-guided-copy-check","kind":"text","assesses":["MR-SCRIPT-HA-01","MR-SCRIPT-O-MATRA-01"],"prompt":"Copy the visible Marathi word for yes once, then name its two pieces.","answer":"हो — ह plus ो","accepted":["हो","ह + ो","ह plus ो"],"feedback":{"correct":"Good: one supported copy, built from ह and attached ो.","incorrect":"Keep the model visible and copy only two pieces: ह, then ो."},"response_seconds":18} -->
 
 [PAUSE 3s] What does a mātrā do to the inherent vowel? (**Replaces** it.) What word did
 those two pieces make? (**हो** — *ho*, "yes".)

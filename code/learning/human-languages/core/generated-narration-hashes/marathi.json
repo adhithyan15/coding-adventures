@@ -237,10 +237,12 @@
     {
       "language": "marathi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:da1616ad5a472c41",
+      "sourceHash": "fnv1a64:3ae68a8a3a71295b",
       "lessonIds": [
         "MR-W01-ha",
         "MR-W01-o-matra",
+        "MR-W01-ho-delayed-copy",
+        "MR-W01-ho-dictation",
         "MR-W01-na",
         "MR-W01-aa-matra",
         "MR-W01-ii-matra",
@@ -255,8 +257,8 @@
       "drivablePrefix": 0,
       "text": "marathi/narration/ch14.txt",
       "json": "marathi/narration/ch14.json",
-      "textHash": "fnv1a64:887fa0efc572a4d2",
-      "jsonHash": "fnv1a64:038600c3072b41e7"
+      "textHash": "fnv1a64:805b1adec8665211",
+      "jsonHash": "fnv1a64:b774834cc05b3d09"
     }
   ],
   "findings": []

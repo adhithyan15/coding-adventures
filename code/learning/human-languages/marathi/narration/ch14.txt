@@ -1,11 +1,11 @@
 Marathi, chapter 14: Hanging From the Head-Line, One Piece at a Time.
-11 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
+13 lessons. The first lesson already needs your eyes or your hands, so save this one for when you have stopped.
 
 
-Lesson 1 of 11.
+Lesson 1 of 13.
 ह — the consonant ha.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -19,21 +19,21 @@ Here is the first consonant:
 That is not h. It is ha — the consonant h with an a already inside it, the a of English about. Nobody wrote that vowel. A bare consonant in this script is understood to carry it, and it is called the inherent vowel.
 Now look at the top of the shape. There is a horizontal bar running across it, and it is not decoration. It is the shirorekhā, the head-line, and in running Devanagari it joins up across a whole word so the writing appears to hang from a washing line. It is the single most recognisable thing about this script — and Gujarati, its sister, is written by erasing exactly this line.
 
-Guided Practice.
-[once you have stopped driving — write: ह (ha)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
+Writing — notice and trace one consonant.
+Keep ह visible. Finger-trace it once, then trace one printed model once with a pencil. Say ha only after your hand stops. Do not copy the word for "yes" yet; its vowel sign comes next.
 
 Wrap-up Recall.
 [pause 3 seconds]
 What vowel does a bare consonant carry? (a — the inherent vowel, and nobody writes it.) What is the bar across the top called, and what does it do in a whole word? (The shirorekhā; it joins up across the word.)
 Source: Unicode Devanagari chart.
+[question — say your answer, then pause 15 seconds]
+Trace the visible Devanagari consonant once, then name its built-in vowel.
 
 
-Lesson 2 of 11.
+Lesson 2 of 13.
 ो (-o) — the vowel sign that replaces the inherent a.
 
-Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it.
 
 Warm-up.
 [pause 2 seconds]
@@ -44,22 +44,62 @@ The inherent a is a default. To get a different vowel you replace it, with a mar
 ो (-o).
 On its own it is meaningless. Attached to a consonant it swaps the inherent short a for o, the vowel of English go — and notice how it attaches: a stroke to the right, plus a small mark riding on the head-line itself.
 Put it on the consonant you have:
-ह (ha) + ो (-o) becomes हो.
+ह (ha) + ो (-o) becomes हो (ho).
 ho. That is a word: it is yes, and you have been saying it since your first lesson in Marathi.
 One consonant and one mark, and a word you could already say became a word you can read. Nothing was memorised as a picture.
 
-Guided Practice.
-[once you have stopped driving — write: ो (-o)]
-[your turn — read: every piece this chapter has given you so far, in order]
-[pause 8 seconds for the answer]
+Writing — one supported copy.
+Keep हो visible. Copy it once: first ह (ha), then its attached ो (-o) sign. Point to both pieces in your copy and read ho. You may look back after each piece; memory is not the task yet.
 
 Wrap-up Recall.
 [pause 3 seconds]
 What does a mātrā do to the inherent vowel? (Replaces it.) What word did those two pieces make? (हो — ho, "yes".)
 Source: Unicode Devanagari chart.
+[question — say your answer, then pause 18 seconds]
+Copy the visible Marathi word for yes once, then name its two pieces.
 
 
-Lesson 3 of 11.
+Lesson 3 of 13.
+हो (ho) — look, hide, write, compare.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Look at हो (ho) for five seconds. Point first to ह (ha), then to attached ो (-o). Do not copy it while the model is visible.
+
+Writing — delayed copy.
+cover हो (ho).
+wait five seconds.
+write it once from memory.
+uncover the model and compare the two pieces.
+If one piece differs, circle it and repair only that place. Repair is part of the exercise, not a failure. There is no tracing and no romanized answer model.
+
+Wrap-up recall.
+Read your repaired word as ho. Stop after one memory attempt.
+[question — say your answer, then pause 18 seconds]
+After hiding the model for five seconds, write the Marathi word for yes and then compare it.
+
+
+Lesson 4 of 13.
+One heard answer — write what you know.
+
+Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped.
+
+Warm-up.
+Cover the answer lower on this page. You will hear one familiar answer. No new Marathi and no new Devanagari shape is hiding in this lesson.
+
+Writing — short dictation.
+[your turn — hear: ho — "yes"]
+[pause 8 seconds for the answer]
+Write the Devanagari word from sound alone. Do not use a visible model, romanization, or tracing guide. Now uncover and compare: हो (ho). Check ह (ha) first and attached ो (-o) second. Repair one place if needed.
+
+Wrap-up recall.
+Writing from sound completes this tiny runway. It is not a mock assessment; later lessons must grow from one known word to forms, messages, and timed tasks.
+[question — say your answer, then pause 18 seconds]
+From the heard cue ho alone, write the known Marathi word for yes.
+
+
+Lesson 5 of 13.
 न — the consonant na.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -85,7 +125,7 @@ What vowel is inside न (na) when nothing is attached? (a.) And how many new ru
 Source: Unicode Devanagari chart.
 
 
-Lesson 4 of 11.
+Lesson 6 of 13.
 ा (-ā) — a second vowel sign, and the simplest one in the script.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -112,7 +152,7 @@ Where does this mātrā sit? (To the right of the consonant.) Does it add a beat
 Source: Unicode Devanagari chart.
 
 
-Lesson 5 of 11.
+Lesson 7 of 13.
 ी (-ī) — a mātrā that leans the other way.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -130,7 +170,7 @@ And now put that beside a piece you already built:
 ना + ही becomes नाही.
 nā-hī — no.
 You can now read both answers to a yes-or-no question:
-हो नाही.
+हो (ho) नाही.
 Two consonants and three vowel signs. That is the arithmetic of an abugida: consonants and mātrās multiply, so a small number of pieces reaches a large number of syllables very fast.
 
 Guided Practice.
@@ -144,7 +184,7 @@ What is नाही? (No.) How many pieces is it built from? (Four — two cons
 Source: Unicode Devanagari chart.
 
 
-Lesson 6 of 11.
+Lesson 8 of 13.
 म — the consonant ma.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -171,7 +211,7 @@ Say the three consonants you hold, each with its inherent vowel. (ha, na, ma.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 7 of 11.
+Lesson 9 of 13.
 स — the consonant sa.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -196,7 +236,7 @@ What is the inherent vowel in स? (a — sa.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 8 of 11.
+Lesson 10 of 13.
 क — the consonant ka.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -222,7 +262,7 @@ Is क (ka) the k of kit or of skip? (Of skip — no puff of air.) And does the 
 Source: Unicode Devanagari chart.
 
 
-Lesson 9 of 11.
+Lesson 11 of 13.
 ् ((virama)) — the mark that DELETES the inherent vowel and glues two consonants together.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -251,7 +291,7 @@ What does the virama do? (Removes the inherent vowel.) What usually happens to a
 Source: Unicode Devanagari chart.
 
 
-Lesson 10 of 11.
+Lesson 12 of 13.
 र (ra) — the last consonant of the greeting.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
@@ -276,7 +316,7 @@ How is र (ra) made? (A light tap of the tongue, not an English r.)
 Source: Unicode Devanagari chart.
 
 
-Lesson 11 of 11.
+Lesson 13 of 13.
 नमस्कार (namaskār) — seven pieces, all of them already yours.
 
 Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it.
