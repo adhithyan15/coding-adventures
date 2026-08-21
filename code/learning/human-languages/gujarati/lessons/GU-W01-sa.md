@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-W01-sa
 spine_node: SPINE-MEET-GREET
-sequence: 750
+sequence: 7
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: સ
 romanization: "sa"
@@ -52,8 +52,9 @@ inherent vowel:
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: સ]
+- [YOU TRACE: keep સ visible and trace it once with a finger]
 - [YOU READ: every piece this chapter has given you so far, in order]
 
 ## Wrap-up Recall

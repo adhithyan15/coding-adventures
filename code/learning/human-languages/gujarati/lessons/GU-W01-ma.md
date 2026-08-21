@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-W01-ma
 spine_node: SPINE-MEET-GREET
-sequence: 740
+sequence: 6
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: મ
 romanization: "ma"
@@ -55,8 +55,9 @@ top.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01] -->
+<!-- hl-writing-stage: observe-trace -->
 
-- [YOU WRITE: મ]
+- [YOU TRACE: keep મ visible and trace it once with a finger]
 - [YOU READ: every piece this chapter has given you so far, in order]
 
 ## Wrap-up Recall

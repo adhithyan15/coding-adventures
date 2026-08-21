@@ -2,9 +2,9 @@
 schema_version: 2
 id: GU-W01-namaste-read
 spine_node: SPINE-MEET-GREET
-sequence: 790
+sequence: 11
 delivery: script
-chapter: 13
+chapter: 1
 type: writing
 headword: નમસ્તે
 romanization: "namaste"
@@ -53,17 +53,18 @@ Read it the way you built it:
 **na-ma-ste.** The greeting you learned in your first lesson, now decoded rather
 than recalled.
 
-Look back at what it took: **four consonants, two vowel signs, one virama, and one
-independent vowel.** With them you can read *yes*, *no*, and the greeting — and
-every consonant you meet from here obeys rules you already hold, so the next word
-costs you shapes and no new machinery.
+The greeting itself takes **four consonants, one vowel sign, and one virama**.
+The extra consonant and long-vowel pieces you traced on the way will pay off in
+the next few spoken words. Every consonant you meet from here follows the same
+inherent-vowel rule, so the next word costs new shapes but not a new system.
 
 The script has around forty more letters. It does not have any more **systems**.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[GU-SCRIPT-HA-01, GU-SCRIPT-AA-MATRA-01, GU-SCRIPT-AA-01, GU-SCRIPT-NA-01, GU-SCRIPT-MA-01, GU-SCRIPT-SA-01, GU-SCRIPT-TA-01, GU-SCRIPT-E-MATRA-01, GU-SCRIPT-VIRAMA-01, GU-SCRIPT-NAMASTE-READ-01] -->
+<!-- hl-writing-stage: guided-copy -->
 
-- [YOU WRITE: નમસ્તે]
+- [YOU COPY: keep નમસ્તે visible and copy it once, piece by piece]
 - [YOU READ: every piece this chapter has given you so far, in order]
 
 ## Wrap-up Recall

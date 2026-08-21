@@ -10,6 +10,31 @@ import {
 it("pins Gujarati continuity", () => expectLanguageContinuity("gujarati"));
 it("pins Gujarati modality", () => expectLanguageModality("gujarati"));
 
+it("pins Gujarati's meaning-first opening script spine", () => {
+  const opening = loadTrackLessons("gujarati")
+    .sort((left, right) => Number(left.frontmatter.sequence) - Number(right.frontmatter.sequence))
+    .slice(0, 11);
+  expect(opening.map((lesson) => lesson.realization.lessonId)).toEqual([
+    "GU-C01-namaste",
+    "GU-W01-ha",
+    "GU-W01-aa-matra",
+    "GU-W01-aa",
+    "GU-W01-na",
+    "GU-W01-ma",
+    "GU-W01-sa",
+    "GU-W01-ta",
+    "GU-W01-e-matra",
+    "GU-W01-virama",
+    "GU-W01-namaste-read",
+  ]);
+  expect(opening.every((lesson) => lesson.frontmatter.chapter === "1")).toBe(true);
+
+  const meaningFirst = opening[0]!;
+  expect(meaningFirst.realization.romanization).toBe("namaste");
+  expect(meaningFirst.frontmatter.skills).toEqual(["listening", "speaking"]);
+  expect(meaningFirst.body).not.toMatch(/\p{Script=Gujarati}/u);
+});
+
 it("pins Gujarati's complete pre-A1 writing runway", () => {
   const gujarati = languageWritingStages("gujarati");
   expect(gujarati.defects).toEqual([]);
@@ -17,6 +42,14 @@ it("pins Gujarati's complete pre-A1 writing runway", () => {
   expect(gujarati.validEvidence.map((entry) => entry.stage)).toEqual([
     "observe-trace",
     "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "observe-trace",
+    "guided-copy",
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",

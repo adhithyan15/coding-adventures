@@ -323,32 +323,6 @@
           "GU-SCRIPT-ANUSVARA-MEDIAL"
         ]
       }
-    },
-    {
-      "chapter": 13,
-      "title": "The Headless Script, Piece by Piece",
-      "label": "ch:gu-script-first",
-      "canDo": "Building on હ and ા from Chapter 1, I can write all nine Gujarati pieces from memory and read no and the greeting by assembling them rather than recalling the words whole.",
-      "spineNodes": [
-        "SPINE-RESPOND-BASIC",
-        "SPINE-MEET-GREET"
-      ],
-      "payoff": {
-        "lesson": "GU-W01-namaste-read",
-        "kind": "reading",
-        "summary": "The greeting assembled from six pieces the reader can each write from memory, including the conjunct, and introducing nothing new at all.",
-        "assesses": [
-          "GU-SCRIPT-NAMASTE-READ-01",
-          "GU-SCRIPT-HA-01",
-          "GU-SCRIPT-AA-MATRA-01",
-          "GU-SCRIPT-NA-01",
-          "GU-SCRIPT-MA-01",
-          "GU-SCRIPT-SA-01",
-          "GU-SCRIPT-TA-01",
-          "GU-SCRIPT-E-MATRA-01",
-          "GU-SCRIPT-VIRAMA-01"
-        ]
-      }
     }
   ]
 }

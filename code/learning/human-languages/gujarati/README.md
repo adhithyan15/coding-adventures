@@ -40,11 +40,13 @@ validation remain explicit backlog.
 
 ## Progress
 
-- **Chapter 1 — Greetings and the first written answer**
+- **Chapter 1 — Greetings, the opening script spine, and the first written answer**
   ([`lessons/GU-C01-*`](./lessons/), [`lessons/GU-W01-*`](./lessons/)):
-  namaste, ābhār, āvjo, hā/nā, then a five-step handoff from tracing **હ** and
-  **ા** separately to copying, recalling, and writing **હા** from a heard cue;
-  sārũ and a four-skill chapter payoff follow.
+  first hear *namaste* with no decoding demand; then meet the Gujarati abugida
+  one reusable piece at a time and copy the greeting only when all six of its
+  pieces are known. Ābhār, āvjo, and hā/nā follow, then a five-step handoff from
+  tracing **હ** and **ા** separately to copying, recalling, and writing **હા**
+  from a heard cue; sārũ and a four-skill chapter payoff close the chapter.
 - **Chapter 2 — Introducing Yourself** ([`lessons/GU-C02-*`](./lessons/)): nām,
   mārũ, chhe, "my name is…", tũ / tame, shũ, "what's your name?", ānand.
 - **Chapter 3 — How Are You** ([`lessons/GU-C03-*`](./lessons/)): kem, "tame
@@ -101,11 +103,8 @@ validation remain explicit backlog.
   while *nāk* shows a neuter noun that does not carry it, and *āṅkh*'s medial
   nasal shows the same mark doing a completely different, non-grammatical job.
 
-Chapters 1–12 are in the book.
-
-- **Chapter 13 — The headless script, continued**: resumes after Chapter 1's
-  **હ** and **ા**, adds the remaining seven pieces one at a time, and assembles
-  **ના** and **નમસ્તે** without introducing an unseen piece in either payoff.
+Chapters 1–12 are in the book. The former Chapter 13 script appendix now sits at
+the start of Chapter 1, before its first load-bearing Gujarati read.
 
 ---
 

@@ -2,7 +2,7 @@
 schema_version: 2
 id: GU-W01-ha
 spine_node: SPINE-MEET-GREET
-sequence: 41
+sequence: 2
 delivery: script
 chapter: 1
 type: writing
@@ -26,15 +26,15 @@ modes: [interpretive, presentational]
 strands: [meaning-input, language-focus]
 register: neutral
 variety: standard
-reviews_of: [GU-C01-haa-naa]
+reviews_of: [GU-C01-namaste]
 ---
 # હ — the consonant ha
 
 ## Warm-up
 <!-- hl-knowledge: introduces=[]; assesses=[] -->
 
-[PAUSE 2s] Say the tiny answer you already know: **હા**, *hā*, "yes." Today your
-hand meets only its first piece.
+[PAUSE 2s] Say the greeting from the previous lesson once. Now let speech rest:
+today your hand meets only one reusable Gujarati consonant.
 
 ## Script
 <!-- hl-knowledge: introduces=[GU-SCRIPT-HA-01]; assesses=[] -->

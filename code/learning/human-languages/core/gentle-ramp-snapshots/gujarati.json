@@ -5,35 +5,35 @@
   "atomMeasurementBlindLessons": 3,
   "durationViolations": 0,
   "atomLessonSpikes": 2,
-  "atomChapterSpikes": 1,
+  "atomChapterSpikes": 2,
   "glyphLessonSpikes": 2,
   "scriptSystemSpikes": 0,
-  "scriptClosureViolations": 49,
+  "scriptClosureViolations": 46,
   "neverTaughtGlyphs": 32,
   "orderDefects": 0,
   "lessonsWithoutSequence": 0,
   "unknownPrerequisites": 0,
   "forwardPrerequisites": 0,
   "forwardReviews": 0,
-  "forwardReferences": 8,
+  "forwardReferences": 7,
   "atomsTaught": 115,
   "atomsNeverRevisited": 10,
-  "reinforcementWindowMisses": 164,
+  "reinforcementWindowMisses": 148,
   "reinforcementMissesByWindow": {
     "R1": 23,
-    "R2": 72,
-    "R3": 69,
+    "R2": 65,
+    "R3": 60,
     "R4": 0
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 56,
-  "firstWritingPracticeAt": 0,
-  "lessonsBeforeWritingPractice": 0,
+  "writingPracticeLessons": 55,
+  "firstWritingPracticeAt": 1,
+  "lessonsBeforeWritingPractice": 1,
   "findings": [
     {
       "language": "gujarati",
       "kind": "forward-language",
-      "count": 8,
+      "count": 7,
       "unit": "use(s)",
       "detail": "teach target-language material before load-bearing use"
     },
@@ -46,8 +46,15 @@
     },
     {
       "language": "gujarati",
+      "kind": "writing-ramp",
+      "count": 1,
+      "unit": "opening lesson(s)",
+      "detail": "move the first gentle writing microstep to lesson one"
+    },
+    {
+      "language": "gujarati",
       "kind": "atom-step",
-      "count": 3,
+      "count": 4,
       "unit": "lesson/chapter spike(s)",
       "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
     },
@@ -61,7 +68,7 @@
     {
       "language": "gujarati",
       "kind": "reinforcement",
-      "count": 164,
+      "count": 148,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
@@ -76,7 +83,7 @@
   "next": {
     "language": "gujarati",
     "kind": "forward-language",
-    "count": 8,
+    "count": 7,
     "unit": "use(s)",
     "detail": "teach target-language material before load-bearing use"
   }
