@@ -202,14 +202,15 @@ fn f32_bytes(values: &[f64]) -> Vec<u8> {
 /// `f32` little-endian bytes → `f64` values. Rejects a length that is not a
 /// whole number of 4-byte `f32`s rather than reading past the end.
 fn f32_from_bytes(bytes: &[u8]) -> Result<Vec<f64>, String> {
-    let chunks = bytes.chunks_exact(4);
-    if !chunks.remainder().is_empty() {
+    let (chunks, remainder) = bytes.as_chunks::<4>();
+    if !remainder.is_empty() {
         return Err(format!(
             "output byte length {} is not a whole number of f32 values",
             bytes.len()
         ));
     }
     Ok(chunks
+        .iter()
         .map(|c| f32::from_le_bytes([c[0], c[1], c[2], c[3]]) as f64)
         .collect())
 }
@@ -231,14 +232,15 @@ fn f64_bytes(values: &[f64]) -> Vec<u8> {
 /// whole number of 8-byte doubles and returns an `Err` — never panicking or
 /// reading out of bounds — on a short or ragged buffer from a malformed result.
 fn f64_from_bytes(bytes: &[u8]) -> Result<Vec<f64>, String> {
-    let chunks = bytes.chunks_exact(8);
-    if !chunks.remainder().is_empty() {
+    let (chunks, remainder) = bytes.as_chunks::<8>();
+    if !remainder.is_empty() {
         return Err(format!(
             "output byte length {} is not a whole number of f64 values",
             bytes.len()
         ));
     }
     Ok(chunks
+        .iter()
         .map(|c| f64::from_le_bytes([c[0], c[1], c[2], c[3], c[4], c[5], c[6], c[7]]))
         .collect())
 }

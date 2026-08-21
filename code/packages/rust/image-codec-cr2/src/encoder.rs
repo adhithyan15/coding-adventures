@@ -166,7 +166,7 @@ pub fn encode_cr2(pixels: &PixelContainer) -> Vec<u8> {
 
     // ── Pixel data ────────────────────────────────────────────────────────────
     debug_assert_eq!(buf.len(), PIXEL_OFF as usize, "Pixel data offset mismatch");
-    for chunk in pixels.data.chunks_exact(4) {
+    for chunk in pixels.data.as_chunks::<4>().0 {
         buf.push(chunk[0]); // R
         buf.push(chunk[1]); // G
         buf.push(chunk[2]); // B

@@ -244,7 +244,7 @@ fn usize_field(object: &[(String, JsonValue)], name: &str) -> usize {
 fn decode_base64(value: &str) -> Vec<u8> {
     assert!(value.len().is_multiple_of(4));
     let mut output = Vec::with_capacity(value.len() / 4 * 3);
-    for chunk in value.as_bytes().chunks_exact(4) {
+    for chunk in value.as_bytes().as_chunks::<4>().0 {
         let a = base64_digit(chunk[0]);
         let b = base64_digit(chunk[1]);
         let c = if chunk[2] == b'=' {
