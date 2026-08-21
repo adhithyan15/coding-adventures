@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+### Added — project-defined pre-A1 four-skill task shapes (HL18)
+
+- Made the pre-A1 target executable as reading, listening, writing, and
+  speaking papers with exact prompts, responses, timing, replay, aids, and
+  scoring boundaries.
+- Kept the assessment contract's point model literal: four separate 100-point
+  papers, a 60-point floor on each, and no aggregate compensation.
+- Writing assesses delayed recall, dictation/transcription, and bounded
+  independent production. Tracing and visible copying remain gentle lesson
+  supports and cannot earn exam credit.
+- The inventory is not a readiness claim. Curriculum task coverage, two full
+  mocks, rubrics, answer keys, calibration, and book-only human validation are
+  still required.
+
 ### Added — pre-A1-to-C2 assessment contract (HL16)
 
 - Added a clearly labelled project-defined Gujarati assessment ladder at
