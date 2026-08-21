@@ -32,13 +32,26 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "observe-trace",
+    "delayed-copy",
+    "guided-copy",
+    "dictation-transcription",
+    "observe-trace",
+    "delayed-copy",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3, 4]),
+    new Set([1, 2, 3, 4, 5, 6]),
   );
   expect(
     lessons
@@ -56,6 +69,17 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C04-hear-paani-meaning",
     "MW-C04-paani-build",
     "MW-C04-practice-paani",
+    "MW-C05-answer-dictation",
+    "MW-C05-hear-hai-meaning",
+    "MW-C05-hear-kain-meaning",
+    "MW-C05-hear-mharo-meaning",
+    "MW-C05-hear-naam-meaning",
+    "MW-C05-hear-tharo-meaning",
+    "MW-C05-kain-delayed",
+    "MW-C05-mharo-delayed",
+    "MW-C05-naam-delayed",
+    "MW-C05-practice-name-exchange",
+    "MW-C05-tharo-contrast",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -68,5 +92,12 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W04-ii-matra-build",
     "MW-W04-nna-contrast",
     "MW-W04-pa-build-paa",
+    "MW-W05-ai-matra-read",
+    "MW-W05-ii-independent-choice",
+    "MW-W05-ka-read",
+    "MW-W05-na-choice",
+    "MW-W05-o-matra-read",
+    "MW-W05-tha-read",
+    "MW-W05-virama-function",
   ]);
 });

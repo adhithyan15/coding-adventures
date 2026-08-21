@@ -76,6 +76,50 @@
       "json": "marwadi/narration/ch04.json",
       "textHash": "fnv1a64:4374e9c62f49f671",
       "jsonHash": "fnv1a64:6c5be8b4f3e96739"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:b92cb985ccda313a",
+      "lessonIds": [
+        "MW-C05-hear-mharo",
+        "MW-W05-virama",
+        "MW-W05-o-matra",
+        "MW-C05-mharo",
+        "MW-C05-hear-naam",
+        "MW-W05-na",
+        "MW-C05-naam",
+        "MW-C05-hear-hai",
+        "MW-W05-ai-matra",
+        "MW-C05-answer"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch05.txt",
+      "json": "marwadi/narration/ch05.json",
+      "textHash": "fnv1a64:32c75112b0457cfe",
+      "jsonHash": "fnv1a64:8c4ec81c7b3a698c"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:3728591382d807d9",
+      "lessonIds": [
+        "MW-C05-hear-tharo",
+        "MW-W05-tha",
+        "MW-C05-tharo",
+        "MW-C05-hear-kain",
+        "MW-W05-ka",
+        "MW-W05-ii-independent",
+        "MW-C05-kain",
+        "MW-C05-practice"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch06.txt",
+      "json": "marwadi/narration/ch06.json",
+      "textHash": "fnv1a64:2b329b7f39bbf9bb",
+      "jsonHash": "fnv1a64:7e496b4ebee71aaf"
     }
   ],
   "findings": []

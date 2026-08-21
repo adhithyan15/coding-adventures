@@ -1,0 +1,801 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 6,
+  "title": "Tharo Naam: Ask One Name",
+  "drivablePrefix": 1,
+  "sourceHash": "fnv1a64:3728591382d807d9",
+  "lessons": [
+    {
+      "id": "MW-C05-hear-tharo",
+      "sequence": 330,
+      "title": "Hear thāro — turn from my to your",
+      "headword": "thāro",
+      "romanization": "thāro",
+      "gloss": "your, agreeing with a masculine noun",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:79f8d2378e45fa0e",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 15,
+              "perItem": false,
+              "source": "[PAUSE 15s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say mhāro nām rām hai once. Write न, then है, from memory. Point to yourself on mhāro."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "thāro — your, before a masculine singular noun."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen twice: thā-ro. Let a small breath follow t. Point to another person when you hear it. Spelling waits for the next lesson."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear mhāro and point to yourself. Hear thāro and point gently away. Change the order twice."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the pair once: mhāro — my; thāro — your."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: SIL International, Marwari–English Dictionary (2015) and Ek Bharat Shreshtha Bharat language report."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C05-hear-tharo-meaning",
+              "prompt": "You hear thāro. Does it point to my or your?",
+              "assesses": [
+                "MW-LEX-THARO-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "your"
+              ],
+              "feedback": {
+                "correct": "Right: thāro points to your here.",
+                "incorrect": "Mhāro is my; thāro is your."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W05-tha",
+      "sequence": 340,
+      "title": "थ (tha) — one breathed consonant",
+      "headword": "थ",
+      "romanization": "tha",
+      "gloss": "the aspirated dental consonant tha",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:5e6bcc8211ee876d",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 10,
+              "perItem": false,
+              "source": "[PAUSE 10s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Read हां, say yes, then hear thāro, point away, and say your."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थ (tha)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read थ as tha: the tongue begins near the teeth and a small breath follows. It is one new shape. The remaining signs in thāro are already known."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep थ visible. Finger-trace it once, then trace one printed model once. Say tha after your hand stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model and write थ (tha) once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W05-tha-read",
+              "prompt": "Read the one new sign थ (tha).",
+              "assesses": [
+                "MW-SCRIPT-THA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "tha",
+                "थ"
+              ],
+              "feedback": {
+                "correct": "Right: थ is tha, with a small breath.",
+                "incorrect": "Place the tongue near the teeth and release breath: tha."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C05-tharo",
+      "sequence": 350,
+      "title": "थारो (thāro) — your",
+      "headword": "थारो",
+      "romanization": "thāro",
+      "gloss": "your, assembled from one new and three known signs",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:81cb5f0f3c847666",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say thāro and its meaning. Read म्हारो and give the opposite direction: my."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थ (tha) + ा + रो becomes थारो — thāro — your."
+            },
+            {
+              "kind": "speech",
+              "text": "Only थ (tha) was new. The rest comes from राम and म्हारो."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look for five seconds, cover थारो (thāro), wait five seconds, then write it. Uncover and compare थ (tha), ा, and रो separately."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read the two words once without romanization."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C05-tharo-contrast",
+              "prompt": "Write the pair for my and your in that order.",
+              "assesses": [
+                "MW-SCRIPT-THARO-01",
+                "MW-LEX-THARO-01",
+                "MW-SCRIPT-MHARO-01",
+                "MW-LEX-MHARO-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "म्हारो — my; थारो — your",
+                "म्हारो थारो"
+              ],
+              "feedback": {
+                "correct": "Right: म्हारो points to me; थारो points to you.",
+                "incorrect": "Begin my with म्ह; begin your with थ: म्हारो, थारो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C05-hear-kain",
+      "sequence": 360,
+      "title": "Hear kāĩ — what",
+      "headword": "kāĩ",
+      "romanization": "kāĩ",
+      "gloss": "what",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:5d0cd1c18740842a",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Retrieve हां सा once by ear, voice, eye, and writing; point to ै in है. Then read थारो, hear thāro nām, and give its meaning: your name."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "kāĩ — what."
+            },
+            {
+              "kind": "speech",
+              "text": "Listen for one long, lightly nasal middle and a final long ī. Say the whole word once rather than exaggerating the nasal sound. Its old interrogative root belongs to the same deep family as Sanskrit kim and English what."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Hear thāro nām kāĩ hai? Point to the question mark and say What is your name? No spelling yet."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Say the four-beat question once from sound."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: SIL International, Marwari–English Dictionary (2015), Turner, A Comparative Dictionary of the Indo-Aryan Languages, and Rajasthan Sahitya Akademi, Jāgtī Jot, September 1999."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C05-hear-kain-meaning",
+              "prompt": "You hear kāĩ in a question. What does it ask for?",
+              "assesses": [
+                "MW-LEX-KAIN-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "what"
+              ],
+              "feedback": {
+                "correct": "Right: kāĩ asks what.",
+                "incorrect": "This is the question word what: kāĩ."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W05-ka",
+      "sequence": 370,
+      "title": "क (ka) — the first sign in kāĩ",
+      "headword": "क",
+      "romanization": "ka",
+      "gloss": "the unaspirated consonant ka",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:bc63cf3db3242586",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Hear kāĩ and say what."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read क as ka. Keep the sound short and unaspirated. Only this one shape is new today."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep क visible. Finger-trace it once, then trace one printed model once. Say ka after your hand stops."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model and write क (ka) once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W05-ka-read",
+              "prompt": "Read the one new sign क (ka).",
+              "assesses": [
+                "MW-SCRIPT-KA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ka",
+                "क"
+              ],
+              "feedback": {
+                "correct": "Right: क is ka.",
+                "incorrect": "Keep the release plain: क is ka."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W05-ii-independent",
+      "sequence": 380,
+      "title": "ई — long ī standing alone",
+      "headword": "ई",
+      "romanization": "ī",
+      "gloss": "independent long ii",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:509ac5cf97a8c28e",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 8,
+              "perItem": false,
+              "source": "[PAUSE 8s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write प, then क (ka), once each. Point to attached ी in पाणी and say its long vowel."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "ई (ī)."
+            },
+            {
+              "kind": "speech",
+              "text": "Read ई as long ī. Use this independent form when the vowel stands on its own. Attached ी still belongs after a consonant."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Keep ई (ī) visible and copy it once. Then point: ई (ī) stands alone; ी attaches."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model, wait three seconds, and write ई (ī) once."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W05-ii-independent-choice",
+              "prompt": "Write the long ī sign that can stand alone.",
+              "assesses": [
+                "MW-SCRIPT-II-INDEPENDENT-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "ई"
+              ],
+              "feedback": {
+                "correct": "Right: independent long ī is ई.",
+                "incorrect": "Use ई when long ī stands alone; ी attaches to a consonant."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C05-kain",
+      "sequence": 390,
+      "title": "कांई (kāĩ) — what, with no new sign",
+      "headword": "कांई",
+      "romanization": "kāĩ",
+      "gloss": "what, assembled from one consonant and familiar vowel material",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:519a21196a8c9204",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 12,
+              "perItem": false,
+              "source": "[PAUSE 12s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write known ण and new थ (tha) once each. Say kāĩ and its meaning, then write क (ka) and independent ई (ī). Point to the known nasal dot in हां."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "क (ka) + ा + ं + ई (ī) becomes कांई — kāĩ — what."
+            },
+            {
+              "kind": "speech",
+              "text": "No shape is new. Read the whole word smoothly; the dot lightly nasalizes the long middle rather than creating an extra beat."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look for five seconds, cover कांई (kāĩ), wait five seconds, and write it. Uncover and compare क (ka), ा, ं, and ई (ī) separately."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read थारो (thāro) नाम कांई (kāĩ) है? once without romanization."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C05-kain-delayed",
+              "prompt": "After hiding the model, write kāĩ and give its meaning.",
+              "assesses": [
+                "MW-SCRIPT-KAIN-01",
+                "MW-LEX-KAIN-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "कांई — what",
+                "कांई",
+                "kāĩ — what"
+              ],
+              "feedback": {
+                "correct": "Right: कांई asks what.",
+                "incorrect": "Build क + ा + ं + ई: कांई."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C05-practice",
+      "sequence": 400,
+      "title": "Practice — ask one name and give one name",
+      "headword": "थारो नाम कांई है? — म्हारो नाम राम है।",
+      "romanization": "thāro nām kāĩ hai? — mhāro nām rām hai.",
+      "gloss": "What is your name? My name is Ram.",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:9c47f3942c50897f",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 25,
+              "perItem": false,
+              "source": "[PAUSE 25s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Say the four older meanings as you hear rām-rām sā, ābhār, hā(n) sā, and pāṇī. Write only पाणी from the last cue."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "You'll want to know",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "थारो (thāro) नाम कांई (kāĩ) है? म्हारो नाम राम है।."
+            },
+            {
+              "kind": "speech",
+              "text": "The question asks What is your name? The answer says My name is Ram. In speech, replace rām with the name the speaker chooses. This book teaches one documented central-Marwari form; regional speakers may use another possessive or copula, and that variation is not an error."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: hear one of the two lines and identify question or answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: hear the question and answer with a chosen name, without notes."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: match the printed question to the printed answer."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: hear the question, wait ten seconds, and write it with no model."
+            },
+            {
+              "kind": "speech",
+              "text": "Score each line separately. Speaking cannot cover a missing word in writing; reading cannot cover an unanswered spoken question."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Stop after one complete exchange. Accuracy comes before speed."
+            },
+            {
+              "kind": "speech",
+              "text": "Sources: Ek Bharat Shreshtha Bharat language report, SIL International, Marwari–English Dictionary (2015), and Rajasthan Sahitya Akademi, Jāgtī Jot, September 1999."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C05-practice-name-exchange",
+              "prompt": "From sound alone, write the Marwadi question What is your name?, then answer aloud with a chosen name.",
+              "assesses": [
+                "MW-QUESTION-NAME-01",
+                "MW-DIALOGUE-NAME-EXCHANGE-01",
+                "MW-SCRIPT-THARO-01",
+                "MW-SCRIPT-NAAM-01",
+                "MW-SCRIPT-KAIN-01",
+                "MW-SCRIPT-HAI-01",
+                "MW-PHRASE-MY-NAME-IS-01"
+              ],
+              "responseSeconds": 30,
+              "acceptedResponses": [
+                "थारो नाम कांई है? — म्हारो नाम [name] है।",
+                "थारो नाम कांई है",
+                "thāro nām kāĩ hai"
+              ],
+              "feedback": {
+                "correct": "The question is complete; now answer with mhāro nām and a chosen name.",
+                "incorrect": "Repair one known group: थारो | नाम | कांई | है."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}

@@ -55,6 +55,40 @@
         "MW-C04-practice"
       ],
       "tex": "marwadi/book/chapters/ch04-paani.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:5c23f0c58fd24483",
+      "lessonIds": [
+        "MW-C05-hear-mharo",
+        "MW-W05-virama",
+        "MW-W05-o-matra",
+        "MW-C05-mharo",
+        "MW-C05-hear-naam",
+        "MW-W05-na",
+        "MW-C05-naam",
+        "MW-C05-hear-hai",
+        "MW-W05-ai-matra",
+        "MW-C05-answer"
+      ],
+      "tex": "marwadi/book/chapters/ch05-name-answer.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:87c358faf295a1fc",
+      "lessonIds": [
+        "MW-C05-hear-tharo",
+        "MW-W05-tha",
+        "MW-C05-tharo",
+        "MW-C05-hear-kain",
+        "MW-W05-ka",
+        "MW-W05-ii-independent",
+        "MW-C05-kain",
+        "MW-C05-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch06-name-question.tex"
     }
   ]
 }
