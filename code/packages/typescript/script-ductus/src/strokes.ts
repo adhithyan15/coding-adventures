@@ -303,6 +303,9 @@ export const ductusKey = (script: string, glyph: string): string => `${script}:$
 // descends down-right through its curved shoulder, and turns left along the
 // baseline in the same pen-down run. Its one-way-connector context stays
 // explicit, but the path does not infer motion from a contextual form.
+// The page's dedicated Arabic ذ clip repeats that body first, then lifts once
+// to place the single upper dot. Its own evidence preserves the body-sharing
+// relationship with د without treating the dot order as an inference.
 // The same page's Arabic ر clip begins at the independent form's upper tip,
 // descends through its short stroke, and sweeps left through the lower curve
 // without lifting. Its scoped source stays distinct from Urdu ر even though
@@ -8327,6 +8330,61 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       },
     ],
     source: arabicAlphabetSource("د"),
+  },
+  [ductusKey("arabic", "ذ")]: {
+    script: "arabic",
+    glyph: "ذ",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "begin at the upper tip and descend diagonally down and right through the curved shoulder",
+            path: [
+              { x: 270, y: 350 },
+              { x: 260, y: 325 },
+              { x: 260, y: 300 },
+              { x: 270, y: 275 },
+              { x: 285, y: 245 },
+              { x: 300, y: 215 },
+              { x: 318, y: 185 },
+              { x: 333, y: 155 },
+              { x: 343, y: 130 },
+              { x: 345, y: 110 },
+              { x: 342, y: 100 },
+            ],
+          },
+          {
+            label: "turn left along the baseline without lifting",
+            path: [
+              { x: 342, y: 100 },
+              { x: 320, y: 90 },
+              { x: 290, y: 75 },
+              { x: 250, y: 60 },
+              { x: 210, y: 50 },
+              { x: 170, y: 40 },
+              { x: 130, y: 40 },
+              { x: 90, y: 50 },
+              { x: 60, y: 65 },
+            ],
+          },
+        ],
+      },
+      {
+        segments: [
+          {
+            label: "lift once, then place the dot above",
+            path: [
+              { x: 218, y: 490 },
+              { x: 180, y: 525 },
+              { x: 216, y: 575 },
+              { x: 265, y: 532 },
+              { x: 218, y: 490 },
+            ],
+          },
+        ],
+      },
+    ],
+    source: arabicAlphabetSource("ذ"),
   },
   [ductusKey("arabic", "ر")]: {
     script: "arabic",

@@ -1228,13 +1228,15 @@ Arabic **ن** then adds a two-frame Waraqa filmstrip: the first run starts at th
 upper-right tip and sweeps down and around the deep below-baseline bowl; after
 one lift, the second frame places the centred upper dot last. Its script-scoped
 source remains separate from Persian and Urdu **ن**.
-Arabic **ء** closes the 22-row starter inventory with Arabic Language Learning
-Notes' documented one-stroke variant: the first frame shapes the c-like upper head and the second
-continues from its lower-left end through the lower diagonal without lifting.
-The source's accepted lifted alternative remains recorded in the metadata, and
-the 22-row starter inventory is now uniqueness-gated and fully sourced. Arabic
-remains incomplete because later lessons use base letters beyond that starter
-set; those rows must be added rather than hidden by a premature completion flag.
+Arabic **ء** closes the original 22-row starter inventory with Arabic Language
+Learning Notes' documented one-stroke variant: the first frame shapes the c-like
+upper head and the second continues from its lower-left end through the lower
+diagonal without lifting. The source's accepted lifted alternative remains
+recorded in the metadata. Arabic **ذ** then grows the canonical inventory to 23
+unique sourced rows: its filmstrip preserves the complete **د** body in the
+first run and places the single upper dot after one lift. Arabic remains
+incomplete because later lessons still use six absent base letters; those rows
+must be added rather than hidden by a premature completion flag.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
