@@ -172,7 +172,7 @@ impl WindowsBrowserHost {
     fn render_bgra(&self) -> Option<(u32, u32, Vec<u8>)> {
         let scene = self.controller.session().viewport()?.viewport_scene();
         let mut pixels = paint_vm_direct2d::render(&scene);
-        for pixel in pixels.data.chunks_exact_mut(4) {
+        for pixel in pixels.data.as_chunks_mut::<4>().0 {
             pixel.swap(0, 2);
         }
         Some((pixels.width, pixels.height, pixels.data))

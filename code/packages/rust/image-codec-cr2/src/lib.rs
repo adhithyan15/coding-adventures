@@ -113,7 +113,7 @@ pub mod lossless_jpeg;
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
-/// Decode a Canon CR2 file from a byte slice into a [`PixelContainer`].
+/// Decode a Canon CR2 file from a byte slice into a [`pixel_container::PixelContainer`].
 ///
 /// The returned container is RGBA8 with A=255 throughout.
 ///
@@ -138,7 +138,7 @@ pub fn decode_cr2(bytes: &[u8]) -> Result<pixel_container::PixelContainer, Strin
     decoder::decode_cr2(bytes)
 }
 
-/// Encode a [`PixelContainer`] into a minimal synthetic CR2 file.
+/// Encode a [`pixel_container::PixelContainer`] into a minimal synthetic CR2 file.
 ///
 /// This is a test-only encoder. It produces a standard uncompressed TIFF with
 /// the 4-byte CR2 signature patched into bytes 8–11. The output is structurally

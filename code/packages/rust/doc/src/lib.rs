@@ -425,7 +425,11 @@ fn decode_one_piece(
 /// consumers treat stray code units, and never panics.
 fn decode_utf16le(slice: &[u8], out: &mut String) -> Result<(), DocError> {
     // Build the u16 code-unit iterator from LE byte pairs.
-    let units = slice.chunks_exact(2).map(|c| u16::from_le_bytes([c[0], c[1]]));
+    let units = slice
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|chunk| u16::from_le_bytes(*chunk));
     for unit in char::decode_utf16(units) {
         match unit {
             Ok(c) => out.push(c),

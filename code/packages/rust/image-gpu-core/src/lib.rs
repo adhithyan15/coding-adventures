@@ -36,7 +36,7 @@
 //! V1 of the matrix-runtime ↔ matrix-cpu protocol doesn't yet expose a
 //! "pre-allocate buffer at planner-assigned id" message, so graphs in
 //! this crate embed their runtime inputs as `matrix_ir::Constant`s.
-//! See [`pipeline`](crate::pipeline) for details.  V2 will switch to
+//! See `pipeline` for details.  V2 will switch to
 //! proper graph inputs once the protocol gains that hook.
 
 // Platform-conditional: the Apple/GPU backend code is inactive on non-Apple targets; allow the resulting dead_code/unused lints only where it does not build in.
@@ -208,7 +208,7 @@ pub fn gpu_colour_matrix(
     // Decode sRGB → linear in Rust.  Linear values laid out as N×3 (RGB).
     let mut linear: Vec<f32> = Vec::with_capacity(n * 3);
     let mut alpha: Vec<u8> = Vec::with_capacity(n);
-    for chunk in img.data.chunks_exact(4) {
+    for chunk in img.data.as_chunks::<4>().0 {
         linear.push(sergb::decode(chunk[0]));
         linear.push(sergb::decode(chunk[1]));
         linear.push(sergb::decode(chunk[2]));
@@ -243,7 +243,7 @@ pub fn gpu_colour_matrix(
 
     // Encode linear → sRGB and recombine with original alpha.
     let mut result = Vec::with_capacity(n * 4);
-    for (i, chunk) in out_bytes.chunks_exact(12).enumerate() {
+    for (i, chunk) in out_bytes.as_chunks::<12>().0.iter().enumerate() {
         let r_lin = f32::from_le_bytes(chunk[0..4].try_into().unwrap());
         let g_lin = f32::from_le_bytes(chunk[4..8].try_into().unwrap());
         let b_lin = f32::from_le_bytes(chunk[8..12].try_into().unwrap());
@@ -276,7 +276,7 @@ pub fn gpu_gamma(img: &PixelContainer, gamma: f32) -> Result<PixelContainer, Gpu
     // Decode in Rust.
     let mut linear: Vec<f32> = Vec::with_capacity(n * 3);
     let mut alpha: Vec<u8> = Vec::with_capacity(n);
-    for chunk in img.data.chunks_exact(4) {
+    for chunk in img.data.as_chunks::<4>().0 {
         linear.push(sergb::decode(chunk[0]));
         linear.push(sergb::decode(chunk[1]));
         linear.push(sergb::decode(chunk[2]));
@@ -299,7 +299,7 @@ pub fn gpu_gamma(img: &PixelContainer, gamma: f32) -> Result<PixelContainer, Gpu
 
     // Encode + recombine alpha.
     let mut result = Vec::with_capacity(n * 4);
-    for (i, chunk) in out_bytes.chunks_exact(12).enumerate() {
+    for (i, chunk) in out_bytes.as_chunks::<12>().0.iter().enumerate() {
         let r = f32::from_le_bytes(chunk[0..4].try_into().unwrap());
         let g_v = f32::from_le_bytes(chunk[4..8].try_into().unwrap());
         let b = f32::from_le_bytes(chunk[8..12].try_into().unwrap());

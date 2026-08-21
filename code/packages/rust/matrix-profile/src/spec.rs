@@ -68,7 +68,7 @@ pub struct SpecKey {
     /// since registry assignment depends on registration order.
     pub backend_id: u32,
     /// **MX05 Phase 4.6.**  Which input slot the policy folded into
-    /// the kernel as a literal constant, when [`range_class`] is
+    /// the kernel as a literal constant, when [`Self::range_class`] is
     /// [`RangeClass::Constant`].  `None` for all other range classes.
     ///
     /// Matters for **non-commutative** binary ops: `Sub`, `Div`,
@@ -118,8 +118,8 @@ pub enum ShapeClass {
 pub enum RangeClass {
     /// Floating-point min/max observed.  Encoded as IEEE-754 bits so
     /// the enum can derive `Hash` (raw `f64` is `PartialEq` but not
-    /// `Hash` because of NaN).  Use [`Self::float`] / [`Self::range_f32`]
-    /// to construct without dealing with bit-encoding directly.
+    /// `Hash` because of NaN).  Use [`Self::float`] to construct without
+    /// dealing with bit-encoding directly.
     FloatBits {
         min_bits: u64,
         max_bits: u64,

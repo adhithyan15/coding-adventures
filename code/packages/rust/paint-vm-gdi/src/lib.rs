@@ -688,7 +688,7 @@ unsafe fn create_surface(width: u32, height: u32) -> Option<GdiSurface> {
 #[cfg(target_os = "windows")]
 fn rgba_to_pbgra_bytes(rgba: &[u8]) -> Vec<u8> {
     let mut pbgra = Vec::with_capacity(rgba.len());
-    for pixel in rgba.chunks_exact(4) {
+    for pixel in rgba.as_chunks::<4>().0 {
         let a = pixel[3] as u16;
         pbgra.push(((pixel[2] as u16 * a + 127) / 255) as u8);
         pbgra.push(((pixel[1] as u16 * a + 127) / 255) as u8);
@@ -1007,7 +1007,7 @@ unsafe fn render_masked_gradient<F>(
 
 #[cfg(target_os = "windows")]
 fn pbgra_to_white_alpha(pbgra: &mut [u8]) {
-    for pixel in pbgra.chunks_exact_mut(4) {
+    for pixel in pbgra.as_chunks_mut::<4>().0 {
         let alpha = pixel[3];
         pixel[0] = alpha;
         pixel[1] = alpha;
@@ -1019,7 +1019,12 @@ fn pbgra_to_white_alpha(pbgra: &mut [u8]) {
 unsafe fn finalize_surface_alpha(color_surface: &mut GdiSurface, coverage_surface: &GdiSurface) {
     let coverage = coverage_surface.pixels();
     let color = color_surface.pixels_mut();
-    for (color_px, coverage_px) in color.chunks_exact_mut(4).zip(coverage.chunks_exact(4)) {
+    for (color_px, coverage_px) in color
+        .as_chunks_mut::<4>()
+        .0
+        .iter_mut()
+        .zip(coverage.as_chunks::<4>().0)
+    {
         let alpha = coverage_px[0].max(coverage_px[1]).max(coverage_px[2]);
         color_px[3] = alpha;
         color_px[0] = color_px[0].min(alpha);
@@ -3192,7 +3197,9 @@ mod tests {
         let pixels = render(&scene);
         let dark_pixels = pixels
             .data
-            .chunks_exact(4)
+            .as_chunks::<4>()
+            .0
+            .iter()
             .filter(|px| px[0] < 128 && px[1] < 128 && px[2] < 128 && px[3] > 0)
             .count();
         assert!(dark_pixels > 20, "expected visible glyph pixels");

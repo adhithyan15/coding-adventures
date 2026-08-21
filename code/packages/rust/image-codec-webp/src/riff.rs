@@ -32,8 +32,8 @@
 //!
 //! ## References
 //!
-//! - RIFF spec: https://www.iana.org/assignments/wave-avi-codec-registry/wave-avi-codec-registry.xhtml
-//! - WebP container spec: https://developers.google.com/speed/webp/docs/riff_container
+//! - RIFF spec: <https://www.iana.org/assignments/wave-avi-codec-registry/wave-avi-codec-registry.xhtml>
+//! - WebP container spec: <https://developers.google.com/speed/webp/docs/riff_container>
 
 /// Build a complete WebP RIFF file containing one chunk.
 ///

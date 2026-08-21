@@ -246,7 +246,9 @@ pub fn decode_read_response(
         });
     }
     Ok(bytes[9..]
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|register| u16::from_be_bytes([register[0], register[1]]))
         .collect())
 }

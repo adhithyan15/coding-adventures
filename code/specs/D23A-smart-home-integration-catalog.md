@@ -609,6 +609,7 @@ These should be implemented before most vendor-specific adapters:
 | `smart-home-ipp-scanner-discovery-integration` | bounded `_scan._sub._ipp._tcp` mDNS scanner UUID, scan resource, authentication, TLS, model, location, document-format, feeder, transparency-adaptor, push-destination-scheme, and endpoint discovery with D23 candidate projection |
 | `smart-home-thread-border-agent-discovery-integration` | bounded `_meshcop._udp` mDNS Border Agent identity, Thread version, state bitmap, network, topology, vendor, and endpoint discovery with binary TXT preservation and D23 candidate projection |
 | `smart-home-matter-operational-discovery-integration` | bounded `_matter._tcp` DNS-SD commissioned-node fabric identity, node identity, endpoint, MRP, TCP-capability, and ICD discovery with D23 candidate projection |
+| `smart-home-kodi-jsonrpc-integration` | authorized bounded local Kodi JSON-RPC application and active-player telemetry plus response-verified play, pause, stop, volume, and mute control through a fixed method allowlist |
 | `coap-protocol` and `smart-home-coap-integration` | bounded Confirmable GET framing and authorized read-only local CoAP scalar telemetry with strict text/JSON decoding |
 | `snmp-protocol` and `smart-home-snmp-integration` | strict bounded SNMPv2c GET framing and authorized read-only local OID telemetry with ephemeral shared-secret handling |
 | `nut-protocol` and `smart-home-nut-ups-integration` | strict bounded RFC 9271 `LIST VAR` framing and authorized anonymous read-only local UPS/PDU telemetry |

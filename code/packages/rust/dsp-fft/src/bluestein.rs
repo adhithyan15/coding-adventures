@@ -84,7 +84,7 @@
 //! ## What this module did NOT include in Phase 4a
 //!
 //! - ~Matrix-ir lowering~ — Phase 4c (this release) adds
-//!   [`build_bluestein_graph`] and [`bluestein_via_runtime`] so
+//!   [`build_bluestein_graph_with_input`] and [`bluestein_via_runtime`] so
 //!   the whole convolution lifts onto the matrix execution
 //!   layer.  The scalar `bluestein_scalar` stays as the oracle.
 //! - `rfft` / `irfft` half-spectrum APIs.  Phase 4b (already
@@ -509,8 +509,8 @@ pub fn bluestein_via_runtime(
     };
 
     let mut out: Vec<f32> = Vec::with_capacity(bytes.len() / 4);
-    for chunk in bytes.chunks_exact(4) {
-        let arr: [u8; 4] = chunk.try_into().unwrap();
+    for chunk in bytes.as_chunks::<4>().0 {
+        let arr = *chunk;
         out.push(f32::from_le_bytes(arr));
     }
     Ok(out)

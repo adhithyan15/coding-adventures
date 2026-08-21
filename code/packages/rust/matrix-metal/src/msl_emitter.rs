@@ -14,7 +14,7 @@
 //! closure that runs on the GPU.  A specialised GPU "kernel" *is*
 //! the source code (MSL on Apple, PTX on NVIDIA, SPIR-V on Vulkan)
 //! that the device driver compiles and runs.  Specialisation
-//! becomes a **code-generation** problem: take a [`SpecKey`] —
+//! becomes a **code-generation** problem: take a [`matrix_profile::SpecKey`] —
 //! which carries everything the profiler observed about the op
 //! (op kind, dtype, shape class, **range class including constants**)
 //! — and emit a tailored kernel string where the observed
@@ -29,7 +29,7 @@
 //!
 //! # What "constants folded in" means
 //!
-//! The generic add_f32 kernel ships in [`crate::kernels`] as:
+//! The generic add_f32 kernel ships in the private `crate::kernels` module as:
 //!
 //! ```msl
 //! kernel void add_f32(
@@ -79,7 +79,7 @@
 //!   (op_kind = `0x07`, dtype = F32, range_class = `Constant { bytes:
 //!   [b0, b1, b2, b3] }`.)
 //!
-//! All other [`SpecKey`] shapes return `None` so the runtime falls
+//! All other [`matrix_profile::SpecKey`] shapes return `None` so the runtime falls
 //! back to either matrix-cpu's specialised path (different backend
 //! handle) or the generic `Dispatch` path.
 //!

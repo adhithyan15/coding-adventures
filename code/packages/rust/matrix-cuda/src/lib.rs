@@ -713,7 +713,7 @@ pub fn local_transport() -> Result<LocalTransport, String> {
 /// `ExecutorId` it was assigned.
 ///
 /// **Phase 1**: registers under name `"cuda"` with the placeholder
-/// profile from [`profile()`].  Because [`supported_ops_bitset()`]
+/// profile from [`profile()`]. Because `supported_ops_bitset()`
 /// returns `0`, the planner's capability filter will never route an
 /// op here — registering is harmless and lets above-layer code
 /// (image-gpu-core, instagram-filters) start checking

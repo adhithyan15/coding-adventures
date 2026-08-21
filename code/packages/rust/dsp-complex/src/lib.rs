@@ -132,7 +132,9 @@ impl ComplexTensor {
     /// Element-wise magnitude (`√(re² + im²)`).
     pub fn magnitude(&self) -> Vec<f32> {
         self.interleaved
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|c| (c[0] * c[0] + c[1] * c[1]).sqrt())
             .collect()
     }
@@ -140,7 +142,9 @@ impl ComplexTensor {
     /// Element-wise phase angle in radians (`atan2(im, re)`).
     pub fn phase(&self) -> Vec<f32> {
         self.interleaved
-            .chunks_exact(2)
+            .as_chunks::<2>()
+            .0
+            .iter()
             .map(|c| c[1].atan2(c[0]))
             .collect()
     }
@@ -179,7 +183,9 @@ impl fmt::Debug for ComplexTensor {
                 "head",
                 &self
                     .interleaved
-                    .chunks_exact(2)
+                    .as_chunks::<2>()
+                    .0
+                    .iter()
                     .take(max_show)
                     .map(|c| (c[0], c[1]))
                     .collect::<Vec<_>>(),

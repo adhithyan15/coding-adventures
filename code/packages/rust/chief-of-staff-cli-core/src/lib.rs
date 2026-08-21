@@ -511,7 +511,7 @@ fn decode_fixed_hex<const N: usize>(value: &str, field: &'static str) -> Result<
         ));
     }
     let mut bytes = [0_u8; N];
-    for (index, pair) in value.as_bytes().chunks_exact(2).enumerate() {
+    for (index, pair) in value.as_bytes().as_chunks::<2>().0.iter().enumerate() {
         bytes[index] = (hex_nibble(pair[0]) << 4) | hex_nibble(pair[1]);
     }
     Ok(bytes)
@@ -532,7 +532,9 @@ fn decode_hex_vec(value: &str, field: &'static str) -> Result<Vec<u8>, CliError>
     }
     Ok(value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| (hex_nibble(pair[0]) << 4) | hex_nibble(pair[1]))
         .collect())
 }

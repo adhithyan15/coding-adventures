@@ -19,7 +19,9 @@ fn decode_hex(value: &str) -> Vec<u8> {
     assert_eq!(value.len() % 2, 0);
     value
         .as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| {
             let digits = std::str::from_utf8(pair).expect("fixture hex is UTF-8");
             u8::from_str_radix(digits, 16).expect("fixture hex is valid")
@@ -30,7 +32,9 @@ fn decode_hex(value: &str) -> Vec<u8> {
 fn decode_f32s(bytes: &[u8]) -> Vec<f32> {
     assert_eq!(bytes.len() % 4, 0);
     bytes
-        .chunks_exact(4)
+        .as_chunks::<4>()
+        .0
+        .iter()
         .map(|chunk| f32::from_le_bytes([chunk[0], chunk[1], chunk[2], chunk[3]]))
         .collect()
 }

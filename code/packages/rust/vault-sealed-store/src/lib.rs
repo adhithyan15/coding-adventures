@@ -1795,7 +1795,7 @@ fn hex_decode(s: &str) -> Result<Vec<u8>, String> {
     }
     let bytes = s.as_bytes();
     let mut out = Vec::with_capacity(bytes.len() / 2);
-    for chunk in bytes.chunks_exact(2) {
+    for chunk in bytes.as_chunks::<2>().0 {
         let hi = hex_nibble(chunk[0])?;
         let lo = hex_nibble(chunk[1])?;
         out.push((hi << 4) | lo);

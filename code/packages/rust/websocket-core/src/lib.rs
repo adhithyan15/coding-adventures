@@ -338,7 +338,7 @@ fn decode_base64(input: &str) -> Result<Vec<u8>, WebSocketError> {
     }
     let bytes = input.as_bytes();
     let mut output = Vec::with_capacity(input.len() / 4 * 3);
-    for (index, chunk) in bytes.chunks_exact(4).enumerate() {
+    for (index, chunk) in bytes.as_chunks::<4>().0.iter().enumerate() {
         let last = index + 1 == input.len() / 4;
         let pad_two = chunk[2] == b'=';
         let pad_three = chunk[3] == b'=';

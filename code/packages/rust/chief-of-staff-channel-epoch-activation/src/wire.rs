@@ -355,7 +355,7 @@ pub fn activation_plan_deserialize(bytes: &[u8]) -> Result<ActivationPlan, Epoch
         return Err(EpochWireError::TrailingBytes);
     }
     let mut receivers = Vec::with_capacity(count);
-    for chunk in bytes[41..].chunks_exact(64) {
+    for chunk in bytes[41..].as_chunks::<64>().0 {
         receivers.push(ActivationPlanEntry::new(
             chunk[..32]
                 .try_into()

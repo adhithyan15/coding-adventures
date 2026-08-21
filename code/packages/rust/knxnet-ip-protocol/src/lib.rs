@@ -381,7 +381,9 @@ fn decode_service_families(dib: &[u8]) -> Result<Vec<SupportedServiceFamily>, Kn
         });
     }
     let mut families = dib[2..]
-        .chunks_exact(2)
+        .as_chunks::<2>()
+        .0
+        .iter()
         .map(|pair| SupportedServiceFamily {
             family_id: pair[0],
             version: pair[1],

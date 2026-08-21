@@ -236,7 +236,7 @@ pub fn encode_tiff(pixels: &PixelContainer) -> Vec<u8> {
     //
     // We store pixels in chunky RGB order: R0 G0 B0 R1 G1 B1 ...
     // Alpha (the 4th byte in RGBA) is dropped — the TIFF file is opaque.
-    for chunk in pixels.data.chunks_exact(4) {
+    for chunk in pixels.data.as_chunks::<4>().0 {
         buf.push(chunk[0]); // R
         buf.push(chunk[1]); // G
         buf.push(chunk[2]); // B

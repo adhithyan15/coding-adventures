@@ -139,7 +139,7 @@ pub enum DiscoveryError {
         /// Canonical candidate package path.
         path: PathBuf,
         /// Registry value validation failure.
-        source: RegistryError,
+        source: Box<RegistryError>,
     },
     /// Two candidates declare the same agent identity.
     DuplicateAgent(String),
@@ -236,11 +236,11 @@ pub fn inspect_agent_package(
     let host_name =
         HostName::new(manifest.agent.clone()).map_err(|source| DiscoveryError::Registry {
             path: canonical.clone(),
-            source,
+            source: Box::new(source),
         })?;
     let package_path = PackagePath::new(portable).map_err(|source| DiscoveryError::Registry {
         path: canonical.clone(),
-        source,
+        source: Box::new(source),
     })?;
     let registration = HostRegistration::new(
         host_name,
