@@ -129,6 +129,21 @@ The label shown to learners is “Coding Adventures <Language> <Level>
 Assessment — project-defined equivalent,” never the name of an official
 qualification the project does not award.
 
+### 4.3 External capstones without a CEFR mapping
+
+An external provider may publish a real proficiency exam without publishing a
+defensible mapping from that exam to A1–C2. The complete book must still prepare
+the learner for that exam when it is an appropriate destination, but the
+contract must not force it into a CEFR rung by editorial guesswork.
+
+Such an exam is declared in the optional root-level `externalCapstones` array.
+Each declaration has a stable lowercase id, an external target and dated source,
+`cefrRelation: not-mapped`, the curriculum level after which the capstone is
+attempted, four independently thresholded skill inventories, any additional
+provider components, and at least two timed mocks with rubrics and answer keys.
+The level is a dependency boundary, not an equivalence claim. Missing referenced
+artifacts remain a computed `external-capstone` work item until they exist.
+
 ## 5. Writing is a full strand, beginning on the first page
 
 Writing has two coupled ramps:
