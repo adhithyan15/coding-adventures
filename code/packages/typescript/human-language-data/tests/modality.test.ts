@@ -973,7 +973,7 @@ describe("corpus regression", () => {
     // this assertion originally caught was a conflation that made it read 276 —
     // every lesson with any detachable block, not the ones that teach the hand.
     // A number that can only grow would not have caught that.
-    expect(summary.lessonsWithWritingSegments).toBe(161); // Marwadi formal thanks adds two trace blocks and one delayed-copy block.
+    expect(summary.lessonsWithWritingSegments).toBe(166); // Marwadi adds three writing blocks; French adds four runway segments and a chapter-payoff recall.
     /* Superseded merge-side totals:
     expect(summary.lessonsWithWritingSegments).toBe(155); // +6: Arabic adds opening trace, guided-copy, delayed-copy, and dictation blocks. // +2: Italian adds observe-trace and guided-copy evidence.
     expect(summary.lessonsWithWritingSegments).toBe(151); // +4: Italian and Portuguese each add observe-trace and guided-copy evidence.

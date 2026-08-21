@@ -1075,9 +1075,13 @@
     {
       "language": "french",
       "chapter": 1,
-      "sourceHash": "fnv1a64:75a7d74a39e7efd4",
+      "sourceHash": "fnv1a64:a89a44581b617bf4",
       "lessonIds": [
         "FR-C01-salut",
+        "FR-W01-salut-observe",
+        "FR-W01-salut-guided-copy",
+        "FR-W01-salut-delayed-copy",
+        "FR-W01-salut-dictation",
         "FR-C01-bien",
         "FR-C01-bon",
         "FR-C01-le-la",
@@ -1089,12 +1093,12 @@
         "FR-C01-bonne-nuit",
         "FR-C01-practice"
       ],
-      "voiceLessons": 10,
-      "drivablePrefix": 8,
+      "voiceLessons": 9,
+      "drivablePrefix": 1,
       "text": "french/narration/ch01.txt",
       "json": "french/narration/ch01.json",
-      "textHash": "fnv1a64:646f032e768ce910",
-      "jsonHash": "fnv1a64:144f5df5a80bf077"
+      "textHash": "fnv1a64:6831987d97e4d6b0",
+      "jsonHash": "fnv1a64:035d81f5d895a463"
     },
     {
       "language": "french",

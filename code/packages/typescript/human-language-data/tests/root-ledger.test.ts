@@ -190,8 +190,8 @@ describe("the committed corpus", () => {
   it("pins the first ledger, and it is the reason the rule exists", () => {
     const l = buildRootLedger(lessons, minReuse);
     expect(l.summary.roots).toBe(3084); // Arabic adds two roots and Portuguese adds one opener etymon.
-    expect(l.summary.underspent).toBe(2969); // All three combined entries begin below the reuse floor.
-    expect(l.summary.neverSpent).toBe(2032); // Urdu now declares sh-k-r in the new trace lesson and spends it again in shukriya.
+    expect(l.summary.underspent).toBe(2968); // Reusing salut across its writing runway spends salus beyond the three-payoff floor.
+    expect(l.summary.neverSpent).toBe(2031); // French's repeated salut runway spends salus after Urdu spends sh-k-r.
     /* Superseded Arabic-only totals:
     expect(l.summary.roots).toBe(3083); // Arabic's greeting ramp records two previously unledgered roots.
     expect(l.summary.underspent).toBe(2968); // Both new roots begin below the reuse floor.

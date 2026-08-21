@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:9dd7b387d65855f3",
+  "sourceHash": "fnv1a64:c71f1e396fd3d131",
   "summary": {
-    "totalLessons": 3416,
-    "voice": 2461,
+    "totalLessons": 3420,
+    "voice": 2460,
     "sight": 589,
-    "pen": 366,
-    "drivableLessons": 2461,
+    "pen": 371,
+    "drivableLessons": 2460,
     "drivablePercent": 72,
     "trackCount": 23,
     "chapterCount": 1005,
-    "drivablePrefixTotal": 2174,
+    "drivablePrefixTotal": 2167,
     "fullyDrivableChapters": 666,
     "unstartableChapters": 216,
     "overriddenLessons": 0,
@@ -1058,12 +1058,12 @@
     },
     {
       "language": "french",
-      "lessonCount": 118,
-      "voice": 103,
+      "lessonCount": 122,
+      "voice": 102,
       "sight": 12,
-      "pen": 3,
-      "drivablePercent": 87,
-      "drivablePrefixTotal": 83,
+      "pen": 8,
+      "drivablePercent": 84,
+      "drivablePrefixTotal": 76,
       "modalities": [
         "voice",
         "sight",
@@ -1072,26 +1072,20 @@
       "chapters": [
         {
           "chapter": 1,
-          "lessonCount": 11,
-          "voice": 10,
+          "lessonCount": 15,
+          "voice": 9,
           "sight": 1,
-          "pen": 0,
+          "pen": 5,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
-          "drivablePrefix": 8,
-          "firstNonVoiceLesson": "FR-C01-nuit",
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "FR-W01-salut-observe",
           "drivable": false,
           "drivableLessonIds": [
-            "FR-C01-salut",
-            "FR-C01-bien",
-            "FR-C01-bon",
-            "FR-C01-le-la",
-            "FR-C01-jour",
-            "FR-C01-bonjour",
-            "FR-C01-soir",
-            "FR-C01-bonsoir"
+            "FR-C01-salut"
           ]
         },
         {
@@ -22855,6 +22849,96 @@
       "sourceHash": "fnv1a64:799e25399a6adbf5"
     },
     {
+      "id": "FR-W01-salut-observe",
+      "language": "french",
+      "chapter": 1,
+      "sequence": 6,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:640b9da0b3095721",
+      "detachableSegments": [
+        "Writing — trace with the model visible"
+      ]
+    },
+    {
+      "id": "FR-W01-salut-guided-copy",
+      "language": "french",
+      "chapter": 1,
+      "sequence": 7,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:8c8cde1a6eb80361",
+      "detachableSegments": [
+        "Writing — guided copy"
+      ]
+    },
+    {
+      "id": "FR-W01-salut-delayed-copy",
+      "language": "french",
+      "chapter": 1,
+      "sequence": 8,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:11f19996e83bf254",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ]
+    },
+    {
+      "id": "FR-W01-salut-dictation",
+      "language": "french",
+      "chapter": 1,
+      "sequence": 9,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:b0497135d19b0a65",
+      "detachableSegments": [
+        "Writing — short dictation"
+      ]
+    },
+    {
       "id": "FR-C01-bien",
       "language": "french",
       "chapter": 1,
@@ -23023,18 +23107,21 @@
       "language": "french",
       "chapter": 1,
       "sequence": 55,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:29b8a7672a93879e"
+      "sourceHash": "fnv1a64:7499253fe8acbabe",
+      "detachableSegments": [
+        "Writing — close the first runway"
+      ]
     },
     {
       "id": "FR-C02-je",

@@ -103,11 +103,11 @@ Learner copy comes first.
     );
     expect(report.summary).toEqual({
       tracks: 23,
-      tracksWithAnyEvidence: 9,
-      tracksCompleteAtPreA1: 2,
-      evidenceBlocks: 27,
+      tracksWithAnyEvidence: 10,
+      tracksCompleteAtPreA1: 3,
+      evidenceBlocks: 31,
       invalidEvidenceBlocks: 0,
-      missingTrackLevelStages: 895,
+      missingTrackLevelStages: 867,
       /* Superseded merge-side totals:
       tracksWithAnyEvidence: 7,
       tracksCompleteAtPreA1: 2,
@@ -135,6 +135,14 @@ Learner copy comes first.
     ]);
     const arabic = report.tracks.find((track) => track.language === "arabic")!;
     expect(arabic.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
-    expect(report.tracks.filter((track) => track.levels[0]?.complete)).toHaveLength(2);
+    const french = report.tracks.find((track) => track.language === "french")!;
+    expect(french.levels[0]).toMatchObject({ level: "pre-A1", complete: true, missingStages: [] });
+    expect(french.validEvidence.map((entry) => entry.stage)).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(report.tracks.filter((track) => track.levels[0]?.complete)).toHaveLength(3);
   }, 30_000);
 });

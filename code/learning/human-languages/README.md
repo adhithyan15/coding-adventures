@@ -134,7 +134,7 @@ enter cross-language review only after focused retrieval.
 |---|---|---:|---:|---|
 | [Spanish](./spanish/README.md) | Romance / Latin | 584 | 584 | 302 chapters; through Ch. 302; 302 generated |
 | [Latin](./latin/README.md) | Italic / Latin | 109 | 109 | 47 chapters; through Ch. 47; 47 generated |
-| [French](./french/README.md) | Romance / Latin | 118 | 104 | 33 chapters; through Ch. 33; 17 generated |
+| [French](./french/README.md) | Romance / Latin | 122 | 108 | 33 chapters; through Ch. 33; 17 generated |
 | [German](./german/README.md) | Germanic / Latin | 107 | 92 | 31 chapters; through Ch. 31; 15 generated |
 | [Arabic](./arabic/README.md) | Semitic / Arabic | 107 | 106 | 36 chapters; through Ch. 36; 34 generated |
 | [Hindi](./hindi/README.md) | Indo-Aryan / Devanagari | 273 | 273 | 66 chapters; through Ch. 66; 66 generated |
