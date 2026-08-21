@@ -6746,6 +6746,25 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("સ"),
   },
+  // t30apps writes Gujarati હ as one continuous upper-loop, middle-turn, and
+  // broad-lower-bowl run.
+  [ductusKey("gujarati", "હ")]: {
+    script: "gujarati", glyph: "હ",
+    strokes: [
+      { segments: [{ label: "circle the compact upper loop and continue through the middle turn around the broad lower bowl", path: [
+        { x: 500, y: 550 }, { x: 455, y: 565 }, { x: 410, y: 565 }, { x: 365, y: 550 },
+        { x: 330, y: 525 }, { x: 315, y: 495 }, { x: 330, y: 465 }, { x: 370, y: 440 },
+        { x: 420, y: 420 }, { x: 470, y: 400 }, { x: 510, y: 375 }, { x: 535, y: 340 },
+        { x: 540, y: 295 }, { x: 525, y: 250 }, { x: 490, y: 220 }, { x: 445, y: 200 },
+        { x: 395, y: 200 }, { x: 350, y: 215 }, { x: 310, y: 240 }, { x: 275, y: 275 },
+        { x: 257, y: 332 }, { x: 161, y: 433 }, { x: 125, y: 440 },
+        { x: 105, y: 400 }, { x: 90, y: 350 }, { x: 85, y: 295 }, { x: 95, y: 235 },
+        { x: 120, y: 180 }, { x: 160, y: 125 }, { x: 215, y: 80 }, { x: 280, y: 50 },
+        { x: 350, y: 35 }, { x: 420, y: 35 }, { x: 490, y: 45 }, { x: 550, y: 65 },
+        { x: 600, y: 90 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("હ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

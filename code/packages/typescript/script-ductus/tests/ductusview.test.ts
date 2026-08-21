@@ -355,6 +355,8 @@ const GUJARATI_SHA = ductusFor("શ", "gujarati")!;
 const gujaratiShaOutline = gujaratiOutline("શ");
 const GUJARATI_SA = ductusFor("સ", "gujarati")!;
 const gujaratiSaOutline = gujaratiOutline("સ");
+const GUJARATI_HA = ductusFor("હ", "gujarati")!;
+const gujaratiHaOutline = gujaratiOutline("હ");
 const HEBREW_ALEF = ductusFor("א", "hebrew")!;
 const hebrewAlefOutline = hebrewOutline("א");
 const HEBREW_BET = ductusFor("ב", "hebrew")!;
@@ -4571,6 +4573,21 @@ describe("Gujarati સ — rounded loop and shoulder before the tall spine", () 
     const paths = byTag(strip.frames[1], "path");
     expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(gujaratiSaOutline.path);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(penPathD(GUJARATI_SA.strokes[1], 1));
+  });
+});
+
+describe("Gujarati હ — upper loop flowing into the broad lower bowl", () => {
+  const steps = ductusSteps(GUJARATI_HA);
+  const strip = ductusFilmstrip(GUJARATI_HA, gujaratiHaOutline);
+  it("shows the single source run without a lift", () => {
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false]);
+    expect(strip.frames).toHaveLength(1);
+    expect(strip.penLifts).toBe(0);
+  });
+  it("draws the exact Noto Sans Gujarati character", () => {
+    const paths = byTag(strip.frames[0], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(gujaratiHaOutline.path);
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(penPathD(GUJARATI_HA.strokes[0], 1));
   });
 });
 
