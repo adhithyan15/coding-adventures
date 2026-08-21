@@ -31,7 +31,7 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
     "lessonsWithoutSequence": 12,
-    "forwardReviews": 13,
+    "forwardReviews": 10,
     "atomsNeverRevisited": 632,
     "forwardReferences": 466,
     "chaptersWithoutCapability": 0,
@@ -6170,30 +6170,6 @@
       }
     ],
     "order": [
-      {
-        "lessonId": "BN-C02-alaap",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-tomar-naam-ki",
-        "detail": "reviews BN-C02-tomar-naam-ki, which the learner does not reach for another 3 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C02-ki",
-        "language": "bengali",
-        "chapter": 2,
-        "kind": "forward-review",
-        "other": "BN-C02-tumi-apni",
-        "detail": "reviews BN-C02-tumi-apni, which the learner does not reach for another 1 lesson(s)"
-      },
-      {
-        "lessonId": "BN-C05-kaj-kora",
-        "language": "bengali",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "BN-C05-thaka",
-        "detail": "reviews BN-C05-thaka, which the learner does not reach for another 1 lesson(s)"
-      },
       {
         "lessonId": "GU-C02-anand",
         "language": "gujarati",
@@ -60422,7 +60398,7 @@
         "lessonCount": 80,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 3,
+        "forwardReviews": 0,
         "atomsTaught": 104,
         "atomsNeverRevisited": 7,
         "forwardReferences": 6
@@ -60642,7 +60618,7 @@
       "lessonsWithoutSequence": 12,
       "tracksWithUnorderedLessons": 2,
       "forwardPrerequisites": 6,
-      "forwardReviews": 13,
+      "forwardReviews": 10,
       "atomsTaught": 4715,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
@@ -70461,10 +70437,10 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 65,
         "neverTaughtGlyphs": 39,
-        "orderDefects": 3,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 3,
+        "forwardReviews": 0,
         "forwardReferences": 6,
         "atomsTaught": 104,
         "atomsNeverRevisited": 7,
@@ -70474,13 +70450,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "bengali",
-            "kind": "order-integrity",
-            "count": 3,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
           {
             "language": "bengali",
             "kind": "forward-language",
@@ -70519,10 +70488,10 @@
         ],
         "next": {
           "language": "bengali",
-          "kind": "order-integrity",
-          "count": 3,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 6,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -72096,13 +72065,6 @@
         "detail": "declare a unique reading order and close every prerequisite and review before use"
       },
       {
-        "language": "bengali",
-        "kind": "order-integrity",
-        "count": 3,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
         "language": "gujarati",
         "kind": "order-integrity",
         "count": 3,
@@ -73026,7 +72988,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 492,
-      "findings": 134
+      "findings": 133
     }
   },
   "levelGate": {
