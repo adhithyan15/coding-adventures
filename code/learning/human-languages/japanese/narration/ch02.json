@@ -4,7 +4,7 @@
   "chapter": 2,
   "title": "Eight Signs, and Three Words You Can Read",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:6f566408e539a412",
+  "sourceHash": "fnv1a64:44f1c780f26d205d",
   "lessons": [
     {
       "id": "JA-W01-i",
@@ -20,7 +20,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:26298eeb3f317c1e",
+      "sourceHash": "fnv1a64:536c9f5fc624cc79",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -93,12 +93,12 @@
           "segments": [
             {
               "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "い — long stroke first, then the short tick",
+              "action": "TRACE",
+              "instruction": "follow the visible い once — long stroke first, then the short tick",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: い — long stroke first, then the short tick]"
+              "source": "[YOU TRACE: follow the visible い once — long stroke first, then the short tick]"
             },
             {
               "kind": "prompt",
@@ -108,6 +108,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: **i**, one clean beat]"
+            },
+            {
+              "kind": "speech",
+              "text": "Keep the model visible and stop after one traced sign. Copying without the model comes later; today your hand is only learning the direction of two strokes."
             }
           ]
         },
@@ -163,7 +167,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:ffb69730dd67576c",
+      "sourceHash": "fnv1a64:319589a1fed4234f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -172,10 +176,9 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script — the shape",
-          "Guided Practice"
+          "Script — the shape"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — the shape and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — the shape until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -237,12 +240,12 @@
           "segments": [
             {
               "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "は (ha) — vertical, crossbar, loop",
-              "spoken": false,
+              "action": "COPY",
+              "instruction": "keep は (ha) visible and write it once — vertical, crossbar, loop",
+              "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: は — vertical, crossbar, loop]"
+              "source": "[YOU COPY: keep は visible and write it once — vertical, crossbar, loop]"
             },
             {
               "kind": "prompt",
@@ -252,6 +255,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU SAY: **ha**, one beat, breath not force]"
+            },
+            {
+              "kind": "speech",
+              "text": "Look back at the model between strokes if you need to. This is one guided copy, not a memory test."
             }
           ]
         },
@@ -304,20 +311,22 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
-        "script-block"
+        "script-block",
+        "sight-cue"
       ],
-      "sourceHash": "fnv1a64:62d719b3344477a5",
+      "sourceHash": "fnv1a64:66f8ba352205ee5c",
       "notice": {
         "modality": "pen",
         "needs": [
           "a pen and something to write on",
-          "your eyes, for letter shapes on the page"
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
           "Script — no new sign at all",
           "Guided Practice"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script — no new sign at all and Guided Practice until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -333,11 +342,15 @@
             },
             {
               "kind": "speech",
-              "text": "Both signs are yours. Write them, in this order, and say each beat as you finish it:"
+              "text": "Both signs are yours. Look at them for five seconds:"
             },
             {
               "kind": "speech",
               "text": "は (ha) い (i)."
+            },
+            {
+              "kind": "speech",
+              "text": "Cover the model. Write the two signs in that order and say each beat as you finish it. Uncover the model, compare once, and repair at most one stroke. This short look-hide-write-check cycle is the whole delayed-copy step."
             }
           ]
         },
@@ -444,7 +457,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:9be9028fc8bdc7fa",
+      "sourceHash": "fnv1a64:3794174c4b117901",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -531,13 +544,17 @@
           "title": "Guided Practice",
           "segments": [
             {
+              "kind": "speech",
+              "text": "Cover the printed え. Have a partner or recording say e once. If you are working alone, read the romanized cue e, cover it, and continue."
+            },
+            {
               "kind": "prompt",
-              "action": "WRITE",
+              "action": "WRITE FROM THE HEARD OR ROMANIZED CUE",
               "instruction": "え — tick first, then the body in one movement",
               "spoken": false,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU WRITE: え — tick first, then the body in one movement]"
+              "source": "[YOU WRITE FROM THE HEARD OR ROMANIZED CUE: え — tick first, then the body in one movement]"
             },
             {
               "kind": "prompt",
@@ -547,6 +564,10 @@
               "scored": false,
               "responseSeconds": 8,
               "source": "[YOU READ: いいえ — three beats, and do not shorten the doubled sign]"
+            },
+            {
+              "kind": "speech",
+              "text": "Uncover the model only after your one transcription attempt. Compare, repair one stroke if needed, and stop."
             }
           ]
         },

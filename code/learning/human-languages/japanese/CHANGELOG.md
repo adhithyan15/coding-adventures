@@ -4,6 +4,15 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — cumulative pre-A1 writing evidence (#12365)
+
+- Turned four already gentle Chapter 2 lessons into an explicit cumulative
+  writing ladder: trace one visible sign, copy one visible sign with cues, hide
+  and recall one two-sign word, then transcribe one heard or romanized mora.
+- Kept every action inside its original one-sign load and below five minutes;
+  the evidence metadata now follows the learner action instead of merely tagging
+  lessons that happen to contain handwriting.
+
 ### Added — pre-A1 four-skill task shapes (#12363)
 
 - Made the project-defined rung below JLPT/JF A1 executable as four independently

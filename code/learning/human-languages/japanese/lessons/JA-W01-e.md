@@ -65,9 +65,16 @@ of them was memorised as a picture.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-LEX-IIE] -->
+<!-- hl-writing-stage: dictation-transcription -->
 
-- [YOU WRITE: え — tick first, then the body in one movement]
+- Cover the printed **え**. Have a partner or recording say **e** once. If you
+  are working alone, read the romanized cue *e*, cover it, and continue.
+- [YOU WRITE FROM THE HEARD OR ROMANIZED CUE: え — tick first, then the body in
+  one movement]
 - [YOU READ: いいえ — three beats, and do not shorten the doubled sign]
+
+Uncover the model only after your one transcription attempt. Compare, repair
+one stroke if needed, and stop.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-E-01, JA-LEX-IIE] -->

@@ -59,9 +59,13 @@ after you have met the sign it *sounds* like.
 
 ## Guided Practice
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01, JA-SCRIPT-I-01] -->
+<!-- hl-writing-stage: guided-copy -->
 
-- [YOU WRITE: は — vertical, crossbar, loop]
+- [YOU COPY: keep は visible and write it once — vertical, crossbar, loop]
 - [YOU SAY: **ha**, one beat, breath not force]
+
+Look back at the model between strokes if you need to. This is one guided copy,
+not a memory test.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[JA-SCRIPT-HA-01] -->
