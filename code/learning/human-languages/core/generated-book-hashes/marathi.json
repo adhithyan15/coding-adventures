@@ -98,10 +98,12 @@
     {
       "language": "marathi",
       "chapter": 14,
-      "sourceHash": "fnv1a64:823201992120effc",
+      "sourceHash": "fnv1a64:5b52f1a9896b6c93",
       "lessonIds": [
         "MR-W01-ha",
         "MR-W01-o-matra",
+        "MR-W01-ho-delayed-copy",
+        "MR-W01-ho-dictation",
         "MR-W01-na",
         "MR-W01-aa-matra",
         "MR-W01-ii-matra",

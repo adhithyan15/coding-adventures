@@ -7,14 +7,14 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:b8680b4902bd51b9",
+  "sourceHash": "fnv1a64:ff6ea3cd33ed21d5",
   "summary": {
-    "totalLessons": 73,
+    "totalLessons": 75,
     "voice": 21,
     "sight": 41,
-    "pen": 11,
+    "pen": 13,
     "drivableLessons": 21,
-    "drivablePercent": 29,
+    "drivablePercent": 28,
     "trackCount": 1,
     "chapterCount": 14,
     "drivablePrefixTotal": 8,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "marathi",
-      "lessonCount": 73,
+      "lessonCount": 75,
       "voice": 21,
       "sight": 41,
-      "pen": 11,
-      "drivablePercent": 29,
+      "pen": 13,
+      "drivablePercent": 28,
       "drivablePrefixTotal": 8,
       "modalities": [
         "voice",
@@ -237,10 +237,10 @@
         },
         {
           "chapter": 14,
-          "lessonCount": 11,
+          "lessonCount": 13,
           "voice": 0,
           "sight": 0,
-          "pen": 11,
+          "pen": 13,
           "modalities": [
             "sight",
             "pen"
@@ -1504,6 +1504,7 @@
       "drivable": false,
       "reasons": [
         "writing-type",
+        "writing-block",
         "script-block",
         "sight-cue"
       ],
@@ -1512,9 +1513,10 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:0cf74f292b342665",
+      "sourceHash": "fnv1a64:1ba26806e71f743e",
       "detachableSegments": [
-        "Script"
+        "Script",
+        "Writing — notice and trace one consonant"
       ],
       "delivery": "script"
     },
@@ -1528,6 +1530,7 @@
       "drivable": false,
       "reasons": [
         "writing-type",
+        "writing-block",
         "script-block"
       ],
       "coreModality": "pen",
@@ -1535,9 +1538,58 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:2ae6f15f4e484fcf",
+      "sourceHash": "fnv1a64:c6ba4ce949efabee",
       "detachableSegments": [
-        "Script"
+        "Script",
+        "Writing — one supported copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ho-delayed-copy",
+      "language": "marathi",
+      "chapter": 14,
+      "sequence": 815,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:3b16799d2e8b32e9",
+      "detachableSegments": [
+        "Writing — delayed copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MR-W01-ho-dictation",
+      "language": "marathi",
+      "chapter": 14,
+      "sequence": 817,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:10fa9ba2c3351bac",
+      "detachableSegments": [
+        "Writing — short dictation"
       ],
       "delivery": "script"
     },
@@ -1558,7 +1610,7 @@
         "writing-type"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:f94d7ae350fe5366",
+      "sourceHash": "fnv1a64:ec4d9f8ba18dec9c",
       "detachableSegments": [
         "Script"
       ],

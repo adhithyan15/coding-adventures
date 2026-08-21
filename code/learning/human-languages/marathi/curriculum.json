@@ -9,6 +9,8 @@
         "MR-C01-namaskar",
         "MR-W01-ha",
         "MR-W01-o-matra",
+        "MR-W01-ho-delayed-copy",
+        "MR-W01-ho-dictation",
         "MR-W01-na",
         "MR-W01-aa-matra",
         "MR-W01-ii-matra",
@@ -789,6 +791,8 @@
       "lessons": [
         "MR-W01-ha",
         "MR-W01-o-matra",
+        "MR-W01-ho-delayed-copy",
+        "MR-W01-ho-dictation",
         "MR-W01-na",
         "MR-W01-aa-matra",
         "MR-W01-ii-matra",

@@ -1,8 +1,8 @@
 {
   "language": "marathi",
-  "lessonCount": 73,
+  "lessonCount": 75,
   "atomMeasurableLessons": 40,
-  "atomMeasurementBlindLessons": 33,
+  "atomMeasurementBlindLessons": 35,
   "durationViolations": 0,
   "atomLessonSpikes": 1,
   "atomChapterSpikes": 0,
@@ -18,15 +18,15 @@
   "forwardReferences": 3,
   "atomsTaught": 79,
   "atomsNeverRevisited": 3,
-  "reinforcementWindowMisses": 98,
+  "reinforcementWindowMisses": 103,
   "reinforcementMissesByWindow": {
     "R1": 6,
     "R2": 48,
-    "R3": 44,
+    "R3": 49,
     "R4": 0
   },
   "payoffSurprises": 0,
-  "writingPracticeLessons": 52,
+  "writingPracticeLessons": 54,
   "firstWritingPracticeAt": 0,
   "lessonsBeforeWritingPractice": 0,
   "findings": [
@@ -61,14 +61,14 @@
     {
       "language": "marathi",
       "kind": "reinforcement",
-      "count": 98,
+      "count": 103,
       "unit": "missed window(s)",
       "detail": "add retrieval at the expanding R1-R4 intervals"
     },
     {
       "language": "marathi",
       "kind": "measurement-blind",
-      "count": 33,
+      "count": 35,
       "unit": "lesson(s)",
       "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
     }

@@ -4,7 +4,7 @@
   "chapter": 14,
   "title": "Hanging From the Head-Line, One Piece at a Time",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:da1616ad5a472c41",
+  "sourceHash": "fnv1a64:3ae68a8a3a71295b",
   "lessons": [
     {
       "id": "MR-W01-ha",
@@ -18,10 +18,11 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
+        "writing-block",
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:0cf74f292b342665",
+      "sourceHash": "fnv1a64:1ba26806e71f743e",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -30,10 +31,9 @@
           "your eyes, because the lesson points at something written down"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "Script"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -86,26 +86,12 @@
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "writing",
+          "title": "Writing — notice and trace one consonant",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ह (ha)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ह]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "Keep ह visible. Finger-trace it once, then trace one printed model once with a pencil. Say ha only after your hand stops. Do not copy the word for \"yes\" yet; its vowel sign comes next."
             }
           ]
         },
@@ -127,6 +113,27 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W01-ha-observe-check",
+              "prompt": "Trace the visible Devanagari consonant once, then name its built-in vowel.",
+              "assesses": [
+                "MR-SCRIPT-HA-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "ह — ha, with inherent a",
+                "ह",
+                "ha",
+                "a",
+                "inherent a"
+              ],
+              "feedback": {
+                "correct": "Right: ह is ha; the a is already present.",
+                "incorrect": "Keep ह visible, trace it once, and remember that a bare Devanagari consonant carries a."
+              }
             }
           ]
         }
@@ -144,9 +151,10 @@
       "derivedModality": "pen",
       "modalityReasons": [
         "writing-type",
+        "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:2ae6f15f4e484fcf",
+      "sourceHash": "fnv1a64:c6ba4ce949efabee",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -154,10 +162,9 @@
           "your eyes, for letter shapes on the page"
         ],
         "waitUntilStopped": [
-          "Script",
-          "Guided Practice"
+          "Script"
         ],
-        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the sections called Script and Guided Practice until you have stopped, and I will say so again when we reach it."
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script until you have stopped, and I will say so again when we reach it."
       },
       "blocks": [
         {
@@ -200,7 +207,7 @@
             },
             {
               "kind": "speech",
-              "text": "ह (ha) + ो (-o) becomes हो."
+              "text": "ह (ha) + ो (-o) becomes हो (ho)."
             },
             {
               "kind": "speech",
@@ -214,26 +221,12 @@
         },
         {
           "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
+          "type": "writing",
+          "title": "Writing — one supported copy",
           "segments": [
             {
-              "kind": "prompt",
-              "action": "WRITE",
-              "instruction": "ो (-o)",
-              "spoken": false,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU WRITE: ो]"
-            },
-            {
-              "kind": "prompt",
-              "action": "READ",
-              "instruction": "every piece this chapter has given you so far, in order",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU READ: every piece this chapter has given you so far, in order]"
+              "kind": "speech",
+              "text": "Keep हो visible. Copy it once: first ह (ha), then its attached ो (-o) sign. Point to both pieces in your copy and read ho. You may look back after each piece; memory is not the task yet."
             }
           ]
         },
@@ -255,6 +248,208 @@
             {
               "kind": "speech",
               "text": "Source: Unicode Devanagari chart."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W01-o-matra-guided-copy-check",
+              "prompt": "Copy the visible Marathi word for yes once, then name its two pieces.",
+              "assesses": [
+                "MR-SCRIPT-HA-01",
+                "MR-SCRIPT-O-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "हो — ह plus ो",
+                "हो",
+                "ह + ो",
+                "ह plus ो"
+              ],
+              "feedback": {
+                "correct": "Good: one supported copy, built from ह and attached ो.",
+                "incorrect": "Keep the model visible and copy only two pieces: ह, then ो."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W01-ho-delayed-copy",
+      "sequence": 815,
+      "title": "हो (ho) — look, hide, write, compare",
+      "headword": "हो",
+      "romanization": "ho",
+      "gloss": "look, hide, write, compare, and repair yes",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:3b16799d2e8b32e9",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on and your eyes, because the lesson points at something written down. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Look at हो (ho) for five seconds. Point first to ह (ha), then to attached ो (-o). Do not copy it while the model is visible."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "cover हो (ho)."
+            },
+            {
+              "kind": "speech",
+              "text": "wait five seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write it once from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "uncover the model and compare the two pieces."
+            },
+            {
+              "kind": "speech",
+              "text": "If one piece differs, circle it and repair only that place. Repair is part of the exercise, not a failure. There is no tracing and no romanized answer model."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read your repaired word as ho. Stop after one memory attempt."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W01-ho-delayed-copy-check",
+              "prompt": "After hiding the model for five seconds, write the Marathi word for yes and then compare it.",
+              "assesses": [
+                "MR-SCRIPT-HA-01",
+                "MR-SCRIPT-O-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "हो"
+              ],
+              "feedback": {
+                "correct": "Yes: हो, one consonant and its attached o sign.",
+                "incorrect": "Uncover the model, repair only the differing piece, and try once more tomorrow."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MR-W01-ho-dictation",
+      "sequence": 817,
+      "title": "One heard answer — write what you know",
+      "headword": "हो",
+      "romanization": "ho",
+      "gloss": "write yes from a heard cue with no visible model",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block"
+      ],
+      "sourceHash": "fnv1a64:10fa9ba2c3351bac",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on"
+        ],
+        "waitUntilStopped": [],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on. You can listen to all of it now and come back to the parts that need looking at once you have stopped."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the answer lower on this page. You will hear one familiar answer. No new Marathi and no new Devanagari shape is hiding in this lesson."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "writing",
+          "title": "Writing — short dictation",
+          "segments": [
+            {
+              "kind": "prompt",
+              "action": "HEAR",
+              "instruction": "ho — \"yes\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU HEAR: *ho* — \"yes\"]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write the Devanagari word from sound alone. Do not use a visible model, romanization, or tracing guide. Now uncover and compare: हो (ho). Check ह (ha) first and attached ो (-o) second. Repair one place if needed."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Writing from sound completes this tiny runway. It is not a mock assessment; later lessons must grow from one known word to forms, messages, and timed tasks."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MR-W01-ho-dictation-answer",
+              "prompt": "From the heard cue ho alone, write the known Marathi word for yes.",
+              "assesses": [
+                "MR-SCRIPT-HA-01",
+                "MR-SCRIPT-O-MATRA-01"
+              ],
+              "responseSeconds": 18,
+              "acceptedResponses": [
+                "हो"
+              ],
+              "feedback": {
+                "correct": "हो — ह with attached o sign ो.",
+                "incorrect": "The word has two pieces: ह, then attached ो: हो."
+              }
             }
           ]
         }
@@ -274,7 +469,7 @@
         "writing-type",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:f94d7ae350fe5366",
+      "sourceHash": "fnv1a64:ec4d9f8ba18dec9c",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -580,7 +775,7 @@
             },
             {
               "kind": "speech",
-              "text": "हो नाही."
+              "text": "हो (ho) नाही."
             },
             {
               "kind": "speech",
