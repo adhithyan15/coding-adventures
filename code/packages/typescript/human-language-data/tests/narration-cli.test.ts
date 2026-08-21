@@ -118,7 +118,7 @@ describe("the narration export's filesystem shell", () => {
     expect(runNarrationGeneration(["--write"], root)).toBe(0);
     const text = join(root, "test", "narration", "ch01.txt");
     const json = join(root, "test", "narration", "ch01.json");
-    const manifest = join(root, "core", "generated-narration-hashes.json");
+    const manifest = join(root, "core", "generated-narration-hashes", "test.json");
     expect(existsSync(text)).toBe(true);
 
     const script = readFileSync(text, "utf8");
@@ -181,9 +181,10 @@ describe("the narration export's filesystem shell", () => {
     writeFileSync(source, readFileSync(source, "utf8").replace("Say it once.", "Say it twice."));
     expect(runNarrationGeneration(["--check"], root)).toBe(1);
 
-    const stale = readFileSync(join(root, "core", "generated-narration-hashes.json"), "utf8");
+    const manifest = join(root, "core", "generated-narration-hashes", "test.json");
+    const stale = readFileSync(manifest, "utf8");
     expect(runNarrationGeneration(["--write"], root)).toBe(0);
-    const fresh = readFileSync(join(root, "core", "generated-narration-hashes.json"), "utf8");
+    const fresh = readFileSync(manifest, "utf8");
     expect(fresh).not.toBe(stale);
     expect(runNarrationGeneration(["--check"], root)).toBe(0);
   });
@@ -266,8 +267,8 @@ gloss: a grid
 
   it("keeps the manifest deterministic across runs", () => {
     const root = fixture();
-    const first = narrationOutputs(root).get("core/generated-narration-hashes.json");
-    const second = narrationOutputs(root).get("core/generated-narration-hashes.json");
+    const first = narrationOutputs(root).get("core/generated-narration-hashes/test.json");
+    const second = narrationOutputs(root).get("core/generated-narration-hashes/test.json");
     expect(first).toBe(second);
     expect(first?.endsWith("\n")).toBe(true);
   });

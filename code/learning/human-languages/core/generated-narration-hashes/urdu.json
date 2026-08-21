@@ -1,0 +1,285 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "urdu",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:98b8d72bdfe4dab5",
+      "lessonIds": [
+        "UR-C01-salam",
+        "UR-W01-shukriya-first-three",
+        "UR-C01-shukriya",
+        "UR-C01-ji-han",
+        "UR-C01-nahin"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch01.txt",
+      "json": "urdu/narration/ch01.json",
+      "textHash": "fnv1a64:c9be4191db4256ef",
+      "jsonHash": "fnv1a64:7f8d4b8cf8202bad"
+    },
+    {
+      "language": "urdu",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:a3f4a0b44c5ad7e6",
+      "lessonIds": [
+        "UR-C02-mera-naam"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch02.txt",
+      "json": "urdu/narration/ch02.json",
+      "textHash": "fnv1a64:b51d3358d9b6bb75",
+      "jsonHash": "fnv1a64:1544dc44968542d9"
+    },
+    {
+      "language": "urdu",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:2373594a092cc216",
+      "lessonIds": [
+        "UR-C03-aap-tum-tu",
+        "UR-C03-kya",
+        "UR-C03-aap-ka-naam-kya-hai",
+        "UR-C03-khushi-hui",
+        "UR-C03-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 2,
+      "text": "urdu/narration/ch03.txt",
+      "json": "urdu/narration/ch03.json",
+      "textHash": "fnv1a64:410c6d05f04f80a7",
+      "jsonHash": "fnv1a64:c04da71a970e5e83"
+    },
+    {
+      "language": "urdu",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:9dbfd2d2b7a48352",
+      "lessonIds": [
+        "UR-C04-kaise-kaisi",
+        "UR-C04-aap-kaise-hain",
+        "UR-C04-main-hun",
+        "UR-C04-thik",
+        "UR-C04-main-thik-hun",
+        "UR-C04-practice"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "urdu/narration/ch04.txt",
+      "json": "urdu/narration/ch04.json",
+      "textHash": "fnv1a64:ff34144da634ce46",
+      "jsonHash": "fnv1a64:dfee6b0784597eb9"
+    },
+    {
+      "language": "urdu",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:fc4210d6ddcf7d8b",
+      "lessonIds": [
+        "UR-C05-khuda",
+        "UR-C05-hafiz",
+        "UR-C05-khuda-hafiz",
+        "UR-C05-practice"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 2,
+      "text": "urdu/narration/ch05.txt",
+      "json": "urdu/narration/ch05.json",
+      "textHash": "fnv1a64:4b650a658b85409b",
+      "jsonHash": "fnv1a64:a357ba5c0f270641"
+    },
+    {
+      "language": "urdu",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:94e111bc86ef5d38",
+      "lessonIds": [
+        "UR-C06-hona",
+        "UR-C06-jana",
+        "UR-C06-ana",
+        "UR-C06-bolna",
+        "UR-C06-janna"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "urdu/narration/ch06.txt",
+      "json": "urdu/narration/ch06.json",
+      "textHash": "fnv1a64:ac88e352a71cb761",
+      "jsonHash": "fnv1a64:6ce3579e4f251d3f"
+    },
+    {
+      "language": "urdu",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:c8278f3017bf9d99",
+      "lessonIds": [
+        "UR-C07-sochna",
+        "UR-C07-samajhna",
+        "UR-C07-parhna",
+        "UR-C07-likhna"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch07.txt",
+      "json": "urdu/narration/ch07.json",
+      "textHash": "fnv1a64:3e017a5b0b4e6325",
+      "jsonHash": "fnv1a64:9eaa17fdb4518cd0"
+    },
+    {
+      "language": "urdu",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:d6961ef47c5a8dd7",
+      "lessonIds": [
+        "UR-C08-lena",
+        "UR-C08-puchhna",
+        "UR-C08-madad",
+        "UR-C08-pasand"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch08.txt",
+      "json": "urdu/narration/ch08.json",
+      "textHash": "fnv1a64:89bfe5828747af1d",
+      "jsonHash": "fnv1a64:ef09aad11524eba4"
+    },
+    {
+      "language": "urdu",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:03400f396e06b4be",
+      "lessonIds": [
+        "UR-C09-bhai",
+        "UR-C09-bahan",
+        "UR-C09-dost",
+        "UR-C09-khandan"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch09.txt",
+      "json": "urdu/narration/ch09.json",
+      "textHash": "fnv1a64:7dbdce5a025257a1",
+      "jsonHash": "fnv1a64:e330411758dce9b7"
+    },
+    {
+      "language": "urdu",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:bb9c226c6cf168a7",
+      "lessonIds": [
+        "UR-C10-kaan",
+        "UR-C10-naak",
+        "UR-C10-aankh",
+        "UR-C10-munh"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch10.txt",
+      "json": "urdu/narration/ch10.json",
+      "textHash": "fnv1a64:3e8af661ecc26341",
+      "jsonHash": "fnv1a64:539226de1f605373"
+    },
+    {
+      "language": "urdu",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:56f531518276b7d1",
+      "lessonIds": [
+        "UR-C11-dil"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch11.txt",
+      "json": "urdu/narration/ch11.json",
+      "textHash": "fnv1a64:eeed4edb2930107d",
+      "jsonHash": "fnv1a64:8904043ce6c2b6e5"
+    },
+    {
+      "language": "urdu",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:e9210dac6052faaf",
+      "lessonIds": [
+        "UR-C12-pani",
+        "UR-C12-chai",
+        "UR-C12-doodh",
+        "UR-C12-roti"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "urdu/narration/ch12.txt",
+      "json": "urdu/narration/ch12.json",
+      "textHash": "fnv1a64:c5574458caf84a4f",
+      "jsonHash": "fnv1a64:413658fe2bd63126"
+    },
+    {
+      "language": "urdu",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:0df1a65676c9aac8",
+      "lessonIds": [
+        "UR-C13-lal",
+        "UR-C13-safed",
+        "UR-C13-kala",
+        "UR-C13-nila"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "urdu/narration/ch13.txt",
+      "json": "urdu/narration/ch13.json",
+      "textHash": "fnv1a64:7020203f4d096e30",
+      "jsonHash": "fnv1a64:280bfff17df5678d"
+    },
+    {
+      "language": "urdu",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:c252fe07d9fd764a",
+      "lessonIds": [
+        "UR-C14-qamiz",
+        "UR-C14-juta",
+        "UR-C14-topi",
+        "UR-C14-koat"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch14.txt",
+      "json": "urdu/narration/ch14.json",
+      "textHash": "fnv1a64:4b8d218c9b64fd4c",
+      "jsonHash": "fnv1a64:ce4ca0a67fd43eb0"
+    },
+    {
+      "language": "urdu",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:743735ab6b6e7b5c",
+      "lessonIds": [
+        "UR-C15-barish",
+        "UR-C15-dhoop",
+        "UR-C15-hawa",
+        "UR-C15-garmi",
+        "UR-C15-sardi"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 3,
+      "text": "urdu/narration/ch15.txt",
+      "json": "urdu/narration/ch15.json",
+      "textHash": "fnv1a64:fd5dce85fefda727",
+      "jsonHash": "fnv1a64:000057ef453b9b94"
+    },
+    {
+      "language": "urdu",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:6ac24a4fee6bc830",
+      "lessonIds": [
+        "UR-W16-alef",
+        "UR-W16-lam",
+        "UR-W16-sin",
+        "UR-W16-mim",
+        "UR-W16-joining",
+        "UR-W16-kaf",
+        "UR-W16-nun",
+        "UR-W16-ye",
+        "UR-C16-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "urdu/narration/ch16.txt",
+      "json": "urdu/narration/ch16.json",
+      "textHash": "fnv1a64:30b82fc16bd26faa",
+      "jsonHash": "fnv1a64:ca3e287d21320d5b"
+    }
+  ],
+  "findings": []
+}

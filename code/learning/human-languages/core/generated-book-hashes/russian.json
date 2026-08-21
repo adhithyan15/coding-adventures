@@ -1,0 +1,210 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "russian",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:e06d77b1635241b5",
+      "lessonIds": [
+        "RU-C01-privet",
+        "RU-C01-zdravstvuyte",
+        "RU-C01-da",
+        "RU-C01-net",
+        "RU-C01-spasibo",
+        "RU-C01-pozhaluysta",
+        "RU-C01-practice",
+        "RU-W01-false-friends-v-r",
+        "RU-W02-false-friends-s-n",
+        "RU-W03-new-shapes-b-d",
+        "RU-W04-privet-letters-p-i",
+        "RU-W05-privet-letters-e-t"
+      ],
+      "tex": "russian/book/chapters/ch01-greetings-and-courtesy.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:96db0b007be2e9be",
+      "lessonIds": [
+        "RU-C02-ya",
+        "RU-C02-ty-vy",
+        "RU-C02-vy-formality",
+        "RU-C02-menya-zovut",
+        "RU-C02-kak-vas-zovut",
+        "RU-C02-kak-cross-language",
+        "RU-C02-ochen-priyatno",
+        "RU-C02-practice",
+        "RU-C02-practice-cases",
+        "RU-C02-practice-zero-copula"
+      ],
+      "tex": "russian/book/chapters/ch02-introducing-yourself.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:6a03e1748b9526c7",
+      "lessonIds": [
+        "RU-C03-byt",
+        "RU-C03-zhit",
+        "RU-C03-znat",
+        "RU-C03-govorit",
+        "RU-C03-videt",
+        "RU-C03-idti"
+      ],
+      "tex": "russian/book/chapters/ch03-first-verbs.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:46e1d7c2356eeaba",
+      "lessonIds": [
+        "RU-C04-dumat",
+        "RU-C04-ponimat",
+        "RU-C04-chitat",
+        "RU-C04-pisat"
+      ],
+      "tex": "russian/book/chapters/ch04-verbs-of-the-mind.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:cce85948b30a2020",
+      "lessonIds": [
+        "RU-C05-brat",
+        "RU-C05-sprashivat",
+        "RU-C05-pomogat",
+        "RU-C05-lyubit"
+      ],
+      "tex": "russian/book/chapters/ch05-verbs-of-the-hand.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:896543a12c8506d1",
+      "lessonIds": [
+        "RU-C06-voda",
+        "RU-C06-kofe",
+        "RU-C06-chai",
+        "RU-C06-khleb"
+      ],
+      "tex": "russian/book/chapters/ch06-water-coffee-tea-bread.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:53daed5cc988927d",
+      "lessonIds": [
+        "RU-C07-drug",
+        "RU-C07-podruga",
+        "RU-C07-brat",
+        "RU-C07-sestra"
+      ],
+      "tex": "russian/book/chapters/ch07-friend-and-siblings.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:a507b3027bf31936",
+      "lessonIds": [
+        "RU-C08-semya"
+      ],
+      "tex": "russian/book/chapters/ch08-family.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:0f760ae1f9ef22ca",
+      "lessonIds": [
+        "RU-C09-ukho",
+        "RU-C09-nos",
+        "RU-C09-rot",
+        "RU-C09-glaz"
+      ],
+      "tex": "russian/book/chapters/ch09-face-parts.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:6aa8e32cac18bf78",
+      "lessonIds": [
+        "RU-C10-serdtse"
+      ],
+      "tex": "russian/book/chapters/ch10-heart.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:db2e96809a7ffd4b",
+      "lessonIds": [
+        "RU-C11-do-svidaniya",
+        "RU-C11-poka",
+        "RU-C11-do-skorogo",
+        "RU-C11-do-zavtra",
+        "RU-C11-do-vstrechi",
+        "RU-C11-spokoynoy-nochi"
+      ],
+      "tex": "russian/book/chapters/ch11-parting-words.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:3071c43e143a8294",
+      "lessonIds": [
+        "RU-C12-mama",
+        "RU-C12-papa",
+        "RU-C12-mat",
+        "RU-C12-otets"
+      ],
+      "tex": "russian/book/chapters/ch12-mother-and-father.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:75e5bba8e91c4f6e",
+      "lessonIds": [
+        "RU-C13-moloko",
+        "RU-C13-syr",
+        "RU-C13-sok",
+        "RU-C13-sup"
+      ],
+      "tex": "russian/book/chapters/ch13-milk-cheese-juice-soup.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:135dfa0e539af049",
+      "lessonIds": [
+        "RU-W06-u",
+        "RU-W06-z",
+        "RU-W06-k",
+        "RU-W06-l",
+        "RU-W06-m",
+        "RU-W06-y",
+        "RU-W06-zh",
+        "RU-W06-ch",
+        "RU-W06-sh",
+        "RU-W06-soft-sign",
+        "RU-W06-ya"
+      ],
+      "tex": "russian/book/chapters/ch14-script-eleven.tex"
+    },
+    {
+      "language": "russian",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:16aa4ad297a16db0",
+      "lessonIds": [
+        "RU-W07-a",
+        "RU-W07-o",
+        "RU-W07-g",
+        "RU-W07-kh",
+        "RU-W07-f",
+        "RU-W07-ts",
+        "RU-W07-y-short",
+        "RU-W07-yu",
+        "RU-C15-practice"
+      ],
+      "tex": "russian/book/chapters/ch15-script-eight.tex"
+    }
+  ]
+}

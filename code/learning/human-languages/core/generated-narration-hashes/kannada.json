@@ -1,0 +1,1108 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "kannada",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:ab7ba438421d31a2",
+      "lessonIds": [
+        "KA-C01-namaskara",
+        "KA-C01-dhanyavada",
+        "KA-C01-haudu",
+        "KA-C01-illa",
+        "KA-C01-sari",
+        "KA-C01-practice"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch01.txt",
+      "json": "kannada/narration/ch01.json",
+      "textHash": "fnv1a64:e374649df0137a84",
+      "jsonHash": "fnv1a64:449842101e4dd252"
+    },
+    {
+      "language": "kannada",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:804526dd486188eb",
+      "lessonIds": [
+        "KA-C02-hesaru",
+        "KA-C02-nanna",
+        "KA-C02-nanna-hesaru",
+        "KA-C02-niinu-niivu",
+        "KA-C02-enu",
+        "KA-C02-nimma-hesaru-enu",
+        "KA-C02-santosha",
+        "KA-C02-practice"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch02.txt",
+      "json": "kannada/narration/ch02.json",
+      "textHash": "fnv1a64:e8264c7f55794c06",
+      "jsonHash": "fnv1a64:fa20182995c3da21"
+    },
+    {
+      "language": "kannada",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:5e7ea2c74c9eb4eb",
+      "lessonIds": [
+        "KA-C03-hege",
+        "KA-C03-niivu-hegiddiira",
+        "KA-C03-naanu",
+        "KA-C03-cennaagi",
+        "KA-C03-paravaagilla",
+        "KA-C03-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch03.txt",
+      "json": "kannada/narration/ch03.json",
+      "textHash": "fnv1a64:1193ebd2ef13eeea",
+      "jsonHash": "fnv1a64:650a36e23f5c11c2"
+    },
+    {
+      "language": "kannada",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:f03224f356d2cf54",
+      "lessonIds": [
+        "KA-C04-hoogu",
+        "KA-C04-hoogi-baruttene",
+        "KA-C04-naale-sigona",
+        "KA-C04-matte-sigona",
+        "KA-C04-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch04.txt",
+      "json": "kannada/narration/ch04.json",
+      "textHash": "fnv1a64:aff5135c0f709539",
+      "jsonHash": "fnv1a64:324a910f4f97e326"
+    },
+    {
+      "language": "kannada",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:ad2edddfabf3d7a8",
+      "lessonIds": [
+        "KA-C05-maatanaadu",
+        "KA-C05-naanu-kannada-maatanaaduttene",
+        "KA-C05-iru",
+        "KA-C05-kelasa-maadu",
+        "KA-C05-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch05.txt",
+      "json": "kannada/narration/ch05.json",
+      "textHash": "fnv1a64:deb6c20d888297ac",
+      "jsonHash": "fnv1a64:22ffef9706ff4e3c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:74b2dfa28b1756f7",
+      "lessonIds": [
+        "KA-C06-dative-ge",
+        "KA-C06-dative-stacking",
+        "KA-C06-dative-subject",
+        "KA-S01-letter-na",
+        "KA-S110-letter-ba"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch06.txt",
+      "json": "kannada/narration/ch06.json",
+      "textHash": "fnv1a64:91e5c73d564a5bcd",
+      "jsonHash": "fnv1a64:099ca7a4ff4a4437"
+    },
+    {
+      "language": "kannada",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:2295ba513f28ffd2",
+      "lessonIds": [
+        "KA-C07-numbers-1-5",
+        "KA-C07-numbers-6-10",
+        "KA-S02-vowel-sign-u",
+        "KA-S111-vowel-sign-e"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch07.txt",
+      "json": "kannada/narration/ch07.json",
+      "textHash": "fnv1a64:648be8799b5b74f7",
+      "jsonHash": "fnv1a64:c86f9a35a12c62c5"
+    },
+    {
+      "language": "kannada",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:99419a39cad07f86",
+      "lessonIds": [
+        "KA-C08-dayavittu",
+        "KA-S03-sign-virama",
+        "KA-S112-letter-ga"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch08.txt",
+      "json": "kannada/narration/ch08.json",
+      "textHash": "fnv1a64:673c49d5e01ec731",
+      "jsonHash": "fnv1a64:a8b86c9246381390"
+    },
+    {
+      "language": "kannada",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:153be3bf12dc9139",
+      "lessonIds": [
+        "KA-C09-kshamisi",
+        "KA-S04-vowel-sign-i",
+        "KA-S113-letter-lla"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch09.txt",
+      "json": "kannada/narration/ch09.json",
+      "textHash": "fnv1a64:1e02493cffbf8c9f",
+      "jsonHash": "fnv1a64:db3e148e1efa5154"
+    },
+    {
+      "language": "kannada",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:4a5f921ff407d8b5",
+      "lessonIds": [
+        "KA-C10-vaara",
+        "KA-S05-letter-ta",
+        "KA-S114-vowel-sign-o"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch10.txt",
+      "json": "kannada/narration/ch10.json",
+      "textHash": "fnv1a64:dd453abd44a3d50c",
+      "jsonHash": "fnv1a64:91d94b75e0180438"
+    },
+    {
+      "language": "kannada",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:e5777d9e702977c7",
+      "lessonIds": [
+        "KA-C11-bannagalu",
+        "KA-S06-letter-da",
+        "KA-S115-letter-i"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch11.txt",
+      "json": "kannada/narration/ch11.json",
+      "textHash": "fnv1a64:c83bda80b8ea2ad1",
+      "jsonHash": "fnv1a64:b9f3284104472cfb"
+    },
+    {
+      "language": "kannada",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:82125d8352849412",
+      "lessonIds": [
+        "KA-C12-kutumba",
+        "KA-S07-letter-ra",
+        "KA-S116-letter-ka"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch12.txt",
+      "json": "kannada/narration/ch12.json",
+      "textHash": "fnv1a64:727e48cecff9c40b",
+      "jsonHash": "fnv1a64:75cd6543a16288f8"
+    },
+    {
+      "language": "kannada",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:87a6fb4bed0f386e",
+      "lessonIds": [
+        "KA-C13-dehada-bhagagalu",
+        "KA-S08-vowel-sign-aa",
+        "KA-S117-letter-ya"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch13.txt",
+      "json": "kannada/narration/ch13.json",
+      "textHash": "fnv1a64:9790837b1452b5fe",
+      "jsonHash": "fnv1a64:e69eea2bc0513139"
+    },
+    {
+      "language": "kannada",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:c28ea535774a9c81",
+      "lessonIds": [
+        "KA-C14-kaalagalu",
+        "KA-S118-letter-dda"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch14.txt",
+      "json": "kannada/narration/ch14.json",
+      "textHash": "fnv1a64:287c5fe1ce5a759c",
+      "jsonHash": "fnv1a64:cb76b28c6824e534"
+    },
+    {
+      "language": "kannada",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:b0a7f35ee94d39f7",
+      "lessonIds": [
+        "KA-C15-niiru-akki",
+        "KA-S119-vowel-sign-oo"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch15.txt",
+      "json": "kannada/narration/ch15.json",
+      "textHash": "fnv1a64:1897842c972abcd2",
+      "jsonHash": "fnv1a64:036ff8c47c92a1a9"
+    },
+    {
+      "language": "kannada",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:e50f384a56a6d24d",
+      "lessonIds": [
+        "KA-C16-tingalugalu",
+        "KA-S120-letter-ha"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch16.txt",
+      "json": "kannada/narration/ch16.json",
+      "textHash": "fnv1a64:a1d695ecce078cdb",
+      "jsonHash": "fnv1a64:57937e102c353222"
+    },
+    {
+      "language": "kannada",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:cef66874854331e1",
+      "lessonIds": [
+        "KA-C17-madhyaahna-madhyaraatri",
+        "KA-S121-letter-sa"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch17.txt",
+      "json": "kannada/narration/ch17.json",
+      "textHash": "fnv1a64:66bf3c56c7decbe1",
+      "jsonHash": "fnv1a64:a11d1e94cf0ced31"
+    },
+    {
+      "language": "kannada",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:4f255850c2b4e0fb",
+      "lessonIds": [
+        "KA-C18-gante",
+        "KA-S122-letter-ca"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch18.txt",
+      "json": "kannada/narration/ch18.json",
+      "textHash": "fnv1a64:1e928a5cafc982d4",
+      "jsonHash": "fnv1a64:49774b95ccd7c46c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:0417b8f99dcd2a1f",
+      "lessonIds": [
+        "KA-C19-vayassu",
+        "KA-S123-sign-anusvara"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch19.txt",
+      "json": "kannada/narration/ch19.json",
+      "textHash": "fnv1a64:2bf1a3d9e277eba0",
+      "jsonHash": "fnv1a64:fa5fc42c171f8b60"
+    },
+    {
+      "language": "kannada",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:12f92fc1da647044",
+      "lessonIds": [
+        "KA-C20-hannondu-ippattu",
+        "KA-C20-havamana",
+        "KA-S124-letter-pa"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "kannada/narration/ch20.txt",
+      "json": "kannada/narration/ch20.json",
+      "textHash": "fnv1a64:28f48c7408d5458e",
+      "jsonHash": "fnv1a64:c1f6e05c6d0db0a8"
+    },
+    {
+      "language": "kannada",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:2b839b98fc94504a",
+      "lessonIds": [
+        "KA-C21-naayi-bekku"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch21.txt",
+      "json": "kannada/narration/ch21.json",
+      "textHash": "fnv1a64:f3e95b05c05e2195",
+      "jsonHash": "fnv1a64:fe3a32aa63e52166"
+    },
+    {
+      "language": "kannada",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:f276e8f0a008ab8b",
+      "lessonIds": [
+        "KA-C22-hasiru-haladi"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch22.txt",
+      "json": "kannada/narration/ch22.json",
+      "textHash": "fnv1a64:dce2aaca8b20ed09",
+      "jsonHash": "fnv1a64:158f0427f2806565"
+    },
+    {
+      "language": "kannada",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:8430eacd3df5139f",
+      "lessonIds": [
+        "KA-C23-dina"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch23.txt",
+      "json": "kannada/narration/ch23.json",
+      "textHash": "fnv1a64:4a0ffac21d9cc656",
+      "jsonHash": "fnv1a64:45281ba3f3d6398e"
+    },
+    {
+      "language": "kannada",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:cfffb9a83bfad045",
+      "lessonIds": [
+        "KA-C24-ratri"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch24.txt",
+      "json": "kannada/narration/ch24.json",
+      "textHash": "fnv1a64:e116dae1c9934d65",
+      "jsonHash": "fnv1a64:18a07d152f0ee12c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:81113a2a23489289",
+      "lessonIds": [
+        "KA-C25-shubha-ratri"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch25.txt",
+      "json": "kannada/narration/ch25.json",
+      "textHash": "fnv1a64:eb7690dc69d12f68",
+      "jsonHash": "fnv1a64:f6c2e71a172b9890"
+    },
+    {
+      "language": "kannada",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:dbb1413f5df139c0",
+      "lessonIds": [
+        "KA-C26-belagge"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch26.txt",
+      "json": "kannada/narration/ch26.json",
+      "textHash": "fnv1a64:461b0f60bf36f1e7",
+      "jsonHash": "fnv1a64:77e908bf9413c2f3"
+    },
+    {
+      "language": "kannada",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:c09f7860a5c9b52d",
+      "lessonIds": [
+        "KA-C27-sanje"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch27.txt",
+      "json": "kannada/narration/ch27.json",
+      "textHash": "fnv1a64:1fc9bc123b4dc95d",
+      "jsonHash": "fnv1a64:f934bdf9b10c50de"
+    },
+    {
+      "language": "kannada",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:e5dbf3de0891bc7d",
+      "lessonIds": [
+        "KA-C28-aparahna"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch28.txt",
+      "json": "kannada/narration/ch28.json",
+      "textHash": "fnv1a64:778e572752b543b5",
+      "jsonHash": "fnv1a64:548cfeef9dfe231d"
+    },
+    {
+      "language": "kannada",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:15f25395e06855d8",
+      "lessonIds": [
+        "KA-C29-shubhodaya"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch29.txt",
+      "json": "kannada/narration/ch29.json",
+      "textHash": "fnv1a64:8f3ea45796a475a1",
+      "jsonHash": "fnv1a64:63056f6fe7d518f1"
+    },
+    {
+      "language": "kannada",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:3e567be5037739b3",
+      "lessonIds": [
+        "KA-C30-shubha-sanje"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch30.txt",
+      "json": "kannada/narration/ch30.json",
+      "textHash": "fnv1a64:998df1514749526e",
+      "jsonHash": "fnv1a64:25cb2e7c77806bc3"
+    },
+    {
+      "language": "kannada",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:55413f7e93660d6a",
+      "lessonIds": [
+        "KA-C31-shubha-madhyahna"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch31.txt",
+      "json": "kannada/narration/ch31.json",
+      "textHash": "fnv1a64:0e5febfbe3bcb408",
+      "jsonHash": "fnv1a64:070d1d3d81a1b359"
+    },
+    {
+      "language": "kannada",
+      "chapter": 32,
+      "sourceHash": "fnv1a64:2c308c4cc3cdd31a",
+      "lessonIds": [
+        "KA-C32-iru",
+        "KA-C32-hoogu",
+        "KA-C32-baa",
+        "KA-C32-tinnu",
+        "KA-C32-noodu",
+        "KA-C32-gottu"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "kannada/narration/ch32.txt",
+      "json": "kannada/narration/ch32.json",
+      "textHash": "fnv1a64:f50bf1cf674b2725",
+      "jsonHash": "fnv1a64:950214a506c25e67"
+    },
+    {
+      "language": "kannada",
+      "chapter": 33,
+      "sourceHash": "fnv1a64:d64825d81777f48f",
+      "lessonIds": [
+        "KA-C33-yocisu",
+        "KA-C33-artha-maadiko",
+        "KA-C33-oodu",
+        "KA-C33-bare"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch33.txt",
+      "json": "kannada/narration/ch33.json",
+      "textHash": "fnv1a64:41bdfc6bacaa1735",
+      "jsonHash": "fnv1a64:74ac8a3121b49b6c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 34,
+      "sourceHash": "fnv1a64:b5119a84010e759f",
+      "lessonIds": [
+        "KA-C34-tegeduko",
+        "KA-C34-keelu",
+        "KA-C34-sahaya-maadu",
+        "KA-C34-ishta",
+        "KA-S125-letter-oo"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch34.txt",
+      "json": "kannada/narration/ch34.json",
+      "textHash": "fnv1a64:bd9cd2c99c745828",
+      "jsonHash": "fnv1a64:dfd09abd392f11ae"
+    },
+    {
+      "language": "kannada",
+      "chapter": 35,
+      "sourceHash": "fnv1a64:cf4d737163378ab5",
+      "lessonIds": [
+        "KA-C35-kutumba",
+        "KA-C35-snehita"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "kannada/narration/ch35.txt",
+      "json": "kannada/narration/ch35.json",
+      "textHash": "fnv1a64:2c89f727d977e1c7",
+      "jsonHash": "fnv1a64:b8a990c9b5846109"
+    },
+    {
+      "language": "kannada",
+      "chapter": 36,
+      "sourceHash": "fnv1a64:a9f129f06c399190",
+      "lessonIds": [
+        "KA-C36-magu",
+        "KA-C36-maga",
+        "KA-C36-magalu"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "kannada/narration/ch36.txt",
+      "json": "kannada/narration/ch36.json",
+      "textHash": "fnv1a64:f6409a1a9af81048",
+      "jsonHash": "fnv1a64:5ca4a96f0d8d5df0"
+    },
+    {
+      "language": "kannada",
+      "chapter": 37,
+      "sourceHash": "fnv1a64:1d2b959adaf95179",
+      "lessonIds": [
+        "KA-C37-kannu",
+        "KA-C37-kivi",
+        "KA-C37-moogu",
+        "KA-C37-baayi"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch37.txt",
+      "json": "kannada/narration/ch37.json",
+      "textHash": "fnv1a64:21b5ad2e420b2aba",
+      "jsonHash": "fnv1a64:8abbe186475a86f6"
+    },
+    {
+      "language": "kannada",
+      "chapter": 38,
+      "sourceHash": "fnv1a64:4ba27be46237587f",
+      "lessonIds": [
+        "KA-C38-hrudaya"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch38.txt",
+      "json": "kannada/narration/ch38.json",
+      "textHash": "fnv1a64:80865df50127c960",
+      "jsonHash": "fnv1a64:df94268c76682c6b"
+    },
+    {
+      "language": "kannada",
+      "chapter": 39,
+      "sourceHash": "fnv1a64:1a5c7b9b093bef67",
+      "lessonIds": [
+        "KA-C39-chaha",
+        "KA-C39-kaapi",
+        "KA-C39-haalu"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "kannada/narration/ch39.txt",
+      "json": "kannada/narration/ch39.json",
+      "textHash": "fnv1a64:576de22964d0d780",
+      "jsonHash": "fnv1a64:94703e0ebfeaeaea"
+    },
+    {
+      "language": "kannada",
+      "chapter": 40,
+      "sourceHash": "fnv1a64:792ebe28ac67d5bb",
+      "lessonIds": [
+        "KA-C40-oota"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "kannada/narration/ch40.txt",
+      "json": "kannada/narration/ch40.json",
+      "textHash": "fnv1a64:461f363042c461c0",
+      "jsonHash": "fnv1a64:cec391d462dc97d9"
+    },
+    {
+      "language": "kannada",
+      "chapter": 41,
+      "sourceHash": "fnv1a64:1d603d69882cd3bd",
+      "lessonIds": [
+        "KA-C41-this",
+        "KA-C41-that",
+        "KA-C41-here",
+        "KA-C41-there",
+        "KA-C41-who",
+        "KA-C41-where",
+        "KA-C41-deixis-system"
+      ],
+      "voiceLessons": 7,
+      "drivablePrefix": 7,
+      "text": "kannada/narration/ch41.txt",
+      "json": "kannada/narration/ch41.json",
+      "textHash": "fnv1a64:3f8705a89aa458a6",
+      "jsonHash": "fnv1a64:0aae170e0d371f47"
+    },
+    {
+      "language": "kannada",
+      "chapter": 42,
+      "sourceHash": "fnv1a64:4e30e5b75b79b180",
+      "lessonIds": [
+        "KA-C42-big",
+        "KA-C42-small",
+        "KA-C42-good",
+        "KA-C42-new",
+        "KA-C42-old",
+        "KA-C42-adjective-system"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "kannada/narration/ch42.txt",
+      "json": "kannada/narration/ch42.json",
+      "textHash": "fnv1a64:1d3336bb6f8d0025",
+      "jsonHash": "fnv1a64:b4f05ca35fd2e130"
+    },
+    {
+      "language": "kannada",
+      "chapter": 43,
+      "sourceHash": "fnv1a64:6a2f6cb5132d84c8",
+      "lessonIds": [
+        "KA-C43-come",
+        "KA-C43-sit",
+        "KA-C43-stand",
+        "KA-C43-give"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch43.txt",
+      "json": "kannada/narration/ch43.json",
+      "textHash": "fnv1a64:75a7d6816d4f7380",
+      "jsonHash": "fnv1a64:f77683c4198aa7bf"
+    },
+    {
+      "language": "kannada",
+      "chapter": 44,
+      "sourceHash": "fnv1a64:05dceaf27326c18f",
+      "lessonIds": [
+        "KA-C44-look",
+        "KA-C44-listen",
+        "KA-C44-speak",
+        "KA-C44-write"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch44.txt",
+      "json": "kannada/narration/ch44.json",
+      "textHash": "fnv1a64:d4505a971fd936b2",
+      "jsonHash": "fnv1a64:90e261c19f781be7"
+    },
+    {
+      "language": "kannada",
+      "chapter": 45,
+      "sourceHash": "fnv1a64:2d62fb1f0478ffb4",
+      "lessonIds": [
+        "KA-C45-grandfather",
+        "KA-C45-grandmother",
+        "KA-C45-husband",
+        "KA-C45-wife"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch45.txt",
+      "json": "kannada/narration/ch45.json",
+      "textHash": "fnv1a64:9a1195191c84821e",
+      "jsonHash": "fnv1a64:551bf53fdf576e8e"
+    },
+    {
+      "language": "kannada",
+      "chapter": 46,
+      "sourceHash": "fnv1a64:38f58df481aeaec5",
+      "lessonIds": [
+        "KA-C46-fruit",
+        "KA-C46-cloth",
+        "KA-C46-lamp",
+        "KA-C46-salt",
+        "KA-C46-book"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "kannada/narration/ch46.txt",
+      "json": "kannada/narration/ch46.json",
+      "textHash": "fnv1a64:7c74708e1d3f7ded",
+      "jsonHash": "fnv1a64:50e8a7d7d5c27e5e"
+    },
+    {
+      "language": "kannada",
+      "chapter": 47,
+      "sourceHash": "fnv1a64:c58e8e1da40d31c4",
+      "lessonIds": [
+        "KA-C47-leg",
+        "KA-C47-tooth",
+        "KA-C47-hair",
+        "KA-C47-finger",
+        "KA-C47-stomach"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 2,
+      "text": "kannada/narration/ch47.txt",
+      "json": "kannada/narration/ch47.json",
+      "textHash": "fnv1a64:55f7514808121ba9",
+      "jsonHash": "fnv1a64:19d3f3b274030a63"
+    },
+    {
+      "language": "kannada",
+      "chapter": 48,
+      "sourceHash": "fnv1a64:0ffde59b78e8c7ab",
+      "lessonIds": [
+        "KA-C48-teacher",
+        "KA-C48-student",
+        "KA-C48-doctor",
+        "KA-C48-farmer",
+        "KA-C48-guest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch48.txt",
+      "json": "kannada/narration/ch48.json",
+      "textHash": "fnv1a64:b5f47bfe11ac87d1",
+      "jsonHash": "fnv1a64:47c971c6b1722d41"
+    },
+    {
+      "language": "kannada",
+      "chapter": 49,
+      "sourceHash": "fnv1a64:b3fd0578054eb63c",
+      "lessonIds": [
+        "KA-C49-true",
+        "KA-C49-enough",
+        "KA-C49-certainly",
+        "KA-C49-perhaps",
+        "KA-C49-just-so"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch49.txt",
+      "json": "kannada/narration/ch49.json",
+      "textHash": "fnv1a64:2ee5f7dd57aafbfa",
+      "jsonHash": "fnv1a64:7e94b881b93e842e"
+    },
+    {
+      "language": "kannada",
+      "chapter": 50,
+      "sourceHash": "fnv1a64:d47d05e11d6581aa",
+      "lessonIds": [
+        "KA-C50-now",
+        "KA-C50-day-after",
+        "KA-C50-journey",
+        "KA-C50-set-out",
+        "KA-C50-farewell"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch50.txt",
+      "json": "kannada/narration/ch50.json",
+      "textHash": "fnv1a64:7682cee09871cab9",
+      "jsonHash": "fnv1a64:92c5137f25e1eaa1"
+    },
+    {
+      "language": "kannada",
+      "chapter": 51,
+      "sourceHash": "fnv1a64:6f571ea38872481e",
+      "lessonIds": [
+        "KA-C51-gratitude",
+        "KA-C51-favour",
+        "KA-C51-respect",
+        "KA-C51-blessing",
+        "KA-C51-salutation"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch51.txt",
+      "json": "kannada/narration/ch51.json",
+      "textHash": "fnv1a64:e57d882196cdc6e7",
+      "jsonHash": "fnv1a64:d0cd619549e5446b"
+    },
+    {
+      "language": "kannada",
+      "chapter": 52,
+      "sourceHash": "fnv1a64:56ad40831f48d2aa",
+      "lessonIds": [
+        "KA-C52-door",
+        "KA-C52-chair",
+        "KA-C52-rangoli",
+        "KA-C52-flower",
+        "KA-C52-garland"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch52.txt",
+      "json": "kannada/narration/ch52.json",
+      "textHash": "fnv1a64:72ecd5fad4e7e2b0",
+      "jsonHash": "fnv1a64:11f29c3d3aee3da7"
+    },
+    {
+      "language": "kannada",
+      "chapter": 53,
+      "sourceHash": "fnv1a64:4509a64f9341bcc0",
+      "lessonIds": [
+        "KA-C53-sky",
+        "KA-C53-sunshine",
+        "KA-C53-moon",
+        "KA-C53-star",
+        "KA-C53-cloud"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch53.txt",
+      "json": "kannada/narration/ch53.json",
+      "textHash": "fnv1a64:b841aefe185e72e5",
+      "jsonHash": "fnv1a64:1fd5595b3d255719"
+    },
+    {
+      "language": "kannada",
+      "chapter": 54,
+      "sourceHash": "fnv1a64:817313e9f3d74cfa",
+      "lessonIds": [
+        "KA-C54-tree",
+        "KA-C54-branch",
+        "KA-C54-leaf",
+        "KA-C54-root",
+        "KA-C54-seed"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch54.txt",
+      "json": "kannada/narration/ch54.json",
+      "textHash": "fnv1a64:26ef05dddd652c04",
+      "jsonHash": "fnv1a64:fb58d26c57e7c05b"
+    },
+    {
+      "language": "kannada",
+      "chapter": 55,
+      "sourceHash": "fnv1a64:11754f9ff606df3c",
+      "lessonIds": [
+        "KA-C55-river",
+        "KA-C55-tank",
+        "KA-C55-hill",
+        "KA-C55-village",
+        "KA-C55-path"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch55.txt",
+      "json": "kannada/narration/ch55.json",
+      "textHash": "fnv1a64:49d5c2d52583047a",
+      "jsonHash": "fnv1a64:cad589118c0e7548"
+    },
+    {
+      "language": "kannada",
+      "chapter": 56,
+      "sourceHash": "fnv1a64:d2ebe18a18d878e5",
+      "lessonIds": [
+        "KA-C56-mat",
+        "KA-C56-basket",
+        "KA-C56-knife",
+        "KA-C56-vessel",
+        "KA-C56-box"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch56.txt",
+      "json": "kannada/narration/ch56.json",
+      "textHash": "fnv1a64:39d5a5c52ec8d7ca",
+      "jsonHash": "fnv1a64:aac63c8c851e4efa"
+    },
+    {
+      "language": "kannada",
+      "chapter": 57,
+      "sourceHash": "fnv1a64:1a2fac7d7aeba08f",
+      "lessonIds": [
+        "KA-C57-neck",
+        "KA-C57-back",
+        "KA-C57-lip",
+        "KA-C57-shoulder",
+        "KA-C57-bone"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch57.txt",
+      "json": "kannada/narration/ch57.json",
+      "textHash": "fnv1a64:4e0f5440783ba22c",
+      "jsonHash": "fnv1a64:c07f066637c0ad2c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 58,
+      "sourceHash": "fnv1a64:f4d06368f5e12f11",
+      "lessonIds": [
+        "KA-C58-a-little",
+        "KA-C58-more",
+        "KA-C58-less",
+        "KA-C58-no-thanks",
+        "KA-C58-thats-all"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch58.txt",
+      "json": "kannada/narration/ch58.json",
+      "textHash": "fnv1a64:20462c08b05cc7cb",
+      "jsonHash": "fnv1a64:039affae8c448f6c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 59,
+      "sourceHash": "fnv1a64:c925d7853eea9a9e",
+      "lessonIds": [
+        "KA-C59-wind",
+        "KA-C59-mist",
+        "KA-C59-sand",
+        "KA-C59-mud",
+        "KA-C59-fire"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch59.txt",
+      "json": "kannada/narration/ch59.json",
+      "textHash": "fnv1a64:8dde34ec46378a21",
+      "jsonHash": "fnv1a64:c71c82091750e38c"
+    },
+    {
+      "language": "kannada",
+      "chapter": 60,
+      "sourceHash": "fnv1a64:359b8870dcbb0314",
+      "lessonIds": [
+        "KA-C60-cow",
+        "KA-C60-goat",
+        "KA-C60-hen",
+        "KA-C60-crow",
+        "KA-C60-bird"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch60.txt",
+      "json": "kannada/narration/ch60.json",
+      "textHash": "fnv1a64:4bea8e9e97d3587d",
+      "jsonHash": "fnv1a64:af20786456c7e168"
+    },
+    {
+      "language": "kannada",
+      "chapter": 61,
+      "sourceHash": "fnv1a64:2b99b6040e01c707",
+      "lessonIds": [
+        "KA-C61-curd",
+        "KA-C61-ghee",
+        "KA-C61-oil",
+        "KA-C61-jaggery",
+        "KA-C61-sugar"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch61.txt",
+      "json": "kannada/narration/ch61.json",
+      "textHash": "fnv1a64:baab146f054c4e56",
+      "jsonHash": "fnv1a64:59e8d8083913b10f"
+    },
+    {
+      "language": "kannada",
+      "chapter": 62,
+      "sourceHash": "fnv1a64:ed2c11072cb1e8d8",
+      "lessonIds": [
+        "KA-C62-thread",
+        "KA-C62-needle",
+        "KA-C62-rope",
+        "KA-C62-broom",
+        "KA-C62-umbrella"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch62.txt",
+      "json": "kannada/narration/ch62.json",
+      "textHash": "fnv1a64:d9021fd5aedfa506",
+      "jsonHash": "fnv1a64:a3cf72339a1b41ee"
+    },
+    {
+      "language": "kannada",
+      "chapter": 63,
+      "sourceHash": "fnv1a64:ba827695e2beb87a",
+      "lessonIds": [
+        "KA-C63-hunger",
+        "KA-C63-sleep",
+        "KA-C63-fever",
+        "KA-C63-pain",
+        "KA-C63-health"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch63.txt",
+      "json": "kannada/narration/ch63.json",
+      "textHash": "fnv1a64:5568f231ca170d10",
+      "jsonHash": "fnv1a64:c4d99810dd5caf72"
+    },
+    {
+      "language": "kannada",
+      "chapter": 64,
+      "sourceHash": "fnv1a64:dfd1cafce09fbe7c",
+      "lessonIds": [
+        "KA-C64-after",
+        "KA-C64-also",
+        "KA-C64-still",
+        "KA-C64-soon",
+        "KA-C64-in-that-case"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch64.txt",
+      "json": "kannada/narration/ch64.json",
+      "textHash": "fnv1a64:e13c4e29e8644b56",
+      "jsonHash": "fnv1a64:fe0dc98362104587"
+    },
+    {
+      "language": "kannada",
+      "chapter": 65,
+      "sourceHash": "fnv1a64:f4afe4d129b0d584",
+      "lessonIds": [
+        "KA-C65-request",
+        "KA-C65-permission",
+        "KA-C65-hesitancy",
+        "KA-C65-trust",
+        "KA-C65-manners"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch65.txt",
+      "json": "kannada/narration/ch65.json",
+      "textHash": "fnv1a64:60e2eeccffa98717",
+      "jsonHash": "fnv1a64:57cacc279dbfdca7"
+    },
+    {
+      "language": "kannada",
+      "chapter": 66,
+      "sourceHash": "fnv1a64:cae668c73bf557db",
+      "lessonIds": [
+        "KA-C66-field",
+        "KA-C66-grass",
+        "KA-C66-paddy",
+        "KA-C66-crop",
+        "KA-C66-harvest"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "kannada/narration/ch66.txt",
+      "json": "kannada/narration/ch66.json",
+      "textHash": "fnv1a64:6e00b34938bc5169",
+      "jsonHash": "fnv1a64:fd07329b5ec6cb49"
+    }
+  ],
+  "findings": []
+}

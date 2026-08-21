@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "marwadi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:20fbd7ec23e5601d",
+      "lessonIds": [
+        "MW-W01-ra",
+        "MW-W01-aa-matra",
+        "MW-W01-raam",
+        "MW-W01-sa",
+        "MW-W01-saa",
+        "MW-C01-raam-raam-saa",
+        "MW-C01-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch01-ram-ram-sa.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:e88908db8b506bb6",
+      "lessonIds": [
+        "MW-W02-aa-independent",
+        "MW-W02-bha",
+        "MW-C02-aabhaar",
+        "MW-C02-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch02-aabhaar.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:9cbafdaf8f3ee95e",
+      "lessonIds": [
+        "MW-W03-ha",
+        "MW-W03-anusvara",
+        "MW-C03-haan-saa",
+        "MW-C03-listen-say",
+        "MW-C03-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch03-haan-saa.tex"
+    }
+  ]
+}

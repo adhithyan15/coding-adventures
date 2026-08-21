@@ -106,7 +106,7 @@ describe("canonical book generator filesystem shell", () => {
 
     expect(runBookGeneration(["--write"], root)).toBe(0);
     const chapter = join(root, "test", "book", "chapters", "ch01-first.tex");
-    const manifest = join(root, "core", "generated-book-hashes.json");
+    const manifest = join(root, "core", "generated-book-hashes", "test.json");
     const modalities = join(root, "test", "book", "chapter-modalities.tex");
     expect(existsSync(chapter)).toBe(true);
     expect(existsSync(modalities)).toBe(true);
