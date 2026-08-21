@@ -4890,6 +4890,31 @@ Live audits across 23 open PRs and 20 unowned remote branches find no overlap
 on the compression packages, parity state, or roadmap. The broader uv
 idempotence audit remains pending for classification of the 17 other fronts.
 
+### Python Huffman compression BUILD-front implementation and validation
+
+The canonical and Windows recipes for Huffman Tree, Brotli, Deflate, and
+Huffman Compression now pin Python 3.13 while preserving `--clear`, exact
+repository-local prerequisite order, editable development installation, and
+their existing pytest gate. A focused repository regression pins all eight
+complete recipes and passes alongside the heap reference regression.
+
+Exact Windows fronts run on Python 3.13.14 and pass Huffman Tree's 36 tests at
+98.62% coverage, Brotli's 75 at 97.70%, Deflate's 20 at 98.14%, and Huffman
+Compression's 35 at 97.44%. The Go build tool passes tests, vet, and trimpath
+compilation. Its exact Windows diff plan evaluates 45 Starlark files,
+discovers 494 Python packages, selects four changed and six affected nodes,
+and a real run builds heap, LZSS, Huffman Tree, Brotli, Deflate, and Huffman
+Compression with 488 skipped. No `UV_PYTHON` override is required.
+
+Parity reporter and capability taxonomy suites pass 10 and 7 tests. After a
+clean rebase on unrelated Arabic human-language main
+`3184faf422a6e3a8181d021e98bf169c04bd2d05`, the schema-3 inventory remains
+15 lanes, 1,368 identities, and 4,561 slots with zero collisions or unknown
+buckets. The 415-item state graph is unique, dependency-complete, and acyclic.
+Diff, dependency, credential, and production-authority scans are clean; this
+tranche changes no production source, dependency metadata, capability
+manifest, or privileged boundary.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.

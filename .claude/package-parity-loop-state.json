@@ -13,7 +13,7 @@
   },
   "active_pr": null,
   "last_inventory": {
-    "revision": "4b36ac52276feb29355065e86ea0121e0b731c52",
+    "revision": "3184faf422a6e3a8181d021e98bf169c04bd2d05",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
@@ -4228,7 +4228,9 @@
       "branch": "codex/python-huffman-compression-build-front-python313",
       "pr_number": null,
       "selection_revision": "4b36ac52276feb29355065e86ea0121e0b731c52",
+      "implementation_revision": "2c8d448d06f24d2522410dd206bf708de75f3b5d",
       "selection_notes": "Selected immediately after Python heap PR #12425 completed all 30 checks and merged through the requested auto-merge path. The post-merge collision inventory remains 15 established lanes, 1,368 canonical identities, and 4,561 implementation slots with zero collisions and zero unknown buckets; the sole later Portuguese human-language commit modifies existing roots only. The heap validation reproduced a clean standalone failure in the direct compression closure: huffman-tree selected Python 3.10 despite declaring Python >=3.12 and could not install the repaired heap, while Brotli, Deflate, and Huffman Compression share the same unpinned front pattern. All four Windows fronts pass only when UV_PYTHON=3.13 is supplied externally, so pinning their canonical and Windows recipes is the smallest dependency-shaped repair. Live audits across 23 open PRs and 20 no-PR remotes find no state, roadmap, or Python compression overlap; the target branch and prior PR are absent. The broader uv idempotence audit remains pending for later classification.",
+      "validation_notes": "Both canonical and Windows front doors now pin Python 3.13 while preserving --clear, repository-local prerequisite order, editable development installation, and the existing pytest gate. A repository regression pins all eight complete recipes and passes alongside the heap reference regression (4 tests total). Exact Windows fronts run under Python 3.13.14 and pass Huffman Tree 36 tests at 98.62% coverage, Brotli 75 at 97.70%, Deflate 20 at 98.14%, and Huffman Compression 35 at 97.44%; the Go build-tool execution repeats those fronts after their direct runs, proving the recipes remain clean with an existing .venv. The Go build tool passes all tests, vet, and trimpath build. Its exact Windows diff plan evaluates 45 Starlark files, discovers 494 Python packages, selects four changed and six affected nodes, and a real run builds heap, lzss, huffman-tree, Brotli, Deflate, and Huffman Compression with 488 skipped and no UV_PYTHON override. Parity reporter and capability taxonomy suites pass 10 and 7 tests. The schema-3 inventory at rebased main 3184faf422 remains 15 lanes, 1,368 identities, and 4,561 slots with zero collisions or unknown buckets; state is unique, dependency-complete, and acyclic across 415 items. Diff, credential, dependency, and production-authority scans are clean; the tranche changes no production source, dependency metadata, capability manifest, or privileged boundary.",
       "notes": "Discovered while validating the selected heap repair against its direct dependent. On a clean Windows checkout, huffman-tree's standalone BUILD_windows creates Python 3.10 despite requiring Python >=3.12, then cannot install the repaired heap package; brotli, deflate, huffman-compression, and related affected compression fronts share the unpinned uv pattern. Audit the exact dependency-shaped closure and pin 3.13 in a separate tranche. Current heap validation may set UV_PYTHON=3.13 only for these pre-existing downstream fronts and must report that distinction explicitly."
     },
     {
