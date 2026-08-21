@@ -7,17 +7,17 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:e0cdd04ce231169b",
+  "sourceHash": "fnv1a64:b18361b6781c6db4",
   "summary": {
-    "totalLessons": 16,
-    "voice": 5,
+    "totalLessons": 22,
+    "voice": 7,
     "sight": 0,
-    "pen": 11,
-    "drivableLessons": 5,
-    "drivablePercent": 31,
+    "pen": 15,
+    "drivableLessons": 7,
+    "drivablePercent": 32,
     "trackCount": 1,
-    "chapterCount": 3,
-    "drivablePrefixTotal": 0,
+    "chapterCount": 4,
+    "drivablePrefixTotal": 1,
     "fullyDrivableChapters": 0,
     "unstartableChapters": 3,
     "overriddenLessons": 0,
@@ -26,12 +26,12 @@
   "tracks": [
     {
       "language": "marwadi",
-      "lessonCount": 16,
-      "voice": 5,
+      "lessonCount": 22,
+      "voice": 7,
       "sight": 0,
-      "pen": 11,
-      "drivablePercent": 31,
-      "drivablePrefixTotal": 0,
+      "pen": 15,
+      "drivablePercent": 32,
+      "drivablePrefixTotal": 1,
       "modalities": [
         "voice",
         "sight",
@@ -85,6 +85,24 @@
           "firstNonVoiceLesson": "MW-W03-ha",
           "drivable": false,
           "drivableLessonIds": []
+        },
+        {
+          "chapter": 4,
+          "lessonCount": 6,
+          "voice": 2,
+          "sight": 0,
+          "pen": 4,
+          "modalities": [
+            "voice",
+            "sight",
+            "pen"
+          ],
+          "drivablePrefix": 1,
+          "firstNonVoiceLesson": "MW-W04-pa",
+          "drivable": false,
+          "drivableLessonIds": [
+            "MW-C04-hear-paani"
+          ]
         }
       ]
     }
@@ -448,6 +466,141 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:83c3d94261a645d9"
+    },
+    {
+      "id": "MW-C04-hear-paani",
+      "language": "marwadi",
+      "chapter": 4,
+      "sequence": 170,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:aaccc85dd1586ef0"
+    },
+    {
+      "id": "MW-W04-pa",
+      "language": "marwadi",
+      "chapter": 4,
+      "sequence": 180,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:1a062d35651bf9ed",
+      "detachableSegments": [
+        "Script — one new consonant",
+        "Writing — observe, trace, copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-W04-nna",
+      "language": "marwadi",
+      "chapter": 4,
+      "sequence": 190,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:20444a4aaebcd2a7",
+      "detachableSegments": [
+        "Script — one new consonant",
+        "Writing — observe, trace, copy"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-W04-ii-matra",
+      "language": "marwadi",
+      "chapter": 4,
+      "sequence": 200,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:7c6e12bac8c4fd11",
+      "detachableSegments": [
+        "Script — one new vowel mark",
+        "Writing — attach only the mark"
+      ],
+      "delivery": "script"
+    },
+    {
+      "id": "MW-C04-paani",
+      "language": "marwadi",
+      "chapter": 4,
+      "sequence": 210,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-block"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:dccdb7fa2a7dc1c4",
+      "detachableSegments": [
+        "Writing — guided, then delayed"
+      ]
+    },
+    {
+      "id": "MW-C04-practice",
+      "language": "marwadi",
+      "chapter": 4,
+      "sequence": 220,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:6170378362027045"
     }
   ],
   "findings": []

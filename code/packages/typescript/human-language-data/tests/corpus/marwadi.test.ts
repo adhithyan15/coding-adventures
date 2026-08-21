@@ -27,13 +27,18 @@ it("pins Marwadi's complete pre-A1 writing ramp", () => {
     "guided-copy",
     "delayed-copy",
     "dictation-transcription",
+    "observe-trace",
+    "observe-trace",
+    "guided-copy",
+    "delayed-copy",
+    "dictation-transcription",
   ]);
 });
 
 it("pins Marwadi-owned chapters and objective activities", () => {
   const lessons = loadTrackLessons("marwadi");
   expect(new Set(lessons.map((lesson) => Number(lesson.frontmatter.chapter)))).toEqual(
-    new Set([1, 2, 3]),
+    new Set([1, 2, 3, 4]),
   );
   expect(
     lessons
@@ -48,6 +53,9 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-C03-haan-saa-build",
     "MW-C03-listen-say-choice",
     "MW-C03-practice-yes",
+    "MW-C04-hear-paani-meaning",
+    "MW-C04-paani-build",
+    "MW-C04-practice-paani",
     "MW-W01-aa-matra-change",
     "MW-W01-ra-read",
     "MW-W01-raam-build",
@@ -57,5 +65,8 @@ it("pins Marwadi-owned chapters and objective activities", () => {
     "MW-W02-bha-sound",
     "MW-W03-anusvara-add",
     "MW-W03-ha-read",
+    "MW-W04-ii-matra-build",
+    "MW-W04-nna-contrast",
+    "MW-W04-pa-build-paa",
   ]);
 });

@@ -22,6 +22,12 @@ memory demand at a time.
 | S14 | `MW-C03-haan-saa`: **हां सा** | build it from **ह + ा + ं**, then known **सा** | delayed copy of one response |
 | S15 | `MW-C03-listen-say` | distinguish *hā(n) sā* from *ābhār* by ear | hidden-model recall of **हां** |
 | S16 | `MW-C03-practice` | hear/read a yes cue and answer respectfully | dictation and independent phrase recall |
+| S17 | `MW-C04-hear-paani`: *pāṇī* | identify water from sound alone | none; meaning precedes spelling |
+| S18 | `MW-W04-pa`: **प** | write **पा** with familiar **ा** | observe, trace, copy one sign |
+| S19 | `MW-W04-nna`: **ण** | distinguish curled-back **ण** from Hindi **न** | observe, trace, copy one sign |
+| S20 | `MW-W04-ii-matra`: **ी** | attach **ी** to **ण** and read **णी** | guided copy of one vowel mark |
+| S21 | `MW-C04-paani`: **पाणी** | join **पा + णी** and give the meaning | delayed copy of one word |
+| S22 | `MW-C04-practice` | retrieve water by ear, voice, eye, and meaning | dictation and independent word recall |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

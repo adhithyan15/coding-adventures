@@ -14,13 +14,16 @@ ask for the complete greeting from memory. Four more lessons then isolate **आ*
 and **भ**, assemble formal **आभार** (*ābhār*, "thanks; gratitude"), and retrieve
 it without a visible model. Five more isolate **ह** and **ं**, build respectful
 **हां सा** (*hā(n) sā*, "yes"), and retrieve it independently by ear, voice, eye,
-and hand. Every lesson is at most five minutes.
+and hand. Six further sessions teach *pāṇī* ("water") by ear before showing its
+spelling, then isolate **प**, **ण**, and **ी** before assembling and independently
+writing **पाणी**. Every lesson is at most five minutes.
 
 ## What this starter edition can honestly claim
 
-After Chapter 3, a learner can recognise, read, say, copy, and write the polite
+After Chapter 4, a learner can recognise, read, say, copy, and write the polite
 greeting **राम-राम सा**, answer it, and offer formal **आभार** after a kindness.
-They can also answer yes respectfully with **हां सा**. That is a small pre-A1
+They can also answer yes respectfully with **हां सा**, and retrieve **पाणी**
+as the Marwadi word for water in all four skills. That is a small pre-A1
 capability, not completion of pre-A1 and not exam readiness. The curriculum map
 records every untouched spine concept explicitly so the remaining work stays
 measurable.
@@ -42,7 +45,9 @@ Akademi magazine *Jāgtī Jot* as **राम-राम सा। — राम-
 April 2004 issue uses **आभार** in an expression of gratitude, anchoring Chapter
 2's formal word. A scholarly edition identifies *hā(n)-sā* as the polite Marwari
 affirmative, and an April–May 2019 *Jāgtī Jot* dialogue uses **हां सा** in
-context, anchoring Chapter 3 without flattening regional alternatives.
+context, anchoring Chapter 3 without flattening regional alternatives. SIL
+International's community-compiled 2015 dictionary records **पाणी** as water,
+anchoring Chapter 4's Marwadi spelling and its contrast with Hindi **पानी**.
 
 - [Rajasthan Foundation: Rajasthani Language](https://foundation.rajasthan.gov.in/RajasthaniLanguage.aspx)
 - [Rajasthan State Archives: learning Rajasthani (Marwari)](https://rsad.artandculture.rajasthan.gov.in/content/raj/art-and-culture/rajasthan-state-archives-bikaner/en/download.html)
@@ -50,6 +55,8 @@ context, anchoring Chapter 3 without flattening regional alternatives.
 - [Rajasthan Sahitya Akademi, *Jāgtī Jot*, April 2004](https://rsad.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_33_01_01_April_to_April_2004.pdf)
 - [Hess, *Texts and Translations*](https://hasp.ub.uni-heidelberg.de/catalog/view/1151/2059/103085)
 - [Rajasthan Sahitya Akademi, *Jāgtī Jot*, April–May 2019](https://rbssa.artandculture.rajasthan.gov.in/content/dam/doitassets/art-and-culture/Rajasthani-Bhasha-Sahitya-Avm-Sanskriti-Academy-Bikaner/pdf/JJ_All_Pdf/JJ_47_01_02_April_to_May_2019.pdf)
+- [SIL International, *Marwari–English Dictionary* (2015)](https://nepal.sil.org/resources/archives/63768)
+- [Turner, *A Comparative Dictionary of the Indo-Aryan Languages*](https://dsal.uchicago.edu/dictionaries/soas/)
 
 The language-specific path is in [`curriculum.json`](./curriculum.json), the
 five-minute sequence in [`session-map.md`](./session-map.md), and the long-range
