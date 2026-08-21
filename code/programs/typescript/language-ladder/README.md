@@ -172,7 +172,7 @@ sitting upside down on a correct letter.
 **All eleven starter Tamil letters — அ, ஆ, இ, க, ம, வ, ல, ற, ன, ண, and ந —,
 all nine Persian starter letters — ا, ب, ت, س, ل, م, ن, ه, and و —, all
 thirteen Urdu starter entries — ا, ج, ر, س, ش, ک, ل, م, ن, ں, ہ, ی, and ے —,
-all twenty-one Arabic starter letters — ا, ب, ت, ث, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, م, ن, ه, و, and ي —,
+all twenty-two Arabic starter entries — ا, ب, ت, ث, ج, ح, خ, د, ر, س, ش, ص, ض, ع, ك, ل, م, ن, ه, و, ي, and ء —,
 all twenty-two Hebrew starter letters א, ב, ג, ד, ה, ו, ז, ח, ט, י, כ, ל,
 מ, נ, ס, ע, פ, צ, ק, ר, ש, and ת, all twenty-four Chinese starter entries 人, 亻, 口, 女, 子, 日, 讠, 氵, 宀, 你, 好, 我, 是, 不, 名, 字, 谢, 请, 再, 见, 什, 么, 早, and 上,
 and Devanagari अ, आ, इ, ई, उ, ऊ, ए, ऐ, ओ, औ, and क
@@ -1228,6 +1228,13 @@ Arabic **ن** then adds a two-frame Waraqa filmstrip: the first run starts at th
 upper-right tip and sweeps down and around the deep below-baseline bowl; after
 one lift, the second frame places the centred upper dot last. Its script-scoped
 source remains separate from Persian and Urdu **ن**.
+Arabic **ء** closes the 22-row starter inventory with Arabic Language Learning
+Notes' documented one-stroke variant: the first frame shapes the c-like upper head and the second
+continues from its lower-left end through the lower diagonal without lifting.
+The source's accepted lifted alternative remains recorded in the metadata, and
+the 22-row starter inventory is now uniqueness-gated and fully sourced. Arabic
+remains incomplete because later lessons use base letters beyond that starter
+set; those rows must be added rather than hidden by a premature completion flag.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
