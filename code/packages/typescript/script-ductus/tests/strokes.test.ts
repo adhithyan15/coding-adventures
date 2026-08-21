@@ -191,6 +191,7 @@ const ARABIC_DAAD = DUCTUS[ductusKey("arabic", "ض")];
 const ARABIC_AYN = DUCTUS[ductusKey("arabic", "ع")];
 const ARABIC_KAF = DUCTUS[ductusKey("arabic", "ك")];
 const ARABIC_LAM = DUCTUS[ductusKey("arabic", "ل")];
+const ARABIC_MEEM = DUCTUS[ductusKey("arabic", "م")];
 const ARABIC_HEH = DUCTUS[ductusKey("arabic", "ه")];
 const ARABIC_WAW = DUCTUS[ductusKey("arabic", "و")];
 const ARABIC_YAA = DUCTUS[ductusKey("arabic", "ي")];
@@ -3066,6 +3067,19 @@ describe("handwriting ductus", () => {
     expect(bowl.at(-1)!.y).toBeGreaterThan(Math.min(...bowl.map((point) => point.y)));
   });
 
+  it("Arabic independent م joins its closed head to the below-baseline tail", () => {
+    expect(ARABIC_MEEM.script).toBe("arabic");
+    expect(penLifts(ARABIC_MEEM)).toBe(0);
+    expect(ARABIC_MEEM.strokes).toHaveLength(1);
+    expect(ARABIC_MEEM.strokes[0].segments).toHaveLength(2);
+    const head = ARABIC_MEEM.strokes[0].segments[0].path;
+    const tail = ARABIC_MEEM.strokes[0].segments[1].path;
+    expect(head.at(-1)).toEqual(tail[0]);
+    expect(head[0].x).toBeLessThan(head.at(-1)!.x);
+    expect(tail[0].y).toBeGreaterThan(tail.at(-1)!.y);
+    expect(Math.min(...tail.map((point) => point.y))).toBeLessThan(0);
+  });
+
   it("Arabic independent ه closes both counters before its leftward baseline sweep", () => {
     expect(ARABIC_HEH.script).toBe("arabic");
     expect(penLifts(ARABIC_HEH)).toBe(0);
@@ -5466,6 +5480,21 @@ describe("handwriting ductus", () => {
     expect(src.url).not.toBe(URDU_LAM.source.url);
     expect(ARABIC_LAM.glyph).toBe(DUCTUS["ل"].glyph);
     expect(ARABIC_LAM.glyph).toBe(URDU_LAM.glyph);
+  });
+
+  it("Arabic independent م traces its continuous head-and-tail order to Waraqa", () => {
+    const src = ARABIC_MEEM.source;
+    expect(src.url).toBe("https://www.waraqaweb.com/lessons/letter-meem-in-arabic");
+    expect(src.citation).toMatch(
+      /Waraqa Institute.*Letter Meem in Arabic.*Writing Meem.*Round Head.*Tail.*Step 4.*2026-08-21/i,
+    );
+    expect(src.variation).toMatch(
+      /beginner lesson.*isolated م.*head-first.*small tightly closed.*circular or oval loop.*tail downward and leftward.*one continuous curve.*below the baseline.*two-way connector.*isolated\/final tail.*tailless initial\/medial.*one-stroke.*zero-lift.*Noto Naskh.*Arabic-scoped provenance.*Persian and Urdu.*same Unicode glyph/i,
+    );
+    expect(src.url).not.toBe(DUCTUS["م"].source.url);
+    expect(src.url).not.toBe(URDU_MIM.source.url);
+    expect(ARABIC_MEEM.glyph).toBe(DUCTUS["م"].glyph);
+    expect(ARABIC_MEEM.glyph).toBe(URDU_MIM.glyph);
   });
 
   it("Arabic independent ي traces its bowl and left-then-right lower dots to the Oregon MOV", () => {
