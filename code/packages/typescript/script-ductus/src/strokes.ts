@@ -6665,6 +6665,22 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("લ"),
   },
+  // t30apps writes Gujarati ળ in one continuous run through the left bowl,
+  // middle turn, high right arch, and descending spine.
+  [ductusKey("gujarati", "ળ")]: {
+    script: "gujarati", glyph: "ળ",
+    strokes: [
+      { segments: [{ label: "circle the left bowl, rise through the middle turn, and descend the right spine into its foot", path: [
+        { x: 260, y: 565 }, { x: 205, y: 545 }, { x: 160, y: 515 }, { x: 125, y: 475 }, { x: 100, y: 430 },
+        { x: 85, y: 380 }, { x: 85, y: 330 }, { x: 100, y: 280 }, { x: 130, y: 235 }, { x: 175, y: 195 },
+        { x: 225, y: 175 }, { x: 275, y: 180 }, { x: 315, y: 205 }, { x: 345, y: 245 }, { x: 370, y: 300 },
+        { x: 390, y: 355 }, { x: 390, y: 420 }, { x: 395, y: 475 }, { x: 410, y: 520 }, { x: 440, y: 550 },
+        { x: 475, y: 560 }, { x: 510, y: 555 }, { x: 540, y: 535 }, { x: 565, y: 500 }, { x: 600, y: 520 },
+        { x: 615, y: 470 }, { x: 615, y: 400 }, { x: 615, y: 320 }, { x: 615, y: 240 }, { x: 615, y: 160 },
+        { x: 620, y: 105 }, { x: 640, y: 70 }, { x: 675, y: 48 }, { x: 710, y: 38 }, { x: 730, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("ળ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the

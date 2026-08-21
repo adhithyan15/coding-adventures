@@ -148,6 +148,7 @@ const GUJARATI_MA = DUCTUS[ductusKey("gujarati", "મ")];
 const GUJARATI_YA = DUCTUS[ductusKey("gujarati", "ય")];
 const GUJARATI_RA = DUCTUS[ductusKey("gujarati", "ર")];
 const GUJARATI_LA = DUCTUS[ductusKey("gujarati", "લ")];
+const GUJARATI_LLA = DUCTUS[ductusKey("gujarati", "ળ")];
 const HEBREW_ALEF = DUCTUS[ductusKey("hebrew", "א")];
 const HEBREW_BET = DUCTUS[ductusKey("hebrew", "ב")];
 const HEBREW_GIMEL = DUCTUS[ductusKey("hebrew", "ג")];
@@ -2260,6 +2261,12 @@ describe("handwriting ductus", () => {
     expect(GUJARATI_LA.script).toBe("gujarati");
     expect(penLifts(GUJARATI_LA)).toBe(2);
     expect(GUJARATI_LA.strokes).toHaveLength(3);
+  });
+
+  it("Gujarati ળ keeps its bowl, turn, arch, and spine continuous", () => {
+    expect(GUJARATI_LLA.script).toBe("gujarati");
+    expect(penLifts(GUJARATI_LLA)).toBe(0);
+    expect(GUJARATI_LLA.strokes).toHaveLength(1);
   });
 
   it("Hebrew א uses two crossed pen-down runs with one lift", () => {
@@ -4816,6 +4823,12 @@ describe("handwriting ductus", () => {
     const src = GUJARATI_LA.source;
     expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*લ animation.*first through third SVG paths/i);
     expect(src.variation).toMatch(/three ordered pen-down runs.*first SVG path.*upper right.*broad rounded left body.*lower-right terminal.*lifts once.*second SVG path.*middle shoulder.*left to right.*lifts again.*third SVG path.*tall right spine.*remaining path slots are empty.*one variant.*rounded-body-before-middle-shoulder-before-right-spine order.*two-lift evidence/i);
+  });
+
+  it("Gujarati ળ traces its bowl, turn, arch, and spine to one path", () => {
+    const src = GUJARATI_LLA.source;
+    expect(src.citation).toMatch(/t30apps\.com.*version 1\.0.*ળ animation.*first SVG path/i);
+    expect(src.variation).toMatch(/one continuous pen-down run.*first SVG path.*remaining path slots are empty.*upper left.*broad left bowl.*narrow middle turn.*high right arch.*tall right spine.*without lifting.*one variant.*left-bowl-to-middle-turn-to-right-spine order.*zero-lift evidence/i);
   });
 
   it("Hebrew א traces its two-run order to the dedicated HebrewPod101 lesson", () => {
