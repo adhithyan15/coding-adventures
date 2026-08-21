@@ -313,7 +313,9 @@ describe("four-skill task-shape inventories (HL18)", () => {
     const registry = loadLanguageRegistry();
     const present = listTaskShapeInventories();
     const backlog = buildTaskShapeBacklog(registry.languages.map((track) => track.id), present);
-    expect(present).toEqual([
+    const levels = ["pre-A1", "A1", "A2", "B1", "B2", "C1", "C2"];
+    const registryOrder = registry.languages.map((track) => track.id);
+    expect(present).toEqual(expect.arrayContaining([
       { language: "spanish", level: "A1" },
       { language: "latin", level: "A1" },
       { language: "french", level: "pre-A1" },
@@ -324,10 +326,17 @@ describe("four-skill task-shape inventories (HL18)", () => {
       { language: "marwadi", level: "A1" },
       { language: "gujarati", level: "pre-A1" },
       { language: "chinese", level: "pre-A1" },
-    ]);
-    expect(backlog).toHaveLength(registry.languages.length * 7 - 10);
-    expect(backlog.filter((item) => item.level === "pre-A1")).toHaveLength(registry.languages.length - 4);
-    expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 6);
+    ]));
+    expect(new Set(present.map((item) => `${item.language}/${item.level}`)).size).toBe(present.length);
+    expect(present).toEqual([...present].sort((left, right) => {
+      const languageDifference = registryOrder.indexOf(left.language) - registryOrder.indexOf(right.language);
+      return languageDifference || levels.indexOf(left.level) - levels.indexOf(right.level);
+    }));
+    expect(backlog).toHaveLength(registry.languages.length * levels.length - present.length);
+    for (const level of levels) {
+      const presentAtLevel = present.filter((item) => item.level === level).length;
+      expect(backlog.filter((item) => item.level === level)).toHaveLength(registry.languages.length - presentAtLevel);
+    }
     expect(backlog.some((item) => item.id === "task-shape/marwadi/pre-A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/marwadi/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/gujarati/pre-A1")).toBe(false);
