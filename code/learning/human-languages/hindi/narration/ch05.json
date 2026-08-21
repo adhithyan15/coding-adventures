@@ -4,7 +4,7 @@
   "chapter": 5,
   "title": "The First Verbs",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:2d9f4dcbd7e52fe5",
+  "sourceHash": "fnv1a64:5d90c350329583d4",
   "lessons": [
     {
       "id": "HI-C05-bolna",
@@ -165,7 +165,7 @@
         "script-block",
         "sight-cue"
       ],
-      "sourceHash": "fnv1a64:c6878088b621d894",
+      "sourceHash": "fnv1a64:dbbb3cb59f48db12",
       "notice": {
         "modality": "sight",
         "needs": [
