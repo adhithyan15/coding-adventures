@@ -393,15 +393,14 @@ impl JVMSimulator {
         let a = self.stack.pop().unwrap();
         let taken = op(a, b);
 
-        let description;
-        if taken {
+        let description = if taken {
             let target = (pc as i32 + offset) as usize;
             self.pc = target;
-            description = format!("pop {} and {}, true, jump to PC={}", b, a, target);
+            format!("pop {} and {}, true, jump to PC={}", b, a, target)
         } else {
             self.pc = pc + 3;
-            description = format!("pop {} and {}, false, fall through", b, a);
-        }
+            format!("pop {} and {}, false, fall through", b, a)
+        };
 
         JVMTrace {
             pc,

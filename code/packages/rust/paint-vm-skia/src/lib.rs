@@ -776,7 +776,7 @@ mod tests {
     fn dark_pixel_count(pixels: &PixelContainer) -> usize {
         pixels
             .data
-            .chunks_exact(4)
+            .as_chunks::<4>().0.iter()
             .filter(|px| px[0] < 96 && px[1] < 96 && px[2] < 96 && px[3] > 0)
             .count()
     }

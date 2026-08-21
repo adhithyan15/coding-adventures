@@ -39,7 +39,7 @@ fn hex_decode(text: &str) -> Vec<u8> {
         }
     }
     text.as_bytes()
-        .chunks_exact(2)
+        .as_chunks::<2>().0.iter()
         .map(|pair| (nibble(pair[0]) << 4) | nibble(pair[1]))
         .collect()
 }

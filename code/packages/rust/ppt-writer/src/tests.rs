@@ -43,7 +43,7 @@ fn decode_text_atom(rec_type: u16, body: &[u8]) -> String {
     } else {
         // TextChars: UTF-16LE.
         let units: Vec<u16> = body
-            .chunks_exact(2)
+            .as_chunks::<2>().0.iter()
             .map(|c| u16::from_le_bytes([c[0], c[1]]))
             .collect();
         String::from_utf16_lossy(&units)

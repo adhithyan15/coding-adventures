@@ -1822,7 +1822,7 @@ fn end_to_end_basic_let_a_1_plus_2_exercises_add_via_lang_aot() {
     // Must contain an ADD instruction word (0x04 in byte 0 of
     // some 3-byte chunk).
     assert!(
-        bytes.chunks_exact(3).any(|w| w[0] == 0x04),
+        bytes.as_chunks::<3>().0.iter().any(|w| w[0] == 0x04),
         ".bin must contain at least one ADD word for `1 + 2`; got {bytes:02x?}"
     );
     // And an HLT for END.

@@ -178,10 +178,10 @@ pub fn murmur3_32(data: &[u8]) -> u32 {
 
 pub fn murmur3_32_with_seed(data: &[u8], seed: u32) -> u32 {
     let mut hash = seed;
-    let mut blocks = data.chunks_exact(4);
+    let (blocks, remainder) = data.as_chunks::<4>();
 
-    for block in &mut blocks {
-        let mut k = u32::from_le_bytes(block.try_into().expect("chunks_exact produced 4 bytes"));
+    for block in blocks {
+        let mut k = u32::from_le_bytes(*block);
         k = k.wrapping_mul(MURMUR3_C1);
         k = k.rotate_left(15);
         k = k.wrapping_mul(MURMUR3_C2);
@@ -192,10 +192,10 @@ pub fn murmur3_32_with_seed(data: &[u8], seed: u32) -> u32 {
     }
 
     let mut k = 0u32;
-    for (index, &byte) in blocks.remainder().iter().enumerate() {
+    for (index, &byte) in remainder.iter().enumerate() {
         k ^= u32::from(byte) << (index * 8);
     }
-    if !blocks.remainder().is_empty() {
+    if !remainder.is_empty() {
         k = k.wrapping_mul(MURMUR3_C1);
         k = k.rotate_left(15);
         k = k.wrapping_mul(MURMUR3_C2);
@@ -215,9 +215,9 @@ pub fn siphash_2_4(data: &[u8], key: &[u8; 16]) -> u64 {
     let mut v2 = SIPHASH_V2 ^ k0;
     let mut v3 = SIPHASH_V3 ^ k1;
 
-    let mut blocks = data.chunks_exact(8);
-    for block in &mut blocks {
-        let m = u64::from_le_bytes(block.try_into().expect("chunks_exact produced 8 bytes"));
+    let (blocks, remainder) = data.as_chunks::<8>();
+    for block in blocks {
+        let m = u64::from_le_bytes(*block);
         v3 ^= m;
         sipround(&mut v0, &mut v1, &mut v2, &mut v3);
         sipround(&mut v0, &mut v1, &mut v2, &mut v3);
@@ -225,7 +225,7 @@ pub fn siphash_2_4(data: &[u8], key: &[u8; 16]) -> u64 {
     }
 
     let mut last = ((data.len() as u64) & 0xff) << 56;
-    for (index, &byte) in blocks.remainder().iter().enumerate() {
+    for (index, &byte) in remainder.iter().enumerate() {
         last |= u64::from(byte) << (index * 8);
     }
 

@@ -392,7 +392,7 @@ pub fn generate_password(
     let modulus =
         u64::try_from(alphabet.len()).expect("an assembled alphabet is at most 89 characters wide");
     let bound = acceptance_bound(modulus);
-    let mut words = entropy.chunks_exact(ENTROPY_WORD_BYTES);
+    let mut words = entropy.as_chunks::<ENTROPY_WORD_BYTES>().0.iter();
     let mut password = Zeroizing::new(String::with_capacity(policy.length()));
     for _ in 0..policy.length() {
         let residue = loop {

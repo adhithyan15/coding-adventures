@@ -977,9 +977,7 @@ impl Compiler {
                                 ));
                             }
                         } else {
-                            for slot in slots {
-                                *slot = StaticParamEvidence::Conflict;
-                            }
+                            slots.fill(StaticParamEvidence::Conflict);
                         }
                     }
                 }
