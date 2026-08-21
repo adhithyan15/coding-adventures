@@ -5,6 +5,19 @@ Findings from the pre-A1 tranche work were recorded in commit messages and PR
 bodies, which are durable and searchable, but a reader opening this file found
 nothing. The entries below are the ones that change how the work is done.
 
+## HL-C09HB — Arabic ن sweeps its deep bowl before placing the dot
+
+Waraqa Institute's adjacent beginner lesson now replaces the final body-and-dot
+placeholder in Arabic's canonical sequence. Independent **ن** starts at the
+upper-right tip, sweeps down and around its deep below-baseline bowl, then lifts
+once to place the centred upper dot last. Arabic, Persian, and Urdu retain
+independent source records for the shared glyph.
+
+Arabic is now **21/22 verified, 1 remaining**. Finish the inventory with **ء**
+next, then audit Arabic for canonical uniqueness and completion before moving to
+the next script. The production `script-data` batch must remain below the 250 kB
+authored-data target; the current build measures **31.46 kB**.
+
 ## HL-C09HA — Arabic م keeps its closed head and descending tail in one run
 
 The next Arabic placeholder is now source-backed by Waraqa Institute's explicit
