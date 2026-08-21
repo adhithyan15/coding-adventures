@@ -40,7 +40,7 @@
     {
       "language": "arabic",
       "chapter": 2,
-      "sourceHash": "fnv1a64:2f9e8dc860cdbf23",
+      "sourceHash": "fnv1a64:6ab19f4d7131734d",
       "lessonIds": [
         "AR-C02-ism",
         "AR-C02-ii-my",
@@ -53,19 +53,20 @@
         "AR-W04-dots-family-nun-ta",
         "AR-W05-ya-and-my-name",
         "AR-W06-harakat-and-hamza",
+        "AR-W06-sukun-shadda-tanwin",
         "AR-W06-hamza"
       ],
       "voiceLessons": 3,
       "drivablePrefix": 0,
       "text": "arabic/narration/ch02.txt",
       "json": "arabic/narration/ch02.json",
-      "textHash": "fnv1a64:8ebda8f907a83742",
-      "jsonHash": "fnv1a64:d18bc40468588e07"
+      "textHash": "fnv1a64:b9fd8aca2944504a",
+      "jsonHash": "fnv1a64:76868b61cac03d0e"
     },
     {
       "language": "arabic",
       "chapter": 3,
-      "sourceHash": "fnv1a64:00cc06864fba2d3d",
+      "sourceHash": "fnv1a64:e987d72ec0053f7c",
       "lessonIds": [
         "AR-W07-hook-family-ha-kha",
         "AR-W08-kaf-and-ra",
@@ -81,13 +82,13 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch03.txt",
       "json": "arabic/narration/ch03.json",
-      "textHash": "fnv1a64:e2a62b90f3294641",
-      "jsonHash": "fnv1a64:a34bd93498f5f2f4"
+      "textHash": "fnv1a64:282b8c0f141baf92",
+      "jsonHash": "fnv1a64:1edf53dd0d3ae355"
     },
     {
       "language": "arabic",
       "chapter": 4,
-      "sourceHash": "fnv1a64:c9ca88fe561b8c3d",
+      "sourceHash": "fnv1a64:eb0160369fc7b6f0",
       "lessonIds": [
         "AR-W10-ayn",
         "AR-W11-ha-and-ta-marbuta",
@@ -102,8 +103,8 @@
       "drivablePrefix": 0,
       "text": "arabic/narration/ch04.txt",
       "json": "arabic/narration/ch04.json",
-      "textHash": "fnv1a64:ee7f034c04449c62",
-      "jsonHash": "fnv1a64:82ee7ec7dadb9681"
+      "textHash": "fnv1a64:b2a07549bfc696c0",
+      "jsonHash": "fnv1a64:d50a2928a3e97c56"
     },
     {
       "language": "arabic",
