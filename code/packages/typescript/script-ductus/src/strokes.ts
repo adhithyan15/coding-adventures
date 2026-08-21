@@ -6645,6 +6645,26 @@ export const DUCTUS: Record<string, LetterDuctus> = {
       ] }] },
     ], source: gujaratiAlphabetSource("ર"),
   },
+  // t30apps writes Gujarati લ as the broad left body, the separate middle
+  // shoulder, and then the separate tall right spine.
+  [ductusKey("gujarati", "લ")]: {
+    script: "gujarati", glyph: "લ",
+    strokes: [
+      { segments: [{ label: "circle counterclockwise around the broad rounded left body", path: [
+        { x: 300, y: 565 }, { x: 245, y: 550 }, { x: 190, y: 525 }, { x: 145, y: 490 }, { x: 110, y: 445 },
+        { x: 90, y: 390 }, { x: 85, y: 335 }, { x: 95, y: 280 }, { x: 120, y: 230 }, { x: 160, y: 190 },
+        { x: 210, y: 160 }, { x: 265, y: 145 }, { x: 320, y: 150 }, { x: 370, y: 170 },
+      ] }] },
+      { segments: [{ label: "lift and sweep the middle shoulder from left to right", path: [
+        { x: 235, y: 340 }, { x: 285, y: 350 }, { x: 335, y: 360 }, { x: 385, y: 370 }, { x: 430, y: 380 }, { x: 475, y: 390 },
+      ] }] },
+      { segments: [{ label: "lift, descend the tall right spine, and turn through its lower foot", path: [
+        { x: 517, y: 585 }, { x: 517, y: 500 }, { x: 517, y: 400 }, { x: 517, y: 300 },
+        { x: 517, y: 200 }, { x: 517, y: 125 }, { x: 525, y: 80 }, { x: 550, y: 55 },
+        { x: 585, y: 40 }, { x: 620, y: 38 }, { x: 635, y: 38 },
+      ] }] },
+    ], source: gujaratiAlphabetSource("લ"),
+  },
   // HebrewPod101's second handwritten Alef demonstration draws one descending
   // diagonal, lifts, then draws the opposing diagonal across it. This learner
   // path keeps those two pen-down runs while routing the crossing through the
