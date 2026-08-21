@@ -1,5 +1,6 @@
 ---
 id: PT-C01-bom-dia
+sequence: 50
 chapter: 1
 type: phrase
 headword: bom dia

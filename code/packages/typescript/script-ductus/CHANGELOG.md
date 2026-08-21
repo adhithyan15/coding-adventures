@@ -2,6 +2,18 @@
 
 ## Unreleased
 
+### Added — source-verified Arabic ن ductus
+
+- Replace Arabic **ن**'s conventional bowl-and-dot summary with a cited path.
+- Sweep the deep below-baseline bowl before lifting once for its centred dot.
+- Keep the Arabic source independent from Persian and Urdu **ن**.
+
+### Added — source-verified Arabic م ductus
+
+- Replace Arabic **م**'s conventional head-and-tail summary with a cited path.
+- Keep its small closed head and below-baseline tail in one continuous run.
+- Cover the Arabic-scoped path independently from Persian and Urdu **م**.
+
 ### Added — source-verified Arabic ث ductus
 
 - Replace Arabic **ث**'s conventional placeholder with the dedicated Oregon video.

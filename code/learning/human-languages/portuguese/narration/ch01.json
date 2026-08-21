@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Greetings",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7028488b19b50ec6",
+  "sourceHash": "fnv1a64:a33ac1ea92dc0dc0",
   "lessons": [
     {
       "id": "PT-C01-ola",
@@ -207,7 +207,7 @@
     },
     {
       "id": "PT-C01-bom",
-      "sequence": null,
+      "sequence": 20,
       "title": "bom / boa — \"good\"",
       "headword": "bom / boa",
       "romanization": "bom / boa",
@@ -218,7 +218,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:d7a6174cadee47fd",
+      "sourceHash": "fnv1a64:31d095b961daee22",
       "notice": null,
       "blocks": [
         {
@@ -322,8 +322,226 @@
       ]
     },
     {
+      "id": "PT-C01-o-a",
+      "sequence": 30,
+      "title": "o / a — \"the,\" an article worn to a single letter",
+      "headword": "o / a",
+      "romanization": "o / a",
+      "gloss": "the (masculine / feminine)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:e659a8b5c24427ea",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Before your first noun: \"the.\" Portuguese wore it down further than any of its sisters."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o (masculine \"the\") and a (feminine) from Latin ille / illa (\"that one\"). Portuguese did something striking — it eroded the word further than any sibling:"
+            },
+            {
+              "kind": "speech",
+              "text": "Latin ille becomes Italian il becomes Spanish el becomes Portuguese just o."
+            },
+            {
+              "kind": "speech",
+              "text": "The whole pointing-word has worn down to a single vowel. (English \"the\" is Germanic, unrelated.)"
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: two genders",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: o dia (\"the day\") is masculine even though it ends in -a."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"o\", \"a\"",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"o\", \"a\"]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "the erosion — ille becomes il becomes el becomes o",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: the erosion — *ille* → *il* → *el* → *o*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word gave Portuguese o, and how is it unusual among its sisters? (ille; Portuguese wore it down to a single letter, more than il/el.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "PT-C01-dia",
+      "sequence": 40,
+      "title": "dia — \"day\"",
+      "headword": "dia",
+      "romanization": "dia",
+      "gloss": "day (masculine)",
+      "script": "latin",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:07f32b79b9ab1dec",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 2,
+              "perItem": false,
+              "source": "[PAUSE 2s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Your first noun — and a gender trap."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "etymology",
+          "title": "The word, taken apart",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "o dia (masc.) from Latin dies (\"day\"), taken almost straight, like Spanish día. Cousins from dies: diurnal, diary; and, through the derived diurnum, English journal and journey (which is why Italian giorno and French jour look so different — they took the longer road, Portuguese and Spanish the short one)."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "grammar",
+          "title": "Grammar Lens: a gender trap",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "dia ends in -a — the usual feminine signal — yet it is masculine: o dia. A fossil of its Latin origin (dies was masculine), and a reminder to learn each noun with its article rather than guessing gender from the ending."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "guided-production",
+          "title": "Guided Practice",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 1,
+              "perItem": false,
+              "source": "[PAUSE 1s]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "\"o dia\" (masculine, despite the -a)",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: \"o dia\" (masculine, despite the *-a*)]"
+            },
+            {
+              "kind": "prompt",
+              "action": "SAY",
+              "instruction": "cousins — diary, diurnal, journal",
+              "spoken": true,
+              "scored": false,
+              "responseSeconds": 8,
+              "source": "[YOU SAY: cousins — *diary*, *diurnal*, *journal*]"
+            }
+          ]
+        },
+        {
+          "index": 4,
+          "type": "recall",
+          "title": "Wrap-up Recall",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 3,
+              "perItem": false,
+              "source": "[PAUSE 3s]"
+            },
+            {
+              "kind": "speech",
+              "text": "What Latin word gave dia, and why is o dia a trap? (dies; it's masculine even though it ends in -a.)"
+            }
+          ]
+        }
+      ]
+    },
+    {
       "id": "PT-C01-bom-dia",
-      "sequence": null,
+      "sequence": 50,
       "title": "bom dia — \"good morning,\" assembled",
       "headword": "bom dia",
       "romanization": "bom dia",
@@ -334,7 +552,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:8f8f5773e8d4760e",
+      "sourceHash": "fnv1a64:4e12b7a714e5bbda",
       "notice": null,
       "blocks": [
         {
@@ -431,19 +649,19 @@
       ]
     },
     {
-      "id": "PT-C01-dia",
-      "sequence": null,
-      "title": "dia — \"day\"",
-      "headword": "dia",
-      "romanization": "dia",
-      "gloss": "day (masculine)",
+      "id": "PT-C01-tarde",
+      "sequence": 60,
+      "title": "tarde / boa tarde — \"afternoon\" and \"good afternoon\"",
+      "headword": "tarde / boa tarde",
+      "romanization": "tarde / boa tarde",
+      "gloss": "afternoon / good afternoon",
       "script": "latin",
       "modality": "voice",
       "derivedModality": "voice",
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:b326770e399d3ecf",
+      "sourceHash": "fnv1a64:399c70790727c9a2",
       "notice": null,
       "blocks": [
         {
@@ -459,7 +677,7 @@
             },
             {
               "kind": "speech",
-              "text": "Your first noun — and a gender trap."
+              "text": "The afternoon greeting — named, like its Spanish twin, after lateness."
             }
           ]
         },
@@ -470,23 +688,12 @@
           "segments": [
             {
               "kind": "speech",
-              "text": "o dia (masc.) from Latin dies (\"day\"), taken almost straight, like Spanish día. Cousins from dies: diurnal, diary; and, through the derived diurnum, English journal and journey (which is why Italian giorno and French jour look so different — they took the longer road, Portuguese and Spanish the short one)."
+              "text": "a tarde (fem.) from Latin tardus (\"slow, late\") — the same tardus behind English tardy and retard (\"to slow\"). Portuguese named the afternoon after its lateness, exactly as Spanish did with the identical tarde. boa tarde = \"good afternoon\" (boa, feminine, because tarde is feminine)."
             }
           ]
         },
         {
           "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: a gender trap",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "dia ends in -a — the usual feminine signal — yet it is masculine: o dia. A fossil of its Latin origin (dies was masculine), and a reminder to learn each noun with its article rather than guessing gender from the ending."
-            }
-          ]
-        },
-        {
-          "index": 3,
           "type": "guided-production",
           "title": "Guided Practice",
           "segments": [
@@ -499,25 +706,25 @@
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "\"o dia\" (masculine, despite the -a)",
+              "instruction": "\"boa tarde\"",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: \"o dia\" (masculine, despite the *-a*)]"
+              "source": "[YOU SAY: \"boa tarde\"]"
             },
             {
               "kind": "prompt",
               "action": "SAY",
-              "instruction": "cousins — diary, diurnal, journal",
+              "instruction": "the cousin — English tardy (late)",
               "spoken": true,
               "scored": false,
               "responseSeconds": 8,
-              "source": "[YOU SAY: cousins — *diary*, *diurnal*, *journal*]"
+              "source": "[YOU SAY: the cousin — English *tardy* (late)]"
             }
           ]
         },
         {
-          "index": 4,
+          "index": 3,
           "type": "recall",
           "title": "Wrap-up Recall",
           "segments": [
@@ -529,7 +736,7 @@
             },
             {
               "kind": "speech",
-              "text": "What Latin word gave dia, and why is o dia a trap? (dies; it's masculine even though it ends in -a.)"
+              "text": "What Latin word gave tarde, and what English word shares it? (tardus, \"late\"; tardy.)"
             }
           ]
         }
@@ -537,7 +744,7 @@
     },
     {
       "id": "PT-C01-noite",
-      "sequence": null,
+      "sequence": 70,
       "title": "noite / boa noite — \"night,\" and the -ct- becomes -it- rule",
       "headword": "noite / boa noite",
       "romanization": "noite / boa noite",
@@ -548,7 +755,7 @@
       "modalityReasons": [
         "wide-table"
       ],
-      "sourceHash": "fnv1a64:453359836b8256d1",
+      "sourceHash": "fnv1a64:dd07fefea56d02f3",
       "notice": {
         "modality": "sight",
         "needs": [
@@ -657,121 +864,8 @@
       ]
     },
     {
-      "id": "PT-C01-o-a",
-      "sequence": null,
-      "title": "o / a — \"the,\" an article worn to a single letter",
-      "headword": "o / a",
-      "romanization": "o / a",
-      "gloss": "the (masculine / feminine)",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:a99b126926f54064",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "Before your first noun: \"the.\" Portuguese wore it down further than any of its sisters."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "o (masculine \"the\") and a (feminine) from Latin ille / illa (\"that one\"). Portuguese did something striking — it eroded the word further than any sibling:"
-            },
-            {
-              "kind": "speech",
-              "text": "Latin ille becomes Italian il becomes Spanish el becomes Portuguese just o."
-            },
-            {
-              "kind": "speech",
-              "text": "The whole pointing-word has worn down to a single vowel. (English \"the\" is Germanic, unrelated.)"
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "grammar",
-          "title": "Grammar Lens: two genders",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "Every Portuguese noun is masculine or feminine — Latin's genders collapsed to two. Learn each noun with its article: o (m.), a (f.). Watch the trap next: o dia (\"the day\") is masculine even though it ends in -a."
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"o\", \"a\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"o\", \"a\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the erosion — ille becomes il becomes el becomes o",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the erosion — *ille* → *il* → *el* → *o*]"
-            }
-          ]
-        },
-        {
-          "index": 4,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word gave Portuguese o, and how is it unusual among its sisters? (ille; Portuguese wore it down to a single letter, more than il/el.)"
-            }
-          ]
-        }
-      ]
-    },
-    {
       "id": "PT-C01-obrigado",
-      "sequence": null,
+      "sequence": 80,
       "title": "obrigado / obrigada — \"thank you,\" i.e. \"[I am] obliged\"",
       "headword": "obrigado / obrigada",
       "romanization": "obrigado / obrigada",
@@ -782,7 +876,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:5b6c01fccdfd47e7",
+      "sourceHash": "fnv1a64:bda5ac3335e039ce",
       "notice": null,
       "blocks": [
         {
@@ -896,7 +990,7 @@
     },
     {
       "id": "PT-C01-practice",
-      "sequence": null,
+      "sequence": 90,
       "title": "Chapter 1 — the day of greetings",
       "headword": "(recap)",
       "romanization": "(recap)",
@@ -907,7 +1001,7 @@
       "modalityReasons": [
         "no-visual-dependency"
       ],
-      "sourceHash": "fnv1a64:eda0c2812ecde1a0",
+      "sourceHash": "fnv1a64:a79f2bb524a8d270",
       "notice": null,
       "blocks": [
         {
@@ -1019,100 +1113,6 @@
             {
               "kind": "speech",
               "text": "Next chapter: introducing yourself — o meu nome é… / chamo-me… — and Portuguese's tu vs. você (familiar / polite \"you\")."
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "PT-C01-tarde",
-      "sequence": null,
-      "title": "tarde / boa tarde — \"afternoon\" and \"good afternoon\"",
-      "headword": "tarde / boa tarde",
-      "romanization": "tarde / boa tarde",
-      "gloss": "afternoon / good afternoon",
-      "script": "latin",
-      "modality": "voice",
-      "derivedModality": "voice",
-      "modalityReasons": [
-        "no-visual-dependency"
-      ],
-      "sourceHash": "fnv1a64:1f3c824ae780a931",
-      "notice": null,
-      "blocks": [
-        {
-          "index": 0,
-          "type": "warmup",
-          "title": "Warm-up",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 2,
-              "perItem": false,
-              "source": "[PAUSE 2s]"
-            },
-            {
-              "kind": "speech",
-              "text": "The afternoon greeting — named, like its Spanish twin, after lateness."
-            }
-          ]
-        },
-        {
-          "index": 1,
-          "type": "etymology",
-          "title": "The word, taken apart",
-          "segments": [
-            {
-              "kind": "speech",
-              "text": "a tarde (fem.) from Latin tardus (\"slow, late\") — the same tardus behind English tardy and retard (\"to slow\"). Portuguese named the afternoon after its lateness, exactly as Spanish did with the identical tarde. boa tarde = \"good afternoon\" (boa, feminine, because tarde is feminine)."
-            }
-          ]
-        },
-        {
-          "index": 2,
-          "type": "guided-production",
-          "title": "Guided Practice",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 1,
-              "perItem": false,
-              "source": "[PAUSE 1s]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "\"boa tarde\"",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: \"boa tarde\"]"
-            },
-            {
-              "kind": "prompt",
-              "action": "SAY",
-              "instruction": "the cousin — English tardy (late)",
-              "spoken": true,
-              "scored": false,
-              "responseSeconds": 8,
-              "source": "[YOU SAY: the cousin — English *tardy* (late)]"
-            }
-          ]
-        },
-        {
-          "index": 3,
-          "type": "recall",
-          "title": "Wrap-up Recall",
-          "segments": [
-            {
-              "kind": "pause",
-              "seconds": 3,
-              "perItem": false,
-              "source": "[PAUSE 3s]"
-            },
-            {
-              "kind": "speech",
-              "text": "What Latin word gave tarde, and what English word shares it? (tardus, \"late\"; tardy.)"
             }
           ]
         }

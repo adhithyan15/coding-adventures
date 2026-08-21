@@ -2,6 +2,17 @@
 
 ## [Unreleased]
 
+### Added — pre-A1-to-C2 four-skill assessment contract (#12435)
+
+- Defined seven project-owned Latin assessment rungs with independently passed
+  reading, listening, writing, and speaking papers, two timed mocks per rung,
+  and the complete cumulative writing ramp.
+- Kept Euroclassica's curriculum and ELEX archive as valuable contextual
+  evidence without presenting them as a four-skill CEFR accreditation.
+- Published exact level envelopes, pronunciation and orthography policy,
+  standard-setting requirements, and the evidence boundary between an
+  inventory, mock readiness, and book-only human validation.
+
 ### Added — writing begins with the first greeting (#12292)
 
 - Add a short observe-and-trace microstep to `LA-C01-salve`, then one separate
