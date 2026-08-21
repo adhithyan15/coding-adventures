@@ -5,6 +5,18 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Added — transitional HSK 3.0 four-skill assessment contract (#12367)
+
+- Replaced the stale pre-2021 six-band mapping with a dated GF0025-2021 /
+  HSK 3.0 target that distinguishes the 2026 Levels 1–6 trials from the
+  operational combined Levels 7–9 exam.
+- Labelled every CEFR correspondence project-defined rather than presenting it
+  as an awarding-body claim, and added companion skill papers wherever a live
+  external form does not independently score the curriculum's four skills.
+- Contracted the full pre-A1-to-C2 gentle writing ladder, timed mocks,
+  calibration, and book-only human validation without claiming the current
+  chapters meet the target.
+
 ### Changed — writing now starts with the first lesson
 
 The opening tone lesson now asks for one model-visible pass over the four pinyin

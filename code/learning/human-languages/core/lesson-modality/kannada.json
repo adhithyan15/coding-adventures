@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:3d019446167559fe",
+  "sourceHash": "fnv1a64:6aa4cfb7dca97371",
   "summary": {
     "totalLessons": 242,
     "voice": 185,
@@ -1355,7 +1355,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:b336cceba80b40d1"
+      "sourceHash": "fnv1a64:b636e9a11d60267f"
     },
     {
       "id": "KA-C02-hesaru",
@@ -1394,7 +1394,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:87fa1eb4380ad2c5",
+      "sourceHash": "fnv1a64:63758b2ac00bd6df",
       "detachableSegments": [
         "The letters in this word"
       ]

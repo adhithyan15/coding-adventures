@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2a3cf17d81c319b7",
+  "sourceHash": "fnv1a64:2aa3d495ce57eafa",
   "summary": {
     "totalLessons": 247,
     "voice": 182,
@@ -1308,7 +1308,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:082eb704b9b04ef0",
+      "sourceHash": "fnv1a64:b63d31de2389c720",
       "detachableSegments": [
         "The letters in this word"
       ]
@@ -1350,7 +1350,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:6f6ee9b070afef33"
+      "sourceHash": "fnv1a64:5a03202775f4a9a5"
     },
     {
       "id": "ML-C02-peru",
@@ -1389,7 +1389,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:17c41728004599b4",
+      "sourceHash": "fnv1a64:b47a8e77b0049d38",
       "detachableSegments": [
         "The letters in this word"
       ]

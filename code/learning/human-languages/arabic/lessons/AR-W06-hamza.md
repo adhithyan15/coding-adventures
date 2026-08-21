@@ -6,11 +6,11 @@ type: writing
 headword: "ء، أ"
 gloss: hamza marks the glottal catch and can ride on alif as its seat
 romanization: hamza
-prerequisites: [AR-W06-harakat-and-hamza]
+prerequisites: [AR-W06-sukun-shadda-tanwin]
 sounds: [arabic-hamza]
 roots: [abjad-vowels]
 est_minutes: 4
-reviews_of: [AR-W06-harakat-and-hamza, AR-C02-anta-anti]
+reviews_of: [AR-W06-sukun-shadda-tanwin, AR-W06-harakat-and-hamza, AR-C02-anta-anti]
 ---
 
 # ء and أ — the glottal catch

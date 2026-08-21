@@ -178,6 +178,7 @@ const HEBREW_TAV = DUCTUS[ductusKey("hebrew", "ת")];
 const ARABIC_ALEF = DUCTUS[ductusKey("arabic", "ا")];
 const ARABIC_BAA = DUCTUS[ductusKey("arabic", "ب")];
 const ARABIC_TAA = DUCTUS[ductusKey("arabic", "ت")];
+const ARABIC_THAA = DUCTUS[ductusKey("arabic", "ث")];
 const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
@@ -2887,6 +2888,17 @@ describe("handwriting ductus", () => {
     );
   });
 
+  it("Arabic independent ث uses the shared bowl, then three separately lifted dots", () => {
+    expect(penLifts(ARABIC_THAA)).toBe(3);
+    expect(ARABIC_THAA.strokes).toHaveLength(4);
+    expect(ARABIC_THAA.strokes.map((stroke) => stroke.segments.length)).toEqual([1, 1, 1, 1]);
+    const bowl = penPath(ARABIC_THAA.strokes[0]);
+    expect(bowl[0].x).toBeGreaterThan(bowl.at(-1)!.x);
+    expect(ARABIC_THAA.strokes[3].segments[0].path[0].y).toBeGreaterThan(
+      ARABIC_THAA.strokes[1].segments[0].path[0].y,
+    );
+  });
+
   it("Arabic independent ج draws its body first, then lifts once for the dot", () => {
     expect(penLifts(ARABIC_JEEM)).toBe(1);
     expect(ARABIC_JEEM.strokes).toHaveLength(2);
@@ -5273,6 +5285,17 @@ describe("handwriting ductus", () => {
       /Baa demonstration.*upper-right tip.*right-to-left.*turned-up left tip.*Taa demonstration opens.*complete bowl.*left dot.*00:00.45–00:00.70.*right dot.*00:00.75–00:01.00.*does not redraw.*rather than inferring.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance.*Persian/i,
     );
     expect(src.url).not.toBe(DUCTUS["ت"].source.url);
+  });
+
+  it("Arabic independent ث traces its bowl-first form to the University of Oregon", () => {
+    const src = ARABIC_THAA.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/two-way-connectors-%D8%A8-%D8%AA-%D8%AB-%D9%86-%D9%8A/",
+    );
+    expect(src.citation).toMatch(/Introduction to Arabic.*Alphabet: ب ت ث.*Thaa demonstration.*Oregon/i);
+    expect(src.variation).toMatch(
+      /dedicated Thaa video.*body-first.*upper-right tip.*right-to-left.*turned-up left tip.*three upper dots.*two-lower-and-one-centred-upper.*lower-left.*lower-right.*centred upper.*four pen-down runs.*three lifts.*two-way connector.*contextual shapes.*Noto Naskh.*Arabic provenance/i,
+    );
   });
 
   it("Arabic independent ج traces its body-first order to the University of Oregon", () => {

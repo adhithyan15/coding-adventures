@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:3e1e07eebe0b0a48",
+  "sourceHash": "fnv1a64:c9cc487b719498e0",
   "summary": {
     "totalLessons": 276,
     "voice": 212,
@@ -1484,7 +1484,7 @@
         "wide-table"
       ],
       "coreDrivable": false,
-      "sourceHash": "fnv1a64:72cfb8497206d816"
+      "sourceHash": "fnv1a64:c593b7c329fbf4cc"
     },
     {
       "id": "TE-C02-peru",
@@ -1523,7 +1523,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:7d91f0d59b61c29c",
+      "sourceHash": "fnv1a64:affcd5254104a7fc",
       "detachableSegments": [
         "The letters in this word"
       ]

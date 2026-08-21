@@ -8036,6 +8036,37 @@ export const DUCTUS: Record<string, LetterDuctus> = {
     ],
     source: arabicAlphabetSource("ت"),
   },
+  [ductusKey("arabic", "ث")]: {
+    script: "arabic",
+    glyph: "ث",
+    strokes: [
+      {
+        segments: [
+          {
+            label: "sweep the shallow bowl from right to left",
+            path: [
+              { x: 678, y: 382 }, { x: 663, y: 345 }, { x: 650, y: 305 },
+              { x: 654, y: 260 }, { x: 672, y: 215 }, { x: 688, y: 170 },
+              { x: 686, y: 126 }, { x: 620, y: 94 }, { x: 530, y: 65 },
+              { x: 430, y: 42 }, { x: 335, y: 38 }, { x: 245, y: 51 },
+              { x: 170, y: 83 }, { x: 120, y: 135 }, { x: 96, y: 205 },
+              { x: 100, y: 255 },
+            ],
+          },
+        ],
+      },
+      { segments: [{ label: "lift, then place the lower-left dot above", path: [
+        { x: 247, y: 369 }, { x: 295, y: 420 }, { x: 340, y: 375 },
+      ] }] },
+      { segments: [{ label: "lift again and place the lower-right dot", path: [
+        { x: 390, y: 382 }, { x: 438, y: 433 }, { x: 483, y: 388 },
+      ] }] },
+      { segments: [{ label: "lift a third time and place the centred upper dot", path: [
+        { x: 320, y: 458 }, { x: 365, y: 504 }, { x: 410, y: 458 },
+      ] }] },
+    ],
+    source: arabicAlphabetSource("ث"),
+  },
   [ductusKey("arabic", "ج")]: {
     script: "arabic",
     glyph: "ج",

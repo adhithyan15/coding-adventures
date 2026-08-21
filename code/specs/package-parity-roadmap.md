@@ -4710,6 +4710,82 @@ were disjoint, and GitHub reports the PR open, non-draft, and mergeable while
 required CI and CodeQL checks are queued. It is the loop's sole active parity
 publication, so the loop remains monitor-only while those checks are pending.
 
+Final reviewed head `73398d3178ae9bdd8ca0f9fc365e37daced0cba5`
+completed all 30 checks with 24 successes, five expected skips, and one neutral
+CodeQL result. Both CI gates and every operating-system build succeeded. After
+the loop requested squash auto-merge, GitHub merged PR #12403 as
+`66b4424e8976369519a5a394f6ef579d1844565f` at 2026-08-21T09:51:46Z and
+deleted the source branch.
+
+### Post-#12403 refresh and Python PNG selection
+
+The exact live-main collision inventory at
+`0055b8b25f384357d7a9bf57b14f097a930c189b` remains 15 established lanes,
+1,368 canonical identities, and 4,560 implementation slots. High-consensus
+coverage is 174 packages with 271 gaps; the 5-9 band contains 123 packages
+with 932 gaps; the 2-4 band contains 166 packages with 2,087 gaps; and 905
+singletons have 12,670 gaps, including 716 Rust singletons. Canonical
+collisions and unknown language buckets remain zero. The Go reconciliation
+changed an existing root, and the later Italian, Marwadi, Gujarati, and
+Punjabi human-language merges add no package root.
+
+The Python PNG child is selected next. Python 3.13.14 and uv 0.11.28 are
+installed, and its established PixelContainer and counted ZIP inflater both
+use compact byte-backed storage, keeping IC18's 33,554,432-pixel ceiling
+honest. Exact Windows prerequisite fronts pass 23 PixelContainer tests at
+100.0% coverage, 51 LZSS tests at 97.89%, and 76 ZIP tests at 93.40% branch
+coverage with Ruff, formatting, and strict MyPy clean. Live open-PR and stale
+remote audits find no Python PNG or prerequisite overlap. The bounded child
+will consume all 85 neutral cases through public APIs, reuse repository ZIP
+raw inflate/deflate and CRC, add focused allocation and precedence evidence,
+and carry empty production capabilities. Its four-node build graph is
+`image-codec-png -> {pixel-container, zip -> lzss}`. The prospective inventory
+adds one slot, moves `image-codec-png` to ten lanes, and therefore yields 175
+high-consensus packages with 276 gaps and 122 packages with 926 gaps in the
+5-9 band. Boxed-byte Haskell, Ruby, Perl, and Elixir prerequisites need
+separate compact-output hardening before their ceilings are credible; Rust
+remains deferred behind live prerequisite ownership and legacy filesystem
+authority.
+
+The tests-first security review found one Python prerequisite gap before the
+PNG ceiling could be treated as load-bearing: ZIP's educational `raw_deflate`
+path materialized boxed LZSS tokens and exhaustively searched a 32 KiB window,
+so a legal noisy 128 MiB scanline stream could amplify into multiple gigabytes
+and impractical match work. This dependency-shaped tranche therefore hardens
+large raw-DEFLATE input in ZIP itself. Stored blocks cover incompressible data,
+fixed-Huffman blocks use constant-size streaming match state for repetitive
+data, and a foreign-zlib 2 MiB noisy-input regression forbids the boxed token
+path. Small inputs retain the educational tokenizer.
+
+### Python PNG implementation and validation
+
+The native package exposes the ordered 29-code payload-blind `PngError`
+taxonomy, Adler-32, deterministic RGBA8 encoding, bounded decoding, and the
+`PngCodec` adapter through repository PixelContainer and ZIP primitives only.
+All 85 neutral cases run through the public API with exact structural and
+error-precedence assertions. Test-only zlib independently inflates encoder
+output, and Pillow accepts complete output while recovering exact RGBA bytes.
+
+The dependency closure is green on Windows: PixelContainer passes 23 tests at
+100.0% coverage, LZSS passes 51 at 97.89%, ZIP passes 77 at 93.87% branch
+coverage, and PNG passes 106 at 99.13%. Ruff, format, and strict MyPy gates are
+clean. ZIP 0.2.1's deterministic 2 MiB noisy-input regression proves the large
+raw-DEFLATE path bypasses boxed LZSS tokens and remains foreign-zlib compatible;
+the existing 100 KiB repetitive regression keeps compression load-bearing.
+LZSS's BUILD fronts now pin Python 3.13 instead of resolving an unsupported
+host default.
+
+The Go build tool passes its tests, vet, and trimpath build. Its Windows diff
+plan discovers 494 Python packages, selects and builds exactly
+`image_codec_png`, `pixel_container`, `zip`, and `lzss`, and skips 490. Neutral
+PNG fixture, capability taxonomy, and parity reporter suites pass 9, 7, and 10
+tests. The prospective collision-checked inventory is 15 lanes, 1,368
+identities, 4,561 slots, and zero collisions or unknown buckets;
+`image-codec-png` reaches ten lanes, moving the high-consensus band to 175
+packages with 276 gaps and the 5-9 band to 122 packages with 926 gaps.
+Production authority, state graph, diff, dependency, and credential audits are
+clean, and the empty capability manifest remains truthful.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
