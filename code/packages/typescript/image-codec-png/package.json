@@ -1,6 +1,6 @@
 {
   "name": "@coding-adventures/image-codec-png",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "IC18: PNG image encoder and decoder using PixelContainer",
   "type": "module",
   "main": "src/index.ts",
