@@ -1,5 +1,7 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { loadAssessmentPolicy, listAssessmentContracts } from "../src/loader.js";
+import { defaultCurriculumRoot, loadAssessmentPolicy, listAssessmentContracts } from "../src/loader.js";
 import { parseAssessmentContract, parseAssessmentPolicy } from "../src/assessment.js";
 
 describe("assessment policy (HL16)", () => {
@@ -37,13 +39,34 @@ describe("assessment policy (HL16)", () => {
     })).toThrow(/maxLessonMinutes must be 5/);
   });
 
-  it("loads the complete French, Gujarati, and Marwadi contracts and keeps the other tracks queued", () => {
-    expect(listAssessmentContracts()).toEqual(["french", "marwadi", "gujarati"]);
+  it("loads the complete French, Marathi, Marwadi, and Gujarati contracts and keeps the other tracks queued", () => {
+    expect(listAssessmentContracts()).toEqual(["french", "marathi", "marwadi", "gujarati"]);
   });
 });
 
 describe("track assessment contracts", () => {
   const policy = loadAssessmentPolicy();
+
+  it("loads Marathi's seven-rung independent four-skill destination", () => {
+    const marathi = parseAssessmentContract(
+      JSON.parse(readFileSync(join(defaultCurriculumRoot(), "marathi", "assessment.json"), "utf8")),
+      "marathi",
+      policy,
+    );
+    expect(marathi.levels.map((level) => level.level)).toEqual(policy.levels);
+    expect(marathi.levels.every((level) => level.target.basis === "project-defined")).toBe(true);
+    expect(marathi.levels.every((level) =>
+      Object.values(level.skills).every((skill) => skill.passThreshold === 0.6)
+    )).toBe(true);
+    expect(marathi.levels[0]?.writingStages).toEqual([
+      "observe-trace",
+      "guided-copy",
+      "delayed-copy",
+      "dictation-transcription",
+    ]);
+    expect(marathi.levels.at(-1)?.writingStages).toEqual(policy.writingStages.map((stage) => stage.id));
+    expect(marathi.levels.every((level) => level.fullMocks.length === 2)).toBe(true);
+  });
 
   it("accepts a complete seven-level contract with independent skills and full mocks", () => {
     const skill = { taskInventory: ["tasks.json"], passThreshold: 0.6 };
