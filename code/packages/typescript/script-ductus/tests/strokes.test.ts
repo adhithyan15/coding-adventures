@@ -183,6 +183,7 @@ const ARABIC_JEEM = DUCTUS[ductusKey("arabic", "ج")];
 const ARABIC_HAA = DUCTUS[ductusKey("arabic", "ح")];
 const ARABIC_KHAA = DUCTUS[ductusKey("arabic", "خ")];
 const ARABIC_DAAL = DUCTUS[ductusKey("arabic", "د")];
+const ARABIC_DHAAL = DUCTUS[ductusKey("arabic", "ذ")];
 const ARABIC_RAA = DUCTUS[ductusKey("arabic", "ر")];
 const ARABIC_SEEN = DUCTUS[ductusKey("arabic", "س")];
 const ARABIC_SHIIN = DUCTUS[ductusKey("arabic", "ش")];
@@ -347,10 +348,10 @@ describe("handwriting ductus", () => {
     expect(gujarati.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
-  it("keeps all 22 unique Arabic starter rows sourced without overstating completion", () => {
+  it("keeps all 23 unique Arabic rows sourced without overstating completion", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     expect(arabic.complete).toBe(false);
-    expect(arabic.letters).toHaveLength(22);
+    expect(arabic.letters).toHaveLength(23);
     expect(arabic.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
   });
 
@@ -2963,6 +2964,17 @@ describe("handwriting ductus", () => {
     expect(baseline[0].x).toBeGreaterThan(baseline.at(-1)!.x);
   });
 
+  it("Arabic independent ذ preserves the Daal body before placing its upper dot", () => {
+    expect(penLifts(ARABIC_DHAAL)).toBe(1);
+    expect(ARABIC_DHAAL.strokes).toHaveLength(2);
+    expect(ARABIC_DHAAL.strokes[0]).toEqual(ARABIC_DAAL.strokes[0]);
+    const body = ARABIC_DHAAL.strokes[0].segments.flatMap((segment) => segment.path);
+    const dot = ARABIC_DHAAL.strokes[1].segments[0].path;
+    expect(Math.min(...dot.map((point) => point.y))).toBeGreaterThan(
+      Math.max(...body.map((point) => point.y)),
+    );
+  });
+
   it("Arabic independent ر descends and sweeps left without lifting", () => {
     expect(penLifts(ARABIC_RAA)).toBe(0);
     expect(ARABIC_RAA.strokes).toHaveLength(1);
@@ -5400,6 +5412,19 @@ describe("handwriting ductus", () => {
     );
     expect(src.variation).toMatch(
       /one continuous pen-down run.*00:07.0–00:07.6.*upper tip.*diagonally down and right.*curved shoulder.*turns left.*baseline.*without lifting.*one-way connector.*independent and final forms.*Noto Naskh.*scoped to Arabic.*contextual form/i,
+    );
+  });
+
+  it("Arabic independent ذ traces its body-first dot-last order to the University of Oregon", () => {
+    const src = ARABIC_DHAAL.source;
+    expect(src.url).toBe(
+      "https://opentext.uoregon.edu/introarabic/chapter/chapter-1/",
+    );
+    expect(src.citation).toMatch(
+      /Introduction to Arabic.*Alphabet: د ذ ر.*Dhaal.*Oregon.*2023.*2026-08-21/i,
+    );
+    expect(src.variation).toMatch(
+      /directly linked dhaal\.mp4.*body-first.*upper tip.*diagonally down and right.*curved shoulder.*turns left.*baseline.*without lifting.*pen lifts once.*single dot above.*one-way connector.*this.*throw.*dh.*independent and final forms.*two-stroke.*one-lift.*Noto Naskh.*shares its body with د.*own video.*rather than inferred/i,
     );
   });
 
