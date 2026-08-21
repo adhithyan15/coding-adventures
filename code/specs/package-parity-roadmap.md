@@ -4775,16 +4775,62 @@ the existing 100 KiB repetitive regression keeps compression load-bearing.
 LZSS's BUILD fronts now pin Python 3.13 instead of resolving an unsupported
 host default.
 
-The Go build tool passes its tests, vet, and trimpath build. Its Windows diff
-plan discovers 494 Python packages, selects and builds exactly
-`image_codec_png`, `pixel_container`, `zip`, and `lzss`, and skips 490. Neutral
-PNG fixture, capability taxonomy, and parity reporter suites pass 9, 7, and 10
+The Go build tool passes its tests, vet, and trimpath build. The exact Windows
+diff has three changed packages and selects eight affected nodes: `deflate`,
+`heap`, `huffman-tree`, `image_codec_png`, `lzss`, `pixel_container`, `zip`,
+and `zstd`. A clean execution builds all eight and skips 4,973. Neutral PNG
+fixture, capability taxonomy, and parity reporter suites pass 9, 7, and 10
 tests. The prospective collision-checked inventory is 15 lanes, 1,368
 identities, 4,561 slots, and zero collisions or unknown buckets;
 `image-codec-png` reaches ten lanes, moving the high-consensus band to 175
 packages with 276 gaps and the 5-9 band to 122 packages with 926 gaps.
 Production authority, state graph, diff, dependency, and credential audits are
 clean, and the empty capability manifest remains truthful.
+
+Final reviewed head `f600037fe3631ddccd8e3c18452f8db96bbf52df`
+completed all 30 checks with 24 successes, five expected skips, one neutral
+CodeQL result, and no failures or pending work. After the loop requested squash
+auto-merge, GitHub merged PR #12420 as
+`43b52d3b5ba230dd55a4fae35d0bee746b4a7d94` at 2026-08-21T11:37:49Z and
+deleted the source branch.
+
+### Post-#12420 refresh and Python heap BUILD-front selection
+
+The exact merged-main collision inventory at
+`43b52d3b5ba230dd55a4fae35d0bee746b4a7d94` remains 15 established lanes and
+1,368 canonical identities while advancing to 4,561 implementation slots.
+`image-codec-png` now spans ten lanes. The high-consensus band contains 175
+packages with 276 gaps; the 5-9 band contains 122 packages with 926 gaps; the
+2-4 band remains 166 packages with 2,087 gaps; and 905 singletons have 12,670
+gaps, including 716 Rust singletons. Canonical collisions and unknown language
+buckets remain zero.
+
+The Python PNG downstream run discovered a concrete build-front contract gap.
+`python/heap` creates `.venv` without `--clear` or a Python pin: the first
+Windows invocation selected unsupported Python 3.10 on this host, and the
+immediate second invocation deterministically failed because the environment
+already existed. `python-heap-build-front-idempotence` is selected as the next
+bounded item. Both BUILD fronts will recreate the environment, pin Python 3.13,
+and invoke that environment explicitly for Ruff, formatting, MyPy, and pytest.
+The validation gate runs each recipe twice in one checkout and then exercises
+the heap-dependent compression closure. Live audits across open PRs and remote
+branches find no heap, state, or roadmap owner.
+
+The same audit found 18 additional Python `BUILD_windows` recipes that create
+`.venv` without `--clear`. They are recorded separately as
+`python-uv-build-front-idempotence-audit`, dependent on this reference repair,
+so the present tranche does not silently expand into unrelated packages.
+Direct clean-tree validation also found that `huffman-tree` creates Python
+3.10 despite declaring Python >=3.12, then cannot install `heap`; its Brotli,
+Deflate, Huffman Compression, and related compression fronts share the
+unpinned uv pattern. That dependency-shaped follow-up is recorded separately
+as `python-huffman-compression-build-front-python313`. Until it lands, local
+downstream validation supplies `UV_PYTHON=3.13` explicitly and does not claim
+that the existing dependent fronts are standalone-clean.
+Remaining PNG lanes stay deferred: Haskell, Ruby, Perl, and Elixir still need
+compact-output prerequisite decisions, Elixir and complete Perl tooling are
+absent locally, and Rust has live PixelContainer/ZIP ownership plus a legacy
+filesystem-authority reconciliation.
 
 ## Autonomous Loop Protocol
 
