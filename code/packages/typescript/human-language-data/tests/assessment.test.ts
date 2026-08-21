@@ -118,7 +118,86 @@ describe("track assessment contracts", () => {
         ],
       })),
     };
-    expect(parseAssessmentContract(value, "alpha", policy).levels).toHaveLength(7);
+    const parsed = parseAssessmentContract(value, "alpha", policy);
+    expect(parsed.levels).toHaveLength(7);
+    expect(parsed.levels.every((level) => Object.keys(level.additionalComponents).length === 0)).toBe(true);
+  });
+
+  it("parses independently required provider components beyond the four-skill floor", () => {
+    const skill = { taskInventory: ["tasks.json"], passThreshold: 0.66 };
+    const value = {
+      version: 1,
+      language: "alpha",
+      levels: policy.levels.map((current, levelIndex) => ({
+        level: current,
+        target: { name: `Alpha ${current}`, basis: "external", source: "assessment-spec.md" },
+        skills: { reading: skill, listening: skill, writing: skill, speaking: skill },
+        additionalComponents: {
+          "lexis-grammar": {
+            name: "Lexis. Grammar",
+            taskInventory: [`task-shapes/${current}.json#lexis-grammar`],
+            passThreshold: 0.66,
+          },
+        },
+        writingStages: policy.writingStages
+          .filter((stage) => policy.levels.indexOf(stage.firstRequiredAt) <= levelIndex)
+          .map((stage) => stage.id),
+        fullMocks: [
+          { id: `${current}-mock-1`, timed: true, rubric: "rubric.md", answerKey: "answers-1.md" },
+          { id: `${current}-mock-2`, timed: true, rubric: "rubric.md", answerKey: "answers-2.md" },
+        ],
+      })),
+    };
+    const parsed = parseAssessmentContract(value, "alpha", policy);
+    expect(parsed.levels[0]?.additionalComponents["lexis-grammar"]).toEqual({
+      name: "Lexis. Grammar",
+      taskInventory: ["task-shapes/pre-A1.json#lexis-grammar"],
+      passThreshold: 0.66,
+    });
+  });
+
+  it("rejects additional components that shadow a universal skill", () => {
+    const skill = { taskInventory: ["tasks.json"], passThreshold: 0.6 };
+    const one = {
+      version: 1,
+      language: "alpha",
+      levels: [{
+        level: "pre-A1",
+        target: { name: "Alpha checkpoint", basis: "external", source: "alpha.md" },
+        skills: { reading: skill, listening: skill, writing: skill, speaking: skill },
+        additionalComponents: {
+          reading: { name: "Second reading", taskInventory: ["extra.json"], passThreshold: 0.6 },
+        },
+        writingStages: ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription"],
+        fullMocks: [
+          { id: "mock-1", timed: true, rubric: "rubric.md", answerKey: "answers-1.md" },
+          { id: "mock-2", timed: true, rubric: "rubric.md", answerKey: "answers-2.md" },
+        ],
+      }],
+    };
+    expect(() => parseAssessmentContract(one, "alpha", policy)).toThrow(/duplicates a universal skill/);
+  });
+
+  it("rejects a declared provider component without a task inventory", () => {
+    const skill = { taskInventory: ["tasks.json"], passThreshold: 0.6 };
+    const one = {
+      version: 1,
+      language: "alpha",
+      levels: [{
+        level: "pre-A1",
+        target: { name: "Alpha checkpoint", basis: "external", source: "alpha.md" },
+        skills: { reading: skill, listening: skill, writing: skill, speaking: skill },
+        additionalComponents: {
+          "lexis-grammar": { name: "Lexis. Grammar", taskInventory: [], passThreshold: 0.66 },
+        },
+        writingStages: ["observe-trace", "guided-copy", "delayed-copy", "dictation-transcription"],
+        fullMocks: [
+          { id: "mock-1", timed: true, rubric: "rubric.md", answerKey: "answers-1.md" },
+          { id: "mock-2", timed: true, rubric: "rubric.md", answerKey: "answers-2.md" },
+        ],
+      }],
+    };
+    expect(() => parseAssessmentContract(one, "alpha", policy)).toThrow(/taskInventory must be a non-empty string array/);
   });
 
   it("requires all four independently scored skills", () => {

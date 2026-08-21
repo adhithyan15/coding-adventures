@@ -39,6 +39,11 @@ export interface AssessmentContract {
       taskInventory: string[];
       passThreshold: number;
     }>;
+    additionalComponents: Record<string, {
+      name: string;
+      taskInventory: string[];
+      passThreshold: number;
+    }>;
     writingStages: string[];
     fullMocks: Array<{
       id: string;
@@ -158,6 +163,51 @@ export function parseAssessmentContract(
       }
       return [skill, { taskInventory: [...skillRaw.taskInventory], passThreshold: skillRaw.passThreshold }];
     })) as AssessmentContract["levels"][number]["skills"];
+    const additionalRaw = item.additionalComponents === undefined
+      ? {}
+      : object(item.additionalComponents, `${expectedLanguage}.${current}.additionalComponents`);
+    const additionalComponents = Object.fromEntries(Object.entries(additionalRaw).map(([id, component]) => {
+      if (!/^[a-z][a-z0-9-]*$/.test(id)) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents key '${id}' must be a lowercase slug`,
+        );
+      }
+      if (ASSESSMENT_SKILLS.includes(id as AssessmentSkill)) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents '${id}' duplicates a universal skill`,
+        );
+      }
+      const componentRaw = object(
+        component,
+        `${expectedLanguage}.${current}.additionalComponents.${id}`,
+      );
+      if (
+        !Array.isArray(componentRaw.taskInventory)
+        || componentRaw.taskInventory.length === 0
+        || componentRaw.taskInventory.some((task) => typeof task !== "string" || task.trim() === "")
+      ) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents.${id}.taskInventory must be a non-empty string array`,
+        );
+      }
+      if (
+        typeof componentRaw.passThreshold !== "number"
+        || componentRaw.passThreshold <= 0
+        || componentRaw.passThreshold > 1
+      ) {
+        throw new Error(
+          `assessment: ${expectedLanguage}.${current}.additionalComponents.${id}.passThreshold must be in (0, 1]`,
+        );
+      }
+      return [id, {
+        name: nonEmpty(
+          componentRaw.name,
+          `${expectedLanguage}.${current}.additionalComponents.${id}.name`,
+        ),
+        taskInventory: [...componentRaw.taskInventory],
+        passThreshold: componentRaw.passThreshold,
+      }];
+    }));
     if (!Array.isArray(item.writingStages) || item.writingStages.some((stage) => typeof stage !== "string")) {
       throw new Error(`assessment: ${expectedLanguage}.${current}.writingStages must be a string array`);
     }
@@ -192,6 +242,7 @@ export function parseAssessmentContract(
         source: nonEmpty(target.source, `${expectedLanguage}.${current}.target.source`),
       },
       skills: parsedSkills,
+      additionalComponents,
       writingStages: [...item.writingStages] as string[],
       fullMocks,
     };
