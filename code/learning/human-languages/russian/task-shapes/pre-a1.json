@@ -1,0 +1,261 @@
+{
+  "version": 1,
+  "language": "russian",
+  "level": "pre-A1",
+  "target": {
+    "name": "Coding Adventures Russian pre-A1 Assessment — project-defined bridge",
+    "basis": "project-defined"
+  },
+  "sources": [
+    {
+      "id": "ca-hl16-assessment-policy",
+      "title": "HL16 — Exam-ready books and the gentle writing ramp",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL16-exam-ready-books-and-writing-ramp.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-hl18-task-shapes",
+      "title": "HL18 — Four-skill task shapes",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/specs/HL18-four-skill-task-shapes.md",
+      "published": "2026-08-20",
+      "accessed": "2026-08-21"
+    },
+    {
+      "id": "ca-russian-assessment",
+      "title": "Coding Adventures Russian Assessment Specification",
+      "url": "https://github.com/adhithyan15/coding-adventures/blob/main/code/learning/human-languages/russian/assessment-spec.md",
+      "published": "2026-08-21",
+      "accessed": "2026-08-21"
+    }
+  ],
+  "administration": {
+    "writtenMinutes": 32,
+    "speakingMinutes": 8,
+    "speakingGroupMaximum": 1,
+    "speakingPreparationMinutes": 0,
+    "deliveryModes": ["paper", "recorded-audio", "live-interlocutor"]
+  },
+  "passRule": {
+    "maximumPoints": 400,
+    "passPoints": 240,
+    "requiresEverySectionAttempted": true,
+    "independentSkillThresholds": {
+      "reading": 0.6,
+      "listening": 0.6,
+      "writing": 0.6,
+      "speaking": 0.6
+    },
+    "note": "Each skill is a separate 100-point paper and must independently reach 60/100; the 240-point headline sum cannot compensate for a failed paper."
+  },
+  "sections": [
+    {
+      "skill": "reading",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "prea1-reading-signs-and-words",
+          "promptModes": ["written-cyrillic"],
+          "promptGenres": ["single-word sign", "single-word label"],
+          "responseModes": ["selection", "word-to-meaning match"],
+          "items": 6,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 40, "criteria": ["meaning selection", "Cyrillic recognition"] },
+          "aids": { "allowed": [], "forbidden": ["romanization", "dictionary"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-reading-phrases-and-notices",
+          "promptModes": ["written-cyrillic"],
+          "promptGenres": ["short phrase", "short notice", "memorized greeting"],
+          "responseModes": ["selection", "situation match"],
+          "items": 4,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 30, "criteria": ["phrase recognition", "situation match"] },
+          "aids": { "allowed": [], "forbidden": ["romanization", "dictionary"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-reading-personal-details",
+          "promptModes": ["written-cyrillic", "written-icon-supported-instruction"],
+          "promptGenres": ["personal detail", "short form field"],
+          "responseModes": ["selection", "detail match"],
+          "items": 4,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 30, "criteria": ["personal-detail recognition", "accurate selection"] },
+          "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["romanization", "dictionary"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "listening",
+      "minutes": 10,
+      "parts": [
+        {
+          "id": "prea1-listening-sounds-and-words",
+          "promptModes": ["recorded-speech"],
+          "promptGenres": ["isolated sound", "known word"],
+          "responseModes": ["selection", "picture match"],
+          "items": 6,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 5, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 40, "criteria": ["sound recognition", "word recognition"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "dictionary"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-listening-greeting-responses",
+          "promptModes": ["recorded-speech"],
+          "promptGenres": ["memorized greeting", "courtesy exchange"],
+          "responseModes": ["selection", "situation match"],
+          "items": 4,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 30, "criteria": ["communicative-function recognition", "appropriate response selection"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "dictionary"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-listening-personal-details",
+          "promptModes": ["recorded-speech"],
+          "promptGenres": ["isolated personal detail", "short personal statement"],
+          "responseModes": ["selection", "picture match"],
+          "items": 4,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": null,
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 30, "criteria": ["gist recognition", "personal-detail recognition"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "dictionary"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "writing",
+      "minutes": 12,
+      "parts": [
+        {
+          "id": "prea1-writing-delayed-recall",
+          "promptModes": ["briefly-visible-written-model"],
+          "promptGenres": ["known word"],
+          "responseModes": ["delayed handwritten recall"],
+          "items": 2,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 1, "maximum": 1, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 20, "criteria": ["recognizable Cyrillic letter sequence", "letter formation", "legibility"] },
+          "aids": { "allowed": ["ten-second initial model view"], "forbidden": ["visible model during response", "romanization", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-writing-dictation",
+          "promptModes": ["recorded-speech"],
+          "promptGenres": ["known word or greeting chunk"],
+          "responseModes": ["handwritten dictation", "Cyrillic transcription"],
+          "items": 4,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 5, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 1, "maximum": 3, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 2,
+          "scoring": { "maxRawPoints": 40, "criteria": ["sound-to-Cyrillic mapping", "word boundary", "legibility"] },
+          "aids": { "allowed": [], "forbidden": ["transcript", "romanization", "dictionary", "copyable model"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-writing-bounded-production",
+          "promptModes": ["written-icon-supported-instruction"],
+          "promptGenres": ["personal label", "greeting choice"],
+          "responseModes": ["independent handwritten word or memorized chunk"],
+          "items": 2,
+          "stimulusLength": { "unit": "words", "minimum": 1, "maximum": 5, "approximate": false },
+          "responseLength": { "unit": "words", "minimum": 1, "maximum": 5, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 0,
+          "scoring": { "maxRawPoints": 40, "criteria": ["task completion", "independent retrieval", "Cyrillic orthographic control", "legibility"] },
+          "aids": { "allowed": ["nonverbal picture cue"], "forbidden": ["copyable answer model", "romanization", "dictionary", "tracing guide"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        }
+      ],
+      "variants": []
+    },
+    {
+      "skill": "speaking",
+      "minutes": 8,
+      "parts": [
+        {
+          "id": "prea1-speaking-greeting-and-identity",
+          "promptModes": ["live-speech"],
+          "promptGenres": ["greeting exchange", "identity prompt"],
+          "responseModes": ["spoken memorized chunk", "short identity response"],
+          "items": 2,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 30, "criteria": ["task completion", "intelligibility", "appropriate greeting response", "identity supplied"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one repeat request"], "forbidden": ["written answer script", "romanization"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-speaking-familiar-questions",
+          "promptModes": ["live-speech", "picture cue"],
+          "promptGenres": ["familiar one-turn question", "personal prompt"],
+          "responseModes": ["short personal response"],
+          "items": 3,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 40, "criteria": ["question recognition", "relevant response", "intelligibility"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one slow repetition"], "forbidden": ["written answer script", "romanization"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        },
+        {
+          "id": "prea1-speaking-short-request",
+          "promptModes": ["live-speech", "picture cue"],
+          "promptGenres": ["familiar request situation"],
+          "responseModes": ["short spoken request"],
+          "items": 1,
+          "stimulusLength": { "unit": "seconds", "minimum": 2, "maximum": 8, "approximate": false },
+          "responseLength": { "unit": "seconds", "minimum": 2, "maximum": 15, "approximate": false },
+          "interaction": "individual",
+          "replayCount": 1,
+          "scoring": { "maxRawPoints": 30, "criteria": ["request completed", "appropriate courtesy", "intelligibility"] },
+          "aids": { "allowed": ["nonverbal picture cue", "one slow repetition"], "forbidden": ["written answer script", "romanization"], "notPublished": [] },
+          "notPublished": [],
+          "sourceIds": ["ca-hl16-assessment-policy", "ca-hl18-task-shapes", "ca-russian-assessment"]
+        }
+      ],
+      "variants": []
+    }
+  ]
+}
