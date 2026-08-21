@@ -1,62 +1,67 @@
 ---
+schema_version: 2
 id: AR-C01-marhaba
+spine_node: SPINE-MEET-GREET
 sequence: 20
 chapter: 1
 type: word
-headword: مرحبا
-gloss: hello / welcome (marḥaban — "there's room for you")
+headword: marḥaban
+gloss: hello / welcome — there is room for you
 concept_tag: GREETING-HELLO
-prerequisites: [AR-C01-salam]
-sounds: [ba-ra-ha, dots-on-skeleton]
+prerequisites: [AR-W00-alif-mim-salam]
+sounds: [m-r-h-b, emphatic-h]
 roots: [r-ḥ-b]
-est_minutes: 4
-reviews_of: [AR-C01-salam]
+duration:
+  max_seconds: 240
+requires:
+  knowledge: [AR-C01-SALAM-01, AR-SCRIPT-WRITE-SALAM-03]
+introduces:
+  knowledge: [AR-C01-MARHABA-04]
+practises:
+  knowledge: [AR-C01-SALAM-01, AR-C01-MARHABA-04]
+skills: [listening, speaking]
+modes: [interpretive, interpersonal]
+strands: [meaning-input, language-focus]
+register: informal
+variety: modern-standard-arabic
+reviews_of: [AR-C01-salam, AR-W00-alif-mim-salam]
 ---
 
-# مرحبا (marḥaban) — "hello," i.e. "there's room for you"
+# *marḥaban* — make room for someone
 
 ## Warm-up
+<!-- hl-knowledge: introduces=[AR-C01-MARHABA-04]; assesses=[AR-C01-SALAM-01] -->
 
-[PAUSE 2s] The casual, everyday "hi" — and, like the last word, a little
-sentence hiding inside a greeting.
+[PAUSE 2s] You can say *salām*. Now learn the light, everyday “hello” by ear
+before its written form asks anything of your eyes or hand.
 
-## The letters in this word
+## Sounds you'll need — Hear the word
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
 
-*(Skim if you read Arabic.)* Three new letters:
+Build three small beats: *mar* — *ḥa* — *ban*. The middle consonant is a warm,
+breathy sound made deeper in the throat than English *h*. Approximate it gently;
+clarity matters more than force.
 
-- **ب** = *bāʾ*, "b" — one dot **below**.
-- **ر** = *rāʾ*, a tapped "r" — a *one-way* letter (joins the letter before,
-  not the one after).
-- **ح** = *ḥāʾ*, a heavy, throaty "h" (from deep in the throat).
-
-With **م** and **ا** from *salām*, you can now read **باب** (*bāb*, "door"),
-**حب** (*ḥubb*, "love"), and then **مرحبا** right to left → *marḥaban*.
-
-> **Dots on a shared skeleton** distinguish letters: **ب / ت / ث** (b / t / th)
-> are the *same* shape with one dot below / two above / three above. Learn one
-> skeleton, often get three letters.
+> *marḥaban* = hello / welcome.
 
 ## The word, taken apart
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
 
-**مرحبا** (*marḥaban*) is built on the root **r–ḥ–b**, *spaciousness*: *raḥuba*
-("to be wide"), *raḥb* ("roomy") → *marḥaban* = "[a place of] welcome, **there
-is room for you**." Not an empty sound but a small welcome. Reply:
-*marḥabtayn*, "two welcomes."
-
-## Why it's said this way
-
-*marḥaban* is the light, friendly greeting — warm and unfussy, for friends and
-easy encounters, where *as-salāmu ʿalaykum* carries more weight and formality.
+The root **r–ḥ–b** carries spaciousness: *raḥb* is roomy. So *marḥaban* is not
+an empty signal. It suggests, “There is room for you here.” A warm reply is
+*marḥabtayn* — literally, “two welcomes.”
 
 ## Guided Practice
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-SALAM-01, AR-C01-MARHABA-04] -->
 
 [PAUSE 1s]
-- [YOU SAY: read right to left — mar · ḥa · ban → "marḥaban"]
-- [YOU SAY: the throaty ح in the middle — mar-**Ḥa**-ban]
-- [YOU SAY: the reply, "marḥabtayn" ("two welcomes")]
+- [YOU SAY: *mar* — *ḥa* — *ban*]
+- [YOU SAY: *marḥaban*, keeping the middle consonant gentle]
+- [YOU SAY: *marḥabtayn*, “two welcomes”]
 
 ## Wrap-up Recall
+<!-- hl-knowledge: introduces=[]; assesses=[AR-C01-MARHABA-04] -->
 
-[PAUSE 3s] Read **مرحبا**. What does it literally say, and from what root?
-("There's room for you," root *r–ḥ–b*, "spaciousness.") How do **ب ت ث** differ?
-(Same skeleton; one dot below / two above / three above.)
+[PAUSE 3s] What does the root r–ḥ–b suggest? (**Room, spaciousness.**) Say the
+three beats of *marḥaban*. The next two lessons reveal its new letter shapes in
+groups of two and three before you copy the whole greeting.

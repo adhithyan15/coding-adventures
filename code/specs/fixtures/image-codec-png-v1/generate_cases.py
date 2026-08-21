@@ -697,6 +697,44 @@ def document() -> dict[str, Any]:
                 "unsupported-feature",
             ),
             decode_error(
+                "png-v1-error-apng-actl",
+                png_from_zlib(
+                    1,
+                    1,
+                    z_one,
+                    after_ihdr=chunk(b"acTL", u32(1) + u32(0)),
+                ),
+                "unsupported-feature",
+            ),
+            decode_error(
+                "png-v1-error-apng-fctl",
+                png_from_zlib(
+                    1,
+                    1,
+                    z_one,
+                    after_ihdr=chunk(
+                        b"fcTL",
+                        u32(0)
+                        + u32(1)
+                        + u32(1)
+                        + u32(0)
+                        + u32(0)
+                        + struct.pack(">HHBB", 1, 100, 0, 0),
+                    ),
+                ),
+                "unsupported-feature",
+            ),
+            decode_error(
+                "png-v1-error-apng-fdat",
+                png_from_zlib(
+                    1,
+                    1,
+                    z_one,
+                    before_iend=chunk(b"fdAT", u32(1) + z_one),
+                ),
+                "unsupported-feature",
+            ),
+            decode_error(
                 "png-v1-error-plte-greyscale",
                 png_from_zlib(
                     1,

@@ -957,7 +957,7 @@ describe("corpus regression", () => {
       // that point — ஏ, ஐ, ஒ and the ten digits ௧-௰ — and exhausting the runway that
       // existed after it. Chapter 39 below then extends the track and teaches ஒ,
       // leaving twelve.
-      totalLessons: 3405, // Spanish's voice practice combines with Italian and Portuguese guided-copy bridges.
+      totalLessons: 3412, // Spanish's voice practice combines with Arabic's greeting-script ramp and the Romance writing openers.
       // Chapters 10 and 13 replace wide legacy tables with small singular-only
       // comparisons, so three more lessons move from sight to voice.
       // All seven Chapter-16 teaching steps are voice-first. Generating the book
@@ -966,7 +966,7 @@ describe("corpus regression", () => {
       // All eight Chapter-17 lessons remain voice-first.
       // +6, and it is the same six lessons that leave `sight` below.
       // +8, the eight chapter 4-5 lessons that drop their inline script sections.
-      voice: 2461, // Spanish adds one voice practice while Portuguese's opener becomes pen-dependent.
+      voice: 2463, // Spanish adds one voice practice after Arabic adds two voice-first greetings.
       // -3 sight / +3 voice: TA-C02-en, -enna and -peyar dropped their "The letters in
       // this word" sections once TA-W08 and TA-W09 gave those glyphs a home in the
       // strand. Verified against the GENERATED manifest, not the source — all three now
@@ -986,7 +986,10 @@ describe("corpus regression", () => {
       // -poy-varugiren, -naalai, -mindum-sandippom and TA-C05-pesu, -velai-sey, -vaazh,
       // -naan-tamizh-pesugiren all flip ["script-block"] -> ["no-visual-dependency"]
       // with an empty detachableSegments, verified against the GENERATED manifest.
+      sight: 587, // -3: Arabic moves three whole-form script blocks out of the spoken greeting lessons.
+      /* Historical cumulative sight ledger retained below.
       sight: 590, // HL-C259: +1 -- GU-C01-practice, see drivableLessons // HL-C251: +1 -- RU-C01-practice, see drivableLessons // merge with main (round 4): +4 -- HL-C231..C240 landed on main while this tranche was in flight // HL-C200: +35 telugu pre-A1 lessons, +7 chapters (chapters 46-52) // HL: +35 -- Sanskrit chapters 24-30, 35 pre-A1 vocabulary lessons // HL-C181: +5 -- chapter 277, the spine closes at 33/33 // HL-C175: +5 -- chapter 272, reading between the lines // HL-C166: +11 -- Sanskrit chapters 19 and 20 // HL-C157 // +5: vocabulary wave 5's honest cousin-script citations in a handful of lessons // +1: HL-C88 slices 5-6 // +18: vocabulary wave 6 // HL-C113 step 7: +2 -- 214 (question marks) and 215 (the accent) cannot be taught by voice // HL-C128 step 2: +1 -- ch223 // HL-C128 step 3: +1 // HL-C128 step 5: +1 // HL-C127: +2 -- ch243 and ch244 turn on written accents, which cannot be heard // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // malayalam pre-A1 tranche: 35 lessons over 7 chapters -- voice +34 and sight +1 sum to 35; the prefix figures follow from the per-chapter walk // latin pre-A1 tranche: +20 lessons, +4 chapters (chapters 44-47)
+      */
       // +3 pen: the Tamil ch1 writing lessons. Rule 1 in src/modality.ts derives
       // this from the lesson TYPE alone — it says outright that it does not look at
       // the body — so all three record reasons ["writing-type","script-block"], and
@@ -1000,10 +1003,19 @@ describe("corpus regression", () => {
       // +2: both new lessons are `type: writing`. voice, sight, drivableLessons,
       // drivablePrefixTotal, fullyDrivableChapters and unstartableChapters ALL hold —
       // this tranche adds lessons and removes no inline section, so nothing flips.
+      pen: 362, // Arabic's eight writing segments combine with the two Portuguese additions.
+      drivableLessons: 2463, // Spanish adds one hands-free practice after Arabic's two gains and the Romance opener losses.
+      /* Superseded merge-side totals:
+      pen: 360, // +8: seven Arabic writing micro-lessons plus salām's one-shape opening trace. // +2: Italian's opener trace and guided copy.
+      // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
+      // +8: exactly the eight lessons that moved sight -> voice.
+      drivableLessons: 2463, // +2: Arabic marḥaban and as-salāmu ʿalaykum are now hands-free. // Italian's opener leaves the hands-free set.
       pen: 354, // +4: Italian and Portuguese each add an opener trace and guided copy.
       // +6: exactly the six lessons that moved sight -> voice; no other lesson changes.
       // +8: exactly the eight lessons that moved sight -> voice.
       drivableLessons: 2461, // Spanish adds one hands-free practice while Portuguese's opener leaves the set.
+      drivableLessons: 2460, // Both Romance openers leave the hands-free set.
+      */
       drivablePercent: 72, // Chinese crosses the rounding boundary after its opener becomes pen. // telugu pre-A1 round 4: 72 -> 73, an IMPROVEMENT and a rounding boundary crossed: 2464/3392 is 72.6% against 2429/3357's 72.4%, because all 35 new lessons are drivable // telugu pre-A1 round 3: +35 lessons, +7 chapters (chapters 60-66) -- 35 ear-only lessons lift the whole-corpus share by one point // HL-C194: +16 Spanish words, all drivable // kannada pre-A1 tranche: +35 lessons, +7 chapters (chapters 46-52) // spanish pre-A1 tranche: +35 lessons, +7 chapters (chapters 282-288) // sanskrit pre-A1 round 2: +35 lessons, +7 chapters (chapters 31-37) // spanish pre-A1 round 2: +35 lessons, +7 chapters (chapters 289-295) // marathi script tranche: +11 lessons, +1 chapter (ch14) -- ten pieces, one per lesson, plus one assembly -- three script tranches in a row have added pen-only lessons and nothing drivable, so the corpus share finally rounds down; that is the cost of teaching script and it is recorded, not hidden
       trackCount: 23,
       chapterCount: 1004, // +1: Marwadi Chapter 1

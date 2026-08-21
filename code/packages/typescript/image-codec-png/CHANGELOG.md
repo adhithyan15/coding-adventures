@@ -1,5 +1,15 @@
 # Changelog — @coding-adventures/image-codec-png
 
+## 0.2.1 — 2026-08-20
+
+### Changed
+
+- Refuse APNG `acTL`, `fcTL`, and `fdAT` chunks as `unsupported-feature`
+  after normal chunk-type and CRC validation rather than skipping them as
+  unknown ancillary data.
+- Consume the expanded 85-case neutral corpus, including all three valid-CRC
+  APNG rejection vectors, while keeping the 29-code taxonomy unchanged.
+
 ## 0.2.0 — 2026-08-20
 
 ### Added
