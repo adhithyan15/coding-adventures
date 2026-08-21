@@ -6,11 +6,17 @@
       "id": "FR-PATH-001",
       "spine_node": "SPINE-MEET-GREET",
       "lessons": [
-        "FR-C01-salut"
+        "FR-C01-salut",
+        "FR-W01-salut-observe",
+        "FR-W01-salut-guided-copy",
+        "FR-W01-salut-delayed-copy",
+        "FR-W01-salut-dictation"
       ],
       "before": [],
       "inline": [],
-      "after": []
+      "after": [
+        "FR-EXT-001-WRITING-RUNWAY"
+      ]
     },
     {
       "id": "FR-PATH-002",
@@ -763,6 +769,20 @@
     }
   },
   "extensions": [
+    {
+      "id": "FR-EXT-001-WRITING-RUNWAY",
+      "stage": "pre-A1",
+      "kind": "required",
+      "category": "script",
+      "canDo": "I can trace, copy, recall, and write salut from a heard cue while preserving its silent final t.",
+      "prerequisites": [],
+      "lessons": [
+        "FR-W01-salut-observe",
+        "FR-W01-salut-guided-copy",
+        "FR-W01-salut-delayed-copy",
+        "FR-W01-salut-dictation"
+      ]
+    },
     {
       "id": "FR-EXT-007-LANGUAGE-SPECIFIC",
       "stage": "pre-A1",

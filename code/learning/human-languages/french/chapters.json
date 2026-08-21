@@ -18,9 +18,9 @@
       "payoff": {
         "lesson": "FR-C01-practice",
         "kind": "task",
-        "summary": "Complete FR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in French, recognize the reply, and choose an appropriate response.",
-        "assesses": [],
-        "note": "This legacy schema-v1 chapter has no typed knowledge atoms yet. The payoff is anchored to real canonical lesson content, but its representativeness remains authored rather than atom-scored until migration."
+        "summary": "Complete FR-C01-practice, the canonical closing checkpoint, and demonstrate the chapter promise: greet someone in French, recognize the reply, choose an appropriate response, and write salut from memory.",
+        "assesses": ["FR-ORTHO-SALUT-01"],
+        "note": "The chapter remains mostly legacy schema v1, but its new typed writing runway is closed explicitly at the canonical payoff."
       }
     },
     {
