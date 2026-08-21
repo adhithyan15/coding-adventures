@@ -12,11 +12,11 @@ script ramp: 56 lessons above 3 new glyphs; 5 opening more than 1 writing system
 cousin layer: 219 lessons show another script (max 26 glyphs) — context, never charged to the budget
 script closure: 741 lessons ask the reader to decode a glyph nobody taught them, across 17 non-Latin tracks; 0 of those tracks teach NO letters at all
 exposure: 303 native-script headwords carry no romanization, so they are load-bearing rather than exposure; the rule exempts 2156 glyphs and makes 181 lessons clean on its own
-order: 12 lessons with no declared sequence across 2 tracks; 6 prerequisites and 7 reviews pointing forward
+order: 12 lessons with no declared sequence across 2 tracks; 6 prerequisites and 6 reviews pointing forward
 reinforcement: 632 of 4720 atoms never revisited (13%); missed windows R1 1191, R2 3690, R3 3558, R4 2075
 forward references: 466 uses of material a later lesson teaches
 writing stages: 2/23 tracks prove the cumulative pre-A1 ladder; 27 evidence blocks, 0 invalid; 895 missing (track, level, stage) pairs
-super-gentle ramp: 22/23 tracks carry detected or unmeasured debt; 132 named track/debt items
+super-gentle ramp: 22/23 tracks carry detected or unmeasured debt; 131 named track/debt items
 writing ramp: 0 track(s) never practise writing; 4 start after lesson one
 gentleness measurement: 492 lesson(s) remain atom-measurement blind
 VOCABULARY vs HL09 §3.1 targets: spanish 153/300 at-or-below pre-A1 (332 total), sanskrit 174/300 at-or-below pre-A1 (240 total), telugu 186/300 at-or-below pre-A1 (239 total), hindi 155/300 at-or-below pre-A1 (212 total), malayalam 154/300 at-or-below pre-A1 (212 total); 22 of 23 tracks short of the level they are working on

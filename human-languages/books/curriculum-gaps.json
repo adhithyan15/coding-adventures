@@ -31,7 +31,7 @@
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
     "lessonsWithoutSequence": 12,
-    "forwardReviews": 7,
+    "forwardReviews": 6,
     "atomsNeverRevisited": 632,
     "forwardReferences": 466,
     "chaptersWithoutCapability": 0,
@@ -6172,14 +6172,6 @@
       }
     ],
     "order": [
-      {
-        "lessonId": "HI-C05-rahna",
-        "language": "hindi",
-        "chapter": 5,
-        "kind": "forward-review",
-        "other": "HI-C05-main-hindi-bolta-hun",
-        "detail": "reviews HI-C05-main-hindi-bolta-hun, which the learner does not reach for another 3 lesson(s)"
-      },
       {
         "lessonId": "FA-C01-bale",
         "language": "persian",
@@ -60426,7 +60418,7 @@
         "lessonCount": 273,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 1,
+        "forwardReviews": 0,
         "atomsTaught": 350,
         "atomsNeverRevisited": 76,
         "forwardReferences": 10
@@ -60596,7 +60588,7 @@
       "lessonsWithoutSequence": 12,
       "tracksWithUnorderedLessons": 2,
       "forwardPrerequisites": 6,
-      "forwardReviews": 7,
+      "forwardReviews": 6,
       "atomsTaught": 4720,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
@@ -70804,10 +70796,10 @@
         "scriptSystemSpikes": 0,
         "scriptClosureViolations": 72,
         "neverTaughtGlyphs": 12,
-        "orderDefects": 1,
+        "orderDefects": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
-        "forwardReviews": 1,
+        "forwardReviews": 0,
         "forwardReferences": 10,
         "atomsTaught": 350,
         "atomsNeverRevisited": 76,
@@ -70817,13 +70809,6 @@
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [
-          {
-            "language": "hindi",
-            "kind": "order-integrity",
-            "count": 1,
-            "unit": "order/dependency defect(s)",
-            "detail": "declare a unique reading order and close every prerequisite and review before use"
-          },
           {
             "language": "hindi",
             "kind": "forward-language",
@@ -70869,10 +70854,10 @@
         ],
         "next": {
           "language": "hindi",
-          "kind": "order-integrity",
-          "count": 1,
-          "unit": "order/dependency defect(s)",
-          "detail": "declare a unique reading order and close every prerequisite and review before use"
+          "kind": "forward-language",
+          "count": 10,
+          "unit": "use(s)",
+          "detail": "teach target-language material before load-bearing use"
         }
       },
       {
@@ -72101,13 +72086,6 @@
         "detail": "declare a unique reading order and close every prerequisite and review before use"
       },
       {
-        "language": "hindi",
-        "kind": "order-integrity",
-        "count": 1,
-        "unit": "order/dependency defect(s)",
-        "detail": "declare a unique reading order and close every prerequisite and review before use"
-      },
-      {
         "language": "russian",
         "kind": "order-integrity",
         "count": 1,
@@ -73017,7 +72995,7 @@
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 492,
-      "findings": 132
+      "findings": 131
     }
   },
   "levelGate": {
