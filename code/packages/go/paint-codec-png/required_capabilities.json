@@ -3,5 +3,5 @@
   "version": 1,
   "package": "go/paint-codec-png",
   "capabilities": [],
-  "justification": "Pure in-memory PNG encoding and decoding for PixelContainer using the Go standard library. No filesystem, network, process, environment, or FFI access needed."
+  "justification": "Pure in-memory PixelContainer PNG adapter backed by the repository IC18 image-codec-png and ZIP/LZSS byte codecs. No filesystem, network, process, environment, clock, entropy, native, or FFI access is used."
 }
