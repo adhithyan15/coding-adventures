@@ -24,8 +24,8 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/generated-book-hashes.json",
-      "justification": "The explicit generate:books command refreshes the deterministic app/book source-hash manifest; CI normally verifies it without writing."
+      "target": "../../learning/human-languages/core/generated-book-hashes/*.json",
+      "justification": "The explicit generate:books command refreshes one independently mergeable app/book source-hash manifest per language; CI normally verifies them without writing."
     },
     {
       "category": "fs",
@@ -48,8 +48,8 @@
     {
       "category": "fs",
       "action": "write",
-      "target": "../../learning/human-languages/core/generated-narration-hashes.json",
-      "justification": "The explicit generate:narration command refreshes the narration source-hash manifest that detects drift between the lessons and the committed voice script; CI normally verifies it without writing."
+      "target": "../../learning/human-languages/core/generated-narration-hashes/*.json",
+      "justification": "The explicit generate:narration command refreshes one independently mergeable source-hash manifest per language to detect drift between lessons and committed voice scripts; CI normally verifies them without writing."
     },
     {
       "category": "fs",

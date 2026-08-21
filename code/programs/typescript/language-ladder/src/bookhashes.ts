@@ -9,6 +9,10 @@ interface BookHashEntry {
   tex: string;
 }
 
+interface BookHashManifest {
+  chapters: BookHashEntry[];
+}
+
 /**
  * The HL05 capability ledgers, loaded LAZILY alongside the manifest.
  *
@@ -46,15 +50,15 @@ interface ChapterCapabilityEntry {
  * than a wrong claim. Call `whenBookHashesReady()` and re-render when it
  * resolves; tests await it in `beforeAll`.
  */
+const BOOK_HASH_MANIFEST_LOADERS = import.meta.glob(
+  "../../../../learning/human-languages/core/generated-book-hashes/*.json",
+  { import: "default" },
+) as Record<string, () => Promise<BookHashManifest>>;
+
 let ENTRIES: BookHashEntry[] = [];
 
 const MANIFEST_READY: Promise<void> = Promise.all([
-  import("../../../../learning/human-languages/core/generated-book-hashes.json").then(
-    (module) => {
-      const manifest = (module.default ?? module) as { chapters: BookHashEntry[] };
-      ENTRIES = manifest.chapters;
-    },
-  ),
+  loadBookHashes(),
   loadCapabilities(),
 ])
   .then(() => {})
@@ -73,6 +77,13 @@ export function whenBookHashesReady(): Promise<void> {
 }
 
 const CAPABILITIES = new Map<string, ChapterCapabilityEntry>();
+
+async function loadBookHashes(): Promise<void> {
+  const manifests = await Promise.all(
+    Object.values(BOOK_HASH_MANIFEST_LOADERS).map((load) => load()),
+  );
+  ENTRIES = manifests.flatMap((manifest) => manifest.chapters ?? []);
+}
 
 async function loadCapabilities(): Promise<void> {
   const ledgers = await Promise.all(

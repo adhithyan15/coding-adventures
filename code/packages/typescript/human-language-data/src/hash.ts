@@ -67,7 +67,7 @@ export function combineLessonHashes(entries: LessonHashEntry[]): string {
  *
  * Before this, `chapters.json` was invisible to the fingerprint. CI still caught a
  * stale chapter, because `book-cli --check` compares full text — but
- * `generated-book-hashes.json` came out byte-identical, so `language-ladder`'s
+ * the generated book-hash ledger came out byte-identical, so `language-ladder`'s
  * `bookHashStatus` reported a genuinely stale `.tex` as synced.
  */
 export function canonicalChapterHash(

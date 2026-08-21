@@ -1,0 +1,518 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "german",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:fbdf9f56aa0bf130",
+      "lessonIds": [
+        "GE-C01-hallo",
+        "GE-W01-hallo-guided-copy",
+        "GE-C01-gut",
+        "GE-C01-der-die-das",
+        "GE-C01-tag",
+        "GE-C01-guten-tag",
+        "GE-C01-morgen",
+        "GE-C01-guten-morgen",
+        "GE-C01-abend",
+        "GE-C01-guten-abend",
+        "GE-C01-nacht",
+        "GE-C01-gute-nacht",
+        "GE-C01-practice"
+      ],
+      "voiceLessons": 11,
+      "drivablePrefix": 0,
+      "text": "german/narration/ch01.txt",
+      "json": "german/narration/ch01.json",
+      "textHash": "fnv1a64:f37ed25e0596bf8f",
+      "jsonHash": "fnv1a64:e29da4d8c2238dd9"
+    },
+    {
+      "language": "german",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:c44c7d00c35088f5",
+      "lessonIds": [
+        "GE-C02-ich",
+        "GE-C02-heissen",
+        "GE-C02-ich-heisse",
+        "GE-C02-du-sie",
+        "GE-C02-wie",
+        "GE-C02-wie-heissen-sie",
+        "GE-C02-freut-mich",
+        "GE-C02-practice"
+      ],
+      "voiceLessons": 8,
+      "drivablePrefix": 8,
+      "text": "german/narration/ch02.txt",
+      "json": "german/narration/ch02.json",
+      "textHash": "fnv1a64:bbed14f4c32d65db",
+      "jsonHash": "fnv1a64:8e5136fa8f795e6a"
+    },
+    {
+      "language": "german",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:4cb03e23d3d38e6f",
+      "lessonIds": [
+        "GE-C03-danke",
+        "GE-C03-bitte",
+        "GE-C03-gehen",
+        "GE-C03-wie-geht-es",
+        "GE-C03-wie-geht-register",
+        "GE-C03-es-geht",
+        "GE-C03-practice",
+        "GE-C03-formal-practice"
+      ],
+      "voiceLessons": 8,
+      "drivablePrefix": 8,
+      "text": "german/narration/ch03.txt",
+      "json": "german/narration/ch03.json",
+      "textHash": "fnv1a64:37033fd4047b3991",
+      "jsonHash": "fnv1a64:a5af417eded2a0a7"
+    },
+    {
+      "language": "german",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:93f7fa99a45c99fc",
+      "lessonIds": [
+        "GE-C04-auf-wiedersehen",
+        "GE-C04-tschuss",
+        "GE-C04-bis-bald",
+        "GE-C04-bis-morgen",
+        "GE-C04-bis-spater",
+        "GE-C04-practice",
+        "GE-W01-eszett",
+        "GE-W02-umlauts",
+        "GE-W03-capitalization"
+      ],
+      "voiceLessons": 6,
+      "drivablePrefix": 6,
+      "text": "german/narration/ch04.txt",
+      "json": "german/narration/ch04.json",
+      "textHash": "fnv1a64:f41ea9e71ef8d25e",
+      "jsonHash": "fnv1a64:3c08b91a13ce7eb8"
+    },
+    {
+      "language": "german",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:6167866188cc7a4e",
+      "lessonIds": [
+        "GE-C05-wohnen",
+        "GE-C05-machen",
+        "GE-C05-lernen",
+        "GE-C05-ich-lerne-deutsch",
+        "GE-C05-practice"
+      ],
+      "voiceLessons": 5,
+      "drivablePrefix": 5,
+      "text": "german/narration/ch05.txt",
+      "json": "german/narration/ch05.json",
+      "textHash": "fnv1a64:04ee664778731999",
+      "jsonHash": "fnv1a64:d8e0bed3a9f8f5b7"
+    },
+    {
+      "language": "german",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:6866acd0f8171296",
+      "lessonIds": [
+        "GE-C06-zahlen-1-5",
+        "GE-C06-zahlen-6-10"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "german/narration/ch06.txt",
+      "json": "german/narration/ch06.json",
+      "textHash": "fnv1a64:44ef522197d162f6",
+      "jsonHash": "fnv1a64:fdc1829a825239c4"
+    },
+    {
+      "language": "german",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:3d80023a6ae5350c",
+      "lessonIds": [
+        "GE-C07-wochentage-1",
+        "GE-C07-wochentage-2"
+      ],
+      "voiceLessons": 0,
+      "drivablePrefix": 0,
+      "text": "german/narration/ch07.txt",
+      "json": "german/narration/ch07.json",
+      "textHash": "fnv1a64:7c84327897fedd56",
+      "jsonHash": "fnv1a64:179dda10263539c8"
+    },
+    {
+      "language": "german",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:43f8eec17cde9e22",
+      "lessonIds": [
+        "GE-C08-uhr",
+        "GE-C08-mittag-mitternacht"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "german/narration/ch08.txt",
+      "json": "german/narration/ch08.json",
+      "textHash": "fnv1a64:8b2960f7341a3736",
+      "jsonHash": "fnv1a64:ab91a571c8ec019f"
+    },
+    {
+      "language": "german",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:bb300434897bdc90",
+      "lessonIds": [
+        "GE-C09-monate",
+        "GE-C09-jahreszeiten"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "german/narration/ch09.txt",
+      "json": "german/narration/ch09.json",
+      "textHash": "fnv1a64:f55bd3307c9ca715",
+      "jsonHash": "fnv1a64:b1280861b0fe5419"
+    },
+    {
+      "language": "german",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:ec1871a82a4f5293",
+      "lessonIds": [
+        "GE-C10-eltern",
+        "GE-C10-geschwister"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "german/narration/ch10.txt",
+      "json": "german/narration/ch10.json",
+      "textHash": "fnv1a64:ad4198d51fe8049c",
+      "jsonHash": "fnv1a64:6373fb1d217b9e97"
+    },
+    {
+      "language": "german",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:8cccc1dc0356d9b4",
+      "lessonIds": [
+        "GE-C11-brot",
+        "GE-C11-wasser-wein"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "german/narration/ch11.txt",
+      "json": "german/narration/ch11.json",
+      "textHash": "fnv1a64:2f185347f13e9e41",
+      "jsonHash": "fnv1a64:07e659f5b2796f09"
+    },
+    {
+      "language": "german",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:8f39891bf2f8c2d6",
+      "lessonIds": [
+        "GE-C12-elf-zwoelf",
+        "GE-C12-zahlen-13-20"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "german/narration/ch12.txt",
+      "json": "german/narration/ch12.json",
+      "textHash": "fnv1a64:ad93e46ef5dcda71",
+      "jsonHash": "fnv1a64:6b179a8e99bb66a8"
+    },
+    {
+      "language": "german",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:d26e6b5bb3b7dc17",
+      "lessonIds": [
+        "GE-C13-schwarz-weiss",
+        "GE-C13-rot-blau"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "german/narration/ch13.txt",
+      "json": "german/narration/ch13.json",
+      "textHash": "fnv1a64:6ed1e69f52088e78",
+      "jsonHash": "fnv1a64:fc72ac45d2c3a0db"
+    },
+    {
+      "language": "german",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:85680b13a9ee2b91",
+      "lessonIds": [
+        "GE-C14-haben",
+        "GE-C14-alter"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "german/narration/ch14.txt",
+      "json": "german/narration/ch14.json",
+      "textHash": "fnv1a64:8711f08c20f17bda",
+      "jsonHash": "fnv1a64:89ebd07d17a64913"
+    },
+    {
+      "language": "german",
+      "chapter": 15,
+      "sourceHash": "fnv1a64:c8a2b075c0bd847f",
+      "lessonIds": [
+        "GE-C15-perfekt",
+        "GE-C15-praeteritum",
+        "GE-C15-praeteritum-map"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch15.txt",
+      "json": "german/narration/ch15.json",
+      "textHash": "fnv1a64:64dd876a3ef08855",
+      "jsonHash": "fnv1a64:7e819edaed331efd"
+    },
+    {
+      "language": "german",
+      "chapter": 16,
+      "sourceHash": "fnv1a64:3e3201f79e13dc35",
+      "lessonIds": [
+        "GE-C16-sein",
+        "GE-C16-perfekt-sein",
+        "GE-C16-perfekt-sein-agreement"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "german/narration/ch16.txt",
+      "json": "german/narration/ch16.json",
+      "textHash": "fnv1a64:7f6e04ffdd5a2613",
+      "jsonHash": "fnv1a64:1bb0cd4185c6c460"
+    },
+    {
+      "language": "german",
+      "chapter": 17,
+      "sourceHash": "fnv1a64:7a8a652337163960",
+      "lessonIds": [
+        "GE-C17-kopf",
+        "GE-C17-kopf-haupt",
+        "GE-C17-hand"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch17.txt",
+      "json": "german/narration/ch17.json",
+      "textHash": "fnv1a64:0f6cf37951ace1c7",
+      "jsonHash": "fnv1a64:3dd66b31f9fb575c"
+    },
+    {
+      "language": "german",
+      "chapter": 18,
+      "sourceHash": "fnv1a64:9ee7c138518419ac",
+      "lessonIds": [
+        "GE-C18-ja",
+        "GE-C18-nein"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 2,
+      "text": "german/narration/ch18.txt",
+      "json": "german/narration/ch18.json",
+      "textHash": "fnv1a64:3c95657affbf0a3b",
+      "jsonHash": "fnv1a64:449d3e4358046d09"
+    },
+    {
+      "language": "german",
+      "chapter": 19,
+      "sourceHash": "fnv1a64:56d533c514140e42",
+      "lessonIds": [
+        "GE-C19-bitte-requests"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "german/narration/ch19.txt",
+      "json": "german/narration/ch19.json",
+      "textHash": "fnv1a64:e3922081d4606042",
+      "jsonHash": "fnv1a64:b263695e7f706b27"
+    },
+    {
+      "language": "german",
+      "chapter": 20,
+      "sourceHash": "fnv1a64:2949289880ce15c7",
+      "lessonIds": [
+        "GE-C20-entschuldigung"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "german/narration/ch20.txt",
+      "json": "german/narration/ch20.json",
+      "textHash": "fnv1a64:9ce079dca9cb122b",
+      "jsonHash": "fnv1a64:eaca86acc09df447"
+    },
+    {
+      "language": "german",
+      "chapter": 21,
+      "sourceHash": "fnv1a64:e773a690ba617e60",
+      "lessonIds": [
+        "GE-C21-das-wetter"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "german/narration/ch21.txt",
+      "json": "german/narration/ch21.json",
+      "textHash": "fnv1a64:e1313c12976293f9",
+      "jsonHash": "fnv1a64:2bbf778609a34dd7"
+    },
+    {
+      "language": "german",
+      "chapter": 22,
+      "sourceHash": "fnv1a64:d7f81c59cce27f45",
+      "lessonIds": [
+        "GE-C22-hund-katze"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "german/narration/ch22.txt",
+      "json": "german/narration/ch22.json",
+      "textHash": "fnv1a64:015dca0f2ba368b5",
+      "jsonHash": "fnv1a64:bcba654e694a4eca"
+    },
+    {
+      "language": "german",
+      "chapter": 23,
+      "sourceHash": "fnv1a64:6fb7a16474f85d3e",
+      "lessonIds": [
+        "GE-C23-gruen-gelb"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 1,
+      "text": "german/narration/ch23.txt",
+      "json": "german/narration/ch23.json",
+      "textHash": "fnv1a64:96af6b0d067f021c",
+      "jsonHash": "fnv1a64:f25b61bea2d51d71"
+    },
+    {
+      "language": "german",
+      "chapter": 24,
+      "sourceHash": "fnv1a64:a6259dd9fea16afd",
+      "lessonIds": [
+        "GE-C24-denken",
+        "GE-C24-verstehen",
+        "GE-C24-lesen",
+        "GE-C24-schreiben"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch24.txt",
+      "json": "german/narration/ch24.json",
+      "textHash": "fnv1a64:ac105e0ff17b46e8",
+      "jsonHash": "fnv1a64:4b10f1455657247f"
+    },
+    {
+      "language": "german",
+      "chapter": 25,
+      "sourceHash": "fnv1a64:eb085c89028cb9aa",
+      "lessonIds": [
+        "GE-C25-nehmen",
+        "GE-C25-fragen",
+        "GE-C25-helfen",
+        "GE-C25-moegen-lieben"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch25.txt",
+      "json": "german/narration/ch25.json",
+      "textHash": "fnv1a64:88ef7d723c403055",
+      "jsonHash": "fnv1a64:fa064ee00e23a7ba"
+    },
+    {
+      "language": "german",
+      "chapter": 26,
+      "sourceHash": "fnv1a64:9f1e817b7beec48a",
+      "lessonIds": [
+        "GE-C26-sitzen",
+        "GE-C26-stehen",
+        "GE-C26-schlafen",
+        "GE-C26-hoeren"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch26.txt",
+      "json": "german/narration/ch26.json",
+      "textHash": "fnv1a64:85ffccdf04545476",
+      "jsonHash": "fnv1a64:2987171e016b5ded"
+    },
+    {
+      "language": "german",
+      "chapter": 27,
+      "sourceHash": "fnv1a64:1bd7e0838fb35899",
+      "lessonIds": [
+        "GE-C27-gehen",
+        "GE-C27-laufen",
+        "GE-C27-oeffnen",
+        "GE-C27-schliessen"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch27.txt",
+      "json": "german/narration/ch27.json",
+      "textHash": "fnv1a64:70899409818d857b",
+      "jsonHash": "fnv1a64:81f8b10789084d45"
+    },
+    {
+      "language": "german",
+      "chapter": 28,
+      "sourceHash": "fnv1a64:72138ddefaa606ae",
+      "lessonIds": [
+        "GE-C28-kaffee",
+        "GE-C28-tee",
+        "GE-C28-milch"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch28.txt",
+      "json": "german/narration/ch28.json",
+      "textHash": "fnv1a64:de539fb4ff0d3752",
+      "jsonHash": "fnv1a64:50b299ea302a3540"
+    },
+    {
+      "language": "german",
+      "chapter": 29,
+      "sourceHash": "fnv1a64:9235ee0c6650b4d7",
+      "lessonIds": [
+        "GE-C29-freund",
+        "GE-C29-freundin",
+        "GE-C29-familie"
+      ],
+      "voiceLessons": 3,
+      "drivablePrefix": 3,
+      "text": "german/narration/ch29.txt",
+      "json": "german/narration/ch29.json",
+      "textHash": "fnv1a64:db0443b188232973",
+      "jsonHash": "fnv1a64:e234a59397ad2f76"
+    },
+    {
+      "language": "german",
+      "chapter": 30,
+      "sourceHash": "fnv1a64:3d76ed21c25da698",
+      "lessonIds": [
+        "GE-C30-auge",
+        "GE-C30-ohr",
+        "GE-C30-mund",
+        "GE-C30-nase"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch30.txt",
+      "json": "german/narration/ch30.json",
+      "textHash": "fnv1a64:21ca7448e9ca583a",
+      "jsonHash": "fnv1a64:946e736c1e37337f"
+    },
+    {
+      "language": "german",
+      "chapter": 31,
+      "sourceHash": "fnv1a64:a016d74815f78532",
+      "lessonIds": [
+        "GE-C31-arm",
+        "GE-C31-finger",
+        "GE-C31-fuss",
+        "GE-C31-herz"
+      ],
+      "voiceLessons": 4,
+      "drivablePrefix": 4,
+      "text": "german/narration/ch31.txt",
+      "json": "german/narration/ch31.json",
+      "textHash": "fnv1a64:d94003c2bce0d255",
+      "jsonHash": "fnv1a64:00dff966fd9cac7b"
+    }
+  ],
+  "findings": []
+}

@@ -7,14 +7,14 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:2aa3d495ce57eafa",
+  "sourceHash": "fnv1a64:e5f168764350268e",
   "summary": {
-    "totalLessons": 247,
-    "voice": 182,
+    "totalLessons": 249,
+    "voice": 181,
     "sight": 41,
-    "pen": 24,
-    "drivableLessons": 182,
-    "drivablePercent": 74,
+    "pen": 27,
+    "drivableLessons": 181,
+    "drivablePercent": 73,
     "trackCount": 1,
     "chapterCount": 66,
     "drivablePrefixTotal": 172,
@@ -26,11 +26,11 @@
   "tracks": [
     {
       "language": "malayalam",
-      "lessonCount": 247,
-      "voice": 182,
+      "lessonCount": 249,
+      "voice": 181,
       "sight": 41,
-      "pen": 24,
-      "drivablePercent": 74,
+      "pen": 27,
+      "drivablePercent": 73,
       "drivablePrefixTotal": 172,
       "modalities": [
         "voice",
@@ -54,13 +54,14 @@
         },
         {
           "chapter": 2,
-          "lessonCount": 9,
-          "voice": 4,
+          "lessonCount": 10,
+          "voice": 3,
           "sight": 5,
-          "pen": 0,
+          "pen": 2,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C02-peru",
@@ -69,13 +70,14 @@
         },
         {
           "chapter": 3,
-          "lessonCount": 6,
+          "lessonCount": 7,
           "voice": 1,
           "sight": 5,
-          "pen": 0,
+          "pen": 1,
           "modalities": [
             "voice",
-            "sight"
+            "sight",
+            "pen"
           ],
           "drivablePrefix": 0,
           "firstNonVoiceLesson": "ML-C03-engane",
@@ -1509,25 +1511,55 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:4a79c6125d8f596e"
+      "sourceHash": "fnv1a64:e9d348626eb61ca9"
+    },
+    {
+      "id": "ML-W02-santosham-guided-copy",
+      "language": "malayalam",
+      "chapter": 2,
+      "sequence": 145,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:302aa3f33ad582a2",
+      "detachableSegments": [
+        "Script — notice before moving",
+        "Writing — trace two visible shapes",
+        "Writing — one guided copy"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C02-practice",
       "language": "malayalam",
       "chapter": 2,
       "sequence": 150,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
       "reasons": [
-        "no-visual-dependency"
+        "writing-block"
       ],
       "coreModality": "voice",
       "coreReasons": [
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:a842043a35b2edf7"
+      "sourceHash": "fnv1a64:114795962eddf610",
+      "detachableSegments": [
+        "Writing check — keep the model visible"
+      ]
     },
     {
       "id": "ML-C03-engane",
@@ -1651,6 +1683,31 @@
       ],
       "coreDrivable": true,
       "sourceHash": "fnv1a64:50faef297aa213bd"
+    },
+    {
+      "id": "ML-W03-santosham-delayed-copy",
+      "language": "malayalam",
+      "chapter": 3,
+      "sequence": 215,
+      "modality": "pen",
+      "derived": "pen",
+      "drivable": false,
+      "reasons": [
+        "writing-type",
+        "writing-block",
+        "sight-cue"
+      ],
+      "coreModality": "pen",
+      "coreReasons": [
+        "writing-type",
+        "sight-cue"
+      ],
+      "coreDrivable": false,
+      "sourceHash": "fnv1a64:388046eca08ab1d4",
+      "detachableSegments": [
+        "Writing — one try after a delay"
+      ],
+      "delivery": "script"
     },
     {
       "id": "ML-C04-pokuka",

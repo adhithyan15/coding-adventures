@@ -1,0 +1,118 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "punjabi",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:7f422214f3ce65b5",
+      "lessonIds": [
+        "PA-C06-numbers-1-5",
+        "PA-C06-panj-convergence"
+      ],
+      "tex": "punjabi/book/chapters/ch06-numbers-1-5.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:68a1b3c7a03f963e",
+      "lessonIds": [
+        "PA-C07-hona",
+        "PA-C07-jana",
+        "PA-C07-auna",
+        "PA-C07-khana",
+        "PA-C07-vekhna",
+        "PA-C07-janna"
+      ],
+      "tex": "punjabi/book/chapters/ch07-core-verbs.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:d216b9ff18e63fbb",
+      "lessonIds": [
+        "PA-C08-sochna",
+        "PA-C08-samajhna",
+        "PA-C08-parhna",
+        "PA-C08-likhna"
+      ],
+      "tex": "punjabi/book/chapters/ch08-mind-and-tone.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:bb53454620f304e2",
+      "lessonIds": [
+        "PA-C09-laina",
+        "PA-C09-puchhna",
+        "PA-C09-madad-karna",
+        "PA-C09-pasand"
+      ],
+      "tex": "punjabi/book/chapters/ch09-taking-and-liking.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:cd2c0c79da536da0",
+      "lessonIds": [
+        "PA-C10-paani",
+        "PA-C10-chaa",
+        "PA-C10-dudh",
+        "PA-C10-roti"
+      ],
+      "tex": "punjabi/book/chapters/ch10-request-food-drink.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:2eff3cda40a2abe1",
+      "lessonIds": [
+        "PA-C11-dost",
+        "PA-C11-parivar",
+        "PA-C11-bhara",
+        "PA-C11-bhain"
+      ],
+      "tex": "punjabi/book/chapters/ch11-friend-and-family.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 12,
+      "sourceHash": "fnv1a64:44fc2ddb1f86fe37",
+      "lessonIds": [
+        "PA-C12-akkh",
+        "PA-C12-kann",
+        "PA-C12-munh",
+        "PA-C12-nakk"
+      ],
+      "tex": "punjabi/book/chapters/ch12-face-parts.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 13,
+      "sourceHash": "fnv1a64:ecc392a64b165b06",
+      "lessonIds": [
+        "PA-C13-dil",
+        "PA-C13-sir"
+      ],
+      "tex": "punjabi/book/chapters/ch13-heart-and-head.tex"
+    },
+    {
+      "language": "punjabi",
+      "chapter": 14,
+      "sourceHash": "fnv1a64:4c20fbf2e7cd6812",
+      "lessonIds": [
+        "PA-W01-ha",
+        "PA-W01-aa-matra",
+        "PA-W01-bindi",
+        "PA-W01-na",
+        "PA-W01-ii-matra",
+        "PA-W01-ma",
+        "PA-W01-sa",
+        "PA-W01-ta",
+        "PA-W01-e-matra",
+        "PA-W01-namaste-read"
+      ],
+      "tex": "punjabi/book/chapters/ch14-script-first.tex"
+    }
+  ]
+}

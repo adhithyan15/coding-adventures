@@ -113,7 +113,14 @@ interface GeneratedBookHashManifest {
   }>;
 }
 
-const MANIFEST_PATH = "core/generated-book-hashes.json";
+export const BOOK_HASH_MANIFEST_DIR = "core/generated-book-hashes";
+
+function manifestPath(language: string): string {
+  if (!/^[a-z0-9-]+$/.test(language)) {
+    throw new Error(`unsafe generated book manifest language '${language}'`);
+  }
+  return `${BOOK_HASH_MANIFEST_DIR}/${language}.json`;
+}
 
 function loadConfig(root: string): BookGenerationConfig {
   const config = JSON.parse(
@@ -236,7 +243,7 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     maxLinearisableTableColumns: policy.maxLinearisableTableColumns,
   });
   const outputs = new Map<string, string>();
-  const manifest: GeneratedBookHashManifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
+  const manifests = new Map<string, GeneratedBookHashManifest>();
   for (const configuredTarget of config.targets) {
     const { scriptSet, ...plainTarget } = configuredTarget;
     const capability = requireChapterCapability(
@@ -273,6 +280,11 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
     const generated = renderBookChapter(target, lessons, capability);
     safeOutput(root, target.output);
     outputs.set(target.output, generated.tex);
+    let manifest = manifests.get(target.language);
+    if (!manifest) {
+      manifest = { version: 1, algorithm: "fnv1a64", chapters: [] };
+      manifests.set(target.language, manifest);
+    }
     manifest.chapters.push({
       language: target.language,
       chapter: target.chapter,
@@ -429,10 +441,10 @@ export function generatedBookOutputs(root = defaultCurriculumRoot()): Map<string
       });
     outputs.set(index.output, renderBookIndex(index, lessons, chapters));
   }
-  manifest.chapters.sort(
-    (left, right) => left.language.localeCompare(right.language) || left.chapter - right.chapter,
-  );
-  outputs.set(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`);
+  for (const [language, manifest] of [...manifests].sort(([left], [right]) => left.localeCompare(right))) {
+    manifest.chapters.sort((left, right) => left.chapter - right.chapter);
+    outputs.set(manifestPath(language), `${JSON.stringify(manifest, null, 2)}\n`);
+  }
   return outputs;
 }
 
@@ -447,7 +459,9 @@ export function runBookGeneration(
   }
   let mismatch = false;
   for (const [relative, expected] of generatedBookOutputs(root)) {
-    const output = relative === MANIFEST_PATH ? join(root, relative) : safeOutput(root, relative);
+    const output = relative.startsWith(`${BOOK_HASH_MANIFEST_DIR}/`)
+      ? join(root, relative)
+      : safeOutput(root, relative);
     if (mode === "--write") {
       mkdirSync(dirname(output), { recursive: true });
       writeFileSync(output, expected, "utf8");

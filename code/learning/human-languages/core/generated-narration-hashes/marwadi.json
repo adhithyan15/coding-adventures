@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "maxLinearisableTableColumns": 3,
+  "chapters": [
+    {
+      "language": "marwadi",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:ac69312516661d42",
+      "lessonIds": [
+        "MW-W01-ra",
+        "MW-W01-aa-matra",
+        "MW-W01-raam",
+        "MW-W01-sa",
+        "MW-W01-saa",
+        "MW-C01-raam-raam-saa",
+        "MW-C01-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "marwadi/narration/ch01.txt",
+      "json": "marwadi/narration/ch01.json",
+      "textHash": "fnv1a64:9ed0384bad3462e2",
+      "jsonHash": "fnv1a64:2b437b9cdc4110f3"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:2b82af50b3ab04d0",
+      "lessonIds": [
+        "MW-W02-aa-independent",
+        "MW-W02-bha",
+        "MW-C02-aabhaar",
+        "MW-C02-practice"
+      ],
+      "voiceLessons": 1,
+      "drivablePrefix": 0,
+      "text": "marwadi/narration/ch02.txt",
+      "json": "marwadi/narration/ch02.json",
+      "textHash": "fnv1a64:e35cca3d954d646a",
+      "jsonHash": "fnv1a64:5b00e74e60f6c24d"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:ab063e492a0daec8",
+      "lessonIds": [
+        "MW-W03-ha",
+        "MW-W03-anusvara",
+        "MW-C03-haan-saa",
+        "MW-C03-listen-say",
+        "MW-C03-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 0,
+      "text": "marwadi/narration/ch03.txt",
+      "json": "marwadi/narration/ch03.json",
+      "textHash": "fnv1a64:94c8ba5505ec69f1",
+      "jsonHash": "fnv1a64:5b908f221596e8a3"
+    }
+  ],
+  "findings": []
+}

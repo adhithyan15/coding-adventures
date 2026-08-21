@@ -625,7 +625,7 @@ introduced. Pairing is whole-word only: the Arabic track teaches ا (*alif*) as 
 lesson, and a substring replace once turned سلام into `سلا (alif)م`.
 
 The export is hash-gated exactly like the generated `.tex`:
-`core/generated-narration-hashes.json` records an FNV-1a fingerprint of each chapter's
+`core/generated-narration-hashes/<language>.json` records an FNV-1a fingerprint of each chapter's
 lesson AST and of the two files generated from it, so a lesson edited without
 re-running the exporter fails `--check` instead of leaving a voice assistant
 confidently teaching a lesson that no longer exists.
@@ -679,7 +679,7 @@ Two design decisions are worth knowing before consuming it:
   driving edition, which is the safe direction to be wrong in. `features.blockModality`
   in the header says whether a given build carries block data.
 - **Nothing is authored.** The manifest is derived, exactly like
-  `core/generated-book-hashes.json`. HL08 deliberately refused to put `modality:` in
+  `core/generated-book-hashes/<language>.json`. HL08 deliberately refused to put `modality:` in
   1,096 frontmatter files, because 1,096 authored copies of a computed fact are 1,096
   places for it to go stale. `check:modality` runs in CI beside `check:books` so the
   manifest cannot drift from the lessons it describes.
@@ -733,7 +733,7 @@ track's `chapters.json` capability ledger; the config is rejected if it tries to
 repeat either field, and a declaration without canonical chapter metadata fails
 closed. The generator orders schema-v2 lessons by `sequence`, writes the LaTeX
 chapter, and records a stable FNV-1a fingerprint in
-`core/generated-book-hashes.json`. The fingerprint covers the chapter's lessons
+`core/generated-book-hashes/<language>.json`. The fingerprint covers the chapter's lessons
 **and the capability fields the book prints** (`title`, `label`, `canDo`, and
 `payoff.summary`), so an
 edit to `chapters.json` moves it. It does not cover `payoff.note`, which the book

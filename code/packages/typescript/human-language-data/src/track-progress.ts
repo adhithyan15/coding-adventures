@@ -5,7 +5,7 @@ import type {
   LanguageRegistry,
 } from "./types.js";
 
-/** The small part of generated-book-hashes.json needed by the progress table. */
+/** The small part of a generated-book-hashes language shard needed by the progress table. */
 export interface GeneratedBookChapterRef {
   language: string;
   chapter: number;

@@ -4,6 +4,15 @@ All notable changes to the Japanese curriculum track are recorded here.
 
 ## [Unreleased]
 
+### Added — pre-A1 four-skill task shapes (#12363)
+
+- Made the project-defined rung below JLPT/JF A1 executable as four independently
+  scored reading, listening, writing, and speaking sections.
+- Kept writing productive: delayed kana recall, dictation/transcription, and one
+  bounded independent response earn points; tracing and visible copying do not.
+- Recorded exact project-owned timing and length bounds without inventing an
+  external “JLPT N6” or implying that chapter coverage proves readiness.
+
 ### Added — pre-A1-to-C2 four-skill assessment contract (#12361)
 
 - Replaced the old unofficial one-level-per-JLPT mapping with the official CEFR

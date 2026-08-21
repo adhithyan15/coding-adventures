@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "algorithm": "fnv1a64",
+  "chapters": [
+    {
+      "language": "chinese",
+      "chapter": 1,
+      "sourceHash": "fnv1a64:facc0883c4ec7149",
+      "lessonIds": [
+        "ZH-C01-tones",
+        "ZH-C01-ni",
+        "ZH-C01-hao",
+        "ZH-C01-nihao",
+        "ZH-C01-tone-sandhi",
+        "ZH-C01-hao-fond",
+        "ZH-C01-practice"
+      ],
+      "tex": "chinese/book/chapters/ch01-nihao.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:6caa25387e298904",
+      "lessonIds": [
+        "ZH-W01-ren",
+        "ZH-W01-ren-radical",
+        "ZH-W01-er",
+        "ZH-W01-ni-build",
+        "ZH-W01-nu",
+        "ZH-W01-zi",
+        "ZH-W01-hao-build"
+      ],
+      "tex": "chinese/book/chapters/ch02-components.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 3,
+      "sourceHash": "fnv1a64:e9e6cad65da7ceb1",
+      "lessonIds": [
+        "ZH-W03-yi",
+        "ZH-C03-yi",
+        "ZH-W03-er",
+        "ZH-C03-er",
+        "ZH-W03-san",
+        "ZH-C03-san",
+        "ZH-W03-si",
+        "ZH-C03-si",
+        "ZH-W03-wu",
+        "ZH-C03-wu",
+        "ZH-C03-practice"
+      ],
+      "tex": "chinese/book/chapters/ch03-numbers.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 4,
+      "sourceHash": "fnv1a64:1017c2a5eb9b6d6b",
+      "lessonIds": [
+        "ZH-W04-kou",
+        "ZH-C04-kou",
+        "ZH-W04-ri",
+        "ZH-C04-ri",
+        "ZH-W04-bu",
+        "ZH-C04-bu",
+        "ZH-C04-practice"
+      ],
+      "tex": "chinese/book/chapters/ch04-negation.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 5,
+      "sourceHash": "fnv1a64:e57ff95fe2751f97",
+      "lessonIds": [
+        "ZH-W05-shi",
+        "ZH-C05-shi",
+        "ZH-C05-bushi",
+        "ZH-C05-practice"
+      ],
+      "tex": "chinese/book/chapters/ch05-shi.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 6,
+      "sourceHash": "fnv1a64:ff7b30998c3daca4",
+      "lessonIds": [
+        "ZH-W06-zai",
+        "ZH-W06-jian",
+        "ZH-C06-zaijian",
+        "ZH-C06-practice"
+      ],
+      "tex": "chinese/book/chapters/ch06-zaijian.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 7,
+      "sourceHash": "fnv1a64:d3d04aa5ae46e30e",
+      "lessonIds": [
+        "ZH-W07-zao",
+        "ZH-W07-shang",
+        "ZH-C07-zaoshang",
+        "ZH-C07-zaoshanghao",
+        "ZH-C07-practice"
+      ],
+      "tex": "chinese/book/chapters/ch07-zaoshang.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 8,
+      "sourceHash": "fnv1a64:1999da1beffc3768",
+      "lessonIds": [
+        "ZH-W08-wo",
+        "ZH-C08-wo",
+        "ZH-W08-ming",
+        "ZH-W08-zi",
+        "ZH-C08-mingzi",
+        "ZH-C08-practice"
+      ],
+      "tex": "chinese/book/chapters/ch08-mingzi.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:44bcdc857065ad05",
+      "lessonIds": [
+        "ZH-W09-shen",
+        "ZH-W09-me",
+        "ZH-C09-shenme",
+        "ZH-C09-practice"
+      ],
+      "tex": "chinese/book/chapters/ch09-shenme.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 10,
+      "sourceHash": "fnv1a64:35e11539b70daa41",
+      "lessonIds": [
+        "ZH-W10-yan",
+        "ZH-W10-xie",
+        "ZH-C10-xiexie",
+        "ZH-C10-buxie",
+        "ZH-C10-practice"
+      ],
+      "tex": "chinese/book/chapters/ch10-xiexie.tex"
+    },
+    {
+      "language": "chinese",
+      "chapter": 11,
+      "sourceHash": "fnv1a64:efeb50daae8dbbb0",
+      "lessonIds": [
+        "ZH-W11-qing",
+        "ZH-C11-qing",
+        "ZH-C11-practice"
+      ],
+      "tex": "chinese/book/chapters/ch11-qing.tex"
+    }
+  ]
+}

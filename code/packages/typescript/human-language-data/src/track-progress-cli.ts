@@ -22,12 +22,22 @@ interface GeneratedBookManifest {
 }
 
 function loadGeneratedBookChapters(root: string): GeneratedBookChapterRef[] {
-  const path = join(root, "core", "generated-book-hashes.json");
-  const manifest = JSON.parse(readFileSync(path, "utf8")) as GeneratedBookManifest;
-  if (manifest.version !== 1 || !Array.isArray(manifest.chapters)) {
-    throw new Error("generated-book-hashes.json must declare version 1 and chapters[]");
+  const directory = join(root, "core", "generated-book-hashes");
+  const chapters: GeneratedBookChapterRef[] = [];
+  for (const entry of readdirSync(directory, { withFileTypes: true })
+    .filter((candidate) => candidate.isFile() && candidate.name.endsWith(".json"))
+    .sort((left, right) => left.name.localeCompare(right.name))) {
+    const language = entry.name.slice(0, -".json".length);
+    const manifest = JSON.parse(readFileSync(join(directory, entry.name), "utf8")) as GeneratedBookManifest;
+    if (manifest.version !== 1 || !Array.isArray(manifest.chapters)) {
+      throw new Error(`${entry.name} must declare version 1 and chapters[]`);
+    }
+    if (manifest.chapters.some((chapter) => chapter.language !== language)) {
+      throw new Error(`${entry.name} may contain only ${language} chapters`);
+    }
+    chapters.push(...manifest.chapters);
   }
-  return manifest.chapters;
+  return chapters;
 }
 
 function safeProgressOutput(root: string, relative: string): string {
