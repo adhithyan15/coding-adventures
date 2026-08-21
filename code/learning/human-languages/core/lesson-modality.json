@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:490c59fc86f5ea9b",
+  "sourceHash": "fnv1a64:aa6148b0dec837f6",
   "summary": {
     "totalLessons": 3411,
     "voice": 2462,
@@ -17510,10 +17510,10 @@
           "firstNonVoiceLesson": null,
           "drivable": true,
           "drivableLessonIds": [
-            "UR-C01-ji-han",
-            "UR-C01-nahin",
             "UR-C01-salam",
-            "UR-C01-shukriya"
+            "UR-C01-shukriya",
+            "UR-C01-ji-han",
+            "UR-C01-nahin"
           ]
         },
         {
@@ -81236,46 +81236,10 @@
       "sourceHash": "fnv1a64:7edf9e9e12600c58"
     },
     {
-      "id": "UR-C01-ji-han",
-      "language": "urdu",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:a50644718ff79815"
-    },
-    {
-      "id": "UR-C01-nahin",
-      "language": "urdu",
-      "chapter": 1,
-      "sequence": null,
-      "modality": "voice",
-      "derived": "voice",
-      "drivable": true,
-      "reasons": [
-        "no-visual-dependency"
-      ],
-      "coreModality": "voice",
-      "coreReasons": [
-        "no-visual-dependency"
-      ],
-      "coreDrivable": true,
-      "sourceHash": "fnv1a64:62f6a8f345192f8a"
-    },
-    {
       "id": "UR-C01-salam",
       "language": "urdu",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 10,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -81287,13 +81251,13 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:56bcf932b70c0520"
+      "sourceHash": "fnv1a64:22f7084edd86a5e8"
     },
     {
       "id": "UR-C01-shukriya",
       "language": "urdu",
       "chapter": 1,
-      "sequence": null,
+      "sequence": 20,
       "modality": "voice",
       "derived": "voice",
       "drivable": true,
@@ -81305,7 +81269,43 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:c9d290fdc45f48d1"
+      "sourceHash": "fnv1a64:24864dac73362330"
+    },
+    {
+      "id": "UR-C01-ji-han",
+      "language": "urdu",
+      "chapter": 1,
+      "sequence": 30,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:07e96fdba7f1a673"
+    },
+    {
+      "id": "UR-C01-nahin",
+      "language": "urdu",
+      "chapter": 1,
+      "sequence": 40,
+      "modality": "voice",
+      "derived": "voice",
+      "drivable": true,
+      "reasons": [
+        "no-visual-dependency"
+      ],
+      "coreModality": "voice",
+      "coreReasons": [
+        "no-visual-dependency"
+      ],
+      "coreDrivable": true,
+      "sourceHash": "fnv1a64:8d69a621b67390d7"
     },
     {
       "id": "UR-C02-mera-naam",
