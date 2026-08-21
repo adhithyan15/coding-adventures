@@ -4477,8 +4477,8 @@ The prospective schema-3 inventory keeps 1,368 canonical identities and adds
 one reviewed slot for 4,558 total. `image-codec-png` now spans C#, Dart, F#,
 Go, Java, Kotlin, and TypeScript; the 5-9 band has 123 packages with 934 gaps.
 Canonical collisions and unknown language buckets remain zero. The branch
-rebased cleanly onto `f5971cbe2b1b1c0c3bd08f80606777a797b120a4` after an
-unrelated human-language-only main advance.
+rebased cleanly through `2e248b9070a4e7a89cea4bef83ad5caa5917148c` after two
+unrelated human-language-only main advances.
 
 ## Autonomous Loop Protocol
 
