@@ -4359,7 +4359,7 @@
     {
       "language": "marwadi",
       "chapter": 1,
-      "sourceHash": "fnv1a64:e7878175209e60ca",
+      "sourceHash": "fnv1a64:20fbd7ec23e5601d",
       "lessonIds": [
         "MW-W01-ra",
         "MW-W01-aa-matra",
@@ -4370,6 +4370,18 @@
         "MW-C01-practice"
       ],
       "tex": "marwadi/book/chapters/ch01-ram-ram-sa.tex"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 2,
+      "sourceHash": "fnv1a64:e88908db8b506bb6",
+      "lessonIds": [
+        "MW-W02-aa-independent",
+        "MW-W02-bha",
+        "MW-C02-aabhaar",
+        "MW-C02-practice"
+      ],
+      "tex": "marwadi/book/chapters/ch02-aabhaar.tex"
     },
     {
       "language": "persian",

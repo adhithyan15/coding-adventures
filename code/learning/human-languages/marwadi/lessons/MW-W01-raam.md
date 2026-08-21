@@ -46,8 +46,8 @@ Join it to the piece you know:
 
 At the end of this word, the built-in vowel of **म** is not pronounced in
 ordinary speech. Read the whole word *rām*. **राम** is the name *Ram*. The
-Marwadi greeting you are building repeats this name: **राम-राम सा**. Today you
-only need the one word **राम**; the complete greeting still comes later.
+Marwadi greeting you are building will repeat this name. Today you only need
+the one word **राम**; the complete greeting still comes later.
 
 ## Writing — from copy to memory
 <!-- hl-knowledge: introduces=[]; assesses=[MW-SCRIPT-MA-01, MW-SCRIPT-RAAM-01, MW-LEX-RAAM-01] -->

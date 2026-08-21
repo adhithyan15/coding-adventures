@@ -4,7 +4,7 @@
   "chapter": 1,
   "title": "Ram-Ram Sa: A Greeting the Hand Can Make",
   "drivablePrefix": 0,
-  "sourceHash": "fnv1a64:7312bd0d6718cbd3",
+  "sourceHash": "fnv1a64:ac69312516661d42",
   "lessons": [
     {
       "id": "MW-W01-ra",
@@ -247,7 +247,7 @@
         "writing-block",
         "script-block"
       ],
-      "sourceHash": "fnv1a64:75400d08ec5a3897",
+      "sourceHash": "fnv1a64:e6652ecc529a071f",
       "notice": {
         "modality": "pen",
         "needs": [
@@ -295,7 +295,7 @@
             },
             {
               "kind": "speech",
-              "text": "At the end of this word, the built-in vowel of म is not pronounced in ordinary speech. Read the whole word rām. राम is the name Ram. The Marwadi greeting you are building repeats this name: राम-राम सा (rām-rām sā). Today you only need the one word राम; the complete greeting still comes later."
+              "text": "At the end of this word, the built-in vowel of म is not pronounced in ordinary speech. Read the whole word rām. राम is the name Ram. The Marwadi greeting you are building will repeat this name. Today you only need the one word राम; the complete greeting still comes later."
             }
           ]
         },

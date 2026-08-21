@@ -1,0 +1,498 @@
+{
+  "version": 1,
+  "language": "marwadi",
+  "chapter": 2,
+  "title": "Aabhaar: Formal Thanks, Two New Signs",
+  "drivablePrefix": 0,
+  "sourceHash": "fnv1a64:2b82af50b3ab04d0",
+  "lessons": [
+    {
+      "id": "MW-W02-aa-independent",
+      "sequence": 80,
+      "title": "आ — long ā at the beginning",
+      "headword": "आ",
+      "romanization": "ā",
+      "gloss": "the independent long-ā vowel sign used when a word begins with ā",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:64a32f92736a50df",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one new sign"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new sign until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "With the page covered, write राम and give the greeting reply you learnt in Chapter 1. Uncover. Point to the vowel mark in रा: you know ा when long ā follows a consonant."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one new sign",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "When long ā begins a word, it stands by itself:"
+            },
+            {
+              "kind": "speech",
+              "text": "आ — ā."
+            },
+            {
+              "kind": "speech",
+              "text": "Notice the upright line at the right. Say one steady ā while your finger follows the sign."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe, trace, copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "look at आ (ā) for three seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "finger-trace it once."
+            },
+            {
+              "kind": "speech",
+              "text": "copy it twice."
+            },
+            {
+              "kind": "speech",
+              "text": "compare only the upright line and the top bar."
+            },
+            {
+              "kind": "speech",
+              "text": "Do not add a word yet. This session belongs to one sign."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the models. Write आ (ā) once, then uncover and compare."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W02-aa-independent-choice",
+              "prompt": "Which sign writes long ā at the beginning of a word?",
+              "assesses": [
+                "MW-SCRIPT-AA-INDEPENDENT-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "आ",
+                "aa independent",
+                "independent aa"
+              ],
+              "feedback": {
+                "correct": "Yes: initial long ā stands as आ.",
+                "incorrect": "Use the independent vowel sign आ; ा must attach to a consonant."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-W02-bha",
+      "sequence": 90,
+      "title": "भ — bha, with a small breath",
+      "headword": "भ",
+      "romanization": "bha",
+      "gloss": "the Devanagari consonant bha",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-type",
+        "writing-block",
+        "script-block",
+        "sight-cue"
+      ],
+      "sourceHash": "fnv1a64:496d994124c20134",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "a pen and something to write on",
+          "your eyes, for letter shapes on the page",
+          "your eyes, because the lesson points at something written down"
+        ],
+        "waitUntilStopped": [
+          "Script — one new sign and sound"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want a pen and something to write on, your eyes, for letter shapes on the page and your eyes, because the lesson points at something written down. You can listen to everything else now — leave the section called Script — one new sign and sound until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 4,
+              "perItem": false,
+              "source": "[PAUSE 4s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write स, then आ (ā), from memory. Check both before moving on."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — one new sign and sound",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "भ — bha."
+            },
+            {
+              "kind": "speech",
+              "text": "Begin like English b, then let a small puff of air follow. Hold a hand near your mouth: bha. The breath is part of the sound."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — observe, trace, copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "look at भ (bha)."
+            },
+            {
+              "kind": "speech",
+              "text": "finger-trace its lower shape, then the upright line."
+            },
+            {
+              "kind": "speech",
+              "text": "copy भ (bha) twice."
+            },
+            {
+              "kind": "speech",
+              "text": "say bha after each copy."
+            },
+            {
+              "kind": "speech",
+              "text": "Stop there. The next lesson will join this sign to signs already in your hand."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Cover the model for five seconds. Write भ (bha), uncover, and compare."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-W02-bha-sound",
+              "prompt": "Read the new sign भ (bha) and name its sound.",
+              "assesses": [
+                "MW-SCRIPT-BHA-01"
+              ],
+              "responseSeconds": 8,
+              "acceptedResponses": [
+                "bha",
+                "भ"
+              ],
+              "feedback": {
+                "correct": "Right: भ is bha, with a breath after b.",
+                "incorrect": "Read भ as bha: b followed by a small puff of air."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C02-aabhaar",
+      "sequence": 100,
+      "title": "आभार (ābhār) — formal thanks, built from known signs",
+      "headword": "आभार",
+      "romanization": "ābhār",
+      "gloss": "formal thanks; gratitude",
+      "script": "devanagari",
+      "modality": "pen",
+      "derivedModality": "pen",
+      "modalityReasons": [
+        "writing-block",
+        "script-block"
+      ],
+      "sourceHash": "fnv1a64:21b84f3790a00905",
+      "notice": {
+        "modality": "pen",
+        "needs": [
+          "your eyes, for letter shapes on the page"
+        ],
+        "waitUntilStopped": [
+          "Script — build the word"
+        ],
+        "text": "Before we start: this one needs your hands, so it is not a driving lesson. You will want your eyes, for letter shapes on the page. You can listen to everything else now — leave the section called Script — build the word until you have stopped, and I will say so again when we reach it."
+      },
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 5,
+              "perItem": false,
+              "source": "[PAUSE 5s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Write सा from memory. Then read these four pieces: आ (ā), भ (bha), ा, र."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "script",
+          "title": "Script — build the word",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Join only signs you already know:"
+            },
+            {
+              "kind": "speech",
+              "text": "आ + भ (bha) + ा + र = आभार ābhār — formal thanks; gratitude."
+            },
+            {
+              "kind": "speech",
+              "text": "Rajasthan Sahitya Akademi's Jāgtī Jot uses आभार (ābhār) when expressing gratitude in Rajasthani prose. It is a formal, Sanskrit-derived word. This lesson keeps that register visible rather than pretending every kind of thanks sounds the same."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "writing",
+          "title": "Writing — from guided to delayed copy",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "copy आभार (ābhār) once while looking."
+            },
+            {
+              "kind": "speech",
+              "text": "point to भा and say bhā."
+            },
+            {
+              "kind": "speech",
+              "text": "hide the word for ten seconds."
+            },
+            {
+              "kind": "speech",
+              "text": "write आभार (ābhār) from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "compare one sign at a time."
+            },
+            {
+              "kind": "speech",
+              "text": "If one sign stalls, practise only that sign before trying the word again."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Read आभार (ābhār), say its meaning, then write it once with the model covered."
+            },
+            {
+              "kind": "speech",
+              "text": "Source: Rajasthan Sahitya Akademi, Jāgtī Jot, April 2004."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C02-aabhaar-build",
+              "prompt": "Build the formal Marwadi/Rajasthani word for thanks from आ (ā) + भ (bha) + ा + र.",
+              "assesses": [
+                "MW-SCRIPT-AABHAAR-01",
+                "MW-LEX-AABHAAR-01"
+              ],
+              "responseSeconds": 12,
+              "acceptedResponses": [
+                "आभार — formal thanks",
+                "आभार",
+                "aabhaar",
+                "ābhār"
+              ],
+              "feedback": {
+                "correct": "Yes: आ + भ + ा + र makes आभार, formal thanks.",
+                "incorrect": "Join the four taught pieces without adding a sign: आभार."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "MW-C02-practice",
+      "sequence": 110,
+      "title": "Practice — receive a kindness, offer formal thanks",
+      "headword": "आभार",
+      "romanization": "ābhār",
+      "gloss": "formal thanks offered after help, a gift, or a kindness",
+      "script": "devanagari",
+      "modality": "voice",
+      "derivedModality": "voice",
+      "modalityReasons": [
+        "no-visual-dependency"
+      ],
+      "sourceHash": "fnv1a64:4bc95709643763e8",
+      "notice": null,
+      "blocks": [
+        {
+          "index": 0,
+          "type": "warmup",
+          "title": "Warm-up",
+          "segments": [
+            {
+              "kind": "pause",
+              "seconds": 6,
+              "perItem": false,
+              "source": "[PAUSE 6s]"
+            },
+            {
+              "kind": "speech",
+              "text": "Give the respectful Chapter 1 greeting from memory. Then, with the new word covered, write आ (ā), then भ (bha). Uncover and check."
+            }
+          ]
+        },
+        {
+          "index": 1,
+          "type": "input",
+          "title": "The exchange — one courtesy move",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Someone helps you or gives you something. Offer formal thanks:"
+            },
+            {
+              "kind": "speech",
+              "text": "आभार (ābhār)। — Ābhār. — Thank you. / My gratitude."
+            },
+            {
+              "kind": "speech",
+              "text": "Use it here as a complete short response. A later chapter can add a more casual Marwadi gratitude form; do not make this one word carry every register."
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "type": "guided-production",
+          "title": "Guided Practice — four tiny skills",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "Listen: ask someone or a screen reader to say ābhār; identify it as formal gratitude."
+            },
+            {
+              "kind": "speech",
+              "text": "Speak: imagine receiving help and say आभार (ābhār) without reading."
+            },
+            {
+              "kind": "speech",
+              "text": "Read: choose the thanks word from राम, आभार (ābhār), सा."
+            },
+            {
+              "kind": "speech",
+              "text": "Write: close the book for fifteen seconds, then write आभार (ābhār) from memory."
+            },
+            {
+              "kind": "speech",
+              "text": "The written response counts only with the model hidden."
+            }
+          ]
+        },
+        {
+          "index": 3,
+          "type": "recall",
+          "title": "Wrap-up recall",
+          "segments": [
+            {
+              "kind": "speech",
+              "text": "If आ (ā) or भ (bha) stalled, return to that sign's two-minute practice before repeating the whole word."
+            },
+            {
+              "kind": "activity",
+              "scored": true,
+              "id": "MW-C02-practice-thanks",
+              "prompt": "You receive formal help. Write the one-word thanks response from memory.",
+              "assesses": [
+                "MW-COURTESY-AABHAAR-FORMAL-01"
+              ],
+              "responseSeconds": 15,
+              "acceptedResponses": [
+                "आभार",
+                "ābhār",
+                "aabhaar"
+              ],
+              "feedback": {
+                "correct": "आभार — a complete formal thanks response.",
+                "incorrect": "Begin with independent आ, then add भार: आभार."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "findings": []
+}
