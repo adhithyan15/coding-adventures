@@ -7,7 +7,7 @@
   "policy": {
     "maxLinearisableTableColumns": 3
   },
-  "sourceHash": "fnv1a64:5ef2206c57881280",
+  "sourceHash": "fnv1a64:c44af5b0af60d4ad",
   "summary": {
     "totalLessons": 3412,
     "voice": 2460,
@@ -53337,7 +53337,7 @@
         "no-visual-dependency"
       ],
       "coreDrivable": true,
-      "sourceHash": "fnv1a64:fbeba526677daaf0",
+      "sourceHash": "fnv1a64:5d32d120d7313ffc",
       "detachableSegments": [
         "The letters in this word"
       ]
