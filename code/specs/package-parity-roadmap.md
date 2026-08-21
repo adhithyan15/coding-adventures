@@ -4486,10 +4486,77 @@ Ready-for-review PR #12376 was opened from clean validated head
 `63e5a7adbe3ea06ba3e732564dfe5136ec29b112` after a normal first push from
 exact `origin/main` `2e248b9070a4e7a89cea4bef83ad5caa5917148c`.
 Independent implementation, security, build, inventory, and live-ownership
-audits found no blocker. The exact 12-path diff is clean, mergeable, and has no
-open or stale ownership overlap. GitHub checks are queued, so the Dart item is
-now `pr-open` and auto-merge remains disabled until every required check is
-terminal acceptable and GitHub still reports no conflict.
+audits found no blocker. The exact 12-path diff was clean, mergeable, and had no
+open or stale ownership overlap. Final reviewed head
+`283ebd81b8a533b4ceb7a5a0055d09d0e5940477` completed all 29 checks with 23
+successes and six expected skips; both CI gates and the Linux, macOS, and
+Windows builds succeeded. After the loop requested squash auto-merge, GitHub
+merged it as `49cfa0700c29fa434fdce3e26cc237ccfcf5a3ce` at
+2026-08-21T05:04:51Z and deleted the source branch.
+
+### Post-#12376 refresh and Swift PNG lane selection
+
+The refreshed collision-checked schema-3 inventory at exact live main
+`12dbe729e721280d38b4522aa6ea66890d10541b` contains 15 established lanes,
+1,368 canonical identities, and 4,558 implementation slots. High-consensus
+coverage remains 174 packages with 271 gaps; the 5-9 band contains 123
+packages with 934 gaps; the 2-4 band contains 166 packages with 2,087 gaps;
+and 905 singletons have 12,670 gaps, including 716 Rust singletons. Canonical
+collisions and unknown language buckets remain zero. The only new root since
+the prior inventory is the reviewed Dart image-codec-png package. Two later
+Gujarati human-language commits modify existing TypeScript roots only, so no
+new classification owner is required.
+
+The Swift PNG child is selected next. Each remaining clean PNG child closes
+one umbrella slot; Swift wins the safety and dependency-critical tie-break
+because Swift 6.3.3 is installed, the lane already has PixelContainer,
+ZIP-owned raw RFC 1951/counting/CRC, and LZSS prerequisites with cross-platform
+BUILD front doors, and complete live open-PR and no-PR branch audits find no
+Swift PNG or prerequisite overlap. Rust is deferred while three live PRs touch
+its PixelContainer or ZIP conformance surfaces, Haskell retains a quarantined
+stale ZIP/LZSS branch, and the Go paint adapter unlocks no parity child. The
+bounded tranche adds one native Swift IC18 package, all 85 neutral cases
+through public APIs, focused resource and precedence regressions, SwiftPM and
+BUILD metadata, documentation, changelog, and an empty capability manifest.
+It does not change IC18, the neutral corpus, adapters, or unrelated lanes.
+
+### Swift PNG implementation and validation
+
+The Swift package implements the native IC18 encoder and bounded decoder over
+the established PixelContainer and ZIP-owned raw RFC 1951/counting/CRC APIs.
+Swift 6.3.3 passes all eight XCTest methods, including all 85 neutral cases
+through public APIs and focused maxPixels, malformed mutable PixelContainer,
+product-before-allocation, APNG-precedence, Adler-boundary, taxonomy, and
+ImageCodec regressions. Encoder output is independently inflated and parsed by
+Python and accepted by the real Windows WIC PNG decoder; the same test target
+uses ImageIO on macOS. Production coverage is 434/440 lines (98.64%) and 27/28
+functions (96.43%). Format lint, SwiftPM manifest resolution, the warnings-as-
+errors release build, and the PixelContainer, LZSS, and ZIP prerequisite BUILD
+front doors pass.
+
+A freshly compiled Go build tool passes tests, vet, and trimpath build. Its
+full collision-checked plan evaluates 45 Starlark files, discovers 4,979
+packages, and selects exactly Swift ImageCodecPNG, PixelContainer, ZIP, and
+LZSS on Linux, Darwin, and Windows; real Windows execution builds those four
+with 161 unrelated Swift packages skipped. Neutral fixture, capability-
+taxonomy, and parity-reporter suites pass 9, 7, and 10 tests. The prospective
+schema-3 inventory retains 1,368 identities and adds one reviewed slot for
+4,559 total. `image-codec-png` spans eight lanes, the 5-9 band has 123 packages
+and 933 gaps, and canonical collisions and unknown buckets remain zero.
+Production imports only repository PixelContainer and ZIP; its empty capability
+profile is valid, test-only Foundation/Python/WIC/ImageIO authority is
+documented, and production authority, credential, dependency, diff, security,
+build, and ownership audits are clean.
+
+### Swift PNG publication
+
+Ready-for-review PR #12383 was opened from clean validated head
+`9d6cdda29a481e89125c5653747462613cde249b` after a normal first push from exact
+`origin/main` `12dbe729e721280d38b4522aa6ea66890d10541b`. Independent
+implementation, security, build, inventory, and live-ownership audits found no
+blocker. The exact 11-path diff is clean, GitHub reports the branch mergeable,
+and required checks queued immediately after publication. The loop remains in
+monitor-only mode until the exact lifecycle-update head is terminal.
 
 ## Autonomous Loop Protocol
 

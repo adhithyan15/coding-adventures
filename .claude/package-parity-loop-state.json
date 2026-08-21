@@ -11,13 +11,13 @@
     "selection_rule": "host-security, credential, native-runtime, and external-approval work may inform classification but is never selected by this parity loop",
     "excluded_delivery_classes": ["onvif", "host-security-hardening", "native-runtime", "external-approval"]
   },
-  "active_pr": 12376,
+  "active_pr": 12383,
   "last_inventory": {
-    "revision": "2e248b9070a4e7a89cea4bef83ad5caa5917148c",
+    "revision": "12dbe729e721280d38b4522aa6ea66890d10541b",
     "schema_version": 3,
     "established_languages": 15,
     "implementation_identities": 1368,
-    "implementation_package_slots": 4557,
+    "implementation_package_slots": 4558,
     "high_consensus_packages": 174,
     "high_consensus_missing_slots": 271,
     "singleton_packages": 905,
@@ -4000,18 +4000,21 @@
     {
       "id": "image-codec-png-dart-lane-parity",
       "title": "Port IC18 image-codec-png to Dart",
-      "status": "pr-open",
+      "status": "merged",
       "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
       "branch": "codex/image-codec-png-dart-lane-parity",
       "pr_number": 12376,
       "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12376",
       "opened_at": "2026-08-21T04:28:04Z",
       "implementation_revision": "63e5a7adbe3ea06ba3e732564dfe5136ec29b112",
+      "final_review_revision": "283ebd81b8a533b4ceb7a5a0055d09d0e5940477",
+      "merged_at": "2026-08-21T05:04:51Z",
+      "merge_revision": "49cfa0700c29fa434fdce3e26cc237ccfcf5a3ce",
       "selection_revision": "3cb13f2b8fb8a27c7c0bf3d6608bbc64aebc9273",
       "selection_notes": "Selected immediately after JVM PNG PR #12360 completed all 29 checks and merged, closing the Java and Kotlin slots. The refreshed collision-checked schema-3 inventory at exact live main 3cb13f2b8f remains 15 established lanes and 1,368 canonical identities while advancing to 4,557 implementation slots, with zero collisions and zero unknown buckets. The only added package roots are the reviewed Java and Kotlin image-codec-png children; intervening human-language commits modify existing roots only, so no new classification owner is needed. Every remaining PNG lane child closes one slot. Dart wins the safety and leverage tie-break because SDK 3.12.2 is installed, the lane is comparatively thin, its pure PixelContainer and ZIP-owned raw RFC 1951, counted-inflate, and CRC-32 dependency chain already exists with BUILD front doors, and current open/no-PR ownership audits find no Dart PNG or prerequisite overlap. The bounded tranche adds one native Dart IC18 package, an 85-case public fixture consumer, focused allocation and precedence tests, package metadata, docs, changelog, BUILD front door, and empty capabilities without changing IC18, the neutral fixture, adapters, or unrelated lanes.",
       "notes": "Standalone Dart child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities.",
       "validation_notes": "Dart 3.12.2 passes 93 tests: all 85 schema-1 image-codec-png-v1 fixtures through public APIs plus focused maxPixels, malformed PixelContainer, nonzero-offset Uint8List, APNG precedence, immutable taxonomy, ImageCodec, and Adler boundary regressions. Encoder evidence independently inflates IDAT with dart:io and decodes the complete PNG with the test-only image package. The coverage front door reports 285/287 production lines (99.30%) and 19/19 functions while enforcing a 90% line floor; format and fatal-info analysis pass. PixelContainer, LZSS, and ZIP prerequisites pass 18, 54, and 66 tests respectively. Go build-tool test, vet, and trimpath build pass; the collision-checked resolver discovers 4,978 packages, validates all BUILD metadata, selects exactly Dart PNG plus PixelContainer, ZIP, and LZSS, and the real Windows plan builds all four with 4,974 skipped. Neutral fixture, capability-taxonomy, and parity-reporter suites pass 9, 7, and 10 tests. The prospective schema-3 inventory remains 1,368 identities and advances to 4,558 slots; image-codec-png spans C#, Dart, F#, Go, Java, Kotlin, and TypeScript, the 5-9 band has 123 packages and 934 gaps, and collisions and unknown buckets remain zero. The 412-item state is unique, dependency-complete, acyclic, and has only this item in progress with no active PR. Production is pure in-memory and imports only typed data plus repository PixelContainer and ZIP; authority and credential scans are clean, production dependencies are current, and git diff --check passes. The branch rebased cleanly through 2e248b90 after two disjoint human-language-only main advances.",
-      "publication_notes": "Opened ready-for-review PR #12376 from clean validated head 63e5a7adbe3ea06ba3e732564dfe5136ec29b112 after a normal first push from exact origin/main 2e248b9070a4e7a89cea4bef83ad5caa5917148c. Independent implementation, security, build, inventory, and live-ownership audits found no blocker; the exact 12-path diff is clean, mergeable, and has no open or stale ownership overlap. GitHub checks are queued, so auto-merge remains disabled until the final publication head is terminal acceptable and conflict-free."
+      "publication_notes": "Opened ready-for-review PR #12376 from clean validated head 63e5a7adbe3ea06ba3e732564dfe5136ec29b112 after a normal first push from exact origin/main 2e248b9070a4e7a89cea4bef83ad5caa5917148c. Independent implementation, security, build, inventory, and live-ownership audits found no blocker; the exact 12-path diff was clean, mergeable, and had no open or stale ownership overlap. Final reviewed head 283ebd81b8a533b4ceb7a5a0055d09d0e5940477 completed all 29 checks with 23 successes and six expected skips; both CI gates and Linux, macOS, and Windows builds succeeded, and GitHub reported the branch conflict-free. After the loop requested squash auto-merge, GitHub merged it as 49cfa0700c29fa434fdce3e26cc237ccfcf5a3ce at 2026-08-21T05:04:51Z and deleted the source branch."
     },
     {
       "id": "image-codec-png-elixir-lane-parity",
@@ -4117,10 +4120,17 @@
     {
       "id": "image-codec-png-swift-lane-parity",
       "title": "Port IC18 image-codec-png to Swift",
-      "status": "pending",
+      "status": "pr-open",
       "depends_on": ["image-codec-png-language-neutral-conformance", "image-codec-png-apng-neutral-rejection-conformance"],
-      "branch": null,
-      "pr_number": null,
+      "branch": "codex/image-codec-png-swift-lane-parity",
+      "pr_number": 12383,
+      "pr_url": "https://github.com/adhithyan15/coding-adventures/pull/12383",
+      "opened_at": "2026-08-21T05:39:25Z",
+      "implementation_revision": "9d6cdda29a481e89125c5653747462613cde249b",
+      "selection_revision": "12dbe729e721280d38b4522aa6ea66890d10541b",
+      "selection_notes": "Selected immediately after Dart PNG PR #12376 completed all 29 checks and merged through the requested auto-merge path, closing the seventh established image-codec-png lane. The collision-checked schema-3 inventory at exact live main 12dbe729e7 remains 15 established lanes and 1,368 canonical identities while advancing to 4,558 implementation slots, with zero collisions and zero unknown buckets. The only new root since the prior inventory is the reviewed Dart image-codec-png package; intervening Gujarati human-language commits modify existing TypeScript roots only, so no new classification owner is required. Every remaining clean PNG child closes one umbrella slot. Swift is the safest dependency-critical choice because Swift 6.3.3 is installed, the established PixelContainer, ZIP-owned raw RFC 1951/counting/CRC, and LZSS prerequisites already have cross-platform BUILD front doors, and complete live open-PR and no-PR branch audits find no Swift PNG or prerequisite overlap. Rust is deferred because three live PRs touch its PixelContainer or ZIP conformance surfaces, Haskell has a quarantined stale ZIP/LZSS branch, and the Go paint adapter unlocks no parity child. The bounded tranche adds one native Swift IC18 implementation, an 85-case public fixture consumer, focused allocation and validation-precedence regressions, SwiftPM and BUILD metadata, documentation, changelog, and an empty capability manifest without changing IC18, the neutral corpus, adapters, or unrelated lanes.",
+      "validation_notes": "Swift 6.3.3 passes all 8 XCTest methods, including the complete 85-case schema-1 image-codec-png-v1 fixture consumer and focused maxPixels, malformed mutable PixelContainer, product-before-allocation, APNG precedence, Adler boundary, taxonomy, and ImageCodec regressions. Encoder evidence independently inflates and parses the stream with Python and requires every encoded fixture to be accepted by the real Windows WIC PNG decoder; the test target also uses ImageIO on macOS. Production coverage is 434/440 lines (98.64%) and 27/28 functions (96.43%). Format lint, SwiftPM manifest resolution, and warnings-as-errors release build pass. PixelContainer, LZSS, and ZIP prerequisite BUILD front doors pass 28, 31, and 36 tests. A freshly compiled Go build tool passes tests, vet, and trimpath build; its full collision-checked plan evaluates 45 Starlark files, discovers 4,979 packages, validates metadata, and selects exactly Swift ImageCodecPNG, PixelContainer, ZIP, and LZSS on Linux, Darwin, and Windows. Real Windows execution builds those four with 161 unrelated Swift packages skipped. Neutral fixture, capability-taxonomy, and parity-reporter suites pass 9, 7, and 10 tests. The prospective schema-3 inventory remains 1,368 identities and advances to 4,559 slots; image-codec-png spans eight lanes, the 5-9 band has 123 packages and 933 gaps, and collisions and unknown buckets remain zero. Production imports only repository PixelContainer and ZIP, uses no filesystem, process, environment, network, native, or credential authority, and retains an empty validated capability manifest; test-only Foundation, Python, WIC, and ImageIO authority is documented. Independent security, build, and ownership audits are green, and git diff --check passes.",
+      "publication_notes": "Opened ready-for-review PR #12383 from clean validated head 9d6cdda29a481e89125c5653747462613cde249b after a normal first push from exact origin/main 12dbe729e721280d38b4522aa6ea66890d10541b. Independent implementation, security, build, inventory, and live-ownership audits found no blocker; the exact 11-path diff was clean and GitHub reported it mergeable with no open or stale ownership overlap. Required checks were queued immediately after publication, so the loop remains in monitor-only mode until the exact lifecycle-update head is terminal.",
       "notes": "Standalone Swift child consuming the neutral PNG corpus and established ZIP raw/CRC surface with empty production capabilities."
     },
     {
