@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3460,
+    "totalLessons": 3469,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -24,15 +24,15 @@
     "version2SchemaTracks": 9,
     "lessonsWithoutLevel": 63,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 49,
-    "lessonsOpeningMultipleScripts": 5,
-    "scriptClosureViolations": 728,
-    "scriptExposureExemptedGlyphs": 2045,
+    "scriptRampOverBudgetLessons": 45,
+    "lessonsOpeningMultipleScripts": 0,
+    "scriptClosureViolations": 720,
+    "scriptExposureExemptedGlyphs": 2000,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 302,
     "lessonsWithoutSequence": 0,
     "forwardReviews": 0,
-    "atomsNeverRevisited": 633,
+    "atomsNeverRevisited": 626,
     "forwardReferences": 428,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 83,
@@ -42,7 +42,7 @@
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2934,
     "drivablePercent": 85,
-    "chaptersWithoutDrivablePrefix": 103,
+    "chaptersWithoutDrivablePrefix": 107,
     "unexplainedModalityOverrides": 0
   },
   "duration": {
@@ -227,7 +227,7 @@
         "chapter": 6
       },
       {
-        "lessonId": "JA-C01-hai",
+        "lessonId": "JA-W01-i",
         "language": "japanese",
         "chapter": 1
       },
@@ -3170,12 +3170,20 @@
         "lessonChapters": [
           1,
           2,
-          3
+          3,
+          4,
+          5,
+          6,
+          7
         ],
         "bookChapters": [
           1,
           2,
-          3
+          3,
+          4,
+          5,
+          6,
+          7
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3378,9 +3386,9 @@
       {
         "language": "japanese",
         "status": "version-2",
-        "lessonCount": 29,
+        "lessonCount": 38,
         "versions": {
-          "2": 29
+          "2": 38
         }
       }
     ]
@@ -4036,8 +4044,8 @@
       },
       {
         "language": "japanese",
-        "bookChapters": 3,
-        "declaredChapters": 3,
+        "bookChapters": 7,
+        "declaredChapters": 7,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4156,8 +4164,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1008,
-      "declaredChapters": 1008,
+      "bookChapters": 1012,
+      "declaredChapters": 1012,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 83,
@@ -4169,9 +4177,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3460,
+    "totalLessons": 3469,
     "byLevel": {
-      "pre-A1": 2190,
+      "pre-A1": 2199,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4304,9 +4312,9 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 29,
+        "lessonCount": 38,
         "byLevel": {
-          "pre-A1": 29,
+          "pre-A1": 38,
           "A1": 0,
           "A2": 0,
           "B1": 0,
@@ -4895,13 +4903,6 @@
         "lessonCount": 9
       },
       {
-        "language": "japanese",
-        "chapter": 1,
-        "atoms": 18,
-        "budget": 12,
-        "lessonCount": 8
-      },
-      {
         "language": "russian",
         "chapter": 1,
         "atoms": 18,
@@ -5102,11 +5103,11 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 29,
-        "measurable": 29,
+        "lessonCount": 38,
+        "measurable": 38,
         "unmeasurable": 0,
         "lessonViolations": 0,
-        "chapterViolations": 1
+        "chapterViolations": 0
       },
       {
         "language": "kannada",
@@ -5235,42 +5236,6 @@
           "sample": "абвдезийопрсту",
           "systems": [
             "Cyrillic"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "JA-C01-arigatou",
-          "language": "japanese",
-          "chapter": 1,
-          "glyphs": 10,
-          "sample": "あうかがしとりる有難",
-          "systems": [
-            "Han",
-            "Hiragana"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "JA-C01-gozaimasu",
-          "language": "japanese",
-          "chapter": 1,
-          "glyphs": 10,
-          "sample": "おごさざすっまゃ申言",
-          "systems": [
-            "Han",
-            "Hiragana"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "JA-C01-koohii",
-          "language": "japanese",
-          "chapter": 1,
-          "glyphs": 10,
-          "sample": "アイコトバパヒルンー",
-          "systems": [
-            "Hiragana",
-            "Katakana"
           ],
           "budget": 3
         },
@@ -5414,18 +5379,6 @@
           "sample": "ःतनमसे्",
           "systems": [
             "Devanagari"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "JA-C01-konnichiwa",
-          "language": "japanese",
-          "chapter": 1,
-          "glyphs": 7,
-          "sample": "こちにわん今日",
-          "systems": [
-            "Han",
-            "Hiragana"
           ],
           "budget": 3
         },
@@ -5771,58 +5724,7 @@
           "budget": 3
         }
       ],
-      "systems": [
-        {
-          "lessonId": "JA-C01-arigatou",
-          "language": "japanese",
-          "chapter": 1,
-          "systems": [
-            "Han",
-            "Hiragana"
-          ],
-          "budget": 1
-        },
-        {
-          "lessonId": "JA-C01-gozaimasu",
-          "language": "japanese",
-          "chapter": 1,
-          "systems": [
-            "Han",
-            "Hiragana"
-          ],
-          "budget": 1
-        },
-        {
-          "lessonId": "JA-C01-hai",
-          "language": "japanese",
-          "chapter": 1,
-          "systems": [
-            "Han",
-            "Hiragana"
-          ],
-          "budget": 1
-        },
-        {
-          "lessonId": "JA-C01-konnichiwa",
-          "language": "japanese",
-          "chapter": 1,
-          "systems": [
-            "Han",
-            "Hiragana"
-          ],
-          "budget": 1
-        },
-        {
-          "lessonId": "JA-C01-koohii",
-          "language": "japanese",
-          "chapter": 1,
-          "systems": [
-            "Hiragana",
-            "Katakana"
-          ],
-          "budget": 1
-        }
-      ],
+      "systems": [],
       "tracks": [
         {
           "language": "arabic",
@@ -5908,10 +5810,10 @@
           "language": "japanese",
           "script": "japanese",
           "latinScript": false,
-          "lessonCount": 29,
-          "totalGlyphs": 45,
-          "lessonViolations": 4,
-          "systemViolations": 5,
+          "lessonCount": 38,
+          "totalGlyphs": 29,
+          "lessonViolations": 0,
+          "systemViolations": 0,
           "lessonsWithForeignScript": 0
         },
         {
@@ -6056,8 +5958,8 @@
         }
       ],
       "summary": {
-        "lessonViolations": 49,
-        "systemViolations": 5,
+        "lessonViolations": 45,
+        "systemViolations": 0,
         "lessonsWithForeignScript": 219,
         "maxForeignGlyphsInALesson": 26,
         "steepestLesson": {
@@ -6075,9 +5977,9 @@
     },
     "summary": {
       "lessonViolations": 46,
-      "chapterViolations": 25,
+      "chapterViolations": 24,
       "unmeasurableLessons": 502,
-      "measurablePercent": 85,
+      "measurablePercent": 86,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -20538,102 +20440,6 @@
         "language": "italian",
         "introducedBy": "IT-C08-mezzogiorno-mezzanotte",
         "introducedAt": 38,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "JA-BRIDGE-SINO-JAPANESE",
-        "language": "japanese",
-        "introducedBy": "JA-C01-nihongo",
-        "introducedAt": 3,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "JA-DIALOGUE-DOORWAY",
-        "language": "japanese",
-        "introducedBy": "JA-C01-practice",
-        "introducedAt": 7,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "JA-ETYMON-ARIGATASHI",
-        "language": "japanese",
-        "introducedBy": "JA-C01-arigatou",
-        "introducedAt": 5,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "JA-LEX-KOOHII",
-        "language": "japanese",
-        "introducedBy": "JA-C01-koohii",
-        "introducedAt": 4,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "JA-LEX-NIHONGO",
-        "language": "japanese",
-        "introducedBy": "JA-C01-nihongo",
-        "introducedAt": 3,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-CHOUON",
-        "language": "japanese",
-        "introducedBy": "JA-C01-koohii",
-        "introducedAt": 4,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 0
-      },
-      {
-        "atom": "JA-SCRIPT-KANJI-READINGS",
-        "language": "japanese",
-        "introducedBy": "JA-C01-nihongo",
-        "introducedAt": 3,
-        "missed": [
-          "R1",
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-KATAKANA-LOANWORDS",
-        "language": "japanese",
-        "introducedBy": "JA-C01-koohii",
-        "introducedAt": 4,
         "missed": [
           "R1",
           "R2",
@@ -38167,105 +37973,6 @@
         "revisits": 2
       },
       {
-        "atom": "JA-LEX-ARIGATOU",
-        "language": "japanese",
-        "introducedBy": "JA-C01-arigatou",
-        "introducedAt": 5,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-LEX-ARIGATOU-GOZAIMASU",
-        "language": "japanese",
-        "introducedBy": "JA-C01-gozaimasu",
-        "introducedAt": 6,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-LEX-IIE",
-        "language": "japanese",
-        "introducedBy": "JA-C01-iie",
-        "introducedAt": 1,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "JA-PARTICLE-WA-SPELLING",
-        "language": "japanese",
-        "introducedBy": "JA-C01-konnichiwa",
-        "introducedAt": 2,
-        "missed": [
-          "R1",
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-REGISTER-TEINEIGO",
-        "language": "japanese",
-        "introducedBy": "JA-C01-gozaimasu",
-        "introducedAt": 6,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-DAKUTEN",
-        "language": "japanese",
-        "introducedBy": "JA-C01-arigatou",
-        "introducedAt": 5,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-MORA-LENGTH",
-        "language": "japanese",
-        "introducedBy": "JA-C01-iie",
-        "introducedAt": 1,
-        "missed": [
-          "R2",
-          "R3"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-N-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-n",
-        "introducedAt": 13,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-WA-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-wa",
-        "introducedAt": 16,
-        "missed": [
-          "R1",
-          "R2"
-        ],
-        "revisits": 0
-      },
-      {
         "atom": "KA-ETYMON-C09-KSHAMISI-01",
         "language": "kannada",
         "introducedBy": "KA-C09-kshamisi",
@@ -52510,126 +52217,6 @@
         "revisits": 3
       },
       {
-        "atom": "JA-LEX-HAI",
-        "language": "japanese",
-        "introducedBy": "JA-C01-hai",
-        "introducedAt": 0,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-LEX-KONNICHIWA",
-        "language": "japanese",
-        "introducedBy": "JA-C01-konnichiwa",
-        "introducedAt": 2,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 3
-      },
-      {
-        "atom": "JA-SCRIPT-CHI-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-chi",
-        "introducedAt": 15,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-E-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-e",
-        "introducedAt": 11,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-HAI-READ-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-hai-read",
-        "introducedAt": 10,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-HIRAGANA-MORA",
-        "language": "japanese",
-        "introducedBy": "JA-C01-hai",
-        "introducedAt": 0,
-        "missed": [
-          "R3"
-        ],
-        "revisits": 8
-      },
-      {
-        "atom": "JA-SCRIPT-I-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-i",
-        "introducedAt": 8,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 4
-      },
-      {
-        "atom": "JA-SCRIPT-KA-01",
-        "language": "japanese",
-        "introducedBy": "JA-W03-ka",
-        "introducedAt": 20,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "JA-SCRIPT-KONNICHIWA-READ-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-konnichiwa-read",
-        "introducedAt": 17,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
-        "atom": "JA-SCRIPT-NI-01",
-        "language": "japanese",
-        "introducedBy": "JA-W01-ni",
-        "introducedAt": 14,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "JA-SCRIPT-TO-01",
-        "language": "japanese",
-        "introducedBy": "JA-W03-to",
-        "introducedAt": 22,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 2
-      },
-      {
-        "atom": "JA-SCRIPT-U-01",
-        "language": "japanese",
-        "introducedBy": "JA-W03-u",
-        "introducedAt": 23,
-        "missed": [
-          "R2"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "KA-LEX-C63-HEALTH-01",
         "language": "kannada",
         "introducedBy": "KA-C63-hunger",
@@ -59939,12 +59526,12 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 29,
+        "lessonCount": 38,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 39,
-        "atomsNeverRevisited": 8,
+        "atomsTaught": 48,
+        "atomsNeverRevisited": 1,
         "forwardReferences": 0
       },
       {
@@ -60093,13 +59680,13 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 4760,
-      "atomsNeverRevisited": 633,
+      "atomsTaught": 4769,
+      "atomsNeverRevisited": 626,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
-        "R1": 1194,
-        "R2": 3679,
-        "R3": 3555,
+        "R1": 1182,
+        "R2": 3655,
+        "R3": 3537,
         "R4": 2078
       },
       "forwardReferences": 428
@@ -60175,14 +59762,14 @@
       {
         "language": "japanese",
         "script": "japanese",
-        "lessonCount": 29,
-        "scriptLessons": 20,
-        "taughtGlyphs": 24,
-        "shownGlyphs": 45,
-        "neverTaughtGlyphs": 21,
-        "violations": 8,
+        "lessonCount": 38,
+        "scriptLessons": 29,
+        "taughtGlyphs": 29,
+        "shownGlyphs": 29,
+        "neverTaughtGlyphs": 0,
+        "violations": 0,
         "exposureOnly": 0,
-        "exposureExemptedGlyphs": 45,
+        "exposureExemptedGlyphs": 0,
         "headwordsWithoutRomanization": 0
       },
       {
@@ -61192,13 +60779,6 @@
         "count": 11
       },
       {
-        "lessonId": "JA-C01-gozaimasu",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "おかこさしっはゃる申言",
-        "count": 11
-      },
-      {
         "lessonId": "KA-C02-santosha",
         "language": "kannada",
         "chapter": 2,
@@ -61336,13 +60916,6 @@
         "language": "gujarati",
         "chapter": 5,
         "glyphs": "ંગછજબરલીુો",
-        "count": 10
-      },
-      {
-        "lessonId": "JA-C01-koohii",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "いえこアイトバパルン",
         "count": 10
       },
       {
@@ -62431,20 +62004,6 @@
         "count": 6
       },
       {
-        "lessonId": "JA-C01-arigatou",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "かしるー有難",
-        "count": 6
-      },
-      {
-        "lessonId": "JA-C01-nihongo",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "こちにはん今",
-        "count": 6
-      },
-      {
         "lessonId": "ML-C02-nii-ningal",
         "language": "malayalam",
         "chapter": 2,
@@ -63219,20 +62778,6 @@
         "language": "hindi",
         "chapter": 39,
         "glyphs": "ईऔथभ",
-        "count": 4
-      },
-      {
-        "lessonId": "JA-C01-konnichiwa",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "いわ今日",
-        "count": 4
-      },
-      {
-        "lessonId": "JA-C01-practice",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "え日本語",
         "count": 4
       },
       {
@@ -64853,20 +64398,6 @@
         "count": 1
       },
       {
-        "lessonId": "JA-C01-hai",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "拝",
-        "count": 1
-      },
-      {
-        "lessonId": "JA-C01-iie",
-        "language": "japanese",
-        "chapter": 1,
-        "glyphs": "は",
-        "count": 1
-      },
-      {
         "lessonId": "KA-C03-naanu",
         "language": "kannada",
         "chapter": 3,
@@ -65430,9 +64961,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 728,
+      "violations": 720,
       "exposureOnly": 192,
-      "exposureExemptedGlyphs": 2045,
+      "exposureExemptedGlyphs": 2000,
       "headwordsWithoutRomanization": 302,
       "tracksWithUnknownScript": 0
     },
@@ -67427,7 +66958,7 @@
             "blockTitle": "Guided Practice",
             "stage": "observe-trace",
             "level": "pre-A1",
-            "sequence": 90
+            "sequence": 10
           },
           {
             "language": "japanese",
@@ -67436,7 +66967,7 @@
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "pre-A1",
-            "sequence": 100
+            "sequence": 20
           },
           {
             "language": "japanese",
@@ -67445,7 +66976,7 @@
             "blockTitle": "Warm-up",
             "stage": "delayed-copy",
             "level": "pre-A1",
-            "sequence": 110
+            "sequence": 30
           },
           {
             "language": "japanese",
@@ -67454,7 +66985,7 @@
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
-            "sequence": 120
+            "sequence": 40
           }
         ],
         "validEvidence": [
@@ -67465,7 +66996,7 @@
             "blockTitle": "Guided Practice",
             "stage": "observe-trace",
             "level": "pre-A1",
-            "sequence": 90
+            "sequence": 10
           },
           {
             "language": "japanese",
@@ -67474,7 +67005,7 @@
             "blockTitle": "Guided Practice",
             "stage": "guided-copy",
             "level": "pre-A1",
-            "sequence": 100
+            "sequence": 20
           },
           {
             "language": "japanese",
@@ -67483,7 +67014,7 @@
             "blockTitle": "Warm-up",
             "stage": "delayed-copy",
             "level": "pre-A1",
-            "sequence": 110
+            "sequence": 30
           },
           {
             "language": "japanese",
@@ -67492,7 +67023,7 @@
             "blockTitle": "Guided Practice",
             "stage": "dictation-transcription",
             "level": "pre-A1",
-            "sequence": 120
+            "sequence": 40
           }
         ],
         "defects": [],
@@ -71446,72 +70977,37 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 29,
-        "atomMeasurableLessons": 29,
+        "lessonCount": 38,
+        "atomMeasurableLessons": 38,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
-        "atomChapterSpikes": 1,
-        "glyphLessonSpikes": 4,
-        "scriptSystemSpikes": 5,
-        "scriptClosureViolations": 8,
-        "neverTaughtGlyphs": 21,
+        "atomChapterSpikes": 0,
+        "glyphLessonSpikes": 0,
+        "scriptSystemSpikes": 0,
+        "scriptClosureViolations": 0,
+        "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "lessonsWithoutSequence": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 39,
-        "atomsNeverRevisited": 8,
-        "reinforcementWindowMisses": 54,
+        "atomsTaught": 48,
+        "atomsNeverRevisited": 1,
+        "reinforcementWindowMisses": 0,
         "reinforcementMissesByWindow": {
-          "R1": 12,
-          "R2": 24,
-          "R3": 18,
+          "R1": 0,
+          "R2": 0,
+          "R3": 0,
           "R4": 0
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 28,
+        "writingPracticeLessons": 37,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
-        "findings": [
-          {
-            "language": "japanese",
-            "kind": "script-closure",
-            "count": 21,
-            "unit": "glyph(s)",
-            "detail": "teach every load-bearing glyph before asking the learner to decode it"
-          },
-          {
-            "language": "japanese",
-            "kind": "atom-step",
-            "count": 1,
-            "unit": "lesson/chapter spike(s)",
-            "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-          },
-          {
-            "language": "japanese",
-            "kind": "glyph-step",
-            "count": 9,
-            "unit": "lesson/system spike(s)",
-            "detail": "split new glyphs and writing systems across gentler steps"
-          },
-          {
-            "language": "japanese",
-            "kind": "reinforcement",
-            "count": 54,
-            "unit": "missed window(s)",
-            "detail": "add retrieval at the expanding R1-R4 intervals"
-          }
-        ],
-        "next": {
-          "language": "japanese",
-          "kind": "script-closure",
-          "count": 21,
-          "unit": "glyph(s)",
-          "detail": "teach every load-bearing glyph before asking the learner to decode it"
-        }
+        "findings": [],
+        "next": null
       },
       {
         "language": "kannada",
@@ -72853,13 +72349,6 @@
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
       },
       {
-        "language": "japanese",
-        "kind": "script-closure",
-        "count": 21,
-        "unit": "glyph(s)",
-        "detail": "teach every load-bearing glyph before asking the learner to decode it"
-      },
-      {
         "language": "kannada",
         "kind": "script-closure",
         "count": 18,
@@ -73035,13 +72524,6 @@
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
       },
       {
-        "language": "japanese",
-        "kind": "atom-step",
-        "count": 1,
-        "unit": "lesson/chapter spike(s)",
-        "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-      },
-      {
         "language": "kannada",
         "kind": "atom-step",
         "count": 1,
@@ -73075,13 +72557,6 @@
         "count": 1,
         "unit": "lesson/chapter spike(s)",
         "detail": "split knowledge-atom spikes into smaller prerequisite-safe steps"
-      },
-      {
-        "language": "japanese",
-        "kind": "glyph-step",
-        "count": 9,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
         "language": "kannada",
@@ -73329,13 +72804,6 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "japanese",
-        "kind": "reinforcement",
-        "count": 54,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
         "language": "spanish",
         "kind": "payoff-surprise",
         "count": 26,
@@ -73562,11 +73030,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithDetectedCliffs": 22,
+      "tracksWithDetectedCliffs": 21,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 502,
-      "findings": 128
+      "findings": 124
     }
   },
   "levelGate": {
@@ -73792,11 +73260,6 @@
             "criterion": "vocabulary",
             "detail": "teaches 7 distinct headwords at or below pre-A1, against 300",
             "shortfall": 293
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "19 atom(s) at or below pre-A1 are revisited fewer than twice (1 etymology hook(s) waived)",
-            "shortfall": 19
           }
         ],
         "vocabulary": 7
@@ -74179,10 +73642,10 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3460,
+    "totalLessons": 3469,
     "voice": 2478,
     "sight": 585,
-    "pen": 397,
+    "pen": 406,
     "coreVoice": 2934,
     "lessonsWithWritingSegments": 188,
     "drivablePercent": 85,
@@ -77616,37 +77079,22 @@
       },
       {
         "language": "japanese",
-        "lessonCount": 29,
+        "lessonCount": 38,
         "voice": 1,
         "sight": 8,
-        "pen": 20,
+        "pen": 29,
         "coreVoice": 9,
-        "drivablePercent": 31,
-        "drivablePrefixTotal": 8,
+        "drivablePercent": 24,
+        "drivablePrefixTotal": 1,
         "chapters": [
           {
             "language": "japanese",
             "chapter": 1,
-            "lessonCount": 8,
-            "voice": 1,
-            "sight": 7,
-            "pen": 0,
-            "coreVoice": 8,
-            "modalities": [
-              "voice",
-              "sight"
-            ],
-            "drivablePrefix": 8,
-            "firstNonVoiceLesson": null
-          },
-          {
-            "language": "japanese",
-            "chapter": 2,
-            "lessonCount": 10,
+            "lessonCount": 6,
             "voice": 0,
-            "sight": 0,
-            "pen": 10,
-            "coreVoice": 0,
+            "sight": 2,
+            "pen": 4,
+            "coreVoice": 2,
             "modalities": [
               "sight",
               "pen"
@@ -77656,11 +77104,26 @@
           },
           {
             "language": "japanese",
-            "chapter": 3,
-            "lessonCount": 11,
+            "chapter": 2,
+            "lessonCount": 7,
             "voice": 0,
             "sight": 1,
-            "pen": 10,
+            "pen": 6,
+            "coreVoice": 1,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W01-ko"
+          },
+          {
+            "language": "japanese",
+            "chapter": 3,
+            "lessonCount": 8,
+            "voice": 0,
+            "sight": 1,
+            "pen": 7,
             "coreVoice": 1,
             "modalities": [
               "sight",
@@ -77668,6 +77131,65 @@
             ],
             "drivablePrefix": 0,
             "firstNonVoiceLesson": "JA-W03-a"
+          },
+          {
+            "language": "japanese",
+            "chapter": 4,
+            "lessonCount": 5,
+            "voice": 0,
+            "sight": 2,
+            "pen": 3,
+            "coreVoice": 2,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W03-sa"
+          },
+          {
+            "language": "japanese",
+            "chapter": 5,
+            "lessonCount": 7,
+            "voice": 0,
+            "sight": 1,
+            "pen": 6,
+            "coreVoice": 1,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W05-nichi-kanji"
+          },
+          {
+            "language": "japanese",
+            "chapter": 6,
+            "lessonCount": 4,
+            "voice": 0,
+            "sight": 1,
+            "pen": 3,
+            "coreVoice": 1,
+            "modalities": [
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 0,
+            "firstNonVoiceLesson": "JA-W06-ko-katakana"
+          },
+          {
+            "language": "japanese",
+            "chapter": 7,
+            "lessonCount": 1,
+            "voice": 1,
+            "sight": 0,
+            "pen": 0,
+            "coreVoice": 1,
+            "modalities": [
+              "voice"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": null
           }
         ]
       },
@@ -89434,11 +88956,11 @@
   "rootLedger": {
     "roots": 3090,
     "underspent": 2971,
-    "neverSpent": 2029,
+    "neverSpent": 2025,
     "payoffDistribution": {
-      "0": 2029,
-      "1": 659,
-      "2": 283,
+      "0": 2025,
+      "1": 662,
+      "2": 284,
       "3": 68,
       "4": 20,
       "5": 12,
@@ -89451,7 +88973,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3460,
+    "lessons": 3469,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -89461,8 +88983,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3343,
-    "usesBeforeIntroduction": 12120,
+    "lessonsUsingTerms": 3349,
+    "usesBeforeIntroduction": 12131,
     "technicalUsesBeforeIntroduction": 3179,
     "technicalLessons": 1655,
     "worstTerms": [
@@ -89493,14 +89015,14 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3460,
+    "lessonsScanned": 3469,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1146,
+    "filesScanned": 1150,
     "mainCharacters": 126,
-    "scriptCharacters": 693,
+    "scriptCharacters": 678,
     "gaps": 0
   }
 }
