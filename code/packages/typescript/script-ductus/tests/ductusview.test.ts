@@ -409,6 +409,8 @@ const ARABIC_BAA = ductusFor("ب", "arabic")!;
 const arabicBaaOutline = naskhOutline("ب");
 const ARABIC_TAA = ductusFor("ت", "arabic")!;
 const arabicTaaOutline = naskhOutline("ت");
+const ARABIC_THAA = ductusFor("ث", "arabic")!;
+const arabicThaaOutline = naskhOutline("ث");
 const ARABIC_JEEM = ductusFor("ج", "arabic")!;
 const arabicJeemOutline = naskhOutline("ج");
 const ARABIC_HAA = ductusFor("ح", "arabic")!;
@@ -515,6 +517,7 @@ describe("ductusFor — only cited letters have a ductus", () => {
     expect(ductusFor("ه")?.glyph).toBe("ه");
     expect(ductusFor("ا", "arabic")?.glyph).toBe("ا");
     expect(ductusFor("ب", "arabic")?.glyph).toBe("ب");
+    expect(ductusFor("ث", "arabic")?.glyph).toBe("ث");
     expect(ductusFor("س", "arabic")?.glyph).toBe("س");
     expect(ductusFor("ش", "arabic")?.glyph).toBe("ش");
     expect(ductusFor("ص", "arabic")?.glyph).toBe("ص");
@@ -5379,6 +5382,37 @@ describe("Arabic ت — a script-scoped bowl-and-two-dots filmstrip", () => {
     ).toEqual([penPathD(ARABIC_TAA.strokes[0], 1), penPathD(ARABIC_TAA.strokes[1], 1)]);
     expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
       penPathD(ARABIC_TAA.strokes[2], 1),
+    );
+  });
+});
+
+describe("Arabic ث — a body-first bowl-and-three-dots filmstrip", () => {
+  const steps = ductusSteps(ARABIC_THAA);
+  const strip = ductusFilmstrip(ARABIC_THAA, arabicThaaOutline);
+
+  it("shows the right-to-left bowl before three separately lifted upper dots", () => {
+    expect(steps.map((step) => step.label)).toEqual([
+      "sweep the shallow bowl from right to left",
+      "lift, then place the lower-left dot above",
+      "lift again and place the lower-right dot",
+      "lift a third time and place the centred upper dot",
+    ]);
+    expect(steps.map((step) => step.startsAfterLift)).toEqual([false, true, true, true]);
+    expect(strip.frames).toHaveLength(4);
+    expect(strip.penLifts).toBe(3);
+    expect(strip.summary).toBe("4 strokes · 3 pen lifts · 4 movements");
+  });
+
+  it("draws the exact Noto Naskh outline and preserves all earlier runs", () => {
+    const paths = byTag(strip.frames[3], "path");
+    expect(paths.find((path) => path.attrs.class === "ductus__glyph")!.attrs.d).toBe(
+      arabicThaaOutline.path,
+    );
+    expect(
+      paths.filter((path) => path.attrs.class === "ductus__done").map((path) => path.attrs.d),
+    ).toEqual(ARABIC_THAA.strokes.slice(0, 3).map((stroke) => penPathD(stroke, 1)));
+    expect(paths.find((path) => path.attrs.class === "ductus__pen")!.attrs.d).toBe(
+      penPathD(ARABIC_THAA.strokes[3], 1),
     );
   });
 });
