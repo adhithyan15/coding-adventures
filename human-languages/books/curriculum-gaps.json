@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3482,
+    "totalLessons": 3489,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -40,7 +40,7 @@
     "tracksWithoutWritingStageEvidence": 8,
     "missingWritingStagePairs": 727,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 2941,
+    "drivableLessons": 2943,
     "drivablePercent": 84,
     "chaptersWithoutDrivablePrefix": 107,
     "unexplainedModalityOverrides": 0
@@ -2764,7 +2764,8 @@
           5,
           6,
           7,
-          8
+          8,
+          9
         ],
         "bookChapters": [
           1,
@@ -2774,7 +2775,8 @@
           5,
           6,
           7,
-          8
+          8,
+          9
         ],
         "missingBookChapters": [],
         "orphanBookChapters": [],
@@ -3316,9 +3318,9 @@
       {
         "language": "marwadi",
         "status": "version-2",
-        "lessonCount": 47,
+        "lessonCount": 54,
         "versions": {
-          "2": 47
+          "2": 54
         }
       },
       {
@@ -4090,8 +4092,8 @@
       },
       {
         "language": "marwadi",
-        "bookChapters": 8,
-        "declaredChapters": 8,
+        "bookChapters": 9,
+        "declaredChapters": 9,
         "missingCapability": 0,
         "findings": 0,
         "clean": true
@@ -4170,8 +4172,8 @@
       }
     ],
     "summary": {
-      "bookChapters": 1015,
-      "declaredChapters": 1015,
+      "bookChapters": 1016,
+      "declaredChapters": 1016,
       "chaptersWithoutCapability": 0,
       "payoffsNotClosed": 0,
       "payoffsNotRepresentative": 83,
@@ -4183,9 +4185,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3482,
+    "totalLessons": 3489,
     "byLevel": {
-      "pre-A1": 2212,
+      "pre-A1": 2219,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4393,9 +4395,9 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 47,
+        "lessonCount": 54,
         "byLevel": {
-          "pre-A1": 47,
+          "pre-A1": 54,
           "A1": 0,
           "A2": 0,
           "B1": 0,
@@ -5149,8 +5151,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 47,
-        "measurable": 47,
+        "lessonCount": 54,
+        "measurable": 54,
         "unmeasurable": 0,
         "lessonViolations": 0,
         "chapterViolations": 0
@@ -5866,8 +5868,8 @@
           "language": "marwadi",
           "script": "devanagari",
           "latinScript": false,
-          "lessonCount": 47,
-          "totalGlyphs": 20,
+          "lessonCount": 54,
+          "totalGlyphs": 24,
           "lessonViolations": 0,
           "systemViolations": 0,
           "lessonsWithForeignScript": 0
@@ -59582,11 +59584,11 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 47,
+        "lessonCount": 54,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 60,
+        "atomsTaught": 69,
         "atomsNeverRevisited": 1,
         "forwardReferences": 0
       },
@@ -59686,7 +59688,7 @@
       "tracksWithUnorderedLessons": 0,
       "forwardPrerequisites": 0,
       "forwardReviews": 0,
-      "atomsTaught": 4789,
+      "atomsTaught": 4798,
       "atomsNeverRevisited": 625,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
@@ -59820,10 +59822,10 @@
       {
         "language": "marwadi",
         "script": "devanagari",
-        "lessonCount": 47,
-        "scriptLessons": 20,
-        "taughtGlyphs": 20,
-        "shownGlyphs": 20,
+        "lessonCount": 54,
+        "scriptLessons": 25,
+        "taughtGlyphs": 24,
+        "shownGlyphs": 24,
         "neverTaughtGlyphs": 0,
         "violations": 0,
         "exposureOnly": 1,
@@ -71439,8 +71441,8 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 47,
-        "atomMeasurableLessons": 47,
+        "lessonCount": 54,
+        "atomMeasurableLessons": 54,
         "atomMeasurementBlindLessons": 0,
         "durationViolations": 0,
         "atomLessonSpikes": 0,
@@ -71455,7 +71457,7 @@
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 0,
-        "atomsTaught": 60,
+        "atomsTaught": 69,
         "atomsNeverRevisited": 1,
         "reinforcementWindowMisses": 0,
         "reinforcementMissesByWindow": {
@@ -71465,7 +71467,7 @@
           "R4": 0
         },
         "payoffSurprises": 0,
-        "writingPracticeLessons": 26,
+        "writingPracticeLessons": 31,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
         "findings": [],
@@ -73468,11 +73470,6 @@
         "inProgressAt": "pre-A1",
         "blockers": [
           {
-            "criterion": "spine-nodes",
-            "detail": "1 of 7 pre-A1 spine node(s) unrealized: SPINE-TAKE-LEAVE",
-            "shortfall": 1
-          },
-          {
             "criterion": "vocabulary",
             "detail": "teaches 11 distinct headwords at or below pre-A1, against 300",
             "shortfall": 289
@@ -73738,11 +73735,11 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3482,
-    "voice": 2483,
+    "totalLessons": 3489,
+    "voice": 2485,
     "sight": 587,
-    "pen": 412,
-    "coreVoice": 2941,
+    "pen": 417,
+    "coreVoice": 2943,
     "lessonsWithWritingSegments": 188,
     "drivablePercent": 84,
     "tracks": [
@@ -80143,13 +80140,13 @@
       },
       {
         "language": "marwadi",
-        "lessonCount": 47,
-        "voice": 21,
+        "lessonCount": 54,
+        "voice": 23,
         "sight": 2,
-        "pen": 24,
-        "coreVoice": 27,
-        "drivablePercent": 57,
-        "drivablePrefixTotal": 6,
+        "pen": 29,
+        "coreVoice": 29,
+        "drivablePercent": 54,
+        "drivablePrefixTotal": 7,
         "chapters": [
           {
             "language": "marwadi",
@@ -80277,6 +80274,22 @@
             ],
             "drivablePrefix": 1,
             "firstNonVoiceLesson": "MW-W06-uu-matra"
+          },
+          {
+            "language": "marwadi",
+            "chapter": 9,
+            "lessonCount": 7,
+            "voice": 2,
+            "sight": 0,
+            "pen": 5,
+            "coreVoice": 2,
+            "modalities": [
+              "voice",
+              "sight",
+              "pen"
+            ],
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "MW-W07-chha"
           }
         ]
       },
@@ -89116,7 +89129,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3482,
+    "lessons": 3489,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -89126,8 +89139,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3358,
-    "usesBeforeIntroduction": 12144,
+    "lessonsUsingTerms": 3362,
+    "usesBeforeIntroduction": 12148,
     "technicalUsesBeforeIntroduction": 3181,
     "technicalLessons": 1657,
     "worstTerms": [
@@ -89158,12 +89171,12 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3482,
+    "lessonsScanned": 3489,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
   "glyphCoverage": {
-    "filesScanned": 1153,
+    "filesScanned": 1154,
     "mainCharacters": 126,
     "scriptCharacters": 681,
     "gaps": 0
