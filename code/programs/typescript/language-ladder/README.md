@@ -1169,6 +1169,11 @@ ordered SVG paths; the Noto Sans Gujarati fit preserves that order while
 tracing a wider, more angular printed body and a straighter spine. The source's
 variation warning continues to qualify the demonstrated school-hand form;
 conventional **ભ** is next.
+The verified two-frame Gujarati **ભ** filmstrip circles the broad left loop,
+winds through its compact inner turn, and exits across the long right shoulder;
+after one lift, the second frame descends the separate tall right spine into
+its foot. The source's two-path order and variation warning remain visible;
+conventional **મ** is next.
 The canonical script-data group is capped at 250 kB per cacheable batch, so
 these growing source notes stay within the app's enforced 500 kB eager-chunk
 budget without removing learner-facing evidence.
