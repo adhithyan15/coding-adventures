@@ -5,6 +5,15 @@ tracks: one entry per authored tranche, describing what was added and why.
 
 ## [Unreleased]
 
+### Changed — complete the pre-A1 writing-stage runway (#12449)
+
+- Made the existing first-character practice an explicit model-visible guided
+  copy rather than leaving the learner to infer how much support was allowed.
+- Turned the already component-safe **你** assembly into a ten-second delayed
+  copy with half-by-half repair.
+- Added sound-only dictation of **好** only after **女** and **子** are secure,
+  without adding a new character or extending any lesson past five minutes.
+
 ### Added — project-defined pre-A1 four-skill task shapes (#12369)
 
 - Turned the Chinese assessment contract's pre-A1 target into bounded reading,

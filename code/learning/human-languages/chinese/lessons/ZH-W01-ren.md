@@ -68,11 +68,15 @@ with fifteen.
 
 The pitch is **second tone**: *rén* rises, like the end of an English question.
 
-## Guided Practice
+## Guided Practice — copy with the model visible
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-REN-01] -->
+<!-- hl-writing-stage: guided-copy -->
 
-- [YOU WRITE: 人 — left stroke first, then right. Say *rén* as you finish it.]
-- [YOU SAY: **rén**, rising]
+Keep **人** visible. Point to the left stroke, then the right. Copy the character
+once immediately below the model: left stroke first, then right. Say *rén* as
+you finish it, and compare the meeting point at the top before moving on.
+
+This is guided copy, not a memory test. One careful copy is enough.
 
 ## Wrap-up Recall
 <!-- hl-knowledge: introduces=[]; assesses=[ZH-SCRIPT-REN-01] -->
