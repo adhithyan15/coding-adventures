@@ -1,14 +1,9 @@
 cd ../pixel-container && luarocks make --local --deps-mode=none coding-adventures-pixel-container-0.1.0-1.rockspec
 cd ../lzss && luarocks make --local --deps-mode=none coding-adventures-lzss-0.1.0-1.rockspec
 cd ../zip && luarocks make --local --deps-mode=none coding-adventures-zip-0.2.0-1.rockspec
-luarocks install --local busted
-luarocks install --local dkjson
-luarocks install --local libdeflate 1.0.2-1
-luarocks install --local luacheck
-luarocks install --local luacov
 luarocks make --local --deps-mode=none coding-adventures-image-codec-png-0.1.0-1.rockspec
 luac -p src/coding_adventures/image_codec_png/init.lua tests/test_image_codec_png.lua tests/test_portable_conformance.lua tests/check_coverage.lua
-set "LUA_PATH=%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua "%APPDATA%\luarocks\bin\luacheck" src tests --std lua54+busted
-cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;../../pixel-container/src/?.lua;../../pixel-container/src/?/init.lua;../../zip/src/?.lua;../../zip/src/?/init.lua;../../lzss/src/?.lua;../../lzss/src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua "%APPDATA%\luarocks\bin\busted" . --verbose --pattern=test_
-cd tests && (del /q luacov.stats.out luacov.report.out 2>nul || ver >nul) && set "LUA_PATH=../src/?.lua;../src/?/init.lua;../../pixel-container/src/?.lua;../../pixel-container/src/?/init.lua;../../zip/src/?.lua;../../zip/src/?/init.lua;../../lzss/src/?.lua;../../lzss/src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua "%APPDATA%\luarocks\bin\busted" . --coverage --coverage-config-file=../.luacov --pattern=test_ && lua "%APPDATA%\luarocks\bin\luacov" -c ../.luacov
+set "LUA_PATH=%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua -e "arg={'src','tests','--std','lua54+busted'}; require('luacheck.main')"
+cd tests && set "LUA_PATH=../src/?.lua;../src/?/init.lua;../../pixel-container/src/?.lua;../../pixel-container/src/?/init.lua;../../zip/src/?.lua;../../zip/src/?/init.lua;../../lzss/src/?.lua;../../lzss/src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua -e "arg={'.','--verbose','--pattern=test_'}; require('busted.runner')({ standalone = false })"
+cd tests && (del /q luacov.stats.out luacov.report.out 2>nul || ver >nul) && set "LUA_PATH=../src/?.lua;../src/?/init.lua;../../pixel-container/src/?.lua;../../pixel-container/src/?/init.lua;../../zip/src/?.lua;../../zip/src/?/init.lua;../../lzss/src/?.lua;../../lzss/src/?/init.lua;%APPDATA%\luarocks\share\lua\5.4\?.lua;%APPDATA%\luarocks\share\lua\5.4\?\init.lua;;" && set "LUA_CPATH=%APPDATA%\luarocks\lib\lua\5.4\?.dll;;" && lua -e "arg={'.','--coverage','--coverage-config-file=../.luacov','--pattern=test_'}; require('busted.runner')({ standalone = false })" && lua -e "local r=require('luacov.runner'); r.run_report(r.load_config('../.luacov'))"
 cd tests && lua check_coverage.lua
