@@ -12,7 +12,7 @@
   },
   "summary": {
     "registeredTracks": 23,
-    "totalLessons": 3411,
+    "totalLessons": 3412,
     "authoredBooks": 23,
     "durationViolations": 0,
     "unknownPrerequisites": 0,
@@ -24,10 +24,10 @@
     "version2SchemaTracks": 9,
     "lessonsWithoutLevel": 63,
     "rampOverBudgetLessons": 46,
-    "scriptRampOverBudgetLessons": 57,
+    "scriptRampOverBudgetLessons": 56,
     "lessonsOpeningMultipleScripts": 5,
-    "scriptClosureViolations": 743,
-    "scriptExposureExemptedGlyphs": 2189,
+    "scriptClosureViolations": 742,
+    "scriptExposureExemptedGlyphs": 2156,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
     "lessonsWithoutSequence": 12,
@@ -37,8 +37,8 @@
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 82,
     "chapterGateCleanTracks": 9,
-    "tracksWithoutWritingStageEvidence": 15,
-    "missingWritingStagePairs": 902,
+    "tracksWithoutWritingStageEvidence": 14,
+    "missingWritingStagePairs": 895,
     "invalidWritingStageEvidence": 0,
     "drivableLessons": 2910,
     "drivablePercent": 85,
@@ -3353,10 +3353,10 @@
       {
         "language": "urdu",
         "status": "mixed",
-        "lessonCount": 68,
+        "lessonCount": 69,
         "versions": {
-          "1": 4,
-          "2": 64
+          "1": 1,
+          "2": 68
         }
       },
       {
@@ -4154,9 +4154,9 @@
     }
   },
   "levels": {
-    "totalLessons": 3411,
+    "totalLessons": 3412,
     "byLevel": {
-      "pre-A1": 2141,
+      "pre-A1": 2142,
       "A1": 573,
       "A2": 549,
       "B1": 40,
@@ -4499,9 +4499,9 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 68,
+        "lessonCount": 69,
         "byLevel": {
-          "pre-A1": 55,
+          "pre-A1": 56,
           "A1": 0,
           "A2": 13,
           "B1": 0,
@@ -5192,9 +5192,9 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 68,
-        "measurable": 64,
-        "unmeasurable": 4,
+        "lessonCount": 69,
+        "measurable": 68,
+        "unmeasurable": 1,
         "lessonViolations": 3,
         "chapterViolations": 3
       }
@@ -5602,17 +5602,6 @@
           "sample": "௬௭௮௯௰",
           "systems": [
             "Tamil"
-          ],
-          "budget": 3
-        },
-        {
-          "lessonId": "UR-C01-shukriya",
-          "language": "urdu",
-          "chapter": 1,
-          "glyphs": 5,
-          "sample": "رشکہی",
-          "systems": [
-            "Arabic"
           ],
           "budget": 3
         },
@@ -6114,15 +6103,15 @@
           "language": "urdu",
           "script": "urdu-nastaliq",
           "latinScript": false,
-          "lessonCount": 68,
+          "lessonCount": 69,
           "totalGlyphs": 37,
-          "lessonViolations": 3,
+          "lessonViolations": 2,
           "systemViolations": 0,
           "lessonsWithForeignScript": 2
         }
       ],
       "summary": {
-        "lessonViolations": 57,
+        "lessonViolations": 56,
         "systemViolations": 5,
         "lessonsWithForeignScript": 219,
         "maxForeignGlyphsInALesson": 26,
@@ -6142,8 +6131,8 @@
     "summary": {
       "lessonViolations": 46,
       "chapterViolations": 24,
-      "unmeasurableLessons": 495,
-      "measurablePercent": 85,
+      "unmeasurableLessons": 492,
+      "measurablePercent": 86,
       "steepestLesson": {
         "lessonId": "BN-C06-numbers-1-5",
         "language": "bengali",
@@ -31688,7 +31677,7 @@
         "atom": "UR-ETYMON-HONA-BE",
         "language": "urdu",
         "introducedBy": "UR-C06-hona",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R1",
           "R2",
@@ -31700,7 +31689,7 @@
         "atom": "UR-SCRIPT-JANA",
         "language": "urdu",
         "introducedBy": "UR-C06-jana",
-        "introducedAt": 21,
+        "introducedAt": 22,
         "missed": [
           "R1",
           "R2",
@@ -47285,7 +47274,7 @@
         "atom": "UR-CHUNK-AAP-SE-MIL-KAR",
         "language": "urdu",
         "introducedBy": "UR-C03-khushi-hui",
-        "introducedAt": 8,
+        "introducedAt": 9,
         "missed": [
           "R1",
           "R2"
@@ -47296,7 +47285,7 @@
         "atom": "UR-CROSSLINGUAL-KHUDA-HAFIZ-SPELLING",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R1",
           "R2"
@@ -47307,7 +47296,7 @@
         "atom": "UR-CROSSLINGUAL-THIK",
         "language": "urdu",
         "introducedBy": "UR-C04-thik",
-        "introducedAt": 13,
+        "introducedAt": 14,
         "missed": [
           "R1",
           "R2"
@@ -47318,7 +47307,7 @@
         "atom": "UR-DIALOGUE-TAKE-LEAVE",
         "language": "urdu",
         "introducedBy": "UR-C05-practice",
-        "introducedAt": 19,
+        "introducedAt": 20,
         "missed": [
           "R1",
           "R2"
@@ -47329,7 +47318,7 @@
         "atom": "UR-DIALOGUE-WELLBEING",
         "language": "urdu",
         "introducedBy": "UR-C04-practice",
-        "introducedAt": 15,
+        "introducedAt": 16,
         "missed": [
           "R2",
           "R3"
@@ -47340,7 +47329,7 @@
         "atom": "UR-ETYMON-AANKH-EYE",
         "language": "urdu",
         "introducedBy": "UR-C10-aankh",
-        "introducedAt": 39,
+        "introducedAt": 40,
         "missed": [
           "R2",
           "R3"
@@ -47351,7 +47340,7 @@
         "atom": "UR-ETYMON-ANA-TOWARD-GO",
         "language": "urdu",
         "introducedBy": "UR-C06-ana",
-        "introducedAt": 22,
+        "introducedAt": 23,
         "missed": [
           "R1",
           "R3"
@@ -47362,7 +47351,7 @@
         "atom": "UR-ETYMON-BAHAN-SHARE",
         "language": "urdu",
         "introducedBy": "UR-C09-bahan",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R2",
           "R3"
@@ -47373,7 +47362,7 @@
         "atom": "UR-ETYMON-CHAI-SILKROAD",
         "language": "urdu",
         "introducedBy": "UR-C12-chai",
-        "introducedAt": 43,
+        "introducedAt": 44,
         "missed": [
           "R2",
           "R3"
@@ -47384,7 +47373,7 @@
         "atom": "UR-ETYMON-DIL-HEART-PIE",
         "language": "urdu",
         "introducedBy": "UR-C11-dil",
-        "introducedAt": 41,
+        "introducedAt": 42,
         "missed": [
           "R2",
           "R3"
@@ -47395,7 +47384,7 @@
         "atom": "UR-ETYMON-DOODH-DOUGHTY",
         "language": "urdu",
         "introducedBy": "UR-C12-doodh",
-        "introducedAt": 44,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -47406,7 +47395,7 @@
         "atom": "UR-ETYMON-DOST-CHOOSE",
         "language": "urdu",
         "introducedBy": "UR-C09-dost",
-        "introducedAt": 35,
+        "introducedAt": 36,
         "missed": [
           "R2",
           "R3"
@@ -47417,7 +47406,7 @@
         "atom": "UR-ETYMON-HAFIZ-ARABIC",
         "language": "urdu",
         "introducedBy": "UR-C05-hafiz",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R1",
           "R3"
@@ -47428,7 +47417,7 @@
         "atom": "UR-ETYMON-JANNA-KNOW",
         "language": "urdu",
         "introducedBy": "UR-C06-janna",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -47439,7 +47428,7 @@
         "atom": "UR-ETYMON-KAAN-UNCERTAIN",
         "language": "urdu",
         "introducedBy": "UR-C10-kaan",
-        "introducedAt": 37,
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -47450,7 +47439,7 @@
         "atom": "UR-ETYMON-KALA-DRAVIDIAN",
         "language": "urdu",
         "introducedBy": "UR-C13-kala",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R1",
           "R2"
@@ -47461,7 +47450,7 @@
         "atom": "UR-ETYMON-KHANDAN-PERSIAN",
         "language": "urdu",
         "introducedBy": "UR-C09-khandan",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2",
           "R3"
@@ -47472,7 +47461,7 @@
         "atom": "UR-ETYMON-KHUSH-PERSIAN",
         "language": "urdu",
         "introducedBy": "UR-C03-khushi-hui",
-        "introducedAt": 8,
+        "introducedAt": 9,
         "missed": [
           "R1",
           "R2"
@@ -47483,7 +47472,7 @@
         "atom": "UR-ETYMON-KYA-QUESTION-FAMILY",
         "language": "urdu",
         "introducedBy": "UR-C03-kya",
-        "introducedAt": 6,
+        "introducedAt": 7,
         "missed": [
           "R1",
           "R2"
@@ -47494,7 +47483,7 @@
         "atom": "UR-ETYMON-LAL-PERSIAN",
         "language": "urdu",
         "introducedBy": "UR-C13-lal",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -47505,7 +47494,7 @@
         "atom": "UR-ETYMON-LENA-TAKE",
         "language": "urdu",
         "introducedBy": "UR-C08-lena",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R1",
           "R3"
@@ -47516,7 +47505,7 @@
         "atom": "UR-ETYMON-MADAD-EXTEND",
         "language": "urdu",
         "introducedBy": "UR-C08-madad",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R2",
           "R3"
@@ -47527,7 +47516,7 @@
         "atom": "UR-ETYMON-MUNH-MYTH",
         "language": "urdu",
         "introducedBy": "UR-C10-munh",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -47538,7 +47527,7 @@
         "atom": "UR-ETYMON-NAAK-NOSE",
         "language": "urdu",
         "introducedBy": "UR-C10-naak",
-        "introducedAt": 38,
+        "introducedAt": 39,
         "missed": [
           "R2",
           "R3"
@@ -47549,7 +47538,7 @@
         "atom": "UR-ETYMON-PANI-DRINK",
         "language": "urdu",
         "introducedBy": "UR-C12-pani",
-        "introducedAt": 42,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -47560,7 +47549,7 @@
         "atom": "UR-ETYMON-PARHNA-RECITE",
         "language": "urdu",
         "introducedBy": "UR-C07-parhna",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2",
           "R3"
@@ -47571,7 +47560,7 @@
         "atom": "UR-ETYMON-PUCHHNA-ASK",
         "language": "urdu",
         "introducedBy": "UR-C08-puchhna",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R2",
           "R3"
@@ -47582,7 +47571,7 @@
         "atom": "UR-ETYMON-ROTI-STRIKE",
         "language": "urdu",
         "introducedBy": "UR-C12-roti",
-        "introducedAt": 45,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -47593,7 +47582,7 @@
         "atom": "UR-ETYMON-SAFED-WHITE-PIE",
         "language": "urdu",
         "introducedBy": "UR-C13-safed",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -47604,7 +47593,7 @@
         "atom": "UR-ETYMON-SAMAJHNA-WAKE",
         "language": "urdu",
         "introducedBy": "UR-C07-samajhna",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R2",
           "R3"
@@ -47615,7 +47604,7 @@
         "atom": "UR-ETYMON-SARDI-PERSIAN",
         "language": "urdu",
         "introducedBy": "UR-C15-sardi",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2"
@@ -47626,7 +47615,7 @@
         "atom": "UR-ETYMON-SOCHNA-GRIEVE",
         "language": "urdu",
         "introducedBy": "UR-C07-sochna",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R2",
           "R3"
@@ -47637,7 +47626,7 @@
         "atom": "UR-ETYMON-TUM-THOU",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-tum-tu",
-        "introducedAt": 5,
+        "introducedAt": 6,
         "missed": [
           "R1",
           "R2"
@@ -47648,7 +47637,7 @@
         "atom": "UR-GRAMMAR-AAP-HAIN",
         "language": "urdu",
         "introducedBy": "UR-C04-aap-kaise-hain",
-        "introducedAt": 11,
+        "introducedAt": 12,
         "missed": [
           "R2",
           "R3"
@@ -47659,7 +47648,7 @@
         "atom": "UR-GRAMMAR-CONJUNCT-VERB",
         "language": "urdu",
         "introducedBy": "UR-C08-madad",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R2",
           "R3"
@@ -47670,7 +47659,7 @@
         "atom": "UR-GRAMMAR-KHUDA-HAFIZ-ELLIPSIS",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R1",
           "R2"
@@ -47681,7 +47670,7 @@
         "atom": "UR-LEX-AANKH",
         "language": "urdu",
         "introducedBy": "UR-C10-aankh",
-        "introducedAt": 39,
+        "introducedAt": 40,
         "missed": [
           "R2",
           "R3"
@@ -47692,7 +47681,7 @@
         "atom": "UR-LEX-BHAI",
         "language": "urdu",
         "introducedBy": "UR-C09-bhai",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R2",
           "R3"
@@ -47703,7 +47692,7 @@
         "atom": "UR-LEX-CHAI",
         "language": "urdu",
         "introducedBy": "UR-C12-chai",
-        "introducedAt": 43,
+        "introducedAt": 44,
         "missed": [
           "R2",
           "R3"
@@ -47714,7 +47703,7 @@
         "atom": "UR-LEX-DIL",
         "language": "urdu",
         "introducedBy": "UR-C11-dil",
-        "introducedAt": 41,
+        "introducedAt": 42,
         "missed": [
           "R2",
           "R3"
@@ -47725,7 +47714,7 @@
         "atom": "UR-LEX-DOODH",
         "language": "urdu",
         "introducedBy": "UR-C12-doodh",
-        "introducedAt": 44,
+        "introducedAt": 45,
         "missed": [
           "R2",
           "R3"
@@ -47736,7 +47725,7 @@
         "atom": "UR-LEX-JANA",
         "language": "urdu",
         "introducedBy": "UR-C06-jana",
-        "introducedAt": 21,
+        "introducedAt": 22,
         "missed": [
           "R2",
           "R3"
@@ -47747,7 +47736,7 @@
         "atom": "UR-LEX-JANNA",
         "language": "urdu",
         "introducedBy": "UR-C06-janna",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -47758,7 +47747,7 @@
         "atom": "UR-LEX-KAAN",
         "language": "urdu",
         "introducedBy": "UR-C10-kaan",
-        "introducedAt": 37,
+        "introducedAt": 38,
         "missed": [
           "R2",
           "R3"
@@ -47769,7 +47758,7 @@
         "atom": "UR-LEX-KAISE-KAISI",
         "language": "urdu",
         "introducedBy": "UR-C04-kaise-kaisi",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R2",
           "R3"
@@ -47780,7 +47769,7 @@
         "atom": "UR-LEX-LAL",
         "language": "urdu",
         "introducedBy": "UR-C13-lal",
-        "introducedAt": 46,
+        "introducedAt": 47,
         "missed": [
           "R2",
           "R3"
@@ -47791,7 +47780,7 @@
         "atom": "UR-LEX-LIKHNA",
         "language": "urdu",
         "introducedBy": "UR-C07-likhna",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3"
@@ -47802,7 +47791,7 @@
         "atom": "UR-LEX-MADAD-KARNA",
         "language": "urdu",
         "introducedBy": "UR-C08-madad",
-        "introducedAt": 31,
+        "introducedAt": 32,
         "missed": [
           "R2",
           "R3"
@@ -47813,7 +47802,7 @@
         "atom": "UR-LEX-MUNH",
         "language": "urdu",
         "introducedBy": "UR-C10-munh",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -47824,7 +47813,7 @@
         "atom": "UR-LEX-NAAK",
         "language": "urdu",
         "introducedBy": "UR-C10-naak",
-        "introducedAt": 38,
+        "introducedAt": 39,
         "missed": [
           "R2",
           "R3"
@@ -47835,7 +47824,7 @@
         "atom": "UR-LEX-PANI",
         "language": "urdu",
         "introducedBy": "UR-C12-pani",
-        "introducedAt": 42,
+        "introducedAt": 43,
         "missed": [
           "R2",
           "R3"
@@ -47846,7 +47835,7 @@
         "atom": "UR-LEX-PUCHHNA",
         "language": "urdu",
         "introducedBy": "UR-C08-puchhna",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R2",
           "R3"
@@ -47857,7 +47846,7 @@
         "atom": "UR-LEX-ROTI",
         "language": "urdu",
         "introducedBy": "UR-C12-roti",
-        "introducedAt": 45,
+        "introducedAt": 46,
         "missed": [
           "R2",
           "R3"
@@ -47868,7 +47857,7 @@
         "atom": "UR-LEX-SAFED",
         "language": "urdu",
         "introducedBy": "UR-C13-safed",
-        "introducedAt": 47,
+        "introducedAt": 48,
         "missed": [
           "R2",
           "R3"
@@ -47879,7 +47868,7 @@
         "atom": "UR-LEX-SAMAJHNA",
         "language": "urdu",
         "introducedBy": "UR-C07-samajhna",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R2",
           "R3"
@@ -47890,7 +47879,7 @@
         "atom": "UR-LEX-SARDI",
         "language": "urdu",
         "introducedBy": "UR-C15-sardi",
-        "introducedAt": 58,
+        "introducedAt": 59,
         "missed": [
           "R1",
           "R2"
@@ -47901,7 +47890,7 @@
         "atom": "UR-LEX-WELLBEING-QUESTION",
         "language": "urdu",
         "introducedBy": "UR-C04-aap-kaise-hain",
-        "introducedAt": 11,
+        "introducedAt": 12,
         "missed": [
           "R2",
           "R3"
@@ -47912,7 +47901,7 @@
         "atom": "UR-PRAGMATICS-RESPECTFUL-GENDER-CHOICE",
         "language": "urdu",
         "introducedBy": "UR-C04-aap-kaise-hain",
-        "introducedAt": 11,
+        "introducedAt": 12,
         "missed": [
           "R1",
           "R2"
@@ -47923,7 +47912,7 @@
         "atom": "UR-REGISTER-INDO-ARYAN-CORE",
         "language": "urdu",
         "introducedBy": "UR-C06-bolna",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R1",
           "R3"
@@ -47934,7 +47923,7 @@
         "atom": "UR-REGISTER-WRITING-BORROWED",
         "language": "urdu",
         "introducedBy": "UR-C07-likhna",
-        "introducedAt": 28,
+        "introducedAt": 29,
         "missed": [
           "R2",
           "R3"
@@ -47945,7 +47934,7 @@
         "atom": "UR-SCRIPT-AAP-TUM-TU",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-tum-tu",
-        "introducedAt": 5,
+        "introducedAt": 6,
         "missed": [
           "R1",
           "R2"
@@ -47956,7 +47945,7 @@
         "atom": "UR-SCRIPT-GAF-LETTER",
         "language": "urdu",
         "introducedBy": "UR-C15-garmi",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R1",
           "R2"
@@ -47967,7 +47956,7 @@
         "atom": "UR-SCRIPT-JANNA-DOUBLE-NUN",
         "language": "urdu",
         "introducedBy": "UR-C06-janna",
-        "introducedAt": 24,
+        "introducedAt": 25,
         "missed": [
           "R2",
           "R3"
@@ -47978,7 +47967,7 @@
         "atom": "UR-SCRIPT-KAISE-KAISI",
         "language": "urdu",
         "introducedBy": "UR-C04-kaise-kaisi",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R1",
           "R2"
@@ -47989,7 +47978,7 @@
         "atom": "UR-SCRIPT-KHUDA",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda",
-        "introducedAt": 16,
+        "introducedAt": 17,
         "missed": [
           "R2",
           "R3"
@@ -48000,7 +47989,7 @@
         "atom": "UR-SCRIPT-KYA",
         "language": "urdu",
         "introducedBy": "UR-C03-kya",
-        "introducedAt": 6,
+        "introducedAt": 7,
         "missed": [
           "R1",
           "R2"
@@ -48011,7 +48000,7 @@
         "atom": "UR-SCRIPT-MERA-NAAM-HAI",
         "language": "urdu",
         "introducedBy": "UR-C02-mera-naam",
-        "introducedAt": 4,
+        "introducedAt": 5,
         "missed": [
           "R1",
           "R2"
@@ -48022,7 +48011,7 @@
         "atom": "UR-SCRIPT-NUN-NASAL-VOWEL",
         "language": "urdu",
         "introducedBy": "UR-C10-munh",
-        "introducedAt": 40,
+        "introducedAt": 41,
         "missed": [
           "R2",
           "R3"
@@ -48033,7 +48022,7 @@
         "atom": "UR-SCRIPT-QAMIZ-LETTERS",
         "language": "urdu",
         "introducedBy": "UR-C14-qamiz",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R1",
           "R2"
@@ -48044,7 +48033,7 @@
         "atom": "UR-SCRIPT-RRE-LETTER",
         "language": "urdu",
         "introducedBy": "UR-C07-parhna",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R2",
           "R3"
@@ -48055,7 +48044,7 @@
         "atom": "UR-SCRIPT-TE-VS-TTE",
         "language": "urdu",
         "introducedBy": "UR-C14-juta",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R1",
           "R2"
@@ -48066,7 +48055,7 @@
         "atom": "UR-SCRIPT-THIK",
         "language": "urdu",
         "introducedBy": "UR-C04-thik",
-        "introducedAt": 13,
+        "introducedAt": 14,
         "missed": [
           "R1",
           "R3"
@@ -48077,7 +48066,7 @@
         "atom": "UR-SCRIPT-YE-THIRD-VALUE",
         "language": "urdu",
         "introducedBy": "UR-C08-lena",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R2",
           "R3"
@@ -55770,7 +55759,7 @@
         "atom": "UR-DIALOGUE-NAME-EXCHANGE",
         "language": "urdu",
         "introducedBy": "UR-C03-practice",
-        "introducedAt": 9,
+        "introducedAt": 10,
         "missed": [
           "R3"
         ],
@@ -55780,7 +55769,7 @@
         "atom": "UR-ETYMON-BARISH-PERSIAN",
         "language": "urdu",
         "introducedBy": "UR-C15-barish",
-        "introducedAt": 54,
+        "introducedAt": 55,
         "missed": [
           "R2"
         ],
@@ -55790,7 +55779,7 @@
         "atom": "UR-ETYMON-BHAI-BROTHER",
         "language": "urdu",
         "introducedBy": "UR-C09-bhai",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R3"
         ],
@@ -55800,7 +55789,7 @@
         "atom": "UR-ETYMON-DHOOP-PRAKRIT",
         "language": "urdu",
         "introducedBy": "UR-C15-dhoop",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R2"
         ],
@@ -55810,7 +55799,7 @@
         "atom": "UR-ETYMON-GARMI-WARM-PIE",
         "language": "urdu",
         "introducedBy": "UR-C15-garmi",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R2"
         ],
@@ -55820,7 +55809,7 @@
         "atom": "UR-ETYMON-JUTA-YOKE",
         "language": "urdu",
         "introducedBy": "UR-C14-juta",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R2"
         ],
@@ -55830,7 +55819,7 @@
         "atom": "UR-ETYMON-KHUDA-PERSIAN",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda",
-        "introducedAt": 16,
+        "introducedAt": 17,
         "missed": [
           "R1"
         ],
@@ -55840,7 +55829,7 @@
         "atom": "UR-ETYMON-NILA-ANILINE",
         "language": "urdu",
         "introducedBy": "UR-C13-nila",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R2"
         ],
@@ -55850,7 +55839,7 @@
         "atom": "UR-ETYMON-QAMIZ-CHEMISE",
         "language": "urdu",
         "introducedBy": "UR-C14-qamiz",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R2"
         ],
@@ -55860,7 +55849,7 @@
         "atom": "UR-ETYMON-TOPI-INTO-ENGLISH",
         "language": "urdu",
         "introducedBy": "UR-C14-topi",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2"
         ],
@@ -55870,7 +55859,7 @@
         "atom": "UR-GRAMMAR-AAP-KA",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-ka-naam-kya-hai",
-        "introducedAt": 7,
+        "introducedAt": 8,
         "missed": [
           "R2"
         ],
@@ -55880,7 +55869,7 @@
         "atom": "UR-GRAMMAR-ADJECTIVE-AGREEMENT",
         "language": "urdu",
         "introducedBy": "UR-C13-kala",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2"
         ],
@@ -55890,7 +55879,7 @@
         "atom": "UR-GRAMMAR-DATIVE-EXPERIENCER",
         "language": "urdu",
         "introducedBy": "UR-C08-pasand",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R3"
         ],
@@ -55900,7 +55889,7 @@
         "atom": "UR-GRAMMAR-HOW-GENDER",
         "language": "urdu",
         "introducedBy": "UR-C04-kaise-kaisi",
-        "introducedAt": 10,
+        "introducedAt": 11,
         "missed": [
           "R2"
         ],
@@ -55910,7 +55899,7 @@
         "atom": "UR-GRAMMAR-MAIN-HUN-FRAME",
         "language": "urdu",
         "introducedBy": "UR-C04-main-hun",
-        "introducedAt": 12,
+        "introducedAt": 13,
         "missed": [
           "R3"
         ],
@@ -55920,7 +55909,7 @@
         "atom": "UR-GRAMMAR-MERA-GENDER-AGREEMENT",
         "language": "urdu",
         "introducedBy": "UR-C09-bahan",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R3"
         ],
@@ -55930,7 +55919,7 @@
         "atom": "UR-GRAMMAR-WELLBEING-WORD-ORDER",
         "language": "urdu",
         "introducedBy": "UR-C04-main-thik-hun",
-        "introducedAt": 14,
+        "introducedAt": 15,
         "missed": [
           "R2"
         ],
@@ -55940,7 +55929,7 @@
         "atom": "UR-LEX-ANA",
         "language": "urdu",
         "introducedBy": "UR-C06-ana",
-        "introducedAt": 22,
+        "introducedAt": 23,
         "missed": [
           "R3"
         ],
@@ -55950,7 +55939,7 @@
         "atom": "UR-LEX-BAHAN",
         "language": "urdu",
         "introducedBy": "UR-C09-bahan",
-        "introducedAt": 34,
+        "introducedAt": 35,
         "missed": [
           "R2"
         ],
@@ -55960,7 +55949,7 @@
         "atom": "UR-LEX-BARISH",
         "language": "urdu",
         "introducedBy": "UR-C15-barish",
-        "introducedAt": 54,
+        "introducedAt": 55,
         "missed": [
           "R2"
         ],
@@ -55970,7 +55959,7 @@
         "atom": "UR-LEX-BOLNA",
         "language": "urdu",
         "introducedBy": "UR-C06-bolna",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R3"
         ],
@@ -55980,7 +55969,7 @@
         "atom": "UR-LEX-DHOOP",
         "language": "urdu",
         "introducedBy": "UR-C15-dhoop",
-        "introducedAt": 55,
+        "introducedAt": 56,
         "missed": [
           "R2"
         ],
@@ -55990,7 +55979,7 @@
         "atom": "UR-LEX-DOST",
         "language": "urdu",
         "introducedBy": "UR-C09-dost",
-        "introducedAt": 35,
+        "introducedAt": 36,
         "missed": [
           "R2"
         ],
@@ -56000,7 +55989,7 @@
         "atom": "UR-LEX-GARMI",
         "language": "urdu",
         "introducedBy": "UR-C15-garmi",
-        "introducedAt": 57,
+        "introducedAt": 58,
         "missed": [
           "R2"
         ],
@@ -56010,7 +55999,7 @@
         "atom": "UR-LEX-HAFIZ",
         "language": "urdu",
         "introducedBy": "UR-C05-hafiz",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R3"
         ],
@@ -56020,7 +56009,7 @@
         "atom": "UR-LEX-HAWA",
         "language": "urdu",
         "introducedBy": "UR-C15-hawa",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2"
         ],
@@ -56030,7 +56019,7 @@
         "atom": "UR-LEX-HONA",
         "language": "urdu",
         "introducedBy": "UR-C06-hona",
-        "introducedAt": 20,
+        "introducedAt": 21,
         "missed": [
           "R3"
         ],
@@ -56040,7 +56029,7 @@
         "atom": "UR-LEX-HUN",
         "language": "urdu",
         "introducedBy": "UR-C04-main-hun",
-        "introducedAt": 12,
+        "introducedAt": 13,
         "missed": [
           "R3"
         ],
@@ -56050,7 +56039,7 @@
         "atom": "UR-LEX-JUTA",
         "language": "urdu",
         "introducedBy": "UR-C14-juta",
-        "introducedAt": 51,
+        "introducedAt": 52,
         "missed": [
           "R2"
         ],
@@ -56060,7 +56049,7 @@
         "atom": "UR-LEX-KALA",
         "language": "urdu",
         "introducedBy": "UR-C13-kala",
-        "introducedAt": 48,
+        "introducedAt": 49,
         "missed": [
           "R2"
         ],
@@ -56070,7 +56059,7 @@
         "atom": "UR-LEX-KHANDAN",
         "language": "urdu",
         "introducedBy": "UR-C09-khandan",
-        "introducedAt": 36,
+        "introducedAt": 37,
         "missed": [
           "R2"
         ],
@@ -56080,7 +56069,7 @@
         "atom": "UR-LEX-KHUDA",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda",
-        "introducedAt": 16,
+        "introducedAt": 17,
         "missed": [
           "R3"
         ],
@@ -56090,7 +56079,7 @@
         "atom": "UR-LEX-KHUDA-HAFIZ",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2"
         ],
@@ -56100,7 +56089,7 @@
         "atom": "UR-LEX-KOAT",
         "language": "urdu",
         "introducedBy": "UR-C14-koat",
-        "introducedAt": 53,
+        "introducedAt": 54,
         "missed": [
           "R2"
         ],
@@ -56110,7 +56099,7 @@
         "atom": "UR-LEX-KYA",
         "language": "urdu",
         "introducedBy": "UR-C03-kya",
-        "introducedAt": 6,
+        "introducedAt": 7,
         "missed": [
           "R2"
         ],
@@ -56120,7 +56109,7 @@
         "atom": "UR-LEX-LENA",
         "language": "urdu",
         "introducedBy": "UR-C08-lena",
-        "introducedAt": 29,
+        "introducedAt": 30,
         "missed": [
           "R3"
         ],
@@ -56130,7 +56119,7 @@
         "atom": "UR-LEX-MAIN",
         "language": "urdu",
         "introducedBy": "UR-C04-main-hun",
-        "introducedAt": 12,
+        "introducedAt": 13,
         "missed": [
           "R2"
         ],
@@ -56140,7 +56129,7 @@
         "atom": "UR-LEX-MERA-NAAM-HAI",
         "language": "urdu",
         "introducedBy": "UR-C02-mera-naam",
-        "introducedAt": 4,
+        "introducedAt": 5,
         "missed": [
           "R3"
         ],
@@ -56150,7 +56139,7 @@
         "atom": "UR-LEX-NAME-QUESTION",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-ka-naam-kya-hai",
-        "introducedAt": 7,
+        "introducedAt": 8,
         "missed": [
           "R2"
         ],
@@ -56160,7 +56149,7 @@
         "atom": "UR-LEX-NICE-TO-MEET",
         "language": "urdu",
         "introducedBy": "UR-C03-khushi-hui",
-        "introducedAt": 8,
+        "introducedAt": 9,
         "missed": [
           "R2"
         ],
@@ -56170,7 +56159,7 @@
         "atom": "UR-LEX-NILA",
         "language": "urdu",
         "introducedBy": "UR-C13-nila",
-        "introducedAt": 49,
+        "introducedAt": 50,
         "missed": [
           "R2"
         ],
@@ -56180,7 +56169,7 @@
         "atom": "UR-LEX-PARHNA",
         "language": "urdu",
         "introducedBy": "UR-C07-parhna",
-        "introducedAt": 27,
+        "introducedAt": 28,
         "missed": [
           "R3"
         ],
@@ -56190,7 +56179,7 @@
         "atom": "UR-LEX-PASAND",
         "language": "urdu",
         "introducedBy": "UR-C08-pasand",
-        "introducedAt": 32,
+        "introducedAt": 33,
         "missed": [
           "R3"
         ],
@@ -56200,7 +56189,7 @@
         "atom": "UR-LEX-QAMIZ",
         "language": "urdu",
         "introducedBy": "UR-C14-qamiz",
-        "introducedAt": 50,
+        "introducedAt": 51,
         "missed": [
           "R2"
         ],
@@ -56210,7 +56199,7 @@
         "atom": "UR-LEX-SOCHNA",
         "language": "urdu",
         "introducedBy": "UR-C07-sochna",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R3"
         ],
@@ -56220,7 +56209,7 @@
         "atom": "UR-LEX-THIK",
         "language": "urdu",
         "introducedBy": "UR-C04-thik",
-        "introducedAt": 13,
+        "introducedAt": 14,
         "missed": [
           "R3"
         ],
@@ -56230,7 +56219,7 @@
         "atom": "UR-LEX-TOPI",
         "language": "urdu",
         "introducedBy": "UR-C14-topi",
-        "introducedAt": 52,
+        "introducedAt": 53,
         "missed": [
           "R2"
         ],
@@ -56240,7 +56229,7 @@
         "atom": "UR-LEX-WELLBEING-REPLY",
         "language": "urdu",
         "introducedBy": "UR-C04-main-thik-hun",
-        "introducedAt": 14,
+        "introducedAt": 15,
         "missed": [
           "R2"
         ],
@@ -56250,7 +56239,7 @@
         "atom": "UR-PRAGMATICS-STANDARD-FAREWELL",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2"
         ],
@@ -56260,7 +56249,7 @@
         "atom": "UR-REGISTER-DOUBLE-LOAN",
         "language": "urdu",
         "introducedBy": "UR-C15-hawa",
-        "introducedAt": 56,
+        "introducedAt": 57,
         "missed": [
           "R2"
         ],
@@ -56270,7 +56259,7 @@
         "atom": "UR-REGISTER-ENGLISH-LAYER",
         "language": "urdu",
         "introducedBy": "UR-C14-koat",
-        "introducedAt": 53,
+        "introducedAt": 54,
         "missed": [
           "R2"
         ],
@@ -56280,7 +56269,7 @@
         "atom": "UR-REGISTER-TWO-ROADS-ONE-ROOT",
         "language": "urdu",
         "introducedBy": "UR-C08-puchhna",
-        "introducedAt": 30,
+        "introducedAt": 31,
         "missed": [
           "R1"
         ],
@@ -56290,7 +56279,7 @@
         "atom": "UR-SCRIPT-BE-LETTER",
         "language": "urdu",
         "introducedBy": "UR-C06-bolna",
-        "introducedAt": 23,
+        "introducedAt": 24,
         "missed": [
           "R3"
         ],
@@ -56300,7 +56289,7 @@
         "atom": "UR-SCRIPT-CHE-LETTER",
         "language": "urdu",
         "introducedBy": "UR-C07-sochna",
-        "introducedAt": 25,
+        "introducedAt": 26,
         "missed": [
           "R3"
         ],
@@ -56310,7 +56299,7 @@
         "atom": "UR-SCRIPT-DO-CHASHMI-HE",
         "language": "urdu",
         "introducedBy": "UR-C07-samajhna",
-        "introducedAt": 26,
+        "introducedAt": 27,
         "missed": [
           "R3"
         ],
@@ -56320,7 +56309,7 @@
         "atom": "UR-SCRIPT-HAFIZ",
         "language": "urdu",
         "introducedBy": "UR-C05-hafiz",
-        "introducedAt": 17,
+        "introducedAt": 18,
         "missed": [
           "R2"
         ],
@@ -56330,7 +56319,7 @@
         "atom": "UR-SCRIPT-HAMZA-YE",
         "language": "urdu",
         "introducedBy": "UR-C09-bhai",
-        "introducedAt": 33,
+        "introducedAt": 34,
         "missed": [
           "R1"
         ],
@@ -56340,7 +56329,7 @@
         "atom": "UR-SCRIPT-KAAN-NAAK-REVERSAL",
         "language": "urdu",
         "introducedBy": "UR-C10-naak",
-        "introducedAt": 38,
+        "introducedAt": 39,
         "missed": [
           "R2"
         ],
@@ -56350,7 +56339,7 @@
         "atom": "UR-SCRIPT-KHUDA-HAFIZ-SPACED",
         "language": "urdu",
         "introducedBy": "UR-C05-khuda-hafiz",
-        "introducedAt": 18,
+        "introducedAt": 19,
         "missed": [
           "R2"
         ],
@@ -56360,7 +56349,7 @@
         "atom": "UR-SCRIPT-MAIN-HUN",
         "language": "urdu",
         "introducedBy": "UR-C04-main-hun",
-        "introducedAt": 12,
+        "introducedAt": 13,
         "missed": [
           "R1"
         ],
@@ -56370,7 +56359,7 @@
         "atom": "UR-SCRIPT-RTL-01",
         "language": "urdu",
         "introducedBy": "UR-W16-alef",
-        "introducedAt": 59,
+        "introducedAt": 60,
         "missed": [
           "R1"
         ],
@@ -56380,7 +56369,7 @@
         "atom": "UR-SCRIPT-URDU-QUESTION-MARK",
         "language": "urdu",
         "introducedBy": "UR-C03-aap-ka-naam-kya-hai",
-        "introducedAt": 7,
+        "introducedAt": 8,
         "missed": [
           "R2"
         ],
@@ -58427,7 +58416,7 @@
       {
         "lessonId": "UR-C13-lal",
         "language": "urdu",
-        "position": 46,
+        "position": 47,
         "word": "کوٹ",
         "taughtBy": "UR-C14-koat",
         "lessonsEarly": 7
@@ -58627,7 +58616,7 @@
       {
         "lessonId": "UR-C13-kala",
         "language": "urdu",
-        "position": 48,
+        "position": 49,
         "word": "کوٹ",
         "taughtBy": "UR-C14-koat",
         "lessonsEarly": 5
@@ -58635,7 +58624,7 @@
       {
         "lessonId": "UR-C13-safed",
         "language": "urdu",
-        "position": 47,
+        "position": 48,
         "word": "ٹوپی",
         "taughtBy": "UR-C14-topi",
         "lessonsEarly": 5
@@ -58787,7 +58776,7 @@
       {
         "lessonId": "UR-C13-kala",
         "language": "urdu",
-        "position": 48,
+        "position": 49,
         "word": "ٹوپی",
         "taughtBy": "UR-C14-topi",
         "lessonsEarly": 4
@@ -58795,7 +58784,7 @@
       {
         "lessonId": "UR-C13-nila",
         "language": "urdu",
-        "position": 49,
+        "position": 50,
         "word": "کوٹ",
         "taughtBy": "UR-C14-koat",
         "lessonsEarly": 4
@@ -58979,7 +58968,7 @@
       {
         "lessonId": "UR-C13-nila",
         "language": "urdu",
-        "position": 49,
+        "position": 50,
         "word": "ٹوپی",
         "taughtBy": "UR-C14-topi",
         "lessonsEarly": 3
@@ -60640,11 +60629,11 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 68,
+        "lessonCount": 69,
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 151,
+        "atomsTaught": 163,
         "atomsNeverRevisited": 8,
         "forwardReferences": 6
       }
@@ -60654,7 +60643,7 @@
       "tracksWithUnorderedLessons": 2,
       "forwardPrerequisites": 6,
       "forwardReviews": 13,
-      "atomsTaught": 4703,
+      "atomsTaught": 4715,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
@@ -60879,14 +60868,14 @@
       {
         "language": "urdu",
         "script": "urdu-nastaliq",
-        "lessonCount": 68,
-        "scriptLessons": 8,
-        "taughtGlyphs": 7,
+        "lessonCount": 69,
+        "scriptLessons": 9,
+        "taughtGlyphs": 9,
         "shownGlyphs": 37,
-        "neverTaughtGlyphs": 30,
-        "violations": 47,
-        "exposureOnly": 12,
-        "exposureExemptedGlyphs": 288,
+        "neverTaughtGlyphs": 28,
+        "violations": 46,
+        "exposureOnly": 13,
+        "exposureExemptedGlyphs": 255,
         "headwordsWithoutRomanization": 0
       }
     ],
@@ -60955,13 +60944,6 @@
         "count": 21
       },
       {
-        "lessonId": "UR-C14-koat",
-        "language": "urdu",
-        "chapter": 14,
-        "glyphs": "اتجحخدرشضظفقلمنپںھہیے",
-        "count": 21
-      },
-      {
         "lessonId": "FA-C11-zaban",
         "language": "persian",
         "chapter": 11,
@@ -60980,27 +60962,6 @@
         "language": "marathi",
         "chapter": 4,
         "glyphs": "उकघजटतदनपभयळहाीुूेो्",
-        "count": 20
-      },
-      {
-        "lessonId": "UR-C13-kala",
-        "language": "urdu",
-        "chapter": 13,
-        "glyphs": "آئبحخدرسظفمنوِٹپھہیے",
-        "count": 20
-      },
-      {
-        "lessonId": "UR-C14-topi",
-        "language": "urdu",
-        "chapter": 14,
-        "glyphs": "اتجحخدرسضظفقلمنکںھہے",
-        "count": 20
-      },
-      {
-        "lessonId": "UR-C15-hawa",
-        "language": "urdu",
-        "chapter": 15,
-        "glyphs": "ءآبتجخدرسشفلنهَپچھیے",
         "count": 20
       },
       {
@@ -61029,6 +60990,20 @@
         "language": "telugu",
         "chapter": 2,
         "glyphs": "ంఅఏటణతనపమరషసాిీుేో్",
+        "count": 19
+      },
+      {
+        "lessonId": "UR-C13-kala",
+        "language": "urdu",
+        "chapter": 13,
+        "glyphs": "آئبحخدسظفمنوِٹپھہیے",
+        "count": 19
+      },
+      {
+        "lessonId": "UR-C14-koat",
+        "language": "urdu",
+        "chapter": 14,
+        "glyphs": "اتجحخدضظفقلمنپںھہیے",
         "count": 19
       },
       {
@@ -61074,17 +61049,17 @@
         "count": 18
       },
       {
-        "lessonId": "UR-C07-parhna",
+        "lessonId": "UR-C14-topi",
         "language": "urdu",
-        "chapter": 7,
-        "glyphs": "آئتجحرزسشظفموٹکںہی",
+        "chapter": 14,
+        "glyphs": "اتجحخدسضظفقلمنںھہے",
         "count": 18
       },
       {
-        "lessonId": "UR-C15-garmi",
+        "lessonId": "UR-C15-hawa",
         "language": "urdu",
         "chapter": 15,
-        "glyphs": "آابتجخدسشفلنوپکھہے",
+        "glyphs": "ءآبتجخدسفلنهَپچھیے",
         "count": 18
       },
       {
@@ -61127,34 +61102,6 @@
         "language": "punjabi",
         "chapter": 13,
         "glyphs": "ਅਕਖਣਤਧਨਮਸਹਾੁੂੈੋੰੱ",
-        "count": 17
-      },
-      {
-        "lessonId": "UR-C08-pasand",
-        "language": "urdu",
-        "chapter": 8,
-        "glyphs": "آاجخرشلموچڑکںھہیے",
-        "count": 17
-      },
-      {
-        "lessonId": "UR-C13-nila",
-        "language": "urdu",
-        "chapter": 13,
-        "glyphs": "آئحخدرسشظفموٹپکہے",
-        "count": 17
-      },
-      {
-        "lessonId": "UR-C14-juta",
-        "language": "urdu",
-        "chapter": 14,
-        "glyphs": "حخدرضظفقلمنٹکھہیے",
-        "count": 17
-      },
-      {
-        "lessonId": "UR-C15-sardi",
-        "language": "urdu",
-        "chapter": 15,
-        "glyphs": "آئابتجشلمنوپکگھہے",
         "count": 17
       },
       {
@@ -61221,24 +61168,10 @@
         "count": 16
       },
       {
-        "lessonId": "UR-C08-madad",
-        "language": "urdu",
-        "chapter": 8,
-        "glyphs": "آئتحخسشظفلوپںہیے",
-        "count": 16
-      },
-      {
-        "lessonId": "UR-C13-safed",
-        "language": "urdu",
-        "chapter": 13,
-        "glyphs": "احخرظلمنوٹپچکھہے",
-        "count": 16
-      },
-      {
-        "lessonId": "UR-C15-dhoop",
+        "lessonId": "UR-C15-garmi",
         "language": "urdu",
         "chapter": 15,
-        "glyphs": "آابجحخرشظفنٹکہیے",
+        "glyphs": "آابتجخدسفلنوپھہے",
         "count": 16
       },
       {
@@ -61326,31 +61259,31 @@
         "count": 15
       },
       {
-        "lessonId": "UR-C08-puchhna",
+        "lessonId": "UR-C07-parhna",
+        "language": "urdu",
+        "chapter": 7,
+        "glyphs": "آئتجحزسظفموٹںہی",
+        "count": 15
+      },
+      {
+        "lessonId": "UR-C08-madad",
         "language": "urdu",
         "chapter": 8,
-        "glyphs": "آتحدرسشلمِکںہیے",
+        "glyphs": "آئتحخسظفلوپںہیے",
         "count": 15
       },
       {
-        "lessonId": "UR-C12-roti",
+        "lessonId": "UR-C14-juta",
         "language": "urdu",
-        "chapter": 12,
-        "glyphs": "ئاجدسمنپچڑکںھہے",
+        "chapter": 14,
+        "glyphs": "حخدضظفقلمنٹھہیے",
         "count": 15
       },
       {
-        "lessonId": "UR-C13-lal",
-        "language": "urdu",
-        "chapter": 13,
-        "glyphs": "حخدرظفمنوَٹکہیے",
-        "count": 15
-      },
-      {
-        "lessonId": "UR-C15-barish",
+        "lessonId": "UR-C15-sardi",
         "language": "urdu",
         "chapter": 15,
-        "glyphs": "آجحسظفلموٹچکہیے",
+        "glyphs": "آئابتجلمنوپگھہے",
         "count": 15
       },
       {
@@ -61442,6 +61375,41 @@
         "language": "punjabi",
         "chapter": 5,
         "glyphs": "ਂਅਣਤਦਮਰਸਹਾਿੈ੍ੰ",
+        "count": 14
+      },
+      {
+        "lessonId": "UR-C08-pasand",
+        "language": "urdu",
+        "chapter": 8,
+        "glyphs": "آاجخلموچڑںھہیے",
+        "count": 14
+      },
+      {
+        "lessonId": "UR-C12-roti",
+        "language": "urdu",
+        "chapter": 12,
+        "glyphs": "ئاجدسمنپچڑںھہے",
+        "count": 14
+      },
+      {
+        "lessonId": "UR-C13-nila",
+        "language": "urdu",
+        "chapter": 13,
+        "glyphs": "آئحخدسظفموٹپہے",
+        "count": 14
+      },
+      {
+        "lessonId": "UR-C13-safed",
+        "language": "urdu",
+        "chapter": 13,
+        "glyphs": "احخظلمنوٹپچھہے",
+        "count": 14
+      },
+      {
+        "lessonId": "UR-C15-barish",
+        "language": "urdu",
+        "chapter": 15,
+        "glyphs": "آجحسظفلموٹچہیے",
         "count": 14
       },
       {
@@ -61620,10 +61588,17 @@
         "count": 13
       },
       {
-        "lessonId": "UR-C09-khandan",
+        "lessonId": "UR-C13-lal",
         "language": "urdu",
-        "chapter": 9,
-        "glyphs": "ئبتحرسظفموھہی",
+        "chapter": 13,
+        "glyphs": "حخدظفمنوَٹہیے",
+        "count": 13
+      },
+      {
+        "lessonId": "UR-C15-dhoop",
+        "language": "urdu",
+        "chapter": 15,
+        "glyphs": "آابجحخظفنٹہیے",
         "count": 13
       },
       {
@@ -61774,13 +61749,6 @@
         "count": 12
       },
       {
-        "lessonId": "UR-C05-practice",
-        "language": "urdu",
-        "chapter": 5,
-        "glyphs": "آرشوٹپکںھہیے",
-        "count": 12
-      },
-      {
         "lessonId": "UR-C07-likhna",
         "language": "urdu",
         "chapter": 7,
@@ -61788,24 +61756,17 @@
         "count": 12
       },
       {
-        "lessonId": "UR-C09-bhai",
+        "lessonId": "UR-C08-puchhna",
+        "language": "urdu",
+        "chapter": 8,
+        "glyphs": "آتحدسلمِںہیے",
+        "count": 12
+      },
+      {
+        "lessonId": "UR-C09-khandan",
         "language": "urdu",
         "chapter": 9,
-        "glyphs": "جدرسمنٹپچڑکے",
-        "count": 12
-      },
-      {
-        "lessonId": "UR-C11-dil",
-        "language": "urdu",
-        "chapter": 11,
-        "glyphs": "اخرسمنوپچھہی",
-        "count": 12
-      },
-      {
-        "lessonId": "UR-C14-qamiz",
-        "language": "urdu",
-        "chapter": 14,
-        "glyphs": "آاحرظفلنپکہے",
+        "glyphs": "ئبتحسظفموھہی",
         "count": 12
       },
       {
@@ -61991,31 +61952,10 @@
         "count": 11
       },
       {
-        "lessonId": "UR-C07-sochna",
+        "lessonId": "UR-C11-dil",
         "language": "urdu",
-        "chapter": 7,
-        "glyphs": "بتجرفمپکںہی",
-        "count": 11
-      },
-      {
-        "lessonId": "UR-C09-dost",
-        "language": "urdu",
-        "chapter": 9,
-        "glyphs": "ئابرمنپچھہی",
-        "count": 11
-      },
-      {
-        "lessonId": "UR-C10-kaan",
-        "language": "urdu",
-        "chapter": 10,
-        "glyphs": "ئبخدرمپڑھہی",
-        "count": 11
-      },
-      {
-        "lessonId": "UR-C12-chai",
-        "language": "urdu",
-        "chapter": 12,
-        "glyphs": "بحخدرظفلمھی",
+        "chapter": 11,
+        "glyphs": "اخسمنوپچھہی",
         "count": 11
       },
       {
@@ -62285,10 +62225,38 @@
         "count": 10
       },
       {
-        "lessonId": "UR-C08-lena",
+        "lessonId": "UR-C09-bhai",
         "language": "urdu",
-        "chapter": 8,
-        "glyphs": "تجدسموکںہے",
+        "chapter": 9,
+        "glyphs": "جدسمنٹپچڑے",
+        "count": 10
+      },
+      {
+        "lessonId": "UR-C09-dost",
+        "language": "urdu",
+        "chapter": 9,
+        "glyphs": "ئابمنپچھہی",
+        "count": 10
+      },
+      {
+        "lessonId": "UR-C10-kaan",
+        "language": "urdu",
+        "chapter": 10,
+        "glyphs": "ئبخدمپڑھہی",
+        "count": 10
+      },
+      {
+        "lessonId": "UR-C12-chai",
+        "language": "urdu",
+        "chapter": 12,
+        "glyphs": "بحخدظفلمھی",
+        "count": 10
+      },
+      {
+        "lessonId": "UR-C14-qamiz",
+        "language": "urdu",
+        "chapter": 14,
+        "glyphs": "آاحظفلنپہے",
         "count": 10
       },
       {
@@ -62474,6 +62442,13 @@
         "count": 9
       },
       {
+        "lessonId": "UR-C05-practice",
+        "language": "urdu",
+        "chapter": 5,
+        "glyphs": "آوٹپںھہیے",
+        "count": 9
+      },
+      {
         "lessonId": "UR-C06-bolna",
         "language": "urdu",
         "chapter": 6,
@@ -62481,31 +62456,17 @@
         "count": 9
       },
       {
-        "lessonId": "UR-C09-bahan",
+        "lessonId": "UR-C07-sochna",
         "language": "urdu",
-        "chapter": 9,
-        "glyphs": "ئادرسمپھی",
+        "chapter": 7,
+        "glyphs": "بتجفمپںہی",
         "count": 9
       },
       {
-        "lessonId": "UR-C10-aankh",
+        "lessonId": "UR-C08-lena",
         "language": "urdu",
-        "chapter": 10,
-        "glyphs": "اجرمٹپچڑی",
-        "count": 9
-      },
-      {
-        "lessonId": "UR-C10-munh",
-        "language": "urdu",
-        "chapter": 10,
-        "glyphs": "آابروکںھی",
-        "count": 9
-      },
-      {
-        "lessonId": "UR-C12-doodh",
-        "language": "urdu",
-        "chapter": 12,
-        "glyphs": "اجرمٹچڑکی",
+        "chapter": 8,
+        "glyphs": "تجدسموںہے",
         "count": 9
       },
       {
@@ -62852,10 +62813,17 @@
         "count": 8
       },
       {
-        "lessonId": "UR-C07-samajhna",
+        "lessonId": "UR-C09-bahan",
         "language": "urdu",
-        "chapter": 7,
-        "glyphs": "توٹچکںہی",
+        "chapter": 9,
+        "glyphs": "ئادسمپھی",
+        "count": 8
+      },
+      {
+        "lessonId": "UR-C10-aankh",
+        "language": "urdu",
+        "chapter": 10,
+        "glyphs": "اجمٹپچڑی",
         "count": 8
       },
       {
@@ -63111,6 +63079,27 @@
         "count": 7
       },
       {
+        "lessonId": "UR-C07-samajhna",
+        "language": "urdu",
+        "chapter": 7,
+        "glyphs": "توٹچںہی",
+        "count": 7
+      },
+      {
+        "lessonId": "UR-C10-munh",
+        "language": "urdu",
+        "chapter": 10,
+        "glyphs": "آابوںھی",
+        "count": 7
+      },
+      {
+        "lessonId": "UR-C12-doodh",
+        "language": "urdu",
+        "chapter": 12,
+        "glyphs": "اجمٹچڑی",
+        "count": 7
+      },
+      {
         "lessonId": "BN-C01-hyan-na",
         "language": "bengali",
         "chapter": 1,
@@ -63360,13 +63349,6 @@
         "language": "urdu",
         "chapter": 6,
         "glyphs": "تموںہی",
-        "count": 6
-      },
-      {
-        "lessonId": "UR-C10-naak",
-        "language": "urdu",
-        "chapter": 10,
-        "glyphs": "ئبرمھی",
         "count": 6
       },
       {
@@ -63738,6 +63720,13 @@
         "language": "telugu",
         "chapter": 7,
         "glyphs": "౧౨౩౪౫",
+        "count": 5
+      },
+      {
+        "lessonId": "UR-C10-naak",
+        "language": "urdu",
+        "chapter": 10,
+        "glyphs": "ئبمھی",
         "count": 5
       },
       {
@@ -64497,20 +64486,6 @@
         "count": 3
       },
       {
-        "lessonId": "UR-C01-ji-han",
-        "language": "urdu",
-        "chapter": 1,
-        "glyphs": "رشک",
-        "count": 3
-      },
-      {
-        "lessonId": "UR-C03-practice",
-        "language": "urdu",
-        "chapter": 3,
-        "glyphs": "رسل",
-        "count": 3
-      },
-      {
         "lessonId": "ZH-C01-ni",
         "language": "chinese",
         "chapter": 1,
@@ -65082,6 +65057,13 @@
         "language": "urdu",
         "chapter": 1,
         "glyphs": "اج",
+        "count": 2
+      },
+      {
+        "lessonId": "UR-C03-practice",
+        "language": "urdu",
+        "chapter": 3,
+        "glyphs": "سل",
         "count": 2
       },
       {
@@ -66096,9 +66078,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 743,
-      "exposureOnly": 179,
-      "exposureExemptedGlyphs": 2189,
+      "violations": 742,
+      "exposureOnly": 180,
+      "exposureExemptedGlyphs": 2156,
       "headwordsWithoutRomanization": 303,
       "tracksWithUnknownScript": 0
     },
@@ -70179,8 +70161,28 @@
       },
       {
         "language": "urdu",
-        "evidence": [],
-        "validEvidence": [],
+        "evidence": [
+          {
+            "language": "urdu",
+            "lessonId": "UR-W01-shukriya-first-three",
+            "blockIndex": 2,
+            "blockTitle": "Writing — trace before you copy",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 15
+          }
+        ],
+        "validEvidence": [
+          {
+            "language": "urdu",
+            "lessonId": "UR-W01-shukriya-first-three",
+            "blockIndex": 2,
+            "blockTitle": "Writing — trace before you copy",
+            "stage": "observe-trace",
+            "level": "pre-A1",
+            "sequence": 15
+          }
+        ],
         "defects": [],
         "levels": [
           {
@@ -70191,9 +70193,10 @@
               "delayed-copy",
               "dictation-transcription"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription"
@@ -70210,9 +70213,10 @@
               "controlled-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription",
@@ -70232,9 +70236,10 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription",
@@ -70255,9 +70260,10 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription",
@@ -70278,9 +70284,10 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription",
@@ -70301,9 +70308,10 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription",
@@ -70324,9 +70332,10 @@
               "connected-composition",
               "timed-assessment-production"
             ],
-            "evidencedStages": [],
+            "evidencedStages": [
+              "observe-trace"
+            ],
             "missingStages": [
-              "observe-trace",
               "guided-copy",
               "delayed-copy",
               "dictation-transcription",
@@ -70341,11 +70350,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithAnyEvidence": 8,
+      "tracksWithAnyEvidence": 9,
       "tracksCompleteAtPreA1": 2,
-      "evidenceBlocks": 22,
+      "evidenceBlocks": 23,
       "invalidEvidenceBlocks": 0,
-      "missingTrackLevelStages": 902
+      "missingTrackLevelStages": 895
     }
   },
   "gentleRamp": {
@@ -71982,28 +71991,28 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 68,
-        "atomMeasurableLessons": 64,
-        "atomMeasurementBlindLessons": 4,
+        "lessonCount": 69,
+        "atomMeasurableLessons": 68,
+        "atomMeasurementBlindLessons": 1,
         "durationViolations": 0,
         "atomLessonSpikes": 3,
         "atomChapterSpikes": 3,
-        "glyphLessonSpikes": 3,
+        "glyphLessonSpikes": 2,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 47,
-        "neverTaughtGlyphs": 30,
+        "scriptClosureViolations": 46,
+        "neverTaughtGlyphs": 28,
         "orderDefects": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
         "forwardReferences": 6,
-        "atomsTaught": 151,
+        "atomsTaught": 163,
         "atomsNeverRevisited": 8,
         "reinforcementWindowMisses": 214,
         "payoffSurprises": 2,
-        "writingPracticeLessons": 27,
-        "firstWritingPracticeAt": 7,
-        "lessonsBeforeWritingPractice": 7,
+        "writingPracticeLessons": 30,
+        "firstWritingPracticeAt": 1,
+        "lessonsBeforeWritingPractice": 1,
         "findings": [
           {
             "language": "urdu",
@@ -72015,14 +72024,14 @@
           {
             "language": "urdu",
             "kind": "script-closure",
-            "count": 30,
+            "count": 28,
             "unit": "glyph(s)",
             "detail": "teach every load-bearing glyph before asking the learner to decode it"
           },
           {
             "language": "urdu",
             "kind": "writing-ramp",
-            "count": 7,
+            "count": 1,
             "unit": "opening lesson(s)",
             "detail": "move the first gentle writing microstep to lesson one"
           },
@@ -72036,7 +72045,7 @@
           {
             "language": "urdu",
             "kind": "glyph-step",
-            "count": 3,
+            "count": 2,
             "unit": "lesson/system spike(s)",
             "detail": "split new glyphs and writing systems across gentler steps"
           },
@@ -72057,7 +72066,7 @@
           {
             "language": "urdu",
             "kind": "measurement-blind",
-            "count": 4,
+            "count": 1,
             "unit": "lesson(s)",
             "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
           }
@@ -72278,7 +72287,7 @@
       {
         "language": "urdu",
         "kind": "script-closure",
-        "count": 30,
+        "count": 28,
         "unit": "glyph(s)",
         "detail": "teach every load-bearing glyph before asking the learner to decode it"
       },
@@ -72376,7 +72385,7 @@
       {
         "language": "urdu",
         "kind": "writing-ramp",
-        "count": 7,
+        "count": 1,
         "unit": "opening lesson(s)",
         "detail": "move the first gentle writing microstep to lesson one"
       },
@@ -72591,13 +72600,6 @@
         "detail": "split new glyphs and writing systems across gentler steps"
       },
       {
-        "language": "urdu",
-        "kind": "glyph-step",
-        "count": 3,
-        "unit": "lesson/system spike(s)",
-        "detail": "split new glyphs and writing systems across gentler steps"
-      },
-      {
         "language": "gujarati",
         "kind": "glyph-step",
         "count": 2,
@@ -72613,6 +72615,13 @@
       },
       {
         "language": "punjabi",
+        "kind": "glyph-step",
+        "count": 2,
+        "unit": "lesson/system spike(s)",
+        "detail": "split new glyphs and writing systems across gentler steps"
+      },
+      {
+        "language": "urdu",
         "kind": "glyph-step",
         "count": 2,
         "unit": "lesson/system spike(s)",
@@ -72990,13 +72999,6 @@
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       },
       {
-        "language": "urdu",
-        "kind": "measurement-blind",
-        "count": 4,
-        "unit": "lesson(s)",
-        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
-      },
-      {
         "language": "latin",
         "kind": "measurement-blind",
         "count": 1,
@@ -73009,6 +73011,13 @@
         "count": 1,
         "unit": "lesson(s)",
         "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
+      },
+      {
+        "language": "urdu",
+        "kind": "measurement-blind",
+        "count": 1,
+        "unit": "lesson(s)",
+        "detail": "migrate undeclared lesson knowledge so gentleness can be measured"
       }
     ],
     "summary": {
@@ -73016,7 +73025,7 @@
       "tracksWithDetectedCliffs": 22,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
-      "atomMeasurementBlindLessons": 495,
+      "atomMeasurementBlindLessons": 492,
       "findings": 134
     }
   },
@@ -73617,8 +73626,8 @@
         "blockers": [
           {
             "criterion": "writing-stage",
-            "detail": "4 cumulative writing stage(s) unproved at pre-A1: observe-trace, guided-copy, delayed-copy, dictation-transcription",
-            "shortfall": 4
+            "detail": "3 cumulative writing stage(s) unproved at pre-A1: guided-copy, delayed-copy, dictation-transcription",
+            "shortfall": 3
           },
           {
             "criterion": "vocabulary",
@@ -73655,12 +73664,12 @@
   },
   "modality": {
     "maxLinearisableTableColumns": 3,
-    "totalLessons": 3411,
-    "voice": 2462,
-    "sight": 587,
-    "pen": 362,
+    "totalLessons": 3412,
+    "voice": 2460,
+    "sight": 589,
+    "pen": 363,
     "coreVoice": 2910,
-    "lessonsWithWritingSegments": 157,
+    "lessonsWithWritingSegments": 158,
     "drivablePercent": 85,
     "tracks": [
       {
@@ -88111,27 +88120,29 @@
       },
       {
         "language": "urdu",
-        "lessonCount": 68,
-        "voice": 41,
-        "sight": 19,
-        "pen": 8,
+        "lessonCount": 69,
+        "voice": 39,
+        "sight": 21,
+        "pen": 9,
         "coreVoice": 60,
-        "drivablePercent": 88,
-        "drivablePrefixTotal": 59,
+        "drivablePercent": 87,
+        "drivablePrefixTotal": 56,
         "chapters": [
           {
             "language": "urdu",
             "chapter": 1,
-            "lessonCount": 4,
-            "voice": 4,
-            "sight": 0,
-            "pen": 0,
+            "lessonCount": 5,
+            "voice": 2,
+            "sight": 2,
+            "pen": 1,
             "coreVoice": 4,
             "modalities": [
-              "voice"
+              "voice",
+              "sight",
+              "pen"
             ],
-            "drivablePrefix": 4,
-            "firstNonVoiceLesson": null
+            "drivablePrefix": 1,
+            "firstNonVoiceLesson": "UR-W01-shukriya-first-three"
           },
           {
             "language": "urdu",
@@ -88836,10 +88847,10 @@
   "rootLedger": {
     "roots": 3084,
     "underspent": 2969,
-    "neverSpent": 2033,
+    "neverSpent": 2032,
     "payoffDistribution": {
-      "0": 2033,
-      "1": 656,
+      "0": 2032,
+      "1": 657,
       "2": 280,
       "3": 65,
       "4": 19,
@@ -88853,7 +88864,7 @@
     "underspentPercent": 96
   },
   "infoDump": {
-    "lessons": 3411,
+    "lessons": 3412,
     "lessonsWithFindings": 121,
     "ruleStatements": 30,
     "paradigmTables": 95,
@@ -88863,8 +88874,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3301,
-    "usesBeforeIntroduction": 12030,
+    "lessonsUsingTerms": 3302,
+    "usesBeforeIntroduction": 12031,
     "technicalUsesBeforeIntroduction": 3169,
     "technicalLessons": 1646,
     "worstTerms": [
@@ -88895,7 +88906,7 @@
     ]
   },
   "literalMarkup": {
-    "lessonsScanned": 3411,
+    "lessonsScanned": 3412,
     "sourceFindings": 0,
     "renderedFindings": 0
   },
