@@ -4907,8 +4907,8 @@ and a real run builds heap, LZSS, Huffman Tree, Brotli, Deflate, and Huffman
 Compression with 488 skipped. No `UV_PYTHON` override is required.
 
 Parity reporter and capability taxonomy suites pass 10 and 7 tests. After a
-clean rebase on unrelated Arabic human-language main
-`3184faf422a6e3a8181d021e98bf169c04bd2d05`, the schema-3 inventory remains
+clean rebase on latest human-language main
+`4bf6d6253a76ade124348248830ff58406a08be5`, the schema-3 inventory remains
 15 lanes, 1,368 identities, and 4,561 slots with zero collisions or unknown
 buckets. The 415-item state graph is unique, dependency-complete, and acyclic.
 Diff, dependency, credential, and production-authority scans are clean; this
