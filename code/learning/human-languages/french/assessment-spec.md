@@ -196,8 +196,8 @@ register and implication across unfamiliar domains.
 
 Every rung still requires:
 
-1. a dated four-skill task-shape inventory (French A1 is the only one already
-   present);
+1. a dated four-skill task-shape inventory (French pre-A1/DILF and A1/DELF are
+   present; A2 through C2 remain backlog);
 2. two original, complete, timed mock forms;
 3. official-grid-aligned rubrics and task-specific scoring notes;
 4. answer keys, acceptable variants, and rater training samples;

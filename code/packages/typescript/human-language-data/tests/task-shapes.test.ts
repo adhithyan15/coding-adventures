@@ -128,6 +128,37 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(speaking?.parts.map((part) => part.scoring.maxRawPoints)).toEqual([4, 4, 4]);
   });
 
+  it("loads DILF as French's sourced pre-A1 target without inventing per-skill floors", () => {
+    const inventory = loadTaskShapeInventory("french", "pre-A1");
+    expect(inventory.target).toEqual({ name: "DILF A1.1", basis: "external" });
+    expect(inventory.sections.map((section) => section.skill)).toEqual([
+      "reading",
+      "listening",
+      "writing",
+      "speaking",
+    ]);
+    expect(inventory.sections.map((section) => section.minutes)).toEqual([25, 25, 15, 10]);
+    expect(inventory.sections.flatMap((section) => section.parts)).toHaveLength(17);
+    expect(inventory.administration).toMatchObject({
+      writtenMinutes: 65,
+      speakingMinutes: 10,
+      speakingGroupMaximum: 1,
+      speakingPreparationMinutes: null,
+    });
+    expect(inventory.passRule).toMatchObject({
+      maximumPoints: 100,
+      passPoints: 50,
+      requiresEverySectionAttempted: false,
+    });
+    expect(Object.values(inventory.passRule.independentSkillThresholds)).toEqual([null, null, null, null]);
+    expect(inventory.sections.find((section) => section.skill === "speaking")?.parts.map((part) => part.id)).toEqual([
+      "speaking-price-transaction",
+      "speaking-present-person-or-place",
+      "speaking-express-need-or-request-information",
+      "speaking-describe-health-problem",
+    ]);
+  });
+
   it("loads the official German A1 performance target", () => {
     const inventory = loadTaskShapeInventory("german", "A1");
     expect(inventory.target).toEqual({
@@ -153,13 +184,14 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(present).toEqual([
       { language: "spanish", level: "A1" },
       { language: "latin", level: "A1" },
+      { language: "french", level: "pre-A1" },
       { language: "french", level: "A1" },
       { language: "german", level: "A1" },
       { language: "arabic", level: "A1" },
       { language: "marwadi", level: "pre-A1" },
     ]);
-    expect(backlog).toHaveLength(registry.languages.length * 7 - 6);
-    expect(backlog.filter((item) => item.level === "pre-A1")).toHaveLength(registry.languages.length - 1);
+    expect(backlog).toHaveLength(registry.languages.length * 7 - 7);
+    expect(backlog.filter((item) => item.level === "pre-A1")).toHaveLength(registry.languages.length - 2);
     expect(backlog.filter((item) => item.level === "A1")).toHaveLength(registry.languages.length - 5);
     expect(backlog.some((item) => item.id === "task-shape/marwadi/pre-A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/spanish/pre-A1")).toBe(true);
@@ -167,6 +199,7 @@ describe("four-skill task-shape inventories (HL18)", () => {
     expect(backlog.some((item) => item.id === "task-shape/spanish/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/latin/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/latin/A2")).toBe(true);
+    expect(backlog.some((item) => item.id === "task-shape/french/pre-A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/french/A1")).toBe(false);
     expect(backlog.some((item) => item.id === "task-shape/french/A2")).toBe(true);
     expect(backlog.some((item) => item.id === "task-shape/german/A1")).toBe(false);
