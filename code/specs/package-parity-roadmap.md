@@ -4720,14 +4720,14 @@ deleted the source branch.
 ### Post-#12403 refresh and Python PNG selection
 
 The exact live-main collision inventory at
-`e08f5670c2d7fec39711d488136930a78efe9ffb` remains 15 established lanes,
+`0055b8b25f384357d7a9bf57b14f097a930c189b` remains 15 established lanes,
 1,368 canonical identities, and 4,560 implementation slots. High-consensus
 coverage is 174 packages with 271 gaps; the 5-9 band contains 123 packages
 with 932 gaps; the 2-4 band contains 166 packages with 2,087 gaps; and 905
 singletons have 12,670 gaps, including 716 Rust singletons. Canonical
 collisions and unknown language buckets remain zero. The Go reconciliation
-changed an existing root, and the later Italian, Marwadi, and Gujarati
-human-language merges add no package root.
+changed an existing root, and the later Italian, Marwadi, Gujarati, and
+Punjabi human-language merges add no package root.
 
 The Python PNG child is selected next. Python 3.13.14 and uv 0.11.28 are
 installed, and its established PixelContainer and counted ZIP inflater both
