@@ -26,21 +26,21 @@
     "rampOverBudgetLessons": 46,
     "scriptRampOverBudgetLessons": 57,
     "lessonsOpeningMultipleScripts": 5,
-    "scriptClosureViolations": 742,
-    "scriptExposureExemptedGlyphs": 2188,
+    "scriptClosureViolations": 743,
+    "scriptExposureExemptedGlyphs": 2189,
     "tracksTeachingNoScript": 0,
     "headwordsWithoutRomanization": 303,
     "lessonsWithoutSequence": 12,
     "forwardReviews": 13,
     "atomsNeverRevisited": 632,
-    "forwardReferences": 469,
+    "forwardReferences": 466,
     "chaptersWithoutCapability": 0,
     "chapterPayoffsNotRepresentative": 82,
     "chapterGateCleanTracks": 9,
     "tracksWithoutWritingStageEvidence": 15,
     "missingWritingStagePairs": 902,
     "invalidWritingStageEvidence": 0,
-    "drivableLessons": 2909,
+    "drivableLessons": 2910,
     "drivablePercent": 85,
     "chaptersWithoutDrivablePrefix": 103,
     "unexplainedModalityOverrides": 0
@@ -53947,16 +53947,6 @@
         "revisits": 2
       },
       {
-        "atom": "MW-SCRIPT-MA-01",
-        "language": "marwadi",
-        "introducedBy": "MW-W01-raam",
-        "introducedAt": 2,
-        "missed": [
-          "R1"
-        ],
-        "revisits": 1
-      },
-      {
         "atom": "PA-CONTRAST-KANN-KARNA",
         "language": "punjabi",
         "introducedBy": "PA-C12-kann",
@@ -59203,14 +59193,6 @@
         "lessonsEarly": 2
       },
       {
-        "lessonId": "MW-W01-sa",
-        "language": "marwadi",
-        "position": 3,
-        "word": "राम",
-        "taughtBy": "MW-C01-raam-raam-saa",
-        "lessonsEarly": 2
-      },
-      {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
         "position": 2,
@@ -60115,22 +60097,6 @@
         "lessonsEarly": 1
       },
       {
-        "lessonId": "MW-W01-saa",
-        "language": "marwadi",
-        "position": 4,
-        "word": "राम",
-        "taughtBy": "MW-C01-raam-raam-saa",
-        "lessonsEarly": 1
-      },
-      {
-        "lessonId": "MW-W01-saa",
-        "language": "marwadi",
-        "position": 4,
-        "word": "राम सा",
-        "taughtBy": "MW-C01-raam-raam-saa",
-        "lessonsEarly": 1
-      },
-      {
         "lessonId": "PT-C01-bom",
         "language": "portuguese",
         "position": 2,
@@ -60588,9 +60554,9 @@
         "lessonsWithoutSequence": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "atomsTaught": 9,
+        "atomsTaught": 10,
         "atomsNeverRevisited": 1,
-        "forwardReferences": 3
+        "forwardReferences": 0
       },
       {
         "language": "persian",
@@ -60688,16 +60654,16 @@
       "tracksWithUnorderedLessons": 2,
       "forwardPrerequisites": 6,
       "forwardReviews": 13,
-      "atomsTaught": 4702,
+      "atomsTaught": 4703,
       "atomsNeverRevisited": 632,
       "neverRevisitedPercent": 13,
       "missedByWindow": {
-        "R1": 1192,
+        "R1": 1191,
         "R2": 3690,
         "R3": 3558,
         "R4": 2075
       },
-      "forwardReferences": 469
+      "forwardReferences": 466
     }
   },
   "scriptClosure": {
@@ -60823,13 +60789,13 @@
         "language": "marwadi",
         "script": "devanagari",
         "lessonCount": 7,
-        "scriptLessons": 5,
+        "scriptLessons": 4,
         "taughtGlyphs": 4,
         "shownGlyphs": 4,
         "neverTaughtGlyphs": 0,
-        "violations": 0,
+        "violations": 1,
         "exposureOnly": 0,
-        "exposureExemptedGlyphs": 0,
+        "exposureExemptedGlyphs": 1,
         "headwordsWithoutRomanization": 0
       },
       {
@@ -65728,6 +65694,13 @@
         "count": 1
       },
       {
+        "lessonId": "MW-W01-raam",
+        "language": "marwadi",
+        "chapter": 1,
+        "glyphs": "स",
+        "count": 1
+      },
+      {
         "lessonId": "PA-C07-hona",
         "language": "punjabi",
         "chapter": 7,
@@ -66123,9 +66096,9 @@
     "summary": {
       "tracksWithScript": 17,
       "tracksTeachingNothing": 0,
-      "violations": 742,
+      "violations": 743,
       "exposureOnly": 179,
-      "exposureExemptedGlyphs": 2188,
+      "exposureExemptedGlyphs": 2189,
       "headwordsWithoutRomanization": 303,
       "tracksWithUnknownScript": 0
     },
@@ -71333,43 +71306,22 @@
         "atomChapterSpikes": 0,
         "glyphLessonSpikes": 0,
         "scriptSystemSpikes": 0,
-        "scriptClosureViolations": 0,
+        "scriptClosureViolations": 1,
         "neverTaughtGlyphs": 0,
         "orderDefects": 0,
         "unknownPrerequisites": 0,
         "forwardPrerequisites": 0,
         "forwardReviews": 0,
-        "forwardReferences": 3,
-        "atomsTaught": 9,
+        "forwardReferences": 0,
+        "atomsTaught": 10,
         "atomsNeverRevisited": 1,
-        "reinforcementWindowMisses": 1,
+        "reinforcementWindowMisses": 0,
         "payoffSurprises": 0,
         "writingPracticeLessons": 5,
         "firstWritingPracticeAt": 0,
         "lessonsBeforeWritingPractice": 0,
-        "findings": [
-          {
-            "language": "marwadi",
-            "kind": "forward-language",
-            "count": 3,
-            "unit": "use(s)",
-            "detail": "teach target-language material before load-bearing use"
-          },
-          {
-            "language": "marwadi",
-            "kind": "reinforcement",
-            "count": 1,
-            "unit": "missed window(s)",
-            "detail": "add retrieval at the expanding R1-R4 intervals"
-          }
-        ],
-        "next": {
-          "language": "marwadi",
-          "kind": "forward-language",
-          "count": 3,
-          "unit": "use(s)",
-          "detail": "teach target-language material before load-bearing use"
-        }
+        "findings": [],
+        "next": null
       },
       {
         "language": "persian",
@@ -72296,13 +72248,6 @@
         "detail": "teach target-language material before load-bearing use"
       },
       {
-        "language": "marwadi",
-        "kind": "forward-language",
-        "count": 3,
-        "unit": "use(s)",
-        "detail": "teach target-language material before load-bearing use"
-      },
-      {
         "language": "bengali",
         "kind": "script-closure",
         "count": 39,
@@ -72849,13 +72794,6 @@
         "detail": "add retrieval at the expanding R1-R4 intervals"
       },
       {
-        "language": "marwadi",
-        "kind": "reinforcement",
-        "count": 1,
-        "unit": "missed window(s)",
-        "detail": "add retrieval at the expanding R1-R4 intervals"
-      },
-      {
         "language": "spanish",
         "kind": "payoff-surprise",
         "count": 26,
@@ -73075,11 +73013,11 @@
     ],
     "summary": {
       "tracks": 23,
-      "tracksWithDetectedCliffs": 23,
+      "tracksWithDetectedCliffs": 22,
       "tracksWithNoWritingPractice": 0,
       "tracksWhereWritingStartsLate": 4,
       "atomMeasurementBlindLessons": 495,
-      "findings": 136
+      "findings": 134
     }
   },
   "levelGate": {
@@ -73453,16 +73391,11 @@
           },
           {
             "criterion": "vocabulary",
-            "detail": "teaches 1 distinct headwords at or below pre-A1, against 300",
-            "shortfall": 299
-          },
-          {
-            "criterion": "reinforcement",
-            "detail": "1 atom(s) at or below pre-A1 are revisited fewer than twice",
-            "shortfall": 1
+            "detail": "teaches 2 distinct headwords at or below pre-A1, against 300",
+            "shortfall": 298
           }
         ],
-        "vocabulary": 1
+        "vocabulary": 2
       },
       {
         "language": "persian",
@@ -73726,7 +73659,7 @@
     "voice": 2462,
     "sight": 587,
     "pen": 362,
-    "coreVoice": 2909,
+    "coreVoice": 2910,
     "lessonsWithWritingSegments": 157,
     "drivablePercent": 85,
     "tracks": [
@@ -80066,8 +79999,8 @@
         "voice": 2,
         "sight": 0,
         "pen": 5,
-        "coreVoice": 2,
-        "drivablePercent": 29,
+        "coreVoice": 3,
+        "drivablePercent": 43,
         "drivablePrefixTotal": 0,
         "chapters": [
           {
@@ -80077,7 +80010,7 @@
             "voice": 2,
             "sight": 0,
             "pen": 5,
-            "coreVoice": 2,
+            "coreVoice": 3,
             "modalities": [
               "voice",
               "sight",
@@ -88930,8 +88863,8 @@
   "metalanguage": {
     "terms": 54,
     "termsUsed": 53,
-    "lessonsUsingTerms": 3300,
-    "usesBeforeIntroduction": 12028,
+    "lessonsUsingTerms": 3301,
+    "usesBeforeIntroduction": 12030,
     "technicalUsesBeforeIntroduction": 3169,
     "technicalLessons": 1646,
     "worstTerms": [
