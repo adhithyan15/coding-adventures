@@ -111,7 +111,7 @@
 //!    (which predates this pattern and has no panic-safety net of its own —
 //!    a wrong shape there would abort the whole process), [`Interpreter::feed`]
 //!    runs parsing *and* evaluation inside [`catch_unwind`] on a dedicated
-//!    worker thread with a large bounded stack ([`EVAL_STACK_SIZE`], 512
+//!    worker thread with a large bounded stack (`EVAL_STACK_SIZE`, 512
 //!    MiB, matching `maple-runtime`'s own choice), so any panic becomes a
 //!    clean `Err(String)` rather than an abort. On a panic, the session is
 //!    rebuilt (`Interpreter::new()`) — trading the lost variable/function

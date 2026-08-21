@@ -253,8 +253,10 @@ fn decode_text_chars(body: &[u8]) -> String {
     // `chunks_exact(2)` yields only whole pairs and silently drops a lone
     // trailing byte, which is exactly the lenient behaviour we want.
     let mut units: Vec<u16> = body
-        .chunks_exact(2)
-        .map(|c| u16::from_le_bytes([c[0], c[1]]))
+        .as_chunks::<2>()
+        .0
+        .iter()
+        .map(|chunk| u16::from_le_bytes(*chunk))
         .collect();
     if units.last() == Some(&0) {
         units.pop();
