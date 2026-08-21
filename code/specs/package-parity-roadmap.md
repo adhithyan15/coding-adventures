@@ -4548,6 +4548,16 @@ profile is valid, test-only Foundation/Python/WIC/ImageIO authority is
 documented, and production authority, credential, dependency, diff, security,
 build, and ownership audits are clean.
 
+### Swift PNG publication
+
+Ready-for-review PR #12383 was opened from clean validated head
+`9d6cdda29a481e89125c5653747462613cde249b` after a normal first push from exact
+`origin/main` `12dbe729e721280d38b4522aa6ea66890d10541b`. Independent
+implementation, security, build, inventory, and live-ownership audits found no
+blocker. The exact 11-path diff is clean, GitHub reports the branch mergeable,
+and required checks queued immediately after publication. The loop remains in
+monitor-only mode until the exact lifecycle-update head is terminal.
+
 ## Autonomous Loop Protocol
 
 Only one parity PR should be active at a time.
