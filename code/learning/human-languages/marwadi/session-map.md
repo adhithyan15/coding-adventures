@@ -53,6 +53,13 @@ memory demand at a time.
 | S45 | `MW-W06-ttha` | distinguish retroflex **ठ** from dental **थ** | observe, trace, copy one consonant |
 | S46 | `MW-C06-answer` | assemble **हूं | ठीक | हूं** | delayed copy of the answer |
 | S47 | `MW-C06-practice` | ask and answer about wellbeing in four separate skills | answer dictation plus spoken question |
+| S48 | `MW-C07-hear-later` | recognise *pāchhe milsū* as see you later | none; sound and meaning only |
+| S49 | `MW-W07-chha` | trace and write **छ** | one consonant only |
+| S50 | `MW-W07-e-matra` | attach **े** to make **छे** | one vowel mark only |
+| S51 | `MW-W07-i-matra` | write **ि** before **म** but read *mi* | one vowel mark only |
+| S52 | `MW-W07-la` | recall and write **ल** | one consonant only |
+| S53 | `MW-C07-read-later` | assemble **पाछे मिलसू** from known units | delayed phrase writing |
+| S54 | `MW-C07-practice` | distinguish goodbye from see you later in four skills | phrase dictation plus spoken farewell |
 
 Reviews use expanding spacing: repeat S7 the next day, after three days, after
 one week, and after two weeks. A failed written recall sends the learner back to

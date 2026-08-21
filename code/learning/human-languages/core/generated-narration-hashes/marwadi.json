@@ -153,6 +153,26 @@
       "json": "marwadi/narration/ch08.json",
       "textHash": "fnv1a64:fbe7aee098259530",
       "jsonHash": "fnv1a64:51aebbc82dca9e75"
+    },
+    {
+      "language": "marwadi",
+      "chapter": 9,
+      "sourceHash": "fnv1a64:b121afde028b4574",
+      "lessonIds": [
+        "MW-C07-hear-later",
+        "MW-W07-chha",
+        "MW-W07-e-matra",
+        "MW-W07-i-matra",
+        "MW-W07-la",
+        "MW-C07-read-later",
+        "MW-C07-practice"
+      ],
+      "voiceLessons": 2,
+      "drivablePrefix": 1,
+      "text": "marwadi/narration/ch09.txt",
+      "json": "marwadi/narration/ch09.json",
+      "textHash": "fnv1a64:eef02c40d84fb6ec",
+      "jsonHash": "fnv1a64:103d3a96fa314257"
     }
   ],
   "findings": []
