@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.11.0
+
+- Reserve XY-chart plot margins for axis titles and lower them to backend-neutral chart labels.
+
 ## 0.8.0
 
 - Resolve quadrant region, label, point, axis, title, and independent border theme colors.

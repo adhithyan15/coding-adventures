@@ -16,7 +16,7 @@ use diagram_ir::{
 };
 use std::collections::{HashMap, VecDeque};
 
-pub const VERSION: &str = "0.10.0";
+pub const VERSION: &str = "0.11.0";
 
 const MARGIN: f64 = 24.0;
 const TITLE_H: f64 = 32.0;
@@ -64,12 +64,22 @@ fn resolve_y_range(diagram: &ChartDiagram) -> (f64, f64) {
 fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
     let has_title = diagram.title.is_some();
     let has_series = !diagram.series.is_empty();
+    let has_x_title = diagram
+        .x_axis
+        .as_ref()
+        .and_then(|axis| axis.title.as_ref())
+        .is_some();
+    let has_y_title = diagram
+        .y_axis
+        .as_ref()
+        .and_then(|axis| axis.title.as_ref())
+        .is_some();
     let lh = if has_series { LEGEND_H } else { 0.0 };
 
     // Plot area bounds
     let pt = MARGIN + if has_title { TITLE_H } else { 0.0 }; // top
-    let pl = MARGIN + Y_LBL_W; // left
-    let pb = ch - MARGIN - X_LBL_H - lh; // bottom
+    let pl = MARGIN + Y_LBL_W + if has_y_title { X_LBL_H } else { 0.0 }; // left
+    let pb = ch - MARGIN - X_LBL_H - lh - if has_x_title { X_LBL_H } else { 0.0 }; // bottom
     let pr = cw - MARGIN; // right
     let pw = (pr - pl).max(1.0);
     let ph = (pb - pt).max(1.0);
@@ -104,6 +114,25 @@ fn layout_xy(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagram {
             y: MARGIN + TITLE_H * 0.5,
             text: t.clone(),
             font_size: None,
+            color: None,
+        });
+    }
+
+    if let Some(axis_title) = diagram.x_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+        items.push(LayoutedChartItem::DataLabel {
+            x: (pl + pr) / 2.0,
+            y: pb + X_LBL_H + 8.0,
+            text: axis_title.clone(),
+            font_size: Some(14.0),
+            color: None,
+        });
+    }
+    if let Some(axis_title) = diagram.y_axis.as_ref().and_then(|axis| axis.title.as_ref()) {
+        items.push(LayoutedChartItem::DataLabel {
+            x: MARGIN + 8.0,
+            y: (pt + pb) / 2.0,
+            text: axis_title.clone(),
+            font_size: Some(14.0),
             color: None,
         });
     }
@@ -352,8 +381,7 @@ fn layout_sankey(diagram: &ChartDiagram, cw: f64, ch: f64) -> LayoutedChartDiagr
 
     let mut geometry = HashMap::<String, (f64, f64, f64)>::new();
     for (column_index, column) in columns.iter().enumerate() {
-        let x = MARGIN
-            + column_index as f64 / max_rank as f64 * (cw - MARGIN * 2.0 - NODE_W);
+        let x = MARGIN + column_index as f64 / max_rank as f64 * (cw - MARGIN * 2.0 - NODE_W);
         let column_height = column
             .iter()
             .map(|id| incoming[id].max(outgoing[id]).max(1.0) * scale)
@@ -638,7 +666,7 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(crate::VERSION, "0.10.0");
+        assert_eq!(crate::VERSION, "0.11.0");
     }
 
     #[test]
@@ -646,6 +674,20 @@ mod tests {
         let d = layout_chart_diagram(&xy_diagram(), 600.0, 400.0);
         assert!(d.width > 0.0);
         assert!(!d.items.is_empty());
+    }
+
+    #[test]
+    fn xy_layout_lowers_axis_titles_to_labels() {
+        let mut diagram = xy_diagram();
+        diagram.x_axis.as_mut().unwrap().title = Some("Quarter".into());
+        diagram.y_axis.as_mut().unwrap().title = Some("Revenue".into());
+        let layout = layout_chart_diagram(&diagram, 600.0, 400.0);
+        for expected in ["Quarter", "Revenue"] {
+            assert!(layout.items.iter().any(|item| matches!(
+                item,
+                LayoutedChartItem::DataLabel { text, .. } if text == expected
+            )));
+        }
     }
 
     #[test]

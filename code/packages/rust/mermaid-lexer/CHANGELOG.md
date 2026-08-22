@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.67.0
+
+- Add a portable, case-insensitive Mermaid 11.16.1 XY-chart token grammar.
+
 ## 0.63.0
 
 - Tokenize GitGraph titles and single-line or multiline accessibility metadata.

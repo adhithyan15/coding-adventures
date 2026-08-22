@@ -1,6 +1,6 @@
 //! Grammar-driven lexers for Mermaid diagram families.
 
-pub const VERSION: &str = "0.63.0";
+pub const VERSION: &str = "0.67.0";
 
 use grammar_tools::token_grammar::parse_token_grammar;
 use lexer::grammar_lexer::GrammarLexer;
@@ -23,6 +23,8 @@ const JOURNEY_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/journey.tokens");
 const REQUIREMENT_TOKEN_GRAMMAR_SOURCE: &str =
     include_str!("../../../../grammars/mermaid/requirement.tokens");
+const XYCHART_TOKEN_GRAMMAR_SOURCE: &str =
+    include_str!("../../../../grammars/mermaid/xychart.tokens");
 
 fn create_lexer<'a>(source: &'a str, grammar_source: &str, grammar_name: &str) -> GrammarLexer<'a> {
     let grammar = parse_token_grammar(grammar_source)
@@ -76,6 +78,10 @@ pub fn create_mermaid_requirement_lexer(source: &str) -> GrammarLexer<'_> {
         REQUIREMENT_TOKEN_GRAMMAR_SOURCE,
         "requirement.tokens",
     )
+}
+
+pub fn create_mermaid_xychart_lexer(source: &str) -> GrammarLexer<'_> {
+    create_lexer(source, XYCHART_TOKEN_GRAMMAR_SOURCE, "xychart.tokens")
 }
 
 pub fn tokenize_mermaid(source: &str) -> Vec<Token> {
@@ -270,6 +276,11 @@ pub fn try_tokenize_mermaid_journey(source: &str) -> Result<Vec<Token>, String> 
     lexer.tokenize().map_err(|error| error.to_string())
 }
 
+pub fn try_tokenize_mermaid_xychart(source: &str) -> Result<Vec<Token>, String> {
+    let mut lexer = create_mermaid_xychart_lexer(source);
+    lexer.tokenize().map_err(|error| error.to_string())
+}
+
 pub fn try_tokenize_mermaid_requirement(source: &str) -> Result<Vec<Token>, String> {
     let mut lexer = create_mermaid_requirement_lexer(source);
     lexer.tokenize().map_err(|error| error.to_string())
@@ -286,7 +297,27 @@ mod tests {
 
     #[test]
     fn version_exists() {
-        assert_eq!(VERSION, "0.63.0");
+        assert_eq!(VERSION, "0.67.0");
+    }
+
+    #[test]
+    fn tokenizes_xychart_statements_case_insensitively() {
+        let tokens = try_tokenize_mermaid_xychart(
+            "XYCHART horizontal\nX-AXIS \"Quarter\" [Q1, Q2]\nLINE Forecast [1, 2]\n",
+        )
+        .unwrap();
+        let names: Vec<_> = tokens
+            .iter()
+            .filter_map(|token| token.type_name.as_deref())
+            .collect();
+        for expected in [
+            "HEADER",
+            "ORIENTATION",
+            "X_AXIS_STATEMENT",
+            "LINE_STATEMENT",
+        ] {
+            assert!(names.contains(&expected));
+        }
     }
 
     #[test]
