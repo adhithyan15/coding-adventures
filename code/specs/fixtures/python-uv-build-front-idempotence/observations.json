@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "revision": "a2855409cfa8ebd5923f76a8fb1a0dce8e6ac4b6",
+  "platform": "windows",
+  "uv_version": "0.11.28",
+  "receipts": [
+    {
+      "packages": [
+        "bloom-filter",
+        "caesar-cipher",
+        "directed-graph",
+        "fenwick-tree",
+        "graph",
+        "hash-functions",
+        "hash-map",
+        "hyperloglog",
+        "in-memory-data-store",
+        "in-memory-data-store-engine",
+        "radix-tree",
+        "resp-protocol",
+        "skip-list",
+        "tcp-server",
+        "tree-set",
+        "trie"
+      ],
+      "first_run": {
+        "failure_command_index": 2,
+        "exit_code": 1,
+        "diagnostic": "requires-python",
+        "interpreter": "3.10.11"
+      },
+      "second_run": {
+        "failure_command_index": 1,
+        "exit_code": 2,
+        "diagnostic": "existing-environment",
+        "interpreter": "3.10.11"
+      }
+    },
+    {
+      "packages": ["ls00"],
+      "first_run": {
+        "failure_command_index": null,
+        "exit_code": 0,
+        "diagnostic": "success",
+        "interpreter": "3.13.14"
+      },
+      "second_run": {
+        "failure_command_index": 1,
+        "exit_code": 2,
+        "diagnostic": "existing-environment",
+        "interpreter": "3.13.14"
+      }
+    }
+  ]
+}

@@ -353,6 +353,9 @@ Useful repository checks:
 # Inspect cross-language coverage and reject naming collisions.
 python code/scripts/package_parity_report.py --fail-on-collisions
 
+# Classify Python uv fronts that cannot repeat in the same checkout.
+python code/scripts/python_uv_build_front_audit.py --format markdown
+
 # Regenerate the package-to-learning coverage backlog.
 python code/scripts/learning_coverage_report.py --output code/learning/COVERAGE.md
 
