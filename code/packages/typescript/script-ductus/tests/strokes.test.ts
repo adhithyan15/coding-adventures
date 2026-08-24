@@ -383,6 +383,14 @@ describe("handwriting ductus", () => {
     expect(hebrew.marks).toHaveLength(9);
   });
 
+  it("marks Chinese complete with every current-corpus row source-verified", () => {
+    const chinese = SCRIPTS.find((script) => script.script === "chinese")!;
+    expect(chinese.complete).toBe(true);
+    expect(chinese.letters).toHaveLength(29);
+    expect(new Set(chinese.letters.map((letter) => letter.glyph)).size).toBe(29);
+    expect(chinese.letters.every((letter) => letter.strokeOrderSource !== undefined)).toBe(true);
+  });
+
   it("keeps taa marbuta word-final and body-first", () => {
     const arabic = SCRIPTS.find((script) => script.script === "arabic")!;
     const ending = arabic.letters.find((letter) => letter.glyph === "ة")!;
