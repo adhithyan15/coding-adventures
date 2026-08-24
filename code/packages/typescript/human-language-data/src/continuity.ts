@@ -424,11 +424,21 @@ function codePointBefore(text: string, end: number): string {
  * behaviour. Every occurrence is examined, not just the first, because the first may
  * be glued to a letter while a later one is free.
  */
-function occursAsWholeWord(haystack: string, needle: string): boolean {
+interface WholeWordSearchProbe {
+  candidateChecks: number;
+  skippedRuns: number;
+}
+
+function occursAsWholeWord(
+  haystack: string,
+  needle: string,
+  probe?: WholeWordSearchProbe,
+): boolean {
   if (needle.length === 0) return false;
   for (let from = 0; from <= haystack.length; ) {
     const at = haystack.indexOf(needle, from);
     if (at < 0) return false;
+    if (probe) probe.candidateChecks += 1;
     // A `u`-flag match runs from one code-point boundary to another, so an
     // occurrence that begins or ends halfway through a surrogate pair is one the
     // regex would refuse — `indexOf` finds the high half of `𐀀` when asked for a
@@ -448,9 +458,29 @@ function occursAsWholeWord(haystack: string, needle: string): boolean {
     // character and would skip past positions that can still match. A split is
     // rare and cannot drive the quadratic case, so it takes the plain step. Found
     // by fuzzing this against the regex it replaced, not by reading it.
-    from = splits ? at + 1 : afterRunAt(haystack, at);
+    const next = splits ? at + 1 : afterRunAt(haystack, at);
+    if (probe && next > at + 1) probe.skippedRuns += 1;
+    from = next;
   }
   return false;
+}
+
+/**
+ * Deterministic complexity evidence for the whole-word walk.
+ *
+ * This is exported from the implementation module, but deliberately not from the
+ * package barrel: the continuity regression test can count candidate checks without
+ * making a wall-clock budget part of the public API. A retry-one-character-later
+ * regression turns one rejected word-adjacent run into thousands of checks, while
+ * the production run skip keeps it to one.
+ */
+export function diagnoseWholeWordSearch(
+  haystack: string,
+  needle: string,
+): WholeWordSearchProbe & { matched: boolean } {
+  const probe: WholeWordSearchProbe = { candidateChecks: 0, skippedRuns: 0 };
+  const matched = occursAsWholeWord(haystack, needle, probe);
+  return { ...probe, matched };
 }
 
 /** Emphasised or code-spanned runs, where the corpus marks target language. */
